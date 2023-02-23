@@ -16,8 +16,8 @@ For short, Exudyn uses UTF-8 character encoding in texts / strings drawn in Open
 However, the set of available UTF-8 characters in Exudyn is restricted to a very small set of characters (as compared to available characters in UTF-8).
 
 
-Greek characters include: \alpha, \beta, \gamma, \delta, \varepsilon, \zeta, \eta, \theta, 
-\kappa, \lambda, \nu, \xi, \pi, \rho, \sigma, \varphi, \Delta, \Pi, \Sigma, \Omega.
+Greek characters include: \ :math:`\alpha, \beta, \gamma, \delta, \varepsilon, \zeta, \eta, \theta, 
+\kappa, \lambda, \nu, \xi, \pi, \rho, \sigma, \varphi, \Delta, \Pi, \Sigma, {\mathbf{O}}ega`\ .
 
 
 

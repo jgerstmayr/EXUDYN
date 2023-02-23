@@ -5,7 +5,7 @@
 ObjectConnectorCoordinateVector
 ===============================
 
-A constraint which constrains the coordinate vectors of two markers Marker[Node|Object|Body]Coordinates attached to nodes or bodies. The marker uses the objects LTG-lists to build the according coordinate mappings.
+A constraint which constrains the coordinate vectors of two markers Marker[Node|Object|Body]Coordinates attached to nodes or bodies. The marker uses the objects \ :ref:`LTG <LTG>`\ -lists to build the according coordinate mappings.
 
 \ **Additional information for ObjectConnectorCoordinateVector**\ :
 
@@ -32,7 +32,7 @@ The item \ **ObjectConnectorCoordinateVector**\  with type = 'ConnectorCoordinat
 * | **offset** [\ :math:`{\mathbf{v}}_\mathrm{off} \in \Rcal^{n_{ae}}`\ , type = NumpyVector, default = []]:
   | offset added to constraint equation; only active, if no userFunction is defined
 * | **velocityLevel** [type = Bool, default = False]:
-  | If true: connector constrains velocities (only works for ODE2 coordinates!); offset is used between velocities; in this case, the offsetUserFunction_t is considered and offsetUserFunction is ignored
+  | If true: connector constrains velocities (only works for \ :ref:`ODE2 <ODE2>`\  coordinates!); offset is used between velocities; in this case, the offsetUserFunction_t is considered and offsetUserFunction is ignored
 * | **constraintUserFunction** [\ :math:`{\mathbf{c}}_{user} \in \Rcal^{n_{ae}}`\ , type = PyFunctionVectorMbsScalarIndex2VectorBool, default =  0]:
   | A Python user function which computes the constraint equations; to define the number of algebraic equations, set scalingMarker0 as a numpy.zeros((nAE,1)) array with nAE being the number algebraic equations; see description below
 * | **jacobianUserFunction** [\ :math:`{\mathbf{J}}_{user} \in \Rcal^{(n_{q_{m0}}+n_{q_{m1}}) \times n_{ae}}`\ , type = PyFunctionMatrixContainerMbsScalarIndex2VectorBool, default =  0]:

@@ -290,25 +290,15 @@ convLatexWords={'(\\the\\month-\\the\\year)':'',
            '\\textcolor{steelblue}':'', 
            '[language=Python, xleftmargin=36pt]':'',
 
-           #'\\bea':'',  #now considered separately
-           #'\\eea':'',
            '\\bi':'', 
            '\\ei':'',
            '\\bn':'', 
            '\\en':'',
-           #'\\be':'',  #now natively ...
-           #'\\ee':'',
            '\\it ':'',
            #specials:
            '\\ge':'>=',
            '\\_':'_',
            '\\textdegree':'°',
-           '\\hac':'',
-           '\\hacs':'',
-           '\\acs':'',
-           '\\acp':'',
-           '\\acf':'',
-           '\\ac':'',
            #
            '{\\"a}':'ä',
            '{\\"o}':'ö',
@@ -316,9 +306,7 @@ convLatexWords={'(\\the\\month-\\the\\year)':'',
            '\\"a':'ä', #if '{' is already removed earlier
            '\\"o':'ö',
            '\\"u':'ü',
-           # '{':'',
-           # '}':'',
-           '$':'',
+           #'$':'',
            }
     
 #should never appear, not compatible with RST: convLabel = {'\\label':('\n\n.. _','_USE',':\n\n')} #do not do this for equation labels
@@ -344,7 +332,7 @@ convLatexCommands={#(precommand,'_USE'/'',postcommand)
     '\\myListing':('','',''),
     '\\setlength':('','',''),
     '\\vspace':('','',''),
-    '\\footnote':(' (','_USE',')'), #rst footnotes may be used instead: https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html#footnotes
+    '\\footnote':('\\ (','_USE',')'), #rst footnotes may be used instead: https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html#footnotes
     '\\mybold':('\\ **','_USE','**\\ '),
     '\\myitalics':('\\ *','_USE','*\\ '),
     #'\\mathrm':('','_USE',''),
@@ -366,8 +354,18 @@ convLatexCommands={#(precommand,'_USE'/'',postcommand)
     '\\refSection':('Section :ref:`','_USE','`\\ '), #anonymous -> if no header given
     '\\exuUrl':('`','_USE','`_','2nd'),
     '\\ref':(' :ref:`','_USE','`\\ '),
-    '\\fig':('Fig. :ref:`','_USE','`\\ '),
+    '\\fig':('\\ :numref:`','_USE','`\\ '), 
+    #'\\fig':('Fig. :ref:`','_USE','`\\ '), 
     'figure':('','',''),
+    '\\hac':('\\ :ref:`_USE <','_USE','>`\\ '),
+    '\\hacs':('\\ :ref:`_USE <','_USE','>`\\ '),
+    '\\acs':('\\ :ref:`_USE <','_USE','>`\\ '),
+    '\\acp':('\\ :ref:`_USE <','_USE','>`\\ '),
+    '\\acf':('\\ :ref:`_USE <','_USE','>`\\ '),
+    '\\ac':('\\ :ref:`_USE <','_USE','>`\\ '),
+    '\\eqs':('Eqs. :eq:`','_USE','`\\ '),
+    '\\eqq':('\\ :eq:`','_USE','`\\ '),
+    '\\eq':('Eq. :eq:`','_USE','`\\ '),
     } #TITLE, SUBTITLE, SUBSUBTITLE, ...
 
 #replace all occurances of conversionDict in string and return modified string
@@ -523,7 +521,7 @@ def FindMatchingBracket(s, start, openBracket='{', closingBracket='}'):
     return [-1,-1]
         
 #convert a text that is mainly designed for latex, but to be output into RST
-def LatexString2RST(s0, replaceCommands=True, replaceMarkups = False): #Latex style to RST
+def LatexString2RST(s0, replaceCommands=True, replaceMarkups = False, sectionMarkerText=''): #Latex style to RST
 
     # replace latex math to RST inline
     sNew = ''
@@ -534,7 +532,7 @@ def LatexString2RST(s0, replaceCommands=True, replaceMarkups = False): #Latex st
     s0 = s0.replace(r'\pythonstyle\begin{lstlisting}',r'\begin{pytlisting}')
 
     if replaceCommands:
-        s = ReplaceLatexCommands(s0, convLatexCommands)
+        s = ReplaceLatexCommands(s0, convLatexCommands, sectionMarkerText=sectionMarkerText)
 
     while not endFound:
         startStr = '$'
@@ -644,6 +642,9 @@ def ExtractLatexCommand(s, key, secondBracket, isBeginEnd=False):
             return [preString, innerString, '', postString]
     else:
         found = s.find(key)
+        while found != -1 and len(s) > found+len(key) and s[found+len(key)] != '{':
+            found = s.find(key, found+1)
+        
         if found != -1:
             [sStart, sEnd] = FindMatchingBracket(s, found+len(key))
 
@@ -728,9 +729,12 @@ def ReplaceLatexCommands(s, conversionDict, sectionMarkerText=''): #replace stri
             if found != -1:
                 [preString, innerString, innerString2, postString] = found
                 s = preString
-                if '\\refSection' in key or key == '\\label' or key == '\\fig' or key == '\\ref':
+                if ('\\refSection' in key or key == '\\label' or key == '\\fig' or key == '\\ref'
+                    or key == '\\eq' or key == '\\eqs' or key == '\\eqq'):
                     innerString=Latex2RSTlabel(innerString)
                 elif (value[1] == '_USE' and key != '\\exuUrl' 
+                      and ('\\ac' not in key) 
+                      and key != '\\onlyRST' and key != '\\footnote' #final replacement in exterior loop!
                       and key != 'lstlisting' and key!='pytlisting'):
                     if 'lstlisting' in innerString:
                         print('WARNING: lstlisting in inner string:',innerString)
@@ -789,7 +793,10 @@ def ReplaceLatexCommands(s, conversionDict, sectionMarkerText=''): #replace stri
                     s += innerString2 + ' <' + innerString + '>'
                     s += value[2]
                 else:
-                    s += value[0]
+                    if '_USE' in value[0]:
+                        s += value[0].replace('_USE', innerString)
+                    else:
+                        s += value[0]
                     if value[1] == '_USE':
                         s += innerString
                     s += value[2]
@@ -1131,12 +1138,17 @@ class PyLatexRST:
     #one row for definition of system structures
     def SystemStructuresWriteDefRow(self, pythonName, typeName, sSize, sDefaultVal, description, typicalPaths = []):
         #latex:
+        typeNameLatex = typeName
+        if len(pythonName)>28:  #for space of pythonname over column width
+            typeNameLatex = '\\tabnewline ' + typeName
+
         self.sLatex += '    ' + pythonName + ' & '                
-        self.sLatex += '    ' + typeName + ' & '
+        self.sLatex += '    ' + typeNameLatex + ' & '
         self.sLatex += '    ' + sSize + ' & '
         self.sLatex += '    ' + sDefaultVal + ' & '
         self.sLatex += '    ' + description + '\\\\ \\hline\n' #Str2Latex not used, must be latex compatible!!!
         
+
         #RST:
         s = '* | **' + pythonName + '** [type = ' + typeName
         if sDefaultVal != '':

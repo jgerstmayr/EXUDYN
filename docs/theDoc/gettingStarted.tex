@@ -655,6 +655,7 @@ to explicitly load the version without AVX2.
   before the application's OpenGL window (renderer) is opened. Therefore, on MacOS \texttt{tkinter.Tk()} is called before the 
   renderer is started.
   In some cases, visualizationSettings dialog may not be available and changes have to be made inside the code.
+  
 \item[$\ra$] To resolve issues, the following visualizationSettings may help (before starting renderer!), but may reduce functionality: 
   dialogs.multiThreadedDialogs = False, general.useMultiThreadedRendering = False
 \ei 

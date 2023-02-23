@@ -155,6 +155,11 @@ Geometric relations
 
 The main geometrical setup is shown in the following figure:
 
+
+.. image:: ../../theDoc/figures/ObjectJointRollingDiscSketch.png
+   :width: 600
+
+
 First, the contact point \ :math:`\LU{0}{{\mathbf{p}}}_{C}`\  must be computed.
 With the helper vector,
 
@@ -300,7 +305,7 @@ The torque onto the ground (marker \ :math:`m0`\ ) is computed as
    \LU{0}{\ttau_{m0}} = \LU{0}{{\mathbf{p}}}_{C} \times \LU{0}{{\mathbf{f}}}
 
 
-Note that if \ ``activeConnector = False``\ , we replace \eqeq:ConnectorRollingDiscPenalty:forces with
+Note that if \ ``activeConnector = False``\ , we replace Eq. :eq:`eq-connectorrollingdiscpenalty-forces`\  with
 
 .. math::
 

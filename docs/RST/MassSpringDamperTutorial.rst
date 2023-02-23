@@ -56,7 +56,7 @@ For the simple spring-mass-damper system, we need initial displacements and velo
 
 
 We first need to add nodes, which provide the coordinates (and the degrees of freedom) to the system.
-The following line adds a 3D node for 3D mass point (Note: Point is an abbreviation for NodePoint, defined in \ ``itemInterface.py``\ .):
+The following line adds a 3D node for 3D mass point\ (Note: Point is an abbreviation for NodePoint, defined in \ ``itemInterface.py``\ .):
 
 .. code-block:: python
 
@@ -76,7 +76,7 @@ Such a ground node is added via:
   nGround=mbs.AddNode(NodePointGround(referenceCoordinates = [0,0,0]))
 
 
-In the next step, we add an object (For the moment, we just need to know that objects either depend on one or more nodes, which are usually bodies and finite elements, or they can be connectors, which connect (the coordinates of) objects via markers, see Section :ref:`sec-overview-modulestructure`\ .), which provides equations for coordinates. The \ ``MassPoint``\  needs at least a mass (kg) and a node number to which the mass point is attached. Additionally, graphical objects could be attached:
+In the next step, we add an object\ (For the moment, we just need to know that objects either depend on one or more nodes, which are usually bodies and finite elements, or they can be connectors, which connect (the coordinates of) objects via markers, see Section :ref:`sec-overview-modulestructure`\ .), which provides equations for coordinates. The \ ``MassPoint``\  needs at least a mass (kg) and a node number to which the mass point is attached. Additionally, graphical objects could be attached:
 
 .. code-block:: python
 
@@ -221,7 +221,7 @@ Now we can load our results from the default solution file \ ``coordinatesSoluti
 directory as your python tutorial file. 
 \ **Note**\  that the visualization of results can be simplified considerably using the \ ``PlotSensor(...)``\  utility function as shown in the \ **Rigid body and joints tutorial**\ !
 
-For reading the file containing commented lines (this does not work in binary mode!), we use a numpy feature and finally plot the displacement of coordinate 0 or our mass point (\ ``data[:,0]``\  contains the simulation time, \ ``data[:,1]``\  contains displacement of (global) coordinate 0, \ ``data[:,2]``\  contains displacement of (global) coordinate 1, ...)):
+For reading the file containing commented lines (this does not work in binary mode!), we use a numpy feature and finally plot the displacement of coordinate 0 or our mass point\ (\ ``data[:,0]``\  contains the simulation time, \ ``data[:,1]``\  contains displacement of (global) coordinate 0, \ ``data[:,2]``\  contains displacement of (global) coordinate 1, ...)):
 
 .. code-block:: python
 
@@ -238,7 +238,7 @@ sensor and the output quantity (scalar, vector, ...):
   plt.plot(data[:,0], data[:,1]*1e-3, 'g-', label='force (kN)')
 
 
-In order to get a nice plot within Spyder, the following options can be used (note, in some environments you need finally the command \ ``plt.show()``\ ):
+In order to get a nice plot within Spyder, the following options can be used\ (note, in some environments you need finally the command \ ``plt.show()``\ ):
 
 .. code-block:: python
 

@@ -5,7 +5,7 @@
 SensorNode
 ==========
 
-A sensor attached to a ODE2 or ODE1 node. The sensor measures OutputVariables and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file.
+A sensor attached to a \ :ref:`ODE2 <ODE2>`\  or \ :ref:`ODE1 <ODE1>`\  node. The sensor measures OutputVariables and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file.
 
 The item \ **SensorNode**\  with type = 'Node' has the following parameters:
 

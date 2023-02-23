@@ -5,7 +5,7 @@
 ObjectANCFCable2D
 =================
 
-A 2D cable finite element using 2 nodes of type NodePoint2DSlope1. The localPosition of the beam with length \ :math:`L`\ =physicsLength and height \ :math:`h`\  ranges in \ :math:`X`\ -direction in range \ :math:`[0, L]`\  and in \ :math:`Y`\ -direction in range \ :math:`[-h/2,h/2]`\  (which is in fact not needed in the EOM).
+A 2D cable finite element using 2 nodes of type NodePoint2DSlope1. The localPosition of the beam with length \ :math:`L`\ =physicsLength and height \ :math:`h`\  ranges in \ :math:`X`\ -direction in range \ :math:`[0, L]`\  and in \ :math:`Y`\ -direction in range \ :math:`[-h/2,h/2]`\  (which is in fact not needed in the \ :ref:`EOM <EOM>`\ ).
 
 \ **Additional information for ObjectANCFCable2D**\ :
 
@@ -314,7 +314,7 @@ The bending moment \ :math:`M`\  in the beam is defined as function of the curre
 in which \ :math:`K_0`\  includes the (pre-)curvature of the undeformed beam and
 \ :math:`K\cRef`\  includes the curvature of the reference configuration, multiplied with the factor \ :math:`f\cRef=1`\ , see the axial strain above.
 
-Using the latter definitions, the elastic forces follow from \eqeq:cable2D:elasticForces.
+Using the latter definitions, the elastic forces follow from Eq. :eq:`eq-cable2d-elasticforces`\ .
 
 The virtual work of viscous damping forces, assuming viscous effects proportial to axial streching and bending, is defined as
 
@@ -383,7 +383,7 @@ using different integration rules
    {\mathbf{Q}}_e \approx  \sum_{ip = 0}^{n_{ip}^\varepsilon-1}  \left(\frac{L}{2}  \bullet(x_{ip}) \frac{\partial \delta \varepsilon}{\partial \delta {\mathbf{q}}} \right) + \sum_{ip = 0}^{n_{ip}^K-1} \left( \frac{L}{2}\bullet(x_{ip}) \frac{\partial \delta K}{\partial \delta {\mathbf{q}}} \right) \,dx
 
 
-with the integration points \ :math:`x_{ip}`\  as defined in \eqeq_ANCFCable_ipTransform and integration rules from Section :ref:`sec-integrationpoints`\ .
+with the integration points \ :math:`x_{ip}`\  as defined in Eq. :eq:`eq-ancfcable-iptransform`\  and integration rules from Section :ref:`sec-integrationpoints`\ .
 There are 3 different options for integration rules depending on the flag \ ``useReducedOrderIntegration``\ :
 
 +  \ ``useReducedOrderIntegration``\  = 0: \ :math:`n_{ip}^\varepsilon = 5`\  (Gauss order 9), \ :math:`n_{ip}^K = 3`\  (Gauss order 5) -- this is considered as full integration, leading to very small approximations; certainly, due to the high nonlinearity of expressions, this is only an approximation.

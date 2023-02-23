@@ -132,7 +132,7 @@ Definition of quantities
 Geometric relations
 -------------------
 
-The geometrical setup is shown in Fig. :ref:`fig-objectcontactconvexroll-sketch`\ . To calculate the contact point of the convex body of revolution the contact (ground) plane is rotated into the local frame of the body. In this local frame in which the generatrix of the body of revolution is described by the polynomial function
+The geometrical setup is shown in \ :numref:`fig-objectcontactconvexroll-sketch`\ . To calculate the contact point of the convex body of revolution the contact (ground) plane is rotated into the local frame of the body. In this local frame in which the generatrix of the body of revolution is described by the polynomial function
 
 .. math::
    :label: eq-connectorconvexrolling-polynomial
@@ -141,7 +141,7 @@ The geometrical setup is shown in Fig. :ref:`fig-objectcontactconvexroll-sketch`
 
 
 with the coefficients of the hull \ :math:`a_i`\ . As a pre-Check for the contact two spheres are put into both ends of the object with the maximum radius and only if one of these is in contact. The contact point \ :math:`^{\mathrm{b}}{\mathbf{p}}_{\mathrm{m1,C}}`\  is calculated relative to the bodies marker \ ``m1``\  in the bodies local frame and transformed accordingly. 
-The contact point C can for be calculated convex bodies by matching the derivative of the polynomial \ :math:`r(^bx)`\  with the gradient of the contact plane, shown in Fig. :ref:`fig-objectcontactconvexroll-sketch`\ , explained in detail in . 
+The contact point C can for be calculated convex bodies by matching the derivative of the polynomial \ :math:`r(^bx)`\  with the gradient of the contact plane, shown in \ :numref:`fig-objectcontactconvexroll-sketch`\ , explained in detail in . 
 At the contact point a normal force \ :math:`{\mathbf{f}}_{\mathrm{N}} = \begin{bmatrix} 0 & 0 & \mathrm{f}_{\mathrm{N}} \end{bmatrix}^T`\   with 
 
 .. math::
@@ -151,6 +151,13 @@ At the contact point a normal force \ :math:`{\mathbf{f}}_{\mathrm{N}} = \begin{
 
 
 acts against the penetration of the ground. The penetration depth \ :math:`z_{\mathrm{pen}}`\  is the z-component of the position vector of the contact point relative to the ground frame \ :math:`{^0{\mathbf{p}}_{\mathrm{C}}}`\ . 
+
+
+.. _fig-objectcontactconvexroll-sketch:
+.. figure:: ../../theDoc/figures/ConvexRolling.png
+   :width: 600
+
+   Sketch of the roller Dimensions. The rollers radius \ :math:`r({^bx})`\  is described by the polynomial \ ``coefficientsHull``\ .
 
 
 

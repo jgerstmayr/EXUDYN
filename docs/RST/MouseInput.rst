@@ -18,7 +18,7 @@ The following table includes the mouse functions:
      - | mouse click on any node, object, etc. to see its basic information in status line; selection is deactivated if mouse coordinates are shown (see button F3)
    * - | \ **right mouse button**\ 
      - | rotate model
-     - | keep right mouse button pressed to rotate model around current current X_1/X_2 axes
+     - | keep right mouse button pressed to rotate model around current current \ :math:`X_1`\ /\ :math:`X_2`\  axes
    * - | \ **right mouse button**\ 
      - |  show item dictionary
      - | (short) press and release on item

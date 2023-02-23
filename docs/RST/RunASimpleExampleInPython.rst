@@ -7,7 +7,7 @@ Run a simple example in Python
 After performing the steps of the previous section, this section shows a simplistic model which helps you to check if Exudyn runs on your computer.
 
 In order to start, run the Python interpreter Spyder (or any preferred Python environment).
-In order to test the following example, which creates a {mbs}, adds a node, an object, a marker and a load and simulates everything with default values, 
+In order to test the following example, which creates a \ :ref:`mbs <mbs>`\ , adds a node, an object, a marker and a load and simulates everything with default values, 
 
 
 +  open \ ``myFirstExample.py``\  from your \ ``Examples``\  folder.
@@ -61,9 +61,9 @@ The beginning and end of the file should look like:
   #Solver Info: stepReductionFailed(or step failed)=0,discontinuousIterationSuccessful=1,newtonSolutionDiverged=0,massMatrixNotInvertible=1,total time steps=100,total Newton iterations=100,total Newton jacobians=100
 
 
-Within this file, the first column shows the simulation time and the following columns provide coordinates, their derivatives and Lagrange multipliers on system level. For relation of local to global coordinates, see Section :ref:`sec-overview-ltgmapping`\ . As expected, the x-coordinate of the point mass has constant acceleration a=f/m=0.001/10=0.0001, the velocity grows up to 0.0001 after 1 second and the point mass moves 0.00005 along the x-axis.
+Within this file, the first column shows the simulation time and the following columns provide coordinates, their derivatives and Lagrange multipliers on system level. For relation of local to global coordinates, see Section :ref:`sec-overview-ltgmapping`\ . As expected, the \ :math:`x`\ -coordinate of the point mass has constant acceleration \ :math:`a=f/m=0.001/10=0.0001`\ , the velocity grows up to \ :math:`0.0001`\  after 1 second and the point mass moves \ :math:`0.00005`\  along the \ :math:`x`\ -axis.
 
-Note that line 8 contains the Exudyn and Python versions (as well as some other specific information on the platform and compilation settings (which may help you identify with which computer, etc., you created results)) provided in the solution file are the versions at which Exudyn has been compiled with.
+Note that line 8 contains the Exudyn and Python versions\ (as well as some other specific information on the platform and compilation settings (which may help you identify with which computer, etc., you created results)) provided in the solution file are the versions at which Exudyn has been compiled with.
 The Python micro version (last digit) may be different from the Python version from which you were running Exudyn.
 This information is also provided in the sensor output files.
 

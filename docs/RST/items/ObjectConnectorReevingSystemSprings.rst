@@ -85,11 +85,18 @@ simple reeving systems in 3D.
 
 
 
+.. _fig-reevingsystemsprings-tangents:
+.. figure:: ../../theDoc/figures/CommonTangents3D.png
+   :width: 500
+
+   Geometry of common tangent for two spatial circles defined by radii \ :math:`R_A`\  and \ :math:`R_B`\  as well as by the normalized axis vectors \ :math:`{\mathbf{a}}_A`\  and \ :math:`{\mathbf{a}}_B`\ . The tangent is undefined, if one of the axis vectors is parallel to the vector \ :math:`{\mathbf{c}}`\ , which connects the two center points. The positive rotation sense is indicated by means of the angular velocities \ :math:`\omega_A`\  and \ :math:`\omega_B`\ .
+
+
 Common tangent of two circles in 3D
 -----------------------------------
 
 In order to compute the total length of the rope of the reeving system, the tangent of two arbitrary circles in space needs to be computed.
-Considering Fig. :ref:`fig-reevingsystemsprings-tangents`\ , the relations are based on the
+Considering \ :numref:`fig-reevingsystemsprings-tangents`\ , the relations are based on the
 center points of the circles \ :math:`{\mathbf{p}}_A`\  and \ :math:`{\mathbf{p}}_B`\ , the radii \ :math:`R_A`\  and \ :math:`R_B`\  as well as
 the axis vectors \ :math:`{\mathbf{a}}_A`\  and \ :math:`{\mathbf{a}}_B`\ , the latter vectors also defining the side at which the tangent contacts.
 For the definition of the tangent, the vectors \ :math:`{\mathbf{r}}_A`\  and \ :math:`{\mathbf{r}}_B`\  need to be computed.
@@ -155,8 +162,8 @@ or
    {\mathbf{r}}_A\tp {\mathbf{c}} + {\mathbf{r}}_A\tp {\mathbf{r}}_B - R_A^2 = 0, \quad \mathrm{and} \quad {\mathbf{r}}_B\tp {\mathbf{c}} - {\mathbf{r}}_B\tp{\mathbf{r}}_A + R_B^2 = 0 .
 
 
-The relations \eqeq:ReevingSystemSprings:Newton reduce to only one equation, if either \ :math:`R_A=0`\  or \ :math:`R_B = 0`\ .
-The equations can be solved by Newton's method by computing the jacobian of \ :math:`{\mathbf{J}}_{CT}`\  of \eqeq:ReevingSystemSprings:Newton w.r.t.\ the 
+The relations Eq. :eq:`eq-reevingsystemsprings-newton`\  reduce to only one equation, if either \ :math:`R_A=0`\  or \ :math:`R_B = 0`\ .
+The equations can be solved by Newton's method by computing the jacobian of \ :math:`{\mathbf{J}}_{CT}`\  of Eq. :eq:`eq-reevingsystemsprings-newton`\  w.r.t.\ the 
 unknown angles \ :math:`\varphi_A`\  and \ :math:`\varphi_B`\ . The iterations are started with
 
 .. math::

@@ -16,6 +16,7 @@ project = 'Exudyn'+release
 copyright = '2023' #'2023, Johannes Gerstmayr'
 author = 'Johannes Gerstmayr'
 
+numfig = True #uses numbers for figures, see https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-numfig
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -39,7 +40,7 @@ html_theme = "sphinx_rtd_theme"
 #only works on readthedocs.io :
 extensions = [
    'sphinx_search.extension', #pip install readthedocs-sphinx-search
-   # 'sphinx.ext.mathjax', #not needed
+   'sphinx_copybutton',
 ]
 #html_theme_path = ["_themes", ]
 
@@ -200,6 +201,8 @@ mathjax3_config = {
             'indtf': r'{_\mathrm{tf}}',
             'indrf': r'{_\mathrm{rf}}',
             'indtr': r'{_\mathrm{tr}}',
+
+            'omegaBDtilde': r'{\LU{b}{\tilde \tomega_\mathrm{bd}}}',
 #for FFRFreducedOrder:
             'indrigid': r'{_\mathrm{rigid}}',
             'indred': r'{_\mathrm{red}}',

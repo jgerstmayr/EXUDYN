@@ -5,7 +5,7 @@
 NodeGenericAE
 =============
 
-A node containing a number of AE variables; use e.g. linear state space systems. Note that referenceCoordinates and initialCoordinates must be initialized, because no default values exist.
+A node containing a number of \ :ref:`AE <AE>`\  variables; use e.g. linear state space systems. Note that referenceCoordinates and initialCoordinates must be initialized, because no default values exist.
 
 The item \ **NodeGenericAE**\  with type = 'GenericAE' has the following parameters:
 
@@ -16,7 +16,7 @@ The item \ **NodeGenericAE**\  with type = 'GenericAE' has the following paramet
 * | **initialCoordinates** [\ :math:`{\mathbf{y}}\cIni = [y_0,\,\ldots,\,y_{nc}]\tp\cIni`\ , type = Vector, default = []]:
   | initial displacement coordinates; must be consistent with numberOfAECoordinates
 * | **numberOfAECoordinates** [\ :math:`n_c`\ , type = PInt, default = 0]:
-  | number of generic AE coordinates
+  | number of generic \ :ref:`AE <AE>`\  coordinates
 * | **visualization** [type = VNodeGenericAE]:
   | parameters for visualization of item
 
@@ -38,7 +38,7 @@ DESCRIPTION of NodeGenericAE
 \ **The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**\ :
 
 * | ``Coordinates``\ : \ :math:`{\mathbf{y}}\cConfig = [y_0,\,\ldots,\,y_{nc}]\tp\cConfig`\ 
-  | AE coordinates vector of node
+  | \ :ref:`AE <AE>`\  coordinates vector of node
 
 
 

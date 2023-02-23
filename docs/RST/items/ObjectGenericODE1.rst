@@ -5,7 +5,7 @@
 ObjectGenericODE1
 =================
 
-A system of \ :math:`n`\  ODE1, having a system matrix, a rhs vector, but mostly it will use a user function to describe special ODE1 systems. It is based on NodeGenericODE1 nodes. NOTE that all matrices, vectors, etc. must have the same dimensions \ :math:`n`\  or \ :math:`(n \times n)`\ , or they must be empty \ :math:`(0 \times 0)`\ , using [] in Python.
+A system of \ :math:`n`\  \ :ref:`ODE1 <ODE1>`\ , having a system matrix, a rhs vector, but mostly it will use a user function to describe special \ :ref:`ODE1 <ODE1>`\  systems. It is based on NodeGenericODE1 nodes. NOTE that all matrices, vectors, etc. must have the same dimensions \ :math:`n`\  or \ :math:`(n \times n)`\ , or they must be empty \ :math:`(0 \times 0)`\ , using [] in Python.
 
 \ **Additional information for ObjectGenericODE1**\ :
 
@@ -52,9 +52,9 @@ DESCRIPTION of ObjectGenericODE1
 \ **The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**\ :
 
 * | ``Coordinates``\ : 
-  | all ODE1 coordinates
+  | all \ :ref:`ODE1 <ODE1>`\  coordinates
 * | ``Coordinates\_t``\ : 
-  | all ODE1 velocity coordinates
+  | all \ :ref:`ODE1 <ODE1>`\  velocity coordinates
 
 
 
@@ -82,7 +82,7 @@ Equations of motion
 
 Note that the user function \ :math:`{\mathbf{f}}_{user}(mbs, t, i_N, {\mathbf{q}})`\  may be empty (=0), and that \ ``iN``\  represents the itemNumber (=objectNumber). 
 
-CoordinateLoads are added for the respective ODE1 coordinate on the RHS of the latter equation.
+CoordinateLoads are added for the respective \ :ref:`ODE1 <ODE1>`\  coordinate on the RHS of the latter equation.
 
 --------
 
@@ -112,7 +112,7 @@ Note that itemNumber represents the index of the ObjectGenericODE1 object in mbs
      - | integer number \ :math:`i_N`\  of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
    * - | \ ``q``\ 
      - | Vector \ :math:`\in \Rcal^n`\ 
-     - | object coordinates (composed from ODE1 nodal coordinates) in current configuration, without reference values
+     - | object coordinates (composed from \ :ref:`ODE1 <ODE1>`\  nodal coordinates) in current configuration, without reference values
    * - | \returnValue
      - | Vector \ :math:`\in \Rcal^{n}`\ 
      - | returns force vector for object

@@ -193,7 +193,7 @@ The algebraic equations read
 
 
 
-No index 2 case exists, because no time derivative exists for \ :math:`s_{el}`\ . The jacobian matrices for algebraic and ODE2 coordinates read
+No index 2 case exists, because no time derivative exists for \ :math:`s_{el}`\ . The jacobian matrices for algebraic and \ :ref:`ODE2 <ODE2>`\  coordinates read
 
 .. math::
 

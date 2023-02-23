@@ -5,7 +5,7 @@
 MarkerNodeCoordinate
 ====================
 
-A node-Marker attached to a ODE2 coordinate of a node; this marker allows to connect a coordinate-based constraint or connector to a nodal coordinate (also NodeGround); for ODE1 coordinates use MarkerNodeODE1Coordinate.
+A node-Marker attached to a \ :ref:`ODE2 <ODE2>`\  coordinate of a node; this marker allows to connect a coordinate-based constraint or connector to a nodal coordinate (also NodeGround); for \ :ref:`ODE1 <ODE1>`\  coordinates use MarkerNodeODE1Coordinate.
 
 \ **Additional information for MarkerNodeCoordinate**\ :
 

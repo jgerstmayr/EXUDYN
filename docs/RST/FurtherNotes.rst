@@ -13,8 +13,8 @@ After the first development phase (2019-2021), it
 +  is a moderately large (2MB on windows!) multibody library, which can be easily linked to other projects,
 +  contains basic multibody rigid bodies, flexible bodies, joints, contact, etc.,
 +  includes a large Python utility library for convenient building and post processing of models,
-+  allows to efficiently simulate small scale systems (compute 100\,000s of time steps per second for systems with n_{DOF}<10),
-+  allows to efficiently simulate medium scaled systems for problems with n_{DOF} < 1\,000\,000,
++  allows to efficiently simulate small scale systems (compute \ :math:`100\,000`\ s of time steps per second for systems with \ :math:`n_{DOF}<10`\ ),
++  allows to efficiently simulate medium scaled systems for problems with \ :math:`n_{DOF} < 1\,000\,000`\ ,
 +  is a safe and widely accessible module for Python,
 +  allows to add user defined objects and solvers in C++,
 +  allows to add user defined objects and solvers in Python.

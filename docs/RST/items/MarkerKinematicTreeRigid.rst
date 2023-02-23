@@ -33,6 +33,18 @@ The item VMarkerKinematicTreeRigid has the following parameters:
   | set true, if item is shown in visualization and false if it is not shown
 
 
+----------
+
+.. _description-markerkinematictreerigid:
+
+DESCRIPTION of MarkerKinematicTreeRigid
+---------------------------------------
+
+Marker quantities
+-----------------
+
+More information will be added later. The marker computes jacobians according to \ ``Jacobian``\  in \ ``class Robot``\ .
+
 
 
 \ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 

@@ -5,7 +5,7 @@
 Node1D
 ======
 
-A node with one ODE2 coordinate for one dimensional (1D) problems; use e.g. for scalar dynamic equations (Mass1D) and mass-spring-damper mechanisms, representing either translational or rotational degrees of freedom: in most cases, Node1D is equivalent to NodeGenericODE2 using one coordinate, however, it offers a transformation to 3D translational or rotational motion and allows to couple this node to 2D or 3D bodies.
+A node with one \ :ref:`ODE2 <ODE2>`\  coordinate for one dimensional (1D) problems; use e.g. for scalar dynamic equations (Mass1D) and mass-spring-damper mechanisms, representing either translational or rotational degrees of freedom: in most cases, Node1D is equivalent to NodeGenericODE2 using one coordinate, however, it offers a transformation to 3D translational or rotational motion and allows to couple this node to 2D or 3D bodies.
 
 \ **Additional information for Node1D**\ :
 
@@ -43,11 +43,11 @@ DESCRIPTION of Node1D
 \ **The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**\ :
 
 * | ``Coordinates``\ : \ :math:`{\mathbf{q}}\cConfig = [q_0]\tp\cConfig`\ 
-  | ODE2 coordinate of node (in vector form)
+  | \ :ref:`ODE2 <ODE2>`\  coordinate of node (in vector form)
 * | ``Coordinates\_t``\ : \ :math:`\dot {\mathbf{q}}\cConfig = [\dot q_0]\tp\cConfig`\ 
-  | ODE2 velocity coordinate of node (in vector form)
+  | \ :ref:`ODE2 <ODE2>`\  velocity coordinate of node (in vector form)
 * | ``Coordinates\_tt``\ : \ :math:`\ddot {\mathbf{q}}\cConfig = [\ddot q_0]\tp\cConfig`\ 
-  | ODE2 acceleration coordinate of node (in vector form)
+  | \ :ref:`ODE2 <ODE2>`\  acceleration coordinate of node (in vector form)
 
 
 \paragraphDetailed information:

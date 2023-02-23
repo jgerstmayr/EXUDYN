@@ -21,7 +21,7 @@ This is the structure which defines a (multibody) system. In C++, there is a Mai
 * | **AssembleCoordinates**\ (): 
   | assemble coordinates: assign computational coordinates to nodes and constraints (algebraic variables)
 * | **AssembleLTGLists**\ (): 
-  | build LTG coordinate lists for objects (used to build global ODE2RHS, MassMatrix, etc. vectors and matrices) and store special object lists (body, connector, constraint, ...)
+  | build \ :ref:`LTG <LTG>`\  coordinate lists for objects (used to build global ODE2RHS, MassMatrix, etc. vectors and matrices) and store special object lists (body, connector, constraint, ...)
 * | **AssembleInitializeSystemCoordinates**\ (): 
   | initialize all system-wide coordinates based on initial values given in nodes
 * | **AssembleSystemInitialize**\ (): 

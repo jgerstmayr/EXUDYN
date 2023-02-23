@@ -12,7 +12,7 @@ import copy #for deep copies
 import io   #for utf-8 encoding
 from autoGenerateHelper import Str2Latex, GenerateLatexStrKeywordExamples, ExtractExamplesWithKeyword, \
                                RSTheaderString, RSTlabelString, ExtractLatexCommand, FindMatchingBracket, ReplaceWords, RSTurl, \
-                               convLatexWords, convLatexCommands, ReplaceLatexCommands
+                               convLatexWords, convLatexCommands, ReplaceLatexCommands, LatexString2RST
                                #ReplaceLatexCommands not imported as it has a special local version
 
 sectionFilesDepth = 1 #0=best for pydata theme, 1=best for read the docs theme
@@ -37,7 +37,7 @@ filesParsed=[
 
 undefLabelList = [
     ('Theory: Contact','seccontacttheory'),
-    ('List of Abbreviations','sec-listofabbreviations'),
+    #('List of Abbreviations','sec-listofabbreviations'),
     ##('Render State','sec-renderstate'),
     ##('GraphicsData','sec-graphicsdata'),
     ('Solvers','sec-solvers'),
@@ -149,10 +149,10 @@ def ConvertFile(s):
     
     s = s.replace(r'\pythonstyle\begin{lstlisting}',r'\begin{pytlisting}')
 
-    s=ReplaceLatexCommands(s, convLatexCommands, sectionMarkerText)
-    # print('count begin lstlisting=',s.count(r'\begin{lstlisting}'))
-    # print('count begin pytlisting=',s.count(r'\begin{pytlisting}'))
-    s=ReplaceWords(s, convLatexWords, replaceBraces=False, replaceDoubleBS=True)
+    s = LatexString2RST(s, sectionMarkerText=sectionMarkerText)
+
+    # s=ReplaceLatexCommands(s, convLatexCommands, sectionMarkerText)
+    # s=ReplaceWords(s, convLatexWords, replaceBraces=False, replaceDoubleBS=True)
     
     return s
 
@@ -381,8 +381,9 @@ Exudyn documentation
    docs/RST/structures/StructuresAndSettingsIndex.rst
 
 .. toctree::
-   :caption: Issue Tracker
+   :caption: Misc
    
+   docs/RST/Abbreviations
    docs/trackerlogRST
 
 Indices and tables
@@ -459,42 +460,64 @@ Indices and tables
             file.close()
 
 
-    #print('sections list:', sectionsList)
-    # print('files list:', filesList)
-    
-    # for i, item in enumerate(sectionsList):
-    #     print('WRITE: section'+item[0]+':',SectionNameToFileName(item[1]))
-        
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#create abbreviations for latex and RST:
+abbrvDict={
+    '2D':'two dimensions or planar',
+    '3D':'three dimensions or spatial',
+    'abs':'absolute (e.g., absolute error), absolute value',
+    'AE':'algebraic equations',
+    'CMS':'component mode synthesis',
+    'coeffs':'coefficients',
+    'COM':'center of mass',
+    'EOM':'equations of motion',
+    'EP':'Euler parameters',
+    'FFRF':'floating frame of reference formulation',
+    'HT':'homogeneous transformation',
+    'LHS':'Left-Hand-Side (of equation)',
+    'LTG':'local-to-global',
+    'mbs':'multibody system',
+    'min':'minimum',
+    'max':'maximum',
+    'ODE':'ordinary differential equation',
+    'ODE1':'first order ordinary differential equations',
+    'ODE2':'second order ordinary differential equations',
+    'pos':'position',
+    'quad':'quadrangle, polygon with 4 vertices',
+    'rel':'relative (e.g., relative error)',
+    'RHS':'Right-Hand-Side (of equation)',
+    'Rot':'rotation',
+    'Rxyz':'rotation parameterization: consecutive rotations around x, y and z-axis (Tait-Bryan)',
+    'STL':'STereoLithography',
+    'T66':'Pl\"ucker transformation',
+    'trig':'triangle (in graphics)',
+}
+
+abbrvTex = ''
+abbrvRST = """
+.. _sec-listofabbreviations:
+
+=====================
+List of Abbreviations
+=====================
+
+"""
+for key, value in abbrvDict.items():
+    abbrvTex += '\\acro{'+key+'}{'+value+'}\n' 
+    abbrvRST += '.. _'+key+':\n\n'
+    s=ReplaceWords(value, convLatexWords)
+    abbrvRST += '\\ **'+key+'**\\ : '+ s + '\n\n'
+
+
+file=open(sourceDir+'abbreviations.tex','w')  
+file.write(abbrvTex)
+file.close()
+
+file=open(destDir+rstFolder+'Abbreviations.rst','w')  
+file.write(abbrvRST)
+file.close()
 
 
 
 
-    # #++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    # #create index ==> NOT NEEDED
-    # if False:
-    #     import re
-        
-    #     regex = re.compile('[^a-zA-Z _]') #only letters and 
-    #     sRST1 = sRST.replace('\n',' ').replace('.',' ').replace('/',' ').replace('\\',' ').replace(',',' ').replace(';',' ').replace('-',' ')
-    #     sRST1 = sRST1.replace('(',' ').replace(')',' ')
-    #     sRST2 = regex.sub('', sRST1)
-    #     listIndex = sRST2.split(' ')
-    
-    #     listIndex2 = []
-    #     previous = ''
-    #     for i, text in enumerate(listIndex):
-    #         if text != '' and len(text) >= 10:
-    #             listIndex2 += [text.lower()]
-    
-    #     listIndex2.sort()
-    #     listIndex3 = []
-    #     for i, text in enumerate(listIndex2):
-    #         if text.lower() != previous:
-    #             previous = text.lower()
-    #             listIndex3 += [previous]
-                
-    #     print('index size=', len(listIndex3))
-    
-    #     sListIndex = ''
-    #     for item in listIndex3:
-    #         sListIndex += '   single: '+item+'\n'

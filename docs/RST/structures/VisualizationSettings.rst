@@ -815,7 +815,7 @@ VSettingsInteractive has the following items:
 * | **selectionRightMouse** [type = bool, default = True]:
   | \ ``SC.visualizationSettings.interactive.selectionRightMouse``\ 
   | True: right mouse click on items and show dictionary (read only!)
-* | **selectionRightMouseGraphicsData** [type = \tabnewline bool, default = False]:
+* | **selectionRightMouseGraphicsData** [type = bool, default = False]:
   | \ ``SC.visualizationSettings.interactive.selectionRightMouseGraphicsData``\ 
   | True: right mouse click on items also shows GraphicsData information for inspectation (may sometimes be very large and may not fit into dialog for large graphics objects!)
 * | **trackMarker** [type = Int, default = -1]:

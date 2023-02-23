@@ -33,6 +33,69 @@ The item VLoadCoordinate has the following parameters:
   | set true, if item is shown in visualization and false if it is not shown
 
 
+----------
+
+.. _description-loadcoordinate:
+
+DESCRIPTION of LoadCoordinate
+-----------------------------
+
+Details
+-------
+
+The scalar \ ``load``\  is applied on a coordinate defined by a Marker of type 'Coordinate', e.g., \ ``MarkerNodeCoordinate``\ .
+This can be used to create simple 1D problems, or to simply apply a translational force on a Node or even a torque
+on a rotation coordinate (but take care for its meaning).
+
+--------
+
+\ **Userfunction**\ : ``loadUserFunction(mbs, t, load)`` 
+
+
+A user function, which computes the scalar load depending on time and the object's \ ``load``\  parameter.
+
+.. list-table:: \ 
+   :widths: auto
+   :header-rows: 1
+
+   * - | arguments / return
+     - | type or size
+     - | description
+   * - | \ ``mbs``\ 
+     - | MainSystem
+     - | provides MainSystem mbs to which load belongs
+   * - | \ ``t``\ 
+     - | Real
+     - | current time in mbs 
+   * - | \ ``load``\ 
+     - | Real
+     - | \ :math:`{\mathbf{b}}`\  copied from object; WARNING: this parameter does not work in combination with static computation, as it is changed by the solver over step time
+   * - | \returnValue
+     - | Real
+     - | computed load
+
+
+--------
+
+\ **User function example**\ :
+
+
+
+.. code-block:: python
+
+    from math import sin, cos, pi
+    #this example uses the object's stored parameter load to compute a time-dependent load
+    def UFload(mbs, t, load): 
+        return load*sin(10*(2*pi)*t)
+
+    n0=mbs.AddNode(Point())
+    nodeMarker = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n0,coordinate=0))
+    mbs.AddLoad(LoadCoordinate(markerNumber = markerCoordinate,
+                               load = 10,
+                               loadUserFunction = UFload))
+
+
+
 
 
 \ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 

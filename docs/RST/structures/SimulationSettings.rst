@@ -29,7 +29,7 @@ SolutionSettings has the following items:
   | filename and (relative) path of solution file (coordinatesSolutionFile) containing all multibody system coordinates versus time; directory will be created if it does not exist; character encoding of string is up to your filesystem, but for compatibility, it is recommended to use letters, numbers and '_' only; filename ending will be added automatically if not provided: .txt in case of text mode and .sol in case of binary solution files (binarySolutionFile=True)
 * | **exportAccelerations** [type = bool, default = True]:
   | \ ``simulationSettings.solutionSettings.exportAccelerations``\ 
-  | add ODE2 accelerations to solution file (coordinatesSolutionFile)
+  | add \ :ref:`ODE2 <ODE2>`\  accelerations to solution file (coordinatesSolutionFile)
 * | **exportAlgebraicCoordinates** [type = bool, default = True]:
   | \ ``simulationSettings.solutionSettings.exportAlgebraicCoordinates``\ 
   | add algebraicCoordinates (=Lagrange multipliers) to solution file (coordinatesSolutionFile)
@@ -41,7 +41,7 @@ SolutionSettings has the following items:
   | add coordinatesODE1_t to solution file (coordinatesSolutionFile)
 * | **exportVelocities** [type = bool, default = True]:
   | \ ``simulationSettings.solutionSettings.exportVelocities``\ 
-  | add ODE2 velocities to solution file (coordinatesSolutionFile)
+  | add \ :ref:`ODE2 <ODE2>`\  velocities to solution file (coordinatesSolutionFile)
 * | **flushFilesDOF** [type = PInt, default = 10000]:
   | \ ``simulationSettings.solutionSettings.flushFilesDOF``\ 
   | number of DOF, above which solution file (coordinatesSolutionFile) buffers are always flushed, irrespectively of whether flushFilesImmediately is set True or False (see also flushFilesImmediately); for larger files, writing takes so much time that flushing does not add considerable time
@@ -108,12 +108,12 @@ Settings for numerical differentiation of a function (needed for computation of 
 
 NumericalDifferentiationSettings has the following items:
 
-* | **addReferenceCoordinatesToEpsilon** [type = \tabnewline bool, default = False]:
+* | **addReferenceCoordinatesToEpsilon** [type = bool, default = False]:
   | \ ``simulationSettings.timeIntegration.newton.numericalDifferentiation.addReferenceCoordinatesToEpsilon``\ , \ ``simulationSettings.staticSolver.newton.numericalDifferentiation.addReferenceCoordinatesToEpsilon``\ 
-  | True: for the size estimation of the differentiation parameter, the reference coordinate \ :math:`q^{Ref}_i`\  is added to ODE2 coordinates --> see; False: only the current coordinate is used for size estimation of the differentiation parameter
+  | True: for the size estimation of the differentiation parameter, the reference coordinate \ :math:`q^{Ref}_i`\  is added to \ :ref:`ODE2 <ODE2>`\  coordinates --> see; False: only the current coordinate is used for size estimation of the differentiation parameter
 * | **doSystemWideDifferentiation** [type = bool, default = False]:
   | \ ``simulationSettings.timeIntegration.newton.numericalDifferentiation.doSystemWideDifferentiation``\ , \ ``simulationSettings.staticSolver.newton.numericalDifferentiation.doSystemWideDifferentiation``\ 
-  | True: system wide differentiation (e.g. all ODE2 equations w.r.t. all ODE2 coordinates); False: only local (object) differentiation
+  | True: system wide differentiation (e.g. all \ :ref:`ODE2 <ODE2>`\  equations w.r.t. all \ :ref:`ODE2 <ODE2>`\  coordinates); False: only local (object) differentiation
 * | **forAE** [type = bool, default = False]:
   | \ ``simulationSettings.timeIntegration.newton.numericalDifferentiation.forAE``\ , \ ``simulationSettings.staticSolver.newton.numericalDifferentiation.forAE``\ 
   | flag (true/false); false = perform direct computation of jacobian for algebraic equations (AE), true = use numerical differentiation; as there must always exist an analytical implemented jacobian for AE, 'true' should only be used for verification
@@ -183,18 +183,18 @@ NewtonSettings has the following items:
 * | **maxModifiedNewtonIterations** [type = UInt, default = 8]:
   | \ ``simulationSettings.timeIntegration.newton.maxModifiedNewtonIterations``\ , \ ``simulationSettings.staticSolver.newton.maxModifiedNewtonIterations``\ 
   | maximum number of iterations for modified Newton (without Jacobian update); after that number of iterations, the modified Newton method gets a jacobian update and is further iterated
-* | **maxModifiedNewtonRestartIterations** [type = \tabnewline UInt, default = 7]:
+* | **maxModifiedNewtonRestartIterations** [type = UInt, default = 7]:
   | \ ``simulationSettings.timeIntegration.newton.maxModifiedNewtonRestartIterations``\ , \ ``simulationSettings.staticSolver.newton.maxModifiedNewtonRestartIterations``\ 
   | maximum number of iterations for modified Newton after aJacobian update; after that number of iterations, the full Newton method is started for this step
 * | **modifiedNewtonContractivity** [type = PReal, default = 0.5]:
   | \ ``simulationSettings.timeIntegration.newton.modifiedNewtonContractivity``\ , \ ``simulationSettings.staticSolver.newton.modifiedNewtonContractivity``\ 
   | maximum contractivity (=reduction of error in every Newton iteration) accepted by modified Newton; if contractivity is greater, a Jacobian update is computed
-* | **modifiedNewtonJacUpdatePerStep** [type = \tabnewline bool, default = False]:
+* | **modifiedNewtonJacUpdatePerStep** [type = bool, default = False]:
   | \ ``simulationSettings.timeIntegration.newton.modifiedNewtonJacUpdatePerStep``\ , \ ``simulationSettings.staticSolver.newton.modifiedNewtonJacUpdatePerStep``\ 
   | True: compute Jacobian at every time step, but not in every iteration (except for bad convergence ==> switch to full Newton)
 * | **newtonResidualMode** [type = UInt, default = 0]:
   | \ ``simulationSettings.timeIntegration.newton.newtonResidualMode``\ , \ ``simulationSettings.staticSolver.newton.newtonResidualMode``\ 
-  | 0 ... use residual for computation of error (standard); 1 ... use ODE2 and ODE1 newton increment for error (set relTol and absTol to same values!) ==> may be advantageous if residual is zero, e.g., in kinematic analysis; TAKE CARE with this flag
+  | 0 ... use residual for computation of error (standard); 1 ... use \ :ref:`ODE2 <ODE2>`\  and \ :ref:`ODE1 <ODE1>`\  newton increment for error (set relTol and absTol to same values!) ==> may be advantageous if residual is zero, e.g., in kinematic analysis; TAKE CARE with this flag
 * | **relativeTolerance** [type = UReal, default = 1e-8]:
   | \ ``simulationSettings.timeIntegration.newton.relativeTolerance``\ , \ ``simulationSettings.staticSolver.newton.relativeTolerance``\ 
   | relative tolerance of residual for Newton (general goal of Newton is to decrease the residual by this factor)
@@ -255,10 +255,10 @@ Settings for generalized-alpha, implicit trapezoidal or Newmark time integration
 
 ExplicitIntegrationSettings has the following items:
 
-* | **computeEndOfStepAccelerations** [type = \tabnewline bool, default = True]:
+* | **computeEndOfStepAccelerations** [type = bool, default = True]:
   | \ ``simulationSettings.timeIntegration.explicitIntegration.computeEndOfStepAccelerations``\ 
   | accelerations are computed at stages of the explicit integration scheme; if the user needs accelerations at the end of a step, this flag needs to be activated; if True, this causes a second call to the RHS of the equations, which may DOUBLE COMPUTATIONAL COSTS for one-step-methods; if False, the accelerations are re-used from the last stage, being slightly different
-* | **computeMassMatrixInversePerBody** [type = \tabnewline bool, default = False]:
+* | **computeMassMatrixInversePerBody** [type = bool, default = False]:
   | \ ``simulationSettings.timeIntegration.explicitIntegration.computeMassMatrixInversePerBody``\ 
   | If true, the solver assumes the bodies to be independent and computes the inverse of the mass matrix for all bodies independently; this may lead to WRONG RESULTS, if bodies share nodes, e.g., two MassPoint objects put on the same node or a beam with a mass point attached at a shared node; however, it may speed up explicit time integration for large systems significantly (multi-threaded)
 * | **dynamicSolverType** [type = DynamicSolverType, default = DynamicSolverType::DOPRI5]:
@@ -306,7 +306,7 @@ TimeIntegrationSettings has the following items:
 * | **adaptiveStepIncrease** [type = UReal, default = 2]:
   | \ ``simulationSettings.timeIntegration.adaptiveStepIncrease``\ 
   | Multiplicative factor (MUST BE > 1) for step size to increase after previous step reduction due to discontinuousIteration or Newton errors
-* | **adaptiveStepRecoveryIterations** [type = \tabnewline UInt, default = 7]:
+* | **adaptiveStepRecoveryIterations** [type = UInt, default = 7]:
   | \ ``simulationSettings.timeIntegration.adaptiveStepRecoveryIterations``\ 
   | Number of max. (Newton iterations + discontinuous iterations) at which a step increase is considered; in order to immediately increase steps after reduction, chose a high value
 * | **adaptiveStepRecoverySteps** [type = UInt, default = 10]:
@@ -387,7 +387,7 @@ StaticSolverSettings has the following items:
 * | **adaptiveStepIncrease** [type = UReal, default = 2]:
   | \ ``simulationSettings.staticSolverSettings.adaptiveStepIncrease``\ 
   | Multiplicative factor (MUST BE > 1) for step size to increase after previous step reduction due to discontinuousIteration or Newton errors
-* | **adaptiveStepRecoveryIterations** [type = \tabnewline UInt, default = 7]:
+* | **adaptiveStepRecoveryIterations** [type = UInt, default = 7]:
   | \ ``simulationSettings.staticSolverSettings.adaptiveStepRecoveryIterations``\ 
   | Number of max. (Newton iterations + discontinuous iterations) at which a step increase is considered; in order to immediately increase steps after reduction, chose a high value
 * | **adaptiveStepRecoverySteps** [type = UInt, default = 4]:
@@ -413,7 +413,7 @@ StaticSolverSettings has the following items:
   | number of load steps; if numberOfLoadSteps=1, no load steps are used and full forces are applied at once
 * | **stabilizerODE2term** [type = UReal, default = 0]:
   | \ ``simulationSettings.staticSolverSettings.stabilizerODE2term``\ 
-  | add mass-proportional stabilizer term in ODE2 part of jacobian for stabilization (scaled ), e.g. of badly conditioned problems; the diagnoal terms are scaled with \ :math:`stabilizer = (1-loadStepFactor^2)`\ , and go to zero at the end of all load steps: \ :math:`loadStepFactor=1`\  -> \ :math:`stabilizer = 0`\ 
+  | add mass-proportional stabilizer term in \ :ref:`ODE2 <ODE2>`\  part of jacobian for stabilization (scaled ), e.g. of badly conditioned problems; the diagnoal terms are scaled with \ :math:`stabilizer = (1-loadStepFactor^2)`\ , and go to zero at the end of all load steps: \ :math:`loadStepFactor=1`\  -> \ :math:`stabilizer = 0`\ 
 * | **stepInformation** [type = UInt, default = 67]:
   | \ ``simulationSettings.staticSolverSettings.stepInformation``\ 
   | add up the following binary flags: 0 ... show only step time, 1 ... show time to go, 2 ... show newton iterations (Nit) per step or period, 4 ... show Newton jacobians (jac) per step or period, 8 ... show discontinuous iterations (Dit) per step or period, 16 ... show step size (dt), 32 ... show CPU time spent; 64 ... show adaptive step reduction warnings; 128 ... show step increase information; 1024 ... show every time step; time is usually shown in fractions of seconds (s), hours (h), or days
@@ -471,7 +471,7 @@ Parallel has the following items:
 * | **multithreadedLLimitLoads** [type = PInt, default = 20]:
   | \ ``simulationSettings.parallel.multithreadedLLimitLoads``\ 
   | compute loads multi-threaded; this is the limit number of loads from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)
-* | **multithreadedLLimitMassMatrices** [type = \tabnewline PInt, default = 20]:
+* | **multithreadedLLimitMassMatrices** [type = PInt, default = 20]:
   | \ ``simulationSettings.parallel.multithreadedLLimitMassMatrices``\ 
   | compute bodies mass matrices multi-threaded; this is the limit number of bodies from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)
 * | **multithreadedLLimitResiduals** [type = PInt, default = 20]:

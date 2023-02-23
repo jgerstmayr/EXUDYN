@@ -205,8 +205,8 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                 pythonName = Str2Latex(parameter['pythonName']) 
                 typeName = Str2Latex(parameter['type'])
                 
-                if len(pythonName)>28: 
-                    typeName = '\\tabnewline ' + typeName
+                # if len(pythonName)>28:  #inside plr.SystemStructuresWriteDefRow
+                #     typeName = '\\tabnewline ' + typeName
                     
                 if parameter['type'] != 'String' and parameter['type'] != 'FileName': #don't do this for file names, because 'f' is erased!
                     defaultValueStr = Str2Latex(defaultValueStr, True)

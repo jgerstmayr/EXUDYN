@@ -2463,11 +2463,11 @@ equations =
       %
       \rowTable{Velocity}{$\LU{0}{\vv}\cConfig(n_i) = \LU{0}{\dot \pRef\cConfig} + \LU{0b}{\Rot}\cConfig (\LU{b}{\dot \qv\indf}\cConfig(n_i) + \LU{b}{\tomega}\cConfig \times \LU{b}{\pv}\cConfig(n_i))$}{global velocity of mesh node $n_i$ including rigid body motion and flexible deformation}
       %
-      \rowTable{Acceleration}{$\LU{0}{\av}\cConfig(n_i) = \LU{0}{\ddot \pRef\cConfig}\cConfig + 
-                              \LU{0b}{\Rot}\cConfig \LU{b}{\ddot \qv\indf}\cConfig(n_i) + 
-                              2\LU{0}{\tomega}\cConfig \times \LU{0b}{\Rot}\cConfig \LU{b}{\dot \qv\indf}\cConfig(n_i) +
-                              \LU{0}{\talpha}\cConfig \times \LU{0}{\pv}\cConfig(n_i)) + 
-                              \LU{0}{\tomega}\cConfig \times (\LU{0}{\tomega}\cConfig \times \LU{0}{\pv}\cConfig(n_i))$}{global acceleration of mesh
+      \rowTable{Acceleration}{$\begin{array}{l} \LU{0}{\av}\cConfig(n_i) = \LU{0}{\ddot \pRef\cConfig}\cConfig \\
+                              + \LU{0b}{\Rot}\cConfig \LU{b}{\ddot \qv\indf}\cConfig(n_i) \\
+                              + 2\LU{0}{\tomega}\cConfig \times \LU{0b}{\Rot}\cConfig \LU{b}{\dot \qv\indf}\cConfig(n_i) \\
+                              + \LU{0}{\talpha}\cConfig \times \LU{0}{\pv}\cConfig(n_i) \\
+                              + \LU{0}{\tomega}\cConfig \times (\LU{0}{\tomega}\cConfig \times \LU{0}{\pv}\cConfig(n_i)) \end{array}$}{global acceleration of mesh
                               node $n_i$ including rigid body motion and flexible deformation; note that $\LU{0}{\pv}\cConfig(n_i) = \LU{0b}{\Rot} \LU{b}{\pv}\cConfig(n_i)$}
       %
       \rowTable{DisplacementLocal}{$\LU{b}{\dv}\cConfig(n_i) = \LU{b}{\pv}\cConfig(n_i) - \LU{b}{\xv}\cRef(n_i)$}{local displacement of mesh node $n_i$, representing the flexible deformation within the body frame; note that $\LU{0}{\uv}\cConfig \neq \LU{0b}{\Rot}\LU{b}{\dv}\cConfig$ !}
@@ -2605,7 +2605,6 @@ equations =
     The detailed equations of motion for this element can be found in \cite{ZwoelferGerstmayr2020}.
 
     The quadratic velocity vector follows as
-    \newcommand{\omegaBDtilde}{\LU{b}{\tilde \tomega_\mathrm{bd}}}
     \be
       \fv_{v}(\qv,\dot \qv) = \vr
       {-\LU{0b}{\Rot} \tPhi\indt\tp \LU{b}{\Mm}\left( \omegaBDtilde \omegaBDtilde \LU{b}{\pv} + 
@@ -2844,6 +2843,7 @@ equations =
     The notation of kinematics quantities follows the floating frame of reference idea with
     quantities given in the tables above and sketched in \fig{fig:ObjectFFRFreducedOrder:mesh}.
     %++++++++++++++++++++++++
+    \ignoreRST{
     \begin{figure}[tbph]
       \begin{center}
       \includegraphics[width=8cm]{figures/ObjectFFRFsketch.pdf}
@@ -2851,6 +2851,14 @@ equations =
       \caption{Floating frame of reference with exemplary position of a mesh node $i$.}
         \label{fig:ObjectFFRFreducedOrder:mesh}
     \end{figure}
+    }
+    \onlyRST{
+    .. _fig-objectffrfreducedorder-mesh:
+    .. figure:: docs/theDoc/figures/ObjectFFRFsketch.png
+       :width: 400
+
+       Floating frame of reference with exemplary position of a mesh node *i* 
+    }
     %++++++++++++++++++++++++
 
                        
@@ -2865,11 +2873,10 @@ equations =
     \texttt{FEMinterface.ComputeHurtyCraigBamptonModes(...)}. For details on model order reduction and component mode synthesis, see \refSection{sec:theory:CMS}.
     In many applications, $n_m$ typically ranges between 10 and 50, but also beyond -- depending on the desired accuracy of the model.
     
-    \newcommand{\qvOFRO}{\qv} %older version: \qvOFRO
     The \texttt{ObjectFFRF} coordinates and \eqs{eq:ObjectFFRF:eom}\footnote{this is not done for user functions and \texttt{forceVector}} can be reduced by the matrix $\Hm \in \Rcal^{(n\indf+n\indrigid) \times n_{ODE2}}$,
     \be
       \qv_{FFRF} = \vr{\qv\indt}{\ttheta}{\LU{b}{\qv\indf}} = \mr{\ImThree}{\Null}{\Null} {\Null}{\Im\indr}{\Null} {\Null}{\Null}{\LU{b}{\tPsi}} \vr{\qv\indt}{\ttheta}{\tzeta}
-        = \Hm \, \qvOFRO
+        = \Hm \, \qv
     \ee
     with the $4\times 4$ identity matrix $\Im\indr$ in case of Euler parameters and the reduced coordinates $\qv$.
     
@@ -2902,15 +2909,15 @@ equations =
     \mysubsubsubsection{Equations of motion}
     Equations of motion, in case that \texttt{computeFFRFterms = True}:
     \bea
-        \left(\Mm_{user}(mbs, t,\qvOFRO,\dot \qvOFRO) + 
-                    \mr{\Mm\indtt}{\Mm\indtr}{\Mm\indtf} {}{\Mm\indrr}{\Mm\indrf} {\mathrm{sym.}}{}{\Mm\indff} \right) \ddot \qvOFRO + 
-                    \mr{0}{0}{0} {0}{0}{0} {0}{0}{\Dm\indff} \dot \qvOFRO + \mr{0}{0}{0} {0}{0}{0} {0}{0}{\Km\indff} \qvOFRO = &&\\ \nonumber
-                    \fv_v(\qvOFRO,\dot \qvOFRO) + \fv_{user}(mbs, t,\qvOFRO,\dot \qvOFRO) &&
+        \left(\Mm_{user}(mbs, t,\qv,\dot \qv) + 
+                    \mr{\Mm\indtt}{\Mm\indtr}{\Mm\indtf} {}{\Mm\indrr}{\Mm\indrf} {\mathrm{sym.}}{}{\Mm\indff} \right) \ddot \qv + 
+                    \mr{0}{0}{0} {0}{0}{0} {0}{0}{\Dm\indff} \dot \qv + \mr{0}{0}{0} {0}{0}{0} {0}{0}{\Km\indff} \qv = &&\\ \nonumber
+                    \fv_v(\qv,\dot \qv) + \fv_{user}(mbs, t,\qv,\dot \qv) &&
     \eea
     \footnote{NOTE that currently the internal (C++) computed terms are zero,
     \be
       \mr{\Mm\indtt}{\Mm\indtr}{\Mm\indtf} {}{\Mm\indrr}{\Mm\indrf} {\mathrm{sym.}}{}{\Mm\indff} = \Null \quad \mathrm{and} \quad
-        \fv_v(\qvOFRO,\dot \qvOFRO) = \Null \eqComma
+        \fv_v(\qv,\dot \qv) = \Null \eqComma
     \ee
     but they are implemented in predefined user functions, see \texttt{FEM.py}, \refSection{sec:FEM:ObjectFFRFreducedOrderInterface:AddObjectFFRFreducedOrderWithUserFunctions}. In near future, these terms will be implemented in C++ and replace the user functions.}
     %
@@ -2934,7 +2941,7 @@ equations =
     \be
       \tzeta \otimes \Im = \vr{\zeta_0 \Im}{\vdots}{\zeta_{m-1} \Im}
     \ee
-    The quadratic velocity vector $\fv_v(\qvOFRO,\dot \qvOFRO) = \left[ \fv_{v\mathrm{t}}\tp,\; \fv_{v\mathrm{r}}\tp,\; \fv_{v\mathrm{f}}\tp \right]\tp$ reads
+    The quadratic velocity vector $\fv_v(\qv,\dot \qv) = \left[ \fv_{v\mathrm{t}}\tp,\; \fv_{v\mathrm{r}}\tp,\; \fv_{v\mathrm{f}}\tp \right]\tp$ reads
     \bea
       \fv_{v\mathrm{t}} &=& \LU{0b}{\Rot} \LU{b}{\tilde \tomega}\left[ m \LU{b}{\tilde \tchi\indu} + \Mm_{\Phi\indt\!{\widetilde\Psi}} 
                       \left( \tzeta \otimes \Im \right)  \right] \LU{b}{\tomega} + 
@@ -2970,8 +2977,8 @@ equations =
     
     In case that \texttt{computeFFRFterms = False}, the mass terms $\Mm\indtt \ldots \Mm\indff$ are zero (not computed) and
     the quadratic velocity vector $\fv_Q = \Null$.
-    Note that the user functions $\fv_{user}(mbs, t,\qvOFRO,\dot \qvOFRO)$ and 
-    $\Mm_{user}(mbs, t,\qvOFRO,\dot \qvOFRO)$ may be empty (=0). 
+    Note that the user functions $\fv_{user}(mbs, t,\qv,\dot \qv)$ and 
+    $\Mm_{user}(mbs, t,\qv,\dot \qv)$ may be empty (=0). 
     The detailed equations of motion for this element can be found in \cite{ZwoelferGerstmayr2021}.
 
     %+++++++++++++++++++++++++
@@ -4996,8 +5003,8 @@ equations =
            f_{\mu,\mathrm{v}} (|v|-v_\mathrm{reg}) \right), \quad \mathrm{else}
            \end{cases}
       \ee
-      This case does not use a PostNewton iteration (which may be advantageous in constant step size explicit integration, 
-      but may be problematic in implicit integration).\\
+    This case does not use a PostNewton iteration (which may be advantageous in constant step size explicit integration, 
+    but may be problematic in implicit integration).\\
       \item CASE 2: \texttt{frictionProportionalZone != 0} (or \texttt{useLimitStops=True}): \\
       This case is perfectly suited for implicit integration, as it includes special switching variables that help to 
       avoid numerical problems due to switching (e.g., between stick and slip) during a Newton iteration. 
@@ -5532,6 +5539,7 @@ equations =
     simple reeving systems in 3D.
     
     %++++++++++++++++++++++++
+    \ignoreRST{
     \begin{figure}[tbph]
       \begin{center}
       \includegraphics[width=10cm]{figures/CommonTangents3D.pdf}
@@ -5542,6 +5550,14 @@ equations =
       angular velocities $\omega_A$ and $\omega_B$.}
         \label{fig:ReevingSystemSprings:tangents}
     \end{figure}
+    }
+    \onlyRST{
+    .. _fig-reevingsystemsprings-tangents:
+    .. figure:: docs/theDoc/figures/CommonTangents3D.png
+       :width: 500
+
+       Geometry of common tangent for two spatial circles defined by radii $R_A$ and $R_B$ as well as by the normalized axis vectors $\av_A$ and $\av_B$. The tangent is undefined, if one of the axis vectors is parallel to the vector $\cv$, which connects the two center points. The positive rotation sense is indicated by means of the angular velocities $\omega_A$ and $\omega_B$.
+    }
     %++++++++++++++++++++++++
     \mysubsubsubsection{Common tangent of two circles in 3D}
     In order to compute the total length of the rope of the reeving system, the tangent of two arbitrary circles in space needs to be computed.
@@ -6206,6 +6222,11 @@ equations =
         \includegraphics[height=4cm]{figures/ObjectJointRollingDiscSketch.pdf}
     \end{center}
     }
+    \onlyRST{
+    .. image:: docs/theDoc/figures/ObjectJointRollingDiscSketch.png
+       :width: 600
+
+    }
     First, the contact point $\LU{0}{\pv}_{C}$ must be computed.
     With the helper vector,
     \be
@@ -6433,6 +6454,7 @@ equations =
     \end{cases}
     \ee
     acts against the penetration of the ground. The penetration depth $z_{\mathrm{pen}}$ is the z-component of the position vector of the contact point relative to the ground frame ${^0\pv_{\mathrm{C}}}$. 
+    \ignoreRST{
     \begin{figure}[tbph]
     \begin{center}
             \includegraphics[width=10cm]{figures/ConvexRolling.pdf}
@@ -6440,6 +6462,14 @@ equations =
             \label{fig:ObjectContactConvexRoll:sketch}
     \end{center}
     \end{figure}
+    }
+    \onlyRST{
+    .. _fig-objectcontactconvexroll-sketch:
+    .. figure:: docs/theDoc/figures/ConvexRolling.png
+       :width: 600
+
+       Sketch of the roller Dimensions. The rollers radius $r({^bx})$ is described by the polynomial \texttt{coefficientsHull}.
+    }
 
     \noindent
     The revolution results in a velocity of 
@@ -6682,6 +6712,7 @@ equations =
     %\rowTable{marker m1 velocity}{$\LU{0}{\vv}_{m1}$}{}
     \finishTable
     %++++++++++++++++++++++++
+    \ignoreRST{
     \begin{figure}[tbph]
       \begin{center}
       \includegraphics[width=12cm]{figures/ContactFrictionCircleCable2D.pdf}
@@ -6693,6 +6724,14 @@ equations =
                perpendicular.}
         \label{fig:ObjectContactFrictionCircleCable2D:sketch}
     \end{figure}
+    }
+    \onlyRST{
+    .. _fig-objectcontactfrictioncirclecable2d-sketch:
+    .. figure:: docs/theDoc/figures/ContactFrictionCircleCable2D.png
+       :width: 600
+
+       Sketch of cable, contact segments and circle; showing case without contact, $|\mathbf{d}_{g1}| > r$, while contact occurs with $|\mathbf{d}_{g1}| \le r$; the shortest distance vector $\mathbf{d}_{g1}$ is related to segment $s_1$ (which is perpendicular to the the segment line) and $\mathbf{d}_{g2}$ is the shortest distance to the end point of segment $s_2$, not being perpendicular
+    }
     %+++++++++++++++++++++++++++++++++++++++++++++++
     \mysubsubsubsection{Connector forces: contact geometry}
     %
@@ -6784,6 +6823,7 @@ equations =
     For a simple 1D example using this position based approach for friction, see \texttt{Examples/lugreFrictionText.py}, 
     which compares the traditional LuGre friction model \cite{CanudasDeWitEtAl1993} with the position based model with tangential stiffness. 
     %++++++++++++++++++++++++
+    \ignoreRST{
     \begin{figure}[tbph]
       \begin{center}
       \includegraphics[width=8cm]{figures/ContactFrictionCircleCable2DstickingPos.pdf}
@@ -6791,6 +6831,14 @@ equations =
       \caption{Calculation of last sticking position; blue parts mark the sticking position calculated as $x^*_{curStick}$.}
         \label{fig:ObjectContactFrictionCircleCable2D:stickingPos}
     \end{figure}
+    }
+    \onlyRST{
+    .. _fig-objectcontactfrictioncirclecable2d-stickingpos:
+    .. figure:: docs/theDoc/figures/ContactFrictionCircleCable2DstickingPos.png
+       :width: 600
+
+       Calculation of last sticking position; blue parts mark the sticking position calculated as $x^*_{curStick}$.
+    }
     %++++++++++++++++++++++++
     
     Because there is the chance to wind/unwind relative to the (last) sticking position without slipping,
@@ -6962,6 +7010,7 @@ equations =
     We distinguish two cases SN and PWN. If \texttt{useSegmentNormals==True}, we use the SN case, while otherwise the PWN case is used, 
     compare \fig{fig:ObjectContactFrictionCircleCable2D:normals}.
     %++++++++++++++++++++++++
+    \ignoreRST{
     \begin{figure}[tbph]
       \begin{center}
       \includegraphics[width=16cm]{figures/ContactFrictionCircleCable2Dnormals.pdf}
@@ -6970,6 +7019,14 @@ equations =
       note that the \texttt{useSegmentNormals=False} is not appropriate for this setup and would produce highly erroneous forces.}
         \label{fig:ObjectContactFrictionCircleCable2D:normals}
     \end{figure}
+    }
+    \onlyRST{
+    .. _fig-objectcontactfrictioncirclecable2d-normals:
+    .. figure:: docs/theDoc/figures/ContactFrictionCircleCable2Dnormals.png
+       :width: 700
+
+       Choice of normals and tangent vectors for calculation of normal contact forces and tangential (friction) forces; note that the \texttt{useSegmentNormals=False} is not appropriate for this setup and would produce highly erroneous forces.
+    }
     %++++++++++++++++++++++++
     
     Segment normals (=SN) lead to always good approximations for normal directions, irrespectively of short or extremely long segments as compared to the circle. However, in case of segments that are short as compared to the circle radius, normals computed from the center of the circle to the segment points (=PWN) are more consistent and produce tangents only in circumferential direction, which may improve behavior in some applications. The equations for the two cases read:
@@ -8482,7 +8539,7 @@ equations =
     \rowTable{marker position}{$\LU{0}{\pv}_{m} = \sum_i w_i \cdot \LU{0}{\pv_i}$}{current global position which is provided by marker}
     \rowTable{marker velocity}{$\LU{0}{\vv}_{m} = \sum_i w_i \cdot \LU{0}{\vv_i}$}{current global velocity which is provided by marker}
     \finishTable
-%
+    %
     \vspace{6pt}
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \mysubsubsubsection{Marker quantities}
@@ -8501,6 +8558,7 @@ equations =
 
     Note that $\Jm_{m,pos}$ is actually computed by the
     \texttt{ObjectSuperElement} within the function \texttt{GetAccessFunctionSuperElement}.
+    %%RSTCOMPATIBLE
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 miniExample =
@@ -8586,16 +8644,15 @@ equations =
               using weighting for averaging; may not coincide with center point of your idealized joint surface (e.g., midpoint of cylinder), see \fig{fig:MarkerSuperElementRigid:sketch}}
     \rowTable{marker centered mesh node local reference position}{$\LU{r}{\pv^{(i)}\cRef} = \LU{r}{\xv^{(i)}\cRef}- \LU{r}{\xv^\mathrm{avg}\cRef}$}{local reference position of mesh node $k_i$ relative to the center position of marker}
     \rowTable{mesh node local velocity}{$\LU{r}{\vv^{(i)}}$}{current local (within reference frame $r$) velocity of mesh node $k_i$ in object $n_b$}
-
+    %
     \rowTable{super element reference point}{$\LU{0}{\pv}_r$ ($=\LU{0}{\pv}\indt$ in \texttt{ObjectFFRFreduced- Order})}{current position (origin) of super element's floating frame (r), which is zero, if the object does not provide a reference frame (such as GenericODE2)}
     \rowTable{super element rotation matrix}{$\LU{0r}{\Rot}$}{current rigid body transformation matrix of super element's floating frame (r), which is the identity matrix, if the object does not provide a reference frame (such as GenericODE2)}
     \rowTable{super element angular velocity}{$\LU{r}{\tomega_r}$}{current local angular velocity of super element's floating frame (r), which is zero, if the object does not provide a reference frame (such as GenericODE2)}
 
-    \rowTable{marker position}{$\LU{0}{\pv}_{m} \!=\! \LU{0}{\pv}_r + \LU{0r}{\Rot} \left(\LU{r}{\ov\cRef}\! +\! \sum_i w_i \cdot \LU{r}{\pv^{(i)}} \right)$}
-             {current global position which is provided by marker; note offset $\LU{r}{\ov\cRef}$ added, if used as a correction of marker mesh nodes}
+    \rowTable{marker position}{$\LU{0}{\pv}_{m} \!=\! \LU{0}{\pv}_r + \LU{0r}{\Rot} \left(\LU{r}{\ov\cRef}\! +\! \sum_i w_i \cdot \LU{r}{\pv^{(i)}} \right)$}{
+              current global position which is provided by marker; note offset $\LU{r}{\ov\cRef}$ added, if used as a correction of marker mesh nodes}
     \rowTable{marker velocity}{$\LU{0}{\vv}_{m} = \LU{0}{\dot \pv}_r $ $+ \LU{0r}{\Rot} \left( \LU{r}{\tilde \tomega_r} \left(\LU{r}{\ov\cRef}\! +\! \sum_i w_i \cdot \LU{r}{\pv^{(i)}} \right) + \right.$
-                                                  $\left. \sum_i (w_i \cdot \LU{r}{\dot \uv^{(i)}}) \right)$}
-             {current global velocity which is provided by marker}
+                                                  $\left. \sum_i (w_i \cdot \LU{r}{\dot \uv^{(i)}}) \right)$}{current global velocity which is provided by marker}
                 %\rowTable{marker velocity}{$\LU{0}{\vv}_{m} = \LU{0}{\dot \pv}_r + \LU{0r}{\Rot} \LU{r}{\tilde \tomega_r} \LU{r}{\pv_{0,ref}} +
                 %\LU{0r}{\Rot} \left(\sum_i (w_i \cdot \LU{r}{\vv^{(i)}}) + \LU{r}{\tilde \tomega_r} \sum_i (w_i \cdot \LU{r}{\uv^{(i)}}) \right)$}
                 %{current global velocity which is provided by marker}
@@ -8603,11 +8660,11 @@ equations =
                 %\rowTable{marker rotation matrix}{$\LU{0r}{\Rot}_{m} = \LU{0r}{\Rot} \mr{1}{-\theta_2}{\theta_1}{\theta_2}{1}{-\theta_0}{-\theta_1}{\theta_0}{1}$}{current rotation matrix, which transforms the local marker coordinates and adds the rigid body transformation of floating frames $\LU{0r}{\Rot}$; only valid for small (linearized rotations)!}
     \rowTable{marker rotation matrix}{$\LU{0r}{\Rot}_{m} = \LU{0r}{\Rot} \cdot \mathbf{exp}(\LU{r}{\ttheta}_{m})$}{current rotation matrix, which transforms the local marker coordinates and adds the rigid body transformation of floating frames $\LU{0r}{\Rot}$; uses exponential map for SO3, assumes that $\ttheta$ represents a rotation vector}
     \rowTable{marker local rotation}{$\LU{r}{\ttheta}_{m}$}{current local linearized rotations (rotation vector); for the computation, see below for the standard and alternative approach}
-%    
+    %    
     \rowTable{marker local angular velocity}{$\LU{r}{\tomega}_{m}$}{local angular velocity due to mesh node velocity only; for the computation, see below for the standard and alternative approach}
     \rowTable{marker global angular velocity}{$\LU{0}{\tomega}_{m} = \LU{0}{\tomega_{r}} + \LU{0r}{\Rot} \LU{r}{\tomega}_{m}$}{current global angular velocity}
     \finishTable
-%
+    %
     \vspace{6pt}
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \mysubsubsubsection{Marker background}
@@ -8617,6 +8674,7 @@ equations =
 
     For more information on the various quantities and their coordinate systems, see table above and \fig{fig:MarkerSuperElementRigid:sketch}.
     %++++++++++++++++++++++++
+    \ignoreRST{
     \begin{figure}[tbph]
       \begin{center}
       \includegraphics[width=10cm]{figures/MarkerSuperElementRigid.pdf}
@@ -8626,6 +8684,14 @@ equations =
                and the averaged of the averaged local reference position.}
         \label{fig:MarkerSuperElementRigid:sketch}
     \end{figure}
+    }
+    \onlyRST{
+    .. _fig-markersuperelementrigid-sketch:
+    .. figure:: docs/theDoc/figures/MarkerSuperElementRigid.png
+       :width: 400
+
+       Sketch of marker nodes, exemplary node $i$, reference coordinates and marker coordinate system; note the difference of the center of the marker 'surface' (rectangle) marked with the red cross, and the averaged of the averaged local reference position.
+    }
     %++++++++++++++++++++++++
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \mysubsubsubsection{Marker quantities}
@@ -8751,13 +8817,14 @@ equations =
       \LU{0}{\Jm_{m,rot,alt}^{FFRFreduced}} = \left[\Null,\; \LU{0r}{\Rot} \LU{r}{\Gm_{local}},\; 
                                                 \LU{0r}{\Rot} \Wm^{-1} \sum_i w_i \LU{r}{\tilde \pv_{ref}^{(i)}} \LU{r}{\Jm_{pos,f}^{(i)}} \right]
     \ee
-    see also the descriptions given after \eq{eq:MarkerSuperElementRigid:jacRotStandard} in the `standard' approach.
+    see also the descriptions given after \eq{eq:MarkerSuperElementRigid:jacRotStandard} in the 'standard' approach.
     %
     \vspace{12pt}\\
     \noindent {\bf EXAMPLE for marker on body 4, mesh nodes 10,11,12,13}:\vspace{6pt}\\
     \texttt{MarkerSuperElementRigid(bodyNumber = 4, meshNodeNumber = [10, 11, 12, 13], weightingFactors = [0.25, 0.25, 0.25, 0.25], referencePosition=[0,0,0])}
     \vspace{12pt}\\
     \noindent For detailed examples, see \texttt{TestModels}.
+    %%RSTCOMPATIBLE
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
@@ -8804,47 +8871,47 @@ mainParentClass = MainMarker
 visuParentClass = VisualizationMarker
 classType = Marker
 equations =
-%    {\bf Definition of marker quantities}:
-%    \startTable{intermediate variables}{symbol}{description}
-%    \rowTable{marker position}{$\LU{0}{\pv}_{m} \!=\! \LU{0}{\pv}_r + \LU{0r}{\Rot} \left(\LU{r}{\ov\cRef}\! +\! \sum_i w_i \cdot \LU{r}{\pv^{(i)}} \right)$}
-%             {current global position which is provided by marker; note offset $\LU{r}{\ov\cRef}$ added, if used as a correction of marker mesh nodes}
-%    \rowTable{marker velocity}{$\LU{0}{\vv}_{m} = \LU{0}{\dot \pv}_r + \LU{0r}{\Rot} \left( \LU{r}{\tilde \tomega_r} \sum_i (w_i \cdot \LU{r}{\pv^{(i)}}) + \right.
-%             \left. \sum_i (w_i \cdot \LU{r}{\dot \uv^{(i)}}) \right)$}
-%             {current global velocity which is provided by marker}
-%    \rowTable{marker rotation matrix}{$\LU{0r}{\Rot}_{m} = \LU{0r}{\Rot} \cdot \mathbf{exp}(\LU{r}{\ttheta}_{m})$}{current rotation matrix, which transforms the local marker coordinates and adds the rigid body transformation of floating frames $\LU{0r}{\Rot}$; uses exponential map for SO3, assumes that $\ttheta$ represents a rotation vector}
-%    \rowTable{marker local rotation}{$\LU{r}{\ttheta}_{m}$}{current local linearized rotations (rotation vector); for the computation, see below for the standard and alternative approach}
-%    
-%    \rowTable{marker local angular velocity}{$\LU{r}{\tomega}_{m}$}{local angular velocity due to mesh node velocity only; for the computation, see below for the standard and alternative approach}
-%    \rowTable{marker global angular velocity}{$\LU{0}{\tomega}_{m} = \LU{0}{\tomega_{r}} + \LU{0r}{\Rot} \LU{r}{\tomega}_{m}$}{current global angular velocity}
-%    \finishTable
-%
-%    \vspace{6pt}
+    %    {\bf Definition of marker quantities}:
+    %    \startTable{intermediate variables}{symbol}{description}
+    %    \rowTable{marker position}{$\LU{0}{\pv}_{m} \!=\! \LU{0}{\pv}_r + \LU{0r}{\Rot} \left(\LU{r}{\ov\cRef}\! +\! \sum_i w_i \cdot \LU{r}{\pv^{(i)}} \right)$}
+    %             {current global position which is provided by marker; note offset $\LU{r}{\ov\cRef}$ added, if used as a correction of marker mesh nodes}
+    %    \rowTable{marker velocity}{$\LU{0}{\vv}_{m} = \LU{0}{\dot \pv}_r + \LU{0r}{\Rot} \left( \LU{r}{\tilde \tomega_r} \sum_i (w_i \cdot \LU{r}{\pv^{(i)}}) + \right.
+    %             \left. \sum_i (w_i \cdot \LU{r}{\dot \uv^{(i)}}) \right)$}
+    %             {current global velocity which is provided by marker}
+    %    \rowTable{marker rotation matrix}{$\LU{0r}{\Rot}_{m} = \LU{0r}{\Rot} \cdot \mathbf{exp}(\LU{r}{\ttheta}_{m})$}{current rotation matrix, which transforms the local marker coordinates and adds the rigid body transformation of floating frames $\LU{0r}{\Rot}$; uses exponential map for SO3, assumes that $\ttheta$ represents a rotation vector}
+    %    \rowTable{marker local rotation}{$\LU{r}{\ttheta}_{m}$}{current local linearized rotations (rotation vector); for the computation, see below for the standard and alternative approach}
+    %    
+    %    \rowTable{marker local angular velocity}{$\LU{r}{\tomega}_{m}$}{local angular velocity due to mesh node velocity only; for the computation, see below for the standard and alternative approach}
+    %    \rowTable{marker global angular velocity}{$\LU{0}{\tomega}_{m} = \LU{0}{\tomega_{r}} + \LU{0r}{\Rot} \LU{r}{\tomega}_{m}$}{current global angular velocity}
+    %    \finishTable
+    %
+    %    \vspace{6pt}
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \mysubsubsubsection{Marker quantities}
     More information will be added later. The marker computes jacobians according to \texttt{Jacobian} in \texttt{class Robot}.
-%    The marker provides a 'position' jacobian, which is the derivative of the global marker velocity w.r.t.\ the 
-%    object velocity coordinates $\dot \qv_{n_b}$,
-%    \be
-%      \LU{0}{\Jm_{m,pos}} = \frac{\partial \LU{0}{\vv}_{m}}{\dot \qv_{n_b}} \eqDot
-%    \ee
-%    In case of \texttt{ObjectGenericODE2}, assuming pure displacement based nodes,
-%    the jacobian will consist of zeros and unit matrices $\Im$ ,
-%    \be
-%      \LU{0}{\Jm_{m,pos}^{GenericODE2}} = \frac{\partial \LU{0}{\vv}_{m}}{\dot \qv_{n_b}} 
-%      = \left[ \Null,\; \ldots,\; \Null,\; \Im,\; \Null,\; \ldots,\; \Null,\; \Im,\; \Null,\; \ldots,\; \Null \right]\eqComma
-%    \ee
-%    in which the $\Im$ matrices are placed at the according indices of marker nodes.
-
-%    In case of \texttt{ObjectFFRFreducedOrder}, this jacobian is computed as weighted sum 
-%    of the position jacobians, see \texttt{ObjectFFRFreducedOrder},
-%    \be
-%      \LU{0}{\Jm_{m,pos}^{FFRFreduced}} = \frac{\partial \LU{0}{\vv}_{m}}{\dot \qv_{n_b}}
-%      = \sum_i w_i \LU{0}{\Jm^{(i)}_\mathrm{pos}}
-%      = \left[\Im, \; -\LU{0r}{\Rot} \left(\sum_i(\LU{r}{\tilde\uv\indf^{(i)}} + \LU{r}{\tilde\xv^{(i)}\cRef}) \right) \LU{r}{\Gm},\;
-%              \sum_i w_i \LU{0r}{\Rot} \vr{\LU{r}{\tPsi_{r=3i}\tp}}{\LU{r}{\tPsi_{r=3i+1}\tp}}{\LU{r}{\tPsi_{r=3i+2}\tp}} \right] \eqDot
-%    \ee
-%    In \texttt{ObjectFFRFreducedOrder}, the jacobian usually affects all reduced coordinates.
-%
+    %%RSTCOMPATIBLE
+    %    The marker provides a 'position' jacobian, which is the derivative of the global marker velocity w.r.t.\ the 
+    %    object velocity coordinates $\dot \qv_{n_b}$,
+    %    \be
+    %      \LU{0}{\Jm_{m,pos}} = \frac{\partial \LU{0}{\vv}_{m}}{\dot \qv_{n_b}} \eqDot
+    %    \ee
+    %    In case of \texttt{ObjectGenericODE2}, assuming pure displacement based nodes,
+    %    the jacobian will consist of zeros and unit matrices $\Im$ ,
+    %    \be
+    %      \LU{0}{\Jm_{m,pos}^{GenericODE2}} = \frac{\partial \LU{0}{\vv}_{m}}{\dot \qv_{n_b}} 
+    %      = \left[ \Null,\; \ldots,\; \Null,\; \Im,\; \Null,\; \ldots,\; \Null,\; \Im,\; \Null,\; \ldots,\; \Null \right]\eqComma
+    %    \ee
+    %    in which the $\Im$ matrices are placed at the according indices of marker nodes.
+    %    In case of \texttt{ObjectFFRFreducedOrder}, this jacobian is computed as weighted sum 
+    %    of the position jacobians, see \texttt{ObjectFFRFreducedOrder},
+    %    \be
+    %      \LU{0}{\Jm_{m,pos}^{FFRFreduced}} = \frac{\partial \LU{0}{\vv}_{m}}{\dot \qv_{n_b}}
+    %      = \sum_i w_i \LU{0}{\Jm^{(i)}_\mathrm{pos}}
+    %      = \left[\Im, \; -\LU{0r}{\Rot} \left(\sum_i(\LU{r}{\tilde\uv\indf^{(i)}} + \LU{r}{\tilde\xv^{(i)}\cRef}) \right) \LU{r}{\Gm},\;
+    %              \sum_i w_i \LU{0r}{\Rot} \vr{\LU{r}{\tPsi_{r=3i}\tp}}{\LU{r}{\tPsi_{r=3i+1}\tp}}{\LU{r}{\tPsi_{r=3i+2}\tp}} \right] \eqDot
+    %    \ee
+    %    In \texttt{ObjectFFRFreducedOrder}, the jacobian usually affects all reduced coordinates.
+    %
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
@@ -9067,6 +9134,7 @@ equations =
         def UFforce(mbs, t, loadVector): 
             return [loadVector[0]*sin(t*10*2*pi),0,0]
     \end{lstlisting}
+    %%RSTCOMPATIBLE
 /end
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
 #CObjectMarkerBodyPosition* automatically inserted!
@@ -9126,6 +9194,7 @@ equations =
         def UFforce(mbs, t, loadVector): 
             return [loadVector[0]*sin(t*10*2*pi),0,0]
     \end{lstlisting}
+    %%RSTCOMPATIBLE
 /end
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
 #CObjectMarkerBodyPosition* automatically inserted!
@@ -9178,6 +9247,7 @@ equations =
       \rowTable{\returnValue}{Vector3D}{computed load vector}
     \finishTable
     Example of user function: functionality same as in \texttt{LoadForceVector}
+    %%RSTCOMPATIBLE
 /end
 miniExample =
     node = mbs.AddNode(NodePoint(referenceCoordinates = [1,0,0]))
@@ -9256,6 +9326,7 @@ equations =
                                    load = 10,
                                    loadUserFunction = UFload))
     \end{lstlisting}
+    %%RSTCOMPATIBLE
 /end
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
 #CObjectMarkerBodyPosition* automatically inserted!
@@ -9527,6 +9598,10 @@ mainParentClass = MainSensor
 visuParentClass = VisualizationSensor
 classType = Sensor
 equations =
+    The sensor collects data via a user function, which completely describes the output itself.
+    Note that the sensorNumbers and factors need to be consistent. 
+    The return value of the user function is a list of \texttt{float} numbers which cast to a \texttt{std::vector} in pybind.
+    This list can have arbitrary dimension, but should be kept constant during simulation.
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \userFunction{sensorUserFunction(mbs, t, sensorNumbers, factors, configuration)}
     A user function, which computes a sensor output from other sensor outputs (or from generic time dependent functions).
@@ -9576,6 +9651,7 @@ equations =
             PlotSensor(mbs, [sNode, sNode, sUser], [0, 1, 0])
         
     \end{lstlisting}
+    %%RSTCOMPATIBLE
 /end
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
 Vp,     M,      name,                           ,               ,       String,     "",                          ,       I,     "sensor's unique name"

@@ -42,6 +42,42 @@ The item VLoadMassProportional has the following parameters:
 DESCRIPTION of LoadMassProportional
 -----------------------------------
 
+Details
+-------
+
+The load applies a (translational) and distributed load proportional to the distributed body's density.
+The marker of type \ ``MarkerBodyMass``\  transforms the loadVector via an according jacobian matrix to object coordinates.
+
+--------
+
+\ **Userfunction**\ : ``loadVectorUserFunction(mbs, t, loadVector)`` 
+
+
+A user function, which computes the mass proporitional load vector depending on time and object parameters, which is hereafter applied to object or node.
+
+.. list-table:: \ 
+   :widths: auto
+   :header-rows: 1
+
+   * - | arguments / return
+     - | type or size
+     - | description
+   * - | \ ``mbs``\ 
+     - | MainSystem
+     - | provides MainSystem mbs to which load belongs
+   * - | \ ``t``\ 
+     - | Real
+     - | current time in mbs 
+   * - | \ ``loadVector``\ 
+     - | Vector3D
+     - | \ :math:`{\mathbf{b}}`\  copied from object; WARNING: this parameter does not work in combination with static computation, as it is changed by the solver over step time
+   * - | \returnValue
+     - | Vector3D
+     - | computed load vector
+
+Example of user function: functionality same as in \ ``LoadForceVector``\ 
+
+
 
 .. _miniexample-loadmassproportional:
 

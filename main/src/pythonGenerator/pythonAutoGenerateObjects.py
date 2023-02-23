@@ -1781,6 +1781,7 @@ Reference manual for: objects, nodes, markers, loads and sensors
             (classType, className, text) = item
             if classType == key:
                 text += '\n\n\\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ \n\n'
+                text = text.replace('docs/theDoc/figures/','../../theDoc/figures/')
                 if True:
                     file=io.open(rstDir+className+'.rst','w',encoding='utf8')  #clear file by one write access
                     file.write(text+'\n')

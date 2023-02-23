@@ -5,7 +5,7 @@
 ObjectConnectorCoordinateSpringDamper
 =====================================
 
-A 1D (scalar) spring-damper element acting on single ODE2 coordinates; connects to coordinate-based markers; NOTE that the coordinate markers only measure the coordinate (=displacement), but the reference position is not included as compared to position-based markers!; the spring-damper can also act on rotational coordinates.
+A 1D (scalar) spring-damper element acting on single \ :ref:`ODE2 <ODE2>`\  coordinates; connects to coordinate-based markers; NOTE that the coordinate markers only measure the coordinate (=displacement), but the reference position is not included as compared to position-based markers!; the spring-damper can also act on rotational coordinates.
 
 \ **Additional information for ObjectConnectorCoordinateSpringDamper**\ :
 

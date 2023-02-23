@@ -5,7 +5,7 @@
 NodePointGround
 ===============
 
-A 3D point node fixed to ground. The node can be used as NodePoint, but it does not generate coordinates. Applied or reaction forces do not have any effect. This node can be used for 'blind' or 'dummy' ODE2 and ODE1 coordinates to which CoordinateSpringDamper or CoordinateConstraint objects are attached to.
+A 3D point node fixed to ground. The node can be used as NodePoint, but it does not generate coordinates. Applied or reaction forces do not have any effect. This node can be used for 'blind' or 'dummy' \ :ref:`ODE2 <ODE2>`\  and \ :ref:`ODE1 <ODE1>`\  coordinates to which CoordinateSpringDamper or CoordinateConstraint objects are attached to.
 
 \ **Additional information for NodePointGround**\ :
 

@@ -11,7 +11,7 @@ When starting with a empty \ ``mbs``\  and calling \ ``exu.StartRenderer()``\ , 
 
 .. code-block:: python
 
-  {'centerPoint': [0.0, 0.0, 0.0],
+  'centerPoint': [0.0, 0.0, 0.0],
   'maxSceneSize': 1.0,
   'zoom': 0.4000000059604645,
   'currentWindowSize': [1024, 768],
@@ -21,7 +21,7 @@ When starting with a empty \ ``mbs``\  and calling \ ``exu.StartRenderer()``\ , 
   'openGLcoordinates': [0.0, 0.0],
   'joystickPosition': [0.0, 0.0, 0.0],
   'joystickRotation': [0.0, 0.0, 0.0],
-  'joystickAvailable': -1}
+  'joystickAvailable': -1
 
 
 

@@ -174,7 +174,7 @@ The index 3 constraint equations read
    \LU{0}{{\mathbf{t}}}_{x0}\tp \LU{0}{{\mathbf{t}}}_{z1} &=& 0
 
 
-The index 2 constraints follow from the derivative of \eqeq:ObjectJointRevoluteZ:index3 w.r.t., and are given in the C++ code.
+The index 2 constraints follow from the derivative of Eq. :eq:`eq-objectjointrevolutez-index3`\  w.r.t., and are given in the C++ code.
 if \ ``activeConnector = False``\ , 
 
 .. math::

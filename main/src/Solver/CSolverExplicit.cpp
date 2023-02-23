@@ -412,7 +412,7 @@ bool CSolverExplicitTimeInt::Newton(CSystem& computationalSystem, const Simulati
 		Real h = it.currentStepSize;
 		Real hOpt = h * pow((1. / err), 1. / (rk.orderMethod)); //rk.orderMethod = q+1 in Hairer, Norsett and Wanner
 
-		Real hMax = EXUstd::Minimum(it.maxStepSize, it.currentStepSize * simulationSettings.timeIntegration.stepSizeMaxIncrease);
+		Real hMax = EXUstd::Minimum(it.maxStepSize, h * simulationSettings.timeIntegration.stepSizeMaxIncrease);
 		Real hMin = it.minStepSize;
 		Real fSafe = simulationSettings.timeIntegration.stepSizeSafety; //safety factor for increasing step size
 		Real hNew = EXUstd::Minimum(hMax, EXUstd::Maximum(hMin, fSafe*hOpt));
@@ -422,14 +422,14 @@ bool CSolverExplicitTimeInt::Newton(CSystem& computationalSystem, const Simulati
 			PyWarning("ExplicitSolver: t="+ EXUstd::ToString(t0) + "; automatic stepsize control reached minStepSize; integration continued, but error will be larger than given tolerances; reduce timeIntegration.minStepSize or increase tolerances");
 			minStepSizeWarned = true;
 		}
-		else if (hOpt < it.currentStepSize)
+		else if (hOpt < h)
 		{
 			stepRejected = true;
 			it.rejectedAutomaticStepSizeSteps++;
 		}
 
 		//now set suggested step size
-		it.currentStepSize = hNew;
+		h = hNew;
 		STOPTIMER(timer.errorEstimator);
 
 		if (IsVerbose(2)) {

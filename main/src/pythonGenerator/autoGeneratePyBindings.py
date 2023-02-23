@@ -8,8 +8,8 @@ automatically generate pybindings for specific classes and functions AND latex d
 """
 
 #TODO:
-#read \acro definitions from theDoc.pdf
-#fix braces in {ODE2} etc. abbreviations => manually create abbrv.tex and according .rst file; replace \acs{} with link
+#add citations
+#add missing figures (items, ?check other replacements)
 #fix eq references as: \eq -> :eq: ...
 # .. math:: e^{i\pi} + 1 = 0
 #    :label: euler
@@ -17,8 +17,6 @@ automatically generate pybindings for specific classes and functions AND latex d
 # Euler's identity, equation :eq:`euler`, was elected one of the most
 # beautiful mathematical formulas.
 
-#add marker/etc. pre-information as list for items
-#add input/output for items
 
 from autoGenerateHelper import PyLatexRST, GetDateStr #AddEnumValue, DefPyFunctionAccess, DefPyStartClass, DefPyFinishClass, DefLatexStartClass, DefLatexFinishTable
                                

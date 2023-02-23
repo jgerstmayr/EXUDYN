@@ -654,7 +654,8 @@ You can call the \texttt{SolutionViewer} either in the model, or at the command 
   SolutionViewer(mbs, sol)
 \end{lstlisting}
 %
-\mybold{Alternatively}, if no solution is provided, \texttt{SolutionViewer} tries to reload the solution of the previous simulation that is referred to from \texttt{mbs.sys$[$simulationSettings$]$}:
+\mybold{Alternatively}, if no solution is provided, \texttt{SolutionViewer} tries to reload the solution of the previous simulation 
+that is referred to from \texttt{mbs.sys\['simulationSettings'\]}:
 \pythonstyle\begin{lstlisting}
   from exudyn.interactive import SolutionViewer
   SolutionViewer(mbs)

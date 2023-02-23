@@ -23,8 +23,9 @@ Exudyn documentation
    docs/RST/structures/StructuresAndSettingsIndex.rst
 
 .. toctree::
-   :caption: Issue Tracker
+   :caption: Misc
    
+   docs/RST/Abbreviations
    docs/trackerlogRST
 
 Indices and tables
@@ -37,13 +38,6 @@ Indices and tables
 
 Theory: Contact
 ===============
-
-See according section in `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
-
-.. _sec-listofabbreviations:
-
-List of Abbreviations
-=====================
 
 See according section in `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 

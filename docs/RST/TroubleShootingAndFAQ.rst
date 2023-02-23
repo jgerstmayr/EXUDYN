@@ -47,23 +47,23 @@ Exceptions and Error Messages. In the following, typical error messages are list
 
 \ **There are several reasons and workarounds**\ :
 
-  |  →  You mixed up 32 and 64 bits version (see below) 
-  |  →  You are using an exudyn version for Python x_1.y_1 (e.g., 3.6.z_1) different from the Python x_2.y_2 version in your Anaconda (e.g., 3.7.z_2); note that x_1=x_2 and y_1=y_2 must be obeyed while z_1 and z_2 may be different
++ [\ :math:`\ra`\ ] You mixed up 32 and 64 bits version (see below) 
++ [\ :math:`\ra`\ ] You are using an exudyn version for Python \ :math:`x_1.y_1`\  (e.g., 3.6.\ :math:`z_1`\ ) different from the Python \ :math:`x_2.y_2`\  version in your Anaconda (e.g., 3.7.\ :math:`z_2`\ ); note that \ :math:`x_1=x_2`\  and \ :math:`y_1=y_2`\  must be obeyed while \ :math:`z_1`\  and \ :math:`z_2`\  may be different
 
 +  \ **Import of exudyn C++ module failed Warning: ...**\ :
 
-  |  →  ... and similar messages with: ModuleNotFoundError, Warning, with AVX2, without AVX2
-  |  →  A known reason is that your CPU \ **does not support AVX2**\ , while Exudyn is compiled with the AVX2 option (modern Intel Core-i3, Core-i5 and Core-i7 processors as well as AMD processors, especially Zen and Zen-2 architectures should have no problems with AVX2; however, low-cost Celeron, Pentium and older AMD processors do \ **not**\  support AVX2, e.g.,  Intel Celeron G3900, Intel core 2 quad q6600, Intel Pentium Gold G5400T; check the system settings of your computer to find out the processor type; typical CPU manufacturer pages or Wikipedia provide information on this).
-  |  →  \ **solution**\ : the release versions without the .dev1 ending in the wheel contain C++ libraries which are compiled without AVX/AVX2; the module loader will usually detect automatically, if your CPU supports AVX/AVX2; if not, it will load the exudynCPPnoAVX.cp ... .pyd file; if this does not work, try
++ [\ :math:`\ra`\ ] ... and similar messages with: ModuleNotFoundError, Warning, with AVX2, without AVX2
++ [\ :math:`\ra`\ ] A known reason is that your CPU \ **does not support AVX2**\ , while Exudyn is compiled with the AVX2 option\ (modern Intel Core-i3, Core-i5 and Core-i7 processors as well as AMD processors, especially Zen and Zen-2 architectures should have no problems with AVX2; however, low-cost Celeron, Pentium and older AMD processors do \ **not**\  support AVX2, e.g.,  Intel Celeron G3900, Intel core 2 quad q6600, Intel Pentium Gold G5400T; check the system settings of your computer to find out the processor type; typical CPU manufacturer pages or Wikipedia provide information on this).
++ [\ :math:`\ra`\ ] \ **solution**\ : the release versions without the .dev1 ending in the wheel contain C++ libraries which are compiled without AVX/AVX2; the module loader will usually detect automatically, if your CPU supports AVX/AVX2; if not, it will load the exudynCPPnoAVX.cp ... .pyd file; if this does not work, try
 
 \ ``import sys``\ 
 
 \ ``sys.exudynCPUhasAVX2 = False``\ 
 
 to explicitly load the version without AVX2.
-  |  →  you can also compile for your specific Python version without AVX if you adjust the \ ``setup.py``\  file in the \ ``main``\  folder.
-  |  →  \ **DEPRECATED workaround**\  to solve the AVX problem: use the Python 3.6 version (up to Exudyn V1.2.28 only the 32bit version), which is compiled without AVX2.
-  |  →  The \ ``ModuleNotFoundError``\  may also happen if something went wrong during installation (paths, problems with Anaconda, ..) → very often a new installation of Anaconda and Exudyn helps.
++ [\ :math:`\ra`\ ] you can also compile for your specific Python version without AVX if you adjust the \ ``setup.py``\  file in the \ ``main``\  folder.
++ [\ :math:`\ra`\ ] \ **DEPRECATED workaround**\  to solve the AVX problem: use the Python 3.6 version (up to Exudyn V1.2.28 only the 32bit version), which is compiled without AVX2.
++ [\ :math:`\ra`\ ] The \ ``ModuleNotFoundError``\  may also happen if something went wrong during installation (paths, problems with Anaconda, ..) \ :math:`\ra`\  very often a new installation of Anaconda and Exudyn helps.
 
 
 \ **Typical Python errors**\ :
@@ -79,7 +79,7 @@ to explicitly load the version without AVX2.
   SyntaxError: invalid syntax
 
 
-  |  →  such an error points to the line of your code (line 42), but in fact the error may have been caused in previous code, such as in this case there was a missing brace in the line 40, which caused the error:
++ [\ :math:`\ra`\ ] such an error points to the line of your code (line 42), but in fact the error may have been caused in previous code, such as in this case there was a missing brace in the line 40, which caused the error:
 
 .. code-block:: python
 
@@ -101,7 +101,7 @@ to explicitly load the version without AVX2.
   ModuleNotFoundError: No module named 'tkinter'
 
 
-  |  →  see installation instructions to install missing Python modules, Section :ref:`sec-install-installinstructions`\ .
++ [\ :math:`\ra`\ ] see installation instructions to install missing Python modules, Section :ref:`sec-install-installinstructions`\ .
 
 +  Problems with \ **tkinter**\ , especially on MacOS:
 
@@ -112,7 +112,8 @@ to explicitly load the version without AVX2.
   before the application's OpenGL window (renderer) is opened. Therefore, on MacOS \ ``tkinter.Tk()``\  is called before the 
   renderer is started.
   In some cases, visualizationSettings dialog may not be available and changes have to be made inside the code.
-  |  →  To resolve issues, the following visualizationSettings may help (before starting renderer!), but may reduce functionality: 
+  
++ [\ :math:`\ra`\ ] To resolve issues, the following visualizationSettings may help (before starting renderer!), but may reduce functionality: 
   dialogs.multiThreadedDialogs = False, general.useMultiThreadedRendering = False
  
 
@@ -165,16 +166,16 @@ to explicitly load the version without AVX2.
 
 
 
-  |  →  it seems clear that you should read this error from top as it indicates that you just forgot to call \ ``mbs.Assemble()``\ 
++ [\ :math:`\ra`\ ] it seems clear that you should read this error from top as it indicates that you just forgot to call \ ``mbs.Assemble()``\ 
 
 +  \ ``SolveDynamic``\  or \ ``SolveStatic``\  \ **terminated due to errors**\ :
 
-  |  →  use flag \ ``showHints = True``\  in \ ``SolveDynamic``\  or \ ``SolveStatic``\ 
++ [\ :math:`\ra`\ ] use flag \ ``showHints = True``\  in \ ``SolveDynamic``\  or \ ``SolveStatic``\ 
 
 +  Very simple example \ **without loads**\  leads to error: \ ``SolveDynamic``\  or \ ``SolveStatic``\  \ **terminated due to errors**\ :
 
-  |  →  see also 'Convergence problems', Section :ref:`sec-overview-basics-convergenceproblems`\ 
-  |  →  may be caused due to nonlinearity of formulation and round off errors, which restrict Newton to achieve desired tolerances; adjust  \ ``.newton.relativeTolerance``\  / \ ``.newton.absoluteTolerance``\  in static solver or in time integration
++ [\ :math:`\ra`\ ] see also 'Convergence problems', Section :ref:`sec-overview-basics-convergenceproblems`\ 
++ [\ :math:`\ra`\ ] may be caused due to nonlinearity of formulation and round off errors, which restrict Newton to achieve desired tolerances; adjust  \ ``.newton.relativeTolerance``\  / \ ``.newton.absoluteTolerance``\  in static solver or in time integration
 
 +  Typical \ **solver error due to redundant constraints or missing inertia terms**\ , could read as follows:
 
@@ -189,7 +190,7 @@ to explicitly load the version without AVX2.
 
 
 
-  |  →  this solver error shows that equation 42 is not solvable. The according coordinate is shown later in such an error message:
++ [\ :math:`\ra`\ ] this solver error shows that equation 42 is not solvable. The according coordinate is shown later in such an error message:
 
 
 .. code-block:: 
@@ -201,9 +202,9 @@ to explicitly load the version without AVX2.
 
 
 
-  |  →  object 7 seems to be the reason, possibly there are too much (joint) constraints applied to your system, check this object.
-  |  →  show typical REASONS and SOLUTIONS, by using \ ``showHints=True``\  in \ ``exu.SolveDynamic(...)``\  or \ ``exu.SolveStatic(...)``\ 
-  |  →  You can also \ **highlight**\  object 7 by using the following code in the iPython console:
++ [\ :math:`\ra`\ ] object 7 seems to be the reason, possibly there are too much (joint) constraints applied to your system, check this object.
++ [\ :math:`\ra`\ ] show typical REASONS and SOLUTIONS, by using \ ``showHints=True``\  in \ ``exu.SolveDynamic(...)``\  or \ ``exu.SolveStatic(...)``\ 
++ [\ :math:`\ra`\ ] You can also \ **highlight**\  object 7 by using the following code in the iPython console:
 
 
 .. code-block:: python
@@ -235,10 +236,10 @@ which draws the according object in red and others gray/transparent (but sometim
 
 
 
-  |  →  this solver error is caused, because the nonlinear system cannot be solved using Newton's method.
-  |  →  the static or dynamic solver by default tries to reduce step size to overcome this problem, but may fail finally (at minimum step size).
-  |  →  possible reasons are: too large time steps (reduce step size by using more steps/second), inappropriate initial conditions, or inappropriate joints or constraints (remove joints to see if they are the reason), usually within a singular configuration. Sometimes a system may be just unsolvable in the way you set it up.
-  |  →  see also 'Convergence problems', Section :ref:`sec-overview-basics-convergenceproblems`\ 
++ [\ :math:`\ra`\ ] this solver error is caused, because the nonlinear system cannot be solved using Newton's method.
++ [\ :math:`\ra`\ ] the static or dynamic solver by default tries to reduce step size to overcome this problem, but may fail finally (at minimum step size).
++ [\ :math:`\ra`\ ] possible reasons are: too large time steps (reduce step size by using more steps/second), inappropriate initial conditions, or inappropriate joints or constraints (remove joints to see if they are the reason), usually within a singular configuration. Sometimes a system may be just unsolvable in the way you set it up.
++ [\ :math:`\ra`\ ] see also 'Convergence problems', Section :ref:`sec-overview-basics-convergenceproblems`\ 
 
 +  Typical solver error if (e.g., syntax) \ **error in user function**\  (output may be very long, \ **read always message on top!**\ ):
 
@@ -267,7 +268,7 @@ which draws the according object in red and others gray/transparent (but sometim
 
 
 
-  |  →  this indicates an error in the user function \ ``LoadCoordinate::loadVectorUserFunction``\ , because \ ``sin``\  function has not been defined (must be imported, e.g., from \ ``math``\ ). It indicates that the error occurred in line 48 in \ ``springDamperUserFunctionTest.py``\  within function \ ``Sweep``\ , which has been called from function \ ``userLoad``\ , etc.
++ [\ :math:`\ra`\ ] this indicates an error in the user function \ ``LoadCoordinate::loadVectorUserFunction``\ , because \ ``sin``\  function has not been defined (must be imported, e.g., from \ ``math``\ ). It indicates that the error occurred in line 48 in \ ``springDamperUserFunctionTest.py``\  within function \ ``Sweep``\ , which has been called from function \ ``userLoad``\ , etc.
 
  
 
@@ -278,53 +279,53 @@ FAQ
 
 +  When \ **importing**\  Exudyn in Python (windows) I get an error 
 
-  |  →  see trouble shooting instructions above!
++ [\ :math:`\ra`\ ] see trouble shooting instructions above!
 
 +  I do not understand the \ **Python errors**\  -- how can I find the reason of the error or crash?
 
-  |  →  Read trouble shooting section above!	
-  |  →  First, you should read all error messages and warnings: from the very first to the last message. Very often, there is a definite line number which shows the error. Note, that if you are executing a string (or module) as a Python code, the line numbers refer to the local line number inside the script or module.
-  |  →  If everything fails, try to execute only part of the code to find out where the first error occurs. By omiting parts of the code, you should find the according source of the error.
-  |  →  If you think, it is a bug: send an email with a representative code snippet, version, etc. to \ `` reply.exudyn@gmail.com``\ 
++ [\ :math:`\ra`\ ] Read trouble shooting section above!	
++ [\ :math:`\ra`\ ] First, you should read all error messages and warnings: from the very first to the last message. Very often, there is a definite line number which shows the error. Note, that if you are executing a string (or module) as a Python code, the line numbers refer to the local line number inside the script or module.
++ [\ :math:`\ra`\ ] If everything fails, try to execute only part of the code to find out where the first error occurs. By omiting parts of the code, you should find the according source of the error.
++ [\ :math:`\ra`\ ] If you think, it is a bug: send an email with a representative code snippet, version, etc. to \ `` reply.exudyn@gmail.com``\ 
 
 +  Spyder \ **console hangs**\  up, does not show error messages, ...:
 
-  |  →  very often a new start of Spyder helps; most times, it is sufficient to restart the kernel or to just press the 'x' in your IPython console, which closes the current session and restarts the kernel (this is much faster than restarting Spyder)
-  |  →  restarting the IPython console also brings back all error messages
++ [\ :math:`\ra`\ ] very often a new start of Spyder helps; most times, it is sufficient to restart the kernel or to just press the 'x' in your IPython console, which closes the current session and restarts the kernel (this is much faster than restarting Spyder)
++ [\ :math:`\ra`\ ] restarting the IPython console also brings back all error messages
 
 +  Where do I find the \ **'.exe' file**\ ?
 
-  |  →  Exudyn is only available via the Python interface as a module '\ ``exudyn``\ ', the C++ code being inside of \ ``exudynCPP.pyd``\ , which is located in the exudyn folder where you installed the package. This means that you need to \ **run Python**\  (best: Spyder) and import the Exudyn module.
++ [\ :math:`\ra`\ ] Exudyn is only available via the Python interface as a module '\ ``exudyn``\ ', the C++ code being inside of \ ``exudynCPP.pyd``\ , which is located in the exudyn folder where you installed the package. This means that you need to \ **run Python**\  (best: Spyder) and import the Exudyn module.
 
 +  I get the error message 'check potential mixing of different (object, node, marker, ...) indices', what does it mean?
 
-  |  →  probably you used wrong item indexes, see beginning of command interface in Section :ref:`sec-pcpp-command-interface`\ . 
-  |  →  E.g., an object number \ ``oNum = mbs.AddObject(...)``\  is used at a place where a \ ``NodeIndex``\  is expected, e.g., \ ``mbs.AddObject(MassPoint(nodeNumber=oNum, ...))``\ 
-  |  →  Usually, this is an ERROR in your code, it does not make sense to mix up these indexes!
-  |  →  In the exceptional case, that you want to convert numbers, see beginning of Section :ref:`sec-pcpp-command-interface`\ .
++ [\ :math:`\ra`\ ] probably you used wrong item indexes, see beginning of command interface in Section :ref:`sec-pcpp-command-interface`\ . 
++ [\ :math:`\ra`\ ] E.g., an object number \ ``oNum = mbs.AddObject(...)``\  is used at a place where a \ ``NodeIndex``\  is expected, e.g., \ ``mbs.AddObject(MassPoint(nodeNumber=oNum, ...))``\ 
++ [\ :math:`\ra`\ ] Usually, this is an ERROR in your code, it does not make sense to mix up these indexes!
++ [\ :math:`\ra`\ ] In the exceptional case, that you want to convert numbers, see beginning of Section :ref:`sec-pcpp-command-interface`\ .
 
 +  Why does \ **type auto completion**\  not work for mbs (MainSystem)?
 
-  |  →  UPDATE 2020-06-01: with Spyder 4, using Python 3.7, type auto completion works much better, but may find too many completions.
-  |  →  most Python environments (e.g., with Spyder 3) only have information up to the first sub-structure, e.g., \ ``SC=exu.SystemContainer()``\  provides full access to SC in the type completion, but \ ``mbs=SC.AddSystem()``\  is at the second sub-structure of the module and is not accessible.
-  |  →  WORKAROUND: type \ ``mbs=MainSystem()``\  \ **before**\  the \ ``mbs=SC.AddSystem()``\  command and the interpreter will know what type mbs is. This also works for settings, e.g., simulation settings 'Newton'.
++ [\ :math:`\ra`\ ] UPDATE 2020-06-01: with Spyder 4, using Python 3.7, type auto completion works much better, but may find too many completions.
++ [\ :math:`\ra`\ ] most Python environments (e.g., with Spyder 3) only have information up to the first sub-structure, e.g., \ ``SC=exu.SystemContainer()``\  provides full access to SC in the type completion, but \ ``mbs=SC.AddSystem()``\  is at the second sub-structure of the module and is not accessible.
++ [\ :math:`\ra`\ ] WORKAROUND: type \ ``mbs=MainSystem()``\  \ **before**\  the \ ``mbs=SC.AddSystem()``\  command and the interpreter will know what type mbs is. This also works for settings, e.g., simulation settings 'Newton'.
 
 +  How to add graphics?
 
-  |  →  Graphics (lines, text, 3D triangular / {STL} mesh) can be added to all BodyGraphicsData items in objects. Graphics objects which are fixed with the background can be attached to a ObjectGround object. Moving objects must be attached to the BodyGraphicsData of a moving body. Other moving bodies can be realized, e.g., by adding a ObjectGround and changing its reference with time. Furthermore, ObjectGround allows to add fully user defined graphics.
++ [\ :math:`\ra`\ ] Graphics (lines, text, 3D triangular / \ :ref:`STL <STL>`\  mesh) can be added to all BodyGraphicsData items in objects. Graphics objects which are fixed with the background can be attached to a ObjectGround object. Moving objects must be attached to the BodyGraphicsData of a moving body. Other moving bodies can be realized, e.g., by adding a ObjectGround and changing its reference with time. Furthermore, ObjectGround allows to add fully user defined graphics.
 
 +  In \ ``GenerateStraightLineANCFCable2D``\  
 
-  |  →  coordinate constraints can be used to constrain position and rotation, e.g., \ ``fixedConstraintsNode0 = [1,1,0,1]``\  for a beam aligned along the global x-axis; 
-  |  →  this \ **does not work**\  for beams with arbitrary rotation in reference configuration, e.g., 45°. Use a GenericJoint with a rotationMarker instead.
++ [\ :math:`\ra`\ ] coordinate constraints can be used to constrain position and rotation, e.g., \ ``fixedConstraintsNode0 = [1,1,0,1]``\  for a beam aligned along the global x-axis; 
++ [\ :math:`\ra`\ ] this \ **does not work**\  for beams with arbitrary rotation in reference configuration, e.g., 45°. Use a GenericJoint with a rotationMarker instead.
 
 +  What is the difference between MarkerBodyPosition and MarkerBodyRigid?
 
-  |  →  Position markers (and nodes) do not have information on the orientation (rotation). For that reason, there is a difference between position based and rigid-body based markers. In case of a rigid body attached to ground with a SpringDamper, you can use both, MarkerBodyPosition or MarkerBodyRigid, markers. For a prismatic joint, you will need a MarkerBodyRigid.
++ [\ :math:`\ra`\ ] Position markers (and nodes) do not have information on the orientation (rotation). For that reason, there is a difference between position based and rigid-body based markers. In case of a rigid body attached to ground with a SpringDamper, you can use both, MarkerBodyPosition or MarkerBodyRigid, markers. For a prismatic joint, you will need a MarkerBodyRigid.
 
 +  I get an error in \ ``exu.SolveDynamic(mbs, ...)``\  OR in \ ``exu.SolveStatic(mbs, ...)``\  but no further information -- how can I solve it?
 
-  |  →  Typical \ **time integration errors**\  may look like:
++ [\ :math:`\ra`\ ] Typical \ **time integration errors**\  may look like:
 
 .. code-block:: 
 
@@ -333,17 +334,17 @@ FAQ
   SystemError: <built-in method SolveSystem of PyCapsule object at 0x0CC63590> returned a result with an error set
 
 
-  |  →  The pre-checks, which are performed to enable a crash-free simulation are insufficient for your model
-  |  →  As a first try, \ **restart the IPython console**\  in order to get all error messages, which may be blocked due to a previous run of Exudyn.
-  |  →  Very likely, you are using Python user functions inside Exudyn : They lead to an internal Python error, which is not always catched by Exudyn ; e.g., a load user function UFload(mbs,~t,~load), which tries to access component load[3] of a load vector with 3 components will fail internally;
-  |  →  Use the print(...) command in Python at many places to find a possible error in user functions (e.g., put \ ``print("Start user function XYZ")``\  at the beginning of every user function; test user functions from iPython console
-  |  →  It is also possible, that you are using inconsistent data, which leads to the crash. In that case, you should try to change your model: omit parts and find out which part is causing your error
-  |  →  see also \ **I do not understand the Python errors -- how can I find the cause?**\ 
++ [\ :math:`\ra`\ ] The pre-checks, which are performed to enable a crash-free simulation are insufficient for your model
++ [\ :math:`\ra`\ ] As a first try, \ **restart the IPython console**\  in order to get all error messages, which may be blocked due to a previous run of Exudyn.
++ [\ :math:`\ra`\ ] Very likely, you are using Python user functions inside Exudyn : They lead to an internal Python error, which is not always catched by Exudyn ; e.g., a load user function UFload(mbs,~t,~load), which tries to access component load[3] of a load vector with 3 components will fail internally;
++ [\ :math:`\ra`\ ] Use the print(...) command in Python at many places to find a possible error in user functions (e.g., put \ ``print("Start user function XYZ")``\  at the beginning of every user function; test user functions from iPython console
++ [\ :math:`\ra`\ ] It is also possible, that you are using inconsistent data, which leads to the crash. In that case, you should try to change your model: omit parts and find out which part is causing your error
++ [\ :math:`\ra`\ ] see also \ **I do not understand the Python errors -- how can I find the cause?**\ 
 
 
 +  Why can't I get the focus of the simulation window on startup (render window hidden)?
 
-  |  →  Starting Exudyn out of Spyder might not bring the simulation window to front, because of specific settings in Spyder(version 3.2.8), e.g., Tools→Preferences→Editor→Advanced settings: uncheck 'Maintain focus in the Editor after running cells or selections'; Alternatively, set \ ``SC.visualizationSettings.window.alwaysOnTop=True``\  \ **before**\  starting the renderer with \ ``exu.StartRenderer()``\ 
++ [\ :math:`\ra`\ ] Starting Exudyn out of Spyder might not bring the simulation window to front, because of specific settings in Spyder(version 3.2.8), e.g., Tools\ :math:`\ra`\ Preferences\ :math:`\ra`\ Editor\ :math:`\ra`\ Advanced settings: uncheck 'Maintain focus in the Editor after running cells or selections'; Alternatively, set \ ``SC.visualizationSettings.window.alwaysOnTop=True``\  \ **before**\  starting the renderer with \ ``exu.StartRenderer()``\ 
 
 
 

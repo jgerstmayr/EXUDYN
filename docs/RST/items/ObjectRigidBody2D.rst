@@ -87,13 +87,13 @@ Definition of quantities
    * - | intermediate variables
      - | symbol
      - | description
-   * - | COM position
+   * - | \ :ref:`COM <COM>`\  position
      - | \ :math:`\pRefG\cConfig + \pRefG\cRef = \LU{0}{{\mathbf{p}}}(n_0)\cConfig`\ 
-     - | reference point, equal to the position of COM; provided by node \ :math:`n_0`\  in any configuration (except reference)
-   * - | COM displacement
+     - | reference point, equal to the position of \ :ref:`COM <COM>`\ ; provided by node \ :math:`n_0`\  in any configuration (except reference)
+   * - | \ :ref:`COM <COM>`\  displacement
      - | \ :math:`\LU{0}{{\mathbf{u}}}\cConfig =\pRefG\cConfig = [q_0,\;q_1,\;0]\cConfig\tp = \LU{0}{{\mathbf{u}}}(n_0)\cConfig`\ 
      - | displacement of center of mass which is provided by node \ :math:`n_0`\  in any configuration; NOTE that for configurations other than reference, it is follows that \ :math:`\pRefG\cRef - \pRefG\cConfig`\ 
-   * - | COM velocity
+   * - | \ :ref:`COM <COM>`\  velocity
      - | \ :math:`\LU{0}{{\mathbf{v}}}\cConfig = [\dot q_0,\;\dot q_1,\;0]\cConfig\tp = \LU{0}{{\mathbf{v}}}(n_0)\cConfig`\ 
      - | velocity of center of mass which is provided by node \ :math:`n_0`\  in any configuration
    * - | body rotation

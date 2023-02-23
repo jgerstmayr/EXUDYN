@@ -5,7 +5,7 @@
 ObjectConnectorCoordinateSpringDamperExt
 ========================================
 
-A 1D (scalar) spring-damper element acting on single ODE2 coordinates; same as ObjectConnectorCoordinateSpringDamper but with extended features, such as limit stop and improved friction; has different user function interface and additional data node as compared to ObjectConnectorCoordinateSpringDamper, but otherwise behaves very similar. The CoordinateSpringDamperExt is very useful for a single axis of a robot or similar machine modelled with a KinematicTree, as it can add friction and limits based on physical properties. It is highly recommended, to use the bristle model for friction with frictionProportionalZone=0 in case of implicit integrators (GeneralizedAlpha) as it converges better.
+A 1D (scalar) spring-damper element acting on single \ :ref:`ODE2 <ODE2>`\  coordinates; same as ObjectConnectorCoordinateSpringDamper but with extended features, such as limit stop and improved friction; has different user function interface and additional data node as compared to ObjectConnectorCoordinateSpringDamper, but otherwise behaves very similar. The CoordinateSpringDamperExt is very useful for a single axis of a robot or similar machine modelled with a KinematicTree, as it can add friction and limits based on physical properties. It is highly recommended, to use the bristle model for friction with frictionProportionalZone=0 in case of implicit integrators (GeneralizedAlpha) as it converges better.
 
 \ **Additional information for ObjectConnectorCoordinateSpringDamperExt**\ :
 
@@ -156,8 +156,8 @@ The friction force is computed for different cases:
    f_\mathrm{friction} = \begin{cases} (f_{\mu,\mathrm{d}} + f_{\mu,\mathrm{so}}) \frac{\Delta v}{v_\mathrm{reg}}, \quad \mathrm{if} \quad |v| <= v_\mathrm{reg} \quad \mathrm{and} \quad v_\mathrm{reg} \neq 0 \\ \mathrm{Sign}(v)\left(f_{\mu,\mathrm{d}} + f_{\mu,\mathrm{so}} \mathrm{e}^{-(|v|-v_{reg})/v_{exp}} + f_{\mu,\mathrm{v}} (|v|-v_\mathrm{reg}) \right), \quad \mathrm{else} \end{cases}
 
 
-  This case does not use a PostNewton iteration (which may be advantageous in constant step size explicit integration, 
-  but may be problematic in implicit integration).
+This case does not use a PostNewton iteration (which may be advantageous in constant step size explicit integration, 
+but may be problematic in implicit integration).
 
 +  CASE 2: \ ``frictionProportionalZone != 0``\  (or \ ``useLimitStops=True``\ ): 
 

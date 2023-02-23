@@ -242,8 +242,7 @@ The matplotlib output should look like this:
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \newpage
-\mysubsection{Rigid body and joints tutorial}
-\label{sec:tutorial:rigidBodyJoints}
+\mysubsectionlabel{Rigid body and joints tutorial}{sec:tutorial:rigidBodyJoints}
 The python source code of the first tutorial can be found in the file:
 \bi
   \item[] \texttt{main/pythonDev/Examples/rigidBodyTutorial3.py}
@@ -499,8 +498,11 @@ For the output see \ignoreRST{\fig{fig_DrawSystemGraphExample}}\onlyRST{the figu
   simulationSettings.solutionSettings.solutionWritePeriod = 0.005 #store every 5 ms
 \end{lstlisting}
 The \texttt{verboseMode} tells the solver the amount of output during solving. Higher values (2, 3, ...) show residual vectors, jacobians, etc. for every time step, but slow down simulation significantly.
-The option \texttt{simulateInRealtime} is used to view the model during simulation, while setting this false, the simulation finishes after fractions of a second. It should be set to false in general, while solution can be viewed using the \texttt{SolutionViewer()}.
-With \texttt{solutionWritePeriod} you can adjust the frequency which is used to store the solution of the whole model, which may lead to very large files and may slow down simulation, but is used in the \texttt{SolutionViewer()} to reload the solution after simulation.
+The option \texttt{simulateInRealtime} is used to view the model during simulation, while setting this false, 
+the simulation finishes after fractions of a second. It should be set to false in general, 
+while solution can be viewed using the \texttt{SolutionViewer()}.
+With \texttt{solutionWritePeriod} you can adjust the frequency which is used to store the solution of the whole model, 
+which may lead to very large files and may slow down simulation, but is used in the \texttt{SolutionViewer()} to reload the solution after simulation.
 
 \noindent In order to improve visualization, there are hundreds of options, see Visualization settings in \refSection{sec:VSettingsGeneral}, some of them used here:
 \pythonstyle\begin{lstlisting}

@@ -5,7 +5,7 @@
 ObjectBeamGeometricallyExact2D
 ==============================
 
-A 2D geometrically exact beam finite element, currently using 2 nodes of type NodeRigidBody2D; FURTHER TESTS REQUIRED. Note that the orientation of the nodes need to follow the cross section orientation; e.g., an angle 0 represents the cross section pointing in \ :math:`y`\ -direction, while and angle \ :math:`\pi`\  means that the cross section points in negative \ :math:`x`\ -direction and the axis shows in positive \ :math:`y`\ -direction. The localPosition of the beam with length \ :math:`L`\ =physicsLength and height \ :math:`h`\  ranges in \ :math:`X`\ -direction in range \ :math:`[-L/2, L/2]`\  and in \ :math:`Y`\ -direction in range \ :math:`[-h/2,h/2]`\  (which is in fact not needed in the EOM).
+A 2D geometrically exact beam finite element, currently using 2 nodes of type NodeRigidBody2D; FURTHER TESTS REQUIRED. Note that the orientation of the nodes need to follow the cross section orientation; e.g., an angle 0 represents the cross section pointing in \ :math:`y`\ -direction, while and angle \ :math:`\pi`\  means that the cross section points in negative \ :math:`x`\ -direction and the axis shows in positive \ :math:`y`\ -direction. The localPosition of the beam with length \ :math:`L`\ =physicsLength and height \ :math:`h`\  ranges in \ :math:`X`\ -direction in range \ :math:`[-L/2, L/2]`\  and in \ :math:`Y`\ -direction in range \ :math:`[-h/2,h/2]`\  (which is in fact not needed in the \ :ref:`EOM <EOM>`\ ).
 
 \ **Additional information for ObjectBeamGeometricallyExact2D**\ :
 
