@@ -1,6 +1,5 @@
 
 
-[1][Solver substructures]
 
 .. _sec-solversubstructures:
 
@@ -10,6 +9,7 @@ Solver substructures
 ********************
 
 This section includes structures contained in the solver, which can be accessed via the Python interface during solution or for building a customized solver in Python.
+There is plenty of possibilities to interact with the solvers, being it the extraction of data at the end (such as .it or .conv), computation of mass matrix or system matrices, and finally the modification of solver structures (which may have effect or not). In any case, there is no full description for all these methods and the user must always consider the according C++ function to verify the desired behavior.
 
 
 .. _sec-csolvertimer:

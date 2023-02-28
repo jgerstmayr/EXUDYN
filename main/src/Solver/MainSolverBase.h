@@ -77,27 +77,27 @@ public: //
 	virtual void PySetTimer(const CSolverTimer& timerInit) { GetCSolver().timer = timerInit; }
 	//! Read (Copy) access to: timer which measures the CPU time of solver sub functions
 	//virtual const CSolverTimer& PyGetTimer() const { return (GetCSolver().timer); }
-	virtual CSolverTimer& PyGetTimer() { return (GetCSolver().timer); }
+	virtual const CSolverTimer& PyGetTimer() const { return GetCSolver().timer; }
 
 	//! Set function (needed in pybind) for: all information about iterations (steps, discontinuous iteration, newton,...)
 	virtual void PySetIt(const SolverIterationData& itInit) { GetCSolver().it = itInit; }
 	//! Read (Copy) access to: all information about iterations (steps, discontinuous iteration, newton,...)
-	virtual SolverIterationData PyGetIt() const { return (SolverIterationData)(GetCSolver().it); }
+    virtual const SolverIterationData& PyGetIt() const { return GetCSolver().it; } //2023-02-25: change to const ...& return value to allow write access
 
 	//! Set function (needed in pybind) for: all information about tolerances, errors and residua
 	virtual void PySetConv(const SolverConvergenceData& convInit) { GetCSolver().conv = convInit; }
 	//! Read (Copy) access to: all information about tolerances, errors and residua
-	virtual SolverConvergenceData PyGetConv() const { return (SolverConvergenceData)(GetCSolver().conv); }
+	virtual const SolverConvergenceData& PyGetConv() const { return GetCSolver().conv; }
 
 	//! Set function (needed in pybind) for: output modes and timers for exporting solver information and solution
 	virtual void PySetOutput(const SolverOutputData& outputInit) { GetCSolver().output = outputInit; }
 	//! Read (Copy) access to: output modes and timers for exporting solver information and solution
-	virtual SolverOutputData PyGetOutput() const { return (SolverOutputData)(GetCSolver().output); }
+	virtual const SolverOutputData& PyGetOutput() const { return GetCSolver().output; }
 
 	//! Set function (needed in pybind) for: copy of newton settings from timeint or staticSolver
 	virtual void PySetNewton(const NewtonSettings& newtonInit) { GetCSolver().newton = newtonInit; }
 	//! Read (Copy) access to: copy of newton settings from timeint or staticSolver
-	virtual NewtonSettings PyGetNewton() const { return (NewtonSettings)(GetCSolver().newton); }
+	virtual const NewtonSettings& PyGetNewton() const { return GetCSolver().newton; }
 
 	//only for static solver:
 	////! Set function (needed in pybind) for: multiplicative load step factor; this factor is computed from loadStepGeometric parameters in SolveSystem(...)

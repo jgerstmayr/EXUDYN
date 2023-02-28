@@ -1,6 +1,5 @@
 
 
-[1][Structures for structural elements]
 
 **********************************
 Structures for structural elements

@@ -317,6 +317,7 @@ void PyProcessRendererKeyQueue()
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void PyProcessShowVisualizationSettingsDialog()
 {
+#ifdef USE_GLFW_GRAPHICS
     //open window to execute a python command ... 
     std::string str = R"(
 import exudyn
@@ -337,12 +338,15 @@ except:
 
 )";
     PyProcessExecuteStringAsPython(str, !PyGetRendererMultiThreadedDialogs(), true);
+#endif // USE_GLFW_GRAPHICS
 }
 
 
 
 void PyProcessShowHelpDialog()
 {
+#ifdef USE_GLFW_GRAPHICS
+
     float alphaTransparency = GetGlfwRenderer().GetVisualizationSettings()->dialogs.alphaTransparency;
     std::string str = R"(
 import tkinter as tk
@@ -423,11 +427,14 @@ else:
     tk.mainloop()
 )";
     PyProcessExecuteStringAsPython(str, !PyGetRendererMultiThreadedDialogs(), true);
+#endif // USE_GLFW_GRAPHICS
 
 }
 
 void PyProcessShowPythonCommandDialog()
 {
+#ifdef USE_GLFW_GRAPHICS
+
     //open window to execute a python command ... 
     float alphaTransparency = GetGlfwRenderer().GetVisualizationSettings()->dialogs.alphaTransparency;
     std::string str = R"(
@@ -475,6 +482,7 @@ else:
     tk.mainloop()
 )";
     PyProcessExecuteStringAsPython(str, !PyGetRendererMultiThreadedDialogs(), true);
+#endif // USE_GLFW_GRAPHICS
 }
 
 void PyProcessShowRightMouseSelectionDialog(Index itemID)

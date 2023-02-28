@@ -640,8 +640,9 @@ def CreatePybindHeaders(parseInfo, parameterList, typeConversion):
                 s += ')\n' #extend this to incorporate 'read only' and other flags
             else:
                 sReturnValueProperty = '' #for structures that should also have write access
-                if parameter['lineType'].find('L') != -1:
-                    sReturnValueProperty += ', py::return_value_policy::reference'
+                #not needed: done automatically as reference access for such structures with get/set function
+                # if parameter['lineType'].find('L') != -1:
+                #     sReturnValueProperty += ', py::return_value_policy::reference'
                 #access with setter/getter functions and conversions to std::vector
                 #functionName = parameter['cplusplusName']
                 functionName = parameter['pythonName'] #for linked variables, this is easier to work with linking e.g. to cSolver

@@ -2088,9 +2088,10 @@ bool MainSensorMarker::CheckPreAssembleConsistency(const MainSystem& mainSystem,
 
 	const CMarker& cMarker = *mainSystem.GetMainSystemData().GetMainMarkers()[n]->GetCMarker();
 
-	if (!((EXUstd::IsOfType(cMarker.GetType(), Marker::Position) && (cSensor->GetOutputVariableType() == OutputVariableType::Position || cSensor->GetOutputVariableType() == OutputVariableType::Velocity)) ||
-		(EXUstd::IsOfType(cMarker.GetType(), Marker::Orientation) && (cSensor->GetOutputVariableType() == OutputVariableType::Rotation || cSensor->GetOutputVariableType() == OutputVariableType::AngularVelocityLocal)) ||
-		(EXUstd::IsOfType(cMarker.GetType(), Marker::Coordinate) && (cSensor->GetOutputVariableType() == OutputVariableType::Coordinates || cSensor->GetOutputVariableType() == OutputVariableType::Coordinates_t))))
+	//if (!((EXUstd::IsOfType(cMarker.GetType(), Marker::Position) && (cSensor->GetOutputVariableType() == OutputVariableType::Position || cSensor->GetOutputVariableType() == OutputVariableType::Velocity)) ||
+	//	(EXUstd::IsOfType(cMarker.GetType(), Marker::Orientation) && (cSensor->GetOutputVariableType() == OutputVariableType::Rotation || cSensor->GetOutputVariableType() == OutputVariableType::AngularVelocityLocal)) ||
+	//	(EXUstd::IsOfType(cMarker.GetType(), Marker::Coordinate) && (cSensor->GetOutputVariableType() == OutputVariableType::Coordinates || cSensor->GetOutputVariableType() == OutputVariableType::Coordinates_t))))
+	if (!(EXUstd::IsOfType(cMarker.GetOutputVariableTypes(), cSensor->GetOutputVariableType()) ))
 	{
 		errorString = STDstring("SensorMarker: OutputVariableType '") + GetOutputVariableTypeString(cSensor->GetOutputVariableType()) + 
 			"' is not available in marker with marker number " + EXUstd::ToString(n);

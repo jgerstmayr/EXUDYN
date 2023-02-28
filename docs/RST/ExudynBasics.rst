@@ -101,6 +101,42 @@ position, forces or joint data. For viewing sensor results, use the \ ``PlotSens
 \ ``exudyn.plot``\  tool, see the rigid body and joints tutorial.
 
 
+.. _sec-overview-basics-renderer:
+
+
+Renderer and 3D graphics
+------------------------
+
+A 3D renderer is attached to the simulation. Visualization is started with  \ ``exu.StartRenderer()``\ , see the examples and tutorials.
+The renderer uses an OpenGL window of a library called GLFW, which is platform-independent. 
+The renderer is set up in a minimalistic way, just to ensure that you can check that the modeling is correct. 
+There is no way to contruct models inside the renderer. 
+Note: Try to avoid huge number of triangles in STL files or by creating large number of complex objects, such as spheres or cylinders.
+
+There are some main features in the renderer, using keyboard and mouse, for details see Section :ref:`sec-graphicsvisualization`\ :
+
++  press key H to show help in renderer
++  move model by pressing left mouse button and drag
++  rotate model by pressing right mouse button and drag
++  for further mouse functionality, see Section :ref:`sec-gui-sec-mouseinput`\ 
++  change visibility (wire frame, solid, transparent, ...) by pressing T
++  zoom all: key A
++  open visualization dialog: key V, see Section :ref:`sec-overview-basics-visualizationsettings`\ 
++  open Python command dialog: key X, see Section :ref:`sec-overview-basics-commandandhelp`\ 
++  show item number: click on graphics element with left mouse button
++  show item dictionary: click on graphics element with right mouse button  
++  for further keys, see Section :ref:`sec-gui-sec-keyboardinput`\  or press H in renderer
+
+Depending on your model (size, place, ...), you may need to adjust the following visualization and \ ``openGL``\  parameters in \ ``visualizationSettings``\ :
+
++  change window size
++  light and light position 
++  shadow (turned off by using 0; turned on by using, e.g., a value of 0.3) and shadow polygon offset; shadow slows down graphics performance by a factor of 2-3, depending on your graphics card
++  visibility of nodes, markers, etc. in according bodies, nodes, markers, ..., \ ``visualizationSettings``\ 
++  move camera with a selected marker: adjust \ ``trackMarker``\  in \ ``visualizationSettings.interactive``\ 
++  ... (see e.g. Section :ref:`sec-vsettingsgeneral`\ )
+
+
 
 .. _sec-overview-basics-visualizationsettings:
 
@@ -173,37 +209,35 @@ The visualization settings structure can be accessed in the system container \ `
 
 
 
-.. _sec-overview-basics-renderer:
+.. _sec-overview-basics-commandandhelp:
 
 
-Renderer and 3D graphics
+Execute Command and Help
 ------------------------
 
-A 3D renderer is attached to the simulation. Visualization is started with  \ ``exu.StartRenderer()``\ , see the examples and tutorials.
-The renderer uses an OpenGL window of a library called GLFW, which is platform-independent. 
-The renderer is set up in a minimalistic way, just to ensure that you can check that the modeling is correct. There is no way to contruct models with the renderer. Try to avoid huge number of triangles in STL files or by creating large number of complex objects, such as spheres or cylinders.
+In addition to the Visualization settings dialog, a simple help window opens upon pressing key 'H'. 
+It is also possible to execute single Python commands during simulation by pressing 'X', which opens a simple dialog, saying 'Single command (press return to execute'. 
+Note that the dialog may appear behind the visualization window!
+This dialog may be very helpful in long running computations or in case that you may evaluate variables for debugging.
+The Python commands are evaluated in the global python scope, meaning that \ ``mbs``\  or other variables of your scripts are available.
+User errors are caught by exceptions, but in severe cases this may lead to crash.
 
-There are some main features in the renderer, using keyboard and mouse:
+Useful examples (single lines) may be: 
 
-+  press key H to show help in renderer
-+  move model by pressing left mouse button and drag
-+  rotate model by pressing right mouse button and drag
-+  change visibility (wire frame, solid, transparent, ...) by pressing T
-+  zoom all: key A
-+  open visualization dialog: key V
-+  show item number: click on graphics element with left mouse button
-+  show item dictionary: click on graphics element with right mouse button  
-+  ... (see Section :ref:`sec-vsettingsgeneral`\ ff.)
+.. code-block:: python
 
-Depending on your model (size, place, ...), you may need to adjust the following \ ``openGL``\  parameters in \ ``visualizationSettings``\ :
-
-+  light and light position 
-+  shadow (turned off by using 0; turned on by using, e.g., a value of 0.3) and shadow polygon offset; shadow slows down graphics performance by a factor of 2-3, depending on your graphics card
-+  visibility of nodes, markers, etc. in according bodies, nodes, markers, ..., \ ``visualizationSettings``\ 
-+  move camera with a selected marker: adjust \ ``trackMarker``\  in \ ``visualizationSettings.interactive``\ 
-+  ... (see Section :ref:`sec-vsettingsgeneral`\ ff.)
+  x=5 #or change any other variable used in Python user functions
+  print(mbs) #print current mbs overview
+  print(mbs.GetSensorValues(0))
+  #adjust simulation end time, in long-run simulations:
+  mbs.sys['dynamicSolver'].it.endTime = 1 
+  mbs.sys['dynamicSolver'].output.verboseMode = 0
 
 
+
+Note that you could also change \ ``visualizationSettings``\  in this way, but the Visualization settings dialog is much more convenient.
+Right now, it is not possible to change \ ``simulationSettings``\  which have been passed to the solver.
+It is, e.g., not possible to change the Newton tolerances on the fly.
 
 
 .. _sec-overview-basics-graphicspipeline:
@@ -462,9 +496,9 @@ The following hints shall be followed (also some solver hints).
 +  \ **static solver**\ : in case that your system is (nearly) kinematic, a static solution can be achieved using \ ``stabilizerODE2term``\ , which adds mass-proportional stiffness terms during load steps \ :math:`< 1`\ .
 +  very small loads or even \ **zero loads**\  do not converge: \ ``SolveDynamic``\  or \ ``SolveStatic``\  \ **terminated due to errors**\ 
   
-+ [\ :math:`\ra`\ ] the reason is the nonlinearity of formulations (nonlinear kinematics, nonlinear beam, etc.) and round off errors, which restrict Newton to achieve desired tolerances
-+ [\ :math:`\ra`\ ] adjust (increase) \ ``.newton.relativeTolerance``\  / \ ``.newton.absoluteTolerance``\  in static solver or in time integration
-+ [\ :math:`\ra`\ ] in many cases, especially for static problems, the \ ``.newton.newtonResidualMode = 1``\  evaluates the increments; the nonlinear problems is assumed to be converged, if increments are within given absolute/relative tolerances; this also works usually better for kinematic solutions
+    |  →  the reason is the nonlinearity of formulations (nonlinear kinematics, nonlinear beam, etc.) and round off errors, which restrict Newton to achieve desired tolerances
+    |  →  adjust (increase) \ ``.newton.relativeTolerance``\  / \ ``.newton.absoluteTolerance``\  in static solver or in time integration
+    |  →  in many cases, especially for static problems, the \ ``.newton.newtonResidualMode = 1``\  evaluates the increments; the nonlinear problems is assumed to be converged, if increments are within given absolute/relative tolerances; this also works usually better for kinematic solutions
   
 +  for \ **discontinuous problems**\ : try to adjust solver parameters; especially the \ ``discontinuous.iterationTolerance``\  and \ ``discontinuous.maxIterations``\ ; try to make smaller load or time steps in order to resolve switching points of contact or friction; generalized alpha solvers may cause troubles when reducing step sizes \ :math:`\ra`\  use TrapezoidalIndex2 solver
 +  if you see further problems, please post them (including relevant example) at the Exudyn github page!

@@ -8,9 +8,10 @@ The 3D OpenGL graphics renderer window is kept simple, but useful to see the ani
 The graphics output is restricted to a 3D window (renderwindow) into which the renderer draws the visualization state of the \texttt{MainSystem} \texttt{mbs}.
 Note that visualization parameters can be widely changed (more than 200 parameters ...), see \refSection{sec:overview:basics:visualizationsettings}.
 
+
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++
-\mysubsection{Mouse input}
+\mysubsectionlabel{Mouse input}{sec:GUI:sec:mouseInput}
 The following table includes the mouse functions:
 %
 \startGenericTable{| p{4cm} | p{4cm} | p{8cm} |}
@@ -31,7 +32,7 @@ see \texttt{visualizationSettings.interactive.useJoystickInput} and similar opti
 The interface only works, if the device maps 6 coordinates to the joystick input of GLFW (tested with 3DCONNEXION mouse).
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++
-\mysubsection{Keyboard input}
+\mysubsectionlabel{Keyboard input}{sec:GUI:sec:keyboardInput}
 The following table includes the keyboard shortcuts available in the window. 
 
 \startGenericTable{| p{4cm} | p{4cm} | p{8cm} |}
@@ -61,8 +62,8 @@ The following table includes the keyboard shortcuts available in the window.
 \rowTableThree{\mybold{Q}}{stop solver}{current solver is stopped (proceeds to next simulation or end of file)}
 \rowTableThree{\mybold{SPACE}}{pause/continue simulation}{pause simulation, e.g. for model inspection; if simulation is paused, it can be continued by pressing space; use SHIFT+SPACE to continuously activate 'continue simulation'}
 \rowTableThree{\mybold{ESCAPE}}{close renderer}{stops the simulation (and further simulations) and closes the render window (same as close window)}
-\rowTableThree{\mybold{X}}{execute command}{open dialog to enter a python command (in global python scope); dialog may appear behind the visualization window! User errors are caught by exceptions, but in severe cases this may lead to crash; Examples: Examples: '\texttt{print(mbs)}', '\texttt{x=5}', '\texttt{print(mbs.GetSensorValues(0))}', etc. }
-\rowTableThree{\mybold{V}}{visualization settings}{open dialog to modify visualization settings; dialog may appear behind the visualization window!}
+\rowTableThree{\mybold{X}}{execute command}{open dialog to enter a python command (in global python scope), see \refSection{sec:overview:basics:commandAndHelp}; dialog may appear behind the visualization window!}
+\rowTableThree{\mybold{V}}{visualization settings}{open dialog to modify visualization settings, see \refSection{sec:overview:basics:visualizationsettings}; dialog may appear behind the visualization window!}
 \rowTableThree{\mybold{F2}}{ignore keys}{ switch key input on / off; can be used in combination with keyPressUserFunction to make simulators}
 \rowTableThree{\mybold{F3}}{show mouse coordinates}{shown in status line}
 \rowTableThree{\mybold{'.' or KEYPAD +}}{zoom in}{zoom one step into scene (additionally press CTRL to perform small zoom step)}

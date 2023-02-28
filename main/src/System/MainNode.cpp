@@ -46,10 +46,10 @@ py::object MainNode::GetOutputVariable(OutputVariableType variableType, Configur
 //! GetOutputVariable with type and return value; restricted to certain number of types
 py::object MainMarker::GetOutputVariable(const CSystemData& cSystemData, OutputVariableType variableType, ConfigurationType configuration) const
 {
-	CSVector9D value;
-	if (GetCMarker()->GetOutputVariable(cSystemData, variableType, configuration, value))
+	Vector values;
+	if (GetCMarker()->GetOutputVariable(cSystemData, variableType, configuration, values))
 	{
-		return py::array_t<Real>(value.NumberOfItems(), value.GetDataPointer());
+		return py::array_t<Real>(values.NumberOfItems(), values.GetDataPointer());
 	}
 	else
 	{
@@ -60,12 +60,50 @@ py::object MainMarker::GetOutputVariable(const CSystemData& cSystemData, OutputV
 }
 
 //! GetOutputVariable with type; writes values into value and returns true, if successful
-bool CMarker::GetOutputVariable(const CSystemData& cSystemData, OutputVariableType variableType, ConfigurationType configuration, CSVector9D& value) const
+bool CMarker::GetOutputVariable(const CSystemData& cSystemData, OutputVariableType variableType, ConfigurationType configuration, Vector& value) const
 {
 	Vector3D value3D;
+
 	bool isSuccess = true;
+	if (EXUstd::IsOfType((Index)OutputVariableType::Coordinates + (Index)OutputVariableType::Coordinates_t, (Index)variableType))
+	{
+		if (configuration != ConfigurationType::Current)
+		{
+			isSuccess = false;
+		}
+		else
+		{
+			bool computeJacobian = false;
+			MarkerData markerData; //slow!
+			ComputeMarkerData(cSystemData, computeJacobian, markerData);
+
+			if (variableType == OutputVariableType::Coordinates)
+			{
+				value.CopyFrom(markerData.vectorValue);
+			}
+			if (variableType == OutputVariableType::Coordinates_t)
+			{
+				if (!markerData.velocityAvailable) { isSuccess = false; }
+				else { value.CopyFrom(markerData.vectorValue_t); }
+			}
+		}
+		return isSuccess;
+	}
+
 	switch (variableType)
 	{
+	case OutputVariableType::Displacement:
+	{
+		if (EXUstd::IsOfType(GetType(), Marker::Position))
+		{
+			Vector3D refPos;
+			GetPosition(cSystemData, refPos, ConfigurationType::Reference);
+			GetPosition(cSystemData, value3D, configuration);
+			value.CopyFrom(value3D - refPos);
+		}
+		else { isSuccess = false; }
+		break;
+	}
 	case OutputVariableType::Position:
 	{
 		if (EXUstd::IsOfType(GetType(), Marker::Position))
@@ -132,4 +170,23 @@ bool CMarker::GetOutputVariable(const CSystemData& cSystemData, OutputVariableTy
 	return isSuccess;
 }
 
+OutputVariableType CMarker::GetOutputVariableTypes() const
+{
+	Index ovt = 0;
+	if (EXUstd::IsOfType(GetType(), Marker::Position))
+	{
+		ovt += (Index)OutputVariableType::Displacement + (Index)OutputVariableType::Position + (Index)OutputVariableType::Velocity;
+	}
+	if (EXUstd::IsOfType(GetType(), Marker::Orientation))
+	{
+		ovt += (Index)OutputVariableType::AngularVelocity + (Index)OutputVariableType::AngularVelocityLocal + 
+			(Index)OutputVariableType::RotationMatrix + (Index)OutputVariableType::Rotation;
+	}
+	if (EXUstd::IsOfType(GetType(), Marker::Coordinate) || EXUstd::IsOfType(GetType(), Marker::Coordinates))
+	{
+		ovt += (Index)OutputVariableType::Coordinates + (Index)OutputVariableType::Coordinates_t; //via MarkerData
+	}
+
+	return (OutputVariableType)ovt;
+}
 

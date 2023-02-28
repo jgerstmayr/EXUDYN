@@ -14,7 +14,7 @@ pip install sphinx
 pip install furo
 pip install sphinx_rtd_theme
 pip install sphinx-copybutton
-#pip install readthedocs-sphinx-search #only works on readthedocs
+#pip install readthedocs-sphinx-search #now included as a standard; only works on readthedocs
 
 #pip install sphinx-tabs #?
 

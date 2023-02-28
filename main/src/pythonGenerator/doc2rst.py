@@ -148,6 +148,7 @@ def ConvertFile(s):
     s=s.replace(r'\ ',r' ') #replace special spaces from latex first; spaces that are added later shall be kept!
     
     s = s.replace(r'\pythonstyle\begin{lstlisting}',r'\begin{pytlisting}')
+    s = s.replace('\\item[$\\ra$]','  |  → ')
 
     s = LatexString2RST(s, sectionMarkerText=sectionMarkerText)
 
@@ -259,11 +260,15 @@ if False: #for debug:
 
 [sRSTmain, hierarchicalRST] = ExtractSections(sRST)
 
+#long README.rst, not used any more:
 sRSTmain += '\n\n\ **FOR FURTHER INFORMATION see** `Exudyn Github pages <https://jgerstmayr.github.io/EXUDYN>`_ and'
 sRSTmain += ' see `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ !!!\n\n'
 
+#on github, first page:
 sRSTreduced = hierarchicalRST[0][1].replace(sectionMarkerText+'0','')
-sRSTreduced += '\n\n\ **FOR FURTHER INFORMATION see** `Exudyn Github pages <https://jgerstmayr.github.io/EXUDYN>`_ and'
+sRSTreduced += '\n\nChanges can be tracked in the Issue tracker, see Github pages and Read the Docs.'
+sRSTreduced += '\n\n\\ **FOR FURTHER INFORMATION see** `Exudyn Github pages <https://jgerstmayr.github.io/EXUDYN>`_\\ , '
+sRSTreduced += '`Read the Docs <https://exudyn.readthedocs.io/>`_ and'
 sRSTreduced += ' for details (incl. equations) see `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ !!!\n\n'
 
 if True:
@@ -307,8 +312,16 @@ sRST = sRST.replace('docs/theDoc/figures/','../theDoc/figures/')
 sRST = sRST.replace('docs/demo/','../demo/')
 [sRST, hierarchicalRST] = ExtractSections(sRST)
 
+#on github pages and readthedocs:
 modMainPage = hierarchicalRST[0][1].replace(sectionMarkerText+'0','')
-modMainPage += '\n\n\\ **READ Exudyn documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ \n\n'
+modMainPage += 'Changes can be tracked in the :ref:`Issue tracker <sec-issuetracker>` \n\n'
+modMainPage += 'For searching on Read the Docs (especially with the search preview), add \* or ~1 / ~2 / ... to your search to search more general, e.g., FEMinter\* to search for FEMinterface, or objetfrf~3 to find ObjectFFRF. Your search preview usually finds less results than the search when pressing Enter. See also `Read the Docs documentation <https://docs.readthedocs.io/en/stable/server-side-search/syntax.html#special-queries>`_ \n\n'
+modMainPage += '\\ **READ Exudyn documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ \n\n'
+
+#last commit
+#https://img.shields.io/github/last-commit/jgerstmayr/exudyn
+#https://img.shields.io/github/stars/jgerstmayr/exudyn
+#https://img.shields.io/pypi/v/exudyn
 
 hierarchicalRST[0] = (hierarchicalRST[0][0], sHEADERsmall + modMainPage)
 

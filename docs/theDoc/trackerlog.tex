@@ -10,15 +10,74 @@ For details, see the \texttt{trackerlog.html} file.
 
 \noindent General information on current version:
 \bi \small
-  \item Exudyn version = 1.5.109.dev1, 
-  \item last change =  2023-02-23, 
-  \item Number of issues = 1448, 
-  \item Number of resolved issues = 1270 (109 in current version), 
+  \item Exudyn version = 1.5.117.dev1, 
+  \item last change =  2023-02-28, 
+  \item Number of issues = 1454, 
+  \item Number of resolved issues = 1278 (117 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.5.117}:  resolved Issue 1453: {\bf \_\_NOGLFW option not working}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: exclude according functions in rendererPythonInterface}
+    \item {\bf notes: added NOGLFW version to automatic build and testsuite}
+    \item   date resolved: {\bf 2023-02-28 15:18},
+date raised: 2023-02-28 
+  \ei
+  \item[] {\bf Version 1.5.116}:  resolved Issue 1452: {\bf Single command}
+(docu)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add some more detailed description in theDoc after Visualization settings dialog}
+    \item   date resolved: {\bf 2023-02-26 00:40},
+date raised: 2023-02-26 
+  \ei
+  \item[] {\bf Version 1.5.115}:  resolved Issue 1451: {\bf solver interface}
+(check)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: check modification of solver structures like it to be writable}
+    \item {\bf notes: added now write functionality for solvers; use with care and only if you know what you do...}
+    \item   date resolved: {\bf 2023-02-26 00:12},
+date raised: 2023-02-25 
+  \ei
+  \item[] {\bf Version 1.5.114}:  resolved Issue 1447: {\bf CSensorMarker}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add RotationMatrix as additional outputvariable type}
+    \item {\bf notes: Coordinates also added as output variable}
+    \item   date resolved: {\bf 2023-02-24 15:46},
+date raised: 2023-02-23 
+  \ei
+  \item[] {\bf Version 1.5.113}:  resolved Issue 1446: {\bf CSensorMarker}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: does not check types; Make GetOutputVariableTypes as in objects; orientation only for selected markers; check types in Assemble prechecks}
+    \item   date resolved: {\bf 2023-02-24 15:46},
+date raised: 2023-02-23 
+  \ei
+  \item[] {\bf Version 1.5.112}: {\bf \color{warningRed}  resolved BUG 1449}: {\bf DOPRI5}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: small bug introduced in previous update: currentStepSize not updated any more}
+    \item   date resolved: {\bf 2023-02-24 15:45},
+date raised: 2023-02-24 
+  \ei
+  \item[] {\bf Version 1.5.111}:  resolved Issue 1448: {\bf GenericJoint}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add experimental flag alternativeConstraints to switch to different constraint equations, e.g. for 3 constrained rotations; this resolves unphysical 180 degree flips especially in static cases; flag may be removed in future}
+    \item {\bf notes: thanks for P. Manzl for raising this problem}
+    \item   date resolved: {\bf 2023-02-24 13:52},
+date raised: 2023-02-24 
+  \ei
+  \item[] {\bf Version 1.5.110}:  resolved Issue 1444: {\bf sphinx/github pages}
+(docu)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: fix equation references and figures}
+    \item   date resolved: {\bf 2023-02-24 13:50},
+date raised: 2023-02-22 
+  \ei
   \item[] {\bf Version 1.5.109}:  resolved Issue 1442: {\bf add readthedocs.io}
 (docu)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

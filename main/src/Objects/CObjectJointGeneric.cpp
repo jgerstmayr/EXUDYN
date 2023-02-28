@@ -115,9 +115,31 @@ void CObjectJointGeneric::ComputeAlgebraicEquations(Vector& algebraicEquations, 
 					Vector3D vy1 = A1all.GetColumnVector<3>(1);
 					//Vector3D vz1 = A1all.GetColumnVector<3>(2);
 
-					algebraicEquations[3] = vz0 * vy1;
-					algebraicEquations[4] = vz0 * vx1;
-					algebraicEquations[5] = vx0 * vy1;
+					if (!parameters.alternativeConstraints)
+					{
+						algebraicEquations[3] = vz0 * vy1;
+						algebraicEquations[4] = vz0 * vx1;
+						algebraicEquations[5] = vx0 * vy1;
+					}
+					else
+					{
+						Vector3D vy0 = A0all.GetColumnVector<3>(1);
+						Vector3D vz1 = A1all.GetColumnVector<3>(2);
+						algebraicEquations[3] = vx0 * vy1.CrossProduct(vz0) - 1;
+						algebraicEquations[4] = vy0 * vz1.CrossProduct(vx0) - 1;
+						algebraicEquations[5] = vz0 * vx1.CrossProduct(vy0) - 1;
+						//works, but is suboptimal:
+						//algebraicEquations[3] += vy0 * vy1 /*+ vz0 * vz1*/ - 1.;
+						//algebraicEquations[4] += vx0 * vx1 /*+ vz0 * vz1*/ - 1.;
+						//algebraicEquations[5] += vx0 * vx1 /*+ vy0 * vy1*/ - 1.;
+
+						//does not work:
+						//Vector3D angles = RigidBodyMath::RotationMatrix2RotXYZ(A0all.GetTransposed()*A1all);
+						//algebraicEquations[3] = angles[0];
+						//algebraicEquations[4] = angles[1];
+						//algebraicEquations[5] = angles[2];
+					}
+
 				}
 				else if (constrainedRotations == 2) //Revolute joint
 				{

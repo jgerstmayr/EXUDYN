@@ -4551,6 +4551,7 @@ The item \mybold{ObjectJointGeneric} with type = 'JointGeneric' has the followin
     offsetUserFunctionParameters &     Vector6D &      &     [0.,0.,0.,0.,0.,0.] &     \tabnewline vector of 6 parameters for joint's offsetUserFunction\\ \hline
     offsetUserFunction &     PyFunctionVector6DmbsScalarIndexVector6D &     \tabnewline  &     \tabnewline 0 &     \tabnewline A Python function which defines the time-dependent (fixed) offset of translation (indices 0,1,2) and rotation (indices 3,4,5) joint coordinates with parameters (mbs, t, offsetUserFunctionParameters)\\ \hline
     offsetUserFunction\_t &     PyFunctionVector6DmbsScalarIndexVector6D &     \tabnewline  &     \tabnewline 0 &     \tabnewline (NOT IMPLEMENTED YET)time derivative of offsetUserFunction using the same parameters\\ \hline
+    alternativeConstraints &     Bool &      &     False &     this is an experimental flag, may change in future: if uses alternative contraint equations for rotations, currently in case of 3 locked rotations: $\LU{0}{\tv}_{x0}\tp (\LU{0}{\tv}_{y1} \times \LU{0}{\tv}_{z0})$, $\LU{0}{\tv}_{y0}\tp (\LU{0}{\tv}_{z1} \times \LU{0}{\tv}_{x0})$, $\LU{0}{\tv}_{z0}\tp (\LU{0}{\tv}_{x1} \times \LU{0}{\tv}_{y0})$; this avoids 180\textdegree flips of the standard configuration in static computations, but leads to different values in Lagrange multipliers\\ \hline
     visualization &     VObjectJointGeneric &      &      &     parameters for visualization of item\\ \hline
 \end{longtable}
 \end{center}

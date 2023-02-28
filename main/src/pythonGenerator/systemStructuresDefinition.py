@@ -806,7 +806,7 @@ writeFile=VisualizationSettings.h
 class = CSolverTimer
 appendToFile=False
 writePybindIncludes = True
-latexText = "\n%++++++++++++++++++++++++++++++++++++++\n\mysubsectionlabel{Solver substructures}{sec:solverSubstructures}\nThis section includes structures contained in the solver, which can be accessed via the Python interface during solution or for building a customized solver in Python.\n"
+latexText = "\n%++++++++++++++++++++++++++++++++++++++\n\mysubsectionlabel{Solver substructures}{sec:solverSubstructures}\nThis section includes structures contained in the solver, which can be accessed via the Python interface during solution or for building a customized solver in Python.\nThere is plenty of possibilities to interact with the solvers, being it the extraction of data at the end (such as .it or .conv), computation of mass matrix or system matrices, and finally the modification of solver structures (which may have effect or not). In any case, there is no full description for all these methods and the user must always consider the according C++ function to verify the desired behavior.\n"
 classDescription = "Structure for timing in solver. Each Real variable is used to measure the CPU time which certain parts of the solver need. This structure is only active if the code is not compiled with the __FAST_EXUDYN_LINALG option and if displayComputationTime is set True. Timings will only be filled, if useTimer is True."
 #V|F,   pythonName,                   cplusplusName,      size, type,          defaultValue,            args,           cFlags, parameterDescription
 V,      useTimer,                   ,                  ,     bool,         true,                   ,   P,    "flag to decide, whether the timer is used (true) or not"

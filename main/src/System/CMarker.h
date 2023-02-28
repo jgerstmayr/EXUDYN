@@ -99,8 +99,9 @@ public: //
 	}
 
 	//! GetOutputVariable with type; writes values into value and returns true, if successful
-	virtual bool GetOutputVariable(const CSystemData& cSystemData, OutputVariableType variableType, ConfigurationType configuration, CSVector9D& value) const;
+	virtual bool GetOutputVariable(const CSystemData& cSystemData, OutputVariableType variableType, ConfigurationType configuration, Vector& value) const;
 
+	virtual OutputVariableType GetOutputVariableTypes() const;
 
 	//! dimension, which an according connector would have
 	virtual Index GetDimension(const CSystemData& cSystemData) const {

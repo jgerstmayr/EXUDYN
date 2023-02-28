@@ -254,7 +254,9 @@ for c in abc:
 convLatexWords={'(\\the\\month-\\the\\year)':'',
            '    \\item':'\\item',
            '  \\item':'\\item',
-           '\\item[$\\ra$]':'  |  → ', #'+ ->', #this is always a sublist
+           '\\item[$\\ra$]':'  |  → ', #'+ ->', #probably not used any more
+           #does not work: '\\item[\\ :math:`\\ra`\\ ]':'  |  \\ :math:`\\ra`\\ ',
+           #does not work: '[\\ :math:`\\ra`\\ ]':'\\ :math:`\\ra`\\ ',
            '\\item[]':'  ', 
            '\\item[--]':' - ',  #one additional whitespace at beginning for alignment of sub-lists!
            '\\item':'+ ',
@@ -307,6 +309,7 @@ convLatexWords={'(\\the\\month-\\the\\year)':'',
            '\\"o':'ö',
            '\\"u':'ü',
            #'$':'',
+           '\\rstStartNewLine':'\\ '
            }
     
 #should never appear, not compatible with RST: convLabel = {'\\label':('\n\n.. _','_USE',':\n\n')} #do not do this for equation labels
@@ -765,13 +768,14 @@ def ReplaceLatexCommands(s, conversionDict, sectionMarkerText=''): #replace stri
                         print('PROBLEM with rowTable: ',innerString2)
 
                 elif key == '\\mysection' or key == '\\mysectionlabel':
-                    s += sectionMarkerText+'[0]'+'[' + innerString + ']'+'\n'
+                    if sectionMarkerText != '':
+                        s += sectionMarkerText+'[0]'+'[' + innerString + ']'+'\n'
                     if 'label' in key: 
                         s += RSTlabelString(innerString2)+'\n'
                     #sectionsList += [('0',innerString)]
                     s += '\n'+RSTheaderString(innerString, secOff + 0)
                 elif key == '\\mysubsection' or key == '\\mysubsectionlabel':
-                    if sectionFilesDepth > 0:
+                    if sectionFilesDepth > 0 and sectionMarkerText != '':
                         s += sectionMarkerText+'[1]'+'[' + innerString + ']'+'\n'
                         #sectionsList += [('1',innerString)]
                     if 'label' in key: s += RSTlabelString(innerString2)+'\n'

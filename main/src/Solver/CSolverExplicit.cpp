@@ -429,7 +429,7 @@ bool CSolverExplicitTimeInt::Newton(CSystem& computationalSystem, const Simulati
 		}
 
 		//now set suggested step size
-		h = hNew;
+		it.currentStepSize = hNew;
 		STOPTIMER(timer.errorEstimator);
 
 		if (IsVerbose(2)) {

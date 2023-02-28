@@ -1,6 +1,5 @@
 
 
-[1][Simulation settings]
 
 *******************
 Simulation settings

@@ -40,8 +40,6 @@ Due to limitations for complex formulas and tables in .rst files, details of the
 
 For license, see LICENSE.txt in the root github folder on github!
 
-Changes can be tracked in the 
-
 In addition to the tutorial in the documentation, many ( **100+** ) examples can be found under main/pythonDev/Examples and main/pythonDev/TestModels .
 
 Tutorial videos can be found in the `youtube channel of Exudyn <https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg_jtl6fx>`_ !
@@ -584,7 +582,7 @@ Exceptions and Error Messages. In the following, typical error messages are list
   ImportError: Module use of python36.dll conflicts with this version of Python.
 \end{lstlisting}
 %
-  Typical \mybold{error messages if 32/64 bits versions are mixed}:\vspace{1pt}\\
+Typical \mybold{error messages if 32/64 bits versions are mixed}:\vspace{1pt}\\
 \begin{lstlisting}
   Traceback (most recent call last):
   
@@ -626,6 +624,7 @@ to explicitly load the version without AVX2.
              ^
   SyntaxError: invalid syntax
 \end{lstlisting}
+\onlyRST{\rstStartNewLine}
 %
 \item[$\ra$] such an error points to the line of your code (line 42), but in fact the error may have been caused in previous code, such as in this case there was a missing brace in the line 40, which caused the error:
 \pythonstyle\begin{lstlisting}
@@ -645,6 +644,7 @@ to explicitly load the version without AVX2.
   Error when executing process ShowVisualizationSettingsDialog':
   ModuleNotFoundError: No module named 'tkinter'
 \end{lstlisting}
+\onlyRST{\rstStartNewLine}
 %
 \item[$\ra$] see installation instructions to install missing Python modules, \refSection{sec:install:installinstructions}.
 
@@ -657,7 +657,7 @@ to explicitly load the version without AVX2.
   In some cases, visualizationSettings dialog may not be available and changes have to be made inside the code.
   
 \item[$\ra$] To resolve issues, the following visualizationSettings may help (before starting renderer!), but may reduce functionality: 
-  dialogs.multiThreadedDialogs = False, general.useMultiThreadedRendering = False
+     dialogs.multiThreadedDialogs = False, general.useMultiThreadedRendering = False
 \ei 
 
 
@@ -703,6 +703,7 @@ to explicitly load the version without AVX2.
 
   ValueError: SolveDynamic terminated
 \end{lstlisting}
+\onlyRST{\rstStartNewLine}
 \bi
 \item[$\ra$] it seems clear that you should read this error from top as it indicates that you just forgot to call \texttt{mbs.Assemble()}
 \ei
@@ -726,6 +727,7 @@ to explicitly load the version without AVX2.
   causing system equation number (coordinate number) = 42
   =========================================
 \end{lstlisting}
+\onlyRST{\rstStartNewLine}
 %
 \bi
 \item[$\ra$] this solver error shows that equation 42 is not solvable. The according coordinate is shown later in such an error message:
@@ -736,6 +738,7 @@ to explicitly load the version without AVX2.
   Potential object number(s) causing linear solver to fail: [7]
       object 7, name='object7', type=JointGeneric
 \end{lstlisting}
+\onlyRST{\rstStartNewLine}
 %
 \bi
 \item[$\ra$] object 7 seems to be the reason, possibly there are too much (joint) constraints applied to your system, check this object.
@@ -767,6 +770,7 @@ which draws the according object in red and others gray/transparent (but sometim
   STEP348, t = 20 sec, timeToGo = 0 sec, Nit/step = 7.00575
   solver finished after 0.258349 seconds.
 \end{lstlisting}
+\onlyRST{\rstStartNewLine}
 %
 \bi
 \item[$\ra$] this solver error is caused, because the nonlinear system cannot be solved using Newton's method.
@@ -798,6 +802,7 @@ which draws the according object in red and others gray/transparent (but sometim
 
   Solver stopped! use showHints=True to show helpful information
 \end{lstlisting}
+\onlyRST{\rstStartNewLine}
 %
 \bi
 \item[$\ra$] this indicates an error in the user function \texttt{LoadCoordinate::loadVectorUserFunction}, because \texttt{sin} function has not been defined (must be imported, e.g., from \texttt{math}). It indicates that the error occurred in line 48 in \texttt{springDamperUserFunctionTest.py} within function \texttt{Sweep}, which has been called from function \texttt{userLoad}, etc.

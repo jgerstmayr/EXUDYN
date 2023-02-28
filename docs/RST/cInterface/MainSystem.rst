@@ -401,7 +401,7 @@ This section provides functions for adding, reading and modifying markers. Marke
 * | **SetMarkerParameter**\ (\ *markerNumber*\ , \ *parameterName*\ , \ *value*\ ): 
   | set parameter 'parameterName' of marker with markerNumber to value; parameter names can be found for the specific items in the reference manual
 * | **GetMarkerOutput**\ (\ *markerNumber*\ , \ *variableType*\ , \ *configuration*\  = ConfigurationType.Current): 
-  | get the ouput of the marker specified with the OutputVariableType; currently only provides Position and Velocity for position based markers, and RotationMatrix, Rotation and AngularVelocity(Local) for markers providing orientation
+  | get the ouput of the marker specified with the OutputVariableType; currently only provides Displacement, Position and Velocity for position based markers, and RotationMatrix, Rotation and AngularVelocity(Local) for markers providing orientation; Coordinates and Coordinates_t available for coordinate markers
   | *Example*:
 
   .. code-block:: python

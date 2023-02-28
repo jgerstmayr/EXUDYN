@@ -2291,7 +2291,7 @@ class VObjectJointGeneric:
     def __repr__(self):
         return str(dict(self))
 class ObjectJointGeneric:
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], constrainedAxes = [1,1,1,1,1,1], rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1), rotationMarker1 = IIDiagMatrix(rowsColumns=3,value=1), activeConnector = True, offsetUserFunctionParameters = [0.,0.,0.,0.,0.,0.], offsetUserFunction = 0, offsetUserFunction_t = 0, visualization = {'show': True, 'axesRadius': 0.1, 'axesLength': 0.4, 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], constrainedAxes = [1,1,1,1,1,1], rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1), rotationMarker1 = IIDiagMatrix(rowsColumns=3,value=1), activeConnector = True, offsetUserFunctionParameters = [0.,0.,0.,0.,0.,0.], offsetUserFunction = 0, offsetUserFunction_t = 0, alternativeConstraints = False, visualization = {'show': True, 'axesRadius': 0.1, 'axesLength': 0.4, 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = markerNumbers
         self.constrainedAxes = constrainedAxes
@@ -2301,6 +2301,7 @@ class ObjectJointGeneric:
         self.offsetUserFunctionParameters = offsetUserFunctionParameters
         self.offsetUserFunction = offsetUserFunction
         self.offsetUserFunction_t = offsetUserFunction_t
+        self.alternativeConstraints = alternativeConstraints
         self.visualization = visualization
 
     def __iter__(self):
@@ -2314,6 +2315,7 @@ class ObjectJointGeneric:
         yield 'offsetUserFunctionParameters', self.offsetUserFunctionParameters
         yield 'offsetUserFunction', self.offsetUserFunction
         yield 'offsetUserFunction_t', self.offsetUserFunction_t
+        yield 'alternativeConstraints', self.alternativeConstraints
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VaxesRadius', dict(self.visualization)["axesRadius"]
         yield 'VaxesLength', dict(self.visualization)["axesLength"]

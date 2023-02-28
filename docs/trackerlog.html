@@ -15,10 +15,10 @@ table{
 
 <h2>ISSUE Tracker</h2>
 
-Number of issues = 1448, 
-Number of resolved issues = 1270 (109 in current minor version), 
-Exudyn version = 1.5.109.dev1, 
-last change =  2023-02-23
+Number of issues = 1454, 
+Number of resolved issues = 1278 (117 in current minor version), 
+Exudyn version = 1.5.117.dev1, 
+last change =  2023-02-28
 
 
 <table style = "width:100%">
@@ -39,31 +39,15 @@ last change =  2023-02-23
 <th>notes</th>
 </tr>
   <tr style = "background-color:#FFB266">
-    <td>1447</td>
-    <td>CSensorMarker       </td>
+    <td>1450</td>
+    <td>coordinatesSolution </td>
     <td>JG</td>
     <td>RAISED  </td>
-    <td> add RotationMatrix as additional outputvariable type</td>
+    <td> add number of threads to solution files and more details on computer; check parameter variation and other files (e.g. numberOfThreads and final computation time)</td>
     <td>EXTENSION</td>
     <td></td>
-    <td>2023-02-23</td>
-    <td>2023-08-22</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>1446</td>
-    <td>CSensorMarker       </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> does not check types; Make GetOutputVariableTypes as in objects; orientation only for selected markers; check types in Assemble prechecks</td>
-    <td>FIX</td>
-    <td></td>
-    <td>2023-02-23</td>
-    <td>2023-08-22</td>
+    <td>2023-02-25</td>
+    <td>2023-08-24</td>
     <td></td>
     <td></td>
     <td></td>
@@ -76,22 +60,6 @@ last change =  2023-02-23
     <td>JG</td>
     <td>RAISED  </td>
     <td> add solver description</td>
-    <td>DOCU</td>
-    <td></td>
-    <td>2023-02-22</td>
-    <td>2023-08-21</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>1444</td>
-    <td>sphinx/github pages </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> fix equation references and figures</td>
     <td>DOCU</td>
     <td></td>
     <td>2023-02-22</td>
@@ -2882,6 +2850,134 @@ last change =  2023-02-23
     <td>2019-07-01</td>
     <td></td>
     <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1453</td>
+    <td>__NOGLFW option not working</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> exclude according functions in rendererPythonInterface</td>
+    <td>FIX</td>
+    <td></td>
+    <td>2023-02-28</td>
+    <td>2023-08-27</td>
+    <td>2023-02-28 15:18</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>added NOGLFW version to automatic build and testsuite</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1452</td>
+    <td>Single command      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add some more detailed description in theDoc after Visualization settings dialog</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2023-02-26</td>
+    <td>2023-08-25</td>
+    <td>2023-02-26 00:40</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1451</td>
+    <td>solver interface    </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> check modification of solver structures like it to be writable</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2023-02-25</td>
+    <td>2023-08-24</td>
+    <td>2023-02-26 00:12</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>added now write functionality for solvers; use with care and only if you know what you do...</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1449</td>
+    <td>DOPRI5              </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> small bug introduced in previous update: currentStepSize not updated any more</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2023-02-24</td>
+    <td>2023-08-23</td>
+    <td>2023-02-24 15:45</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1448</td>
+    <td>GenericJoint        </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add experimental flag alternativeConstraints to switch to different constraint equations, e.g. for 3 constrained rotations; this resolves unphysical 180 degree flips especially in static cases; flag may be removed in future</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2023-02-24</td>
+    <td>2023-08-23</td>
+    <td>2023-02-24 13:52</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>thanks for P. Manzl for raising this problem</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1447</td>
+    <td>CSensorMarker       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add RotationMatrix as additional outputvariable type</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2023-02-23</td>
+    <td>2023-08-22</td>
+    <td>2023-02-24 15:46</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>Coordinates also added as output variable</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1446</td>
+    <td>CSensorMarker       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> does not check types; Make GetOutputVariableTypes as in objects; orientation only for selected markers; check types in Assemble prechecks</td>
+    <td>FIX</td>
+    <td></td>
+    <td>2023-02-23</td>
+    <td>2023-08-22</td>
+    <td>2023-02-24 15:46</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1444</td>
+    <td>sphinx/github pages </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> fix equation references and figures</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2023-02-22</td>
+    <td>2023-08-21</td>
+    <td>2023-02-24 13:50</td>
+    <td>JG</td>
     <td></td>
     <td></td>
     <td></td>
