@@ -35,6 +35,8 @@ The item \ **ObjectJointGeneric**\  with type = 'JointGeneric' has the following
   | A Python function which defines the time-dependent (fixed) offset of translation (indices 0,1,2) and rotation (indices 3,4,5) joint coordinates with parameters (mbs, t, offsetUserFunctionParameters)
 * | **offsetUserFunction_t** [\ :math:`\mathrm{UF} \in \Rcal^6`\ , type = PyFunctionVector6DmbsScalarIndexVector6D, default =  0]:
   | (NOT IMPLEMENTED YET)time derivative of offsetUserFunction using the same parameters
+* | **alternativeConstraints** [type = Bool, default = False]:
+  | this is an experimental flag, may change in future: if uses alternative contraint equations for rotations, currently in case of 3 locked rotations: \ :math:`\LU{0}{{\mathbf{t}}}_{x0}\tp (\LU{0}{{\mathbf{t}}}_{y1} \times \LU{0}{{\mathbf{t}}}_{z0})`\ , \ :math:`\LU{0}{{\mathbf{t}}}_{y0}\tp (\LU{0}{{\mathbf{t}}}_{z1} \times \LU{0}{{\mathbf{t}}}_{x0})`\ , \ :math:`\LU{0}{{\mathbf{t}}}_{z0}\tp (\LU{0}{{\mathbf{t}}}_{x1} \times \LU{0}{{\mathbf{t}}}_{y0})`\ ; this avoids 180° flips of the standard configuration in static computations, but leads to different values in Lagrange multipliers
 * | **visualization** [type = VObjectJointGeneric]:
   | parameters for visualization of item
 

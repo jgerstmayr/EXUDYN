@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Exudyn Basics &mdash; Exudyn1.5.109.dev1 1.5.109.dev1 documentation</title>
+  <title>Exudyn Basics &mdash; Exudyn1.5.117.dev1 1.5.117.dev1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
@@ -39,7 +39,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.5.109.dev1
+            Exudyn1.5.117.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -62,8 +62,9 @@
 <li class="toctree-l3"><a class="reference internal" href="#interaction-with-the-exudyn-module">Interaction with the Exudyn module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#simulation-settings">Simulation settings</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#generating-output-and-results">Generating output and results</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#visualization-settings-dialog">Visualization settings dialog</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#renderer-and-3d-graphics">Renderer and 3D graphics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#visualization-settings-dialog">Visualization settings dialog</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#execute-command-and-help">Execute Command and Help</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#graphics-pipeline">Graphics pipeline</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#storing-the-model-view">Storing the model view</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#graphics-user-functions-via-python">Graphics user functions via Python</a></li>
@@ -101,7 +102,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.5.109.dev1</a>
+          <a href="../../index.html">Exudyn1.5.117.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -189,6 +190,37 @@ Using <code class="docutils literal notranslate"><span class="pre">mbs.Reset()</
 position, forces or joint data. For viewing sensor results, use the <code class="docutils literal notranslate"><span class="pre">PlotSensor</span></code> function of the
 <code class="docutils literal notranslate"><span class="pre">exudyn.plot</span></code> tool, see the rigid body and joints tutorial.</p>
 </section>
+<section id="renderer-and-3d-graphics">
+<span id="sec-overview-basics-renderer"></span><h2>Renderer and 3D graphics<a class="headerlink" href="#renderer-and-3d-graphics" title="Permalink to this heading"></a></h2>
+<p>A 3D renderer is attached to the simulation. Visualization is started with  <code class="docutils literal notranslate"><span class="pre">exu.StartRenderer()</span></code>, see the examples and tutorials.
+The renderer uses an OpenGL window of a library called GLFW, which is platform-independent.
+The renderer is set up in a minimalistic way, just to ensure that you can check that the modeling is correct.
+There is no way to contruct models inside the renderer.
+Note: Try to avoid huge number of triangles in STL files or by creating large number of complex objects, such as spheres or cylinders.</p>
+<p>There are some main features in the renderer, using keyboard and mouse, for details see Section <a class="reference internal" href="GraphicsAndVisualization.html#sec-graphicsvisualization"><span class="std std-ref">Graphics and visualization</span></a>:</p>
+<ul class="simple">
+<li><p>press key H to show help in renderer</p></li>
+<li><p>move model by pressing left mouse button and drag</p></li>
+<li><p>rotate model by pressing right mouse button and drag</p></li>
+<li><p>for further mouse functionality, see Section <a class="reference internal" href="MouseInput.html#sec-gui-sec-mouseinput"><span class="std std-ref">Mouse input</span></a></p></li>
+<li><p>change visibility (wire frame, solid, transparent, …) by pressing T</p></li>
+<li><p>zoom all: key A</p></li>
+<li><p>open visualization dialog: key V, see Section <a class="reference internal" href="#sec-overview-basics-visualizationsettings"><span class="std std-ref">Visualization settings dialog</span></a></p></li>
+<li><p>open Python command dialog: key X, see Section <a class="reference internal" href="#sec-overview-basics-commandandhelp"><span class="std std-ref">Execute Command and Help</span></a></p></li>
+<li><p>show item number: click on graphics element with left mouse button</p></li>
+<li><p>show item dictionary: click on graphics element with right mouse button</p></li>
+<li><p>for further keys, see Section <a class="reference internal" href="KeyboardInput.html#sec-gui-sec-keyboardinput"><span class="std std-ref">Keyboard input</span></a> or press H in renderer</p></li>
+</ul>
+<p>Depending on your model (size, place, …), you may need to adjust the following visualization and <code class="docutils literal notranslate"><span class="pre">openGL</span></code> parameters in <code class="docutils literal notranslate"><span class="pre">visualizationSettings</span></code>:</p>
+<ul class="simple">
+<li><p>change window size</p></li>
+<li><p>light and light position</p></li>
+<li><p>shadow (turned off by using 0; turned on by using, e.g., a value of 0.3) and shadow polygon offset; shadow slows down graphics performance by a factor of 2-3, depending on your graphics card</p></li>
+<li><p>visibility of nodes, markers, etc. in according bodies, nodes, markers, …, <code class="docutils literal notranslate"><span class="pre">visualizationSettings</span></code></p></li>
+<li><p>move camera with a selected marker: adjust <code class="docutils literal notranslate"><span class="pre">trackMarker</span></code> in <code class="docutils literal notranslate"><span class="pre">visualizationSettings.interactive</span></code></p></li>
+<li><p>… (see e.g. Section <a class="reference internal" href="structures/VisualizationSettings.html#sec-vsettingsgeneral"><span class="std std-ref">VSettingsGeneral</span></a>)</p></li>
+</ul>
+</section>
 <section id="visualization-settings-dialog">
 <span id="sec-overview-basics-visualizationsettings"></span><h2>Visualization settings dialog<a class="headerlink" href="#visualization-settings-dialog" title="Permalink to this heading"></a></h2>
 <p>Visualization settings are used for user interaction with the model. E.g., the nodes, markers, loads, etc., can be visualized for every model. There are default values, e.g., for the size of nodes, which may be inappropriate for your model. Therefore, you can adjust those parameters. In some cases, huge models require simpler graphics representation, in order not to slow down performance – e.g., the number of faces to represent a cylinder should be small if there are 10000s of cylinders drawn. Even computation performance can be slowed down, if visualization takes lots of CPU power. However, visualization is performed in a separate thread, which usually does not influence the computation exhaustively.</p>
@@ -241,31 +273,26 @@ Note that this dialog is automatically created and uses Python’s <code class="
 </pre></div>
 </div>
 </section>
-<section id="renderer-and-3d-graphics">
-<span id="sec-overview-basics-renderer"></span><h2>Renderer and 3D graphics<a class="headerlink" href="#renderer-and-3d-graphics" title="Permalink to this heading"></a></h2>
-<p>A 3D renderer is attached to the simulation. Visualization is started with  <code class="docutils literal notranslate"><span class="pre">exu.StartRenderer()</span></code>, see the examples and tutorials.
-The renderer uses an OpenGL window of a library called GLFW, which is platform-independent.
-The renderer is set up in a minimalistic way, just to ensure that you can check that the modeling is correct. There is no way to contruct models with the renderer. Try to avoid huge number of triangles in STL files or by creating large number of complex objects, such as spheres or cylinders.</p>
-<p>There are some main features in the renderer, using keyboard and mouse:</p>
-<ul class="simple">
-<li><p>press key H to show help in renderer</p></li>
-<li><p>move model by pressing left mouse button and drag</p></li>
-<li><p>rotate model by pressing right mouse button and drag</p></li>
-<li><p>change visibility (wire frame, solid, transparent, …) by pressing T</p></li>
-<li><p>zoom all: key A</p></li>
-<li><p>open visualization dialog: key V</p></li>
-<li><p>show item number: click on graphics element with left mouse button</p></li>
-<li><p>show item dictionary: click on graphics element with right mouse button</p></li>
-<li><p>… (see Section <a class="reference internal" href="structures/VisualizationSettings.html#sec-vsettingsgeneral"><span class="std std-ref">VSettingsGeneral</span></a>ff.)</p></li>
-</ul>
-<p>Depending on your model (size, place, …), you may need to adjust the following <code class="docutils literal notranslate"><span class="pre">openGL</span></code> parameters in <code class="docutils literal notranslate"><span class="pre">visualizationSettings</span></code>:</p>
-<ul class="simple">
-<li><p>light and light position</p></li>
-<li><p>shadow (turned off by using 0; turned on by using, e.g., a value of 0.3) and shadow polygon offset; shadow slows down graphics performance by a factor of 2-3, depending on your graphics card</p></li>
-<li><p>visibility of nodes, markers, etc. in according bodies, nodes, markers, …, <code class="docutils literal notranslate"><span class="pre">visualizationSettings</span></code></p></li>
-<li><p>move camera with a selected marker: adjust <code class="docutils literal notranslate"><span class="pre">trackMarker</span></code> in <code class="docutils literal notranslate"><span class="pre">visualizationSettings.interactive</span></code></p></li>
-<li><p>… (see Section <a class="reference internal" href="structures/VisualizationSettings.html#sec-vsettingsgeneral"><span class="std std-ref">VSettingsGeneral</span></a>ff.)</p></li>
-</ul>
+<section id="execute-command-and-help">
+<span id="sec-overview-basics-commandandhelp"></span><h2>Execute Command and Help<a class="headerlink" href="#execute-command-and-help" title="Permalink to this heading"></a></h2>
+<p>In addition to the Visualization settings dialog, a simple help window opens upon pressing key ‘H’.
+It is also possible to execute single Python commands during simulation by pressing ‘X’, which opens a simple dialog, saying ‘Single command (press return to execute’.
+Note that the dialog may appear behind the visualization window!
+This dialog may be very helpful in long running computations or in case that you may evaluate variables for debugging.
+The Python commands are evaluated in the global python scope, meaning that <code class="docutils literal notranslate"><span class="pre">mbs</span></code> or other variables of your scripts are available.
+User errors are caught by exceptions, but in severe cases this may lead to crash.</p>
+<p>Useful examples (single lines) may be:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">x</span><span class="o">=</span><span class="mi">5</span> <span class="c1">#or change any other variable used in Python user functions</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">mbs</span><span class="p">)</span> <span class="c1">#print current mbs overview</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">mbs</span><span class="o">.</span><span class="n">GetSensorValues</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+<span class="c1">#adjust simulation end time, in long-run simulations:</span>
+<span class="n">mbs</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span><span class="s1">&#39;dynamicSolver&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">it</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">mbs</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span><span class="s1">&#39;dynamicSolver&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">verboseMode</span> <span class="o">=</span> <span class="mi">0</span>
+</pre></div>
+</div>
+<p>Note that you could also change <code class="docutils literal notranslate"><span class="pre">visualizationSettings</span></code> in this way, but the Visualization settings dialog is much more convenient.
+Right now, it is not possible to change <code class="docutils literal notranslate"><span class="pre">simulationSettings</span></code> which have been passed to the solver.
+It is, e.g., not possible to change the Newton tolerances on the fly.</p>
 </section>
 <section id="graphics-pipeline">
 <span id="sec-overview-basics-graphicspipeline"></span><h2>Graphics pipeline<a class="headerlink" href="#graphics-pipeline" title="Permalink to this heading"></a></h2>
@@ -449,14 +476,19 @@ However, the output of the performance tests is not stored on github.</p>
 Tuning solver parameters is at hand of the user.
 In general, the Newton solver tries to reduce the error by the factor given in <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.relativeTolerance</span></code> (for static solver), which is not possible for very small (or zero) initial residuals. The absolute tolerance is helping out as a lower bound for the error, given in <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.absoluteTolerance</span></code> (for static solver), which is by default rather low (1e-10) – in order to achieve accurate results for small systems or small motion (in mm or <span class="math notranslate nohighlight">\(\mu\)</span>m regime). Increasing this value helps to solve such problems. Nevertheless, you should usually set tolerances as low as possible because otherwise, your solution may become inaccurate.</p>
 <p>The following hints shall be followed (also some solver hints).</p>
-<ul class="simple">
+<ul>
 <li><p><strong>static solver</strong>: load steps are reduced even if the solution seems to be smooth and less steps are expected; larger number of steps may happen for finer discretization; you may adjust (increase) <code class="docutils literal notranslate"><span class="pre">.newton.relativeTolerance</span></code> / <code class="docutils literal notranslate"><span class="pre">.newton.absoluteTolerance</span></code> in static solver or in time integration to resolve such problems, but check if solution achieves according accuracy</p></li>
 <li><p><strong>static solver</strong>: load steps are reduced significantly for highly nonlinear problems; solver repeatedly writes that steps are reduced <span class="math notranslate nohighlight">\(\ra\)</span> try to use <code class="docutils literal notranslate"><span class="pre">loadStepGeometric</span></code> and use a large <code class="docutils literal notranslate"><span class="pre">loadStepGeometricRange</span></code>: this allows to start with very small loads in which the system is nearly linear (e.g. for thin strings or belts under gravity).</p></li>
 <li><p><strong>static solver</strong>: in case that your system is (nearly) kinematic, a static solution can be achieved using <code class="docutils literal notranslate"><span class="pre">stabilizerODE2term</span></code>, which adds mass-proportional stiffness terms during load steps <span class="math notranslate nohighlight">\(&lt; 1\)</span>.</p></li>
-<li><p>very small loads or even <strong>zero loads</strong> do not converge: <code class="docutils literal notranslate"><span class="pre">SolveDynamic</span></code> or <code class="docutils literal notranslate"><span class="pre">SolveStatic</span></code> <strong>terminated due to errors</strong></p></li>
-<li><p>[<span class="math notranslate nohighlight">\(\ra\)</span>] the reason is the nonlinearity of formulations (nonlinear kinematics, nonlinear beam, etc.) and round off errors, which restrict Newton to achieve desired tolerances</p></li>
-<li><p>[<span class="math notranslate nohighlight">\(\ra\)</span>] adjust (increase) <code class="docutils literal notranslate"><span class="pre">.newton.relativeTolerance</span></code> / <code class="docutils literal notranslate"><span class="pre">.newton.absoluteTolerance</span></code> in static solver or in time integration</p></li>
-<li><p>[<span class="math notranslate nohighlight">\(\ra\)</span>] in many cases, especially for static problems, the <code class="docutils literal notranslate"><span class="pre">.newton.newtonResidualMode</span> <span class="pre">=</span> <span class="pre">1</span></code> evaluates the increments; the nonlinear problems is assumed to be converged, if increments are within given absolute/relative tolerances; this also works usually better for kinematic solutions</p></li>
+<li><p>very small loads or even <strong>zero loads</strong> do not converge: <code class="docutils literal notranslate"><span class="pre">SolveDynamic</span></code> or <code class="docutils literal notranslate"><span class="pre">SolveStatic</span></code> <strong>terminated due to errors</strong></p>
+<blockquote>
+<div><div class="line-block">
+<div class="line">→  the reason is the nonlinearity of formulations (nonlinear kinematics, nonlinear beam, etc.) and round off errors, which restrict Newton to achieve desired tolerances</div>
+<div class="line">→  adjust (increase) <code class="docutils literal notranslate"><span class="pre">.newton.relativeTolerance</span></code> / <code class="docutils literal notranslate"><span class="pre">.newton.absoluteTolerance</span></code> in static solver or in time integration</div>
+<div class="line">→  in many cases, especially for static problems, the <code class="docutils literal notranslate"><span class="pre">.newton.newtonResidualMode</span> <span class="pre">=</span> <span class="pre">1</span></code> evaluates the increments; the nonlinear problems is assumed to be converged, if increments are within given absolute/relative tolerances; this also works usually better for kinematic solutions</div>
+</div>
+</div></blockquote>
+</li>
 <li><p>for <strong>discontinuous problems</strong>: try to adjust solver parameters; especially the <code class="docutils literal notranslate"><span class="pre">discontinuous.iterationTolerance</span></code> and <code class="docutils literal notranslate"><span class="pre">discontinuous.maxIterations</span></code>; try to make smaller load or time steps in order to resolve switching points of contact or friction; generalized alpha solvers may cause troubles when reducing step sizes <span class="math notranslate nohighlight">\(\ra\)</span> use TrapezoidalIndex2 solver</p></li>
 <li><p>if you see further problems, please post them (including relevant example) at the Exudyn github page!</p></li>
 </ul>

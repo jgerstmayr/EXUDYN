@@ -1,3 +1,6 @@
+.. _sec-gui-sec-mouseinput:
+
+
 Mouse input
 ===========
 

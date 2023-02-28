@@ -1,3 +1,6 @@
+.. _sec-gui-sec-keyboardinput:
+
+
 Keyboard input
 ==============
 
@@ -88,10 +91,10 @@ The following table includes the keyboard shortcuts available in the window.
      - | stops the simulation (and further simulations) and closes the render window (same as close window)
    * - | \ **X**\ 
      - | execute command
-     - | open dialog to enter a python command (in global python scope); dialog may appear behind the visualization window! User errors are caught by exceptions, but in severe cases this may lead to crash; Examples: Examples: '\ ``print(mbs)``\ ', '\ ``x=5``\ ', '\ ``print(mbs.GetSensorValues(0))``\ ', etc. 
+     - | open dialog to enter a python command (in global python scope), see Section :ref:`sec-overview-basics-commandandhelp`\ ; dialog may appear behind the visualization window!
    * - | \ **V**\ 
      - | visualization settings
-     - | open dialog to modify visualization settings; dialog may appear behind the visualization window!
+     - | open dialog to modify visualization settings, see Section :ref:`sec-overview-basics-visualizationsettings`\ ; dialog may appear behind the visualization window!
    * - | \ **F2**\ 
      - | ignore keys
      - |  switch key input on / off; can be used in combination with keyPressUserFunction to make simulators

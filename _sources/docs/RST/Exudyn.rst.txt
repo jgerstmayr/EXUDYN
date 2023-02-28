@@ -18,7 +18,7 @@ Exudyn
 
 **A flexible multibody dynamics systems simulation code with Python and C++**
 
-Exudyn version = 1.5.109.dev1 (Fitzgerald)
+Exudyn version = 1.5.116.dev1 (Fitzgerald)
 
 +  **University of Innsbruck**, Department of Mechatronics, Innsbruck, Austria
 
@@ -60,8 +60,6 @@ Due to limitations for complex formulas and tables in .rst files, details of the
 
 For license, see LICENSE.txt in the root github folder on github!
 
-Changes can be tracked in the 
-
 In addition to the tutorial in the documentation, many ( **100+** ) examples can be found under main/pythonDev/Examples and main/pythonDev/TestModels .
 
 Tutorial videos can be found in the `youtube channel of Exudyn <https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg_jtl6fx>`_ !
@@ -69,7 +67,9 @@ Tutorial videos can be found in the `youtube channel of Exudyn <https://www.yout
 Enjoy the Python library for multibody dynamics modeling, simulation, creating large scale systems, parameterized systems, component mode synthesis, optimization, ...
 
 
+Changes can be tracked in the :ref:`Issue tracker <sec-issuetracker>` 
 
+For searching on Read the Docs (especially with the search preview), add \* or ~1 / ~2 / ... to your search to search more general, e.g., FEMinter\* to search for FEMinterface, or objetfrf~3 to find ObjectFFRF. Your search preview usually finds less results than the search when pressing Enter. See also `Read the Docs documentation <https://docs.readthedocs.io/en/stable/server-side-search/syntax.html#special-queries>`_ 
 
 \ **READ Exudyn documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 

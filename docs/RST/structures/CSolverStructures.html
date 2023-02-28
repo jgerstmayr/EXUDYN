@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Solver substructures &mdash; Exudyn1.5.109.dev1 1.5.109.dev1 documentation</title>
+  <title>Solver substructures &mdash; Exudyn1.5.117.dev1 1.5.117.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -39,7 +39,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.5.109.dev1
+            Exudyn1.5.117.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -93,7 +93,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.5.109.dev1</a>
+          <a href="../../../index.html">Exudyn1.5.117.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -112,10 +112,10 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <p>[1][Solver substructures]</p>
-<section id="solver-substructures">
+  <section id="solver-substructures">
 <span id="sec-solversubstructures"></span><h1>Solver substructures<a class="headerlink" href="#solver-substructures" title="Permalink to this heading"></a></h1>
-<p>This section includes structures contained in the solver, which can be accessed via the Python interface during solution or for building a customized solver in Python.</p>
+<p>This section includes structures contained in the solver, which can be accessed via the Python interface during solution or for building a customized solver in Python.
+There is plenty of possibilities to interact with the solvers, being it the extraction of data at the end (such as .it or .conv), computation of mass matrix or system matrices, and finally the modification of solver structures (which may have effect or not). In any case, there is no full description for all these methods and the user must always consider the according C++ function to verify the desired behavior.</p>
 <section id="csolvertimer">
 <span id="sec-csolvertimer"></span><h2>CSolverTimer<a class="headerlink" href="#csolvertimer" title="Permalink to this heading"></a></h2>
 <p>Structure for timing in solver. Each Real variable is used to measure the CPU time which certain parts of the solver need. This structure is only active if the code is not compiled with the __FAST_EXUDYN_LINALG option and if displayComputationTime is set True. Timings will only be filled, if useTimer is True.</p>
