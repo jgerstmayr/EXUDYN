@@ -47,6 +47,8 @@ def Demo1():
     print('results can be found in local directory: solution/demo1.txt')
 
     DemoInfo()
+    
+    return [mbs, SC]
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: advanced demo, showing that graphics is available; similar to Examples/rigid3Dexample.py
@@ -144,6 +146,7 @@ def Demo2():
 
     DemoInfo()
 
+    return [mbs, SC]
 
 
 #%%++++++++++++++++++++++++

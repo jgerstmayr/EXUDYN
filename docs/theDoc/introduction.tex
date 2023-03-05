@@ -921,6 +921,110 @@ Everything is experimental, but contributions are welcome!
 
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\mysubsubsectionlabel{Interaction with Julia}{sec:overview:advanced:julia}
+The scientific community gets increasingly interested into the language Julia.
+There is a very simple interoperability with julia -- at least from julia to Python -- which has been tests.
+The other way -- calling Python from julia -- is also possible, but it is left to the reader.
+
+After installing julia (tested on Windows 10 with julia 1.6.7), you need to add Python accessibility via \texttt{PyCall}
+in \mybold{julia}:
+\begin{lstlisting}
+  using Pkg
+  Pkg.add("PyCall")
+\end{lstlisting}
+%
+Ideally, you have a certain Python installation where \codeName\ is already installed (and for the following examples, you also need \texttt{matplotlib}). Find the according Python path in any \mybold{Python} console:
+\pythonstyle\begin{lstlisting}
+  import sys
+  print(sys.executable)
+\end{lstlisting}
+%
+Use this path and adapt the following \mybold{julia} script ('raw' allows to use single backslash) in \mybold{julia}:
+%\plainlststyle
+\begin{lstlisting}
+  ENV["PYTHON"]=raw"C:\Users\xyz\.conda\envs\venvP38\python.exe"
+  Pkg.build("PyCall")
+\end{lstlisting}
+%
+Now we can interact with Python, using Python objects in \mybold{julia} almost natively, try:
+\begin{lstlisting}
+  py"""
+  import exudyn
+  from exudyn.demos import *
+
+  Demo1()
+  """
+\end{lstlisting}
+This will run the very simple \codeName\ \texttt{Demo1}.
+As \texttt{exudyn} is now imported into this Python session, you can access it, e.g., \texttt{py"exudyn".Help()} 
+will write the help message.
+
+To show the interoperability with julia, test the following example (similar to \texttt{Demo1}) in \mybold{julia}:
+\begin{lstlisting}
+  py"""
+  import exudyn as exu               #EXUDYN package including C++ core part
+  import exudyn.itemInterface as eii #conversion of data to exudyn dictionaries
+
+  SC = exu.SystemContainer()         #container of systems
+  mbs = SC.AddSystem()               #add a new system to work with
+
+  nMP = mbs.AddNode(eii.NodePoint2D(referenceCoordinates=[0,0]))
+  mbs.AddObject(eii.ObjectMassPoint2D(physicsMass=10, nodeNumber=nMP ))
+  mMP = mbs.AddMarker(eii.MarkerNodePosition(nodeNumber = nMP))
+  mbs.AddLoad(eii.Force(markerNumber = mMP, loadVector=[0.001,0,0]))
+
+  #add a sensor:
+  s = mbs.AddSensor(eii.SensorNode(nodeNumber=nMP,
+                    outputVariableType=exu.OutputVariableType.Position,
+                    storeInternal=True))
+
+  mbs.Assemble()                     #assemble system and solve
+  simulationSettings = exu.SimulationSettings()
+  simulationSettings.timeIntegration.verboseMode=1 #provide some output
+  simulationSettings.solutionSettings.coordinatesSolutionFileName = 'solution/demo1.txt'
+
+  exu.SolveDynamic(mbs, simulationSettings)
+  print('results can be found in local directory: solution/demo1.txt')
+  """
+\end{lstlisting}
+We can access Python variables from julia via \texttt{py"..."} to read out, e.g., \tettt{mbs}:
+  \begin{lstlisting}
+  py"mbs".systemData.Info()
+\end{lstlisting}
+%
+We can use variables (or objects) directly in julia, e.g., 
+\begin{lstlisting}
+  mbs=py"mbs"
+  print(mbs)
+\end{lstlisting}
+%
+Finally, we can also plot values via \texttt{PlotSensor} (\texttt{matplotlib} in the background):
+\begin{lstlisting}
+  eplt=pyimport("exudyn.plot")
+  eplt.PlotSensor(py"mbs", py"s")
+\end{lstlisting}
+We could also access the stored sensor data in julia, using
+\begin{lstlisting}
+  x = py"mbs".GetSensorStoredData(py"s")
+\end{lstlisting}
+and we could just print (or use) the first 10 rows of this data generated on the Python side, using it in \mybold{julia}:
+\begin{lstlisting}
+  x[1:10,:]
+\end{lstlisting}
+\mybold{NOTE} the 1-based indexing in julia, which highlights the limitations of this approach.
+
+To finally check if the GLFW renderer also runs via julia, just use:
+\begin{lstlisting}
+  py"""
+  from exudyn.demos import *
+  Demo2()
+  """
+\end{lstlisting}
+For the full range of possibilities, see \exuUrl{https://github.com/JuliaPy/PyCall.jl}{github.com/JuliaPy/PyCall.jl}.
+
+
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \mysubsubsectionlabel{Interaction with other codes}{sec:overview:advanced:interactwithcodes}
 %
 Interaction with other codes and computers (E.g., MATLAB or other C++ codes, or other Python versions)

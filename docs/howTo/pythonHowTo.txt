@@ -1,3 +1,26 @@
+#++++++++++++++++++++++++++++++++++++
+#how to exit .py file (in Spyder): (exit, quit, exit(), ... do not work!)
+sys.exit()
 
-how to exit .py file (in Spyder): (exit, quit, exit(), ... do not work!)
-	sys.exit()
+
+#++++++++++++++++++++++++++++++++++++
+#prevent Windows from sleep mode:
+pip install wakepy
+
+from wakepy import set_keepawake, unset_keepawake
+
+set_keepawake(keep_screen_awake=False)
+# do stuff that takes long time
+unset_keepawake()
+
+
+#++++++++++++++++++++++++++++++++++++
+#prevent Windows from turning off monitor (also sleep mode?):
+
+import ctypes
+
+# prevent
+ctypes.windll.kernel32.SetThreadExecutionState(0x80000002)
+# set back to normal
+ctypes.windll.kernel32.SetThreadExecutionState(0x80000000)
+

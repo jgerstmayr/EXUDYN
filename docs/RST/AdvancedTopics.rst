@@ -95,6 +95,141 @@ An example is provided in \ ``openVRengine.py``\ , showing some optimal flags li
 Everything is experimental, but contributions are welcome!
 
 
+.. _sec-overview-advanced-julia:
+
+
+Interaction with Julia
+----------------------
+
+The scientific community gets increasingly interested into the language Julia.
+There is a very simple interoperability with julia -- at least from julia to Python -- which has been tests.
+The other way -- calling Python from julia -- is also possible, but it is left to the reader.
+
+After installing julia (tested on Windows 10 with julia 1.6.7), you need to add Python accessibility via \ ``PyCall``\ 
+in \ **julia**\ :
+
+.. code-block:: 
+
+  using Pkg
+  Pkg.add("PyCall")
+
+
+Ideally, you have a certain Python installation where Exudyn is already installed (and for the following examples, you also need \ ``matplotlib``\ ). Find the according Python path in any \ **Python**\  console:
+
+.. code-block:: python
+
+  import sys
+  print(sys.executable)
+
+
+Use this path and adapt the following \ **julia**\  script ('raw' allows to use single backslash) in \ **julia**\ :
+
+.. code-block:: 
+
+  ENV["PYTHON"]=raw"C:\Users\xyz\.condavs\venvP38\python.exe"
+  Pkg.build("PyCall")
+
+
+Now we can interact with Python, using Python objects in \ **julia**\  almost natively, try:
+
+.. code-block:: 
+
+  py"""
+  import exudyn
+  from exudyn.demos import *
+
+  Demo1()
+  """
+
+
+This will run the very simple Exudyn \ ``Demo1``\ .
+As \ ``exudyn``\  is now imported into this Python session, you can access it, e.g., \ ``py"exudyn".Help()``\  
+will write the help message.
+
+To show the interoperability with julia, test the following example (similar to \ ``Demo1``\ ) in \ **julia**\ :
+
+.. code-block:: 
+
+  py"""
+  import exudyn as exu               #EXUDYN package including C++ core part
+  import exudyn.itemInterface as eii #conversion of data to exudyn dictionaries
+
+  SC = exu.SystemContainer()         #container of systems
+  mbs = SC.AddSystem()               #add a new system to work with
+
+  nMP = mbs.AddNode(eii.NodePoint2D(referenceCoordinates=[0,0]))
+  mbs.AddObject(eii.ObjectMassPoint2D(physicsMass=10, nodeNumber=nMP ))
+  mMP = mbs.AddMarker(eii.MarkerNodePosition(nodeNumber = nMP))
+  mbs.AddLoad(eii.Force(markerNumber = mMP, loadVector=[0.001,0,0]))
+
+  #add a sensor:
+  s = mbs.AddSensor(eii.SensorNode(nodeNumber=nMP,
+                    outputVariableType=exu.OutputVariableType.Position,
+                    storeInternal=True))
+
+  mbs.Assemble()                     #assemble system and solve
+  simulationSettings = exu.SimulationSettings()
+  simulationSettings.timeIntegration.verboseMode=1 #provide some output
+  simulationSettings.solutionSettings.coordinatesSolutionFileName = 'solution/demo1.txt'
+
+  exu.SolveDynamic(mbs, simulationSettings)
+  print('results can be found in local directory: solution/demo1.txt')
+  """
+
+
+We can access Python variables from julia via \ ``py"..."``\  to read out, e.g., \tetttmbs:
+  
+.. code-block:: 
+
+  py"mbs".systemData.Info()
+
+
+We can use variables (or objects) directly in julia, e.g., 
+
+.. code-block:: 
+
+  mbs=py"mbs"
+  print(mbs)
+
+
+Finally, we can also plot values via \ ``PlotSensor``\  (\ ``matplotlib``\  in the background):
+
+.. code-block:: 
+
+  eplt=pyimport("exudyn.plot")
+  eplt.PlotSensor(py"mbs", py"s")
+
+
+We could also access the stored sensor data in julia, using
+
+.. code-block:: 
+
+  x = py"mbs".GetSensorStoredData(py"s")
+
+
+and we could just print (or use) the first 10 rows of this data generated on the Python side, using it in \ **julia**\ :
+
+.. code-block:: 
+
+  x[1:10,:]
+
+
+\ **NOTE**\  the 1-based indexing in julia, which highlights the limitations of this approach.
+
+To finally check if the GLFW renderer also runs via julia, just use:
+
+.. code-block:: 
+
+  py"""
+  from exudyn.demos import *
+  Demo2()
+  """
+
+
+For the full range of possibilities, see `github.com/JuliaPy/PyCall.jl <https://github.com/JuliaPy/PyCall.jl>`_.
+
+
+
 .. _sec-overview-advanced-interactwithcodes:
 
 
