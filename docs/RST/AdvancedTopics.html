@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Advanced topics &mdash; Exudyn1.5.117.dev1 1.5.117.dev1 documentation</title>
+  <title>Advanced topics &mdash; Exudyn1.5.118.dev1 1.5.118.dev1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
@@ -39,7 +39,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.5.117.dev1
+            Exudyn1.5.118.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -63,6 +63,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#camera-following-objects-and-interacting-with-model-view">Camera following objects and interacting with model view</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#contact-problems">Contact problems</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#openvr">OpenVR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#interaction-with-julia">Interaction with Julia</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#interaction-with-other-codes">Interaction with other codes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#ros">ROS</a></li>
 </ul>
@@ -92,7 +93,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.5.117.dev1</a>
+          <a href="../../index.html">Exudyn1.5.118.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -176,6 +177,97 @@ This separate module <code class="docutils literal notranslate"><span class="pre
 <p>Running OpenVR either requires an according head mounted display (HMD) or a virtualization using, e.g., Riftcat 2 to use a mobile phone with an according adapter. Visualization settings are available in <code class="docutils literal notranslate"><span class="pre">interactive.openVR</span></code>, but need to be considered with care.
 An example is provided in <code class="docutils literal notranslate"><span class="pre">openVRengine.py</span></code>, showing some optimal flags like locking the model rotation, zoom or translation.</p>
 <p>Everything is experimental, but contributions are welcome!</p>
+</section>
+<section id="interaction-with-julia">
+<span id="sec-overview-advanced-julia"></span><h2>Interaction with Julia<a class="headerlink" href="#interaction-with-julia" title="Permalink to this heading"></a></h2>
+<p>The scientific community gets increasingly interested into the language Julia.
+There is a very simple interoperability with julia – at least from julia to Python – which has been tests.
+The other way – calling Python from julia – is also possible, but it is left to the reader.</p>
+<p>After installing julia (tested on Windows 10 with julia 1.6.7), you need to add Python accessibility via <code class="docutils literal notranslate"><span class="pre">PyCall</span></code>in <strong>julia</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">using</span> <span class="n">Pkg</span>
+<span class="n">Pkg</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;PyCall&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Ideally, you have a certain Python installation where Exudyn is already installed (and for the following examples, you also need <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>). Find the according Python path in any <strong>Python</strong> console:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Use this path and adapt the following <strong>julia</strong> script (‘raw’ allows to use single backslash) in <strong>julia</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ENV</span><span class="p">[</span><span class="s2">&quot;PYTHON&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">raw</span><span class="s2">&quot;C:\Users\xyz\.condavs</span><span class="se">\v</span><span class="s2">envP38\python.exe&quot;</span>
+<span class="n">Pkg</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="s2">&quot;PyCall&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now we can interact with Python, using Python objects in <strong>julia</strong> almost natively, try:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">py</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">import exudyn</span>
+<span class="s2">from exudyn.demos import *</span>
+
+<span class="s2">Demo1()</span>
+<span class="s2">&quot;&quot;&quot;</span>
+</pre></div>
+</div>
+<p>This will run the very simple Exudyn <code class="docutils literal notranslate"><span class="pre">Demo1</span></code>.
+As <code class="docutils literal notranslate"><span class="pre">exudyn</span></code> is now imported into this Python session, you can access it, e.g., <code class="docutils literal notranslate"><span class="pre">py&quot;exudyn&quot;.Help()</span></code>will write the help message.</p>
+<p>To show the interoperability with julia, test the following example (similar to <code class="docutils literal notranslate"><span class="pre">Demo1</span></code>) in <strong>julia</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">py</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">import exudyn as exu               #EXUDYN package including C++ core part</span>
+<span class="s2">import exudyn.itemInterface as eii #conversion of data to exudyn dictionaries</span>
+
+<span class="s2">SC = exu.SystemContainer()         #container of systems</span>
+<span class="s2">mbs = SC.AddSystem()               #add a new system to work with</span>
+
+<span class="s2">nMP = mbs.AddNode(eii.NodePoint2D(referenceCoordinates=[0,0]))</span>
+<span class="s2">mbs.AddObject(eii.ObjectMassPoint2D(physicsMass=10, nodeNumber=nMP ))</span>
+<span class="s2">mMP = mbs.AddMarker(eii.MarkerNodePosition(nodeNumber = nMP))</span>
+<span class="s2">mbs.AddLoad(eii.Force(markerNumber = mMP, loadVector=[0.001,0,0]))</span>
+
+<span class="s2">#add a sensor:</span>
+<span class="s2">s = mbs.AddSensor(eii.SensorNode(nodeNumber=nMP,</span>
+<span class="s2">                  outputVariableType=exu.OutputVariableType.Position,</span>
+<span class="s2">                  storeInternal=True))</span>
+
+<span class="s2">mbs.Assemble()                     #assemble system and solve</span>
+<span class="s2">simulationSettings = exu.SimulationSettings()</span>
+<span class="s2">simulationSettings.timeIntegration.verboseMode=1 #provide some output</span>
+<span class="s2">simulationSettings.solutionSettings.coordinatesSolutionFileName = &#39;solution/demo1.txt&#39;</span>
+
+<span class="s2">exu.SolveDynamic(mbs, simulationSettings)</span>
+<span class="s2">print(&#39;results can be found in local directory: solution/demo1.txt&#39;)</span>
+<span class="s2">&quot;&quot;&quot;</span>
+</pre></div>
+</div>
+<p>We can access Python variables from julia via <code class="docutils literal notranslate"><span class="pre">py&quot;...&quot;</span></code> to read out, e.g., tetttmbs:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">py</span><span class="s2">&quot;mbs&quot;</span><span class="o">.</span><span class="n">systemData</span><span class="o">.</span><span class="n">Info</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>We can use variables (or objects) directly in julia, e.g.,</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">=</span><span class="n">py</span><span class="s2">&quot;mbs&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">mbs</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Finally, we can also plot values via <code class="docutils literal notranslate"><span class="pre">PlotSensor</span></code> (<code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> in the background):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">eplt</span><span class="o">=</span><span class="n">pyimport</span><span class="p">(</span><span class="s2">&quot;exudyn.plot&quot;</span><span class="p">)</span>
+<span class="n">eplt</span><span class="o">.</span><span class="n">PlotSensor</span><span class="p">(</span><span class="n">py</span><span class="s2">&quot;mbs&quot;</span><span class="p">,</span> <span class="n">py</span><span class="s2">&quot;s&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We could also access the stored sensor data in julia, using</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">py</span><span class="s2">&quot;mbs&quot;</span><span class="o">.</span><span class="n">GetSensorStoredData</span><span class="p">(</span><span class="n">py</span><span class="s2">&quot;s&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>and we could just print (or use) the first 10 rows of this data generated on the Python side, using it in <strong>julia</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">10</span><span class="p">,:]</span>
+</pre></div>
+</div>
+<p><strong>NOTE</strong> the 1-based indexing in julia, which highlights the limitations of this approach.</p>
+<p>To finally check if the GLFW renderer also runs via julia, just use:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">py</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">from exudyn.demos import *</span>
+<span class="s2">Demo2()</span>
+<span class="s2">&quot;&quot;&quot;</span>
+</pre></div>
+</div>
+<p>For the full range of possibilities, see <a class="reference external" href="https://github.com/JuliaPy/PyCall.jl">github.com/JuliaPy/PyCall.jl</a>.</p>
 </section>
 <section id="interaction-with-other-codes">
 <span id="sec-overview-advanced-interactwithcodes"></span><h2>Interaction with other codes<a class="headerlink" href="#interaction-with-other-codes" title="Permalink to this heading"></a></h2>
