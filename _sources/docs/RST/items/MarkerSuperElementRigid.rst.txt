@@ -26,6 +26,8 @@ The item \ **MarkerSuperElementRigid**\  with type = 'SuperElementRigid' has the
   | a list of \ :math:`n_m`\  weighting factors per node to compute the final local position and orientation; these factors could be based on surface integrals of the constrained mesh faces
 * | **useAlternativeApproach** [type = Bool, default = True]:
   | this flag switches between two versions for the computation of the rotation and angular velocity of the marker; alternative approach uses skew symmetric matrix of reference position; follows the inertia concept
+* | **rotationsExponentialMap** [type = Index, default = 2]:
+  | Experimental flag (2 is the correct value and will be used in future, removing this flag): This value switches different behavior for computation of rotations and angular velocities: 0 uses linearized rotations and angular velocities, 1 uses the exponential map for rotations but linear angular velocities, 2 uses the exponential map for rotations and the according tangent map for angular velocities
 * | **visualization** [type = VMarkerSuperElementRigid]:
   | parameters for visualization of item
 

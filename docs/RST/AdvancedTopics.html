@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Advanced topics &mdash; Exudyn1.5.118.dev1 1.5.118.dev1 documentation</title>
+  <title>Advanced topics &mdash; Exudyn1.6.0 1.6.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
@@ -39,7 +39,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.5.118.dev1
+            Exudyn1.6.0
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -93,7 +93,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.5.118.dev1</a>
+          <a href="../../index.html">Exudyn1.6.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -119,6 +119,13 @@ Functionality may be extended but also removed in future</p>
 <section id="camera-following-objects-and-interacting-with-model-view">
 <span id="sec-overview-advanced-camerafollowing"></span><h2>Camera following objects and interacting with model view<a class="headerlink" href="#camera-following-objects-and-interacting-with-model-view" title="Permalink to this heading"></a></h2>
 <p>For some models, it may be advantageous to track the translation and/or rotation of certain bodies, e.g., for cars, (wheeled) robots or bicycles.
+Since Exudyn 1.4.18 you can attach view to a marker, using the visualization setting</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">SC</span><span class="o">.</span><span class="n">visualizationSettings</span><span class="o">.</span><span class="n">interactive</span><span class="o">.</span><span class="n">trackMarker</span> <span class="o">=</span> <span class="n">nMarker</span>
+</pre></div>
+</div>
+<p>in which <code class="docutils literal notranslate"><span class="pre">nMarker</span></code> represents the desired marker number to follow.
+See also related options in <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.interactive</span></code> in Section <a class="reference internal" href="structures/VisualizationSettings.html#sec-vsettingsinteractive"><span class="std std-ref">VSettingsInteractive</span></a>.</p>
+<p>The following paragraph represents a slower, slightly outdated approach, which may be interesting for advanced usage of object tracking.
 To do so, the current render state (<code class="docutils literal notranslate"><span class="pre">SC.GetRenderState()</span></code>, <code class="docutils literal notranslate"><span class="pre">SC.SetRenderState(...)</span></code>) can be obtained and modified, in order to always follow a certain position.
 As this needs to be done during redraw of every frame, it is conveniently done in a graphicsUserFunction, e.g., within the ground body. This is shown in the following example, in which <code class="docutils literal notranslate"><span class="pre">mbs.variables['nTrackNode']</span></code> is a node number to be tracked:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#mbs.variables[&#39;nTrackNode&#39;] contains node number</span>
@@ -139,6 +146,7 @@ As this needs to be done during redraw of every frame, it is conveniently done i
 <span class="c1">#.... further code for simulation here</span>
 </pre></div>
 </div>
+<p>NOTE that this approach is slower and it may lead to a (usually silient) crash after closing the renderer, as the renderer thread is somehow coupled to Python which is prohibited from Python side.</p>
 </section>
 <section id="contact-problems">
 <span id="sec-overview-advanced-contact"></span><h2>Contact problems<a class="headerlink" href="#contact-problems" title="Permalink to this heading"></a></h2>
@@ -237,7 +245,7 @@ As <code class="docutils literal notranslate"><span class="pre">exudyn</span></c
 <span class="s2">&quot;&quot;&quot;</span>
 </pre></div>
 </div>
-<p>We can access Python variables from julia via <code class="docutils literal notranslate"><span class="pre">py&quot;...&quot;</span></code> to read out, e.g., tetttmbs:</p>
+<p>We can access Python variables from julia via <code class="docutils literal notranslate"><span class="pre">py&quot;...&quot;</span></code> to read out, e.g., <code class="docutils literal notranslate"><span class="pre">mbs</span></code>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">py</span><span class="s2">&quot;mbs&quot;</span><span class="o">.</span><span class="n">systemData</span><span class="o">.</span><span class="n">Info</span><span class="p">()</span>
 </pre></div>
 </div>

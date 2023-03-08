@@ -14,6 +14,17 @@ Camera following objects and interacting with model view
 --------------------------------------------------------
 
 For some models, it may be advantageous to track the translation and/or rotation of certain bodies, e.g., for cars, (wheeled) robots or bicycles. 
+Since Exudyn 1.4.18 you can attach view to a marker, using the visualization setting
+
+.. code-block:: python
+
+  SC.visualizationSettings.interactive.trackMarker = nMarker
+
+
+in which \ ``nMarker``\  represents the desired marker number to follow.
+See also related options in \ ``SC.visualizationSettings.interactive``\  in Section :ref:`sec-vsettingsinteractive`\ .
+
+The following paragraph represents a slower, slightly outdated approach, which may be interesting for advanced usage of object tracking.
 To do so, the current render state (\ ``SC.GetRenderState()``\ , \ ``SC.SetRenderState(...)``\ ) can be obtained and modified, in order to always follow a certain position.
 As this needs to be done during redraw of every frame, it is conveniently done in a graphicsUserFunction, e.g., within the ground body. This is shown in the following example, in which \ ``mbs.variables['nTrackNode']``\  is a node number to be tracked:
 
@@ -37,6 +48,7 @@ As this needs to be done during redraw of every frame, it is conveniently done i
   #.... further code for simulation here
 
 
+NOTE that this approach is slower and it may lead to a (usually silient) crash after closing the renderer, as the renderer thread is somehow coupled to Python which is prohibited from Python side.
 
 .. _sec-overview-advanced-contact:
 
@@ -177,7 +189,7 @@ To show the interoperability with julia, test the following example (similar to 
   """
 
 
-We can access Python variables from julia via \ ``py"..."``\  to read out, e.g., \tetttmbs:
+We can access Python variables from julia via \ ``py"..."``\  to read out, e.g., \ ``mbs``\ :
   
 .. code-block:: 
 
