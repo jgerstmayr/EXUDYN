@@ -109,6 +109,7 @@ void CMarkerSuperElementRigid::GetWeightedRotations(const CSystemData& cSystemDa
 	}
 	else
 	{
+		//weightedRotations /= 0.5*factorMatrix.Trace();
 		weightedRotations /= factor;
 	}
 }
@@ -225,7 +226,15 @@ void CMarkerSuperElementRigid::GetRotationMatrix(const CSystemData& cSystemData,
 	GetWeightedRotations(cSystemData, weightedRotations, configuration);
 
 	//linearized, inconsistent rotation matrix: rotationMatrix = frameRotationMatrix * (EXUmath::unitMatrix3D + RigidBodyMath::Vector2SkewMatrix(weightedRotations)); //linearized rotation matrix reads: I+skew(rotVec)
-	rotationMatrix = frameRotationMatrix * EXUlie::ExpSO3(weightedRotations); //gives consistent rotation matrix!
+    if (parameters.rotationsExponentialMap > 0)
+    {
+		//EXUlie::TExpSO3(weightedRotations)
+        rotationMatrix = frameRotationMatrix * EXUlie::ExpSO3(weightedRotations); //gives consistent rotation matrix!
+    }
+    else
+    {
+        rotationMatrix = frameRotationMatrix * (EXUmath::unitMatrix3D + RigidBodyMath::Vector2SkewMatrix(weightedRotations)); //inconsistent ...
+    }
 }
 
 void CMarkerSuperElementRigid::GetAngularVelocity(const CSystemData& cSystemData, Vector3D& angularVelocity, ConfigurationType configuration) const
@@ -238,6 +247,17 @@ void CMarkerSuperElementRigid::GetAngularVelocity(const CSystemData& cSystemData
 
 	Vector3D weightedAngularVelocity;
 	GetWeightedAngularVelocity(cSystemData, weightedAngularVelocity, configuration);
+    if (parameters.rotationsExponentialMap >= 2)
+    {
+        Vector3D weightedRotations;
+        GetWeightedRotations(cSystemData, weightedRotations, configuration);
+
+        if (parameters.rotationsExponentialMap == 2) { weightedAngularVelocity = EXUlie::TExpSO3(weightedRotations)*weightedAngularVelocity; }
+        else if (parameters.rotationsExponentialMap == 3) { weightedAngularVelocity = weightedAngularVelocity* EXUlie::TExpSO3(weightedRotations); }
+        else if (parameters.rotationsExponentialMap == 4) { weightedAngularVelocity = EXUlie::TExpSO3Inv(weightedRotations)*weightedAngularVelocity; }
+		else if (parameters.rotationsExponentialMap == 5) { weightedAngularVelocity = weightedAngularVelocity * EXUlie::TExpSO3Inv(weightedRotations); }
+		else if (parameters.rotationsExponentialMap == 6) { weightedAngularVelocity = EXUlie::ExpSO3(weightedRotations) * EXUlie::TExpSO3(weightedRotations)*weightedAngularVelocity; }
+	}
 	angularVelocity = frameRotationMatrix * (frameAngularVelocityLocal + weightedAngularVelocity);
 }
 
@@ -251,7 +271,18 @@ void CMarkerSuperElementRigid::GetAngularVelocityLocal(const CSystemData& cSyste
 
 	Vector3D weightedAngularVelocity;
 	GetWeightedAngularVelocity(cSystemData, weightedAngularVelocity, configuration);
-	angularVelocity = frameAngularVelocityLocal + weightedAngularVelocity;
+    if (parameters.rotationsExponentialMap >= 2)
+    {
+        Vector3D weightedRotations;
+        GetWeightedRotations(cSystemData, weightedRotations, configuration);
+
+        if (parameters.rotationsExponentialMap == 2) { weightedAngularVelocity = EXUlie::TExpSO3(weightedRotations)*weightedAngularVelocity; }
+        else if (parameters.rotationsExponentialMap == 3) { weightedAngularVelocity = weightedAngularVelocity * EXUlie::TExpSO3(weightedRotations); }
+        else if (parameters.rotationsExponentialMap == 4) { weightedAngularVelocity = EXUlie::TExpSO3Inv(weightedRotations)*weightedAngularVelocity; }
+        else if (parameters.rotationsExponentialMap == 5) { weightedAngularVelocity = weightedAngularVelocity * EXUlie::TExpSO3Inv(weightedRotations); }
+		else if (parameters.rotationsExponentialMap == 6) { weightedAngularVelocity = EXUlie::ExpSO3(weightedRotations) * EXUlie::TExpSO3(weightedRotations)*weightedAngularVelocity; }
+	}
+    angularVelocity = frameAngularVelocityLocal + weightedAngularVelocity;
 }
 
 

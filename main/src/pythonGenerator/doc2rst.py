@@ -160,7 +160,8 @@ def ConvertFile(s):
 print('------------------------------------------')
 print('converting latex docu into README.rst file...')
 
-sHEADERsmall = """|PyPI version exudyn| |PyPI pyversions| |PyPI download month|
+sHEADERsmall = """|RTD documentation| |PyPI version exudyn| |PyPI pyversions| |PyPI download month| |Github release date| 
+|Github issues| |Github stars| |Github commits| |Github last commit|
 
 .. |PyPI version exudyn| image:: https://badge.fury.io/py/exudyn.svg
    :target: https://pypi.python.org/pypi/exudyn/
@@ -171,13 +172,32 @@ sHEADERsmall = """|PyPI version exudyn| |PyPI pyversions| |PyPI download month|
 .. |PyPI download month| image:: https://img.shields.io/pypi/dm/exudyn.svg
    :target: https://pypi.python.org/pypi/exudyn/
 
-"""
-sHEADER = '|Documentation GithubIO| '+sHEADERsmall+"""
+.. |RTD documentation| image:: https://readthedocs.org/projects/exudyn/badge/?version=latest
+   :target: https://exudyn.readthedocs.io/en/latest/?badge=latest
 
-.. |Documentation GithubIO| image:: https://img.shields.io/website-up-down-green-red/https/jgerstmayr.github.io/EXUDYN.svg
+.. |Github issues| image:: https://img.shields.io/github/issues-raw/jgerstmayr/exudyn
+   :target: https://jgerstmayr.github.io/EXUDYN/
+
+.. |Github stars| image:: https://img.shields.io/github/stars/jgerstmayr/exudyn?style=plastic
+   :target: https://jgerstmayr.github.io/EXUDYN/
+
+.. |Github release date| image:: https://img.shields.io/github/release-date/jgerstmayr/exudyn?label=release
+   :target: https://jgerstmayr.github.io/EXUDYN/
+
+.. |Github commits| image:: https://img.shields.io/github/commits-since/jgerstmayr/exudyn/v1.0.6
+   :target: https://jgerstmayr.github.io/EXUDYN/
+
+.. |Github last commit| image:: https://img.shields.io/github/last-commit/jgerstmayr/exudyn
    :target: https://jgerstmayr.github.io/EXUDYN/
 
 """
+sHEADER = sHEADERsmall
+# sHEADER = '|Documentation GithubIO| '+sHEADERsmall+"""
+
+# .. |Documentation GithubIO| image:: https://img.shields.io/website-up-down-green-red/https/jgerstmayr.github.io/EXUDYN.svg
+#    :target: https://jgerstmayr.github.io/EXUDYN/
+
+# """
 # #unused / does not work:
 # abc="""
 # |Github all releases|

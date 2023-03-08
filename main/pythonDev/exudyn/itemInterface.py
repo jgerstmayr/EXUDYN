@@ -2971,13 +2971,14 @@ class VMarkerSuperElementRigid:
     def __repr__(self):
         return str(dict(self))
 class MarkerSuperElementRigid:
-    def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), offset = [0.,0.,0.], meshNodeNumbers = [], weightingFactors = [], useAlternativeApproach = True, visualization = {'show': True, 'showMarkerNodes': True}):
+    def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), offset = [0.,0.,0.], meshNodeNumbers = [], weightingFactors = [], useAlternativeApproach = True, rotationsExponentialMap = 2, visualization = {'show': True, 'showMarkerNodes': True}):
         self.name = name
         self.bodyNumber = bodyNumber
         self.offset = offset
         self.meshNodeNumbers = meshNodeNumbers
         self.weightingFactors = weightingFactors
         self.useAlternativeApproach = useAlternativeApproach
+        self.rotationsExponentialMap = rotationsExponentialMap
         self.visualization = visualization
 
     def __iter__(self):
@@ -2988,6 +2989,7 @@ class MarkerSuperElementRigid:
         yield 'meshNodeNumbers', self.meshNodeNumbers
         yield 'weightingFactors', self.weightingFactors
         yield 'useAlternativeApproach', self.useAlternativeApproach
+        yield 'rotationsExponentialMap', self.rotationsExponentialMap
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VshowMarkerNodes', dict(self.visualization)["showMarkerNodes"]
 

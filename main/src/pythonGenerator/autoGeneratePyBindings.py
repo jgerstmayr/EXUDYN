@@ -1133,7 +1133,7 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='SetMarkerParameter', cName='PyS
                                 )
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='GetMarkerOutput', cName='PyGetMarkerOutputVariable', 
-                                description="get the ouput of the marker specified with the OutputVariableType; currently only provides Displacement, Position and Velocity for position based markers, and RotationMatrix, Rotation and AngularVelocity(Local) for markers providing orientation; Coordinates and Coordinates\_t available for coordinate markers",
+                                description="get the ouput of the marker specified with the OutputVariableType; currently only provides Displacement, Position and Velocity for position based markers, and RotationMatrix, Rotation and AngularVelocity(Local) for markers providing orientation; Coordinates and Coordinates_t available for coordinate markers",
                                 argList=['markerNumber','variableType','configuration'],
                                 defaultArgs=['','','ConfigurationType::Current'],
                                 example = "mbs.GetMarkerOutput(markerNumber=0, variableType=exu.OutputVariableType.Position)"

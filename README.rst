@@ -1,4 +1,5 @@
-|Documentation GithubIO| |PyPI version exudyn| |PyPI pyversions| |PyPI download month|
+|RTD documentation| |PyPI version exudyn| |PyPI pyversions| |PyPI download month| |Github release date| 
+|Github issues| |Github stars| |Github commits| |Github last commit|
 
 .. |PyPI version exudyn| image:: https://badge.fury.io/py/exudyn.svg
    :target: https://pypi.python.org/pypi/exudyn/
@@ -9,9 +10,22 @@
 .. |PyPI download month| image:: https://img.shields.io/pypi/dm/exudyn.svg
    :target: https://pypi.python.org/pypi/exudyn/
 
+.. |RTD documentation| image:: https://readthedocs.org/projects/exudyn/badge/?version=latest
+   :target: https://exudyn.readthedocs.io/en/latest/?badge=latest
 
+.. |Github issues| image:: https://img.shields.io/github/issues-raw/jgerstmayr/exudyn
+   :target: https://jgerstmayr.github.io/EXUDYN/
 
-.. |Documentation GithubIO| image:: https://img.shields.io/website-up-down-green-red/https/jgerstmayr.github.io/EXUDYN.svg
+.. |Github stars| image:: https://img.shields.io/github/stars/jgerstmayr/exudyn?style=plastic
+   :target: https://jgerstmayr.github.io/EXUDYN/
+
+.. |Github release date| image:: https://img.shields.io/github/release-date/jgerstmayr/exudyn?label=release
+   :target: https://jgerstmayr.github.io/EXUDYN/
+
+.. |Github commits| image:: https://img.shields.io/github/commits-since/jgerstmayr/exudyn/v1.0.6
+   :target: https://jgerstmayr.github.io/EXUDYN/
+
+.. |Github last commit| image:: https://img.shields.io/github/last-commit/jgerstmayr/exudyn
    :target: https://jgerstmayr.github.io/EXUDYN/
 
 
@@ -23,11 +37,9 @@ Exudyn
 
 **A flexible multibody dynamics systems simulation code with Python and C++**
 
-Exudyn version = 1.5.118.dev1 (Fitzgerald)
+Exudyn version = 1.6.0 (Gillespie)
 
 +  **University of Innsbruck**, Department of Mechatronics, Innsbruck, Austria
-
-Exudyn 1.5 is out! It includes now Python 3.7/8 - 3.10 wheels for MacOS (since 1.5.11.dev1 also showing tkinter dialogs!), linux and windows. See theDoc.pdf chapter **Issues and Bugs** for changes!
 
 If you like using Exudyn, please add a *star* on github and follow us on 
 `Twitter @RExudyn <https://twitter.com/RExudyn>`_ !
@@ -59,9 +71,7 @@ If you like using Exudyn, please add a *star* on github and follow us on
 
 A paper on Exudyn has been presented at the `6th Joint International Conference on Multibody System Dynamics <http://imsdacmd2020.iitd.ac.in>`_ and submitted to the proceedings: J. Gerstmayr, Exudyn - A C++ based Python package for flexible multibody systems, Proceedings of The 6th Joint International Conference on Multibody System Dynamics and the 10th Asian Conference on Multibody System Dynamics 2020, New Delhi, India, 2022. `PDF <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/publications/GerstmayrIMSD2022.pdf>`_
 
-This README document is a small part of the complete documentation found as PDF document in docs/theDoc/theDoc.pdf.
-It is auto-generated from .tex files (sorry for some conversion errors!). 
-Due to limitations for complex formulas and tables in .rst files, details of the reference manual and many other parts of the documentation are only available in theDoc.pdf, see the `github page of Exudyn <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ !
+Due to limitations for complex formulas and tables in .rst files, details of the reference manual and many other parts of the documentation are only available in theDoc.pdf, see the `github page of Exudyn <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_! There may also be some conversion errors in the auto-generated html pages.
 
 For license, see LICENSE.txt in the root github folder on github!
 

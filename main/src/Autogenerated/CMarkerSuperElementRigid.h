@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-08-11  16:21:00 (last modified)
+* @date         2023-03-05  18:08:48 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -32,6 +32,7 @@ public: // AUTO:
     ArrayIndex meshNodeNumbers;                   //!< AUTO: a list of \f$n_m\f$ mesh node numbers of superelement (=interface nodes) which are used to compute the body-fixed marker position and orientation; the related nodes must provide 3D position information, such as NodePoint, NodePoint2D, NodeRigidBody[..]; in order to retrieve the global node number, the generic body needs to convert local into global node numbers
     Vector weightingFactors;                      //!< AUTO: a list of \f$n_m\f$ weighting factors per node to compute the final local position and orientation; these factors could be based on surface integrals of the constrained mesh faces
     bool useAlternativeApproach;                  //!< AUTO: this flag switches between two versions for the computation of the rotation and angular velocity of the marker; alternative approach uses skew symmetric matrix of reference position; follows the inertia concept
+    Index rotationsExponentialMap;                //!< AUTO: Experimental flag (2 is the correct value and will be used in future, removing this flag): This value switches different behavior for computation of rotations and angular velocities: 0 uses linearized rotations and angular velocities, 1 uses the exponential map for rotations but linear angular velocities, 2 uses the exponential map for rotations and the according tangent map for angular velocities
     //! AUTO: default constructor with parameter initialization
     CMarkerSuperElementRigidParameters()
     {
@@ -40,6 +41,7 @@ public: // AUTO:
         meshNodeNumbers = ArrayIndex();
         weightingFactors = Vector();
         useAlternativeApproach = true;
+        rotationsExponentialMap = 2;
     };
 };
 

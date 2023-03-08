@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-07-21  19:36:24 (last modified)
+* @date         2023-03-05  18:08:48 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -113,6 +113,7 @@ public: // AUTO:
         cMarkerSuperElementRigid->GetParameters().meshNodeNumbers = py::cast<std::vector<Index>>(d["meshNodeNumbers"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cMarkerSuperElementRigid->GetParameters().weightingFactors = py::cast<std::vector<Real>>(d["weightingFactors"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cMarkerSuperElementRigid->GetParameters().useAlternativeApproach = py::cast<bool>(d["useAlternativeApproach"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        cMarkerSuperElementRigid->GetParameters().rotationsExponentialMap = py::cast<Index>(d["rotationsExponentialMap"]); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationMarkerSuperElementRigid->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "VshowMarkerNodes")) { visualizationMarkerSuperElementRigid->GetShowMarkerNodes() = py::cast<bool>(d["VshowMarkerNodes"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
@@ -128,6 +129,7 @@ public: // AUTO:
         d["meshNodeNumbers"] = (std::vector<Index>)cMarkerSuperElementRigid->GetParameters().meshNodeNumbers; //! AUTO: cast variables into python (not needed for standard types) 
         d["weightingFactors"] = EPyUtils::Vector2NumPy(cMarkerSuperElementRigid->GetParameters().weightingFactors); //! AUTO: cast variables into python (not needed for standard types) 
         d["useAlternativeApproach"] = (bool)cMarkerSuperElementRigid->GetParameters().useAlternativeApproach; //! AUTO: cast variables into python (not needed for standard types) 
+        d["rotationsExponentialMap"] = (Index)cMarkerSuperElementRigid->GetParameters().rotationsExponentialMap; //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationMarkerSuperElementRigid->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         d["VshowMarkerNodes"] = (bool)visualizationMarkerSuperElementRigid->GetShowMarkerNodes(); //! AUTO: cast variables into python (not needed for standard types) 
@@ -143,6 +145,7 @@ public: // AUTO:
         else if (parameterName.compare("meshNodeNumbers") == 0) { return py::cast((std::vector<Index>)cMarkerSuperElementRigid->GetParameters().meshNodeNumbers);} //! AUTO: get parameter
         else if (parameterName.compare("weightingFactors") == 0) { return EPyUtils::Vector2NumPy(cMarkerSuperElementRigid->GetParameters().weightingFactors);} //! AUTO: get parameter
         else if (parameterName.compare("useAlternativeApproach") == 0) { return py::cast((bool)cMarkerSuperElementRigid->GetParameters().useAlternativeApproach);} //! AUTO: get parameter
+        else if (parameterName.compare("rotationsExponentialMap") == 0) { return py::cast((Index)cMarkerSuperElementRigid->GetParameters().rotationsExponentialMap);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationMarkerSuperElementRigid->GetShow());} //! AUTO: get parameter
         else if (parameterName.compare("VshowMarkerNodes") == 0) { return py::cast((bool)visualizationMarkerSuperElementRigid->GetShowMarkerNodes());} //! AUTO: get parameter
         else  {PyError(STDstring("MarkerSuperElementRigid::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
@@ -159,6 +162,7 @@ public: // AUTO:
         else if (parameterName.compare("meshNodeNumbers") == 0) { cMarkerSuperElementRigid->GetParameters().meshNodeNumbers = py::cast<std::vector<Index>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("weightingFactors") == 0) { cMarkerSuperElementRigid->GetParameters().weightingFactors = py::cast<std::vector<Real>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("useAlternativeApproach") == 0) { cMarkerSuperElementRigid->GetParameters().useAlternativeApproach = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("rotationsExponentialMap") == 0) { cMarkerSuperElementRigid->GetParameters().rotationsExponentialMap = py::cast<Index>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationMarkerSuperElementRigid->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VshowMarkerNodes") == 0) { visualizationMarkerSuperElementRigid->GetShowMarkerNodes() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("MarkerSuperElementRigid::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user

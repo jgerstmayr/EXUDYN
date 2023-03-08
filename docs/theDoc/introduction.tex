@@ -828,6 +828,14 @@ Functionality may be extended but also removed in future
 \mysubsubsectionlabel{Camera following objects and interacting with model view}{sec:overview:advanced:camerafollowing}
 %
 For some models, it may be advantageous to track the translation and/or rotation of certain bodies, e.g., for cars, (wheeled) robots or bicycles. 
+Since \codeName\ 1.4.18 you can attach view to a marker, using the visualization setting
+\pythonstyle\begin{lstlisting}
+  SC.visualizationSettings.interactive.trackMarker = nMarker
+\end{lstlisting}
+in which \texttt{nMarker} represents the desired marker number to follow.
+See also related options in \texttt{SC.visualizationSettings.interactive} in \refSection{sec:VSettingsInteractive}.
+
+The following paragraph represents a slower, slightly outdated approach, which may be interesting for advanced usage of object tracking.
 To do so, the current render state (\texttt{SC.GetRenderState()}, \texttt{SC.SetRenderState(...)}) can be obtained and modified, in order to always follow a certain position.
 As this needs to be done during redraw of every frame, it is conveniently done in a graphicsUserFunction, e.g., within the ground body. This is shown in the following example, in which \texttt{mbs.variables['nTrackNode']} is a node number to be tracked:
 %
@@ -849,6 +857,7 @@ As this needs to be done during redraw of every frame, it is conveniently done i
                  VObjectGround(graphicsDataUserFunction=UFgraphics)))
   #.... further code for simulation here
 \end{lstlisting}
+NOTE that this approach is slower and it may lead to a (usually silient) crash after closing the renderer, as the renderer thread is somehow coupled to Python which is prohibited from Python side.
 %
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -987,7 +996,7 @@ To show the interoperability with julia, test the following example (similar to 
   print('results can be found in local directory: solution/demo1.txt')
   """
 \end{lstlisting}
-We can access Python variables from julia via \texttt{py"..."} to read out, e.g., \tettt{mbs}:
+We can access Python variables from julia via \texttt{py"..."} to read out, e.g., \texttt{mbs}:
   \begin{lstlisting}
   py"mbs".systemData.Info()
 \end{lstlisting}
