@@ -1,7 +1,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  Example of a serial robot with minimum and redundant coordinates
+# Details:  Example of a serial robot with minimal and redundant coordinates
 #           Robot interacts with particles
 #
 # Author:   Johannes Gerstmayr

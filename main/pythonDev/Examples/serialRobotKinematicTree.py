@@ -1,7 +1,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  Example of a serial robot with minimum and redundant coordinates
+# Details:  Example of a serial robot with minimal and redundant coordinates
 #
 # Author:   Johannes Gerstmayr
 # Date:     2022-06-26
@@ -70,39 +70,39 @@ robot = Robot(gravity=[0,0,9.81],
               tool = RobotTool(HT=HTtranslate([0,0,0.1]), visualization=VRobotTool(graphicsData=graphicsToolList)),
              referenceConfiguration = []) #referenceConfiguration created with 0s automatically
 
-#modKKDH according to Khalil and Kleinfinger, 1986
+#modDHKK according to Khalil and Kleinfinger, 1986
 link0={'stdDH':[0,0,0,pi/2], 
-       'modKKDH':[0,0,0,0], 
+       'modDHKK':[0,0,0,0], 
         'mass':20,  #not needed!
         'inertia':np.diag([1e-8,0.35,1e-8]), #w.r.t. COM! in stdDH link frame
         'COM':[0,0,0]} #in stdDH link frame
 
 link1={'stdDH':[0,0,0.4318,0],
-       'modKKDH':[0.5*pi,0,0,0], 
+       'modDHKK':[0.5*pi,0,0,0], 
         'mass':17.4, 
         'inertia':np.diag([0.13,0.524,0.539]), #w.r.t. COM! in stdDH link frame
         'COM':[-0.3638, 0.006, 0.2275]} #in stdDH link frame
 
 link2={'stdDH':[0,0.15,0.0203,-pi/2], 
-       'modKKDH':[0,0.4318,0,0.15], 
+       'modDHKK':[0,0.4318,0,0.15], 
         'mass':4.8, 
         'inertia':np.diag([0.066,0.086,0.0125]), #w.r.t. COM! in stdDH link frame
         'COM':[-0.0203,-0.0141,0.07]} #in stdDH link frame
 
 link3={'stdDH':[0,0.4318,0,pi/2], 
-       'modKKDH':[-0.5*pi,0.0203,0,0.4318], 
+       'modDHKK':[-0.5*pi,0.0203,0,0.4318], 
         'mass':0.82, 
         'inertia':np.diag([0.0018,0.0013,0.0018]), #w.r.t. COM! in stdDH link frame
         'COM':[0,0.019,0]} #in stdDH link frame
 
 link4={'stdDH':[0,0,0,-pi/2], 
-       'modKKDH':[0.5*pi,0,0,0], 
+       'modDHKK':[0.5*pi,0,0,0], 
         'mass':0.34, 
         'inertia':np.diag([0.0003,0.0004,0.0003]), #w.r.t. COM! in stdDH link frame
         'COM':[0,0,0]} #in stdDH link frame
 
 link5={'stdDH':[0,0,0,0], 
-       'modKKDH':[-0.5*pi,0,0,0], 
+       'modDHKK':[-0.5*pi,0,0,0], 
         'mass':0.09, 
         'inertia':np.diag([0.00015,0.00015,4e-5]), #w.r.t. COM! in stdDH link frame
         'COM':[0,0,0.032]} #in stdDH link frame
@@ -125,14 +125,14 @@ if mode=='newDH':
                                    ))
 elif mode=='newModDH': #computes preHT and localHT, but ALSO converts inertia parameters from stdDH to modDHKK (NEEDED!)
     for cnt, link in enumerate(linkList): 
-        [preHT, localHT] =  ModDHKK2HT(link['modKKDH'])
+        [preHT, localHT] =  ModDHKK2HT(link['modDHKK'])
         stdLocalHT =  StdDH2HT(link['stdDH'])
         HT = InverseHT(stdLocalHT) @ (localHT) #from stdHT back and forward in localHT of ModDHKK
         
         rbi = RigidBodyInertia()
         rbi.SetWithCOMinertia(link['mass'], link['inertia'], link['COM'])
 
-        rbi = rbi.Transformed(InverseHT(HT)) #inertia parameters need to be transformed to new modKKDH link frame
+        rbi = rbi.Transformed(InverseHT(HT)) #inertia parameters need to be transformed to new modDHKK link frame
         
         robot.AddLink(RobotLink(mass=rbi.mass,
                                    COM=rbi.COM(), 
