@@ -202,35 +202,35 @@ def EulerParameters2RotationMatrix(eulerParameters):
 #**input: 3x3 rotation matrix as list of lists or as np.array
 #**output: vector of 4 eulerParameters as np.array
 def RotationMatrix2EulerParameters(rotationMatrix):
-    A=rotationMatrix
-    trace = A[0][0] + A[1][1] + A[2][2] + 1.0
+    A=np.array(rotationMatrix)
+    trace = A[0,0] + A[1,1] + A[2,2] + 1.0
     M_EPSILON = 1e-15 #small number to avoid division by zero
 
     if (abs(trace) > M_EPSILON):
         s = 0.5 / np.sqrt(abs(trace))
         ep0 = 0.25 / s
-        ep1 = (A[2][1] - A[1][2]) * s
-        ep2 = (A[0][2] - A[2][0]) * s
-        ep3 = (A[1][0] - A[0][1]) * s
+        ep1 = (A[2,1] - A[1,2]) * s
+        ep2 = (A[0,2] - A[2,0]) * s
+        ep3 = (A[1,0] - A[0,1]) * s
     else:
-        if (A[0][0] > A[1][1]) and (A[0][0] > A[2][2]):
-            s = 2.0 * np.sqrt(abs(1.0 + A[0][0] - A[1][1] - A[2][2]))
+        if (A[0,0] > A[1,1]) and (A[0,0] > A[2,2]):
+            s = 2.0 * np.sqrt(abs(1.0 + A[0,0] - A[1,1] - A[2,2]))
             ep1 = 0.25 * s
-            ep2 = (A[0][1] + A[1][0]) / s
-            ep3 = (A[0][2] + A[2][0]) / s
-            ep0 = (A[1][2] - A[2][1]) / s
-        elif A[1][1] > A[2][2]:
-            s = 2.0 * np.sqrt(abs(1.0 + A[1][1] - A[0][0] - A[2][2]))
-            ep1 = (A[0][1] + A[1][0]) / s
+            ep2 = (A[0,1] + A[1,0]) / s
+            ep3 = (A[0,2] + A[2,0]) / s
+            ep0 = (A[1,2] - A[2,1]) / s
+        elif A[1,1] > A[2,2]:
+            s = 2.0 * np.sqrt(abs(1.0 + A[1,1] - A[0,0] - A[2,2]))
+            ep1 = (A[0,1] + A[1,0]) / s
             ep2 = 0.25 * s
-            ep3 = (A[1][2] + A[2][1]) / s
-            ep0 = (A[0][2] - A[2][0]) / s
+            ep3 = (A[1,2] + A[2,1]) / s
+            ep0 = (A[0,2] - A[2,0]) / s
         else:
-            s = 2.0 * np.sqrt(abs(1.0 + A[2][2] - A[0][0] - A[1][1]));
-            ep1 = (A[0][2] + A[2][0]) / s
-            ep2 = (A[1][2] + A[2][1]) / s
+            s = 2.0 * np.sqrt(abs(1.0 + A[2,2] - A[0,0] - A[1,1]));
+            ep1 = (A[0,2] + A[2,0]) / s
+            ep2 = (A[1,2] + A[2,1]) / s
             ep3 = 0.25 * s
-            ep0 = (A[0][1] - A[1][0]) / s
+            ep0 = (A[0,1] - A[1,0]) / s
 
     ep=np.array([ep0,ep1,ep2,ep3])
     #normalize Euler parameters, if rotation matrix is inaccurate; otherwise, may lead to errors in checkPreAssemble
@@ -258,6 +258,7 @@ def AngularVelocity2EulerParameters_t(angularVelocity, eulerParameters):
 #**function: rotaton matrix from rotation vector, see appendix B in \cite{Simo1988}
 #**input: 3D rotation vector as list or np.array
 #**output: 3x3 rotation matrix as np.array
+#**notes: gets inaccurate for very large rotations, $\phi \\gg 2*\pi$
 def RotationVector2RotationMatrix(rotationVector):
     phi = np.linalg.norm(rotationVector)
     if phi == 0.:
@@ -265,7 +266,7 @@ def RotationVector2RotationMatrix(rotationVector):
     else:
         OmegaSkew = Skew(rotationVector)
         alpha = np.sin(phi)/phi
-        beta = 2*(1-np.cos(phi))/phi**2
+        beta = 2*(1-np.cos(phi))/phi**2 #the loss of digits in 1-np.cos(phi) is compensated by OmegaSkew@OmegaSkew
         R = np.eye(3) + alpha*OmegaSkew + 0.5*beta*np.matmul(OmegaSkew, OmegaSkew)
 
     
@@ -276,19 +277,32 @@ def RotationVector2RotationMatrix(rotationVector):
 #**input: 3x3 rotation matrix as list of lists or as np.array
 #**output: vector of 3 components of rotation vector as np.array
 def RotationMatrix2RotationVector(rotationMatrix):
-    # compute a  rotation vector from given rotation matrix according to 
-    # 2015 - Sonneville - A geometrical local frame approach for flexible multibody systems, p45
-    if np.linalg.norm(rotationMatrix - np.eye(3)) == 0.:
-        rotationVector = np.zeros(3)
-    else:
-        theta = np.arccos(0.5*(np.trace(rotationMatrix)-1))
-        if abs(theta) < np.pi and abs(theta) > 0:
-            logR = (theta/(2*np.sin(theta)))*(rotationMatrix - np.transpose(rotationMatrix))
-            rotationVector = Skew2Vec(logR)
-        else:
-            rotationVector = np.zeros(3)
+    ep = RotationMatrix2EulerParameters(rotationMatrix)
+    
+    n = ep[1:]
+    norm = np.linalg.norm(n)
+    
+    #phi = 2.*acos(ep[0])
+    phi = 2.*np.arctan2(norm, ep[0])
+    
+    if norm != 0.:
+        n = (1./norm)*n
 
-    return rotationVector
+    return phi*n
+    
+    # # compute a  rotation vector from given rotation matrix according to 
+    # # 2015 - Sonneville - A geometrical local frame approach for flexible multibody systems, p45
+    # if np.linalg.norm(rotationMatrix - np.eye(3)) == 0.:
+    #     rotationVector = np.zeros(3)
+    # else:
+    #     theta = np.arccos(0.5*(np.trace(rotationMatrix)-1))
+    #     if abs(theta) < np.pi and abs(theta) > 0:
+    #         logR = (theta/(2*np.sin(theta)))*(rotationMatrix - np.transpose(rotationMatrix))
+    #         rotationVector = Skew2Vec(logR)
+    #     else:
+    #         rotationVector = np.zeros(3)
+
+    # return rotationVector
 
 
 #**function: compute rotation axis from given rotation vector
@@ -339,21 +353,42 @@ def RotXYZ2RotationMatrix(rot):
     c2 = np.cos(rot[2])
     s2 = np.sin(rot[2])
     
-    return np.array([[c1*c2,-c1 * s2,s1],
-                  [s0*s1*c2 + c0 * s2, -s0 * s1*s2 + c0 * c2,-s0 * c1],
-                  [-c0 * s1*c2 + s0 * s2,c0*s1*s2 + s0 * c2,c0*c1 ]]);
+    return np.array([[ c1*c2           ,-c1*s2           , s1    ],
+                     [ s0*s1*c2 + c0*s2,-s0*s1*s2 + c0*c2,-s0*c1 ],
+                     [-c0*s1*c2 + s0*s2, c0*s1*s2 + s0*c2, c0*c1 ]]);
 
 #**function: convert rotation matrix to xyz Euler angles (Tait-Bryan angles);  A=Ax*Ay*Az; 
 #**input:  3x3 rotation matrix as list of lists or np.array
 #**output: vector of Tait-Bryan rotation parameters [X,Y,Z] (in radiant) as np.array
+#**notes: due to gimbal lock / singularity at rot[1] = pi/2, -pi/2, ... the reconstruction of 
+#  \texttt{RotationMatrix2RotXYZ( RotXYZ2RotationMatrix(rot) )} may fail, but 
+#  \texttt{RotXYZ2RotationMatrix( RotationMatrix2RotXYZ( RotXYZ2RotationMatrix(rot) ) )} works always
 def RotationMatrix2RotXYZ(rotationMatrix):
-    R=rotationMatrix
+    R=np.array(rotationMatrix)
     #rot=np.array([0,0,0])
-    rot=[0,0,0]
-    rot[0] = np.arctan2(-R[1][2], R[2][2])
-    rot[1] = np.arctan2(R[0][2], np.sqrt(abs(1. - R[0][2] * R[0][2]))) #fabs for safety, if small round up error in rotation matrix ...
-    rot[2] = np.arctan2(-R[0][1], R[0][0])
-    return np.array(rot);
+    rot=np.zeros(3)
+    absC1 = np.sqrt((-R[1,2])**2+R[2,2]**2)
+    rot[1] = np.arctan2(R[0,2], absC1)
+    if absC1 > 1e-14:
+        rot[0] = np.arctan2(-R[1,2], R[2,2])
+        rot[2] = np.arctan2(-R[0,1], R[0,0])
+    else: #rot[0] and rot[2] represent same axes, set one of them zero!
+        rot[0] = 0.
+        #c1=0,s0=0,c0=1
+        #s0*s1*c2 + c0*s2,-s0*s1*s2 + c0*c2 => c0*s2, c0*c2
+        rot[2] = np.arctan2(R[1,0], R[1,1])
+        
+    return rot
+
+# #OLD, problems at rot[1]=pi/2: rotation represents different rotation matrix
+# def RotationMatrix2RotXYZ(rotationMatrix):
+#     R=np.array(rotationMatrix)
+#     #rot=np.array([0,0,0])
+#     rot=[0,0,0]
+#     rot[0] = np.arctan2(-R[1,2], R[2,2])
+#     rot[1] = np.arctan2(R[0,2], np.sqrt(abs(1. - R[0,2] * R[0,2]))) #fabs for safety, if small round up error in rotation matrix ...
+#     rot[2] = np.arctan2(-R[0,1], R[0,0])
+#     return np.array(rot);
 
 
 #**function: compute (global-frame) G-matrix for xyz Euler angles (Tait-Bryan angles) ($\LU{0}{\Gm} = \partial \LU{0}{\tomega}  / \partial \dot \ttheta$)
@@ -466,42 +501,43 @@ def RotXYZ2EulerParameters(alpha):
 #            Euler ANGLES
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-# **function: convert rotation matrix to zyz Euler angles;  A=Az*Ay*Az;
-# **input:
+#**function: convert rotation matrix to zyz Euler angles;  A=Az*Ay*Az;
+#**input:
 #  rotationMatrix: 3x3 rotation matrix as list of lists or np.array
 #  flip:           argument to choose first Euler angle to be in quadrant 2 or 3.
-# **output: vector of Euler rotation parameters [Z,Y,Z] (in radiant) as np.array
-# **notes: tested (compared with Robotcs, Vision and Control book of P. Corke)
-# **author: Martin Sereinig
+#**output: vector of Euler rotation parameters [Z,Y,Z] (in radiant) as np.array
+#**notes: tested (compared with Robotics, Vision and Control book of P. Corke)
+#**author: Martin Sereinig
 def RotationMatrix2RotZYZ(rotationMatrix, flip):
+    R=np.array(rotationMatrix)
     # Method as per Paul, p 69.
     # euler = [phi theta psi]
     eulangles = np.zeros([3])
     eps = 10**(-14)
 
-    if abs(rotationMatrix[0, 2]) < eps and abs(rotationMatrix[1, 2]) < eps:
+    if abs(R[0, 2]) < eps and abs(R[1, 2]) < eps:
         # singularity
         eulangles[0] = 0
         sp = 0
         cp = 1
         eulangles[1] = np.arctan2(
-            cp*rotationMatrix[0, 2] + sp*rotationMatrix[1, 2], rotationMatrix[2, 2])
-        eulangles[2] = np.arctan2(-sp * rotationMatrix[0, 0] + cp *
-                                  rotationMatrix[1, 0], -sp*rotationMatrix[0, 1] + cp*rotationMatrix[1, 1])
+            cp*R[0, 2] + sp*R[1, 2], R[2, 2])
+        eulangles[2] = np.arctan2(-sp * R[0, 0] + cp *
+                                  R[1, 0], -sp*R[0, 1] + cp*R[1, 1])
     else:
         # non singular
         # Only positive phi is returned.
         if flip:
-            eulangles[0] = np.arctan2(-rotationMatrix[1, 2], -rotationMatrix[0, 2])
+            eulangles[0] = np.arctan2(-R[1, 2], -R[0, 2])
         else:
-            eulangles[0] = np.arctan2(rotationMatrix[1, 2], rotationMatrix[0, 2])
+            eulangles[0] = np.arctan2(R[1, 2], R[0, 2])
 
         sp = np.sin(eulangles[0])
         cp = np.cos(eulangles[0])
         eulangles[1] = np.arctan2(
-            cp*rotationMatrix[0, 2] + sp*rotationMatrix[1, 2], rotationMatrix[2, 2])
-        eulangles[2] = np.arctan2(-sp * rotationMatrix[0, 0] + cp *
-                                  rotationMatrix[1, 0], -sp*rotationMatrix[0, 1] + cp*rotationMatrix[1, 1])
+            cp*R[0, 2] + sp*R[1, 2], R[2, 2])
+        eulangles[2] = np.arctan2(-sp * R[0, 0] + cp *
+                                  R[1, 0], -sp*R[0, 1] + cp*R[1, 1])
     return eulangles
 
 

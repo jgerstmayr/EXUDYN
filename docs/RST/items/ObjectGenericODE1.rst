@@ -150,6 +150,7 @@ MINI EXAMPLE for ObjectGenericODE1
 
 
 .. code-block:: python
+   :linenos:
 
    #set up a 2-DOF system
    nODE1 = mbs.AddNode(NodeGenericODE1(referenceCoordinates=[0,0],

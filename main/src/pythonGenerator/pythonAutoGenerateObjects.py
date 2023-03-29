@@ -19,6 +19,8 @@ space4 = '    '
 space8 = space4+space4
 space12 = space8+space4
 
+localListItemNames = [] #string list for highlighting
+
 # compute destination number of str given from [C|M][P]
 # [sParamComp=0, sParamMain=1, sComp=2, sMain=3]
 # return -1 if no destination
@@ -406,6 +408,12 @@ def WriteFile(parseInfo, parameterList, typeConversion):
 
 
     if hasPybindInterface: #otherwise do not include the description into latex doc
+        localListItemNames.append(parseInfo['class'])
+        localListItemNames.append('V'+parseInfo['class'])
+        if len(parseInfo['pythonShortName']) != 0:
+            localListItemNames.append(parseInfo['pythonShortName'])
+            localListItemNames.append('V'+parseInfo['pythonShortName'])
+            
         sLatexItemList += '  \\item ' + parseInfo['class'] + '\n'
         
         descriptionStr = parseInfo['classDescription']
@@ -1791,6 +1799,26 @@ Reference manual for: objects, nodes, markers, loads and sensors
         file=io.open(rstDir+FileNameLower(Key2FileName(key))+'Index.rst','w',encoding='utf8')  #clear file by one write access
         file.write(rstIndex+'\n')
         file.close()
+
+
+    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #write class names for confHelperItems.py
+    exuDir = '../../../docs/RST/'
+    
+    sConfHelper = ''
+    sConfHelper += '#this is a helper file to define additional keywords for examples\n'
+    sConfHelper += '#Created: 2023-03-17, Johannes Gerstmayr\n\n'
+    
+    #list of classes and enum classes:
+    sConfHelper += 'listItemNames=['
+    for s in localListItemNames:
+        sConfHelper += "'" + s + "'" + ', '
+    sConfHelper += ']\n\n'
+
+    with open(exuDir+'confHelperItems.py', 'w') as f:
+        f.write(sConfHelper)
+
 
 #%%
 finally:    

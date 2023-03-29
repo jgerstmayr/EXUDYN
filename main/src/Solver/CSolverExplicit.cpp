@@ -303,11 +303,6 @@ bool CSolverExplicitTimeInt::Newton(CSystem& computationalSystem, const Simulati
 		}
 	}
 
-	if (rk.hasStepSizeControl)
-	{
-		//** 2023-02-10: store here: solutionODE2increment = solutionODE2 - rk.startOfStepODE2
-	}
-
 	if (useLieGroupIntegration)
 	{
 		LieGroupODE2StepEvaluation(computationalSystem, solutionODE2, it.currentStepSize, rk.weight);

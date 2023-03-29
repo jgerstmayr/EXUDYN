@@ -2188,7 +2188,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = ObjectKinematicTree
-classDescription = "A special object to represent open kinematic trees using minimum coordinate formulation (NOT FULLY TESTED!). The kinematic tree is defined by lists of joint types, parents, inertia parameters (w.r.t. COM), etc.\ per link (body) and given joint (pre) transformations from the previous joint. Every joint / link is defined by the position and orientation of the previous joint and a coordinate transformation (incl.\ translation) from the previous link's to this link's joint coordinates. The joint can be combined with a marker, which allows to attach connectors as well as joints to represent closed loop mechanisms. Efficient models can be created by using tree structures in combination with constraints and very long chains should be avoided and replaced by (smaller) jointed chains if possible. The class Robot from exudyn.robotics can also be used to create kinematic trees, which are then exported as KinematicTree or as redundant multibody system. Use specialized settings in VisualizationSettings.bodies.kinematicTree for showing joint frames and other properties."
+classDescription = "A special object to represent open kinematic trees using minimal coordinate formulation (NOT FULLY TESTED!). The kinematic tree is defined by lists of joint types, parents, inertia parameters (w.r.t. COM), etc.\ per link (body) and given joint (pre) transformations from the previous joint. Every joint / link is defined by the position and orientation of the previous joint and a coordinate transformation (incl.\ translation) from the previous link's to this link's joint coordinates. The joint can be combined with a marker, which allows to attach connectors as well as joints to represent closed loop mechanisms. Efficient models can be created by using tree structures in combination with constraints and very long chains should be avoided and replaced by (smaller) jointed chains if possible. The class Robot from exudyn.robotics can also be used to create kinematic trees, which are then exported as KinematicTree or as redundant multibody system. Use specialized settings in VisualizationSettings.bodies.kinematicTree for showing joint frames and other properties."
 cParentClass = CObjectSuperElement
 mainParentClass = MainObjectBody
 visuParentClass = VisualizationObjectSuperElement
@@ -2202,7 +2202,7 @@ equations =
     %
     \mysubsubsubsection{General notes}
     The \texttt{KinematicTree} object is used to represent the equations of motion of a (open) tree-structured multibody system
-    using a minimum set of coordinates. Even though that \codeName\ is based on redundant coordinates,
+    using a minimal set of coordinates. Even though that \codeName\ is based on redundant coordinates,
     the \texttt{KinematicTree} allows to efficiently model standard multibody models based on revolute and prismatic joints.
     Especially, a chain with 3 links leads to only 3 equations of motion, while a redundant formulation would lead
     to $3 \times 7$ coordinates using Euler Parameters and $3 \times 6$ constraints for joints and Euler parameters,
@@ -2318,7 +2318,7 @@ miniExample =
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
 Vp,     M,      name,                           ,               ,       String,      "",                      ,       I,      "objects's unique name"
-V,      CP,     nodeNumber,                     ,               ,       NodeIndex,   "EXUstd::InvalidIndex",  ,       I,      "$n_0 \in \Ncal^n$node number (type NodeIndex) of GenericODE2 node containing the coordinates for the kinematic tree; $n$ being the number of minimum coordinates"
+V,      CP,     nodeNumber,                     ,               ,       NodeIndex,   "EXUstd::InvalidIndex",  ,       I,      "$n_0 \in \Ncal^n$node number (type NodeIndex) of GenericODE2 node containing the coordinates for the kinematic tree; $n$ being the number of minimal coordinates"
 V,      CP,     gravity,                        ,               ,       Vector3D,    "Vector3D({0.,0.,0.})",  ,       I,      "$\LU{0}{\gv} \in \Rcal^{3}$gravity vector in inertial coordinates; used to simply apply gravity as LoadMassProportional is not available for KinematicTree"
 V,      CP,     baseOffset,                     ,               ,       Vector3D,    "Vector3D({0.,0.,0.})",  ,       I,      "$\LU{0}{\pv_b} \in \Rcal^{3}$offset vector for base, in global coordinates"
 #not needed, because every link has preTransformation! V,      CP,     baseTransformation,             ,               ,       Matrix3D,    "EXUmath::unitMatrix3D", ,       I,      "$\Tm_b \in \Rcal^{3 \times 3}$transformation of base"
@@ -3392,7 +3392,7 @@ equations =
     \bn
       \item \texttt{useReducedOrderIntegration} = 0: $n_{ip}^\varepsilon = 5$ (Gauss order 9), $n_{ip}^K = 3$ (Gauss order 5) -- this is considered as full integration, leading to very small approximations; certainly, due to the high nonlinearity of expressions, this is only an approximation.
       \item \texttt{useReducedOrderIntegration} = 1: $n_{ip}^\varepsilon = 4$ (Gauss order 7), $n_{ip}^K = 2$ (Gauss order 3) -- this is considered as reduced integration, which is usually sufficiently accurate but leads to slightly less computational efforts, especially for bending terms.
-      \item \texttt{useReducedOrderIntegration} = 2: $n_{ip}^\varepsilon = 3$ (Lobatto order 3), $n_{ip}^K = 2$ (Gauss order 3) -- this is a further reduced integration, with the exceptional property that axial strain and bending strain terms are computed at completely disjointed locations: axial strain terms are evaluated at $0$, $L/2$ and $L$, while bending terms are evaluated at $\pm \frac{L}{2}\sqrt{1/3}$. This allows axial strains to freely follow the bending terms at $\pm \frac{L}{2}\sqrt{1/3}$, while axial strains are almost independent from bending terms at $0$, $L/2$ and $L$. However, due to the highly reduced integration, spurious (hourglass) modes may occur in certain applications!
+      \item \texttt{useReducedOrderIntegration} = 2: $n_{ip}^\varepsilon = 3$ (Lobatto order 3), $n_{ip}^K = 2$ (Gauss order 3) -- this is a further reduced integration, with the exceptional property that axial strain and bending strain terms are computed at completely disjointed locations: axial strain terms are evaluated at $0$, $L/2$ and $L$, while bending terms are evaluated at $\frac{L}{2} \pm \frac{L}{2}\sqrt{1/3}$. This allows axial strains to freely follow the bending terms at $\frac{L}{2} \pm \frac{L}{2}\sqrt{1/3}$, while axial strains are almost independent from bending terms at $0$, $L/2$ and $L$. However, due to the highly reduced integration, spurious (hourglass) modes may occur in certain applications!
     \en
     Note that the Jacobian of elastic forces is computed using automatic differentiation.
     
@@ -6980,28 +6980,26 @@ equations =
     $x_{gap, s_i} <= 0$:
     \bi
       \item[I.] Compute contact force $f_n$, \eq{ObjectContactFrictionCircleCable2D:contactForce}.
-      \item[II.] In case of sticking:
+      \item[II.] In case of sticking ($|x_{isSlipStick}|\neq 1$):
       \bi
         \item [II.1] the current sticking position $x_{curStick}$ is computed from \eq{ObjectContactFrictionCircleCable2D:lastCurStick}, and the difference of current and last sticking position reads\footnote{see the difference to the \texttt{PostNewtonStep}: we use $x_{lastStick}$ here, not the \texttt{startOfStep} variant.}:
         \be
-          \Delta x^*_{stick} = x_{curStick} - x_{lastStick}
+          \Delta x^*_{stick} = x_{curStick} - x_{lastStick}, \quad
           \Delta x_{stick} = x^*_{stick} - \mathrm{floor}\left(\frac{\Delta x^*_{stick} }{2 \pi \cdot r} + \frac{1}{2}\right) \cdot 2 \pi \cdot r
         \ee
-        \item [II.2] however, if the friction stiffness is $\mu_k==0$ or if $x_{isSlipStick} == -2$, we also set $\Delta x_{stick}=0$
-        \item [II.3] using the tangential velocity from \eq{ObjectContactFrictionCircleCable2D:vTangent}, the linear tangent force follows as
+        \item [II.2] if the friction stiffness is $\mu_k==0$ or if $x_{isSlipStick} == -2$, we set $\Delta x_{stick}=0$
+        \item [II.3] using the tangential velocity from \eq{ObjectContactFrictionCircleCable2D:vTangent}, the tangent force follows as (even if it is larger than the sticking limit)
         \be
-          f_{t,lin} = \mu_v \cdot v_t + \mu_k \Delta x_{stick}
+          f_t = \mu_v \cdot v_t + \mu_k \Delta x_{stick}
         \ee
-        \item [II.4] the tangential firction force then results in\footnote{see again difference to \texttt{PostNewtonStep}!},
-        \be
-            f_t = 
-                \begin{cases} f_t^{(lin)}, \quad \quad \quad \quad \quad \quad \quad \mathrm{if} \quad 
-                  \Vert x_{isSlipStick} \Vert \neq 1 \\ 
-                  \mu \cdot |f_n| \cdot x_{isSlipStick}, \quad \mathrm{else}
-                \end{cases}
-        \ee 
-      \ei
     \ei
+      \item [III.] In case of slipping ($|x_{isSlipStick}|=1$), the tangential firction force is set  as\footnote{see again difference to \texttt{PostNewtonStep}!},
+      \be
+      f_t = \mu \cdot |f_n| \cdot x_{isSlipStick}, \quad \mathrm{else}
+      \ee 
+    \ei
+    Note that in the Newton method, the tangential force may be inconsistent with the Kuhn-Tucker conditions. However,
+    the \texttt{PostNewtonStep} resolves this inconsistency.
     %++++++++++++++++++++++++++++++++++++++++++++++
     \mysubsubsubsection{Computation of LHS terms for circle and ANCF cable element}
     If \texttt{activeConnector = True}, 

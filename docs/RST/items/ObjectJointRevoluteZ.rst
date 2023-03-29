@@ -192,6 +192,7 @@ MINI EXAMPLE for ObjectJointRevoluteZ
 
 
 .. code-block:: python
+   :linenos:
 
    #example with rigid body at [0,0,0], with torsional load
    nBody = mbs.AddNode(RigidRxyz())

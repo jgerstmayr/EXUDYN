@@ -258,6 +258,7 @@ MINI EXAMPLE for ObjectConnectorCartesianSpringDamper
 
 
 .. code-block:: python
+   :linenos:
 
    #example with mass at [1,1,0], 5kg under load 5N in -y direction
    k=5000

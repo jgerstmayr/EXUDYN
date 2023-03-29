@@ -243,18 +243,33 @@ namespace EXUlie {
 		return HomogeneousTransformation(ExpSO3(incRot), x);
 	}
 
+	//! matrix logarithm of SE3, returns HomogeneousTransformation
 	inline HomogeneousTransformation LogSE3(const HomogeneousTransformation& H)
 	{
-		Matrix3D aSkew = LogSO3(H.GetRotation());
+		//Matrix3D aSkew = LogSO3(H.GetRotation());
+		//Vector3D a = RigidBodyMath::SkewMatrix2Vector(aSkew);
 
-		Vector3D a = RigidBodyMath::SkewMatrix2Vector(aSkew);
-		
+		Vector3D a = LogSO3Vector(H.GetRotation());
+
 		HomogeneousTransformation logH;
 		Matrix3D A = TExpSO3Inv(a).GetTransposed();
 		logH.GetTranslation() = A * H.GetTranslation();
-		logH.GetRotation() = aSkew;
+		logH.GetRotation() = RigidBodyMath::Vector2SkewMatrix(a);
 
 		return logH;
+	}
+
+	//! matrix logarithm of SE3, returns incr. displacement and incr. rotation
+	inline void LogSE3Vector(const HomogeneousTransformation& H, Vector3D& incDisp, Vector3D& incRot)
+	{
+		//Matrix3D aSkew = LogSO3(H.GetRotation());
+		//Vector3D a = RigidBodyMath::SkewMatrix2Vector(aSkew);
+
+		incRot = LogSO3Vector(H.GetRotation());
+
+		HomogeneousTransformation logH;
+		Matrix3D A = TExpSO3Inv(incRot).GetTransposed();
+		incDisp = A * H.GetTranslation();
 	}
 
 	//! compute the tangent operator TExpSE3 corresponding to ExpSE3, see \cite{Bruels2011}
@@ -324,7 +339,7 @@ namespace EXUlie {
 inline void HomogeneousTransformation::GetRelativeMotionTo(const HomogeneousTransformation& HT1,
 	Vector3D& incDisp, Vector3D& incRot)
 {
-	EXUlie::LogSE3(GetInverse() * HT1).Skew2Vector(incDisp, incRot);
+	EXUlie::LogSE3Vector(GetInverse() * HT1, incDisp, incRot);
 }
 
 #ifndef USE_EFFICIENT_TRANSFORMATION66

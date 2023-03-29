@@ -10,6 +10,12 @@ currently: automatic generate structures with ostream and initialization
 import datetime # for current date
 import copy
 
+#lists that are created during parsing
+#will be used for pygments
+localListFunctionNames = []
+localListClassNames = []
+localListEnumNames = []
+
 #******************************************************************************************************
 def GetDateStr():
     now=datetime.datetime.now()
@@ -347,7 +353,8 @@ convLatexCommands={#(precommand,'_USE'/'',postcommand)
     #for tables:
     '\\startGenericTable':('\n.. list-table:: \\ \n   :widths: auto\n   :header-rows: 1\n','',''), 
     '\\rowTableThree':('','_USE','','*2nd','*3rd'),       #filled manually
-    '\\rowTableFour':('','_USE','','*2nd','*3rd','*4rd'), #filled manually
+    '\\rowTableFour':('','_USE','','*2nd','*3rd','*4th'), #filled manually
+    '\\rowTableFive':('','_USE','','*2nd','*3rd','*4th','*5th'), #filled manually
     #
     '\\startTable':('\n.. list-table:: \\ \n   :widths: auto\n   :header-rows: 1\n','','','*2nd','*3rd'), 
     '\\rowTable':('','_USE','','*2nd','*3rd'),       #filled manually
@@ -398,9 +405,19 @@ def RSTmarkup(name, c='*', blindSpaces=True):
 
 
 #add code block; code must already be indented; code must have \n at end
-def RSTcodeBlock(code, typeString=''):
-    s = '.. code-block:: '+typeString + '\n\n'
-    s += code + '\n'
+def RSTcodeBlock(code, typeString='', addLineNumbers=False, indentation=''):
+    s = '.. code-block:: '+typeString + '\n'
+    icode = code
+
+    if indentation != '':
+        icode = RemoveIndentation(code,indentation, False, False) #add 3 spaces
+
+    if addLineNumbers:
+        if indentation == '':
+            s += '   '
+        s += indentation + ':linenos:\n'
+
+    s += '\n' + icode + '\n'
     return s
 
 #create text for inline URL
@@ -891,7 +908,8 @@ class PyLatexRST:
 
         
     #add python style code blocks to latex and RST
-    def AddDocuCodeBlock(self, code, pythonStyle=True):
+    #line numbers in Latex not preferable because copying does not work well; line numbers only if code>3lines
+    def AddDocuCodeBlock(self, code, pythonStyle=True, addRSTLineNumbers=True):
         # print('code0=', ord(code[0]))
         if code.strip(' ')[-1] != '\n':
             code += '\n'
@@ -900,9 +918,12 @@ class PyLatexRST:
         self.sLatex += code
         self.sLatex +='\\end{lstlisting}\n\n'
 
+        spaces='   '
         self.sRST += '\n.. code-block:: ' + 'python'*pythonStyle + '\n' #needs empty line in between
+        if addRSTLineNumbers and code.count('\n') > 4:
+            self.sRST += spaces+':linenos:\n'
         self.sRST += '\n'*(code.strip(' ')[0] != '\n')
-        self.sRST += RemoveIndentation(code, '   ',False)
+        self.sRST += RemoveIndentation(code, spaces,False)
         #print(RemoveIndentation(code, '   '))
         self.sRST += '\n'*(code.strip(' ')[-1] != '\n')
         
@@ -998,6 +1019,9 @@ class PyLatexRST:
     
     #start class definition
     def DefPyStartClass(self, cClass, pyClass, description, subSection = False, labelName=''):
+        if pyClass != '' and pyClass not in localListClassNames:
+            localListClassNames.append(pyClass)
+
         self.sPy += '\n'
         sectionName = pyClass
         if (cClass == ''): 
@@ -1033,6 +1057,10 @@ class PyLatexRST:
     #example = string, which is put into latex documentation
     #isLambdaFunction = True: cName is intepreted as lambda function and copied into pybind definition
     def DefPyFunctionAccess(self, cClass, pyName, cName, description, argList=[], defaultArgs=[], example='', options='', isLambdaFunction = False): 
+        
+        if pyName not in localListFunctionNames:
+            localListFunctionNames.append(pyName)
+
         
         def ReplaceDefaultArgsCpp(s):
             sNew = copy.copy(s)
@@ -1122,7 +1150,7 @@ class PyLatexRST:
             example = example.replace('\\\\','\\tabnewline\n    ')
             example = example.replace('\\TAB','\\phantom{XXXX}') #phantom spaces, not visible
             self.sLatex += '\\tabnewline \n    \\textcolor{steelblue}{{\\bf EXAMPLE}: \\tabnewline \n    \\texttt{' + example.replace("'","{\\textquotesingle}") + '}}'
-            exampleRST = exampleRST.replace('\\\\','\n')
+            exampleRST = exampleRST.replace('\\#','#').replace('\\\\','\n')
             
             self.sRST += '  | *Example*:\n\n'
             self.sRST += '  '+RSTcodeBlock(RemoveIndentation(exampleRST,'   '+'  ', False).replace('\\TAB','  '), 'python') + '\n' #TAB=2 spaces +2 spaces surrounding
@@ -1131,6 +1159,10 @@ class PyLatexRST:
     #add a enum value and definition to pybind interface and to latex documentation
     def AddEnumValue(self, className, itemName, description):
         self.sPy += '		.value("' + itemName + '", ' + className + '::' + itemName + ')    //' + description + '\n'
+
+        #this function is for enums
+        if className not in localListEnumNames:
+            localListEnumNames.append(className)
 
         #self.sLatex += '  ' + Str2Latex(itemName) + ' & ' + Str2Latex(description) + '\\\\ \\hline \n'
         self.DefLatexDataAccess(itemName, description) #Str2Latex(...) done inside function

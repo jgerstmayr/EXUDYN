@@ -3613,18 +3613,6 @@ void CSystem::UpdatePostProcessData(bool recordImage)
 	postProcessData.postProcessDataReady = true;
 	if (recordImage) { postProcessData.recordImageCounter = postProcessData.updateCounter; } //this is the condition to record an image
 
-	//GetSystemData().GetCData().visualizationState = GetSystemData().GetCData().currentState; //copy current (computation step result) to post process state
-
-	//consider this, if more visualization crashes:
-	//if (GetSystemData().GetCData().visualizationState.GetODE2Coords().NumberOfItems() != GetSystemData().GetCData().currentState.GetODE2Coords().NumberOfItems() ||
-	//	GetSystemData().GetCData().visualizationState.GetODE1Coords().NumberOfItems() != GetSystemData().GetCData().currentState.GetODE1Coords().NumberOfItems() ||
-	//	GetSystemData().GetCData().visualizationState.GetAECoords().NumberOfItems() != GetSystemData().GetCData().currentState.GetAECoords().NumberOfItems() ||
-	//	GetSystemData().GetCData().visualizationState.GetDataCoords().NumberOfItems() != GetSystemData().GetCData().currentState.GetDataCoords().NumberOfItems()
-	//	)
-	//{
-	//	GetSystemData().GetCData().visualizationState = GetSystemData().GetCData().currentState; //make immediate, not thread-safe update, which will however guarantee that next update is working
-	//}
-
 	postProcessData.GetVisualizationStateUpdate() = GetSystemData().GetCData().currentState;
 	postProcessData.SetVisualizationStateUpdateAvailable(true);
 

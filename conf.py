@@ -6,7 +6,9 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #create exudynVersionString
+exudynVersionString=''
 file='main/src/pythonGenerator/exudynVersion.py'
 exec(open(file).read(), globals())
 
@@ -15,6 +17,50 @@ release = exudynVersionString
 project = 'Exudyn'+release
 copyright = '2023' #'2023, Johannes Gerstmayr'
 author = 'Johannes Gerstmayr'
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#try to patch pygments Python style
+#seems not to work:
+# from confHelper import listClassNames, listFunctionNames
+
+listClassNames=[]
+listFunctionNames=[]
+file='docs/RST/confHelper.py'
+exec(open(file).read(), globals())
+file='docs/RST/confHelperItems.py'
+exec(open(file).read(), globals())
+file='docs/RST/confHelperPyUtilities.py'
+exec(open(file).read(), globals())
+
+import pygments
+from pygments.lexers import PythonLexer
+from pygments.lexer import Lexer, RegexLexer, include, bygroups, using, \
+    default, words, combined, do_insertions, this
+from pygments.token import Text, Comment, Operator, Keyword, Name, String, \
+    Number, Punctuation, Generic, Other, Error
+
+#PythonLexer.EXTRA_CLASSNAMES = set(('AddSystem', 'AddObject', 'AddNode', 'AddMarker', 'AddLoad', 'AddSensor'))
+PythonLexer.EXTRA_CLASSNAMES = set(listClassNames+listItemNames)
+PythonLexer.EXTRA_FUNCTIONNAMES = set(listFunctionNames+listPyFunctionNames+listPyClassNames)
+
+def ProcessTokens(self,text):
+        for index, token, value in RegexLexer.get_tokens_unprocessed(self, text):
+            if token is Name and value in self.EXTRA_CLASSNAMES:
+                yield index, Name.Class, value   
+            elif token is Name and value in self.EXTRA_FUNCTIONNAMES:
+                yield index, Name.Function, value   
+                #yield index, Keyword.Pseudo, value 
+                #yield index, Operator.Word, value   
+                #yield index, Name, value   
+                #yield index, Name.Function, value   
+            else:
+                yield index, token, value
+
+#monkey patch this function ...
+PythonLexer.get_tokens_unprocessed = ProcessTokens
+#style: see https://pygments.org/styles/
+pygments_style = 'colorful' #colorful, native, vs, 
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 numfig = True #uses numbers for figures, see https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-numfig
 
@@ -47,6 +93,7 @@ extensions = [
 #for custom layout:
 templates_path = ["_templates"]
 
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #rtd:
 if html_theme == "sphinx_rtd_theme":
     html_static_path = ['docs/_static']
@@ -85,11 +132,15 @@ if html_theme == "furo":
         # },
     }
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #this does some magic and will add macros for mathjax (Default in sphinx for math: / latex formulas)
 #https://github.com/sphinx-doc/sphinx/issues/8195
 #https://docs.mathjax.org/en/latest/input/tex/extensions/configmacros.html
 packages: {'[+]': ['noerrors']}
 mathjax3_config = {  
+  #needed for color?
+  #loader: {load: ['[tex]/color']},
+  #tex: {packages: {'[+]': ['color']}}
     'loader': {
         'load': ['[tex]/mathtools']
     },
@@ -162,6 +213,11 @@ mathjax3_config = {
             'vp': [r'{\left[ \begin{array}{c} { #1} \vspace{0.04cm}\\ { #2} \end{array} \right]}', 2],
             'mp': [r'{\left[ \begin{array}{cc} #1 & #2 \vspace{0.04cm}\\ #3 & #4 \end{array} \right]}', 4],
 
+            'vrRow': [r'{[#1,\, #2,\, #3]}', 3], 
+            'vsix': [r'{\left[\!\! \begin{array}{c} { #1} \\ { #2} \\ { #3} \\ { #4} \\ { #5} \\ { #6} \end{array} \!\!\right]}', 6], 
+            'vsixb': [r'{\begin{array}{c} { #1} \\ { #2} \\ { #3} \\ { #4} \\ { #5} \\ { #6} \end{array} }', 6], 
+            'vsixs': [r'{ \begin{array}{c} { #1} \\ { #2} \\ { #3} \\ { #4} \\ { #5} \\ { #6} \end{array} }', 6], 
+
 #for system equations marking components
             'SO': r'{q}',
             'FO': r'{y}',
@@ -208,7 +264,16 @@ mathjax3_config = {
             'indred': r'{_\mathrm{red}}',
             'induser': r'{_\mathrm{user}}',
             'indu': r'{_\mathrm{u}}',
-            #
+#theory:
+            'termA': [r'{\color{blue}{#1}}',1],
+            'termB': [r'{\color{red}{#1}}',1],
+            'termC': [r'{\color{green}{#1}}',1],
+#solver:
+            'avu': r'{\ddot \mathbf{q}}',
+            'GA': r'{G\alpha}',
+            'aalg': r'{\mathbf{a}}',
+            'vel': r'{\mathbf{v}}',
+
             }                       
         }                           
     }       

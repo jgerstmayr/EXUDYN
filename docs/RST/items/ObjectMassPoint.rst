@@ -123,6 +123,7 @@ MINI EXAMPLE for ObjectMassPoint
 
 
 .. code-block:: python
+   :linenos:
 
    node = mbs.AddNode(NodePoint(referenceCoordinates = [1,1,0], 
                                 initialCoordinates=[0.5,0,0],

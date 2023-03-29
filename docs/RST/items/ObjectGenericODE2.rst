@@ -340,6 +340,7 @@ MINI EXAMPLE for ObjectGenericODE2
 
 
 .. code-block:: python
+   :linenos:
 
    #set up a mechanical system with two nodes; it has the structure: |~~M0~~M1
    nMass0 = mbs.AddNode(NodePoint(referenceCoordinates=[0,0,0]))

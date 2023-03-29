@@ -43,6 +43,18 @@ title = {{Euler angles, quaternions, and transformation matrices for space shutt
 year = {1977}
 }
 
+
+@ARTICLE{GazDeLuca2019,  
+author={C. {Gaz} and M. {Cognetti} and A. {Oliva} and P. {Robuffo Giordano} and A. {De Luca}},  
+journal={IEEE Robotics and Automation Letters},   
+title={Dynamic Identification of the Franka Emika Panda Robot With Retrieval of Feasible Parameters Using Penalty-Based Optimization},   
+year={2019},  
+volume={4},  
+number={4},  
+pages={4147-4154},  
+doi={10.1109/LRA.2019.2931248}}
+
+
 @article{Yoshikawa1985,
 author = {Tsuneo Yoshikawa},
 title ={Manipulability of Robotic Mechanisms},
@@ -182,7 +194,7 @@ year = {2000}
 
 @book{GeradinCardona2001,
 author = {Geradin, Michel and Cardona, Alberto},
-publisher = {John Wiley \$ Sons},
+publisher = {John Wiley \& Sons},
 title = {Flexible Multibody Dynamics},
 year = {2001}
 }
@@ -384,7 +396,7 @@ year = {2013}
 
 @inproceedings{GerstmayrEtAl2013,
 abstract = {The multibody dynamics and finite element simulation code has been developed since 1997. In the past years, more than 10 researchers have contributed to certain parts of HOTINT, such as solver, graphical user interface, element library, joint library, finite element functionality and port blocks. Currently, a script-language based version of HOTINT is freely available for download, intended for research, education and industrial applications. The main features of the current available version include objects like point mass, rigid bodies, complex point-based joints, classical mechanical joints, flexible (nonlinear) beams, port-blocks for mechatronics applications and many other features such as loads, sensors and graphical objects. HOTINT includes a 3D graphical visualization showing the results immediately during simulation, which helps to reduce modelling errors. In the present paper, we show the current state and the structure of the code. Examples should demonstrate the easiness of use of HOTINT.},
-author = {Gerstmayr, Johannes and Dorninger, Alexander and Eder, Rafael and Gruber, Peter and Reischl, Daniel and Saxinger, Martin and Sch�rgenhumer, Markus and Humer, Alexander and Nachbagauer, Karin and Pechstein, Astrid and Vetyukov, Yury},
+author = {Gerstmayr, Johannes and Dorninger, Alexander and Eder, Rafael and Gruber, Peter and Reischl, Daniel and Saxinger, Martin and Sch{\"o}rgenhumer, Markus and Humer, Alexander and Nachbagauer, Karin and Pechstein, Astrid and Vetyukov, Yury},
 booktitle = {9th International Conference on Multibody Systems, Nonlinear Dynamics, and Control, International Design Engineering Technical Conferences and Computers and Information in Engineering Conference (ASME IDETC 2013)},
 doi = {10.1115/DETC2013-12299},
 title = {{HOTINT: A Script Language Based Framework for the Simulation of Multibody Dynamics Systems}},
@@ -549,13 +561,6 @@ title = {{International Conference on Multibody Systems, Nonlinear Dynamics, and
 year = {2020}
 }
 
-@inproceedings{HolzingerGerstmayr2020,
-author = {Gerstmayr, Johannes and Holzinger, Stefan},
-booktitle = {International Conference on Multibody Systems, Nonlinear Dynamics, and Control, International Design Engineering Technical Conferences and Computers and Information in Engineering Conference (ASME IDETC 2020)},
-title = {{Explicit time integration of multibody systems modelled with three rotation parameters}},
-year = {2020}
-}
-
 @article{NaetsDevosHumerGerstmayr2020,
 abstract = {Abstract This paper presents a novel system-level model order reduction scheme for flexible multibody simulation, namely the system-level affine projection (SLAP). Contrary to existing system-level model order reduction approaches for multibody systems simulation, this methodology allows to obtain a constant reduced order basis which can be obtained in a noninvasive fashion with respect to the original flexible multibody model. It is shown that this scheme enables an automatic joint constraint elimination which can be obtained at low computational cost through exploitation of the component level modes typically employed in flexible multibody simulation. The equations of motion are derived such that the computational cost of the resulting SLAP model is independent of the original model size. This approach results in a set of ordinary differential equations with a constant mass matrix and nonlinear internal forces. This structure makes the resulting model suitable for a range of estimation, control, and design applications. The proposed approach is validated numerically on a flexible four-bar mechanism and shows good accuracy for a very low-order SLAP model.},
 author = {Naets, Frank and Devos, Thijs and Humer, Alexander and Gerstmayr, Johannes},
@@ -568,43 +573,6 @@ title = {{A noninvasive system-level model order reduction scheme for flexible m
 url = {https://onlinelibrary.wiley.com/doi/abs/10.1002/nme.6348},
 volume = {121},
 year = {2020}
-}
-@article{ZwoelferGerstmayr2020,
-author = {Zw{\"{o}}lfer, Andreas and Gerstmayr, Johannes},
-journal = {Multibody System Dynamics},
-number = {3},
-pages = {291--313},
-volume = {49},
-title = {{A concise nodal-based derivation of the floating frame of reference formulation for displacement-based solid finite elements}},
-year = {2020}
-}
-
-@article{Holzinger2021,
-author = {Holzinger, Stefan and Gerstmayr, Johannes},
-journal = {Multibody System Dynamics},
-title = {{Time integration of rigid bodies modelled with three rotation parameters}},
-pages = {345--378},
-volume = {53},
-number = {4},
-year = {2021},
-}
-
-@article{ZwoelferGerstmayr2021,
-author = {Zw{\"{o}}lfer, Andreas and Gerstmayr, Johannes},
-journal = {Acta Mechanica},
-pages = {835--851},
-volume = {232},
-number = {3},
-title = {{The nodal-based floating frame of reference formulation with modal reduction}},
-year = {2021}
-}
-
-@inproceedings{ManzlGerstmayr2021,
-  title={An Improved Dynamic Model of the Mecanum Wheel for Multibody Simulations},
-  author={Manzl, Peter and Gerstmayr, Johannes},
-  booktitle={ASME 2021 International Design Engineering Technical Conferences and Computers and Information in Engineering Conference},
-  organization={American Society of Mechanical Engineers Digital Collection},
-  year = {2021}
 }
 
 @misc{2022_Gerstmayr_theDoc,
@@ -623,14 +591,6 @@ year = {2021}
   year = {2023},
   publisher = {Youtube},
   howpublished = {\url{https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg_jtl6fx} (accessed on March 8, 2023)},
-}
-
-@inproceedings{GerstmayrExudyn2022,
-  title={Exudyn - A C++ based Python package for flexible multibody systems},
-  author={Gerstmayr, Johannes},
-  booktitle={The 6th Joint International Conference on Multibody System Dynamics and the 10th Asian Conference on Multibody System Dynamics 2020},
-  organization={New Delhi, India},
-  year = {2022}
 }
 
 @article{Schoeberl1997,
@@ -750,4 +710,107 @@ location = {Los Angeles, California},
 series = {SIGGRAPH '15}
 }
 
+@inproceedings{GerstmayrExudyn2022,
+  title={Exudyn - A C++ based Python package for flexible multibody systems},
+  author={Gerstmayr, Johannes},
+  booktitle={The 6th Joint International Conference on Multibody System Dynamics and the 10th Asian Conference on Multibody System Dynamics 2020},
+  organization={New Delhi, India},
+  year = {2022}
+}
+
+@article{HolzingerSchoeberl2020,
+author = {Holzinger, Stefan and Sch{\"{o}}berl, Joachim and Gerstmayr, Johannes},
+doi = {10.1007/s11044-019-09700-5},
+journal = {Multibody System Dynamics},
+number = {3},
+pages = {283--309},
+title = {{The equations of motion for a rigid body using non-redundant unified local velocity coordinates}},
+volume = {48},
+year = {2020}
+}
+
+@inproceedings{HolzingerGerstmayr2020,
+author = {Gerstmayr, Johannes and Holzinger, Stefan},
+booktitle = {International Conference on Multibody Systems, Nonlinear Dynamics, and Control, International Design Engineering Technical Conferences and Computers and Information in Engineering Conference (ASME IDETC 2020)},
+title = {{Explicit time integration of multibody systems modelled with three rotation parameters}},
+year = {2020}
+}
+
+@article{ZwoelferGerstmayr2020,
+author = {Zw{\"{o}}lfer, Andreas and Gerstmayr, Johannes},
+journal = {Multibody System Dynamics},
+number = {3},
+pages = {291--313},
+volume = {49},
+title = {{A concise nodal-based derivation of the floating frame of reference formulation for displacement-based solid finite elements}},
+year = {2020}
+}
+
+@article{PieberNtarladima2022,
+author        = {Pieber, Michael and Ntarladima, Konstantina and Gerstmayr, Johannes},
+title         = {A {H}ybrid {A}rbitrary {L}agrangian
+{E}ulerian {F}ormulation for the
+{I}nvestigation of the {S}tability of
+{P}ipes {C}onveying {F}luid and
+{A}xially {M}oving {B}eams},
+journal       = {Journal of Computational and Nonlinear Dynamics},
+year          = {2022},
+volume        = {17},
+number        = {5},
+pages         = {051006 (13 pages)},
+DOI           = {10.1115/1.4053505},
+download      = {https://doi.org/10.1115/1.4053505}
+}
+
+@article{Holzinger2021,
+author = {Holzinger, Stefan and Gerstmayr, Johannes},
+journal = {Multibody System Dynamics},
+title = {{Time integration of rigid bodies modelled with three rotation parameters}},
+pages = {345--378},
+volume = {53},
+number = {4},
+year = {2021},
+}
+
+@article{ZwoelferGerstmayr2021,
+author = {Zw{\"{o}}lfer, Andreas and Gerstmayr, Johannes},
+journal = {Acta Mechanica},
+pages = {835--851},
+volume = {232},
+number = {3},
+title = {{The nodal-based floating frame of reference formulation with modal reduction}},
+year = {2021}
+}
+
+@inproceedings{ManzlGerstmayr2021,
+  title={An Improved Dynamic Model of the Mecanum Wheel for Multibody Simulations},
+  author={Manzl, Peter and Gerstmayr, Johannes},
+  booktitle={ASME 2021 International Design Engineering Technical Conferences and Computers and Information in Engineering Conference},
+  organization={American Society of Mechanical Engineers Digital Collection},
+  year = {2021}
+}
+
+@article{HolzingerSchieferle2022,
+    author = {Holzinger, Stefan and Schieferle, Manuel and Gutmann, Christoph and Hofer, Manfred and Gerstmayr, Johannes},
+    title = "{Modeling and Parameter Identification for a Flexible Rotor With Impacts}",
+    journal = {Journal of Computational and Nonlinear Dynamics},
+    volume = {17},
+    number = {5},
+    year = {2022},
+    issn = {1555-1415},
+    doi = {10.1115/1.4053560},
+    url = {https://doi.org/10.1115/1.4053560},
+    note = {051008},
+    eprint = {https://asmedigitalcollection.asme.org/computationalnonlinear/article-pdf/17/5/051008/6863995/cnd\_017\_05\_051008.pdf},
+}
+
+
+@misc{Exudyn2023,
+  doi = {10.21203/rs.3.rs-2693700/v1},
+  howpublished = {preprint, Research Square, \url{https://www.researchsquare.com/article/rs-2693700/v1}},
+  author = {Gerstmayr, Johannes},
+  title = {Exudyn -- {A} {C}++ based {P}ython package for flexible multibody systems},
+  publisher = {Research Square},
+  year = {2023},
+}
 

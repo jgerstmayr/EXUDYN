@@ -753,8 +753,8 @@ try: #still close file if crashes
     totalNumberOfLines = 0
 
     file=open(filename,'r') 
-    
     fileLines = file.readlines()
+    file.close()
     
     typeConversion = {'Bool':'bool', 'Int':'Index', 'Real':'Real', 'UInt':'Index', 'PInt':'Index', 
                       'UReal':'Real', 'PReal':'Real', 'UFloat':'float',  'PFloat':'float', 

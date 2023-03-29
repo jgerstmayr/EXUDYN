@@ -24,13 +24,13 @@ from typing import Optional #, Union
 import numpy as np
 
 #import gym #not needed here
-from gym import logger, spaces 
+from gym import logger, spaces, Env
 
 
 #**class: interface class to set up Exudyn model which can be used as model in open AI gym;
 #         see specific class functions which contain 'OVERRIDE' to integrate your model;
 #         in general, set up a model with CreateMBS(), map state to initial values, initial values to state and action to mbs;
-class OpenAIGymInterfaceEnv:
+class OpenAIGymInterfaceEnv(Env):
     metadata = {'render_modes': ['human'], 'render_fps': 50}
     #**classFunction: internal function to initialize model; store self.mbs and self.simulationSettings; special arguments **kwargs are passed to CreateMBS
     def __init__(self, **kwargs):
@@ -116,6 +116,7 @@ class OpenAIGymInterfaceEnv:
 
         storeRenderer = self.useRenderer 
         self.useRenderer = useRenderer #set this true to show visualization
+        self.flagNan = False
         observation, info = self.reset(seed=seed, return_info=True)
     
         ts = -time.time()
@@ -125,6 +126,9 @@ class OpenAIGymInterfaceEnv:
             else:
                 action = self.action_space.sample()
 
+            if np.isnan(self.state).any(): 
+                self.flagNan = True
+                break # 
             observation, reward, done, info = self.step(action)
             self.render()
             if self.mbs.GetRenderEngineStopFlag(): #user presses quit

@@ -17,7 +17,8 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn.basicUtilities as ebu
-from exudyn.rigidBodyUtilities import ComputeOrthonormalBasisVectors
+from exudyn.rigidBodyUtilities import ComputeOrthonormalBasisVectors, HomogeneousTransformation, \
+                                      HT2rotationMatrix, HT2translation
 
 #constants and fixed structures:
 import numpy as np #LoadSolutionFile
@@ -332,11 +333,18 @@ def MergeGraphicsDataTriangleList(g1,g2):
     if 'edges' in g1:
         data['edges'] = copy.copy(g1['edges'])
     if 'edges' in g2:
+        edges2 = copy.copy(g2['edges'])
         if 'edges' not in data:
             data['edges'] = []
-        data['edges'] += copy.copy(g2['edges'])
-    if 'edgeColor' in g1 and 'edgeColor' in g2:
+        else:
+            for i in range(len(edges2)):
+                edges2[i] += np #add point offset
+        
+        data['edges'] += edges2
+    if 'edgeColor' in g1:
         data['edgeColor'] = copy.copy(g1['edgeColor']) #only taken from g1
+    elif 'edgeColor' in g2:
+        data['edgeColor'] = copy.copy(g2['edgeColor']) #only taken from g1
 
     for p in g2['triangles']:
         data['triangles'] += [int(p + np)] #add point offset for correct connectivity
@@ -541,8 +549,12 @@ def GraphicsDataCube(pList, color=[0.,0.,0.,1.], faces=[1,1,1,1,1,1], addNormals
 #  radius: positive value
 #  color: provided as list of 4 RGBA values
 #  nTiles: used to determine resolution of sphere >=3; use larger values for finer resolution
+#  addEdges: True or number of edges along sphere shell (under development); for optimal drawing, nTiles shall be multiple of 4 or 8
+#  edgeColor: optional color for edges
+#  addFaces: if False, no faces are added (only edges)
 #**output: graphicsData dictionary, to be used in visualization of EXUDYN objects
-def GraphicsDataSphere(point=[0,0,0], radius=0.1, color=[0.,0.,0.,1.], nTiles = 8):
+def GraphicsDataSphere(point=[0,0,0], radius=0.1, color=[0.,0.,0.,1.], nTiles = 8, 
+                       addEdges = False, edgeColor=color4black, addFaces=True):
     if nTiles < 3: print("WARNING: GraphicsDataSphere: nTiles < 3: set nTiles=3")
     
     p = copy.deepcopy(point)
@@ -551,7 +563,7 @@ def GraphicsDataSphere(point=[0,0,0], radius=0.1, color=[0.,0.,0.,1.], nTiles = 
     e0=np.array([1,0,0])
     e1=np.array([0,1,0])
     e2=np.array([0,0,1])
-    
+
     points = []
     normals = []
     colors = []
@@ -577,25 +589,80 @@ def GraphicsDataSphere(point=[0,0,0], radius=0.1, color=[0.,0.,0.,1.], nTiles = 
             colors += color
 
     
-    for i0 in range(nTiles):
-        for iphi in range(nTiles):
-            p0 = i0*nTiles+iphi
-            p1 = (i0+1)*nTiles+iphi
-            iphi1 = iphi + 1
-            if iphi1 >= nTiles: 
-                iphi1 = 0
-            p2 = i0*nTiles+iphi1
-            p3 = (i0+1)*nTiles+iphi1
-
-            if switchTriangleOrder:
-                triangles += [p0,p3,p1, p0,p2,p3]
-            else:
-                triangles += [p0,p1,p3, p0,p3,p2]
-                
+    if addFaces:
+        for i0 in range(nTiles):
+            for iphi in range(nTiles):
+                p0 = i0*nTiles+iphi
+                p1 = (i0+1)*nTiles+iphi
+                iphi1 = iphi + 1
+                if iphi1 >= nTiles: 
+                    iphi1 = 0
+                p2 = i0*nTiles+iphi1
+                p3 = (i0+1)*nTiles+iphi1
+    
+                if switchTriangleOrder:
+                    triangles += [p0,p3,p1, p0,p2,p3]
+                else:
+                    triangles += [p0,p1,p3, p0,p3,p2]
             
     data = {'type':'TriangleList', 'colors':colors, 
             'normals':normals, 
-            'points':points, 'triangles':triangles}
+            'points':points, 
+            'triangles':triangles}
+    
+    if type(addEdges) == bool and addEdges == True:
+        addEdges = 3
+
+    if addEdges > 0:
+        data['edgeColor'] = edgeColor
+
+        edges = []
+        hEdges = [] #edges at half of iphi
+        nt = 2
+        if addEdges > 1:
+            nt = 4
+        if addEdges > 3:
+            nt = 8
+        for j in range(nt):
+            hEdges += [[]]
+        hTiles = int(nTiles/nt)
+        # hLast = [None]*nt
+        # hFirst = [None]*nt
+        sTiles = max(addEdges-1,1) #non-negative
+        nStep = int(nTiles/sTiles)
+        
+        for i0 in range(nTiles):
+            for iphi in range(nTiles):
+                p0 = i0*nTiles+iphi
+                p1 = (i0+1)*nTiles+iphi
+                if i0%nStep == 0:
+                    iphi1 = iphi + 1
+                    if iphi1 >= nTiles: 
+                        iphi1 = 0
+                    p2 = i0*nTiles+iphi1
+                    if addEdges>1:
+                        edges += [p0, p2]
+                if hTiles != 0:
+                    if iphi%hTiles == 0:
+                        j = int(iphi/hTiles)
+                        if j < nt:
+                            hEdges[j] += [p0,p1]
+                            # if hLast[j] == None:
+                            #     hLast[j] = p0
+                            #     hFirst[j] = p0
+                            # else:
+                            #     hEdges[j] += [hLast[j], p0]
+                            #     hLast[j] = p0
+        
+        for j in range(nt):
+            #print('j=',j, hEdges[j], ', hFirst=',hFirst)
+            if nt%2 == 0: #close edges only for even nt
+                hEdges[j] += [hEdges[j][-1], hEdges[(j+int(nt/2))%nt][-1]]
+                
+            edges += hEdges[j]
+
+        data['edges'] = edges
+    
     return data
             
 #**function: generate graphics data for a cylinder with given axis, radius and color; nTiles gives the number of tiles (minimum=3)
@@ -608,13 +675,14 @@ def GraphicsDataSphere(point=[0,0,0], radius=0.1, color=[0.,0.,0.,1.], nTiles = 
 #  angleRange: given in rad, to draw only part of cylinder (halfcylinder, etc.); for full range use [0..2 * pi]
 #  lastFace: if angleRange != [0,2*pi], then the faces of the open cylinder are shown with lastFace = True
 #  cutPlain: only used for angleRange != [0,2*pi]; if True, a plane is cut through the part of the cylinder; if False, the cylinder becomes a cake shape ...
-#  addEdges: if True, edges are added in TriangleList of GraphicsData
-#  addFaces: if False, no faces are added (only edges)
+#  addEdges: if True, edges are added in TriangleList of GraphicsData; if addEdges is integer, additional int(addEdges) lines are added on the cylinder mantle
 #  edgeColor: optional color for edges
+#  addFaces: if False, no faces are added (only edges)
 #  alternatingColor: if given, optionally another color in order to see rotation of solid; only works, if angleRange=[0,2*pi]
 #**output: graphicsData dictionary, to be used in visualization of EXUDYN objects
 def GraphicsDataCylinder(pAxis=[0,0,0], vAxis=[0,0,1], radius=0.1, color=[0.,0.,0.,1.], nTiles = 16, 
-                         angleRange=[0,2*pi], lastFace = True, cutPlain = True, addEdges=False, edgeColor=color4black, 
+                         angleRange=[0,2*pi], lastFace = True, cutPlain = True, 
+                         addEdges=False, edgeColor=color4black,
                          addFaces=True, **kwargs):  
 
     if nTiles < 3: print("WARNING: GraphicsDataCylinder: nTiles < 3: set nTiles=3")
@@ -771,6 +839,10 @@ def GraphicsDataCylinder(pAxis=[0,0,0], vAxis=[0,0,1], radius=0.1, color=[0.,0.,
     if addEdges:
         data['edgeColor'] = edgeColor
         
+        faceEdges = 0
+        if type(addEdges) != bool:
+            faceEdges = int(addEdges)
+        
         edges = []
         pLast = nTiles
         for i in range(nTiles):
@@ -781,6 +853,15 @@ def GraphicsDataCylinder(pAxis=[0,0,0], vAxis=[0,0,1], radius=0.1, color=[0.,0.,
         for i in range(nTiles):
             edges += [pLast, i+1+(nTiles+1)]
             pLast = i+1+(nTiles+1)
+        
+        if faceEdges > 0:
+            nStep = int(nTiles/faceEdges)
+            pLast0 = 1
+            pLast1 = 1+(nTiles+1)
+            for i in range(faceEdges):
+                edges += [pLast0, pLast1]
+                pLast0 += nStep
+                pLast1 += nStep
         
         data['edges'] = edges
 
@@ -1227,13 +1308,16 @@ def ExportGraphicsData2STL(graphicsData, fileName, solidName='ExudynSolid', inve
 #   unused argument yet: contourNormals: if provided as list of 2D vectors, they prescribe the normals to the contour for smooth visualization; otherwise, contour is drawn flat
 #**function: generate graphics data for a solid of revolution with given 3D point and axis, 2D point list for contour, (optional)2D normals and color; 
 #**input:
-#   pAxis: axis point of one face of solid of revolution (3D list or np.array)
-#   vAxis: vector representing the solid of revolution's axis (3D list or np.array)
-#   contour: a list of 2D-points, specifying the contour (x=axis, y=radius), e.g.: [[0,0],[0,0.1],[1,0.1]]
-#   color: provided as list of 4 RGBA values
-#   nTiles: used to determine resolution of solid; use larger values for finer resolution
-#   smoothContour: if True, the contour is made smooth by auto-computing normals to the contour
-#   alternatingColor: add a second color, which enables to see the rotation of the solid
+#  pAxis: axis point of one face of solid of revolution (3D list or np.array)
+#  vAxis: vector representing the solid of revolution's axis (3D list or np.array)
+#  contour: a list of 2D-points, specifying the contour (x=axis, y=radius), e.g.: [[0,0],[0,0.1],[1,0.1]]
+#  color: provided as list of 4 RGBA values
+#  nTiles: used to determine resolution of solid; use larger values for finer resolution
+#  smoothContour: if True, the contour is made smooth by auto-computing normals to the contour
+#  addEdges: True or number of edges along revolution mantle; for optimal drawing, nTiles shall be multiple addEdges
+#  edgeColor: optional color for edges
+#  addFaces: if False, no faces are added (only edges)
+#  alternatingColor: add a second color, which enables to see the rotation of the solid
 #**output: graphicsData dictionary, to be used in visualization of EXUDYN objects
 #**example:
 ##simple contour, using list of 2D points:
@@ -1253,7 +1337,8 @@ def ExportGraphicsData2STL(graphicsData, fileName, solidName='ExudynSolid', inve
 #rev2 = GraphicsDataSolidOfRevolution(pAxis=[0,0.5,0], vAxis=[1,0,0], 
 #                                     contour=contour, color=color4red, 
 #                                     nTiles = 64, smoothContour=True)
-def GraphicsDataSolidOfRevolution(pAxis, vAxis, contour, color=[0.,0.,0.,1.], nTiles = 16, smoothContour = False, **kwargs):  
+def GraphicsDataSolidOfRevolution(pAxis, vAxis, contour, color=[0.,0.,0.,1.], nTiles = 16, smoothContour = False, 
+                                  addEdges = False, edgeColor=color4black, addFaces=True, **kwargs):  
 
     if len(contour) < 2: 
         raise ValueError("ERROR: GraphicsDataSolidOfRevolution: contour must contain at least 2 points")
@@ -1333,20 +1418,50 @@ def GraphicsDataSolidOfRevolution(pAxis, vAxis, contour, color=[0.,0.,0.,1.], nT
     triangles = []
     n = nTiles
     #circumference:
-    for j in range(len(contour)-1):
-        k = j*2*n
-        for i in range(nTiles):
-            if i < nTiles-1:
-                triangles += [i+k,n+i+k+1,n+i+k]
-                triangles += [i+k,i+1+k,n+i+k+1]
-            else:
-                triangles += [i+k,n+k,n+i+k]
-                triangles += [i+k,k,n+k]
+    if addFaces:
+        for j in range(len(contour)-1):
+            k = j*2*n
+            for i in range(nTiles):
+                if i < nTiles-1:
+                    triangles += [i+k,n+i+k+1,n+i+k]
+                    triangles += [i+k,i+1+k,n+i+k+1]
+                else:
+                    triangles += [i+k,n+k,n+i+k]
+                    triangles += [i+k,k,n+k]
 
     #triangle normals point inwards to object ...
     data = {'type':'TriangleList', 'colors':colors, 
             'normals':normals, 
             'points':points, 'triangles':triangles}
+
+
+    if addEdges > 0:
+        data['edgeColor'] = edgeColor
+        edges = []
+
+        cntEdges = 0        
+        nSteps = nTiles
+        if type(addEdges) != bool and addEdges > 0:
+            cntEdges = int(addEdges)
+            nSteps = int(nTiles/cntEdges)
+        
+        hEdges = []
+        for j in range(cntEdges):
+            hEdges += [[]]
+
+        for j in range(len(contour)-1):
+            k = j*2*n
+            for i in range(nTiles):
+                edges += [i+k, (i+1)%nTiles+k]
+                if i%nSteps==0:
+                    j=int(i/nSteps)
+                    if j < cntEdges:
+                        hEdges[j] += [i+k, i+k+n]
+
+        for j in range(cntEdges):
+            edges += hEdges[j]
+
+        data['edges'] = edges
 
     return data
 
@@ -1371,6 +1486,7 @@ def GraphicsDataArrow(pAxis, vAxis, radius, color=[0.,0.,0.,1.], headFactor = 2,
 #**function: generate graphics data for three arrows representing an orthogonal basis with point of origin, shaft radius, optional size factors for head and colors; nTiles gives the number of tiles (minimum=3)
 #**input:
 #  origin: point of the origin of the base (3D list or np.array)
+#  rotationMatrix: optional transformation, which rotates the basis vectors
 #  length: positive value representing lengths of arrows for basis
 #  colors: provided as list of 3 colors (list of 4 RGBA values)
 #  headFactor: positive value representing the ratio between head's radius and the shaft radius
@@ -1378,15 +1494,42 @@ def GraphicsDataArrow(pAxis, vAxis, radius, color=[0.,0.,0.,1.], headFactor = 2,
 #  nTiles: used to determine resolution of arrows of basis (of revolution object) >=3; use larger values for finer resolution
 #  radius: positive value representing radius of arrows; default: radius = 0.01*length
 #**output: graphicsData dictionary, to be used in visualization of EXUDYN objects
-def GraphicsDataBasis(origin=[0,0,0], length = 1, colors=[color4red, color4green, color4blue], 
+def GraphicsDataBasis(origin=[0,0,0], rotationMatrix = np.eye(3), length = 1, colors=[color4red, color4green, color4blue], 
                       headFactor = 2, headStretch = 4, nTiles = 12, **kwargs):  
     radius = 0.01*length
     if 'radius' in kwargs:
         radius = kwargs['radius']
 
-    g1 = GraphicsDataArrow(origin,[length,0,0],radius, colors[0], headFactor, headStretch, nTiles)
-    g2 = GraphicsDataArrow(origin,[0,length,0],radius, colors[1], headFactor, headStretch, nTiles)
-    g3 = GraphicsDataArrow(origin,[0,0,length],radius, colors[2], headFactor, headStretch, nTiles)
+    A = np.array(rotationMatrix)
+    g1 = GraphicsDataArrow(origin,A@[length,0,0],radius, colors[0], headFactor, headStretch, nTiles)
+    g2 = GraphicsDataArrow(origin,A@[0,length,0],radius, colors[1], headFactor, headStretch, nTiles)
+    g3 = GraphicsDataArrow(origin,A@[0,0,length],radius, colors[2], headFactor, headStretch, nTiles)
+
+    return MergeGraphicsDataTriangleList(MergeGraphicsDataTriangleList(g1,g2),g3)
+
+#**function: generate graphics data for frame (similar to GraphicsDataBasis), showing three arrows representing an orthogonal basis for the homogeneous transformation HT; optional shaft radius, optional size factors for head and colors; nTiles gives the number of tiles (minimum=3)
+#**input:
+#  HT: homogeneous transformation representing frame
+#  length: positive value representing lengths of arrows for basis
+#  colors: provided as list of 3 colors (list of 4 RGBA values)
+#  headFactor: positive value representing the ratio between head's radius and the shaft radius
+#  headStretch: positive value representing the ratio between the head's radius and the head's length
+#  nTiles: used to determine resolution of arrows of basis (of revolution object) >=3; use larger values for finer resolution
+#  radius: positive value representing radius of arrows; default: radius = 0.01*length
+#**output: graphicsData dictionary, to be used in visualization of EXUDYN objects
+def GraphicsDataFrame(HT=np.eye(4), length = 1, colors=[color4red, color4green, color4blue], 
+                      headFactor = 2, headStretch = 4, nTiles = 12, **kwargs):  
+    radius = 0.01*length
+    if 'radius' in kwargs:
+        radius = kwargs['radius']
+
+    
+    A = HT2rotationMatrix(HT)
+    origin = HT2translation(HT)
+    
+    g1 = GraphicsDataArrow(origin,A@[length,0,0],radius, colors[0], headFactor, headStretch, nTiles)
+    g2 = GraphicsDataArrow(origin,A@[0,length,0],radius, colors[1], headFactor, headStretch, nTiles)
+    g3 = GraphicsDataArrow(origin,A@[0,0,length],radius, colors[2], headFactor, headStretch, nTiles)
 
     return MergeGraphicsDataTriangleList(MergeGraphicsDataTriangleList(g1,g2),g3)
 
@@ -1671,12 +1814,12 @@ def CirclePointsAndSegments(center=[0,0], radius=0.1, invert = False, pointIndex
 #  rot:      rotation matrix, which the extruded object point coordinates are multiplied with before adding offset
 #  pOff:     3D offset vector added to extruded coordinates; the z-coordinate of the extrusion object obtains 0 for the base plane, z=height for the top plane
 #  smoothNormals: if True, algorithm tries to smoothen normals at vertices and normals are added; creates more points; if False, triangle normals are used internally 
-#  addEdges: if True, edges are included in the GraphicsData dictionary
+#  addEdges: if True or 1, edges at bottom/top are included in the GraphicsData dictionary; if 2, also mantle edges are included
 #  edgeColor: optional color for edges
-#**output: graphicsData dictionary, to be used in visualization of EXUDYN objects; if addEdges=True, it returns a list of two dictionaries
+#  addFaces: if False, no faces are added (only edges)
 #**output: graphicsData dictionary, to be used in visualization of EXUDYN objects
 def GraphicsDataSolidExtrusion(vertices, segments, height, rot = np.diag([1,1,1]), pOff = [0,0,0], color = [0,0,0,1],
-                               smoothNormals = False, addEdges = False, edgeColor=color4black):
+                               smoothNormals = False, addEdges = False, edgeColor=color4black, addFaces=True):
     from copy import copy
     n = len(vertices)
     n2 = n*2 #total number of vertices
@@ -1686,6 +1829,7 @@ def GraphicsDataSolidExtrusion(vertices, segments, height, rot = np.diag([1,1,1]
         colors+=color
 
     edges = []
+    mantleEdges = (addEdges == 2)
 
     points = [[]]*n2
     for i in range(n):
@@ -1699,6 +1843,7 @@ def GraphicsDataSolidExtrusion(vertices, segments, height, rot = np.diag([1,1,1]
             edges[cnt] = [seg[0], seg[1]]
             edges[cnt+ns] = [seg[0]+n, seg[1]+n]
 
+    edges = list(np.array(edges).flatten())
     if smoothNormals: #second set of points for top/bottom faces
         #pointNormals = [[]]*(2*n2)
         for i in range(n2):
@@ -1767,15 +1912,20 @@ def GraphicsDataSolidExtrusion(vertices, segments, height, rot = np.diag([1,1,1]
     for i in range(ns):
         trigList[2*nt+2*i  ] = [segments[i][0]+off,segments[i][1]+off,  segments[i][1]+n+off]
         trigList[2*nt+2*i+1] = [segments[i][0]+off,segments[i][1]+n+off,segments[i][0]+n+off]
+
+        if mantleEdges:
+            edges += [segments[i][0]+off,segments[i][0]+n+off]
+
     #print("trigList=",trigList)
     triangles = []
-    for t in trigList:
-        triangles += t
+    if addFaces:
+        for t in trigList:
+            triangles += t
    
     data = {'type':'TriangleList', 'colors': colors, 'points':pointsTransformed, 'triangles':triangles}
     if addEdges:
         data['edgeColor'] = list(edgeColor)
-        data['edges'] = list(np.array(edges).flatten())
+        data['edges'] = edges
 
     if smoothNormals:
         data['normals'] = list(pointNormals.flatten())

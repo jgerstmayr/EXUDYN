@@ -75,7 +75,7 @@ namespace ngstd
   {
   public:
     /// maximal number of timers
-    enum { SIZE = 1024*1024 };
+    enum { SIZE = 256 }; //*JG2023-03-28 reduce in order to reduce from 1024*1024 to 256 startup time
     //  static long int tottimes[SIZE];
     // static long int starttimes[SIZE];
 

@@ -89,7 +89,8 @@ namespace ngstd
     }
     static void ResumeWorkers() { sleep = false; }
 
-    static void SetNumThreads(int amax_threads);
+	static bool IsRunning() { return (task_manager && task_manager->active_workers > 0); }
+	static void SetNumThreads(int amax_threads);
     static int GetMaxThreads() { return max_threads; }
     // static int GetNumThreads() { return task_manager ? task_manager->num_threads : 1; }
     static int GetNumThreads() { return num_threads; }

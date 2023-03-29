@@ -5,7 +5,7 @@
 ObjectKinematicTree
 ===================
 
-A special object to represent open kinematic trees using minimum coordinate formulation (NOT FULLY TESTED!). The kinematic tree is defined by lists of joint types, parents, inertia parameters (w.r.t. COM), etc.\ per link (body) and given joint (pre) transformations from the previous joint. Every joint / link is defined by the position and orientation of the previous joint and a coordinate transformation (incl.\ translation) from the previous link's to this link's joint coordinates. The joint can be combined with a marker, which allows to attach connectors as well as joints to represent closed loop mechanisms. Efficient models can be created by using tree structures in combination with constraints and very long chains should be avoided and replaced by (smaller) jointed chains if possible. The class Robot from exudyn.robotics can also be used to create kinematic trees, which are then exported as KinematicTree or as redundant multibody system. Use specialized settings in VisualizationSettings.bodies.kinematicTree for showing joint frames and other properties.
+A special object to represent open kinematic trees using minimal coordinate formulation (NOT FULLY TESTED!). The kinematic tree is defined by lists of joint types, parents, inertia parameters (w.r.t. COM), etc.\ per link (body) and given joint (pre) transformations from the previous joint. Every joint / link is defined by the position and orientation of the previous joint and a coordinate transformation (incl.\ translation) from the previous link's to this link's joint coordinates. The joint can be combined with a marker, which allows to attach connectors as well as joints to represent closed loop mechanisms. Efficient models can be created by using tree structures in combination with constraints and very long chains should be avoided and replaced by (smaller) jointed chains if possible. The class Robot from exudyn.robotics can also be used to create kinematic trees, which are then exported as KinematicTree or as redundant multibody system. Use specialized settings in VisualizationSettings.bodies.kinematicTree for showing joint frames and other properties.
 
 \ **Additional information for ObjectKinematicTree**\ :
 
@@ -20,7 +20,7 @@ The item \ **ObjectKinematicTree**\  with type = 'KinematicTree' has the followi
 * | **name** [type = String, default = '']:
   | objects's unique name
 * | **nodeNumber** [\ :math:`n_0 \in \Ncal^n`\ , type = NodeIndex, default = invalid (-1)]:
-  | node number (type NodeIndex) of GenericODE2 node containing the coordinates for the kinematic tree; \ :math:`n`\  being the number of minimum coordinates
+  | node number (type NodeIndex) of GenericODE2 node containing the coordinates for the kinematic tree; \ :math:`n`\  being the number of minimal coordinates
 * | **gravity** [\ :math:`\LU{0}{{\mathbf{g}}} \in \Rcal^{3}`\ , type = Vector3D, default = [0.,0.,0.]]:
   | gravity vector in inertial coordinates; used to simply apply gravity as LoadMassProportional is not available for KinematicTree
 * | **baseOffset** [\ :math:`\LU{0}{{\mathbf{p}}_b} \in \Rcal^{3}`\ , type = Vector3D, default = [0.,0.,0.]]:
@@ -98,7 +98,7 @@ General notes
 -------------
 
 The \ ``KinematicTree``\  object is used to represent the equations of motion of a (open) tree-structured multibody system
-using a minimum set of coordinates. Even though that Exudyn is based on redundant coordinates,
+using a minimal set of coordinates. Even though that Exudyn is based on redundant coordinates,
 the \ ``KinematicTree``\  allows to efficiently model standard multibody models based on revolute and prismatic joints.
 Especially, a chain with 3 links leads to only 3 equations of motion, while a redundant formulation would lead
 to \ :math:`3 \times 7`\  coordinates using Euler Parameters and \ :math:`3 \times 6`\  constraints for joints and Euler parameters,
@@ -215,6 +215,7 @@ MINI EXAMPLE for ObjectKinematicTree
 
 
 .. code-block:: python
+   :linenos:
 
    #build 1R mechanism (pendulum)
    L = 1 #length of link

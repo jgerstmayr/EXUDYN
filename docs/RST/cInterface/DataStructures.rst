@@ -12,14 +12,19 @@ such as a MatrixContainer for dense/sparse matrices or a list of 3D vectors.
 Note that there are many native data types, such as lists, dicts and numpy arrays (e.g. 3D vectors), 
 which are not described here as they are native to Pybind11, but can be passed as arguments when appropriate.
 
+.. _sec-matrixcontainer:
+
+
 MatrixContainer
 ===============
 
 The MatrixContainer is a versatile representation for dense and sparse matrices.
 
 .. code-block:: python
+   :linenos:
    
    #Create empty MatrixContainer:
+   from exudyn import MatrixContainer
    mc = MatrixContainer()
    
    #Create MatrixContainer with dense matrix:
@@ -28,7 +33,22 @@ The MatrixContainer is a versatile representation for dense and sparse matrices.
    mc = MatrixContainer(matrix)
    
    #Set with dense pyArray (a numpy array): 
+   pyArray = np.array(matrix)
    mc.SetWithDenseMatrix(pyArray, useDenseMatrix = True)
+   
+   #Set empty matrix:
+   mc.SetWithDenseMatrix(], bool useDenseMatrix = True)
+   
+   #Set with list of lists, stored as sparse matrix:
+   mc.SetWithDenseMatrix([[1,2],[3,4]], bool useDenseMatrix = False)
+   
+   #Set with sparse CSR matrix:
+   mc.SetWithSparseMatrixCSR(2,3,[[0,0,13.3],[1,1,4.2],[1,2,42.]], useDenseMatrix=True)
+   
+   print(mc)
+   #gives dense matrix:
+   #[[13.3  0.   0. ]
+   # [ 0.   4.2 42. ]]
 
 \ The class **MatrixContainer** has the following **functions and structures**:
 

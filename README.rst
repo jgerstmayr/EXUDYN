@@ -37,7 +37,7 @@ Exudyn
 
 **A flexible multibody dynamics systems simulation code with Python and C++**
 
-Exudyn version = 1.6.0 (Gillespie)
+Exudyn version = 1.6.31.dev1 (Gillespie)
 
 +  **University of Innsbruck**, Department of Mechatronics, Innsbruck, Austria
 
@@ -69,17 +69,18 @@ If you like using Exudyn, please add a *star* on github and follow us on
    
 |pic1| |pic2| |pic3| |pic4| |pic5| |pic6|
 
-A paper on Exudyn has been presented at the `6th Joint International Conference on Multibody System Dynamics <http://imsdacmd2020.iitd.ac.in>`_ and submitted to the proceedings: J. Gerstmayr, Exudyn - A C++ based Python package for flexible multibody systems, Proceedings of The 6th Joint International Conference on Multibody System Dynamics and the 10th Asian Conference on Multibody System Dynamics 2020, New Delhi, India, 2022.
+Johannes Gerstmayr. Exudyn -- A C++ based Python package for flexible multibody systems. Preprint, Research Square, 2023. `https://doi.org/10.21203/rs.3.rs-2693700/v1 <https://doi.org/10.21203/rs.3.rs-2693700/v1>`_
 
-Due to limitations for complex formulas and tables in .rst files, details of the reference manual and many other parts of the documentation are only available in theDoc.pdf, see the `github page of Exudyn <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_! There may also be some conversion errors in the auto-generated html pages.
+Due to limitations for complex formulas and tables in .rst files, some details of the reference manual are only available in theDoc.pdf, see the `github page of Exudyn <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_! There may also be some conversion errors in the auto-generated html pages.
 
 For license, see LICENSE.txt in the root github folder on github!
 
-In addition to the tutorial in the documentation, many ( **100+** ) examples can be found under main/pythonDev/Examples and main/pythonDev/TestModels .
+In addition to the tutorial in the documentation, many ( **100+** ) examples can be downloaded on github under main/pythonDev/Examples and main/pythonDev/TestModels . They are also on ReadTheDocs.
 
 Tutorial videos can be found in the `youtube channel of Exudyn <https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg_jtl6fx>`_ !
 
 Enjoy the Python library for multibody dynamics modeling, simulation, creating large scale systems, parameterized systems, component mode synthesis, optimization, ...
+
 
 
 

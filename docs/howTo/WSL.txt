@@ -95,6 +95,13 @@ conda install -c conda-forge matplotlib -y
 https://docs.microsoft.com/en-us/windows/terminal/get-started
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#install mpi:
+sudo apt-get update
+sudo apt install openmpi-bin libopenmpi-dev
+conda install mpi4py
+#pip install does not (always?) work on WSL
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
 #++++++++++++++++++++++++++++++

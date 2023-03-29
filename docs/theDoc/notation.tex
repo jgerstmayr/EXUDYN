@@ -1,0 +1,266 @@
+%solver
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\mysectionlabel{Notation}{sec:generalnotation}
+%
+The notation is used to explain:
+\bi
+  \item typical symbols in equations and formulas (e.g., $q$)
+  \item common types used as parameters in items (e.g., \texttt{PInt})
+  \item typical annotation of equations (or parts of it) and symbols (e.g., \texttt{ODE2})
+\ei
+
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\mysubsubsectionlabel{Common types}{sec:typesDescriptions}
+%
+Common types are especially used in the definition of items. 
+These types indicate how they need to be set (e.g., a \texttt{Vector3D} is set as a list of 3 floats or as a numpy array with 3 floats), 
+and they usually include some range or size check (e.g., \texttt{PReal} is checked for being positive and non-zero):
+\bi
+  \item \texttt{float} $\ldots$ a single-precision floating point number (note: in Python, '\texttt{float}' is used also for double precision numbers; in EXUDYN, internally floats are single precision numbers especially for graphics objects and OpenGL)
+  \item \texttt{Real} $\ldots$ a double-precision floating point number (note: in Python this is also of type '\texttt{float}')
+  \item \texttt{UReal} $\ldots$ same as \texttt{Real}, but may not be negative
+  \item \texttt{PReal} $\ldots$ same as \texttt{Real}, but must be positive, non-zero (e.g., step size may never be zero)
+  \item \texttt{Index} $\ldots$ deprecated, represents unsined integer, \texttt{UInt}
+  \item \texttt{Int} $\ldots$ a (signed) integer number, which converts to '\texttt{int}' in Python, '\texttt{int}' in C++
+  \item \texttt{UInt} $\ldots$ an unsigned integer number, which converts to '\texttt{int}' in Python
+  \item \texttt{PInt} $\ldots$ an positive integer number (> 0), which converts to '\texttt{int}' in Python
+%
+  \item \texttt{NodeIndex, MarkerIndex, ...} $\ldots$ a special (non-negative) integer type to represent indices of nodes, markers, ...; specifically, an unintentional conversion from one index type to the other is not possible (e.g., to convert \texttt{NodeIndex} to \texttt{MarkerIndex}); see \refSection{sec:itemIndex}
+  \item \texttt{String} $\ldots$ a string
+  \item \texttt{ArrayIndex} $\ldots$ a list of integer numbers (either list or in some cases \texttt{numpy} arrays may be allowed)
+  \item \texttt{ArrayNodeIndex} $\ldots$ a list of node indices
+  \item \texttt{Bool} $\ldots$ a boolean parameter: either \texttt{True} or \texttt{False} ('\texttt{bool}' in Python)
+  \item \texttt{VObjectMassPoint}, \texttt{VObjectRigidBody}, \texttt{VObjectGround}, etc.  $\ldots$ represents the visualization object of the underlying object; 'V' is put in front of object name
+  \item \texttt{BodyGraphicsData} $\ldots$ see \refSection{sec:graphicsData}
+%
+  \item \texttt{Vector2D} $\ldots$ a list or \texttt{numpy} array of 2 real numbers
+  \item \texttt{Vector3D} $\ldots$ a list or \texttt{numpy} array of 3 real numbers
+  \item \texttt{Vector'X'D} $\ldots$ a list or \texttt{numpy} array of 'X' real numbers
+  \item \texttt{Float4} $\ldots$ a list of 4 float numbers
+  \item \texttt{Vector} $\ldots$ a list or \texttt{numpy} array of real numbers (length given by according object)
+  \item \texttt{NumpyVector} $\ldots$ a 1D \texttt{numpy} array with real numbers (size given by according object); similar as Vector, but not accepting list
+%
+  \item \texttt{Matrix3D} $\ldots$ a list of lists or \texttt{numpy} array with $3 \times 3$ real numbers
+  \item \texttt{Matrix6D} $\ldots$ a list of lists or \texttt{numpy} array with $6 \times 6$ real numbers
+  \item \texttt{NumpyMatrix} $\ldots$ a 2D \texttt{numpy} array (matrix) with real numbers (size given by according object)
+  \item \texttt{NumpyMatrixI} $\ldots$ a 2D \texttt{numpy} array (matrix) with integer numbers (size given by according object)
+  \item \texttt{MatrixContainer} $\ldots$ a versatile representation for dense and sparse matrices, see \refSection{sec:MatrixContainer}
+%
+  \item \texttt{PyFunctionGraphicsData} $\ldots$ a user function providing GraphicsData, see the user function description of the according object
+  \item \texttt{PyFunctionMbsScalar...} $\ldots$ a user function for the according object; the name is chosen according to the interface (arguments containing scalars, vectors, etc.) and is only used internally for code generation; see the according user function description
+\ei
+
+%
+\mysubsubsection{States and coordinate attributes}
+The following subscripts are used to define configurations of a quantity, e.g., for a vector of displacement coordinates $\qv$:
+\bi
+  \item $\qv\cConfig \ldots$ $\qv$ in any configuration
+  \item $\qv\cRef \ldots$ $\qv$ in reference configuration, e.g., reference coordinates: $\cv\cRef$
+  \item $\qv\cIni \ldots$ $\qv$ in initial configuration, e.g., initial displacements: $\uv\cIni$
+  \item $\qv\cCur \ldots$ $\qv$ in current configuration
+  \item $\qv\cVis \ldots$ $\qv$ in visualization configuration
+  \item $\qv\cSOS \ldots$ $\qv$ in start of step configuration
+\ei
+As written in the introduction, the coordinates are attributed to certain types of equations and therefore, the following attributes are used (usually as subscript, e.g., $\qv_{ODE2}$):
+\ignoreRST{
+\bi
+  \item \hacs{ODE2} $\ldots$ \acl{ODE2} (coordinates)
+  \item \hacs{ODE1} $\ldots$ \acl{ODE1} (coordinates)
+  \item \hacs{AE} $\ldots$ \acl{AE} (coordinates)
+  \item Data $\ldots$ data coordinates (history variables)
+\ei}
+\onlyRST{
+
+ + \hacs{ODE2}, \hacs{ODE1}, \hacs{AE}, Data : These attributes refer to these types of equations or coordinates (click to see explanation)
+
+}
+Time is usually defined as 'time' or $t$.
+The cross product or vector product '$\times$' is often replaced by the skew symmetric matrix using the tilde '$\tilde{\;\;}$' symbol,
+\be
+  \av \times \bv = \tilde \av \, \bv = -\tilde \bv \, \av \eqComma
+\ee
+in which $\tilde{\;\;}$ transforms a vector $\av$ into a skew-symmetric matrix $\tilde \av$.
+If the components of $\av$ are defined as $\av = \vrRow{a_0}{a_1}{a_2}\tp$, then the skew-symmetric matrix reads
+\be
+  \tilde \av = \mr{0}{-a_2}{a_1} {a_2}{0}{-a_0} {-a_1}{a_0}{0} \eqDot
+\ee
+The inverse operation is denoted as $\vec$, resulting in $\vec(\tilde \av) = \av$.
+
+For the length of a vector we often use the abbreviation 
+\be \label{eq:definition:length}
+  \Vert \av \Vert = \sqrt{\av^T \av} \eqDot
+\ee
+
+A vector $\av=[x,\, y,\, z]\tp$ can be transformed into a diagonal matrix, e.g.,
+\be
+  \Am = \diag(\av) = \mr{x}{0}{0} {0}{y}{0} {0}{0}{z} 
+\ee
+%
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\mysubsubsectionlabel{Symbols in item equations}{sec:symbolsItems}
+\noindent The following tables contains the common notation
+General \mybold{coordinates} are: \vspace{-12pt}
+%
+\startGenericTable{| p{5cm} | p{5cm} | p{6cm} |}
+\rowTableThree{\mybold{python name (or description)}}{\mybold{symbol}}{\mybold{description} }
+\rowTableThree{displacement coordinates (\hac{ODE2})}{$\qv = [q_0,\, \ldots,\, q_n]\tp$}{vector of $n$ displacement based coordinates in any configuration; used for second order differential equations }
+\rowTableThree{rotation coordinates (\hac{ODE2})}{$\tpsi = [\psi_0,\, \ldots,\, \psi_\eta]\tp$}{vector of $\eta$ \mybold{rotation based coordinates} in any configuration; these coordinates are added to reference rotation parameters to provide the current rotation parameters; used for second order differential equations }
+\rowTableThree{coordinates (\hac{ODE1})}{$\yv = [y_0,\, \ldots,\, y_n]\tp$}{vector of $n$ coordinates for first order ordinary differential equations (\hac{ODE1}) in any configuration }
+\rowTableThree{algebraic coordinates}{$\zv = [z_0,\, \ldots,\, z_m]\tp$}{vector of $m$ algebraic coordinates if not Lagrange multipliers in any configuration }
+\rowTableThree{Lagrange multipliers}{$\tlambda = [\lambda_0,\, \ldots,\, \lambda_m]\tp$}{vector of $m$ Lagrange multipliers (=algebraic coordinates) in any configuration }
+\rowTableThree{data coordinates}{$\xv = [x_0,\, \ldots,\, x_l]\tp$}{vector of $l$ data coordinates in any configuration }
+\finishTable
+%+++++++++++++++++++++++++++++++++++++++++++++++++++
+
+The following parameters represent possible \mybold{OutputVariable} (list is not complete): \vspace{-12pt}
+\startGenericTable{| p{5cm} | p{5cm} | p{6cm} |}
+\rowTableThree{\mybold{python name}}{\mybold{symbol}}{\mybold{description} }
+\rowTableThree{Coordinate}{$\cv = [c_0,\, \ldots,\, c_n]\tp$}{coordinate vector with $n$ generalized coordinates $c_i$ in any configuration; the letter $c$ is used both for \hac{ODE1} and \hac{ODE2} coordinates }
+\rowTableThree{Coordinate\_t}{$\dot \cv = [c_0,\, \ldots,\, c_n]\tp$}{time derivative of coordinate vector }
+\rowTableThree{Displacement}{$\LU{0}{\uv} = [u_0,\, u_1,\, u_2]\tp$}{global displacement vector with 3 displacement coordinates $u_i$ in any configuration; in 1D or 2D objects, some of there coordinates may be zero }
+\rowTableThree{Rotation}{$[\varphi_0,\,\varphi_1,\,\varphi_2]\tp\cConfig$}{vector with 3 components of the Euler angles in xyz-sequence ($\LU{0b}{\Rot}\cConfig=:\Rot_0(\varphi_0) \cdot \Rot_1(\varphi_1) \cdot \Rot_2(\varphi_2)$), recomputed from rotation matrix }
+\rowTableThree{Rotation (alt.)}{$\ttheta = [\theta_0,\, \ldots,\, \theta_n]\tp$}{vector of \mybold{rotation parameters} (e.g., Euler parameters, Tait Bryan angles, ...) with $n$ coordinates $\theta_i$ in any configuration }
+\rowTableThree{Identity matrix}{$\Im = \mr{1}{0}{0} {0}{\ddots}{0} {0}{0}{1}$}{the identity matrix, very often $\Im = \ImThree$, the $3 \times 3$ identity matrix }
+\rowTableThree{Identity transformation}{$\LU{0b}{\ImThree} = \ImThree$}{converts body-fixed into global coordinates, e.g., $\LU{0}{\xv} = \LU{0b}{\ImThree} \LU{b}{\xv}$, thus resulting in $\LU{0}{\xv} = \LU{b}{\xv}$ in this case }
+\rowTableThree{RotationMatrix}{$\LU{0b}{\Rot} = \mr{A_{00}}{A_{01}}{A_{02}} {A_{10}}{A_{11}}{A_{12}} {A_{20}}{A_{21}}{A_{22}}$}{a 3D rotation matrix, which transforms local (e.g., body $b$) to global coordinates (0): $\LU{0}{\xv} = \LU{0b}{\Rot} \LU{b}{\xv}$ }
+\rowTableThree{RotationMatrixX}{$\LU{01}{\Rot_0(\theta_0)} = \mr{1}{0}{0} {0}{\cos(\theta_0)}{-\sin(\theta_0)} {0}{\sin(\theta_0)}{\cos(\theta_0)}$}{rotation matrix for rotation around $X$ axis (axis 0), transforming a vector from frame 1 to frame 0 }
+\rowTableThree{RotationMatrixY}{$\LU{01}{\Rot_1(\theta_1)} = \mr{\cos(\theta_1)}{0}{\sin(\theta_1)} {0}{1}{0} {-\sin(\theta_1)}{0}{\cos(\theta_1)}$}{rotation matrix for rotation around $Y$ axis (axis 1), transforming a vector from frame 1 to frame 0 }
+\rowTableThree{RotationMatrixZ}{$\LU{01}{\Rot_2(\theta_2)} = \mr{\cos(\theta_2)}{-\sin(\theta_2)}{0} {\sin(\theta_2)}{\cos(\theta_2)}{0} {0}{0}{1}$}{rotation matrix for rotation around $Z$ axis (axis 2), transforming a vector from frame 1 to frame 0 }
+\rowTableThree{Position}{$\LU{0}{\pv} = [p_0,\, p_1,\, p_2]\tp$}{global position vector with 3 position coordinates $p_i$ in any configuration }
+\rowTableThree{Velocity}{$\LU{0}{\vv} = \LU{0}{\dot \uv} = [v_0,\, v_1,\, v_2]\tp$}{global velocity vector with 3 displacement coordinates $v_i$ in any configuration }
+\rowTableThree{AngularVelocity}{$\LU{0}{\tomega} = [\omega_0,\, \ldots,\, \omega_2]\tp$}{global angular velocity vector with $3$ coordinates $\omega_i$ in any configuration }
+\rowTableThree{Acceleration}{$\LU{0}{\av} = \LU{0}{\ddot \uv} = [a_0,\, a_1,\, a_2]\tp$}{global acceleration vector with 3 displacement coordinates $a_i$ in any configuration }
+\rowTableThree{AngularAcceleration}{$\LU{0}{\talpha} = \LU{0}{\dot \tomega} = [\alpha_0,\, \ldots,\, \alpha_2]\tp$}{global angular acceleration vector with $3$ coordinates $\alpha_i$ in any configuration }
+\rowTableThree{VelocityLocal}{$\LU{b}{\vv} = [v_0,\, v_1,\, v_2]\tp$}{local (body-fixed) velocity vector with 3 displacement coordinates $v_i$ in any configuration }
+\rowTableThree{AngularVelocityLocal}{$\LU{b}{\tomega} = [\omega_0,\, \ldots,\, \omega_2]\tp$}{local (body-fixed) angular velocity vector with $3$ coordinates $\omega_i$ in any configuration }
+\rowTableThree{Force}{$\LU{0}{\fv} = [f_0,\, \ldots,\, f_2]\tp$}{vector of $3$ force components in global coordinates }
+\rowTableThree{Torque}{$\LU{0}{\ttau} = [\tau_0,\, \ldots,\, \tau_2]\tp$}{vector of $3$ torque components in global coordinates }
+\finishTable
+%+++++++++++++++++++++++++++++++++++++++++++++++++++
+
+The following table collects some typical \mybold{input parameters} for nodes, objects and markers: \vspace{-12pt}
+\startGenericTable{| p{5cm} | p{5cm} | p{6cm} |}
+\rowTableThree{\mybold{python name}}{\mybold{symbol}}{\mybold{description} }
+\rowTableThree{referenceCoordinates}{$\cv\cRef = [c_0,\, \ldots,\, c_n]\cRef\tp = [c_{\mathrm{Ref},0},\, \ldots,\, c_{\mathrm{Ref},n}]\cRef\tp$}{$n$ coordinates of reference configuration (can usually be set at initialization of nodes) }
+\rowTableThree{initialCoordinates}{$\cv\cIni$}{initial coordinates with generalized or mixed displacement/rotation quantities (can usually be set at initialization of nodes) }
+\rowTableThree{reference point}{$\pRefG = [r_0,\, r_1,\, r_2]\tp$}{reference point of body, e.g., for rigid bodies or \hac{FFRF} bodies, in any configuration; NOTE: for ANCF elements, $\pRefG$ is used for the position vector to the beam centerline }
+\rowTableThree{localPosition}{$\pLocB = [\LUR{b}{b}{0},\, \LUR{b}{b}{1},\, \LUR{b}{b}{2}]\tp$}{local (body-fixed) position vector with 3 position coordinates $b_i$ in any configuration, measured relative to reference point; NOTE: for rigid bodies, $\LU{0}{\pv} = \pRefG + \LU{0b}{\Rot} \pLocB$; localPosition is used for definition of body-fixed local position of markers, sensors, COM, etc. }
+\finishTable
+
+%\mysubsectionlabel{Notation for equations of motion}
+%
+\ignoreRST{\mysubsectionlabel{\hac{LHS}--\hac{RHS} naming conventions in EXUDYN}{sec:equationLHSRHS}}
+\onlyRST{\mysubsectionlabel{LHS-RHS naming conventions in EXUDYN}{sec:equationLHSRHS}}
+The general idea of the \codeName\ is to have objects, which provide equations (\hac{ODE2}, \hac{ODE1}, \hac{AE}).
+The solver then assembles these equations and solves the static or dynamic problem.
+The system structure and solver are similar but much more advanced and modular as earlier solvers by the main developer \cite{GerstmayrStangl2004,Gerstmayr2009,GerstmayrEtAl2013}.
+
+Functions and variables contain the abbreviations \hac{LHS} and \hac{RHS}, sometimes lower-case, in order
+to distinguish if terms are computed at the \hac{LHS} or \hac{RHS}.
+
+The objects have the following \hac{LHS}--\hac{RHS} conventions:
+\bi
+  \item the acceleration term, e.g., $m \cdot \ddot q$ is always positive on the \hac{LHS}
+  \item objects, connectors, etc., use \hac{LHS} conventions for most terms: mass, stiffness matrix, elastic forces, damping, etc., are computed at \hac{LHS} of the object equation
+  \item object forces are written at the \hac{RHS} of the object equation
+  \item in case of constraint or connector equations, there is no \hac{LHS} or \hac{RHS}, as there is no acceleration term. 
+\ei
+Therefore, the computation function evaluates the term as given in the description of the object, adding it to the \hac{LHS}.
+Object equations may read, e.g., for one coordinate $q$, mass $m$, damping coefficient $d$, stiffness $k$ and applied force $f$,
+\be
+  \underbrace{m \cdot \ddot q + d \cdot \dot q + k \cdot q}_{LHS} = \underbrace{f}_{RHS}
+\ee 
+In this case, the C++ function \texttt{ComputeODE2LHS(const Vector\& ode2Lhs)} will compute the term
+$d \cdot \dot q + k \cdot q$ with positive sign. Note that the acceleration term $m \cdot \ddot q$ is computed separately, as it 
+is computed from mass matrix and acceleration.
+
+However, system quantities (e.g.\ within the solver) are always written on \hac{RHS}\footnote{except for the acceleration $\times$ mass matrix and constraint reaction forces, see \eq{eq_system_EOM}}: 
+\be 
+  \underbrace{M_{sys} \cdot \ddot q_{sys}}_{LHS} = \underbrace{f_{sys}}_{RHS} \,.
+\ee
+In the case of the object equation
+\be
+  m \cdot \ddot q + d \cdot \dot q + k \cdot q = f \, ,
+\ee 
+the \hac{RHS} term becomes $f_{sys} = -(d \cdot \dot q + k \cdot q) + f $ and it is computed by the C++ function \texttt{ComputeSystemODE2RHS}.
+%
+This means, that during computation, terms which appear at the \hac{LHS} of the object are transferred to the \hac{RHS} of the system equation.
+This enables a simpler setup of equations for the solver.
+%
+\mysubsection{System assembly}
+Assembling equations of motion is done within the C++ class \texttt{CSystem}, see the file \texttt{CSystem.cpp}.
+The general idea is to assemble, i.e.\ to sum up, (parts of) residuals attributed by different objects. The summation process is based on coordinate indices to which the single equations belong to.
+Let's assume that we have two simple \texttt{ObjectMass1D} objects, with object indices $o0$ and $o1$ and having mass $m_0$ and $m_1$. They are connected to nodes of type \texttt{Node1D} $n0$ and $n1$, with global coordinate indices $c0$ and $c1$.
+The partial object residuals, which are fully independent equations, read
+\bea
+  m_0 \cdot \ddot q_{c0} &=& RHS_{c0} \eqComma \\
+  m_1 \cdot \ddot q_{c1} &=& RHS_{c1} \eqComma
+\eea
+where $RHS_{c0}$ and $RHS_{c1}$ the right-hand-side of the respective equations/coordinates. They represent forces, e.g., from \texttt{LoadCoordinate} items (which directly are applied to coordinates of nodes), say $f_{c0}$ and $f_{c1}$, that are in case also summed up on the right hand side.
+Let us for now assume that 
+\be
+  RHS_{c0} = f_{c0} \quad \mathrm{and} \quad RHS_{c1} = f_{c1} \eqDot
+\ee
+
+Now we add another \texttt{ObjectMass1D} object with object index $o2$, having mass $m_2$, but letting the object {\it again} use node $n0$ with coordinate $c0$.
+In this case, the total object residuals read
+\bea
+  (m_0+m_2) \cdot \ddot q_{c0} &=& RHS_{c0} \eqComma \\
+  m_1 \cdot \ddot q_{c1} &=& RHS_{c1} \eqDot
+\eea 
+It is clear, that now the mass in the first equation is increased due to the fact that two objects contribute to the same coordinate. The same would happen, if several loads are applied to the same coordinate.
+
+Finally, if we add a \texttt{CoordinateSpringDamper}, assuming a spring $k$ between coordinates $c0$ and $c1$, the \hac{RHS} of equations related to $c0$ and $c1$ is now augmented to
+\bea
+  RHS_{c0} &=& f_{c0} + k \cdot (q_{c1} - q_{c0}) \eqComma \\
+  RHS_{c1} &=& f_{c1} + k \cdot (q_{c0} - q_{c1}) \eqDot
+\eea
+The system of equation would therefore read
+\bea
+  (m_0+m_2) \cdot \ddot q_{c0} &=& f_{c0} + k \cdot (q_{c1} - q_{c0}) \eqComma \\
+  m_1 \cdot \ddot q_{c1}  &=& f_{c1} + k \cdot (q_{c0} - q_{c1}) \eqDot
+\eea
+It should be noted, that all (components of) residuals ('equations') are summed up for the according coordinates, and also all contributions to the mass matrix. 
+Only constraint equations, which are related to Lagrange parameters always get their 'own' Lagrange multipliers, which are automatically assigned by the system and therefore independent for every constraint.
+
+\mysubsectionlabel{Nomenclature for system equations of motion and solvers}{sec:nomenclatureEOM}
+Using the basic notation for coordinates in \refSection{sec:generalnotation}, we use the following quantities and symbols for equations of motion and solvers:
+%
+\startGenericTable{| p{5cm} | p{5cm} | p{6cm} |}
+\rowTableThree{\mybold{quantity}}{\mybold{symbol}}{\mybold{description} }
+\rowTableThree{number of \hac{ODE2} coordinates}{$n$}{\acf{ODE2} } % = \SON
+\rowTableThree{number of \hac{ODE1} coordinates}{$n_\FO$}{\acf{ODE1} } % = \FON
+\rowTableThree{number of \hac{AE} coordinates}{$m$}{\acf{AE} } % = \AEN
+\rowTableThree{number of system coordinates}{$n_{\SYS}$}{\SYSN }
+\rowTableThree{\hac{ODE2} coordinates}{$\qv = [q_0,\, \ldots,\, q_{n_q}]\tp$}{\hac{ODE2}, displacement-based coordinates (could also be rotation or deformation coordinates) }
+  %\vel needed for transformation to first order equations
+\rowTableThree{\hac{ODE2} velocities}{$\vel = \dot \qv = [\dot q_0,\, \ldots,\, \dot q_{n_q}]\tp$}{\hac{ODE2} velocity coordinates }
+\rowTableThree{\hac{ODE2} accelerations}{$\ddot \qv = [\ddot q_0,\, \ldots,\, \ddot q_{n_q}]\tp$}{\hac{ODE2} acceleration coordinates }
+\rowTableThree{\hac{ODE1} coordinates}{$\yv = [y_0,\, \ldots,\, y_{n_y}]\tp$}{vector of $n_y$ coordinates for \acf{ODE1} }
+\rowTableThree{\hac{ODE1} velocities}{$\dot \yv = [\dot y_0,\, \ldots,\, \dot y_{n_y}]\tp$}{vector of $n$ velocities for \acf{ODE1} }
+%currently not used/needed:    algebraic coordinates}{$\zv = [z_0,\, \ldots,\, z_m]\tp$}{vector of $m$ algebraic coordinates if not Lagrange multipliers in any configuration }
+\rowTableThree{\hac{ODE2} Lagrange multipliers}{$\tlambda = [\lambda_0,\, \ldots,\, \lambda_m]\tp$}{vector of $m$ Lagrange multipliers (=algebraic coordinates), representing the linear factors (often forces or torques) to fulfill the algebraic equations; for \hac{ODE1} and \hac{ODE2} coordinates }
+%not needed, because lambda can act on \hac{ODE2} and \hac{ODE1}
+    %\hac{ODE1} Lagrange multipliers}{$\tlambda = [\lambda_0,\, \ldots,\, \lambda_m]\tp$}{vector of $m$ Lagrange multipliers (=algebraic coordinates) for \FON ; needed if constraints are applied to \hac{ODE1} coordinates }
+\rowTableThree{data coordinates}{$\xv = [x_0,\, \ldots,\, x_l]\tp$}{vector of $l$ data coordinates in any configuration }
+%
+\rowTableThree{\hac{RHS} \hac{ODE2}}{$\fv_\SO\in \Rcal^{n_q}$}{right-hand-side of \hac{ODE2} equations; (all terms except mass matrix $\times$ acceleration and joint reaction forces) }
+\rowTableThree{\hac{RHS} \hac{ODE1}}{$\fv_\SO\in \Rcal^{n_y}$}{right-hand-side of \hac{ODE1} equations }
+\rowTableThree{\hac{AE}}{$\gv\in \Rcal^{m}$}{algebraic equations }
+%
+\rowTableThree{mass matrix}{$\Mm\in \Rcal^{n_q \times n_q}$}{mass matrix, only for \hac{ODE2} equations }
+\rowTableThree{(tangent) stiffness matrix}{$\Km\in \Rcal^{n_q \times n_q}$}{includes all derivatives of $\fv_\SO$ w.r.t.\ $\qv$ }
+\rowTableThree{damping/gyroscopic matrix}{$\Dm\in \Rcal^{n_q \times n_q}$}{includes all derivatives of $\fv_\SO$ w.r.t.\ $\vel$ }
+%
+\rowTableThree{step size}{$h$}{current step size in time integration method }
+\rowTableThree{residual}{$\rv_\SO \in \Rcal^{n_q}$, $\rv_\FO \in \Rcal^{n_y}$, $\rv_\AE \in \Rcal^{m}$}{residuals for each type of coordinates within static/time integration -- depends on method }
+\rowTableThree{system residual}{$\rv\in \Rcal^{n_s}$}{system residual -- depends on method }
+\rowTableThree{system coordinates}{$\txi$}{system coordinates and unknowns for solver; definition depends on solver }
+\rowTableThree{Jacobian}{$\Jm\in \Rcal^{n_s \times n_s}$}{system Jacobian -- depends on method }
+\finishTable
+
+
+
+

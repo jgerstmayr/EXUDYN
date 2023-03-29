@@ -44,6 +44,7 @@ namespace ngstd {
 	class TaskManager
 	{
 	public:
+		static bool IsRunning() { return false; }
 		static int GetNumThreads() { return 1; }
 		static void SetNumThreads(int amax_threads) {};
 		static int GetMaxThreads() { return 1; }

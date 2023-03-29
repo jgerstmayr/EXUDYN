@@ -6,7 +6,7 @@
 #               For details on Lie group methods used here, see the references \cite{Henderson1977, Simo1988, Bruels2011, Sonneville2014, Sonneville2017, Terze2016, Mueller2017}.
 #               Lie group methods for rotation vector are described in Holzinger and Gerstmayr \cite{HolzingerGerstmayr2020, Holzinger2021}.
 #               
-# Author:   Stefan Holzinger
+# Author:   Stefan Holzinger, Johannes Gerstmayr
 # Date:     2020-09-11
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
@@ -21,7 +21,7 @@ from math import sin, cos, tan, atan2, acos, sqrt
 
 #import exudyn as exu
 from exudyn.rigidBodyUtilities import EulerParameters2RotationMatrix, RotXYZ2RotationMatrix, HT2rotationMatrix, HT2translation, \
-            HomogeneousTransformation, Skew, Skew2Vec, ComputeRotationAxisFromRotationVector 
+            HomogeneousTransformation, Skew, Skew2Vec, ComputeRotationAxisFromRotationVector, RotationMatrix2EulerParameters
 
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -31,6 +31,7 @@ from exudyn.rigidBodyUtilities import EulerParameters2RotationMatrix, RotXYZ2Rot
 #**function: compute the cardinal sine function in radians
 #**input: scalar float or int value
 #**output: float value in radians
+#**author: Stefan Holzinger
 def Sinc(x):
     if x == 0.:
         s = 1.0
@@ -43,6 +44,7 @@ def Sinc(x):
 #**function: compute the cotangent function cot(x)=1/tan(x) in radians
 #**input: scalar float or int value
 #**output: float value in radians
+#**author: Stefan Holzinger
 def Cot(x):
     return 1/tan(x)
 
@@ -51,6 +53,7 @@ def Cot(x):
 #**input: 
 #   G: 7x7 matrix as np.array
 #**output: 3x3 rotation matrix as np.array
+#**author: Stefan Holzinger
 def R3xSO3Matrix2RotationMatrix(G): 
     return G[0:3,0:3]
 
@@ -59,6 +62,7 @@ def R3xSO3Matrix2RotationMatrix(G):
 #**input: 
 #   G: 7x7 matrix as np.array
 #**output: 3D vector as np.array containg translational part of R3xSO(3)
+#**author: Stefan Holzinger
 def R3xSO3Matrix2Translation(G):
     return G[3:6,6]
 
@@ -68,6 +72,7 @@ def R3xSO3Matrix2Translation(G):
 #   x: 3D vector as np.array representing the translation part corresponding to R3 
 #   R: 3x3 rotation matrix as np.array
 #**output: 7x7 matrix as np.array
+#**author: Stefan Holzinger
 def R3xSO3Matrix(x,R):
     G = np.eye(7)
     G[0:3,0:3] = R
@@ -90,6 +95,7 @@ def R3xSO3Matrix(x,R):
 #**function: compute the matrix exponential map on the Lie group SO(3), see \cite{Mueller2017}
 #**input: 3D rotation vector as np.array
 #**output: 3x3 matrix as np.array
+#**author: Stefan Holzinger
 def ExpSO3(Omega):
     phi = norm(Omega)
     I = np.eye(3)
@@ -102,6 +108,7 @@ def ExpSO3(Omega):
 #**input: 3D rotation vector as np.array
 #**output: 4D vector as np.array containing four Euler parameters 
 #          entry zero of output represent the scalar part of Euler parameters
+#**author: Stefan Holzinger
 def ExpS3(Omega):
     phi = norm(Omega)
     q0 = cos(0.5*phi)
@@ -109,29 +116,50 @@ def ExpS3(Omega):
     return np.array([q0, qV[0], qV[1], qV[2]])     
 
 
-#**function: compute the matrix logarithmic map on the Lie group SO(3), see \cite{Sonneville2014, Sonneville2017}
+#**function: compute the matrix logarithmic map on the Lie group SO(3)
 #**input: 3x3 rotation matrix as np.array
 #**output: 3x3 skew symmetric matrix as np.array
+#**author: Johannes Gerstmayr
+#**notes: improved accuracy for very small angles as well as angles phi close to pi AS WELL AS at phi=pi
 def LogSO3(R):
-    val = 0.5*(np.trace(R)-1) #if slightly larger than 1, due to numerical differentiation
-    if abs(val)>1:
-        val = val/abs(val)
-    phi = acos(val)
-    if phi == 0.:
-        X = np.zeros((3,3))
-    else:
-        X = (phi/(2*sin(phi)))*(R - np.transpose(R))
-    return X
+    ep = RotationMatrix2EulerParameters(R)
+    
+    n = ep[1:]
+    norm = np.linalg.norm(n)
+    
+    #phi = 2.*acos(ep[0])
+    phi = 2.*np.arctan2(norm, ep[0])
+    
+    if norm != 0.:
+        n = (1./norm)*n
+
+    return Skew(phi*n)
+    
 
 
-#not all of these terms are needed (as implemented in C++ code):
-#termExpanded = lambda x: 1/6 - (1/120)*x**2 + (1/5040)*x**4 - (1/362880)*x**6 + (1/39916800)*x**8 - (1/6227020800)*x**10 + (1/1307674368000)*x**12 
-termExpanded = lambda x : 1 / 6 - (1 / 120)*x**2 + (1 / 5040)*x**4
+# #**function: compute the matrix logarithmic map on the Lie group SO(3), see \cite{Sonneville2014, Sonneville2017}
+# #**input: 3x3 rotation matrix as np.array
+# #**output: 3x3 skew symmetric matrix as np.array
+# #**author: Stefan Holzinger
+# def LogSO3(R):
+#     val = 0.5*(np.trace(R)-1) #if slightly larger than 1, due to numerical differentiation
+#     if abs(val)>1:
+#         val = val/abs(val)
+#     phi = acos(val)
+#     if phi == 0.:
+#         X = np.zeros((3,3))
+#     else:
+#         X = (phi/(2*sin(phi)))*(R - np.transpose(R))
+#     return X
+
 
 #**function: compute the tangent operator corresponding to ExpSO3, see \cite{Bruels2011}
 #**input: 3D rotation vector as np.array
 #**output: 3x3 matrix as np.array       
+#**author: Stefan Holzinger
 def TExpSO3(Omega):
+    #not all of these terms are needed (as implemented in C++ code):
+
     phi = norm(Omega)
     I = np.eye(3)
     if phi == 0.:
@@ -140,7 +168,8 @@ def TExpSO3(Omega):
         OmegaSkew = Skew(Omega)
         t1 = -0.5*Sinc(phi/2)**2 #(np.cos(phi)-1)/(phi**2)
         if phi < 0.01:
-            t2 = termExpanded(phi)
+            t2 = 1 / 6 - (1 / 120)*phi**2 + (1 / 5040)*phi**4
+            #termExpanded = lambda x: 1/6 - (1/120)*x**2 + (1/5040)*x**4 - (1/362880)*x**6 + (1/39916800)*x**8 - (1/6227020800)*x**10 + (1/1307674368000)*x**12 
         else:
             t2 = (1/(phi**2))*(1-(sin(phi)/phi))
         T = I + t1*OmegaSkew + t2*np.dot(OmegaSkew, OmegaSkew)
@@ -151,6 +180,7 @@ def TExpSO3(Omega):
 #            this function was improved, see coordinateMaps.pdf by Stefan Holzinger
 #**input: 3D rotation vector as np.array
 #**output: 3x3 matrix as np.array 
+#**author: Stefan Holzinger
 def TExpSO3Inv(Omega):
     phi = norm(Omega)
     if phi == 0.0: 
@@ -173,6 +203,7 @@ def TExpSO3Inv(Omega):
 #**function: compute the matrix exponential map on the Lie group SE(3), see \cite{Bruels2011}
 #**input: 6D incremental motion vector as np.array
 #**output: 4x4 homogeneous transformation matrix as np.array
+#**author: Stefan Holzinger
 def ExpSE3(x):
     U     = x[0:3]
     Omega = x[3:6]
@@ -184,6 +215,7 @@ def ExpSE3(x):
 #**function: compute the matrix logarithm on the Lie group SE(3), see \cite{Sonneville2014}
 #**input: 4x4 homogeneous transformation matrix as np.array
 #**output: 4x4 skew symmetric matrix as np.array
+#**author: Stefan Holzinger
 def LogSE3(H):
     R = HT2rotationMatrix(H)
     aSkew = LogSO3(R)
@@ -225,6 +257,7 @@ def TExpSE3(x):
 #**function: compute the inverse of tangent operator TExpSE3, see \cite{Sonneville2014}
 #**input: 6D incremental motion vector as np.array
 #**output: 6x6 matrix as np.array
+#**author: Stefan Holzinger
 def TExpSE3Inv(x):
     U     = x[0:3]
     Omega = x[3:6]
@@ -249,6 +282,7 @@ def TExpSE3Inv(x):
 #**function: compute the matrix exponential map on the Lie group R3xSO(3), see \cite{Bruels2011}
 #**input: 6D incremental motion vector as np.array
 #**output: 7x7 matrix as np.array
+#**author: Stefan Holzinger
 def ExpR3xSO3(x):
     G = np.eye(7)
     G[0:3,0:3] = ExpSO3(x[3:6])
@@ -259,6 +293,7 @@ def ExpR3xSO3(x):
 #**function: compute the tangent operator corresponding to ExpR3xSO3, see \cite{Bruels2011}
 #**input: 6D incremental motion vector as np.array
 #**output: 6x6 matrix as np.array
+#**author: Stefan Holzinger
 def TExpR3xSO3(x):
     T = np.eye(6)
     T[3:6,3:6] = TExpSO3(x[3:6])
@@ -268,6 +303,7 @@ def TExpR3xSO3(x):
 #**function: compute the inverse of tangent operator TExpR3xSO3
 #**input: 6D incremental motion vector as np.array
 #**output: 6x6 matrix as np.array
+#**author: Stefan Holzinger
 def TExpR3xSO3Inv(x):
     T = np.eye(6)
     T[3:6,3:6] = TExpSO3Inv(x[3:6])
@@ -291,6 +327,7 @@ def TExpR3xSO3Inv(x):
 #  q0: 7D vector as np.array containing position coordinates and Euler parameters
 #  incrementalMotionVector: 6D incremental motion vector as np.array
 #**output: 7D vector as np.array containing composed position coordinates and composed Euler parameters
+#**author: Stefan Holzinger
 def CompositionRuleDirectProductR3AndS3(q0, incrementalMotionVector):
     
     # pair (x0, theta0)
@@ -313,6 +350,7 @@ def CompositionRuleDirectProductR3AndS3(q0, incrementalMotionVector):
 #  q0: 7D vector as np.array containing position coordinates and Euler parameters
 #  incrementalMotionVector: 6D incremental motion vector as np.array
 #**output: 7D vector as np.array containing composed position coordinates and composed Euler parameters
+#**author: Stefan Holzinger
 def CompositionRuleSemiDirectProductR3AndS3(q0, incrementalMotionVector):
     
     # pair (x0, theta0)
@@ -338,6 +376,7 @@ def CompositionRuleSemiDirectProductR3AndS3(q0, incrementalMotionVector):
 #  q0: 6D vector as np.array containing position coordinates and rotation vector
 #  incrementalMotionVector: 6D incremental motion vector as np.array
 #**output: 7D vector as np.array containing composed position coordinates and composed rotation vector
+#**author: Stefan Holzinger
 def CompositionRuleDirectProductR3AndR3RotVec(q0, incrementalMotionVector):
     
     # pair (x0, psi0)
@@ -362,6 +401,7 @@ def CompositionRuleDirectProductR3AndR3RotVec(q0, incrementalMotionVector):
 #  q0: 6D vector as np.array containing position coordinates and rotation vector
 #  incrementalMotionVector: 6D incremental motion vector as np.array
 #**output: 6D vector as np.array containing composed position coordinates and composed rotation vector
+#**author: Stefan Holzinger
 def CompositionRuleSemiDirectProductR3AndR3RotVec(q0, incrementalMotionVector):
     
     # pair (x0, psi0)
@@ -387,6 +427,7 @@ def CompositionRuleSemiDirectProductR3AndR3RotVec(q0, incrementalMotionVector):
 #  q0: 6D vector as np.array containing position coordinates and Cardan-Tait/Bryan angles
 #  incrementalMotionVector: 6D incremental motion vector as np.array
 #**output: 6D vector as np.array containing composed position coordinates and composed Cardan-Tait/Bryan angles
+#**author: Stefan Holzinger
 def CompositionRuleDirectProductR3AndR3RotXYZAngles(q0, incrementalMotionVector):
     
     # pair (x0, psi0)
@@ -411,6 +452,7 @@ def CompositionRuleDirectProductR3AndR3RotXYZAngles(q0, incrementalMotionVector)
 #  q0: 6D vector as np.array containing position coordinates and Cardan-Tait/Bryan angles
 #  incrementalMotionVector: 6D incremental motion vector as np.array
 #**output: 6D vector as np.array containing composed position coordinates and composed Cardan-Tait/Bryan angles
+#**author: Stefan Holzinger
 def CompositionRuleSemiDirectProductR3AndR3RotXYZAngles(q0, incrementalMotionVector):
     
     # pair (x0, psi0)
@@ -435,6 +477,7 @@ def CompositionRuleSemiDirectProductR3AndR3RotXYZAngles(q0, incrementalMotionVec
 #  q: 4D vector as np.array containing Euler parameters
 #  p: 4D vector as np.array containing Euler parameters
 #**output: 4D vector as np.array containing composed (multiplied) Euler parameters
+#**author: Stefan Holzinger
 def CompositionRuleForEulerParameters(q, p):
     p0 = p[0]
     pV = p[1:4]
@@ -450,6 +493,7 @@ def CompositionRuleForEulerParameters(q, p):
 #  v0: 3D rotation vector as np.array
 #  Omega: 3D (incremental) rotation vector as np.array
 #**output: 3D vector as np.array containing composed rotation vector v
+#**author: Stefan Holzinger
 def CompositionRuleForRotationVectors(v0, Omega):
     w1Half = 0.5*norm(v0)
     w2Half = 0.5*norm(Omega)
@@ -472,6 +516,7 @@ def CompositionRuleForRotationVectors(v0, Omega):
 #  alpha0: 3D vector as np.array containing RotXYZ angles
 #  Omega:  3D vector as np.array containing the (incremental) rotation vector
 #**output: 3D vector as np.array containing composed RotXYZ angles
+#**author: Stefan Holzinger
 def CompositionRuleRotXYZAnglesRotationVector(alpha0, Omega):
   
     # Cardan-Tait/Bryan angles

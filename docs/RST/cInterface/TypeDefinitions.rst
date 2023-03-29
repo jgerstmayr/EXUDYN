@@ -10,6 +10,7 @@ This section defines a couple of structures (C++: enum aka enumeration type), wh
 
 
 .. code-block:: python
+   :linenos:
    
    #Conversion to integer is possible: 
    x = int(exu.OutputVariableType.Displacement)

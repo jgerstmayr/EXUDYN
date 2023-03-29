@@ -200,13 +200,13 @@ namespace MicroThreading {
 
 		void StartWorkers();
 		void StopWorkers();
-
 		static void SuspendWorkers(Index asleep_usecs = 1000) {} //not implemented, for compatibility with NGsolve
 		static void ResumeWorkers() {} //not implemented, for compatibility with NGsolve
 
-		static void SetNumThreads(Index numThreadsInit) 
+		static bool IsRunning() { return isRunning; }
+		static void SetNumThreads(Index numThreadsInit)
 		{ 
-			CHECKandTHROW(!isRunning, "SetNumThreads: may only be called when threads are not running");
+			CHECKandTHROW(!isRunning, "SetNumThreads: may only be called if threads are not running");
 			num_threads = numThreadsInit;
 		}
 		static Index GetNumThreads() { return num_threads; }

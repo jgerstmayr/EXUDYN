@@ -31,6 +31,9 @@ sphinx-build -b html source build
 #use -E option to process all files, do not use cache (may not always update all files ...):
 sphinx-build -b html source build -E
 
+#For Exudyn, go into Exudyn_git root directory and run:
+sphinx-build -b html . _build -E
+
 #+++++++++++++++++++++++++++++++++++++++++++
 #settings on github:
 #add .yaml or .yml file in .github/workflows

@@ -14,27 +14,43 @@ a \codeName\ model in Python. Note that some functions or classes will be used i
 In the following, some basic steps and concepts for usage are shown, references to all functions are placed hereafter:
 
 To import the module, just include the \codeName\ module in Python:
-\bi
-  \item[] \texttt{import exudyn as exu}
-\ei
+\pythonstyle
+\begin{lstlisting}[language=Python, firstnumber=1]
+
+import exudyn as exu
+\end{lstlisting}
+
+
 For compatibility with examples and other users, we recommend to use the \texttt{exu} abbreviation throughout. In addition, you may work with a convenient interface for your items, therefore also always include:
-\bi
-  \item[] \texttt{from exudyn.itemInterface import *}
-\ei
+\pythonstyle
+\begin{lstlisting}[language=Python, firstnumber=1]
+
+from exudyn.itemInterface import *
+\end{lstlisting}
+
+
 Note that including \texttt{exudyn.utilities} will cover \texttt{itemInterface}. Also note that \texttt{from ... import *} is not recommended in general and it will not work in certain cases, e.g., if you like to compute on a cluster. However, it greatly simplifies life for smaller models and you may replace imports in your files afterwards by removing the star import.
 
 The general hub to multibody dynamics models is provided by the classes \texttt{SystemContainer} and \texttt{MainSystem}, except for some very basic system functionality (which is inside the \codeName\ module). 
 
 You can create a new \texttt{SystemContainer}, which is a class that is initialized by assigning a system container to a variable, usually denoted as \texttt{SC}:
-\bi
-  \item[] \texttt{SC = exu.SystemContainer()}
-\ei
+\pythonstyle
+\begin{lstlisting}[language=Python, firstnumber=1]
+
+exu.SystemContainer()
+\end{lstlisting}
+
+
 Note that creating a second \texttt{exu.SystemContainer()} will be independent of \texttt{SC} and therefore usually makes no sense.
 
 To add a MainSystem to system container SC and store as variable mbs, write:
-\bi
-  \item[] \texttt{mbs = SC.AddSystem()}
-\ei
+\pythonstyle
+\begin{lstlisting}[language=Python, firstnumber=1]
+
+mbs = SC.AddSystem()
+\end{lstlisting}
+
+
 Furthermore, there are a couple of commands available directly in the \texttt{exudyn} module, given in the following subsections.Regarding the \mybold{(basic) module access}, functions are related to the \texttt{exudyn = exu} module, see these examples:
 \pythonstyle
 \begin{lstlisting}[language=Python, firstnumber=1]
@@ -888,12 +904,14 @@ which are not described here as they are native to Pybind11, but can be passed a
 
 %++++++++++++++++++++
 \mysubsubsection{MatrixContainer}
+\label{sec:MatrixContainer}
 The MatrixContainer is a versatile representation for dense and sparse matrices.
 
 \pythonstyle
 \begin{lstlisting}[language=Python, firstnumber=1]
 
 #Create empty MatrixContainer:
+from exudyn import MatrixContainer
 mc = MatrixContainer()
 
 #Create MatrixContainer with dense matrix:
@@ -902,7 +920,22 @@ matrix = np.eye(6)
 mc = MatrixContainer(matrix)
 
 #Set with dense pyArray (a numpy array): 
+pyArray = np.array(matrix)
 mc.SetWithDenseMatrix(pyArray, useDenseMatrix = True)
+
+#Set empty matrix:
+mc.SetWithDenseMatrix(], bool useDenseMatrix = True)
+
+#Set with list of lists, stored as sparse matrix:
+mc.SetWithDenseMatrix([[1,2],[3,4]], bool useDenseMatrix = False)
+
+#Set with sparse CSR matrix:
+mc.SetWithSparseMatrixCSR(2,3,[[0,0,13.3],[1,1,4.2],[1,2,42.]], useDenseMatrix=True)
+
+print(mc)
+#gives dense matrix:
+#[[13.3  0.   0. ]
+# [ 0.   4.2 42. ]]
 \end{lstlisting}
 
 \begin{center}

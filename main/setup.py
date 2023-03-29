@@ -650,6 +650,9 @@ if compileParallel:
                 else:
                     compile_opts.extend(self.compile_options)
 
+                with exudynCompileCnt.get_lock():
+                    exudynCompileCnt.value = 0
+
                 nObjects = len(objects)
 
                 #this function is called in a for loop in the original version:                    

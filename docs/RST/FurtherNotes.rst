@@ -24,7 +24,7 @@ Future goals (2022-2024) are:
 +  add more multi-threaded parallel computing techniques (DONE, Q2 2022),
 +  add vectorization,
 +  add specific and advanced connectors/constraints (extended wheels, contact, control connector)
-+  kinematical trees with minimum coordinates (DONE, Q1 2022),
++  kinematical trees with minimal coordinates (DONE, Q1 2022),
 +  automatic step size selection for second order solvers (planned, 2023),
 +  deeper integration of Lie groups (Q3 2022),
 +  more interfaces for robotics (DONE, Q1 2022),

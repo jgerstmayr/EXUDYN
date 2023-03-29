@@ -56,7 +56,7 @@ Function: ProcessParameterList
 
 Function: ParameterVariation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ParameterVariation <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L309>`__\ (\ ``parameterFunction``\ , \ ``parameters``\ , \ ``useLogSpace = False``\ , \ ``debugMode = False``\ , \ ``addComputationIndex = False``\ , \ ``useMultiProcessing = False``\ , \ ``showProgress = True``\ , \ ``parameterFunctionData = {}``\ , \ ``clusterHostNames = []``\ , \ ``numberOfThreads = None``\ , \ ``resultsFile = ''``\ , \ ``**kwargs``\ )
+`ParameterVariation <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L355>`__\ (\ ``parameterFunction``\ , \ ``parameters``\ , \ ``useLogSpace = False``\ , \ ``debugMode = False``\ , \ ``addComputationIndex = False``\ , \ ``useMultiProcessing = False``\ , \ ``showProgress = True``\ , \ ``parameterFunctionData = {}``\ , \ ``clusterHostNames = []``\ , \ ``numberOfThreads = None``\ , \ ``resultsFile = ''``\ , \ ``**kwargs``\ )
 
 - | \ *function description*\ :
   | calls successively the function parameterFunction(parameterDict) with variation of parameters in given range; parameterDict is a dictionary, containing the current values of parameters,
@@ -95,7 +95,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: GeneticOptimization
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`GeneticOptimization <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L458>`__\ (\ ``objectiveFunction``\ , \ ``parameters``\ , \ ``populationSize = 100``\ , \ ``numberOfGenerations = 10``\ , \ ``elitistRatio = 0.1``\ , \ ``crossoverProbability = 0.25``\ , \ ``crossoverAmount = 0.5``\ , \ ``rangeReductionFactor = 0.7``\ , \ ``distanceFactor = 0.1``\ , \ ``childDistribution = "uniform"``\ , \ ``distanceFactorGenerations = -1``\ , \ ``debugMode = False``\ , \ ``addComputationIndex = False``\ , \ ``useMultiProcessing = False``\ , \ ``showProgress = True``\ , \ ``clusterHostNames = []``\ , \ ``**kwargs``\ )
+`GeneticOptimization <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L504>`__\ (\ ``objectiveFunction``\ , \ ``parameters``\ , \ ``populationSize = 100``\ , \ ``numberOfGenerations = 10``\ , \ ``elitistRatio = 0.1``\ , \ ``crossoverProbability = 0.25``\ , \ ``crossoverAmount = 0.5``\ , \ ``rangeReductionFactor = 0.7``\ , \ ``distanceFactor = 0.1``\ , \ ``childDistribution = "uniform"``\ , \ ``distanceFactorGenerations = -1``\ , \ ``debugMode = False``\ , \ ``addComputationIndex = False``\ , \ ``useMultiProcessing = False``\ , \ ``showProgress = True``\ , \ ``clusterHostNames = []``\ , \ ``**kwargs``\ )
 
 - | \ *function description*\ :
   | compute minimum of given objectiveFunction
@@ -144,7 +144,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: Minimize
 ^^^^^^^^^^^^^^^^^^
-`Minimize <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L817>`__\ (\ ``objectiveFunction``\ , \ ``parameters``\ , \ ``initialGuess = []``\ , \ ``method = 'Nelder-Mead'``\ , \ ``tol = 1e-4``\ , \ ``options = {}``\ , \ ``enforceBounds = True``\ , \ ``debugMode = False``\ , \ ``showProgress = True``\ , \ ``addComputationIndex = False``\ , \ ``storeFunctionValues = True``\ , \ ``**kwargs``\ )
+`Minimize <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L863>`__\ (\ ``objectiveFunction``\ , \ ``parameters``\ , \ ``initialGuess = []``\ , \ ``method = 'Nelder-Mead'``\ , \ ``tol = 1e-4``\ , \ ``options = {}``\ , \ ``enforceBounds = True``\ , \ ``debugMode = False``\ , \ ``showProgress = True``\ , \ ``addComputationIndex = False``\ , \ ``storeFunctionValues = True``\ , \ ``**kwargs``\ )
 
 - | \ *function description*\ :
   | Compute minimum of given objectiveFunction. This function is based on scipy.optimize.minimize() and it provides the same interface as GeneticOptimization().
@@ -185,7 +185,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: ComputeSensitivities
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ComputeSensitivities <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L1017>`__\ (\ ``parameterFunction``\ , \ ``parameters``\ , \ ``scaledByReference = False``\ , \ ``debugMode = False``\ , \ ``addComputationIndex = False``\ , \ ``useMultiProcessing = False``\ , \ ``showProgress = True``\ , \ ``parameterFunctionData = dict()``\ , \ ``**kwargs``\ )
+`ComputeSensitivities <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L1063>`__\ (\ ``parameterFunction``\ , \ ``parameters``\ , \ ``scaledByReference = False``\ , \ ``debugMode = False``\ , \ ``addComputationIndex = False``\ , \ ``useMultiProcessing = False``\ , \ ``showProgress = True``\ , \ ``parameterFunctionData = dict()``\ , \ ``**kwargs``\ )
 
 - | \ *function description*\ :
   | Perform a sensitivity analysis by successively calling the function parameterFunction(parameterList[i]) with a one at a time variation of parameters in the defined increments.
@@ -223,7 +223,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: PlotOptimizationResults2D
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`PlotOptimizationResults2D <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L1127>`__\ (\ ``parameterList``\ , \ ``valueList``\ , \ ``xLogScale = False``\ , \ ``yLogScale = False``\ )
+`PlotOptimizationResults2D <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L1173>`__\ (\ ``parameterList``\ , \ ``valueList``\ , \ ``xLogScale = False``\ , \ ``yLogScale = False``\ )
 
 - | \ *function description*\ :
   | visualize results of optimization for every parameter (2D plots)
@@ -246,7 +246,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: PlotSensitivityResults
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`PlotSensitivityResults <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L1183>`__\ (\ ``valRef``\ , \ ``valuesSorted``\ , \ ``sensitivity``\ , \ ``fVar = None``\ , \ ``strYAxis = None``\ )
+`PlotSensitivityResults <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L1229>`__\ (\ ``valRef``\ , \ ``valuesSorted``\ , \ ``sensitivity``\ , \ ``fVar = None``\ , \ ``strYAxis = None``\ )
 
 - | \ *function description*\ :
   | visualize results of Sensitivityanalyis for every parameter (2D plots)

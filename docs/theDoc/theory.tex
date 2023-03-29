@@ -3,173 +3,16 @@
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 %\mysubsection{Theory}
+\mysectionlabel{Theory and formulations}{sec:theory}
 
-This section includes some material on notation, formulations and general theoretical backgrounds for \codeName .
+This section includes some material on formulations and general theoretical backgrounds for \codeName .
 Note that the formulation of nodes, objects, markers, etc. is presented right at the subsection of each object, see \refSection{sec:item:reference:manual}.
-Furthermore, overview on the system assembly and system equations of motion is given in \refSection{sec:notationSystemOfEOM},
-solvers are described in \refSection{sec:solvers}.
-
-%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-\mysubsection{Notation}
-\label{sec:itemnotation}
-%
-\mysubsubsection{Common types in item descriptions}
-\label{sec:typesDescriptions}
-%
-There are certain types, which are heavily used in the description of items:
-\bi
-  \item \texttt{float} $\ldots$ a single-precision floating point number (note: in Python, '\texttt{float}' is used also for double precision numbers; in EXUDYN, internally floats are single precision numbers especially for graphics objects and OpenGL)
-  \item \texttt{Real} $\ldots$ a double-precision floating point number (note: in Python this is also of type '\texttt{float}')
-  \item \texttt{UReal} $\ldots$ same as \texttt{Real}, but may not be negative
-  \item \texttt{PReal} $\ldots$ same as \texttt{Real}, but must be positive, non-zero (e.g., step size may never be zero)
-  \item \texttt{Index} $\ldots$ deprecated, represents unsined integer, \texttt{UInt}
-  \item \texttt{Int} $\ldots$ a (signed) integer number, which converts to '\texttt{int}' in Python, '\texttt{int}' in C++
-  \item \texttt{UInt} $\ldots$ an unsigned integer number, which converts to '\texttt{int}' in Python
-  \item \texttt{PInt} $\ldots$ an positive integer number (> 0), which converts to '\texttt{int}' in Python
-  \item \texttt{NodeIndex, MarkerIndex, ...} $\ldots$ a special (non-negative) integer type to represent indices of nodes, markers, ...; specifically, an unintentional conversion from one index type to the other is not possible (e.g., to convert \texttt{NodeIndex} to \texttt{MarkerIndex}); see \refSection{sec:itemIndex}
-  \item \texttt{String} $\ldots$ a string
-  \item \texttt{ArrayIndex} $\ldots$ a list of integer numbers (either list or in some cases \texttt{numpy} arrays may be allowed)
-  \item \texttt{ArrayNodeIndex} $\ldots$ a list of node indices
-  \item \texttt{Bool} $\ldots$ a boolean parameter: either \texttt{True} or \texttt{False} ('\texttt{bool}' in Python)
-  \item \texttt{VObjectMassPoint}, \texttt{VObjectRigidBody}, \texttt{VObjectGround}, etc.  $\ldots$ represents the visualization object of the underlying object; 'V' is put in front of object name
-  \item \texttt{BodyGraphicsData} $\ldots$ see \refSection{sec:graphicsData}
-%	
-	\item \texttt{Vector2D} $\ldots$ a list or \texttt{numpy} array of 2 real numbers
-	\item \texttt{Vector3D} $\ldots$ a list or \texttt{numpy} array of 3 real numbers
-	\item \texttt{Vector'X'D} $\ldots$ a list or \texttt{numpy} array of 'X' real numbers
-	\item \texttt{Float4} $\ldots$ a list of 4 float numbers
-%
-	\item \texttt{Vector} $\ldots$ a list or \texttt{numpy} array of real numbers (length given by according object)
-	\item \texttt{NumpyVector} $\ldots$ a 1D \texttt{numpy} array with real numbers (size given by according object); similar as Vector, but not accepting list
-
-	\item \texttt{Matrix3D} $\ldots$ a list of lists or \texttt{numpy} array with $3 \times 3$ real numbers
-	\item \texttt{Matrix6D} $\ldots$ a list of lists or \texttt{numpy} array with $6 \times 6$ real numbers
-	\item \texttt{NumpyMatrix} $\ldots$ a 2D \texttt{numpy} array (matrix) with real numbers (size given by according object)
-	\item \texttt{NumpyMatrixI} $\ldots$ a 2D \texttt{numpy} array (matrix) with integer numbers (size given by according object)
-	\item \texttt{MatrixContainer} $\ldots$ a versatile representation for dense and sparse matrices, see \refSection{sec:MatrixContainer} below
-  \item \texttt{PyFunctionGraphicsData} $\ldots$ a user function providing GraphicsData, see the user function description of the according object
-  \item \texttt{PyFunctionMbsScalar...} $\ldots$ a user function for the according object; the name is chosen according to the interface (arguments containing scalars, vectors, etc.); see the according user function description
-  %
-\ei
-
-\mysubsubsection{MatrixContainer} 
-\label{sec:MatrixContainer}
-The \texttt{MatrixContainer} is a versatile representation for dense and sparse matrices.
-Some functionality:
-\bi
-  \item Create empty \texttt{MatrixContainer} with \texttt{mc = MatrixContainer()}
-  \item Set with dense \text{pyArray} (a numpy array) (if \texttt{useDenseMatrix} is set False, it converts into a sparse matrix, which may speed up further computations for sparse matrices!): \texttt{mc.SetWithDenseMatrix(pyArray, bool useDenseMatrix = True)}
-  \item Set with sparse \text{pyArray} (a numpy array), which has 3 colums and according rows containing the sparse triplets \texttt{(row, col, value)} describing the sparse matrix; Use \texttt{CSRtoScipySparseCSR(...)} and \texttt{ ScipySparseCSRtoCSR(...)} to convert between this format and the scipy csr format; if \texttt{useDenseMatrix} is set True, it converts into a dense matrix, which may slow down computations: \texttt{mc.SetWithSparseMatrixCSR(numberOfRowsInit, numberOfColumnsInit, pyArray, useDenseMatrix = False)}
-  \item Convert matrix into dense format (slow, but helpful for debug): \texttt{mc.Convert2DenseMatrix()}
-  \item Get internal stored object: \texttt{mc.GetPythonObject()}
-  \item \mybold{Automatic type conversion}: if a function or class requests a \texttt{MatrixContainer}, such as \texttt{ObjectGenericODE2}, there are automatic type conversions from:
-  \bi
-    \item empty list: \texttt{[]}
-    \item numpy array, e.g.: \texttt{np.array([[1,2],[3,4]])}
-    \item list of lists describing matrix, e.g. (slow for larger matrices!): \texttt{[[1,2],[3,4]]}
-  \ei
-\ei
-
-%
-\mysubsubsection{States and coordinate attributes}
-The following subscripts are used to define configurations of a quantity, e.g., for a vector of displacement coordinates $\qv$:
-\bi
-  \item $\qv\cConfig \ldots$ $\qv$ in any configuration
-  \item $\qv\cRef \ldots$ $\qv$ in reference configuration, e.g., reference coordinates: $\cv\cRef$
-  \item $\qv\cIni \ldots$ $\qv$ in initial configuration, e.g., initial displacements: $\uv\cIni$
-  \item $\qv\cCur \ldots$ $\qv$ in current configuration
-  \item $\qv\cVis \ldots$ $\qv$ in visualization configuration
-  \item $\qv\cSOS \ldots$ $\qv$ in start of step configuration
-\ei
-As written in the introduction, the coordinates are attributed to certain types of equations and therefore, the following attributes are used (usually as subscript, e.g., $\qv_{ODE2}$):
-\bi
-  \item \hacs{ODE2} $\ldots$ \acl{ODE2} (coordinates)
-  \item \hacs{ODE1} $\ldots$ \acl{ODE1} (coordinates)
-  \item \hacs{AE} $\ldots$ \acl{AE} (coordinates)
-  \item Data $\ldots$ data coordinates (history variables)
-\ei
-Time is usually defined as 'time' or $t$.
-The cross product or vector product '$\times$' is often replaced by the skew symmetric matrix using the tilde '$\tilde{\;\;}$' symbol,
-\be
-  \av \times \bv = \tilde \av \, \bv = -\tilde \bv \, \av \eqComma
-\ee
-in which $\tilde{\;\;}$ transforms a vector $\av$ into a skew-symmetric matrix $\tilde \av$.
-If the components of $\av$ are defined as $\av = \vrRow{a_0}{a_1}{a_2}\tp$, then the skew-symmetric matrix reads
-\be
-  \tilde \av = \mr{0}{-a_2}{a_1} {a_2}{0}{-a_0} {-a_1}{a_0}{0} \eqDot
-\ee
-The inverse operation is denoted as $\vec$, resulting in $\vec(\tilde \av) = \av$.
-
-For the length of a vector we often use the abbreviation 
-\be \label{eq:definition:length}
-  \Vert \av \Vert = \sqrt{\av^T \av} \eqDot
-\ee
-
-A vector $\av=[x,\, y,\, z]\tp$ can be transformed into a diagonal matrix, e.g.,
-\be
-  \Am = \diag(\av) = \mr{x}{0}{0} {0}{y}{0} {0}{0}{z} 
-\ee
-%
-%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-\mysubsubsection{Symbols in item equations}
-\label{sec:symbolsItems}
-\noindent The following table contains the common notation: \vspace{-12pt}
-\begin{center}
-  \footnotesize
-  \begin{longtable}{| p{5cm} | p{5cm} | p{6cm} |}
-    \hline
-    \bf python name (or description) & \bf symbol & \bf description \\ \hline
-    displacement coordinates (\hac{ODE2}) & $\qv = [q_0,\, \ldots,\, q_n]\tp$ & vector of $n$ displacement based coordinates in any configuration; used for second order differential equations\\ \hline
-    rotation coordinates (\hac{ODE2}) & $\tpsi = [\psi_0,\, \ldots,\, \psi_\eta]\tp$ & vector of $\eta$ {\bf rotation based coordinates} in any configuration; these coordinates are added to reference rotation parameters to provide the current rotation parameters; used for second order differential equations\\ \hline
-    coordinates (\hac{ODE1}) & $\yv = [y_0,\, \ldots,\, y_n]\tp$ & vector of $n$ coordinates for first order ordinary differential equations (\hac{ODE1}) in any configuration\\ \hline
-    algebraic coordinates & $\zv = [z_0,\, \ldots,\, z_m]\tp$ & vector of $m$ algebraic coordinates if not Lagrange multipliers in any configuration\\ \hline
-    Lagrange multipliers & $\tlambda = [\lambda_0,\, \ldots,\, \lambda_m]\tp$ & vector of $m$ Lagrange multipliers (=algebraic coordinates) in any configuration\\ \hline
-    data coordinates & $\xv = [x_0,\, \ldots,\, x_l]\tp$ & vector of $l$ data coordinates in any configuration\\ \hline
-%+++++++++++++++++++++++++++++++++++++++++++++++++++
-    \hline %new part of table
-		\bf python name: OutputVariable & \bf symbol & \bf description \\ \hline
-    Coordinate & $\cv = [c_0,\, \ldots,\, c_n]\tp$ & coordinate vector with $n$ generalized coordinates $c_i$ in any configuration; the letter $c$ is used both for \hac{ODE1} and \hac{ODE2} coordinates\\ \hline
-    Coordinate\_t & $\dot \cv = [c_0,\, \ldots,\, c_n]\tp$ & time derivative of coordinate vector\\ \hline
-    Displacement & $\LU{0}{\uv} = [u_0,\, u_1,\, u_2]\tp$ & global displacement vector with 3 displacement coordinates $u_i$ in any configuration; in 1D or 2D objects, some of there coordinates may be zero\\ \hline
-Rotation & $[\varphi_0,\,\varphi_1,\,\varphi_2]\tp\cConfig$ & vector with 3 components of the Euler angles in xyz-sequence ($\LU{0b}{\Rot}\cConfig=:\Rot_0(\varphi_0) \cdot \Rot_1(\varphi_1) \cdot \Rot_2(\varphi_2)$), recomputed from rotation matrix\\ \hline
-    %Rotation & $\ttheta = [\theta_0,\, \ldots,\, \theta_n]\tp$ & vector of {\bf rotation parameters} (e.g., Euler parameters, Tait Bryan angles, ...) with $n$ coordinates $\theta_i$ in any configuration\\ \hline
-    Identity matrix & $\Im = \mr{1}{0}{0} {0}{\ddots}{0} {0}{0}{1}$ & the identity matrix, very often $\Im = \ImThree$, the $3 \times 3$ identity matrix \\ \hline
-    Identity transformation & $\LU{0b}{\ImThree} = \ImThree$ & converts body-fixed into global coordinates, e.g., $\LU{0}{\xv} = \LU{0b}{\ImThree} \LU{b}{\xv}$, thus resulting in $\LU{0}{\xv} = \LU{b}{\xv}$ in this case\\ \hline
-    RotationMatrix & $\LU{0b}{\Rot} = \mr{A_{00}}{A_{01}}{A_{02}} {A_{10}}{A_{11}}{A_{12}} {A_{20}}{A_{21}}{A_{22}}$ & a 3D rotation matrix, which transforms local (e.g., body $b$) to global coordinates (0): $\LU{0}{\xv} = \LU{0b}{\Rot} \LU{b}{\xv}$\\ \hline
-    RotationMatrixX & $\LU{01}{\Rot_0(\theta_0)} = 
-		\mr{1}{0}{0} {0}{\cos(\theta_0)}{-\sin(\theta_0)} {0}{\sin(\theta_0)}{\cos(\theta_0)}$ & rotation matrix for rotation around $X$ axis (axis 0), transforming a vector from frame 1 to frame 0\\ \hline    
-    %
-		RotationMatrixY & $\LU{01}{\Rot_1(\theta_1)} = 
-		\mr{\cos(\theta_1)}{0}{\sin(\theta_1)} {0}{1}{0} {-\sin(\theta_1)}{0}{\cos(\theta_1)}$ & rotation matrix for rotation around $Y$ axis (axis 1), transforming a vector from frame 1 to frame 0\\ \hline    %
-    RotationMatrixZ & $\LU{01}{\Rot_2(\theta_2)} = 
-		\mr{\cos(\theta_2)}{-\sin(\theta_2)}{0} {\sin(\theta_2)}{\cos(\theta_2)}{0} {0}{0}{1}$ & rotation matrix for rotation around $Z$ axis (axis 2), transforming a vector from frame 1 to frame 0\\ \hline    
-		Position & $\LU{0}{\pv} = [p_0,\, p_1,\, p_2]\tp$ & global position vector with 3 position coordinates $p_i$ in any configuration\\ \hline
-		Velocity & $\LU{0}{\vv} = \LU{0}{\dot \uv} = [v_0,\, v_1,\, v_2]\tp$ & global velocity vector with 3 displacement coordinates $v_i$ in any configuration\\ \hline
-    AngularVelocity & $\LU{0}{\tomega} = [\omega_0,\, \ldots,\, \omega_2]\tp$ & global angular velocity vector with $3$ coordinates $\omega_i$ in any configuration\\ \hline
-    Acceleration & $\LU{0}{\av} = \LU{0}{\ddot \uv} = [a_0,\, a_1,\, a_2]\tp$ & global acceleration vector with 3 displacement coordinates $a_i$ in any configuration\\ \hline
-    AngularAcceleration & $\LU{0}{\talpha} = \LU{0}{\dot \tomega} = [\alpha_0,\, \ldots,\, \alpha_2]\tp$ & global angular acceleration vector with $3$ coordinates $\alpha_i$ in any configuration\\ \hline
-%
-    VelocityLocal & $\LU{b}{\vv} = [v_0,\, v_1,\, v_2]\tp$ & local (body-fixed) velocity vector with 3 displacement coordinates $v_i$ in any configuration\\ \hline
-    AngularVelocityLocal & $\LU{b}{\tomega} = [\omega_0,\, \ldots,\, \omega_2]\tp$ & local (body-fixed) angular velocity vector with $3$ coordinates $\omega_i$ in any configuration\\ \hline
-    Force & $\LU{0}{\fv} = [f_0,\, \ldots,\, f_2]\tp$ & vector of $3$ force components in global coordinates\\ \hline
-    Torque & $\LU{0}{\ttau} = [\tau_0,\, \ldots,\, \tau_2]\tp$ & vector of $3$ torque components in global coordinates\\ \hline
-%+++++++++++++++++++++++++++++++++++++++++++++++++++
-		\hline %new part of table
-    \bf python name: input to nodes, markers, etc. & \bf symbol & \bf description \\ \hline
-    referenceCoordinates & $\cv\cRef = [c_0,\, \ldots,\, c_n]\cRef\tp = [c_{\mathrm{Ref},0},\, \ldots,\, c_{\mathrm{Ref},n}]\cRef\tp$ & $n$ coordinates of reference configuration (can usually be set at initialization of nodes)\\ \hline
-    initialCoordinates & $\cv\cIni$ & initial coordinates with generalized or mixed displacement/rotation quantities (can usually be set at initialization of nodes)  \\ \hline
-    reference point & $\pRefG = [r_0,\, r_1,\, r_2]\tp$ & reference point of body, e.g., for rigid bodies or \hac{FFRF} bodies, in any configuration; NOTE: for ANCF elements, $\pRefG$ is used for the position vector to the beam centerline\\ \hline    
-    localPosition & $\pLocB = [\LUR{b}{b}{0},\, \LUR{b}{b}{1},\, \LUR{b}{b}{2}]\tp$ & local (body-fixed) position vector with 3 position coordinates $b_i$ in any configuration, measured relative to reference point; NOTE: for rigid bodies, $\LU{0}{\pv} = \pRefG + \LU{0b}{\Rot} \pLocB$;
-		localPosition is used for definition of body-fixed local position of markers, sensors, COM, etc.\\ \hline
-	  \end{longtable}
-	\end{center}
-%
+Furthermore, the general notations are described in \refSection{sec:generalnotation} and an overview on the system assembly and system equations of motion is given in \refSection{sec:generalnotation}, solvers are described in \refSection{sec:solvers}.
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \mysubsubsection{Reference and current coordinates}
 %
-An important fact on the coordinates is upon the splitting of quantities (e.g. position, rotation parameters, etc.) into reference and current (initial/visualization/...) coordinates.
+An important fact on the coordinates used in \codeName\ is upon the \mybold{additive}\footnote{This additive splitting is also used for rotations: therefore, only the sum of reference and current (or visualization) coordinates has a geometrical meaning, while the parts are only used within the solver for incrementing.} splitting of quantities (e.g. position, rotation parameters, etc.) into \mybold{reference} and \mybold{current} (initial/visualization/...) coordinates.
 The current position vector of a point node is computed from the reference position plus the current displacment, reading
 \be
   \pv\cCur = \pv\cRef + \uv\cCur
@@ -218,53 +61,46 @@ To transform the local coordinates $\LU{m0}{\uv}$ of marker 0 into global coordi
 \ee
 in which $\LU{0,m0}{\Rot}$ is the transformation matrix of (the body or node of) the underlying marker 0.
 
-\mysubsubsection{Integration Points}
-\label{sec:integrationPoints}
+\mysubsubsectionlabel{Integration Points}{sec:integrationPoints}
 For several tasks, especially for finite elements and contact, different integration rules are used, which are summarized here.
 The interval of all integration rules is $\in [-1,1]$, thus giving a total sum for integration weights of 2.
 The points $\xi_{ip}$ and weights $w_{ip}$ for Gauss rules read:
-\begin{center}
-  \footnotesize
-  \begin{longtable}{| c | c | c | c | c |}
-    \hline
-    type/order & point 0 & point 1 & point 2 & point 3 \\ \hline
-    %Gauss 7 & \\ \hline
-    Gauss 1 & 0 & & &\\ \hline
-    Gauss 3 & $-\sqrt{1 / 3}$ & $\sqrt{1 / 3}$ & &\\ \hline
-    Gauss 5 & $-\sqrt{3 / 5}$ & 0 & $\sqrt{3 / 5}$ &\\ \hline
-    Gauss 7 & $-\sqrt{3 / 7 + \sqrt{120} / 35}$ & $-\sqrt{3 / 7 - \sqrt{120} / 35}$ & $\sqrt{3 / 7 - \sqrt{120} / 35}$ & $\sqrt{3 / 7 + \sqrt{120} / 35}$ \\ \hline
-    \hline
-    type/order & weight 0 & weight 1 & weight 2 & weight 3 \\ \hline
-    Gauss 1 & 2 & & &\\ \hline
-    Gauss 3 & 1 & 1 & &\\ \hline
-    Gauss 5 & $5 / 9$ & $8 / 9$ & $5 / 9$ & \\ \hline
-    Gauss 7 & $1 / 2 - 5 / (3 \sqrt{120})$ & $1 / 2 + 5 / (3*\sqrt{120})$ & $1 / 2 + 5 / (3*\sqrt{120})$ & $1 / 2 - 5 / (3*\sqrt{120})$ \\ \hline
-  \end{longtable}
-\end{center}
-The points $\xi_{ip}$ and weights $w_{ip}$ for Lobatto rules read:
-\begin{center}
-  \footnotesize
-  \begin{longtable}{| c | c | c | c | c |}
-    \hline
-    type/order & point 0 & point 1 & point 2 & point 3 \\ \hline
-    Lobatto 1 & -1 & 1 & &\\ \hline
-    Lobatto 3 & -1 & 0 & 1&\\ \hline
-    Lobatto 5 & -1& $-\sqrt{1/5}$ & $\sqrt{1/5}$& 1\\ \hline
-    \hline
-    type/order & weight 0 & weight 1 & weight 2 & weight 3 \\ \hline
-    Lobatto 1 & 1 & 1 & &\\ \hline
-    Lobatto 3 & $1/3$& $4/3$& $1/3$&\\ \hline
-    Lobatto 5 & $1/6$& $5/6$& $5/6$& $1/6$\\ \hline
-  \end{longtable}
-\end{center}
+
+The following table collects some typical \mybold{input parameters} for nodes, objects and markers: \vspace{-12pt}
+\startGenericTable{| c | c | c | c | c |}
+\rowTableFive{\mybold{type/order}}{ \mybold{point 0}}{ \mybold{point 1}}{ \mybold{point 2}}{ \mybold{point 3} }
+\rowTableFive{Gauss 1}{ 0}{}{}{}
+\rowTableFive{Gauss 3}{ $-\sqrt{1 / 3}$}{ $\sqrt{1 / 3}$}{}{}
+\rowTableFive{Gauss 5}{ $-\sqrt{3 / 5}$}{ 0}{ $\sqrt{3 / 5}$}{}
+\rowTableFive{Gauss 7}{ $-\sqrt{3 / 7 + \sqrt{120} / 35}$}{ $-\sqrt{3 / 7 - \sqrt{120} / 35}$}{ $\sqrt{3 / 7 - \sqrt{120} / 35}$}{ $\sqrt{3 / 7 + \sqrt{120} / 35}$ }
+\rowTableFive{}{}{}{}{}
+\rowTableFive{\mybold{type/order}}{ \mybold{weight 0}}{ \mybold{weight 1}}{ \mybold{weight 2}}{ \mybold{weight 3} }
+\rowTableFive{Gauss 1}{ 2}{}{}{}
+\rowTableFive{Gauss 3}{ 1}{ 1}{}{}
+\rowTableFive{Gauss 5}{ $5 / 9$}{ $8 / 9$}{ $5 / 9$}{ }
+\rowTableFive{Gauss 7}{ $1 / 2 - 5 / (3 \sqrt{120})$}{ $1 / 2 + 5 / (3*\sqrt{120})$}{ $1 / 2 + 5 / (3*\sqrt{120})$}{ $1 / 2 - 5 / (3*\sqrt{120})$ }
+\finishTable
+
+The points $\xi_{ip}$ and weights $w_{ip}$ for Lobatto rules read: \vspace{-12pt}
+\startGenericTable{| c | c | c | c | c |}
+\rowTableFive{\mybold{type/order}}{ \mybold{point 0}}{ \mybold{point 1}}{ \mybold{point 2}}{ \mybold{point 3}}
+\rowTableFive{Lobatto 1}{ -1}{ 1}{}{}
+\rowTableFive{Lobatto 3}{ -1}{ 0}{ 1}{}
+\rowTableFive{Lobatto 5}{ -1}{ $-\sqrt{1/5}$}{ $\sqrt{1/5}$}{ 1}
+\rowTableFive{}{}{}{}{}
+\rowTableFive{\mybold{type/order}}{ \mybold{weight 0}}{ \mybold{weight 1}}{ \mybold{weight 2}}{ \mybold{weight 3} }
+\rowTableFive{Lobatto 1}{ 1}{ 1}{}{}
+\rowTableFive{Lobatto 3}{ $1/3$}{ $4/3$}{ $1/3$}{}
+\rowTableFive{Lobatto 5}{ $1/6$}{ $5/6$}{ $5/6$}{ $1/6$}
+\finishTable
 Further integration rules can be found in the C++ code of \codeName\ , see file \texttt{BasicLinalg.h}.
+%%RSTCOMPATIBLE
 
 
 
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \newpage
-\mysubsection{Model order reduction and component mode synthesis}
-\label{sec:theory:CMS}
+\mysubsectionlabel{Model order reduction and component mode synthesis}{sec:theory:CMS}
 %terminology: eigenmode, eigenvector, eigenvalue, normal mode, static mode
 
 This section describes the process how to create general flexible multibody system models using the floating frame of reference formulation with model order reduction (here also denoted as \hac{CMS}). The according object \texttt{ObjectFFRFreducedOrder} is described in \refSection{sec:item:ObjectFFRFreducedOrder}.
@@ -332,7 +168,7 @@ Finally, \texttt{elements} need to be included for visualization, and a surface 
   \includegraphics[width=10cm]{figures/modesHinge/HCBhingeMesh.jpg}
   \end{center}
   \caption{Test model and mesh for hinge created with Netgen (linear tetrahedral elements).}
-	\label{fig_hingePartMesh}
+  \label{fig_hingePartMesh}
 \end{figure}
 %++++++++++++++++++++++++
 As an example, we consider a part denoted as 'hinge' in the following, see \fig{fig_hingePartMesh}. The test example can be found in \texttt{Examples/NGsolveCMStutorial.py} with lots of additional features.
@@ -342,7 +178,7 @@ which computes the quantities \texttt{fem.modeBasis} and \texttt{fem.eigenValues
 The eigenvalues in Hz can be retrieved also with the function \texttt{fem.GetEigenFrequenciesHz()}.
 The function \texttt{fem.ComputeEigenFrequencies(...)} is available for dense and sparse matrices, and uses \texttt{scipy.linalg} to compute eigenvalues of the linear, undamped mechanical system
 \be \label{theory:eigenmodes:EOM}
-	\Mm \ddot \qv(t) + \Km \qv(t) = \fv(t) \eqDot
+  \Mm \ddot \qv(t) + \Km \qv(t) = \fv(t) \eqDot
 \ee
 Here, the total number of coordinates of the system is $n$, 
 thus having the vector of system coordinates $\qv \in \Rcal^n$, 
@@ -351,15 +187,15 @@ mass matrix $\Mm \in \Rcal^{n \times n}$ and stiffness matrix $\Km \in \Rcal^{n 
 If we are interested in free vibrations of the system, without any boundary conditions or interconnections to other bodies, \eq{theory:eigenmodes:EOM} can be converted to a generalized eigenvalue problem. Using the approach 
 $\qv(t) = \vv \mathrm{e}^{\mathrm{i} \omega t}$ in \eq{theory:eigenmodes:EOM}, and thus $\ddot \qv(t) = -\omega^2 \qv(t)$, we obtain
 \be \label{theory:eigenmodes:harmonicEquation}
-		\left[ \left(-\omega^2 \Mm + \Km \right) \vv \right] \mathrm{e}^{i\omega t} = \Null \eqDot
+    \left[ \left(-\omega^2 \Mm + \Km \right) \vv \right] \mathrm{e}^{i\omega t} = \Null \eqDot
 \ee
-Assuming that \eq{theory:eigenmodes:harmonicEquation} is valid for all times, the {\bf generalized eigenvalue problem} follows that
+Assuming that \eq{theory:eigenmodes:harmonicEquation} is valid for all times, the \mybold{generalized eigenvalue problem} follows that
 \be \label{theory:eigenmodes:GEP}
-	\left(-\omega^2 \Mm + \Km \right) \vv = \Null \eqComma
+  \left(-\omega^2 \Mm + \Km \right) \vv = \Null \eqComma
 \ee
 which can be rewritten as
 \be \label{theory:eigenmodes:GEP2}
-	\det \left(-\omega^2 \Mm + \Km \right) = 0 \eqComma
+  \det \left(-\omega^2 \Mm + \Km \right) = 0 \eqComma
 \ee
 and which defines the eigenvalues $\omega_i^2$ of the linear system, where $i \in \{0, \ldots, n-1\}$. Note that in this case, the eigenvalues are the squared eigenfrequencies (in rad/s).
 We can use eigenvalue algorithms to compute the eigenvalues $\omega_i^2$ and according eigenvectors $\vv_i$ from Python.
@@ -381,7 +217,7 @@ Here, we will also use synonymously the terms `eigenmodes' and `normal modes', w
   \includegraphics[width=4cm]{figures/modesHinge/freeFreeModeStress8}
   \end{center}
   \caption{Lowest 8 free-free modes for hinge finite element model, contour plot for $xx$-stress component.}
-	\label{fig_hingePartFreeFreeModes}
+  \label{fig_hingePartFreeFreeModes}
 \end{figure}
 %++++++++++++++++++++++++
 
@@ -410,7 +246,7 @@ Therefore, we can use modes based on ideas of Hurty \cite{Hurty1965} and Craig-B
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-\mysubsubsection{Hurty-Craig-Bampton modes} \label{sec:hurty-craig-bampton-modes}
+\mysubsubsectionlabel{Hurty-Craig-Bampton modes}{sec:hurty-craig-bampton-modes}
 This section will describe the computation of static and eigen (normal) modes using FEMinterface.
 The theory is based on Hurty \cite{Hurty1965} and Craig-Bampton \cite{CraigBampton1968}, but often only attributed to Craig-Bampton.
 Furthermore, boundaries are also called interfaces\footnote{Here, and in the description of various Python functions, we will use boundary and interface often synonymously, as flexible bodies can be either connected to ground in the sense of a classical 'support-type' boundary condition, or they can represent the boundary of the flexible body as an interface to joints (via markers).}, as they either represent surface sections of our finite element model which are connected to the ground or they represent interfaces to joints and are connected to other bodies.
@@ -423,35 +259,35 @@ and a reduced set of coordinates $\pv \in \Rcal^m$, for which we assume $m \ll n
 In order to include boundary/interface effects, we separate our nodes and the nodal coordinates into 
 \bi
   \item[] a) boundary nodes $\qv_b \in \Rcal^{n_b}$ and
-	\item[] b) internal or inner nodes $\qv_i \in \Rcal^{n_i}$.
+  \item[] b) internal or inner nodes $\qv_i \in \Rcal^{n_i}$.
 \ei
 We assume that internal nodes are not exposed to boundary/interface conditions or to forces.
 
 Therefore, we may rewrite \eq{theory:eigenmodes:EOM} as follows
 \be \label{eq_GuyanIrons}
-	\mp{\Mm_{bb}}{\Mm_{bi}}{\Mm_{ib}}{\Mm_{ii}} \vp{\ddot{\qv}_b}{\ddot{\qv}_i} + \mp{\Km_{bb}}{\Km_{bi}}{\Km_{ib}}{\Km_{ii}} \vp{\qv_b}{\qv_i} =   \vp{\fv_b}{\Null}
+  \mp{\Mm_{bb}}{\Mm_{bi}}{\Mm_{ib}}{\Mm_{ii}} \vp{\ddot{\qv}_b}{\ddot{\qv}_i} + \mp{\Km_{bb}}{\Km_{bi}}{\Km_{ib}}{\Km_{ii}} \vp{\qv_b}{\qv_i} =   \vp{\fv_b}{\Null}
 \ee
 or, equivalently,
 \bea
-	\Mm_{bb} \ddot{\qv}_b + \Mm_{bi} \ddot{\qv}_i +\Km_{bb}  {\qv}_b + \Km_{bi}  {\qv}_i  = {\fv}_b \label{eq_Guyan_bb}\\
-	\Mm_{ib} \ddot{\qv}_b + \Mm_{ii} \ddot{\qv}_i +\Km_{ib}  {\qv}_b + \Km_{ii}  {\qv}_i  = \Null \eqDot \label{eq_Guyan_ii}
+  \Mm_{bb} \ddot{\qv}_b + \Mm_{bi} \ddot{\qv}_i +\Km_{bb}  {\qv}_b + \Km_{bi}  {\qv}_i  = {\fv}_b \label{eq_Guyan_bb}\\
+  \Mm_{ib} \ddot{\qv}_b + \Mm_{ii} \ddot{\qv}_i +\Km_{ib}  {\qv}_b + \Km_{ii}  {\qv}_i  = \Null \eqDot \label{eq_Guyan_ii}
 \eea
 A pure static condensation follows from \eq{eq_Guyan_ii} with the assumption that inertia terms are neglected,
 leading to the static result for internal nodes,
 \be 
-	{\qv}_{i,stat}=-\Km_{ii}^{-1} \Km_{ib} {\qv}_{b} \eqDot 
+  {\qv}_{i,stat}=-\Km_{ii}^{-1} \Km_{ib} {\qv}_{b} \eqDot 
 \ee
 A pure static condensation, also denoted as Guyan-Irons method, keeps boundary coordinates but removes all internal modes, using the approximation
 \be
-	\label{eq_guans_red}
-	\vp{\qv_b}{\qv_i} \approx \vp{\Im}{-\Km_{ii}^{-1} \Km_{ib}}  \qv_b = \tPsi^{GI} \qv_b \eqComma
+  \label{eq_guans_red}
+  \vp{\qv_b}{\qv_i} \approx \vp{\Im}{-\Km_{ii}^{-1} \Km_{ib}}  \qv_b = \tPsi^{GI} \qv_b \eqComma
 \ee
 which leads to no approximations ('exact') results for the static case, but poor performance in highly dynamic problems.
 
 Significant improvement result from the Hurty-Craig-Bampton method, which adds eigenmodes of the internal coordinates (internal nodes).
 We assume that $\tPsi_{ii}$ is the matrix of eigenvectors as a solution to the eigenvalue problem
 \be \label{theory:eigenmodes:GEPii}
-	\left(-\omega^2 \Mm_{ii} + \Km_{ii} \right) \vv = \Null \eqComma
+  \left(-\omega^2 \Mm_{ii} + \Km_{ii} \right) \vv = \Null \eqComma
 \ee
 Hereafter, we will only keep the lowest (or other appropriate) $m$ eigenmodes in a reduced eigenmode matrix,
 \be
@@ -460,11 +296,11 @@ Hereafter, we will only keep the lowest (or other appropriate) $m$ eigenmodes in
 Combining these `fixed-fixed' eigenvectors with the Guyan-Irons reduction \eqref{eq_guans_red}, we obtain the 
 Hurty-Craig-Bampton modes as
 \be
-	\vp{\qv_b}{\qv_i} \approx \vp{\Im}{-\Km_{ii}^{-1} \Km_{ib}}  \qv_b  +  \vp{\Null}{\tPsi_{r,i}}  \pv_{r} \eqComma
+  \vp{\qv_b}{\qv_i} \approx \vp{\Im}{-\Km_{ii}^{-1} \Km_{ib}}  \qv_b  +  \vp{\Null}{\tPsi_{r,i}}  \pv_{r} \eqComma
 \ee
 or in matrix form
 \be \label{theory:eigenmodes:HCB}
-	\vp{\qv_b}{\qv_i} \approx \mp{\Im}{\Null}{-\Km_{ii}^{-1} \Km_{ib}}{\tPsi_{r,i}}   \vp{\qv_b}{\pv_r} = \tPsi^{HCB} \pv^{HCB} \eqDot
+  \vp{\qv_b}{\qv_i} \approx \mp{\Im}{\Null}{-\Km_{ii}^{-1} \Km_{ib}}{\tPsi_{r,i}}   \vp{\qv_b}{\pv_r} = \tPsi^{HCB} \pv^{HCB} \eqDot
 \ee
 The disadvantage of \eq{theory:eigenmodes:HCB} is evident by the fact that there may be a large number of boundary/interface nodes, leading to a huge number of static modes (100s or 1000s) and thus making the model reduction inefficient. Therefore, we can switch to other interfaces, as described in the following.
 
@@ -518,8 +354,8 @@ The transformation for rotation follows from
 \be
   %in old version, j should have been 0, 1, 2, ...
   %\Tm_r  = \left[ \widetilde \tOmega_x \rv_{j_0} \;\; \widetilde \tOmega_y \rv_{j_0} \;\; \widetilde \tOmega_z \rv_{j_0} \;\;
-	                %\widetilde \tOmega_x \rv_{j_1} \;\; \widetilde \tOmega_y \rv_{j_1} \;\; \widetilde \tOmega_z \rv_{j_1}
-									%\ldots \right]\tp \in \Rcal^{3 n_b \times 3}
+                  %\widetilde \tOmega_x \rv_{j_1} \;\; \widetilde \tOmega_y \rv_{j_1} \;\; \widetilde \tOmega_z \rv_{j_1}
+                  %\ldots \right]\tp \in \Rcal^{3 n_b \times 3}
   \Tm_r = \vr{ \tilde \rv_0 }{ \vdots}{ \tilde \rv_{n_b-1}} \in \Rcal^{3 n_b \times 3} \eqDot
 \ee
 %with the special tensors, representing rotation about (x,y,z)-axes,
@@ -545,20 +381,19 @@ which is the sum of translation and rotation.
 
 As an example, having the boundary nodes sorted for two boundary node set $B_0$ and $B_1$, we obtain the following transformation for the Hurty-Craig-Bampton method with only 6 modes per boundary node set,
 \be \label{theory:eigenmodes:HCBRBE2}
-	%\vp{\qv_b}{\qv_i} \approx \mp{ \Im \mp{\Tm_0}{}{}{\Tm_1}}{\Null}{-\Km_{ii}^{-1} \Km_{ib}\vp{\Tm_0}{\Tm_1}}{\tPsi_{r,i}}   
-	%\vr{\qv_{B_0}}{\qv_{B_1}}{\pv_r} \eqDot
-	\vp{\qv_b}{\qv_i} \approx \mr{ \Tm_0}{\Null}{\Null} {\Null}{\Tm_1}{\Null} 
-	                          {-\Km_{ii}^{-1} \Km_{ib}\vp{\Tm_0}{\Null} }{-\Km_{ii}^{-1} \Km_{ib}\vp{\Null}{\Tm_1} }{\tPsi_{r,i}}   
-	\vr{\qv_{B_0}}{\qv_{B_1}}{\pv_r} \eqDot
+  %\vp{\qv_b}{\qv_i} \approx \mp{ \Im \mp{\Tm_0}{}{}{\Tm_1}}{\Null}{-\Km_{ii}^{-1} \Km_{ib}\vp{\Tm_0}{\Tm_1}}{\tPsi_{r,i}}   
+  %\vr{\qv_{B_0}}{\qv_{B_1}}{\pv_r} \eqDot
+  \vp{\qv_b}{\qv_i} \approx \mr{ \Tm_0}{\Null}{\Null} {\Null}{\Tm_1}{\Null} 
+                            {-\Km_{ii}^{-1} \Km_{ib}\vp{\Tm_0}{\Null} }{-\Km_{ii}^{-1} \Km_{ib}\vp{\Null}{\Tm_1} }{\tPsi_{r,i}}   
+  \vr{\qv_{B_0}}{\qv_{B_1}}{\pv_r} \eqDot
 \ee
 with the new boundary node vector $\qv_b = [\qv_{B_0}\tp \;\; \qv_{B_1}\tp]\tp$.
-%\newcommand{\mr}[9]{\left[\!\! \begin{array}{ccc} #1 & #2 & #3 \vspace{0.1cm}\\ #4 & #5 & #6 \vspace{0.1cm}\\ #7 & #8 & #9  \end{array} \!\!\right]}
 
-\noindent {\bf Notes}:
+\noindent \mybold{Notes}:
 \bi
   \item The inverse $\Km_{ii}^{-1} $ is not computed, but this matrix is LU-factorized using sparse techniques.
-	\item The factorization only needs to be applied to six vectors for every relevant boundary node set.
-	\item One set of boundary nodes can be omitted from the final static modes in \eq{theory:eigenmodes:HCBRBE2}, because keeping all boundary modes, would introduce six rigid body motions to our mode basis, what is usually not wanted nor needed.
+  \item The factorization only needs to be applied to six vectors for every relevant boundary node set.
+  \item One set of boundary nodes can be omitted from the final static modes in \eq{theory:eigenmodes:HCBRBE2}, because keeping all boundary modes, would introduce six rigid body motions to our mode basis, what is usually not wanted nor needed.
 \ei
 
 Using again the examples given in \fig{fig_hingePartMesh}, we now obtain a set of modified modes using the function \texttt{fem.ComputeHurtyCraigBamptonModes(...)}.
@@ -584,7 +419,7 @@ The eigenfrequencies for this case now are significantly higher than in the free
   \includegraphics[width=5cm]{figures/modesHinge/HCBmodesHingeStaticArotZ}
   \end{center}
   \caption{Static modes for bolt rigid body interface, using Hurty-Craig-Bampton method; top three images show (x,y,z)-translation modes, bottom three images show (x,y,z)-rotation modes; contour color represents norm of displacements.}
-	\label{fig_hingePartStaticModesA}
+  \label{fig_hingePartStaticModesA}
 \end{figure}
 %++++++++++++++++++++++++
 
@@ -599,7 +434,7 @@ The eigenfrequencies for this case now are significantly higher than in the free
   \includegraphics[width=5cm]{figures/modesHinge/HCBmodesHingeStaticBrotZ}
   \end{center}
   \caption{Static modes for bushing rigid body interface, using Hurty-Craig-Bampton method; top three images show (x,y,z)-translation modes, bottom three images show (x,y,z)-rotation modes; contour color represents norm of displacements.}
-	\label{fig_hingePartStaticModesB}
+  \label{fig_hingePartStaticModesB}
 \end{figure}
 %++++++++++++++++++++++++
 
@@ -616,7 +451,7 @@ The eigenfrequencies for this case now are significantly higher than in the free
   \includegraphics[width=4cm]{figures/modesHinge/HCBmodesHingeEigenmode7}
   \end{center}
   \caption{Eigenmodes for fixed-fixed case, resulting from Hurty-Craig-Bampton method; contour color represents norm of displacements.}
-	\label{fig_hingePartFixedFixedModes}
+  \label{fig_hingePartFixedFixedModes}
 \end{figure}
 %++++++++++++++++++++++++
 
@@ -709,13 +544,13 @@ The eigenfrequencies for this case now are significantly higher than in the free
 %\ee
 %Using the projected stiffness and mass matrices,
 %\be
-	%\Mm_P = \Vm_P \mp{\Mm_{bb}}{\Mm_{bi}}{\Mm_{ib}}{\Mm_{ii}} \Vm_P\tp \quad \mathrm{and} \quad
+  %\Mm_P = \Vm_P \mp{\Mm_{bb}}{\Mm_{bi}}{\Mm_{ib}}{\Mm_{ii}} \Vm_P\tp \quad \mathrm{and} \quad
   %\Km_P = \Vm_P \mp{\Km_{bb}}{\Km_{bi}}{\Km_{ib}}{\Km_{ii}} \Vm_P\tp 
 %\eqComma
 %\ee
 %the eigenvalue problem for the constrained system of \eq{eq:theory:HCB:RBE3linearEq} is given by
 %\be \label{eq:theory:HCB:RBE3eigen}
-	%\Mm_P \ddot{\qv}_P + \Km_P \qv_P = \Null \eqDot
+  %\Mm_P \ddot{\qv}_P + \Km_P \qv_P = \Null \eqDot
 %\ee
 %The eigen analysis of \eq{eq:theory:HCB:RBE3eigen} results in the eigenvector matrix $\tPsi_P \in \Rcal^{(n-6) \times m}$, containing a set of $m$ eigenvectors.
 %The final eigenvectors $\tPsi \in \Rcal^{n \times m}$ are computed by means of projection onto the original boundary nodes, using
@@ -728,8 +563,7 @@ The eigenfrequencies for this case now are significantly higher than in the free
 
 
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-\mysubsubsection{Interfaces and boundaries}
-\label{sec:theory:CMS:interfaces}
+\mysubsubsectionlabel{Interfaces and boundaries}{sec:theory:CMS:interfaces}
 Being able to model a sole flexible body is not sufficient for the modeling of industrial problems.
 An important part of component mode synthesis is the appropriate definition of boundaries or interfaces.
 The term interface is widely used and may be more appropriate when connecting two bodies via such interfaces.
@@ -754,8 +588,7 @@ the \texttt{FEMinterface} function \texttt{VolumeToSurfaceElements}.
 
 
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-\mysubsubsection{Node weighting}
-\label{sec:theory:CMS:nodeWeighting}
+\mysubsubsectionlabel{Node weighting}{sec:theory:CMS:nodeWeighting}
 %
 As mentioned in the literature \cite{HeirmanDesmet2010}, there are certain advantages to use regular meshes on boundaries/interfaces.
 However, industrial relevant geometries often cannot be meshed by regular hexahedral meshes which leads to unstructured tetrahedral elements with (nearly) arbitrary triangular surfaces.
@@ -770,8 +603,7 @@ using the total area $A_B$ of the boundary.
 This weighting leads to nearly constant strain distribution along the cross section of a fixed bar with equally distributed axial forces.
 
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-\mysubsubsection{Reference conditions}
-\label{sec:theory:CMS:referenceConditions}
+\mysubsubsectionlabel{Reference conditions}{sec:theory:CMS:referenceConditions}
 %
 Currently, there is no specific functionality to define reference conditions for \ac{FFRF} objects in \codeName\ .
 In the \texttt{ObjectFFRF}, a \texttt{ObjectConnectorCoordinateVector} needs to be used to define constraints of a so-called Tisserand frame.
@@ -806,12 +638,11 @@ It should be noted that regarding efficiency or highest accuracy, better referen
 
 \clearpage
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-\mysubsection{Modeling of Contact in \codeName }
-\label{secContactTheory}
+\mysubsectionlabel{Modeling of Contact in \codeName }{secContactTheory}
 % 
 The \texttt{GeneralContact} module, see \refSection{sec:GeneralContact},  which is 
 \bi
-  \item[] {\bf still under developement, consider with care!}
+  \item[] \mybold{still under developement, consider with care!}
 \ei
 provides a simple, efficient and versatile interface to a general contact module. The movivation for this module is based on the need for simple contact modeling in robotics, but also for the efficient modeling of beam-cylinder or beam-beam contact, as well as contact between deformable meshes (not yet available).
 
@@ -820,22 +651,22 @@ Note that there are currently only simplistic contact models, such as linear con
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \begin{figure}[hb]
   \centering
-	\begin{tikzpicture}[node distance = 2cm, auto, thick,scale=0.7, every node/.style={scale=0.7}]
-			% Place nodes
-			\node [cloud] (availableContacts) {{\bf available contacts}};
-			\node [wideblock, below of=availableContacts, node distance=3cm, xshift = -7.5cm] (sphericalContact) {sphere--sphere, circle--circle};
-			\node [wideblock, right of=sphericalContact, node distance=4.5cm] (clusteredSphericalContact) {clustered sphere--\{sphere,trig\}};
-			\node [wideblock, right of=clusteredSphericalContact, node distance=4.5cm] (sphereTrigContact) {sphere--triangle};
-			\node [wideblock, right of=sphereTrigContact, node distance=4.5cm] (trigTrigContact) {triangle--triangle};
-			\node [wideblock, right of=trigTrigContact, node distance=4.5cm] (circleCableContact) {circle--ANCFCable2D};
-			\path [line] (availableContacts) -- (sphericalContact);
-			\path [line] (availableContacts) -- (clusteredSphericalContact);
-			\path [line] (availableContacts) -- (sphereTrigContact);
-			\path [line] (availableContacts) -- (trigTrigContact);
-			\path [line] (availableContacts) -- (circleCableContact);
-	\end{tikzpicture}
+  \begin{tikzpicture}[node distance = 2cm, auto, thick,scale=0.7, every node/.style={scale=0.7}]
+      % Place nodes
+      \node [cloud] (availableContacts) {\mybold{available contacts}};
+      \node [wideblock, below of=availableContacts, node distance=3cm, xshift = -7.5cm] (sphericalContact) {sphere--sphere, circle--circle};
+      \node [wideblock, right of=sphericalContact, node distance=4.5cm] (clusteredSphericalContact) {clustered sphere--\{sphere,trig\}};
+      \node [wideblock, right of=clusteredSphericalContact, node distance=4.5cm] (sphereTrigContact) {sphere--triangle};
+      \node [wideblock, right of=sphereTrigContact, node distance=4.5cm] (trigTrigContact) {triangle--triangle};
+      \node [wideblock, right of=trigTrigContact, node distance=4.5cm] (circleCableContact) {circle--ANCFCable2D};
+      \path [line] (availableContacts) -- (sphericalContact);
+      \path [line] (availableContacts) -- (clusteredSphericalContact);
+      \path [line] (availableContacts) -- (sphereTrigContact);
+      \path [line] (availableContacts) -- (trigTrigContact);
+      \path [line] (availableContacts) -- (circleCableContact);
+  \end{tikzpicture}
   \caption{Contact: possible coupling of geometrical objects in \codeName\ }
-	\label{fig_available_contact}
+  \label{fig_available_contact}
 \end{figure}
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %
@@ -888,13 +719,12 @@ Within a regularized friction law, similar to a well known law attributed to Haf
   \end{cases}
 \eea
 %
-{\bf Note} that the following equations represent the computed contact relations in high detail, but minor cases and flags, such as the \texttt{intraSpheresContact} are not described here, but must be carefully considered in the description of \texttt{GeneralContact}, see \refSection{sec:GeneralContact}.
+\mybold{Note} that the following equations represent the computed contact relations in high detail, but minor cases and flags, such as the \texttt{intraSpheresContact} are not described here, but must be carefully considered in the description of \texttt{GeneralContact}, see \refSection{sec:GeneralContact}.
 
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %
-\mysubsubsection{Sphere-sphere contact: Equations}
-\label{secContactSphereSphere}
+\mysubsubsectionlabel{Sphere-sphere contact: Equations}{secContactSphereSphere}
 %
 The equations for sphere-sphere contact in contact normal direction are very similar to the \texttt{ObjectConnectorSpringDamper}, see \refSection{sec:item:ObjectConnectorSpringDamper}.
 %
@@ -940,18 +770,6 @@ In case of rigid bodies and non-zero friction, we also compute angular velocitie
 \rowTable{marker $m1$ rotation Jacobian}{$\LU{0}{\Jm_{rot,m1}}$}{with interpretation as derivative of the global angular velocity $\LU{0}{\tomega}_{m1} = \LU{0}{\Jm_{rot,m1}} \dot \qv_{m1}$; assuming that $\dot \qv_{m1}$ represents the generalized velocities of marker $m1$}
 \finishTable
 
-
-%
-\newcommand{\diffANCF}[1]{\frac{\partial #1}{\partial \qv_{ANCF}}}
-\newcommand{\diffANCFt}[1]{\frac{\partial #1}{\partial \dot \qv_{ANCF}}}
-\newcommand{\diffANCFmI}[1]{\frac{\partial #1}{\partial \qv_{ANCF,m1}}}
-\newcommand{\diffANCFmIt}[1]{\frac{\partial #1}{\partial \dot \qv_{ANCF,m1}}}
-\newcommand{\diffmI}[1]{\frac{\partial #1}{\partial \qv_{m1}}}
-\newcommand{\diffmIt}[1]{\frac{\partial #1}{\partial \dot \qv_{m1}}}
-\newcommand{\diffmO}[1]{\frac{\partial #1}{\partial \qv_{m0}}}
-\newcommand{\diffmOt}[1]{\frac{\partial #1}{\partial \dot \qv_{m0}}}
-\newcommand{\diffmOI}[1]{\frac{\partial #1}{\partial \qv_{m0,m1}}}
-\newcommand{\diffmOIt}[1]{\frac{\partial #1}{\partial \dot \qv_{m0,m1}}}
 %
 %
 \noindent Contact between spheres with global index $g_i$ and another sphere with global index $g_j$ is active, if
@@ -974,7 +792,7 @@ Note that quantities $^*$ are only computed if contact is active.
   \includegraphics[width=8cm]{figures/generalContactSpheres}
   \end{center}
   \caption{Geometrical relations for contact of two spheres $i$ and $j$ with according markers $m0$ and $m1$.}
-	\label{fig_GeneralContactSpheres}
+  \label{fig_GeneralContactSpheres}
 \end{figure}
 %++++++++++++++++++++++++
 the velocities of the spheres at the contact point\footnote{In case of no friction, the angular velocities are not included in these relations},
@@ -1050,7 +868,7 @@ with respect to the generalized coordinates affected by the two markers,
 \be
   \qv = \vp{\qv_{m0}}{\qv_{m1}} \eqDot
 \ee
-The Jacobian thus reads\footnote{{\bf NOTE} that only terms marked in {\bf\termC{green}} are currently fully implemented and terms in {\bf\termA{blue}} are approximated, while other terms are neglected}
+The Jacobian thus reads\footnote{\mybold{NOTE} that only terms marked in \mybold{\termC{green}} are currently fully implemented and terms in \mybold{\termA{blue}} are approximated, while other terms are neglected}
 \be
   \termA{ \Jm_{c}  = \frac{\partial \fv_{LHS}}{\partial \qv}
            = \mp{\frac{\partial \left(-\LU{0}{\Jm_{pos,m0}\tp} \LU{0}{\fv_c} + \LU{0}{\Jm_{rot,m0}\tp} \LU{0}{\ttau_{f,i}}\right)}{\partial \qv_{m0}}}
@@ -1133,7 +951,7 @@ $\frac{\partial }{\partial \qv_{m0}}$ and $\LU{0}{\Jm_{pos,m1}}$ in case of $\fr
     %\termC{\frac{\partial p}{\partial \qv_{m1}} = -\LU{0}{\nv_0}\!\tp \LU{0}{\Jm_{pos,m1}} } 
   %\ee
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  \item $v_n = \left( \LU{0}{\vv}_j - \LU{0}{\vv}_i \right)\tp \LU{0}{\nv_0}$ ({\bf NOTE}: only valid in case that markers are attached to node or body reference point!!!):
+  \item $v_n = \left( \LU{0}{\vv}_j - \LU{0}{\vv}_i \right)\tp \LU{0}{\nv_0}$ (\mybold{NOTE}: only valid in case that markers are attached to node or body reference point!!!):
   \be
     \termC{\diffmOI{v_n} = 
     \left( \LU{0}{\vv}_j - \LU{0}{\vv}_i \right)\tp \left(
@@ -1330,14 +1148,9 @@ In this model, due to the active set strategy, the reference coordinates spannin
   \includegraphics[width=\textwidth]{figures/generalContactANCF2Dcircle}
   \end{center}
   \caption{Geometrical relations for contact of ANCFCable2D $i$ and circle $j$ with according marker $m1$; case a) shows a cable with nodes $n_0$ and $n_1$, partially penetrating at the midspan of the cable; case b) shows the case of a cable where node $n_0$ is inside the cable.}
-	\label{fig_generalContactANCF2Dcircle}
+  \label{fig_generalContactANCF2Dcircle}
 \end{figure}
 %++++++++++++++++++++++++
-\newcommand{\ANCFdk}{\LU{0}{\dv_k}}
-\newcommand{\ANCFdkt}{\LU{0}{\dot\dv_k}}
-\newcommand{\ANCFdkO}{\LU{0}{\dv_{0,k}}}
-\newcommand{\ANCFdkOtp}{\LU{0}{\dv_{0,k}\tp}}
-\newcommand{\diffANCFdk}{\diffANCFmI{\ANCFdk}}
 
 Normal contact and tangential friction forces are then computed based on integrals over the coordinates $[s_0,\, s_1]$.
 The integration is performed over $n_{ip}$ integration points $x_k \in [x_{i0},\, x_{i1},\, \ldots]$. In case of a 3 point Lobatto integration, we chose the integration points 

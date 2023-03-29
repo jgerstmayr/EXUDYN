@@ -18,7 +18,15 @@ automatically generate pybindings for specific classes and functions AND latex d
 # beautiful mathematical formulas.
 
 
-from autoGenerateHelper import PyLatexRST, GetDateStr #AddEnumValue, DefPyFunctionAccess, DefPyStartClass, DefPyFinishClass, DefLatexStartClass, DefLatexFinishTable
+from autoGenerateHelper import PyLatexRST, GetDateStr, RSTlabelString
+     #AddEnumValue, DefPyFunctionAccess, DefPyStartClass, DefPyFinishClass, DefLatexStartClass, DefLatexFinishTable
+
+from autoGenerateHelper import localListFunctionNames, localListClassNames, localListEnumNames
+
+localListFunctionNames.clear()
+localListClassNames.clear()
+localListEnumNames.clear()
+
                                
 import io   #for utf-8 encoding
 import copy
@@ -45,10 +53,17 @@ In the following, some basic steps and concepts for usage are shown, references 
 """, section='General information on Python-C++ interface', sectionLevel=1, sectionLabel='sec:generalPythonInterface')
 
 plrmain.AddDocu('To import the module, just include the \\codeName\\ module in Python:')
-plrmain.AddDocuList(itemList=['\\texttt{import exudyn as exu}'], itemText='[]')
+plrmain.AddDocuCodeBlock(code="""
+import exudyn as exu
+""")
+
+#plrmain.AddDocuList(itemList=['\\texttt{import exudyn as exu}'], itemText='[]')
 plrmain.AddDocu('For compatibility with examples and other users, we recommend to use the \\texttt{exu} abbreviation throughout. '+
                 'In addition, you may work with a convenient interface for your items, therefore also always include:')
-plrmain.AddDocuList(itemList=['\\texttt{from exudyn.itemInterface import *}'], itemText='[]')
+plrmain.AddDocuCodeBlock(code="""
+from exudyn.itemInterface import *
+""")
+#plrmain.AddDocuList(itemList=['\\texttt{from exudyn.itemInterface import *}'], itemText='[]')
 plrmain.AddDocu('Note that including \\texttt{exudyn.utilities} will cover \\texttt{itemInterface}. '+
                 'Also note that \\texttt{from ... import *} is not recommended in general and it will not work in certain cases, '+
                 'e.g., if you like to compute on a cluster. However, it greatly simplifies life for smaller models and you may replace '+
@@ -58,11 +73,18 @@ plrmain.AddDocu('The general hub to multibody dynamics models is provided by the
                 'except for some very basic system functionality (which is inside the \\codeName\\ module). \n\n'+
                 'You can create a new \\texttt{SystemContainer}, which is a class that is initialized by assigning a '+
                 'system container to a variable, usually denoted as \\texttt{SC}:')
-plrmain.AddDocuList(itemList=['\\texttt{SC = exu.SystemContainer()}'], itemText='[]')
+plrmain.AddDocuCodeBlock(code="""
+exu.SystemContainer()
+""")
+#plrmain.AddDocuList(itemList=['\\texttt{SC = exu.SystemContainer()}'], itemText='[]')
 plrmain.AddDocu('Note that creating a second \\texttt{exu.SystemContainer()} will be independent of \\texttt{SC} and therefore usually makes no sense.\n')
 
 plrmain.AddDocu('To add a MainSystem to system container SC and store as variable mbs, write:')
-plrmain.AddDocuList(itemList=['\\texttt{mbs = SC.AddSystem()}'], itemText='[]')
+
+plrmain.AddDocuCodeBlock(code="""
+mbs = SC.AddSystem()
+""")
+#plrmain.AddDocuList(itemList=['\\texttt{mbs = SC.AddSystem()}'], itemText='[]')
 
 plrmain.AddDocu('Furthermore, there are a couple of commands available directly in the \\texttt{exudyn} module, given in the following subsections.'+
                 'Regarding the \\mybold{(basic) module access}, functions are related to the \\texttt{exudyn = exu} module, see these examples:')
@@ -1790,11 +1812,14 @@ which are not described here as they are native to Pybind11, but can be passed a
 #documentation and pybindings for MatrixContainer
 classStr = 'PyMatrixContainer'
 pyClassStr = 'MatrixContainer'
+
 plr.DefPyStartClass(classStr, pyClassStr, 'The MatrixContainer is a versatile representation for dense and sparse matrices.',
-                    subSection=True)
+                    subSection=True, 
+                    labelName='sec:MatrixContainer') #section with this label was earlier in theory section
 
 plr.AddDocuCodeBlock(code="""
 #Create empty MatrixContainer:
+from exudyn import MatrixContainer
 mc = MatrixContainer()
 
 #Create MatrixContainer with dense matrix:
@@ -1803,7 +1828,22 @@ matrix = np.eye(6)
 mc = MatrixContainer(matrix)
 
 #Set with dense pyArray (a numpy array): 
+pyArray = np.array(matrix)
 mc.SetWithDenseMatrix(pyArray, useDenseMatrix = True)
+
+#Set empty matrix:
+mc.SetWithDenseMatrix(], bool useDenseMatrix = True)
+
+#Set with list of lists, stored as sparse matrix:
+mc.SetWithDenseMatrix([[1,2],[3,4]], bool useDenseMatrix = False)
+
+#Set with sparse CSR matrix:
+mc.SetWithSparseMatrixCSR(2,3,[[0,0,13.3],[1,1,4.2],[1,2,42.]], useDenseMatrix=True)
+
+print(mc)
+#gives dense matrix:
+#[[13.3  0.   0. ]
+# [ 0.   4.2 42. ]]
 """)
 
 plr.DefLatexStartTable(pyClassStr)
@@ -2134,5 +2174,39 @@ indexRST += '\n'
 file=io.open(rstDir+rstIndexFile,'w',encoding='utf8')  #clear file by one write access
 file.write(indexRST)
 file.close()
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#write function, class, ... names for conf.py
+exuDir = '../../../docs/RST/'
+
+sConfHelper = ''
+sConfHelper += '#this is a helper file to define additional keywords for examples\n'
+sConfHelper += '#Created: 2023-03-17, Johannes Gerstmayr\n\n'
+
+#some manual entries ...
+localListClassNames.append('SimulationSettings')
+localListFunctionNames.append('visualizationSettings') #in fact, it is a member
+localListFunctionNames.append('systemData') #in fact, it is a member
+localListFunctionNames.append('systemIsConsistent') #in fact, it is a member
+localListFunctionNames.append('interactiveMode') #in fact, it is a member
+
+#list of classes and enum classes:
+sConfHelper += 'listClassNames=['
+for s in localListClassNames:
+    sConfHelper += "'" + s + "'" + ', '
+for s in localListEnumNames:
+    sConfHelper += "'" + s + "'" + ', '
+sConfHelper += ']\n\n'
+
+sConfHelper += 'listFunctionNames=['
+for s in localListFunctionNames:
+    sConfHelper += "'" + s + "'" + ', '
+sConfHelper += ']\n\n'
+
+
+with open(exuDir+'confHelper.py', 'w') as f:
+    f.write(sConfHelper)
+
 
 

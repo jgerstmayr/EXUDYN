@@ -12,6 +12,9 @@ from autoGenerateHelper import Str2Latex, GenerateLatexStrKeywordExamples, Extra
           RemoveIndentation, RSTheaderString, RSTlabelString, RSTinlineMath, RSTmath, RSTurl, RSTmarkup, RSTcodeBlock, \
           LatexString2RST, Latex2RSTlabel
 
+localListFunctionNames = [] #string list for highlighting
+localListClassNames = [] #string list for highlighting
+
 writeRST = True
 addExampleReferences = True #costs lot of time
 theDocDir = '../../../docs/theDoc/'
@@ -55,6 +58,12 @@ headerTags = ['Details','Author','Date','Copyright','References','Notes','Exampl
 
 tagPreamble = '#**' #this must be given at beginning of any tag
 
+def SpecialAppend(prevList, name):
+    name = name.replace('\\_','_')
+    if name not in prevList and name not in ['__init__', '__add__', '__iadd__', '__sub__', '__len__', '__repr__', '__getitem__', '__iter__']:
+        prevList.append(name)
+
+    return prevList
 
 def LatexString2RSTspecial(s, replaceMarkups = True): #replace \_ \{ etc. for RST
 
@@ -416,7 +425,7 @@ def DictToItemsText(functionDict, tagList, addStr):
                     if s.strip() != '':
                         if s.find(':') != -1 and (' ' not in s[:s.find(':')]): #first occurance = argument; may not have spaces
                             n=s.find(':')
-                            sr = RSTmarkup(s[:n],'``') + LatexString2RSTspecial(s[n:], replaceMarkups = replaceMarkups) #in this string, there should be no markup ...
+                            sr = RSTmarkup(s[:n].replace('\\_','_'),'``') + LatexString2RSTspecial(s[n:], replaceMarkups = replaceMarkups) #in this string, there should be no markup ...
                             s = '{\\it '+s[:n]+'}'+ s[n:]
                         else:
                             sr = LatexString2RSTspecial(s, replaceMarkups = replaceMarkups)
@@ -566,6 +575,8 @@ for fileName in filesParsed:
     isFirstFunction = True
     #insert function descriptions 
     for funcDict in functionList:
+        SpecialAppend(localListFunctionNames, funcDict['functionName'])
+
         if not isFirstFunction:
             sLatex += "\\noindent\\rule{8cm}{0.75pt}\\vspace{1pt} \\\\ \n"
             sRST += "\n----\n" #horizontal ruler
@@ -587,6 +598,8 @@ for fileName in filesParsed:
 
     #insert class descriptions with functions
     for classDict in classList:
+        SpecialAppend(localListClassNames, classDict['className'])
+        
         sLatex += '\\my'+strSub+'subsubsection{CLASS '+classDict['className']+' (in module '+moduleNameLatex+')}\n'
         #sLatex += '\\bi'
         sLatex += '\\noindent\\textcolor{steelblue}{{\\bf class description}}: ' + classDict['class']
@@ -612,6 +625,8 @@ for fileName in filesParsed:
 
         isFirstFunction = True
         for funcDict in classDict['functionList']:
+            SpecialAppend(localListFunctionNames, funcDict['functionName'])
+                
             if not isFirstFunction:
                 sLatex += "\\noindent\\rule{8cm}{0.75pt}\\vspace{1pt} \\\\ \n"
                 sRST += "\n----\n" #horizontal ruler
@@ -686,9 +701,27 @@ if writeRST:
     file.write(sRSTindex)
     file.close()
     
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++        
+#export data for conf.py
+#write class names for confHelperPyUtilities.py
 
+sConfHelper = ''
+sConfHelper += '#this is a helper file to define additional keywords for examples\n'
+sConfHelper += '#Created: 2023-03-17, Johannes Gerstmayr\n\n'
 
+#list of classes and function names:
+sConfHelper += 'listPyFunctionNames=['
+for s in localListFunctionNames:
+    sConfHelper += "'" + s + "'" + ', '
+sConfHelper += ']\n\n'
 
+sConfHelper += 'listPyClassNames=['
+for s in localListClassNames:
+    sConfHelper += "'" + s + "'" + ', '
+sConfHelper += ']\n\n'
+
+with open(rstDir+'confHelperPyUtilities.py', 'w') as f:
+    f.write(sConfHelper)
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++        

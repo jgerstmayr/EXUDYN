@@ -77,7 +77,7 @@ for i, pos in enumerate(posList):
                          nodeType = exu.NodeType.RotationEulerParameters, 
                          position = pos,
                          gravity = g, 
-                         graphicsDataList = [graphicsRoll, GraphicsDataBasis(inertiaRoll.COM(), 0.5) ])
+                         graphicsDataList = [graphicsRoll, GraphicsDataBasis(inertiaRoll.COM(), length=0.5) ])
     mR = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nR))
     nodeList += [nR]
     bodyList += [bR]

@@ -198,10 +198,33 @@ columns=flexible, %do not add Phantom spaces at "'"
 \definecolor{termred}{rgb}{0.8,0.1,0.1}
 \definecolor{termgreen}{rgb}{0,0.65,0}
 
-%colored terms in equations:
+%colored terms in equations (theory):
 \newcommand{\termA}[1]{\textcolor{termblue}{#1}}
 \newcommand{\termB}[1]{\textcolor{termred}{#1}}
 \newcommand{\termC}[1]{\textcolor{termgreen}{#1}}
+
+%theory (not in sphinx):
+\newcommand{\ANCFdk}{\LU{0}{\dv_k}}
+\newcommand{\ANCFdkt}{\LU{0}{\dot\dv_k}}
+\newcommand{\ANCFdkO}{\LU{0}{\dv_{0,k}}}
+\newcommand{\ANCFdkOtp}{\LU{0}{\dv_{0,k}\tp}}
+\newcommand{\diffANCFdk}{\diffANCFmI{\ANCFdk}}
+\newcommand{\diffANCF}[1]{\frac{\partial #1}{\partial \qv_{ANCF}}}
+\newcommand{\diffANCFt}[1]{\frac{\partial #1}{\partial \dot \qv_{ANCF}}}
+\newcommand{\diffANCFmI}[1]{\frac{\partial #1}{\partial \qv_{ANCF,m1}}}
+\newcommand{\diffANCFmIt}[1]{\frac{\partial #1}{\partial \dot \qv_{ANCF,m1}}}
+\newcommand{\diffmI}[1]{\frac{\partial #1}{\partial \qv_{m1}}}
+\newcommand{\diffmIt}[1]{\frac{\partial #1}{\partial \dot \qv_{m1}}}
+\newcommand{\diffmO}[1]{\frac{\partial #1}{\partial \qv_{m0}}}
+\newcommand{\diffmOt}[1]{\frac{\partial #1}{\partial \dot \qv_{m0}}}
+\newcommand{\diffmOI}[1]{\frac{\partial #1}{\partial \qv_{m0,m1}}}
+\newcommand{\diffmOIt}[1]{\frac{\partial #1}{\partial \dot \qv_{m0,m1}}}
+
+%solver:
+\newcommand{\avu}{\mathbf{\ddot q}} %unknown acceleration
+\newcommand{\GA}{{G\alpha}} %abbreviation to mark equations, residuals, etc.
+\newcommand{\aalg}{\mathbf{a}} 
+\newcommand{\vel}{\mathbf{v}} %use this for transformation of \hac{ODE2} into first order equations
 
 
 \newcommand{\bigmr}[9]{\left[\!\! \begin{array}{ccc} \displaystyle #1 & \displaystyle #2 & \displaystyle #3 \vspace{0.3cm}\\ \displaystyle #4 & \displaystyle #5 & \displaystyle #6 \vspace{0.3cm}\\ \displaystyle #7 & \displaystyle #8 & \displaystyle #9  \end{array} \!\!\right]}
@@ -291,6 +314,7 @@ Johannes Gerstmayr\vspace{1cm}
 
 %++++++++++++++++++++++++++++++++++++++++++
 \section*{List of abbreviations (for theDoc, C++ and Python codes)}
+This section shows typical abbreviations. For further symbols in notation, see Section Notation \refSection{sec:generalnotation}.
 \label{sec:listOfAbbreviations}
 \begin{acronym}[coeffs] %put here longest acronym for list of acronyms
 %unused: acro{ODE2t}[ODE2\_t]{velocities (or velocity terms) for second order ordinary differential equations}
@@ -399,6 +423,17 @@ Johannes Gerstmayr\vspace{1cm}
 	%\item If you are unsure about the type of an index, use \texttt{ni.GetTypeString()} to show the index type
 %\ei
 
+%+++++++++++++++++++++++++++++++++++++
+\iftoggle{compileAll}
+{
+\input{notation}
+}
+%+++++++++++++++++++++++++++++++++++++
+\iftoggle{compileAll}
+{
+\input{theory}
+}
+
 \iftoggle{compileAll}
 {
 \input{manual_interfaces}
@@ -450,14 +485,6 @@ example: (to be called from windows Anaconda prompt or in linux terminal in the 
 {
 \input{pythonUtilitiesDescription}
 }
-
-%+++++++++++++++++++++++++++++++++++++
-\mysection{Theory and formulations} \label{sec:theory}
-\iftoggle{compileAll}
-{
-\input{theory}
-}
-%\input{jacobians} % temporary
 
 \mysection{Objects, nodes, markers, loads and sensors reference manual} \label{sec:item:reference:manual}
 %rather large section on all items [MAIN part of the docu]:

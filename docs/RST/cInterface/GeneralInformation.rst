@@ -14,13 +14,15 @@ In the following, some basic steps and concepts for usage are shown, references 
 
 To import the module, just include the Exudyn module in Python:
 
-  | \ ``import exudyn as exu``\ 
-
+.. code-block:: python
+   
+   import exudyn as exu
 
 For compatibility with examples and other users, we recommend to use the \ ``exu``\  abbreviation throughout. In addition, you may work with a convenient interface for your items, therefore also always include:
 
-  | \ ``from exudyn.itemInterface import *``\ 
-
+.. code-block:: python
+   
+   from exudyn.itemInterface import *
 
 Note that including \ ``exudyn.utilities``\  will cover \ ``itemInterface``\ . Also note that \ ``from ... import *``\  is not recommended in general and it will not work in certain cases, e.g., if you like to compute on a cluster. However, it greatly simplifies life for smaller models and you may replace imports in your files afterwards by removing the star import.
 
@@ -28,19 +30,22 @@ The general hub to multibody dynamics models is provided by the classes \ ``Syst
 
 You can create a new \ ``SystemContainer``\ , which is a class that is initialized by assigning a system container to a variable, usually denoted as \ ``SC``\ :
 
-  | \ ``SC = exu.SystemContainer()``\ 
-
+.. code-block:: python
+   
+   exu.SystemContainer()
 
 Note that creating a second \ ``exu.SystemContainer()``\  will be independent of \ ``SC``\  and therefore usually makes no sense.
 
 To add a MainSystem to system container SC and store as variable mbs, write:
 
-  | \ ``mbs = SC.AddSystem()``\ 
-
+.. code-block:: python
+   
+   mbs = SC.AddSystem()
 
 Furthermore, there are a couple of commands available directly in the \ ``exudyn``\  module, given in the following subsections.Regarding the \ **(basic) module access**\ , functions are related to the \ ``exudyn = exu``\  module, see these examples:
 
 .. code-block:: python
+   :linenos:
    
    #  import exudyn module:
    import exudyn as exu
@@ -56,6 +61,7 @@ Furthermore, there are a couple of commands available directly in the \ ``exudyn
 Understanding the usage of functions for python object \ ``SystemContainer``\  of the module \ ``exudyn``\ , the following examples might help:
 
 .. code-block:: python
+   :linenos:
    
    #import exudyn module:
    import exudyn as exu
@@ -117,6 +123,7 @@ There are only a few very important cases where data is references in Exudyn , t
 The following code snippets and comments should explain this behavior:
 
 .. code-block:: python
+   :linenos:
    
    #create system container, referenced from SC:
    SC = exu.SystemContainer()
@@ -140,6 +147,7 @@ There are several levels of type and argument checks, leading to different types
 As an example, a type conversion error is raised when providing wrong argument types, e.g., try \ ``exu.GetVersionString('abs')``\ :
 
 .. code-block:: 
+   :linenos:
    
    Traceback (most recent call last):
    
@@ -162,6 +170,7 @@ Another error results from internal type and range checking, saying User ERROR, 
 Which results in a error message similar to:
 
 .. code-block:: 
+   :linenos:
    
    =========================================
    User ERROR [file 'C:\Users\username\AppData\Local\Temp\ipykernel_24988\2838049308.py', line 1]: 

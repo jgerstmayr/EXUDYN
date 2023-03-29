@@ -366,6 +366,12 @@ void CSolverBase::InitializeSolverData(CSystem& computationalSystem, const Simul
 	output.multiThreadingMode = 0; //no multithreading
 	output.numberOfThreadsUsed = 1;
 
+	if (exuThreading::TaskManager::IsRunning()) //should not happen; only if FinalizeSolver has not been called in last computation
+	{
+		PyWarning("Initialize Solver: TaskManager already/still running from previous computation; this may indicate a recursive/parallel solver call with numberOfThreads>1; exiting task manager now");
+		exuThreading::ExitTaskManager(taskmanagerNumthreads);
+	}
+
 	//Eigen::initParallel(); //with C++11 and eigen 3.3 optional
 	Index nThreads = simulationSettings.parallel.numberOfThreads;
 	//pout << "numThreads before init=" << exuThreading::TaskManager::GetNumThreads() << "\n";
@@ -408,8 +414,10 @@ void CSolverBase::InitializeSolverData(CSystem& computationalSystem, const Simul
 	{
 		//this is needed to set back number of threads to 0, which otherwise causes that CSystem functions are still using parallel mode if there was a parallel run before
 		exuThreading::TaskManager::SetNumThreads(1); //necessary in order that computation functions have reserved correct size of arrays
-		taskmanagerNumthreads = exuThreading::EnterTaskManager(); //this is needed in order that any ParallelFor is executed in parallel during solving
-		exuThreading::ExitTaskManager(taskmanagerNumthreads);
+
+		//removed 2023-03-28
+		//taskmanagerNumthreads = exuThreading::EnterTaskManager(); 
+		//exuThreading::ExitTaskManager(taskmanagerNumthreads);
 	}
 	//pout << "numThreads after init=" << exuThreading::TaskManager::GetNumThreads() << "\n";
 
@@ -560,6 +568,7 @@ void CSolverBase::FinalizeSolver(CSystem& computationalSystem, const SimulationS
 	{
 		VerboseWrite(1, "Stop multi-threading\n");
 		exuThreading::ExitTaskManager(exuThreading::TaskManager::GetNumThreads());
+		exuThreading::TaskManager::SetNumThreads(1); //for next computation, if it is going to be serial
 	}
 
 	if (IsVerboseCheck(1))
@@ -1041,6 +1050,7 @@ void CSolverBase::FinishStep(CSystem& computationalSystem, const SimulationSetti
 	}
 
 	//update postprocess data only if visualization is running ...
+	//however, this is always true in case of several mbs (one mbs to visualize and one to compute e.g. inverse kinematics)
 	if (computationalSystem.GetPostProcessData()->VisualizationIsRunning())
 	{
 		computationalSystem.UpdatePostProcessData(recordImage);

@@ -30,18 +30,20 @@ If you like using Exudyn, please add a *star* on github and follow us on
    
 |pic1| |pic2| |pic3| |pic4| |pic5| |pic6|
 
-A paper on Exudyn has been presented at the `6th Joint International Conference on Multibody System Dynamics <http://imsdacmd2020.iitd.ac.in>`_ and submitted to the proceedings: J. Gerstmayr, Exudyn - A C++ based Python package for flexible multibody systems, Proceedings of The 6th Joint International Conference on Multibody System Dynamics and the 10th Asian Conference on Multibody System Dynamics 2020, New Delhi, India, 2022. `PDF <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/publications/GerstmayrIMSD2022.pdf>`_
+Johannes Gerstmayr. Exudyn -- A C++ based Python package for flexible multibody systems. Preprint, Research Square, 2023. `https://doi.org/10.21203/rs.3.rs-2693700/v1 <https://doi.org/10.21203/rs.3.rs-2693700/v1>`_
 
-Due to limitations for complex formulas and tables in .rst files, details of the reference manual and many other parts of the documentation are only available in theDoc.pdf, see the `github page of Exudyn <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_! There may also be some conversion errors in the auto-generated html pages.
+Due to limitations for complex formulas and tables in .rst files, some details of the reference manual are only available in theDoc.pdf, see the `github page of Exudyn <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_! There may also be some conversion errors in the auto-generated html pages.
 
 For license, see LICENSE.txt in the root github folder on github!
 
-In addition to the tutorial in the documentation, many ( **100+** ) examples can be found under main/pythonDev/Examples and main/pythonDev/TestModels .
+In addition to the tutorial in the documentation, many ( **100+** ) examples can be downloaded on github under main/pythonDev/Examples and main/pythonDev/TestModels . They are also on ReadTheDocs.
 
 Tutorial videos can be found in the `youtube channel of Exudyn <https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg_jtl6fx>`_ !
 
 Enjoy the Python library for multibody dynamics modeling, simulation, creating large scale systems, parameterized systems, component mode synthesis, optimization, ...
 }
+%`PDF <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/publications/GerstmayrIMSD2022.pdf>`_
+
 %
 %.. image:: docs/theDoc/intro2.jpg
 %    :width: 100%
@@ -54,7 +56,9 @@ as well as a larger part containing the \codeName\ module description and interf
 %
 How to cite:
 \bi
-  \item J. Gerstmayr, Exudyn - A C++ based Python package for flexible multibody systems, \\ Proceedings of The 6th Joint International Conference on Multibody System Dynamics and the 10th Asian Conference on Multibody System Dynamics 2020, New Delhi, India, 2022. \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/docs/publications/GerstmayrIMSD2022.pdf}{PDF} \cite{GerstmayrExudyn2022} %\vspace{6pt} \\
+  \item[] Johannes Gerstmayr. Exudyn -- A C++ based Python package for flexible multibody systems. Preprint, Research Square, 2023. \url{https://doi.org/10.21203/rs.3.rs-2693700/v1} \cite{Exudyn2023}
+%J. Gerstmayr, Exudyn - A C++ based Python package for flexible multibody systems, \\ Proceedings of The 6th Joint International Conference on Multibody System Dynamics and the 10th Asian Conference on Multibody System Dynamics 2020, New Delhi, India, 2022. \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/docs/publications/GerstmayrIMSD2022.pdf}{PDF} \cite{GerstmayrExudyn2022} %\vspace{6pt} \\
+%A paper on Exudyn has been presented at the `6th Joint International Conference on Multibody System Dynamics <http://imsdacmd2020.iitd.ac.in>`_ and submitted to the proceedings: J. Gerstmayr, Exudyn - A C++ based Python package for flexible multibody systems, Proceedings of The 6th Joint International Conference on Multibody System Dynamics and the 10th Asian Conference on Multibody System Dynamics 2020, New Delhi, India, 2022. 
 \ei
 %
 Tutorial videos can be found in the \exuUrl{https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg_jtl6fx}{youtube channel of Exudyn}.
@@ -97,7 +101,18 @@ It seemed that the previous code HOTINT reached limits of further (efficient) de
 \codeName\ is designed to easily set up complex multibody models, consisting of rigid and flexible bodies with joints, loads and other components. It shall enable automatized model setup and parameter variations, which are often necessary for system design but also for analysis of technical problems. The broad usability of Python allows to couple a multibody simulation with environments such as optimization, statistics, data analysis, machine learning and others.
 
 The multibody formulation is mainly based on redundant coordinates. This means that computational objects (rigid bodies, flexible bodies, ...) are added as independent bodies to the system. Hereafter, connectors (e.g., springs or constraints) are used to interconnect the bodies. The connectors are using Markers on the bodies as interfaces, in order to transfer forces and displacements.
-For details on the interaction of nodes, objects, markers and loads see \refSection{sec:overview:items}.
+For details on the interaction of nodes, objects, markers and loads see \refSection{sec:overview:items}. For a non-redundant formulation, see \texttt{ObjectKinematicTree} -- this allows to create tree-structures with minimal coordinates in \codeName\ .
+
+There are several journal papers of the developers which were using \codeName\ (list may be incomplete):
+\bi
+  \item A. Zw{\"o}lfer, J. Gerstmayr. A concise nodal-based derivation of the floating frame of reference formulation for displacement-based solid finite elements, Journal of Multibody System Dynamics, Vol. 49(3), pp. 291 -- 313, 2020. \ignoreRST{\cite{ZwoelferGerstmayr2020}}
+  \item S. Holzinger, J. Sch{\"o}berl, J. Gerstmayr. The equations of motion for a rigid body using non-redundant unified local velocity coordinates. Multibody System Dynamics, Vol. 48, pp. 283 -- 309, 2020. \ignoreRST{\cite{HolzingerSchoeberl2020}}
+  \item S. Holzinger, J. Gerstmayr. Time integration of rigid bodies modelled with three rotation parameters, Multibody System Dynamics, Vol. 53(5), 2021. \ignoreRST{\cite{Holzinger2021}}
+  \item A. Zwölfer, J. Gerstmayr. The nodal-based floating frame of reference formulation with modal reduction. Acta Mechanica, Vol. 232, pp.  835--851 (2021). \ignoreRST{\cite{ZwoelferGerstmayr2021}}
+  \item M. Pieber, K. Ntarladima, R. Winkler, J. Gerstmayr. A Hybrid ALE Formulation for the Investigation of the Stability of Pipes Conveying Fluid and Axially Moving Beams, ASME Journal of Computational and Nonlinear Dynamics, 2022. \ignoreRST{\cite{PieberNtarladima2022}}
+  \item S. Holzinger, M. Schieferle, C. Gutmann, M. Hofer, J. Gerstmayr. Modeling and Parameter Identification for a Flexible Rotor with Impacts. Journal of Computational and Nonlinear Dynamics, 2022. \ignoreRST{\cite{HolzingerSchieferle2022}}
+  %\item R. Neurauter, J. Gerstmayr. A novel motion reconstruction method for inertial sensors with constraints, Multibody System Dynamics, 2022. \ignoreRST{\cite{}}
+\ei
 
 \mysubsubsection{Developers of \codeName\ and thanks}
 \codeName\ is currently (\the\month-\the\year) developed at the University of Innsbruck.
@@ -479,7 +494,7 @@ Future goals (2022-2024) are:
   \item add more multi-threaded parallel computing techniques (DONE, Q2 2022),
   \item add vectorization,
   \item add specific and advanced connectors/constraints (extended wheels, contact, control connector)
-  \item kinematical trees with minimum coordinates (DONE, Q1 2022),
+  \item kinematical trees with minimal coordinates (DONE, Q1 2022),
   \item automatic step size selection for second order solvers (planned, 2023),
   \item deeper integration of Lie groups (Q3 2022),
   \item more interfaces for robotics (DONE, Q1 2022),

@@ -152,6 +152,7 @@ MINI EXAMPLE for ObjectRotationalMass1D
 
 
 .. code-block:: python
+   :linenos:
 
    node = mbs.AddNode(Node1D(referenceCoordinates = [1], #\psi_0ref
                              initialCoordinates=[0.5],   #\psi_0ini

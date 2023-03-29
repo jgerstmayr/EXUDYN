@@ -12,7 +12,8 @@ import copy #for deep copies
 import io   #for utf-8 encoding
 from autoGenerateHelper import Str2Latex, GenerateLatexStrKeywordExamples, ExtractExamplesWithKeyword, \
                                RSTheaderString, RSTlabelString, ExtractLatexCommand, FindMatchingBracket, ReplaceWords, RSTurl, \
-                               convLatexWords, convLatexCommands, ReplaceLatexCommands, LatexString2RST
+                               convLatexWords, convLatexCommands, ReplaceLatexCommands, LatexString2RST, \
+                               RemoveIndentation, RSTcodeBlock, RSTheaderString, RSTurl, Latex2RSTlabel
                                #ReplaceLatexCommands not imported as it has a special local version
 
 sectionFilesDepth = 1 #0=best for pydata theme, 1=best for read the docs theme
@@ -33,14 +34,17 @@ filesParsed=[
               'introduction.tex',
               'tutorial.tex',
               'GUI.tex',
-             ]
+              'notation.tex',
+              'theory.tex',
+              'solver.tex',
+            ]
 
 undefLabelList = [
     ('Theory: Contact','seccontacttheory'),
     #('List of Abbreviations','sec-listofabbreviations'),
     ##('Render State','sec-renderstate'),
     ##('GraphicsData','sec-graphicsdata'),
-    ('Solvers','sec-solvers'),
+    #('Solvers','sec-solvers'),
     #('Items Reference Manual','sec-item-reference-manual'),
     ('Solvers: Static','sec-solver-solverstatic'),
     ('Solvers: Dynamic','sec-solver-solverdynamic'),
@@ -48,7 +52,7 @@ undefLabelList = [
     ('Theory: Component Mode Synthesis','sec-theory-cms'),
     #'sec-mainsolverstatic',
     ##('Graphics: UTF-8','sec-utf8'),
-    ('Solver: Explicit','sec-explicitsolver'),
+    #('Solver: Explicit','sec-explicitsolver'),
     ]
 undefLabels =''
 for i, (header, label) in enumerate(undefLabelList): 
@@ -233,6 +237,9 @@ def ParseFile(fileName, header = ''):
     nLines = len(fileLines)
     
     for line in fileLines:
+        if line.find('%%RSTCOMPATIBLE') != -1:
+            sFile += '\\mybold{For further information on this topic read}: \\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf}{theDoc.pdf}\n'
+            break
         if not (len(line.strip()) > 0 and line.strip()[0] == '%'):
             sFile += line# + '\n'
     
@@ -417,7 +424,9 @@ Exudyn documentation
    :caption: Misc
    
    docs/RST/Abbreviations
-   docs/trackerlogRST
+   docs/RST/ExamplesIndex
+   docs/RST/TestModelsIndex
+   docs/RST/trackerlog
 
 Indices and tables
 ==================
@@ -470,8 +479,10 @@ Indices and tables
                     if fileOpen:
                         file.write('\n')
                         file.close()
+                        fileOpen = False
                     #print('write:', destDir+filename+'Index.rst')
                     file=io.open(destDir+filename+'Index.rst','w',encoding='utf8')  #clear file by one write access
+                    fileOpen = True
                     
                     lenName = len(name)
                     s=''
@@ -491,6 +502,84 @@ Indices and tables
         if fileOpen:
             file.write('\n')
             file.close()
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#examples and test models
+if True:
+    import sys, os
+    sys.path.append(os.path.join(os.path.dirname(__file__), '../..', 'pythonDev/TestModels'))
+    rstDir = destDir+rstFolder
+    from runTestSuiteRefSol import TestExamplesReferenceSolution
+
+    examplesTestRefSol = TestExamplesReferenceSolution()
+    folderSource = '../../pythonDev/'
+
+    #++++++++++++++++++++++++++++++++++++++
+    #CREATE lists
+    testFileList=[] #automatically create list from reference solution ...
+    for key in examplesTestRefSol.keys():
+        testFileList+=[key]
+
+    from os import listdir
+    from os.path import isfile, join
+
+    dirPath = '../../pythonDev/Examples/'
+    examplesFileList = [f for f in listdir(dirPath) if isfile(join(dirPath, f)) and '.py' in f]
+    
+    fileLists={'TestModels':testFileList,
+               'Examples':examplesFileList}
+
+    listTypes = ['TestModel', 'Example']
+    #listTypes = ['Example']
+    for fileType in listTypes:
+        fileTypeS = fileType+'s'
+        fileList = fileLists[fileTypeS]
+
+        rstModelIndex = '\n'+'.. _sec-'+fileType.lower()+'s-index:'+'\n\n'
+    
+        rstModelIndex += RSTheaderString(fileTypeS,0)+'\n'
+        rstModelIndex += 'This section includes all '+fileTypeS+' for Exudyn.'
+        rstModelIndex += 'They can also be found and downloaded at the '
+        rstModelIndex += RSTurl(fileTypeS+' folder of Exudyn on Github', 
+                                'https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/'+fileTypeS)
+        rstModelIndex += """
+
+.. toctree::
+   :maxdepth: 2
+    
+"""
+    
+        for fileName in fileList:
+            #print('PROCESS '+fileType+ ' ' + fileName)
+            pureName = fileName.replace('.py','')
+            s=''
+            with open(folderSource+fileTypeS+'/'+fileName) as f:
+                s = f.read()
+                
+            sRST = ''
+            #sRST += RSTheaderString(fileType+': '+pureName,1)+'\n'
+            sRST += RSTlabelString(Latex2RSTlabel(fileTypeS+'-'+pureName))+'\n'
+            sRST += RSTheaderString(fileName,1)+'\n'
+    
+            sRST += 'You can view and download this file on Github: '
+            sRST += RSTurl(fileName, 
+                          'https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/'+fileTypeS+'/'+fileName)+'\n\n'
+    
+            sRST += RSTcodeBlock(s, typeString='python', addLineNumbers=True, indentation='   ') + '\n'
+            
+            file=io.open(rstDir+fileTypeS+'/'+pureName+'.rst','w',encoding='utf8')  #clear file by one write access
+            file.write(sRST)
+            file.close()
+    
+            rstModelIndex += '   '+fileTypeS+'/'+pureName+'\n'
+    
+    
+        file=io.open(rstDir+fileTypeS+'Index.rst','w',encoding='utf8')  #clear file by one write access
+        file.write(rstModelIndex+'\n')
+        file.close()
+
+
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -534,6 +623,9 @@ abbrvRST = """
 =====================
 List of Abbreviations
 =====================
+
+This section shows typical abbreviations. For further notation, 
+see also :ref:`Section Notation <sec-generalnotation>`\ .
 
 """
 for key, value in abbrvDict.items():

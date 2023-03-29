@@ -23,10 +23,12 @@ from exudyn.lieGroupBasics import LogSE3, ExpSE3
 
 import numpy as np
 from numpy import linalg as LA
-from math import pi
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#motion planning:
+jointSpaceInterpolation = False #false interpolates TCP position in work space/Cartesian coordinates
 
 
-sensorWriteToFile = True
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #kinematic tree and redundant mbs agrees for stdDH version up to 1e-10, with compensateStaticTorques = False
@@ -38,11 +40,12 @@ jointWidth=0.1
 jointRadius=0.06
 linkWidth=0.1
 
-graphicsBaseList = [GraphicsDataOrthoCubePoint([0,0,-0.15], [0.12,0.12,0.1], color4grey)]
+graphicsBaseList = [GraphicsDataOrthoCubePoint([0,0,-0.35], [0.12,0.12,0.5], color4grey)]
 graphicsBaseList +=[GraphicsDataCylinder([0,0,0], [0.5,0,0], 0.0025, color4red)]
 graphicsBaseList +=[GraphicsDataCylinder([0,0,0], [0,0.5,0], 0.0025, color4green)]
 graphicsBaseList +=[GraphicsDataCylinder([0,0,0], [0,0,0.5], 0.0025, color4blue)]
 graphicsBaseList +=[GraphicsDataCylinder([0,0,-jointWidth], [0,0,jointWidth], linkWidth*0.5, color4list[0])] #belongs to first body
+graphicsBaseList +=[GraphicsDataCheckerBoard([0,0,-0.6], [0,0,1], size=2)]
 
 ty = 0.03
 tz = 0.04
@@ -56,42 +59,29 @@ graphicsToolList+= [GraphicsDataOrthoCubePoint([0,-ty,1.5*tz+zOff], toolSize, co
 robotDef = ManipulatorPuma560()
 # robotDef = ManipulatorUR5()
 # robotDef = ManipulatorPANDA()
+HTtool = HTtranslate([0,0,0.08])
 
 robot = Robot(gravity=[0,0,-9.81],
               base = RobotBase(HT=HTtranslate([0,0,0]), visualization=VRobotBase(graphicsData=graphicsBaseList)),
-              tool = RobotTool(HT=HTtranslate([0,0,0]), visualization=VRobotTool(graphicsData=graphicsToolList)),
+              tool = RobotTool(HT=HTtool, visualization=VRobotTool(graphicsData=graphicsToolList)),
               referenceConfiguration = []) #referenceConfiguration created with 0s automatically
 
 robot=LinkDict2Robot(robotDef, robot)
 
-ik = InverseKinematicsNumerical(robot=robot, useRenderer=False, flagDebug=True)
+ik = InverseKinematicsNumerical(robot=robot, useRenderer=False, 
+                                #flagDebug=True, 
+                                #jointStiffness=1e4
+                                ) #, useAlternativeConstraints=True)
 SC = exu.SystemContainer()
 SC.AttachToRenderEngine()
 mbs = SC.AddSystem()
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#add controller
-#control parameters, per joint:
-Pcontrol = np.array([40000, 40000, 40000, 100, 100, 10])
-Dcontrol = np.array([400,   400,   100,   1,   1,   0.1])
-
-for i, link in enumerate(robot.links):
-    link.SetPDcontrol(Pcontrol[i],Dcontrol[i])
-
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #configurations and trajectory
 q0 = [0,0,0,0,0,0] #zero angle configuration
-q1 = [0, pi/8, pi*0.5, 0,pi/8,0] #configuration 1
-q2 = [0.8*pi,-0.8*pi, -pi*0.5,0.75*pi,-pi*0.4,pi*0.4] #configuration 2
-q3 = [0.5*pi,0,-0.25*pi,0,0,0] #zero angle configuration
-
-#trajectory generated with optimal acceleration profiles:
-trajectory = Trajectory(initialCoordinates=q0, initialTime=0)
-# trajectory.Add(ProfileConstantAcceleration(q3,0.25))
-# trajectory.Add(ProfileConstantAcceleration(q1,0.25))
-# trajectory.Add(ProfileConstantAcceleration(q2,0.25))
-trajectory.Add(ProfileConstantAcceleration(q0,0.25))
-#traj.Add(ProfilePTP([1,1],syncAccTimes=False, maxVelocities=[1,1], maxAccelerations=[5,5]))
+# q1 = [0, pi/8, pi*0.5, 0,pi/8,0] #configuration 1
+# q2 = [0.8*pi,-0.8*pi, -pi*0.5,0.75*pi,-pi*0.4,pi*0.4] #configuration 2
+# q3 = [0.5*pi,0,-0.25*pi,0,0,0] #zero angle configuration
 
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -100,38 +90,67 @@ trajectory.Add(ProfileConstantAcceleration(q0,0.25))
 
 mbs.variables['myIkine'] = ik
 jointHTs = robot.JointHT(q0)
-HTlastJoint = jointHTs[-1]
-[q, success] = ik.SolveIkine(HTlastJoint, q0)
-print('[q, success]=',[q, success])
+HTlastJoint = jointHTs[-1]@HTtool
 
 #prescribed motion:
 #HTmove = HTtranslate([-0.25,0.,0.3])
-HTmove = HT(RotationMatrixZ(0.25*pi),[-0.25,0.,0.3])
+
+# HTmove = HT(RotationMatrixX(-0.3*pi),[-0.45,0.,0.]) #goes through singularity
+HTmove = HT(RotationMatrixX(0.3*pi),[0.,0.,-0.3])    #no singularity
 logMove = LogSE3(HTmove)
 rotMove = Skew2Vec(logMove[0:3,0:3])
 dispMove = HT2translation(logMove)
 
+q0=[0,0,0,0.01,0.02,0.03]
+[q1, success] = ik.SolveSafe(HTlastJoint@HTmove, q0)
+if not success: print('[q1, success]=',[q1, success])
+[q2, success] = ik.SolveSafe(HTlastJoint@HTmove@HTmove, q1)
+if not success: print('[q2, success]=',[q2, success])
+
+#initialize for first simulation step:
+[q, success] = ik.Solve(HTlastJoint, q0)
+print('[q, success]=',[q, success])
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#trajectory generated with optimal acceleration profiles, for joint-interpolation:
+trajectory = Trajectory(initialCoordinates=q0, initialTime=0)
+trajectory.Add(ProfileConstantAcceleration(q1,1))
+trajectory.Add(ProfileConstantAcceleration(q1,1))
+trajectory.Add(ProfileConstantAcceleration(q2,1))
+trajectory.Add(ProfileConstantAcceleration(q2,1))
+#traj.Add(ProfilePTP([1,1],syncAccTimes=False, maxVelocities=[1,1], maxAccelerations=[5,5]))
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
 
 #use frame for prescribed TCP:
-gFrame = [GraphicsDataFrame(HTlastJoint, length=0.3, colors=[color4grey]*3)]
+gFrame = [GraphicsDataFrame(HTlastJoint, length=0.3, colors=[color4lightgrey]*3)]
 gFrame += [GraphicsDataFrame(HTlastJoint@HTmove, length=0.3, colors=[color4grey]*3)]
+gFrame += [GraphicsDataFrame(HTlastJoint@HTmove@HTmove, length=0.3, colors=[color4dodgerblue]*3)]
 oGround = mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=gFrame)))
 
 robotDict = robot.CreateKinematicTree(mbs)
 oKT = robotDict['objectKinematicTree']
 
+#add sensor for joint coordinates (relative to reference coordinates)
+sJoints = mbs.AddSensor(SensorNode(nodeNumber=robotDict['nodeGeneric'], storeInternal=True, 
+                         outputVariableType=exu.OutputVariableType.Coordinates))
+
 #user function which is called only once per step, speeds up simulation drastically
 def PreStepUF(mbs, t):
-    if True:
+    if not jointSpaceInterpolation:
         ik = mbs.variables['myIkine']
-        tt = t
-        if tt > 1:
-            tt=1
-        
-        T = HTlastJoint@ExpSE3(list(tt*dispMove)+list(tt*rotMove))
-        # T = HTlastJoint@HTtranslate([-x,0,0])
+        if t < 2:
+            tt = min(t,1)
+            T = HTlastJoint@ExpSE3(list(tt*dispMove)+list(tt*rotMove))
+        elif t < 4:
+            tt=min(t-2,1)
+            T = HTlastJoint@HTmove@ExpSE3(list(tt*dispMove)+list(tt*rotMove))
+        else:
+            T = HTlastJoint@HTmove@HTmove
 
-        [q,success]=ik.SolveIkine(T, q0)
+        [q,success]=ik.Solve(T) #, q0) #takes 60 us internally
         mbs.SetObjectParameter(oKT, 'jointPositionOffsetVector', q)
         
     else:
@@ -159,39 +178,40 @@ SC.visualizationSettings.connectors.jointAxesRadius = 0.002
 SC.visualizationSettings.nodes.showBasis = True
 SC.visualizationSettings.nodes.basisSize = 0.1
 SC.visualizationSettings.loads.show = False
+SC.visualizationSettings.bodies.kinematicTree.showJointFrames = False
 
 SC.visualizationSettings.openGL.multiSampling=4
     
-# tEnd = 1.25
-# h = 0.002
-tEnd = 2
-h = 0.004#*0.1*0.01
+tEnd = 5
+h = 0.002 #500 steps take 0.16 seconds, 0.3ms / step (83% Python + inverse kinematics)
 
 #mbs.WaitForUserToContinue()
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 
+
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.solutionSettings.solutionWritePeriod = 0.005
+simulationSettings.solutionSettings.solutionWritePeriod = 0.02
 simulationSettings.solutionSettings.sensorsWritePeriod = 0.005
-simulationSettings.solutionSettings.binarySolutionFile = True
 #simulationSettings.solutionSettings.writeSolutionToFile = False
-simulationSettings.timeIntegration.simulateInRealtime = True
-simulationSettings.timeIntegration.realtimeFactor = 0.025
+# simulationSettings.timeIntegration.simulateInRealtime = True
+# simulationSettings.timeIntegration.realtimeFactor = 0.025
 
 simulationSettings.timeIntegration.verboseMode = 1
 simulationSettings.displayComputationTime = True
-simulationSettings.displayStatistics = True
+# simulationSettings.displayStatistics = True
 #simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
 
 #simulationSettings.timeIntegration.newton.useModifiedNewton = True
-simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
-simulationSettings.timeIntegration.generalizedAlpha.useNewmark = simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 
 simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations=True
 SC.visualizationSettings.general.autoFitScene=False
 SC.visualizationSettings.window.renderWindowSize=[1920,1200]
+SC.visualizationSettings.general.graphicsUpdateInterval = 0.01
+SC.visualizationSettings.openGL.shadow=0.3
+SC.visualizationSettings.openGL.perspective=0.5
+
 useGraphics = True
 
 if useGraphics:
@@ -200,69 +220,31 @@ if useGraphics:
         SC.SetRenderState(exu.sys['renderState'])
     mbs.WaitForUserToContinue()
     
-exu.SolveDynamic(mbs, simulationSettings, showHints=True)
+exu.SolveDynamic(mbs, simulationSettings, 
+                 #solverType = exudyn.DynamicSolverType.TrapezoidalIndex2,
+                 showHints=True)
 
 
 if useGraphics:
     SC.visualizationSettings.general.autoFitScene = False
     exu.StopRenderer()
 
-if False:
+if True:
+#%%++++++++++++++++++++++++++++++++++++++++++++
     from exudyn.interactive import SolutionViewer
     SolutionViewer(mbs)
+#%%++++++++++++++++++++++++++++++++++++++++++++
 
 
 q = mbs.GetObjectOutput(oKT, exu.OutputVariableType.Coordinates)
 exu.Print("rotations at tEnd=", VSum(q), ',', q)
     
-
-
-#add larger test tolerance for 32/64bits difference
-# exudynTestGlobals.testError = 1e-2*(VSum(measuredTorques) - 76.80031232091771 )  #old controller: 77.12176106978085) #OLDER results: up to 2021-06-28: 0.7712176106955341; 2020-08-25: 77.13193176752571 (32bits),   2020-08-24: (64bits)77.13193176846507
-# exudynTestGlobals.testResult = 1e-2*VSum(measuredTorques)   
-
-
-if False:
-    import matplotlib.pyplot as plt
-    import matplotlib.ticker as ticker
-    plt.rcParams.update({'font.size': 14})
-    plt.close("all")
-
-    doJointTorques = False
-    if doJointTorques:
-        for i in range(6):
-            data = np.loadtxt("solution/jointTorque" + str(i) + ".txt", comments='#', delimiter=',')
-            plt.plot(data[:,0], data[:,3], PlotLineCode(i), label="joint torque"+str(i)) #z-rotation
-    
-        plt.xlabel("time (s)")
-        plt.ylabel("joint torque (Nm)")
-        ax=plt.gca() # get current axes
-        ax.grid(True, 'major', 'both')
-        ax.xaxis.set_major_locator(ticker.MaxNLocator(10)) 
-        ax.yaxis.set_major_locator(ticker.MaxNLocator(10)) 
-        plt.tight_layout()
-        ax.legend(loc='center right')
-        plt.show() 
-        # plt.savefig("solution/robotJointTorques.pdf")
-
-    doJointAngles = True
-    if doJointAngles:
-        plt.close("all")
+#%%++++++++++++++++++++++++++++++++++++++++++++
+if True:
+    from exudyn.plot import PlotSensor
+    labels = []
+    for i in range(6):
+        labels += ['joint '+str(i)]
         
-        for i in range(6):
-            data = np.loadtxt("solution/joint" + str(i) + "Rot.txt", comments='#', delimiter=',')
-            # data = np.loadtxt("solution/joint" + str(i) + "AngVel.txt", comments='#', delimiter=',')
-            plt.plot(data[:,0], data[:,1], PlotLineCode(i), label="joint"+str(i)) #z-rotation
-            
-        plt.xlabel("time (s)")
-        plt.ylabel("joint angle (rad)")
-        ax=plt.gca() 
-        ax.grid(True, 'major', 'both')
-        ax.xaxis.set_major_locator(ticker.MaxNLocator(10)) 
-        ax.yaxis.set_major_locator(ticker.MaxNLocator(10)) 
-        plt.tight_layout()
-        ax.legend()
-        plt.rcParams.update({'font.size': 16})
-        plt.show() 
-        # plt.savefig("solution/robotJointAngles.pdf")
+    PlotSensor(mbs, sensorNumbers=[sJoints]*6, components=list(np.arange(6)), yLabel='joint coordinates', labels=labels)
 

@@ -207,6 +207,7 @@ MINI EXAMPLE for ObjectConnectorCoordinateSpringDamper
 
 
 .. code-block:: python
+   :linenos:
 
    #define user function:
    #NOTE: removed 2023-01-21: dryFriction, dryFrictionProportionalZone

@@ -8,8 +8,6 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-from modelUnitTests import exudynTestGlobals
-import exudyn as exu
 import sys
 
 #%%+++++++++++++++++++++++++++++++++++++++
@@ -81,9 +79,6 @@ def TestExamplesReferenceSolution():
         'superElementRigidJointTest.py':0.015217208913989071,#before 2022-02-20 (accuracy of internal sensors is higher): 0.015217208913983024,
         }
 
-    # if exudynTestGlobals.useCorrectedAccGenAlpha and not exudynTestGlobals.useNewGenAlphaSolver:
-    #     refSol['serialRobotTest.py']=0.7712176102645458#-4.309882450925784e-10 diff between old corrected and new gen alpha solver
-
     if (sys.version_info.major == 3 and sys.version_info.minor == 6): #different solutions without AVX
         replaceRefSol = {
             #Python version without AVX leads to different solution: since 2022-07-11 (StateVector with ResizableVectorParallel)
@@ -149,6 +144,8 @@ def MiniExamplesReferenceSolution():
         'ObjectRigidBody2D.py':4.356194490192344,
         'ObjectRotationalMass1D.py':2.0,
         }
+    import exudyn as exu
+
     if 'experimentalNewSolver' in exu.sys: #needs some corrected results
         refSol['ObjectConnectorRigidBodySpringDamper.py'] = -0.5349299542344889 #diff to other solvers: 3.6e-9
 

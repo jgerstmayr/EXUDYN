@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-03-07 (last modfied)
+* @date         AUTO: 2023-03-28 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -159,7 +159,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-03-07 (last modfied)
+* @date         AUTO: 2023-03-28 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -242,7 +242,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-03-07 (last modfied)
+* @date         AUTO: 2023-03-28 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -310,7 +310,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-03-07 (last modfied)
+* @date         AUTO: 2023-03-28 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -330,16 +330,16 @@ class NewtonSettings // AUTO:
 public: // AUTO: 
   NumericalDifferentiationSettings numericalDifferentiation;//!< AUTO: numerical differentiation parameters for numerical jacobian (e.g. Newton in static solver or implicit time integration)
   Real absoluteTolerance;                         //!< AUTO: absolute tolerance of residual for Newton (needed e.g. if residual is fulfilled right at beginning); condition: sqrt(q*q)/numberOfCoordinates <= absoluteTolerance
-  bool adaptInitialResidual;                      //!< AUTO: flag (true/false); false = standard; True: if initialResidual is very small (or zero), it may increas dramatically in first step; to achieve relativeTolerance, the initialResidual will by updated by a higher residual within the first Newton iteration
-  Real maximumSolutionNorm;                       //!< AUTO: this is the maximum allowed value for solutionU.L2NormSquared() which is the square of the square norm (value=\f$u_1^2\f$+\f$u_2^2\f$+...), and solutionV/A...; if the norm of solution vectors are larger, Newton method is stopped; the default value is chosen such that it would still work for single precision numbers (float)
-  Index maxIterations;                            //!< AUTO: maximum number of iterations (including modified + restart Newton steps); after that iterations, the static/dynamic solver stops with error
+  bool adaptInitialResidual;                      //!< AUTO: flag (true/false); false = standard; True: if initialResidual is very small (or zero), it may increase significantely in the first Newton iteration; to achieve relativeTolerance, the initialResidual will by updated by a higher residual within the first Newton iteration
+  Real maximumSolutionNorm;                       //!< AUTO: this is the maximum allowed value for solutionU.L2NormSquared() which is the square of the square norm (i.e., value=\f$u_1^2\f$+\f$u_2^2\f$+...), and solutionV/A...; if the norm of solution vectors is larger, Newton method is stopped; the default value is chosen such that it would still work for single precision numbers (float)
+  Index maxIterations;                            //!< AUTO: maximum number of iterations (including modified + restart Newton iterations); after that total number of iterations, the static/dynamic solver refines the step size or stops with an error
   Index maxModifiedNewtonIterations;              //!< AUTO: maximum number of iterations for modified Newton (without Jacobian update); after that number of iterations, the modified Newton method gets a jacobian update and is further iterated
-  Index maxModifiedNewtonRestartIterations;       //!< AUTO: maximum number of iterations for modified Newton after aJacobian update; after that number of iterations, the full Newton method is started for this step
+  Index maxModifiedNewtonRestartIterations;       //!< AUTO: maximum number of iterations for modified Newton after a Jacobian update; after that number of iterations, the full Newton method is started for this step
   Real modifiedNewtonContractivity;               //!< AUTO: maximum contractivity (=reduction of error in every Newton iteration) accepted by modified Newton; if contractivity is greater, a Jacobian update is computed
-  bool modifiedNewtonJacUpdatePerStep;            //!< AUTO: True: compute Jacobian at every time step, but not in every iteration (except for bad convergence ==> switch to full Newton)
+  bool modifiedNewtonJacUpdatePerStep;            //!< AUTO: True: compute Jacobian at every time step (or static step), but not in every Newton iteration (except for bad convergence ==> switch to full Newton)
   Index newtonResidualMode;                       //!< AUTO: 0 ... use residual for computation of error (standard); 1 ... use \hac{ODE2} and \hac{ODE1} newton increment for error (set relTol and absTol to same values!) ==> may be advantageous if residual is zero, e.g., in kinematic analysis; TAKE CARE with this flag
   Real relativeTolerance;                         //!< AUTO: relative tolerance of residual for Newton (general goal of Newton is to decrease the residual by this factor)
-  bool useModifiedNewton;                         //!< AUTO: True: compute Jacobian only at first step; no Jacobian updates per step; False: Jacobian computed in every step
+  bool useModifiedNewton;                         //!< AUTO: True: compute Jacobian only at first call to solver; the Jacobian (and its factorizations) is not computed in each Newton iteration, even not in every (time integration) step; False: Jacobian (and factorization) is computed in every Newton iteration (default, but may be costly)
   bool useNewtonSolver;                           //!< AUTO: flag (true/false); false = linear computation, true = use Newton solver for nonlinear solution
   bool weightTolerancePerCoordinate;              //!< AUTO: flag (true/false); false = compute error as L2-Norm of residual; true = compute error as (L2-Norm of residual) / (sqrt(number of coordinates)), which can help to use common tolerance independent of system size
 
@@ -369,14 +369,14 @@ public: // AUTO:
   //! AUTO: Read (Copy) access to: absolute tolerance of residual for Newton (needed e.g. if residual is fulfilled right at beginning); condition: sqrt(q*q)/numberOfCoordinates <= absoluteTolerance
   Real PyGetAbsoluteTolerance() const { return Real(absoluteTolerance); }
 
-  //! AUTO: Set function (needed in pybind) for: this is the maximum allowed value for solutionU.L2NormSquared() which is the square of the square norm (value=\f$u_1^2\f$+\f$u_2^2\f$+...), and solutionV/A...; if the norm of solution vectors are larger, Newton method is stopped; the default value is chosen such that it would still work for single precision numbers (float)
+  //! AUTO: Set function (needed in pybind) for: this is the maximum allowed value for solutionU.L2NormSquared() which is the square of the square norm (i.e., value=\f$u_1^2\f$+\f$u_2^2\f$+...), and solutionV/A...; if the norm of solution vectors is larger, Newton method is stopped; the default value is chosen such that it would still work for single precision numbers (float)
   void PySetMaximumSolutionNorm(const Real& maximumSolutionNormInit) { maximumSolutionNorm = EXUstd::GetSafelyUReal(maximumSolutionNormInit,"maximumSolutionNorm"); }
-  //! AUTO: Read (Copy) access to: this is the maximum allowed value for solutionU.L2NormSquared() which is the square of the square norm (value=\f$u_1^2\f$+\f$u_2^2\f$+...), and solutionV/A...; if the norm of solution vectors are larger, Newton method is stopped; the default value is chosen such that it would still work for single precision numbers (float)
+  //! AUTO: Read (Copy) access to: this is the maximum allowed value for solutionU.L2NormSquared() which is the square of the square norm (i.e., value=\f$u_1^2\f$+\f$u_2^2\f$+...), and solutionV/A...; if the norm of solution vectors is larger, Newton method is stopped; the default value is chosen such that it would still work for single precision numbers (float)
   Real PyGetMaximumSolutionNorm() const { return Real(maximumSolutionNorm); }
 
-  //! AUTO: Set function (needed in pybind) for: maximum number of iterations (including modified + restart Newton steps); after that iterations, the static/dynamic solver stops with error
+  //! AUTO: Set function (needed in pybind) for: maximum number of iterations (including modified + restart Newton iterations); after that total number of iterations, the static/dynamic solver refines the step size or stops with an error
   void PySetMaxIterations(const Index& maxIterationsInit) { maxIterations = EXUstd::GetSafelyUInt(maxIterationsInit,"maxIterations"); }
-  //! AUTO: Read (Copy) access to: maximum number of iterations (including modified + restart Newton steps); after that iterations, the static/dynamic solver stops with error
+  //! AUTO: Read (Copy) access to: maximum number of iterations (including modified + restart Newton iterations); after that total number of iterations, the static/dynamic solver refines the step size or stops with an error
   Index PyGetMaxIterations() const { return Index(maxIterations); }
 
   //! AUTO: Set function (needed in pybind) for: maximum number of iterations for modified Newton (without Jacobian update); after that number of iterations, the modified Newton method gets a jacobian update and is further iterated
@@ -384,9 +384,9 @@ public: // AUTO:
   //! AUTO: Read (Copy) access to: maximum number of iterations for modified Newton (without Jacobian update); after that number of iterations, the modified Newton method gets a jacobian update and is further iterated
   Index PyGetMaxModifiedNewtonIterations() const { return Index(maxModifiedNewtonIterations); }
 
-  //! AUTO: Set function (needed in pybind) for: maximum number of iterations for modified Newton after aJacobian update; after that number of iterations, the full Newton method is started for this step
+  //! AUTO: Set function (needed in pybind) for: maximum number of iterations for modified Newton after a Jacobian update; after that number of iterations, the full Newton method is started for this step
   void PySetMaxModifiedNewtonRestartIterations(const Index& maxModifiedNewtonRestartIterationsInit) { maxModifiedNewtonRestartIterations = EXUstd::GetSafelyUInt(maxModifiedNewtonRestartIterationsInit,"maxModifiedNewtonRestartIterations"); }
-  //! AUTO: Read (Copy) access to: maximum number of iterations for modified Newton after aJacobian update; after that number of iterations, the full Newton method is started for this step
+  //! AUTO: Read (Copy) access to: maximum number of iterations for modified Newton after a Jacobian update; after that number of iterations, the full Newton method is started for this step
   Index PyGetMaxModifiedNewtonRestartIterations() const { return Index(maxModifiedNewtonRestartIterations); }
 
   //! AUTO: Set function (needed in pybind) for: maximum contractivity (=reduction of error in every Newton iteration) accepted by modified Newton; if contractivity is greater, a Jacobian update is computed
@@ -440,7 +440,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-03-07 (last modfied)
+* @date         AUTO: 2023-03-28 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -524,11 +524,11 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        ExplicitIntegrationSettings
-* @brief        Settings for generalized-alpha, implicit trapezoidal or Newmark time integration methods.
+* @brief        Settings for explicit solvers, like Explicit Euler, RK44, ODE23, DOPRI5 and others. The settings may significantely influence performance.
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-03-07 (last modfied)
+* @date         AUTO: 2023-03-28 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -592,7 +592,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-03-07 (last modfied)
+* @date         AUTO: 2023-03-28 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -805,7 +805,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-03-07 (last modfied)
+* @date         AUTO: 2023-03-28 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -971,7 +971,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-03-07 (last modfied)
+* @date         AUTO: 2023-03-28 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1040,7 +1040,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-03-07 (last modfied)
+* @date         AUTO: 2023-03-28 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1062,7 +1062,7 @@ public: // AUTO:
   Index multithreadedLLimitLoads;                 //!< AUTO: compute loads multi-threaded; this is the limit number of loads from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)
   Index multithreadedLLimitMassMatrices;          //!< AUTO: compute bodies mass matrices multi-threaded; this is the limit number of bodies from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)
   Index multithreadedLLimitResiduals;             //!< AUTO: compute RHS vectors, AE, and reaction forces multi-threaded; this is the limit number of objects from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)
-  Index numberOfThreads;                          //!< AUTO: number of threads used for parallel computation (1 == scalar processing); do not use more threads than available threads (in most cases it is good to restrict to the number of cores)
+  Index numberOfThreads;                          //!< AUTO: number of threads used for parallel computation (1 == scalar processing); do not use more threads than available threads (in most cases it is good to restrict to the number of cores); currently, only one solver can be started with multithreading; if you use several mbs in parallel (co-simulation), you should use serial computing
   Index taskSplitMinItems;                        //!< AUTO: number of items from which on the tasks are split into subtasks (which slightly increases threading performance; this may be critical for smaller number of objects, should be roughly between 50 and 5000; flag is copied into MainSystem internal flag at InitializeSolverData(...)
   Index taskSplitTasksPerThread;                  //!< AUTO: this is the number of subtasks that every thread receives; minimum is 1, the maximum should not be larger than 100; this factor is 1 as long as the taskSplitMinItems is not reached; flag is copied into MainSystem internal flag at InitializeSolverData(...)
 
@@ -1101,9 +1101,9 @@ public: // AUTO:
   //! AUTO: Read (Copy) access to: compute RHS vectors, AE, and reaction forces multi-threaded; this is the limit number of objects from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)
   Index PyGetMultithreadedLLimitResiduals() const { return Index(multithreadedLLimitResiduals); }
 
-  //! AUTO: Set function (needed in pybind) for: number of threads used for parallel computation (1 == scalar processing); do not use more threads than available threads (in most cases it is good to restrict to the number of cores)
+  //! AUTO: Set function (needed in pybind) for: number of threads used for parallel computation (1 == scalar processing); do not use more threads than available threads (in most cases it is good to restrict to the number of cores); currently, only one solver can be started with multithreading; if you use several mbs in parallel (co-simulation), you should use serial computing
   void PySetNumberOfThreads(const Index& numberOfThreadsInit) { numberOfThreads = EXUstd::GetSafelyPInt(numberOfThreadsInit,"numberOfThreads"); }
-  //! AUTO: Read (Copy) access to: number of threads used for parallel computation (1 == scalar processing); do not use more threads than available threads (in most cases it is good to restrict to the number of cores)
+  //! AUTO: Read (Copy) access to: number of threads used for parallel computation (1 == scalar processing); do not use more threads than available threads (in most cases it is good to restrict to the number of cores); currently, only one solver can be started with multithreading; if you use several mbs in parallel (co-simulation), you should use serial computing
   Index PyGetNumberOfThreads() const { return Index(numberOfThreads); }
 
   //! AUTO: Set function (needed in pybind) for: number of items from which on the tasks are split into subtasks (which slightly increases threading performance; this may be critical for smaller number of objects, should be roughly between 50 and 5000; flag is copied into MainSystem internal flag at InitializeSolverData(...)
@@ -1145,7 +1145,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-03-07 (last modfied)
+* @date         AUTO: 2023-03-28 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

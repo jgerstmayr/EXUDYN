@@ -386,9 +386,25 @@ namespace RigidBodyMath {
 	inline Vector3D RotationMatrix2RotXYZ(const Matrix3D& R)
 	{
 		Vector3D rot;
-		rot[0] = atan2(-R(1, 2), R(2, 2));
-		rot[1] = atan2(R(0, 2), sqrt(fabs(1. - R(0, 2) * R(0, 2)))); //fabs for safety, if small round up error in rotation matrix ...
-		rot[2] = atan2(-R(0, 1), R(0, 0));
+
+		Real absC1 = sqrt(EXUstd::Square(-R(1, 2)) + EXUstd::Square(R(2, 2)) );
+		rot[1] = atan2(R(0, 2), absC1);
+		if (absC1 > 1e-14)
+		{
+			rot[0] = atan2(-R(1, 2), R(2, 2));
+			rot[2] = atan2(-R(0, 1), R(0, 0));
+		}
+		else //c1 = 0, s0 = 0, c0 = 1:  #rot[0] and rot[2] represent same axes, set one of them zero!
+		{
+			rot[0] = 0.;
+			//s0*s1*c2 + c0 * s2, -s0 * s1*s2 + c0 * c2 = > c0*s2, c0*c2
+			rot[2] = atan2(R(1, 0), R(1, 1));
+		}
+
+		//Vector3D rot;
+		//rot[0] = atan2(-R(1, 2), R(2, 2));
+		//rot[1] = atan2(R(0, 2), sqrt(fabs(1. - R(0, 2) * R(0, 2)))); //fabs for safety, if small round up error in rotation matrix ...
+		//rot[2] = atan2(-R(0, 1), R(0, 0));
 		return rot;
 	}
 
@@ -726,28 +742,52 @@ namespace EXUlie {
 		return R;
 	}
 
-	//! compute the matrix logarithmic map on the Lie group SO(3), see \cite{Sonneville2014, Sonneville2017}
+	//! compute the matrix logarithmic map on the Lie group SO(3)
 	inline Matrix3D LogSO3(const Matrix3D& R)
 	{
-		Matrix3D X;
-		Real val = 0.5*(R.Trace() - 1.);
-			
-		if (fabs(val) > 1.) //#if slightly larger than 1, due to numerical differentiation
-		{ 
-			val = val / fabs(val); 
-		}
-		
-		Real phi = acos(val);
-		if (phi == 0.)
-		{
-			X.SetScalarMatrix(3,0.); 
-		}
-		else
-		{
-			X = R - R.GetTransposed();
-			X *= phi / (2. * sin(phi));
-		}
-		return X;
+		Real ep0;
+		Vector3D n;
+		RigidBodyMath::RotationMatrix2EP(R, ep0, n[0], n[1], n[2]);
+		Real norm = n.GetL2Norm();
+
+		Real phi = 2.*atan2(norm, ep0);
+		if (norm != 0.) { n = (1. / norm)*n; }
+
+		return RigidBodyMath::Vector2SkewMatrix(phi*n);
+
+		//Matrix3D X;
+		//Real val = 0.5*(R.Trace() - 1.);
+		//	
+		//if (fabs(val) > 1.) //#if slightly larger than 1, due to numerical differentiation
+		//{ 
+		//	val = val / fabs(val); 
+		//}
+		//
+		//Real phi = acos(val);
+		//if (phi == 0.)
+		//{
+		//	X.SetScalarMatrix(3,0.); 
+		//}
+		//else
+		//{
+		//	X = R - R.GetTransposed();
+		//	X *= phi / (2. * sin(phi));
+		//}
+		//return X;
+	}
+
+	//! compute the vector of matrix logarithmic map on the Lie group SO(3)
+	inline Vector3D LogSO3Vector(const Matrix3D& R)
+	{
+		Real ep0;
+		Vector3D n;
+		RigidBodyMath::RotationMatrix2EP(R, ep0, n[0], n[1], n[2]);
+		Real norm = n.GetL2Norm();
+
+		Real phi = 2.*atan2(norm, ep0);
+		if (norm != 0.) { n = (1. / norm)*n; }
+
+		return phi*n;
 	}
 
 	//! compute the tangent operator corresponding to ExpSO3, see \cite{Bruels2011}; improved version using polynomial expansion

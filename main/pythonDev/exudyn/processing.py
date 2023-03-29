@@ -148,11 +148,34 @@ def ProcessParameterList(parameterFunction, parameterList, addComputationIndex, 
         try:
             import dispy
         except:
-            print('ProcessParameterList: dispy is not installed (try: pip install dispy); switching to multiprocessing mode instead')
+            print('WARNING: ProcessParameterList: dispy is not installed (try: pip install dispy); switching to multiprocessing mode instead')
             useCluster = False
 
-    if not useCluster: 
-        resultsFileCnt = 0 #counter for results file
+    useMPI = False
+    if 'useMPI' in kwargs and useMultiProcessing:
+        useMPI = kwargs['useMPI']
+        try:
+            from mpi4py.futures import MPIPoolExecutor
+        except:
+            print('WARNING: ProcessParameterList: mpi4py is not installed or mpi4py.futures not available (try: conda install mpi4py); switching to multiprocessing mode instead')
+            useMPI = False
+
+    useTQDM = False
+    if showProgress and useMultiProcessing and not useCluster:
+        try:
+            import tqdm #progress bar
+            try: #_instances only available after first run!
+                tqdm.tqdm._instances.clear() #if open instances of tqdm, which leads to nasty newline
+            except:
+                pass
+            useTQDM = True
+        except:
+            pass
+            #print("module 'tqdm' not available (use pip to install); progress bar not shown")
+
+    resultsFileCnt = 0 #counter for results file; used in several if branches
+
+    if not useCluster and not useMPI:
         if not useMultiProcessing:
             for i in range(nVariations):
                 currentParameters = parameterList[i]
@@ -187,20 +210,7 @@ def ProcessParameterList(parameterFunction, parameterList, addComputationIndex, 
                 numberOfThreads = kwargs['numberOfThreads']
             
             vInput = np.array(parameterList)
-    
-            useTQDM = False
-            if showProgress:
-                try:
-                    import tqdm #progress bar
-                    try: #_instances only available after first run!
-                        tqdm.tqdm._instances.clear() #if open instances of tqdm, which leads to nasty newline
-                    except:
-                        pass
-                    useTQDM = True
-                except:
-                    pass
-                    #print("module 'tqdm' not available (use pip to install); progress bar not shown")
-            
+                
             if useTQDM:
                 with Pool(processes=numberOfThreads) as p:
                     #values = list(tqdm.tqdm(p.imap(parameterFunction, vInput), total=nVariations))
@@ -225,7 +235,7 @@ def ProcessParameterList(parameterFunction, parameterList, addComputationIndex, 
                                                       fileType='parameter variation',
                                                       multiProcessingMode='multiprocessing.Pool, numberOfThreads='+str(numberOfThreads))
                             #print("value=",i)
-    else: # use cluster
+    elif useCluster: 
         
         # form cluster and submit jobs
         cluster = dispy.JobCluster(parameterFunction, nodes=clusterHostNames, host=clusterHostNames, cleanup=True, dispy_port=9700) 
@@ -281,7 +291,43 @@ def ProcessParameterList(parameterFunction, parameterList, addComputationIndex, 
         if http_server != None:
             http_server.shutdown() # this waits until browser gets all updates
         cluster.close()
-                        
+    elif useMPI:
+        #numberOfThreads not used in this case; given by mpiexec call
+
+        vInput = np.array(parameterList)
+
+        from mpi4py import MPI
+        
+        comm = MPI.COMM_WORLD
+        nprocs = comm.Get_size()
+        # rank   = comm.Get_rank() 
+        
+        if useTQDM:
+
+            with MPIPoolExecutor() as p:
+            # with Pool(processes=numberOfThreads) as p:
+                for v in (tqdm.tqdm(p.map(parameterFunction, vInput), total=nVariations)):
+                    values+=[v]
+                    if resultsFile != '':
+                        resultsFileCnt = WriteToFile(resultsFile, parameters, [parameterList[resultsFileCnt]], 
+                                                  [v], resultsFileCnt, writeHeader = (resultsFileCnt == 0), 
+                                                  fileType='parameter variation',
+                                                  multiProcessingMode='mpi4py, numberOfWorkers='+str(nprocs))
+            print("", flush=True) #newline after tqdm progress bar output....
+        else:
+            #simpler approach without tqdm:
+            # with Pool(processes=numberOfThreads) as p:
+            #     values = p.map(parameterFunction, vInput)
+            with MPIPoolExecutor() as p:
+                for v in p.map(parameterFunction, vInput):
+                    values+=[v]
+                    if resultsFile != '':
+                        resultsFileCnt = WriteToFile(resultsFile, parameters, [parameterList[resultsFileCnt]], 
+                                                  [v], resultsFileCnt, writeHeader = (resultsFileCnt == 0), 
+                                                  fileType='parameter variation',
+                                                  multiProcessingMode='mpi4py, numberOfWorkers='+str(nprocs))
+
+            
     return values
 
 
@@ -346,9 +392,9 @@ def ParameterVariation(parameterFunction, parameters,
         print("number of variations =", nVariations)
 
     cnt = 0
+    isIntType = [False] * dim # true if corresponding parameter ranges/list is all int type
     parameterDict = {} #dictionary of parameter lists
     for (key,value) in parameters.items():
-        isIntType = False #is true, if  paramter ranges/list is all int
         if isinstance(value, tuple): #then it is a range (start, end, numberOfValues)
             pStart = value[0]
             pEnd = value[1]
@@ -363,7 +409,7 @@ def ParameterVariation(parameterFunction, parameters,
         
             step = (pEnd-pStart+1)/numberOfValues # is for check if numberOfValues is even
             if IsInteger(pStart) and IsInteger(pEnd) and step == int(step): # is true, if ranges/list are all int and step is integer
-                isIntType = True 
+                isIntType[cnt] = True 
 
             #now create list of parameters, using duplicates according to dimensionality
             if useLogSpace:
@@ -372,10 +418,10 @@ def ParameterVariation(parameterFunction, parameters,
                 space = np.linspace(pStart,pEnd,numberOfValues)
         else: #already checked above: if isinstance(value, list): #then it contains list of values, e.g., [1,2,4,8]
             space = value
-            isIntType = True
+            isIntType[cnt] = True
             for val in value:
                 if not IsInteger(val):
-                    isIntType = False
+                    isIntType[cnt] = False
             
         range1 = nParams[0:cnt].prod()
         range2 = nParams[cnt+1:dim+1].prod()
@@ -399,15 +445,16 @@ def ParameterVariation(parameterFunction, parameters,
     parameterList = [] #list of parameter dictionaries
     for i in range(nVariations):
         parameterSet = {}
+        cnt = 0
         for (key,value) in parameterDict.items(): 
             if key == 'computationIndex':
                 v = int(value[i]) #make integers, which follow type(v)==int
-            elif isIntType:
+            elif isIntType[cnt]: # check if this variable is an integer type
                 v = int(value[i]) #make integers, which follow type(v)==int
             else:
                 v = float(value[i]) #make floats, which follow type(v)==float
             parameterSet[key] = v
-
+            cnt += 1
         if parameterFunctionData != {}:
             parameterSet['functionData'] = parameterFunctionData
             #not needed: parameterSet['functionData'] = copy.deepcopy(parameterFunctionData)

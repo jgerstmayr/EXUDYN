@@ -13,6 +13,9 @@ Exudyn documentation
    docs/RST/OverviewOnExudynIndex
    docs/RST/TutorialIndex
    docs/RST/GraphicsAndVisualizationIndex
+   docs/RST/NotationIndex
+   docs/RST/TheoryAndFormulationsIndex
+   docs/RST/SolversIndex
    docs/RST/cInterface/CInterfaceIndex
 
 .. toctree::
@@ -26,7 +29,9 @@ Exudyn documentation
    :caption: Misc
    
    docs/RST/Abbreviations
-   docs/trackerlogRST
+   docs/RST/ExamplesIndex
+   docs/RST/TestModelsIndex
+   docs/RST/trackerlog
 
 Indices and tables
 ==================
@@ -38,13 +43,6 @@ Indices and tables
 
 Theory: Contact
 ===============
-
-See according section in `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
-
-.. _sec-solvers:
-
-Solvers
-=======
 
 See according section in `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
@@ -66,13 +64,6 @@ See according section in `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/
 
 Theory: Component Mode Synthesis
 ================================
-
-See according section in `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
-
-.. _sec-explicitsolver:
-
-Solver: Explicit
-================
 
 See according section in `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
