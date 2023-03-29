@@ -1072,17 +1072,19 @@ def projectAngleToPMPi(q0):
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**function: This class can be used to solve the inverse kinematics problem using a multibody system 
+#**class: This class can be used to solve the inverse kinematics problem using a multibody system 
 #            by solving the static problem of a serial robot
-#**input:
-#  robot: robot class
-#  jointStiffness: the stiffness used for the robot's model joints
-#  useRenderer: when solving the inverse kinematics the renderer is used to show the starting/end 
-#               configuration of the robot using the graphics objects definded in the robot object
-#**author: Peter Manzl
+#**author: Peter Manzl, Johannes Gerstmayr
 #**notes: still under development; errors in orientations of solution may occure. proviedes mtehods to calculate inverse Kinematics 
 class InverseKinematicsNumerical(): 
     # initialize system
+    #**classFunction: initialize RigidBodyInertia with scalar mass, 3x3 inertiaTensor (w.r.t. reference point!!!) and center of mass com
+    #**input:
+    #  robot: robot class
+    #  jointStiffness: the stiffness used for the robot's model joints
+    #  useRenderer: when solving the inverse kinematics the renderer is used to show the starting/end 
+    #               configuration of the robot using the graphics objects definded in the robot object
+    #**author: Peter Manzl
     def __init__(self, robot, jointStiffness = 1e0, useRenderer=False, flagDebug=False, 
                  useAlternativeConstraints=False): 
         self.SC = exudyn.SystemContainer()
@@ -1169,7 +1171,7 @@ class InverseKinematicsNumerical():
         return x, y, z
 
 
-    #**function: Utility function to get current Homogeneous transformation of the robot to check inverse Kinematics solution
+    #**classFunction: Utility function to get current Homogeneous transformation of the robot to check inverse Kinematics solution
     # ** output: 
     #   T: 4x4 homogeneous Transformation matrix of the current TCP pose
     def GetCurrentRobotHT(self): 
@@ -1179,7 +1181,7 @@ class InverseKinematicsNumerical():
         T = erb.HomogeneousTransformation(RotFkine, posFKine) # global HT
         return T
 
-    #**function: 
+    #**classFunction: 
     #**input:
     #  T1: 4x4 homogeneous transformation matrix representing the first Pose
     #  T2: 4x4 homogeneous transformation matrix representing the second Pose
@@ -1220,7 +1222,7 @@ class InverseKinematicsNumerical():
         T += [T2] # to satisfy the boundry condition
         return T
     
-    #**function: This Method can be used to solve the inverse kinematics problem by solving 
+    #**classFunction: This Method can be used to solve the inverse kinematics problem by solving 
     #            the static problem of a serial robot using steps to interpolate between start and end position close to the function Solve. 
     #            This helps the function Solve() to find the correct solutions. 
     #**input:
@@ -1229,7 +1231,7 @@ class InverseKinematicsNumerical():
     #**output: [q, success]; q: The solution for the joint angles in which the robot's tool center point (TCP) reaches the desired homogeneous transformation matrix T; success=False indicates that all trials for inverse kinematics failed, leading to q=None
     # success: flag to indicate if method was successful
     #**author: Peter Manzl, Johannes Gerstmayr
-    #**notes: still under development; errors in orientations of solution may occure. works similar to ikine_LM function of the robotics toolbox from peter corke
+    #**notes: still under development; errors in orientations of solution may occure. works similar to ikine\_LM function of the robotics toolbox from peter corke
     def SolveSafe(self, T, q0 = None):
         T0 = self.GetCurrentRobotHT()
         TInterp = self.InterpolateHTs(T0, T, rotStep=np.pi/3) # no steps in between needed!
@@ -1271,7 +1273,7 @@ class InverseKinematicsNumerical():
 
         return [q, success]
     
-    #**function: This Method can be used to solve the inverse kinematics problem by solving 
+    #**classFunction: This Method can be used to solve the inverse kinematics problem by solving 
     #            the static problem of a serial robot using steps to interpolate between start and end position close to the function Solve. 
     #           T his helps the fucntion Solve to find the correct solutions. 
     #**input:
@@ -1279,7 +1281,7 @@ class InverseKinematicsNumerical():
     #  q0: The configuration (joint angles/positions) of the robot from which the numerical methods start so calculate the solution; q0=None indicates that the stored solution (from model or previous solution) shall be used for initialization
     #**output: [q, success]; q: The solution for the joint angles in which the robot's tool center point (TCP) reaches the desired homogeneous transformation matrix T; success=False indicates that all trials for inverse kinematics failed, leading to q=None
     #**author: Peter Manzl, Johannes Gerstmayr
-    #**notes: still under development; errors in orientations of solution may occure. works similar to ikine_LM function of the robotics toolbox from peter corke
+    #**notes: still under development; errors in orientations of solution may occure. works similar to ikine\_LM function of the robotics toolbox from peter corke
     def Solve(self, T, q0 = None): 
         # check type of T 
         T = np.array(T)

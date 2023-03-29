@@ -16,17 +16,19 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 
 Function: VelocityManipulability
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`VelocityManipulability <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L31>`__\ (\ ``robot``\ , \ ``HT``\ , \ ``mode``\ )
+`VelocityManipulability <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L32>`__\ (\ ``robot``\ , \ ``HT``\ , \ ``mode``\ )
 
 - | \ *function description*\ :
-  | compute velocity manipulability measure for given pose (homogenious transformation)
+  | compute velocity manipulability measure for given pose (homogeneous  transformation)
 - | \ *input*\ :
   | \ ``robot``\ : robot class
-  | \ ``HT``\ : actual pose as hoogenious transformaton matrix
+  | \ ``HT``\ : actual pose as homogeneous transformaton matrix
   | \ ``mode``\ : rotational or translational part of the movement
   | \ ``singularWeight``\ : Weighting of singular configurations where the value would be infinity,default value=100
 - | \ *output*\ :
   | velocity manipulability measure as scalar value, defined as \ :math:`\sqrt(det(JJ^T))`\
+- | \ *author*\ :
+  | Martin Sereinig
 - | \ *notes*\ :
   | compute velocity dependent manipulability definded by Yoshikawa, see
 
@@ -37,17 +39,19 @@ Function: VelocityManipulability
 
 Function: ForceManipulability
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ForceManipulability <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L63>`__\ (\ ``robot``\ , \ ``HT``\ , \ ``mode``\ , \ ``singular_weight = 100``\ )
+`ForceManipulability <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L65>`__\ (\ ``robot``\ , \ ``HT``\ , \ ``mode``\ , \ ``singular_weight = 100``\ )
 
 - | \ *function description*\ :
-  | compute force manipulability measure for given pose (homogenious transformation)
+  | compute force manipulability measure for given pose (homogeneous  transformation)
 - | \ *input*\ :
   | \ ``robot``\ : robot class
   | \ ``HT``\ : actual pose as hoogenious transformaton matrix
-  | \ ``singularWeight``\ : Weighting of singular configurations where the value would be infinity,default value=100
+  | \ ``singularWeight``\ : Weighting of singular configurations where the value would be infinity, default value=100
   | \ ``mode``\ : rotational or translational part of the movement
 - | \ *output*\ :
   | force manipulability measure as scalar value, defined as \ :math:`\sqrt((det(JJ^T))^{-1})`\
+- | \ *author*\ :
+  | Martin Sereinig
 - | \ *notes*\ :
   | compute force dependent manipulability definded by Yoshikawa, see
 
@@ -58,19 +62,21 @@ Function: ForceManipulability
 
 Function: StiffnessManipulability
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`StiffnessManipulability <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L106>`__\ (\ ``robot``\ , \ ``JointStiffness``\ , \ ``HT``\ , \ ``mode``\ , \ ``singularWeight = 1000``\ )
+`StiffnessManipulability <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L109>`__\ (\ ``robot``\ , \ ``JointStiffness``\ , \ ``HT``\ , \ ``mode``\ , \ ``singularWeight = 1000``\ )
 
 - | \ *function description*\ :
-  | compute cartesian stiffness measure for given pose (homogenious transformation)
+  | compute cartesian stiffness measure for given pose (homogeneous transformation)
 - | \ *input*\ :
   | \ ``robot``\ : robot class
   | \ ``JointStiffness``\ : joint stiffness matrix
-  | \ ``HT``\ : actual pose as hoogenious transformaton matrix
+  | \ ``HT``\ : actual pose as homogeneous transformaton matrix
   | \ ``mode``\ : rotational or translational part of the movement
   | \ ``singularWeight``\ : Weighting of singular configurations where the value would be infinity,default value=1000
 - | \ *output*\ :
   | stiffness manipulability measure as scalar value, defined as minimum Eigenvalaue of the Cartesian stiffness matrix
   | Cartesian stiffness matrix
+- | \ *author*\ :
+  | Martin Sereinig
 - | \ *notes*\ :
   | 
 - | \ *status*\ :
@@ -83,15 +89,17 @@ Function: StiffnessManipulability
 
 Function: JointJacobian
 ^^^^^^^^^^^^^^^^^^^^^^^
-`JointJacobian <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L141>`__\ (\ ``robot``\ , \ ``HTJoint``\ , \ ``HTLink``\ )
+`JointJacobian <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L152>`__\ (\ ``robot``\ , \ ``HTJoint``\ , \ ``HTLink``\ )
 
 - | \ *function description*\ :
-  | compute joint jacobian for each frame for given pose (homogenious transformation)
+  | compute joint jacobian for each frame for given pose (homogeneous transformation)
 - | \ *input*\ :
   | \ ``robot``\ : robot class
-  | \ ``HT``\ : actual pose as hoogenious transformaton matrix
+  | \ ``HT``\ : actual pose as homogeneous transformaton matrix
 - | \ *output*\ :
   | Link(body)-Jacobi matrix JJ: \ :math:`\LU{i}{JJ_i}=[\LU{i}{J_{Ri}},\; \LU{i}{J_{Ti}}]`\  for each link i, seperated in rotational (\ :math:`J_R`\ ) and translational (\ :math:`J_T`\ ) part of Jacobian matrix located in the \ :math:`i^{th}`\  coordiante system, see
+- | \ *author*\ :
+  | Martin Sereinig
 - | \ *notes*\ :
   | runs over number of HTs given in HT (may be less than number of links), caclulations in link coordinate system located at the end of each link regarding Standard  Denavid-Hartenberg parameters, see
 
@@ -102,16 +110,18 @@ Function: JointJacobian
 
 Function: MassMatrix
 ^^^^^^^^^^^^^^^^^^^^
-`MassMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L203>`__\ (\ ``robot``\ , \ ``HT``\ , \ ``jointJacobian``\ )
+`MassMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L215>`__\ (\ ``robot``\ , \ ``HT``\ , \ ``jointJacobian``\ )
 
 - | \ *function description*\ :
   | compute mass matrix from jointJacobian
 - | \ *input*\ :
   | \ ``robot``\ : robot structure
-  | \ ``HT``\ : actual pose as hoogenious transformaton matrix
+  | \ ``HT``\ : actual pose as homogeneous transformaton matrix
   | \ ``jointJacobian``\ : provide list of jacobians as provided by function JointJacobian(...)
 - | \ *output*\ :
   | MM: Mass matrix
+- | \ *author*\ :
+  | Martin Sereinig
 - | \ *notes*\ :
   | Mass Matrix calculation calculated in joint coordinates regarding (std) DH parameter:
   | \*\*       Dynamic equations in minimal coordinates as described in MehrkÃ¶rpersysteme by Woernle, , p206, eq6.90.
@@ -128,13 +138,13 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: DynamicManipulability
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`DynamicManipulability <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L236>`__\ (\ ``robot``\ , \ ``HT``\ , \ ``MassMatrix``\ , \ ``Tmax``\ , \ ``mode``\ , \ ``singularWeight = 1000``\ )
+`DynamicManipulability <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L249>`__\ (\ ``robot``\ , \ ``HT``\ , \ ``MassMatrix``\ , \ ``Tmax``\ , \ ``mode``\ , \ ``singularWeight = 1000``\ )
 
 - | \ *function description*\ :
-  | compute dynamic manipulability measure for given pose (homogenious transformation)
+  | compute dynamic manipulability measure for given pose (homogeneous transformation)
 - | \ *input*\ :
   | \ ``robot``\ : robot structure
-  | \ ``HT``\ : actual pose as hoogenious transformaton matrix
+  | \ ``HT``\ : actual pose as homogeneous transformaton matrix
   | \ ``Tmax``\ : maximum joint torques
   | \ ``mode``\ : rotational or translational part of the movement
   | \ ``MassMatrix``\ : Mass (inertia) Maxtrix provided by the function MassMatrix
@@ -142,6 +152,8 @@ Function: DynamicManipulability
 - | \ *output*\ :
   | dynamic manipulability measure as scalar value, defined as minimum Eigenvalaue of the dynamic manipulability matrix N
   | dynamic manipulability matrix
+- | \ *author*\ :
+  | Martin Sereinig
 - | \ *notes*\ :
   | acceleration dependent manipulability definded by Chiacchio, see , eq.32. The eigenvectors and eigenvalues of N ([eigenvec eigenval]=eig(N))gives the direction and value of minimal and maximal accaleration )
 - | \ *status*\ :
@@ -150,69 +162,28 @@ Function: DynamicManipulability
 
 ----
 
-.. _sec-special-computeik3r:
+.. _sec-special-calculateallmeasures:
 
-Function: ComputeIK3R
-^^^^^^^^^^^^^^^^^^^^^
-`ComputeIK3R <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L284>`__\ (\ ``robot``\ , \ ``HT``\ )
-
-- | \ *function description*\ :
-  | calculates the analytical inverse kinematics for 3R elbow type serial robot manipulator
-- | \ *input*\ :
-  | \ ``robot``\ : robot structure
-  | \ ``HT``\ : desired position and orientation for the end effector as 4x4 homogeneous transformation matrix as list of lists or np.array
-- | \ *output*\ :
-  | solutions, list of lists with posible joint angles [q1,q2,q3] (in radiant)
-  | to achive the desired position and orientation (4 posible solutions,schoulder left/right, ellbow up/down )
-  | left/down, left/up, right/up, right/down
-- | \ *notes*\ :
-  | only applicable for standard Denavit-Hartenberg parameters
-- | \ *status*\ :
-  | testet with various configurations and joint angels
-
-
-----
-
-.. _sec-special-computeikpuma560:
-
-Function: ComputeIKPuma560
-^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ComputeIKPuma560 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L355>`__\ (\ ``robot``\ , \ ``HT``\ )
+Function: calculateAllMeasures
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`calculateAllMeasures <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L296>`__\ (\ ``robot``\ , \ ``robotDic``\ , \ ``q``\ , \ ``mode``\ , \ ``flag = [0,0,0,0]``\ )
 
 - | \ *function description*\ :
-  | calculates the analytical inverse kinematics for Puma560 serial 6R robot manipulator
+  | calculation of 4 different manipulability measures using a certain serial robot
 - | \ *input*\ :
-  | \ ``robot``\ : robot structure
-  | \ ``HT``\ : desired position and orientation for the end effector as 4x4 homogeneous transformation matrix as list of lists or np.array
+  | \ ``robot``\ : robot class
+  | \ ``robotDic``\ : robot dictionary
+  | \ ``q``\ : joint position vector
+  | \ ``mode``\ : trans or rot, for used parts of the manipulator Jacobi Matrix
+  | \ ``Tmax``\ : maximum joint torques
+  | \ ``mode``\ : rotational or translational part of the movement
+  | \ ``flag``\ : flag vector to swich individual measure on and of [flagmv,flagmf,flagmst,flagma] = [1,1,1,1]
 - | \ *output*\ :
-  | solutions, list of lists with posible joint angles [q1,q2,q3,q4,q5,q6] (in radiant)
-  | to achive the desired position and orientation (8 posible solutions,schoulder left/right, ellbow up/down, wrist flipped/notflipped (rotated by pi) )
-  | left/down/notflipped, left/down/flipped, left/up/notflipped, left/up/flipped, right/up/notflipped, right/up/flipped, right/down/notflipped, right/down/flipped
+  | [mv,mf,mst,mstM,ma,maM]
+- | \ *author*\ :
+  | Martin Sereinig
 - | \ *notes*\ :
-  | Usage for different manipulators with sperical wrist posible, only applicable for standard Denavit-Hartenberg parameters
+  | 
 - | \ *status*\ :
-  | tested (compared with Robotcs, Vision and Control book of P. Corke
-
-
-----
-
-.. _sec-special-computeikur:
-
-Function: ComputeIKUR
-^^^^^^^^^^^^^^^^^^^^^
-`ComputeIKUR <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L481>`__\ (\ ``robot``\ , \ ``HTdes``\ )
-
-- | \ *function description*\ :
-  | calculates the analytical inverse kinematics for UR type serial 6R robot manipulator without sperical wrist
-- | \ *input*\ :
-  | \ ``robot``\ : robot structure
-  | \ ``HT``\ : desired position and orientation for the end effector as 4x4 homogeneous transformation matrix as list of lists or np.array
-- | \ *output*\ :
-  | solutions, list of lists with posible joint angles [q1,q2,q3,q4,q5,q6] (in radiant)
-  | to achive the desired position and orientation (8 posible solutions,schoulder left/right, ellbow up/down, wrist flipped/notflipped (rotated by pi) )
-  | [left/down/notflipped, left/down/flipped, left/up/notflipped, left/up/flipped, right/up/notflipped, right/up/flipped, right/down/notflipped, right/down/flipped]
-- | \ *notes*\ :
-  | Usage for different manipulators without sperical wrist posible UR3,UR5,UR10, only applicable for standard Denavit-Hartenberg parameters
-- | \ *status*\ :
-  | under development, works for most configurations, singularities not checked -> ZeroConfiguration not working
+  | this function is \ **currently under development**\  and under testing!
 

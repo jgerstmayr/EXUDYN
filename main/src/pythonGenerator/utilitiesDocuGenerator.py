@@ -575,6 +575,9 @@ for fileName in filesParsed:
     isFirstFunction = True
     #insert function descriptions 
     for funcDict in functionList:
+        if 'functionName' not in funcDict:
+            print('SpecialAppend: missing functionName in: ',funcDict)
+
         SpecialAppend(localListFunctionNames, funcDict['functionName'])
 
         if not isFirstFunction:
