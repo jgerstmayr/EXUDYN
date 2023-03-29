@@ -84,7 +84,8 @@
 <li class="toctree-l3"><a class="reference internal" href="#function-manipulatorpanda">Function: ManipulatorPANDA</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-manipulatorur5">Function: ManipulatorUR5</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-manipulatorpuma560">Function: ManipulatorPuma560</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#function-linklist2robot">Function: LinkList2Robot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-linkdict2robot">Function: LinkDict2Robot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-linkdictmoddhkk2robot">Function: LinkDictModDHKK2Robot</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="robotics.mobile.html">Module: robotics.mobile</a></li>
@@ -139,21 +140,25 @@ which return the according robot dictionary;
 the library is built on Denavit-Hartenberg Parameters and
 Homogeneous Transformations (HT) to describe transformations and coordinate systems</p>
 <ul class="simple">
-<li><p>Author:    Martin Sereinig</p></li>
 <li><p>Date:      2021-01-10</p></li>
 </ul>
 <section id="function-manipulator4rsimple">
 <span id="sec-models-manipulator4rsimple"></span><h2>Function: Manipulator4Rsimple<a class="headerlink" href="#function-manipulator4rsimple" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/models.py#L38">Manipulator4Rsimple</a>()</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/models.py#L41">Manipulator4Rsimple</a>()</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">generate simple 4R manipulator as myRobot dictionary, settings are done in function</div>
+<div class="line">generate 4R manipulator as myRobot dictionary, settings are done in function</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><em>output</em>:</div>
 <div class="line">myRobot dictionary</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>author</em>:</div>
+<div class="line">Martin Sereinig</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -166,16 +171,31 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 </section>
 <section id="function-manipulator3rsimple">
 <span id="sec-models-manipulator3rsimple"></span><h2>Function: Manipulator3RSimple<a class="headerlink" href="#function-manipulator3rsimple" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/models.py#L117">Manipulator3RSimple</a>()</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/models.py#L130">Manipulator3RSimple</a>()</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">generate simple 3R manipulator as myRobot dictionary, settings are done in function</div>
+<div class="line">generate 3R manipulator as myRobot dictionary, settings are done in function</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><em>output</em>:</div>
 <div class="line">myRobot dictionary</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>author</em>:</div>
+<div class="line">Martin Sereinig</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>notes</em>:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">DH-parameters</span></code>: [theta, d, a, alpha], according to P. Corke</div>
+<div class="line">Values according to WÃ¶rnle simple example with l1=0</div>
+<div class="line">d=[h1 0 0];</div>
+<div class="line">theta=[beta1 beta2 beta3];</div>
+<div class="line">a=[l1 l2 l3];</div>
+<div class="line">alpha=[pi/2 0 0];</div>
 </div>
 </li>
 </ul>
@@ -183,11 +203,11 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 </section>
 <section id="function-manipulatorpanda">
 <span id="sec-models-manipulatorpanda"></span><h2>Function: ManipulatorPANDA<a class="headerlink" href="#function-manipulatorpanda" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/models.py#L203">ManipulatorPANDA</a>()</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/models.py#L217">ManipulatorPANDA</a>()</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">generate simple Franka Emika Panda manipulator as myRobot dictionary, settings are done in function</div>
+<div class="line">generate Franka Emika Panda manipulator as myRobot dictionary, settings are done in function</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -195,12 +215,29 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 <div class="line">myRobot dictionary</div>
 </div>
 </li>
+<li><div class="line-block">
+<div class="line"><em>author</em>:</div>
+<div class="line">Martin Sereinig</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>notes</em>:</div>
+<div class="line">all Parameter according to Gaz et. al</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">DH-parameters(std)</span></code>: [theta, d, a, alpha], according to P. Corke</div>
+<div class="line">Standard DH Parameters, masses, inertias and com according P.Corke and Gaz et. al (they working with modified DH parameter)</div>
+<div class="line">changes to standard DH Parameter checked with P.Corke toolbox</div>
+</div>
+</li>
 </ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/InverseKinematicsNumericalExample.py">InverseKinematicsNumericalExample.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotInverseKinematics.py">serialRobotInverseKinematics.py</a> (Ex)</p>
+</div></blockquote>
 <hr class="docutils" />
 </section>
 <section id="function-manipulatorur5">
 <span id="sec-models-manipulatorur5"></span><h2>Function: ManipulatorUR5<a class="headerlink" href="#function-manipulatorur5" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/models.py#L345">ManipulatorUR5</a>()</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/models.py#L358">ManipulatorUR5</a>()</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -213,6 +250,11 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 </div>
 </li>
 <li><div class="line-block">
+<div class="line"><em>author</em>:</div>
+<div class="line">Martin Sereinig</div>
+</div>
+</li>
+<li><div class="line-block">
 <div class="line"><em>notes</em>:</div>
 <div class="line">define myRobot kinematics, UR5 Universal Robotics,</div>
 <div class="line">Standard DH-parameters: [theta, d, a, alpha], according to P. Corke,</div>
@@ -220,11 +262,15 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 </div>
 </li>
 </ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/InverseKinematicsNumericalExample.py">InverseKinematicsNumericalExample.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotInverseKinematics.py">serialRobotInverseKinematics.py</a> (Ex)</p>
+</div></blockquote>
 <hr class="docutils" />
 </section>
 <section id="function-manipulatorpuma560">
 <span id="sec-models-manipulatorpuma560"></span><h2>Function: ManipulatorPuma560<a class="headerlink" href="#function-manipulatorpuma560" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/models.py#L427">ManipulatorPuma560</a>()</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/models.py#L446">ManipulatorPuma560</a>()</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -237,36 +283,46 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 </div>
 </li>
 <li><div class="line-block">
+<div class="line"><em>author</em>:</div>
+<div class="line">Martin Sereinig</div>
+</div>
+</li>
+<li><div class="line-block">
 <div class="line"><em>notes</em>:</div>
-<div class="line">std DH-parameters: [theta, d, a, alpha], according to P. Corke page 138, puma p560 limits, taken from Corke Visual Control of Robots</div>
+<div class="line">std DH-parameters: [theta, d, a, alpha], according to P. Corke page 138,</div>
+<div class="line">puma p560 limits, taken from Corke Visual Control of Robots</div>
 </div>
 </li>
 </ul>
 <p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
 <blockquote>
-<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py">humanRobotInteraction.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTreeDigging.py">serialRobotKinematicTreeDigging.py</a> (Ex)</p>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py">humanRobotInteraction.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/InverseKinematicsNumericalExample.py">InverseKinematicsNumericalExample.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotInverseKinematics.py">serialRobotInverseKinematics.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTreeDigging.py">serialRobotKinematicTreeDigging.py</a> (Ex)</p>
 </div></blockquote>
 <hr class="docutils" />
 </section>
-<section id="function-linklist2robot">
-<span id="sec-models-linklist2robot"></span><h2>Function: LinkList2Robot<a class="headerlink" href="#function-linklist2robot" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/models.py#L523">LinkList2Robot</a>(<code class="docutils literal notranslate"><span class="pre">robotClass</span></code>, <code class="docutils literal notranslate"><span class="pre">robotLinkList</span></code>, <code class="docutils literal notranslate"><span class="pre">dhmode</span></code>)</p>
+<section id="function-linkdict2robot">
+<span id="sec-models-linkdict2robot"></span><h2>Function: LinkDict2Robot<a class="headerlink" href="#function-linkdict2robot" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/models.py#L544">LinkDict2Robot</a>(<code class="docutils literal notranslate"><span class="pre">robotLinkDict</span></code>, <code class="docutils literal notranslate"><span class="pre">robotClass</span> <span class="pre">=</span> <span class="pre">None</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">generate serial manipulator as robotClass object from linklist settings are done in function</div>
+<div class="line">generate serial manipulator as robotClass object from robotLinkDict</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><em>input</em>:</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">robotClass</span></code>: robot class object generated before by robotics module</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">robotlinkList</span></code>: list of robot links generated by manipulator import for individual robot dictionary</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">dhmode</span></code>: ‘std’ for standard Denavid Hartenberg parameter, ‘mod’ for modified Denavid Hartenberg parameter</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">robotClass</span></code>: robot class object from roboticsCore; if robotClass is provided, gravity, tool and base are used from there</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">robotLinkDict</span></code>: list of robot links generated by manipulator import for individual robot dictionary</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><em>output</em>:</div>
-<div class="line">myRobot dictionary</div>
+<div class="line">updated robot class</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>author</em>:</div>
+<div class="line">Martin Sereinig</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -277,6 +333,43 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 <div class="line">used by Corke and Lynch: Rx(alpha) * Tx(a) * Rz(theta) * Tz(d)</div>
 <div class="line">used by Khali:           Rx(alpha) * Tx(d) * Rz(theta) * Tz(r)</div>
 <div class="line">Important note:  d(khali)=a(corke)  and r(khali)=d(corke)</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotInverseKinematics.py">serialRobotInverseKinematics.py</a> (Ex)</p>
+</div></blockquote>
+<hr class="docutils" />
+</section>
+<section id="function-linkdictmoddhkk2robot">
+<span id="sec-models-linkdictmoddhkk2robot"></span><h2>Function: LinkDictModDHKK2Robot<a class="headerlink" href="#function-linkdictmoddhkk2robot" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/models.py#L598">LinkDictModDHKK2Robot</a>(<code class="docutils literal notranslate"><span class="pre">robotLinkDict</span></code>, <code class="docutils literal notranslate"><span class="pre">robotClass</span> <span class="pre">=</span> <span class="pre">None</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">special test function to generate serial manipulator as robotClass object from robotLinkDict using inertia parameters defined in stdDH coordinates, but creating robot from modDHKK; will be ERASED in future</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">robotLinkDict</span></code>: list of robot links generated by manipulator import for individual robot dictionary</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">robotClass</span></code>: robot class object from roboticsCore; if robotClass is provided, gravity, tool and base are used from there</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">updated robot class</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>author</em>:</div>
+<div class="line">Martin Sereinig</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>notes</em>:</div>
+<div class="line">DEPRECATED; function uses modDHKK in robotLinkDict for creation, transforms inertia parameters; should only be used for testing!</div>
 </div>
 </li>
 </ul>

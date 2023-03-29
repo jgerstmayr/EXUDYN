@@ -77,7 +77,13 @@
 <li class="toctree-l2"><a class="reference internal" href="processing.html">Module: processing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html">Module: rigidBodyUtilities</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robotics.html">Module: robotics</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Module: robotics.future</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Module: robotics.future</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#function-makecorkerobot">Function: MakeCorkeRobot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-computeik3r">Function: ComputeIK3R</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-computeikpuma560">Function: ComputeIKPuma560</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-computeikur">Function: ComputeIKUR</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="robotics.models.html">Module: robotics.models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robotics.mobile.html">Module: robotics.mobile</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robotics.motion.html">Module: robotics.motion</a></li>
@@ -129,8 +135,165 @@
 <p>The future module contains functionality which is currently under development
 and will be moved in other robotics libraries in future</p>
 <ul class="simple">
-<li><p>Date:      2021-12-02</p></li>
+<li><p>Date:      2023-03-27</p></li>
 </ul>
+<section id="function-makecorkerobot">
+<span id="sec-future-makecorkerobot"></span><h2>Function: MakeCorkeRobot<a class="headerlink" href="#function-makecorkerobot" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/future.py#L41">MakeCorkeRobot</a>(<code class="docutils literal notranslate"><span class="pre">robotDic</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">makeCorkeRobot, creates robot using the peter corke toolbox using standard (stdDH) or modified (modKKDH) Denavid Hartenberg parameters</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">robotDic</span></code>: robot dictionary by exudyn robotic models</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">dhpara</span></code>: stDH for standard DH parameter, modKKDH for modified DH parameter</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">serial robot object by corke</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>author</em>:</div>
+<div class="line">Martin Sereinig</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>notes</em>:</div>
+<div class="line">DH Parameter Information:</div>
+<div class="line">stdH = [theta, d, a, alpha] with Rz(theta) * Tz(d) * Tx(a) * Rx(alpha)</div>
+<div class="line">modDH = [alpha, dx, theta, rz] with</div>
+<div class="line">used by Corke and Lynch: Rx(alpha) * Tx(a) * Rz(theta) * Tz(d)</div>
+<div class="line">used by Khali:           Rx(alpha) * Tx(d) * Rz(theta) * Tz(r)</div>
+<div class="line">Important note:  d(khali)=a(corke)  and r(khali)=d(corke)</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+</section>
+<section id="function-computeik3r">
+<span id="sec-future-computeik3r"></span><h2>Function: ComputeIK3R<a class="headerlink" href="#function-computeik3r" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/future.py#L86">ComputeIK3R</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">calculates the analytical inverse kinematics for 3R elbow type serial robot manipulator</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">robot</span></code>: robot structure</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">HT</span></code>: desired position and orientation for the end effector as 4x4 homogeneous transformation matrix as list of lists or np.array</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">solutions, list of lists with posible joint angles [q1,q2,q3] (in radiant)</div>
+<div class="line">to achive the desired position and orientation (4 posible solutions,schoulder left/right, ellbow up/down )</div>
+<div class="line">left/down, left/up, right/up, right/down</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>author</em>:</div>
+<div class="line">Martin Sereinig</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>notes</em>:</div>
+<div class="line">only applicable for standard Denavit-Hartenberg parameters</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>status</em>:</div>
+<div class="line">testet with various configurations and joint angels</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+</section>
+<section id="function-computeikpuma560">
+<span id="sec-future-computeikpuma560"></span><h2>Function: ComputeIKPuma560<a class="headerlink" href="#function-computeikpuma560" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/future.py#L158">ComputeIKPuma560</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">calculates the analytical inverse kinematics for Puma560 serial 6R robot manipulator</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">robot</span></code>: robot structure</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">HT</span></code>: desired position and orientation for the end effector as 4x4 homogeneous transformation matrix as list of lists or np.array</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">qSolutions, list of lists with posible joint angles [q1,q2,q3,q4,q5,q6] (in radiant)</div>
+<div class="line">to achive the desired position and orientation (8 posible solutions,schoulder left/right, ellbow up/down, wrist flipped/notflipped (rotated by pi) )</div>
+<div class="line">left/down/notflipped, left/down/flipped, left/up/notflipped, left/up/flipped, right/up/notflipped, right/up/flipped, right/down/notflipped, right/down/flipped</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>author</em>:</div>
+<div class="line">Martin Sereinig</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>notes</em>:</div>
+<div class="line">Usage for different manipulators with sperical wrist posible, only applicable for standard Denavit-Hartenberg parameters</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>status</em>:</div>
+<div class="line">tested (compared with Robotcs, Vision and Control book of P. Corke</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+</section>
+<section id="function-computeikur">
+<span id="sec-future-computeikur"></span><h2>Function: ComputeIKUR<a class="headerlink" href="#function-computeikur" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/future.py#L283">ComputeIKUR</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HTdes</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">calculates the analytical inverse kinematics for UR type serial 6R robot manipulator without sperical wrist</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">robot</span></code>: robot structure</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">HT</span></code>: desired position and orientation for the end effector as 4x4 homogeneous transformation matrix as list of lists or np.array</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">solutions, list of lists with posible joint angles [q1,q2,q3,q4,q5,q6] (in radiant)</div>
+<div class="line">to achive the desired position and orientation (8 posible solutions,schoulder left/right, ellbow up/down, wrist flipped/notflipped (rotated by pi) )</div>
+<div class="line">[left/down/notflipped, left/down/flipped, left/up/notflipped, left/up/flipped, right/up/notflipped, right/up/flipped, right/down/notflipped, right/down/flipped]</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>author</em>:</div>
+<div class="line">Martin Sereinig</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>notes</em>:</div>
+<div class="line">Usage for different manipulators without sperical wrist posible UR3,UR5,UR10, only applicable for standard Denavit-Hartenberg parameters</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>status</em>:</div>
+<div class="line">under development, works for most configurations, singularities not checked -&gt; ZeroConfiguration not working</div>
+</div>
+</li>
+</ul>
+</section>
 </section>
 
 

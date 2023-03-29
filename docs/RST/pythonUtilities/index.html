@@ -129,7 +129,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="pythonUtilities.html">Python Utility Functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="artificialIntelligence.html">Module: artificialIntelligence</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="artificialIntelligence.html#class-openaigyminterfaceenv-in-module-artificialintelligence">CLASS OpenAIGymInterfaceEnv (in module artificialIntelligence)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="artificialIntelligence.html#class-openaigyminterfaceenv-env-in-module-artificialintelligence">CLASS OpenAIGymInterfaceEnv(Env) (in module artificialIntelligence)</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="basicUtilities.html">Module: basicUtilities</a><ul>
@@ -262,6 +262,7 @@
 <li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-graphicsdatasolidofrevolution">Function: GraphicsDataSolidOfRevolution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-graphicsdataarrow">Function: GraphicsDataArrow</a></li>
 <li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-graphicsdatabasis">Function: GraphicsDataBasis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-graphicsdataframe">Function: GraphicsDataFrame</a></li>
 <li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-graphicsdataquad">Function: GraphicsDataQuad</a></li>
 <li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-graphicsdatacheckerboard">Function: GraphicsDataCheckerBoard</a></li>
 <li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-computetriangularmesh">Function: ComputeTriangularMesh</a></li>
@@ -396,6 +397,7 @@
 <li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-rotxyz2glocal-t">Function: RotXYZ2GLocal_t</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-angularvelocity2rotxyz-t">Function: AngularVelocity2RotXYZ_t</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-rotxyz2eulerparameters">Function: RotXYZ2EulerParameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-rotationmatrix2rotzyz">Function: RotationMatrix2RotZYZ</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-rotationmatrixx">Function: RotationMatrixX</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-rotationmatrixy">Function: RotationMatrixY</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-rotationmatrixz">Function: RotationMatrixZ</a></li>
@@ -453,14 +455,7 @@
 <li class="toctree-l1"><a class="reference internal" href="robotics.html">Module: robotics</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="robotics.html#function-stddh2ht">Function: StdDH2HT</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robotics.html#function-moddhkk2ht">Function: ModDHKK2HT</a></li>
-<li class="toctree-l2"><a class="reference internal" href="robotics.html#function-constantaccelerationparameters">Function: ConstantAccelerationParameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="robotics.html#function-constantaccelerationprofile">Function: ConstantAccelerationProfile</a></li>
-<li class="toctree-l2"><a class="reference internal" href="robotics.html#function-motioninterpolator">Function: MotionInterpolator</a></li>
-<li class="toctree-l2"><a class="reference internal" href="robotics.html#function-serialrobot2mbs">Function: SerialRobot2MBS</a></li>
-<li class="toctree-l2"><a class="reference internal" href="robotics.html#function-computejointht">Function: ComputeJointHT</a></li>
-<li class="toctree-l2"><a class="reference internal" href="robotics.html#function-computecomht">Function: ComputeCOMHT</a></li>
-<li class="toctree-l2"><a class="reference internal" href="robotics.html#function-computestatictorques">Function: ComputeStaticTorques</a></li>
-<li class="toctree-l2"><a class="reference internal" href="robotics.html#function-jacobian">Function: Jacobian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.html#function-projectangletopmpi">Function: projectAngleToPMPi</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robotics.html#class-function-init">Class function: __init__</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robotics.html#sec-roboticscore-robotlink-init">Class function: __init__</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robotics.html#class-function-setpdcontrol">Class function: SetPDcontrol</a></li>
@@ -489,16 +484,28 @@
 <li class="toctree-l2"><a class="reference internal" href="robotics.html#class-function-getkinematictree66">Class function: GetKinematicTree66</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robotics.html#class-function-getlinkgraphicsdata">Class function: GetLinkGraphicsData</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robotics.html#class-function-buildfromdictionary">Class function: BuildFromDictionary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.html#sec-roboticscore-inversekinematicsnumerical-init">Class function: __init__</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.html#class-function-getcurrentrobotht">Class function: GetCurrentRobotHT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.html#class-function-interpolatehts">Class function: InterpolateHTs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.html#class-function-solvesafe">Class function: SolveSafe</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.html#class-function-solve">Class function: Solve</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="robotics.future.html">Module: robotics.future</a></li>
+<li class="toctree-l1"><a class="reference internal" href="robotics.future.html">Module: robotics.future</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="robotics.future.html#function-makecorkerobot">Function: MakeCorkeRobot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.future.html#function-computeik3r">Function: ComputeIK3R</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.future.html#function-computeikpuma560">Function: ComputeIKPuma560</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.future.html#function-computeikur">Function: ComputeIKUR</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="robotics.models.html">Module: robotics.models</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="robotics.models.html#function-manipulator4rsimple">Function: Manipulator4Rsimple</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robotics.models.html#function-manipulator3rsimple">Function: Manipulator3RSimple</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robotics.models.html#function-manipulatorpanda">Function: ManipulatorPANDA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robotics.models.html#function-manipulatorur5">Function: ManipulatorUR5</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robotics.models.html#function-manipulatorpuma560">Function: ManipulatorPuma560</a></li>
-<li class="toctree-l2"><a class="reference internal" href="robotics.models.html#function-linklist2robot">Function: LinkList2Robot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.models.html#function-linkdict2robot">Function: LinkDict2Robot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.models.html#function-linkdictmoddhkk2robot">Function: LinkDictModDHKK2Robot</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="robotics.mobile.html">Module: robotics.mobile</a></li>
@@ -533,9 +540,7 @@
 <li class="toctree-l2"><a class="reference internal" href="robotics.special.html#function-jointjacobian">Function: JointJacobian</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robotics.special.html#function-massmatrix">Function: MassMatrix</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robotics.special.html#function-dynamicmanipulability">Function: DynamicManipulability</a></li>
-<li class="toctree-l2"><a class="reference internal" href="robotics.special.html#function-computeik3r">Function: ComputeIK3R</a></li>
-<li class="toctree-l2"><a class="reference internal" href="robotics.special.html#function-computeikpuma560">Function: ComputeIKPuma560</a></li>
-<li class="toctree-l2"><a class="reference internal" href="robotics.special.html#function-computeikur">Function: ComputeIKUR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.special.html#function-calculateallmeasures">Function: calculateAllMeasures</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="robotics.utilities.html">Module: robotics.utilities</a></li>

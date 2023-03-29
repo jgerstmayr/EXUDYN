@@ -13,8 +13,8 @@ For standard machine learning algorithms, install e.g. stable_baselines3 using '
 - Date:      2022-05-21 (created) 
 
 
-CLASS OpenAIGymInterfaceEnv (in module artificialIntelligence)
---------------------------------------------------------------
+CLASS OpenAIGymInterfaceEnv(Env) (in module artificialIntelligence)
+-------------------------------------------------------------------
 **class description**: 
 
     interface class to set up Exudyn model which can be used as model in open AI gym;
@@ -22,7 +22,7 @@ CLASS OpenAIGymInterfaceEnv (in module artificialIntelligence)
     in general, set up a model with CreateMBS(), map state to initial values, initial values to state and action to mbs;
 
 
-.. _sec-artificialintelligence-openaigyminterfaceenv---init--:
+.. _sec-artificialintelligence-openaigyminterfaceenv(env)---init--:
 
 Class function: \_\_init\_\_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -33,7 +33,7 @@ Class function: \_\_init\_\_
 
 ----
 
-.. _sec-artificialintelligence-openaigyminterfaceenv-creatembs:
+.. _sec-artificialintelligence-openaigyminterfaceenv(env)-creatembs:
 
 Class function: CreateMBS
 ^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -45,7 +45,7 @@ Class function: CreateMBS
 
 ----
 
-.. _sec-artificialintelligence-openaigyminterfaceenv-setupspaces:
+.. _sec-artificialintelligence-openaigyminterfaceenv(env)-setupspaces:
 
 Class function: SetupSpaces
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -56,7 +56,7 @@ Class function: SetupSpaces
 
 ----
 
-.. _sec-artificialintelligence-openaigyminterfaceenv-mapaction2mbs:
+.. _sec-artificialintelligence-openaigyminterfaceenv(env)-mapaction2mbs:
 
 Class function: MapAction2MBS
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -67,7 +67,7 @@ Class function: MapAction2MBS
 
 ----
 
-.. _sec-artificialintelligence-openaigyminterfaceenv-output2stateanddone:
+.. _sec-artificialintelligence-openaigyminterfaceenv(env)-output2stateanddone:
 
 Class function: Output2StateAndDone
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -80,7 +80,7 @@ Class function: Output2StateAndDone
 
 ----
 
-.. _sec-artificialintelligence-openaigyminterfaceenv-state2initialvalues:
+.. _sec-artificialintelligence-openaigyminterfaceenv(env)-state2initialvalues:
 
 Class function: State2InitialValues
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -93,7 +93,7 @@ Class function: State2InitialValues
 
 ----
 
-.. _sec-artificialintelligence-openaigyminterfaceenv-testmodel:
+.. _sec-artificialintelligence-openaigyminterfaceenv(env)-testmodel:
 
 Class function: TestModel
 ^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -114,7 +114,7 @@ Class function: TestModel
 
 ----
 
-.. _sec-artificialintelligence-openaigyminterfaceenv-setsolver:
+.. _sec-artificialintelligence-openaigyminterfaceenv(env)-setsolver:
 
 Class function: SetSolver
 ^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -125,7 +125,7 @@ Class function: SetSolver
 
 ----
 
-.. _sec-artificialintelligence-openaigyminterfaceenv-preinitializesolver:
+.. _sec-artificialintelligence-openaigyminterfaceenv(env)-preinitializesolver:
 
 Class function: PreInitializeSolver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -136,7 +136,7 @@ Class function: PreInitializeSolver
 
 ----
 
-.. _sec-artificialintelligence-openaigyminterfaceenv-integratestep:
+.. _sec-artificialintelligence-openaigyminterfaceenv(env)-integratestep:
 
 Class function: IntegrateStep
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -147,7 +147,7 @@ Class function: IntegrateStep
 
 ----
 
-.. _sec-artificialintelligence-openaigyminterfaceenv-step:
+.. _sec-artificialintelligence-openaigyminterfaceenv(env)-step:
 
 Class function: step
 ^^^^^^^^^^^^^^^^^^^^
@@ -158,7 +158,7 @@ Class function: step
 
 ----
 
-.. _sec-artificialintelligence-openaigyminterfaceenv-reset:
+.. _sec-artificialintelligence-openaigyminterfaceenv(env)-reset:
 
 Class function: reset
 ^^^^^^^^^^^^^^^^^^^^^
@@ -169,7 +169,7 @@ Class function: reset
 
 ----
 
-.. _sec-artificialintelligence-openaigyminterfaceenv-render:
+.. _sec-artificialintelligence-openaigyminterfaceenv(env)-render:
 
 Class function: render
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -180,7 +180,7 @@ Class function: render
 
 ----
 
-.. _sec-artificialintelligence-openaigyminterfaceenv-close:
+.. _sec-artificialintelligence-openaigyminterfaceenv(env)-close:
 
 Class function: close
 ^^^^^^^^^^^^^^^^^^^^^

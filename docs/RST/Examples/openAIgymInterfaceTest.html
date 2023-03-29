@@ -242,7 +242,7 @@
 <span class="linenos"> 20</span><span class="c1">#**class: interface class to set up Exudyn model which can be used as model in open AI gym;</span>
 <span class="linenos"> 21</span><span class="c1">#         see specific class functions which contain &#39;OVERRIDE&#39; to integrate your model;</span>
 <span class="linenos"> 22</span><span class="c1">#         in general, set up a model with CreateMBS(), map state to initial values, initial values to state and action to mbs;</span>
-<span class="linenos"> 23</span><span class="k">class</span> <span class="nc">InvertedDoublePendulumEnv</span><span class="p">(</span><span class="nf">OpenAIGymInterfaceEnv</span><span class="p">):</span>
+<span class="linenos"> 23</span><span class="k">class</span> <span class="nc">InvertedDoublePendulumEnv</span><span class="p">(</span><span class="n">OpenAIGymInterfaceEnv</span><span class="p">):</span>
 <span class="linenos"> 24</span>
 <span class="linenos"> 25</span>    <span class="c1">#**classFunction: OVERRIDE this function to create multibody system mbs and setup simulationSettings; call Assemble() at the end!</span>
 <span class="linenos"> 26</span>    <span class="c1">#                 you may also change SC.visualizationSettings() individually; kwargs may be used for special setup</span>
