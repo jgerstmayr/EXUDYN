@@ -231,6 +231,7 @@ MINI EXAMPLE for ObjectConnectorTorsionalSpringDamper
 
 
 .. code-block:: python
+   :linenos:
 
    #example with rigid body at [0,0,0], with torsional load
    k=2e3

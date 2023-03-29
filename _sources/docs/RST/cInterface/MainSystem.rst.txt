@@ -114,6 +114,7 @@ MainSystem: Node
 This section provides functions for adding, reading and modifying nodes. Nodes are used to define coordinates (unknowns to the static system and degrees of freedom if constraints are not present). Nodes can provide various types of coordinates for second/first order differential equations (ODE2/ODE1), algebraic equations (AE) and for data (history) variables -- which are not providing unknowns in the nonlinear solver but will be solved in an additional nonlinear iteration for e.g. contact, friction or plasticity.
 
 .. code-block:: python
+   :linenos:
    
    import exudyn as exu               #EXUDYN package including C++ core part
    from exudyn.itemInterface import * #conversion of data to exudyn dictionaries
@@ -233,6 +234,7 @@ MainSystem: Object
 This section provides functions for adding, reading and modifying objects, which can be bodies (mass point, rigid body, finite element, ...), connectors (spring-damper or joint) or general objects. Objects provided terms to the residual of equations resulting from every coordinate given by the nodes. Single-noded objects (e.g.~mass point) provides exactly residual terms for its nodal coordinates. Connectors constrain or penalize two markers, which can be, e.g., position, rigid or coordinate markers. Thus, the dependence of objects is either on the coordinates of the marker-objects/nodes or on nodes which the objects possess themselves.
 
 .. code-block:: python
+   :linenos:
    
    import exudyn as exu               #EXUDYN package including C++ core part
    from exudyn.itemInterface import * #conversion of data to exudyn dictionaries
@@ -339,6 +341,7 @@ MainSystem: Marker
 This section provides functions for adding, reading and modifying markers. Markers define how to measure primal kinematical quantities on objects or nodes (e.g., position, orientation or coordinates themselves), and how to act on the quantities which are dual to the kinematical quantities (e.g., force, torque and generalized forces). Markers provide unique interfaces for loads, sensors and constraints in order to address these quantities independently of the structure of the object or node (e.g., rigid or flexible body).
 
 .. code-block:: python
+   :linenos:
    
    import exudyn as exu               #EXUDYN package including C++ core part
    from exudyn.itemInterface import * #conversion of data to exudyn dictionaries
@@ -423,6 +426,7 @@ MainSystem: Load
 This section provides functions for adding, reading and modifying operating loads. Loads are used to act on the quantities which are dual to the primal kinematic quantities, such as displacement and rotation. Loads represent, e.g., forces, torques or generalized forces.
 
 .. code-block:: python
+   :linenos:
    
    import exudyn as exu               #EXUDYN package including C++ core part
    from exudyn.itemInterface import * #conversion of data to exudyn dictionaries
@@ -503,6 +507,7 @@ MainSystem: Sensor
 This section provides functions for adding, reading and modifying operating sensors. Sensors are used to measure information in nodes, objects, markers, and loads for output in a file.
 
 .. code-block:: python
+   :linenos:
    
    import exudyn as exu               #EXUDYN package including C++ core part
    from exudyn.itemInterface import * #conversion of data to exudyn dictionaries

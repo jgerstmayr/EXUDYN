@@ -262,6 +262,7 @@ MINI EXAMPLE for ObjectConnectorCoordinate
 
 
 .. code-block:: python
+   :linenos:
 
    def OffsetUF(mbs, t, itemNumber, lOffset): #gives 0.05 at t=1
        return 0.5*(1-np.cos(2*3.141592653589793*0.25*t))*lOffset

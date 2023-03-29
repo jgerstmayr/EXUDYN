@@ -9,6 +9,7 @@ Exudyn
 These are the access functions to the Exudyn module. General usage is explained in Section :ref:`sec-generalpythoninterface`\  and examples are provided there. The C++ module \ ``exudyn``\  is the root level object linked between Python and C++.In the installed site-packages, the according file is usually denoted as \ ``exudynCPP.pyd``\  for the regular module, \ ``exudynCPPfast.pyd``\  for the module without range checks and \ ``exudynCPPnoAVX.pyd``\  for the module compiled without AVX vector extensions (may depend on your installation).
 
 .. code-block:: python
+   :linenos:
    
    #import exudyn module:
    import exudyn as exu
@@ -56,10 +57,10 @@ These are the access functions to the Exudyn module. General usage is explained 
 
   .. code-block:: python
 
-     exu.SetWriteToConsole(False) \#no output to console
+     exu.SetWriteToConsole(False) #no output to console
      exu.SetWriteToFile(filename='testOutput.log', flagWriteToFile=True, flagAppend=False)
      exu.Print('print this to file')
-     exu.SetWriteToFile('', False) \#terminate writing to file which closes the file
+     exu.SetWriteToFile('', False) #terminate writing to file which closes the file
 
 * | **SetPrintDelayMilliSeconds**\ (\ *delayMilliSeconds*\ ): 
   | add some delay (in milliSeconds) to printing to console, in order to let Spyder process the output; default = 0

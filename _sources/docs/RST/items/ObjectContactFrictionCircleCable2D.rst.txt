@@ -428,32 +428,34 @@ The operations are similar to the \ ``PostNewtonStep``\ , but without switching.
 \ :math:`x_{gap, s_i} <= 0`\ :
 
 + [I.] Compute contact force \ :math:`f_n`\ , Eq. :eq:`objectcontactfrictioncirclecable2d-contactforce`\ .
-+ [II.] In case of sticking:
++ [II.] In case of sticking (\ :math:`|x_{isSlipStick}|\neq 1`\ ):
   
 +  [II.1] the current sticking position \ :math:`x_{curStick}`\  is computed from Eq. :eq:`objectcontactfrictioncirclecable2d-lastcurstick`\ , and the difference of current and last sticking position reads\ (see the difference to the \ ``PostNewtonStep``\ : we use \ :math:`x_{lastStick}`\  here, not the \ ``startOfStep``\  variant.):
     
 .. math::
 
-   \Delta x^*_{stick} = x_{curStick} - x_{lastStick} \Delta x_{stick} = x^*_{stick} - \mathrm{floor}\left(\frac{\Delta x^*_{stick} }{2 \pi \cdot r} + \frac{1}{2}\right) \cdot 2 \pi \cdot r
+   \Delta x^*_{stick} = x_{curStick} - x_{lastStick}, \quad \Delta x_{stick} = x^*_{stick} - \mathrm{floor}\left(\frac{\Delta x^*_{stick} }{2 \pi \cdot r} + \frac{1}{2}\right) \cdot 2 \pi \cdot r
 
 
-+  [II.2] however, if the friction stiffness is \ :math:`\mu_k==0`\  or if \ :math:`x_{isSlipStick} == -2`\ , we also set \ :math:`\Delta x_{stick}=0`\ 
-+  [II.3] using the tangential velocity from Eq. :eq:`objectcontactfrictioncirclecable2d-vtangent`\ , the linear tangent force follows as
++  [II.2] if the friction stiffness is \ :math:`\mu_k==0`\  or if \ :math:`x_{isSlipStick} == -2`\ , we set \ :math:`\Delta x_{stick}=0`\ 
++  [II.3] using the tangential velocity from Eq. :eq:`objectcontactfrictioncirclecable2d-vtangent`\ , the tangent force follows as (even if it is larger than the sticking limit)
     
 .. math::
 
-   f_{t,lin} = \mu_v \cdot v_t + \mu_k \Delta x_{stick}
+   f_t = \mu_v \cdot v_t + \mu_k \Delta x_{stick}
 
 
-+  [II.4] the tangential firction force then results in\ (see again difference to \ ``PostNewtonStep``\ !),
-    
+
++  [III.] In case of slipping (\ :math:`|x_{isSlipStick}|=1`\ ), the tangential firction force is set  as\ (see again difference to \ ``PostNewtonStep``\ !),
+  
 .. math::
 
-   f_t = \begin{cases} f_t^{(lin)}, \quad \quad \quad \quad \quad \quad \quad \mathrm{if} \quad \Vert x_{isSlipStick} \Vert \neq 1 \\ \mu \cdot |f_n| \cdot x_{isSlipStick}, \quad \mathrm{else} \end{cases}
+   f_t = \mu \cdot |f_n| \cdot x_{isSlipStick}, \quad \mathrm{else}
 
  
-  
 
+Note that in the Newton method, the tangential force may be inconsistent with the Kuhn-Tucker conditions. However,
+the \ ``PostNewtonStep``\  resolves this inconsistency.
 
 Computation of LHS terms for circle and ANCF cable element
 ----------------------------------------------------------

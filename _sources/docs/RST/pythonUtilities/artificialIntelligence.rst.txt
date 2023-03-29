@@ -107,7 +107,7 @@ Class function: TestModel
   | \ ``model``\ : either None to just test the MBS model without learned model, or containing a learned model, e.g., with A2C; use A2C.save(...) and A2C.load(...) for storing and retrieving models
   | \ ``solutionFileName``\ : if given, the MBS internal states are written to the file with given name, which can be loaded with solution viewer and visualized; solution is written every period given in simulationSettings.solutionSettings.solutionWritePeriod
   | \ ``useRenderer``\ : if set True, the internal renderer is used and model updates are shown in visualization of Exudyn
-  | \ ``return\_info``\ : internal value in reset function
+  | \ ``return_info``\ : internal value in reset function
   | \ ``sleepTime``\ : sleep time between time steps to obtain certain frame rate for visualization
   | \ ``stopIfDone``\ : if set to True, the simulation will reset as soon as the defined observation limits are reached and done is set True
   | \ ``showTimeSpent``\ : if True, the total time spent is measured; this helps to check the performance of the model (e.g. how many steps can be computed per second)
@@ -118,7 +118,7 @@ Class function: TestModel
 
 Class function: SetSolver
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-`SetSolver <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py\#L143>`__\ (\ ``self``\ , \ ``solverType``\ )
+`SetSolver <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py\#L147>`__\ (\ ``self``\ , \ ``solverType``\ )
 
 - | \ *classFunction*\ :
   | use solverType = exudyn.DynamicSolverType.[...] to define solver (choose between implicit and explicit solvers!)
@@ -129,7 +129,7 @@ Class function: SetSolver
 
 Class function: PreInitializeSolver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`PreInitializeSolver <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py\#L169>`__\ (\ ``self``\ )
+`PreInitializeSolver <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py\#L173>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | internal function which initializes dynamic solver; adapt in special cases; this function has some overhead and should not be called during reset() or step()
@@ -140,7 +140,7 @@ Class function: PreInitializeSolver
 
 Class function: IntegrateStep
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`IntegrateStep <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py\#L176>`__\ (\ ``self``\ )
+`IntegrateStep <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py\#L180>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | internal function which is called to solve for one step
@@ -151,7 +151,7 @@ Class function: IntegrateStep
 
 Class function: step
 ^^^^^^^^^^^^^^^^^^^^
-`step <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py\#L196>`__\ (\ ``self``\ , \ ``action``\ )
+`step <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py\#L200>`__\ (\ ``self``\ , \ ``action``\ )
 
 - | \ *classFunction*\ :
   | openAI gym interface function which is called to compute one step
@@ -162,7 +162,7 @@ Class function: step
 
 Class function: reset
 ^^^^^^^^^^^^^^^^^^^^^
-`reset <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py\#L237>`__\ (\ ``self``\ , \ ``*``\ , \ ``seed: Optional[int] = None``\ , \ ``return_info: bool = False``\ , \ ``options: Optional[dict] = None``\ )
+`reset <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py\#L241>`__\ (\ ``self``\ , \ ``*``\ , \ ``seed: Optional[int] = None``\ , \ ``return_info: bool = False``\ , \ ``options: Optional[dict] = None``\ )
 
 - | \ *classFunction*\ :
   | openAI gym function which resets the system
@@ -173,7 +173,7 @@ Class function: reset
 
 Class function: render
 ^^^^^^^^^^^^^^^^^^^^^^
-`render <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py\#L274>`__\ (\ ``self``\ , \ ``mode = "human"``\ )
+`render <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py\#L278>`__\ (\ ``self``\ , \ ``mode = "human"``\ )
 
 - | \ *classFunction*\ :
   | openAI gym interface function to render the system
@@ -184,7 +184,7 @@ Class function: render
 
 Class function: close
 ^^^^^^^^^^^^^^^^^^^^^
-`close <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py\#L280>`__\ (\ ``self``\ )
+`close <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py\#L284>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | openAI gym interface function to close system after learning or simulation

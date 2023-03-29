@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Implicit trapezoidal rule-based, Newmark and Generalized-alpha solver &mdash; Exudyn1.6.31.dev1 1.6.31.dev1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+        <script src="../../_static/js/rtd_search_config.js"></script>
+        <script src="../../_static/js/rtd_sphinx_search.min.js"></script>
+        <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "vrRow": ["{[#1,\\, #2,\\, #3]}", 3], "vsix": ["{\\left[\\!\\! \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} \\!\\!\\right]}", 6], "vsixb": ["{\\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "vsixs": ["{ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "omegaBDtilde": "{\\LU{b}{\\tilde \\tomega_\\mathrm{bd}}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}", "termA": ["{\\color{blue}{#1}}", 1], "termB": ["{\\color{red}{#1}}", 1], "termC": ["{\\color{green}{#1}}", 1], "avu": "{\\ddot \\mathbf{q}}", "GA": "{G\\alpha}", "aalg": "{\\mathbf{a}}", "vel": "{\\mathbf{v}}"}}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Optimization and parameter variation" href="OptimizationAndParameterVariation.html" />
+    <link rel="prev" title="Explicit solvers" href="ExplicitSolvers.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Exudyn1.6.31.dev1
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Exudyn.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="NotationIndex.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TheoryAndFormulationsIndex.html">Theory and formulations</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="SolversIndex.html">Solvers</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Solvers.html">Solvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SolversInExudyn.html">Solvers in Exudyn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ExplicitSolvers.html">Explicit solvers</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Implicit trapezoidal rule-based, Newmark and Generalized-alpha solver</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#newmark-and-generalized-alpha-method">Newmark and Generalized-alpha method</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#parameter-selection-for-generalized-alpha">Parameter selection for Generalized-alpha</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#newton-iteration">Newton iteration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#initial-accelerations">Initial accelerations</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="OptimizationAndParameterVariation.html">Optimization and parameter variation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="pythonUtilities/index.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="structures/StructuresAndSettingsIndex.html">Structures and Settings</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Misc</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ExamplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TestModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Exudyn1.6.31.dev1</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="SolversIndex.html">Solvers</a></li>
+      <li class="breadcrumb-item active">Implicit trapezoidal rule-based, Newmark and Generalized-alpha solver</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/docs/RST/ImplicitTrapezoidalRulebasedNewmarkAndGeneralizedalphaSolver.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="implicit-trapezoidal-rule-based-newmark-and-generalized-alpha-solver">
+<span id="sec-implicittrapezoidalsolver"></span><h1>Implicit trapezoidal rule-based, Newmark and Generalized-alpha solver<a class="headerlink" href="#implicit-trapezoidal-rule-based-newmark-and-generalized-alpha-solver" title="Permalink to this heading"></a></h1>
+<p>This solver represents a class of solvers, which are – in the undamped case – based on the implicit trapezoidal rule (in the view of Runge-Kutta methods). The interpolation of the quantities for one step includes the start and the end value of the time step, thus being called trapezoidal integration rule. In some special cases in Newmark’s method , the interpolation might only depend on the start value or the end value.</p>
+<p>For now, all implemented solvers can be viewed as a generalization of Newmark’s method, but there are called differently in the solver interfaces</p>
+<ul class="simple">
+<li><p><strong>Implicit trapezoidal rule</strong> (Newmark with <span class="math notranslate nohighlight">\(\beta = \frac 1 4\)</span> and <span class="math notranslate nohighlight">\(\gamma = \frac 1 2\)</span>)</p></li>
+<li><p><strong>Newmark’s method</strong></p></li>
+<li><p><strong>Generalized</strong>-<span class="math notranslate nohighlight">\(\alpha\)</span> <strong>method</strong> (<span class="math notranslate nohighlight">\(=\)</span> generalized Newmark method with additional parameters), see Chung and Hulbert  for the original method and Arnold and Brüls  for the application to multibody system dynamics.</p></li>
+</ul>
+<section id="newmark-and-generalized-alpha-method">
+<h2>Newmark and Generalized-alpha method<a class="headerlink" href="#newmark-and-generalized-alpha-method" title="Permalink to this heading"></a></h2>
+<p>Newmark’s method has two parameters <span class="math notranslate nohighlight">\(\beta\)</span> and <span class="math notranslate nohighlight">\(\gamma\)</span>.
+The main ideas are given in the following.
+First, displacements and velocities are linearly interpolated using the accelerations <span class="math notranslate nohighlight">\(\ddot {\mathbf{q}}\)</span> of the beginning of the time step (subindex ‘0’) and the end of the time step (subindex ‘T’).
+The SON displacements and velocities and for FON coordinates are given by (definition of <span class="math notranslate nohighlight">\(\aalg\)</span> will become clear later):</p>
+<div class="math notranslate nohighlight" id="equation-eq-newmark-interpolation">
+<span class="eqno">(6)<a class="headerlink" href="#equation-eq-newmark-interpolation" title="Permalink to this equation"></a></span>\[\begin{split}{\mathbf{q}}_T &amp; = &amp;      {\mathbf{q}}_0 + h \dot {\mathbf{q}}_0 + h^2 (\frac 1 2 -\beta) \aalg_0 + h^2 \beta \aalg_T \nonumber\ \dot {\mathbf{q}}_T &amp; = &amp; \dot {\mathbf{q}}_0 + h (1-\gamma) \aalg_0 + h\gamma \aalg_T \nonumber\\
+{\mathbf{y}}_T &amp; = &amp; {\mathbf{y}}_0 + h (1-\gamma_\FO) \vel^0_\FO + h\gamma_\FO \vel^T_\FO\end{split}\]</div>
+<p>Hereafter, the system equations are solved at the end of the time step (<span class="math notranslate nohighlight">\(T\)</span>) for the unknown accelerations as well as for FON and AEN coordinates.</p>
+<p>Remarks:</p>
+<ul class="simple">
+<li><p>The system of equations may be solved for accelerations <span class="math notranslate nohighlight">\(\ddot {\mathbf{q}}\)</span>, but also for displacements <span class="math notranslate nohighlight">\({\mathbf{q}}\)</span> or even velocities as unknowns while the remaining quantities are reconstructed from Eq. <a class="reference internal" href="#equation-eq-newmark-interpolation">(6)</a>. In case of displacements as unknowns, a scaling of the Jacobian is necessary, see later.</p></li>
+<li><p>For consistency reasons, one may set <span class="math notranslate nohighlight">\(\gamma_\FO = \gamma\)</span>, but <strong>currently we use</strong> <span class="math notranslate nohighlight">\(\gamma_T = \frac 1 2\)</span>, leading to no numerical damping for <a class="reference internal" href="Abbreviations.html#ode1"><span class="std std-ref">ODE1</span></a> variables <span class="math notranslate nohighlight">\({\mathbf{y}}\)</span>.</p></li>
+<li><p>In the extension to the so-called generalized-<span class="math notranslate nohighlight">\(\alpha\)</span> method , algorithmic accelerations <span class="math notranslate nohighlight">\(\aalg\)</span> are used in Eq. <a class="reference internal" href="#equation-eq-newmark-interpolation">(6)</a>.</p></li>
+<li><p>Algorithmic accelerations are no longer equivalent to the time derivatives of displacements, <span class="math notranslate nohighlight">\(\aalg \neq \ddot {\mathbf{q}}\)</span>; thus, both sets of variables are used independently. In case of Newmark or the implicit trapezoidal rule just use <span class="math notranslate nohighlight">\(\aalg = \ddot {\mathbf{q}}\)</span>.</p></li>
+</ul>
+<p>For generalized-<span class="math notranslate nohighlight">\(\alpha\)</span>, the algorithmic accelerations <span class="math notranslate nohighlight">\(\aalg\)</span> are computed from the recurrence relation</p>
+<div class="math notranslate nohighlight">
+\[(1-\alpha_m){\mathbf{a}}_T + \alpha_m {\mathbf{a}}_0 = (1-\alpha_f) \ddot {\mathbf{u}}_T + \alpha_f \ddot {\mathbf{u}}_0\]</div>
+<p>which can be resolved for the unknown <span class="math notranslate nohighlight">\({\mathbf{a}}_T\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[{\mathbf{a}}_T = \frac{(1-\alpha_f) \ddot {\mathbf{u}}_T + \alpha_f \ddot {\mathbf{u}}_0 - \alpha_m {\mathbf{a}}_0}{(1-\alpha_m)}\]</div>
+<p>For the first step, one can simply use <span class="math notranslate nohighlight">\(\aalg_0 = \ddot {\mathbf{q}}_0\)</span>.</p>
+</section>
+<section id="parameter-selection-for-generalized-alpha">
+<span id="sec-parametersgeneralizedalpha"></span><h2>Parameter selection for Generalized-alpha<a class="headerlink" href="#parameter-selection-for-generalized-alpha" title="Permalink to this heading"></a></h2>
+<p>Compared to alternative implicit integration methods (including the Newmark method), the generalized-<span class="math notranslate nohighlight">\(\alpha\)</span> integrator’s parameters break down to one single parameter <span class="math notranslate nohighlight">\(\rho_\infty\)</span>, which allows to chose numerical damping in a practical way.</p>
+<p>Based on a simple single DOF mass-spring-damper model , having the eigen frequency <span class="math notranslate nohighlight">\(\omega = 2\pi f\)</span> with frequency <span class="math notranslate nohighlight">\(f\)</span> and period <span class="math notranslate nohighlight">\(T=1/f\)</span>, the spectral radius <span class="math notranslate nohighlight">\(\rho\)</span> for the integrator defines the amount of damping for a given step size <span class="math notranslate nohighlight">\(h\)</span> related to <span class="math notranslate nohighlight">\(T\)</span>, thus using the dimensionless step size <span class="math notranslate nohighlight">\(\bar h=h/T\)</span>.</p>
+<p>In <code class="xref std std-numref docutils literal notranslate"><span class="pre">fig-spectralradius</span></code> the spectral radius is shown versus <span class="math notranslate nohighlight">\(\bar h\)</span> for various spectral radii at infinity <span class="math notranslate nohighlight">\(\rho_\infty\)</span>.
+Here, <span class="math notranslate nohighlight">\(\rho_\infty\)</span> specifies the numerical damping of very time step for large step sizes (or very high frequencies). An amount of <span class="math notranslate nohighlight">\(\rho_\infty=0.9\)</span> means that high frequency parts of the system ((<span class="math notranslate nohighlight">\(\bar h \gg 1\)</span>); high compared to the step rate) are damped to <span class="math notranslate nohighlight">\(90\%\)</span> in every step, reducing an initial value <span class="math notranslate nohighlight">\(1\)</span> to <span class="math notranslate nohighlight">\(2.66e-5\)</span> after 100 steps, which is already much larger than usual physical damping in many cases.</p>
+<p>Furthermore, low frequency parts of the system (<span class="math notranslate nohighlight">\(\bar h \ll 1\)</span>) receive almost no numerical damping, see again <code class="xref std std-numref docutils literal notranslate"><span class="pre">fig-spectralradius</span></code>.
+Exemplarily, consider <span class="math notranslate nohighlight">\(\rho\)</span> a low frequency situation with different <span class="math notranslate nohighlight">\(\rho_\infty\)</span>:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\rho(\bar h=0.01, \rho_\infty=0.9) = 1 - 1.13\cdot 10^{-9}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\rho(\bar h=0.01, \rho_\infty=0.6) = 1 - 1.22\cdot 10^{-7}\)</span></p></li>
+</ul>
+<p>which shows that numerical damping is very low for moderately small step sizes (100 steps for one oscillation).</p>
+<p>Obviously, <span class="math notranslate nohighlight">\(\rho_\infty\)</span> does not have a large influence for very high or low frequencies in the system as long as it is <span class="math notranslate nohighlight">\(\neq 1\)</span> and we could even use <span class="math notranslate nohighlight">\(\rho_\infty=0\)</span>.
+Regarding differential algebraic equations (DAEs), <span class="math notranslate nohighlight">\(\rho_\infty&lt;1\)</span> allows to integrate index 3 DAEs. Typically a value of <span class="math notranslate nohighlight">\(\rho_\infty=0.7\)</span> leads to a stable integration, but values depend on the structure of the multibody system.</p>
+<p>Once having chosen <span class="math notranslate nohighlight">\(\rho_\infty\)</span>, all other parameters follow automatically , regarding the <span class="math notranslate nohighlight">\(\alpha\)</span>s</p>
+<div class="math notranslate nohighlight">
+\[\alpha_m = \frac{2 \rho_\infty - 1}{\rho_\infty + 1}, \quad \alpha_f = \frac{\rho_\infty}{\rho_\infty + 1}\]</div>
+<p>and Newmarks’s parameters,</p>
+<div class="math notranslate nohighlight">
+\[\gamma = \frac{1}{2} - \alpha_m + \alpha_f, \quad \beta = \frac{1}{4}(1- \alpha_m + \alpha_f)^2\]</div>
+</section>
+<section id="newton-iteration">
+<h2>Newton iteration<a class="headerlink" href="#newton-iteration" title="Permalink to this heading"></a></h2>
+<p>Thus, the residuals at the end of the time step (<span class="math notranslate nohighlight">\(T\)</span>) read (put all terms to <a class="reference internal" href="Abbreviations.html#lhs"><span class="std std-ref">LHS</span></a>):</p>
+<div class="math notranslate nohighlight" id="equation-eq-generalizedalphares">
+<span class="eqno">(7)<a class="headerlink" href="#equation-eq-generalizedalphares" title="Permalink to this equation"></a></span>\[\begin{split}{\mathbf{r}}^\GA_\SO &amp;=&amp; {\mathbf{M}} \ddot {\mathbf{q}}_T + \frac{\partial {\mathbf{g}}}{\partial {\mathbf{q}}^\mathrm{T}} \tlambda_T - {\mathbf{f}}_\SO({\mathbf{q}}_T, \dot {\mathbf{q}}_T, t) = 0\\
+{\mathbf{r}}^\GA_\FO &amp;=&amp; \dot {\mathbf{y}}_T + \frac{\partial {\mathbf{g}}}{\partial {\mathbf{y}}^\mathrm{T}} \tlambda_T - {\mathbf{f}}_\FO({\mathbf{y}}_T, t) = 0\\
+{\mathbf{r}}^\GA_\AE &amp;=&amp; {\mathbf{g}}({\mathbf{q}}_T, \dot {\mathbf{q}}_T, {\mathbf{y}}_T, \tlambda_T, t) = 0\end{split}\]</div>
+<p>We consider two options for SON: (A) solve for unknown accelerations <span class="math notranslate nohighlight">\({\mathbf{a}}u_T\)</span>,  or (B) for unknown displacements <span class="math notranslate nohighlight">\({\mathbf{q}}_T\)</span>.</p>
+<section id="a-solve-for-unknown-accelerations">
+<h3>(A) Solve for unknown accelerations<a class="headerlink" href="#a-solve-for-unknown-accelerations" title="Permalink to this heading"></a></h3>
+<p>The unknowns for the Newton method then are</p>
+<div class="math notranslate nohighlight" id="equation-eq-newton-unknowns1">
+<span class="eqno">(8)<a class="headerlink" href="#equation-eq-newton-unknowns1" title="Permalink to this equation"></a></span>\[\txi^\GA_{k+1} = \vr{{\mathbf{a}}u_T}{{\mathbf{y}}_T}{\tlambda_T}\]</div>
+<p>and at the beginning of the step, we have</p>
+<div class="math notranslate nohighlight" id="equation-eq-newton-unknowns2">
+<span class="eqno">(9)<a class="headerlink" href="#equation-eq-newton-unknowns2" title="Permalink to this equation"></a></span>\[\txi^\GA_{k} = \vr{{\mathbf{a}}u_0}{{\mathbf{y}}_0}{\tlambda_0}\]</div>
+<p>For the Newton method, we need to compute an update for the unknowns of Eq. <a class="reference internal" href="#equation-eq-newton-unknowns1">(8)</a>, using the previous residual <span class="math notranslate nohighlight">\({\mathbf{r}}_{k}\)</span> and the inverse of the Jacobian <span class="math notranslate nohighlight">\({\mathbf{J}}_{k}\)</span> of Newton iteration <span class="math notranslate nohighlight">\(k\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[\txi^\GA_{k+1} = \txi^\GA_{k} - {\mathbf{J}}^{-1} \left( \txi^\GA_{k} \right) \cdot {\mathbf{r}}^\GA \left( \txi^\GA_{k} \right)\]</div>
+<p>The Jacobian has the following <span class="math notranslate nohighlight">\(3 \times 3\)</span> structure,</p>
+<div class="math notranslate nohighlight">
+\[{\mathbf{J}} = \mr{{\mathbf{J}}_{\SO\SO}}{{\mathbf{J}}_{\SO\FO}}{{\mathbf{J}}_{\SO\AE}} {{\mathbf{J}}_{\FO\SO}}{{\mathbf{J}}_{\FO\FO}}{{\mathbf{J}}_{\FO\AE}} {{\mathbf{J}}_{\AE\SO}}{{\mathbf{J}}_{\AE\FO}}{{\mathbf{J}}_{\AE\AE}} = \mr{{\mathbf{J}}_{\SO\SO}}{\Null}{{\mathbf{J}}_{\SO\AE}} {\Null}{{\mathbf{J}}_{\FO\FO}}{{\mathbf{J}}_{\FO\AE}} {{\mathbf{J}}_{\AE\SO}}{{\mathbf{J}}_{\AE\FO}}{{\mathbf{J}}_{\AE\AE}}\]</div>
+<p>in which we consider <span class="math notranslate nohighlight">\({\mathbf{J}}_{\FO\SO}\)</span> and <span class="math notranslate nohighlight">\({\mathbf{J}}_{\SO\FO}\)</span> to vanish in the current implementations, which means that coupling of <a class="reference internal" href="Abbreviations.html#ode1"><span class="std std-ref">ODE1</span></a> and <a class="reference internal" href="Abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> coordinates is only possible due to algebraic equations.</p>
+<p>The remaining terms in the Jacobian are currently (or by default settings) evaluated as:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}{\mathbf{J}}_{\SO\SO}&amp;=&amp;\frac{\partial {\mathbf{r}}^\GA_\SO}{\partial {\mathbf{a}}u} = \frac{\partial {\mathbf{r}}^\GA_\SO}{\partial {\mathbf{q}}} \frac{\partial {\mathbf{q}}}{\partial {\mathbf{a}}u} + \frac{\partial {\mathbf{r}}^\GA_\SO}{\partial \dot {\mathbf{q}}} \frac{\partial \dot {\mathbf{q}}}{\partial {\mathbf{a}}u} = h^2 \beta {\mathbf{K}} + h \gamma {\mathbf{D}} \nonumber \\
+{\mathbf{J}}_{\SO\AE}&amp;=&amp;\frac{\partial {\mathbf{r}}^\GA_\SO}{\partial \tlambda} = \frac{\partial {\mathbf{g}}}{\partial {\mathbf{q}}} \quad (\mbox{or } \frac{\partial {\mathbf{g}}}{\partial \dot {\mathbf{q}}} \mbox{ for constraints at velocity level)} \nonumber \\
+{\mathbf{J}}_{\FO\FO}&amp;=&amp;\frac{\partial {\mathbf{r}}^\GA_\FO}{\partial {\mathbf{y}}} \nonumber \\
+{\mathbf{J}}_{\AE\SO}&amp;=&amp;\frac{\partial {\mathbf{r}}^\GA_\AE}{\partial {\mathbf{a}}u} = \frac{\partial {\mathbf{g}}}{\partial {\mathbf{a}}u} = \frac{\partial {\mathbf{g}}}{\partial {\mathbf{q}}} \frac{\partial {\mathbf{q}}}{\partial {\mathbf{a}}u} + \frac{\partial {\mathbf{g}}}{\partial \dot {\mathbf{q}}} \frac{\partial \dot {\mathbf{q}}}{\partial {\mathbf{a}}u} = h^2 \beta \frac{\partial {\mathbf{g}}}{\partial {\mathbf{q}}} + h \gamma \frac{\partial {\mathbf{g}}}{\partial \dot {\mathbf{q}}} \nonumber \\
+{\mathbf{J}}_{\AE\FO}&amp;=&amp;\frac{\partial {\mathbf{r}}^\GA_\AE}{\partial {\mathbf{y}}} \nonumber \\
+{\mathbf{J}}_{\AE\AE}&amp;=&amp;\frac{\partial {\mathbf{r}}^\GA_\AE}{\partial \tlambda} = \frac{\partial {\mathbf{g}}}{\partial \tlambda}\end{split}\]</div>
+<p>Note that some parts of the Jacobian are <strong>neglected</strong>, such as mass matrix and constraint Jacobian terms in <span class="math notranslate nohighlight">\({\mathbf{J}}_{\SO\SO}\)</span>, which are usually of minor influence. Furthermore, Jacobians for state-dependent loads are neglected except for system-wide numerical Jacobians.</p>
+<p>Once an update <span class="math notranslate nohighlight">\({\mathbf{q}}^\mathrm{Newton}_{k+1}\)</span> has been computed, the interpolation formulas eqrefeq_Newmark_interpolation need to be evaluated before the next residual and Jacobian can be computed.</p>
+</section>
+<section id="b-solve-for-unknown-displacements">
+<h3>(B) Solve for unknown displacements<a class="headerlink" href="#b-solve-for-unknown-displacements" title="Permalink to this heading"></a></h3>
+<p>This approach is similar to the previous approach and follows exactly the algorithm given by Arnold and Brüls , however, extended for <a class="reference internal" href="Abbreviations.html#ode1"><span class="std std-ref">ODE1</span></a> variables, which are integrated by the (undamped) trapezoidal rule.
+Documentation will be added lateron.</p>
+</section>
+</section>
+<section id="initial-accelerations">
+<h2>Initial accelerations<a class="headerlink" href="#initial-accelerations" title="Permalink to this heading"></a></h2>
+<p>For the solvers based on the implicit trapezoidal rule, initial accelerations are necessary in order to significantly increase the accuracy
+of the first time step.
+For this reason, the constraints <span class="math notranslate nohighlight">\({\mathbf{g}}({\mathbf{q}}_0, \dot {\mathbf{q}}_0, {\mathbf{y}}_0, \tlambda_0, t) = 0\)</span> in Eq. <a class="reference internal" href="SolversInExudyn.html#equation-eq-system-eom">(2)</a> are differentiated w.r.t. time,</p>
+<div class="math notranslate nohighlight" id="equation-eq-initialaccelerationsvel">
+<span class="eqno">(10)<a class="headerlink" href="#equation-eq-initialaccelerationsvel" title="Permalink to this equation"></a></span>\[\dot {\mathbf{g}}({\mathbf{q}}_0, \dot {\mathbf{q}}_0, {\mathbf{y}}_0, \tlambda_0, t) = \frac{\partial {\mathbf{g}}}{\partial {\mathbf{q}}} \dot {\mathbf{q}}_0 + \frac{\partial {\mathbf{g}}}{\partial \dot {\mathbf{q}}}\ddot {\mathbf{q}}_0 + \frac{\partial {\mathbf{g}}}{\partial {\mathbf{y}}} \dot {\mathbf{y}}_0 + \frac{\partial {\mathbf{g}}}{\partial \tlambda} \dot \tlambda + \frac{\partial {\mathbf{g}}}{\partial t} = 0 .\]</div>
+<p>Currently, we assume <span class="math notranslate nohighlight">\(\frac{\partial {\mathbf{g}}}{\partial \tlambda} = 0\)</span> for all further derivations on initial accelerations.
+For velocity level constraints, Eq. <a class="reference internal" href="#equation-eq-initialaccelerationsvel">(10)</a> is used to extract initial accelerations <span class="math notranslate nohighlight">\(\ddot {\mathbf{q}}_0\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[\frac{\partial {\mathbf{g}}}{\partial \dot {\mathbf{q}}}\ddot {\mathbf{q}}_0 = -\frac{\partial {\mathbf{g}}}{\partial {\mathbf{q}}} \dot {\mathbf{q}}_0 -\frac{\partial {\mathbf{g}}}{\partial {\mathbf{y}}} \dot {\mathbf{y}}_0 -  \frac{\partial {\mathbf{g}}}{\partial t} .\]</div>
+<p>Finally, the equations for the computation of the initial accelerations read for velocity level constraints,
+note that <span class="math notranslate nohighlight">\({\mathbf{y}}_{init}\)</span> are the nodal initial values for <span class="math notranslate nohighlight">\({\mathbf{y}}\)</span>,</p>
+<div class="math notranslate nohighlight" id="equation-eq-initialaccelerationsvel2">
+<span class="eqno">(11)<a class="headerlink" href="#equation-eq-initialaccelerationsvel2" title="Permalink to this equation"></a></span>\[\mr{{\mathbf{M}}}{\Null}{\frac{\partial {\mathbf{g}}}{\partial \dot {\mathbf{q}}^\mathrm{T}}} {\Null}{{\mathbf{I}}}{\Null} {\frac{\partial {\mathbf{g}}}{\partial \dot {\mathbf{q}}}}{\Null}{\Null} \vr{\ddot {\mathbf{q}}_0}{{\mathbf{y}}_0}{\tlambda_0} = \vr{{\mathbf{f}}_\SO({\mathbf{q}}_T, \dot {\mathbf{q}}_T, t)}{{\mathbf{y}}_{init}} {-\frac{\partial {\mathbf{g}}}{\partial {\mathbf{q}}} \dot {\mathbf{q}}_0-\frac{\partial {\mathbf{g}}}{\partial {\mathbf{y}}} \dot {\mathbf{y}}_0 - \frac{\partial {\mathbf{g}}}{\partial t}}  ,\]</div>
+<p>The term <span class="math notranslate nohighlight">\(\frac{\partial {\mathbf{g}}}{\partial t}\)</span> can only occur in case of user functions and therefore currently not implemented, and the <a class="reference internal" href="Abbreviations.html#ode1"><span class="std std-ref">ODE1</span></a> term <span class="math notranslate nohighlight">\(\frac{\partial {\mathbf{g}}}{\partial {\mathbf{y}}} = 0\)</span> is not used yet in constraints.</p>
+<p>For position level constraints, we assume <span class="math notranslate nohighlight">\(\frac{\partial {\mathbf{g}}}{\partial \dot {\mathbf{q}}} = 0\)</span> and <span class="math notranslate nohighlight">\(\frac{\partial {\mathbf{g}}}{\partial {\mathbf{y}}} = 0\)</span> in Eq. <a class="reference internal" href="#equation-eq-initialaccelerationsvel">(10)</a> and perform a second derivation w.r.t. time,</p>
+<div class="math notranslate nohighlight" id="equation-eq-initialaccelerationspos">
+<span class="eqno">(12)<a class="headerlink" href="#equation-eq-initialaccelerationspos" title="Permalink to this equation"></a></span>\[\ddot {\mathbf{g}}({\mathbf{q}}_0, \dot {\mathbf{q}}_0, {\mathbf{y}}_0, \tlambda_0, t) = \frac{\partial^2 {\mathbf{g}}}{\partial {\mathbf{q}}^2} \dot {\mathbf{q}}_0^2 + 2 \frac{\partial^2 {\mathbf{g}}}{\partial {\mathbf{q}} \partial t} \dot {\mathbf{q}}_0 + \frac{\partial {\mathbf{g}}}{\partial {\mathbf{q}}} \ddot {\mathbf{q}}_0 + \frac{\partial^2 {\mathbf{g}}}{\partial t^2} = 0 .\]</div>
+<p>For position level constraints, Eq. <a class="reference internal" href="#equation-eq-initialaccelerationspos">(12)</a> is used to extract initial accelerations <span class="math notranslate nohighlight">\(\ddot {\mathbf{q}}_0\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[\frac{\partial {\mathbf{g}}}{\partial {\mathbf{q}}} \ddot {\mathbf{q}}_0 = - 2 \frac{\partial^2 {\mathbf{g}}}{\partial {\mathbf{q}} \partial t} \dot {\mathbf{q}}_0 - \frac{\partial^2 {\mathbf{g}}}{\partial {\mathbf{q}}^2} \dot {\mathbf{q}}_0^2 - \frac{\partial^2 {\mathbf{g}}}{\partial t^2} .\]</div>
+<p>Finally, the equations for the computation of the initial accelerations for position level constraints read</p>
+<div class="math notranslate nohighlight" id="equation-eq-initialaccelerationspos2">
+<span class="eqno">(13)<a class="headerlink" href="#equation-eq-initialaccelerationspos2" title="Permalink to this equation"></a></span>\[\mr{{\mathbf{M}}}{\Null}{\frac{\partial {\mathbf{g}}}{\partial {\mathbf{q}}^\mathrm{T}}} {\Null}{{\mathbf{I}}}{\Null} {\frac{\partial {\mathbf{g}}}{\partial {\mathbf{q}}} }{\Null}{\Null} \vr{\ddot {\mathbf{q}}_0}{{\mathbf{y}}_0}{\tlambda_0} = \vr{{\mathbf{f}}_\SO({\mathbf{q}}_T, \dot {\mathbf{q}}_T, t)}{{\mathbf{y}}_{init}} {- 2 \frac{\partial^2 {\mathbf{g}}}{\partial {\mathbf{q}} \partial t} \dot {\mathbf{q}}_0 - \frac{\partial^2 {\mathbf{g}}}{\partial {\mathbf{q}}^2} \dot {\mathbf{q}}_0^2  - \frac{\partial^2 {\mathbf{g}}}{\partial t^2}}  ,\]</div>
+<p>The linear system of equations  <span class="xref std std-ref">eq-initialaccelerationsvel2</span> or  <span class="xref std std-ref">eq-initialaccelerationspos2</span> is solved prior to an implicit time integration if</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations</span> <span class="pre">=</span> <span class="pre">True</span></code></p>
+</div></blockquote>
+<p>which is the default value.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ExplicitSolvers.html" class="btn btn-neutral float-left" title="Explicit solvers" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="OptimizationAndParameterVariation.html" class="btn btn-neutral float-right" title="Optimization and parameter variation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

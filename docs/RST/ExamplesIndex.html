@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Examples &mdash; Exudyn1.6.31.dev1 1.6.31.dev1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+        <script src="../../_static/js/rtd_search_config.js"></script>
+        <script src="../../_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="3SpringsDistance.py" href="Examples/3SpringsDistance.html" />
+    <link rel="prev" title="List of Abbreviations" href="Abbreviations.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Exudyn1.6.31.dev1
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Exudyn.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="NotationIndex.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TheoryAndFormulationsIndex.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="SolversIndex.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="pythonUtilities/index.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="structures/StructuresAndSettingsIndex.html">Structures and Settings</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Misc</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Examples/3SpringsDistance.html">3SpringsDistance.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/addPrismaticJoint.html">addPrismaticJoint.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/addRevoluteJoint.html">addRevoluteJoint.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/ALEANCFpipe.html">ALEANCFpipe.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/ANCFALEtest.html">ANCFALEtest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/ANCFcantileverTest.html">ANCFcantileverTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/ANCFcantileverTestDyn.html">ANCFcantileverTestDyn.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/ANCFcontactCircle.html">ANCFcontactCircle.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/ANCFcontactCircle2.html">ANCFcontactCircle2.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/ANCFmovingRigidbody.html">ANCFmovingRigidbody.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/ANCFslidingJoint2D.html">ANCFslidingJoint2D.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/ANCFslidingJoint2Drigid.html">ANCFslidingJoint2Drigid.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/ANCFswitchingSlidingJoint2D.html">ANCFswitchingSlidingJoint2D.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/ANCFtestHalfcircle.html">ANCFtestHalfcircle.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/ANCFtests2.html">ANCFtests2.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/beltDriveALE.html">beltDriveALE.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/beltDriveReevingSystem.html">beltDriveReevingSystem.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/beltDrivesComparison.html">beltDrivesComparison.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/bicycleIftommBenchmark.html">bicycleIftommBenchmark.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/cartesianSpringDamper.html">cartesianSpringDamper.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/CMSexampleCourse.html">CMSexampleCourse.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/ComputeSensitivitiesExample.html">ComputeSensitivitiesExample.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/coordinateSpringDamper.html">coordinateSpringDamper.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/craneReevingSystem.html">craneReevingSystem.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/dispyParameterVariationExample.html">dispyParameterVariationExample.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/finiteSegmentMethod.html">finiteSegmentMethod.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/flexiblePendulumANCF.html">flexiblePendulumANCF.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/flexibleRotor3Dtest.html">flexibleRotor3Dtest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/fourBarMechanism3D.html">fourBarMechanism3D.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/geneticOptimizationSliderCrank.html">geneticOptimizationSliderCrank.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/graphicsDataExample.html">graphicsDataExample.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/gyroStability.html">gyroStability.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/humanRobotInteraction.html">humanRobotInteraction.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/HydraulicActuator2Arms.html">HydraulicActuator2Arms.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/HydraulicsUserFunction.html">HydraulicsUserFunction.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/interactiveTutorial.html">interactiveTutorial.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/InverseKinematicsNumericalExample.html">InverseKinematicsNumericalExample.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/kinematicTreeAndMBS.html">kinematicTreeAndMBS.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/kinematicTreePendulum.html">kinematicTreePendulum.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/lavalRotor2Dtest.html">lavalRotor2Dtest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/leggedRobot.html">leggedRobot.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/lugreFrictionODE1.html">lugreFrictionODE1.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/lugreFrictionTest.html">lugreFrictionTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/massSpringFrictionInteractive.html">massSpringFrictionInteractive.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/minimizeExample.html">minimizeExample.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/mouseInteractionExample.html">mouseInteractionExample.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/multiMbsTest.html">multiMbsTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/multiprocessingTest.html">multiprocessingTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/myFirstExample.html">myFirstExample.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/NGsolveCMStutorial.html">NGsolveCMStutorial.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/NGsolveCraigBampton.html">NGsolveCraigBampton.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/NGsolveLinearFEM.html">NGsolveLinearFEM.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/NGsolvePistonEngine.html">NGsolvePistonEngine.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/NGsolvePostProcessingStresses.html">NGsolvePostProcessingStresses.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/nMassOscillatorInteractive.html">nMassOscillatorInteractive.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/ObjectFFRFconvergenceTestBeam.html">ObjectFFRFconvergenceTestBeam.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/ObjectFFRFconvergenceTestHinge.html">ObjectFFRFconvergenceTestHinge.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/objectFFRFreducedOrderNetgen.html">objectFFRFreducedOrderNetgen.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/openAIgymInterfaceTest.html">openAIgymInterfaceTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/openAIgymTriplePendulum.html">openAIgymTriplePendulum.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/openVRengine.html">openVRengine.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/parameterVariationExample.html">parameterVariationExample.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/particleClusters.html">particleClusters.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/particlesSilo.html">particlesSilo.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/particlesTest.html">particlesTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/particlesTest3D.html">particlesTest3D.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/particlesTest3D2.html">particlesTest3D2.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/pendulum.html">pendulum.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/pendulum2Dconstraint.html">pendulum2Dconstraint.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/pendulumIftommBenchmark.html">pendulumIftommBenchmark.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/pendulumVerify.html">pendulumVerify.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/performanceMultiThreadingNG.html">performanceMultiThreadingNG.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/plotSensorExamples.html">plotSensorExamples.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/reevingSystem.html">reevingSystem.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/rigid3Dexample.html">rigid3Dexample.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/rigidBodyIMUtest.html">rigidBodyIMUtest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/rigidBodyTutorial.html">rigidBodyTutorial.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/rigidBodyTutorial2.html">rigidBodyTutorial2.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/rigidBodyTutorial3.html">rigidBodyTutorial3.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/rigidPendulum.html">rigidPendulum.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/rigidRotor3DbasicBehaviour.html">rigidRotor3DbasicBehaviour.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/rigidRotor3DFWBW.html">rigidRotor3DFWBW.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/rigidRotor3Dnutation.html">rigidRotor3Dnutation.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/rigidRotor3Drunup.html">rigidRotor3Drunup.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/serialRobotFlexible.html">serialRobotFlexible.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/serialRobotInteractiveLimits.html">serialRobotInteractiveLimits.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/serialRobotInverseKinematics.html">serialRobotInverseKinematics.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/serialRobotKinematicTree.html">serialRobotKinematicTree.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/serialRobotKinematicTreeDigging.html">serialRobotKinematicTreeDigging.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/serialRobotTestDH2.html">serialRobotTestDH2.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/serialRobotTSD.html">serialRobotTSD.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/simulateInteractively.html">simulateInteractively.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/SliderCrank.html">SliderCrank.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/sliderCrank3DwithANCFbeltDrive.html">sliderCrank3DwithANCFbeltDrive.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/sliderCrank3DwithANCFbeltDrive2.html">sliderCrank3DwithANCFbeltDrive2.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/slidercrankWithMassSpring.html">slidercrankWithMassSpring.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/solutionViewerMultipleSimulations.html">solutionViewerMultipleSimulations.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/solutionViewerTest.html">solutionViewerTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/solverFunctionsTestEigenvalues.html">solverFunctionsTestEigenvalues.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/SpringDamperMasspointSystem.html">SpringDamperMasspointSystem.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/SpringDamperMassUserFunction.html">SpringDamperMassUserFunction.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/springDamperTutorial.html">springDamperTutorial.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/springDamperUserFunctionNumbaJIT.html">springDamperUserFunctionNumbaJIT.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/springsDeactivateConnectors.html">springsDeactivateConnectors.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/SpringWithConstraints.html">SpringWithConstraints.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/stiffFlyballGovernor2.html">stiffFlyballGovernor2.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/stiffFlyballGovernorKT.html">stiffFlyballGovernorKT.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/stlFileImport.html">stlFileImport.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/switchingConstraintsPendulum.html">switchingConstraintsPendulum.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/TCPIPclientTest.html">TCPIPclientTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/TCPIPexudynMatlab.html">TCPIPexudynMatlab.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/TCPIPserverTest.html">TCPIPserverTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/testGymCartpole.html">testGymCartpole.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/testGymCartpoleEnv.html">testGymCartpoleEnv.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/testGymDoublePendulum.html">testGymDoublePendulum.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/testGymDoublePendulumEnv.html">testGymDoublePendulumEnv.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/tippeTop.html">tippeTop.py</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="TestModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Exudyn1.6.31.dev1</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Examples</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/docs/RST/ExamplesIndex.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="examples">
+<span id="sec-examples-index"></span><h1>Examples<a class="headerlink" href="#examples" title="Permalink to this heading"></a></h1>
+<p>This section includes all Examples for Exudyn.They can also be found and downloaded at the <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples">Examples folder of Exudyn on Github</a></p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Examples/3SpringsDistance.html">3SpringsDistance.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/addPrismaticJoint.html">addPrismaticJoint.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/addRevoluteJoint.html">addRevoluteJoint.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/ALEANCFpipe.html">ALEANCFpipe.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/ANCFALEtest.html">ANCFALEtest.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/ANCFcantileverTest.html">ANCFcantileverTest.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/ANCFcantileverTestDyn.html">ANCFcantileverTestDyn.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/ANCFcontactCircle.html">ANCFcontactCircle.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/ANCFcontactCircle2.html">ANCFcontactCircle2.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/ANCFmovingRigidbody.html">ANCFmovingRigidbody.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/ANCFslidingJoint2D.html">ANCFslidingJoint2D.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/ANCFslidingJoint2Drigid.html">ANCFslidingJoint2Drigid.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/ANCFswitchingSlidingJoint2D.html">ANCFswitchingSlidingJoint2D.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/ANCFtestHalfcircle.html">ANCFtestHalfcircle.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/ANCFtests2.html">ANCFtests2.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/beltDriveALE.html">beltDriveALE.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/beltDriveReevingSystem.html">beltDriveReevingSystem.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/beltDrivesComparison.html">beltDrivesComparison.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/bicycleIftommBenchmark.html">bicycleIftommBenchmark.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/cartesianSpringDamper.html">cartesianSpringDamper.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/CMSexampleCourse.html">CMSexampleCourse.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/ComputeSensitivitiesExample.html">ComputeSensitivitiesExample.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/coordinateSpringDamper.html">coordinateSpringDamper.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/craneReevingSystem.html">craneReevingSystem.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/dispyParameterVariationExample.html">dispyParameterVariationExample.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/finiteSegmentMethod.html">finiteSegmentMethod.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/flexiblePendulumANCF.html">flexiblePendulumANCF.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/flexibleRotor3Dtest.html">flexibleRotor3Dtest.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/fourBarMechanism3D.html">fourBarMechanism3D.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/geneticOptimizationSliderCrank.html">geneticOptimizationSliderCrank.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/graphicsDataExample.html">graphicsDataExample.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/gyroStability.html">gyroStability.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/humanRobotInteraction.html">humanRobotInteraction.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/HydraulicActuator2Arms.html">HydraulicActuator2Arms.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/HydraulicsUserFunction.html">HydraulicsUserFunction.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/interactiveTutorial.html">interactiveTutorial.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/InverseKinematicsNumericalExample.html">InverseKinematicsNumericalExample.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/kinematicTreeAndMBS.html">kinematicTreeAndMBS.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/kinematicTreePendulum.html">kinematicTreePendulum.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/lavalRotor2Dtest.html">lavalRotor2Dtest.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/leggedRobot.html">leggedRobot.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/lugreFrictionODE1.html">lugreFrictionODE1.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/lugreFrictionTest.html">lugreFrictionTest.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/massSpringFrictionInteractive.html">massSpringFrictionInteractive.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/minimizeExample.html">minimizeExample.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/mouseInteractionExample.html">mouseInteractionExample.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/multiMbsTest.html">multiMbsTest.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/multiprocessingTest.html">multiprocessingTest.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/myFirstExample.html">myFirstExample.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/NGsolveCMStutorial.html">NGsolveCMStutorial.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/NGsolveCraigBampton.html">NGsolveCraigBampton.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/NGsolveLinearFEM.html">NGsolveLinearFEM.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/NGsolvePistonEngine.html">NGsolvePistonEngine.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/NGsolvePostProcessingStresses.html">NGsolvePostProcessingStresses.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/nMassOscillatorInteractive.html">nMassOscillatorInteractive.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/ObjectFFRFconvergenceTestBeam.html">ObjectFFRFconvergenceTestBeam.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/ObjectFFRFconvergenceTestHinge.html">ObjectFFRFconvergenceTestHinge.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/objectFFRFreducedOrderNetgen.html">objectFFRFreducedOrderNetgen.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/openAIgymInterfaceTest.html">openAIgymInterfaceTest.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/openAIgymTriplePendulum.html">openAIgymTriplePendulum.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/openVRengine.html">openVRengine.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/parameterVariationExample.html">parameterVariationExample.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/particleClusters.html">particleClusters.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/particlesSilo.html">particlesSilo.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/particlesTest.html">particlesTest.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/particlesTest3D.html">particlesTest3D.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/particlesTest3D2.html">particlesTest3D2.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/pendulum.html">pendulum.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/pendulum2Dconstraint.html">pendulum2Dconstraint.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/pendulumIftommBenchmark.html">pendulumIftommBenchmark.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/pendulumVerify.html">pendulumVerify.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/performanceMultiThreadingNG.html">performanceMultiThreadingNG.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/plotSensorExamples.html">plotSensorExamples.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/reevingSystem.html">reevingSystem.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/rigid3Dexample.html">rigid3Dexample.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/rigidBodyIMUtest.html">rigidBodyIMUtest.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/rigidBodyTutorial.html">rigidBodyTutorial.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/rigidBodyTutorial2.html">rigidBodyTutorial2.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/rigidBodyTutorial3.html">rigidBodyTutorial3.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/rigidPendulum.html">rigidPendulum.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/rigidRotor3DbasicBehaviour.html">rigidRotor3DbasicBehaviour.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/rigidRotor3DFWBW.html">rigidRotor3DFWBW.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/rigidRotor3Dnutation.html">rigidRotor3Dnutation.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/rigidRotor3Drunup.html">rigidRotor3Drunup.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/serialRobotFlexible.html">serialRobotFlexible.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/serialRobotInteractiveLimits.html">serialRobotInteractiveLimits.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/serialRobotInverseKinematics.html">serialRobotInverseKinematics.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/serialRobotKinematicTree.html">serialRobotKinematicTree.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/serialRobotKinematicTreeDigging.html">serialRobotKinematicTreeDigging.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/serialRobotTestDH2.html">serialRobotTestDH2.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/serialRobotTSD.html">serialRobotTSD.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/simulateInteractively.html">simulateInteractively.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/SliderCrank.html">SliderCrank.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/sliderCrank3DwithANCFbeltDrive.html">sliderCrank3DwithANCFbeltDrive.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/sliderCrank3DwithANCFbeltDrive2.html">sliderCrank3DwithANCFbeltDrive2.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/slidercrankWithMassSpring.html">slidercrankWithMassSpring.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/solutionViewerMultipleSimulations.html">solutionViewerMultipleSimulations.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/solutionViewerTest.html">solutionViewerTest.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/solverFunctionsTestEigenvalues.html">solverFunctionsTestEigenvalues.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/SpringDamperMasspointSystem.html">SpringDamperMasspointSystem.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/SpringDamperMassUserFunction.html">SpringDamperMassUserFunction.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/springDamperTutorial.html">springDamperTutorial.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/springDamperUserFunctionNumbaJIT.html">springDamperUserFunctionNumbaJIT.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/springsDeactivateConnectors.html">springsDeactivateConnectors.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/SpringWithConstraints.html">SpringWithConstraints.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/stiffFlyballGovernor2.html">stiffFlyballGovernor2.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/stiffFlyballGovernorKT.html">stiffFlyballGovernorKT.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/stlFileImport.html">stlFileImport.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/switchingConstraintsPendulum.html">switchingConstraintsPendulum.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/TCPIPclientTest.html">TCPIPclientTest.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/TCPIPexudynMatlab.html">TCPIPexudynMatlab.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/TCPIPserverTest.html">TCPIPserverTest.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/testGymCartpole.html">testGymCartpole.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/testGymCartpoleEnv.html">testGymCartpoleEnv.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/testGymDoublePendulum.html">testGymDoublePendulum.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/testGymDoublePendulumEnv.html">testGymDoublePendulumEnv.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/tippeTop.html">tippeTop.py</a></li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Abbreviations.html" class="btn btn-neutral float-left" title="List of Abbreviations" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Examples/3SpringsDistance.html" class="btn btn-neutral float-right" title="3SpringsDistance.py" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

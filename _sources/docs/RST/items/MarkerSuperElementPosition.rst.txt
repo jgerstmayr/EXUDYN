@@ -104,6 +104,7 @@ MINI EXAMPLE for MarkerSuperElementPosition
 
 
 .. code-block:: python
+   :linenos:
 
    #set up a mechanical system with two nodes; it has the structure: |~~M0~~M1
    #==>further examples see objectGenericODE2Test.py, objectFFRFTest2.py, etc.

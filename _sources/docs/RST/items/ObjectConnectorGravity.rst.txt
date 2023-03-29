@@ -183,6 +183,7 @@ MINI EXAMPLE for ObjectConnectorGravity
 
 
 .. code-block:: python
+   :linenos:
 
    mass0 = 1e25
    mass1 = 1e3

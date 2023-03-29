@@ -12,6 +12,7 @@ GeneralContact
 Structure to define general and highly efficient contact functionality in multibody systems\ (Note that GeneralContact is still developed, use with care.). For further explanations and theoretical backgrounds, see Section :ref:`seccontacttheory`\ .
 
 .. code-block:: python
+   :linenos:
    
    #...
    #code snippet, must be placed anywhere before mbs.Assemble()
@@ -61,7 +62,7 @@ Structure to define general and highly efficient contact functionality in multib
 
   .. code-block:: python
 
-     \#set 3 surface friction types, all being 0.1:
+     #set 3 surface friction types, all being 0.1:
      gContact.SetFrictionPairings(0.1*np.ones((3,3)));
 
 * | **SetFrictionProportionalZone**\ (\ *frictionProportionalZone*\ ): 

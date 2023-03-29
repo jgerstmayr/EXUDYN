@@ -322,6 +322,7 @@ MINI EXAMPLE for ObjectConnectorRigidBodySpringDamper
 
 
 .. code-block:: python
+   :linenos:
 
    #example with rigid body at [0,0,0], 1kg under initial velocity
    k=500

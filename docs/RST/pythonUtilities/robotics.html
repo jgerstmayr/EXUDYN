@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Module: robotics &mdash; Exudyn1.6.0 1.6.0 documentation</title>
+  <title>Module: robotics &mdash; Exudyn1.6.31.dev1 1.6.31.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -19,6 +19,7 @@
         <script src="../../../_static/sphinx_highlight.js"></script>
         <script src="../../../_static/clipboard.min.js"></script>
         <script src="../../../_static/copybutton.js"></script>
+        <script src="../../../_static/js/rtd_search_config.js"></script>
         <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -36,7 +37,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.0
+            Exudyn1.6.31.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -53,6 +54,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NotationIndex.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TheoryAndFormulationsIndex.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../SolversIndex.html">Solvers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
@@ -130,6 +134,9 @@
 <p class="caption" role="heading"><span class="caption-text">Misc</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../Abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ExamplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TestModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trackerlog.html">Issue tracker</a></li>
 </ul>
 
         </div>
@@ -138,7 +145,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.0</a>
+          <a href="../../../index.html">Exudyn1.6.31.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -299,7 +306,7 @@ import this library e.g. with import exudyn.robotics as robotics</p>
 <span class="n">PTP</span><span class="o">+=</span><span class="p">[{</span><span class="s1">&#39;q&#39;</span><span class="p">:</span><span class="n">q1</span><span class="p">,</span>
 <span class="s1">&#39;time&#39;</span><span class="p">:</span><span class="mf">1e6</span><span class="p">}]</span> <span class="c1">#forever</span>
 <span class="n">RT</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;PTP&#39;</span><span class="p">:</span><span class="n">PTP</span><span class="p">}</span>
-<span class="p">[</span><span class="n">u</span><span class="p">,</span><span class="n">v</span><span class="p">,</span><span class="n">a</span><span class="p">]</span> <span class="o">=</span> <span class="n">MotionInterpolator</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">robotTrajectory</span><span class="o">=</span><span class="n">RT</span><span class="p">,</span> <span class="n">joint</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="p">[</span><span class="n">u</span><span class="p">,</span><span class="n">v</span><span class="p">,</span><span class="n">a</span><span class="p">]</span> <span class="o">=</span> <span class="nf">MotionInterpolator</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">robotTrajectory</span><span class="o">=</span><span class="n">RT</span><span class="p">,</span> <span class="n">joint</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
@@ -364,12 +371,12 @@ import this library e.g. with import exudyn.robotics as robotics</p>
 <span class="s1">&#39;COM&#39;</span><span class="p">:[</span><span class="o">-</span><span class="mf">0.3638</span><span class="p">,</span> <span class="mf">0.006</span><span class="p">,</span> <span class="mf">0.2275</span><span class="p">]}</span>
 <span class="n">robot</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;links&#39;</span><span class="p">:[</span><span class="n">link0</span><span class="p">,</span> <span class="n">link1</span><span class="p">],</span>
 <span class="s1">&#39;jointType&#39;</span><span class="p">:[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="c1">#1=revolute, 0=prismatic</span>
-<span class="s1">&#39;base&#39;</span><span class="p">:{</span><span class="s1">&#39;HT&#39;</span><span class="p">:</span><span class="n">HT0</span><span class="p">()},</span>
-<span class="s1">&#39;tool&#39;</span><span class="p">:{</span><span class="s1">&#39;HT&#39;</span><span class="p">:</span><span class="n">HTtranslate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.1</span><span class="p">])},</span>
+<span class="s1">&#39;base&#39;</span><span class="p">:{</span><span class="s1">&#39;HT&#39;</span><span class="p">:</span><span class="nf">HT0</span><span class="p">()},</span>
+<span class="s1">&#39;tool&#39;</span><span class="p">:{</span><span class="s1">&#39;HT&#39;</span><span class="p">:</span><span class="nf">HTtranslate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.1</span><span class="p">])},</span>
 <span class="s1">&#39;gravity&#39;</span><span class="p">:[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">9.81</span><span class="p">],</span>
 <span class="s1">&#39;referenceConfiguration&#39;</span><span class="p">:[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span> <span class="c1">#reference configuration for bodies; at which the robot is built</span>
 <span class="p">}</span>
-<span class="n">HTlist</span> <span class="o">=</span> <span class="n">ComputeJointHT</span><span class="p">(</span><span class="n">robot</span><span class="p">,</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">8</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">HTlist</span> <span class="o">=</span> <span class="nf">ComputeJointHT</span><span class="p">(</span><span class="n">robot</span><span class="p">,</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">8</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 </div>
 <hr class="docutils" />

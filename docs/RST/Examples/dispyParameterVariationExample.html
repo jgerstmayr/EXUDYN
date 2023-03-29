@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>dispyParameterVariationExample.py &mdash; Exudyn1.6.31.dev1 1.6.31.dev1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/clipboard.min.js"></script>
+        <script src="../../../_static/copybutton.js"></script>
+        <script src="../../../_static/js/rtd_search_config.js"></script>
+        <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="finiteSegmentMethod.py" href="finiteSegmentMethod.html" />
+    <link rel="prev" title="craneReevingSystem.py" href="craneReevingSystem.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn1.6.31.dev1
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Exudyn.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NotationIndex.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TheoryAndFormulationsIndex.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../SolversIndex.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../pythonUtilities/index.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structures/StructuresAndSettingsIndex.html">Structures and Settings</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Misc</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../Abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../ExamplesIndex.html">Examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="3SpringsDistance.html">3SpringsDistance.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="addPrismaticJoint.html">addPrismaticJoint.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="addRevoluteJoint.html">addRevoluteJoint.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ALEANCFpipe.html">ALEANCFpipe.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ANCFALEtest.html">ANCFALEtest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ANCFcantileverTest.html">ANCFcantileverTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ANCFcantileverTestDyn.html">ANCFcantileverTestDyn.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ANCFcontactCircle.html">ANCFcontactCircle.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ANCFcontactCircle2.html">ANCFcontactCircle2.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ANCFmovingRigidbody.html">ANCFmovingRigidbody.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ANCFslidingJoint2D.html">ANCFslidingJoint2D.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ANCFslidingJoint2Drigid.html">ANCFslidingJoint2Drigid.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ANCFswitchingSlidingJoint2D.html">ANCFswitchingSlidingJoint2D.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ANCFtestHalfcircle.html">ANCFtestHalfcircle.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ANCFtests2.html">ANCFtests2.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="beltDriveALE.html">beltDriveALE.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="beltDriveReevingSystem.html">beltDriveReevingSystem.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="beltDrivesComparison.html">beltDrivesComparison.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bicycleIftommBenchmark.html">bicycleIftommBenchmark.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cartesianSpringDamper.html">cartesianSpringDamper.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="CMSexampleCourse.html">CMSexampleCourse.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ComputeSensitivitiesExample.html">ComputeSensitivitiesExample.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="coordinateSpringDamper.html">coordinateSpringDamper.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="craneReevingSystem.html">craneReevingSystem.py</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">dispyParameterVariationExample.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="finiteSegmentMethod.html">finiteSegmentMethod.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flexiblePendulumANCF.html">flexiblePendulumANCF.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flexibleRotor3Dtest.html">flexibleRotor3Dtest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fourBarMechanism3D.html">fourBarMechanism3D.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geneticOptimizationSliderCrank.html">geneticOptimizationSliderCrank.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphicsDataExample.html">graphicsDataExample.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gyroStability.html">gyroStability.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="humanRobotInteraction.html">humanRobotInteraction.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HydraulicActuator2Arms.html">HydraulicActuator2Arms.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HydraulicsUserFunction.html">HydraulicsUserFunction.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interactiveTutorial.html">interactiveTutorial.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="InverseKinematicsNumericalExample.html">InverseKinematicsNumericalExample.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinematicTreeAndMBS.html">kinematicTreeAndMBS.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinematicTreePendulum.html">kinematicTreePendulum.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lavalRotor2Dtest.html">lavalRotor2Dtest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="leggedRobot.html">leggedRobot.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lugreFrictionODE1.html">lugreFrictionODE1.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lugreFrictionTest.html">lugreFrictionTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="massSpringFrictionInteractive.html">massSpringFrictionInteractive.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="minimizeExample.html">minimizeExample.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mouseInteractionExample.html">mouseInteractionExample.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multiMbsTest.html">multiMbsTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multiprocessingTest.html">multiprocessingTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="myFirstExample.html">myFirstExample.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NGsolveCMStutorial.html">NGsolveCMStutorial.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NGsolveCraigBampton.html">NGsolveCraigBampton.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NGsolveLinearFEM.html">NGsolveLinearFEM.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NGsolvePistonEngine.html">NGsolvePistonEngine.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NGsolvePostProcessingStresses.html">NGsolvePostProcessingStresses.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nMassOscillatorInteractive.html">nMassOscillatorInteractive.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectFFRFconvergenceTestBeam.html">ObjectFFRFconvergenceTestBeam.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectFFRFconvergenceTestHinge.html">ObjectFFRFconvergenceTestHinge.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectFFRFreducedOrderNetgen.html">objectFFRFreducedOrderNetgen.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="openAIgymInterfaceTest.html">openAIgymInterfaceTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="openAIgymTriplePendulum.html">openAIgymTriplePendulum.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="openVRengine.html">openVRengine.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parameterVariationExample.html">parameterVariationExample.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="particleClusters.html">particleClusters.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="particlesSilo.html">particlesSilo.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="particlesTest.html">particlesTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="particlesTest3D.html">particlesTest3D.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="particlesTest3D2.html">particlesTest3D2.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pendulum.html">pendulum.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pendulum2Dconstraint.html">pendulum2Dconstraint.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pendulumIftommBenchmark.html">pendulumIftommBenchmark.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pendulumVerify.html">pendulumVerify.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="performanceMultiThreadingNG.html">performanceMultiThreadingNG.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plotSensorExamples.html">plotSensorExamples.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reevingSystem.html">reevingSystem.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigid3Dexample.html">rigid3Dexample.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyIMUtest.html">rigidBodyIMUtest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyTutorial.html">rigidBodyTutorial.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyTutorial2.html">rigidBodyTutorial2.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyTutorial3.html">rigidBodyTutorial3.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidPendulum.html">rigidPendulum.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidRotor3DbasicBehaviour.html">rigidRotor3DbasicBehaviour.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidRotor3DFWBW.html">rigidRotor3DFWBW.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidRotor3Dnutation.html">rigidRotor3Dnutation.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidRotor3Drunup.html">rigidRotor3Drunup.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="serialRobotFlexible.html">serialRobotFlexible.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="serialRobotInteractiveLimits.html">serialRobotInteractiveLimits.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="serialRobotInverseKinematics.html">serialRobotInverseKinematics.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="serialRobotKinematicTree.html">serialRobotKinematicTree.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="serialRobotKinematicTreeDigging.html">serialRobotKinematicTreeDigging.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="serialRobotTestDH2.html">serialRobotTestDH2.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="serialRobotTSD.html">serialRobotTSD.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simulateInteractively.html">simulateInteractively.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SliderCrank.html">SliderCrank.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sliderCrank3DwithANCFbeltDrive.html">sliderCrank3DwithANCFbeltDrive.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sliderCrank3DwithANCFbeltDrive2.html">sliderCrank3DwithANCFbeltDrive2.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="slidercrankWithMassSpring.html">slidercrankWithMassSpring.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solutionViewerMultipleSimulations.html">solutionViewerMultipleSimulations.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solutionViewerTest.html">solutionViewerTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solverFunctionsTestEigenvalues.html">solverFunctionsTestEigenvalues.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SpringDamperMasspointSystem.html">SpringDamperMasspointSystem.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SpringDamperMassUserFunction.html">SpringDamperMassUserFunction.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="springDamperTutorial.html">springDamperTutorial.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="springDamperUserFunctionNumbaJIT.html">springDamperUserFunctionNumbaJIT.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="springsDeactivateConnectors.html">springsDeactivateConnectors.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SpringWithConstraints.html">SpringWithConstraints.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stiffFlyballGovernor2.html">stiffFlyballGovernor2.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stiffFlyballGovernorKT.html">stiffFlyballGovernorKT.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stlFileImport.html">stlFileImport.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="switchingConstraintsPendulum.html">switchingConstraintsPendulum.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TCPIPclientTest.html">TCPIPclientTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TCPIPexudynMatlab.html">TCPIPexudynMatlab.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TCPIPserverTest.html">TCPIPserverTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testGymCartpole.html">testGymCartpole.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testGymCartpoleEnv.html">testGymCartpoleEnv.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testGymDoublePendulum.html">testGymDoublePendulum.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testGymDoublePendulumEnv.html">testGymDoublePendulumEnv.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tippeTop.html">tippeTop.py</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../TestModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn1.6.31.dev1</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../ExamplesIndex.html">Examples</a></li>
+      <li class="breadcrumb-item active">dispyParameterVariationExample.py</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/RST/Examples/dispyParameterVariationExample.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="dispyparametervariationexample-py">
+<span id="examples-dispyparametervariationexample"></span><h1>dispyParameterVariationExample.py<a class="headerlink" href="#dispyparametervariationexample-py" title="Permalink to this heading"></a></h1>
+<p>You can view and download this file on Github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/dispyParameterVariationExample.py">dispyParameterVariationExample.py</a></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">  1</span><span class="c1">#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">  2</span><span class="c1"># This is an EXUDYN example</span>
+<span class="linenos">  3</span><span class="c1">#</span>
+<span class="linenos">  4</span><span class="c1"># Details:  This example performs a parameter variation of a simple</span>
+<span class="linenos">  5</span><span class="c1">#           mass-spring-damper system; varying mass, spring, using the python module dispy</span>
+<span class="linenos">  6</span><span class="c1">#           In this example, we return the computed sensor values to the ParameterVariation funtion</span>
+<span class="linenos">  7</span><span class="c1">#           and visualize a set of results</span>
+<span class="linenos">  8</span><span class="c1">#           NOTE: the real speedup using multiprocessing or cluster is about 3 on a 4-core machine, but not the value given by dispy!</span>
+<span class="linenos">  9</span><span class="c1">#</span>
+<span class="linenos"> 10</span><span class="c1"># Author:   Stefan Holzinger, Johannes Gerstmayr</span>
+<span class="linenos"> 11</span><span class="c1"># Date:     2022-04-11</span>
+<span class="linenos"> 12</span><span class="c1">#</span>
+<span class="linenos"> 13</span><span class="c1"># Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See &#39;LICENSE.txt&#39; for more details.</span>
+<span class="linenos"> 14</span><span class="c1">#</span>
+<span class="linenos"> 15</span><span class="c1">#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos"> 16</span>
+<span class="linenos"> 17</span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="linenos"> 18</span>
+<span class="linenos"> 19</span><span class="c1">#this is the function that is called via dispy; parameterSet contains the dictionary of current parameters and</span>
+<span class="linenos"> 20</span><span class="c1">#optional &#39;functionData&#39; with additional data passed to this function (e.g. numpy arrays)</span>
+<span class="linenos"> 21</span><span class="c1">#parameters are written into the &#39;P&#39; structure, such that they can be overwritten easily</span>
+<span class="linenos"> 22</span><span class="k">def</span> <span class="nf">ParameterFunction</span><span class="p">(</span><span class="n">parameterSet</span><span class="p">):</span>
+<span class="linenos"> 23</span>    <span class="c1"># modules such as exudyn etc. need to be imported inside parameter function</span>
+<span class="linenos"> 24</span>    <span class="kn">import</span> <span class="nn">socket</span>
+<span class="linenos"> 25</span>    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="linenos"> 26</span>    <span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
+<span class="linenos"> 27</span>    <span class="kn">import</span> <span class="nn">exudyn.itemInterface</span> <span class="k">as</span> <span class="nn">eii</span>
+<span class="linenos"> 28</span>
+<span class="linenos"> 29</span>    <span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
+<span class="linenos"> 30</span>    <span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
+<span class="linenos"> 31</span>
+<span class="linenos"> 32</span>    <span class="c1">#++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos"> 33</span>    <span class="c1">#++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos"> 34</span>    <span class="c1">#store default parameters in structure (all these parameters can be varied!)</span>
+<span class="linenos"> 35</span>    <span class="k">class</span> <span class="nc">P</span><span class="p">:</span> <span class="k">pass</span> <span class="c1">#create emtpy structure for parameters; simplifies way to update parameters</span>
+<span class="linenos"> 36</span>
+<span class="linenos"> 37</span>    <span class="c1">#default values</span>
+<span class="linenos"> 38</span>    <span class="n">P</span><span class="o">.</span><span class="n">mass</span> <span class="o">=</span> <span class="mf">1.6</span>          <span class="c1">#mass in kg</span>
+<span class="linenos"> 39</span>    <span class="n">P</span><span class="o">.</span><span class="n">spring</span> <span class="o">=</span> <span class="mi">4000</span>       <span class="c1">#stiffness of spring-damper in N/m</span>
+<span class="linenos"> 40</span>    <span class="n">P</span><span class="o">.</span><span class="n">damper</span> <span class="o">=</span> <span class="mi">8</span>          <span class="c1">#damping constant in N/(m/s)</span>
+<span class="linenos"> 41</span>    <span class="n">P</span><span class="o">.</span><span class="n">u0</span><span class="o">=-</span><span class="mf">0.08</span>            <span class="c1">#initial displacement</span>
+<span class="linenos"> 42</span>    <span class="n">P</span><span class="o">.</span><span class="n">v0</span><span class="o">=</span><span class="mi">1</span>                <span class="c1">#initial velocity</span>
+<span class="linenos"> 43</span>    <span class="n">P</span><span class="o">.</span><span class="n">f</span> <span class="o">=</span><span class="mi">80</span>               <span class="c1">#force applied to mass</span>
+<span class="linenos"> 44</span>    <span class="n">P</span><span class="o">.</span><span class="n">L</span><span class="o">=</span><span class="mf">0.5</span>               <span class="c1">#spring length (for drawing)</span>
+<span class="linenos"> 45</span>    <span class="n">P</span><span class="o">.</span><span class="n">computationIndex</span> <span class="o">=</span> <span class="s1">&#39;Ref&#39;</span> <span class="c1">#if computationIndex not provided</span>
+<span class="linenos"> 46</span>
+<span class="linenos"> 47</span>    <span class="c1"># #now update parameters with parameterSet (will work with any parameters in structure P)</span>
+<span class="linenos"> 48</span>    <span class="k">for</span> <span class="n">key</span><span class="p">,</span><span class="n">value</span> <span class="ow">in</span> <span class="n">parameterSet</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+<span class="linenos"> 49</span>        <span class="nb">setattr</span><span class="p">(</span><span class="n">P</span><span class="p">,</span><span class="n">key</span><span class="p">,</span><span class="n">value</span><span class="p">)</span>
+<span class="linenos"> 50</span>
+<span class="linenos"> 51</span>     <span class="c1">#++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos"> 52</span>     <span class="c1">#++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos"> 53</span>     <span class="c1">#START HERE: create parameterized model, using structure P, which is updated in every computation</span>
+<span class="linenos"> 54</span>
+<span class="linenos"> 55</span>    <span class="c1"># +++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos"> 56</span>    <span class="c1"># create mechanical system</span>
+<span class="linenos"> 57</span>
+<span class="linenos"> 58</span>    <span class="c1">#mass-spring-damper system</span>
+<span class="linenos"> 59</span>    <span class="n">P</span><span class="o">.</span><span class="n">L</span><span class="o">=</span><span class="mf">0.5</span>               <span class="c1">#spring length (for drawing)</span>
+<span class="linenos"> 60</span>
+<span class="linenos"> 61</span>    <span class="n">x0</span><span class="o">=</span><span class="n">P</span><span class="o">.</span><span class="n">f</span><span class="o">/</span><span class="n">P</span><span class="o">.</span><span class="n">spring</span>         <span class="c1">#static displacement</span>
+<span class="linenos"> 62</span>
+<span class="linenos"> 63</span>    <span class="c1">#node for 3D mass point:</span>
+<span class="linenos"> 64</span>    <span class="n">n1</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="n">eii</span><span class="o">.</span><span class="nc">Point</span><span class="p">(</span><span class="n">referenceCoordinates</span> <span class="o">=</span> <span class="p">[</span><span class="n">P</span><span class="o">.</span><span class="n">L</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos"> 65</span>                                <span class="n">initialCoordinates</span> <span class="o">=</span> <span class="p">[</span><span class="n">P</span><span class="o">.</span><span class="n">u0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos"> 66</span>                                <span class="n">initialVelocities</span><span class="o">=</span> <span class="p">[</span><span class="n">P</span><span class="o">.</span><span class="n">v0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+<span class="linenos"> 67</span>
+<span class="linenos"> 68</span>
+<span class="linenos"> 69</span>    <span class="c1">#ground node</span>
+<span class="linenos"> 70</span>    <span class="n">nGround</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="n">eii</span><span class="o">.</span><span class="nc">NodePointGround</span><span class="p">(</span><span class="n">referenceCoordinates</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+<span class="linenos"> 71</span>
+<span class="linenos"> 72</span>    <span class="c1">#add mass point (this is a 3D object with 3 coordinates):</span>
+<span class="linenos"> 73</span>    <span class="n">massPoint</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="n">eii</span><span class="o">.</span><span class="nc">MassPoint</span><span class="p">(</span><span class="n">physicsMass</span> <span class="o">=</span> <span class="n">P</span><span class="o">.</span><span class="n">mass</span><span class="p">,</span> <span class="n">nodeNumber</span> <span class="o">=</span> <span class="n">n1</span><span class="p">))</span>
+<span class="linenos"> 74</span>
+<span class="linenos"> 75</span>    <span class="c1">#marker for ground (=fixed):</span>
+<span class="linenos"> 76</span>    <span class="n">groundMarker</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="n">eii</span><span class="o">.</span><span class="nc">MarkerNodeCoordinate</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span> <span class="n">nGround</span><span class="p">,</span> <span class="n">coordinate</span> <span class="o">=</span> <span class="mi">0</span><span class="p">))</span>
+<span class="linenos"> 77</span>    <span class="c1">#marker for springDamper for first (x-)coordinate:</span>
+<span class="linenos"> 78</span>    <span class="n">nodeMarker</span>  <span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="n">eii</span><span class="o">.</span><span class="nc">MarkerNodeCoordinate</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span> <span class="n">n1</span><span class="p">,</span> <span class="n">coordinate</span> <span class="o">=</span> <span class="mi">0</span><span class="p">))</span>
+<span class="linenos"> 79</span>
+<span class="linenos"> 80</span>    <span class="c1">#spring-damper between two marker coordinates</span>
+<span class="linenos"> 81</span>    <span class="n">nC</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="n">eii</span><span class="o">.</span><span class="nc">CoordinateSpringDamper</span><span class="p">(</span><span class="n">markerNumbers</span> <span class="o">=</span> <span class="p">[</span><span class="n">groundMarker</span><span class="p">,</span> <span class="n">nodeMarker</span><span class="p">],</span>
+<span class="linenos"> 82</span>                                                  <span class="n">stiffness</span> <span class="o">=</span> <span class="n">P</span><span class="o">.</span><span class="n">spring</span><span class="p">,</span> <span class="n">damping</span> <span class="o">=</span> <span class="n">P</span><span class="o">.</span><span class="n">damper</span><span class="p">))</span>
+<span class="linenos"> 83</span>
+<span class="linenos"> 84</span>    <span class="c1">#add load:</span>
+<span class="linenos"> 85</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">AddLoad</span><span class="p">(</span><span class="n">eii</span><span class="o">.</span><span class="nc">LoadCoordinate</span><span class="p">(</span><span class="n">markerNumber</span> <span class="o">=</span> <span class="n">nodeMarker</span><span class="p">,</span> <span class="n">load</span> <span class="o">=</span> <span class="n">P</span><span class="o">.</span><span class="n">f</span><span class="p">))</span>
+<span class="linenos"> 86</span>
+<span class="linenos"> 87</span>    <span class="c1">#add sensor:</span>
+<span class="linenos"> 88</span>    <span class="n">fileName</span> <span class="o">=</span> <span class="s1">&#39;solution/paramVarDisplacement&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">P</span><span class="o">.</span><span class="n">computationIndex</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;.txt&#39;</span>
+<span class="linenos"> 89</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="n">eii</span><span class="o">.</span><span class="nc">SensorObject</span><span class="p">(</span><span class="n">objectNumber</span><span class="o">=</span><span class="n">nC</span><span class="p">,</span> <span class="n">fileName</span><span class="o">=</span><span class="n">fileName</span><span class="p">,</span>
+<span class="linenos"> 90</span>                                <span class="n">outputVariableType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="nc">Force</span><span class="p">))</span>
+<span class="linenos"> 91</span>
+<span class="linenos"> 92</span>
+<span class="linenos"> 93</span>    <span class="c1">#print(mbs)</span>
+<span class="linenos"> 94</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
+<span class="linenos"> 95</span>
+<span class="linenos"> 96</span>    <span class="n">steps</span> <span class="o">=</span> <span class="mi">1000000</span>  <span class="c1">#number of steps to show solution; use many steps to see speedup!</span>
+<span class="linenos"> 97</span>    <span class="n">tEnd</span> <span class="o">=</span> <span class="mi">1</span>     <span class="c1">#end time of simulation</span>
+<span class="linenos"> 98</span>
+<span class="linenos"> 99</span>    <span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">()</span>
+<span class="linenos">100</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">writeSolutionToFile</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="linenos">101</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">sensorsWritePeriod</span> <span class="o">=</span> <span class="mf">5e-3</span>  <span class="c1">#output interval of sensors</span>
+<span class="linenos">102</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="n">steps</span>
+<span class="linenos">103</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="n">tEnd</span>
+<span class="linenos">104</span>
+<span class="linenos">105</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">generalizedAlpha</span><span class="o">.</span><span class="n">spectralRadius</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1">#no damping</span>
+<span class="linenos">106</span>
+<span class="linenos">107</span>    <span class="c1">#start solver:</span>
+<span class="linenos">108</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="p">)</span>
+<span class="linenos">109</span>
+<span class="linenos">110</span>    <span class="c1"># +++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">111</span>    <span class="c1"># evaluate difference between reference and optimized solution</span>
+<span class="linenos">112</span>
+<span class="linenos">113</span>    <span class="c1"># get reference solution</span>
+<span class="linenos">114</span>    <span class="k">if</span> <span class="s1">&#39;functionData&#39;</span> <span class="ow">in</span> <span class="n">parameterSet</span><span class="p">:</span> <span class="c1"># load reference solution from function data</span>
+<span class="linenos">115</span>        <span class="n">functionData</span> <span class="o">=</span> <span class="n">parameterSet</span><span class="p">[</span><span class="s1">&#39;functionData&#39;</span><span class="p">]</span>
+<span class="linenos">116</span>        <span class="n">refSol</span> <span class="o">=</span> <span class="n">functionData</span><span class="p">[</span><span class="s1">&#39;refSol&#39;</span><span class="p">]</span>
+<span class="linenos">117</span>    <span class="k">else</span><span class="p">:</span> <span class="c1"># load from file</span>
+<span class="linenos">118</span>        <span class="n">refSol</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">fileName</span><span class="p">,</span> <span class="n">comments</span><span class="o">=</span><span class="s1">&#39;#&#39;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+<span class="linenos">119</span>
+<span class="linenos">120</span>    <span class="c1"># computation solution from current simulation</span>
+<span class="linenos">121</span>    <span class="n">sol</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">fileName</span><span class="p">,</span> <span class="n">comments</span><span class="o">=</span><span class="s1">&#39;#&#39;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+<span class="linenos">122</span>
+<span class="linenos">123</span>    <span class="c1"># compute error</span>
+<span class="linenos">124</span>    <span class="n">diff</span> <span class="o">=</span> <span class="n">refSol</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">sol</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span>
+<span class="linenos">125</span>    <span class="n">errorNorm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">diff</span><span class="p">,</span><span class="n">diff</span><span class="p">))</span><span class="o">/</span><span class="n">steps</span><span class="o">*</span><span class="n">tEnd</span>
+<span class="linenos">126</span>
+<span class="linenos">127</span>
+<span class="linenos">128</span>    <span class="k">return</span> <span class="p">[</span><span class="n">errorNorm</span><span class="p">,</span> <span class="n">sol</span><span class="p">]</span>  <span class="c1">#we can also return any pickle-able data in return value, which is then stored in values of ParameterVariation</span>
+<span class="linenos">129</span>    <span class="c1">#return errorNorm #for debug: (socket.gethostname(), errorNorm)</span>
+<span class="linenos">130</span>
+<span class="linenos">131</span>
+<span class="linenos">132</span>
+<span class="linenos">133</span><span class="c1">#%%</span>
+<span class="linenos">134</span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+<span class="linenos">135</span>    <span class="kn">from</span> <span class="nn">exudyn.processing</span> <span class="kn">import</span> <span class="nf">ParameterVariation</span>
+<span class="linenos">136</span>    <span class="kn">import</span> <span class="nn">time</span>
+<span class="linenos">137</span>
+<span class="linenos">138</span>
+<span class="linenos">139</span>    <span class="c1">#++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">140</span>    <span class="c1"># generate reference solution</span>
+<span class="linenos">141</span>    <span class="n">refval</span> <span class="o">=</span> <span class="n">ParameterFunction</span><span class="p">({})</span> <span class="c1"># compute reference solution</span>
+<span class="linenos">142</span>    <span class="c1">#print(&quot;refval =&quot;, refval)</span>
+<span class="linenos">143</span>
+<span class="linenos">144</span>    <span class="c1"># add reference solution to function data</span>
+<span class="linenos">145</span>    <span class="n">referenceSolution</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s1">&#39;solution/paramVarDisplacementRef.txt&#39;</span><span class="p">,</span> <span class="n">comments</span><span class="o">=</span><span class="s1">&#39;#&#39;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+<span class="linenos">146</span>    <span class="n">functionData</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;refSol&#39;</span><span class="p">:</span> <span class="n">referenceSolution</span><span class="p">}</span>
+<span class="linenos">147</span>
+<span class="linenos">148</span>
+<span class="linenos">149</span>
+<span class="linenos">150</span>    <span class="c1">#++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">151</span>    <span class="c1"># process inputs to form array with each parameter values etc. see ParameterVariation()</span>
+<span class="linenos">152</span>    <span class="n">useCluster</span> <span class="o">=</span> <span class="kc">True</span> <span class="c1"># if false, multiprocessing is used</span>
+<span class="linenos">153</span>    <span class="k">if</span> <span class="n">useCluster</span><span class="p">:</span> <span class="c1"># specify nodes by providing host names or IPv4-addresses</span>
+<span class="linenos">154</span>        <span class="k">if</span> <span class="kc">False</span><span class="p">:</span> <span class="c1">#put your dispy hosts here</span>
+<span class="linenos">155</span>            <span class="n">activeHosts</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;111.112.113.114&#39;</span><span class="p">]</span> <span class="c1"># enter list of IPv4 addresses or host names here</span>
+<span class="linenos">156</span>        <span class="k">else</span><span class="p">:</span> <span class="c1">#just use local host (for tests only!);</span>
+<span class="linenos">157</span>            <span class="kn">import</span> <span class="nn">socket</span>
+<span class="linenos">158</span>            <span class="n">hostName</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">gethostname</span><span class="p">()</span>
+<span class="linenos">159</span>            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;your hostname is: &#39;</span><span class="p">,</span><span class="n">hostName</span><span class="p">)</span>
+<span class="linenos">160</span>            <span class="n">activeHosts</span> <span class="o">=</span> <span class="p">[</span><span class="n">hostName</span><span class="p">]</span>
+<span class="linenos">161</span>        <span class="n">clusterHostNames</span> <span class="o">=</span> <span class="n">activeHosts</span>
+<span class="linenos">162</span>        <span class="n">useDispyWebMonitor</span> <span class="o">=</span> <span class="s1">&#39;useDispyWebMonitor&#39;</span> <span class="c1"># if given to ParameterVariation(), a web browser is started which can be used to manage the cluster computation</span>
+<span class="linenos">163</span>
+<span class="linenos">164</span>    <span class="k">else</span><span class="p">:</span>
+<span class="linenos">165</span>        <span class="n">clusterHostNames</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos">166</span>        <span class="n">useDispyWebMonitor</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+<span class="linenos">167</span>
+<span class="linenos">168</span>
+<span class="linenos">169</span>
+<span class="linenos">170</span>    <span class="c1">#++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">171</span>    <span class="c1"># perform parameter variation</span>
+<span class="linenos">172</span>    <span class="n">n</span> <span class="o">=</span> <span class="mi">4</span> <span class="c1"># n*n = number of variations</span>
+<span class="linenos">173</span>    <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="linenos">174</span>    <span class="p">[</span><span class="n">pDict</span><span class="p">,</span> <span class="n">values</span><span class="p">]</span> <span class="o">=</span> <span class="nf">ParameterVariation</span><span class="p">(</span><span class="n">parameterFunction</span><span class="o">=</span><span class="n">ParameterFunction</span><span class="p">,</span>
+<span class="linenos">175</span>                                         <span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;mass&#39;</span><span class="p">:(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">n</span><span class="p">),</span>
+<span class="linenos">176</span>                                                       <span class="s1">&#39;spring&#39;</span><span class="p">:(</span><span class="mi">2000</span><span class="p">,</span><span class="mi">8000</span><span class="p">,</span><span class="n">n</span><span class="p">),</span>
+<span class="linenos">177</span>                                                       <span class="p">},</span>
+<span class="linenos">178</span>                                         <span class="n">parameterFunctionData</span> <span class="o">=</span> <span class="n">functionData</span><span class="p">,</span>
+<span class="linenos">179</span>                                         <span class="n">debugMode</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="linenos">180</span>                                         <span class="n">addComputationIndex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">181</span>                                         <span class="n">useMultiProcessing</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">182</span>                                         <span class="c1">#showProgress=False, #by default True</span>
+<span class="linenos">183</span>                                         <span class="n">clusterHostNames</span><span class="o">=</span><span class="n">clusterHostNames</span><span class="p">,</span> <span class="c1">#not that there is a significant overhead, thus cluster only makes sense for computations that take longer than 1 second</span>
+<span class="linenos">184</span>                                         <span class="c1">#useDispyWebMonitor=useDispyWebMonitor, #slows down a little and waits 5 seconds in the end to finish</span>
+<span class="linenos">185</span>                                         <span class="p">)</span>
+<span class="linenos">186</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--- </span><span class="si">%s</span><span class="s2"> seconds ---&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">))</span>
+<span class="linenos">187</span>
+<span class="linenos">188</span>
+<span class="linenos">189</span>
+<span class="linenos">190</span>
+<span class="linenos">191</span><span class="c1">#%% post processing of all computed variations</span>
+<span class="linenos">192</span>    <span class="k">if</span> <span class="kc">True</span><span class="p">:</span>
+<span class="linenos">193</span>        <span class="kn">from</span> <span class="nn">exudyn.plot</span> <span class="kn">import</span> <span class="nf">PlotSensor</span>
+<span class="linenos">194</span>        <span class="c1">#extract solution from return values</span>
+<span class="linenos">195</span>        <span class="n">valuesPlot</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos">196</span>        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
+<span class="linenos">197</span>            <span class="n">valuesPlot</span> <span class="o">+=</span><span class="p">[</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+<span class="linenos">198</span>
+<span class="linenos">199</span>        <span class="c1">#plot first 8 results:</span>
+<span class="linenos">200</span>        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)):</span>
+<span class="linenos">201</span>            <span class="nf">PlotSensor</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">sensorNumbers</span><span class="o">=</span><span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="s1">&#39;result&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">newFigure</span><span class="o">=</span><span class="p">(</span><span class="n">i</span><span class="o">==</span><span class="mi">0</span><span class="p">),</span>
+<span class="linenos">202</span>                       <span class="n">colorCodeOffset</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">fontSize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">closeAll</span><span class="o">=</span><span class="p">(</span><span class="n">i</span><span class="o">==</span><span class="mi">0</span><span class="p">))</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="craneReevingSystem.html" class="btn btn-neutral float-left" title="craneReevingSystem.py" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="finiteSegmentMethod.html" class="btn btn-neutral float-right" title="finiteSegmentMethod.py" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

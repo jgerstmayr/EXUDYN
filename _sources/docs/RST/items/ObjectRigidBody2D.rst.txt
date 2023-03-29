@@ -203,6 +203,7 @@ MINI EXAMPLE for ObjectRigidBody2D
 
 
 .. code-block:: python
+   :linenos:
 
    node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates = [1,1,0.25*np.pi], 
                                       initialCoordinates=[0.5,0,0],

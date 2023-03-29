@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Data structures &mdash; Exudyn1.6.0 1.6.0 documentation</title>
+  <title>Data structures &mdash; Exudyn1.6.31.dev1 1.6.31.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -19,6 +19,7 @@
         <script src="../../../_static/sphinx_highlight.js"></script>
         <script src="../../../_static/clipboard.min.js"></script>
         <script src="../../../_static/copybutton.js"></script>
+        <script src="../../../_static/js/rtd_search_config.js"></script>
         <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -36,7 +37,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.0
+            Exudyn1.6.31.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -53,6 +54,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NotationIndex.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TheoryAndFormulationsIndex.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../SolversIndex.html">Solvers</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="CInterfaceIndex.html">Python-C++ command interface</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="GeneralInformation.html">General information on Python-C++ interface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Exudyn.html">Exudyn</a></li>
@@ -82,6 +86,9 @@
 <p class="caption" role="heading"><span class="caption-text">Misc</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../Abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ExamplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TestModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trackerlog.html">Issue tracker</a></li>
 </ul>
 
         </div>
@@ -90,7 +97,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.0</a>
+          <a href="../../../index.html">Exudyn1.6.31.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -116,18 +123,34 @@ such as a MatrixContainer for dense/sparse matrices or a list of 3D vectors.
 Note that there are many native data types, such as lists, dicts and numpy arrays (e.g. 3D vectors),
 which are not described here as they are native to Pybind11, but can be passed as arguments when appropriate.</p>
 <section id="matrixcontainer">
-<h2>MatrixContainer<a class="headerlink" href="#matrixcontainer" title="Permalink to this heading"></a></h2>
+<span id="sec-matrixcontainer"></span><h2>MatrixContainer<a class="headerlink" href="#matrixcontainer" title="Permalink to this heading"></a></h2>
 <p>The MatrixContainer is a versatile representation for dense and sparse matrices.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Create empty MatrixContainer:</span>
-<span class="n">mc</span> <span class="o">=</span> <span class="n">MatrixContainer</span><span class="p">()</span>
-
-<span class="c1">#Create MatrixContainer with dense matrix:</span>
-<span class="c1">#matrix can be a list of lists or a numpy array, e.g.:</span>
-<span class="n">matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
-<span class="n">mc</span> <span class="o">=</span> <span class="n">MatrixContainer</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
-
-<span class="c1">#Set with dense pyArray (a numpy array):</span>
-<span class="n">mc</span><span class="o">.</span><span class="n">SetWithDenseMatrix</span><span class="p">(</span><span class="n">pyArray</span><span class="p">,</span> <span class="n">useDenseMatrix</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1">#Create empty MatrixContainer:</span>
+<span class="linenos"> 2</span><span class="kn">from</span> <span class="nn">exudyn</span> <span class="kn">import</span> <span class="nc">MatrixContainer</span>
+<span class="linenos"> 3</span><span class="n">mc</span> <span class="o">=</span> <span class="nc">MatrixContainer</span><span class="p">()</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="c1">#Create MatrixContainer with dense matrix:</span>
+<span class="linenos"> 6</span><span class="c1">#matrix can be a list of lists or a numpy array, e.g.:</span>
+<span class="linenos"> 7</span><span class="n">matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+<span class="linenos"> 8</span><span class="n">mc</span> <span class="o">=</span> <span class="nc">MatrixContainer</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
+<span class="linenos"> 9</span>
+<span class="linenos">10</span><span class="c1">#Set with dense pyArray (a numpy array):</span>
+<span class="linenos">11</span><span class="n">pyArray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
+<span class="linenos">12</span><span class="n">mc</span><span class="o">.</span><span class="nf">SetWithDenseMatrix</span><span class="p">(</span><span class="n">pyArray</span><span class="p">,</span> <span class="n">useDenseMatrix</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="linenos">13</span>
+<span class="linenos">14</span><span class="c1">#Set empty matrix:</span>
+<span class="linenos">15</span><span class="n">mc</span><span class="o">.</span><span class="nf">SetWithDenseMatrix</span><span class="p">(],</span> <span class="nb">bool</span> <span class="n">useDenseMatrix</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span><span class="c1">#Set with list of lists, stored as sparse matrix:</span>
+<span class="linenos">18</span><span class="n">mc</span><span class="o">.</span><span class="nf">SetWithDenseMatrix</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]],</span> <span class="nb">bool</span> <span class="n">useDenseMatrix</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+<span class="linenos">19</span>
+<span class="linenos">20</span><span class="c1">#Set with sparse CSR matrix:</span>
+<span class="linenos">21</span><span class="n">mc</span><span class="o">.</span><span class="nf">SetWithSparseMatrixCSR</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">13.3</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mf">4.2</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mf">42.</span><span class="p">]],</span> <span class="n">useDenseMatrix</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">22</span>
+<span class="linenos">23</span><span class="nb">print</span><span class="p">(</span><span class="n">mc</span><span class="p">)</span>
+<span class="linenos">24</span><span class="c1">#gives dense matrix:</span>
+<span class="linenos">25</span><span class="c1">#[[13.3  0.   0. ]</span>
+<span class="linenos">26</span><span class="c1"># [ 0.   4.2 42. ]]</span>
 </pre></div>
 </div>
 <p>The class <strong>MatrixContainer</strong> has the following <strong>functions and structures</strong>:</p>

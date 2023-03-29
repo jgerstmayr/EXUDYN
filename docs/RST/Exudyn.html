@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Exudyn &mdash; Exudyn1.6.0 1.6.0 documentation</title>
+  <title>Exudyn &mdash; Exudyn1.6.31.dev1 1.6.31.dev1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
@@ -19,6 +19,7 @@
         <script src="../../_static/sphinx_highlight.js"></script>
         <script src="../../_static/clipboard.min.js"></script>
         <script src="../../_static/copybutton.js"></script>
+        <script src="../../_static/js/rtd_search_config.js"></script>
         <script src="../../_static/js/rtd_sphinx_search.min.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -36,7 +37,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.6.0
+            Exudyn1.6.31.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -53,6 +54,9 @@
 <li class="toctree-l1"><a class="reference internal" href="OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
 <li class="toctree-l1"><a class="reference internal" href="TutorialIndex.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="NotationIndex.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TheoryAndFormulationsIndex.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="SolversIndex.html">Solvers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
@@ -64,6 +68,9 @@
 <p class="caption" role="heading"><span class="caption-text">Misc</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ExamplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TestModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trackerlog.html">Issue tracker</a></li>
 </ul>
 
         </div>
@@ -72,7 +79,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.6.0</a>
+          <a href="../../index.html">Exudyn1.6.31.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -95,7 +102,7 @@
 <section id="exudyn">
 <h1>Exudyn<a class="headerlink" href="#exudyn" title="Permalink to this heading"></a></h1>
 <p><strong>A flexible multibody dynamics systems simulation code with Python and C++</strong></p>
-<p>Exudyn version = 1.6.8 (Gillespie)</p>
+<p>Exudyn version = 1.6.31.dev1 (Gillespie)</p>
 <ul class="simple">
 <li><p><strong>University of Innsbruck</strong>, Department of Mechatronics, Innsbruck, Austria</p></li>
 </ul>
@@ -108,13 +115,13 @@
 <li><p>Exudyn can be linked to any other Python package, but we explicitly mention: <a class="reference external" href="https://github.com/NGSolve/ngsolve">NGsolve</a>, <a class="reference external" href="https://github.com/openai">OpenAI</a>, <a class="reference external" href="https://github.com/openai/gym">OpenAI gym</a>, <a class="reference external" href="https://github.com/petercorke/robotics-toolbox-python">Robotics Toolbox (Peter Corke)</a>, <a class="reference external" href="https://github.com/pybind/pybind11">Pybind11</a></p></li>
 </ul>
 <p><a class="reference internal" href="../../_images/pistonEngine.gif"><img alt="pic1" src="../../_images/pistonEngine.gif" style="width: 200px;" /></a> <a class="reference internal" href="../../_images/hydraulic2arm.gif"><img alt="pic2" src="../../_images/hydraulic2arm.gif" style="width: 200px;" /></a> <a class="reference internal" href="../../_images/particles2M.gif"><img alt="pic3" src="../../_images/particles2M.gif" style="width: 120px;" /></a> <a class="reference internal" href="../../_images/shaftGear.png"><img alt="pic4" src="../../_images/shaftGear.png" style="width: 160px;" /></a> <a class="reference internal" href="../../_images/rotor_runup_plot3.png"><img alt="pic5" src="../../_images/rotor_runup_plot3.png" style="width: 190px;" /></a> <a class="reference internal" href="../../_images/DrawSystemGraphExample.png"><img alt="pic6" src="../../_images/DrawSystemGraphExample.png" style="width: 240px;" /></a></p>
-<p>A paper on Exudyn has been presented at the <a class="reference external" href="http://imsdacmd2020.iitd.ac.in">6th Joint International Conference on Multibody System Dynamics</a> and submitted to the proceedings: J. Gerstmayr, Exudyn - A C++ based Python package for flexible multibody systems, Proceedings of The 6th Joint International Conference on Multibody System Dynamics and the 10th Asian Conference on Multibody System Dynamics 2020, New Delhi, India, 2022.</p>
-<p>Due to limitations for complex formulas and tables in .rst files, details of the reference manual and many other parts of the documentation are only available in theDoc.pdf, see the <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf">github page of Exudyn</a>! There may also be some conversion errors in the auto-generated html pages.</p>
+<p>Johannes Gerstmayr. Exudyn – A C++ based Python package for flexible multibody systems. Preprint, Research Square, 2023. <a class="reference external" href="https://doi.org/10.21203/rs.3.rs-2693700/v1">https://doi.org/10.21203/rs.3.rs-2693700/v1</a></p>
+<p>Due to limitations for complex formulas and tables in .rst files, some details of the reference manual are only available in theDoc.pdf, see the <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf">github page of Exudyn</a>! There may also be some conversion errors in the auto-generated html pages.</p>
 <p>For license, see LICENSE.txt in the root github folder on github!</p>
-<p>In addition to the tutorial in the documentation, many ( <strong>100+</strong> ) examples can be found under main/pythonDev/Examples and main/pythonDev/TestModels .</p>
+<p>In addition to the tutorial in the documentation, many ( <strong>100+</strong> ) examples can be downloaded on github under main/pythonDev/Examples and main/pythonDev/TestModels . They are also on ReadTheDocs.</p>
 <p>Tutorial videos can be found in the <a class="reference external" href="https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg_jtl6fx">youtube channel of Exudyn</a> !</p>
 <p>Enjoy the Python library for multibody dynamics modeling, simulation, creating large scale systems, parameterized systems, component mode synthesis, optimization, …</p>
-<p>Changes can be tracked in the <span class="xref std std-ref">Issue tracker</span></p>
+<p>Changes can be tracked in the <a class="reference internal" href="trackerlog.html#sec-issuetracker"><span class="std std-ref">Issue tracker</span></a></p>
 <p>For searching on Read the Docs (especially with the search preview), add * or ~1 / ~2 / … to your search to search more general, e.g., FEMinter* to search for FEMinterface, or objetfrf~3 to find ObjectFFRF. Your search preview usually finds less results than the search when pressing Enter. See also <a class="reference external" href="https://docs.readthedocs.io/en/stable/server-side-search/syntax.html#special-queries">Read the Docs documentation</a></p>
 <p><strong>READ Exudyn documentation</strong> : <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf">theDoc.pdf</a></p>
 </section>

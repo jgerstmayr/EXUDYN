@@ -86,6 +86,7 @@ MINI EXAMPLE for LoadMassProportional
 
 
 .. code-block:: python
+   :linenos:
 
    node = mbs.AddNode(NodePoint(referenceCoordinates = [1,0,0]))
    body = mbs.AddObject(MassPoint(nodeNumber = node, physicsMass=2))

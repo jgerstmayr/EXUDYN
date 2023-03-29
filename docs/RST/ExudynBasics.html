@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Exudyn Basics &mdash; Exudyn1.6.0 1.6.0 documentation</title>
+  <title>Exudyn Basics &mdash; Exudyn1.6.31.dev1 1.6.31.dev1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
@@ -19,8 +19,9 @@
         <script src="../../_static/sphinx_highlight.js"></script>
         <script src="../../_static/clipboard.min.js"></script>
         <script src="../../_static/copybutton.js"></script>
+        <script src="../../_static/js/rtd_search_config.js"></script>
         <script src="../../_static/js/rtd_sphinx_search.min.js"></script>
-        <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "omegaBDtilde": "{\\LU{b}{\\tilde \\tomega_\\mathrm{bd}}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}"}}}</script>
+        <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "vrRow": ["{[#1,\\, #2,\\, #3]}", 3], "vsix": ["{\\left[\\!\\! \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} \\!\\!\\right]}", 6], "vsixb": ["{\\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "vsixs": ["{ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "omegaBDtilde": "{\\LU{b}{\\tilde \\tomega_\\mathrm{bd}}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}", "termA": ["{\\color{blue}{#1}}", 1], "termB": ["{\\color{red}{#1}}", 1], "termC": ["{\\color{green}{#1}}", 1], "avu": "{\\ddot \\mathbf{q}}", "GA": "{G\\alpha}", "aalg": "{\\mathbf{a}}", "vel": "{\\mathbf{v}}"}}}</script>
         <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -38,7 +39,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.6.0
+            Exudyn1.6.31.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -81,6 +82,9 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="TutorialIndex.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="NotationIndex.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TheoryAndFormulationsIndex.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="SolversIndex.html">Solvers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
@@ -92,6 +96,9 @@
 <p class="caption" role="heading"><span class="caption-text">Misc</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ExamplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TestModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trackerlog.html">Issue tracker</a></li>
 </ul>
 
         </div>
@@ -100,7 +107,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.6.0</a>
+          <a href="../../index.html">Exudyn1.6.31.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -145,7 +152,7 @@ Using <code class="docutils literal notranslate"><span class="pre">mbs.Reset()</
 <p>The simulation settings consists of a couple of substructures, e.g., for <code class="docutils literal notranslate"><span class="pre">solutionSettings</span></code>, <code class="docutils literal notranslate"><span class="pre">staticSolver</span></code>, <code class="docutils literal notranslate"><span class="pre">timeIntegration</span></code> as well as a couple of general options – for details see Section <a class="reference internal" href="structures/SimulationSettings.html#sec-solutionsettings"><span class="std std-ref">SolutionSettings</span></a> and Section <a class="reference internal" href="structures/SimulationSettings.html#sec-simulationsettings"><span class="std std-ref">SimulationSettings</span></a>.</p>
 <p>Simulation settings are needed for every solver. They contain solver-specific parameters (e.g., the way how load steps are applied), information on how solution files are written, and very specific control parameters, e.g., for the Newton solver.</p>
 <p>The simulation settings structure is created with</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">SimulationSettings</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>Hereafter, values of the structure can be modified, e.g.,</p>
@@ -161,7 +168,7 @@ Using <code class="docutils literal notranslate"><span class="pre">mbs.Reset()</
 <span class="c1">#write solution every 0.1 seconds:</span>
 <span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">solutionWritePeriod</span> <span class="o">=</span> <span class="mf">0.1</span>
 <span class="c1">#use sparse matrix storage and solver (package Eigen):</span>
-<span class="n">simulationSettings</span><span class="o">.</span><span class="n">linearSolverType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">LinearSolverType</span><span class="o">.</span><span class="n">EigenSparse</span>
+<span class="n">simulationSettings</span><span class="o">.</span><span class="n">linearSolverType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">LinearSolverType</span><span class="o">.</span><span class="n">EigenSparse</span>
 </pre></div>
 </div>
 </section>
@@ -170,7 +177,7 @@ Using <code class="docutils literal notranslate"><span class="pre">mbs.Reset()</
 <p>The solvers provide a number of options in <code class="docutils literal notranslate"><span class="pre">solutionSettings</span></code> to generate a solution file. As a default, exporting the solution of all system coordinates (on position, velocity, … level) to the solution file is activated with a writing period of 0.01 seconds.</p>
 <p>Typical output settings are:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#create a new simulationSettings structure:</span>
-<span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">SimulationSettings</span><span class="p">()</span>
+<span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">()</span>
 
 <span class="c1">#activate writing to solution file:</span>
 <span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">writeSolutionToFile</span> <span class="o">=</span> <span class="kc">True</span>
@@ -248,26 +255,26 @@ Note that this dialog is automatically created and uses Python’s <code class="
 </figure>
 <p>Note: Press ‘V’ in render window to open dialog.</p>
 <p>The visualization settings structure can be accessed in the system container <code class="docutils literal notranslate"><span class="pre">SC</span></code> (access per reference, no copying!), accessing every value or structure directly, e.g.,</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">SC</span><span class="o">.</span><span class="n">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">defaultSize</span> <span class="o">=</span> <span class="mf">0.001</span>      <span class="c1">#draw nodes very small</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">defaultSize</span> <span class="o">=</span> <span class="mf">0.001</span>      <span class="c1">#draw nodes very small</span>
 
 <span class="c1">#change openGL parameters; current values can be obtained from SC.GetRenderState()</span>
 <span class="c1">#change zoom factor:</span>
-<span class="n">SC</span><span class="o">.</span><span class="n">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">initialZoom</span> <span class="o">=</span> <span class="mf">0.2</span>
+<span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">initialZoom</span> <span class="o">=</span> <span class="mf">0.2</span>
 <span class="c1">#set the center point of the scene (can be attached to moving object):</span>
-<span class="n">SC</span><span class="o">.</span><span class="n">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">initialCenterPoint</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.192</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0039</span><span class="p">,</span><span class="o">-</span><span class="mf">0.075</span><span class="p">]</span>
+<span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">initialCenterPoint</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.192</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0039</span><span class="p">,</span><span class="o">-</span><span class="mf">0.075</span><span class="p">]</span>
 
 <span class="c1">#turn of auto-fit:</span>
-<span class="n">SC</span><span class="o">.</span><span class="n">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">autoFitScene</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">autoFitScene</span> <span class="o">=</span> <span class="kc">False</span>
 
 <span class="c1">#change smoothness of a cylinder:</span>
-<span class="n">SC</span><span class="o">.</span><span class="n">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">cylinderTiling</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">cylinderTiling</span> <span class="o">=</span> <span class="mi">100</span>
 
 <span class="c1">#make round objects flat:</span>
-<span class="n">SC</span><span class="o">.</span><span class="n">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">shadeModelSmooth</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">shadeModelSmooth</span> <span class="o">=</span> <span class="kc">False</span>
 
 <span class="c1">#turn on coloured plot, using y-component of displacements:</span>
-<span class="n">SC</span><span class="o">.</span><span class="n">visualizationSettings</span><span class="o">.</span><span class="n">contour</span><span class="o">.</span><span class="n">outputVariable</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">OutputVariableType</span><span class="o">.</span><span class="n">Displacement</span>
-<span class="n">SC</span><span class="o">.</span><span class="n">visualizationSettings</span><span class="o">.</span><span class="n">contour</span><span class="o">.</span><span class="n">outputVariableComponent</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1">#0=x, 1=y, 2=z</span>
+<span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">contour</span><span class="o">.</span><span class="n">outputVariable</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Displacement</span>
+<span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">contour</span><span class="o">.</span><span class="n">outputVariableComponent</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1">#0=x, 1=y, 2=z</span>
 </pre></div>
 </div>
 </section>
@@ -282,7 +289,7 @@ User errors are caught by exceptions, but in severe cases this may lead to crash
 <p>Useful examples (single lines) may be:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">x</span><span class="o">=</span><span class="mi">5</span> <span class="c1">#or change any other variable used in Python user functions</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">mbs</span><span class="p">)</span> <span class="c1">#print current mbs overview</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">mbs</span><span class="o">.</span><span class="n">GetSensorValues</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">mbs</span><span class="o">.</span><span class="nf">GetSensorValues</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
 <span class="c1">#adjust simulation end time, in long-run simulations:</span>
 <span class="n">mbs</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span><span class="s1">&#39;dynamicSolver&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">it</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="n">mbs</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span><span class="s1">&#39;dynamicSolver&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">verboseMode</span> <span class="o">=</span> <span class="mi">0</span>
@@ -319,21 +326,21 @@ see also Section <a class="reference internal" href="RenderState.html#sec-render
 A simple way is to reload the stored render state (model view) after simulating your model once at the end of the simulation(
 note that <code class="docutils literal notranslate"><span class="pre">visualizationSettings.general.autoFitScene</span></code> should be set False if you want to use the stored zoom factor):</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
-<span class="n">SC</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="n">SystemContainer</span><span class="p">()</span>
-<span class="n">SC</span><span class="o">.</span><span class="n">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">autoFitScene</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1">#prevent from autozoom</span>
-<span class="n">exu</span><span class="o">.</span><span class="n">StartRenderer</span><span class="p">()</span>
+<span class="n">SC</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
+<span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">autoFitScene</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1">#prevent from autozoom</span>
+<span class="n">exu</span><span class="o">.</span><span class="nf">StartRenderer</span><span class="p">()</span>
 <span class="k">if</span> <span class="s1">&#39;renderState&#39;</span> <span class="ow">in</span> <span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">:</span>
-    <span class="n">SC</span><span class="o">.</span><span class="n">SetRenderState</span><span class="p">(</span><span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span><span class="s1">&#39;renderState&#39;</span><span class="p">])</span>
+    <span class="n">SC</span><span class="o">.</span><span class="nf">SetRenderState</span><span class="p">(</span><span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span><span class="s1">&#39;renderState&#39;</span><span class="p">])</span>
 <span class="c1">#+++++++++++++++</span>
 <span class="c1">#do simulation here and adjust model view settings with mouse</span>
 <span class="c1">#+++++++++++++++</span>
 
 <span class="c1">#store model view for next run:</span>
-<span class="n">StopRenderer</span><span class="p">()</span> <span class="c1">#stores render state in exu.sys[&#39;renderState&#39;]</span>
+<span class="nf">StopRenderer</span><span class="p">()</span> <span class="c1">#stores render state in exu.sys[&#39;renderState&#39;]</span>
 </pre></div>
 </div>
 <p>Alternatively, you can obtain the current model view from the console after a simulation, e.g.,</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">:</span> <span class="n">SC</span><span class="o">.</span><span class="n">GetRenderState</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">:</span> <span class="n">SC</span><span class="o">.</span><span class="nf">GetRenderState</span><span class="p">()</span>
 <span class="n">Out</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
 <span class="s1">&#39;centerPoint&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
  <span class="s1">&#39;maxSceneSize&#39;</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">,</span>
@@ -346,8 +353,8 @@ note that <code class="docutils literal notranslate"><span class="pre">visualiza
 </div>
 <p>which contains the last state of the renderer.
 Now copy the output and set this with <code class="docutils literal notranslate"><span class="pre">SC.SetRenderState</span></code> in your Python code to have a fixed model view in every simulation (<code class="docutils literal notranslate"><span class="pre">SC.SetRenderState</span></code> AFTER <code class="docutils literal notranslate"><span class="pre">exu.StartRenderer()</span></code>):</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">SC</span><span class="o">.</span><span class="n">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">autoFitScene</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1">#prevent from autozoom</span>
-<span class="n">exu</span><span class="o">.</span><span class="n">StartRenderer</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">autoFitScene</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1">#prevent from autozoom</span>
+<span class="n">exu</span><span class="o">.</span><span class="nf">StartRenderer</span><span class="p">()</span>
 <span class="n">renderState</span><span class="o">=</span><span class="s1">&#39;centerPoint&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
              <span class="s1">&#39;maxSceneSize&#39;</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">,</span>
              <span class="s1">&#39;zoom&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
@@ -355,7 +362,7 @@ Now copy the output and set this with <code class="docutils literal notranslate"
              <span class="s1">&#39;modelRotation&#39;</span><span class="p">:</span>     <span class="p">[[</span> <span class="mf">0.34202015</span><span class="p">,</span>  <span class="mf">0.</span>        <span class="p">,</span>  <span class="mf">0.9396926</span> <span class="p">],</span>
                                   <span class="p">[</span><span class="o">-</span><span class="mf">0.60402274</span><span class="p">,</span>  <span class="mf">0.76604444</span><span class="p">,</span>  <span class="mf">0.21984631</span><span class="p">],</span>
                                   <span class="p">[</span><span class="o">-</span><span class="mf">0.7198463</span> <span class="p">,</span> <span class="o">-</span><span class="mf">0.6427876</span> <span class="p">,</span>  <span class="mf">0.26200265</span><span class="p">]])</span>
-<span class="n">SC</span><span class="o">.</span><span class="n">SetRenderState</span><span class="p">(</span><span class="n">renderState</span><span class="p">)</span>
+<span class="n">SC</span><span class="o">.</span><span class="nf">SetRenderState</span><span class="p">(</span><span class="n">renderState</span><span class="p">)</span>
 <span class="c1">#.... further code for simulation here</span>
 </pre></div>
 </div>
@@ -415,15 +422,15 @@ see</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">exu.SimulationSettings().solutionSettings.coordinatesSolutionFileName</span></code></p></li>
 </ul>
 <p>You can call the <code class="docutils literal notranslate"><span class="pre">SolutionViewer</span></code> either in the model, or at the command line / IPython to load a previous solution (belonging to the same mbs underlying the solution!):</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">exudyn.interactive</span> <span class="kn">import</span> <span class="n">SolutionViewer</span>
-<span class="n">sol</span> <span class="o">=</span> <span class="n">LoadSolutionFile</span><span class="p">(</span><span class="s1">&#39;coordinatesSolution.txt&#39;</span><span class="p">)</span>
-<span class="n">SolutionViewer</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sol</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">exudyn.interactive</span> <span class="kn">import</span> <span class="nf">SolutionViewer</span>
+<span class="n">sol</span> <span class="o">=</span> <span class="nf">LoadSolutionFile</span><span class="p">(</span><span class="s1">&#39;coordinatesSolution.txt&#39;</span><span class="p">)</span>
+<span class="nf">SolutionViewer</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sol</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><strong>Alternatively</strong>, if no solution is provided, <code class="docutils literal notranslate"><span class="pre">SolutionViewer</span></code> tries to reload the solution of the previous simulation
 that is referred to from <code class="docutils literal notranslate"><span class="pre">mbs.sys\['simulationSettings'\]</span></code>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">exudyn.interactive</span> <span class="kn">import</span> <span class="n">SolutionViewer</span>
-<span class="n">SolutionViewer</span><span class="p">(</span><span class="n">mbs</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">exudyn.interactive</span> <span class="kn">import</span> <span class="nf">SolutionViewer</span>
+<span class="nf">SolutionViewer</span><span class="p">(</span><span class="n">mbs</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>An example for the <code class="docutils literal notranslate"><span class="pre">SolutionViewer</span></code> is integrated into the <code class="docutils literal notranslate"><span class="pre">Examples/</span></code> directory, see <code class="docutils literal notranslate"><span class="pre">solutionViewerTest.py</span></code>.</p>

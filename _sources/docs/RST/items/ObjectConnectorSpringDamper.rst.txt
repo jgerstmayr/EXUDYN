@@ -330,6 +330,7 @@ MINI EXAMPLE for ObjectConnectorSpringDamper
 
 
 .. code-block:: python
+   :linenos:
 
    node = mbs.AddNode(NodePoint(referenceCoordinates = [1.05,0,0]))
    oMassPoint = mbs.AddObject(MassPoint(nodeNumber = node, physicsMass=1))

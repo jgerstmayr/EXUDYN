@@ -388,7 +388,7 @@ There are 3 different options for integration rules depending on the flag \ ``us
 
 +  \ ``useReducedOrderIntegration``\  = 0: \ :math:`n_{ip}^\varepsilon = 5`\  (Gauss order 9), \ :math:`n_{ip}^K = 3`\  (Gauss order 5) -- this is considered as full integration, leading to very small approximations; certainly, due to the high nonlinearity of expressions, this is only an approximation.
 +  \ ``useReducedOrderIntegration``\  = 1: \ :math:`n_{ip}^\varepsilon = 4`\  (Gauss order 7), \ :math:`n_{ip}^K = 2`\  (Gauss order 3) -- this is considered as reduced integration, which is usually sufficiently accurate but leads to slightly less computational efforts, especially for bending terms.
-+  \ ``useReducedOrderIntegration``\  = 2: \ :math:`n_{ip}^\varepsilon = 3`\  (Lobatto order 3), \ :math:`n_{ip}^K = 2`\  (Gauss order 3) -- this is a further reduced integration, with the exceptional property that axial strain and bending strain terms are computed at completely disjointed locations: axial strain terms are evaluated at \ :math:`0`\ , \ :math:`L/2`\  and \ :math:`L`\ , while bending terms are evaluated at \ :math:`\pm \frac{L}{2}\sqrt{1/3}`\ . This allows axial strains to freely follow the bending terms at \ :math:`\pm \frac{L}{2}\sqrt{1/3}`\ , while axial strains are almost independent from bending terms at \ :math:`0`\ , \ :math:`L/2`\  and \ :math:`L`\ . However, due to the highly reduced integration, spurious (hourglass) modes may occur in certain applications!
++  \ ``useReducedOrderIntegration``\  = 2: \ :math:`n_{ip}^\varepsilon = 3`\  (Lobatto order 3), \ :math:`n_{ip}^K = 2`\  (Gauss order 3) -- this is a further reduced integration, with the exceptional property that axial strain and bending strain terms are computed at completely disjointed locations: axial strain terms are evaluated at \ :math:`0`\ , \ :math:`L/2`\  and \ :math:`L`\ , while bending terms are evaluated at \ :math:`\frac{L}{2} \pm \frac{L}{2}\sqrt{1/3}`\ . This allows axial strains to freely follow the bending terms at \ :math:`\frac{L}{2} \pm \frac{L}{2}\sqrt{1/3}`\ , while axial strains are almost independent from bending terms at \ :math:`0`\ , \ :math:`L/2`\  and \ :math:`L`\ . However, due to the highly reduced integration, spurious (hourglass) modes may occur in certain applications!
 
 Note that the Jacobian of elastic forces is computed using automatic differentiation.
 
@@ -422,6 +422,7 @@ MINI EXAMPLE for ObjectANCFCable2D
 
 
 .. code-block:: python
+   :linenos:
 
    rhoA = 78.
    EA = 1000000.

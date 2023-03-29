@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MainSystem &mdash; Exudyn1.6.0 1.6.0 documentation</title>
+  <title>MainSystem &mdash; Exudyn1.6.31.dev1 1.6.31.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -19,6 +19,7 @@
         <script src="../../../_static/sphinx_highlight.js"></script>
         <script src="../../../_static/clipboard.min.js"></script>
         <script src="../../../_static/copybutton.js"></script>
+        <script src="../../../_static/js/rtd_search_config.js"></script>
         <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -36,7 +37,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.0
+            Exudyn1.6.31.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -53,6 +54,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NotationIndex.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TheoryAndFormulationsIndex.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../SolversIndex.html">Solvers</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="CInterfaceIndex.html">Python-C++ command interface</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="GeneralInformation.html">General information on Python-C++ interface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Exudyn.html">Exudyn</a></li>
@@ -81,6 +85,9 @@
 <p class="caption" role="heading"><span class="caption-text">Misc</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../Abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ExamplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TestModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trackerlog.html">Issue tracker</a></li>
 </ul>
 
         </div>
@@ -89,7 +96,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.0</a>
+          <a href="../../../index.html">Exudyn1.6.31.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -112,8 +119,8 @@
 <h1>MainSystem<a class="headerlink" href="#mainsystem" title="Permalink to this heading"></a></h1>
 <p>This is the structure which defines a (multibody) system. In C++, there is a MainSystem (links to Python) and a System (computational part). For that reason, the name is MainSystem on the Python side, but it is often just called ‘system’. For compatibility, it is recommended to denote the variable holding this system as mbs, the multibody dynamics system. It can be created, visualized and computed. Use the following functions for system manipulation.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
-<span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">SystemContainer</span><span class="p">()</span>
-<span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="n">AddSystem</span><span class="p">()</span>
+<span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
+<span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>The class <strong>MainSystem</strong> has the following <strong>functions and structures</strong>:</p>
@@ -184,11 +191,11 @@
 <div class="line"><em>Example</em>:</div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">PreStepUserFunction</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">mbs</span><span class="o">.</span><span class="n">systemData</span><span class="o">.</span><span class="n">NumberOfNodes</span><span class="p">())</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">NumberOfNodes</span><span class="p">())</span>
     <span class="k">if</span><span class="p">(</span><span class="n">t</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">False</span>
     <span class="k">return</span> <span class="kc">True</span>
- <span class="n">mbs</span><span class="o">.</span><span class="n">SetPreStepUserFunction</span><span class="p">(</span><span class="n">PreStepUserFunction</span><span class="p">)</span>
+ <span class="n">mbs</span><span class="o">.</span><span class="nf">SetPreStepUserFunction</span><span class="p">(</span><span class="n">PreStepUserFunction</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
@@ -201,7 +208,7 @@
     <span class="k">if</span><span class="p">(</span><span class="n">t</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1e-6</span><span class="p">]</span>
     <span class="k">return</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
- <span class="n">mbs</span><span class="o">.</span><span class="n">SetPostNewtonUserFunction</span><span class="p">(</span><span class="n">PostNewtonUserFunction</span><span class="p">)</span>
+ <span class="n">mbs</span><span class="o">.</span><span class="nf">SetPostNewtonUserFunction</span><span class="p">(</span><span class="n">PostNewtonUserFunction</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
@@ -215,7 +222,7 @@
 <div class="line">get read/write access to GeneralContact with index generalContactNumber stored in mbs; Examples shows how to access the GeneralContact object added with last AddGeneralContact() command:</div>
 <div class="line"><em>Example</em>:</div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">gc</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="n">GetGeneralContact</span><span class="p">(</span><span class="n">mbs</span><span class="o">.</span><span class="n">NumberOfGeneralContacts</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">gc</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">GetGeneralContact</span><span class="p">(</span><span class="n">mbs</span><span class="o">.</span><span class="nf">NumberOfGeneralContacts</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
@@ -272,11 +279,11 @@
 <section id="mainsystem-node">
 <span id="sec-mainsystem-node"></span><h2>MainSystem: Node<a class="headerlink" href="#mainsystem-node" title="Permalink to this heading"></a></h2>
 <p>This section provides functions for adding, reading and modifying nodes. Nodes are used to define coordinates (unknowns to the static system and degrees of freedom if constraints are not present). Nodes can provide various types of coordinates for second/first order differential equations (ODE2/ODE1), algebraic equations (AE) and for data (history) variables – which are not providing unknowns in the nonlinear solver but will be solved in an additional nonlinear iteration for e.g. contact, friction or plasticity.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>               <span class="c1">#EXUDYN package including C++ core part</span>
-<span class="kn">from</span> <span class="nn">exudyn.itemInterface</span> <span class="kn">import</span> <span class="o">*</span> <span class="c1">#conversion of data to exudyn dictionaries</span>
-<span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">SystemContainer</span><span class="p">()</span>         <span class="c1">#container of systems</span>
-<span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="n">AddSystem</span><span class="p">()</span>               <span class="c1">#add a new system to work with</span>
-<span class="n">nMP</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">AddNode</span><span class="p">(</span><span class="n">NodePoint2D</span><span class="p">(</span><span class="n">referenceCoordinates</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>               <span class="c1">#EXUDYN package including C++ core part</span>
+<span class="linenos">2</span><span class="kn">from</span> <span class="nn">exudyn.itemInterface</span> <span class="kn">import</span> <span class="o">*</span> <span class="c1">#conversion of data to exudyn dictionaries</span>
+<span class="linenos">3</span><span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>         <span class="c1">#container of systems</span>
+<span class="linenos">4</span><span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>               <span class="c1">#add a new system to work with</span>
+<span class="linenos">5</span><span class="n">nMP</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">NodePoint2D</span><span class="p">(</span><span class="n">referenceCoordinates</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
 </pre></div>
 </div>
 <p>The class <strong>MainSystem</strong> has the following <strong>functions and structures</strong> regarding <strong>nodes</strong>:</p>
@@ -286,13 +293,13 @@
 <div class="line">add a node with nodeDefinition from Python node class; returns (global) node index (type NodeIndex) of newly added node; use int(nodeIndex) to convert to int, if needed (but not recommended in order not to mix up index types of nodes, objects, markers, …)</div>
 <div class="line"><em>Example</em>:</div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">item</span> <span class="o">=</span> <span class="n">Rigid2D</span><span class="p">(</span> <span class="n">referenceCoordinates</span><span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">initialVelocities</span><span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
-<span class="n">mbs</span><span class="o">.</span><span class="n">AddNode</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">item</span> <span class="o">=</span> <span class="nc">Rigid2D</span><span class="p">(</span> <span class="n">referenceCoordinates</span><span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">initialVelocities</span><span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
 <span class="n">nodeDict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;nodeType&#39;</span><span class="p">:</span> <span class="s1">&#39;Point&#39;</span><span class="p">,</span>
 <span class="s1">&#39;referenceCoordinates&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
 <span class="s1">&#39;initialCoordinates&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
 <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;example node&#39;</span><span class="p">}</span>
-<span class="n">mbs</span><span class="o">.</span><span class="n">AddNode</span><span class="p">(</span><span class="n">nodeDict</span><span class="p">)</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="n">nodeDict</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
@@ -301,7 +308,7 @@
 <div class="line">get node’s number by name (string)</div>
 <div class="line"><em>Example</em>:</div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">GetNodeNumber</span><span class="p">(</span><span class="s1">&#39;example node&#39;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetNodeNumber</span><span class="p">(</span><span class="s1">&#39;example node&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
@@ -310,7 +317,7 @@
 <div class="line">get node’s dictionary by node number (type NodeIndex)</div>
 <div class="line"><em>Example</em>:</div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">nodeDict</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">GetNode</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">nodeDict</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetNode</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
@@ -319,7 +326,7 @@
 <div class="line">modify node’s dictionary by node number (type NodeIndex)</div>
 <div class="line"><em>Example</em>:</div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="n">ModifyNode</span><span class="p">(</span><span class="n">nodeNumber</span><span class="p">,</span> <span class="n">nodeDict</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="nf">ModifyNode</span><span class="p">(</span><span class="n">nodeNumber</span><span class="p">,</span> <span class="n">nodeDict</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
@@ -329,7 +336,7 @@
 <div class="line"><em>Example</em>:</div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">nodeType</span> <span class="o">=</span> <span class="s1">&#39;Point&#39;</span>
-<span class="n">nodeDict</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">GetNodeDefaults</span><span class="p">(</span><span class="n">nodeType</span><span class="p">)</span>
+<span class="n">nodeDict</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetNodeDefaults</span><span class="p">(</span><span class="n">nodeType</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
@@ -338,7 +345,7 @@
 <div class="line">get the ouput of the node specified with the OutputVariableType; output may be scalar or array (e.g. displacement vector)</div>
 <div class="line"><em>Example</em>:</div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="n">GetNodeOutput</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">variableType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="n">OutputVariableType</span><span class="o">.</span><span class="n">Displacement</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="nf">GetNodeOutput</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">variableType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Displacement</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
@@ -347,7 +354,7 @@
 <div class="line">get index in the global ODE2 coordinate vector for the first node coordinate of the specified node</div>
 <div class="line"><em>Example</em>:</div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="n">GetNodeODE2Index</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="nf">GetNodeODE2Index</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
@@ -356,7 +363,7 @@
 <div class="line">get index in the global ODE1 coordinate vector for the first node coordinate of the specified node</div>
 <div class="line"><em>Example</em>:</div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="n">GetNodeODE1Index</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="nf">GetNodeODE1Index</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
@@ -365,7 +372,7 @@
 <div class="line">get index in the global AE coordinate vector for the first node coordinate of the specified node</div>
 <div class="line"><em>Example</em>:</div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="n">GetNodeAEIndex</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="nf">GetNodeAEIndex</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
@@ -374,7 +381,7 @@
 <div class="line">get nodes’s parameter from node number (type NodeIndex) and parameterName; parameter names can be found for the specific items in the reference manual; for visualization parameters, use a ‘V’ as a prefix</div>
 <div class="line"><em>Example</em>:</div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="n">GetNodeParameter</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;referenceCoordinates&#39;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="nf">GetNodeParameter</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;referenceCoordinates&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
@@ -383,7 +390,7 @@
 <div class="line">set parameter ‘parameterName’ of node with node number (type NodeIndex) to value; parameter names can be found for the specific items in the reference manual; for visualization parameters, use a ‘V’ as a prefix</div>
 <div class="line"><em>Example</em>:</div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="n">SetNodeParameter</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Vshow&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="nf">SetNodeParameter</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Vshow&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
@@ -392,12 +399,12 @@
 <section id="mainsystem-object">
 <span id="sec-mainsystem-object"></span><h2>MainSystem: Object<a class="headerlink" href="#mainsystem-object" title="Permalink to this heading"></a></h2>
 <p>This section provides functions for adding, reading and modifying objects, which can be bodies (mass point, rigid body, finite element, …), connectors (spring-damper or joint) or general objects. Objects provided terms to the residual of equations resulting from every coordinate given by the nodes. Single-noded objects (e.g.~mass point) provides exactly residual terms for its nodal coordinates. Connectors constrain or penalize two markers, which can be, e.g., position, rigid or coordinate markers. Thus, the dependence of objects is either on the coordinates of the marker-objects/nodes or on nodes which the objects possess themselves.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>               <span class="c1">#EXUDYN package including C++ core part</span>
-<span class="kn">from</span> <span class="nn">exudyn.itemInterface</span> <span class="kn">import</span> <span class="o">*</span> <span class="c1">#conversion of data to exudyn dictionaries</span>
-<span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">SystemContainer</span><span class="p">()</span>         <span class="c1">#container of systems</span>
-<span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="n">AddSystem</span><span class="p">()</span>               <span class="c1">#add a new system to work with</span>
-<span class="n">nMP</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">AddNode</span><span class="p">(</span><span class="n">NodePoint2D</span><span class="p">(</span><span class="n">referenceCoordinates</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
-<span class="n">mbs</span><span class="o">.</span><span class="n">AddObject</span><span class="p">(</span><span class="n">ObjectMassPoint2D</span><span class="p">(</span><span class="n">physicsMass</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">nodeNumber</span><span class="o">=</span><span class="n">nMP</span> <span class="p">))</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>               <span class="c1">#EXUDYN package including C++ core part</span>
+<span class="linenos">2</span><span class="kn">from</span> <span class="nn">exudyn.itemInterface</span> <span class="kn">import</span> <span class="o">*</span> <span class="c1">#conversion of data to exudyn dictionaries</span>
+<span class="linenos">3</span><span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>         <span class="c1">#container of systems</span>
+<span class="linenos">4</span><span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>               <span class="c1">#add a new system to work with</span>
+<span class="linenos">5</span><span class="n">nMP</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">NodePoint2D</span><span class="p">(</span><span class="n">referenceCoordinates</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+<span class="linenos">6</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectMassPoint2D</span><span class="p">(</span><span class="n">physicsMass</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">nodeNumber</span><span class="o">=</span><span class="n">nMP</span> <span class="p">))</span>
 </pre></div>
 </div>
 <p>The class <strong>MainSystem</strong> has the following <strong>functions and structures</strong> regarding <strong>objects</strong>:</p>
@@ -407,13 +414,13 @@
 <div class="line">add an object with objectDefinition from Python object class; returns (global) object number (type ObjectIndex) of newly added object</div>
 <div class="line"><em>Example</em>:</div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">item</span> <span class="o">=</span> <span class="n">MassPoint</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;heavy object&#39;</span><span class="p">,</span> <span class="n">nodeNumber</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">physicsMass</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
-<span class="n">mbs</span><span class="o">.</span><span class="n">AddObject</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">item</span> <span class="o">=</span> <span class="nc">MassPoint</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;heavy object&#39;</span><span class="p">,</span> <span class="n">nodeNumber</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">physicsMass</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
 <span class="n">objectDict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;objectType&#39;</span><span class="p">:</span> <span class="s1">&#39;MassPoint&#39;</span><span class="p">,</span>
 <span class="s1">&#39;physicsMass&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
 <span class="s1">&#39;nodeNumber&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
 <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;example object&#39;</span><span class="p">}</span>
-<span class="n">mbs</span><span class="o">.</span><span class="n">AddObject</span><span class="p">(</span><span class="n">objectDict</span><span class="p">)</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="n">objectDict</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
@@ -422,7 +429,7 @@
 <div class="line">get object’s number by name (string)</div>
 <div class="line"><em>Example</em>:</div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">GetObjectNumber</span><span class="p">(</span><span class="s1">&#39;heavy object&#39;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetObjectNumber</span><span class="p">(</span><span class="s1">&#39;heavy object&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
@@ -431,7 +438,7 @@
 <div class="line">get object’s dictionary by object number (type ObjectIndex); NOTE: visualization parameters have a prefix ‘V’; in order to also get graphicsData written, use addGraphicsData=True (which is by default False, as it would spoil the information)</div>
 <div class="line"><em>Example</em>:</div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">objectDict</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">GetObject</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">objectDict</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetObject</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
@@ -440,7 +447,7 @@
 <div class="line">modify object’s dictionary by object number (type ObjectIndex); NOTE: visualization parameters have a prefix ‘V’</div>
 <div class="line"><em>Example</em>:</div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="n">ModifyObject</span><span class="p">(</span><span class="n">objectNumber</span><span class="p">,</span> <span class="n">objectDict</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="nf">ModifyObject</span><span class="p">(</span><span class="n">objectNumber</span><span class="p">,</span> <span class="n">objectDict</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
@@ -450,7 +457,7 @@
 <div class="line"><em>Example</em>:</div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">objectType</span> <span class="o">=</span> <span class="s1">&#39;MassPoint&#39;</span>
-<span class="n">objectDict</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">GetObjectDefaults</span><span class="p">(</span><span class="n">objectType</span><span class="p">)</span>
+<span class="n">objectDict</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetObjectDefaults</span><span class="p">(</span><span class="n">objectType</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
@@ -464,7 +471,7 @@
 <div class="line">get body’s output variable from object number (type ObjectIndex) and OutputVariableType, using the localPosition as defined in the body, and as used in MarkerBody and SensorBody</div>
 <div class="line"><em>Example</em>:</div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">u</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">GetObjectOutputBody</span><span class="p">(</span><span class="n">objectNumber</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">variableType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">OutputVariableType</span><span class="o">.</span><span class="n">Position</span><span class="p">,</span> <span class="n">localPosition</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">configuration</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">ConfigurationType</span><span class="o">.</span><span class="n">Initial</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">u</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetObjectOutputBody</span><span class="p">(</span><span class="n">objectNumber</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">variableType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Position</span><span class="p">,</span> <span class="n">localPosition</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">configuration</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">ConfigurationType</span><span class="o">.</span><span class="n">Initial</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
@@ -473,7 +480,7 @@
 <div class="line">get output variable from mesh node number of object with type SuperElement (GenericODE2, FFRF, FFRFreduced - CMS) with specific OutputVariableType; the meshNodeNumber is the object’s local node number, not the global node number!</div>
 <div class="line"><em>Example</em>:</div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">u</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">GetObjectOutputSuperElement</span><span class="p">(</span><span class="n">objectNumber</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">variableType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">OutputVariableType</span><span class="o">.</span><span class="n">Position</span><span class="p">,</span> <span class="n">meshNodeNumber</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span> <span class="n">configuration</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">ConfigurationType</span><span class="o">.</span><span class="n">Initial</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">u</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetObjectOutputSuperElement</span><span class="p">(</span><span class="n">objectNumber</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">variableType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Position</span><span class="p">,</span> <span class="n">meshNodeNumber</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span> <span class="n">configuration</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">ConfigurationType</span><span class="o">.</span><span class="n">Initial</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
@@ -482,7 +489,7 @@
 <div class="line">get objects’s parameter from object number (type ObjectIndex) and parameterName; parameter names can be found for the specific items in the reference manual; for visualization parameters, use a ‘V’ as a prefix; NOTE that BodyGraphicsData cannot be get or set, use dictionary access instead</div>
 <div class="line"><em>Example</em>:</div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="n">GetObjectParameter</span><span class="p">(</span><span class="n">objectNumber</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">parameterName</span> <span class="o">=</span> <span class="s1">&#39;nodeNumber&#39;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="nf">GetObjectParameter</span><span class="p">(</span><span class="n">objectNumber</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">parameterName</span> <span class="o">=</span> <span class="s1">&#39;nodeNumber&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
@@ -491,7 +498,7 @@
 <div class="line">set parameter ‘parameterName’ of object with object number (type ObjectIndex) to value;; parameter names can be found for the specific items in the reference manual; for visualization parameters, use a ‘V’ as a prefix; NOTE that BodyGraphicsData cannot be get or set, use dictionary access instead</div>
 <div class="line"><em>Example</em>:</div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="n">SetObjectParameter</span><span class="p">(</span><span class="n">objectNumber</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">parameterName</span> <span class="o">=</span> <span class="s1">&#39;Vshow&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="nf">SetObjectParameter</span><span class="p">(</span><span class="n">objectNumber</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">parameterName</span> <span class="o">=</span> <span class="s1">&#39;Vshow&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
@@ -500,13 +507,13 @@
 <section id="mainsystem-marker">
 <span id="sec-mainsystem-marker"></span><h2>MainSystem: Marker<a class="headerlink" href="#mainsystem-marker" title="Permalink to this heading"></a></h2>
 <p>This section provides functions for adding, reading and modifying markers. Markers define how to measure primal kinematical quantities on objects or nodes (e.g., position, orientation or coordinates themselves), and how to act on the quantities which are dual to the kinematical quantities (e.g., force, torque and generalized forces). Markers provide unique interfaces for loads, sensors and constraints in order to address these quantities independently of the structure of the object or node (e.g., rigid or flexible body).</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>               <span class="c1">#EXUDYN package including C++ core part</span>
-<span class="kn">from</span> <span class="nn">exudyn.itemInterface</span> <span class="kn">import</span> <span class="o">*</span> <span class="c1">#conversion of data to exudyn dictionaries</span>
-<span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">SystemContainer</span><span class="p">()</span>         <span class="c1">#container of systems</span>
-<span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="n">AddSystem</span><span class="p">()</span>               <span class="c1">#add a new system to work with</span>
-<span class="n">nMP</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">AddNode</span><span class="p">(</span><span class="n">NodePoint2D</span><span class="p">(</span><span class="n">referenceCoordinates</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
-<span class="n">mbs</span><span class="o">.</span><span class="n">AddObject</span><span class="p">(</span><span class="n">ObjectMassPoint2D</span><span class="p">(</span><span class="n">physicsMass</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">nodeNumber</span><span class="o">=</span><span class="n">nMP</span> <span class="p">))</span>
-<span class="n">mMP</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">AddMarker</span><span class="p">(</span><span class="n">MarkerNodePosition</span><span class="p">(</span><span class="n">nodeNumber</span> <span class="o">=</span> <span class="n">nMP</span><span class="p">))</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>               <span class="c1">#EXUDYN package including C++ core part</span>
+<span class="linenos">2</span><span class="kn">from</span> <span class="nn">exudyn.itemInterface</span> <span class="kn">import</span> <span class="o">*</span> <span class="c1">#conversion of data to exudyn dictionaries</span>
+<span class="linenos">3</span><span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>         <span class="c1">#container of systems</span>
+<span class="linenos">4</span><span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>               <span class="c1">#add a new system to work with</span>
+<span class="linenos">5</span><span class="n">nMP</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">NodePoint2D</span><span class="p">(</span><span class="n">referenceCoordinates</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+<span class="linenos">6</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectMassPoint2D</span><span class="p">(</span><span class="n">physicsMass</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">nodeNumber</span><span class="o">=</span><span class="n">nMP</span> <span class="p">))</span>
+<span class="linenos">7</span><span class="n">mMP</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerNodePosition</span><span class="p">(</span><span class="n">nodeNumber</span> <span class="o">=</span> <span class="n">nMP</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>The class <strong>MainSystem</strong> has the following <strong>functions and structures</strong> regarding <strong>markers</strong>:</p>
@@ -516,12 +523,12 @@
 <div class="line">add a marker with markerDefinition from Python marker class; returns (global) marker number (type MarkerIndex) of newly added marker</div>
 <div class="line"><em>Example</em>:</div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">item</span> <span class="o">=</span> <span class="n">MarkerNodePosition</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;my marker&#39;</span><span class="p">,</span><span class="n">nodeNumber</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">mbs</span><span class="o">.</span><span class="n">AddMarker</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">item</span> <span class="o">=</span> <span class="nc">MarkerNodePosition</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;my marker&#39;</span><span class="p">,</span><span class="n">nodeNumber</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
 <span class="n">markerDict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;markerType&#39;</span><span class="p">:</span> <span class="s1">&#39;NodePosition&#39;</span><span class="p">,</span>
   <span class="s1">&#39;nodeNumber&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
   <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;position0&#39;</span><span class="p">}</span>
-<span class="n">mbs</span><span class="o">.</span><span class="n">AddMarker</span><span class="p">(</span><span class="n">markerDict</span><span class="p">)</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="n">markerDict</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
@@ -530,7 +537,7 @@
 <div class="line">get marker’s number by name (string)</div>
 <div class="line"><em>Example</em>:</div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">GetMarkerNumber</span><span class="p">(</span><span class="s1">&#39;my marker&#39;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetMarkerNumber</span><span class="p">(</span><span class="s1">&#39;my marker&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
@@ -539,7 +546,7 @@
 <div class="line">get marker’s dictionary by index</div>
 <div class="line"><em>Example</em>:</div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">markerDict</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">GetMarker</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">markerDict</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetMarker</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
@@ -548,7 +555,7 @@
 <div class="line">modify marker’s dictionary by index</div>
 <div class="line"><em>Example</em>:</div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="n">ModifyMarker</span><span class="p">(</span><span class="n">markerNumber</span><span class="p">,</span> <span class="n">markerDict</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="nf">ModifyMarker</span><span class="p">(</span><span class="n">markerNumber</span><span class="p">,</span> <span class="n">markerDict</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
@@ -558,7 +565,7 @@
 <div class="line"><em>Example</em>:</div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">markerType</span> <span class="o">=</span> <span class="s1">&#39;NodePosition&#39;</span>
-<span class="n">markerDict</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">GetMarkerDefaults</span><span class="p">(</span><span class="n">markerType</span><span class="p">)</span>
+<span class="n">markerDict</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetMarkerDefaults</span><span class="p">(</span><span class="n">markerType</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
@@ -577,7 +584,7 @@
 <div class="line">get the ouput of the marker specified with the OutputVariableType; currently only provides Displacement, Position and Velocity for position based markers, and RotationMatrix, Rotation and AngularVelocity(Local) for markers providing orientation; Coordinates and Coordinates_t available for coordinate markers</div>
 <div class="line"><em>Example</em>:</div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="n">GetMarkerOutput</span><span class="p">(</span><span class="n">markerNumber</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">variableType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="n">OutputVariableType</span><span class="o">.</span><span class="n">Position</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="nf">GetMarkerOutput</span><span class="p">(</span><span class="n">markerNumber</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">variableType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Position</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
@@ -586,14 +593,14 @@
 <section id="mainsystem-load">
 <span id="sec-mainsystem-load"></span><h2>MainSystem: Load<a class="headerlink" href="#mainsystem-load" title="Permalink to this heading"></a></h2>
 <p>This section provides functions for adding, reading and modifying operating loads. Loads are used to act on the quantities which are dual to the primal kinematic quantities, such as displacement and rotation. Loads represent, e.g., forces, torques or generalized forces.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>               <span class="c1">#EXUDYN package including C++ core part</span>
-<span class="kn">from</span> <span class="nn">exudyn.itemInterface</span> <span class="kn">import</span> <span class="o">*</span> <span class="c1">#conversion of data to exudyn dictionaries</span>
-<span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">SystemContainer</span><span class="p">()</span>         <span class="c1">#container of systems</span>
-<span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="n">AddSystem</span><span class="p">()</span>               <span class="c1">#add a new system to work with</span>
-<span class="n">nMP</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">AddNode</span><span class="p">(</span><span class="n">NodePoint2D</span><span class="p">(</span><span class="n">referenceCoordinates</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
-<span class="n">mbs</span><span class="o">.</span><span class="n">AddObject</span><span class="p">(</span><span class="n">ObjectMassPoint2D</span><span class="p">(</span><span class="n">physicsMass</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">nodeNumber</span><span class="o">=</span><span class="n">nMP</span> <span class="p">))</span>
-<span class="n">mMP</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">AddMarker</span><span class="p">(</span><span class="n">MarkerNodePosition</span><span class="p">(</span><span class="n">nodeNumber</span> <span class="o">=</span> <span class="n">nMP</span><span class="p">))</span>
-<span class="n">mbs</span><span class="o">.</span><span class="n">AddLoad</span><span class="p">(</span><span class="n">Force</span><span class="p">(</span><span class="n">markerNumber</span> <span class="o">=</span> <span class="n">mMP</span><span class="p">,</span> <span class="n">loadVector</span><span class="o">=</span><span class="p">[</span><span class="mf">0.001</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>               <span class="c1">#EXUDYN package including C++ core part</span>
+<span class="linenos">2</span><span class="kn">from</span> <span class="nn">exudyn.itemInterface</span> <span class="kn">import</span> <span class="o">*</span> <span class="c1">#conversion of data to exudyn dictionaries</span>
+<span class="linenos">3</span><span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>         <span class="c1">#container of systems</span>
+<span class="linenos">4</span><span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>               <span class="c1">#add a new system to work with</span>
+<span class="linenos">5</span><span class="n">nMP</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">NodePoint2D</span><span class="p">(</span><span class="n">referenceCoordinates</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+<span class="linenos">6</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectMassPoint2D</span><span class="p">(</span><span class="n">physicsMass</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">nodeNumber</span><span class="o">=</span><span class="n">nMP</span> <span class="p">))</span>
+<span class="linenos">7</span><span class="n">mMP</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerNodePosition</span><span class="p">(</span><span class="n">nodeNumber</span> <span class="o">=</span> <span class="n">nMP</span><span class="p">))</span>
+<span class="linenos">8</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddLoad</span><span class="p">(</span><span class="nc">Force</span><span class="p">(</span><span class="n">markerNumber</span> <span class="o">=</span> <span class="n">mMP</span><span class="p">,</span> <span class="n">loadVector</span><span class="o">=</span><span class="p">[</span><span class="mf">0.001</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
 </pre></div>
 </div>
 <p>The class <strong>MainSystem</strong> has the following <strong>functions and structures</strong> regarding <strong>loads</strong>:</p>
@@ -603,13 +610,13 @@
 <div class="line">add a load with loadDefinition from Python load class; returns (global) load number (type LoadIndex) of newly added load</div>
 <div class="line"><em>Example</em>:</div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">item</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">AddLoad</span><span class="p">(</span><span class="n">LoadForceVector</span><span class="p">(</span><span class="n">loadVector</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">markerNumber</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;heavy load&#39;</span><span class="p">))</span>
-<span class="n">mbs</span><span class="o">.</span><span class="n">AddLoad</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">item</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddLoad</span><span class="p">(</span><span class="nc">LoadForceVector</span><span class="p">(</span><span class="n">loadVector</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">markerNumber</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;heavy load&#39;</span><span class="p">))</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">AddLoad</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
 <span class="n">loadDict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;loadType&#39;</span><span class="p">:</span> <span class="s1">&#39;ForceVector&#39;</span><span class="p">,</span>
   <span class="s1">&#39;markerNumber&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
   <span class="s1">&#39;loadVector&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
   <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;heavy load&#39;</span><span class="p">}</span>
-<span class="n">mbs</span><span class="o">.</span><span class="n">AddLoad</span><span class="p">(</span><span class="n">loadDict</span><span class="p">)</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">AddLoad</span><span class="p">(</span><span class="n">loadDict</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
@@ -618,7 +625,7 @@
 <div class="line">get load’s number by name (string)</div>
 <div class="line"><em>Example</em>:</div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">GetLoadNumber</span><span class="p">(</span><span class="s1">&#39;heavy load&#39;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetLoadNumber</span><span class="p">(</span><span class="s1">&#39;heavy load&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
@@ -627,7 +634,7 @@
 <div class="line">get load’s dictionary by index</div>
 <div class="line"><em>Example</em>:</div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">loadDict</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">GetLoad</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">loadDict</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetLoad</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
@@ -636,7 +643,7 @@
 <div class="line">modify load’s dictionary by index</div>
 <div class="line"><em>Example</em>:</div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="n">ModifyLoad</span><span class="p">(</span><span class="n">loadNumber</span><span class="p">,</span> <span class="n">loadDict</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="nf">ModifyLoad</span><span class="p">(</span><span class="n">loadNumber</span><span class="p">,</span> <span class="n">loadDict</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
@@ -646,7 +653,7 @@
 <div class="line"><em>Example</em>:</div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">loadType</span> <span class="o">=</span> <span class="s1">&#39;ForceVector&#39;</span>
-<span class="n">loadDict</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">GetLoadDefaults</span><span class="p">(</span><span class="n">loadType</span><span class="p">)</span>
+<span class="n">loadDict</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetLoadDefaults</span><span class="p">(</span><span class="n">loadType</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
@@ -670,20 +677,20 @@
 <section id="mainsystem-sensor">
 <span id="sec-mainsystem-sensor"></span><h2>MainSystem: Sensor<a class="headerlink" href="#mainsystem-sensor" title="Permalink to this heading"></a></h2>
 <p>This section provides functions for adding, reading and modifying operating sensors. Sensors are used to measure information in nodes, objects, markers, and loads for output in a file.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>               <span class="c1">#EXUDYN package including C++ core part</span>
-<span class="kn">from</span> <span class="nn">exudyn.itemInterface</span> <span class="kn">import</span> <span class="o">*</span> <span class="c1">#conversion of data to exudyn dictionaries</span>
-<span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">SystemContainer</span><span class="p">()</span>         <span class="c1">#container of systems</span>
-<span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="n">AddSystem</span><span class="p">()</span>               <span class="c1">#add a new system to work with</span>
-<span class="n">nMP</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">AddNode</span><span class="p">(</span><span class="n">NodePoint</span><span class="p">(</span><span class="n">referenceCoordinates</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
-<span class="n">mbs</span><span class="o">.</span><span class="n">AddObject</span><span class="p">(</span><span class="n">ObjectMassPoint</span><span class="p">(</span><span class="n">physicsMass</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">nodeNumber</span><span class="o">=</span><span class="n">nMP</span> <span class="p">))</span>
-<span class="n">mMP</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">AddMarker</span><span class="p">(</span><span class="n">MarkerNodePosition</span><span class="p">(</span><span class="n">nodeNumber</span> <span class="o">=</span> <span class="n">nMP</span><span class="p">))</span>
-<span class="n">mbs</span><span class="o">.</span><span class="n">AddLoad</span><span class="p">(</span><span class="n">Force</span><span class="p">(</span><span class="n">markerNumber</span> <span class="o">=</span> <span class="n">mMP</span><span class="p">,</span> <span class="n">loadVector</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">]))</span>
-<span class="n">sMP</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">AddSensor</span><span class="p">(</span><span class="n">SensorNode</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">nMP</span><span class="p">,</span> <span class="n">storeInternal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                               <span class="n">outputVariableType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="n">OutputVariableType</span><span class="o">.</span><span class="n">Position</span><span class="p">))</span>
-<span class="n">mbs</span><span class="o">.</span><span class="n">Assemble</span><span class="p">()</span>
-<span class="n">exu</span><span class="o">.</span><span class="n">SolveDynamic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="n">SimulationSettings</span><span class="p">())</span>
-<span class="kn">from</span> <span class="nn">exudyn.plot</span> <span class="kn">import</span> <span class="n">PlotSensor</span>
-<span class="n">PlotSensor</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sMP</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>               <span class="c1">#EXUDYN package including C++ core part</span>
+<span class="linenos"> 2</span><span class="kn">from</span> <span class="nn">exudyn.itemInterface</span> <span class="kn">import</span> <span class="o">*</span> <span class="c1">#conversion of data to exudyn dictionaries</span>
+<span class="linenos"> 3</span><span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>         <span class="c1">#container of systems</span>
+<span class="linenos"> 4</span><span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>               <span class="c1">#add a new system to work with</span>
+<span class="linenos"> 5</span><span class="n">nMP</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">NodePoint</span><span class="p">(</span><span class="n">referenceCoordinates</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+<span class="linenos"> 6</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectMassPoint</span><span class="p">(</span><span class="n">physicsMass</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">nodeNumber</span><span class="o">=</span><span class="n">nMP</span> <span class="p">))</span>
+<span class="linenos"> 7</span><span class="n">mMP</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerNodePosition</span><span class="p">(</span><span class="n">nodeNumber</span> <span class="o">=</span> <span class="n">nMP</span><span class="p">))</span>
+<span class="linenos"> 8</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddLoad</span><span class="p">(</span><span class="nc">Force</span><span class="p">(</span><span class="n">markerNumber</span> <span class="o">=</span> <span class="n">mMP</span><span class="p">,</span> <span class="n">loadVector</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">]))</span>
+<span class="linenos"> 9</span><span class="n">sMP</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorNode</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">nMP</span><span class="p">,</span> <span class="n">storeInternal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">10</span>                               <span class="n">outputVariableType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Position</span><span class="p">))</span>
+<span class="linenos">11</span><span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
+<span class="linenos">12</span><span class="n">exu</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">())</span>
+<span class="linenos">13</span><span class="kn">from</span> <span class="nn">exudyn.plot</span> <span class="kn">import</span> <span class="nf">PlotSensor</span>
+<span class="linenos">14</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sMP</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
 </pre></div>
 </div>
 <p>The class <strong>MainSystem</strong> has the following <strong>functions and structures</strong> regarding <strong>sensors</strong>:</p>
@@ -693,13 +700,13 @@
 <div class="line">add a sensor with sensor definition from Python sensor class; returns (global) sensor number (type SensorIndex) of newly added sensor</div>
 <div class="line"><em>Example</em>:</div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">item</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">AddSensor</span><span class="p">(</span><span class="n">SensorNode</span><span class="p">(</span><span class="n">sensorType</span><span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">SensorType</span><span class="o">.</span><span class="n">Node</span><span class="p">,</span> <span class="n">nodeNumber</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;test sensor&#39;</span><span class="p">))</span>
-<span class="n">mbs</span><span class="o">.</span><span class="n">AddSensor</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">item</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorNode</span><span class="p">(</span><span class="n">sensorType</span><span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">SensorType</span><span class="o">.</span><span class="nc">Node</span><span class="p">,</span> <span class="n">nodeNumber</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;test sensor&#39;</span><span class="p">))</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
 <span class="n">sensorDict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;sensorType&#39;</span><span class="p">:</span> <span class="s1">&#39;Node&#39;</span><span class="p">,</span>
   <span class="s1">&#39;nodeNumber&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
   <span class="s1">&#39;fileName&#39;</span><span class="p">:</span> <span class="s1">&#39;sensor.txt&#39;</span><span class="p">,</span>
   <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;test sensor&#39;</span><span class="p">}</span>
-<span class="n">mbs</span><span class="o">.</span><span class="n">AddSensor</span><span class="p">(</span><span class="n">sensorDict</span><span class="p">)</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="n">sensorDict</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
@@ -708,7 +715,7 @@
 <div class="line">get sensor’s number by name (string)</div>
 <div class="line"><em>Example</em>:</div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">GetSensorNumber</span><span class="p">(</span><span class="s1">&#39;test sensor&#39;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetSensorNumber</span><span class="p">(</span><span class="s1">&#39;test sensor&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
@@ -717,7 +724,7 @@
 <div class="line">get sensor’s dictionary by index</div>
 <div class="line"><em>Example</em>:</div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sensorDict</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">GetSensor</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sensorDict</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetSensor</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
@@ -726,7 +733,7 @@
 <div class="line">modify sensor’s dictionary by index</div>
 <div class="line"><em>Example</em>:</div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="n">ModifySensor</span><span class="p">(</span><span class="n">sensorNumber</span><span class="p">,</span> <span class="n">sensorDict</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="nf">ModifySensor</span><span class="p">(</span><span class="n">sensorNumber</span><span class="p">,</span> <span class="n">sensorDict</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
@@ -736,7 +743,7 @@
 <div class="line"><em>Example</em>:</div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sensorType</span> <span class="o">=</span> <span class="s1">&#39;Node&#39;</span>
-<span class="n">sensorDict</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">GetSensorDefaults</span><span class="p">(</span><span class="n">sensorType</span><span class="p">)</span>
+<span class="n">sensorDict</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetSensorDefaults</span><span class="p">(</span><span class="n">sensorType</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mass-Spring-Damper tutorial &mdash; Exudyn1.6.0 1.6.0 documentation</title>
+  <title>Mass-Spring-Damper tutorial &mdash; Exudyn1.6.31.dev1 1.6.31.dev1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
@@ -19,6 +19,7 @@
         <script src="../../_static/sphinx_highlight.js"></script>
         <script src="../../_static/clipboard.min.js"></script>
         <script src="../../_static/copybutton.js"></script>
+        <script src="../../_static/js/rtd_search_config.js"></script>
         <script src="../../_static/js/rtd_sphinx_search.min.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -36,7 +37,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.6.0
+            Exudyn1.6.31.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -58,6 +59,9 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="NotationIndex.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TheoryAndFormulationsIndex.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="SolversIndex.html">Solvers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
@@ -69,6 +73,9 @@
 <p class="caption" role="heading"><span class="caption-text">Misc</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ExamplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TestModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trackerlog.html">Issue tracker</a></li>
 </ul>
 
         </div>
@@ -77,7 +84,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.6.0</a>
+          <a href="../../index.html">Exudyn1.6.31.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -111,8 +118,8 @@
 </div>
 <p>Next, we need a <code class="docutils literal notranslate"><span class="pre">SystemContainer</span></code>, which contains all computable systems and add a new MainSystem <code class="docutils literal notranslate"><span class="pre">mbs</span></code>.
 Per default, you always should name your system ‘mbs’ (multibody system), in order to copy/paste code parts from other examples, tutorials and other projects:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">SystemContainer</span><span class="p">()</span>
-<span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="n">AddSystem</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
+<span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>In order to check, which version you are using, you can printout the current Exudyn version. This version is in line with the issue tracker and marks the number of open/closed issues added to Exudyn :</p>
@@ -137,7 +144,7 @@ Per default, you always should name your system ‘mbs’ (multibody system), in
 </div>
 <p>We first need to add nodes, which provide the coordinates (and the degrees of freedom) to the system.
 The following line adds a 3D node for 3D mass point(Note: Point is an abbreviation for NodePoint, defined in <code class="docutils literal notranslate"><span class="pre">itemInterface.py</span></code>.):</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">n1</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="n">AddNode</span><span class="p">(</span><span class="n">Point</span><span class="p">(</span><span class="n">referenceCoordinates</span> <span class="o">=</span> <span class="p">[</span><span class="n">L</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">n1</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">Point</span><span class="p">(</span><span class="n">referenceCoordinates</span> <span class="o">=</span> <span class="p">[</span><span class="n">L</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
                      <span class="n">initialCoordinates</span> <span class="o">=</span> <span class="p">[</span><span class="n">u0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
                      <span class="n">initialVelocities</span> <span class="o">=</span> <span class="p">[</span><span class="n">v0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
 </pre></div>
@@ -146,44 +153,44 @@ The following line adds a 3D node for 3D mass point(Note: Point is an abbreviati
 The command <code class="docutils literal notranslate"><span class="pre">mbs.AddNode(...)</span></code> returns a <code class="docutils literal notranslate"><span class="pre">NodeIndex</span> <span class="pre">n1</span></code>, which basically contains an integer, which can only be used as node number. This node number will be used lateron to use the node in the object or in the marker.</p>
 <p>While <code class="docutils literal notranslate"><span class="pre">Point</span></code> adds 3 unknown coordinates to the system, which need to be solved, we also can add ground nodes, which can be used similar to nodes, but they do not have unknown coordinates – and therefore also have no initial displacements or velocities. The advantage of ground nodes (and ground bodies) is that no constraints are needed to fix these nodes.
 Such a ground node is added via:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">nGround</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="n">AddNode</span><span class="p">(</span><span class="n">NodePointGround</span><span class="p">(</span><span class="n">referenceCoordinates</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">nGround</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">NodePointGround</span><span class="p">(</span><span class="n">referenceCoordinates</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
 </pre></div>
 </div>
 <p>In the next step, we add an object(For the moment, we just need to know that objects either depend on one or more nodes, which are usually bodies and finite elements, or they can be connectors, which connect (the coordinates of) objects via markers, see Section <a class="reference internal" href="ModuleStructure.html#sec-overview-modulestructure"><span class="std std-ref">Module structure</span></a>.), which provides equations for coordinates. The <code class="docutils literal notranslate"><span class="pre">MassPoint</span></code> needs at least a mass (kg) and a node number to which the mass point is attached. Additionally, graphical objects could be attached:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">massPoint</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">AddObject</span><span class="p">(</span><span class="n">MassPoint</span><span class="p">(</span><span class="n">physicsMass</span> <span class="o">=</span> <span class="n">mass</span><span class="p">,</span> <span class="n">nodeNumber</span> <span class="o">=</span> <span class="n">n1</span><span class="p">))</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">massPoint</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">MassPoint</span><span class="p">(</span><span class="n">physicsMass</span> <span class="o">=</span> <span class="n">mass</span><span class="p">,</span> <span class="n">nodeNumber</span> <span class="o">=</span> <span class="n">n1</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>In order to apply constraints and loads, we need markers. These markers are used as local positions (and frames), where we can attach a constraint lateron. In this example, we work on the coordinate level, both for forces as well as for constraints.
 Markers are attached to the according ground and regular node number, additionally using a coordinate number (0 … first coordinate):</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">groundMarker</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="n">AddMarker</span><span class="p">(</span><span class="n">MarkerNodeCoordinate</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span> <span class="n">nGround</span><span class="p">,</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">groundMarker</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerNodeCoordinate</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span> <span class="n">nGround</span><span class="p">,</span>
                                                 <span class="n">coordinate</span> <span class="o">=</span> <span class="mi">0</span><span class="p">))</span>
 <span class="c1">#marker for springDamper for first (x-)coordinate:</span>
-<span class="n">nodeMarker</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">AddMarker</span><span class="p">(</span><span class="n">MarkerNodeCoordinate</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span> <span class="n">n1</span><span class="p">,</span>
+<span class="n">nodeMarker</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerNodeCoordinate</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span> <span class="n">n1</span><span class="p">,</span>
                                                 <span class="n">coordinate</span> <span class="o">=</span> <span class="mi">0</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>This means that loads can be applied to the first coordinate of node <code class="docutils literal notranslate"><span class="pre">n1</span></code> via marker with number <code class="docutils literal notranslate"><span class="pre">nodeMarker</span></code>,
 which is in fact of type <code class="docutils literal notranslate"><span class="pre">MarkerIndex</span></code>.</p>
 <p>Now we add a spring-damper to the markers with numbers <code class="docutils literal notranslate"><span class="pre">groundMarker</span></code> and the <code class="docutils literal notranslate"><span class="pre">nodeMarker</span></code>, providing stiffness and damping parameters:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">nC</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">AddObject</span><span class="p">(</span><span class="n">CoordinateSpringDamper</span><span class="p">(</span><span class="n">markerNumbers</span> <span class="o">=</span> <span class="p">[</span><span class="n">groundMarker</span><span class="p">,</span> <span class="n">nodeMarker</span><span class="p">],</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">nC</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">CoordinateSpringDamper</span><span class="p">(</span><span class="n">markerNumbers</span> <span class="o">=</span> <span class="p">[</span><span class="n">groundMarker</span><span class="p">,</span> <span class="n">nodeMarker</span><span class="p">],</span>
                                      <span class="n">stiffness</span> <span class="o">=</span> <span class="n">spring</span><span class="p">,</span>
                                      <span class="n">damping</span> <span class="o">=</span> <span class="n">damper</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>A load is added to marker <code class="docutils literal notranslate"><span class="pre">nodeMarker</span></code>, with a scalar load with value <code class="docutils literal notranslate"><span class="pre">f</span></code>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">nLoad</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">AddLoad</span><span class="p">(</span><span class="n">LoadCoordinate</span><span class="p">(</span><span class="n">markerNumber</span> <span class="o">=</span> <span class="n">nodeMarker</span><span class="p">,</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">nLoad</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddLoad</span><span class="p">(</span><span class="nc">LoadCoordinate</span><span class="p">(</span><span class="n">markerNumber</span> <span class="o">=</span> <span class="n">nodeMarker</span><span class="p">,</span>
                                    <span class="n">load</span> <span class="o">=</span> <span class="n">f</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>Finally, a sensor is added to the coordinate constraint object with number <code class="docutils literal notranslate"><span class="pre">nC</span></code>, requesting the <code class="docutils literal notranslate"><span class="pre">outputVariableType</span></code> <code class="docutils literal notranslate"><span class="pre">Force</span></code>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="n">AddSensor</span><span class="p">(</span><span class="n">SensorObject</span><span class="p">(</span><span class="n">objectNumber</span><span class="o">=</span><span class="n">nC</span><span class="p">,</span> <span class="n">fileName</span><span class="o">=</span><span class="s1">&#39;groundForce.txt&#39;</span><span class="p">,</span>
-                           <span class="n">outputVariableType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="n">OutputVariableType</span><span class="o">.</span><span class="n">Force</span><span class="p">))</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorObject</span><span class="p">(</span><span class="n">objectNumber</span><span class="o">=</span><span class="n">nC</span><span class="p">,</span> <span class="n">fileName</span><span class="o">=</span><span class="s1">&#39;groundForce.txt&#39;</span><span class="p">,</span>
+                           <span class="n">outputVariableType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="nc">Force</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>Note that sensors can be attached, e.g., to nodes, bodies, objects (constraints) or loads.
 As our system is fully set, we can print the overall information and assemble the system to make it ready for simulation:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">mbs</span><span class="p">)</span>
-<span class="n">mbs</span><span class="o">.</span><span class="n">Assemble</span><span class="p">()</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>We will use time integration and therefore define a number of steps (fixed step size; must be provided) and the total time span for the simulation:</p>
@@ -192,7 +199,7 @@ As our system is fully set, we can print the overall information and assemble th
 </pre></div>
 </div>
 <p>All settings for simulation, see according reference section, can be provided in a structure given from <code class="docutils literal notranslate"><span class="pre">exu.SimulationSettings()</span></code>. Note that this structure will contain all default values, and only non-default values need to be provided:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">SimulationSettings</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">()</span>
 <span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">solutionWritePeriod</span> <span class="o">=</span> <span class="mf">5e-3</span> <span class="c1">#output interval general</span>
 <span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">sensorsWritePeriod</span> <span class="o">=</span> <span class="mf">5e-3</span>  <span class="c1">#output interval of sensors</span>
 <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tEnd</span><span class="o">/</span><span class="n">h</span><span class="p">)</span> <span class="c1">#must be integer</span>
@@ -204,24 +211,24 @@ As our system is fully set, we can print the overall information and assemble th
 </pre></div>
 </div>
 <p>In order to visualize the results online, a renderer can be started. As our computation will be very fast, it is a good idea to wait for the user to press SPACE, before starting the simulation (uncomment second line):</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">exu</span><span class="o">.</span><span class="n">StartRenderer</span><span class="p">()</span>              <span class="c1">#start graphics visualization</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">exu</span><span class="o">.</span><span class="nf">StartRenderer</span><span class="p">()</span>              <span class="c1">#start graphics visualization</span>
 <span class="c1">#mbs.WaitForUserToContinue()     #wait for pressing SPACE bar to continue (in render window!)</span>
 </pre></div>
 </div>
 <p>As the simulation is still very fast, we will not see the motion of our node. Using a very small step size of, e.g., <code class="docutils literal notranslate"><span class="pre">h=1e-7</span></code> in the lines above allows us to visualize the resulting oscillations in realtime.</p>
 <p>Finally, we start the solver, by telling which system to be solved, solver type and the simulation settings:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">exu</span><span class="o">.</span><span class="n">SolveDynamic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">exu</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>After simulation, our renderer needs to be stopped (otherwise it would stay in background and prohibit further simulations).
 Sometimes you would like to wait until closing the render window, using <code class="docutils literal notranslate"><span class="pre">WaitForRenderEngineStopFlag()</span></code>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#SC.WaitForRenderEngineStopFlag()#wait for pressing &#39;Q&#39; to quit</span>
-<span class="n">exu</span><span class="o">.</span><span class="n">StopRenderer</span><span class="p">()</span>               <span class="c1">#safely close rendering window!</span>
+<span class="n">exu</span><span class="o">.</span><span class="nf">StopRenderer</span><span class="p">()</span>               <span class="c1">#safely close rendering window!</span>
 </pre></div>
 </div>
 <p>There are several ways to evaluate results, see the reference pages. In the following we take the final value of node <code class="docutils literal notranslate"><span class="pre">n1</span></code> and read its 3D position vector:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#evaluate final (=current) output values</span>
-<span class="n">u</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">GetNodeOutput</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="n">OutputVariableType</span><span class="o">.</span><span class="n">Position</span><span class="p">)</span>
+<span class="n">u</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetNodeOutput</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Position</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;displacement=&#39;</span><span class="p">,</span><span class="n">u</span><span class="p">)</span>
 </pre></div>
 </div>

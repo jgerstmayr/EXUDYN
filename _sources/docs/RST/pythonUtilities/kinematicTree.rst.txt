@@ -4,7 +4,7 @@
 Module: kinematicTree
 =====================
 
-A library for preparation of minimum coordinates (kinematic tree) formulation.
+A library for preparation of minimal coordinates (kinematic tree) formulation.
 This library follows mostly the algorithms of Roy Featherstone, see http://royfeatherstone.org/
 His code is availble in MATLAB as well as described in the Springer Handbook of Robotics .
 The main formalisms are based on 6x6 matrices, so-called Plücker transformations, denoted as \ :ref:`T66 <T66>`\ , as defined by Featherstone.
@@ -26,7 +26,7 @@ Function: MassCOMinertia2T66
   | \ ``centerOfMass``\ : 3D vector (list/array)
   | \ ``inertia``\ : 3x3 matrix (list of lists / 2D array) w.r.t. center of mass
 - | \ *output*\ :
-  | 6x6 numpy array for further use in minimum coordinates formulation
+  | 6x6 numpy array for further use in minimal coordinates formulation
 
 
 ----
@@ -40,7 +40,7 @@ Function: Inertia2T66
 - | \ *function description*\ :
   | convert inertia as produced with RigidBodyInertia class into 6x6 inertia matrix (as used in KinematicTree66, Featherstone / Handbook of robotics )
 - | \ *output*\ :
-  | 6x6 numpy array for further use in minimum coordinates formulation
+  | 6x6 numpy array for further use in minimal coordinates formulation
 - | \ *notes*\ :
   | within the 6x6 matrix, the inertia tensor is defined w.r.t.\ the center of mass, while RigidBodyInertia defines the inertia tensor w.r.t.\ the reference point; however, this function correctly transforms all quantities of inertia.
 
@@ -129,7 +129,7 @@ CLASS KinematicTree33 (in module kinematicTree)
 **class description**: 
 
     class to define a kinematic tree in Python, which can be used for building serial or tree-structured multibody systems
-    (or robots) with a minimum coordinates formulation, using rotation matrices and 3D offsets; for efficient computation, use the C++ ObjectKinematicTree
+    (or robots) with a minimal coordinates formulation, using rotation matrices and 3D offsets; for efficient computation, use the C++ ObjectKinematicTree
 
 - | \ *notes*\ :
   | The formulation and structures widely follows the more efficient formulas (but still implemented in Python!) with 3D vectors and rotation matrices as proposed in Handbook of robotics , Chapter 3, but with the rotation matrices (\ ``listOfRotations``\ ) being transposed in the Python implementation as compared to the description in the book, being thus compliant with other Exudyn functions; the 3D vector/matrix Python implementation does not offer advantages as compared to the formulation with Plücker coordinates, BUT it reflects the formulas of the C++ implementation and is used for testing
@@ -187,7 +187,7 @@ Class function: ForwardDynamicsCRB
   | compute forward dynamics using composite rigid body algorithm
 - | \ *input*\ :
   | \ ``q``\ : joint space coordinates for the model at which the forward dynamics is evaluated
-  | \ ``q\_t``\ : joint space velocity coordinates for the model at which the forward dynamics is evaluated
+  | \ ``q_t``\ : joint space velocity coordinates for the model at which the forward dynamics is evaluated
   | \ ``torques``\ : a vector of torques applied at joint coordinates or list/array with zero length
   | \ ``forces``\ : forces acting on the bodies using special format
 - | \ *output*\ :
@@ -208,7 +208,7 @@ Class function: ComputeMassMatrixAndForceTerms
   | contain Coriolis and gravity if given in the kinematicTree.
 - | \ *input*\ :
   | \ ``q``\ : current joint coordinates
-  | \ ``q\_t``\ : current joint velocities
+  | \ ``q_t``\ : current joint velocities
   | \ ``externalForces``\ : list of torque/forces in global (world) frame per joint; may be empty list, containing 6D vectors or matrices with 6D vectors in columns that are summed up for each link
 - | \ *output*\ :
   | mass matrix \ :math:`{\mathbf{M}}`\  and RHS vector \ :math:`{\mathbf{f}}_{RHS}`\  for equations of motion \ :math:`M(q) \cdot q_{tt} + f(q,q_t,externalForces) = \tau`\ ; RHS is \ :math:`{\mathbf{f}}_{RHS}=\tau - f(q,q_t,externalForces)`\ ; \ :math:`\tau`\  can be added outside of \ ``ComputeMassMatrixAndForceTerms``\
@@ -223,7 +223,7 @@ CLASS KinematicTree66 (in module kinematicTree)
 **class description**: 
 
     class to define a kinematic tree, which can be used for building serial or tree-structured multibody systems
-    (or robots) with a minimum coordinates formulation, using Plücker coordinate transforms (6x6); for efficient computation, use the C++ ObjectKinematicTree
+    (or robots) with a minimal coordinates formulation, using Plücker coordinate transforms (6x6); for efficient computation, use the C++ ObjectKinematicTree
 
 - | \ *notes*\ :
   | The formulation and structures widely follow Roy Featherstone (http://royfeatherstone.org/) / Handbook of robotics
@@ -278,7 +278,7 @@ Class function: ForwardDynamicsCRB
   | compute forward dynamics using composite rigid body algorithm
 - | \ *input*\ :
   | \ ``q``\ : joint space coordinates for the model at which the forward dynamics is evaluated
-  | \ ``q\_t``\ : joint space velocity coordinates for the model at which the forward dynamics is evaluated
+  | \ ``q_t``\ : joint space velocity coordinates for the model at which the forward dynamics is evaluated
   | \ ``torques``\ : a vector of torques applied at joint coordinates or list/array with zero length
   | \ ``forces``\ : forces acting on the bodies using special format
 - | \ *output*\ :
@@ -299,7 +299,7 @@ Class function: ComputeMassMatrixAndForceTerms
   | contain Coriolis and gravity if given in the kinematicTree.
 - | \ *input*\ :
   | \ ``q``\ : current joint coordinates
-  | \ ``q\_t``\ : current joint velocities
+  | \ ``q_t``\ : current joint velocities
   | \ ``externalForces``\ : list of torque/forces in global (world) frame per joint; may be empty list, containing 6D vectors or matrices with 6D vectors in columns that are summed up for each link
 - | \ *output*\ :
   | mass matrix \ :math:`{\mathbf{M}}`\  and RHS vector \ :math:`{\mathbf{f}}_{RHS}`\  for equations of motion \ :math:`M(q) \cdot q_{tt} + f(q,q_t,externalForces) = \tau`\ ; RHS is \ :math:`{\mathbf{f}}_{RHS}=\tau - f(q,q_t,externalForces)`\ ; \ :math:`\tau`\  can be added outside of \ ``ComputeMassMatrixAndForceTerms``\

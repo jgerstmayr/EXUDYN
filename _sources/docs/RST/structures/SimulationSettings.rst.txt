@@ -172,25 +172,25 @@ NewtonSettings has the following items:
   | absolute tolerance of residual for Newton (needed e.g. if residual is fulfilled right at beginning); condition: sqrt(q*q)/numberOfCoordinates <= absoluteTolerance
 * | **adaptInitialResidual** [type = bool, default = True]:
   | \ ``simulationSettings.timeIntegration.newton.adaptInitialResidual``\ , \ ``simulationSettings.staticSolver.newton.adaptInitialResidual``\ 
-  | flag (true/false); false = standard; True: if initialResidual is very small (or zero), it may increas dramatically in first step; to achieve relativeTolerance, the initialResidual will by updated by a higher residual within the first Newton iteration
+  | flag (true/false); false = standard; True: if initialResidual is very small (or zero), it may increase significantely in the first Newton iteration; to achieve relativeTolerance, the initialResidual will by updated by a higher residual within the first Newton iteration
 * | **maximumSolutionNorm** [type = UReal, default = 1e38]:
   | \ ``simulationSettings.timeIntegration.newton.maximumSolutionNorm``\ , \ ``simulationSettings.staticSolver.newton.maximumSolutionNorm``\ 
-  | this is the maximum allowed value for solutionU.L2NormSquared() which is the square of the square norm (value=\ :math:`u_1^2`\ +\ :math:`u_2^2`\ +...), and solutionV/A...; if the norm of solution vectors are larger, Newton method is stopped; the default value is chosen such that it would still work for single precision numbers (float)
+  | this is the maximum allowed value for solutionU.L2NormSquared() which is the square of the square norm (i.e., value=\ :math:`u_1^2`\ +\ :math:`u_2^2`\ +...), and solutionV/A...; if the norm of solution vectors is larger, Newton method is stopped; the default value is chosen such that it would still work for single precision numbers (float)
 * | **maxIterations** [type = UInt, default = 25]:
   | \ ``simulationSettings.timeIntegration.newton.maxIterations``\ , \ ``simulationSettings.staticSolver.newton.maxIterations``\ 
-  | maximum number of iterations (including modified + restart Newton steps); after that iterations, the static/dynamic solver stops with error
+  | maximum number of iterations (including modified + restart Newton iterations); after that total number of iterations, the static/dynamic solver refines the step size or stops with an error
 * | **maxModifiedNewtonIterations** [type = UInt, default = 8]:
   | \ ``simulationSettings.timeIntegration.newton.maxModifiedNewtonIterations``\ , \ ``simulationSettings.staticSolver.newton.maxModifiedNewtonIterations``\ 
   | maximum number of iterations for modified Newton (without Jacobian update); after that number of iterations, the modified Newton method gets a jacobian update and is further iterated
 * | **maxModifiedNewtonRestartIterations** [type = UInt, default = 7]:
   | \ ``simulationSettings.timeIntegration.newton.maxModifiedNewtonRestartIterations``\ , \ ``simulationSettings.staticSolver.newton.maxModifiedNewtonRestartIterations``\ 
-  | maximum number of iterations for modified Newton after aJacobian update; after that number of iterations, the full Newton method is started for this step
+  | maximum number of iterations for modified Newton after a Jacobian update; after that number of iterations, the full Newton method is started for this step
 * | **modifiedNewtonContractivity** [type = PReal, default = 0.5]:
   | \ ``simulationSettings.timeIntegration.newton.modifiedNewtonContractivity``\ , \ ``simulationSettings.staticSolver.newton.modifiedNewtonContractivity``\ 
   | maximum contractivity (=reduction of error in every Newton iteration) accepted by modified Newton; if contractivity is greater, a Jacobian update is computed
 * | **modifiedNewtonJacUpdatePerStep** [type = bool, default = False]:
   | \ ``simulationSettings.timeIntegration.newton.modifiedNewtonJacUpdatePerStep``\ , \ ``simulationSettings.staticSolver.newton.modifiedNewtonJacUpdatePerStep``\ 
-  | True: compute Jacobian at every time step, but not in every iteration (except for bad convergence ==> switch to full Newton)
+  | True: compute Jacobian at every time step (or static step), but not in every Newton iteration (except for bad convergence ==> switch to full Newton)
 * | **newtonResidualMode** [type = UInt, default = 0]:
   | \ ``simulationSettings.timeIntegration.newton.newtonResidualMode``\ , \ ``simulationSettings.staticSolver.newton.newtonResidualMode``\ 
   | 0 ... use residual for computation of error (standard); 1 ... use \ :ref:`ODE2 <ODE2>`\  and \ :ref:`ODE1 <ODE1>`\  newton increment for error (set relTol and absTol to same values!) ==> may be advantageous if residual is zero, e.g., in kinematic analysis; TAKE CARE with this flag
@@ -199,7 +199,7 @@ NewtonSettings has the following items:
   | relative tolerance of residual for Newton (general goal of Newton is to decrease the residual by this factor)
 * | **useModifiedNewton** [type = bool, default = False]:
   | \ ``simulationSettings.timeIntegration.newton.useModifiedNewton``\ , \ ``simulationSettings.staticSolver.newton.useModifiedNewton``\ 
-  | True: compute Jacobian only at first step; no Jacobian updates per step; False: Jacobian computed in every step
+  | True: compute Jacobian only at first call to solver; the Jacobian (and its factorizations) is not computed in each Newton iteration, even not in every (time integration) step; False: Jacobian (and factorization) is computed in every Newton iteration (default, but may be costly)
 * | **useNewtonSolver** [type = bool, default = True]:
   | \ ``simulationSettings.timeIntegration.newton.useNewtonSolver``\ , \ ``simulationSettings.staticSolver.newton.useNewtonSolver``\ 
   | flag (true/false); false = linear computation, true = use Newton solver for nonlinear solution
@@ -250,7 +250,7 @@ GeneralizedAlphaSettings has the following items:
 ExplicitIntegrationSettings
 ---------------------------
 
-Settings for generalized-alpha, implicit trapezoidal or Newmark time integration methods.
+Settings for explicit solvers, like Explicit Euler, RK44, ODE23, DOPRI5 and others. The settings may significantely influence performance.
 
 ExplicitIntegrationSettings has the following items:
 
@@ -478,7 +478,7 @@ Parallel has the following items:
   | compute RHS vectors, AE, and reaction forces multi-threaded; this is the limit number of objects from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)
 * | **numberOfThreads** [type = PInt, default = 1]:
   | \ ``simulationSettings.parallel.numberOfThreads``\ 
-  | number of threads used for parallel computation (1 == scalar processing); do not use more threads than available threads (in most cases it is good to restrict to the number of cores)
+  | number of threads used for parallel computation (1 == scalar processing); do not use more threads than available threads (in most cases it is good to restrict to the number of cores); currently, only one solver can be started with multithreading; if you use several mbs in parallel (co-simulation), you should use serial computing
 * | **taskSplitMinItems** [type = PInt, default = 50]:
   | \ ``simulationSettings.parallel.taskSplitMinItems``\ 
   | number of items from which on the tasks are split into subtasks (which slightly increases threading performance; this may be critical for smaller number of objects, should be roughly between 50 and 5000; flag is copied into MainSystem internal flag at InitializeSolverData(...)

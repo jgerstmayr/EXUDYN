@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>beltDriveALE.py &mdash; Exudyn1.6.31.dev1 1.6.31.dev1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/clipboard.min.js"></script>
+        <script src="../../../_static/copybutton.js"></script>
+        <script src="../../../_static/js/rtd_search_config.js"></script>
+        <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="beltDriveReevingSystem.py" href="beltDriveReevingSystem.html" />
+    <link rel="prev" title="ANCFtests2.py" href="ANCFtests2.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn1.6.31.dev1
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Exudyn.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NotationIndex.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TheoryAndFormulationsIndex.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../SolversIndex.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../pythonUtilities/index.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structures/StructuresAndSettingsIndex.html">Structures and Settings</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Misc</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../Abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../ExamplesIndex.html">Examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="3SpringsDistance.html">3SpringsDistance.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="addPrismaticJoint.html">addPrismaticJoint.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="addRevoluteJoint.html">addRevoluteJoint.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ALEANCFpipe.html">ALEANCFpipe.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ANCFALEtest.html">ANCFALEtest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ANCFcantileverTest.html">ANCFcantileverTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ANCFcantileverTestDyn.html">ANCFcantileverTestDyn.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ANCFcontactCircle.html">ANCFcontactCircle.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ANCFcontactCircle2.html">ANCFcontactCircle2.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ANCFmovingRigidbody.html">ANCFmovingRigidbody.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ANCFslidingJoint2D.html">ANCFslidingJoint2D.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ANCFslidingJoint2Drigid.html">ANCFslidingJoint2Drigid.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ANCFswitchingSlidingJoint2D.html">ANCFswitchingSlidingJoint2D.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ANCFtestHalfcircle.html">ANCFtestHalfcircle.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ANCFtests2.html">ANCFtests2.py</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">beltDriveALE.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="beltDriveReevingSystem.html">beltDriveReevingSystem.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="beltDrivesComparison.html">beltDrivesComparison.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bicycleIftommBenchmark.html">bicycleIftommBenchmark.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cartesianSpringDamper.html">cartesianSpringDamper.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="CMSexampleCourse.html">CMSexampleCourse.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ComputeSensitivitiesExample.html">ComputeSensitivitiesExample.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="coordinateSpringDamper.html">coordinateSpringDamper.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="craneReevingSystem.html">craneReevingSystem.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dispyParameterVariationExample.html">dispyParameterVariationExample.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="finiteSegmentMethod.html">finiteSegmentMethod.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flexiblePendulumANCF.html">flexiblePendulumANCF.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flexibleRotor3Dtest.html">flexibleRotor3Dtest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fourBarMechanism3D.html">fourBarMechanism3D.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geneticOptimizationSliderCrank.html">geneticOptimizationSliderCrank.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphicsDataExample.html">graphicsDataExample.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gyroStability.html">gyroStability.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="humanRobotInteraction.html">humanRobotInteraction.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HydraulicActuator2Arms.html">HydraulicActuator2Arms.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HydraulicsUserFunction.html">HydraulicsUserFunction.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interactiveTutorial.html">interactiveTutorial.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="InverseKinematicsNumericalExample.html">InverseKinematicsNumericalExample.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinematicTreeAndMBS.html">kinematicTreeAndMBS.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinematicTreePendulum.html">kinematicTreePendulum.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lavalRotor2Dtest.html">lavalRotor2Dtest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="leggedRobot.html">leggedRobot.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lugreFrictionODE1.html">lugreFrictionODE1.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lugreFrictionTest.html">lugreFrictionTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="massSpringFrictionInteractive.html">massSpringFrictionInteractive.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="minimizeExample.html">minimizeExample.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mouseInteractionExample.html">mouseInteractionExample.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multiMbsTest.html">multiMbsTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multiprocessingTest.html">multiprocessingTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="myFirstExample.html">myFirstExample.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NGsolveCMStutorial.html">NGsolveCMStutorial.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NGsolveCraigBampton.html">NGsolveCraigBampton.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NGsolveLinearFEM.html">NGsolveLinearFEM.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NGsolvePistonEngine.html">NGsolvePistonEngine.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NGsolvePostProcessingStresses.html">NGsolvePostProcessingStresses.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nMassOscillatorInteractive.html">nMassOscillatorInteractive.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectFFRFconvergenceTestBeam.html">ObjectFFRFconvergenceTestBeam.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectFFRFconvergenceTestHinge.html">ObjectFFRFconvergenceTestHinge.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectFFRFreducedOrderNetgen.html">objectFFRFreducedOrderNetgen.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="openAIgymInterfaceTest.html">openAIgymInterfaceTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="openAIgymTriplePendulum.html">openAIgymTriplePendulum.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="openVRengine.html">openVRengine.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parameterVariationExample.html">parameterVariationExample.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="particleClusters.html">particleClusters.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="particlesSilo.html">particlesSilo.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="particlesTest.html">particlesTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="particlesTest3D.html">particlesTest3D.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="particlesTest3D2.html">particlesTest3D2.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pendulum.html">pendulum.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pendulum2Dconstraint.html">pendulum2Dconstraint.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pendulumIftommBenchmark.html">pendulumIftommBenchmark.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pendulumVerify.html">pendulumVerify.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="performanceMultiThreadingNG.html">performanceMultiThreadingNG.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plotSensorExamples.html">plotSensorExamples.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reevingSystem.html">reevingSystem.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigid3Dexample.html">rigid3Dexample.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyIMUtest.html">rigidBodyIMUtest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyTutorial.html">rigidBodyTutorial.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyTutorial2.html">rigidBodyTutorial2.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyTutorial3.html">rigidBodyTutorial3.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidPendulum.html">rigidPendulum.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidRotor3DbasicBehaviour.html">rigidRotor3DbasicBehaviour.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidRotor3DFWBW.html">rigidRotor3DFWBW.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidRotor3Dnutation.html">rigidRotor3Dnutation.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidRotor3Drunup.html">rigidRotor3Drunup.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="serialRobotFlexible.html">serialRobotFlexible.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="serialRobotInteractiveLimits.html">serialRobotInteractiveLimits.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="serialRobotInverseKinematics.html">serialRobotInverseKinematics.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="serialRobotKinematicTree.html">serialRobotKinematicTree.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="serialRobotKinematicTreeDigging.html">serialRobotKinematicTreeDigging.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="serialRobotTestDH2.html">serialRobotTestDH2.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="serialRobotTSD.html">serialRobotTSD.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simulateInteractively.html">simulateInteractively.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SliderCrank.html">SliderCrank.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sliderCrank3DwithANCFbeltDrive.html">sliderCrank3DwithANCFbeltDrive.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sliderCrank3DwithANCFbeltDrive2.html">sliderCrank3DwithANCFbeltDrive2.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="slidercrankWithMassSpring.html">slidercrankWithMassSpring.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solutionViewerMultipleSimulations.html">solutionViewerMultipleSimulations.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solutionViewerTest.html">solutionViewerTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solverFunctionsTestEigenvalues.html">solverFunctionsTestEigenvalues.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SpringDamperMasspointSystem.html">SpringDamperMasspointSystem.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SpringDamperMassUserFunction.html">SpringDamperMassUserFunction.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="springDamperTutorial.html">springDamperTutorial.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="springDamperUserFunctionNumbaJIT.html">springDamperUserFunctionNumbaJIT.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="springsDeactivateConnectors.html">springsDeactivateConnectors.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SpringWithConstraints.html">SpringWithConstraints.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stiffFlyballGovernor2.html">stiffFlyballGovernor2.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stiffFlyballGovernorKT.html">stiffFlyballGovernorKT.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stlFileImport.html">stlFileImport.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="switchingConstraintsPendulum.html">switchingConstraintsPendulum.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TCPIPclientTest.html">TCPIPclientTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TCPIPexudynMatlab.html">TCPIPexudynMatlab.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TCPIPserverTest.html">TCPIPserverTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testGymCartpole.html">testGymCartpole.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testGymCartpoleEnv.html">testGymCartpoleEnv.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testGymDoublePendulum.html">testGymDoublePendulum.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testGymDoublePendulumEnv.html">testGymDoublePendulumEnv.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tippeTop.html">tippeTop.py</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../TestModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn1.6.31.dev1</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../ExamplesIndex.html">Examples</a></li>
+      <li class="breadcrumb-item active">beltDriveALE.py</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/RST/Examples/beltDriveALE.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="beltdriveale-py">
+<span id="examples-beltdriveale"></span><h1>beltDriveALE.py<a class="headerlink" href="#beltdriveale-py" title="Permalink to this heading"></a></h1>
+<p>You can view and download this file on Github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/beltDriveALE.py">beltDriveALE.py</a></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">  1</span><span class="c1">#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">  2</span><span class="c1"># This is an EXUDYN example</span>
+<span class="linenos">  3</span><span class="c1">#</span>
+<span class="linenos">  4</span><span class="c1"># Details:  Model for belt drive; using ALE ANCF cable and regular cable</span>
+<span class="linenos">  5</span><span class="c1">#</span>
+<span class="linenos">  6</span><span class="c1"># Author:   Johannes Gerstmayr</span>
+<span class="linenos">  7</span><span class="c1"># Date:     2022-07-08</span>
+<span class="linenos">  8</span><span class="c1">#</span>
+<span class="linenos">  9</span><span class="c1"># Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See &#39;LICENSE.txt&#39; for more details.</span>
+<span class="linenos"> 10</span><span class="c1">#</span>
+<span class="linenos"> 11</span><span class="c1">#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos"> 12</span>
+<span class="linenos"> 13</span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
+<span class="linenos"> 14</span><span class="kn">from</span> <span class="nn">exudyn.itemInterface</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="linenos"> 15</span><span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="linenos"> 16</span><span class="kn">from</span> <span class="nn">exudyn.beams</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="linenos"> 17</span>
+<span class="linenos"> 18</span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="linenos"> 19</span><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sin</span><span class="p">,</span> <span class="n">cos</span><span class="p">,</span> <span class="n">pi</span><span class="p">,</span> <span class="n">sqrt</span> <span class="p">,</span> <span class="n">asin</span><span class="p">,</span> <span class="n">acos</span><span class="p">,</span> <span class="n">atan2</span><span class="p">,</span> <span class="n">exp</span>
+<span class="linenos"> 20</span><span class="kn">import</span> <span class="nn">copy</span>
+<span class="linenos"> 21</span>
+<span class="linenos"> 22</span>
+<span class="linenos"> 23</span><span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
+<span class="linenos"> 24</span><span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
+<span class="linenos"> 25</span>
+<span class="linenos"> 26</span><span class="c1">#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos"> 27</span>
+<span class="linenos"> 28</span><span class="c1">#improvedBelt = True #True: improved belt model (tEnd ~= 2.5 seconds simulation, more damping, better initial conditions, etc.)</span>
+<span class="linenos"> 29</span>
+<span class="linenos"> 30</span><span class="c1">#%%</span>
+<span class="linenos"> 31</span><span class="c1">#settings:</span>
+<span class="linenos"> 32</span><span class="n">useGraphics</span><span class="o">=</span> <span class="kc">True</span>
+<span class="linenos"> 33</span><span class="n">useContact</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos"> 34</span><span class="n">doDynamic</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos"> 35</span><span class="n">makeAnimation</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="linenos"> 36</span><span class="n">useALE</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos"> 37</span><span class="n">useFrictionStiffness</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos"> 38</span>
+<span class="linenos"> 39</span><span class="n">stepSize</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="mf">0.5</span><span class="o">*</span><span class="mf">1e-4</span>  <span class="c1">#accurate: 2.5e-5 # for frictionVelocityPenalty = 1e7*... it must be not larger than 2.5e-5</span>
+<span class="linenos"> 40</span><span class="n">discontinuousIterations</span> <span class="o">=</span> <span class="mi">0</span><span class="o">+</span><span class="mi">3</span> <span class="c1">#larger is more accurate, but smaller step size is equivalent</span>
+<span class="linenos"> 41</span>
+<span class="linenos"> 42</span><span class="k">if</span> <span class="n">useFrictionStiffness</span><span class="p">:</span>
+<span class="linenos"> 43</span>    <span class="n">stepSize</span> <span class="o">=</span> <span class="mf">0.25</span><span class="o">*</span><span class="mf">0.5</span><span class="o">*</span><span class="mf">1e-4</span>  <span class="c1">#accurate: 2.5e-5 # for frictionVelocityPenalty = 1e7*... it must be not larger than 2.5e-5</span>
+<span class="linenos"> 44</span>    <span class="c1"># discontinuousIterations = 6+3 #larger is more accurate, but smaller step size is equivalent</span>
+<span class="linenos"> 45</span>
+<span class="linenos"> 46</span><span class="c1">#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos"> 47</span><span class="c1">#Parameters for the belt</span>
+<span class="linenos"> 48</span><span class="n">gVec</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">9.81</span><span class="o">*</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>     <span class="c1"># gravity</span>
+<span class="linenos"> 49</span><span class="n">Emodulus</span><span class="o">=</span><span class="mf">1e7</span>             <span class="c1"># Young&#39;s modulus of ANCF element in N/m^2</span>
+<span class="linenos"> 50</span><span class="n">b</span><span class="o">=</span><span class="mf">0.08</span> <span class="c1">#0.002            # width of rectangular ANCF element in m</span>
+<span class="linenos"> 51</span><span class="n">hc</span> <span class="o">=</span> <span class="mf">0.0001</span>              <span class="c1"># height (geometric) of rectangular ANCF element in m</span>
+<span class="linenos"> 52</span><span class="n">hcStiff</span> <span class="o">=</span> <span class="mf">0.01</span>           <span class="c1"># stiffness relevant height</span>
+<span class="linenos"> 53</span><span class="n">rhoBeam</span><span class="o">=</span><span class="mf">1036.</span>            <span class="c1"># density of ANCF element in kg/m^3</span>
+<span class="linenos"> 54</span><span class="n">A</span><span class="o">=</span><span class="n">b</span><span class="o">*</span><span class="n">hcStiff</span>              <span class="c1"># cross sectional area of ANCF element in m^2</span>
+<span class="linenos"> 55</span><span class="n">I</span><span class="o">=</span><span class="p">(</span><span class="n">b</span><span class="o">*</span><span class="n">hcStiff</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span><span class="o">/</span><span class="mi">12</span>      <span class="c1"># second moment of area of ANCF element in m^4</span>
+<span class="linenos"> 56</span><span class="n">EI</span> <span class="o">=</span> <span class="mf">0.02</span><span class="o">*</span><span class="n">Emodulus</span><span class="o">*</span><span class="n">I</span>
+<span class="linenos"> 57</span><span class="n">EA</span> <span class="o">=</span> <span class="n">Emodulus</span><span class="o">*</span><span class="n">A</span>
+<span class="linenos"> 58</span><span class="n">rhoA</span> <span class="o">=</span> <span class="n">rhoBeam</span><span class="o">*</span><span class="n">A</span>
+<span class="linenos"> 59</span><span class="n">dEI</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos"> 60</span><span class="n">dEA</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="linenos"> 61</span>
+<span class="linenos"> 62</span><span class="c1"># EI *= 1000*2</span>
+<span class="linenos"> 63</span><span class="c1"># EI  *= 500*5 #for test</span>
+<span class="linenos"> 64</span><span class="c1">#%%</span>
+<span class="linenos"> 65</span>
+<span class="linenos"> 66</span><span class="c1">#h = 1e-3 #step size</span>
+<span class="linenos"> 67</span><span class="n">tAccStart</span> <span class="o">=</span> <span class="mf">0.05</span>
+<span class="linenos"> 68</span><span class="n">tAccEnd</span> <span class="o">=</span> <span class="mf">0.6</span>
+<span class="linenos"> 69</span><span class="n">omegaFinal</span> <span class="o">=</span> <span class="mi">12</span>
+<span class="linenos"> 70</span>
+<span class="linenos"> 71</span><span class="n">useFriction</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos"> 72</span><span class="n">dryFriction</span> <span class="o">=</span> <span class="mf">0.5</span><span class="c1">#0.5#1.2</span>
+<span class="linenos"> 73</span><span class="n">contactStiffness</span> <span class="o">=</span> <span class="mf">1e8</span><span class="c1">#2e5</span>
+<span class="linenos"> 74</span><span class="n">contactDamping</span> <span class="o">=</span> <span class="mi">0</span><span class="c1">#1e-3*contactStiffness</span>
+<span class="linenos"> 75</span>
+<span class="linenos"> 76</span><span class="n">nSegments</span> <span class="o">=</span> <span class="mi">2</span> <span class="c1">#4, for nANCFnodes=60, nSegments = 2 lead to less oscillations inside, but lot of stick-slip...</span>
+<span class="linenos"> 77</span><span class="n">nANCFnodes</span> <span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="mi">30</span><span class="c1">#2*60#120 works well, 60 leads to oscillatory tangent/normal forces for improvedBelt=True</span>
+<span class="linenos"> 78</span>
+<span class="linenos"> 79</span><span class="n">wheelMass</span> <span class="o">=</span> <span class="mi">50</span><span class="c1">#1 the wheel mass is not given in the paper, only the inertia</span>
+<span class="linenos"> 80</span><span class="c1"># for the second pulley</span>
+<span class="linenos"> 81</span><span class="n">wheelInertia</span> <span class="o">=</span> <span class="mf">0.25</span><span class="c1">#0.01</span>
+<span class="linenos"> 82</span><span class="n">rotationDampingWheels</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#zero in example in 2013 paper; torque proportional to rotation speed</span>
+<span class="linenos"> 83</span>
+<span class="linenos"> 84</span><span class="c1">#torque = 1</span>
+<span class="linenos"> 85</span>
+<span class="linenos"> 86</span><span class="c1">#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos"> 87</span><span class="c1">#create circles</span>
+<span class="linenos"> 88</span><span class="c1">#complicated shape:</span>
+<span class="linenos"> 89</span><span class="c1">#initialDisplacement = -0.0025 #not used in improvedBelt!</span>
+<span class="linenos"> 90</span><span class="n">radiusPulley</span> <span class="o">=</span> <span class="mf">0.09995</span>
+<span class="linenos"> 91</span><span class="n">positionPulley2x</span> <span class="o">=</span> <span class="mf">0.1</span><span class="o">*</span><span class="n">pi</span>
+<span class="linenos"> 92</span><span class="c1">#initialDistance = positionPulley2x</span>
+<span class="linenos"> 93</span><span class="n">initialLength</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">positionPulley2x</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span> <span class="n">pi</span><span class="o">*</span><span class="p">(</span><span class="n">radiusPulley</span> <span class="o">+</span> <span class="n">hcStiff</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+<span class="linenos"> 94</span><span class="c1">#finalLength = initialLength - 2* initialDisplacement</span>
+<span class="linenos"> 95</span><span class="c1">#preStretch = -(finalLength - initialLength)/ initialLength</span>
+<span class="linenos"> 96</span>
+<span class="linenos"> 97</span><span class="c1">#factorStriplen = (2*initialDistance+2*pi*radiusPulley)/(2*initialDistance+2*pi*(radiusPulley + hcStiff/2));</span>
+<span class="linenos"> 98</span><span class="c1">#print(&#39;factorStriplen =&#39;, factorStriplen )</span>
+<span class="linenos"> 99</span><span class="c1">#preStretch += (1-1./factorStriplen) #this is due to an error in the original paper 2013</span>
+<span class="linenos">100</span>
+<span class="linenos">101</span>
+<span class="linenos">102</span><span class="n">rotationDampingWheels</span> <span class="o">=</span> <span class="mi">2</span> <span class="c1">#to reduce vibrations of driven pulley</span>
+<span class="linenos">103</span><span class="n">tEnd</span> <span class="o">=</span> <span class="mf">2.45</span> <span class="c1">#at 2.45 node 1 is approximately at initial position!</span>
+<span class="linenos">104</span><span class="n">preStretch</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.05</span>
+<span class="linenos">105</span><span class="n">staticEqulibrium</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">106</span><span class="c1">#dryFriction = 0</span>
+<span class="linenos">107</span>
+<span class="linenos">108</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;preStretch=&#39;</span><span class="p">,</span> <span class="n">preStretch</span><span class="p">)</span>
+<span class="linenos">109</span><span class="n">circleList</span> <span class="o">=</span> <span class="p">[[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">radiusPulley</span><span class="p">,</span><span class="s1">&#39;L&#39;</span><span class="p">],</span>
+<span class="linenos">110</span>              <span class="p">[[</span><span class="n">positionPulley2x</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">radiusPulley</span><span class="p">,</span><span class="s1">&#39;L&#39;</span><span class="p">],</span>
+<span class="linenos">111</span>              <span class="c1"># [[initialDisplacement0,0], radiusPulley,&#39;L&#39;],</span>
+<span class="linenos">112</span>              <span class="c1"># [[positionPulley2x,0], radiusPulley,&#39;L&#39;],</span>
+<span class="linenos">113</span>              <span class="p">]</span>
+<span class="linenos">114</span>
+<span class="linenos">115</span><span class="c1">#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">116</span><span class="c1">#create geometry:</span>
+<span class="linenos">117</span><span class="n">reevingDict</span> <span class="o">=</span> <span class="nf">CreateReevingCurve</span><span class="p">(</span><span class="n">circleList</span><span class="p">,</span> <span class="n">drawingLinesPerCircle</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span>
+<span class="linenos">118</span>                                <span class="n">radialOffset</span><span class="o">=</span><span class="mf">0.5</span><span class="o">*</span><span class="n">hc</span><span class="p">,</span> <span class="n">closedCurve</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="c1">#allows closed curve</span>
+<span class="linenos">119</span>                                <span class="n">numberOfANCFnodes</span><span class="o">=</span><span class="n">nANCFnodes</span><span class="p">,</span> <span class="n">graphicsNodeSize</span><span class="o">=</span> <span class="mf">0.01</span><span class="p">)</span>
+<span class="linenos">120</span>
+<span class="linenos">121</span>
+<span class="linenos">122</span>
+<span class="linenos">123</span><span class="c1"># set precurvature at location of pulleys:</span>
+<span class="linenos">124</span><span class="n">elementCurvatures</span> <span class="o">=</span> <span class="n">reevingDict</span><span class="p">[</span><span class="s1">&#39;elementCurvatures&#39;</span><span class="p">]</span>
+<span class="linenos">125</span>
+<span class="linenos">126</span><span class="n">gList</span><span class="o">=</span><span class="p">[]</span>
+<span class="linenos">127</span><span class="k">if</span> <span class="kc">False</span><span class="p">:</span> <span class="c1">#visualize reeving curve, without simulation</span>
+<span class="linenos">128</span>    <span class="n">gList</span> <span class="o">=</span> <span class="n">reevingDict</span><span class="p">[</span><span class="s1">&#39;graphicsDataLines&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">reevingDict</span><span class="p">[</span><span class="s1">&#39;graphicsDataCircles&#39;</span><span class="p">]</span>
+<span class="linenos">129</span>
+<span class="linenos">130</span><span class="n">oGround</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectGround</span><span class="p">(</span><span class="n">referencePosition</span><span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">visualization</span><span class="o">=</span><span class="nc">VObjectGround</span><span class="p">(</span><span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">)))</span><span class="c1">#, visualization = {&#39;show : False&#39;}</span>
+<span class="linenos">131</span><span class="n">nGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">NodePointGround</span><span class="p">())</span>
+<span class="linenos">132</span><span class="n">mCoordinateGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerNodeCoordinate</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">nGround</span><span class="p">,</span> <span class="n">coordinate</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+<span class="linenos">133</span>
+<span class="linenos">134</span>
+<span class="linenos">135</span><span class="c1">#mbs.SetObjectParameter(objectNumber = oGround, parameterName = &#39;Vshow&#39;, value=False)</span>
+<span class="linenos">136</span><span class="c1">#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">137</span><span class="c1">#create ANCF elements:</span>
+<span class="linenos">138</span><span class="n">dimZ</span> <span class="o">=</span> <span class="n">b</span> <span class="c1">#z.dimension</span>
+<span class="linenos">139</span>
+<span class="linenos">140</span><span class="n">ANCFElementType</span> <span class="o">=</span> <span class="nc">Cable2D</span>
+<span class="linenos">141</span><span class="n">nodesANCF</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="linenos">142</span><span class="k">if</span> <span class="n">useALE</span><span class="p">:</span>
+<span class="linenos">143</span>    <span class="n">ANCFElementType</span> <span class="o">=</span> <span class="nc">ALECable2D</span>
+<span class="linenos">144</span>    <span class="n">nALE</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">NodeGenericODE2</span><span class="p">(</span><span class="n">numberOfODE2Coordinates</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">referenceCoordinates</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos">145</span>                                          <span class="n">initialCoordinates</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">initialCoordinates_t</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos">146</span>                                          <span class="n">visualization</span> <span class="o">=</span> <span class="nc">VNode1D</span><span class="p">(</span><span class="n">show</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)))</span><span class="c1">#, color = [0.,0.,0.,1.])</span>
+<span class="linenos">147</span>    <span class="n">mALE</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerNodeCoordinate</span><span class="p">(</span><span class="n">nodeNumber</span> <span class="o">=</span> <span class="n">nALE</span><span class="p">,</span> <span class="n">coordinate</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+<span class="linenos">148</span>                                              <span class="n">visualization</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;show&#39;</span><span class="p">:</span><span class="kc">True</span><span class="p">}))</span> <span class="c1">#ALE velocity</span>
+<span class="linenos">149</span>    <span class="n">nodesANCF</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">nALE</span><span class="p">]</span>
+<span class="linenos">150</span>
+<span class="linenos">151</span>    <span class="c1">#Constraint for eulerian coordinate</span>
+<span class="linenos">152</span>    <span class="n">oCCvALE</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">CoordinateConstraint</span><span class="p">(</span><span class="n">markerNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">mCoordinateGround</span><span class="p">,</span> <span class="n">mALE</span><span class="p">],</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+<span class="linenos">153</span>                                                <span class="n">velocityLevel</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="linenos">154</span>                                                <span class="n">visualization</span><span class="o">=</span><span class="nc">VCoordinateConstraint</span><span class="p">(</span><span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">)))</span>
+<span class="linenos">155</span>
+<span class="linenos">156</span><span class="n">cableTemplate</span> <span class="o">=</span> <span class="n">ANCFElementType</span><span class="p">(</span><span class="c1">#physicsLength = L / nElements, #set in GenerateStraightLineANCFCable2D(...)</span>
+<span class="linenos">157</span>                        <span class="n">nodeNumbers</span> <span class="o">=</span> <span class="n">nodesANCF</span><span class="p">,</span>
+<span class="linenos">158</span>                        <span class="n">physicsMassPerLength</span> <span class="o">=</span> <span class="n">rhoA</span><span class="p">,</span>
+<span class="linenos">159</span>                        <span class="n">physicsBendingStiffness</span> <span class="o">=</span> <span class="n">EI</span><span class="p">,</span>
+<span class="linenos">160</span>                        <span class="n">physicsAxialStiffness</span> <span class="o">=</span> <span class="n">EA</span><span class="p">,</span>
+<span class="linenos">161</span>                        <span class="n">physicsBendingDamping</span> <span class="o">=</span> <span class="n">dEI</span><span class="p">,</span>
+<span class="linenos">162</span>                        <span class="n">physicsAxialDamping</span> <span class="o">=</span> <span class="n">dEA</span><span class="p">,</span>
+<span class="linenos">163</span>                        <span class="n">physicsReferenceAxialStrain</span> <span class="o">=</span> <span class="n">preStretch</span><span class="p">,</span>
+<span class="linenos">164</span>                        <span class="n">physicsReferenceCurvature</span> <span class="o">=</span> <span class="mf">0.</span><span class="p">,</span>
+<span class="linenos">165</span>                        <span class="n">useReducedOrderIntegration</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+<span class="linenos">166</span>                        <span class="n">strainIsRelativeToReference</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="c1">#would cause reference configuration to be precurved</span>
+<span class="linenos">167</span>                        <span class="n">visualization</span><span class="o">=</span><span class="nc">VCable2D</span><span class="p">(</span><span class="n">drawHeight</span><span class="o">=</span><span class="n">hc</span><span class="p">),</span>
+<span class="linenos">168</span>                        <span class="p">)</span>
+<span class="linenos">169</span>
+<span class="linenos">170</span><span class="k">if</span> <span class="n">useALE</span><span class="p">:</span>
+<span class="linenos">171</span>    <span class="n">cableTemplate</span><span class="o">.</span><span class="n">physicsAddALEvariation</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="linenos">172</span>
+<span class="linenos">173</span><span class="n">ancf</span> <span class="o">=</span> <span class="nf">PointsAndSlopes2ANCFCable2D</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">reevingDict</span><span class="p">[</span><span class="s1">&#39;ancfPointsSlopes&#39;</span><span class="p">],</span>
+<span class="linenos">174</span>                                   <span class="n">reevingDict</span><span class="p">[</span><span class="s1">&#39;elementLengths&#39;</span><span class="p">],</span>
+<span class="linenos">175</span>                                   <span class="n">cableTemplate</span><span class="p">,</span> <span class="n">massProportionalLoad</span><span class="o">=</span><span class="n">gVec</span><span class="p">,</span>
+<span class="linenos">176</span>                                   <span class="n">fixedConstraintsNode0</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="o">*</span><span class="n">staticEqulibrium</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="c1">#fixedConstraintsNode1=[1,1,1,1],</span>
+<span class="linenos">177</span>                                   <span class="c1">#elementCurvatures  = elementCurvatures, #do not set this, will cause inhomogeneous curvatures</span>
+<span class="linenos">178</span>                                   <span class="n">firstNodeIsLastNode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">graphicsSizeConstraints</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+<span class="linenos">179</span>
+<span class="linenos">180</span><span class="n">lElem</span> <span class="o">=</span> <span class="n">reevingDict</span><span class="p">[</span><span class="s1">&#39;totalLength&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">nANCFnodes</span>
+<span class="linenos">181</span><span class="n">cFact</span><span class="o">=</span><span class="n">b</span><span class="o">*</span><span class="n">lElem</span><span class="o">/</span><span class="n">nSegments</span> <span class="c1">#stiffness shall be per area, but is applied at every segment</span>
+<span class="linenos">182</span>
+<span class="linenos">183</span><span class="n">contactStiffness</span><span class="o">*=</span><span class="mi">40</span><span class="o">*</span><span class="n">cFact</span>
+<span class="linenos">184</span><span class="n">contactDamping</span> <span class="o">=</span> <span class="mi">40</span><span class="o">*</span><span class="mi">2000</span><span class="o">*</span><span class="n">cFact</span> <span class="c1">#according to Dufva 2008 paper ... seems also to be used in 2013 PEchstein Gerstmayr</span>
+<span class="linenos">185</span><span class="n">frictionStiffness</span> <span class="o">=</span> <span class="mf">50e8</span><span class="o">*</span><span class="n">cFact</span> <span class="c1">#1e7 converges good; 1e8 is already quite accurate</span>
+<span class="linenos">186</span><span class="n">massSegment</span> <span class="o">=</span> <span class="n">rhoA</span><span class="o">*</span><span class="n">lElem</span><span class="o">/</span><span class="n">nSegments</span>
+<span class="linenos">187</span><span class="n">frictionVelocityPenalty</span> <span class="o">=</span> <span class="mi">10</span><span class="o">*</span><span class="n">sqrt</span><span class="p">(</span><span class="n">frictionStiffness</span><span class="o">*</span><span class="n">massSegment</span><span class="p">)</span> <span class="c1">#bristle damping; should be adjusted to reduce vibrations induced by bristle model</span>
+<span class="linenos">188</span>
+<span class="linenos">189</span><span class="k">if</span> <span class="n">useFrictionStiffness</span><span class="p">:</span>
+<span class="linenos">190</span>    <span class="n">frictionStiffness</span><span class="o">*=</span><span class="mf">0.1</span>
+<span class="linenos">191</span><span class="k">else</span><span class="p">:</span>
+<span class="linenos">192</span>    <span class="n">frictionStiffness</span><span class="o">*=</span><span class="mi">0</span>
+<span class="linenos">193</span>    <span class="n">frictionVelocityPenalty</span><span class="o">*=</span> <span class="mi">2</span>
+<span class="linenos">194</span>
+<span class="linenos">195</span><span class="c1">#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">196</span><span class="c1">#create sensors for all nodes</span>
+<span class="linenos">197</span><span class="n">sMidVel</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos">198</span><span class="n">sAxialForce</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos">199</span><span class="n">sCable0Pos</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos">200</span><span class="c1"># sObjectDisp =[]</span>
+<span class="linenos">201</span>
+<span class="linenos">202</span><span class="n">ancfNodes</span> <span class="o">=</span> <span class="n">ancf</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos">203</span><span class="n">ancfObjects</span> <span class="o">=</span> <span class="n">ancf</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="linenos">204</span><span class="n">positionList2Node</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1">#axial position at x=0 and x=0.5*lElem</span>
+<span class="linenos">205</span><span class="n">positionListMid</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1">#axial position at midpoint of element</span>
+<span class="linenos">206</span><span class="n">positionListSegments</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1">#axial position at midpoint of segments</span>
+<span class="linenos">207</span><span class="n">currentPosition</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#is increased at every iteration</span>
+<span class="linenos">208</span><span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">obj</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ancfObjects</span><span class="p">):</span>
+<span class="linenos">209</span>    <span class="n">lElem</span> <span class="o">=</span> <span class="n">reevingDict</span><span class="p">[</span><span class="s1">&#39;elementLengths&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+<span class="linenos">210</span>    <span class="n">positionList2Node</span> <span class="o">+=</span> <span class="p">[</span><span class="n">currentPosition</span><span class="p">,</span> <span class="n">currentPosition</span> <span class="o">+</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">lElem</span><span class="p">]</span>
+<span class="linenos">211</span>    <span class="n">positionListMid</span> <span class="o">+=</span> <span class="p">[</span><span class="n">currentPosition</span> <span class="o">+</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">lElem</span><span class="p">]</span>
+<span class="linenos">212</span>
+<span class="linenos">213</span>    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nSegments</span><span class="p">):</span>
+<span class="linenos">214</span>        <span class="n">segPos</span> <span class="o">=</span> <span class="p">(</span><span class="n">j</span><span class="o">+</span><span class="mf">0.5</span><span class="p">)</span><span class="o">*</span><span class="n">lElem</span><span class="o">/</span><span class="n">nSegments</span> <span class="o">+</span> <span class="n">currentPosition</span>
+<span class="linenos">215</span>        <span class="n">positionListSegments</span> <span class="o">+=</span> <span class="p">[</span><span class="n">segPos</span><span class="p">]</span>
+<span class="linenos">216</span>    <span class="n">currentPosition</span> <span class="o">+=</span> <span class="n">lElem</span>
+<span class="linenos">217</span>
+<span class="linenos">218</span>    <span class="n">sAxialForce</span> <span class="o">+=</span> <span class="p">[</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorBody</span><span class="p">(</span><span class="n">bodyNumber</span> <span class="o">=</span> <span class="n">obj</span><span class="p">,</span>
+<span class="linenos">219</span>                                              <span class="n">storeInternal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">220</span>                                              <span class="n">localPosition</span><span class="o">=</span><span class="p">[</span><span class="mf">0.</span><span class="o">*</span><span class="n">lElem</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos">221</span>                                              <span class="n">outputVariableType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">ForceLocal</span><span class="p">))]</span>
+<span class="linenos">222</span>    <span class="n">sAxialForce</span> <span class="o">+=</span> <span class="p">[</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorBody</span><span class="p">(</span><span class="n">bodyNumber</span> <span class="o">=</span> <span class="n">obj</span><span class="p">,</span>
+<span class="linenos">223</span>                                              <span class="n">storeInternal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">224</span>                                              <span class="n">localPosition</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="o">*</span><span class="n">lElem</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos">225</span>                                              <span class="n">outputVariableType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">ForceLocal</span><span class="p">))]</span>
+<span class="linenos">226</span>    <span class="n">sMidVel</span> <span class="o">+=</span> <span class="p">[</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorBody</span><span class="p">(</span><span class="n">bodyNumber</span> <span class="o">=</span> <span class="n">obj</span><span class="p">,</span>
+<span class="linenos">227</span>                                          <span class="n">storeInternal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">228</span>                                          <span class="n">localPosition</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="o">*</span><span class="n">lElem</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="c1">#0=at left node</span>
+<span class="linenos">229</span>                                          <span class="n">outputVariableType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">VelocityLocal</span><span class="p">))]</span>
+<span class="linenos">230</span>    <span class="n">sCable0Pos</span> <span class="o">+=</span> <span class="p">[</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorBody</span><span class="p">(</span><span class="n">bodyNumber</span> <span class="o">=</span> <span class="n">obj</span><span class="p">,</span>
+<span class="linenos">231</span>                                            <span class="n">storeInternal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">232</span>                                            <span class="n">localPosition</span><span class="o">=</span><span class="p">[</span><span class="mf">0.</span><span class="o">*</span><span class="n">lElem</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos">233</span>                                            <span class="n">outputVariableType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Position</span><span class="p">))]</span>
+<span class="linenos">234</span>    <span class="c1"># sObjectDisp += [mbs.AddSensor(SensorBody(bodyNumber = obj,</span>
+<span class="linenos">235</span>    <span class="c1">#                                           storeInternal=True,</span>
+<span class="linenos">236</span>    <span class="c1">#                                           localPosition=[0.5*lElem,0,0],</span>
+<span class="linenos">237</span>    <span class="c1">#                                           outputVariableType=exu.OutputVariableType.Displacement))]</span>
+<span class="linenos">238</span>
+<span class="linenos">239</span>
+<span class="linenos">240</span>
+<span class="linenos">241</span><span class="c1">#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">242</span><span class="c1">#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">243</span><span class="c1">#add contact:</span>
+<span class="linenos">244</span><span class="k">if</span> <span class="n">useContact</span><span class="p">:</span>
+<span class="linenos">245</span>
+<span class="linenos">246</span>    <span class="n">contactObjects</span> <span class="o">=</span> <span class="p">[[],[]]</span> <span class="c1">#list of contact objects</span>
+<span class="linenos">247</span>
+<span class="linenos">248</span>    <span class="n">dimZ</span><span class="o">=</span> <span class="mf">0.01</span> <span class="c1">#for drawing</span>
+<span class="linenos">249</span>    <span class="n">sWheelRot</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1">#sensors for angular velocity</span>
+<span class="linenos">250</span>
+<span class="linenos">251</span>    <span class="n">nMassList</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos">252</span>    <span class="n">wheelSprings</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1">#for static computation</span>
+<span class="linenos">253</span>    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">wheel</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">circleList</span><span class="p">):</span>
+<span class="linenos">254</span>        <span class="n">p</span> <span class="o">=</span> <span class="p">[</span><span class="n">wheel</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">wheel</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">]</span> <span class="c1">#position of wheel center</span>
+<span class="linenos">255</span>        <span class="n">r</span> <span class="o">=</span> <span class="n">wheel</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="linenos">256</span>
+<span class="linenos">257</span>        <span class="n">rot0</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#initial rotation</span>
+<span class="linenos">258</span>        <span class="n">pRef</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">rot0</span><span class="p">]</span>
+<span class="linenos">259</span>        <span class="n">gList</span> <span class="o">=</span> <span class="p">[</span><span class="nf">GraphicsDataCylinder</span><span class="p">(</span><span class="n">pAxis</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="n">dimZ</span><span class="p">],</span><span class="n">vAxis</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="n">dimZ</span><span class="p">],</span> <span class="n">radius</span><span class="o">=</span><span class="n">r</span><span class="p">,</span>
+<span class="linenos">260</span>                                      <span class="n">color</span><span class="o">=</span> <span class="n">color4dodgerblue</span><span class="p">,</span> <span class="n">nTiles</span><span class="o">=</span><span class="mi">64</span><span class="p">),</span>
+<span class="linenos">261</span>                 <span class="nf">GraphicsDataArrow</span><span class="p">(</span><span class="n">pAxis</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">vAxis</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">0.9</span><span class="o">*</span><span class="n">r</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.01</span><span class="o">*</span><span class="n">r</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color4orange</span><span class="p">),</span>
+<span class="linenos">262</span>                 <span class="nf">GraphicsDataArrow</span><span class="p">(</span><span class="n">pAxis</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">vAxis</span><span class="o">=</span><span class="p">[</span><span class="mf">0.9</span><span class="o">*</span><span class="n">r</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.01</span><span class="o">*</span><span class="n">r</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color4orange</span><span class="p">)]</span>
+<span class="linenos">263</span>
+<span class="linenos">264</span>        <span class="n">omega0</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#initial angular velocity</span>
+<span class="linenos">265</span>        <span class="n">v0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">omega0</span><span class="p">])</span>
+<span class="linenos">266</span>
+<span class="linenos">267</span>        <span class="n">nMass</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">NodeRigidBody2D</span><span class="p">(</span><span class="n">referenceCoordinates</span><span class="o">=</span><span class="n">pRef</span><span class="p">,</span> <span class="n">initialVelocities</span><span class="o">=</span><span class="n">v0</span><span class="p">,</span>
+<span class="linenos">268</span>                                            <span class="n">visualization</span><span class="o">=</span><span class="nc">VNodeRigidBody2D</span><span class="p">(</span><span class="n">drawSize</span><span class="o">=</span><span class="n">dimZ</span><span class="o">*</span><span class="mi">2</span><span class="p">)))</span>
+<span class="linenos">269</span>        <span class="n">nMassList</span> <span class="o">+=</span> <span class="p">[</span><span class="n">nMass</span><span class="p">]</span>
+<span class="linenos">270</span>        <span class="n">oMass</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectRigidBody2D</span><span class="p">(</span><span class="n">physicsMass</span><span class="o">=</span><span class="n">wheelMass</span><span class="p">,</span> <span class="n">physicsInertia</span><span class="o">=</span><span class="n">wheelInertia</span><span class="p">,</span>
+<span class="linenos">271</span>                                                <span class="n">nodeNumber</span><span class="o">=</span><span class="n">nMass</span><span class="p">,</span> <span class="n">visualization</span><span class="o">=</span>
+<span class="linenos">272</span>                                                <span class="nc">VObjectRigidBody2D</span><span class="p">(</span><span class="n">graphicsData</span><span class="o">=</span><span class="n">gList</span><span class="p">)))</span>
+<span class="linenos">273</span>        <span class="n">mNode</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerNodeRigid</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">nMass</span><span class="p">))</span>
+<span class="linenos">274</span>        <span class="n">mGroundWheel</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerBodyRigid</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">oGround</span><span class="p">,</span> <span class="n">localPosition</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">visualization</span> <span class="o">=</span> <span class="nc">VMarkerBodyRigid</span><span class="p">(</span><span class="n">show</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)))</span>
+<span class="linenos">275</span>
+<span class="linenos">276</span>        <span class="c1">#mbs.AddObject(RevoluteJoint2D(markerNumbers=[mGroundWheel, mNode], visualization=VRevoluteJoint2D(show=False)))</span>
+<span class="linenos">277</span>
+<span class="linenos">278</span>        <span class="n">mCoordinateWheelX</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerNodeCoordinate</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">nMass</span><span class="p">,</span> <span class="n">coordinate</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+<span class="linenos">279</span>        <span class="n">mCoordinateWheelY</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerNodeCoordinate</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">nMass</span><span class="p">,</span> <span class="n">coordinate</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+<span class="linenos">280</span>        <span class="n">constraintX</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">CoordinateConstraint</span><span class="p">(</span><span class="n">markerNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">mCoordinateGround</span><span class="p">,</span> <span class="n">mCoordinateWheelX</span><span class="p">],</span>
+<span class="linenos">281</span>                                                 <span class="n">visualization</span><span class="o">=</span><span class="nc">VCoordinateConstraint</span><span class="p">(</span><span class="n">show</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)))</span>
+<span class="linenos">282</span>        <span class="n">constraintY</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">CoordinateConstraint</span><span class="p">(</span><span class="n">markerNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">mCoordinateGround</span><span class="p">,</span> <span class="n">mCoordinateWheelY</span><span class="p">],</span>
+<span class="linenos">283</span>                                                 <span class="n">visualization</span><span class="o">=</span><span class="nc">VCoordinateConstraint</span><span class="p">(</span><span class="n">show</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)))</span>
+<span class="linenos">284</span>        <span class="k">if</span> <span class="n">i</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+<span class="linenos">285</span>            <span class="n">constraintPulleyLeftX</span> <span class="o">=</span> <span class="n">constraintX</span>
+<span class="linenos">286</span>
+<span class="linenos">287</span>        <span class="k">if</span> <span class="kc">True</span><span class="p">:</span>
+<span class="linenos">288</span>
+<span class="linenos">289</span>            <span class="n">sWheelRot</span> <span class="o">+=</span> <span class="p">[</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorNode</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">nMass</span><span class="p">,</span>
+<span class="linenos">290</span>                                                   <span class="n">storeInternal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">291</span>                                                   <span class="n">fileName</span><span class="o">=</span><span class="s1">&#39;solutionDelete/wheel&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;angVel.txt&#39;</span><span class="p">,</span>
+<span class="linenos">292</span>                                                   <span class="n">outputVariableType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">AngularVelocity</span><span class="p">))]</span>
+<span class="linenos">293</span>        <span class="n">tdisplacement</span> <span class="o">=</span> <span class="mf">0.05</span>
+<span class="linenos">294</span>
+<span class="linenos">295</span>
+<span class="linenos">296</span>        <span class="k">def</span> <span class="nf">UFvelocityDrive</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">itemNumber</span><span class="p">,</span> <span class="n">lOffset</span><span class="p">):</span> <span class="c1">#time derivative of UFoffset</span>
+<span class="linenos">297</span>            <span class="k">if</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="n">tAccStart</span><span class="p">:</span>
+<span class="linenos">298</span>                <span class="n">v</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">299</span>            <span class="k">if</span> <span class="n">t</span> <span class="o">&gt;=</span> <span class="n">tAccStart</span> <span class="ow">and</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="n">tAccEnd</span><span class="p">:</span>
+<span class="linenos">300</span>                <span class="n">v</span> <span class="o">=</span> <span class="n">omegaFinal</span><span class="o">/</span><span class="p">(</span><span class="n">tAccEnd</span><span class="o">-</span><span class="n">tAccStart</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">t</span><span class="o">-</span><span class="n">tAccStart</span><span class="p">)</span>
+<span class="linenos">301</span>            <span class="k">elif</span> <span class="n">t</span> <span class="o">&gt;=</span> <span class="n">tAccEnd</span><span class="p">:</span>
+<span class="linenos">302</span>                <span class="n">v</span> <span class="o">=</span> <span class="n">omegaFinal</span>
+<span class="linenos">303</span>            <span class="k">return</span> <span class="n">v</span>
+<span class="linenos">304</span>
+<span class="linenos">305</span>        <span class="k">if</span> <span class="n">doDynamic</span><span class="p">:</span>
+<span class="linenos">306</span>            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+<span class="linenos">307</span>                <span class="n">mCoordinateWheel</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerNodeCoordinate</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">nMass</span><span class="p">,</span> <span class="n">coordinate</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+<span class="linenos">308</span>                <span class="n">velControl</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">CoordinateConstraint</span><span class="p">(</span><span class="n">markerNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">mCoordinateGround</span><span class="p">,</span> <span class="n">mCoordinateWheel</span><span class="p">],</span>
+<span class="linenos">309</span>                                                    <span class="n">velocityLevel</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">offsetUserFunction_t</span><span class="o">=</span> <span class="n">UFvelocityDrive</span><span class="p">,</span>
+<span class="linenos">310</span>                                                    <span class="n">visualization</span><span class="o">=</span><span class="nc">VCoordinateConstraint</span><span class="p">(</span><span class="n">show</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)))</span><span class="c1">#UFvelocityDrive</span>
+<span class="linenos">311</span>            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+<span class="linenos">312</span>                <span class="n">mCoordinateWheel</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerNodeCoordinate</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">nMass</span><span class="p">,</span> <span class="n">coordinate</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+<span class="linenos">313</span>                <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">CoordinateSpringDamper</span><span class="p">(</span><span class="n">markerNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">mCoordinateGround</span><span class="p">,</span> <span class="n">mCoordinateWheel</span><span class="p">],</span>
+<span class="linenos">314</span>                                                     <span class="n">damping</span> <span class="o">=</span> <span class="n">rotationDampingWheels</span><span class="p">,</span>
+<span class="linenos">315</span>                                                     <span class="n">visualization</span><span class="o">=</span><span class="nc">VCoordinateSpringDamper</span><span class="p">(</span><span class="n">show</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)))</span>
+<span class="linenos">316</span>
+<span class="linenos">317</span>                <span class="c1">#this is used for times &gt; 1 in order to see influence of torque step in Wheel1</span>
+<span class="linenos">318</span>                <span class="k">def</span> <span class="nf">UFforce</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">load</span><span class="p">):</span>
+<span class="linenos">319</span>                    <span class="n">tau</span> <span class="o">=</span> <span class="mf">0.</span>
+<span class="linenos">320</span>                    <span class="n">tau</span> <span class="o">+=</span>  <span class="mf">25.</span><span class="o">*</span><span class="p">(</span><span class="n">SmoothStep</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">)</span> <span class="o">-</span> <span class="n">SmoothStep</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">,</span> <span class="mf">4.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">))</span>
+<span class="linenos">321</span>                    <span class="c1">#tau += 16.*(SmoothStep(t, 5, 5.5, 0., 1.) - SmoothStep(t, 7.5, 8., 0., 1.))</span>
+<span class="linenos">322</span>                    <span class="k">return</span> <span class="o">-</span><span class="n">tau</span>
+<span class="linenos">323</span>
+<span class="linenos">324</span>                <span class="n">mbs</span><span class="o">.</span><span class="nf">AddLoad</span><span class="p">(</span><span class="nc">LoadCoordinate</span><span class="p">(</span><span class="n">markerNumber</span><span class="o">=</span><span class="n">mCoordinateWheel</span><span class="p">,</span>
+<span class="linenos">325</span>                                           <span class="n">load</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">loadUserFunction</span> <span class="o">=</span> <span class="nf">UFforce</span><span class="p">))</span>
+<span class="linenos">326</span>
+<span class="linenos">327</span>        <span class="k">if</span> <span class="n">staticEqulibrium</span><span class="p">:</span>
+<span class="linenos">328</span>            <span class="n">mCoordinateWheel</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerNodeCoordinate</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">nMass</span><span class="p">,</span> <span class="n">coordinate</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+<span class="linenos">329</span>            <span class="n">csd</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">CoordinateConstraint</span><span class="p">(</span><span class="n">markerNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">mCoordinateGround</span><span class="p">,</span> <span class="n">mCoordinateWheel</span><span class="p">],</span>
+<span class="linenos">330</span>                                                     <span class="n">visualization</span><span class="o">=</span><span class="nc">VCoordinateConstraint</span><span class="p">(</span><span class="n">show</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)))</span>
+<span class="linenos">331</span>            <span class="n">wheelSprings</span> <span class="o">+=</span> <span class="p">[</span><span class="n">csd</span><span class="p">]</span>
+<span class="linenos">332</span>
+<span class="linenos">333</span>
+<span class="linenos">334</span>        <span class="n">cableList</span> <span class="o">=</span> <span class="n">ancf</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="linenos">335</span>        <span class="n">mCircleBody</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerBodyRigid</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">oMass</span><span class="p">))</span>
+<span class="linenos">336</span>        <span class="c1">#mCircleBody = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nMass))</span>
+<span class="linenos">337</span>        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cableList</span><span class="p">)):</span>
+<span class="linenos">338</span>            <span class="n">initialGapList</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">]</span><span class="o">*</span><span class="n">nSegments</span> <span class="o">+</span> <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">nSegments</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">nSegments</span><span class="p">)</span> <span class="c1">#initial gap of 0., isStick (0=slip, +-1=stick, -2 undefined initial state), lastStickingPosition (0)</span>
+<span class="linenos">339</span>
+<span class="linenos">340</span>            <span class="n">mCable</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerBodyCable2DShape</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">cableList</span><span class="p">[</span><span class="n">k</span><span class="p">],</span>
+<span class="linenos">341</span>                                                          <span class="n">numberOfSegments</span> <span class="o">=</span> <span class="n">nSegments</span><span class="p">,</span> <span class="n">verticalOffset</span><span class="o">=-</span><span class="mi">0</span><span class="o">*</span><span class="n">hc</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span>
+<span class="linenos">342</span>            <span class="k">if</span> <span class="n">k</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+<span class="linenos">343</span>                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;+++++++++++++++++++++++++++++++++++&#39;</span><span class="p">)</span>
+<span class="linenos">344</span>                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;+++++++++++++++++++++++++++++++++++&#39;</span><span class="p">)</span>
+<span class="linenos">345</span>                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;extend vertical offset for ALE!!!&#39;</span><span class="p">)</span>
+<span class="linenos">346</span>                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;+++++++++++++++++++++++++++++++++++&#39;</span><span class="p">)</span>
+<span class="linenos">347</span>                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;+++++++++++++++++++++++++++++++++++&#39;</span><span class="p">)</span>
+<span class="linenos">348</span>            <span class="n">nodeDataContactCable</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">NodeGenericData</span><span class="p">(</span><span class="n">initialCoordinates</span><span class="o">=</span><span class="n">initialGapList</span><span class="p">,</span>
+<span class="linenos">349</span>                                                               <span class="n">numberOfDataCoordinates</span><span class="o">=</span><span class="n">nSegments</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span> <span class="p">))</span>
+<span class="linenos">350</span>
+<span class="linenos">351</span>            <span class="n">co</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectContactFrictionCircleCable2D</span><span class="p">(</span><span class="n">markerNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">mCircleBody</span><span class="p">,</span> <span class="n">mCable</span><span class="p">],</span> <span class="n">nodeNumber</span> <span class="o">=</span> <span class="n">nodeDataContactCable</span><span class="p">,</span>
+<span class="linenos">352</span>                                                     <span class="n">numberOfContactSegments</span><span class="o">=</span><span class="n">nSegments</span><span class="p">,</span>
+<span class="linenos">353</span>                                                     <span class="n">contactStiffness</span> <span class="o">=</span> <span class="n">contactStiffness</span><span class="p">,</span>
+<span class="linenos">354</span>                                                     <span class="n">contactDamping</span><span class="o">=</span><span class="n">contactDamping</span><span class="p">,</span>
+<span class="linenos">355</span>                                                     <span class="n">frictionVelocityPenalty</span> <span class="o">=</span> <span class="n">frictionVelocityPenalty</span><span class="p">,</span>
+<span class="linenos">356</span>                                                     <span class="n">frictionStiffness</span> <span class="o">=</span> <span class="n">frictionStiffness</span><span class="p">,</span>
+<span class="linenos">357</span>                                                     <span class="n">frictionCoefficient</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">useFriction</span><span class="p">)</span><span class="o">*</span><span class="n">dryFriction</span><span class="p">,</span>
+<span class="linenos">358</span>                                                     <span class="n">circleRadius</span> <span class="o">=</span> <span class="n">r</span><span class="p">,</span>
+<span class="linenos">359</span>                                                     <span class="n">visualization</span><span class="o">=</span><span class="nc">VObjectContactFrictionCircleCable2D</span><span class="p">(</span><span class="n">showContactCircle</span><span class="o">=</span><span class="kc">False</span><span class="p">)))</span>
+<span class="linenos">360</span>            <span class="n">contactObjects</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="p">[</span><span class="n">co</span><span class="p">]</span>
+<span class="linenos">361</span>
+<span class="linenos">362</span>
+<span class="linenos">363</span>
+<span class="linenos">364</span><span class="c1">#+++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">365</span><span class="c1">#create list of sensors for contact</span>
+<span class="linenos">366</span><span class="n">sContactDisp</span> <span class="o">=</span> <span class="p">[[],[]]</span>
+<span class="linenos">367</span><span class="n">sContactForce</span> <span class="o">=</span> <span class="p">[[],[]]</span>
+<span class="linenos">368</span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">contactObjects</span><span class="p">)):</span>
+<span class="linenos">369</span>    <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">contactObjects</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+<span class="linenos">370</span>        <span class="n">sContactForce</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="p">[</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorObject</span><span class="p">(</span><span class="n">objectNumber</span> <span class="o">=</span> <span class="n">obj</span><span class="p">,</span>
+<span class="linenos">371</span>                                                        <span class="n">storeInternal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">372</span>                                                        <span class="n">outputVariableType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">ForceLocal</span><span class="p">))]</span>
+<span class="linenos">373</span>        <span class="n">sContactDisp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="p">[</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorObject</span><span class="p">(</span><span class="n">objectNumber</span> <span class="o">=</span> <span class="n">obj</span><span class="p">,</span>
+<span class="linenos">374</span>                                                        <span class="n">storeInternal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">375</span>                                                        <span class="n">outputVariableType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Coordinates</span><span class="p">))]</span>
+<span class="linenos">376</span>
+<span class="linenos">377</span>
+<span class="linenos">378</span><span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
+<span class="linenos">379</span>
+<span class="linenos">380</span>
+<span class="linenos">381</span><span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">()</span> <span class="c1">#takes currently set values or default values</span>
+<span class="linenos">382</span>
+<span class="linenos">383</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">linearSolverType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">LinearSolverType</span><span class="o">.</span><span class="n">EigenSparse</span>
+<span class="linenos">384</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">coordinatesSolutionFileName</span> <span class="o">=</span> <span class="s1">&#39;solution/testCoords.txt&#39;</span>
+<span class="linenos">385</span>
+<span class="linenos">386</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">writeSolutionToFile</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">387</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">solutionWritePeriod</span> <span class="o">=</span> <span class="mf">0.002</span>
+<span class="linenos">388</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">sensorsWritePeriod</span> <span class="o">=</span> <span class="mf">0.001</span>
+<span class="linenos">389</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">parallel</span><span class="o">.</span><span class="n">numberOfThreads</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1">#use 4 to speed up for &gt; 100 ANCF elements</span>
+<span class="linenos">390</span>
+<span class="linenos">391</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="n">tEnd</span>
+<span class="linenos">392</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tEnd</span><span class="o">/</span><span class="n">stepSize</span><span class="p">)</span>
+<span class="linenos">393</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">stepInformation</span><span class="o">=</span> <span class="mi">255</span>
+<span class="linenos">394</span>
+<span class="linenos">395</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">verboseMode</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="linenos">396</span>
+<span class="linenos">397</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">useModifiedNewton</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">398</span><span class="c1">#simulationSettings.timeIntegration.newton.numericalDifferentiation.minimumCoordinateSize = 1</span>
+<span class="linenos">399</span><span class="c1">#simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5</span>
+<span class="linenos">400</span>
+<span class="linenos">401</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">discontinuous</span><span class="o">.</span><span class="n">iterationTolerance</span> <span class="o">=</span> <span class="mf">1e-3</span>
+<span class="linenos">402</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">discontinuous</span><span class="o">.</span><span class="n">maxIterations</span> <span class="o">=</span> <span class="n">discontinuousIterations</span> <span class="c1">#3</span>
+<span class="linenos">403</span>
+<span class="linenos">404</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">displayStatistics</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">405</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">displayComputationTime</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="linenos">406</span>
+<span class="linenos">407</span>
+<span class="linenos">408</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">circleTiling</span> <span class="o">=</span> <span class="mi">24</span>
+<span class="linenos">409</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">loads</span><span class="o">.</span><span class="n">show</span><span class="o">=</span><span class="kc">False</span>
+<span class="linenos">410</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">show</span><span class="o">=</span><span class="kc">False</span>
+<span class="linenos">411</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">markers</span><span class="o">.</span><span class="n">show</span><span class="o">=</span><span class="kc">False</span>
+<span class="linenos">412</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">defaultSize</span> <span class="o">=</span> <span class="mf">0.002</span>
+<span class="linenos">413</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">multiSampling</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="linenos">414</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">lineWidth</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="linenos">415</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">renderWindowSize</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1920</span><span class="p">,</span><span class="mi">1080</span><span class="p">]</span>
+<span class="linenos">416</span>
+<span class="linenos">417</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">connectors</span><span class="o">.</span><span class="n">showContact</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">418</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">contact</span><span class="o">.</span><span class="n">contactPointsDefaultSize</span> <span class="o">=</span> <span class="mf">0.0002</span>
+<span class="linenos">419</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">contact</span><span class="o">.</span><span class="n">showContactForces</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">420</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">contact</span><span class="o">.</span><span class="n">contactForcesFactor</span> <span class="o">=</span> <span class="mf">0.005</span>
+<span class="linenos">421</span>
+<span class="linenos">422</span>
+<span class="linenos">423</span><span class="k">if</span> <span class="kc">True</span><span class="p">:</span>
+<span class="linenos">424</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">bodies</span><span class="o">.</span><span class="n">beams</span><span class="o">.</span><span class="n">axialTiling</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="linenos">425</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">bodies</span><span class="o">.</span><span class="n">beams</span><span class="o">.</span><span class="n">drawVertical</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">426</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">bodies</span><span class="o">.</span><span class="n">beams</span><span class="o">.</span><span class="n">drawVerticalLines</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">427</span>
+<span class="linenos">428</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">contour</span><span class="o">.</span><span class="n">outputVariableComponent</span><span class="o">=</span><span class="mi">0</span>
+<span class="linenos">429</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">contour</span><span class="o">.</span><span class="n">outputVariable</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">ForceLocal</span>
+<span class="linenos">430</span>
+<span class="linenos">431</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">bodies</span><span class="o">.</span><span class="n">beams</span><span class="o">.</span><span class="n">drawVerticalFactor</span> <span class="o">=</span> <span class="mf">0.0003</span>
+<span class="linenos">432</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">bodies</span><span class="o">.</span><span class="n">beams</span><span class="o">.</span><span class="n">drawVerticalOffset</span> <span class="o">=</span> <span class="o">-</span><span class="mi">220</span>
+<span class="linenos">433</span>
+<span class="linenos">434</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">bodies</span><span class="o">.</span><span class="n">beams</span><span class="o">.</span><span class="n">reducedAxialInterploation</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">435</span>
+<span class="linenos">436</span>    <span class="c1"># SC.visualizationSettings.contour.outputVariable=exu.OutputVariableType.VelocityLocal</span>
+<span class="linenos">437</span>    <span class="c1"># SC.visualizationSettings.bodies.beams.drawVerticalFactor = -0.25</span>
+<span class="linenos">438</span>    <span class="c1"># SC.visualizationSettings.bodies.beams.drawVerticalOffset = 0.30</span>
+<span class="linenos">439</span>    <span class="c1"># SC.visualizationSettings.bodies.beams.reducedAxialInterploation = False</span>
+<span class="linenos">440</span>
+<span class="linenos">441</span>
+<span class="linenos">442</span><span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
+<span class="linenos">443</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StartRenderer</span><span class="p">()</span>
+<span class="linenos">444</span>    <span class="c1">#mbs.WaitForUserToContinue()</span>
+<span class="linenos">445</span>
+<span class="linenos">446</span><span class="c1">#simulationSettings.staticSolver.newton.absoluteTolerance = 1e-10</span>
+<span class="linenos">447</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">adaptiveStep</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">448</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">loadStepGeometric</span> <span class="o">=</span> <span class="kc">False</span><span class="p">;</span>
+<span class="linenos">449</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">loadStepGeometricRange</span><span class="o">=</span><span class="mf">1e4</span>
+<span class="linenos">450</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">numberOfLoadSteps</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="linenos">451</span><span class="c1">#simulationSettings.staticSolver.useLoadFactor = False</span>
+<span class="linenos">452</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">stabilizerODE2term</span> <span class="o">=</span> <span class="mf">1e5</span><span class="o">*</span><span class="mi">10</span>
+<span class="linenos">453</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">relativeTolerance</span> <span class="o">=</span> <span class="mf">1e-6</span>
+<span class="linenos">454</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">absoluteTolerance</span> <span class="o">=</span> <span class="mf">1e-6</span>
+<span class="linenos">455</span>
+<span class="linenos">456</span><span class="k">if</span> <span class="n">staticEqulibrium</span><span class="p">:</span> <span class="c1">#precompute static equilibrium</span>
+<span class="linenos">457</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">SetObjectParameter</span><span class="p">(</span><span class="n">velControl</span><span class="p">,</span> <span class="s1">&#39;activeConnector&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+<span class="linenos">458</span>
+<span class="linenos">459</span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">contactObjects</span><span class="p">)):</span>
+<span class="linenos">460</span>        <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">contactObjects</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+<span class="linenos">461</span>            <span class="n">mbs</span><span class="o">.</span><span class="nf">SetObjectParameter</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s1">&#39;frictionCoefficient&#39;</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)</span>
+<span class="linenos">462</span>            <span class="n">mbs</span><span class="o">.</span><span class="nf">SetObjectParameter</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s1">&#39;frictionStiffness&#39;</span><span class="p">,</span> <span class="mf">1e-8</span><span class="p">)</span> <span class="c1">#do not set to zero, as it needs to do some initialization...</span>
+<span class="linenos">463</span>
+<span class="linenos">464</span>    <span class="c1"># simulationSettings.solutionSettings.appendToFile=False</span>
+<span class="linenos">465</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">SolveStatic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="p">,</span> <span class="n">updateInitialValues</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">466</span>    <span class="c1"># simulationSettings.solutionSettings.appendToFile=True</span>
+<span class="linenos">467</span>
+<span class="linenos">468</span>    <span class="c1">#check total force on support, expect: supportLeftX \approx 2*preStretch*EA</span>
+<span class="linenos">469</span>    <span class="n">supportLeftX</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetObjectOutput</span><span class="p">(</span><span class="n">constraintPulleyLeftX</span><span class="p">,</span><span class="n">variableType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="nc">Force</span><span class="p">)</span>
+<span class="linenos">470</span>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Force x in support of left pulley = &#39;</span><span class="p">,</span> <span class="n">supportLeftX</span><span class="p">)</span>
+<span class="linenos">471</span>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Belt pre-tension=&#39;</span><span class="p">,</span> <span class="n">preStretch</span><span class="o">*</span><span class="n">EA</span><span class="p">)</span>
+<span class="linenos">472</span>
+<span class="linenos">473</span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">contactObjects</span><span class="p">)):</span>
+<span class="linenos">474</span>        <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">contactObjects</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+<span class="linenos">475</span>            <span class="n">mbs</span><span class="o">.</span><span class="nf">SetObjectParameter</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s1">&#39;frictionCoefficient&#39;</span><span class="p">,</span> <span class="n">dryFriction</span><span class="p">)</span>
+<span class="linenos">476</span>            <span class="n">mbs</span><span class="o">.</span><span class="nf">SetObjectParameter</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s1">&#39;frictionStiffness&#39;</span><span class="p">,</span> <span class="n">frictionStiffness</span><span class="p">)</span>
+<span class="linenos">477</span>
+<span class="linenos">478</span>    <span class="c1"># useALE = False</span>
+<span class="linenos">479</span>    <span class="k">for</span> <span class="n">coordinateConstraint</span> <span class="ow">in</span> <span class="n">ancf</span><span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="c1">#release constraints for dynamic Solver</span>
+<span class="linenos">480</span>        <span class="k">if</span> <span class="ow">not</span> <span class="n">useALE</span><span class="p">:</span> <span class="c1">#except ALE constraint</span>
+<span class="linenos">481</span>            <span class="n">mbs</span><span class="o">.</span><span class="nf">SetObjectParameter</span><span class="p">(</span><span class="n">coordinateConstraint</span><span class="p">,</span> <span class="s1">&#39;activeConnector&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+<span class="linenos">482</span>
+<span class="linenos">483</span>    <span class="k">if</span> <span class="n">useALE</span><span class="p">:</span>
+<span class="linenos">484</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">SetObjectParameter</span><span class="p">(</span><span class="n">oCCvALE</span><span class="p">,</span> <span class="s1">&#39;activeConnector&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span> <span class="c1">#do not fix ALE coordinate any more</span>
+<span class="linenos">485</span>
+<span class="linenos">486</span>
+<span class="linenos">487</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">SetObjectParameter</span><span class="p">(</span><span class="n">velControl</span><span class="p">,</span> <span class="s1">&#39;activeConnector&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<span class="linenos">488</span>    <span class="k">for</span> <span class="n">csd</span> <span class="ow">in</span> <span class="n">wheelSprings</span><span class="p">:</span>
+<span class="linenos">489</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">SetObjectParameter</span><span class="p">(</span><span class="n">csd</span><span class="p">,</span> <span class="s1">&#39;activeConnector&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+<span class="linenos">490</span>
+<span class="linenos">491</span><span class="k">if</span> <span class="kc">True</span><span class="p">:</span>
+<span class="linenos">492</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="p">,</span> <span class="n">solverType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">DynamicSolverType</span><span class="o">.</span><span class="n">TrapezoidalIndex2</span><span class="p">)</span> <span class="c1">#183 Newton iterations, 0.114 seconds</span>
+<span class="linenos">493</span><span class="c1">#exu.SolveDynamic(mbs, simulationSettings)</span>
+<span class="linenos">494</span>
+<span class="linenos">495</span><span class="k">if</span> <span class="n">useGraphics</span> <span class="ow">and</span> <span class="kc">True</span><span class="p">:</span>
+<span class="linenos">496</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">autoFitScene</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="linenos">497</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">graphicsUpdateInterval</span><span class="o">=</span><span class="mf">0.02</span>
+<span class="linenos">498</span>    <span class="kn">from</span> <span class="nn">exudyn.interactive</span> <span class="kn">import</span> <span class="nf">SolutionViewer</span>
+<span class="linenos">499</span>    <span class="n">sol</span> <span class="o">=</span> <span class="nf">LoadSolutionFile</span><span class="p">(</span><span class="s1">&#39;solution/testCoords.txt&#39;</span><span class="p">,</span> <span class="n">safeMode</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="c1">#, maxRows=100)</span>
+<span class="linenos">500</span>    <span class="nf">SolutionViewer</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sol</span><span class="p">)</span>
+<span class="linenos">501</span>
+<span class="linenos">502</span>
+<span class="linenos">503</span><span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
+<span class="linenos">504</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">WaitForRenderEngineStopFlag</span><span class="p">()</span>
+<span class="linenos">505</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StopRenderer</span><span class="p">()</span> <span class="c1">#safely close rendering window!</span>
+<span class="linenos">506</span>
+<span class="linenos">507</span>
+<span class="linenos">508</span><span class="c1">#%%++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">509</span><span class="k">if</span> <span class="kc">True</span><span class="p">:</span>
+<span class="linenos">510</span>    <span class="n">solDir</span> <span class="o">=</span> <span class="s1">&#39;solutionDelete/&#39;</span>
+<span class="linenos">511</span>    <span class="c1">#shift data depending on axial position by subtracting xOff; put negative x values+shiftValue to end of array</span>
+<span class="linenos">512</span>    <span class="k">def</span> <span class="nf">ShiftXoff</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">xOff</span><span class="p">,</span> <span class="n">shiftValue</span><span class="p">):</span>
+<span class="linenos">513</span>        <span class="n">indOff</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">514</span>        <span class="n">n</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos">515</span>        <span class="n">data</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">-=</span> <span class="n">xOff</span>
+<span class="linenos">516</span>        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+<span class="linenos">517</span>           <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+<span class="linenos">518</span>               <span class="n">indOff</span><span class="o">+=</span><span class="mi">1</span>
+<span class="linenos">519</span>               <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">shiftValue</span>
+<span class="linenos">520</span>        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;indOff=&#39;</span><span class="p">,</span> <span class="n">indOff</span><span class="p">)</span>
+<span class="linenos">521</span>        <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">data</span><span class="p">[</span><span class="n">indOff</span><span class="p">:,:],</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">indOff</span><span class="p">,:]))</span>
+<span class="linenos">522</span>        <span class="k">return</span> <span class="n">data</span>
+<span class="linenos">523</span>
+<span class="linenos">524</span>    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="linenos">525</span>    <span class="kn">import</span> <span class="nn">matplotlib.ticker</span> <span class="k">as</span> <span class="nn">ticker</span>
+<span class="linenos">526</span>    <span class="kn">from</span> <span class="nn">exudyn.plot</span> <span class="kn">import</span> <span class="nf">PlotSensor</span><span class="p">,</span> <span class="nf">DataArrayFromSensorList</span>
+<span class="linenos">527</span>
+<span class="linenos">528</span>    <span class="nf">PlotSensor</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">closeAll</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">529</span>
+<span class="linenos">530</span>    <span class="c1">#compute axial offset, to normalize results:</span>
+<span class="linenos">531</span>    <span class="n">nodePos0</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetSensorValues</span><span class="p">(</span><span class="n">sCable0Pos</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="linenos">532</span>    <span class="n">xOff</span> <span class="o">=</span> <span class="n">nodePos0</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos">533</span>    <span class="n">maxXoff</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">positionPulley2x</span>
+<span class="linenos">534</span>    <span class="n">maxYoff</span> <span class="o">=</span> <span class="mf">0.1</span><span class="o">*</span><span class="n">r</span>
+<span class="linenos">535</span>    <span class="c1"># indOff = 0 #single data per element</span>
+<span class="linenos">536</span>    <span class="c1"># indOff2 = 0 #double data per element</span>
+<span class="linenos">537</span>    <span class="n">correctXoffset</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">538</span>    <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">nodePos0</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">r</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">maxYoff</span> <span class="ow">or</span> <span class="n">nodePos0</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">maxXoff</span> <span class="ow">or</span> <span class="n">nodePos0</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">0.1</span><span class="o">*</span><span class="n">maxXoff</span><span class="p">:</span>
+<span class="linenos">539</span>        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;*****************&#39;</span><span class="p">)</span>
+<span class="linenos">540</span>        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;warning: final position not at top of belt or too far away&#39;</span><span class="p">)</span>
+<span class="linenos">541</span>        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;nodePos0=&#39;</span><span class="p">,</span><span class="n">nodePos0</span><span class="p">)</span>
+<span class="linenos">542</span>        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;*****************&#39;</span><span class="p">)</span>
+<span class="linenos">543</span>        <span class="n">xOff</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">544</span>        <span class="n">correctXoffset</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="linenos">545</span>    <span class="k">else</span><span class="p">:</span>
+<span class="linenos">546</span>        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;******************</span><span class="se">\n</span><span class="s1">xOff=&#39;</span><span class="p">,</span> <span class="n">xOff</span><span class="p">)</span>
+<span class="linenos">547</span>
+<span class="linenos">548</span>
+<span class="linenos">549</span>    <span class="n">dataVel</span> <span class="o">=</span> <span class="nf">DataArrayFromSensorList</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sensorNumbers</span><span class="o">=</span><span class="n">sMidVel</span><span class="p">,</span> <span class="n">positionList</span><span class="o">=</span><span class="n">positionListMid</span><span class="p">)</span>
+<span class="linenos">550</span>    <span class="k">if</span> <span class="n">correctXoffset</span><span class="p">:</span>
+<span class="linenos">551</span>        <span class="n">dataVel</span><span class="o">=</span><span class="n">ShiftXoff</span><span class="p">(</span><span class="n">dataVel</span><span class="p">,</span><span class="n">xOff</span><span class="p">,</span> <span class="n">reevingDict</span><span class="p">[</span><span class="s1">&#39;totalLength&#39;</span><span class="p">])</span>
+<span class="linenos">552</span>
+<span class="linenos">553</span>    <span class="c1"># PlotSensor(mbs, sensorNumbers=[dataVel], components=0, labels=[&#39;axial velocity&#39;],</span>
+<span class="linenos">554</span>    <span class="c1">#            xLabel=&#39;axial position (m)&#39;, yLabel=&#39;velocity (m/s)&#39;)</span>
+<span class="linenos">555</span>
+<span class="linenos">556</span>    <span class="c1">#axial force over beam length:</span>
+<span class="linenos">557</span>    <span class="n">dataForce</span> <span class="o">=</span> <span class="nf">DataArrayFromSensorList</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sensorNumbers</span><span class="o">=</span><span class="n">sAxialForce</span><span class="p">,</span> <span class="n">positionList</span><span class="o">=</span><span class="n">positionList2Node</span><span class="p">)</span>
+<span class="linenos">558</span>    <span class="k">if</span> <span class="n">correctXoffset</span><span class="p">:</span>
+<span class="linenos">559</span>        <span class="n">dataForce</span> <span class="o">=</span> <span class="n">ShiftXoff</span><span class="p">(</span><span class="n">dataForce</span><span class="p">,</span><span class="n">xOff</span><span class="p">,</span> <span class="n">reevingDict</span><span class="p">[</span><span class="s1">&#39;totalLength&#39;</span><span class="p">])</span>
+<span class="linenos">560</span>    <span class="c1"># PlotSensor(mbs, sensorNumbers=[dataForce], components=0, labels=[&#39;axial force&#39;], colorCodeOffset=2,</span>
+<span class="linenos">561</span>    <span class="c1">#            xLabel=&#39;axial position (m)&#39;, yLabel=&#39;axial force (N)&#39;)</span>
+<span class="linenos">562</span>
+<span class="linenos">563</span>
+<span class="linenos">564</span>    <span class="c1"># if dryFriction==0.5 and nANCFnodes==120:</span>
+<span class="linenos">565</span>    <span class="c1">#     #analytical exponential curve, Euler&#39;s/Eytelwein&#39;s solution:</span>
+<span class="linenos">566</span>    <span class="c1">#     na = 12 #number of data points</span>
+<span class="linenos">567</span>    <span class="c1">#     dataExp = np.zeros((na*2, 2))</span>
+<span class="linenos">568</span>    <span class="c1">#     #f0 = 278.733 #this is at low level, but exp starts later</span>
+<span class="linenos">569</span>    <span class="c1">#     f0 = 191.0#287.0</span>
+<span class="linenos">570</span>    <span class="c1">#     x0 = 0.5860 #1.1513 #starting coordinate, drawn in -x direction</span>
+<span class="linenos">571</span>    <span class="c1">#     d = 0.28     #amount along x drawn</span>
+<span class="linenos">572</span>    <span class="c1">#     for i in range(na):</span>
+<span class="linenos">573</span>    <span class="c1">#         x = i/na*d</span>
+<span class="linenos">574</span>    <span class="c1">#         beta = x/(radiusPulley + hc/2)</span>
+<span class="linenos">575</span>    <span class="c1">#         val = f0*exp(beta*dryFriction)</span>
+<span class="linenos">576</span>    <span class="c1">#         #print(&#39;x=&#39;,x,&#39;,exp=&#39;,val)</span>
+<span class="linenos">577</span>    <span class="c1">#         dataExp[i,0] = x0-x</span>
+<span class="linenos">578</span>    <span class="c1">#         dataExp[i,1] = val</span>
+<span class="linenos">579</span>
+<span class="linenos">580</span>    <span class="c1">#     f0 = 193.4#287.0</span>
+<span class="linenos">581</span>    <span class="c1">#     x0 = 0.984 #1.1513 #starting coordinate, drawn in -x direction</span>
+<span class="linenos">582</span>    <span class="c1">#     for i in range(na):</span>
+<span class="linenos">583</span>    <span class="c1">#         x = i/na*d</span>
+<span class="linenos">584</span>    <span class="c1">#         beta = x/(radiusPulley + hc/2)</span>
+<span class="linenos">585</span>    <span class="c1">#         val = f0*exp(beta*dryFriction)</span>
+<span class="linenos">586</span>    <span class="c1">#         dataExp[i+na,0] = x0+x</span>
+<span class="linenos">587</span>    <span class="c1">#         dataExp[i+na,1] = val</span>
+<span class="linenos">588</span>
+<span class="linenos">589</span>    <span class="c1">#     PlotSensor(mbs, sensorNumbers=[dataExp], components=0, labels=[&#39;analytical Eytelwein&#39;], colorCodeOffset=3, newFigure=False,</span>
+<span class="linenos">590</span>    <span class="c1">#                lineStyles=[&#39;&#39;], markerStyles=[&#39;x &#39;], markerDensity=2*na)</span>
+<span class="linenos">591</span>
+<span class="linenos">592</span>    <span class="c1">#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">593</span>    <span class="c1">#contact forces are stored (x/y) for every segment ==&gt; put into consecutive array</span>
+<span class="linenos">594</span>    <span class="n">contactForces</span> <span class="o">=</span><span class="p">[[],[]]</span> <span class="c1">#these are the contact forces of the whole belt, but from both pulleys!</span>
+<span class="linenos">595</span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sContactForce</span><span class="p">)):</span>
+<span class="linenos">596</span>        <span class="n">contactForces</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">sContactForce</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">*</span><span class="n">nSegments</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span> <span class="c1">#per row: [position, Fx, Fy]</span>
+<span class="linenos">597</span>        <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">sensor</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sContactForce</span><span class="p">[</span><span class="n">i</span><span class="p">]):</span>
+<span class="linenos">598</span>            <span class="n">values</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetSensorValues</span><span class="p">(</span><span class="n">sensor</span><span class="p">)</span>
+<span class="linenos">599</span>            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nSegments</span><span class="p">):</span>
+<span class="linenos">600</span>                <span class="n">row</span> <span class="o">=</span> <span class="n">j</span><span class="o">*</span><span class="n">nSegments</span> <span class="o">+</span> <span class="n">k</span>
+<span class="linenos">601</span>                <span class="n">contactForces</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">row</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">positionListSegments</span><span class="p">[</span><span class="n">row</span><span class="p">]</span>
+<span class="linenos">602</span>                <span class="n">contactForces</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">row</span><span class="p">,</span> <span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="n">k</span><span class="o">*</span><span class="mi">2</span><span class="p">:</span><span class="n">k</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span>
+<span class="linenos">603</span>
+<span class="linenos">604</span>    <span class="n">contactForcesTotal</span> <span class="o">=</span> <span class="n">contactForces</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos">605</span>    <span class="n">contactForcesTotal</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+=</span> <span class="n">contactForces</span><span class="p">[</span><span class="mi">1</span><span class="p">][:,</span><span class="mi">1</span><span class="p">:]</span>
+<span class="linenos">606</span>
+<span class="linenos">607</span>    <span class="k">if</span> <span class="n">correctXoffset</span><span class="p">:</span>
+<span class="linenos">608</span>        <span class="n">contactForcesTotal</span> <span class="o">=</span> <span class="n">ShiftXoff</span><span class="p">(</span><span class="n">contactForcesTotal</span><span class="p">,</span><span class="o">-</span><span class="n">xOff</span><span class="p">,</span> <span class="n">reevingDict</span><span class="p">[</span><span class="s1">&#39;totalLength&#39;</span><span class="p">])</span>
+<span class="linenos">609</span>    <span class="c1">#plot contact forces over beam length:</span>
+<span class="linenos">610</span>    <span class="nf">PlotSensor</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sensorNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">contactForcesTotal</span><span class="p">,</span><span class="n">contactForcesTotal</span><span class="p">],</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;tangential force&#39;</span><span class="p">,</span><span class="s1">&#39;normal force&#39;</span><span class="p">],</span>
+<span class="linenos">611</span>               <span class="n">xLabel</span><span class="o">=</span><span class="s1">&#39;axial position (m)&#39;</span><span class="p">,</span> <span class="n">yLabel</span><span class="o">=</span><span class="s1">&#39;contact forces (N)&#39;</span><span class="p">,</span> <span class="n">newFigure</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">612</span>    <span class="c1"># PlotSensor(mbs, sensorNumbers=[contactForces[1],contactForces[1]], components=[0,1], labels=[&#39;tangential force&#39;,&#39;normal force&#39;],</span>
+<span class="linenos">613</span>    <span class="c1">#            xLabel=&#39;axial position (m)&#39;, yLabel=&#39;contact forces (N)&#39;, newFigure=False)</span>
+<span class="linenos">614</span>    <span class="nf">PlotSensor</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sensorNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">solDir</span><span class="o">+</span><span class="s1">&#39;contactForcesh5e-05n2s2cs40ALE1.txt&#39;</span><span class="p">],</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span>
+<span class="linenos">615</span>               <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;tangential force ALE&#39;</span><span class="p">,</span><span class="s1">&#39;normal force ALE&#39;</span><span class="p">],</span>
+<span class="linenos">616</span>                <span class="n">xLabel</span><span class="o">=</span><span class="s1">&#39;axial position (m)&#39;</span><span class="p">,</span> <span class="n">yLabel</span><span class="o">=</span><span class="s1">&#39;contact forces (N)&#39;</span><span class="p">,</span> <span class="n">colorCodeOffset</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">newFigure</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="linenos">617</span>    <span class="nf">PlotSensor</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sensorNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">solDir</span><span class="o">+</span><span class="s1">&#39;contactForcesh5e-05n2s2cs40ALE0.txt&#39;</span><span class="p">],</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span>
+<span class="linenos">618</span>               <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;tangential force Ref&#39;</span><span class="p">,</span><span class="s1">&#39;normal force Ref&#39;</span><span class="p">],</span>
+<span class="linenos">619</span>                <span class="n">xLabel</span><span class="o">=</span><span class="s1">&#39;axial position (m)&#39;</span><span class="p">,</span> <span class="n">yLabel</span><span class="o">=</span><span class="s1">&#39;contact forces (N)&#39;</span><span class="p">,</span> <span class="n">colorCodeOffset</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">newFigure</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="linenos">620</span>
+<span class="linenos">621</span>    <span class="n">contactDisp</span> <span class="o">=</span><span class="p">[[],[]]</span> <span class="c1">#slip and gap</span>
+<span class="linenos">622</span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sContactDisp</span><span class="p">)):</span>
+<span class="linenos">623</span>        <span class="n">contactDisp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">sContactDisp</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">*</span><span class="n">nSegments</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span> <span class="c1">#per row: [position, Fx, Fy]</span>
+<span class="linenos">624</span>        <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">sensor</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sContactDisp</span><span class="p">[</span><span class="n">i</span><span class="p">]):</span>
+<span class="linenos">625</span>            <span class="n">values</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetSensorValues</span><span class="p">(</span><span class="n">sensor</span><span class="p">)</span>
+<span class="linenos">626</span>            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nSegments</span><span class="p">):</span>
+<span class="linenos">627</span>                <span class="n">row</span> <span class="o">=</span> <span class="n">j</span><span class="o">*</span><span class="n">nSegments</span> <span class="o">+</span> <span class="n">k</span>
+<span class="linenos">628</span>                <span class="n">contactDisp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">row</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">positionListSegments</span><span class="p">[</span><span class="n">row</span><span class="p">]</span>
+<span class="linenos">629</span>                <span class="n">contactDisp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">row</span><span class="p">,</span> <span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="n">k</span><span class="o">*</span><span class="mi">2</span><span class="p">:</span><span class="n">k</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span>
+<span class="linenos">630</span>
+<span class="linenos">631</span>    <span class="k">if</span> <span class="n">correctXoffset</span><span class="p">:</span>
+<span class="linenos">632</span>        <span class="n">contactDisp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">ShiftXoff</span><span class="p">(</span><span class="n">contactDisp</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="o">-</span><span class="n">xOff</span><span class="p">,</span> <span class="n">reevingDict</span><span class="p">[</span><span class="s1">&#39;totalLength&#39;</span><span class="p">])</span>
+<span class="linenos">633</span>        <span class="n">contactDisp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">ShiftXoff</span><span class="p">(</span><span class="n">contactDisp</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="o">-</span><span class="n">xOff</span><span class="p">,</span> <span class="n">reevingDict</span><span class="p">[</span><span class="s1">&#39;totalLength&#39;</span><span class="p">])</span>
+<span class="linenos">634</span>
+<span class="linenos">635</span>    <span class="k">if</span> <span class="kc">False</span><span class="p">:</span>
+<span class="linenos">636</span>        <span class="nf">PlotSensor</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sensorNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">contactDisp</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">contactDisp</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;slip&#39;</span><span class="p">,</span><span class="s1">&#39;gap&#39;</span><span class="p">],</span>
+<span class="linenos">637</span>                   <span class="n">xLabel</span><span class="o">=</span><span class="s1">&#39;axial position (m)&#39;</span><span class="p">,</span> <span class="n">yLabel</span><span class="o">=</span><span class="s1">&#39;slip, gap (m)&#39;</span><span class="p">,</span> <span class="n">newFigure</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">638</span>        <span class="nf">PlotSensor</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sensorNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">contactDisp</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">contactDisp</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;slip&#39;</span><span class="p">,</span><span class="s1">&#39;gap&#39;</span><span class="p">],</span>
+<span class="linenos">639</span>                   <span class="n">xLabel</span><span class="o">=</span><span class="s1">&#39;axial position (m)&#39;</span><span class="p">,</span> <span class="n">yLabel</span><span class="o">=</span><span class="s1">&#39;slip, gap (m)&#39;</span><span class="p">,</span> <span class="n">newFigure</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="linenos">640</span>        <span class="nf">PlotSensor</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sensorNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">solDir</span><span class="o">+</span><span class="s1">&#39;contactDisph5e-05n2s2cs40ALE1.txt&#39;</span><span class="p">],</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;slipALE&#39;</span><span class="p">,</span><span class="s1">&#39;gapALE&#39;</span><span class="p">],</span>
+<span class="linenos">641</span>                   <span class="n">xLabel</span><span class="o">=</span><span class="s1">&#39;axial position (m)&#39;</span><span class="p">,</span> <span class="n">yLabel</span><span class="o">=</span><span class="s1">&#39;slip, gap (m)&#39;</span><span class="p">,</span> <span class="n">colorCodeOffset</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">newFigure</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="linenos">642</span>
+<span class="linenos">643</span>
+<span class="linenos">644</span>
+<span class="linenos">645</span>    <span class="n">header</span>  <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+<span class="linenos">646</span>    <span class="n">header</span> <span class="o">+=</span> <span class="s1">&#39;endTime=&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">tEnd</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+<span class="linenos">647</span>    <span class="n">header</span> <span class="o">+=</span> <span class="s1">&#39;stepSize=&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">stepSize</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+<span class="linenos">648</span>    <span class="n">header</span> <span class="o">+=</span> <span class="s1">&#39;nSegments=&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">nSegments</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+<span class="linenos">649</span>    <span class="n">header</span> <span class="o">+=</span> <span class="s1">&#39;nANCFnodes=&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">nANCFnodes</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+<span class="linenos">650</span>    <span class="n">header</span> <span class="o">+=</span> <span class="s1">&#39;contactStiffness=&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">contactStiffness</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+<span class="linenos">651</span>    <span class="n">header</span> <span class="o">+=</span> <span class="s1">&#39;contactDamping=&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">contactDamping</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+<span class="linenos">652</span>    <span class="n">header</span> <span class="o">+=</span> <span class="s1">&#39;frictionStiffness=&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">frictionStiffness</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+<span class="linenos">653</span>    <span class="n">header</span> <span class="o">+=</span> <span class="s1">&#39;frictionVelocityPenalty=&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">frictionVelocityPenalty</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+<span class="linenos">654</span>    <span class="n">header</span> <span class="o">+=</span> <span class="s1">&#39;dryFriction=&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">dryFriction</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+<span class="linenos">655</span>    <span class="n">header</span> <span class="o">+=</span> <span class="s1">&#39;useALE=&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">useALE</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+<span class="linenos">656</span>    <span class="n">fstr</span>  <span class="o">=</span> <span class="s1">&#39;h&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">stepSize</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;n&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">nANCFnodes</span><span class="o">/</span><span class="mi">60</span><span class="p">))</span><span class="o">+</span><span class="s1">&#39;s&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">nSegments</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;cs&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">((</span><span class="n">contactStiffness</span><span class="o">/</span><span class="mi">41800</span><span class="p">)))</span>
+<span class="linenos">657</span>    <span class="n">fstr</span> <span class="o">+=</span> <span class="s1">&#39;ALE&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">useALE</span><span class="p">))</span>
+<span class="linenos">658</span>    <span class="c1">#fstr += &#39;fs&#39;+str(int((frictionStiffness/52300)))</span>
+<span class="linenos">659</span>
+<span class="linenos">660</span>    <span class="c1">#export solution:</span>
+<span class="linenos">661</span>    <span class="n">contactDispSave</span> <span class="o">=</span> <span class="n">contactDisp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos">662</span>    <span class="n">contactDispSave</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+=</span> <span class="n">contactDisp</span><span class="p">[</span><span class="mi">1</span><span class="p">][:,</span><span class="mi">1</span><span class="p">:]</span>
+<span class="linenos">663</span>
+<span class="linenos">664</span>    <span class="k">if</span> <span class="kc">False</span><span class="p">:</span> <span class="c1">#for saving</span>
+<span class="linenos">665</span>        <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">solDir</span><span class="o">+</span><span class="s1">&#39;contactForces&#39;</span><span class="o">+</span><span class="n">fstr</span><span class="o">+</span><span class="s1">&#39;.txt&#39;</span><span class="p">,</span> <span class="n">contactForcesTotal</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span>
+<span class="linenos">666</span>                   <span class="n">header</span><span class="o">=</span><span class="s1">&#39;Exudyn: solution of belt drive, contact forces over belt length</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">+</span><span class="n">header</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="linenos">667</span>        <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">solDir</span><span class="o">+</span><span class="s1">&#39;contactDisp&#39;</span><span class="o">+</span><span class="n">fstr</span><span class="o">+</span><span class="s1">&#39;.txt&#39;</span><span class="p">,</span> <span class="n">contactDispSave</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span>
+<span class="linenos">668</span>                   <span class="n">header</span><span class="o">=</span><span class="s1">&#39;Exudyn: solution of belt drive, slip and gap over belt length</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">+</span><span class="n">header</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="linenos">669</span>
+<span class="linenos">670</span>
+<span class="linenos">671</span>    <span class="c1">#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">672</span>
+<span class="linenos">673</span>    <span class="k">if</span> <span class="kc">False</span><span class="p">:</span>
+<span class="linenos">674</span>        <span class="c1"># PlotSensor(mbs, sensorNumbers=[sWheelRot[0], sWheelRot[1]], components=[2,2])#,sWheelRot[1]</span>
+<span class="linenos">675</span>        <span class="nf">PlotSensor</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sensorNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">sWheelRot</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">sWheelRot</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+<span class="linenos">676</span>                                       <span class="n">solDir</span><span class="o">+</span><span class="s1">&#39;wheel0angVelALE.txt&#39;</span><span class="p">,</span><span class="n">solDir</span><span class="o">+</span><span class="s1">&#39;wheel1angVelALE.txt&#39;</span><span class="p">],</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span>
+<span class="linenos">677</span>                   <span class="n">colorCodeOffset</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="c1">#,sWheelRot[1]</span>
+<span class="linenos">678</span>    <span class="c1">#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ANCFtests2.html" class="btn btn-neutral float-left" title="ANCFtests2.py" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="beltDriveReevingSystem.html" class="btn btn-neutral float-right" title="beltDriveReevingSystem.py" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

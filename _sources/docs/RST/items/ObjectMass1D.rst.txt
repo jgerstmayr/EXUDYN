@@ -143,6 +143,7 @@ MINI EXAMPLE for ObjectMass1D
 
 
 .. code-block:: python
+   :linenos:
 
    node = mbs.AddNode(Node1D(referenceCoordinates = [1], 
                              initialCoordinates=[0.5],

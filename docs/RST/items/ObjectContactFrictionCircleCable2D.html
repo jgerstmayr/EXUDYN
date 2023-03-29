@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ObjectContactFrictionCircleCable2D &mdash; Exudyn1.6.0 1.6.0 documentation</title>
+  <title>ObjectContactFrictionCircleCable2D &mdash; Exudyn1.6.31.dev1 1.6.31.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -19,8 +19,9 @@
         <script src="../../../_static/sphinx_highlight.js"></script>
         <script src="../../../_static/clipboard.min.js"></script>
         <script src="../../../_static/copybutton.js"></script>
+        <script src="../../../_static/js/rtd_search_config.js"></script>
         <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
-        <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "omegaBDtilde": "{\\LU{b}{\\tilde \\tomega_\\mathrm{bd}}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}"}}}</script>
+        <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "vrRow": ["{[#1,\\, #2,\\, #3]}", 3], "vsix": ["{\\left[\\!\\! \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} \\!\\!\\right]}", 6], "vsixb": ["{\\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "vsixs": ["{ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "omegaBDtilde": "{\\LU{b}{\\tilde \\tomega_\\mathrm{bd}}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}", "termA": ["{\\color{blue}{#1}}", 1], "termB": ["{\\color{red}{#1}}", 1], "termC": ["{\\color{green}{#1}}", 1], "avu": "{\\ddot \\mathbf{q}}", "GA": "{G\\alpha}", "aalg": "{\\mathbf{a}}", "vel": "{\\mathbf{v}}"}}}</script>
         <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -38,7 +39,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.0
+            Exudyn1.6.31.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -55,6 +56,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NotationIndex.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TheoryAndFormulationsIndex.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../SolversIndex.html">Solvers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
@@ -96,6 +100,9 @@
 <p class="caption" role="heading"><span class="caption-text">Misc</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../Abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ExamplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TestModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trackerlog.html">Issue tracker</a></li>
 </ul>
 
         </div>
@@ -104,7 +111,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.0</a>
+          <a href="../../../index.html">Exudyn1.6.31.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -418,7 +425,7 @@ with the relation</p>
 \[{\mathbf{d}}_g = {\mathbf{d}}_{g,s_i}= {\mathbf{p}}_{m0} - {\mathbf{p}}_p .\]</div>
 <p>The contact gap for a specific point for segment <span class="math notranslate nohighlight">\(s_i\)</span> is in general defined as</p>
 <div class="math notranslate nohighlight" id="equation-objectcontactfrictioncirclecable2d-gap">
-<span class="eqno">(33)<a class="headerlink" href="#equation-objectcontactfrictioncirclecable2d-gap" title="Permalink to this equation"></a></span>\[g = g_{s_i} = d_g - r .\]</div>
+<span class="eqno">(46)<a class="headerlink" href="#equation-objectcontactfrictioncirclecable2d-gap" title="Permalink to this equation"></a></span>\[g = g_{s_i} = d_g - r .\]</div>
 <p>using <span class="math notranslate nohighlight">\(d_g = |{\mathbf{d}}_g|\)</span>.</p>
 </section>
 <section id="contact-frame-and-relative-motion">
@@ -437,7 +444,7 @@ this choice is more consistent with the computations at position level.</p>
 \[v_n = \left( \dot {\mathbf{p}}_p - \dot {\mathbf{p}}_{m0} \right) {\mathbf{n}}\]</div>
 <p>In a similar, the tangential velocity reads</p>
 <div class="math notranslate nohighlight" id="equation-objectcontactfrictioncirclecable2d-vtangent">
-<span class="eqno">(34)<a class="headerlink" href="#equation-objectcontactfrictioncirclecable2d-vtangent" title="Permalink to this equation"></a></span>\[v_t = \left( \dot {\mathbf{p}}_p - \dot {\mathbf{p}}_{m0} \right) {\mathbf{t}}\]</div>
+<span class="eqno">(47)<a class="headerlink" href="#equation-objectcontactfrictioncirclecable2d-vtangent" title="Permalink to this equation"></a></span>\[v_t = \left( \dot {\mathbf{p}}_p - \dot {\mathbf{p}}_{m0} \right) {\mathbf{t}}\]</div>
 <p>In case of <code class="docutils literal notranslate"><span class="pre">frictionStiffness</span> <span class="pre">!=</span> <span class="pre">0</span></code>, we continuously track the sticking position at which the cable element (or segment) and the circle
 previously sticked together, similar as proposed by Lugr'is et al.~.
 The difference here to the latter reference, is that we explicitly exclude switching from Newton’s method and that Lugr'is et al.~used
@@ -468,10 +475,10 @@ influences the behavior significantly, which is why we recommend to use <code cl
 appropriate assumption.
 Thus, the current sticking position <span class="math notranslate nohighlight">\(x_{curStick}\)</span> is computed per segment as</p>
 <div class="math notranslate nohighlight" id="equation-objectcontactfrictioncirclecable2d-lastcurstick">
-<span class="eqno">(35)<a class="headerlink" href="#equation-objectcontactfrictioncirclecable2d-lastcurstick" title="Permalink to this equation"></a></span>\[x^*_{curStick} = x_{s,curStick} + x_{c,curStick}, \quad\]</div>
+<span class="eqno">(48)<a class="headerlink" href="#equation-objectcontactfrictioncirclecable2d-lastcurstick" title="Permalink to this equation"></a></span>\[x^*_{curStick} = x_{s,curStick} + x_{c,curStick}, \quad\]</div>
 <p>Due to the possibility of switching of <span class="math notranslate nohighlight">\(\alpha+\phi\)</span> between <span class="math notranslate nohighlight">\(-\pi\)</span> and <span class="math notranslate nohighlight">\(\pi\)</span>, the result is normalized to</p>
 <div class="math notranslate nohighlight" id="equation-objectcontactfrictioncirclecable2d-curstick">
-<span class="eqno">(36)<a class="headerlink" href="#equation-objectcontactfrictioncirclecable2d-curstick" title="Permalink to this equation"></a></span>\[x_{curStick} = x^*_{curStick} - \mathrm{floor}\left(\frac{x^*_{curStick} }{2 \pi \cdot r} + \frac{1}{2}\right) \cdot 2 \pi \cdot r, \quad\]</div>
+<span class="eqno">(49)<a class="headerlink" href="#equation-objectcontactfrictioncirclecable2d-curstick" title="Permalink to this equation"></a></span>\[x_{curStick} = x^*_{curStick} - \mathrm{floor}\left(\frac{x^*_{curStick} }{2 \pi \cdot r} + \frac{1}{2}\right) \cdot 2 \pi \cdot r, \quad\]</div>
 <p>which gives <span class="math notranslate nohighlight">\(\bar x_{curStick} \in [-\pi \cdot r,\pi \cdot r]\)</span>, which is stored in the 3rd data variable (per segment).
 The function floor() is a standardized version of rounding, available in C and Python programming languages.
 In the <code class="docutils literal notranslate"><span class="pre">PostNewtonStep</span></code>, the last sticking position is computed, <span class="math notranslate nohighlight">\(x_{lastStick} = x_{curStick}\)</span>, and it is also available in the <code class="docutils literal notranslate"><span class="pre">startOfStep</span></code> state.</p>
@@ -480,7 +487,7 @@ In the <code class="docutils literal notranslate"><span class="pre">PostNewtonSt
 <h2>Contact forces: definition<a class="headerlink" href="#contact-forces-definition" title="Permalink to this heading"></a></h2>
 <p>The contact force <span class="math notranslate nohighlight">\(f_n\)</span> is zero for <span class="math notranslate nohighlight">\(g &gt; 0\)</span> and otherwise computed from</p>
 <div class="math notranslate nohighlight" id="equation-objectcontactfrictioncirclecable2d-contactforce">
-<span class="eqno">(37)<a class="headerlink" href="#equation-objectcontactfrictioncirclecable2d-contactforce" title="Permalink to this equation"></a></span>\[f_n = k_c \cdot g + d_c \cdot v_n\]</div>
+<span class="eqno">(50)<a class="headerlink" href="#equation-objectcontactfrictioncirclecable2d-contactforce" title="Permalink to this equation"></a></span>\[f_n = k_c \cdot g + d_c \cdot v_n\]</div>
 <p>NOTE that currently, there is only a linear spring-damper model available, assuming that the impact dynamics
 is not dominating (such as in belt drives or reeving systems).</p>
 <p>Friction forces are primarily based on relative (tangential) velocity at each segment.
@@ -501,7 +508,7 @@ This is necessary in order to avoid discontinuities in the equations, while othe
 <div class="math notranslate nohighlight">
 \[[x_{gap},\, x_{isSlipStick},\, x_{lastStick}]\]</div>
 <p>Here, <span class="math notranslate nohighlight">\(x_{gap}\)</span> contains the gap of the segment (<span class="math notranslate nohighlight">\(\le 0\)</span> means contact), <span class="math notranslate nohighlight">\(x_{lastStick}\)</span> is described in
-Eq. <a class="reference internal" href="#equation-objectcontactfrictioncirclecable2d-curstick">(36)</a>, and
+Eq. <a class="reference internal" href="#equation-objectcontactfrictioncirclecable2d-curstick">(49)</a>, and
 <span class="math notranslate nohighlight">\(x_{isSlipStick}\)</span> defines the stick or slip case,</p>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(x_{isSlipStick} = -2\)</span>: undefined, used for initialization</p></li>
@@ -511,13 +518,13 @@ Eq. <a class="reference internal" href="#equation-objectcontactfrictioncirclecab
 <p>The basic algorithm in the <code class="docutils literal notranslate"><span class="pre">PostNewtonStep</span></code>, with all operations given for any segment <span class="math notranslate nohighlight">\(s_i\)</span>, can be summarized as follows:</p>
 <ul class="simple">
 <li><dl class="simple">
-<dt>[I.] Evaluate gap per segment <span class="math notranslate nohighlight">\(g\)</span> using Eq. <a class="reference internal" href="#equation-objectcontactfrictioncirclecable2d-gap">(33)</a> and store in data variable:</dt><dd><p><span class="math notranslate nohighlight">\(x_{gap} = g\)</span></p>
+<dt>[I.] Evaluate gap per segment <span class="math notranslate nohighlight">\(g\)</span> using Eq. <a class="reference internal" href="#equation-objectcontactfrictioncirclecable2d-gap">(46)</a> and store in data variable:</dt><dd><p><span class="math notranslate nohighlight">\(x_{gap} = g\)</span></p>
 </dd>
 </dl>
 </li>
 <li><p>[II.] If <span class="math notranslate nohighlight">\(x_{gap} &lt; 0\)</span> and (<span class="math notranslate nohighlight">\(\mu_v \neq 0\)</span> or  <span class="math notranslate nohighlight">\(\mu_k \neq 0\)</span>):</p></li>
-<li><p>Compute contact force <span class="math notranslate nohighlight">\(f_n\)</span> according to Eq. <a class="reference internal" href="#equation-objectcontactfrictioncirclecable2d-contactforce">(37)</a></p></li>
-<li><p>Compute current sticking position <span class="math notranslate nohighlight">\(x_{curStick}\)</span> according to Eq. <a class="reference internal" href="#equation-objectcontactfrictioncirclecable2d-lastcurstick">(35)</a>(terms are only evaluated if <span class="math notranslate nohighlight">\(\mu_k \neq 0\)</span>)</p></li>
+<li><p>Compute contact force <span class="math notranslate nohighlight">\(f_n\)</span> according to Eq. <a class="reference internal" href="#equation-objectcontactfrictioncirclecable2d-contactforce">(50)</a></p></li>
+<li><p>Compute current sticking position <span class="math notranslate nohighlight">\(x_{curStick}\)</span> according to Eq. <a class="reference internal" href="#equation-objectcontactfrictioncirclecable2d-lastcurstick">(48)</a>(terms are only evaluated if <span class="math notranslate nohighlight">\(\mu_k \neq 0\)</span>)</p></li>
 <li><dl class="simple">
 <dt>Retrieve <code class="docutils literal notranslate"><span class="pre">startOfStep</span></code> sticking position(Importantly, the <code class="docutils literal notranslate"><span class="pre">PostNewtonStep</span></code> always refers to the <code class="docutils literal notranslate"><span class="pre">startOfStep</span></code> state in the sticking position, because in the discontinuous iterations, the algorithm could switch to slipping in between and override the last sticking position in the current step) in <span class="math notranslate nohighlight">\(x^{startOfStep}_{lastStick}\)</span> and compute and normalize</dt><dd><p>difference in sticking position(in case that <span class="math notranslate nohighlight">\(x_{isSlipStick} = -2\)</span>, meaning that there is no stored sticking position, we set <span class="math notranslate nohighlight">\(\Delta x_{stick} = 0\)</span>):</p>
 </dd>
@@ -580,23 +587,25 @@ For efficiency, the LHS computation is only performed, if the <code class="docut
 <p>The operations are similar to the <code class="docutils literal notranslate"><span class="pre">PostNewtonStep</span></code>, but without switching. The following operations are performed for each segment <span class="math notranslate nohighlight">\(s_i\)</span>, if
 <span class="math notranslate nohighlight">\(x_{gap, s_i} &lt;= 0\)</span>:</p>
 <ul class="simple">
-<li><p>[I.] Compute contact force <span class="math notranslate nohighlight">\(f_n\)</span>, Eq. <a class="reference internal" href="#equation-objectcontactfrictioncirclecable2d-contactforce">(37)</a>.</p></li>
-<li><p>[II.] In case of sticking:</p></li>
-<li><p>[II.1] the current sticking position <span class="math notranslate nohighlight">\(x_{curStick}\)</span> is computed from Eq. <a class="reference internal" href="#equation-objectcontactfrictioncirclecable2d-lastcurstick">(35)</a>, and the difference of current and last sticking position reads(see the difference to the <code class="docutils literal notranslate"><span class="pre">PostNewtonStep</span></code>: we use <span class="math notranslate nohighlight">\(x_{lastStick}\)</span> here, not the <code class="docutils literal notranslate"><span class="pre">startOfStep</span></code> variant.):</p></li>
+<li><p>[I.] Compute contact force <span class="math notranslate nohighlight">\(f_n\)</span>, Eq. <a class="reference internal" href="#equation-objectcontactfrictioncirclecable2d-contactforce">(50)</a>.</p></li>
+<li><p>[II.] In case of sticking (<span class="math notranslate nohighlight">\(|x_{isSlipStick}|\neq 1\)</span>):</p></li>
+<li><p>[II.1] the current sticking position <span class="math notranslate nohighlight">\(x_{curStick}\)</span> is computed from Eq. <a class="reference internal" href="#equation-objectcontactfrictioncirclecable2d-lastcurstick">(48)</a>, and the difference of current and last sticking position reads(see the difference to the <code class="docutils literal notranslate"><span class="pre">PostNewtonStep</span></code>: we use <span class="math notranslate nohighlight">\(x_{lastStick}\)</span> here, not the <code class="docutils literal notranslate"><span class="pre">startOfStep</span></code> variant.):</p></li>
 </ul>
 <div class="math notranslate nohighlight">
-\[\Delta x^*_{stick} = x_{curStick} - x_{lastStick} \Delta x_{stick} = x^*_{stick} - \mathrm{floor}\left(\frac{\Delta x^*_{stick} }{2 \pi \cdot r} + \frac{1}{2}\right) \cdot 2 \pi \cdot r\]</div>
+\[\Delta x^*_{stick} = x_{curStick} - x_{lastStick}, \quad \Delta x_{stick} = x^*_{stick} - \mathrm{floor}\left(\frac{\Delta x^*_{stick} }{2 \pi \cdot r} + \frac{1}{2}\right) \cdot 2 \pi \cdot r\]</div>
 <ul class="simple">
-<li><p>[II.2] however, if the friction stiffness is <span class="math notranslate nohighlight">\(\mu_k==0\)</span> or if <span class="math notranslate nohighlight">\(x_{isSlipStick} == -2\)</span>, we also set <span class="math notranslate nohighlight">\(\Delta x_{stick}=0\)</span></p></li>
-<li><p>[II.3] using the tangential velocity from Eq. <a class="reference internal" href="#equation-objectcontactfrictioncirclecable2d-vtangent">(34)</a>, the linear tangent force follows as</p></li>
+<li><p>[II.2] if the friction stiffness is <span class="math notranslate nohighlight">\(\mu_k==0\)</span> or if <span class="math notranslate nohighlight">\(x_{isSlipStick} == -2\)</span>, we set <span class="math notranslate nohighlight">\(\Delta x_{stick}=0\)</span></p></li>
+<li><p>[II.3] using the tangential velocity from Eq. <a class="reference internal" href="#equation-objectcontactfrictioncirclecable2d-vtangent">(47)</a>, the tangent force follows as (even if it is larger than the sticking limit)</p></li>
 </ul>
 <div class="math notranslate nohighlight">
-\[f_{t,lin} = \mu_v \cdot v_t + \mu_k \Delta x_{stick}\]</div>
+\[f_t = \mu_v \cdot v_t + \mu_k \Delta x_{stick}\]</div>
 <ul class="simple">
-<li><p>[II.4] the tangential firction force then results in(see again difference to <code class="docutils literal notranslate"><span class="pre">PostNewtonStep</span></code>!),</p></li>
+<li><p>[III.] In case of slipping (<span class="math notranslate nohighlight">\(|x_{isSlipStick}|=1\)</span>), the tangential firction force is set  as(see again difference to <code class="docutils literal notranslate"><span class="pre">PostNewtonStep</span></code>!),</p></li>
 </ul>
 <div class="math notranslate nohighlight">
-\[\begin{split}f_t = \begin{cases} f_t^{(lin)}, \quad \quad \quad \quad \quad \quad \quad \mathrm{if} \quad \Vert x_{isSlipStick} \Vert \neq 1 \\ \mu \cdot |f_n| \cdot x_{isSlipStick}, \quad \mathrm{else} \end{cases}\end{split}\]</div>
+\[f_t = \mu \cdot |f_n| \cdot x_{isSlipStick}, \quad \mathrm{else}\]</div>
+<p>Note that in the Newton method, the tangential force may be inconsistent with the Kuhn-Tucker conditions. However,
+the <code class="docutils literal notranslate"><span class="pre">PostNewtonStep</span></code> resolves this inconsistency.</p>
 </section>
 <section id="computation-of-lhs-terms-for-circle-and-ancf-cable-element">
 <h2>Computation of LHS terms for circle and ANCF cable element<a class="headerlink" href="#computation-of-lhs-terms-for-circle-and-ancf-cable-element" title="Permalink to this heading"></a></h2>

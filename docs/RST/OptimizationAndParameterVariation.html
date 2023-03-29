@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Optimization and parameter variation &mdash; Exudyn1.6.31.dev1 1.6.31.dev1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+        <script src="../../_static/js/rtd_search_config.js"></script>
+        <script src="../../_static/js/rtd_sphinx_search.min.js"></script>
+        <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "vrRow": ["{[#1,\\, #2,\\, #3]}", 3], "vsix": ["{\\left[\\!\\! \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} \\!\\!\\right]}", 6], "vsixb": ["{\\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "vsixs": ["{ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "omegaBDtilde": "{\\LU{b}{\\tilde \\tomega_\\mathrm{bd}}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}", "termA": ["{\\color{blue}{#1}}", 1], "termB": ["{\\color{red}{#1}}", 1], "termC": ["{\\color{green}{#1}}", 1], "avu": "{\\ddot \\mathbf{q}}", "GA": "{G\\alpha}", "aalg": "{\\mathbf{a}}", "vel": "{\\mathbf{v}}"}}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Python-C++ command interface" href="cInterface/CInterfaceIndex.html" />
+    <link rel="prev" title="Implicit trapezoidal rule-based, Newmark and Generalized-alpha solver" href="ImplicitTrapezoidalRulebasedNewmarkAndGeneralizedalphaSolver.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Exudyn1.6.31.dev1
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Exudyn.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="NotationIndex.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TheoryAndFormulationsIndex.html">Theory and formulations</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="SolversIndex.html">Solvers</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Solvers.html">Solvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SolversInExudyn.html">Solvers in Exudyn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ExplicitSolvers.html">Explicit solvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ImplicitTrapezoidalRulebasedNewmarkAndGeneralizedalphaSolver.html">Implicit trapezoidal rule-based, Newmark and Generalized-alpha solver</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Optimization and parameter variation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#parameter-variation">Parameter Variation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#genetic-optimization">Genetic Optimization</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="pythonUtilities/index.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="structures/StructuresAndSettingsIndex.html">Structures and Settings</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Misc</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ExamplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TestModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Exudyn1.6.31.dev1</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="SolversIndex.html">Solvers</a></li>
+      <li class="breadcrumb-item active">Optimization and parameter variation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/docs/RST/OptimizationAndParameterVariation.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="optimization-and-parameter-variation">
+<h1>Optimization and parameter variation<a class="headerlink" href="#optimization-and-parameter-variation" title="Permalink to this heading"></a></h1>
+<p>The real benefit of powerful multi-body simulation emerges only if combined with modern but also simple analysis and evaluation methods.
+Therefore, Exudyn has been integrated into the Python language, which offers a virtually unlimited number of methods of post-processing, evaluation and optimization.
+In this section, two methods that are directly integrated into Exudyn are revisited.</p>
+<section id="parameter-variation">
+<span id="sec-parametervariation"></span><h2>Parameter Variation<a class="headerlink" href="#parameter-variation" title="Permalink to this heading"></a></h2>
+<p>Parameter variation is one of the simplest tools to evaluate the dependency of the solution of a problem on certain parameters. This usually requires the computation of an objective (goal, result) value for a single computation (e.g, some error norm, maximum vibration amplitude, maximum stress, maximum deflection, etc.) for every computation. Furthermore, it needs to be run for a set of parameters, e.g., using a <code class="docutils literal notranslate"><span class="pre">for</span></code> loop.
+While this could be done manually in Exudyn , it is recommended to use built-in functions, which simplify evaluation and postprocessing and directly enable parallelization.
+The according function <code class="docutils literal notranslate"><span class="pre">ParameterVariation(...)</span></code>, see Section <a class="reference internal" href="pythonUtilities/processing.html#sec-processing-parametervariation"><span class="std std-ref">Function: ParameterVariation</span></a>, performs a set of multi-dimensional parameter variations using a dictionary that describes the variation of parameters. See also <code class="docutils literal notranslate"><span class="pre">parameterVariationExample.py</span></code> in the <code class="docutils literal notranslate"><span class="pre">Examples</span></code> folder for a simple example showing a 2D parameter variation. The function <code class="docutils literal notranslate"><span class="pre">ParameterVariation(...)</span></code> requires the <code class="docutils literal notranslate"><span class="pre">multiprocessing</span></code> Python module which enables simple multi-threaded parallelism and has been tested for up to 80 cores on the LEO4 supercomputer at the University of Innsbruck, achieving a speedup of 50 as compared to a serial computation.</p>
+</section>
+<section id="genetic-optimization">
+<span id="sec-optimization"></span><h2>Genetic Optimization<a class="headerlink" href="#genetic-optimization" title="Permalink to this heading"></a></h2>
+<p>In engineering, we often need to find a set of unknown, independent parameters <span class="math notranslate nohighlight">\({\mathbf{x}} \in \Rcal^n\)</span>, <span class="math notranslate nohighlight">\({\mathbf{x}}\)</span> being denoted as design variables and <span class="math notranslate nohighlight">\(\Rcal^n\)</span> as design space. Sometimes, the design space is further subjected to constraints <span class="math notranslate nohighlight">\({\mathbf{g}}({\mathbf{x}})=0\)</span> as well as inequalities <span class="math notranslate nohighlight">\({\mathbf{h}}(x) \le 0\)</span>, which are not considered here. For simple solutions for constrained optimization problems using penalty methods, see the introductory literature .</p>
+<p>Optimization problems are written in general in the form</p>
+<div class="math notranslate nohighlight">
+\[\min\limits_{{\mathbf{x}}} f({\mathbf{x}}), \quad {\mathbf{x}} \in \Rcal^n ,\]</div>
+<p>where <span class="math notranslate nohighlight">\(f({\mathbf{x}})\)</span> denotes the objective function (=fitness function). If we would like to maximize a function <span class="math notranslate nohighlight">\(\bar f({\mathbf{x}})\)</span>, simply set <span class="math notranslate nohighlight">\(f({\mathbf{x}})=-\bar f({\mathbf{x}})\)</span>.</p>
+<p>In engineering, the optimization problem could seek model parameters, e.g., the geometric dimensions and inertia parameters of a slider crank mechanism, in order to achieve smallest possible forces at the supports.
+Another example is the identification of unknown physical parameters, such as stiffness, damping of friction. This can be achieved by comparing measurement and simulation data (e.g., accelerations measured at relevant parts of a machine). Lets assume that <span class="math notranslate nohighlight">\(\epsilon(t)\)</span> is an error computed in every time step of a computation, then we can set the objective (=fitness) function, e.g., as</p>
+<div class="math notranslate nohighlight">
+\[f(x) = \frac 1 T \sqrt{\int_{t=0}^T \epsilon(t)^2 dt}\]</div>
+<p>as the integral over the error <span class="math notranslate nohighlight">\(\epsilon\)</span> between measurement and simulation data.
+In general, a parameter variation would be sufficient to compute sufficient computations for all combinations within the design space, however, a 3D design space with 100 variations into every direction (e.g., varying the unknown damping coefficient between 1 and 100, etc.) would already require 1000.000 computations, which in an ideal case of 1 second/computation leads to almost 2 weeks of computation time.</p>
+<p>As an alternative stochastic methods can be use to compute only the objective function for a smaller set of randomly generated design variables, which usually show regions with better parameters (lower <span class="math notranslate nohighlight">\(f\)</span>) in scatter plots.</p>
+<p><strong>Genetic algorithms</strong> can significantly reduce the necessary amount of objective function evaluations in order to perform the optimization. Genetic identification algorithms have been already successfully applied to multibody system dynamics.</p>
+<p>For details, see the cited literature. Here, we focus on the implementation of the function
+<code class="docutils literal notranslate"><span class="pre">GeneticOptimization(...)</span></code>, see Section <a class="reference internal" href="pythonUtilities/processing.html#sec-processing-geneticoptimization"><span class="std std-ref">Function: GeneticOptimization</span></a>.
+The initial population (step 1) is created with <code class="docutils literal notranslate"><span class="pre">initialPopulationSize</span></code> individuals with uniformly distributed random design variables <span class="math notranslate nohighlight">\([{\mathbf{x}}_0, \ldots, {\mathbf{x}}_{n_{pi}-1}]\)</span>(<span class="math notranslate nohighlight">\({\mathbf{x}}_i=[x_{i0}, x_{i1}, \ldots]\)</span> being a set of genes, with single genes <span class="math notranslate nohighlight">\(x_{i0}\)</span>, <span class="math notranslate nohighlight">\(x_{i1}\)</span>, … ) in the search space, which is given in the dictionary <code class="docutils literal notranslate"><span class="pre">parameters</span></code>. Herafter (steps 2-6), we iteratively process a population for a certain textnumberOfGenerations generations.</p>
+<p>In step 3, the surviving individuals <span class="math notranslate nohighlight">\(S_s\)</span> with best fitness (smallest value from evaluation of <code class="docutils literal notranslate"><span class="pre">objectiveFunction</span></code>) are selected and considered further in the optimization. If the <code class="docutils literal notranslate"><span class="pre">distanceFactor</span></code> is used, the surviving individuals must be located within a certain distance (measured relative to the range of the search space) to all other surviving individuals. This option guarantees the search within several local minima, while a conventional search often converges to one single minimum.
+Crossover (step 4)  is performed using a crossover of all available parameters of two randomly selected parents when generating children from the surviving individuals. The crossover of genes is performed only for a part of the new population, defined by <code class="docutils literal notranslate"><span class="pre">crossoverAmount</span></code>.</p>
+<p>Finally, in step 5, we apply mutation to all genes, which extends the search to the surrounding design space of the individuals created by crossover. The mutation could be performed by means of certain distribution functions in order to focus on the currently best search regions. However, in the current implementation of <code class="docutils literal notranslate"><span class="pre">GeneticOptimization(...)</span></code> we simply use a uniform random variable to distribute the genes over a certain percentage of the design space, which is reduced in every generation defined by the <code class="docutils literal notranslate"><span class="pre">rangeReductionFactor</span></code> <span class="math notranslate nohighlight">\(r_r\)</span>. This allows us to restrict further search to a smaller subregion of the design space and in general allows a reduction of search space by means of <span class="math notranslate nohighlight">\(r_r^{n_g}\)</span>. In the ideal case, using sufficiently large population sizes and being lucky with the found random values, a range reduction factor <span class="math notranslate nohighlight">\(r_r=0.7\)</span> reduces the search space by a factor of <span class="math notranslate nohighlight">\(100\)</span> after every 13 generations, allowing to obtain 4 digits of accuracy for design variables after 26 generations for suitable optimization problems.</p>
+<p>It should be noted that still this optimization method is based on random values and thus may fail occasionally for any problem case. In order to get reproducible results, set <code class="docutils literal notranslate"><span class="pre">randomizerInitialization</span></code> to any integer value (simply: 0) in order to get identical results for repeated runs. Setting the latter variable guarantees that the Python (numpy) randomizer creates the same series of random values for initial population, mutation, etc.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ImplicitTrapezoidalRulebasedNewmarkAndGeneralizedalphaSolver.html" class="btn btn-neutral float-left" title="Implicit trapezoidal rule-based, Newmark and Generalized-alpha solver" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="cInterface/CInterfaceIndex.html" class="btn btn-neutral float-right" title="Python-C++ command interface" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

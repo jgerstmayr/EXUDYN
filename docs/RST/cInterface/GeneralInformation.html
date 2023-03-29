@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>General information on Python-C++ interface &mdash; Exudyn1.6.0 1.6.0 documentation</title>
+  <title>General information on Python-C++ interface &mdash; Exudyn1.6.31.dev1 1.6.31.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -19,6 +19,7 @@
         <script src="../../../_static/sphinx_highlight.js"></script>
         <script src="../../../_static/clipboard.min.js"></script>
         <script src="../../../_static/copybutton.js"></script>
+        <script src="../../../_static/js/rtd_search_config.js"></script>
         <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -36,7 +37,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.0
+            Exudyn1.6.31.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -53,6 +54,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NotationIndex.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TheoryAndFormulationsIndex.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../SolversIndex.html">Solvers</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="CInterfaceIndex.html">Python-C++ command interface</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">General information on Python-C++ interface</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#item-index">Item index</a></li>
@@ -79,6 +83,9 @@
 <p class="caption" role="heading"><span class="caption-text">Misc</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../Abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ExamplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TestModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trackerlog.html">Issue tracker</a></li>
 </ul>
 
         </div>
@@ -87,7 +94,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.0</a>
+          <a href="../../../index.html">Exudyn1.6.31.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -113,64 +120,56 @@
 a Exudyn model in Python. Note that some functions or classes will be used in examples, which are explained in detail later on.
 In the following, some basic steps and concepts for usage are shown, references to all functions are placed hereafter:</p>
 <p>To import the module, just include the Exudyn module in Python:</p>
-<blockquote>
-<div><div class="line-block">
-<div class="line"><code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">exudyn</span> <span class="pre">as</span> <span class="pre">exu</span></code></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
+</pre></div>
 </div>
-</div></blockquote>
 <p>For compatibility with examples and other users, we recommend to use the <code class="docutils literal notranslate"><span class="pre">exu</span></code> abbreviation throughout. In addition, you may work with a convenient interface for your items, therefore also always include:</p>
-<blockquote>
-<div><div class="line-block">
-<div class="line"><code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">exudyn.itemInterface</span> <span class="pre">import</span> <span class="pre">*</span></code></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">exudyn.itemInterface</span> <span class="kn">import</span> <span class="o">*</span>
+</pre></div>
 </div>
-</div></blockquote>
 <p>Note that including <code class="docutils literal notranslate"><span class="pre">exudyn.utilities</span></code> will cover <code class="docutils literal notranslate"><span class="pre">itemInterface</span></code>. Also note that <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">...</span> <span class="pre">import</span> <span class="pre">*</span></code> is not recommended in general and it will not work in certain cases, e.g., if you like to compute on a cluster. However, it greatly simplifies life for smaller models and you may replace imports in your files afterwards by removing the star import.</p>
 <p>The general hub to multibody dynamics models is provided by the classes <code class="docutils literal notranslate"><span class="pre">SystemContainer</span></code> and <code class="docutils literal notranslate"><span class="pre">MainSystem</span></code>, except for some very basic system functionality (which is inside the Exudyn module).</p>
 <p>You can create a new <code class="docutils literal notranslate"><span class="pre">SystemContainer</span></code>, which is a class that is initialized by assigning a system container to a variable, usually denoted as <code class="docutils literal notranslate"><span class="pre">SC</span></code>:</p>
-<blockquote>
-<div><div class="line-block">
-<div class="line"><code class="docutils literal notranslate"><span class="pre">SC</span> <span class="pre">=</span> <span class="pre">exu.SystemContainer()</span></code></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
+</pre></div>
 </div>
-</div></blockquote>
 <p>Note that creating a second <code class="docutils literal notranslate"><span class="pre">exu.SystemContainer()</span></code> will be independent of <code class="docutils literal notranslate"><span class="pre">SC</span></code> and therefore usually makes no sense.</p>
 <p>To add a MainSystem to system container SC and store as variable mbs, write:</p>
-<blockquote>
-<div><div class="line-block">
-<div class="line"><code class="docutils literal notranslate"><span class="pre">mbs</span> <span class="pre">=</span> <span class="pre">SC.AddSystem()</span></code></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
+</pre></div>
 </div>
-</div></blockquote>
 <p>Furthermore, there are a couple of commands available directly in the <code class="docutils literal notranslate"><span class="pre">exudyn</span></code> module, given in the following subsections.Regarding the <strong>(basic) module access</strong>, functions are related to the <code class="docutils literal notranslate"><span class="pre">exudyn</span> <span class="pre">=</span> <span class="pre">exu</span></code> module, see these examples:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#  import exudyn module:</span>
-<span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
-<span class="c1">#  print detailed exudyn version, Python version (at which it is compiled):</span>
-<span class="n">exu</span><span class="o">.</span><span class="n">GetVersionString</span><span class="p">(</span><span class="n">addDetails</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-<span class="c1">#  set precision of C++ output to console</span>
-<span class="n">exu</span><span class="o">.</span><span class="n">SetOutputPrecision</span><span class="p">(</span><span class="n">numberOfDigits</span><span class="p">)</span>
-<span class="c1">#  turn on/off output to console</span>
-<span class="n">exu</span><span class="o">.</span><span class="n">SetWriteToConsole</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-<span class="c1">#  invalid index, may depend on compilation settings:</span>
-<span class="n">nInvalid</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">InvalidIndex</span><span class="p">()</span> <span class="c1">#the invalid index, depends on architecture and version</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1">#  import exudyn module:</span>
+<span class="linenos"> 2</span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
+<span class="linenos"> 3</span><span class="c1">#  print detailed exudyn version, Python version (at which it is compiled):</span>
+<span class="linenos"> 4</span><span class="n">exu</span><span class="o">.</span><span class="nf">GetVersionString</span><span class="p">(</span><span class="n">addDetails</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="linenos"> 5</span><span class="c1">#  set precision of C++ output to console</span>
+<span class="linenos"> 6</span><span class="n">exu</span><span class="o">.</span><span class="nf">SetOutputPrecision</span><span class="p">(</span><span class="n">numberOfDigits</span><span class="p">)</span>
+<span class="linenos"> 7</span><span class="c1">#  turn on/off output to console</span>
+<span class="linenos"> 8</span><span class="n">exu</span><span class="o">.</span><span class="nf">SetWriteToConsole</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+<span class="linenos"> 9</span><span class="c1">#  invalid index, may depend on compilation settings:</span>
+<span class="linenos">10</span><span class="n">nInvalid</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nf">InvalidIndex</span><span class="p">()</span> <span class="c1">#the invalid index, depends on architecture and version</span>
 </pre></div>
 </div>
 <p>Understanding the usage of functions for python object <code class="docutils literal notranslate"><span class="pre">SystemContainer</span></code> of the module <code class="docutils literal notranslate"><span class="pre">exudyn</span></code>, the following examples might help:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#import exudyn module:</span>
-<span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
-<span class="c1">#  import utilities (includes itemInterface, basicUtilities,</span>
-<span class="c1">#                  advancedUtilities, rigidBodyUtilities, graphicsDataUtilities):</span>
-<span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="c1">#  create system container and store in SC:</span>
-<span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">SystemContainer</span><span class="p">()</span>
-<span class="c1">#  add a MainSystem (multibody system) to system container SC and store as mbs:</span>
-<span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="n">AddSystem</span><span class="p">()</span>
-<span class="c1">#  add a second MainSystem to system container SC and store as mbs2:</span>
-<span class="n">mbs2</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="n">AddSystem</span><span class="p">()</span>
-<span class="c1">#  print number of systems available:</span>
-<span class="n">nSys</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="n">NumberOfSystems</span><span class="p">()</span>
-<span class="n">exu</span><span class="o">.</span><span class="n">Print</span><span class="p">(</span><span class="n">nSys</span><span class="p">)</span> <span class="c1">#or just print(nSys)</span>
-<span class="c1">#  reset system container (mbs becomes invalid):</span>
-<span class="n">SC</span><span class="o">.</span><span class="n">Reset</span><span class="p">()</span>
-<span class="c1">#  delete mbs (usually not necessary):</span>
-<span class="k">del</span> <span class="n">mbs</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1">#import exudyn module:</span>
+<span class="linenos"> 2</span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
+<span class="linenos"> 3</span><span class="c1">#  import utilities (includes itemInterface, basicUtilities,</span>
+<span class="linenos"> 4</span><span class="c1">#                  advancedUtilities, rigidBodyUtilities, graphicsDataUtilities):</span>
+<span class="linenos"> 5</span><span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="linenos"> 6</span><span class="c1">#  create system container and store in SC:</span>
+<span class="linenos"> 7</span><span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
+<span class="linenos"> 8</span><span class="c1">#  add a MainSystem (multibody system) to system container SC and store as mbs:</span>
+<span class="linenos"> 9</span><span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
+<span class="linenos">10</span><span class="c1">#  add a second MainSystem to system container SC and store as mbs2:</span>
+<span class="linenos">11</span><span class="n">mbs2</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
+<span class="linenos">12</span><span class="c1">#  print number of systems available:</span>
+<span class="linenos">13</span><span class="n">nSys</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">NumberOfSystems</span><span class="p">()</span>
+<span class="linenos">14</span><span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="n">nSys</span><span class="p">)</span> <span class="c1">#or just print(nSys)</span>
+<span class="linenos">15</span><span class="c1">#  reset system container (mbs becomes invalid):</span>
+<span class="linenos">16</span><span class="n">SC</span><span class="o">.</span><span class="nf">Reset</span><span class="p">()</span>
+<span class="linenos">17</span><span class="c1">#  delete mbs (usually not necessary):</span>
+<span class="linenos">18</span><span class="k">del</span> <span class="n">mbs</span>
 </pre></div>
 </div>
 <p>If you run a parameter variation (check <code class="docutils literal notranslate"><span class="pre">Examples/parameterVariationExample.py</span></code>), you may reset or delete the created <code class="docutils literal notranslate"><span class="pre">MainSystem</span></code> <code class="docutils literal notranslate"><span class="pre">mbs</span></code> and the <code class="docutils literal notranslate"><span class="pre">SystemContainer</span></code> <code class="docutils literal notranslate"><span class="pre">SC</span></code> before creating new instances in order to avoid memory growth.</p>
@@ -204,16 +203,16 @@ There are only a few very important cases where data is references in Exudyn , t
 <code class="docutils literal notranslate"><span class="pre">VisualizationSettings</span></code>, and
 <code class="docutils literal notranslate"><span class="pre">SimulationSettings</span></code> which are always references to internal C++ classes.
 The following code snippets and comments should explain this behavior:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#create system container, referenced from SC:</span>
-<span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">SystemContainer</span><span class="p">()</span>
-<span class="n">SC2</span> <span class="o">=</span> <span class="n">SC</span>                           <span class="c1">#this will only put a reference to SC</span>
-                                   <span class="c1">#SC2 and SC represent the SAME C++ object</span>
-<span class="c1">#add a MainSystem (multibody system):</span>
-<span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="n">AddSystem</span><span class="p">()</span>               <span class="c1">#get reference mbs to C++ system</span>
-<span class="n">mbs2</span><span class="o">=</span><span class="n">mbs</span>                           <span class="c1">#again, mbs2 and mbs refer to the same C++ object</span>
-<span class="n">og</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">AddObject</span><span class="p">(</span><span class="n">ObjectGround</span><span class="p">())</span> <span class="c1">#copy data of ObjectGround() into C++</span>
-<span class="n">o0</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">GetObject</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>              <span class="c1">#get copy of internal data as dictionary</span>
-<span class="k">del</span> <span class="n">o0</span>                             <span class="c1">#delete the local dictionary; C++ data not affected</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1">#create system container, referenced from SC:</span>
+<span class="linenos"> 2</span><span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
+<span class="linenos"> 3</span><span class="n">SC2</span> <span class="o">=</span> <span class="n">SC</span>                           <span class="c1">#this will only put a reference to SC</span>
+<span class="linenos"> 4</span>                                   <span class="c1">#SC2 and SC represent the SAME C++ object</span>
+<span class="linenos"> 5</span><span class="c1">#add a MainSystem (multibody system):</span>
+<span class="linenos"> 6</span><span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>               <span class="c1">#get reference mbs to C++ system</span>
+<span class="linenos"> 7</span><span class="n">mbs2</span><span class="o">=</span><span class="n">mbs</span>                           <span class="c1">#again, mbs2 and mbs refer to the same C++ object</span>
+<span class="linenos"> 8</span><span class="n">og</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectGround</span><span class="p">())</span> <span class="c1">#copy data of ObjectGround() into C++</span>
+<span class="linenos"> 9</span><span class="n">o0</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetObject</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>              <span class="c1">#get copy of internal data as dictionary</span>
+<span class="linenos">10</span><span class="k">del</span> <span class="n">o0</span>                             <span class="c1">#delete the local dictionary; C++ data not affected</span>
 </pre></div>
 </div>
 </section>
@@ -221,36 +220,36 @@ The following code snippets and comments should explain this behavior:</p>
 <span id="sec-cinterface-exceptions"></span><h2>Exceptions and Error Messages<a class="headerlink" href="#exceptions-and-error-messages" title="Permalink to this heading"></a></h2>
 <p>There are several levels of type and argument checks, leading to different types of errors and exceptions. The according error messages are non-unique, because they may be raised in Python modules or in C++, and they may be raised on different levels of the code. Error messages depend on Python version and on your iPython console. Very often the exception may be called <code class="docutils literal notranslate"><span class="pre">ValueError</span></code>, but it mustnot mean that it is a wrong error, but it could also be, e.g., a wrong order of function calls.</p>
 <p>As an example, a type conversion error is raised when providing wrong argument types, e.g., try <code class="docutils literal notranslate"><span class="pre">exu.GetVersionString('abs')</span></code>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
-
-<span class="n">File</span> <span class="s2">&quot;C:\Users\username\AppData\Local\Temp\ipykernel_24988</span><span class="se">\221</span><span class="s2">2168679.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
-    <span class="n">exu</span><span class="o">.</span><span class="n">GetVersionString</span><span class="p">(</span><span class="s1">&#39;abs&#39;</span><span class="p">)</span>
-
-<span class="ne">TypeError</span><span class="p">:</span> <span class="n">GetVersionString</span><span class="p">():</span> <span class="n">incompatible</span> <span class="n">function</span> <span class="n">arguments</span><span class="o">.</span> <span class="n">The</span> <span class="n">following</span> <span class="n">argument</span> <span class="n">types</span> <span class="n">are</span> <span class="n">supported</span><span class="p">:</span>
-    <span class="mf">1.</span> <span class="p">(</span><span class="n">addDetails</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span>
-
-<span class="n">Invoked</span> <span class="k">with</span><span class="p">:</span> <span class="s1">&#39;abs&#39;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+<span class="linenos">2</span>
+<span class="linenos">3</span><span class="n">File</span> <span class="s2">&quot;C:\Users\username\AppData\Local\Temp\ipykernel_24988</span><span class="se">\221</span><span class="s2">2168679.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="linenos">4</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">GetVersionString</span><span class="p">(</span><span class="s1">&#39;abs&#39;</span><span class="p">)</span>
+<span class="linenos">5</span>
+<span class="linenos">6</span><span class="ne">TypeError</span><span class="p">:</span> <span class="nf">GetVersionString</span><span class="p">():</span> <span class="n">incompatible</span> <span class="n">function</span> <span class="n">arguments</span><span class="o">.</span> <span class="n">The</span> <span class="n">following</span> <span class="n">argument</span> <span class="n">types</span> <span class="n">are</span> <span class="n">supported</span><span class="p">:</span>
+<span class="linenos">7</span>    <span class="mf">1.</span> <span class="p">(</span><span class="n">addDetails</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span>
+<span class="linenos">8</span>
+<span class="linenos">9</span><span class="n">Invoked</span> <span class="k">with</span><span class="p">:</span> <span class="s1">&#39;abs&#39;</span>
 </pre></div>
 </div>
 <p>Note that your particular error message may be different.</p>
 <p>Another error results from internal type and range checking, saying User ERROR, as it is due to a wrong input of the user. For this, we try</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="n">AddObject</span><span class="p">(</span><span class="s1">&#39;abc&#39;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="s1">&#39;abc&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Which results in a error message similar to:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">=========================================</span>
-<span class="n">User</span> <span class="n">ERROR</span> <span class="p">[</span><span class="n">file</span> <span class="s1">&#39;C:\Users\username\AppData\Local\Temp\ipykernel_24988</span><span class="se">\2</span><span class="s1">838049308.py&#39;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">]:</span>
-<span class="n">Error</span> <span class="ow">in</span> <span class="n">AddObject</span><span class="p">(</span><span class="o">...</span><span class="p">):</span>
-<span class="n">Check</span> <span class="n">your</span> <span class="n">python</span> <span class="n">code</span> <span class="p">(</span><span class="n">negative</span> <span class="n">indices</span><span class="p">,</span> <span class="n">invalid</span> <span class="ow">or</span> <span class="n">undefined</span> <span class="n">parameters</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
-
-<span class="o">=========================================</span>
-
-<span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
-
-  <span class="n">File</span> <span class="s2">&quot;C:\Users\username\AppData\Local\Temp\ipykernel_24988</span><span class="se">\2</span><span class="s2">838049308.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
-    <span class="n">mbs</span><span class="o">.</span><span class="n">AddObject</span><span class="p">(</span><span class="s1">&#39;abc&#39;</span><span class="p">)</span>
-
-<span class="ne">RuntimeError</span><span class="p">:</span> <span class="n">Exudyn</span><span class="p">:</span> <span class="n">parsing</span> <span class="n">of</span> <span class="n">Python</span> <span class="n">file</span> <span class="n">terminated</span> <span class="n">due</span> <span class="n">to</span> <span class="n">Python</span> <span class="p">(</span><span class="n">user</span><span class="p">)</span> <span class="n">error</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="o">=========================================</span>
+<span class="linenos"> 2</span><span class="n">User</span> <span class="n">ERROR</span> <span class="p">[</span><span class="n">file</span> <span class="s1">&#39;C:\Users\username\AppData\Local\Temp\ipykernel_24988</span><span class="se">\2</span><span class="s1">838049308.py&#39;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">]:</span>
+<span class="linenos"> 3</span><span class="n">Error</span> <span class="ow">in</span> <span class="nf">AddObject</span><span class="p">(</span><span class="o">...</span><span class="p">):</span>
+<span class="linenos"> 4</span><span class="n">Check</span> <span class="n">your</span> <span class="n">python</span> <span class="n">code</span> <span class="p">(</span><span class="n">negative</span> <span class="n">indices</span><span class="p">,</span> <span class="n">invalid</span> <span class="ow">or</span> <span class="n">undefined</span> <span class="n">parameters</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span><span class="o">=========================================</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span><span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+<span class="linenos"> 9</span>
+<span class="linenos">10</span>  <span class="n">File</span> <span class="s2">&quot;C:\Users\username\AppData\Local\Temp\ipykernel_24988</span><span class="se">\2</span><span class="s2">838049308.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="linenos">11</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="s1">&#39;abc&#39;</span><span class="p">)</span>
+<span class="linenos">12</span>
+<span class="linenos">13</span><span class="ne">RuntimeError</span><span class="p">:</span> <span class="n">Exudyn</span><span class="p">:</span> <span class="n">parsing</span> <span class="n">of</span> <span class="n">Python</span> <span class="n">file</span> <span class="n">terminated</span> <span class="n">due</span> <span class="n">to</span> <span class="n">Python</span> <span class="p">(</span><span class="n">user</span><span class="p">)</span> <span class="n">error</span>
 </pre></div>
 </div>
 <p>Finally, there may be system errors. They may be caused due to previous wrong input, but if there is no reason seen, it may be appropriate to report this error on <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN">github.com/jgerstmayr/EXUDYN/</a> .</p>

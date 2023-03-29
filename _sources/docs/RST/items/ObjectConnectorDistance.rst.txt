@@ -129,6 +129,7 @@ MINI EXAMPLE for ObjectConnectorDistance
 
 
 .. code-block:: python
+   :linenos:
 
    #example with 1m pendulum, 50kg under gravity
    nMass = mbs.AddNode(NodePoint2D(referenceCoordinates=[1,0]))

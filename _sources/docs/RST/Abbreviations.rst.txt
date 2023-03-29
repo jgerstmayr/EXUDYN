@@ -5,6 +5,9 @@
 List of Abbreviations
 =====================
 
+This section shows typical abbreviations. For further notation, 
+see also :ref:`Section Notation <sec-generalnotation>`\ .
+
 .. _2D:
 
 \ **2D**\ : two dimensions or planar

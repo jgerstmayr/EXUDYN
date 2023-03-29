@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Trouble shooting and FAQ &mdash; Exudyn1.6.0 1.6.0 documentation</title>
+  <title>Trouble shooting and FAQ &mdash; Exudyn1.6.31.dev1 1.6.31.dev1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
@@ -19,8 +19,9 @@
         <script src="../../_static/sphinx_highlight.js"></script>
         <script src="../../_static/clipboard.min.js"></script>
         <script src="../../_static/copybutton.js"></script>
+        <script src="../../_static/js/rtd_search_config.js"></script>
         <script src="../../_static/js/rtd_sphinx_search.min.js"></script>
-        <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "omegaBDtilde": "{\\LU{b}{\\tilde \\tomega_\\mathrm{bd}}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}"}}}</script>
+        <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "vrRow": ["{[#1,\\, #2,\\, #3]}", 3], "vsix": ["{\\left[\\!\\! \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} \\!\\!\\right]}", 6], "vsixb": ["{\\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "vsixs": ["{ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "omegaBDtilde": "{\\LU{b}{\\tilde \\tomega_\\mathrm{bd}}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}", "termA": ["{\\color{blue}{#1}}", 1], "termB": ["{\\color{red}{#1}}", 1], "termC": ["{\\color{green}{#1}}", 1], "avu": "{\\ddot \\mathbf{q}}", "GA": "{G\\alpha}", "aalg": "{\\mathbf{a}}", "vel": "{\\mathbf{v}}"}}}</script>
         <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -38,7 +39,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.6.0
+            Exudyn1.6.31.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -67,6 +68,9 @@
 <li class="toctree-l1"><a class="reference internal" href="OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
 <li class="toctree-l1"><a class="reference internal" href="TutorialIndex.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="NotationIndex.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TheoryAndFormulationsIndex.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="SolversIndex.html">Solvers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
@@ -78,6 +82,9 @@
 <p class="caption" role="heading"><span class="caption-text">Misc</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ExamplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TestModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trackerlog.html">Issue tracker</a></li>
 </ul>
 
         </div>
@@ -86,7 +93,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.6.0</a>
+          <a href="../../index.html">Exudyn1.6.31.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -167,7 +174,7 @@ Exceptions and Error Messages. In the following, typical error messages are list
 <li><p>Typical Python <strong>syntax error</strong> with missing braces:</p></li>
 </ul>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">&quot;C:\DATA\cpp\EXUDYN_git\main\pythonDev\Examples\springDamperTutorial.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">42</span>
-    <span class="n">nGround</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="n">AddNode</span><span class="p">(</span><span class="n">NodePointGround</span><span class="p">(</span><span class="n">referenceCoordinates</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="n">nGround</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">NodePointGround</span><span class="p">(</span><span class="n">referenceCoordinates</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
            <span class="o">^</span>
 <span class="ne">SyntaxError</span><span class="p">:</span> <span class="n">invalid</span> <span class="n">syntax</span>
 </pre></div>
@@ -178,11 +185,11 @@ Exceptions and Error Messages. In the following, typical error messages are list
 </div>
 </dd>
 </dl>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="mi">38</span>  <span class="n">n1</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="n">AddNode</span><span class="p">(</span><span class="n">Point</span><span class="p">(</span><span class="n">referenceCoordinates</span> <span class="o">=</span> <span class="p">[</span><span class="n">L</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="mi">38</span>  <span class="n">n1</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">Point</span><span class="p">(</span><span class="n">referenceCoordinates</span> <span class="o">=</span> <span class="p">[</span><span class="n">L</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
 <span class="mi">39</span>                       <span class="n">initialCoordinates</span> <span class="o">=</span> <span class="p">[</span><span class="n">u0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
 <span class="mi">40</span>                       <span class="n">initialVelocities</span><span class="o">=</span> <span class="p">[</span><span class="n">v0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
 <span class="mi">41</span>  <span class="c1">#ground node</span>
-<span class="mi">42</span>  <span class="n">nGround</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="n">AddNode</span><span class="p">(</span><span class="n">NodePointGround</span><span class="p">(</span><span class="n">referenceCoordinates</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+<span class="mi">42</span>  <span class="n">nGround</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">NodePointGround</span><span class="p">(</span><span class="n">referenceCoordinates</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
 <span class="mi">43</span>
 </pre></div>
 </div>
@@ -221,10 +228,10 @@ dialogs.multiThreadedDialogs = False, general.useMultiThreadedRendering = False<
 </ul>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
 <span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">SystemContainer</span><span class="p">()</span>
-<span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="n">AddSystem</span><span class="p">()</span>
-<span class="n">sims</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="n">SimulationSettings</span><span class="p">()</span>
-<span class="n">exu</span><span class="o">.</span><span class="n">SolveDynamic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sims</span><span class="p">)</span>
+<span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
+<span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
+<span class="n">sims</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">()</span>
+<span class="n">exu</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sims</span><span class="p">)</span>
 </pre></div>
 </div>
 <ul class="simple">
@@ -232,7 +239,7 @@ dialogs.multiThreadedDialogs = False, general.useMultiThreadedRendering = False<
 </ul>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">=========================================</span>
 <span class="n">User</span> <span class="n">ERROR</span> <span class="p">[</span><span class="n">file</span> <span class="s1">&#39;C:\Users\username\.condavs</span><span class="se">\v</span><span class="s1">envP39\lib\site-packages\exudyn\solver.py&#39;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">245</span><span class="p">]:</span>
-<span class="n">Solver</span><span class="p">:</span> <span class="n">system</span> <span class="ow">is</span> <span class="n">inconsistent</span> <span class="ow">and</span> <span class="n">cannot</span> <span class="n">be</span> <span class="n">solved</span> <span class="p">(</span><span class="n">call</span> <span class="n">Assemble</span><span class="p">()</span> <span class="ow">and</span> <span class="n">check</span> <span class="n">error</span> <span class="n">messages</span><span class="p">)</span>
+<span class="n">Solver</span><span class="p">:</span> <span class="n">system</span> <span class="ow">is</span> <span class="n">inconsistent</span> <span class="ow">and</span> <span class="n">cannot</span> <span class="n">be</span> <span class="n">solved</span> <span class="p">(</span><span class="n">call</span> <span class="nf">Assemble</span><span class="p">()</span> <span class="ow">and</span> <span class="n">check</span> <span class="n">error</span> <span class="n">messages</span><span class="p">)</span>
 <span class="o">=========================================</span>
 
 <span class="o">=========================================</span>
@@ -249,12 +256,12 @@ dialogs.multiThreadedDialogs = False, general.useMultiThreadedRendering = False<
 <span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
 
   <span class="n">File</span> <span class="s2">&quot;C:\Users\username\AppData\Local\Temp\ipykernel_24988</span><span class="se">\334</span><span class="s2">8856385.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
-    <span class="n">exu</span><span class="o">.</span><span class="n">SolveDynamic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sims</span><span class="p">)</span>
+    <span class="n">exu</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sims</span><span class="p">)</span>
 
-  <span class="n">File</span> <span class="s2">&quot;C:\Users\username\.condavs</span><span class="se">\v</span><span class="s2">envP39\lib\site-packages\exudyn\solver.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">255</span><span class="p">,</span> <span class="ow">in</span> <span class="n">SolveDynamic</span>
+  <span class="n">File</span> <span class="s2">&quot;C:\Users\username\.condavs</span><span class="se">\v</span><span class="s2">envP39\lib\site-packages\exudyn\solver.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">255</span><span class="p">,</span> <span class="ow">in</span> <span class="nf">SolveDynamic</span>
     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;SolveDynamic terminated&quot;</span><span class="p">)</span>
 
-<span class="ne">ValueError</span><span class="p">:</span> <span class="n">SolveDynamic</span> <span class="n">terminated</span>
+<span class="ne">ValueError</span><span class="p">:</span> <span class="nf">SolveDynamic</span> <span class="n">terminated</span>
 </pre></div>
 </div>
 <p></p>
@@ -311,8 +318,8 @@ causing system equation number (coordinate number) = 42
 <div class="line">→  You can also <strong>highlight</strong> object 7 by using the following code in the iPython console:</div>
 </div>
 </div></blockquote>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">exu</span><span class="o">.</span><span class="n">StartRenderer</span><span class="p">()</span>
-<span class="n">HighlightItem</span><span class="p">(</span><span class="n">SC</span><span class="p">,</span><span class="n">mbs</span><span class="p">,</span><span class="mi">7</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">exu</span><span class="o">.</span><span class="nf">StartRenderer</span><span class="p">()</span>
+<span class="nf">HighlightItem</span><span class="p">(</span><span class="n">SC</span><span class="p">,</span><span class="n">mbs</span><span class="p">,</span><span class="mi">7</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>which draws the according object in red and others gray/transparent (but sometimes objects may be hidden inside other objects!). See the command’s description for further options, e.g., to highlight nodes.</p>
@@ -321,15 +328,15 @@ causing system equation number (coordinate number) = 42
 </ul>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">+++++++++++++++++++++++++++++++</span>
 <span class="n">EXUDYN</span> <span class="n">V1</span><span class="mf">.0.200</span> <span class="n">solver</span><span class="p">:</span> <span class="n">implicit</span> <span class="n">second</span> <span class="n">order</span> <span class="n">time</span> <span class="n">integration</span>
-  <span class="n">Newton</span> <span class="p">(</span><span class="n">time</span><span class="o">/</span><span class="n">load</span> <span class="n">step</span> <span class="c1">#1): convergence failed after 25 iterations; relative error = 0.079958, time = 2</span>
-  <span class="n">Newton</span> <span class="p">(</span><span class="n">time</span><span class="o">/</span><span class="n">load</span> <span class="n">step</span> <span class="c1">#1): convergence failed after 25 iterations; relative error = 0.0707764, time = 1</span>
-  <span class="n">Newton</span> <span class="p">(</span><span class="n">time</span><span class="o">/</span><span class="n">load</span> <span class="n">step</span> <span class="c1">#1): convergence failed after 25 iterations; relative error = 0.0185745, time = 0.5</span>
-  <span class="n">Newton</span> <span class="p">(</span><span class="n">time</span><span class="o">/</span><span class="n">load</span> <span class="n">step</span> <span class="c1">#2): convergence failed after 25 iterations; relative error = 0.332953, time = 0.5</span>
-  <span class="n">Newton</span> <span class="p">(</span><span class="n">time</span><span class="o">/</span><span class="n">load</span> <span class="n">step</span> <span class="c1">#2): convergence failed after 25 iterations; relative error = 0.0783815, time = 0.375</span>
-  <span class="n">Newton</span> <span class="p">(</span><span class="n">time</span><span class="o">/</span><span class="n">load</span> <span class="n">step</span> <span class="c1">#2): convergence failed after 25 iterations; relative error = 0.0879718, time = 0.3125</span>
-  <span class="n">Newton</span> <span class="p">(</span><span class="n">time</span><span class="o">/</span><span class="n">load</span> <span class="n">step</span> <span class="c1">#2): convergence failed after 25 iterations; relative error = 2.84704e-06, time = 0.28125</span>
-  <span class="n">Newton</span> <span class="p">(</span><span class="n">time</span><span class="o">/</span><span class="n">load</span> <span class="n">step</span> <span class="c1">#3): convergence failed after 25 iterations; relative error = 1.9894e-07, time = 0.28125</span>
-<span class="n">STEP348</span><span class="p">,</span> <span class="n">t</span> <span class="o">=</span> <span class="mi">20</span> <span class="n">sec</span><span class="p">,</span> <span class="n">timeToGo</span> <span class="o">=</span> <span class="mi">0</span> <span class="n">sec</span><span class="p">,</span> <span class="n">Nit</span><span class="o">/</span><span class="n">step</span> <span class="o">=</span> <span class="mf">7.00575</span>
+  <span class="n">Newton</span> <span class="p">(</span><span class="n">time</span><span class="o">/</span><span class="n">load</span> <span class="nf">step</span> <span class="c1">#1): convergence failed after 25 iterations; relative error = 0.079958, time = 2</span>
+  <span class="n">Newton</span> <span class="p">(</span><span class="n">time</span><span class="o">/</span><span class="n">load</span> <span class="nf">step</span> <span class="c1">#1): convergence failed after 25 iterations; relative error = 0.0707764, time = 1</span>
+  <span class="n">Newton</span> <span class="p">(</span><span class="n">time</span><span class="o">/</span><span class="n">load</span> <span class="nf">step</span> <span class="c1">#1): convergence failed after 25 iterations; relative error = 0.0185745, time = 0.5</span>
+  <span class="n">Newton</span> <span class="p">(</span><span class="n">time</span><span class="o">/</span><span class="n">load</span> <span class="nf">step</span> <span class="c1">#2): convergence failed after 25 iterations; relative error = 0.332953, time = 0.5</span>
+  <span class="n">Newton</span> <span class="p">(</span><span class="n">time</span><span class="o">/</span><span class="n">load</span> <span class="nf">step</span> <span class="c1">#2): convergence failed after 25 iterations; relative error = 0.0783815, time = 0.375</span>
+  <span class="n">Newton</span> <span class="p">(</span><span class="n">time</span><span class="o">/</span><span class="n">load</span> <span class="nf">step</span> <span class="c1">#2): convergence failed after 25 iterations; relative error = 0.0879718, time = 0.3125</span>
+  <span class="n">Newton</span> <span class="p">(</span><span class="n">time</span><span class="o">/</span><span class="n">load</span> <span class="nf">step</span> <span class="c1">#2): convergence failed after 25 iterations; relative error = 2.84704e-06, time = 0.28125</span>
+  <span class="n">Newton</span> <span class="p">(</span><span class="n">time</span><span class="o">/</span><span class="n">load</span> <span class="nf">step</span> <span class="c1">#3): convergence failed after 25 iterations; relative error = 1.9894e-07, time = 0.28125</span>
+<span class="n">STEP348</span><span class="p">,</span> <span class="n">t</span> <span class="o">=</span> <span class="mi">20</span> <span class="n">sec</span><span class="p">,</span> <span class="n">timeToGo</span> <span class="o">=</span> <span class="mi">0</span> <span class="n">sec</span><span class="p">,</span> <span class="n">Nit</span><span class="o">/</span><span class="nf">step</span> <span class="o">=</span> <span class="mf">7.00575</span>
 <span class="n">solver</span> <span class="n">finished</span> <span class="n">after</span> <span class="mf">0.258349</span> <span class="n">seconds</span><span class="o">.</span>
 </pre></div>
 </div>

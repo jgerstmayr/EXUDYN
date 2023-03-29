@@ -122,6 +122,7 @@ MINI EXAMPLE for ObjectMassPoint2D
 
 
 .. code-block:: python
+   :linenos:
 
    node = mbs.AddNode(NodePoint2D(referenceCoordinates = [1,1], 
                                 initialCoordinates=[0.5,0],

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Explicit solvers &mdash; Exudyn1.6.31.dev1 1.6.31.dev1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+        <script src="../../_static/js/rtd_search_config.js"></script>
+        <script src="../../_static/js/rtd_sphinx_search.min.js"></script>
+        <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "vrRow": ["{[#1,\\, #2,\\, #3]}", 3], "vsix": ["{\\left[\\!\\! \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} \\!\\!\\right]}", 6], "vsixb": ["{\\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "vsixs": ["{ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "omegaBDtilde": "{\\LU{b}{\\tilde \\tomega_\\mathrm{bd}}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}", "termA": ["{\\color{blue}{#1}}", 1], "termB": ["{\\color{red}{#1}}", 1], "termC": ["{\\color{green}{#1}}", 1], "avu": "{\\ddot \\mathbf{q}}", "GA": "{G\\alpha}", "aalg": "{\\mathbf{a}}", "vel": "{\\mathbf{v}}"}}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Implicit trapezoidal rule-based, Newmark and Generalized-alpha solver" href="ImplicitTrapezoidalRulebasedNewmarkAndGeneralizedalphaSolver.html" />
+    <link rel="prev" title="Solvers in Exudyn" href="SolversInExudyn.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Exudyn1.6.31.dev1
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Exudyn.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="NotationIndex.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TheoryAndFormulationsIndex.html">Theory and formulations</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="SolversIndex.html">Solvers</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Solvers.html">Solvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SolversInExudyn.html">Solvers in Exudyn</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Explicit solvers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#explicit-runge-kutta-method">Explicit Runge-Kutta method</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#automatic-step-size-control">Automatic step size control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#stability-limit">Stability limit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#explicit-lie-group-integrators">Explicit Lie group integrators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#constraints-with-explicit-solvers">Constraints with explicit solvers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ImplicitTrapezoidalRulebasedNewmarkAndGeneralizedalphaSolver.html">Implicit trapezoidal rule-based, Newmark and Generalized-alpha solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="OptimizationAndParameterVariation.html">Optimization and parameter variation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="pythonUtilities/index.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="structures/StructuresAndSettingsIndex.html">Structures and Settings</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Misc</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ExamplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TestModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Exudyn1.6.31.dev1</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="SolversIndex.html">Solvers</a></li>
+      <li class="breadcrumb-item active">Explicit solvers</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/docs/RST/ExplicitSolvers.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="explicit-solvers">
+<span id="sec-explicitsolver"></span><h1>Explicit solvers<a class="headerlink" href="#explicit-solvers" title="Permalink to this heading"></a></h1>
+<p>Explicit solvers are in general only applicable for systems without constraints (i.e., no joints!). However, some solvers accept simple <code class="docutils literal notranslate"><span class="pre">CoordinateConstraint</span></code>, e.g., fixing coordinates to the ground.
+Nevertheless, for constraint-free systems, e.g., with penalty constraints, can be solved for very high order and with great efficiency.
+A list of explicit solvers is available, see Section <a class="reference internal" href="cInterface/TypeDefinitions.html#sec-dynamicsolvertype"><span class="std std-ref">DynamicSolverType</span></a>, for an overview of all implicit and explicit solvers.</p>
+<p>The solution vector <span class="math notranslate nohighlight">\(\txi\)</span> (denoted as <span class="math notranslate nohighlight">\(y\)</span> in the literature ), which is defined as</p>
+<div class="math notranslate nohighlight">
+\[\txi = [{\mathbf{q}}\tp \;\; \dot {\mathbf{q}}\tp \;\; {\mathbf{y}}\tp ]\tp\]</div>
+<p>and which includes <a class="reference internal" href="Abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> coordinates and velocities and <a class="reference internal" href="Abbreviations.html#ode1"><span class="std std-ref">ODE1</span></a> coordinates. All coordinates are computed without reference values.</p>
+<p>The <a class="reference internal" href="Abbreviations.html#ode1"><span class="std std-ref">ODE1</span></a> and <a class="reference internal" href="Abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> equations of Eq. <a class="reference internal" href="#equation-eq-systemeom">(3)</a>, with <span class="math notranslate nohighlight">\(\tlambda=0\)</span>, are written in explicit form and converted to first order equations,</p>
+<div class="math notranslate nohighlight" id="equation-eq-systemeom">
+<span class="eqno">(3)<a class="headerlink" href="#equation-eq-systemeom" title="Permalink to this equation"></a></span>\[\begin{split}\dot {\mathbf{q}} &amp;=&amp; \vel \nonumber \\
+\ddot \vel &amp; = &amp;{\mathbf{M}}^{-1} {\mathbf{f}}_\SO({\mathbf{q}}, \vel, t) \nonumber \\
+\dot {\mathbf{y}} &amp; = &amp;{\mathbf{f}}_\FO({\mathbf{y}}, t) \\\end{split}\]</div>
+<p>The system first order differential equations for explicit solvers thus read</p>
+<div class="math notranslate nohighlight">
+\[\dot \txi = {\mathbf{f}}_e (\txi, t)\]</div>
+<section id="explicit-runge-kutta-method">
+<span id="sec-rungekuttamethod"></span><h2>Explicit Runge-Kutta method<a class="headerlink" href="#explicit-runge-kutta-method" title="Permalink to this heading"></a></h2>
+<p>Explicit time integration methods seek the solution <span class="math notranslate nohighlight">\(\txi_{t+h}\)</span> at time <span class="math notranslate nohighlight">\(t+h\)</span> for given initial value <span class="math notranslate nohighlight">\(\txi_{t}\)</span> (at the beginning of one step <span class="math notranslate nohighlight">\(t\)</span> or at the beginning of the simulation, <span class="math notranslate nohighlight">\(t=0\)</span>),</p>
+<div class="math notranslate nohighlight">
+\[\txi_{t+h} = \txi_{t} + \Delta \txi.\]</div>
+<p>For any given Runge-Kutta method, the integration of one step with step size <span class="math notranslate nohighlight">\(h\)</span> is performed by an approximation</p>
+<div class="math notranslate nohighlight" id="equation-s-stage-quadrature">
+<span class="eqno">(4)<a class="headerlink" href="#equation-s-stage-quadrature" title="Permalink to this equation"></a></span>\[\Delta \txi = \int _{t}^{t+h}{\mathbf{f}}_e(\tau ,\txi(\tau ))d\tau \approx h\left[b_{1} {\mathbf{f}}_e(t,\txi(t))+b_{2} {\mathbf{f}}_e(t+c_{2} h,\txi(t+c_{2} h))+ \ldots +b_{s} {\mathbf{f}}_e(t+\txi_{s} h,u(t+\txi_{s} h))\right]\]</div>
+<p>in which <span class="math notranslate nohighlight">\(t + c_{i}h\)</span> is the time for stage <span class="math notranslate nohighlight">\(i\)</span> and <span class="math notranslate nohighlight">\(b_i\)</span> the according weight given in the integration formula.
+Stages are within one step (therefor called one-step-methods), where <span class="math notranslate nohighlight">\(c_i=0\)</span> represents the beginning of the step and <span class="math notranslate nohighlight">\(c_i=1\)</span> the end.
+Note that <span class="math notranslate nohighlight">\(c_{1}= 0\)</span> for explicit integration formulas.</p>
+<p>The unknown solution vectors <span class="math notranslate nohighlight">\(\txi\)</span> at the stages are abbreviated by</p>
+<div class="math notranslate nohighlight">
+\[{\mathbf{g}}_{i} \approx \txi(t+c_{i} h)\]</div>
+<p>and computed by explicit integration (quadrature) formulas of lower order (<span class="math notranslate nohighlight">\(g_i\)</span> not to be mixed up with algebraic equations!),</p>
+<div class="math notranslate nohighlight" id="equation-eq-expl-rk-stages">
+<span class="eqno">(5)<a class="headerlink" href="#equation-eq-expl-rk-stages" title="Permalink to this equation"></a></span>\[\begin{split}\begin{array}{l} {{\mathbf{g}}_{1} =\txi_t} \\ {{\mathbf{g}}_{2} =\txi_t+ha_{21} {\mathbf{f}}_e(t,{\mathbf{g}}_{1} )} \\ {{\mathbf{g}}_{3} =\txi_t+h\left[a_{31} {\mathbf{f}}_e(t,{\mathbf{g}}_{1} )+a_{32} {\mathbf{f}}_e(t+c_{2} h,{\mathbf{g}}_{2} )\right]} \\ {{\rm \; \; \; \; \; \; }\vdots } \\ {{\mathbf{g}}_{s} =\txi_t+h\left[a_{s1} {\mathbf{f}}_e(t,{\mathbf{g}}_{1} )+a_{s2} {\mathbf{f}}_e(t+c_{2} h,{\mathbf{g}}_{2} )+ \ldots +a_{s,s-1} {\mathbf{f}}_e(t+c_{s-1} h,{\mathbf{g}}_{s-1} )\right]} \end{array}\end{split}\]</div>
+<p>After all vectors <span class="math notranslate nohighlight">\({\mathbf{g}}_i\)</span> have been consecutively evaluated, the step is updated by Eq. <a class="reference internal" href="#equation-s-stage-quadrature">(4)</a>.</p>
+</section>
+<section id="automatic-step-size-control">
+<h2>Automatic step size control<a class="headerlink" href="#automatic-step-size-control" title="Permalink to this heading"></a></h2>
+<p>Advanced solvers, such as <code class="docutils literal notranslate"><span class="pre">ODE23</span></code> and <code class="docutils literal notranslate"><span class="pre">DOPRI5</span></code>, include automatic step size control(activated with
+<code class="docutils literal notranslate"><span class="pre">timeIntegration.automaticStepSize</span> <span class="pre">=</span> <span class="pre">True</span></code> in simulationSettings).</p>
+<p>We estimate the error of a time step with current step size <span class="math notranslate nohighlight">\(h\)</span> by
+using an embedded Runge-Kutta formula, which includes two approximations <a class="reference internal" href="#equation-s-stage-quadrature">(4)</a> of order <span class="math notranslate nohighlight">\(p\)</span> and <span class="math notranslate nohighlight">\(\hat p = p-1\)</span>, which is obtained by using two different integration formulas with common coefficients <span class="math notranslate nohighlight">\(c_i\)</span>, but two sets of weights <span class="math notranslate nohighlight">\(b_i\)</span> and <span class="math notranslate nohighlight">\(\hat b_i\)</span>, leading to two approximations <span class="math notranslate nohighlight">\(\txi\)</span> and <span class="math notranslate nohighlight">\(\hat \txi\)</span>. These so-called embedded Runge-Kutta formulas are widely used, for details see Hairer et al. .</p>
+<p>The according apporximations <span class="math notranslate nohighlight">\(\txi\)</span> and <span class="math notranslate nohighlight">\(\hat \txi\)</span> are used to estimate an error</p>
+<div class="math notranslate nohighlight">
+\[e_j=|\xi_j- \hat \xi_j|\]</div>
+<p>for every component <span class="math notranslate nohighlight">\(j\)</span> of the solution vector <span class="math notranslate nohighlight">\(\txi\)</span>.
+A scaling is used for every component of the solution vector, evaluating at the beginning (<span class="math notranslate nohighlight">\(0\)</span>) and end (<span class="math notranslate nohighlight">\(1\)</span>) of the time step:</p>
+<div class="math notranslate nohighlight">
+\[s_j = a_{tol} + r_{tol} \cdot \mathrm{max}(|\xi_{0j}|, |\xi_{1j}|)\]</div>
+<p>Then the relative, scaled, scalar error for the step, which needs to fulfill <span class="math notranslate nohighlight">\(err \le 1\)</span>, is computed as</p>
+<div class="math notranslate nohighlight">
+\[err = \sqrt{\frac 1 n \sum_{j=1}^n \left( \frac{\xi_{1j} - \hat \xi_{1j}}{s_j} \right)^2}\]</div>
+<p>The optimal step size then reads</p>
+<div class="math notranslate nohighlight">
+\[h_{opt} = h \cdot \left(\frac{1}{err} \right)^{(1/(q+1))}\]</div>
+<p>Currently we use the suggested step size as</p>
+<div class="math notranslate nohighlight">
+\[h_{new} = \mathrm{min}\left(h_{max}, \mathrm{min}\left(h \cdot f_{maxInc},  \mathrm{max}(h_{min}, f_{sfty} \cdot h_{opt}) \right) \right)\]</div>
+<p>With the maximum step size <span class="math notranslate nohighlight">\(h_{max} = \frac{t_{start} - t_{end}}{n_{steps}}\)</span> and the minimum step size <span class="math notranslate nohighlight">\(h_{min}\)</span>, given in the <code class="docutils literal notranslate"><span class="pre">timeIntegration</span></code><code class="docutils literal notranslate"><span class="pre">simulationSettings</span></code>.
+The factor <span class="math notranslate nohighlight">\(f_{maxInc}\)</span> limits the increase of the current step size <span class="math notranslate nohighlight">\(h\)</span>, the factor <span class="math notranslate nohighlight">\(f_{sfty}\)</span> is a safety factor for limiting the chosen step size relative to the optimal one in order to avoid frequent step rejections.
+If <span class="math notranslate nohighlight">\(h_{new} \le h\)</span>, the current step is accepted, otherwise the step is recomputed with <span class="math notranslate nohighlight">\(h_{new}\)</span>.
+For more details, see Hairer et al. .</p>
+</section>
+<section id="stability-limit">
+<h2>Stability limit<a class="headerlink" href="#stability-limit" title="Permalink to this heading"></a></h2>
+<p>Note that there are hard limitations for every explicit integration method regarding the step size. Especially for stiff systems (basically with high stiffness parameters and small masses, but also with restrictions to damping), the <strong>step size :math:`h` has an upper limit</strong>: <span class="math notranslate nohighlight">\(h &lt; h_{lim}\)</span>. Above that limit the method is inherently unstable, which needs to be considered both for constant and automatic step size selection.</p>
+</section>
+<section id="explicit-lie-group-integrators">
+<h2>Explicit Lie group integrators<a class="headerlink" href="#explicit-lie-group-integrators" title="Permalink to this heading"></a></h2>
+<p>All explicit solvers including the automatic step size solvers (DOPRI5, ODE23) have been equiped with Lie group integration functionality – details will be published soon and some tests are made, but handle this with care.</p>
+<p>Basically, the integration formulas, see Section <a class="reference internal" href="#sec-rungekuttamethod"><span class="std std-ref">Explicit Runge-Kutta method</span></a> are extended for special rotation parameters.
+Lie group integration is currently only available for <code class="docutils literal notranslate"><span class="pre">NodeRigidBodyRotVecLG</span></code> used in <code class="docutils literal notranslate"><span class="pre">ObjectRigidBody</span></code> (3D rigid body).
+<code class="docutils literal notranslate"><span class="pre">FFRFreducedOrder</span></code> will be extended to such nodes in the near future.
+To get Lie group integrators running with rigid body models, all 3D node types need to be set to <code class="docutils literal notranslate"><span class="pre">NodeRigidBodyRotVecLG</span></code> and
+set <code class="docutils literal notranslate"><span class="pre">explicitIntegration.useLieGroupIntegration</span> <span class="pre">==</span> <span class="pre">True</span></code>.</p>
+</section>
+<section id="constraints-with-explicit-solvers">
+<h2>Constraints with explicit solvers<a class="headerlink" href="#constraints-with-explicit-solvers" title="Permalink to this heading"></a></h2>
+<p>Explicit solvers generally do not solve for algebraic constraints, except for very simple <code class="docutils literal notranslate"><span class="pre">CoordinateConstraint</span></code>.
+All connectors having the additional <code class="docutils literal notranslate"><span class="pre">type=Constraint</span></code>, see the according object in Section <a class="reference internal" href="items/ObjectConnectorSpringDamper.html#sec-item-objectconnectorspringdamper"><span class="std std-ref">ObjectConnectorSpringDamper</span></a>ff.,
+are in general not solvable by explicit solvers.
+Currently, only <code class="docutils literal notranslate"><span class="pre">CoordinateConstraint</span></code> with one coordinate fixed to ground can be accounted for,
+if <code class="docutils literal notranslate"><span class="pre">explicitIntegration.eliminateConstraints</span> <span class="pre">==</span> <span class="pre">True</span></code>.
+However, this offers the great flexibility to compute finite elements (imported meshes or ANCF beams) to be (partially) fixed to ground.
+A <code class="docutils literal notranslate"><span class="pre">CoordinateConstraint</span></code> that fixes a coordinate with index <span class="math notranslate nohighlight">\(j\)</span> to ground leads to the simple algebraic <a class="reference internal" href="Abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> equation</p>
+<div class="math notranslate nohighlight">
+\[g_j({\mathbf{q}}) = 0 \quad \Leftrightarrow \quad  q_j = 0\]</div>
+<p>which can be solved by the implemented explicit solvers by just setting <span class="math notranslate nohighlight">\(q_j = 0\)</span> previously to every computation and <span class="math notranslate nohighlight">\(\dot q_j = 0\)</span> after every <a class="reference internal" href="Abbreviations.html#rhs"><span class="std std-ref">RHS</span></a> evaluation.</p>
+<p>NOTE that, if <code class="docutils literal notranslate"><span class="pre">explicitIntegration.eliminateConstraints</span> <span class="pre">==</span> <span class="pre">False</span></code>, constraints are ignored by the explicit solver (and all algebraic variables are set to zero). This may be wanted (e.g. to investigate the free motion of bodies), but in general leads to wrong and meaningless solution.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="SolversInExudyn.html" class="btn btn-neutral float-left" title="Solvers in Exudyn" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ImplicitTrapezoidalRulebasedNewmarkAndGeneralizedalphaSolver.html" class="btn btn-neutral float-right" title="Implicit trapezoidal rule-based, Newmark and Generalized-alpha solver" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
