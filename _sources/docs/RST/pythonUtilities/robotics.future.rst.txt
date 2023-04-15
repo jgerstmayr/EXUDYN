@@ -40,17 +40,16 @@ Function: MakeCorkeRobot
 
 Function: ComputeIK3R
 ^^^^^^^^^^^^^^^^^^^^^
-`ComputeIK3R <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/future.py\#L86>`__\ (\ ``robot``\ , \ ``HT``\ )
+`ComputeIK3R <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/future.py\#L85>`__\ (\ ``robotDic``\ , \ ``HT``\ )
 
 - | \ *function description*\ :
   | calculates the analytical inverse kinematics for 3R elbow type serial robot manipulator
 - | \ *input*\ :
-  | \ ``robot``\ : robot structure
+  | \ ``robotDic``\ : robot dictionary
   | \ ``HT``\ : desired position and orientation for the end effector as 4x4 homogeneous transformation matrix as list of lists or np.array
 - | \ *output*\ :
   | solutions, list of lists with posible joint angles [q1,q2,q3] (in radiant)
-  | to achive the desired position and orientation (4 posible solutions,schoulder left/right, ellbow up/down )
-  | left/down, left/up, right/up, right/down
+  | to achive the desired position (4 posible solutions,schoulder left/right, ellbow up/down ) in following order: left/down, left/up, right/up, right/down
 - | \ *author*\ :
   | Martin Sereinig
 - | \ *notes*\ :
@@ -65,12 +64,12 @@ Function: ComputeIK3R
 
 Function: ComputeIKPuma560
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ComputeIKPuma560 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/future.py\#L158>`__\ (\ ``robot``\ , \ ``HT``\ )
+`ComputeIKPuma560 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/future.py\#L157>`__\ (\ ``robotDic``\ , \ ``HT``\ )
 
 - | \ *function description*\ :
-  | calculates the analytical inverse kinematics for Puma560 serial 6R robot manipulator
+  | calculates the analytical inverse kinematics for Puma560 serial 6R robotDic manipulator
 - | \ *input*\ :
-  | \ ``robot``\ : robot structure
+  | \ ``robotDic``\ : robotDictionary
   | \ ``HT``\ : desired position and orientation for the end effector as 4x4 homogeneous transformation matrix as list of lists or np.array
 - | \ *output*\ :
   | qSolutions, list of lists with posible joint angles [q1,q2,q3,q4,q5,q6] (in radiant)
@@ -81,7 +80,7 @@ Function: ComputeIKPuma560
 - | \ *notes*\ :
   | Usage for different manipulators with sperical wrist posible, only applicable for standard Denavit-Hartenberg parameters
 - | \ *status*\ :
-  | tested (compared with Robotcs, Vision and Control book of P. Corke
+  | tested (compared with robotDiccs, Vision and Control book of P. Corke
 
 
 ----
@@ -90,12 +89,12 @@ Function: ComputeIKPuma560
 
 Function: ComputeIKUR
 ^^^^^^^^^^^^^^^^^^^^^
-`ComputeIKUR <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/future.py\#L283>`__\ (\ ``robot``\ , \ ``HTdes``\ )
+`ComputeIKUR <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/future.py\#L282>`__\ (\ ``robotDic``\ , \ ``HTdes``\ )
 
 - | \ *function description*\ :
   | calculates the analytical inverse kinematics for UR type serial 6R robot manipulator without sperical wrist
 - | \ *input*\ :
-  | \ ``robot``\ : robot structure
+  | \ ``robotDic``\ : robot dictionary
   | \ ``HT``\ : desired position and orientation for the end effector as 4x4 homogeneous transformation matrix as list of lists or np.array
 - | \ *output*\ :
   | solutions, list of lists with posible joint angles [q1,q2,q3,q4,q5,q6] (in radiant)

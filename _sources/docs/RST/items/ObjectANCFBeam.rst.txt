@@ -9,8 +9,8 @@ OBJECT UNDER CONSTRUCTION: A 3D beam finite element based on the absolute nodal 
 
 \ **Additional information for ObjectANCFBeam**\ :
 
-* | The Object has the following types = \ ``Body``\ , \ ``MultiNoded``\ 
-* | Requested node type = \ ``Position``\  + \ ``Orientation``\ 
+* | This \ ``Object``\  has/provides the following types = \ ``Body``\ , \ ``MultiNoded``\ 
+* | Requested \ ``Node``\  type = \ ``Position``\  + \ ``Orientation``\ 
 * | \ **Short name**\  for Python = \ ``ANCFBeam``\ 
 * | \ **Short name**\  for Python visualization object = \ ``VANCFBeam``\ 
 
@@ -27,8 +27,6 @@ The item \ **ObjectANCFBeam**\  with type = 'ANCFBeam' has the following paramet
   | data as given by exudyn.BeamSection(), defining inertial, stiffness and damping parameters of beam section.
 * | **crossSectionPenaltyFactor** [\ :math:`f_{cs} = [f_{yy},\,f_{zz},\,f_{yz}]\tp`\ , type = Vector3D, default = [1.,1.,1.]]:
   | [SI:1] additional penalty factors for cross section deformation, which are in total \ :math:`k_{cs} = [f_{yy}\cdot k_{yy},\, f_{zz}\cdot k_{zz},\, f_{yz}\cdot k_{yz}]\tp`\ 
-* | **testBeamRectangularSize** [\ :math:`[h_y,\, h_z]`\ , type = Vector2D, default = [-1.,-1.]]:
-  | [SI:m] test dimensions for mass matrix and other terms using standard rectangular cross section
 * | **visualization** [type = VObjectANCFBeam]:
   | parameters for visualization of item
 
@@ -76,7 +74,12 @@ DESCRIPTION of ObjectANCFBeam
 Detailed description coming later.
 
 
+Relevant Examples and TestModels with weblink:
 
-\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+    \ `ANCFBeamEigTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamEigTest.py>`_\  (TestModels/), \ `ANCFBeamTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamTest.py>`_\  (TestModels/), \ `geometricallyExactBeamTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geometricallyExactBeamTest.py>`_\  (TestModels/)
+
+
+
+\ **The web version may not be complete. For details, consider also the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

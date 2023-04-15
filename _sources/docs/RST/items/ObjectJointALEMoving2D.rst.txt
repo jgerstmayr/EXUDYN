@@ -9,9 +9,9 @@ A specialized axially moving joint (without rotation) in 2D between a ALE Cable2
 
 \ **Additional information for ObjectJointALEMoving2D**\ :
 
-* | The Object has the following types = \ ``Connector``\ , \ ``Constraint``\ 
-* | Requested marker type = \ ``_None``\ 
-* | Requested node type: read detailed information of item
+* | This \ ``Object``\  has/provides the following types = \ ``Connector``\ , \ ``Constraint``\ 
+* | Requested \ ``Marker``\  type = \ ``_None``\ 
+* | Requested \ ``Node``\  type: read detailed information of item
 * | \ **Short name**\  for Python = \ ``ALEMovingJoint2D``\ 
 * | \ **Short name**\  for Python visualization object = \ ``VALEMovingJoint2D``\ 
 
@@ -214,7 +214,12 @@ Finally, the data coordinate is updated in order to provide the starting value f
 
 
 
+Relevant Examples and TestModels with weblink:
 
-\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+    \ `ANCFmovingRigidbody.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFmovingRigidbody.py>`_\  (Examples/), \ `ANCFmovingRigidBodyTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFmovingRigidBodyTest.py>`_\  (TestModels/)
+
+
+
+\ **The web version may not be complete. For details, consider also the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

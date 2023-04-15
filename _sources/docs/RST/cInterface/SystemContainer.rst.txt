@@ -6,7 +6,7 @@ SystemContainer
 
 
 
-The SystemContainer is the top level of structures in Exudyn. The container holds all (multibody) systems, solvers and all other data structures for computation. Currently, only one container shall be used. In future, multiple containers might be usable at the same time.Regarding the \ **(basic) module access**\ , functions are related to the \ ``exudyn = exu``\  module, see also the introduction of this chapter and this example:
+The SystemContainer is the top level of structures in Exudyn. The container holds all (multibody) systems, solvers and all other data structures for computation. A SystemContainer is created by \ ``SC = exu.SystemContainer()``\ , understanding \ ``exu.SystemContainer``\  as a class like Python's internal list class, creating a list instance with \ ``x=list()``\ . Currently, only one container shall be used. In future, multiple containers might be usable at the same time. Regarding the \ **(basic) module access**\ , functions are related to the \ ``exudyn = exu``\  module, see also the introduction of this chapter and this example:
 
 .. code-block:: python
    :linenos:

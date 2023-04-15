@@ -9,9 +9,9 @@ A penalty-based contact condition for one coordinate; the contact gap \ :math:`g
 
 \ **Additional information for ObjectContactCoordinate**\ :
 
-* | The Object has the following types = \ ``Connector``\ 
-* | Requested marker type = \ ``Coordinate``\ 
-* | Requested node type = \ ``GenericData``\ 
+* | This \ ``Object``\  has/provides the following types = \ ``Connector``\ 
+* | Requested \ ``Marker``\  type = \ ``Coordinate``\ 
+* | Requested \ ``Node``\  type = \ ``GenericData``\ 
 
 
 The item \ **ObjectContactCoordinate**\  with type = 'ContactCoordinate' has the following parameters:
@@ -45,8 +45,19 @@ The item VObjectContactCoordinate has the following parameters:
   | RGBA connector color; if R==-1, use default color
 
 
+----------
+
+.. _description-objectcontactcoordinate:
+
+DESCRIPTION of ObjectContactCoordinate
+--------------------------------------
+
+Relevant Examples and TestModels with weblink:
+
+    \ `ANCFcontactCircle.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle.py>`_\  (Examples/), \ `ANCFcontactCircle2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle2.py>`_\  (Examples/), \ `ANCFcontactCircleTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py>`_\  (TestModels/), \ `contactCoordinateTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/contactCoordinateTest.py>`_\  (TestModels/)
 
 
-\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+
+\ **The web version may not be complete. For details, consider also the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

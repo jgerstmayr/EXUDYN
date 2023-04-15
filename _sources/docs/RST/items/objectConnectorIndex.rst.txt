@@ -2,6 +2,8 @@
 Object (Connector)
 ==================
 
+A Connector is a special Object, which links two or more markers. A Connector which is not a Constraint, is a force element (e.g., spring-damper) or a penalty based joint.
+
 .. toctree::
    :maxdepth: 2
 

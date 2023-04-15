@@ -9,7 +9,7 @@ A 2D cable finite element using 2 nodes of type NodePoint2DSlope1 and a axially 
 
 \ **Additional information for ObjectALEANCFCable2D**\ :
 
-* | Requested node type: read detailed information of item
+* | Requested \ ``Node``\  type: read detailed information of item
 * | \ **Short name**\  for Python = \ ``ALECable2D``\ 
 * | \ **Short name**\  for Python visualization object = \ ``VALECable2D``\ 
 
@@ -111,7 +111,12 @@ A detailed paper on this element is yet under submission, but a similar formulat
 the underlying beam element is identical to ObjectANCFCable2D.
 
 
+Relevant Examples and TestModels with weblink:
 
-\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+    \ `ALEANCFpipe.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ALEANCFpipe.py>`_\  (Examples/), \ `ANCFALEtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFALEtest.py>`_\  (Examples/), \ `ANCFmovingRigidbody.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFmovingRigidbody.py>`_\  (Examples/), \ `flexiblePendulumANCF.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/flexiblePendulumANCF.py>`_\  (Examples/), \ `ANCFoutputTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFoutputTest.py>`_\  (TestModels/)
+
+
+
+\ **The web version may not be complete. For details, consider also the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

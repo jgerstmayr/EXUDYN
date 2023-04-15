@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Module: robotics.special &mdash; Exudyn1.6.31.dev1 1.6.31.dev1 documentation</title>
+  <title>Module: robotics.special &mdash; Exudyn1.6.57.dev1 1.6.57.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -39,7 +39,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.31.dev1
+            Exudyn1.6.57.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -116,7 +116,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.31.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.57.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -146,7 +146,7 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 </ul>
 <section id="function-velocitymanipulability">
 <span id="sec-special-velocitymanipulability"></span><h2>Function: VelocityManipulability<a class="headerlink" href="#function-velocitymanipulability" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py#L32">VelocityManipulability</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>, <code class="docutils literal notranslate"><span class="pre">mode</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py#L31">VelocityManipulability</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>, <code class="docutils literal notranslate"><span class="pre">mode</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -158,7 +158,6 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 <div class="line"><code class="docutils literal notranslate"><span class="pre">robot</span></code>: robot class</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">HT</span></code>: actual pose as homogeneous transformaton matrix</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">mode</span></code>: rotational or translational part of the movement</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">singularWeight</span></code>: Weighting of singular configurations where the value would be infinity,default value=100</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -181,7 +180,7 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 </section>
 <section id="function-forcemanipulability">
 <span id="sec-special-forcemanipulability"></span><h2>Function: ForceManipulability<a class="headerlink" href="#function-forcemanipulability" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py#L65">ForceManipulability</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>, <code class="docutils literal notranslate"><span class="pre">mode</span></code>, <code class="docutils literal notranslate"><span class="pre">singular_weight</span> <span class="pre">=</span> <span class="pre">100</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py#L61">ForceManipulability</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>, <code class="docutils literal notranslate"><span class="pre">mode</span></code>, <code class="docutils literal notranslate"><span class="pre">singularWeight</span> <span class="pre">=</span> <span class="pre">100</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -216,7 +215,7 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 </section>
 <section id="function-stiffnessmanipulability">
 <span id="sec-special-stiffnessmanipulability"></span><h2>Function: StiffnessManipulability<a class="headerlink" href="#function-stiffnessmanipulability" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py#L109">StiffnessManipulability</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">JointStiffness</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>, <code class="docutils literal notranslate"><span class="pre">mode</span></code>, <code class="docutils literal notranslate"><span class="pre">singularWeight</span> <span class="pre">=</span> <span class="pre">1000</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py#L105">StiffnessManipulability</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">JointStiffness</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>, <code class="docutils literal notranslate"><span class="pre">mode</span></code>, <code class="docutils literal notranslate"><span class="pre">singularWeight</span> <span class="pre">=</span> <span class="pre">1000</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -258,7 +257,7 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 </section>
 <section id="function-jointjacobian">
 <span id="sec-special-jointjacobian"></span><h2>Function: JointJacobian<a class="headerlink" href="#function-jointjacobian" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py#L152">JointJacobian</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HTJoint</span></code>, <code class="docutils literal notranslate"><span class="pre">HTLink</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py#L148">JointJacobian</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HTJoint</span></code>, <code class="docutils literal notranslate"><span class="pre">HTLink</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -291,7 +290,7 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 </section>
 <section id="function-massmatrix">
 <span id="sec-special-massmatrix"></span><h2>Function: MassMatrix<a class="headerlink" href="#function-massmatrix" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py#L215">MassMatrix</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>, <code class="docutils literal notranslate"><span class="pre">jointJacobian</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py#L211">MassMatrix</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>, <code class="docutils literal notranslate"><span class="pre">jointJacobian</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -331,7 +330,7 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 </section>
 <section id="function-dynamicmanipulability">
 <span id="sec-special-dynamicmanipulability"></span><h2>Function: DynamicManipulability<a class="headerlink" href="#function-dynamicmanipulability" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py#L249">DynamicManipulability</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>, <code class="docutils literal notranslate"><span class="pre">MassMatrix</span></code>, <code class="docutils literal notranslate"><span class="pre">Tmax</span></code>, <code class="docutils literal notranslate"><span class="pre">mode</span></code>, <code class="docutils literal notranslate"><span class="pre">singularWeight</span> <span class="pre">=</span> <span class="pre">1000</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py#L245">DynamicManipulability</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>, <code class="docutils literal notranslate"><span class="pre">MassMatrix</span></code>, <code class="docutils literal notranslate"><span class="pre">Tmax</span></code>, <code class="docutils literal notranslate"><span class="pre">mode</span></code>, <code class="docutils literal notranslate"><span class="pre">singularWeight</span> <span class="pre">=</span> <span class="pre">1000</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -374,7 +373,7 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 </section>
 <section id="function-calculateallmeasures">
 <span id="sec-special-calculateallmeasures"></span><h2>Function: calculateAllMeasures<a class="headerlink" href="#function-calculateallmeasures" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py#L296">calculateAllMeasures</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">robotDic</span></code>, <code class="docutils literal notranslate"><span class="pre">q</span></code>, <code class="docutils literal notranslate"><span class="pre">mode</span></code>, <code class="docutils literal notranslate"><span class="pre">flag</span> <span class="pre">=</span> <span class="pre">[0,0,0,0]</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py#L292">calculateAllMeasures</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">robotDic</span></code>, <code class="docutils literal notranslate"><span class="pre">q</span></code>, <code class="docutils literal notranslate"><span class="pre">mode</span></code>, <code class="docutils literal notranslate"><span class="pre">flag</span> <span class="pre">=</span> <span class="pre">[0,0,0,0]</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>

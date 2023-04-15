@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>General information on Python-C++ interface &mdash; Exudyn1.6.31.dev1 1.6.31.dev1 documentation</title>
+  <title>General information on Python-C++ interface &mdash; Exudyn1.6.57.dev1 1.6.57.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -37,7 +37,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.31.dev1
+            Exudyn1.6.57.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -94,7 +94,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.31.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.57.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -130,15 +130,15 @@ In the following, some basic steps and concepts for usage are shown, references 
 <p>Note that including <code class="docutils literal notranslate"><span class="pre">exudyn.utilities</span></code> will cover <code class="docutils literal notranslate"><span class="pre">itemInterface</span></code>. Also note that <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">...</span> <span class="pre">import</span> <span class="pre">*</span></code> is not recommended in general and it will not work in certain cases, e.g., if you like to compute on a cluster. However, it greatly simplifies life for smaller models and you may replace imports in your files afterwards by removing the star import.</p>
 <p>The general hub to multibody dynamics models is provided by the classes <code class="docutils literal notranslate"><span class="pre">SystemContainer</span></code> and <code class="docutils literal notranslate"><span class="pre">MainSystem</span></code>, except for some very basic system functionality (which is inside the Exudyn module).</p>
 <p>You can create a new <code class="docutils literal notranslate"><span class="pre">SystemContainer</span></code>, which is a class that is initialized by assigning a system container to a variable, usually denoted as <code class="docutils literal notranslate"><span class="pre">SC</span></code>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>Note that creating a second <code class="docutils literal notranslate"><span class="pre">exu.SystemContainer()</span></code> will be independent of <code class="docutils literal notranslate"><span class="pre">SC</span></code> and therefore usually makes no sense.</p>
-<p>To add a MainSystem to system container SC and store as variable mbs, write:</p>
+<p>Note that creating a second <code class="docutils literal notranslate"><span class="pre">exu.SystemContainer()</span></code> will be independent of <code class="docutils literal notranslate"><span class="pre">SC</span></code> and therefore makes no sense if you do not intend to work with two different containers.</p>
+<p>To add a MainSystem to system container <code class="docutils literal notranslate"><span class="pre">SC</span></code> and store as variable <code class="docutils literal notranslate"><span class="pre">mbs</span></code>, write:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>Furthermore, there are a couple of commands available directly in the <code class="docutils literal notranslate"><span class="pre">exudyn</span></code> module, given in the following subsections.Regarding the <strong>(basic) module access</strong>, functions are related to the <code class="docutils literal notranslate"><span class="pre">exudyn</span> <span class="pre">=</span> <span class="pre">exu</span></code> module, see these examples:</p>
+<p>Furthermore, there are a couple of commands available directly in the <code class="docutils literal notranslate"><span class="pre">exudyn</span></code> module, given in the following subsections. Regarding the <strong>(basic) module access</strong>, functions are related to the <code class="docutils literal notranslate"><span class="pre">exudyn</span> <span class="pre">=</span> <span class="pre">exu</span></code> module, see these examples:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1">#  import exudyn module:</span>
 <span class="linenos"> 2</span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
 <span class="linenos"> 3</span><span class="c1">#  print detailed exudyn version, Python version (at which it is compiled):</span>
@@ -166,16 +166,16 @@ In the following, some basic steps and concepts for usage are shown, references 
 <span class="linenos">12</span><span class="c1">#  print number of systems available:</span>
 <span class="linenos">13</span><span class="n">nSys</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">NumberOfSystems</span><span class="p">()</span>
 <span class="linenos">14</span><span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="n">nSys</span><span class="p">)</span> <span class="c1">#or just print(nSys)</span>
-<span class="linenos">15</span><span class="c1">#  reset system container (mbs becomes invalid):</span>
-<span class="linenos">16</span><span class="n">SC</span><span class="o">.</span><span class="nf">Reset</span><span class="p">()</span>
-<span class="linenos">17</span><span class="c1">#  delete mbs (usually not necessary):</span>
-<span class="linenos">18</span><span class="k">del</span> <span class="n">mbs</span>
+<span class="linenos">15</span><span class="c1">#  delete reference to mbs and mbs2 (usually not necessary):</span>
+<span class="linenos">16</span><span class="k">del</span> <span class="n">mbs</span><span class="p">,</span> <span class="n">mbs2</span>
+<span class="linenos">17</span><span class="c1">#  reset system container (mbs becomes invalid):</span>
+<span class="linenos">18</span><span class="n">SC</span><span class="o">.</span><span class="nf">Reset</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>If you run a parameter variation (check <code class="docutils literal notranslate"><span class="pre">Examples/parameterVariationExample.py</span></code>), you may reset or delete the created <code class="docutils literal notranslate"><span class="pre">MainSystem</span></code> <code class="docutils literal notranslate"><span class="pre">mbs</span></code> and the <code class="docutils literal notranslate"><span class="pre">SystemContainer</span></code> <code class="docutils literal notranslate"><span class="pre">SC</span></code> before creating new instances in order to avoid memory growth.</p>
 <section id="item-index">
 <span id="sec-itemindex"></span><h2>Item index<a class="headerlink" href="#item-index" title="Permalink to this heading"></a></h2>
-<p>Many functions will work with node numbers (<code class="docutils literal notranslate"><span class="pre">NodeIndex</span></code>), object numbers (<code class="docutils literal notranslate"><span class="pre">ObjectIndex</span></code>),marker numbers (<code class="docutils literal notranslate"><span class="pre">MarkerIndex</span></code>) and others. These numbers are special objects, which have been introduced in order to avoid mixing up, e.g., node and object numbers.</p>
+<p>Many functions will work with node numbers (<code class="docutils literal notranslate"><span class="pre">NodeIndex</span></code>), object numbers (<code class="docutils literal notranslate"><span class="pre">ObjectIndex</span></code>),marker numbers (<code class="docutils literal notranslate"><span class="pre">MarkerIndex</span></code>) and others. These numbers are special Python objects, which have been introduced in order to avoid mixing up, e.g., node and object numbers.</p>
 <p>For example, the command <code class="docutils literal notranslate"><span class="pre">mbs.AddNode(...)</span></code> returns a <code class="docutils literal notranslate"><span class="pre">NodeIndex</span></code>. For these indices, the following rules apply:</p>
 <blockquote>
 <div><div class="line-block">
@@ -197,7 +197,7 @@ In the following, some basic steps and concepts for usage are shown, references 
 <p>As a key concept to working with Exudyn , most data which is retrieved by C++ interface functions is copied.
 Experienced Python users may know that it is a key concept to Python to often use references instead of copying, which is
 sometimes error-prone but offers a computationally efficient behavior.
-There are only a few very important cases where data is references in Exudyn , the main ones are
+There are only a few very important cases where data is referenced in Exudyn , the main ones are
 <code class="docutils literal notranslate"><span class="pre">SystemContainer</span></code>,
 <code class="docutils literal notranslate"><span class="pre">MainSystem</span></code>,
 <code class="docutils literal notranslate"><span class="pre">VisualizationSettings</span></code>, and
@@ -213,22 +213,25 @@ The following code snippets and comments should explain this behavior:</p>
 <span class="linenos"> 8</span><span class="n">og</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectGround</span><span class="p">())</span> <span class="c1">#copy data of ObjectGround() into C++</span>
 <span class="linenos"> 9</span><span class="n">o0</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetObject</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>              <span class="c1">#get copy of internal data as dictionary</span>
 <span class="linenos">10</span><span class="k">del</span> <span class="n">o0</span>                             <span class="c1">#delete the local dictionary; C++ data not affected</span>
+<span class="linenos">11</span><span class="k">del</span> <span class="n">mbs</span><span class="p">,</span> <span class="n">mbs2</span>                      <span class="c1">#references to mbs deleted (C++ data still available)</span>
+<span class="linenos">12</span><span class="k">del</span> <span class="n">SC</span>                             <span class="c1">#references to SystemContainer deleted</span>
+<span class="linenos">13</span><span class="c1">#at this point, mbs and SC are not available any more (data may be cleaned up by Python)</span>
 </pre></div>
 </div>
 </section>
 <section id="exceptions-and-error-messages">
 <span id="sec-cinterface-exceptions"></span><h2>Exceptions and Error Messages<a class="headerlink" href="#exceptions-and-error-messages" title="Permalink to this heading"></a></h2>
 <p>There are several levels of type and argument checks, leading to different types of errors and exceptions. The according error messages are non-unique, because they may be raised in Python modules or in C++, and they may be raised on different levels of the code. Error messages depend on Python version and on your iPython console. Very often the exception may be called <code class="docutils literal notranslate"><span class="pre">ValueError</span></code>, but it mustnot mean that it is a wrong error, but it could also be, e.g., a wrong order of function calls.</p>
-<p>As an example, a type conversion error is raised when providing wrong argument types, e.g., try <code class="docutils literal notranslate"><span class="pre">exu.GetVersionString('abs')</span></code>:</p>
+<p>As an example, a type conversion error is raised when providing wrong argument types, e.g., try <code class="docutils literal notranslate"><span class="pre">exu.GetVersionString('abc')</span></code>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
 <span class="linenos">2</span>
 <span class="linenos">3</span><span class="n">File</span> <span class="s2">&quot;C:\Users\username\AppData\Local\Temp\ipykernel_24988</span><span class="se">\221</span><span class="s2">2168679.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
-<span class="linenos">4</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">GetVersionString</span><span class="p">(</span><span class="s1">&#39;abs&#39;</span><span class="p">)</span>
+<span class="linenos">4</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">GetVersionString</span><span class="p">(</span><span class="s1">&#39;abc&#39;</span><span class="p">)</span>
 <span class="linenos">5</span>
 <span class="linenos">6</span><span class="ne">TypeError</span><span class="p">:</span> <span class="nf">GetVersionString</span><span class="p">():</span> <span class="n">incompatible</span> <span class="n">function</span> <span class="n">arguments</span><span class="o">.</span> <span class="n">The</span> <span class="n">following</span> <span class="n">argument</span> <span class="n">types</span> <span class="n">are</span> <span class="n">supported</span><span class="p">:</span>
 <span class="linenos">7</span>    <span class="mf">1.</span> <span class="p">(</span><span class="n">addDetails</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span>
 <span class="linenos">8</span>
-<span class="linenos">9</span><span class="n">Invoked</span> <span class="k">with</span><span class="p">:</span> <span class="s1">&#39;abs&#39;</span>
+<span class="linenos">9</span><span class="n">Invoked</span> <span class="k">with</span><span class="p">:</span> <span class="s1">&#39;abc&#39;</span>
 </pre></div>
 </div>
 <p>Note that your particular error message may be different.</p>

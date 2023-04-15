@@ -9,9 +9,9 @@ A 1D (scalar) spring-damper element acting on single \ :ref:`ODE2 <ODE2>`\  coor
 
 \ **Additional information for ObjectConnectorCoordinateSpringDamperExt**\ :
 
-* | The Object has the following types = \ ``Connector``\ 
-* | Requested marker type = \ ``Coordinate``\ 
-* | Requested node type = \ ``GenericData``\ 
+* | This \ ``Object``\  has/provides the following types = \ ``Connector``\ 
+* | Requested \ ``Marker``\  type = \ ``Coordinate``\ 
+* | Requested \ ``Node``\  type = \ ``GenericData``\ 
 * | \ **Short name**\  for Python = \ ``CoordinateSpringDamperExt``\ 
 * | \ **Short name**\  for Python visualization object = \ ``VCoordinateSpringDamperExt``\ 
 
@@ -332,7 +332,12 @@ mbs.GetObjectParameter(itemNumber, 'limitStopsUpper') to obtain these parameters
 
 
 
+Relevant Examples and TestModels with weblink:
 
-\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+    \ `lugreFrictionTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/lugreFrictionTest.py>`_\  (Examples/), \ `massSpringFrictionInteractive.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/massSpringFrictionInteractive.py>`_\  (Examples/), \ `coordinateSpringDamperExt.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/coordinateSpringDamperExt.py>`_\  (TestModels/)
+
+
+
+\ **The web version may not be complete. For details, consider also the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

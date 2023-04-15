@@ -9,8 +9,8 @@ OBJECT UNDER CONSTRUCTION: A 3D geometrically exact beam finite element, current
 
 \ **Additional information for ObjectBeamGeometricallyExact**\ :
 
-* | The Object has the following types = \ ``Body``\ , \ ``MultiNoded``\ 
-* | Requested node type = \ ``Position``\  + \ ``Orientation``\ 
+* | This \ ``Object``\  has/provides the following types = \ ``Body``\ , \ ``MultiNoded``\ 
+* | Requested \ ``Node``\  type = \ ``Position``\  + \ ``Orientation``\ 
 * | \ **Short name**\  for Python = \ ``Beam3D``\ 
 * | \ **Short name**\  for Python visualization object = \ ``VBeam3D``\ 
 
@@ -66,7 +66,12 @@ DESCRIPTION of ObjectBeamGeometricallyExact
 Detailed description coming later.
 
 
+Relevant Examples and TestModels with weblink:
 
-\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+    \ `geometricallyExactBeamTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geometricallyExactBeamTest.py>`_\  (TestModels/)
+
+
+
+\ **The web version may not be complete. For details, consider also the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

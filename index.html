@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Exudyn documentation &mdash; Exudyn1.6.31.dev1 1.6.31.dev1 documentation</title>
+  <title>Exudyn documentation &mdash; Exudyn1.6.57.dev1 1.6.57.dev1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
@@ -36,7 +36,7 @@
           
           
           <a href="#" class="icon icon-home">
-            Exudyn1.6.31.dev1
+            Exudyn1.6.57.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -78,7 +78,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="#">Exudyn1.6.31.dev1</a>
+          <a href="#">Exudyn1.6.57.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -821,7 +821,10 @@
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.special.html#function-calculateallmeasures">Function: calculateAllMeasures</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.utilities.html">Module: robotics.utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.utilities.html">Module: robotics.utilities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.utilities.html#function-addlidar">Function: AddLidar</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="docs/RST/pythonUtilities/signalProcessing.html">Module: signalProcessing</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/signalProcessing.html#function-filtersensoroutput">Function: FilterSensorOutput</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/signalProcessing.html#function-filtersignal">Function: FilterSignal</a></li>
@@ -842,6 +845,7 @@
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/utilities.html#function-showonlyobjects">Function: ShowOnlyObjects</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/utilities.html#function-highlightitem">Function: HighlightItem</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/utilities.html#function-ufsensordistance">Function: __UFsensorDistance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/utilities.html#function-distancesensorsetupgeometry">Function: DistanceSensorSetupGeometry</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/utilities.html#function-adddistancesensor">Function: AddDistanceSensor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/utilities.html#function-ufsensorrecord">Function: UFsensorRecord</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/utilities.html#function-addsensorrecorder">Function: AddSensorRecorder</a></li>
@@ -1147,8 +1151,14 @@
 <li class="toctree-l4"><a class="reference internal" href="docs/RST/items/ObjectContactConvexRoll.html#geometric-relations">Geometric relations</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/items/ObjectContactCoordinate.html">ObjectContactCoordinate</a></li>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/items/ObjectContactCircleCable2D.html">ObjectContactCircleCable2D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/items/ObjectContactCoordinate.html">ObjectContactCoordinate</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="docs/RST/items/ObjectContactCoordinate.html#description-of-objectcontactcoordinate">DESCRIPTION of ObjectContactCoordinate</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/items/ObjectContactCircleCable2D.html">ObjectContactCircleCable2D</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="docs/RST/items/ObjectContactCircleCable2D.html#description-of-objectcontactcirclecable2d">DESCRIPTION of ObjectContactCircleCable2D</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/items/ObjectContactFrictionCircleCable2D.html">ObjectContactFrictionCircleCable2D</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="docs/RST/items/ObjectContactFrictionCircleCable2D.html#description-of-objectcontactfrictioncirclecable2d">DESCRIPTION of ObjectContactFrictionCircleCable2D</a></li>
 <li class="toctree-l4"><a class="reference internal" href="docs/RST/items/ObjectContactFrictionCircleCable2D.html#definition-of-quantities">Definition of quantities</a></li>
@@ -1219,8 +1229,14 @@
 <li class="toctree-l4"><a class="reference internal" href="docs/RST/items/ObjectJointRollingDisc.html#connector-constraint-equations">Connector constraint equations</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/items/ObjectJointRevolute2D.html">ObjectJointRevolute2D</a></li>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/items/ObjectJointPrismatic2D.html">ObjectJointPrismatic2D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/items/ObjectJointRevolute2D.html">ObjectJointRevolute2D</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="docs/RST/items/ObjectJointRevolute2D.html#description-of-objectjointrevolute2d">DESCRIPTION of ObjectJointRevolute2D</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/items/ObjectJointPrismatic2D.html">ObjectJointPrismatic2D</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="docs/RST/items/ObjectJointPrismatic2D.html#description-of-objectjointprismatic2d">DESCRIPTION of ObjectJointPrismatic2D</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/items/ObjectJointSliding2D.html">ObjectJointSliding2D</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="docs/RST/items/ObjectJointSliding2D.html#description-of-objectjointsliding2d">DESCRIPTION of ObjectJointSliding2D</a></li>
 <li class="toctree-l4"><a class="reference internal" href="docs/RST/items/ObjectJointSliding2D.html#definition-of-quantities">Definition of quantities</a></li>
@@ -1241,15 +1257,39 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="docs/RST/items/markerIndex.html">Marker</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/items/MarkerBodyMass.html">MarkerBodyMass</a></li>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/items/MarkerBodyPosition.html">MarkerBodyPosition</a></li>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/items/MarkerBodyRigid.html">MarkerBodyRigid</a></li>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/items/MarkerNodePosition.html">MarkerNodePosition</a></li>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/items/MarkerNodeRigid.html">MarkerNodeRigid</a></li>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/items/MarkerNodeCoordinate.html">MarkerNodeCoordinate</a></li>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/items/MarkerNodeCoordinates.html">MarkerNodeCoordinates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/items/MarkerBodyMass.html">MarkerBodyMass</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="docs/RST/items/MarkerBodyMass.html#description-of-markerbodymass">DESCRIPTION of MarkerBodyMass</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/items/MarkerBodyPosition.html">MarkerBodyPosition</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="docs/RST/items/MarkerBodyPosition.html#description-of-markerbodyposition">DESCRIPTION of MarkerBodyPosition</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/items/MarkerBodyRigid.html">MarkerBodyRigid</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="docs/RST/items/MarkerBodyRigid.html#description-of-markerbodyrigid">DESCRIPTION of MarkerBodyRigid</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/items/MarkerNodePosition.html">MarkerNodePosition</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="docs/RST/items/MarkerNodePosition.html#description-of-markernodeposition">DESCRIPTION of MarkerNodePosition</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/items/MarkerNodeRigid.html">MarkerNodeRigid</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="docs/RST/items/MarkerNodeRigid.html#description-of-markernoderigid">DESCRIPTION of MarkerNodeRigid</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/items/MarkerNodeCoordinate.html">MarkerNodeCoordinate</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="docs/RST/items/MarkerNodeCoordinate.html#description-of-markernodecoordinate">DESCRIPTION of MarkerNodeCoordinate</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/items/MarkerNodeCoordinates.html">MarkerNodeCoordinates</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="docs/RST/items/MarkerNodeCoordinates.html#description-of-markernodecoordinates">DESCRIPTION of MarkerNodeCoordinates</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/items/MarkerNodeODE1Coordinate.html">MarkerNodeODE1Coordinate</a></li>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/items/MarkerNodeRotationCoordinate.html">MarkerNodeRotationCoordinate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/items/MarkerNodeRotationCoordinate.html">MarkerNodeRotationCoordinate</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="docs/RST/items/MarkerNodeRotationCoordinate.html#description-of-markernoderotationcoordinate">DESCRIPTION of MarkerNodeRotationCoordinate</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/items/MarkerSuperElementPosition.html">MarkerSuperElementPosition</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="docs/RST/items/MarkerSuperElementPosition.html#description-of-markersuperelementposition">DESCRIPTION of MarkerSuperElementPosition</a></li>
 <li class="toctree-l4"><a class="reference internal" href="docs/RST/items/MarkerSuperElementPosition.html#marker-quantities">Marker quantities</a></li>
@@ -1269,9 +1309,18 @@
 <li class="toctree-l4"><a class="reference internal" href="docs/RST/items/MarkerKinematicTreeRigid.html#marker-quantities">Marker quantities</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/items/MarkerObjectODE2Coordinates.html">MarkerObjectODE2Coordinates</a></li>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/items/MarkerBodyCable2DShape.html">MarkerBodyCable2DShape</a></li>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/items/MarkerBodyCable2DCoordinates.html">MarkerBodyCable2DCoordinates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/items/MarkerObjectODE2Coordinates.html">MarkerObjectODE2Coordinates</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="docs/RST/items/MarkerObjectODE2Coordinates.html#description-of-markerobjectode2coordinates">DESCRIPTION of MarkerObjectODE2Coordinates</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/items/MarkerBodyCable2DShape.html">MarkerBodyCable2DShape</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="docs/RST/items/MarkerBodyCable2DShape.html#description-of-markerbodycable2dshape">DESCRIPTION of MarkerBodyCable2DShape</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/items/MarkerBodyCable2DCoordinates.html">MarkerBodyCable2DCoordinates</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="docs/RST/items/MarkerBodyCable2DCoordinates.html#description-of-markerbodycable2dcoordinates">DESCRIPTION of MarkerBodyCable2DCoordinates</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="docs/RST/items/loadIndex.html">Load</a><ul>
@@ -1299,13 +1348,34 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="docs/RST/items/sensorIndex.html">Sensor</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/items/SensorNode.html">SensorNode</a></li>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/items/SensorObject.html">SensorObject</a></li>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/items/SensorBody.html">SensorBody</a></li>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/items/SensorSuperElement.html">SensorSuperElement</a></li>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/items/SensorKinematicTree.html">SensorKinematicTree</a></li>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/items/SensorMarker.html">SensorMarker</a></li>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/items/SensorLoad.html">SensorLoad</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/items/SensorNode.html">SensorNode</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="docs/RST/items/SensorNode.html#description-of-sensornode">DESCRIPTION of SensorNode</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/items/SensorObject.html">SensorObject</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="docs/RST/items/SensorObject.html#description-of-sensorobject">DESCRIPTION of SensorObject</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/items/SensorBody.html">SensorBody</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="docs/RST/items/SensorBody.html#description-of-sensorbody">DESCRIPTION of SensorBody</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/items/SensorSuperElement.html">SensorSuperElement</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="docs/RST/items/SensorSuperElement.html#description-of-sensorsuperelement">DESCRIPTION of SensorSuperElement</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/items/SensorKinematicTree.html">SensorKinematicTree</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="docs/RST/items/SensorKinematicTree.html#description-of-sensorkinematictree">DESCRIPTION of SensorKinematicTree</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/items/SensorMarker.html">SensorMarker</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="docs/RST/items/SensorMarker.html#description-of-sensormarker">DESCRIPTION of SensorMarker</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/items/SensorLoad.html">SensorLoad</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="docs/RST/items/SensorLoad.html#description-of-sensorload">DESCRIPTION of SensorLoad</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/items/SensorUserFunction.html">SensorUserFunction</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="docs/RST/items/SensorUserFunction.html#description-of-sensoruserfunction">DESCRIPTION of SensorUserFunction</a></li>
 </ul>
@@ -1495,6 +1565,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="docs/RST/TestModelsIndex.html">TestModels</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="docs/RST/TestModels/ANCFBeamTest.html">ANCFBeamTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="docs/RST/TestModels/ANCFcontactCircleTest.html">ANCFcontactCircleTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="docs/RST/TestModels/ANCFcontactFrictionTest.html">ANCFcontactFrictionTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="docs/RST/TestModels/ANCFgeneralContactCircle.html">ANCFgeneralContactCircle.py</a></li>
@@ -1522,6 +1593,7 @@
 <li class="toctree-l2"><a class="reference internal" href="docs/RST/TestModels/genericODE2test.html">genericODE2test.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="docs/RST/TestModels/geneticOptimizationTest.html">geneticOptimizationTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="docs/RST/TestModels/geometricallyExactBeam2Dtest.html">geometricallyExactBeam2Dtest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs/RST/TestModels/geometricallyExactBeamTest.html">geometricallyExactBeamTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="docs/RST/TestModels/heavyTop.html">heavyTop.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="docs/RST/TestModels/hydraulicActuatorSimpleTest.html">hydraulicActuatorSimpleTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="docs/RST/TestModels/kinematicTreeAndMBStest.html">kinematicTreeAndMBStest.py</a></li>

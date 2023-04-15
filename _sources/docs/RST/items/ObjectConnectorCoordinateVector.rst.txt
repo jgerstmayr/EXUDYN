@@ -9,8 +9,8 @@ A constraint which constrains the coordinate vectors of two markers Marker[Node|
 
 \ **Additional information for ObjectConnectorCoordinateVector**\ :
 
-* | The Object has the following types = \ ``Connector``\ , \ ``Constraint``\ 
-* | Requested marker type = \ ``Coordinate``\ 
+* | This \ ``Object``\  has/provides the following types = \ ``Connector``\ , \ ``Constraint``\ 
+* | Requested \ ``Marker``\  type = \ ``Coordinate``\ 
 * | \ **Short name**\  for Python = \ ``CoordinateVectorConstraint``\ 
 * | \ **Short name**\  for Python visualization object = \ ``VCoordinateVectorConstraint``\ 
 
@@ -259,7 +259,12 @@ The returned matrix of \ ``jacobianUserFunction``\  must have \ ``nAE``\  rows a
 
 
 
+Relevant Examples and TestModels with weblink:
 
-\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+    \ `coordinateVectorConstraint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/coordinateVectorConstraint.py>`_\  (TestModels/), \ `coordinateVectorConstraintGenericODE2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/coordinateVectorConstraintGenericODE2.py>`_\  (TestModels/), \ `rigidBodyAsUserFunctionTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rigidBodyAsUserFunctionTest.py>`_\  (TestModels/)
+
+
+
+\ **The web version may not be complete. For details, consider also the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

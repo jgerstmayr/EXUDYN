@@ -109,7 +109,7 @@ Function: UFvonMisesStress
 
   #assuming s0, s1, s2 being sensor numbers with StressLocal components
   sUser = mbs.AddSensor(SensorUserFunction(sensorNumbers=[s0,s1,s2],
-  fileName='solution/sensorMisesStress.txt',
-  sensorUserFunction=UFvonMisesStress))
+                                           fileName='solution/sensorMisesStress.txt',
+                                           sensorUserFunction=UFvonMisesStress))
 
 

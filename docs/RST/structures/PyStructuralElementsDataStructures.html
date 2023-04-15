@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Structures for structural elements &mdash; Exudyn1.6.31.dev1 1.6.31.dev1 documentation</title>
+  <title>Structures for structural elements &mdash; Exudyn1.6.57.dev1 1.6.57.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -39,7 +39,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.31.dev1
+            Exudyn1.6.57.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -94,7 +94,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.31.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.57.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -115,7 +115,7 @@
              
   <section id="structures-for-structural-elements">
 <h1>Structures for structural elements<a class="headerlink" href="#structures-for-structural-elements" title="Permalink to this heading"></a></h1>
-<p>This section includes data structures for structural elements, surch as beams (and plates in future). These classes are used as interface between Python libraries for structural elements and Exudyn internal classes.</p>
+<p>This section includes data structures for structural elements, such as beams (and plates in future). These classes are used as interface between Python libraries for structural elements and Exudyn internal classes.</p>
 <section id="pybeamsection">
 <span id="sec-pybeamsection"></span><h2>PyBeamSection<a class="headerlink" href="#pybeamsection" title="Permalink to this heading"></a></h2>
 <p>Data structure for definition of 2D and 3D beam (cross) section mechanical properties. The beam has local coordinates, in which <span class="math notranslate nohighlight">\(X\)</span> represents the beam centerline (beam axis) coordinate, being the neutral fiber w.r.t.bending; <span class="math notranslate nohighlight">\(Y\)</span> and <span class="math notranslate nohighlight">\(Z\)</span> are the local cross section coordinates. Note that most elements do not accept all parameters, which results in an error if those parameters (e.g., stiffness parameters) are non-zero.</p>
@@ -123,12 +123,12 @@
 <ul>
 <li><div class="line-block">
 <div class="line"><strong>dampingMatrix</strong> [type = Matrix6D, default = np.zeros((6,6))]:</div>
-<div class="line"><span class="math notranslate nohighlight">\(\LU{c}{{\mathbf{D}}} \in \Rcal^{6 \times 6}\,\)</span> [SI:Nsm<span class="math notranslate nohighlight">\(^2\)</span>, Nsm and Ns (mixed)] sectional linear damping matrix related to <span class="math notranslate nohighlight">\(\vp{\LU{c}{{\mathbf{n}}}}{\LU{c}{{\mathbf{m}}}} = \LU{c}{{\mathbf{D}}} \vp{\LU{c}{\tepsDot}}{\LU{c}{\tkappaDot}}\)</span>; note that this damping models is highly simplified and usually, it cannot be derived from material parameters; however, it can be used to adjust model damping to observed damping behavior.</div>
+<div class="line"><span class="math notranslate nohighlight">\(\LU{c}{{\mathbf{D}}} \in \Rcal^{6 \times 6}\,\)</span> [SI:Nsm<span class="math notranslate nohighlight">\(^2\)</span>, Nsm and Ns (mixed)] sectional linear damping matrix related to <span class="math notranslate nohighlight">\(\vp{\LU{c}{{\mathbf{n}}}}{\LU{c}{{\mathbf{m}}}} = \LU{c}{{\mathbf{D}}} \vp{\LU{c}{\tepsDot}}{\LU{c}{\tkappaDot}}\)</span>; note that this damping models is highly simplified and usually, it cannot be derived from material parameters; however, it can be used to adjust model damping to observed damping behavior. Set with list of lists or numpy array.</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>inertia</strong> [type = Matrix3D, default = [[0,0,0], [0,0,0], [0,0,0]]]:</div>
-<div class="line"><span class="math notranslate nohighlight">\(\LU{c}{{\mathbf{J}}} \in \Rcal^{3 \times 3}\,\)</span> [SI:kg<span class="math notranslate nohighlight">\(\,\)</span>m<span class="math notranslate nohighlight">\(^2\)</span>] sectional inertia for shear-deformable beams.</div>
+<div class="line"><span class="math notranslate nohighlight">\(\LU{c}{{\mathbf{J}}} \in \Rcal^{3 \times 3}\,\)</span> [SI:kg<span class="math notranslate nohighlight">\(\,\)</span>m<span class="math notranslate nohighlight">\(^2\)</span>] sectional inertia for shear-deformable beams. Set with list of lists or numpy array.</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -138,7 +138,7 @@
 </li>
 <li><div class="line-block">
 <div class="line"><strong>stiffnessMatrix</strong> [type = Matrix6D, default = np.zeros((6,6))]:</div>
-<div class="line"><span class="math notranslate nohighlight">\(\LU{c}{{\mathbf{C}}} \in \Rcal^{6 \times 6}\,\)</span> [SI:Nm<span class="math notranslate nohighlight">\(^2\)</span>, Nm and N (mixed)] sectional stiffness matrix related to <span class="math notranslate nohighlight">\(\vp{\LU{c}{{\mathbf{n}}}}{\LU{c}{{\mathbf{m}}}} = \LU{c}{{\mathbf{C}}} \vp{\LU{c}{\teps}}{\LU{c}{\tkappa}}\)</span> with sectional normal force <span class="math notranslate nohighlight">\(\LU{c}{{\mathbf{n}}}\)</span>, torque <span class="math notranslate nohighlight">\(\LU{c}{{\mathbf{m}}}\)</span>, strain <span class="math notranslate nohighlight">\(\LU{c}{\teps}\)</span> and curvature <span class="math notranslate nohighlight">\(\LU{c}{\tkappa}\)</span>, all quantities expressed in the cross section frame <span class="math notranslate nohighlight">\(c\)</span>.</div>
+<div class="line"><span class="math notranslate nohighlight">\(\LU{c}{{\mathbf{C}}} \in \Rcal^{6 \times 6}\,\)</span> [SI:Nm<span class="math notranslate nohighlight">\(^2\)</span>, Nm and N (mixed)] sectional stiffness matrix related to <span class="math notranslate nohighlight">\(\vp{\LU{c}{{\mathbf{n}}}}{\LU{c}{{\mathbf{m}}}} = \LU{c}{{\mathbf{C}}} \vp{\LU{c}{\teps}}{\LU{c}{\tkappa}}\)</span> with sectional normal force <span class="math notranslate nohighlight">\(\LU{c}{{\mathbf{n}}}\)</span>, torque <span class="math notranslate nohighlight">\(\LU{c}{{\mathbf{m}}}\)</span>, strain <span class="math notranslate nohighlight">\(\LU{c}{\teps}\)</span> and curvature <span class="math notranslate nohighlight">\(\LU{c}{\tkappa}\)</span>, all quantities expressed in the cross section frame <span class="math notranslate nohighlight">\(c\)</span>. Set with list of lists or numpy array.</div>
 </div>
 </li>
 </ul>

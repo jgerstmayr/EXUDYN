@@ -9,8 +9,8 @@ A connector for additing forces due to gravitational fields beween two bodies, w
 
 \ **Additional information for ObjectConnectorGravity**\ :
 
-* | The Object has the following types = \ ``Connector``\ 
-* | Requested marker type = \ ``Position``\ 
+* | This \ ``Object``\  has/provides the following types = \ ``Connector``\ 
+* | Requested \ ``Marker``\  type = \ ``Position``\ 
 * | \ **Short name**\  for Python = \ ``ConnectorGravity``\ 
 * | \ **Short name**\  for Python visualization object = \ ``VConnectorGravity``\ 
 
@@ -213,7 +213,12 @@ MINI EXAMPLE for ObjectConnectorGravity
    #expect y=x after one period of orbiting (got: 100000.00000000479)
    exudynTestGlobals.testResult = mbs.GetNodeOutput(node1, exu.OutputVariableType.Position)[1]/100000
 
+Relevant Examples and TestModels with weblink:
 
-\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+    \ `connectorGravityTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/connectorGravityTest.py>`_\  (TestModels/)
+
+
+
+\ **The web version may not be complete. For details, consider also the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

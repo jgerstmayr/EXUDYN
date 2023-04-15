@@ -9,8 +9,8 @@ A 2D geometrically exact beam finite element, currently using 2 nodes of type No
 
 \ **Additional information for ObjectBeamGeometricallyExact2D**\ :
 
-* | The Object has the following types = \ ``Body``\ , \ ``MultiNoded``\ 
-* | Requested node type = \ ``Position2D``\  + \ ``Orientation2D``\  + \ ``Position``\  + \ ``Orientation``\ 
+* | This \ ``Object``\  has/provides the following types = \ ``Body``\ , \ ``MultiNoded``\ 
+* | Requested \ ``Node``\  type = \ ``Position2D``\  + \ ``Orientation2D``\  + \ ``Position``\  + \ ``Orientation``\ 
 * | \ **Short name**\  for Python = \ ``Beam2D``\ 
 * | \ **Short name**\  for Python visualization object = \ ``VBeam2D``\ 
 
@@ -89,7 +89,12 @@ See paper of Simo and Vu-Quoc (1986).
 Detailed description coming later.
 
 
+Relevant Examples and TestModels with weblink:
 
-\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+    \ `ANCFBeamEigTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamEigTest.py>`_\  (TestModels/), \ `geometricallyExactBeam2Dtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geometricallyExactBeam2Dtest.py>`_\  (TestModels/)
+
+
+
+\ **The web version may not be complete. For details, consider also the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

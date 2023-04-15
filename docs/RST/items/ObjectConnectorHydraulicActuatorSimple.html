@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ObjectConnectorHydraulicActuatorSimple &mdash; Exudyn1.6.31.dev1 1.6.31.dev1 documentation</title>
+  <title>ObjectConnectorHydraulicActuatorSimple &mdash; Exudyn1.6.57.dev1 1.6.57.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -39,7 +39,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.31.dev1
+            Exudyn1.6.57.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -111,7 +111,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.31.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.57.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -137,15 +137,15 @@
 <p><strong>Additional information for ObjectConnectorHydraulicActuatorSimple</strong>:</p>
 <ul>
 <li><div class="line-block">
-<div class="line">The Object has the following types = <code class="docutils literal notranslate"><span class="pre">Connector</span></code></div>
+<div class="line">This <code class="docutils literal notranslate"><span class="pre">Object</span></code> has/provides the following types = <code class="docutils literal notranslate"><span class="pre">Connector</span></code></div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line">Requested marker type = <code class="docutils literal notranslate"><span class="pre">Position</span></code></div>
+<div class="line">Requested <code class="docutils literal notranslate"><span class="pre">Marker</span></code> type = <code class="docutils literal notranslate"><span class="pre">Position</span></code></div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line">Requested node type: read detailed information of item</div>
+<div class="line">Requested <code class="docutils literal notranslate"><span class="pre">Node</span></code> type: read detailed information of item</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -510,7 +510,7 @@ If <code class="docutils literal notranslate"><span class="pre">activeConnector<
 The <a class="reference internal" href="../Abbreviations.html#ode1"><span class="std std-ref">ODE1</span></a> for pressures follows for the the case of laminar flow, based on system and tank pressure,
 valve positions as well as the actuator velocity and position (only for change of volume).</p>
 <p>The distance between the two marker points, which are usually the bushings or clevis mounts of the hydraulic cylinder, is
-denoted as <span class="math notranslate nohighlight">\(L\)</span>. The stroke length <span class="math notranslate nohighlight">\(s in [0, L_s]\)</span> is defined as</p>
+denoted as <span class="math notranslate nohighlight">\(L\)</span>. The stroke length <span class="math notranslate nohighlight">\(s \in [0, L_s]\)</span> is defined as</p>
 <div class="math notranslate nohighlight">
 \[s = L - L_o\]</div>
 <p>such that at zero stroke, the actuator length is <span class="math notranslate nohighlight">\(L_o\)</span>. The stroke velocity (positive value means extension) reads</p>
@@ -541,7 +541,11 @@ thus, in the implementation we use <span class="math notranslate nohighlight">\(
 \[\dot p_1 = \frac{K_{oil}}{V_{1,cur}} \left(  A_1 \cdot \dot s + A_{v1} \cdot Q_n \cdot \mathrm{sqrts}(p_s - p_1)  \right)  \quad \mathrm{if} \quad \mathrm A_{v1} \ge 0\]</div>
 <div class="math notranslate nohighlight">
 \[\dot p_1 = \frac{K_{oil}}{V_{1,cur}} \left(  A_1 \cdot \dot s + A_{v1} \cdot Q_n \cdot \mathrm{sqrts}(p_1 - p_t)  \right)  \quad \mathrm{if} \quad \mathrm A_{v1} &lt; 0\]</div>
-<p><strong>The web version may not be complete. For details, always consider the Exudyn PDF documentation</strong> : <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf">theDoc.pdf</a></p>
+<p>Relevant Examples and TestModels with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/HydraulicActuator2Arms.py">HydraulicActuator2Arms.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/hydraulicActuatorSimpleTest.py">hydraulicActuatorSimpleTest.py</a> (TestModels/)</p>
+</div></blockquote>
+<p><strong>The web version may not be complete. For details, consider also the Exudyn PDF documentation</strong> : <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf">theDoc.pdf</a></p>
 </section>
 </section>
 

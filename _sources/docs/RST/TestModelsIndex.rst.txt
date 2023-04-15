@@ -10,6 +10,7 @@ This section includes all TestModels for Exudyn.They can also be found and downl
 .. toctree::
    :maxdepth: 2
     
+   TestModels/ANCFBeamTest
    TestModels/ANCFcontactCircleTest
    TestModels/ANCFcontactFrictionTest
    TestModels/ANCFgeneralContactCircle
@@ -37,6 +38,7 @@ This section includes all TestModels for Exudyn.They can also be found and downl
    TestModels/genericODE2test
    TestModels/geneticOptimizationTest
    TestModels/geometricallyExactBeam2Dtest
+   TestModels/geometricallyExactBeamTest
    TestModels/heavyTop
    TestModels/hydraulicActuatorSimpleTest
    TestModels/kinematicTreeAndMBStest

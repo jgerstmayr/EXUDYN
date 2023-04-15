@@ -59,7 +59,7 @@ You can view and download this file on Github: `distanceSensor.py <https://githu
    gContact.verboseMode = 1
    gContact.SetFrictionPairings(0*np.eye(1))
    noc = 8
-   gContact.SetSearchTreeCellSize(numberOfCells=[noc,noc,noc]) #does not work with 16!
+   gContact.SetSearchTreeCellSize(numberOfCells=[noc,noc,noc])
    
    rRot = 0.2 #rotating table radius
    #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

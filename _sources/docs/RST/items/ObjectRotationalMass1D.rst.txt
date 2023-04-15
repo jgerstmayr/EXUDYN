@@ -9,8 +9,8 @@ A 1D rotational inertia (mass) which is attached to Node1D.
 
 \ **Additional information for ObjectRotationalMass1D**\ :
 
-* | The Object has the following types = \ ``Body``\ , \ ``SingleNoded``\ 
-* | Requested node type = \ ``GenericODE2``\ 
+* | This \ ``Object``\  has/provides the following types = \ ``Body``\ , \ ``SingleNoded``\ 
+* | Requested \ ``Node``\  type = \ ``GenericODE2``\ 
 * | \ **Short name**\  for Python = \ ``Rotor1D``\ 
 * | \ **Short name**\  for Python visualization object = \ ``VRotor1D``\ 
 
@@ -167,7 +167,12 @@ MINI EXAMPLE for ObjectRotationalMass1D
    exudynTestGlobals.testResult = mbs.GetObjectOutputBody(rotor, exu.OutputVariableType.Rotation, [0,0,0])
    #final z-angle of rotor shall be 2
 
+Relevant Examples and TestModels with weblink:
 
-\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+    \ `distanceSensor.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/distanceSensor.py>`_\  (TestModels/), \ `coordinateSpringDamperExt.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/coordinateSpringDamperExt.py>`_\  (TestModels/), \ `driveTrainTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/driveTrainTest.py>`_\  (TestModels/)
+
+
+
+\ **The web version may not be complete. For details, consider also the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

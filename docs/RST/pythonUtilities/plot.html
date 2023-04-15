@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Module: plot &mdash; Exudyn1.6.31.dev1 1.6.31.dev1 documentation</title>
+  <title>Module: plot &mdash; Exudyn1.6.57.dev1 1.6.57.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -39,7 +39,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.31.dev1
+            Exudyn1.6.57.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -117,7 +117,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.31.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.57.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -258,25 +258,25 @@
 </ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#assume to have some position-based nodes 0 and 1:</span>
 <span class="n">s0</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorNode</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">fileName</span><span class="o">=</span><span class="s1">&#39;s0.txt&#39;</span><span class="p">,</span>
-<span class="n">outputVariableType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Position</span><span class="p">))</span>
+                            <span class="n">outputVariableType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Position</span><span class="p">))</span>
 <span class="n">s1</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorNode</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">fileName</span><span class="o">=</span><span class="s1">&#39;s1.txt&#39;</span><span class="p">,</span>
-<span class="n">outputVariableType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Position</span><span class="p">))</span>
+                            <span class="n">outputVariableType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Position</span><span class="p">))</span>
 <span class="nf">PlotSensor</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">s0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="c1">#plot x-coordinate</span>
 <span class="c1">#plot x for s0 and z for s1:</span>
 <span class="nf">PlotSensor</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sensorNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">s0</span><span class="p">,</span><span class="n">s1</span><span class="p">],</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="n">yLabel</span><span class="o">=</span><span class="s1">&#39;this is the position in meter&#39;</span><span class="p">)</span>
 <span class="nf">PlotSensor</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sensorNumbers</span><span class="o">=</span><span class="n">s0</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="n">plot</span><span class="o">.</span><span class="n">componentNorm</span><span class="p">)</span> <span class="c1">#norm of position</span>
 <span class="nf">PlotSensor</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sensorNumbers</span><span class="o">=</span><span class="n">s0</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="n">factors</span><span class="o">=</span><span class="mf">1000.</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Answers to the big questions&#39;</span><span class="p">)</span>
 <span class="nf">PlotSensor</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sensorNumbers</span><span class="o">=</span><span class="n">s0</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span>
-<span class="n">yLabel</span><span class="o">=</span><span class="s1">&#39;Coordantes with offset 1</span><span class="se">\n</span><span class="s1">and scaled with $</span><span class="se">\\</span><span class="s1">frac</span><span class="si">{1}{1000}</span><span class="s1">$&#39;</span><span class="p">,</span>
-<span class="n">factors</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">offsets</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">fontSize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">closeAll</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+           <span class="n">yLabel</span><span class="o">=</span><span class="s1">&#39;Coordantes with offset 1</span><span class="se">\n</span><span class="s1">and scaled with $</span><span class="se">\\</span><span class="s1">frac</span><span class="si">{1}{1000}</span><span class="s1">$&#39;</span><span class="p">,</span>
+           <span class="n">factors</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">offsets</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">fontSize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">closeAll</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="c1">#assume to have body sensor sBody, marker sensor sMarker:</span>
 <span class="nf">PlotSensor</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sensorNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">sBody</span><span class="p">]</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="p">[</span><span class="n">sMarker</span><span class="p">]</span><span class="o">*</span><span class="mi">3</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span>
-<span class="n">colorCodeOffset</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">newFigure</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fontSize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-<span class="n">yLabel</span><span class="o">=</span><span class="s1">&#39;Rotation $</span><span class="se">\\</span><span class="s1">alpha, </span><span class="se">\\</span><span class="s1">beta, </span><span class="se">\\</span><span class="s1">gamma$ and</span><span class="se">\n</span><span class="s1"> Position $x,y,z$&#39;</span><span class="p">,</span>
-<span class="n">title</span><span class="o">=</span><span class="s1">&#39;compare marker and body sensor&#39;</span><span class="p">)</span>
+           <span class="n">colorCodeOffset</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">newFigure</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fontSize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+           <span class="n">yLabel</span><span class="o">=</span><span class="s1">&#39;Rotation $</span><span class="se">\\</span><span class="s1">alpha, </span><span class="se">\\</span><span class="s1">beta, </span><span class="se">\\</span><span class="s1">gamma$ and</span><span class="se">\n</span><span class="s1"> Position $x,y,z$&#39;</span><span class="p">,</span>
+           <span class="n">title</span><span class="o">=</span><span class="s1">&#39;compare marker and body sensor&#39;</span><span class="p">)</span>
 <span class="c1">#assume having file plotSensorNode.txt:</span>
 <span class="nf">PlotSensor</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sensorNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">s0</span><span class="p">]</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span> <span class="p">[</span><span class="n">filedir</span><span class="o">+</span><span class="s1">&#39;plotSensorNode.txt&#39;</span><span class="p">]</span><span class="o">*</span><span class="mi">3</span><span class="p">,</span>
-<span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
+           <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
 <span class="c1">#plot y over x:</span>
 <span class="nf">PlotSensor</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sensorNumbers</span><span class="o">=</span><span class="n">s0</span><span class="p">,</span> <span class="n">componentsX</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">xLabel</span><span class="o">=</span><span class="s1">&#39;x-Position&#39;</span><span class="p">,</span> <span class="n">yLabel</span><span class="o">=</span><span class="s1">&#39;y-Position&#39;</span><span class="p">)</span>
 <span class="c1">#for further examples, see also Examples/plotSensorExamples.py</span>

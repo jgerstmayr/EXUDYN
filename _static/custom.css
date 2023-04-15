@@ -63,5 +63,40 @@ th {
     padding: 0px 0px 0px 0px;
 }
 
+.textred {
+  color: red;
+}
+
+.textgreen {
+  color: green;
+}
+
+.textorange {
+  color: orange;
+}
+
+.textblue {
+  color: blue;
+}
+
+.boldred {
+  color: red;
+  font-weight:bold;
+}
+
+.boldgreen {
+  color: green;
+  font-weight:bold;
+}
+
+.boldorange {
+  color: orange;
+  font-weight:bold;
+}
+
+.boldblue {
+  color: blue;
+  font-weight:bold;
+}
 
 

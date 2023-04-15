@@ -122,26 +122,26 @@ CLASS InteractiveDialog (in module interactive)
   #               'variable': according variable in mbs.variables, which is set to current slider value
   #example:
   dialogItems = [{'type':'label', 'text':'Nonlinear oscillation simulator', 'grid':(0,0,2), 'options':['L']},
-  {'type':'button', 'text':'test button','callFunction':ButtonCall, 'grid':(1,0,2)},
-  {'type':'radio', 'textValueList':[('linear',0),('nonlinear',1)], 'value':0, 'variable':'mode', 'grid': [(2,0),(2,1)]},
-  {'type':'label', 'text':'excitation frequency (Hz):', 'grid':(5,0)},
-  {'type':'slider', 'range':(3*f1/800, 3*f1), 'value':omegaInit/(2*pi), 'steps':800, 'variable':'frequency', 'grid':(5,1)},
-  {'type':'label', 'text':'damping:', 'grid':(6,0)},
-  {'type':'slider', 'range': (0, 40), 'value':damper, 'steps':800, 'variable':'damping', 'grid':(6,1)},
-  {'type':'label', 'text':'stiffness:', 'grid':(7,0)},
-  {'type':'slider', 'range':(0, 10000), 'value':spring, 'steps':800, 'variable':'stiffness', 'grid':(7,1)}]
+                 {'type':'button', 'text':'test button','callFunction':ButtonCall, 'grid':(1,0,2)},
+                 {'type':'radio', 'textValueList':[('linear',0),('nonlinear',1)], 'value':0, 'variable':'mode', 'grid': [(2,0),(2,1)]},
+                 {'type':'label', 'text':'excitation frequency (Hz):', 'grid':(5,0)},
+                 {'type':'slider', 'range':(3*f1/800, 3*f1), 'value':omegaInit/(2*pi), 'steps':800, 'variable':'frequency', 'grid':(5,1)},
+                 {'type':'label', 'text':'damping:', 'grid':(6,0)},
+                 {'type':'slider', 'range': (0, 40), 'value':damper, 'steps':800, 'variable':'damping', 'grid':(6,1)},
+                 {'type':'label', 'text':'stiffness:', 'grid':(7,0)},
+                 {'type':'slider', 'range':(0, 10000), 'value':spring, 'steps':800, 'variable':'stiffness', 'grid':(7,1)}]
   #plots structure:
   plots={'nPoints':500,              #number of stored points in subplots (higher means slower drawing)
-  'subplots':(2,1),           #(rows, columns) arrangement of subplots (for every sensor)
-  #sensors defines per subplot (sensor, coordinate), xlabel and ylabel; if coordinate=0, time is used:
-  'sensors':[[(sensPos,0),(sensPos,1),'time','mass position'],
-  [(sensFreq,0),(sensFreq,1),'time','excitation frequency']],
-  'limitsX':[(0,2),(-5,5)],   #x-range per subplot; if not provided, autoscale is applied
-  'limitsY':[(-5,5),(0,10),], #y-range per subplot; if not provided, autoscale is applied
-  'fontSize':16,              #custom font size for figure
-  'subplots':False,           #if not specified, subplots are created; if False, all plots go into one window
-  'lineStyles':['r-','b-'],    #if not specified, uses default '-b', otherwise define list of line styles [string for matplotlib.pyplot.plot] per sensor
-  'sizeInches':(12,12)}       #specific x and y size of figure in inches (using 100 dpi)
+         'subplots':(2,1),           #(rows, columns) arrangement of subplots (for every sensor)
+         #sensors defines per subplot (sensor, coordinate), xlabel and ylabel; if coordinate=0, time is used:
+         'sensors':[[(sensPos,0),(sensPos,1),'time','mass position'],
+                    [(sensFreq,0),(sensFreq,1),'time','excitation frequency']],
+         'limitsX':[(0,2),(-5,5)],   #x-range per subplot; if not provided, autoscale is applied
+         'limitsY':[(-5,5),(0,10),], #y-range per subplot; if not provided, autoscale is applied
+         'fontSize':16,              #custom font size for figure
+         'subplots':False,           #if not specified, subplots are created; if False, all plots go into one window
+         'lineStyles':['r-','b-'],    #if not specified, uses default '-b', otherwise define list of line styles [string for matplotlib.pyplot.plot] per sensor
+         'sizeInches':(12,12)}       #specific x and y size of figure in inches (using 100 dpi)
 
 
 

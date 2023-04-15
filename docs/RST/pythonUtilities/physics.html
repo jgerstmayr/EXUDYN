@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Module: physics &mdash; Exudyn1.6.31.dev1 1.6.31.dev1 documentation</title>
+  <title>Module: physics &mdash; Exudyn1.6.57.dev1 1.6.57.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -39,7 +39,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.31.dev1
+            Exudyn1.6.57.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -114,7 +114,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.31.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.57.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -268,8 +268,8 @@ models and parameters; for rigid body inertia, see rigidBodyUtilities</p>
 </ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#assuming s0, s1, s2 being sensor numbers with StressLocal components</span>
 <span class="n">sUser</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorUserFunction</span><span class="p">(</span><span class="n">sensorNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">s0</span><span class="p">,</span><span class="n">s1</span><span class="p">,</span><span class="n">s2</span><span class="p">],</span>
-<span class="n">fileName</span><span class="o">=</span><span class="s1">&#39;solution/sensorMisesStress.txt&#39;</span><span class="p">,</span>
-<span class="n">sensorUserFunction</span><span class="o">=</span><span class="nf">UFvonMisesStress</span><span class="p">))</span>
+                                         <span class="n">fileName</span><span class="o">=</span><span class="s1">&#39;solution/sensorMisesStress.txt&#39;</span><span class="p">,</span>
+                                         <span class="n">sensorUserFunction</span><span class="o">=</span><span class="nf">UFvonMisesStress</span><span class="p">))</span>
 </pre></div>
 </div>
 </section>

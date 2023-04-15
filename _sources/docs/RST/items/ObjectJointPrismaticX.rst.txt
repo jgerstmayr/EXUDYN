@@ -9,8 +9,8 @@ A prismatic joint in 3D; constrains the relative rotation of two rigid body mark
 
 \ **Additional information for ObjectJointPrismaticX**\ :
 
-* | The Object has the following types = \ ``Connector``\ , \ ``Constraint``\ 
-* | Requested marker type = \ ``Position``\  + \ ``Orientation``\ 
+* | This \ ``Object``\  has/provides the following types = \ ``Connector``\ , \ ``Constraint``\ 
+* | Requested \ ``Marker``\  type = \ ``Position``\  + \ ``Orientation``\ 
 * | \ **Short name**\  for Python = \ ``PrismaticJointX``\ 
 * | \ **Short name**\  for Python visualization object = \ ``VPrismaticJointX``\ 
 
@@ -184,7 +184,12 @@ if \ ``activeConnector = False``\ ,
 
 
 
+Relevant Examples and TestModels with weblink:
 
-\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+    \ `revoluteJointPrismaticJointTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/revoluteJointPrismaticJointTest.py>`_\  (TestModels/)
+
+
+
+\ **The web version may not be complete. For details, consider also the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

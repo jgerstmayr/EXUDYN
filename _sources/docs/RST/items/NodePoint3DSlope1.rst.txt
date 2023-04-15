@@ -9,7 +9,7 @@ A 3D point/slope vector node for spatial Bernoulli-Euler ANCF (absolute nodal co
 
 \ **Additional information for NodePoint3DSlope1**\ :
 
-* | The Node has the following types = \ ``Position``\ 
+* | This \ ``Node``\  has/provides the following types = \ ``Position``\ 
 * | \ **Short name**\  for Python = \ ``Point3DS1``\ 
 * | \ **Short name**\  for Python visualization object = \ ``VPoint3DS1``\ 
 
@@ -48,12 +48,14 @@ DESCRIPTION of NodePoint3DSlope1
 
 \ **The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**\ :
 
-* | ``Position``\ : 
+* | ``Position``\ : \ :math:`\LU{0}{{\mathbf{p}}}\cConfig = [p_0,\, p_1,\, p_2]\cConfig\tp`\ 
   | global 3D position vector of node (=displacement+reference position)
-* | ``Displacement``\ : 
+* | ``Displacement``\ : \ :math:`\LU{0}{{\mathbf{u}}}\cConfig = [q_0,\, q_1,\, q_2]\cConfig\tp`\ 
   | global 3D displacement vector of node
-* | ``Velocity``\ : 
+* | ``Velocity``\ : \ :math:`\LU{0}{{\mathbf{a}}}\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2]\cConfig\tp`\ 
   | global 3D velocity vector of node
+* | ``Acceleration``\ : \ :math:`\LU{0}{{\mathbf{a}}}\cConfig = [\ddot q_0,\,\ddot q_1,\,\ddot q_2]\cConfig\tp`\ 
+  | global 3D acceleration vector of node
 * | ``Coordinates``\ : 
   | coordinates vector of node (3 displacement coordinates + 3 slope vector coordinates)
 * | ``Coordinates\_t``\ : 
@@ -64,6 +66,6 @@ DESCRIPTION of NodePoint3DSlope1
 
 
 
-\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+\ **The web version may not be complete. For details, consider also the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

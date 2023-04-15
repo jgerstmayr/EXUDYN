@@ -9,8 +9,8 @@ A system of \ :math:`n`\  \ :ref:`ODE1 <ODE1>`\ , having a system matrix, a rhs 
 
 \ **Additional information for ObjectGenericODE1**\ :
 
-* | The Object has the following types = \ ``MultiNoded``\ 
-* | Requested node type: read detailed information of item
+* | This \ ``Object``\  has/provides the following types = \ ``MultiNoded``\ 
+* | Requested \ ``Node``\  type: read detailed information of item
 
 
 The item \ **ObjectGenericODE1**\  with type = 'GenericODE1' has the following parameters:
@@ -177,7 +177,12 @@ MINI EXAMPLE for ObjectGenericODE1
    #check result at default integration time
    exudynTestGlobals.testResult = mbs.GetNodeOutput(nODE1, exu.OutputVariableType.Coordinates)[0]
 
+Relevant Examples and TestModels with weblink:
 
-\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+    \ `HydraulicsUserFunction.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/HydraulicsUserFunction.py>`_\  (Examples/), \ `lugreFrictionODE1.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/lugreFrictionODE1.py>`_\  (Examples/), \ `lugreFrictionTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/lugreFrictionTest.py>`_\  (Examples/), \ `solverExplicitODE1ODE2test.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/solverExplicitODE1ODE2test.py>`_\  (TestModels/)
+
+
+
+\ **The web version may not be complete. For details, consider also the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

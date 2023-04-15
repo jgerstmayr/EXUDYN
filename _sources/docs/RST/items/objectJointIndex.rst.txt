@@ -2,6 +2,8 @@
 Object (Joint)
 ==============
 
+A Joint is a special Object, Connector and Constraint, which is attached to position or rigid body markers. The joint results in special algebraic equations and requires implicit time integration. Joints represent special constraints, as described in multibody system dynamics literature.
+
 .. toctree::
    :maxdepth: 2
 

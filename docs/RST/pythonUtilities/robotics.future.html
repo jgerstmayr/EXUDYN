@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Module: robotics.future &mdash; Exudyn1.6.31.dev1 1.6.31.dev1 documentation</title>
+  <title>Module: robotics.future &mdash; Exudyn1.6.57.dev1 1.6.57.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -37,7 +37,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.31.dev1
+            Exudyn1.6.57.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -111,7 +111,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.31.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.57.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -177,7 +177,7 @@ and will be moved in other robotics libraries in future</p>
 </section>
 <section id="function-computeik3r">
 <span id="sec-future-computeik3r"></span><h2>Function: ComputeIK3R<a class="headerlink" href="#function-computeik3r" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/future.py#L86">ComputeIK3R</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/future.py#L85">ComputeIK3R</a>(<code class="docutils literal notranslate"><span class="pre">robotDic</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -186,15 +186,14 @@ and will be moved in other robotics libraries in future</p>
 </li>
 <li><div class="line-block">
 <div class="line"><em>input</em>:</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">robot</span></code>: robot structure</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">robotDic</span></code>: robot dictionary</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">HT</span></code>: desired position and orientation for the end effector as 4x4 homogeneous transformation matrix as list of lists or np.array</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><em>output</em>:</div>
 <div class="line">solutions, list of lists with posible joint angles [q1,q2,q3] (in radiant)</div>
-<div class="line">to achive the desired position and orientation (4 posible solutions,schoulder left/right, ellbow up/down )</div>
-<div class="line">left/down, left/up, right/up, right/down</div>
+<div class="line">to achive the desired position (4 posible solutions,schoulder left/right, ellbow up/down ) in following order: left/down, left/up, right/up, right/down</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -217,16 +216,16 @@ and will be moved in other robotics libraries in future</p>
 </section>
 <section id="function-computeikpuma560">
 <span id="sec-future-computeikpuma560"></span><h2>Function: ComputeIKPuma560<a class="headerlink" href="#function-computeikpuma560" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/future.py#L158">ComputeIKPuma560</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/future.py#L157">ComputeIKPuma560</a>(<code class="docutils literal notranslate"><span class="pre">robotDic</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">calculates the analytical inverse kinematics for Puma560 serial 6R robot manipulator</div>
+<div class="line">calculates the analytical inverse kinematics for Puma560 serial 6R robotDic manipulator</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><em>input</em>:</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">robot</span></code>: robot structure</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">robotDic</span></code>: robotDictionary</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">HT</span></code>: desired position and orientation for the end effector as 4x4 homogeneous transformation matrix as list of lists or np.array</div>
 </div>
 </li>
@@ -249,7 +248,7 @@ and will be moved in other robotics libraries in future</p>
 </li>
 <li><div class="line-block">
 <div class="line"><em>status</em>:</div>
-<div class="line">tested (compared with Robotcs, Vision and Control book of P. Corke</div>
+<div class="line">tested (compared with robotDiccs, Vision and Control book of P. Corke</div>
 </div>
 </li>
 </ul>
@@ -257,7 +256,7 @@ and will be moved in other robotics libraries in future</p>
 </section>
 <section id="function-computeikur">
 <span id="sec-future-computeikur"></span><h2>Function: ComputeIKUR<a class="headerlink" href="#function-computeikur" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/future.py#L283">ComputeIKUR</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HTdes</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/future.py#L282">ComputeIKUR</a>(<code class="docutils literal notranslate"><span class="pre">robotDic</span></code>, <code class="docutils literal notranslate"><span class="pre">HTdes</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -266,7 +265,7 @@ and will be moved in other robotics libraries in future</p>
 </li>
 <li><div class="line-block">
 <div class="line"><em>input</em>:</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">robot</span></code>: robot structure</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">robotDic</span></code>: robot dictionary</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">HT</span></code>: desired position and orientation for the end effector as 4x4 homogeneous transformation matrix as list of lists or np.array</div>
 </div>
 </li>

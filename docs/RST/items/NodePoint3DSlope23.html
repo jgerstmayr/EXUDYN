@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NodePoint3DSlope23 &mdash; Exudyn1.6.31.dev1 1.6.31.dev1 documentation</title>
+  <title>NodePoint3DSlope23 &mdash; Exudyn1.6.57.dev1 1.6.57.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -39,7 +39,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.31.dev1
+            Exudyn1.6.57.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -111,7 +111,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.31.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.57.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -137,7 +137,7 @@
 <p><strong>Additional information for NodePoint3DSlope23</strong>:</p>
 <ul>
 <li><div class="line-block">
-<div class="line">The Node has the following types = <code class="docutils literal notranslate"><span class="pre">Position</span></code>, <code class="docutils literal notranslate"><span class="pre">Orientation</span></code></div>
+<div class="line">This <code class="docutils literal notranslate"><span class="pre">Node</span></code> has/provides the following types = <code class="docutils literal notranslate"><span class="pre">Position</span></code>, <code class="docutils literal notranslate"><span class="pre">Orientation</span></code></div>
 </div>
 </li>
 <li><div class="line-block">
@@ -201,23 +201,28 @@
 <p><strong>The following output variables are available as OutputVariableType in sensors, Get…Output() and other functions</strong>:</p>
 <ul>
 <li><div class="line-block">
-<div class="line"><code class="docutils literal notranslate"><span class="pre">Position</span></code>:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Position</span></code>: <span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{p}}}\cConfig = \LU{0}{[p_0,\, p_1,\, p_2]}\cConfig\tp\)</span></div>
 <div class="line">global 3D position vector of node (=displacement+reference position)</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><code class="docutils literal notranslate"><span class="pre">Displacement</span></code>:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Displacement</span></code>: <span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{u}}}\cConfig = \LU{0}{[q_0,\, q_1,\, q_2]}\cConfig\tp\)</span></div>
 <div class="line">global 3D displacement vector of node</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><code class="docutils literal notranslate"><span class="pre">Velocity</span></code>:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Velocity</span></code>: <span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{a}}}\cConfig = \LU{0}{[\dot q_0,\,\dot q_1,\,\dot q_2]}\cConfig\tp\)</span></div>
 <div class="line">global 3D velocity vector of node</div>
 </div>
 </li>
 <li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Acceleration</span></code>: <span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{a}}}\cConfig = \LU{0}{[\ddot q_0,\,\ddot q_1,\,\ddot q_2]}\cConfig\tp\)</span></div>
+<div class="line">global 3D acceleration vector of node</div>
+</div>
+</li>
+<li><div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">Coordinates</span></code>:</div>
-<div class="line">coordinates vector of node (3 displacement coordinates + 2 <span class="math notranslate nohighlight">\(\times\)</span> 3 slope vector coordinates)</div>
+<div class="line">coordinate vector of node (relative to reference configuration)</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -230,8 +235,32 @@
 <div class="line">acceleration coordinates vector of node</div>
 </div>
 </li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">RotationMatrix</span></code>: <span class="math notranslate nohighlight">\([A_{00},\,A_{01},\,A_{02},\,A_{10},\,\ldots,\,A_{21},\,A_{22}]\cConfig\tp\)</span></div>
+<div class="line">vector with 9 components of the rotation matrix <span class="math notranslate nohighlight">\(\LU{0b}{\Rot}\cConfig\)</span> in row-major format, in any configuration; the rotation matrix transforms local (<span class="math notranslate nohighlight">\(b\)</span>) to global (0) coordinates</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Rotation</span></code>: <span class="math notranslate nohighlight">\([\varphi_0,\,\varphi_1,\,\varphi_2]\tp\cConfig\)</span></div>
+<div class="line">vector with 3 components of the Euler / Tait-Bryan angles in xyz-sequence</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">AngularVelocity</span></code>: <span class="math notranslate nohighlight">\(\LU{0}{\tomega}\cConfig = \LU{0}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp\)</span></div>
+<div class="line">global 3D angular velocity vector of node</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">AngularVelocityLocal</span></code>: <span class="math notranslate nohighlight">\(\LU{b}{\tomega}\cConfig = \LU{b}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp\)</span></div>
+<div class="line">local (body-fixed)  3D angular velocity vector of node</div>
+</div>
+</li>
 </ul>
-<p><strong>The web version may not be complete. For details, always consider the Exudyn PDF documentation</strong> : <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf">theDoc.pdf</a></p>
+<p>Relevant Examples and TestModels with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamEigTest.py">ANCFBeamEigTest.py</a> (TestModels/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamTest.py">ANCFBeamTest.py</a> (TestModels/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geometricallyExactBeamTest.py">geometricallyExactBeamTest.py</a> (TestModels/)</p>
+</div></blockquote>
+<p><strong>The web version may not be complete. For details, consider also the Exudyn PDF documentation</strong> : <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf">theDoc.pdf</a></p>
 </section>
 </section>
 

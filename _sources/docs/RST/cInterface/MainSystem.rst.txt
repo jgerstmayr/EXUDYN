@@ -6,7 +6,7 @@ MainSystem
 
 
 
-This is the structure which defines a (multibody) system. In C++, there is a MainSystem (links to Python) and a System (computational part). For that reason, the name is MainSystem on the Python side, but it is often just called 'system'. For compatibility, it is recommended to denote the variable holding this system as mbs, the multibody dynamics system. It can be created, visualized and computed. Use the following functions for system manipulation.
+This is the class which defines a (multibody) system. The MainSystem shall only be created by \ ``SC.AddSystem()``\ , not with \ ``exu.MainSystem()``\ , as the latter one would not be linked to a SystemContainer. In C++, there is a MainSystem (the part which links to Python) and a System (computational part). For that reason, the name is MainSystem on the Python side, but it is often just called 'system'. For compatibility, it is recommended to denote the variable holding this system as mbs, the multibody dynamics system. It can be created, visualized and computed. Use the following functions for system manipulation.
 
 .. code-block:: python
    

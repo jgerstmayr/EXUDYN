@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Module: robotics.utilities &mdash; Exudyn1.6.31.dev1 1.6.31.dev1 documentation</title>
+  <title>Module: robotics.utilities &mdash; Exudyn1.6.57.dev1 1.6.57.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -37,7 +37,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.31.dev1
+            Exudyn1.6.57.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -82,7 +82,10 @@
 <li class="toctree-l2"><a class="reference internal" href="robotics.mobile.html">Module: robotics.mobile</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robotics.motion.html">Module: robotics.motion</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robotics.special.html">Module: robotics.special</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Module: robotics.utilities</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Module: robotics.utilities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#function-addlidar">Function: AddLidar</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="signalProcessing.html">Module: signalProcessing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="solver.html">Module: solver</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utilities.html">Module: utilities</a></li>
@@ -105,7 +108,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.31.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.57.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -128,8 +131,55 @@
 <span id="sec-module-robotics-utilities"></span><h1>Module: robotics.utilities<a class="headerlink" href="#module-robotics-utilities" title="Permalink to this heading"></a></h1>
 <p>The utilities contains general helper functions for the robotics module</p>
 <ul class="simple">
-<li><p>Date:      2021-12-02</p></li>
+<li><p>Date:      2023-04-15</p></li>
 </ul>
+<section id="function-addlidar">
+<span id="sec-utilities-addlidar"></span><h2>Function: AddLidar<a class="headerlink" href="#function-addlidar" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/utilities.py#L40">AddLidar</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">generalContactIndex</span></code>, <code class="docutils literal notranslate"><span class="pre">positionOrMarker</span></code>, <code class="docutils literal notranslate"><span class="pre">minDistance</span> <span class="pre">=</span> <span class="pre">-1e7</span></code>, <code class="docutils literal notranslate"><span class="pre">maxDistance</span> <span class="pre">=</span> <span class="pre">1e7</span></code>, <code class="docutils literal notranslate"><span class="pre">cylinderRadius</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">lineLength</span> <span class="pre">=</span> <span class="pre">1</span></code>, <code class="docutils literal notranslate"><span class="pre">numberOfSensors</span> <span class="pre">=</span> <span class="pre">100</span></code>, <code class="docutils literal notranslate"><span class="pre">angleStart</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">angleEnd</span> <span class="pre">=</span> <span class="pre">2*np.pi</span></code>, <code class="docutils literal notranslate"><span class="pre">inclination</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">rotation</span> <span class="pre">=</span> <span class="pre">np.eye(3)</span></code>, <code class="docutils literal notranslate"><span class="pre">selectedTypeIndex</span> <span class="pre">=</span> <span class="pre">exudyn.ContactTypeIndex.IndexEndOfEnumList</span></code>, <code class="docutils literal notranslate"><span class="pre">storeInternal</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">fileName</span> <span class="pre">=</span> <span class="pre">''</span></code>, <code class="docutils literal notranslate"><span class="pre">measureVelocity</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">addGraphicsObject</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">drawDisplaced</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[1.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0,</span> <span class="pre">1.0]</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">Function to add many distance sensors to represent Lidar; sensors can be either placed on absolute position or attached to rigid body marker</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">generalContactIndex</span></code>: the number of the GeneralContact object in mbs; the index of the GeneralContact object which has been added with last AddGeneralContact(…) command is generalContactIndex=mbs.NumberOfGeneralContacts()-1</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">positionOrMarker</span></code>: either a 3D position as list or np.array, or a MarkerIndex with according rigid body marker</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">minDistance</span></code>: the minimum distance which is accepted; smaller distance will be ignored</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">maxDistance</span></code>: the maximum distance which is accepted; items being at maxDistance or futher are ignored; if no items are found, the function returns maxDistance</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">cylinderRadius</span></code>: in case of spheres (selectedTypeIndex=ContactTypeIndex.IndexSpheresMarkerBased), a cylinder can be used which measures the shortest distance at a certain radius (geometrically interpreted as cylinder)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">lineLength</span></code>: length of line to be drawn; note that this length is drawn from obstacle towards sensor if drawDisplaced=True, but the length is always constant</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">numberOfSensors</span></code>: number of sensors arranged between angleStart and angleEnd; higher numbers give finer resolution (but requires more CPU time)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">angleStart</span></code>: starting rangle of angles to be used (in radiant)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">angleEnd</span></code>: end of range for angle to be used (in radiant)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">inclination</span></code>: angle of inclination (radiant), positive values showing upwards if placed</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">rotation</span></code>: a 3x3 rotation matrix (numpy); the sensor is placed in the X-Y plane of the marker where it is added to; however, you can use this rotation matrix to change the orientation</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">selectedTypeIndex</span></code>: either this type has default value, meaning that all items in GeneralContact are measured, or there is a specific type index, which is the only type that is considered during measurement</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">storeInternal</span></code>: like with any SensorUserFunction, setting to True stores sensor data internally</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">fileName</span></code>: if defined, recorded data of SensorUserFunction is written to specified file</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">measureVelocity</span></code>: if True, the sensor measures additionally the velocity (component 0=distance, component 1=velocity); velocity is the velocity in direction ‘dirSensor’ and does not account for changes in geometry, thus it may be different from the time derivative of the distance!</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">addGraphicsObject</span></code>: if True, the distance sensor is also visualized graphically in a simplified manner with a red line having the length of dirSensor; NOTE that updates are ONLY performed during computation, not in visualization; for this reason, solutionSettings.sensorsWritePeriod should be accordingly small</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">drawDisplaced</span></code>: if True, the red line is drawn backwards such that it moves along the measured surface; if False, the beam is fixed to marker or position</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">color</span></code>: optional color for ‘laser beam’ to be drawn</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">creates sensor and returns list of sensor numbers for all laser sensors</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>notes</em>:</div>
+<div class="line">use generalContactIndex = DistanceSensorSetupGeometry(…) before to create GeneralContact module containing geometry</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/laserScannerTest.py">laserScannerTest.py</a> (TM)</p>
+</div></blockquote>
+</section>
 </section>
 
 
