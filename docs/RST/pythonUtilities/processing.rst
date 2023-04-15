@@ -31,14 +31,13 @@ Function: GetVersionPlatformString
 
 Function: ProcessParameterList
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ProcessParameterList <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L130>`__\ (\ ``parameterFunction``\ , \ ``parameterList``\ , \ ``addComputationIndex``\ , \ ``useMultiProcessing``\ , \ ``clusterHostNames = []``\ , \ ``**kwargs``\ )
+`ProcessParameterList <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L143>`__\ (\ ``parameterFunction``\ , \ ``parameterList``\ , \ ``useMultiProcessing``\ , \ ``clusterHostNames = []``\ , \ ``**kwargs``\ )
 
 - | \ *function description*\ :
   | processes parameterFunction for given parameters in parameterList, see ParameterVariation
 - | \ *input*\ :
   | \ ``parameterFunction``\ : function, which takes the form parameterFunction(parameterDict) and which returns any values that can be stored in a list (e.g., a floating point number)
-  | \ ``parameterList``\ : list of parameter sets (as dictionaries) which are fed into the parameter variation, e.g., ['mass': 10, 'mass':20, ...]
-  | \ ``addComputationIndex``\ : if True, key 'computationIndex' is added to every parameterDict in the call to parameterFunction(), which allows to generate independent output files for every parameter, etc.
+  | \ ``parameterList``\ : list of parameter sets (as dictionaries) which are fed into the parameter variation, see example
   | \ ``useMultiProcessing``\ : if True, the multiprocessing lib is used for parallelized computation; WARNING: be aware that the function does not check if your function runs independently; DO NOT use GRAPHICS and DO NOT write to same output files, etc.!
   | \ ``numberOfThreads``\ : default: same as number of cpus (threads); used for multiprocessing lib;
   | \ ``resultsFile``\ : if provided, output is immediately written to resultsFile during processing
@@ -48,6 +47,23 @@ Function: ProcessParameterList
   | returns values containing the results according to parameterList
 - | \ *notes*\ :
   | options are passed from Parametervariation
+- | \ *example*\ :
+
+.. code-block:: python
+
+  def PF(parameterSet):
+      #in reality, value will be result of a complex exudyn simulation:
+      value = sin(parameterSet['mass']) * parameterSet['stiffness']
+      return value
+  values=ProcessParameterList(parameterFunction=PF,
+                              parameterList=[{'m':1, 's':100},
+                                            {'m':2, 's':100},
+                                            {'m':3, 's':100},
+                                            {'m':1, 's':200},
+                                            {'m':2, 's':250},
+                                            {'m':3, 's':300},
+                                            ], useMultiProcessing=False )
+
 
 
 ----
@@ -56,7 +72,7 @@ Function: ProcessParameterList
 
 Function: ParameterVariation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ParameterVariation <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L355>`__\ (\ ``parameterFunction``\ , \ ``parameters``\ , \ ``useLogSpace = False``\ , \ ``debugMode = False``\ , \ ``addComputationIndex = False``\ , \ ``useMultiProcessing = False``\ , \ ``showProgress = True``\ , \ ``parameterFunctionData = {}``\ , \ ``clusterHostNames = []``\ , \ ``numberOfThreads = None``\ , \ ``resultsFile = ''``\ , \ ``**kwargs``\ )
+`ParameterVariation <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L371>`__\ (\ ``parameterFunction``\ , \ ``parameters``\ , \ ``useLogSpace = False``\ , \ ``debugMode = False``\ , \ ``addComputationIndex = False``\ , \ ``useMultiProcessing = False``\ , \ ``showProgress = True``\ , \ ``parameterFunctionData = {}``\ , \ ``clusterHostNames = []``\ , \ ``numberOfThreads = None``\ , \ ``resultsFile = ''``\ , \ ``**kwargs``\ )
 
 - | \ *function description*\ :
   | calls successively the function parameterFunction(parameterDict) with variation of parameters in given range; parameterDict is a dictionary, containing the current values of parameters,
@@ -73,15 +89,18 @@ Function: ParameterVariation
   | \ ``numberOfThreads``\ : default(None): same as number of cpus (threads); used for multiprocessing lib;
   | \ ``parameterFunctionData``\ : dictionary containing additional data passed to the parameterFunction inside the parameters with dict key 'functionData'; use this e.g. for passing solver parameters or other settings
   | \ ``clusterHostNames``\ : list of hostnames, e.g. clusterHostNames=['123.124.125.126','123.124.125.127'] providing a list of strings with IP addresses or host names, see dispy documentation. If list is non-empty and useMultiProcessing==True and dispy is installed, cluster computation is used; NOTE that cluster computation speedup factors shown are not fully true, as they include a significant overhead; thus, only for computations which take longer than 1-5 seconds and for sufficient network bandwith, the speedup is roughly true
-  | \ ``useDispyWebMonitor``\ : if given in \*\*kwargs, a web browser is startet in case of cluster computation to manage the cluster during computation
+  | \ ``useDispyWebMonitor``\ : if given in \*\*kwargs, a web browser is started in case of cluster computation to manage the cluster during computation
 - | \ *output*\ :
-  | returns [parameterList, values], containing, e.g., parameterList='mass':[1,1,1,2,2,2,3,3,3], 'stiffness':[4,5,6, 4,5,6, 4,5,6] and the result values of the parameter variation accoring to the parameterList,
+  | returns [parameterList, values], containing, e.g., parameterList=\'mass':[1,1,1,2,2,2,3,3,3], 'stiffness':[4,5,6, 4,5,6, 4,5,6]\ and the result values of the parameter variation accoring to the parameterList,
   | values=[7,8,9 ,3,4,5, 6,7,8] (depends on solution of problem ..., can also contain tuples, etc.)
 - | \ *example*\ :
 
 .. code-block:: python
 
-  ParameterVariation(parameters={'mass':(1,10,10), 'stiffness':(1000,10000,10)}, parameterFunction=Test, useMultiProcessing=True)
+  if __name__ == '__main__':
+      ParameterVariation(parameterFunction=Test,
+                         parameters={'mass':(1,10,10), 'stiffness':(1000,10000,10)},
+                         useMultiProcessing=True)
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
@@ -95,7 +114,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: GeneticOptimization
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`GeneticOptimization <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L505>`__\ (\ ``objectiveFunction``\ , \ ``parameters``\ , \ ``populationSize = 100``\ , \ ``numberOfGenerations = 10``\ , \ ``elitistRatio = 0.1``\ , \ ``crossoverProbability = 0.25``\ , \ ``crossoverAmount = 0.5``\ , \ ``rangeReductionFactor = 0.7``\ , \ ``distanceFactor = 0.1``\ , \ ``childDistribution = "uniform"``\ , \ ``distanceFactorGenerations = -1``\ , \ ``debugMode = False``\ , \ ``addComputationIndex = False``\ , \ ``useMultiProcessing = False``\ , \ ``showProgress = True``\ , \ ``clusterHostNames = []``\ , \ ``**kwargs``\ )
+`GeneticOptimization <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L521>`__\ (\ ``objectiveFunction``\ , \ ``parameters``\ , \ ``populationSize = 100``\ , \ ``numberOfGenerations = 10``\ , \ ``elitistRatio = 0.1``\ , \ ``crossoverProbability = 0.25``\ , \ ``crossoverAmount = 0.5``\ , \ ``rangeReductionFactor = 0.7``\ , \ ``distanceFactor = 0.1``\ , \ ``childDistribution = "uniform"``\ , \ ``distanceFactorGenerations = -1``\ , \ ``debugMode = False``\ , \ ``addComputationIndex = False``\ , \ ``useMultiProcessing = False``\ , \ ``showProgress = True``\ , \ ``clusterHostNames = []``\ , \ ``**kwargs``\ )
 
 - | \ *function description*\ :
   | compute minimum of given objectiveFunction
@@ -144,7 +163,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: Minimize
 ^^^^^^^^^^^^^^^^^^
-`Minimize <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L864>`__\ (\ ``objectiveFunction``\ , \ ``parameters``\ , \ ``initialGuess = []``\ , \ ``method = 'Nelder-Mead'``\ , \ ``tol = 1e-4``\ , \ ``options = {}``\ , \ ``enforceBounds = True``\ , \ ``debugMode = False``\ , \ ``showProgress = True``\ , \ ``addComputationIndex = False``\ , \ ``storeFunctionValues = True``\ , \ ``**kwargs``\ )
+`Minimize <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L880>`__\ (\ ``objectiveFunction``\ , \ ``parameters``\ , \ ``initialGuess = []``\ , \ ``method = 'Nelder-Mead'``\ , \ ``tol = 1e-4``\ , \ ``options = {}``\ , \ ``enforceBounds = True``\ , \ ``debugMode = False``\ , \ ``showProgress = True``\ , \ ``addComputationIndex = False``\ , \ ``storeFunctionValues = True``\ , \ ``**kwargs``\ )
 
 - | \ *function description*\ :
   | Compute minimum of given objectiveFunction. This function is based on scipy.optimize.minimize() and it provides the same interface as GeneticOptimization().
@@ -185,7 +204,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: ComputeSensitivities
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ComputeSensitivities <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L1064>`__\ (\ ``parameterFunction``\ , \ ``parameters``\ , \ ``scaledByReference = False``\ , \ ``debugMode = False``\ , \ ``addComputationIndex = False``\ , \ ``useMultiProcessing = False``\ , \ ``showProgress = True``\ , \ ``parameterFunctionData = dict()``\ , \ ``**kwargs``\ )
+`ComputeSensitivities <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L1080>`__\ (\ ``parameterFunction``\ , \ ``parameters``\ , \ ``scaledByReference = False``\ , \ ``debugMode = False``\ , \ ``addComputationIndex = False``\ , \ ``useMultiProcessing = False``\ , \ ``showProgress = True``\ , \ ``parameterFunctionData = dict()``\ , \ ``**kwargs``\ )
 
 - | \ *function description*\ :
   | Perform a sensitivity analysis by successively calling the function parameterFunction(parameterList[i]) with a one at a time variation of parameters in the defined increments.
@@ -223,7 +242,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: PlotOptimizationResults2D
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`PlotOptimizationResults2D <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L1174>`__\ (\ ``parameterList``\ , \ ``valueList``\ , \ ``xLogScale = False``\ , \ ``yLogScale = False``\ )
+`PlotOptimizationResults2D <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L1190>`__\ (\ ``parameterList``\ , \ ``valueList``\ , \ ``xLogScale = False``\ , \ ``yLogScale = False``\ )
 
 - | \ *function description*\ :
   | visualize results of optimization for every parameter (2D plots)
@@ -246,7 +265,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: PlotSensitivityResults
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`PlotSensitivityResults <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L1230>`__\ (\ ``valRef``\ , \ ``valuesSorted``\ , \ ``sensitivity``\ , \ ``fVar = None``\ , \ ``strYAxis = None``\ )
+`PlotSensitivityResults <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L1246>`__\ (\ ``valRef``\ , \ ``valuesSorted``\ , \ ``sensitivity``\ , \ ``fVar = None``\ , \ ``strYAxis = None``\ )
 
 - | \ *function description*\ :
   | visualize results of Sensitivityanalyis for every parameter (2D plots)

@@ -254,8 +254,10 @@ def WriteFile(parseInfo, parameterList, typeConversion):
     #************************************
     #class definition:
     strParentClass = ''
+    constructorParentClass = ''
     if len(parseInfo['parentClass']) != 0:
         strParentClass = ': public ' + parseInfo['parentClass']
+        constructorParentClass = ': '+parseInfo['parentClass']+'()'
     s+='class ' + parseInfo['class'] + strParentClass + ' // AUTO: \n'
     s+='{\n'
 
@@ -311,7 +313,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
     #constructor with default initialization:
     if cntDefaultParameters or len(parseInfo['addConstructor']) != 0:
         s+='  //! AUTO: default constructor with parameter initialization\n'
-        s+='  '+parseInfo['class']+'()\n'
+        s+='  '+parseInfo['class']+'()'+constructorParentClass+'\n'
         s+='  {\n'
     
         for parameter in parameterListSorted:
@@ -413,7 +415,18 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                 if not typeWithGetSetFunction:
                     s+='PySet' + functionStr + '(const ' + typeCastStr + refChar + ' ' + paramStrPure + 'Init) { ' + linkedClassStr + paramStr + ' = ' + paramSetStr + '; }\n'
                 else:
-                    s+='PySet' + functionStr + '(const ' + typeCastStr + refChar + ' ' + paramStrPure + 'Init) { ' + paramStr+ '=(const ' + typeStr+ '&)'+ paramStrPure + 'Init; }\n'
+                    paramInitStr = paramStr+ '= '+'(const ' + typeStr+ '&)' + paramStrPure + 'Init'
+                    #in this case, we need special typecast
+                    if typeStr == 'Matrix3D' or typeStr == 'Matrix6D': #in linux casting from std::array<std::array<Real,...>> gives segmentation fault (overrides strangely)
+                        print('parameter '+parameter['pythonName']+' needs special treatment:', typeStr)
+                        typeCastStr = 'py::object'
+                        matDim = 3
+                        if typeStr == 'Matrix6D':
+                            matDim = 6
+                        paramInitStr = 'EPyUtils::SetConstMatrixTemplateSafely<'+str(matDim)+', '+str(matDim)+'>('+paramStrPure+'Init, '+ paramStrPure+')'
+                        
+                    s+='PySet' + functionStr + '(const ' + typeCastStr + refChar + ' ' + paramStrPure + 'Init) { ' 
+                    s+= paramInitStr+'; }\n'
                         
                     if typeStr == 'Matrix3D' or typeStr == 'Matrix6D': #Matrix type (Matrix3D, ...)
                         getReturnStr = 'py::array_t<Real>' #this makes a numpy array instead of list of lists!

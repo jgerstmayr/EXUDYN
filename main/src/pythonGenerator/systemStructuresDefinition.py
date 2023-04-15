@@ -42,18 +42,18 @@ parentClass = BeamSection
 pythonClass = BeamSection
 #appendToFile=True #not done in first class
 writePybindIncludes = True
-cppText = '#include "Main/StructuralElementsDataStructures.h"\n'
+cppText = '#include "Main/StructuralElementsDataStructures.h"\n#include "Pymodules/PybindUtilities.h"\n'
 #cppText = 'class PyNumpyArray; //declaration to avoid include of pybind\n'
-latexText = "\n%++++++++++++++++++++++++++++++++++++++\n\mysubsection{Structures for structural elements}\nThis section includes data structures for structural elements, surch as beams (and plates in future). These classes are used as interface between Python libraries for structural elements and Exudyn internal classes.\n"
+latexText = "\n%++++++++++++++++++++++++++++++++++++++\n\mysubsection{Structures for structural elements}\nThis section includes data structures for structural elements, such as beams (and plates in future). These classes are used as interface between Python libraries for structural elements and Exudyn internal classes.\n"
 classDescription = "Data structure for definition of 2D and 3D beam (cross) section mechanical properties. The beam has local coordinates, in which $X$ represents the beam centerline (beam axis) coordinate, being the neutral fiber w.r.t.\ bending; $Y$ and $Z$ are the local cross section coordinates. Note that most elements do not accept all parameters, which results in an error if those parameters (e.g., stiffness parameters) are non-zero."
 #V|F, pythonName,          cplusplusName,   size, type,                     defaultValue,args,  cFlags, parameterDescription
 #
 #see Bauchau, 2010, page 620
 #not part of section?: V,  length,                             ,       , PReal,                    0.,             ,  DP     , "$l_b$ [SI:m] length of beam element"
-VL,  stiffnessMatrix,                   ,       , Matrix6D,                 "Matrix6D(6,6,0.)", ,  DP     , "$\LU{c}{\Cm} \in \Rcal^{6 \times 6}\,$ [SI:Nm$^2$, Nm and N (mixed)] sectional stiffness matrix related to $\vp{\LU{c}{\nv}}{\LU{c}{\mv}} = \LU{c}{\Cm} \vp{\LU{c}{\teps}}{\LU{c}{\tkappa}}$ with sectional normal force $\LU{c}{\nv}$, torque $\LU{c}{\mv}$, strain $\LU{c}{\teps}$ and curvature $\LU{c}{\tkappa}$, all quantities expressed in the cross section frame $c$."
-VL,  dampingMatrix,                     ,       , Matrix6D,                 "Matrix6D(6,6,0.)", ,  DP     , "$\LU{c}{\Dm} \in \Rcal^{6 \times 6}\,$ [SI:Nsm$^2$, Nsm and Ns (mixed)] sectional linear damping matrix related to $\vp{\LU{c}{\nv}}{\LU{c}{\mv}} = \LU{c}{\Dm} \vp{\LU{c}{\tepsDot}}{\LU{c}{\tkappaDot}}$; note that this damping models is highly simplified and usually, it cannot be derived from material parameters; however, it can be used to adjust model damping to observed damping behavior."
+VL,  stiffnessMatrix,                   ,       , Matrix6D,                 "Matrix6D(6,6,0.)", ,  DP     , "$\LU{c}{\Cm} \in \Rcal^{6 \times 6}\,$ [SI:Nm$^2$, Nm and N (mixed)] sectional stiffness matrix related to $\vp{\LU{c}{\nv}}{\LU{c}{\mv}} = \LU{c}{\Cm} \vp{\LU{c}{\teps}}{\LU{c}{\tkappa}}$ with sectional normal force $\LU{c}{\nv}$, torque $\LU{c}{\mv}$, strain $\LU{c}{\teps}$ and curvature $\LU{c}{\tkappa}$, all quantities expressed in the cross section frame $c$. Set with list of lists or numpy array."
+VL,  dampingMatrix,                     ,       , Matrix6D,                 "Matrix6D(6,6,0.)", ,  DP     , "$\LU{c}{\Dm} \in \Rcal^{6 \times 6}\,$ [SI:Nsm$^2$, Nsm and Ns (mixed)] sectional linear damping matrix related to $\vp{\LU{c}{\nv}}{\LU{c}{\mv}} = \LU{c}{\Dm} \vp{\LU{c}{\tepsDot}}{\LU{c}{\tkappaDot}}$; note that this damping models is highly simplified and usually, it cannot be derived from material parameters; however, it can be used to adjust model damping to observed damping behavior. Set with list of lists or numpy array."
 VL,  massPerLength,                     ,       , UReal,                    0.,             ,  DP     , "$\rho A\,$ [SI:kg/m] mass per unit length of the beam"
-VL,  inertia,                           ,       , Matrix3D,                 "EXUmath::zeroMatrix3D", ,  DP     , "$\LU{c}{\Jm} \in \Rcal^{3 \times 3}\,$ [SI:kg$\,$m$^2$] sectional inertia for shear-deformable beams."
+VL,  inertia,                           ,       , Matrix3D,                 "EXUmath::zeroMatrix3D", ,  DP     , "$\LU{c}{\Jm} \in \Rcal^{3 \times 3}\,$ [SI:kg$\,$m$^2$] sectional inertia for shear-deformable beams. Set with list of lists or numpy array."
 #optional, used by Bauchau:
 #  sectionalCOM,                       ,       , Vector2D,                 "Vector2D(0.)", ,  DP     , "$\LU{c}{\vv_{com}} \in \Rcal^2\,$ [SI:m] sectional center of mass."
 #

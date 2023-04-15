@@ -74,19 +74,19 @@ plrmain.AddDocu('The general hub to multibody dynamics models is provided by the
                 'You can create a new \\texttt{SystemContainer}, which is a class that is initialized by assigning a '+
                 'system container to a variable, usually denoted as \\texttt{SC}:')
 plrmain.AddDocuCodeBlock(code="""
-exu.SystemContainer()
+SC = exu.SystemContainer()
 """)
 #plrmain.AddDocuList(itemList=['\\texttt{SC = exu.SystemContainer()}'], itemText='[]')
-plrmain.AddDocu('Note that creating a second \\texttt{exu.SystemContainer()} will be independent of \\texttt{SC} and therefore usually makes no sense.\n')
+plrmain.AddDocu('Note that creating a second \\texttt{exu.SystemContainer()} will be independent of \\texttt{SC} and therefore makes no sense if you do not intend to work with two different containers.\n')
 
-plrmain.AddDocu('To add a MainSystem to system container SC and store as variable mbs, write:')
+plrmain.AddDocu('To add a MainSystem to system container \\texttt{SC} and store as variable \\texttt{mbs}, write:')
 
 plrmain.AddDocuCodeBlock(code="""
 mbs = SC.AddSystem()
 """)
 #plrmain.AddDocuList(itemList=['\\texttt{mbs = SC.AddSystem()}'], itemText='[]')
 
-plrmain.AddDocu('Furthermore, there are a couple of commands available directly in the \\texttt{exudyn} module, given in the following subsections.'+
+plrmain.AddDocu('Furthermore, there are a couple of commands available directly in the \\texttt{exudyn} module, given in the following subsections. '+
                 'Regarding the \\mybold{(basic) module access}, functions are related to the \\texttt{exudyn = exu} module, see these examples:')
 
 plrmain.AddDocuCodeBlock(code="""
@@ -118,10 +118,10 @@ mbs2 = SC.AddSystem()
 #  print number of systems available:
 nSys = SC.NumberOfSystems()
 exu.Print(nSys) #or just print(nSys)
+#  delete reference to mbs and mbs2 (usually not necessary):
+del mbs, mbs2
 #  reset system container (mbs becomes invalid):
 SC.Reset()
-#  delete mbs (usually not necessary):
-del mbs
 """)
 plrmain.AddDocu('If you run a parameter variation (check \\texttt{Examples/parameterVariationExample.py}), '+
                 'you may reset or delete the created \\texttt{MainSystem} \\texttt{mbs} and '+
@@ -130,7 +130,7 @@ plrmain.AddDocu('If you run a parameter variation (check \\texttt{Examples/param
 #+++++++++++++++++++++++++++++++++++
 #ITEMINDEX
 plrmain.AddDocu('Many functions will work with node numbers (\\texttt{NodeIndex}), object numbers (\\texttt{ObjectIndex}),'+
-                'marker numbers (\\texttt{MarkerIndex}) and others. These numbers are special objects, which have been '+
+                'marker numbers (\\texttt{MarkerIndex}) and others. These numbers are special Python objects, which have been '+
                 'introduced in order to avoid mixing up, e.g., node and object numbers. \n\n'+
                 'For example, the command \\texttt{mbs.AddNode(...)} returns a \\texttt{NodeIndex}. '+
                 'For these indices, the following rules apply:',
@@ -152,7 +152,7 @@ plrmain.AddDocuList(itemList=[
 plrmain.AddDocu("""As a key concept to working with \\codeName\\ , most data which is retrieved by C++ interface functions is copied.
 Experienced Python users may know that it is a key concept to Python to often use references instead of copying, which is
 sometimes error-prone but offers a computationally efficient behavior.
-There are only a few very important cases where data is references in \\codeName\\ , the main ones are 
+There are only a few very important cases where data is referenced in \\codeName\\ , the main ones are 
 \\texttt{SystemContainer}, 
 \\texttt{MainSystem}, 
 \\texttt{VisualizationSettings}, and
@@ -171,6 +171,9 @@ mbs2=mbs                           #again, mbs2 and mbs refer to the same C++ ob
 og = mbs.AddObject(ObjectGround()) #copy data of ObjectGround() into C++
 o0 = mbs.GetObject(0)              #get copy of internal data as dictionary
 del o0                             #delete the local dictionary; C++ data not affected
+del mbs, mbs2                      #references to mbs deleted (C++ data still available)
+del SC                             #references to SystemContainer deleted
+#at this point, mbs and SC are not available any more (data may be cleaned up by Python)
 """)
 
 #+++++++++++++++++++++++++++++++++++
@@ -182,18 +185,18 @@ plrmain.AddDocu('There are several levels of type and argument checks, leading t
                 'not mean that it is a wrong error, but it could also be, e.g., a wrong order of function calls.',
                 section='Exceptions and Error Messages', sectionLevel=2,sectionLabel='sec:cinterface:exceptions')
 
-plrmain.AddDocu("As an example, a type conversion error is raised when providing wrong argument types, e.g., try \\texttt{exu.GetVersionString('abs')}:")
+plrmain.AddDocu("As an example, a type conversion error is raised when providing wrong argument types, e.g., try \\texttt{exu.GetVersionString('abc')}:")
 
 plrmain.AddDocuCodeBlock(code="""
 Traceback (most recent call last):
 
 File "C:\\Users\\username\\AppData\\Local\\Temp\\ipykernel_24988\\2212168679.py", line 1, in <module>
-    exu.GetVersionString('abs')
+    exu.GetVersionString('abc')
 
 TypeError: GetVersionString(): incompatible function arguments. The following argument types are supported:
     1. (addDetails: bool = False) -> str
 
-Invoked with: 'abs'
+Invoked with: 'abc'
 """,
 pythonStyle=False)
 
@@ -676,10 +679,11 @@ sPyOld = plr.PyStr() #systemcontainer manually added in C++
 plr.DefPyStartClass(classStr, pyClassStr, '')
 
 plr.AddDocu('The SystemContainer is the top level of structures in \\codeName. '+
-                'The container holds all (multibody) systems, solvers and all other data structures for computation. '+
-                'Currently, only one container shall be used. In future, multiple containers might be usable at the same time.'+
-                'Regarding the \\mybold{(basic) module access}, functions are related to the \\texttt{exudyn = exu} module, '+
-                'see also the introduction of this chapter and this example:')
+            'The container holds all (multibody) systems, solvers and all other data structures for computation. '+
+            "A SystemContainer is created by \\texttt{SC = exu.SystemContainer()}, understanding \\texttt{exu.SystemContainer} as a class like Python's internal list class, creating a list instance with \\texttt{x=list()}. "+
+            'Currently, only one container shall be used. In future, multiple containers might be usable at the same time. '+
+            'Regarding the \\mybold{(basic) module access}, functions are related to the \\texttt{exudyn = exu} module, '+
+            'see also the introduction of this chapter and this example:')
 
 plr.AddDocuCodeBlock(code="""
 import exudyn as exu
@@ -785,10 +789,11 @@ plr.DefLatexFinishTable()#only finalize latex table
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 plr.CreateNewRSTfile('MainSystem')
 classStr = 'MainSystem'
-plr.DefPyStartClass(classStr, classStr, '')
+plr.DefPyStartClass(classStr, classStr, '', forbidPythonConstructor=True)
 
-plr.AddDocu("This is the structure which defines a (multibody) system. "+
-            "In C++, there is a MainSystem (links to Python) and a System (computational part). "+
+plr.AddDocu("This is the class which defines a (multibody) system. "+
+            "The MainSystem shall only be created by \\texttt{SC.AddSystem()}, not with \\texttt{exu.MainSystem()}, as the latter one would not be linked to a SystemContainer. "+
+            "In C++, there is a MainSystem (the part which links to Python) and a System (computational part). "+
             "For that reason, the name is MainSystem on the Python side, but it is often just called 'system'. "+
             "For compatibility, it is recommended to denote the variable holding this system as mbs, the multibody dynamics system. "+
             "It can be created, visualized and computed. Use the following functions for system manipulation.")
@@ -860,7 +865,8 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='AddGeneralContact', cName='AddG
 plr.DefPyFunctionAccess(cClass=classStr, pyName='GetGeneralContact', cName='GetGeneralContact', 
                                 description="get read/write access to GeneralContact with index generalContactNumber stored in mbs; Examples shows how to access the GeneralContact object added with last AddGeneralContact() command:",
                                 example = 'gc=mbs.GetGeneralContact(mbs.NumberOfGeneralContacts()-1)',
-                                argList=['generalContactNumber'])
+                                argList=['generalContactNumber'],
+                                options='py::return_value_policy::reference')
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='DeleteGeneralContact', cName='DeleteGeneralContact', 
                                 description="delete GeneralContact with index generalContactNumber in mbs; other general contacts are resorted (index changes!)",
@@ -1328,7 +1334,8 @@ plr.sPy += plr2.PyStr() #only use Pybind string
 plr.CreateNewRSTfile('SystemData')
 pyClassStr = 'SystemData'
 classStr = 'Main'+pyClassStr
-plr.DefPyStartClass(classStr,pyClassStr, '', labelName='sec:mbs:systemData')
+plr.DefPyStartClass(classStr,pyClassStr, '', labelName='sec:mbs:systemData',
+                    forbidPythonConstructor=True)
 
 plr.AddDocu('This is the data structure of a system which contains Objects (bodies/constraints/...), Nodes, Markers and Loads. '+
             'The SystemData structure allows advanced access to this data, which HAS TO BE USED WITH CARE, as unexpected results '+
@@ -1634,7 +1641,8 @@ plr.sPy += plr2.PyStr() #only use Pybind string
 plr.CreateNewRSTfile('GeneralContact')
 classStr = 'PyGeneralContact'
 pyClassStr = 'GeneralContact'
-plr.DefPyStartClass(classStr, pyClassStr, '',labelName='sec:GeneralContact')
+plr.DefPyStartClass(classStr, pyClassStr, '',labelName='sec:GeneralContact',
+                    forbidPythonConstructor=True)
 
 plr.AddDocu('Structure to define general and highly efficient contact functionality in multibody systems'+
             '\\footnote{Note that GeneralContact is still developed, use with care.}. For further explanations '+

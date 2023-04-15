@@ -347,7 +347,7 @@ visuParentClass = VisualizationNode
 addProtectedC = "    static constexpr Index nRotationCoordinates = 3;\n    static constexpr Index nDisplacementCoordinates = 3;\n"
 author = Gerstmayr Johannes, Holzinger Stefan
 pythonShortName = RigidRotVecLG
-outputVariables = "{'Position':'$\LU{0}{\pv}\cConfig = \LU{0}{[p_0,\,p_1,\,p_2]}\cConfig\tp= \LU{0}{\uv}\cConfig + \LU{0}{\pv}\cRef$global 3D position vector of node; $\uv\cRef=0$', 'Displacement':'$\LU{0}{\uv}\cConfig = [q_0,\,q_1,\,q_2]\cConfig\tp$global 3D displacement vector of node','Velocity':'$\LU{0}{\vv}\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2]\cConfig\tp$global 3D velocity vector of node', 'Coordinates':'$\cv\cConfig = [q_0,\,q_1,\,q_2, \,\nu_0,\,\nu_1,\,\nu_2]\tp\cConfig$ coordinate vector of node, having 3 displacement coordinates and 3 Euler angles', 'Coordinates_t':'$\dot\cv\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2, \,\dot \nu_0,\,\dot \nu_1,\,\dot \nu_2]\tp\cConfig$ velocity coordinates vector of node', 'RotationMatrix':'$[A_{00},\,A_{01},\,A_{02},\,A_{10},\,\ldots,\,A_{21},\,A_{22}]\cConfig\tp$vector with 9 components of the rotation matrix $\LU{0b}{\Rot}\cConfig$ in row-major format, in any configuration; the rotation matrix transforms local ($b$) to global (0) coordinates', 'Rotation':'$[\varphi_0,\,\varphi_1,\,\varphi_2]\tp\cConfig$vector with 3 components of the Euler/Tait-Bryan angles in xyz-sequence ($\LU{0b}{\Rot}\cConfig=:\Rot_0(\varphi_0) \cdot \Rot_1(\varphi_1) \cdot \Rot_2(\varphi_2)$), recomputed from rotation matrix', 'AngularVelocity':'$\LU{0}{\tomega}\cConfig = \LU{0}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$global 3D angular velocity vector of node', 'AngularVelocityLocal':'$\LU{b}{\tomega}\cConfig = \LU{b}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$local (body-fixed)  3D angular velocity vector of node'}"
+outputVariables = "{'Position':'$\LU{0}{\pv}\cConfig = \LU{0}{[p_0,\,p_1,\,p_2]}\cConfig\tp= \LU{0}{\uv}\cConfig + \LU{0}{\pv}\cRef$global 3D position vector of node; $\uv\cRef=0$', 'Displacement':'$\LU{0}{\uv}\cConfig = [q_0,\,q_1,\,q_2]\cConfig\tp$global 3D displacement vector of node','Velocity':'$\LU{0}{\vv}\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2]\cConfig\tp$global 3D velocity vector of node', 'Acceleration':'$\LU{0}{\av}\cConfig = [\ddot q_0,\,\ddot q_1,\,\ddot q_2]\cConfig\tp$global 3D acceleration vector of node', 'Coordinates':'$\cv\cConfig = [q_0,\,q_1,\,q_2, \,\nu_0,\,\nu_1,\,\nu_2]\tp\cConfig$ coordinate vector of node, having 3 displacement coordinates and 3 Euler angles', 'Coordinates_t':'$\dot\cv\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2, \,\dot \nu_0,\,\dot \nu_1,\,\dot \nu_2]\tp\cConfig$ velocity coordinates vector of node', 'RotationMatrix':'$[A_{00},\,A_{01},\,A_{02},\,A_{10},\,\ldots,\,A_{21},\,A_{22}]\cConfig\tp$vector with 9 components of the rotation matrix $\LU{0b}{\Rot}\cConfig$ in row-major format, in any configuration; the rotation matrix transforms local ($b$) to global (0) coordinates', 'Rotation':'$[\varphi_0,\,\varphi_1,\,\varphi_2]\tp\cConfig$vector with 3 components of the Euler/Tait-Bryan angles in xyz-sequence ($\LU{0b}{\Rot}\cConfig=:\Rot_0(\varphi_0) \cdot \Rot_1(\varphi_1) \cdot \Rot_2(\varphi_2)$), recomputed from rotation matrix', 'AngularVelocity':'$\LU{0}{\tomega}\cConfig = \LU{0}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$global 3D angular velocity vector of node', 'AngularVelocityLocal':'$\LU{b}{\tomega}\cConfig = \LU{b}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$local (body-fixed)  3D angular velocity vector of node'}"
 classType = Node
 equations =
     \paragraph{Detailed information:}
@@ -394,6 +394,7 @@ Fv,     C,      GetType,                        ,               ,       Node::Ty
 Fv,     C,      GetNodeGroup,                   ,               ,       CNodeGroup,  "return CNodeGroup::ODE2variables;", ,    CI,     "return node group, which is special because of algebraic equations" 
 Fv,     C,      GetPosition,                    ,               3,      Vector3D,   ,                           "ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent position of node; returns always a 3D Vector" 
 Fv,     C,      GetVelocity,                    ,               3,      Vector3D,   ,                           "ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent velocity of node; returns always a 3D Vector" 
+Fv,     C,      GetAcceleration,                ,               3,      Vector3D,   ,                           "ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent acceleration of node" 
 Fv,     C,      GetRotationMatrix,              ,               9,      Matrix3D,   ,                           "ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent rotation matrix of node; returns always a 3D Vector" 
 Fv,     C,      GetAngularVelocity,             ,               3,      Vector3D,   ,                           "ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent angular velocity of node; returns always a 3D Vector" 
 Fv,     C,      GetAngularVelocityLocal,        ,               3,      Vector3D,   ,                           "ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent local (=body-fixed) angular velocity of node; returns always a 3D Vector" 
@@ -628,6 +629,7 @@ Fv,     C,      GetNumberOfODE2Coordinates,     GetNumberOfODE2Coordinates,,  In
 Fv,     C,      GetType,                        ,               ,       Node::Type, "return Node::GenericODE2;",,       CI,     "return node type (for node treatment in computation)" 
 Fv,     C,      GetPosition,                    ,               3,      Vector3D,   , "ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent position of node; returns always a 3D Vector; gives the local (x) position for Node1D" 
 Fv,     C,      GetVelocity,                    ,               3,      Vector3D,   , "ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent velocity of node; returns always a 3D Vector; gives the local (x) velocity for Node1D" 
+Fv,     C,      GetAcceleration,                ,               3,      Vector3D,   , "ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent acceleration of node" 
 Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return '1D';",       ,       CI,     "Get type name of node (without keyword 'Node'...!); could also be realized via a string -> type conversion?" 
 #Fv,     M,      CallFunction,                   ,               ,       py::object,  ";",    "STDstring functionName, py::dict args",       CDI,    "Call a specific node function ==> automatically generated in future" 
 Fv,     C,      GetReferenceCoordinateVector,   ,               ,       LinkedDataVector, "return parameters.referenceCoordinates;", , CI,  "return internally stored reference coordinates of node" 
@@ -648,7 +650,7 @@ cParentClass = CNodeODE2
 mainParentClass = MainNode
 visuParentClass = VisualizationNode
 pythonShortName = Point2DS1
-outputVariables = "{'Position':'global 3D position vector of node (=displacement+reference position)', 'Displacement':'global 3D displacement vector of node', 'Velocity':'global 3D velocity vector of node', 'Coordinates':'coordinates vector of node (2 displacement coordinates + 2 slope vector coordinates)', 'Coordinates_t':'velocity coordinates vector of node (derivative of the 2 displacement coordinates + 2 slope vector coordinates)', 'Coordinates_tt':'acceleration coordinates vector of node (derivative of the 2 displacement coordinates + 2 slope vector coordinates)'}"
+outputVariables = "{'Position':'$\LU{0}{\pv}\cConfig = [p_0,\, p_1,\,0]\cConfig\tp$global 3D position vector of node (=displacement+reference position)', 'Displacement':'$\LU{0}{\uv}\cConfig = [q_0,\, q_1,\,0]\cConfig\tp$global 3D displacement vector of node', 'Velocity':'$\LU{0}{\vv}\cConfig = [\dot q_0,\,\dot q_1,\,0]\cConfig\tp$global 3D velocity vector of node', 'Acceleration':'$\LU{0}{\av}\cConfig = [\ddot q_0,\,\ddot q_1,\,0]\cConfig\tp$global 3D acceleration vector of node', 'Coordinates':'coordinates vector of node (2 displacement coordinates + 2 slope vector coordinates)', 'Coordinates_t':'velocity coordinates vector of node (derivative of the 2 displacement coordinates + 2 slope vector coordinates)', 'Coordinates_tt':'acceleration coordinates vector of node (derivative of the 2 displacement coordinates + 2 slope vector coordinates)'}"
 classType = Node
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
 Vp,     M,      name,                           ,               ,       String,     "",                       ,       I,      "node's unique name"
@@ -660,6 +662,7 @@ Fv,     C,      GetNumberOfODE2Coordinates,     GetNumberOfODE2Coordinates,,  In
 Fv,     C,      GetType,                        ,               ,       Node::Type,  "return (Node::Type)(Node::Position2D + Node::Orientation2D + Node::Point2DSlope1);", ,   CI,     "return node type (for node treatment in computation)" 
 Fv,     C,      GetPosition,                    ,               3,      Vector3D,   ,                           "ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent position of node; returns always a 3D Vector" 
 Fv,     C,      GetVelocity,                    ,               3,      Vector3D,   ,                           "ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent velocity of node; returns always a 3D Vector" 
+Fv,     C,      GetAcceleration,                ,               3,      Vector3D,   ,                           "ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent acceleration of node" 
 Fv,     C,      GetRotationMatrix,              ,               9,      Matrix3D,   ,                           "ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent rotation matrix of node; the slope vector $\rv^\prime = [1,0]$ is defines as zero angle ($\varphi = 0$), leading to a matrix $\Am = \mr{\cos\varphi}{-\sin\varphi}{0} {\sin\varphi}{\cos\varphi}{0} {0}{0}{1}$; the function always computes a 3D Matrix" 
 Fv,     C,      GetAngularVelocity,             ,               3,      Vector3D,   ,                           "ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent local (=body-fixed) angular velocity of node; returns always a 3D Vector" 
 Fv,     C,      GetAngularVelocityLocal,        ,               3,      Vector3D,   "return GetAngularVelocity(configuration);","ConfigurationType configuration = ConfigurationType::Current",       CI,    "return configuration dependent angular velocity of node; in 2D case, this is the same as the global angular velocity; returns always a 3D Vector" 
@@ -688,7 +691,7 @@ mainParentClass = MainNode
 visuParentClass = VisualizationNode
 pythonShortName = Point3DS1
 addPublicC = "    static constexpr Index nODE2coordinates = 6;//AUTO: number of coordinates, used for fixed-size templates\n"
-outputVariables = "{'Position':'global 3D position vector of node (=displacement+reference position)', 'Displacement':'global 3D displacement vector of node', 'Velocity':'global 3D velocity vector of node', 'Coordinates':'coordinates vector of node (3 displacement coordinates + 3 slope vector coordinates)', 'Coordinates_t':'velocity coordinates vector of node (derivative of the 3 displacement coordinates + 3 slope vector coordinates)', 'Coordinates_tt':'acceleration coordinates vector of node (derivative of the 3 displacement coordinates + 3 slope vector coordinates)'}"
+outputVariables = "{'Position':'$\LU{0}{\pv}\cConfig = [p_0,\, p_1,\, p_2]\cConfig\tp$global 3D position vector of node (=displacement+reference position)', 'Displacement':'$\LU{0}{\uv}\cConfig = [q_0,\, q_1,\, q_2]\cConfig\tp$global 3D displacement vector of node', 'Velocity':'$\LU{0}{\av}\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2]\cConfig\tp$global 3D velocity vector of node', 'Acceleration':'$\LU{0}{\av}\cConfig = [\ddot q_0,\,\ddot q_1,\,\ddot q_2]\cConfig\tp$global 3D acceleration vector of node', 'Coordinates':'coordinates vector of node (3 displacement coordinates + 3 slope vector coordinates)', 'Coordinates_t':'velocity coordinates vector of node (derivative of the 3 displacement coordinates + 3 slope vector coordinates)', 'Coordinates_tt':'acceleration coordinates vector of node (derivative of the 3 displacement coordinates + 3 slope vector coordinates)'}"
 classType = Node
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
 Vp,     M,      name,                           ,               ,       String,     "",                       ,       I,      "node's unique name"
@@ -700,6 +703,7 @@ Fv,     C,      GetNumberOfODE2Coordinates,     GetNumberOfODE2Coordinates,,  In
 Fv,     C,      GetType,                        ,               ,       Node::Type,  "return (Node::Type)(Node::Position + Node::Point3DSlope1);", ,   CI,     "return node type (for node treatment in computation)" 
 Fv,     C,      GetPosition,                    ,               3,      Vector3D,   ,                           "ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent position of node; returns always a 3D Vector" 
 Fv,     C,      GetVelocity,                    ,               3,      Vector3D,   ,                           "ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent velocity of node; returns always a 3D Vector" 
+Fv,     C,      GetAcceleration,                ,               3,      Vector3D,   ,                           "ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent acceleration of node" 
 # Fv,     C,      GetRotationMatrix,              ,               9,      Matrix3D,   ,                           "ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent rotation matrix of node; the slope vector $\rv^\prime = [1,0]$ is defines as zero angle ($\varphi = 0$), leading to a matrix $\Am = \mr{\cos\varphi}{-\sin\varphi}{0} {\sin\varphi}{\cos\varphi}{0} {0}{0}{1}$; the function always computes a 3D Matrix" 
 # Fv,     C,      GetAngularVelocity,             ,               3,      Vector3D,   ,                           "ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent local (=body-fixed) angular velocity of node; returns always a 3D Vector" 
 # Fv,     C,      GetAngularVelocityLocal,        ,               3,      Vector3D,   ,                           "ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent angular velocity of node; in 2D case, this is the same as the global angular velocity; returns always a 3D Vector" 
@@ -727,7 +731,8 @@ mainParentClass = MainNode
 visuParentClass = VisualizationNode
 pythonShortName = Point3DS23
 addPublicC = "    static constexpr Index nODE2coordinates = 9;//AUTO: number of coordinates, used for fixed-size templates\n"
-outputVariables = "{'Position':'global 3D position vector of node (=displacement+reference position)', 'Displacement':'global 3D displacement vector of node', 'Velocity':'global 3D velocity vector of node', 'Coordinates':'coordinates vector of node (3 displacement coordinates + 2 $\times$ 3 slope vector coordinates)', 'Coordinates_t':'velocity coordinates vector of node', 'Coordinates_tt':'acceleration coordinates vector of node'}"
+outputVariables = "{'Position':'$\LU{0}{\pv}\cConfig = \LU{0}{[p_0,\, p_1,\, p_2]}\cConfig\tp$global 3D position vector of node (=displacement+reference position)', 'Displacement':'$\LU{0}{\uv}\cConfig = \LU{0}{[q_0,\, q_1,\, q_2]}\cConfig\tp$global 3D displacement vector of node', 'Velocity':'$\LU{0}{\av}\cConfig = \LU{0}{[\dot q_0,\,\dot q_1,\,\dot q_2]}\cConfig\tp$global 3D velocity vector of node', 'Acceleration':'$\LU{0}{\av}\cConfig = \LU{0}{[\ddot q_0,\,\ddot q_1,\,\ddot q_2]}\cConfig\tp$global 3D acceleration vector of node', 'Coordinates':'coordinate vector of node (relative to reference configuration)', 'Coordinates_t':'velocity coordinates vector of node', 'Coordinates_tt':'acceleration coordinates vector of node', 'RotationMatrix':'$[A_{00},\,A_{01},\,A_{02},\,A_{10},\,\ldots,\,A_{21},\,A_{22}]\cConfig\tp$vector with 9 components of the rotation matrix $\LU{0b}{\Rot}\cConfig$ in row-major format, in any configuration; the rotation matrix transforms local ($b$) to global (0) coordinates', 'Rotation':'$[\varphi_0,\,\varphi_1,\,\varphi_2]\tp\cConfig$vector with 3 components of the Euler / Tait-Bryan angles in xyz-sequence', 'AngularVelocity':'$\LU{0}{\tomega}\cConfig = \LU{0}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$global 3D angular velocity vector of node', 'AngularVelocityLocal':'$\LU{b}{\tomega}\cConfig = \LU{b}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$local (body-fixed)  3D angular velocity vector of node'}"
+#missing:'AngularAcceleration':'$\LU{0}{\talpha}\cConfig = \LU{0}{[\alpha_0,\,\alpha_1,\,\alpha_2]}\cConfig\tp$global 3D angular acceleration vector of node'
 classType = Node
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
 Vp,     M,      name,                           ,               ,       String,     "",                       ,       I,      "node's unique name"
@@ -739,6 +744,7 @@ Fv,     C,      GetNumberOfODE2Coordinates,     GetNumberOfODE2Coordinates,,  In
 Fv,     C,      GetType,                        ,               ,       Node::Type,  "return (Node::Type)(Node::Position + Node::Orientation + Node::Point3DSlope23);", ,   CI,     "return node type (for node treatment in computation)" 
 Fv,     C,      GetPosition,                    ,               3,      Vector3D,   ,                           "ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent position of node; returns always a 3D Vector" 
 Fv,     C,      GetVelocity,                    ,               3,      Vector3D,   ,                           "ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent velocity of node; returns always a 3D Vector" 
+Fv,     C,      GetAcceleration,                ,               3,      Vector3D,   ,                           "ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent acceleration of node" 
 Fv,     C,      GetRotationMatrix,              ,               9,      Matrix3D,   ,                           "ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent rotation matrix of node"
 #"; the slope vector $\rv^\prime = [1,0]$ is defines as zero angle ($\varphi = 0$), leading to a matrix $\Am = \mr{\cos\varphi}{-\sin\varphi}{0} {\sin\varphi}{\cos\varphi}{0} {0}{0}{1}$; the function always computes a 3D Matrix" 
 F,      C,      GetRotationMatrix_t,            ,               9,      Matrix3D,   ,                           "ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent time derivative of rotation matrix of node" 
@@ -3634,7 +3640,6 @@ V,      CP,     nodeNumbers,                    ,               ,       NodeInde
 V,      CP,     physicsLength,                  ,               ,       PReal,      "0.",                       ,       I,     "$L$ [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives $\rho A L$; must be positive"
 V,      M,      sectionData,                    ,               ,       BeamSection,"BeamSection()",            ,       I,     "data as given by exudyn.BeamSection(), defining inertial, stiffness and damping parameters of beam section."
 V,      CP,     crossSectionPenaltyFactor,      ,               ,       Vector3D,   "Vector3D({1.,1.,1.})",     ,       I,     "$f_{cs} = [f_{yy},\,f_{zz},\,f_{yz}]\tp$ [SI:1] additional penalty factors for cross section deformation, which are in total $k_{cs} = [f_{yy}\cdot k_{yy},\, f_{zz}\cdot k_{zz},\, f_{yz}\cdot k_{yz}]\tp$"
-V,      CP,     testBeamRectangularSize,        ,               ,       Vector2D,   "Vector2D({-1.,-1.})",      ,       I,     "$[h_y,\, h_z]$ [SI:m] test dimensions for mass matrix and other terms using standard rectangular cross section"
 V,      CP,     physicsMassPerLength,           ,               ,       UReal,      "0.",                       ,       ,      "$\rho A$ [SI:kg/m] mass per length of beam; this data is used internally for computation"
 V,      CP,     physicsCrossSectionInertia,     ,               ,       Matrix3D,      "EXUmath::zeroMatrix3D", ,       ,      "$\rho \Jm$ [SI:kg m] cross section mass moment of inertia tensor; this data is used internally for computation"
 #
@@ -5397,7 +5402,7 @@ equations =
     valve positions as well as the actuator velocity and position (only for change of volume).
     
     The distance between the two marker points, which are usually the bushings or clevis mounts of the hydraulic cylinder, is
-    denoted as $L$. The stroke length $s in [0, L_s]$ is defined as
+    denoted as $L$. The stroke length $s \in [0, L_s]$ is defined as
     \be
       s = L - L_o
     \ee
@@ -7444,7 +7449,7 @@ Fv,     C,      GetOutputVariableConnector,              ,               ,      
 Fv,     C,      GetRequestedMarkerType,         ,               ,       Marker::Type, "return (Marker::Type)((Index)Marker::Position + (Index)Marker::Orientation);", ,   CI,     "provide requested markerType for connector" 
 Fv,     C,      GetType,                        ,               ,       CObjectType,"return (CObjectType)((Index)CObjectType::Connector + (Index)CObjectType::Constraint);", , CI,    "return object type (for node treatment in computation)" 
 Fv,     C,      GetAlgebraicEquationsSize,      ,               ,       Index,      "return 5;",                ,       CI,     "number of algebraic equations; independent of node/body coordinates" 
-Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'JointRevolute';", ,   CI,     "Get type name of object (without keyword 'Object'...!); could also be realized via a string -> type conversion?" 
+Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'JointRevoluteZ';", ,   CI,     "Get type name of object (without keyword 'Object'...!); could also be realized via a string -> type conversion?" 
 Fv,     C,      IsActive,                       ,               ,       Bool,       "return parameters.activeConnector;", , CI,    "return if connector is active-->speeds up computation" 
 F,      C,      EvaluateUserFunctionOffset,     ,               ,       void,      ,"Vector6D& offset, const MainSystemBase& mainSystem, Real t, Index itemIndex", CDI,  "call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places"
 F,      C,      EvaluateUserFunctionOffset_t,   ,               ,       void,      ,"Vector6D& offset, const MainSystemBase& mainSystem, Real t, Index itemIndex", CDI,  "call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places"
@@ -7549,7 +7554,7 @@ Fv,     C,      GetOutputVariableConnector,              ,               ,      
 Fv,     C,      GetRequestedMarkerType,         ,               ,       Marker::Type, "return (Marker::Type)((Index)Marker::Position + (Index)Marker::Orientation);", ,   CI,     "provide requested markerType for connector" 
 Fv,     C,      GetType,                        ,               ,       CObjectType,"return (CObjectType)((Index)CObjectType::Connector + (Index)CObjectType::Constraint);", , CI,    "return object type (for node treatment in computation)" 
 Fv,     C,      GetAlgebraicEquationsSize,      ,               ,       Index,      "return 5;",                ,       CI,     "number of algebraic equations; independent of node/body coordinates" 
-Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'JointRevolute';", ,   CI,     "Get type name of object (without keyword 'Object'...!); could also be realized via a string -> type conversion?" 
+Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'JointPrismaticX';", ,   CI,     "Get type name of object (without keyword 'Object'...!); could also be realized via a string -> type conversion?" 
 Fv,     C,      IsActive,                       ,               ,       Bool,       "return parameters.activeConnector;", , CI,    "return if connector is active-->speeds up computation" 
 F,      C,      EvaluateUserFunctionOffset,     ,               ,       void,      ,"Vector6D& offset, const MainSystemBase& mainSystem, Real t, Index itemIndex", CDI,  "call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places"
 F,      C,      EvaluateUserFunctionOffset_t,   ,               ,       void,      ,"Vector6D& offset, const MainSystemBase& mainSystem, Real t, Index itemIndex", CDI,  "call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places"
@@ -8265,7 +8270,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = MarkerBodyPosition
-classDescription = "A position body-marker attached to a local (body-fixed) position $\pLocB = [b_0,\; b_1,\; b_2]$ ($x$, $y$, and $z$ coordinates) of the body."
+classDescription = "A position body-marker attached to a local (body-fixed) position $\pLocB = [b_0,\; b_1,\; b_2]$ ($x$, $y$, and $z$ coordinates) of the body. It provides position information as well as the according derivatives (=velocity and derivative of position w.r.t. body coordinates). It can be used for connectors, joints or loads where position is required. If connectors also require orientation information, use a MarkerBodyRigid."
 cParentClass = CMarker
 mainParentClass = MainMarker
 visuParentClass = VisualizationMarker
@@ -8293,7 +8298,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = MarkerBodyRigid
-classDescription = "A rigid-body (position+orientation) body-marker attached to a local (body-fixed) position $\pLocB = [b_0,\; b_1,\; b_2]$ ($x$, $y$, and $z$ coordinates) of the body."
+classDescription = "A rigid-body (position+orientation) body-marker attached to a local (body-fixed) position $\pLocB = [b_0,\; b_1,\; b_2]$ ($x$, $y$, and $z$ coordinates) of the body. It provides position and orientation (rotation), as well as the according derivatives. It can be used for most connectors, joints or loads where either position, position and orientation, or orientation are required."
 cParentClass = CMarker
 mainParentClass = MainMarker
 visuParentClass = VisualizationMarker
@@ -8325,7 +8330,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = MarkerNodePosition
-classDescription = "A node-Marker attached to a position-based node."
+classDescription = "A node-Marker attached to a position-based node. It can be used for connectors, joints or loads where position is required. If connectors also require orientation information, use a MarkerNodeRigid."
 cParentClass = CMarker
 mainParentClass = MainMarker
 visuParentClass = VisualizationMarker
@@ -8351,7 +8356,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = MarkerNodeRigid
-classDescription = "A rigid-body (position+orientation) node-marker attached to a rigid-body node."
+classDescription = "A rigid-body (position+orientation) node-marker attached to a rigid-body node. It provides position and orientation (rotation), as well as the according derivatives. It can be used for most connectors, joints or loads where either position, position and orientation, or orientation are required."
 cParentClass = CMarker
 mainParentClass = MainMarker
 visuParentClass = VisualizationMarker
@@ -8509,7 +8514,7 @@ V,      CP,     rotationCoordinate,             ,               ,       UInt,   
 #
 Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "return parameters.nodeNumber;", ,  CI,     "access to node number" 
 F,      C,      GetRotationCoordinateNumber,    ,               ,       Index,      "return parameters.rotationCoordinate;", ,  CI, "access to coordinate index" 
-Fv,     C,      GetType,                        ,               ,       "Marker::Type", "return (Marker::Type)(Marker::Node + Marker::Coordinate + Marker::Orientation);", ,       CI,     "return marker type (for node treatment in computation)" 
+Fv,     C,      GetType,                        ,               ,       "Marker::Type", "return (Marker::Type)(Marker::Node + Marker::Coordinate);", ,       CI,     "return marker type (for node treatment in computation)" 
 Fv,     C,      GetDimension,                   ,               ,       Index,      "return 1;",                "const CSystemData& cSystemData", CI,   "return dimension of connector, which an attached connector would have; for coordinate markers, it gives the number of coordinates used by the marker"
 Fv,     C,      GetPosition,                    ,               3,      void,       ,  "const CSystemData& cSystemData, Vector3D& position, ConfigurationType configuration = ConfigurationType::Current", CDI,   "return position of marker" 
 Fv,     C,      ComputeMarkerData,              ,               ,       void,       ,  "const CSystemData& cSystemData, bool computeJacobian, MarkerData& markerData", CDI,     "Compute marker data (e.g. position and positionJacobian) for a marker" 

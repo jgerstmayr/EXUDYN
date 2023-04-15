@@ -145,6 +145,32 @@ def __UFsensorDistance(mbs, t, sensorNumbers, factors, configuration):
             
     return rv
 
+
+
+#**function: Add geometry for distance sensor given by points and triangles (point indices) to mbs; use a rigid body marker where the geometry is put on; 
+#           Creates a GeneralContact for efficient search on background. If you have several sets of points and trigs, first merge them or add them manually to the contact
+#**input: 
+#  mbs: MainSystem where contact is created
+#  meshPoints: list of points (3D), as returned by GraphicsData2PointsAndTrigs()
+#  meshTrigs: list of trigs (3 node indices each), as returned by GraphicsData2PointsAndTrigs()
+#  rigidBodyMarkerIndex: rigid body marker to which the triangles are fixed on (ground or moving object)
+#  searchTreeCellSize: size of search tree (X,Y,Z); use larger values in directions where more triangles are located
+#**output: returns [ngc, gContact]: ngc is the number of GeneralContact in mbs, to be used in AddDistanceSensor; keep the gContact as deletion may corrupt data
+#**notes: should be used by AddDistanceSensor(...) and AddLidar(...) for simple initialization of GeneralContact
+def DistanceSensorSetupGeometry(mbs, meshPoints, meshTrigs, rigidBodyMarkerIndex, searchTreeCellSize=[8,8,8]):
+    gContact = mbs.AddGeneralContact()
+    gContact.SetFrictionPairings(0*np.eye(1)) #may not be empty
+    gContact.SetSearchTreeCellSize(numberOfCells=searchTreeCellSize)
+    # [meshPoints, meshTrigs] = RefineMesh(meshPoints, meshTrigs) #just to have more triangles on floor
+    gContact.AddTrianglesRigidBodyBased(rigidBodyMarkerIndex=rigidBodyMarkerIndex,
+                                        contactStiffness=1, contactDamping=1, #dummy values
+                                        frictionMaterialIndex=0, pointList=meshPoints, triangleList=meshTrigs)
+    gContact.isActive=False #no contact computation; could also be done later on, if many moving objects are used ...
+    ngc = mbs.NumberOfGeneralContacts()-1
+    gContact = mbs.GetGeneralContact(ngc) #keeps reference to gContact, while other functions work with automatic ...
+
+    return ngc
+
 #**function: Function to add distance sensor based on GeneralContact to mbs; sensor can be either placed on absolute position or attached to rigid body marker; in case of marker, dirSensor is relative to the marker
 #**input:
 #  generalContactIndex: the number of the GeneralContact object in mbs; the index of the GeneralContact object which has been added with last AddGeneralContact(...) command is generalContactIndex=mbs.NumberOfGeneralContacts()-1
@@ -159,13 +185,15 @@ def __UFsensorDistance(mbs, t, sensorNumbers, factors, configuration):
 #  measureVelocity: if True, the sensor measures additionally the velocity (component 0=distance, component 1=velocity); velocity is the velocity in direction 'dirSensor' and does not account for changes in geometry, thus it may be different from the time derivative of the distance!
 #  addGraphicsObject: if True, the distance sensor is also visualized graphically in a simplified manner with a red line having the length of dirSensor; NOTE that updates are ONLY performed during computation, not in visualization; for this reason, solutionSettings.sensorsWritePeriod should be accordingly small
 #  drawDisplaced: if True, the red line is drawn backwards such that it moves along the measured surface; if False, the beam is fixed to marker or position
+#  color: optional color for 'laser beam' to be drawn
 #**output: creates sensor and returns according sensor number of SensorUserFunction
+#**notes: use generalContactIndex = DistanceSensorSetupGeometry(...) before to create GeneralContact module containing geometry
 def AddDistanceSensor(mbs, generalContactIndex,
                       positionOrMarker, dirSensor, minDistance=-1e7, 
                       maxDistance=1e7, cylinderRadius=0, 
                       selectedTypeIndex=exudyn.ContactTypeIndex.IndexEndOfEnumList,
                       storeInternal = False, fileName = '', measureVelocity = False,
-                      addGraphicsObject=False, drawDisplaced=True):
+                      addGraphicsObject=False, drawDisplaced=True, color=color4red):
     
     markerNumber = -1
     p0list = [0,0,0]
@@ -174,7 +202,7 @@ def AddDistanceSensor(mbs, generalContactIndex,
     elif type(positionOrMarker)==exudyn.MarkerIndex:
         markerNumber = float(int(positionOrMarker))
         try:
-            p0list = mbs.GetMarkerOutput(markerNumber=0,variableType=exu.OutputVariableType.Position, configuration=exu.ConfigurationType.Reference)
+            p0list = mbs.GetMarkerOutput(markerNumber=positionOrMarker,variableType=exu.OutputVariableType.Position, configuration=exu.ConfigurationType.Reference)
             p0list = list(p0list)
         except:
             p0list = [0,0,0] #this was just a trial, otherwise initialize with zeros (e.g. for special objects where this does not work)
@@ -187,9 +215,9 @@ def AddDistanceSensor(mbs, generalContactIndex,
         sign = -1.
     if addGraphicsObject:
         if cylinderRadius == 0:
-            gData = GraphicsDataLine([[0,0,0],list(sign*np.array(dirSensor))], color = color4red)
+            gData = GraphicsDataLine([[0,0,0],list(sign*np.array(dirSensor))], color = color)
         else: 
-            gData = GraphicsDataCylinder([0,0,0],sign*np.array(dirSensor), radius=cylinderRadius, color = color4red)
+            gData = GraphicsDataCylinder([0,0,0],sign*np.array(dirSensor), radius=cylinderRadius, color = color)
             
         graphicsObject=mbs.AddObject(ObjectGround(referencePosition= p0list,
                                       visualization=VObjectGround(graphicsData=[gData])))
@@ -205,11 +233,6 @@ def AddDistanceSensor(mbs, generalContactIndex,
                                               sensorUserFunction=__UFsensorDistance))
 
     return sUF
-
-
-
-
-
 
 
 #**function: DEPRECATED: Internal SensorUserFunction, used in function AddSensorRecorder

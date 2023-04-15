@@ -9,7 +9,7 @@ A 2D point/slope vector node for planar Bernoulli-Euler ANCF (absolute nodal coo
 
 \ **Additional information for NodePoint2DSlope1**\ :
 
-* | The Node has the following types = \ ``Position2D``\ , \ ``Orientation2D``\ , \ ``Point2DSlope1``\ , \ ``Position``\ , \ ``Orientation``\ 
+* | This \ ``Node``\  has/provides the following types = \ ``Position2D``\ , \ ``Orientation2D``\ , \ ``Point2DSlope1``\ , \ ``Position``\ , \ ``Orientation``\ 
 * | \ **Short name**\  for Python = \ ``Point2DS1``\ 
 * | \ **Short name**\  for Python visualization object = \ ``VPoint2DS1``\ 
 
@@ -48,12 +48,14 @@ DESCRIPTION of NodePoint2DSlope1
 
 \ **The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**\ :
 
-* | ``Position``\ : 
+* | ``Position``\ : \ :math:`\LU{0}{{\mathbf{p}}}\cConfig = [p_0,\, p_1,\,0]\cConfig\tp`\ 
   | global 3D position vector of node (=displacement+reference position)
-* | ``Displacement``\ : 
+* | ``Displacement``\ : \ :math:`\LU{0}{{\mathbf{u}}}\cConfig = [q_0,\, q_1,\,0]\cConfig\tp`\ 
   | global 3D displacement vector of node
-* | ``Velocity``\ : 
+* | ``Velocity``\ : \ :math:`\LU{0}{{\mathbf{v}}}\cConfig = [\dot q_0,\,\dot q_1,\,0]\cConfig\tp`\ 
   | global 3D velocity vector of node
+* | ``Acceleration``\ : \ :math:`\LU{0}{{\mathbf{a}}}\cConfig = [\ddot q_0,\,\ddot q_1,\,0]\cConfig\tp`\ 
+  | global 3D acceleration vector of node
 * | ``Coordinates``\ : 
   | coordinates vector of node (2 displacement coordinates + 2 slope vector coordinates)
 * | ``Coordinates\_t``\ : 
@@ -63,7 +65,12 @@ DESCRIPTION of NodePoint2DSlope1
 
 
 
+Relevant Examples and TestModels with weblink:
 
-\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+    \ `sliderCrank3DwithANCFbeltDrive2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/sliderCrank3DwithANCFbeltDrive2.py>`_\  (Examples/), \ `ALEANCFpipe.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ALEANCFpipe.py>`_\  (Examples/), \ `ANCFcantileverTestDyn.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcantileverTestDyn.py>`_\  (Examples/), \ `ANCFcontactCircle.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle.py>`_\  (Examples/), \ `ANCFcontactCircle2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle2.py>`_\  (Examples/), \ `ANCFmovingRigidbody.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFmovingRigidbody.py>`_\  (Examples/), \ `ANCFslidingJoint2D.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFslidingJoint2D.py>`_\  (Examples/), \ `ANCFslidingJoint2Drigid.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFslidingJoint2Drigid.py>`_\  (Examples/), \ `ANCFswitchingSlidingJoint2D.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFswitchingSlidingJoint2D.py>`_\  (Examples/), \ `ANCFtestHalfcircle.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFtestHalfcircle.py>`_\  (Examples/), \ `ANCFtests2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFtests2.py>`_\  (Examples/), \ `sliderCrank3DwithANCFbeltDrive.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/sliderCrank3DwithANCFbeltDrive.py>`_\  (Examples/), \ `ANCFcontactCircleTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py>`_\  (TestModels/), \ `ANCFcontactFrictionTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactFrictionTest.py>`_\  (TestModels/), \ `computeODE2EigenvaluesTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/computeODE2EigenvaluesTest.py>`_\  (TestModels/)
+
+
+
+\ **The web version may not be complete. For details, consider also the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

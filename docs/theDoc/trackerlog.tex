@@ -9,15 +9,202 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi \small
-  \item Exudyn version = 1.6.31.dev1, 
-  \item last change =  2023-03-29, 
-  \item Number of issues = 1484, 
-  \item Number of resolved issues = 1311 (31 in current version), 
+  \item Exudyn version = 1.6.57.dev1, 
+  \item last change =  2023-04-15, 
+  \item Number of issues = 1515, 
+  \item Number of resolved issues = 1337 (57 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.6.57}:  resolved Issue 1269: {\bf LaserSensor}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add advanced distance sensors replicating laser scanner (with axis, revolution speed and initial direction)}
+    \item {\bf notes: added function AddLidar(...) into exudyn.robotics.utilities; see laserScannerTest.py}
+    \item   date resolved: {\bf 2023-04-15 15:33},
+date raised: 2022-09-21 
+  \ei
+  \item[] {\bf Version 1.6.56}:  resolved Issue 1270: {\bf DistanceSensor}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add advanced distance sensor with possibility to use a set of beams and averaging or multiple output}
+    \item {\bf notes: added DistanceSensorSetupGeometry in exudyn.utilities to set up contact geometry easily; see laserScannerTest.py}
+    \item   date resolved: {\bf 2023-04-15 15:32},
+date raised: 2022-09-21 
+  \ei
+  \item[] {\bf Version 1.6.55}: {\bf \color{warningRed}  resolved BUG 1514}: {\bf GetInterpolatedSignalValue}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: check for simple test, seems not to work}
+    \item {\bf notes: changed order of args: dataArrayIndex and timeArrayIndex}
+    \item   date resolved: {\bf 2023-04-15 14:34},
+date raised: 2023-04-14 
+  \ei
+  \item[] {\bf Version 1.6.54}:  resolved Issue 1513: {\bf RevoluteJoint, PrismaticJoint}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: both ObjectJointPrismaticX and ObjectJointRevoluteZ have wrong internal typename JointRevolute; change to correct names; when analyzing such objects, they will return wrong typenames}
+    \item   date resolved: {\bf 2023-04-14 14:36},
+date raised: 2023-04-14 
+  \ei
+  \item[] {\bf Version 1.6.53}:  resolved Issue 1511: {\bf AddDistanceSensor}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add optional color for laser beam}
+    \item   date resolved: {\bf 2023-04-13 17:45},
+date raised: 2023-04-13 
+  \ei
+  \item[] {\bf Version 1.6.52}: {\bf \color{warningRed}  resolved BUG 1510}: {\bf AddDistanceSensor}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: checks performed with invalid marker number}
+    \item   date resolved: {\bf 2023-04-13 10:28},
+date raised: 2023-04-13 
+  \ei
+  \item[] {\bf Version 1.6.51}:  resolved Issue 1141: {\bf object factory}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: consider hash tables for object factory; check current performance?}
+    \item {\bf notes: no changes; string comparison has no effect on performance as compared to new and pybind11 overheads for call to  AddObject, etc.}
+    \item   date resolved: {\bf 2023-04-10 21:48},
+date raised: 2022-06-12 
+  \ei
+  \item[] {\bf Version 1.6.50}:  resolved Issue 1506: {\bf ODE2Size}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: and other functions have additional ConfigurationType: remove}
+    \item {\bf notes: kept the argument ConfigurationType; usually, all configuration types have same sizes but the call must be related to a speficic configuration}
+    \item   date resolved: {\bf 2023-04-10 21:42},
+date raised: 2023-04-08 
+  \ei
+  \item[] {\bf Version 1.6.49}:  resolved Issue 1509: {\bf SystemData}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: prevent from creation of a pure SystemData in exudyn; check constructor used in SC.AddSystem and SystemData()}
+    \item   date resolved: {\bf 2023-04-10 21:37},
+date raised: 2023-04-10 
+  \ei
+  \item[] {\bf Version 1.6.48}:  resolved Issue 1508: {\bf MainSystem}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: prevent from creation of a pure MainSystem in exudyn; check constructor used in SC.AddSystem and MainSystem()}
+    \item   date resolved: {\bf 2023-04-10 21:37},
+date raised: 2023-04-10 
+  \ei
+  \item[] {\bf Version 1.6.47}:  resolved Issue 1507: {\bf SystemContainer}
+(docu)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add description for SystemContainer itself; sying that it behaves like a variable in Python}
+    \item   date resolved: {\bf 2023-04-10 21:36},
+date raised: 2023-04-10 
+  \ei
+  \item[] {\bf Version 1.6.46}:  resolved Issue 1503: {\bf item description}
+(docu)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add general description to RST / sphinx}
+    \item   date resolved: {\bf 2023-04-08 19:04},
+date raised: 2023-04-08 
+  \ei
+  \item[] {\bf Version 1.6.45}:  resolved Issue 1496: {\bf AddMainObjectPyClass}
+(check)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: C++: for adding objects, nodes, etc. currently py::object and py::dict is copied: check performance increase, if it is passed by reference}
+    \item {\bf notes: tests show small performance improvements (10%) for creation of items}
+    \item   date resolved: {\bf 2023-04-08 17:36},
+date raised: 2023-04-07 
+  \ei
+  \item[] {\bf Version 1.6.44}:  resolved Issue 1498: {\bf MarkerNodeRotationCoordinate}
+(check)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: check if Orientation type is correct, see docu}
+    \item {\bf notes: removed Marker::Orientation from MarkerNodeRotationCoordinate as it is not provided}
+    \item   date resolved: {\bf 2023-04-08 17:30},
+date raised: 2023-04-08 
+  \ei
+  \item[] {\bf Version 1.6.43}: {\bf \color{warningRed}  resolved BUG 1497}: {\bf PyBeamSection}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: C++: segmentation fault in linux, caused by conversion from numpy array into std::array; use SetConstMatrixTemplateSafely for writing matrix or list}
+    \item   date resolved: {\bf 2023-04-07 19:05},
+date raised: 2023-04-07 
+  \ei
+  \item[] {\bf Version 1.6.42}: {\bf \color{warningRed}  resolved BUG 1495}: {\bf BeamSection}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: PyBeamSection does not call parent constructor (BeamSection); leads to seg fault in linux version}
+    \item   date resolved: {\bf 2023-04-07 13:32},
+date raised: 2023-04-07 
+  \ei
+  \item[] {\bf Version 1.6.41}:  resolved Issue 1272: {\bf GeometricallyExactBeam}
+(check)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: check jacobian computation as numerical differentiation works better; similar to \#1100}
+    \item {\bf notes: fixed bug of GeometricallyExactBeam having wrong jacobian}
+    \item   date resolved: {\bf 2023-04-06 18:28},
+date raised: 2022-09-24 
+  \ei
+  \item[] {\bf Version 1.6.40}:  resolved Issue 1492: {\bf Python utilities}
+(docu)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: fix indentation of examples}
+    \item   date resolved: {\bf 2023-04-06 14:55},
+date raised: 2023-04-06 
+  \ei
+  \item[] {\bf Version 1.6.39}:  resolved Issue 1491: {\bf ProcessParameterList}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: remove addComputationIndex, as it is unused}
+    \item   date resolved: {\bf 2023-04-06 14:35},
+date raised: 2023-04-06 
+  \ei
+  \item[] {\bf Version 1.6.38}:  resolved Issue 1156: {\bf renderState}
+(docu)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add description of render state from C++ into theDoc}
+    \item {\bf notes: added section Render State in section Graphics and Visualization (GUI)}
+    \item   date resolved: {\bf 2023-04-05 14:14},
+date raised: 2022-06-21 
+  \ei
+  \item[] {\bf Version 1.6.37}:  resolved Issue 1468: {\bf sphinx}
+(docu)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add issue and bugs section with resolved issues and open issues table; resolved issues with version}
+    \item {\bf notes: already done earlier}
+    \item   date resolved: {\bf 2023-04-05 14:08},
+date raised: 2023-03-22 
+  \ei
+  \item[] {\bf Version 1.6.36}:  resolved Issue 1490: {\bf ANCFBeam}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: remove testBeamRectangularSize}
+    \item   date resolved: {\bf 2023-04-05 13:59},
+date raised: 2023-04-05 
+  \ei
+  \item[] {\bf Version 1.6.35}:  resolved Issue 1088: {\bf ANCFBeam3D}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add test model, compare to 2013 paper}
+    \item   date resolved: {\bf 2023-04-04 20:59},
+date raised: 2022-05-16 
+  \ei
+  \item[] {\bf Version 1.6.34}: {\bf \color{warningRed}  resolved BUG 1489}: {\bf CObjectANCFBeam}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: Computation of elastic forces uses global instead of local twist-and-curvature vector}
+    \item   date resolved: {\bf 2023-04-04 20:04},
+date raised: 2023-04-04 
+  \ei
+  \item[] {\bf Version 1.6.33}:  resolved Issue 1488: {\bf NodePoint3DSlope23}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add full rigid body output values to node (e.g., Rotation missing)}
+    \item   date resolved: {\bf 2023-04-04 13:31},
+date raised: 2023-04-04 
+  \ei
+  \item[] {\bf Version 1.6.32}:  resolved Issue 1487: {\bf Acceleration}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add GetAcceleration function to all nodes; add acceleration to all ODE2-based node output variables}
+    \item   date resolved: {\bf 2023-04-04 13:27},
+date raised: 2023-04-04 
+  \ei
   \item[] {\bf Version 1.6.31}:  resolved Issue 1482: {\bf EnterTaskManager}
 (change)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
@@ -6123,7 +6310,7 @@ date raised: 2021-01-05
     \item   date resolved: {\bf 2021-01-05 21:46},
 date raised: 2021-01-05 
   \ei
-  \item[] {\bf Version 1.0.83}: {\bf \color{warningRed}  resolved Issue 0529}: {\bf add MainSystem to userFunctions}
+  \item[] {\bf Version 1.0.83}:  resolved Issue 0529: {\bf add MainSystem to userFunctions}
 (change)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: add MainSystem "mbs" to all user functions as first argument (WARNING: this changes ALL user functions!!!}

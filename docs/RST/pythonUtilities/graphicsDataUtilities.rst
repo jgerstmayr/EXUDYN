@@ -79,7 +79,7 @@ Function: GraphicsData2PointsAndTrigs
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `particleClusters.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particleClusters.py>`_\  (Ex), \ `particlesSilo.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particlesSilo.py>`_\  (Ex), \ `serialRobotKinematicTreeDigging.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTreeDigging.py>`_\  (Ex), \ `tippeTop.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/tippeTop.py>`_\  (Ex), \ `distanceSensor.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/distanceSensor.py>`_\  (TM), \ `generalContactFrictionTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/generalContactFrictionTests.py>`_\  (TM)
+    \ `particleClusters.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particleClusters.py>`_\  (Ex), \ `particlesSilo.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particlesSilo.py>`_\  (Ex), \ `serialRobotKinematicTreeDigging.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTreeDigging.py>`_\  (Ex), \ `tippeTop.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/tippeTop.py>`_\  (Ex), \ `distanceSensor.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/distanceSensor.py>`_\  (TM), \ `generalContactFrictionTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/generalContactFrictionTests.py>`_\  (TM), \ `laserScannerTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/laserScannerTest.py>`_\  (TM)
 
 
 ----
@@ -192,7 +192,7 @@ Function: MergeGraphicsDataTriangleList
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `graphicsDataExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/graphicsDataExample.py>`_\  (Ex), \ `particleClusters.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particleClusters.py>`_\  (Ex), \ `particlesSilo.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particlesSilo.py>`_\  (Ex), \ `serialRobotKinematicTreeDigging.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTreeDigging.py>`_\  (Ex), \ `distanceSensor.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/distanceSensor.py>`_\  (TM), \ `generalContactFrictionTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/generalContactFrictionTests.py>`_\  (TM)
+    \ `graphicsDataExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/graphicsDataExample.py>`_\  (Ex), \ `particleClusters.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particleClusters.py>`_\  (Ex), \ `particlesSilo.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particlesSilo.py>`_\  (Ex), \ `serialRobotKinematicTreeDigging.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTreeDigging.py>`_\  (Ex), \ `distanceSensor.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/distanceSensor.py>`_\  (TM), \ `generalContactFrictionTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/generalContactFrictionTests.py>`_\  (TM), \ `laserScannerTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/laserScannerTest.py>`_\  (TM)
 
 
 ----
@@ -599,19 +599,19 @@ Function: GraphicsDataSolidOfRevolution
   #simple contour, using list of 2D points:
   contour=[[0,0.2],[0.3,0.2],[0.5,0.3],[0.7,0.4],[1,0.4],[1,0.]]
   rev1 = GraphicsDataSolidOfRevolution(pAxis=[0,0.5,0], vAxis=[1,0,0],
-  contour=contour, color=color4red,
-  alternatingColor=color4grey)
+                                       contour=contour, color=color4red,
+                                       alternatingColor=color4grey)
   #draw torus:
   contour=[]
   r = 0.2 #small radius of torus
   R = 0.5 #big radius of torus
   nc = 16 #discretization of torus
   for i in range(nc+3): #+3 in order to remove boundary effects
-  contour+=[[r*cos(i/nc*pi*2),R+r*sin(i/nc*pi*2)]]
+      contour+=[[r*cos(i/nc*pi*2),R+r*sin(i/nc*pi*2)]]
   #use smoothContour to make torus looking smooth
   rev2 = GraphicsDataSolidOfRevolution(pAxis=[0,0.5,0], vAxis=[1,0,0],
-  contour=contour, color=color4red,
-  nTiles = 64, smoothContour=True)
+                                       contour=contour, color=color4red,
+                                       nTiles = 64, smoothContour=True)
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
@@ -722,10 +722,10 @@ Function: GraphicsDataQuad
 .. code-block:: python
 
   plane = GraphicsDataQuad([[-8, 0, -8],[ 8, 0, -8,],[ 8, 0, 8],[-8, 0, 8]],
-  color4darkgrey, nTiles=8,
-  alternatingColor=color4lightgrey)
+                           color4darkgrey, nTiles=8,
+                           alternatingColor=color4lightgrey)
   oGround=mbs.AddObject(ObjectGround(referencePosition=[0,0,0],
-  visualization=VObjectGround(graphicsData=[plane])))
+                        visualization=VObjectGround(graphicsData=[plane])))
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
@@ -761,7 +761,7 @@ Function: GraphicsDataCheckerBoard
 
   plane = GraphicsDataCheckerBoard(normal=[0,0,1], size=5)
   oGround=mbs.AddObject(ObjectGround(referencePosition=[0,0,0],
-  visualization=VObjectGround(graphicsData=[plane])))
+                        visualization=VObjectGround(graphicsData=[plane])))
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
@@ -803,7 +803,7 @@ Function: ComputeTriangularMesh
   points = np.array([[0, 0], [0, 2], [2, 2], [2, 1], [1, 1], [0, 1], [1, 0]])
   segments = [len(points)-1,0]
   for i in range(len(points)-1):
-  segments += [i,i+1]
+      segments += [i,i+1]
   tri = ComputeTriangularMesh(points, segments)
   print(tri.simplices)
 

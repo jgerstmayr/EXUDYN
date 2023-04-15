@@ -1,13 +1,13 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  Example of a serial robot with minimal and redundant coordinates
+# Details:  Example of a serial robot with minimal coordinates using the inverse kinematics Funcion of Exudyn
 #
 # Author:   Johannes Gerstmayr
-# Date:     2022-06-26
+# Date:     2023-03-29
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
-#
+#q
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
@@ -22,12 +22,19 @@ from exudyn.robotics.models import ManipulatorPuma560, ManipulatorPANDA, Manipul
 from exudyn.lieGroupBasics import LogSE3, ExpSE3
 
 import numpy as np
-from numpy import linalg as LA
 
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# exuVersion = np.array(exu.__version__.split('.')[:3], dtype=int)
+exuVersion = exu.__version__.split('.')[:3]
+exuVersion = exuVersion[0] + exuVersion[1] + exuVersion[2]
+if int(exuVersion) < 1631: 
+    print('\nWarning: use at least exudyn verion 1.6.31.dev1')
+    print('You can install the latest development version with\npip install -U exudyn --pre\n\n')
+    
+
+#%% ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #motion planning:
 jointSpaceInterpolation = False #false interpolates TCP position in work space/Cartesian coordinates
-
+motionCase = 1 # case 1 and 2 move in different planes
 
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -55,7 +62,8 @@ graphicsToolList = [GraphicsDataCylinder(pAxis=[0,0,zOff], vAxis= [0,0,tz], radi
 graphicsToolList+= [GraphicsDataOrthoCubePoint([0,ty,1.5*tz+zOff], toolSize, color4grey)]
 graphicsToolList+= [GraphicsDataOrthoCubePoint([0,-ty,1.5*tz+zOff], toolSize, color4grey)]
 
-
+# here another robot could be loaded; note that the robots sizes and workspaces and zero configuration 
+# differ, so the HTmove may need to be adjusted to be inside the workspace
 robotDef = ManipulatorPuma560()
 # robotDef = ManipulatorUR5()
 # robotDef = ManipulatorPANDA()
@@ -72,16 +80,19 @@ ik = InverseKinematicsNumerical(robot=robot, useRenderer=False,
                                 #flagDebug=True, 
                                 #jointStiffness=1e4
                                 ) #, useAlternativeConstraints=True)
-SC = exu.SystemContainer()
+SC = exu.SystemContainer() 
 SC.AttachToRenderEngine()
 mbs = SC.AddSystem()
+# the system container holds one or several systems; the inverse kinematics uses a second system container without visualization
+# in the mbs the mainsystem (multibody system) is stored; in the SC more than one mbs can be created but they do not interact with each other. 
+
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #configurations and trajectory
 q0 = [0,0,0,0,0,0] #zero angle configuration
 # q1 = [0, pi/8, pi*0.5, 0,pi/8,0] #configuration 1
 # q2 = [0.8*pi,-0.8*pi, -pi*0.5,0.75*pi,-pi*0.4,pi*0.4] #configuration 2
-# q3 = [0.5*pi,0,-0.25*pi,0,0,0] #zero angle configuration
+# q3 = [0.5*pi,0,-0.25*pi,0,0,0] # configuration 3
 
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -94,9 +105,15 @@ HTlastJoint = jointHTs[-1]@HTtool
 
 #prescribed motion:
 #HTmove = HTtranslate([-0.25,0.,0.3])
+if motionCase == 1: 
+    HTmove = HT(RotationMatrixX(-0.3*pi),[-0.45,0.,0.]) #goes through singularity
+elif motionCase == 2: 
+    HTmove = HT(RotationMatrixX(0.3*pi),[0.,0.,-0.3])    #no singularity
+else: 
+    print('no valid motionCase provided')
 
-# HTmove = HT(RotationMatrixX(-0.3*pi),[-0.45,0.,0.]) #goes through singularity
-HTmove = HT(RotationMatrixX(0.3*pi),[0.,0.,-0.3])    #no singularity
+## here another motionCase/HTmove could be added 
+
 logMove = LogSE3(HTmove)
 rotMove = Skew2Vec(logMove[0:3,0:3])
 dispMove = HT2translation(logMove)
@@ -168,69 +185,76 @@ mbs.SetPreStepUserFunction(PreStepUF)
 
 
 
-mbs.Assemble()
-#mbs.systemData.Info()
+mbs.Assemble() # assemble the dynamic system
+#mbs.systemData.Info() 
 
+#%% setting for visualization
 SC.visualizationSettings.connectors.showJointAxes = True
 SC.visualizationSettings.connectors.jointAxesLength = 0.02
 SC.visualizationSettings.connectors.jointAxesRadius = 0.002
-
 SC.visualizationSettings.nodes.showBasis = True
-SC.visualizationSettings.nodes.basisSize = 0.1
-SC.visualizationSettings.loads.show = False
-SC.visualizationSettings.bodies.kinematicTree.showJointFrames = False
-
+SC.visualizationSettings.nodes.basisSize = 0.1 
+SC.visualizationSettings.loads.show = False # shows external loads 
+SC.visualizationSettings.bodies.kinematicTree.showJointFrames = False # shows the frames for each joint of the robot
 SC.visualizationSettings.openGL.multiSampling=4
-    
-tEnd = 5
-h = 0.002 #500 steps take 0.16 seconds, 0.3ms / step (83% Python + inverse kinematics)
-
-#mbs.WaitForUserToContinue()
-simulationSettings = exu.SimulationSettings() #takes currently set values or default values
-
-
-simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
-simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.solutionSettings.solutionWritePeriod = 0.02
-simulationSettings.solutionSettings.sensorsWritePeriod = 0.005
-#simulationSettings.solutionSettings.writeSolutionToFile = False
-# simulationSettings.timeIntegration.simulateInRealtime = True
-# simulationSettings.timeIntegration.realtimeFactor = 0.025
-
-simulationSettings.timeIntegration.verboseMode = 1
-simulationSettings.displayComputationTime = True
-# simulationSettings.displayStatistics = True
-#simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
-
-#simulationSettings.timeIntegration.newton.useModifiedNewton = True
-simulationSettings.timeIntegration.newton.useModifiedNewton = True
-
-simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations=True
 SC.visualizationSettings.general.autoFitScene=False
 SC.visualizationSettings.window.renderWindowSize=[1920,1200]
 SC.visualizationSettings.general.graphicsUpdateInterval = 0.01
 SC.visualizationSettings.openGL.shadow=0.3
 SC.visualizationSettings.openGL.perspective=0.5
 
-useGraphics = True
+#%% 
+tEnd = 5 # endtime of the simulation
+h = 0.002 #500 steps take 0.16 seconds, 0.3ms / step (83% Python + inverse kinematics)
+
+# settings for the time integration / simulation
+simulationSettings = exu.SimulationSettings() #takes currently set values or default values
+simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h) 
+simulationSettings.timeIntegration.endTime = tEnd
+simulationSettings.solutionSettings.solutionWritePeriod = 0.02 
+# determines the timesteps in which the solution is saved; when it is decreased more solutions are saved, which also 
+# enables the solutionViewer to
+
+simulationSettings.solutionSettings.sensorsWritePeriod = 0.005
+#simulationSettings.solutionSettings.writeSolutionToFile = False
+# simulationSettings.timeIntegration.simulateInRealtime = True
+# simulationSettings.timeIntegration.realtimeFactor = 0.025 # slow down simulation to look at
+
+simulationSettings.timeIntegration.verboseMode = 1
+simulationSettings.displayComputationTime = True
+# simulationSettings.displayStatistics = True
+#simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+simulationSettings.timeIntegration.newton.useModifiedNewton = True
+
+# solver type
+simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations=True
+
+#%% 
+useGraphics = True 
+# if useGraphics is false rendering while calculating the solution is dectivated, 
+# the solution is still saved and can be then visualized afterwards for the solution viewer
+
 
 if useGraphics:
+    # start graphics
     exu.StartRenderer()
     if 'renderState' in exu.sys:
         SC.SetRenderState(exu.sys['renderState'])
     mbs.WaitForUserToContinue()
     
+# hte the simulation with the set up simulationsettings is started 
 exu.SolveDynamic(mbs, simulationSettings, 
-                 #solverType = exudyn.DynamicSolverType.TrapezoidalIndex2,
+                 #solverType = exudyn.DynamicSolverType.TrapezoidalIndex2, # different solver types can be used depending on the problem
                  showHints=True)
 
 
-if useGraphics:
+if useGraphics: # when graphics are deactivated the renderer does not need to be stopped
     SC.visualizationSettings.general.autoFitScene = False
     exu.StopRenderer()
 
-if True:
 #%%++++++++++++++++++++++++++++++++++++++++++++
+if True:
+    # import the solution viewer which loads 
     from exudyn.interactive import SolutionViewer
     SolutionViewer(mbs)
 #%%++++++++++++++++++++++++++++++++++++++++++++
@@ -245,6 +269,6 @@ if True:
     labels = []
     for i in range(6):
         labels += ['joint '+str(i)]
-        
-    PlotSensor(mbs, sensorNumbers=[sJoints]*6, components=list(np.arange(6)), yLabel='joint coordinates', labels=labels)
-
+    # plot data from the sensor sJoints 6 times and take the values 0 to 5 in the steps
+    PlotSensor(mbs, sensorNumbers=[sJoints]*6, components=list(np.arange(6)), yLabel='joint coordinates', labels=labels) 
+    

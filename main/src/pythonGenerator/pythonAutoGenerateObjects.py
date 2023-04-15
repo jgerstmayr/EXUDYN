@@ -538,14 +538,14 @@ def WriteFile(parseInfo, parameterList, typeConversion):
             lstAdd = []
             plr.AddDocu('\\noindent \\mybold{Additional information for ' + parseInfo['class'] + '}:\n', preNewLine=True)
             if len(itemTypeString) != 0:
-                lstAdd += ['The ' + parseInfo['classType'] + ' has the following types = ' + itemTypeString]
+                lstAdd += ['This \\texttt{' + parseInfo['classType'] + '} has/provides the following types = ' + itemTypeString]
             if len(requestedMarkerString) != 0:
-                lstAdd += ['Requested marker type = ' + requestedMarkerString]
+                lstAdd += ['Requested \\texttt{Marker} type = ' + requestedMarkerString]
             if len(requestedNodeString) != 0:
                 if requestedNodeString.find('_None') != -1:
-                    lstAdd += ['Requested node type: read detailed information of item']
+                    lstAdd += ['Requested \\texttt{Node} type: read detailed information of item']
                 else:
-                    lstAdd += ['Requested node type = ' + requestedNodeString]
+                    lstAdd += ['Requested \\texttt{Node} type = ' + requestedNodeString]
             if len(parseInfo['pythonShortName']) != 0:
                 lstAdd += ['{\\bf Short name} for Python = \\texttt{' + parseInfo['pythonShortName'] + '}']
                 lstAdd += ['{\\bf Short name} for Python visualization object = \\texttt{V' + parseInfo['pythonShortName'] + '}']
@@ -625,11 +625,13 @@ def WriteFile(parseInfo, parameterList, typeConversion):
             # plrAdd.sLatex += parseInfo['miniExample'] + '\n'
             # plrAdd.sLatex +='\\end{lstlisting}\n\n'
 
-        sExamples = GenerateLatexStrKeywordExamples(parseInfo['classType'], 
-                                        parseInfo['class'], parseInfo['pythonShortName'])
+        [sExamples, sExamplesRST] = GenerateLatexStrKeywordExamples(parseInfo['classType'], 
+                                        parseInfo['class'], parseInfo['pythonShortName'],
+                                        useLatex=False)
         if len(sExamples) != 0:
             plrAdd.sLatex += "\\vspace{6pt}\\par\\noindent\\rule{\\textwidth}{0.4pt}\n"
             plrAdd.sLatex += sExamples
+            plrAdd.sRST += '\n'+sExamplesRST
 
         if len(plrAdd.sLatex) != 0:
             #plrAdd.sLatex += "\\vspace{6pt}\\par\\noindent\\rule{\\textwidth}{0.4pt}\n"
@@ -1392,18 +1394,20 @@ try: #still close file if crashes
     nPythonGlobal = len(sPythonGlobalNames)
     nLatexGlobal = nPythonGlobal+nObjectTypes
     sLatexGlobal = ['']*nLatexGlobal        #gobal Latex string; 'Node','Object','Marker','Load','Sensor'
-    sLatexGlobalItemIntros=['Nodes provide coordinates for objects. Loads can be applied and Markers or Sensors can be attached to Nodes. The sorting of Nodes in the system (the order they are added to mbs) defines the order of system coordinates.',
-                            'A Body is a special Object, which has physical properties such as mass. A localPosition can be measured w.r.t.\\ the reference point of the body',
-                            'A SuperElement is a special Object which acts on a set of nodes. Essentially, SuperElements can be linked with special SuperElement markers. SuperElements may represent complex flexible bodies, based on finite element formulations.',
-                            'A FiniteElement is a special Object and Body, which is used to define deformable bodies, such as beams or solid finite elements. FiniteElements are usually linked to two or more nodes.',
-                            'A Joint is a special Object, Connector and Constraint, which is attached to position or rigid body markers. The joint results in special algebraic equations and requires implicit time integration. Joints represent special constraints, as described in multibody system dynamics literature.',
-                            'A Connector is a special Object, which links two or more markers. A Connector which is not a Constraint, is a force element (e.g., spring-damper) or a penalty based joint.',
-                            'A Constraint is a special Object and Connector, which links two or more markers. A Constraint leads to algebraic equations, which exactly fulfill special constraints on the kinematic behavior of the multibody syste, such as a constraint on a coordinate or a distance constraint.',
-                            'A Object provides equations, using coordinates from Nodes. General objects lead to system equations, that do not represent physical Bodies or Connectors.',
-                            'A Marker provides an interface between a large variety of Nodes / Objects and Connectors or Loads.',
-                            'A Load applies a (usually constant) force, torque, mass-proportional or generalized load onto Nodes or Objects via Markers',
-                            'A Sensor is used to measure quantities during simulation. Sensors may be attached to Nodes, Objects, Markers or Loads. Sensor values may be directly read via mbs or can be continuously written to files or SensorRecorder during simulation. The exudyn.plot Python utility function PlotSensor(...) can be conveniently used to show Sensor values over time.',
-                            ]
+    
+    #... convert to dictionary, in or to be safe w.r.t. relation to sLatexGlobalNames
+    sLatexGlobalItemIntros={'Nodes':                   'Nodes provide coordinates for objects. Loads can be applied and Markers or Sensors can be attached to Nodes. The sorting of Nodes in the system (the order they are added to mbs) defines the order of system coordinates.',
+                            'Objects (Body)':          'A Body is a special Object, which has physical properties such as mass. A localPosition can be measured w.r.t.\\ the reference point of the body',
+                            'Objects (SuperElement)':  'A SuperElement is a special Object which acts on a set of nodes. Essentially, SuperElements can be linked with special SuperElement markers. SuperElements may represent complex flexible bodies, based on finite element formulations.',
+                            'Objects (FiniteElement)': 'A FiniteElement is a special Object and Body, which is used to define deformable bodies, such as beams or solid finite elements. FiniteElements are usually linked to two or more nodes.',
+                            'Objects (Joint)':         'A Joint is a special Object, Connector and Constraint, which is attached to position or rigid body markers. The joint results in special algebraic equations and requires implicit time integration. Joints represent special constraints, as described in multibody system dynamics literature.',
+                            'Objects (Connector)':     'A Connector is a special Object, which links two or more markers. A Connector which is not a Constraint, is a force element (e.g., spring-damper) or a penalty based joint.',
+                            'Objects (Constraint)':    'A Constraint is a special Object and Connector, which links two or more markers. A Constraint leads to algebraic equations, which exactly fulfill special constraints on the kinematic behavior of the multibody syste, such as a constraint on a coordinate or a distance constraint.',
+                            'Objects (Object)':        'A Object provides equations, using coordinates from Nodes. General objects lead to system equations, that do not represent physical Bodies or Connectors.',
+                            'Markers':                 'A Marker provides an interface BETWEEN a large variety of Nodes / Bodies / Objects AND Connectors / Loads. To understand which markers are needed, see first the requested \\texttt{Marker} type of the connector, constraint or joint. Hereafter, chose a \\texttt{Marker} -- attached to a node, body or object -- with the according properties. The \\texttt{Marker} may provide more information (e.g., position and orientation) than needed.',
+                            'Loads':                   'A Load applies a (usually constant) force, torque, mass-proportional or generalized load onto Nodes or Objects via Markers. The requested \\texttt{Marker} types need to be provided by the used \\text{Marker}. The marker may provide more types than requested. For non-constant loads, use either a \\texttt{load...UserFunction} or change the load in every step by means of a \\texttt{preStepUserFunction} in the \\texttt{MainSystem} (mbs).',
+                            'Sensors':                 'A Sensor is used to measure quantities during simulation. Sensors may be attached to Nodes, Objects, Markers or Loads. Sensor values may be directly read via mbs or can be continuously written to files or SensorRecorder during simulation. The exudyn.plot Python utility function PlotSensor(...) can be conveniently used to show Sensor values over time.',
+                            }
 
     latexGlobalFromPython = [0,1,nObjectTypes+1,nObjectTypes+2,nObjectTypes+3]
     sLatexGlobalNames = ['Nodes']
@@ -1419,7 +1423,8 @@ try: #still close file if crashes
     #Latex and RST
     sRSTItemList = []   #list of class type, class name, RST string
     sRSTfolderDict = {} #dict containing available folders (to create index file)
-
+    sRSTtypeConversion = {} #conversion from singular to plural
+    
     sLatexItemList = '' #Latex string containing list of items
     sPythonGlobal = ['']*nPythonGlobal  #global python interface class strings; 'Node','Object','Marker','Load','Sensor'
     #++++++++++++++++++++++++++    
@@ -1531,12 +1536,15 @@ try: #still close file if crashes
                                     
                                     if parseInfo['excludeFromTheDoc'] != 'True':
                                         sRSTtype = parseInfo['classType']
+                                        sRSTtype2 = parseInfo['classType']+'s'
                                         indexLatexGlobal = latexGlobalFromPython[typeInd]
                                         oType=''
                                         if parseInfo['classType'] == 'Object':
                                             oType = parseInfo['objectType']
                                             indexLatexGlobal += objectClassDict[parseInfo['objectType']]
                                             sRSTtype += ' ('+parseInfo['objectType']+')'
+                                            sRSTtype2 += ' ('+parseInfo['objectType']+')'
+                                            
                                         if len(sLatexGlobal[indexLatexGlobal]) != 0:
                                             sLatexGlobal[indexLatexGlobal] += '\\newpage\n' #add newpage after every subsection!
                                             
@@ -1545,6 +1553,7 @@ try: #still close file if crashes
                                         sRSTItemList += [(sRSTtype, parseInfo['class'], fileStr[7])] 
                                         if sRSTtype not in sRSTfolderDict:
                                             sRSTfolderDict[sRSTtype] = []
+                                            sRSTtypeConversion[sRSTtype] = sRSTtype2 #conversion from singular to plural
                                         sRSTfolderDict[sRSTtype] += [parseInfo['class']]
 
                                     # print('item=',parseInfo['class'], ', typeInd=',typeInd,',objType=', oType, ', indexGlobal=', indexLatexGlobal)
@@ -1665,7 +1674,7 @@ For description of types (e.g., the meaning of \texttt{Vector3D} or \texttt{Nump
     for it, item in enumerate(sLatexGlobalNames): 
         fileLatex.write('\n\\newpage\n%+++++++++++++++++++++++++++++++\n%+++++++++++++++++++++++++++++++\n')
         fileLatex.write('\\mysubsection{'+item+'}\n')
-        fileLatex.write(sLatexGlobalItemIntros[it]+'\n%++++++\n')
+        fileLatex.write(sLatexGlobalItemIntros[item]+'\n%++++++\n')
         fileLatex.write(sLatexGlobal[it])
     
     fileLatex.close()
@@ -1779,8 +1788,14 @@ Reference manual for: objects, nodes, markers, loads and sensors
 
     #%%write files for each type separately
     for key, value in sRSTfolderDict.items():
+
         rstIndex = RSTheaderString(key, 0)
         rstIndex += '\n'
+        
+        key2 = sRSTtypeConversion[key]
+        rstIndex += LatexString2RST(sLatexGlobalItemIntros[key2])
+        rstIndex += '\n\n'
+
         rstIndex += '.. toctree::\n'
         rstIndex += '   :maxdepth: 2\n'
         rstIndex += '\n'
@@ -1788,7 +1803,7 @@ Reference manual for: objects, nodes, markers, loads and sensors
         for item in sRSTItemList:
             (classType, className, text) = item
             if classType == key:
-                text += '\n\n\\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ \n\n'
+                text += '\n\n\\ **The web version may not be complete. For details, consider also the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ \n\n'
                 text = text.replace('docs/theDoc/figures/','../../theDoc/figures/')
                 if True:
                     file=io.open(rstDir+className+'.rst','w',encoding='utf8')  #clear file by one write access

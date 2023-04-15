@@ -80,6 +80,9 @@ The following table includes the keyboard shortcuts available in the window.
    * - | \ **T**\ 
      - | faces / edges mode
      - | switch between faces transparent/ faces transparent + edges / only face edges / full faces with edges / only faces visible
+   * - | \ **O**\ 
+     - | change center
+     - | change center of rotation to current center of the window (affects only current plane coordinates; rotate model to ajust other coordinates)
    * - | \ **Q**\ 
      - | stop solver
      - | current solver is stopped (proceeds to next simulation or end of file)

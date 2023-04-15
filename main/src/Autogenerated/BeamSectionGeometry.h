@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-03-28 (last modfied)
+* @date         AUTO: 2023-04-07 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -53,7 +53,7 @@ public: // AUTO:
   Real PyGetCrossSectionRadiusZ() const { return Real(crossSectionRadiusZ); }
 
   //! AUTO: Set function (needed in pybind) for: \f$\pv_{pg}\,\f$ [SI: (m,m) ] list of polygonal (\f$Y,Z\f$) points in local beam cross section coordinates, defined in positive rotation direction
-  void PySetPolygonalPoints(const PyVector2DList& polygonalPointsInit) { polygonalPoints=(const Vector2DList&)polygonalPointsInit; }
+  void PySetPolygonalPoints(const PyVector2DList& polygonalPointsInit) { polygonalPoints= (const Vector2DList&)polygonalPointsInit; }
   //! AUTO: Read (Copy) access to: \f$\pv_{pg}\,\f$ [SI: (m,m) ] list of polygonal (\f$Y,Z\f$) points in local beam cross section coordinates, defined in positive rotation direction
   PyVector2DList PyGetPolygonalPoints() const { return PyVector2DList(polygonalPoints); }
 

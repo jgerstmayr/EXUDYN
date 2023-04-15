@@ -332,11 +332,14 @@
 \bi
  \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py}{\texttt{NGsolvePistonEngine.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/carRollingDiscTest.py}{\texttt{carRollingDiscTest.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mecanumWheelRollingDiscTest.py}{\texttt{mecanumWheelRollingDiscTest.py}} (TM), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/NGsolveCrankShaftTest.py}{\texttt{NGsolveCrankShaftTest.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/laserScannerTest.py}{\texttt{laserScannerTest.py}} (TM), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mecanumWheelRollingDiscTest.py}{\texttt{mecanumWheelRollingDiscTest.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/NGsolveCrankShaftTest.py}{\texttt{NGsolveCrankShaftTest.py}} (TM), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rigidBodyCOMtest.py}{\texttt{rigidBodyCOMtest.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sliderCrank3Dbenchmark.py}{\texttt{sliderCrank3Dbenchmark.py}} (TM), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sliderCrank3Dtest.py}{\texttt{sliderCrank3Dtest.py}} (TM)
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sliderCrank3Dbenchmark.py}{\texttt{sliderCrank3Dbenchmark.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sliderCrank3Dtest.py}{\texttt{sliderCrank3Dtest.py}} (TM), 
+ ...
+
 \ei
 
 %
@@ -644,15 +647,15 @@
 {\bf example}: \vspace{-12pt}\ei\begin{lstlisting}[language=Python, xleftmargin=36pt]
   #list with circle center, radius and side at which rope runs
   circleList = [[[0,0],0.2,'L'],
-  [[0,1],0.2,'L'],
-  [[0.8,0.8],0.4,'L'],
-  [[1,0],0.2,'L'],
-  [[0,0],0.2,'L'],
-  [[0,1],0.2,'L'],
-  ]
+                [[0,1],0.2,'L'],
+                [[0.8,0.8],0.4,'L'],
+                [[1,0],0.2,'L'],
+                [[0,0],0.2,'L'],
+                [[0,1],0.2,'L'],
+                ]
   [] = CreateReevingCurve(circleList,
-  removeLastLine=True, #allows closed curve
-  numberOfANCFnodes=50)
+                          removeLastLine=True, #allows closed curve
+                          numberOfANCFnodes=50)
 \end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspace{12pt}\end{itemize}
 %
 %
@@ -1280,10 +1283,10 @@ this class holds all data for ObjectFFRF user functions
 \item[--]\textcolor{steelblue}{\bf example}: \vspace{-12pt}\ei\begin{lstlisting}[language=Python, xleftmargin=36pt]
   #example of a user function for forces:
   def UFforceFFRFreducedOrder(mbs, t, itemIndex, qReduced, qReduced_t):
-  return cms.UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
+      return cms.UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
   #example of a user function for mass matrix:
   def UFmassFFRFreducedOrder(mbs, t, itemIndex, qReduced, qReduced\_t):
-  return cms.UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced\_t)
+      return cms.UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced\_t)
 \end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspace{12pt}\end{itemize}
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
@@ -2115,7 +2118,8 @@ this class holds all data for ObjectFFRF user functions
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTreeDigging.py}{\texttt{serialRobotKinematicTreeDigging.py}} (Ex), 
 \\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/tippeTop.py}{\texttt{tippeTop.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/distanceSensor.py}{\texttt{distanceSensor.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/generalContactFrictionTests.py}{\texttt{generalContactFrictionTests.py}} (TM)
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/generalContactFrictionTests.py}{\texttt{generalContactFrictionTests.py}} (TM), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/laserScannerTest.py}{\texttt{laserScannerTest.py}} (TM)
 \ei
 
 %
@@ -2269,7 +2273,8 @@ this class holds all data for ObjectFFRF user functions
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particlesSilo.py}{\texttt{particlesSilo.py}} (Ex), 
 \\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTreeDigging.py}{\texttt{serialRobotKinematicTreeDigging.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/distanceSensor.py}{\texttt{distanceSensor.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/generalContactFrictionTests.py}{\texttt{generalContactFrictionTests.py}} (TM)
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/generalContactFrictionTests.py}{\texttt{generalContactFrictionTests.py}} (TM), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/laserScannerTest.py}{\texttt{laserScannerTest.py}} (TM)
 \ei
 
 %
@@ -2826,19 +2831,19 @@ this class holds all data for ObjectFFRF user functions
   #simple contour, using list of 2D points:
   contour=[[0,0.2],[0.3,0.2],[0.5,0.3],[0.7,0.4],[1,0.4],[1,0.]]
   rev1 = GraphicsDataSolidOfRevolution(pAxis=[0,0.5,0], vAxis=[1,0,0],
-  contour=contour, color=color4red,
-  alternatingColor=color4grey)
+                                       contour=contour, color=color4red,
+                                       alternatingColor=color4grey)
   #draw torus:
   contour=[]
   r = 0.2 #small radius of torus
   R = 0.5 #big radius of torus
   nc = 16 #discretization of torus
   for i in range(nc+3): #+3 in order to remove boundary effects
-  contour+=[[r*cos(i/nc*pi*2),R+r*sin(i/nc*pi*2)]]
+      contour+=[[r*cos(i/nc*pi*2),R+r*sin(i/nc*pi*2)]]
   #use smoothContour to make torus looking smooth
   rev2 = GraphicsDataSolidOfRevolution(pAxis=[0,0.5,0], vAxis=[1,0,0],
-  contour=contour, color=color4red,
-  nTiles = 64, smoothContour=True)
+                                       contour=contour, color=color4red,
+                                       nTiles = 64, smoothContour=True)
 \end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspace{12pt}\end{itemize}
 %
 %
@@ -2999,10 +3004,10 @@ this class holds all data for ObjectFFRF user functions
 \item[--]
 {\bf example}: \vspace{-12pt}\ei\begin{lstlisting}[language=Python, xleftmargin=36pt]
   plane = GraphicsDataQuad([[-8, 0, -8],[ 8, 0, -8,],[ 8, 0, 8],[-8, 0, 8]],
-  color4darkgrey, nTiles=8,
-  alternatingColor=color4lightgrey)
+                           color4darkgrey, nTiles=8,
+                           alternatingColor=color4lightgrey)
   oGround=mbs.AddObject(ObjectGround(referencePosition=[0,0,0],
-  visualization=VObjectGround(graphicsData=[plane])))
+                        visualization=VObjectGround(graphicsData=[plane])))
 \end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspace{12pt}\end{itemize}
 %
 %
@@ -3048,7 +3053,7 @@ this class holds all data for ObjectFFRF user functions
 {\bf example}: \vspace{-12pt}\ei\begin{lstlisting}[language=Python, xleftmargin=36pt]
   plane = GraphicsDataCheckerBoard(normal=[0,0,1], size=5)
   oGround=mbs.AddObject(ObjectGround(referencePosition=[0,0,0],
-  visualization=VObjectGround(graphicsData=[plane])))
+                        visualization=VObjectGround(graphicsData=[plane])))
 \end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspace{12pt}\end{itemize}
 %
 %
@@ -3107,7 +3112,7 @@ this class holds all data for ObjectFFRF user functions
   points = np.array([[0, 0], [0, 2], [2, 2], [2, 1], [1, 1], [0, 1], [1, 0]])
   segments = [len(points)-1,0]
   for i in range(len(points)-1):
-  segments += [i,i+1]
+      segments += [i,i+1]
   tri = ComputeTriangularMesh(points, segments)
   print(tri.simplices)
 \end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspace{12pt}\end{itemize}
@@ -3396,26 +3401,26 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
   #               'variable': according variable in mbs.variables, which is set to current slider value
   #example:
   dialogItems = [{'type':'label', 'text':'Nonlinear oscillation simulator', 'grid':(0,0,2), 'options':['L']},
-  {'type':'button', 'text':'test button','callFunction':ButtonCall, 'grid':(1,0,2)},
-  {'type':'radio', 'textValueList':[('linear',0),('nonlinear',1)], 'value':0, 'variable':'mode', 'grid': [(2,0),(2,1)]},
-  {'type':'label', 'text':'excitation frequency (Hz):', 'grid':(5,0)},
-  {'type':'slider', 'range':(3*f1/800, 3*f1), 'value':omegaInit/(2*pi), 'steps':800, 'variable':'frequency', 'grid':(5,1)},
-  {'type':'label', 'text':'damping:', 'grid':(6,0)},
-  {'type':'slider', 'range': (0, 40), 'value':damper, 'steps':800, 'variable':'damping', 'grid':(6,1)},
-  {'type':'label', 'text':'stiffness:', 'grid':(7,0)},
-  {'type':'slider', 'range':(0, 10000), 'value':spring, 'steps':800, 'variable':'stiffness', 'grid':(7,1)}]
+                 {'type':'button', 'text':'test button','callFunction':ButtonCall, 'grid':(1,0,2)},
+                 {'type':'radio', 'textValueList':[('linear',0),('nonlinear',1)], 'value':0, 'variable':'mode', 'grid': [(2,0),(2,1)]},
+                 {'type':'label', 'text':'excitation frequency (Hz):', 'grid':(5,0)},
+                 {'type':'slider', 'range':(3*f1/800, 3*f1), 'value':omegaInit/(2*pi), 'steps':800, 'variable':'frequency', 'grid':(5,1)},
+                 {'type':'label', 'text':'damping:', 'grid':(6,0)},
+                 {'type':'slider', 'range': (0, 40), 'value':damper, 'steps':800, 'variable':'damping', 'grid':(6,1)},
+                 {'type':'label', 'text':'stiffness:', 'grid':(7,0)},
+                 {'type':'slider', 'range':(0, 10000), 'value':spring, 'steps':800, 'variable':'stiffness', 'grid':(7,1)}]
   #plots structure:
   plots={'nPoints':500,              #number of stored points in subplots (higher means slower drawing)
-  'subplots':(2,1),           #(rows, columns) arrangement of subplots (for every sensor)
-  #sensors defines per subplot (sensor, coordinate), xlabel and ylabel; if coordinate=0, time is used:
-  'sensors':[[(sensPos,0),(sensPos,1),'time','mass position'],
-  [(sensFreq,0),(sensFreq,1),'time','excitation frequency']],
-  'limitsX':[(0,2),(-5,5)],   #x-range per subplot; if not provided, autoscale is applied
-  'limitsY':[(-5,5),(0,10),], #y-range per subplot; if not provided, autoscale is applied
-  'fontSize':16,              #custom font size for figure
-  'subplots':False,           #if not specified, subplots are created; if False, all plots go into one window
-  'lineStyles':['r-','b-'],    #if not specified, uses default '-b', otherwise define list of line styles [string for matplotlib.pyplot.plot] per sensor
-  'sizeInches':(12,12)}       #specific x and y size of figure in inches (using 100 dpi)
+         'subplots':(2,1),           #(rows, columns) arrangement of subplots (for every sensor)
+         #sensors defines per subplot (sensor, coordinate), xlabel and ylabel; if coordinate=0, time is used:
+         'sensors':[[(sensPos,0),(sensPos,1),'time','mass position'],
+                    [(sensFreq,0),(sensFreq,1),'time','excitation frequency']],
+         'limitsX':[(0,2),(-5,5)],   #x-range per subplot; if not provided, autoscale is applied
+         'limitsY':[(-5,5),(0,10),], #y-range per subplot; if not provided, autoscale is applied
+         'fontSize':16,              #custom font size for figure
+         'subplots':False,           #if not specified, subplots are created; if False, all plots go into one window
+         'lineStyles':['r-','b-'],    #if not specified, uses default '-b', otherwise define list of line styles [string for matplotlib.pyplot.plot] per sensor
+         'sizeInches':(12,12)}       #specific x and y size of figure in inches (using 100 dpi)
 \end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspace{24pt}\end{itemize}
 %
 \begin{flushleft}
@@ -4575,8 +4580,8 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 {\bf example}: \vspace{-12pt}\ei\begin{lstlisting}[language=Python, xleftmargin=36pt]
   #assuming s0, s1, s2 being sensor numbers with StressLocal components
   sUser = mbs.AddSensor(SensorUserFunction(sensorNumbers=[s0,s1,s2],
-  fileName='solution/sensorMisesStress.txt',
-  sensorUserFunction=UFvonMisesStress))
+                                           fileName='solution/sensorMisesStress.txt',
+                                           sensorUserFunction=UFvonMisesStress))
 \end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspace{12pt}\end{itemize}
 %
 \mysubsection{Module: plot}
@@ -4688,25 +4693,25 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 {\bf example}: \vspace{-12pt}\ei\begin{lstlisting}[language=Python, xleftmargin=36pt]
   #assume to have some position-based nodes 0 and 1:
   s0=mbs.AddSensor(SensorNode(nodeNumber=0, fileName='s0.txt',
-  outputVariableType=exu.OutputVariableType.Position))
+                              outputVariableType=exu.OutputVariableType.Position))
   s1=mbs.AddSensor(SensorNode(nodeNumber=1, fileName='s1.txt',
-  outputVariableType=exu.OutputVariableType.Position))
+                              outputVariableType=exu.OutputVariableType.Position))
   PlotSensor(mbs, s0, 0) #plot x-coordinate
   #plot x for s0 and z for s1:
   PlotSensor(mbs, sensorNumbers=[s0,s1], components=[0,2], yLabel='this is the position in meter')
   PlotSensor(mbs, sensorNumbers=s0, components=plot.componentNorm) #norm of position
   PlotSensor(mbs, sensorNumbers=s0, components=[0,1,2], factors=1000., title='Answers to the big questions')
   PlotSensor(mbs, sensorNumbers=s0, components=[0,1,2,3],
-  yLabel='Coordantes with offset 1\nand scaled with $\\frac{1}{1000}$',
-  factors=1e-3, offsets=1,fontSize=12, closeAll=True)
+             yLabel='Coordantes with offset 1\nand scaled with $\\frac{1}{1000}$',
+             factors=1e-3, offsets=1,fontSize=12, closeAll=True)
   #assume to have body sensor sBody, marker sensor sMarker:
   PlotSensor(mbs, sensorNumbers=[sBody]*3+[sMarker]*3, components=[0,1,2,0,1,2],
-  colorCodeOffset=3, newFigure=False, fontSize=10,
-  yLabel='Rotation $\\alpha, \\beta, \\gamma$ and\n Position $x,y,z$',
-  title='compare marker and body sensor')
+             colorCodeOffset=3, newFigure=False, fontSize=10,
+             yLabel='Rotation $\\alpha, \\beta, \\gamma$ and\n Position $x,y,z$',
+             title='compare marker and body sensor')
   #assume having file plotSensorNode.txt:
   PlotSensor(mbs, sensorNumbers=[s0]*3+ [filedir+'plotSensorNode.txt']*3,
-  components=[0,1,2]*2)
+             components=[0,1,2]*2)
   #plot y over x:
   PlotSensor(mbs, sensorNumbers=s0, componentsX=[0], components=[1], xLabel='x-Position', yLabel='y-Position')
   #for further examples, see also Examples/plotSensorExamples.py
@@ -4903,8 +4908,8 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L130}{ProcessParameterList}{}}}\label{sec:processing:ProcessParameterList}
-({\it parameterFunction}, {\it parameterList}, {\it addComputationIndex}, {\it useMultiProcessing}, {\it clusterHostNames}= [], {\it **kwargs})
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L143}{ProcessParameterList}{}}}\label{sec:processing:ProcessParameterList}
+({\it parameterFunction}, {\it parameterList}, {\it useMultiProcessing}, {\it clusterHostNames}= [], {\it **kwargs})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
@@ -4915,8 +4920,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 \begin{itemize}[leftmargin=1.2cm]
 \setlength{\itemindent}{-0.7cm}
 \item[]{\it parameterFunction}: function, which takes the form parameterFunction(parameterDict) and which returns any values that can be stored in a list (e.g., a floating point number)
-\item[]{\it parameterList}: list of parameter sets (as dictionaries) which are fed into the parameter variation, e.g., [{'mass': 10}, {'mass':20}, ...]
-\item[]{\it addComputationIndex}: if True, key 'computationIndex' is added to every parameterDict in the call to parameterFunction(), which allows to generate independent output files for every parameter, etc.
+\item[]{\it parameterList}: list of parameter sets (as dictionaries) which are fed into the parameter variation, see example
 \item[]{\it useMultiProcessing}: if True, the multiprocessing lib is used for parallelized computation; WARNING: be aware that the function does not check if your function runs independently; DO NOT use GRAPHICS and DO NOT write to same output files, etc.!
 \item[]{\it numberOfThreads}: default: same as number of cpus (threads); used for multiprocessing lib;
 \item[]{\it resultsFile}: if provided, output is immediately written to resultsFile during processing
@@ -4927,11 +4931,25 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 {\bf output}: returns values containing the results according to parameterList
 \item[--]
 {\bf notes}: options are passed from Parametervariation
-\vspace{12pt}\end{itemize}
+\item[--]
+{\bf example}: \vspace{-12pt}\ei\begin{lstlisting}[language=Python, xleftmargin=36pt]
+  def PF(parameterSet):
+      #in reality, value will be result of a complex exudyn simulation:
+      value = sin(parameterSet['mass']) * parameterSet['stiffness']
+      return value
+  values=ProcessParameterList(parameterFunction=PF,
+                              parameterList=[{'m':1, 's':100},
+                                            {'m':2, 's':100},
+                                            {'m':3, 's':100},
+                                            {'m':1, 's':200},
+                                            {'m':2, 's':250},
+                                            {'m':3, 's':300},
+                                            ], useMultiProcessing=False )
+\end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspace{12pt}\end{itemize}
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L355}{ParameterVariation}{}}}\label{sec:processing:ParameterVariation}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L371}{ParameterVariation}{}}}\label{sec:processing:ParameterVariation}
 ({\it parameterFunction}, {\it parameters}, {\it useLogSpace}= False, {\it debugMode}= False, {\it addComputationIndex}= False, {\it useMultiProcessing}= False, {\it showProgress}= True, {\it parameterFunctionData}= {}, {\it clusterHostNames}= [], {\it numberOfThreads}= None, {\it resultsFile}= '', {\it **kwargs})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4958,18 +4976,21 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 \item[]{\it numberOfThreads}: default(None): same as number of cpus (threads); used for multiprocessing lib;
 \item[]{\it parameterFunctionData}: dictionary containing additional data passed to the parameterFunction inside the parameters with dict key 'functionData'; use this e.g. for passing solver parameters or other settings
 \item[]{\it clusterHostNames}: list of hostnames, e.g. clusterHostNames=['123.124.125.126','123.124.125.127'] providing a list of strings with IP addresses or host names, see dispy documentation. If list is non-empty and useMultiProcessing==True and dispy is installed, cluster computation is used; NOTE that cluster computation speedup factors shown are not fully true, as they include a significant overhead; thus, only for computations which take longer than 1-5 seconds and for sufficient network bandwith, the speedup is roughly true
-\item[]{\it useDispyWebMonitor}: if given in **kwargs, a web browser is startet in case of cluster computation to manage the cluster during computation
+\item[]{\it useDispyWebMonitor}: if given in **kwargs, a web browser is started in case of cluster computation to manage the cluster during computation
 \end{itemize}
 \item[--]
 {\bf output}: \vspace{-6pt}
 \begin{itemize}[leftmargin=1.2cm]
 \setlength{\itemindent}{-0.7cm}
-\item[]returns [parameterList, values], containing, e.g., parameterList={'mass':[1,1,1,2,2,2,3,3,3], 'stiffness':[4,5,6, 4,5,6, 4,5,6]} and the result values of the parameter variation accoring to the parameterList,
+\item[]returns [parameterList, values], containing, e.g., parameterList=\{'mass':[1,1,1,2,2,2,3,3,3], 'stiffness':[4,5,6, 4,5,6, 4,5,6]\} and the result values of the parameter variation accoring to the parameterList,
 \item[]values=[7,8,9 ,3,4,5, 6,7,8] (depends on solution of problem ..., can also contain tuples, etc.)
 \end{itemize}
 \item[--]
 {\bf example}: \vspace{-12pt}\ei\begin{lstlisting}[language=Python, xleftmargin=36pt]
-  ParameterVariation(parameters={'mass':(1,10,10), 'stiffness':(1000,10000,10)}, parameterFunction=Test, useMultiProcessing=True)
+  if __name__ == '__main__':
+      ParameterVariation(parameterFunction=Test,
+                         parameters={'mass':(1,10,10), 'stiffness':(1000,10000,10)},
+                         useMultiProcessing=True)
 \end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspace{12pt}\end{itemize}
 %
 %
@@ -4983,7 +5004,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L505}{GeneticOptimization}{}}}\label{sec:processing:GeneticOptimization}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L521}{GeneticOptimization}{}}}\label{sec:processing:GeneticOptimization}
 ({\it objectiveFunction}, {\it parameters}, {\it populationSize}= 100, {\it numberOfGenerations}= 10, {\it elitistRatio}= 0.1, {\it crossoverProbability}= 0.25, {\it crossoverAmount}= 0.5, {\it rangeReductionFactor}= 0.7, {\it distanceFactor}= 0.1, {\it childDistribution}= "uniform", {\it distanceFactorGenerations}= -1, {\it debugMode}= False, {\it addComputationIndex}= False, {\it useMultiProcessing}= False, {\it showProgress}= True, {\it clusterHostNames}= [], {\it **kwargs})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -5040,7 +5061,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L864}{Minimize}{}}}\label{sec:processing:Minimize}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L880}{Minimize}{}}}\label{sec:processing:Minimize}
 ({\it objectiveFunction}, {\it parameters}, {\it initialGuess}= [], {\it method}= 'Nelder-Mead', {\it tol}= 1e-4, {\it options}= {}, {\it enforceBounds}= True, {\it debugMode}= False, {\it showProgress}= True, {\it addComputationIndex}= False, {\it storeFunctionValues}= True, {\it **kwargs})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -5087,7 +5108,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L1064}{ComputeSensitivities}{}}}\label{sec:processing:ComputeSensitivities}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L1080}{ComputeSensitivities}{}}}\label{sec:processing:ComputeSensitivities}
 ({\it parameterFunction}, {\it parameters}, {\it scaledByReference}= False, {\it debugMode}= False, {\it addComputationIndex}= False, {\it useMultiProcessing}= False, {\it showProgress}= True, {\it parameterFunctionData}= dict(), {\it **kwargs})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -5132,7 +5153,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L1174}{PlotOptimizationResults2D}{}}}\label{sec:processing:PlotOptimizationResults2D}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L1190}{PlotOptimizationResults2D}{}}}\label{sec:processing:PlotOptimizationResults2D}
 ({\it parameterList}, {\it valueList}, {\it xLogScale}= False, {\it yLogScale}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -5163,7 +5184,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L1230}{PlotSensitivityResults}{}}}\label{sec:processing:PlotSensitivityResults}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L1246}{PlotSensitivityResults}{}}}\label{sec:processing:PlotSensitivityResults}
 ({\it valRef}, {\it valuesSorted}, {\it sensitivity}, {\it fVar}= None, {\it strYAxis}= None)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -5268,8 +5289,8 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 \\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupIntegratorPythonTest.py}{\texttt{explicitLieGroupIntegratorPythonTest.py}} (TM), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupIntegratorTest.py}{\texttt{explicitLieGroupIntegratorTest.py}} (TM), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/heavyTop.py}{\texttt{heavyTop.py}} (TM), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/LieGroupIntegrationUnitTests.py}{\texttt{LieGroupIntegrationUnitTests.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mecanumWheelRollingDiscTest.py}{\texttt{mecanumWheelRollingDiscTest.py}} (TM), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/laserScannerTest.py}{\texttt{laserScannerTest.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/LieGroupIntegrationUnitTests.py}{\texttt{LieGroupIntegrationUnitTests.py}} (TM), 
  ...
 
 \ei
@@ -5747,8 +5768,8 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
  ...
 , 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/generalContactFrictionTests.py}{\texttt{generalContactFrictionTests.py}} (TM), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mecanumWheelRollingDiscTest.py}{\texttt{mecanumWheelRollingDiscTest.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/perf3DRigidBodies.py}{\texttt{perf3DRigidBodies.py}} (TM), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/laserScannerTest.py}{\texttt{laserScannerTest.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mecanumWheelRollingDiscTest.py}{\texttt{mecanumWheelRollingDiscTest.py}} (TM), 
  ...
 
 \ei
@@ -7507,8 +7528,8 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/future.py\#L86}{ComputeIK3R}{}}}\label{sec:future:ComputeIK3R}
-({\it robot}, {\it HT})
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/future.py\#L85}{ComputeIK3R}{}}}\label{sec:future:ComputeIK3R}
+({\it robotDic}, {\it HT})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
@@ -7518,7 +7539,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 {\bf input}: \vspace{-6pt}
 \begin{itemize}[leftmargin=1.2cm]
 \setlength{\itemindent}{-0.7cm}
-\item[]{\it robot}: robot structure
+\item[]{\it robotDic}: robot dictionary
 \item[]{\it HT}: desired position and orientation for the end effector as 4x4 homogeneous transformation matrix as list of lists or np.array
 \end{itemize}
 \item[--]
@@ -7526,8 +7547,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 \begin{itemize}[leftmargin=1.2cm]
 \setlength{\itemindent}{-0.7cm}
 \item[]solutions, list of lists with posible joint angles [q1,q2,q3] (in radiant)
-\item[]to achive the desired position and orientation (4 posible solutions,schoulder left/right, ellbow up/down )
-\item[]left/down, left/up, right/up, right/down
+\item[]to achive the desired position (4 posible solutions,schoulder left/right, ellbow up/down ) in following order: left/down, left/up, right/up, right/down
 \end{itemize}
 \item[--]
 {\bf author}: Martin Sereinig
@@ -7539,18 +7559,18 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/future.py\#L158}{ComputeIKPuma560}{}}}\label{sec:future:ComputeIKPuma560}
-({\it robot}, {\it HT})
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/future.py\#L157}{ComputeIKPuma560}{}}}\label{sec:future:ComputeIKPuma560}
+({\it robotDic}, {\it HT})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
 \item[--]
-{\bf function description}: calculates the analytical inverse kinematics for Puma560 serial 6R robot manipulator
+{\bf function description}: calculates the analytical inverse kinematics for Puma560 serial 6R robotDic manipulator
 \item[--]
 {\bf input}: \vspace{-6pt}
 \begin{itemize}[leftmargin=1.2cm]
 \setlength{\itemindent}{-0.7cm}
-\item[]{\it robot}: robot structure
+\item[]{\it robotDic}: robotDictionary
 \item[]{\it HT}: desired position and orientation for the end effector as 4x4 homogeneous transformation matrix as list of lists or np.array
 \end{itemize}
 \item[--]
@@ -7566,13 +7586,13 @@ The inertia tensor and center of mass must correspond when initializing the body
 \item[--]
 {\bf notes}: Usage for different manipulators with sperical wrist posible, only applicable for standard Denavit-Hartenberg parameters
 \item[--]
-{\bf status}: tested (compared with Robotcs, Vision and Control book of P. Corke
+{\bf status}: tested (compared with robotDiccs, Vision and Control book of P. Corke
 \vspace{12pt}\end{itemize}
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/future.py\#L283}{ComputeIKUR}{}}}\label{sec:future:ComputeIKUR}
-({\it robot}, {\it HTdes})
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/future.py\#L282}{ComputeIKUR}{}}}\label{sec:future:ComputeIKUR}
+({\it robotDic}, {\it HTdes})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
@@ -7582,7 +7602,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 {\bf input}: \vspace{-6pt}
 \begin{itemize}[leftmargin=1.2cm]
 \setlength{\itemindent}{-0.7cm}
-\item[]{\it robot}: robot structure
+\item[]{\it robotDic}: robot dictionary
 \item[]{\it HT}: desired position and orientation for the end effector as 4x4 homogeneous transformation matrix as list of lists or np.array
 \end{itemize}
 \item[--]
@@ -8120,7 +8140,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 \item[]Date:      2021-22-09
 \ei
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L32}{VelocityManipulability}{}}}\label{sec:special:VelocityManipulability}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L31}{VelocityManipulability}{}}}\label{sec:special:VelocityManipulability}
 ({\it robot}, {\it HT}, {\it mode})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -8134,7 +8154,6 @@ The inertia tensor and center of mass must correspond when initializing the body
 \item[]{\it robot}: robot class
 \item[]{\it HT}: actual pose as homogeneous transformaton matrix
 \item[]{\it mode}: rotational or translational part of the movement
-\item[]{\it singularWeight}: Weighting of singular configurations where the value would be infinity,default value=100
 \end{itemize}
 \item[--]
 {\bf output}: velocity manipulability measure as scalar value, defined as $\sqrt(det(JJ^T))$
@@ -8146,8 +8165,8 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L65}{ForceManipulability}{}}}\label{sec:special:ForceManipulability}
-({\it robot}, {\it HT}, {\it mode}, {\it singular\_weight}= 100)
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L61}{ForceManipulability}{}}}\label{sec:special:ForceManipulability}
+({\it robot}, {\it HT}, {\it mode}, {\it singularWeight}= 100)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
@@ -8172,7 +8191,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L109}{StiffnessManipulability}{}}}\label{sec:special:StiffnessManipulability}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L105}{StiffnessManipulability}{}}}\label{sec:special:StiffnessManipulability}
 ({\it robot}, {\it JointStiffness}, {\it HT}, {\it mode}, {\it singularWeight}= 1000)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -8206,7 +8225,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L152}{JointJacobian}{}}}\label{sec:special:JointJacobian}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L148}{JointJacobian}{}}}\label{sec:special:JointJacobian}
 ({\it robot}, {\it HTJoint}, {\it HTLink})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -8230,7 +8249,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L215}{MassMatrix}{}}}\label{sec:special:MassMatrix}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L211}{MassMatrix}{}}}\label{sec:special:MassMatrix}
 ({\it robot}, {\it HT}, {\it jointJacobian})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -8277,7 +8296,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L249}{DynamicManipulability}{}}}\label{sec:special:DynamicManipulability}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L245}{DynamicManipulability}{}}}\label{sec:special:DynamicManipulability}
 ({\it robot}, {\it HT}, {\it MassMatrix}, {\it Tmax}, {\it mode}, {\it singularWeight}= 1000)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -8312,7 +8331,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L296}{calculateAllMeasures}{}}}\label{sec:special:calculateAllMeasures}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L292}{calculateAllMeasures}{}}}\label{sec:special:calculateAllMeasures}
 ({\it robot}, {\it robotDic}, {\it q}, {\it mode}, {\it flag}= [0,0,0,0])
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -8346,8 +8365,52 @@ The inertia tensor and center of mass must correspond when initializing the body
   The utilities contains general helper functions for the robotics module
 \begin{itemize}[leftmargin=1.4cm]
 \setlength{\itemindent}{-1.4cm}
-\item[]Date:      2021-12-02
+\item[]Date:      2023-04-15
 \ei
+\begin{flushleft}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/utilities.py\#L40}{AddLidar}{}}}\label{sec:utilities:AddLidar}
+({\it mbs}, {\it generalContactIndex}, {\it positionOrMarker}, {\it minDistance}= -1e7, {\it maxDistance}= 1e7, {\it cylinderRadius}= 0, {\it lineLength}= 1, {\it numberOfSensors}= 100, {\it angleStart}= 0, {\it angleEnd}= 2*np.pi, {\it inclination}= 0, {\it rotation}= np.eye(3), {\it selectedTypeIndex}= exudyn.ContactTypeIndex.IndexEndOfEnumList, {\it storeInternal}= False, {\it fileName}= '', {\it measureVelocity}= False, {\it addGraphicsObject}= False, {\it drawDisplaced}= True, {\it color}= [1.0, 0.0, 0.0, 1.0])
+\end{flushleft}
+\setlength{\itemindent}{0.7cm}
+\begin{itemize}[leftmargin=0.7cm]
+\item[--]
+{\bf function description}: Function to add many distance sensors to represent Lidar; sensors can be either placed on absolute position or attached to rigid body marker
+\item[--]
+{\bf input}: \vspace{-6pt}
+\begin{itemize}[leftmargin=1.2cm]
+\setlength{\itemindent}{-0.7cm}
+\item[]{\it generalContactIndex}: the number of the GeneralContact object in mbs; the index of the GeneralContact object which has been added with last AddGeneralContact(...) command is generalContactIndex=mbs.NumberOfGeneralContacts()-1
+\item[]{\it positionOrMarker}: either a 3D position as list or np.array, or a MarkerIndex with according rigid body marker
+\item[]{\it minDistance}: the minimum distance which is accepted; smaller distance will be ignored
+\item[]{\it maxDistance}: the maximum distance which is accepted; items being at maxDistance or futher are ignored; if no items are found, the function returns maxDistance
+\item[]{\it cylinderRadius}: in case of spheres (selectedTypeIndex=ContactTypeIndex.IndexSpheresMarkerBased), a cylinder can be used which measures the shortest distance at a certain radius (geometrically interpreted as cylinder)
+\item[]{\it lineLength}: length of line to be drawn; note that this length is drawn from obstacle towards sensor if drawDisplaced=True, but the length is always constant
+\item[]{\it numberOfSensors}: number of sensors arranged between angleStart and angleEnd; higher numbers give finer resolution (but requires more CPU time)
+\item[]{\it angleStart}: starting rangle of angles to be used (in radiant)
+\item[]{\it angleEnd}: end of range for angle to be used (in radiant)
+\item[]{\it inclination}: angle of inclination (radiant), positive values showing upwards if placed
+\item[]{\it rotation}: a 3x3 rotation matrix (numpy); the sensor is placed in the X-Y plane of the marker where it is added to; however, you can use this rotation matrix to change the orientation
+\item[]{\it selectedTypeIndex}: either this type has default value, meaning that all items in GeneralContact are measured, or there is a specific type index, which is the only type that is considered during measurement
+\item[]{\it storeInternal}: like with any SensorUserFunction, setting to True stores sensor data internally
+\item[]{\it fileName}: if defined, recorded data of SensorUserFunction is written to specified file
+\item[]{\it measureVelocity}: if True, the sensor measures additionally the velocity (component 0=distance, component 1=velocity); velocity is the velocity in direction 'dirSensor' and does not account for changes in geometry, thus it may be different from the time derivative of the distance!
+\item[]{\it addGraphicsObject}: if True, the distance sensor is also visualized graphically in a simplified manner with a red line having the length of dirSensor; NOTE that updates are ONLY performed during computation, not in visualization; for this reason, solutionSettings.sensorsWritePeriod should be accordingly small
+\item[]{\it drawDisplaced}: if True, the red line is drawn backwards such that it moves along the measured surface; if False, the beam is fixed to marker or position
+\item[]{\it color}: optional color for 'laser beam' to be drawn
+\end{itemize}
+\item[--]
+{\bf output}: creates sensor and returns list of sensor numbers for all laser sensors
+\item[--]
+{\bf notes}: use generalContactIndex = DistanceSensorSetupGeometry(...) before to create GeneralContact module containing geometry
+\vspace{12pt}\end{itemize}
+%
+%
+\noindent For examples on AddLidar see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
+\bi
+ \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/laserScannerTest.py}{\texttt{laserScannerTest.py}} (TM)
+\ei
+
+%
 \mysubsection{Module: signalProcessing}
 \label{sec:module:signalProcessing}
   The signal library supports processing of signals for import (e.g. measurement data)
@@ -8358,7 +8421,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 \item[]Notes:     This module is still under construction and should be used with care!
 \ei
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py\#L25}{FilterSensorOutput}{}}}\label{sec:signalProcessing:FilterSensorOutput}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py\#L26}{FilterSensorOutput}{}}}\label{sec:signalProcessing:FilterSensorOutput}
 ({\it signal}, {\it filterWindow}= 5, {\it polyOrder}= 3, {\it derivative}= 0, {\it centralDifferentiate}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -8389,7 +8452,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py\#L81}{FilterSignal}{}}}\label{sec:signalProcessing:FilterSignal}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py\#L82}{FilterSignal}{}}}\label{sec:signalProcessing:FilterSignal}
 ({\it signal}, {\it samplingRate}= -1, {\it filterWindow}= 5, {\it polyOrder}= 3, {\it derivative}= 0, {\it centralDifferentiate}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -8420,7 +8483,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py\#L126}{ComputeFFT}{}}}\label{sec:signalProcessing:ComputeFFT}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py\#L127}{ComputeFFT}{}}}\label{sec:signalProcessing:ComputeFFT}
 ({\it time}, {\it data})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -8450,8 +8513,8 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py\#L163}{GetInterpolatedSignalValue}{}}}\label{sec:signalProcessing:GetInterpolatedSignalValue}
-({\it time}, {\it dataArray}, {\it timeArray}= [], {\it timeArrayIndex}= -1, {\it dataArrayIndex}= -1, {\it rangeWarning}= True, {\it tolerance}= 1e-6)
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py\#L166}{GetInterpolatedSignalValue}{}}}\label{sec:signalProcessing:GetInterpolatedSignalValue}
+({\it time}, {\it dataArray}, {\it timeArray}= [], {\it dataArrayIndex}= -1, {\it timeArrayIndex}= -1, {\it rangeWarning}= True, {\it tolerance}= 1e-6)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
@@ -8536,7 +8599,7 @@ The inertia tensor and center of mass must correspond when initializing the body
   print("success =", success)
   print("iterations = ", mbs.sys['staticSolver'].it)
   print("pos=", mbs.GetObjectOutputBody(body,localPosition=[0,0,0],
-  variableType=exu.OutputVariableType.Position))
+        variableType=exu.OutputVariableType.Position))
 \end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspace{12pt}\end{itemize}
 %
 %
@@ -8549,7 +8612,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle.py}{\texttt{ANCFcontactCircle.py}} (Ex), 
  ...
 , 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3Dtest.py}{\texttt{ANCFBeam3Dtest.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamTest.py}{\texttt{ANCFBeamTest.py}} (TM), 
 \\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py}{\texttt{ANCFbeltDrive.py}} (TM), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py}{\texttt{ANCFcontactCircleTest.py}} (TM), 
  ...
@@ -8601,7 +8664,7 @@ The inertia tensor and center of mass must correspond when initializing the body
   print("success =", success)
   print("iterations = ", mbs.sys['dynamicSolver'].it)
   print("pos=", mbs.GetObjectOutputBody(body,localPosition=[0,0,0],
-  variableType=exu.OutputVariableType.Position))
+        variableType=exu.OutputVariableType.Position))
 \end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspace{12pt}\end{itemize}
 %
 %
@@ -8615,8 +8678,8 @@ The inertia tensor and center of mass must correspond when initializing the body
  ...
 , 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py}{\texttt{ACFtest.py}} (TM), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3DeigTest.py}{\texttt{ANCFBeam3DeigTest.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3Dtest.py}{\texttt{ANCFBeam3Dtest.py}} (TM), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamEigTest.py}{\texttt{ANCFBeamEigTest.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamTest.py}{\texttt{ANCFBeamTest.py}} (TM), 
  ...
 
 \ei
@@ -8653,8 +8716,9 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent For examples on ComputeLinearizedSystem see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 \bi
- \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3DeigTest.py}{\texttt{ANCFBeam3DeigTest.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3Dtest.py}{\texttt{ANCFBeam3Dtest.py}} (TM)
+ \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamEigTest.py}{\texttt{ANCFBeamEigTest.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamTest.py}{\texttt{ANCFBeamTest.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geometricallyExactBeamTest.py}{\texttt{geometricallyExactBeamTest.py}} (TM)
 \ei
 
 %
@@ -8694,9 +8758,10 @@ The inertia tensor and center of mass must correspond when initializing the body
 \noindent For examples on ComputeODE2Eigenvalues see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 \bi
  \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/nMassOscillatorInteractive.py}{\texttt{nMassOscillatorInteractive.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3DeigTest.py}{\texttt{ANCFBeam3DeigTest.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3Dtest.py}{\texttt{ANCFBeam3Dtest.py}} (TM), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/computeODE2EigenvaluesTest.py}{\texttt{computeODE2EigenvaluesTest.py}} (TM)
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamEigTest.py}{\texttt{ANCFBeamEigTest.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamTest.py}{\texttt{ANCFBeamTest.py}} (TM), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/computeODE2EigenvaluesTest.py}{\texttt{computeODE2EigenvaluesTest.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geometricallyExactBeamTest.py}{\texttt{geometricallyExactBeamTest.py}} (TM)
 \ei
 
 %
@@ -8781,8 +8846,45 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L163}{AddDistanceSensor}{}}}\label{sec:utilities:AddDistanceSensor}
-({\it mbs}, {\it generalContactIndex}, {\it positionOrMarker}, {\it dirSensor}, {\it minDistance}= -1e7, {\it maxDistance}= 1e7, {\it cylinderRadius}= 0, {\it selectedTypeIndex}= exudyn.ContactTypeIndex.IndexEndOfEnumList, {\it storeInternal}= False, {\it fileName}= '', {\it measureVelocity}= False, {\it addGraphicsObject}= False, {\it drawDisplaced}= True)
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L160}{DistanceSensorSetupGeometry}{}}}\label{sec:utilities:DistanceSensorSetupGeometry}
+({\it mbs}, {\it meshPoints}, {\it meshTrigs}, {\it rigidBodyMarkerIndex}, {\it searchTreeCellSize}= [8,8,8])
+\end{flushleft}
+\setlength{\itemindent}{0.7cm}
+\begin{itemize}[leftmargin=0.7cm]
+\item[--]
+{\bf function description}: \vspace{-6pt}
+\begin{itemize}[leftmargin=1.2cm]
+\setlength{\itemindent}{-0.7cm}
+\item[]Add geometry for distance sensor given by points and triangles (point indices) to mbs; use a rigid body marker where the geometry is put on;
+\item[]Creates a GeneralContact for efficient search on background. If you have several sets of points and trigs, first merge them or add them manually to the contact
+\end{itemize}
+\item[--]
+{\bf input}: \vspace{-6pt}
+\begin{itemize}[leftmargin=1.2cm]
+\setlength{\itemindent}{-0.7cm}
+\item[]{\it mbs}: MainSystem where contact is created
+\item[]{\it meshPoints}: list of points (3D), as returned by GraphicsData2PointsAndTrigs()
+\item[]{\it meshTrigs}: list of trigs (3 node indices each), as returned by GraphicsData2PointsAndTrigs()
+\item[]{\it rigidBodyMarkerIndex}: rigid body marker to which the triangles are fixed on (ground or moving object)
+\item[]{\it searchTreeCellSize}: size of search tree (X,Y,Z); use larger values in directions where more triangles are located
+\end{itemize}
+\item[--]
+{\bf output}: returns [ngc, gContact]: ngc is the number of GeneralContact in mbs, to be used in AddDistanceSensor; keep the gContact as deletion may corrupt data
+\item[--]
+{\bf notes}: should be used by AddDistanceSensor(...) and AddLidar(...) for simple initialization of GeneralContact
+\vspace{12pt}\end{itemize}
+%
+%
+\noindent For examples on DistanceSensorSetupGeometry see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
+\bi
+ \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/laserScannerTest.py}{\texttt{laserScannerTest.py}} (TM)
+\ei
+
+%
+\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
+\begin{flushleft}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L191}{AddDistanceSensor}{}}}\label{sec:utilities:AddDistanceSensor}
+({\it mbs}, {\it generalContactIndex}, {\it positionOrMarker}, {\it dirSensor}, {\it minDistance}= -1e7, {\it maxDistance}= 1e7, {\it cylinderRadius}= 0, {\it selectedTypeIndex}= exudyn.ContactTypeIndex.IndexEndOfEnumList, {\it storeInternal}= False, {\it fileName}= '', {\it measureVelocity}= False, {\it addGraphicsObject}= False, {\it drawDisplaced}= True, {\it color}= color4red)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
@@ -8804,21 +8906,25 @@ The inertia tensor and center of mass must correspond when initializing the body
 \item[]{\it measureVelocity}: if True, the sensor measures additionally the velocity (component 0=distance, component 1=velocity); velocity is the velocity in direction 'dirSensor' and does not account for changes in geometry, thus it may be different from the time derivative of the distance!
 \item[]{\it addGraphicsObject}: if True, the distance sensor is also visualized graphically in a simplified manner with a red line having the length of dirSensor; NOTE that updates are ONLY performed during computation, not in visualization; for this reason, solutionSettings.sensorsWritePeriod should be accordingly small
 \item[]{\it drawDisplaced}: if True, the red line is drawn backwards such that it moves along the measured surface; if False, the beam is fixed to marker or position
+\item[]{\it color}: optional color for 'laser beam' to be drawn
 \end{itemize}
 \item[--]
 {\bf output}: creates sensor and returns according sensor number of SensorUserFunction
+\item[--]
+{\bf notes}: use generalContactIndex = DistanceSensorSetupGeometry(...) before to create GeneralContact module containing geometry
 \vspace{12pt}\end{itemize}
 %
 %
 \noindent For examples on AddDistanceSensor see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 \bi
- \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/distanceSensor.py}{\texttt{distanceSensor.py}} (TM)
+ \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/distanceSensor.py}{\texttt{distanceSensor.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/laserScannerTest.py}{\texttt{laserScannerTest.py}} (TM)
 \ei
 
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L217}{UFsensorRecord}{}}}\label{sec:utilities:UFsensorRecord}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L240}{UFsensorRecord}{}}}\label{sec:utilities:UFsensorRecord}
 ({\it mbs}, {\it t}, {\it sensorNumbers}, {\it factors}, {\it configuration})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -8831,7 +8937,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L238}{AddSensorRecorder}{}}}\label{sec:utilities:AddSensorRecorder}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L261}{AddSensorRecorder}{}}}\label{sec:utilities:AddSensorRecorder}
 ({\it mbs}, {\it sensorNumber}, {\it endTime}, {\it sensorsWritePeriod}, {\it sensorOutputSize}= 3)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -8863,7 +8969,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L265}{LoadSolutionFile}{}}}\label{sec:utilities:LoadSolutionFile}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L288}{LoadSolutionFile}{}}}\label{sec:utilities:LoadSolutionFile}
 ({\it fileName}, {\it safeMode}= False, {\it maxRows}= -1, {\it verbose}= True, {\it hasHeader}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -8904,7 +9010,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L396}{NumpyInt8ArrayToString}{}}}\label{sec:utilities:NumpyInt8ArrayToString}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L419}{NumpyInt8ArrayToString}{}}}\label{sec:utilities:NumpyInt8ArrayToString}
 ({\it npArray})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -8915,7 +9021,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L403}{BinaryReadIndex}{}}}\label{sec:utilities:BinaryReadIndex}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L426}{BinaryReadIndex}{}}}\label{sec:utilities:BinaryReadIndex}
 ({\it file}, {\it intType})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -8926,7 +9032,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L409}{BinaryReadReal}{}}}\label{sec:utilities:BinaryReadReal}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L432}{BinaryReadReal}{}}}\label{sec:utilities:BinaryReadReal}
 ({\it file}, {\it realType})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -8937,7 +9043,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L415}{BinaryReadString}{}}}\label{sec:utilities:BinaryReadString}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L438}{BinaryReadString}{}}}\label{sec:utilities:BinaryReadString}
 ({\it file}, {\it intType})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -8948,7 +9054,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L421}{BinaryReadArrayIndex}{}}}\label{sec:utilities:BinaryReadArrayIndex}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L444}{BinaryReadArrayIndex}{}}}\label{sec:utilities:BinaryReadArrayIndex}
 ({\it file}, {\it intType})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -8959,7 +9065,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L428}{BinaryReadRealVector}{}}}\label{sec:utilities:BinaryReadRealVector}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L451}{BinaryReadRealVector}{}}}\label{sec:utilities:BinaryReadRealVector}
 ({\it file}, {\it intType}, {\it realType})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -8972,7 +9078,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L444}{LoadBinarySolutionFile}{}}}\label{sec:utilities:LoadBinarySolutionFile}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L467}{LoadBinarySolutionFile}{}}}\label{sec:utilities:LoadBinarySolutionFile}
 ({\it fileName}, {\it maxRows}= -1, {\it verbose}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -8993,7 +9099,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L630}{RecoverSolutionFile}{}}}\label{sec:utilities:RecoverSolutionFile}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L653}{RecoverSolutionFile}{}}}\label{sec:utilities:RecoverSolutionFile}
 ({\it fileName}, {\it newFileName}, {\it verbose}= 0)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -9014,7 +9120,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L686}{InitializeFromRestartFile}{}}}\label{sec:utilities:InitializeFromRestartFile}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L709}{InitializeFromRestartFile}{}}}\label{sec:utilities:InitializeFromRestartFile}
 ({\it mbs}, {\it simulationSettings}, {\it restartFileName}, {\it verbose}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -9036,7 +9142,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L747}{SetSolutionState}{}}}\label{sec:utilities:SetSolutionState}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L770}{SetSolutionState}{}}}\label{sec:utilities:SetSolutionState}
 ({\it mbs}, {\it solution}, {\it row}, {\it configuration}= exudyn.ConfigurationType.Current, {\it sendRedrawSignal}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -9047,7 +9153,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L779}{AnimateSolution}{}}}\label{sec:utilities:AnimateSolution}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L802}{AnimateSolution}{}}}\label{sec:utilities:AnimateSolution}
 ({\it mbs}, {\it solution}, {\it rowIncrement}= 1, {\it timeout}= 0.04, {\it createImages}= False, {\it runLoop}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -9085,7 +9191,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L821}{DrawSystemGraph}{}}}\label{sec:utilities:DrawSystemGraph}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L844}{DrawSystemGraph}{}}}\label{sec:utilities:DrawSystemGraph}
 ({\it mbs}, {\it showLoads}= True, {\it showSensors}= True, {\it useItemNames}= False, {\it useItemTypes}= False, {\it addItemTypeNames}= True, {\it multiLine}= True, {\it fontSizeFactor}= 1., {\it layoutDistanceFactor}= 3., {\it layoutIterations}= 100, {\it showLegend}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -9123,7 +9229,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L1220}{CreateTCPIPconnection}{}}}\label{sec:utilities:CreateTCPIPconnection}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L1243}{CreateTCPIPconnection}{}}}\label{sec:utilities:CreateTCPIPconnection}
 ({\it sendSize}, {\it receiveSize}, {\it IPaddress}= '127.0.0.1', {\it port}= 52421, {\it bigEndian}= False, {\it verbose}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -9151,24 +9257,24 @@ The inertia tensor and center of mass must correspond when initializing the body
 \item[--]
 {\bf example}: \vspace{-12pt}\ei\begin{lstlisting}[language=Python, xleftmargin=36pt]
   mbs.sys['TCPIPobject'] = CreateTCPIPconnection(sendSize=3, receiveSize=2,
-  bigEndian=True, verbose=True)
+                                                 bigEndian=True, verbose=True)
   sampleTime = 0.01 #sample time in MATLAB! must be same!
   mbs.variables['tLast'] = 0 #in case that exudyn makes finer steps than sample time
   def PreStepUserFunction(mbs, t):
-  if t >= mbs.variables['tLast'] + sampleTime:
-  mbs.variables['tLast'] += sampleTime
-  tcp = mbs.sys['TCPIPobject']
-  y = TCPIPsendReceive(tcp, np.array([t, np.sin(t), np.cos(t)])) #time, torque
-  tau = y[1]
-  print('tau=',tau)
-  return True
+      if t >= mbs.variables['tLast'] + sampleTime:
+          mbs.variables['tLast'] += sampleTime
+          tcp = mbs.sys['TCPIPobject']
+          y = TCPIPsendReceive(tcp, np.array([t, np.sin(t), np.cos(t)])) #time, torque
+          tau = y[1]
+          print('tau=',tau)
+      return True
   try:
-  mbs.SetPreStepUserFunction(PreStepUserFunction)
-  #%%++++++++++++++++++++++++++++++++++++++++++++++++++
-  mbs.Assemble()
-  [...] #start renderer; simulate model
+      mbs.SetPreStepUserFunction(PreStepUserFunction)
+      #%%++++++++++++++++++++++++++++++++++++++++++++++++++
+      mbs.Assemble()
+      [...] #start renderer; simulate model
   finally: #use this to always close connection, even in case of errors
-  CloseTCPIPconnection(mbs.sys['TCPIPobject'])
+      CloseTCPIPconnection(mbs.sys['TCPIPobject'])
   #*****************************************
   #the following settings work between Python and MATLAB-Simulink (client), and gives stable results(with only delay of one step):
   # TCP/IP Client Send:
@@ -9193,7 +9299,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L1253}{TCPIPsendReceive}{}}}\label{sec:utilities:TCPIPsendReceive}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L1276}{TCPIPsendReceive}{}}}\label{sec:utilities:TCPIPsendReceive}
 ({\it TCPIPobject}, {\it sendData})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -9230,7 +9336,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L1266}{CloseTCPIPconnection}{}}}\label{sec:utilities:CloseTCPIPconnection}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L1289}{CloseTCPIPconnection}{}}}\label{sec:utilities:CloseTCPIPconnection}
 ({\it TCPIPobject})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}

@@ -32,8 +32,14 @@ Vector3D CNodePoint3DSlope1::GetPosition(ConfigurationType configuration) const
 
 Vector3D CNodePoint3DSlope1::GetVelocity(ConfigurationType configuration) const
 {
-	LinkedDataVector u3D_t = GetCoordinateVector_t(configuration);
-	return Vector3D({ u3D_t[0], u3D_t[1] , u3D_t[2] });
+    LinkedDataVector u3D_t = GetCoordinateVector_t(configuration);
+    return Vector3D({ u3D_t[0], u3D_t[1] , u3D_t[2] });
+}
+
+Vector3D CNodePoint3DSlope1::GetAcceleration(ConfigurationType configuration) const
+{
+    LinkedDataVector u3D_tt = GetCoordinateVector_tt(configuration);
+    return Vector3D({ u3D_tt[0], u3D_tt[1] , u3D_tt[2] });
 }
 
 //! provide position jacobian of node; derivative of 3D Position with respect to 6 coordinates ux,uy and x/y "displacements" of slopex
@@ -154,8 +160,9 @@ void CNodePoint3DSlope1::GetOutputVariable(OutputVariableType variableType, Conf
 	{
 	case OutputVariableType::Position: value.CopyFrom(GetPosition(configuration)); break;
 	case OutputVariableType::Displacement: value.CopyFrom(GetPosition(configuration) - GetPosition(ConfigurationType::Reference)); break;
-	case OutputVariableType::Velocity: value.CopyFrom(GetVelocity(configuration)); break;
-	case OutputVariableType::Coordinates:
+    case OutputVariableType::Velocity: value.CopyFrom(GetVelocity(configuration)); break;
+    case OutputVariableType::Acceleration: value.CopyFrom(GetAcceleration(configuration)); break;
+    case OutputVariableType::Coordinates:
 	{
 		if (IsValidConfiguration(configuration)) //((Index)configuration & ((Index)ConfigurationType::Current + (Index)ConfigurationType::Initial + (Index)ConfigurationType::Reference + (Index)ConfigurationType::Visualization))
 		{

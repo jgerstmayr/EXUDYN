@@ -34,7 +34,13 @@ Vector3D CNode1D::GetPosition(ConfigurationType configuration) const
 //! this is the local velocity, the nodal coordinate being the x-coordinate of a 3D-vector
 Vector3D CNode1D::GetVelocity(ConfigurationType configuration) const
 {
-	return Vector3D({ GetCoordinateVector_t(configuration)[0], 0., 0. });
+    return Vector3D({ GetCoordinateVector_t(configuration)[0], 0., 0. });
+}
+
+//! this is the local acceleration, the nodal coordinate being the x-coordinate of a 3D-vector
+Vector3D CNode1D::GetAcceleration(ConfigurationType configuration) const
+{
+    return Vector3D({ GetCoordinateVector_tt(configuration)[0], 0., 0. });
 }
 
 //! provide according output variable in "value"

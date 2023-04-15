@@ -41,27 +41,27 @@ public:
 	//! Create a specific node with nodeType; returns node=Null if no success
 	MainNode* CreateMainNode(MainSystem& mainSystem, STDstring nodeType);
 	//! Add a MainNode (and its according CNode) to the system container
-	Index AddMainNode(MainSystem& mainSystem, py::dict d);
+	Index AddMainNode(MainSystem& mainSystem, const py::dict& d);
 
 	//! Create a specific object with objectType; returns object=Null if no success
 	MainObject* CreateMainObject(MainSystem& mainSystem, STDstring objectType);
 	//! Add a MainObject (and its according CObject) to the system container
-	Index AddMainObject(MainSystem& mainSystem, py::dict d);
+	Index AddMainObject(MainSystem& mainSystem, const py::dict& d);
 
 	//! Create a specific marker with markerType; returns marker=Null if no success
 	MainMarker* CreateMainMarker(MainSystem& mainSystem, STDstring markerType);
 	//! Add a MainMarker (and its according CMarker) to the system container; return index in item list or EXUstd::InvalidIndex if failed
-	Index AddMainMarker(MainSystem& mainSystem, py::dict d);
+	Index AddMainMarker(MainSystem& mainSystem, const py::dict& d);
 
 	//! Create a specific load with loadType; returns node=Null if no success
 	MainLoad* CreateMainLoad(MainSystem& mainSystem, STDstring loadType);
 	//! Add a MainLoad (and its according CLoad) to the system container
-	Index AddMainLoad(MainSystem& mainSystem, py::dict d);
+	Index AddMainLoad(MainSystem& mainSystem, const py::dict& d);
 
 	//! Create a specific sensor with sensorType; returns sensor=Null if no success
 	MainSensor* CreateMainSensor(MainSystem& mainSystem, STDstring sensorType);
 	//! Add a MainSensor (and its according CSensor) to the system container; return index in item list or EXUstd::InvalidIndex if failed
-	Index AddMainSensor(MainSystem& mainSystem, py::dict d);
+	Index AddMainSensor(MainSystem& mainSystem, const py::dict& d);
 
 };
 

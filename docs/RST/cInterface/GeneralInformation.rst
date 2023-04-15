@@ -32,17 +32,17 @@ You can create a new \ ``SystemContainer``\ , which is a class that is initializ
 
 .. code-block:: python
    
-   exu.SystemContainer()
+   SC = exu.SystemContainer()
 
-Note that creating a second \ ``exu.SystemContainer()``\  will be independent of \ ``SC``\  and therefore usually makes no sense.
+Note that creating a second \ ``exu.SystemContainer()``\  will be independent of \ ``SC``\  and therefore makes no sense if you do not intend to work with two different containers.
 
-To add a MainSystem to system container SC and store as variable mbs, write:
+To add a MainSystem to system container \ ``SC``\  and store as variable \ ``mbs``\ , write:
 
 .. code-block:: python
    
    mbs = SC.AddSystem()
 
-Furthermore, there are a couple of commands available directly in the \ ``exudyn``\  module, given in the following subsections.Regarding the \ **(basic) module access**\ , functions are related to the \ ``exudyn = exu``\  module, see these examples:
+Furthermore, there are a couple of commands available directly in the \ ``exudyn``\  module, given in the following subsections. Regarding the \ **(basic) module access**\ , functions are related to the \ ``exudyn = exu``\  module, see these examples:
 
 .. code-block:: python
    :linenos:
@@ -77,10 +77,10 @@ Understanding the usage of functions for python object \ ``SystemContainer``\  o
    #  print number of systems available:
    nSys = SC.NumberOfSystems()
    exu.Print(nSys) #or just print(nSys)
+   #  delete reference to mbs and mbs2 (usually not necessary):
+   del mbs, mbs2
    #  reset system container (mbs becomes invalid):
    SC.Reset()
-   #  delete mbs (usually not necessary):
-   del mbs
 
 If you run a parameter variation (check \ ``Examples/parameterVariationExample.py``\ ), you may reset or delete the created \ ``MainSystem``\  \ ``mbs``\  and the \ ``SystemContainer``\  \ ``SC``\  before creating new instances in order to avoid memory growth.
 
@@ -90,7 +90,7 @@ If you run a parameter variation (check \ ``Examples/parameterVariationExample.p
 Item index
 ==========
 
-Many functions will work with node numbers (\ ``NodeIndex``\ ), object numbers (\ ``ObjectIndex``\ ),marker numbers (\ ``MarkerIndex``\ ) and others. These numbers are special objects, which have been introduced in order to avoid mixing up, e.g., node and object numbers. 
+Many functions will work with node numbers (\ ``NodeIndex``\ ), object numbers (\ ``ObjectIndex``\ ),marker numbers (\ ``MarkerIndex``\ ) and others. These numbers are special Python objects, which have been introduced in order to avoid mixing up, e.g., node and object numbers. 
 
 For example, the command \ ``mbs.AddNode(...)``\  returns a \ ``NodeIndex``\ . For these indices, the following rules apply:
 
@@ -115,7 +115,7 @@ Copying and referencing C++ objects
 As a key concept to working with Exudyn , most data which is retrieved by C++ interface functions is copied.
 Experienced Python users may know that it is a key concept to Python to often use references instead of copying, which is
 sometimes error-prone but offers a computationally efficient behavior.
-There are only a few very important cases where data is references in Exudyn , the main ones are 
+There are only a few very important cases where data is referenced in Exudyn , the main ones are 
 \ ``SystemContainer``\ , 
 \ ``MainSystem``\ , 
 \ ``VisualizationSettings``\ , and
@@ -135,6 +135,9 @@ The following code snippets and comments should explain this behavior:
    og = mbs.AddObject(ObjectGround()) #copy data of ObjectGround() into C++
    o0 = mbs.GetObject(0)              #get copy of internal data as dictionary
    del o0                             #delete the local dictionary; C++ data not affected
+   del mbs, mbs2                      #references to mbs deleted (C++ data still available)
+   del SC                             #references to SystemContainer deleted
+   #at this point, mbs and SC are not available any more (data may be cleaned up by Python)
 
 
 .. _sec-cinterface-exceptions:
@@ -144,7 +147,7 @@ Exceptions and Error Messages
 
 There are several levels of type and argument checks, leading to different types of errors and exceptions. The according error messages are non-unique, because they may be raised in Python modules or in C++, and they may be raised on different levels of the code. Error messages depend on Python version and on your iPython console. Very often the exception may be called \ ``ValueError``\ , but it mustnot mean that it is a wrong error, but it could also be, e.g., a wrong order of function calls.
 
-As an example, a type conversion error is raised when providing wrong argument types, e.g., try \ ``exu.GetVersionString('abs')``\ :
+As an example, a type conversion error is raised when providing wrong argument types, e.g., try \ ``exu.GetVersionString('abc')``\ :
 
 .. code-block:: 
    :linenos:
@@ -152,12 +155,12 @@ As an example, a type conversion error is raised when providing wrong argument t
    Traceback (most recent call last):
    
    File "C:\Users\username\AppData\Local\Temp\ipykernel_24988\2212168679.py", line 1, in <module>
-       exu.GetVersionString('abs')
+       exu.GetVersionString('abc')
    
    TypeError: GetVersionString(): incompatible function arguments. The following argument types are supported:
        1. (addDetails: bool = False) -> str
    
-   Invoked with: 'abs'
+   Invoked with: 'abc'
 
 Note that your particular error message may be different.
 

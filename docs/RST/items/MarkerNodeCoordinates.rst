@@ -9,7 +9,7 @@ A node-Marker attached to all \ :ref:`ODE2 <ODE2>`\  coordinates of a node; IN C
 
 \ **Additional information for MarkerNodeCoordinates**\ :
 
-* | The Marker has the following types = \ ``Node``\ , \ ``Coordinate``\ 
+* | This \ ``Marker``\  has/provides the following types = \ ``Node``\ , \ ``Coordinate``\ 
 
 
 The item \ **MarkerNodeCoordinates**\  with type = 'NodeCoordinates' has the following parameters:
@@ -29,8 +29,19 @@ The item VMarkerNodeCoordinates has the following parameters:
   | set true, if item is shown in visualization and false if it is not shown
 
 
+----------
+
+.. _description-markernodecoordinates:
+
+DESCRIPTION of MarkerNodeCoordinates
+------------------------------------
+
+Relevant Examples and TestModels with weblink:
+
+    \ `coordinateVectorConstraint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/coordinateVectorConstraint.py>`_\  (TestModels/), \ `coordinateVectorConstraintGenericODE2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/coordinateVectorConstraintGenericODE2.py>`_\  (TestModels/), \ `rigidBodyAsUserFunctionTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rigidBodyAsUserFunctionTest.py>`_\  (TestModels/)
 
 
-\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+
+\ **The web version may not be complete. For details, consider also the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

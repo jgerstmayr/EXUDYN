@@ -37,10 +37,10 @@ public: //
   //! default constructor with parameter initialization
 	BeamSection()
 	{
-		dampingMatrix = Matrix6D(0.);
-		inertia = Matrix3D(0.);
-		massPerLength = 0.;
-		stiffnessMatrix = Matrix6D(0.);
+        dampingMatrix = Matrix6D(6, 6, 0.);
+        inertia = EXUmath::zeroMatrix3D;
+        massPerLength = 0.;
+        stiffnessMatrix = Matrix6D(6, 6, 0.);
 	};
 
 	//! print function used in ostream operator (print is virtual and can thus be overloaded)
@@ -62,43 +62,6 @@ public: //
 	}
 
 };
-
-//class BeamSectionGeometry
-//{
-//public: 
-//	Real crossSectionRadiusY;                       //!< \f$c_Y\,\f$ [SI:m] \f$Y\f$ radius for circular cross section
-//	Real crossSectionRadiusZ;                       //!< \f$c_Z\,\f$ [SI:m] \f$Z\f$ radius for circular cross section
-//	CrossSectionType crossSectionType;              //!< Type of cross section: Polygon, Circular, etc.
-//	Vector2DList polygonalPoints;                   //!< \f$\pv_{pg}\,\f$ [SI: (m,m) ] list of polygonal (\f$Y,Z\f$) points in local beam cross section coordinates, defined in positive rotation direction
-//
-//
-//public: // 
-//  //! default constructor with parameter initialization
-//	BeamSectionGeometry()
-//	{
-//		crossSectionRadiusY = 0.;
-//		crossSectionRadiusZ = 0.;
-//		crossSectionType = CrossSectionType::Polygon;
-//	};
-//
-//	//! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
-//	virtual void Print(std::ostream& os) const
-//	{
-//		os << "BeamSectionGeometry" << ":\n";
-//		os << "  crossSectionRadiusY = " << crossSectionRadiusY << "\n";
-//		os << "  crossSectionRadiusZ = " << crossSectionRadiusZ << "\n";
-//		os << "  polygonalPoints = " << polygonalPoints << "\n";
-//		os << "\n";
-//	}
-//
-//	//! ostream operator also used in derived object!
-//	friend std::ostream& operator<<(std::ostream& os, const BeamSectionGeometry& object)
-//	{
-//		object.Print(os);
-//		return os;
-//	}
-//
-//};
 
 
 

@@ -196,8 +196,14 @@ Vector3D CNodeRigidBodyRotVecLG::GetPosition(ConfigurationType configuration) co
 
 Vector3D CNodeRigidBodyRotVecLG::GetVelocity(ConfigurationType configuration) const
 {
-	LinkedDataVector u3D_t = GetCoordinateVector_t(configuration);
-	return Vector3D({ u3D_t[0], u3D_t[1], u3D_t[2] });
+    LinkedDataVector u3D_t = GetCoordinateVector_t(configuration);
+    return Vector3D({ u3D_t[0], u3D_t[1], u3D_t[2] });
+}
+
+Vector3D CNodeRigidBodyRotVecLG::GetAcceleration(ConfigurationType configuration) const
+{
+    LinkedDataVector u3D_tt = GetCoordinateVector_tt(configuration);
+    return Vector3D({ u3D_tt[0], u3D_tt[1], u3D_tt[2] });
 }
 
 Matrix3D CNodeRigidBodyRotVecLG::GetRotationMatrix(ConfigurationType configuration) const
@@ -271,8 +277,9 @@ void CNodeRigidBodyRotVecLG::GetOutputVariable(OutputVariableType variableType, 
 	{
 	case OutputVariableType::Position: value.CopyFrom(GetPosition(configuration)); break;
 	case OutputVariableType::Displacement: value.CopyFrom(GetPosition(configuration) - GetPosition(ConfigurationType::Reference)); break;
-	case OutputVariableType::Velocity: value.CopyFrom(GetVelocity(configuration)); break;
-	case OutputVariableType::AngularVelocity: value.CopyFrom(GetAngularVelocity(configuration)); break;
+    case OutputVariableType::Velocity: value.CopyFrom(GetVelocity(configuration)); break;
+    case OutputVariableType::Acceleration: value.CopyFrom(GetAcceleration(configuration)); break;
+    case OutputVariableType::AngularVelocity: value.CopyFrom(GetAngularVelocity(configuration)); break;
 	case OutputVariableType::AngularVelocityLocal: value.CopyFrom(GetAngularVelocityLocal(configuration)); break;
 	case OutputVariableType::RotationMatrix: {
 		Matrix3D rot = GetRotationMatrix(configuration);

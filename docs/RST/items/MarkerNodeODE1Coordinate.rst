@@ -9,7 +9,7 @@ A node-Marker attached to a \ :ref:`ODE1 <ODE1>`\  coordinate of a node.
 
 \ **Additional information for MarkerNodeODE1Coordinate**\ :
 
-* | The Marker has the following types = \ ``Node``\ , \ ``Coordinate``\ 
+* | This \ ``Marker``\  has/provides the following types = \ ``Node``\ , \ ``Coordinate``\ 
 
 
 The item \ **MarkerNodeODE1Coordinate**\  with type = 'NodeODE1Coordinate' has the following parameters:
@@ -33,6 +33,6 @@ The item VMarkerNodeODE1Coordinate has the following parameters:
 
 
 
-\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+\ **The web version may not be complete. For details, consider also the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

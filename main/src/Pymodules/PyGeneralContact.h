@@ -36,6 +36,13 @@ public:
 	//! create empty (dense) container
 	PyGeneralContact() : GeneralContact() {}
 
+    //! forbid calls of GeneralContact constructor, as this would lead to an unusable system
+    static PyGeneralContact* ForbidConstructor()
+    {
+        CHECKandTHROWstring("GeneralContact() may not be called. Use AddGeneralContact() of MainSystem() to create a GeneralContact inside MainSystem.");
+        return new PyGeneralContact(); //this is never called
+    }
+
 	//! add contact object for Triangles attached to rigidBodyMarker
 	//! contact is possible between sphere (circle) and Triangle but yet not between triangle and triangle!
 	Index PyAddTrianglesRigidBodyBased(Index rigidBodyMarkerIndexInit, Real contactStiffnessInit, Real contactDampingInit,

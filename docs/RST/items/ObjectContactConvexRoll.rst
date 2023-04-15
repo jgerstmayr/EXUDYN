@@ -11,9 +11,9 @@ Author: Manzl Peter
 
 \ **Additional information for ObjectContactConvexRoll**\ :
 
-* | The Object has the following types = \ ``Connector``\ 
-* | Requested marker type = \ ``Position``\  + \ ``Orientation``\ 
-* | Requested node type = \ ``GenericData``\ 
+* | This \ ``Object``\  has/provides the following types = \ ``Connector``\ 
+* | Requested \ ``Marker``\  type = \ ``Position``\  + \ ``Orientation``\ 
+* | Requested \ ``Node``\  type = \ ``GenericData``\ 
 
 
 The item \ **ObjectContactConvexRoll**\  with type = 'ContactConvexRoll' has the following parameters:
@@ -207,7 +207,12 @@ The torque
 acts onto the body, resulting from the slip force acting not in the bodies center. 
 
 
+Relevant Examples and TestModels with weblink:
 
-\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+    \ `ConvexContactTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ConvexContactTest.py>`_\  (TestModels/)
+
+
+
+\ **The web version may not be complete. For details, consider also the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

@@ -34,8 +34,14 @@ Vector3D CNodePoint3DSlope23::GetPosition(ConfigurationType configuration) const
 
 Vector3D CNodePoint3DSlope23::GetVelocity(ConfigurationType configuration) const
 {
-	LinkedDataVector u3D_t = GetCoordinateVector_t(configuration);
-	return Vector3D({ u3D_t[0], u3D_t[1] , u3D_t[2] });
+    LinkedDataVector u3D_t = GetCoordinateVector_t(configuration);
+    return Vector3D({ u3D_t[0], u3D_t[1] , u3D_t[2] });
+}
+
+Vector3D CNodePoint3DSlope23::GetAcceleration(ConfigurationType configuration) const
+{
+    LinkedDataVector u3D_tt = GetCoordinateVector_tt(configuration);
+    return Vector3D({ u3D_tt[0], u3D_tt[1] , u3D_tt[2] });
 }
 
 //! provide position jacobian of node; derivative of 3D Position with respect to 9 coordinates ux,uy and x/y "displacements" of slopex
@@ -70,19 +76,16 @@ Matrix3D CNodePoint3DSlope23::GetRotationMatrix_t(ConfigurationType configuratio
 		q0 += GetCoordinateVector(configuration);
 	}
 
-	//LinkedDataVector q(&q0[3], nqSlope);
-	//LinkedDataVector q_t(&GetCoordinateVector_t(configuration)[3], nqSlope);
-
-	ConstSizeVector<nqSlope> q(LinkedDataVector(q0), 3);
-	ConstSizeVector<nqSlope> q_t(GetCoordinateVector_t(configuration), 3);
+	ConstSizeVector<nqSlope> q23(LinkedDataVector(q0), 3); //fetch q_Y and q_Z from q0
+	ConstSizeVector<nqSlope> q23_t(GetCoordinateVector_t(configuration), 3);
 
 	bool doNumDiff = false;
 	if (doNumDiff)
 	{
-		auto fRot = [](const ConstSizeVector<6>& q, ConstSizeVector<9>& f) //-> void
+		auto fRot = [](const ConstSizeVector<6>& q23, ConstSizeVector<9>& f) //-> void
 		{
 			Matrix3D A;
-			EXUmath::OrthogonalBasisFromVectorsZY(Vector3D({ q[0],q[1],q[2] }), Vector3D({ q[3],q[4],q[5] }), A);
+			EXUmath::OrthogonalBasisFromVectorsZY(Vector3D({ q23[0],q23[1],q23[2] }), Vector3D({ q23[3],q23[4],q23[5] }), A);
 			f.CopyFrom(LinkedDataVector(A.GetDataPointer(), 9));
 		};
 
@@ -90,11 +93,11 @@ Matrix3D CNodePoint3DSlope23::GetRotationMatrix_t(ConfigurationType configuratio
 		ConstSizeVector<dimRot> tempF0;
 		ConstSizeVector<dimRot> tempF1;
 		//EXUmath::NumDiff(fRotTest, dimRot, q, tempF0, tempF1, jacobian);
-		EXUmath::NumDiffVectors<CSVector6D, CSVector9D, ConstSizeMatrix<6 * 9>, dimRot>(fRot, q, tempF0, tempF1, jacobian);
+		EXUmath::NumDiffVectors<CSVector6D, CSVector9D, ConstSizeMatrix<6 * 9>, dimRot>(fRot, q23, tempF0, tempF1, jacobian);
 
 		Matrix3D Ap(3, 3);
 		LinkedDataVector result(Ap.GetDataPointer(), 9);
-		EXUmath::MultMatrixVectorTemplate<ConstSizeMatrix<nqSlope*dimRot>, ConstSizeVector<nqSlope>, LinkedDataVector>(jacobian, q_t, result);
+		EXUmath::MultMatrixVectorTemplate<ConstSizeMatrix<nqSlope*dimRot>, ConstSizeVector<nqSlope>, LinkedDataVector>(jacobian, q23_t, result);
 
 		return Ap;
 	}
@@ -104,14 +107,14 @@ Matrix3D CNodePoint3DSlope23::GetRotationMatrix_t(ConfigurationType configuratio
 		//void fRot = [](const ConstSizeVectorBase<DRealX, 6>& q, ConstSizeVectorBase<DRealX, 9>& f)
 		//{
 		//	ConstSizeMatrixBase<DRealX, 9> A;
-		//	EXUmath::OrthogonalBasisFromVectorsZY(SlimVectorBase< DRealX,3>({ q[0],q[1],q[2] }), SlimVectorBase< DRealX, 3>({ q[3],q[4],q[5] }), A);
+		//	EXUmath::OrthogonalBasisFromVectorsZY(SlimVectorBase< DRealX,3>({ q23[0],q23[1],q23[2] }), SlimVectorBase< DRealX, 3>({ q23[3],q23[4],q23[5] }), A);
 		//	f.CopyFrom(LinkedDataVectorBase<DRealX>(A.GetDataPointer(), 9));
 		//};
 		ConstSizeMatrix<nqSlope*dimRot> jacobian;
-		EXUmath::AutoDiffVectors<dimRot, nqSlope>(fRotTest<EXUmath::AutoDiff<nqSlope, Real>>, q, jacobian);
+		EXUmath::AutoDiffVectors<dimRot, nqSlope>(fRotTest<EXUmath::AutoDiff<nqSlope, Real>>, q23, jacobian);
 		Matrix3D Ap(3, 3);
 		LinkedDataVector result(Ap.GetDataPointer(), 9);
-		EXUmath::MultMatrixVectorTemplate<ConstSizeMatrix<nqSlope*dimRot>, ConstSizeVector<nqSlope>, LinkedDataVector>(jacobian, q_t, result);
+		EXUmath::MultMatrixVectorTemplate<ConstSizeMatrix<nqSlope*dimRot>, ConstSizeVector<nqSlope>, LinkedDataVector>(jacobian, q23_t, result);
 
 		return Ap;
 	}
@@ -174,8 +177,6 @@ Vector3D CNodePoint3DSlope23::GetAngularVelocity(ConfigurationType configuration
 //! AUTO:  return configuration dependent velocity of node; returns always a 3D Vector
 Vector3D CNodePoint3DSlope23::GetAngularVelocityLocal(ConfigurationType configuration) const
 {
-	//CHECKandTHROWstring("CNodePoint3DSlope23::GetAngularVelocityLocal: untested!");
-
 	return GetRotationMatrix(configuration).GetTransposed() * GetAngularVelocity(configuration);
 }
 
@@ -268,8 +269,25 @@ void CNodePoint3DSlope23::GetOutputVariable(OutputVariableType variableType, Con
 	{
 	case OutputVariableType::Position: value.CopyFrom(GetPosition(configuration)); break;
 	case OutputVariableType::Displacement: value.CopyFrom(GetPosition(configuration) - GetPosition(ConfigurationType::Reference)); break;
-	case OutputVariableType::Velocity: value.CopyFrom(GetVelocity(configuration)); break;
-	case OutputVariableType::Coordinates:
+    case OutputVariableType::Velocity: value.CopyFrom(GetVelocity(configuration)); break;
+    case OutputVariableType::Acceleration: value.CopyFrom(GetAcceleration(configuration)); break;
+
+    case OutputVariableType::AngularVelocity: value.CopyFrom(GetAngularVelocity(configuration)); break;
+    case OutputVariableType::AngularVelocityLocal: value.CopyFrom(GetAngularVelocityLocal(configuration)); break;
+    //missing: case OutputVariableType::AngularAcceleration: value.CopyFrom(GetAngularAcceleration(configuration)); break;
+
+    case OutputVariableType::RotationMatrix: {
+        Matrix3D rot = GetRotationMatrix(configuration);
+        value.SetVector(9, rot.GetDataPointer());
+        break;
+    }
+    case OutputVariableType::Rotation: {
+        Matrix3D rotMat = GetRotationMatrix(configuration);
+        Vector3D rot = RigidBodyMath::RotationMatrix2RotXYZ(rotMat);
+        value.SetVector(3, rot.GetDataPointer());
+        break;
+    }
+    case OutputVariableType::Coordinates:
 	{
 		if (IsValidConfiguration(configuration)) //((Index)configuration & ((Index)ConfigurationType::Current + (Index)ConfigurationType::Initial + (Index)ConfigurationType::Reference + (Index)ConfigurationType::Visualization))
 		{

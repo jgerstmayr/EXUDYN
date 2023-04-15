@@ -169,7 +169,7 @@ bool MainSystem::UnlinkVisualizationSystem()
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //! this is the hook to the object factory, handling all kinds of objects, nodes, ...
-Index MainSystem::AddMainNode(py::dict d)
+Index MainSystem::AddMainNode(const py::dict& d)
 {
 	SystemHasChanged();
 	Index ind = GetMainObjectFactory().AddMainNode(*this, d);
@@ -177,7 +177,7 @@ Index MainSystem::AddMainNode(py::dict d)
 	return ind;
 };
 
-NodeIndex MainSystem::AddMainNodePyClass(py::object pyObject)
+NodeIndex MainSystem::AddMainNodePyClass(const py::object& pyObject)
 {
 	py::dict dictObject;
 	Index itemIndex = 0;
@@ -466,7 +466,7 @@ void MainSystem::PySetNodeParameter(const py::object& itemIndex, const STDstring
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //! this is the hook to the object factory, handling all kinds of objects, nodes, ...
-Index MainSystem::AddMainObject(py::dict d)
+Index MainSystem::AddMainObject(const py::dict& d)
 {
 	SystemHasChanged();
 	Index ind = GetMainObjectFactory().AddMainObject(*this, d);
@@ -475,7 +475,7 @@ Index MainSystem::AddMainObject(py::dict d)
 	return ind;
 };
 
-ObjectIndex MainSystem::AddMainObjectPyClass(py::object pyObject)
+ObjectIndex MainSystem::AddMainObjectPyClass(const py::object& pyObject)
 {
 	py::dict dictObject;
 	Index itemIndex = 0;
@@ -727,7 +727,7 @@ void MainSystem::PySetObjectParameter(const py::object& itemIndex, const STDstri
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //! this is the hook to the object factory, handling all kinds of objects, nodes, ...
-Index MainSystem::AddMainMarker(py::dict d)
+Index MainSystem::AddMainMarker(const py::dict& d)
 {
 	SystemHasChanged();
 	Index ind = GetMainObjectFactory().AddMainMarker(*this, d);
@@ -735,7 +735,7 @@ Index MainSystem::AddMainMarker(py::dict d)
 	return ind;
 };
 
-MarkerIndex MainSystem::AddMainMarkerPyClass(py::object pyObject)
+MarkerIndex MainSystem::AddMainMarkerPyClass(const py::object& pyObject)
 {
 	py::dict dictObject;
 	Index itemIndex = 0;
@@ -907,7 +907,7 @@ py::object MainSystem::PyGetMarkerOutputVariable(const py::object& itemIndex, Ou
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //! this is the hook to the object factory, handling all kinds of objects, nodes, ...
-Index MainSystem::AddMainLoad(py::dict d)
+Index MainSystem::AddMainLoad(const py::dict& d)
 {
 	SystemHasChanged();
 	Index ind = GetMainObjectFactory().AddMainLoad(*this, d);
@@ -915,7 +915,7 @@ Index MainSystem::AddMainLoad(py::dict d)
 	return ind;
 };
 
-LoadIndex MainSystem::AddMainLoadPyClass(py::object pyObject)
+LoadIndex MainSystem::AddMainLoadPyClass(const py::object& pyObject)
 {
 	py::dict dictObject;
 	Index itemIndex = 0;
@@ -1086,7 +1086,7 @@ void MainSystem::PySetLoadParameter(const py::object& itemIndex, const STDstring
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //! this is the hook to the object factory, handling all kinds of objects, nodes, ...
-Index MainSystem::AddMainSensor(py::dict d)
+Index MainSystem::AddMainSensor(const py::dict& d)
 {
 	SystemHasChanged();
 	Index ind = GetMainObjectFactory().AddMainSensor(*this, d);
@@ -1094,7 +1094,7 @@ Index MainSystem::AddMainSensor(py::dict d)
 	return ind;
 };
 
-SensorIndex MainSystem::AddMainSensorPyClass(py::object pyObject)
+SensorIndex MainSystem::AddMainSensorPyClass(const py::object& pyObject)
 {
 	py::dict dictObject;
 	Index itemIndex = 0;

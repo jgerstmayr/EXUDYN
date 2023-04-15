@@ -399,6 +399,7 @@ KEYPAD 2/8,4/6,1/9    ... rotate scene about 1,2 or 3-axis (use CTRL for small r
 F2                    ... ignore all keyboard input, except for KeyPress user function, 
                           F2 and escape keys
 F3                    ... show mouse coordinates
+Q      ... stop current solver and proceed to next simulation (or end of file)
 A      ... zoom all
 C      ... show/hide connectors
 CTRL+C ... show/hide connector numbers
@@ -412,8 +413,8 @@ N      ... show/hide nodes
 CTRL+N ... show/hide node numbers
 S      ... show/hide sensors
 CTRL+S ... show/hide sensor numbers
+O      ... change center of rotation to current center of the window (affects only current plane coordinates; rotate model to ajust other coordinates)
 T      ... switch between faces transparent/ faces transparent + edges / only face edges / full faces with edges / only faces
-Q      ... stop current solver and proceed to next simulation (or end of file)
 X      ... execute command; dialog may appear behind the visualization window! may crash!
 V      ... visualization settings; dialog may appear behind the visualization window!
 ESCAPE ... close render window and stop all simulations (same as close window button)

@@ -9,9 +9,9 @@ A basic hydraulic actuator with pressure build up equations. The actuator follow
 
 \ **Additional information for ObjectConnectorHydraulicActuatorSimple**\ :
 
-* | The Object has the following types = \ ``Connector``\ 
-* | Requested marker type = \ ``Position``\ 
-* | Requested node type: read detailed information of item
+* | This \ ``Object``\  has/provides the following types = \ ``Connector``\ 
+* | Requested \ ``Marker``\  type = \ ``Position``\ 
+* | Requested \ ``Node``\  type: read detailed information of item
 * | \ **Short name**\  for Python = \ ``HydraulicActuatorSimple``\ 
 * | \ **Short name**\  for Python visualization object = \ ``VHydraulicActuatorSimple``\ 
 
@@ -201,7 +201,7 @@ The \ :ref:`ODE1 <ODE1>`\  for pressures follows for the the case of laminar flo
 valve positions as well as the actuator velocity and position (only for change of volume).
 
 The distance between the two marker points, which are usually the bushings or clevis mounts of the hydraulic cylinder, is
-denoted as \ :math:`L`\ . The stroke length \ :math:`s in [0, L_s]`\  is defined as
+denoted as \ :math:`L`\ . The stroke length \ :math:`s \in [0, L_s]`\  is defined as
 
 .. math::
 
@@ -269,7 +269,12 @@ thus, in the implementation we use \ :math:`\mathrm{sqrts}(x) = \mathrm{sign}(x)
 
 
 
+Relevant Examples and TestModels with weblink:
 
-\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+    \ `HydraulicActuator2Arms.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/HydraulicActuator2Arms.py>`_\  (Examples/), \ `hydraulicActuatorSimpleTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/hydraulicActuatorSimpleTest.py>`_\  (TestModels/)
+
+
+
+\ **The web version may not be complete. For details, consider also the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes, Holzinger Stefan
 * @date         2019-07-01 (generated)
-* @date         2022-09-16  15:48:27 (last modified)
+* @date         2023-04-04  13:38:52 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -108,6 +108,9 @@ public: // AUTO:
     //! AUTO:  return configuration dependent velocity of node; returns always a 3D Vector
     virtual Vector3D GetVelocity(ConfigurationType configuration = ConfigurationType::Current) const override;
 
+    //! AUTO:  return configuration dependent acceleration of node
+    virtual Vector3D GetAcceleration(ConfigurationType configuration = ConfigurationType::Current) const override;
+
     //! AUTO:  return configuration dependent rotation matrix of node; returns always a 3D Vector
     virtual Matrix3D GetRotationMatrix(ConfigurationType configuration = ConfigurationType::Current) const override;
 
@@ -177,6 +180,7 @@ public: // AUTO:
             (Index)OutputVariableType::Position +
             (Index)OutputVariableType::Displacement +
             (Index)OutputVariableType::Velocity +
+            (Index)OutputVariableType::Acceleration +
             (Index)OutputVariableType::Coordinates +
             (Index)OutputVariableType::Coordinates_t +
             (Index)OutputVariableType::RotationMatrix +

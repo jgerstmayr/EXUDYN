@@ -118,8 +118,7 @@ def WriteToFile(resultsFile, parameters, currentGeneration, values, globalCnt, w
 #**function: processes parameterFunction for given parameters in parameterList, see ParameterVariation
 #**input:
 #    parameterFunction: function, which takes the form parameterFunction(parameterDict) and which returns any values that can be stored in a list (e.g., a floating point number)
-#    parameterList: list of parameter sets (as dictionaries) which are fed into the parameter variation, e.g., [{'mass': 10}, {'mass':20}, ...]
-#    addComputationIndex: if True, key 'computationIndex' is added to every parameterDict in the call to parameterFunction(), which allows to generate independent output files for every parameter, etc.
+#    parameterList: list of parameter sets (as dictionaries) which are fed into the parameter variation, see example 
 #    useMultiProcessing: if True, the multiprocessing lib is used for parallelized computation; WARNING: be aware that the function does not check if your function runs independently; DO NOT use GRAPHICS and DO NOT write to same output files, etc.!
 #    numberOfThreads: default: same as number of cpus (threads); used for multiprocessing lib;
 #    resultsFile: if provided, output is immediately written to resultsFile during processing
@@ -127,7 +126,21 @@ def WriteToFile(resultsFile, parameters, currentGeneration, values, globalCnt, w
 #    useDispyWebMonitor: if given in **kwargs, a web browser is startet in case of cluster computation to manage the cluster during computation
 #**output: returns values containing the results according to parameterList
 #**notes: options are passed from Parametervariation
-def ProcessParameterList(parameterFunction, parameterList, addComputationIndex, useMultiProcessing, clusterHostNames=[], **kwargs):
+#**example:
+#def PF(parameterSet):
+#    #in reality, value will be result of a complex exudyn simulation:
+#    value = sin(parameterSet['mass']) * parameterSet['stiffness']
+#    return value
+#
+#values=ProcessParameterList(parameterFunction=PF, 
+#                            parameterList=[{'m':1, 's':100},
+#                                          {'m':2, 's':100},
+#                                          {'m':3, 's':100},
+#                                          {'m':1, 's':200},
+#                                          {'m':2, 's':250},
+#                                          {'m':3, 's':300},
+#                                          ], useMultiProcessing=False )
+def ProcessParameterList(parameterFunction, parameterList, useMultiProcessing, clusterHostNames=[], **kwargs):
     values = [] #create empty list
     nVariations = len(parameterList)
     #print("pl=",parameterList)
@@ -346,12 +359,15 @@ def ProcessParameterList(parameterFunction, parameterList, addComputationIndex, 
 #    numberOfThreads: default(None): same as number of cpus (threads); used for multiprocessing lib;
 #    parameterFunctionData: dictionary containing additional data passed to the parameterFunction inside the parameters with dict key 'functionData'; use this e.g. for passing solver parameters or other settings
 #    clusterHostNames: list of hostnames, e.g. clusterHostNames=['123.124.125.126','123.124.125.127'] providing a list of strings with IP addresses or host names, see dispy documentation. If list is non-empty and useMultiProcessing==True and dispy is installed, cluster computation is used; NOTE that cluster computation speedup factors shown are not fully true, as they include a significant overhead; thus, only for computations which take longer than 1-5 seconds and for sufficient network bandwith, the speedup is roughly true
-#    useDispyWebMonitor: if given in **kwargs, a web browser is startet in case of cluster computation to manage the cluster during computation
+#    useDispyWebMonitor: if given in **kwargs, a web browser is started in case of cluster computation to manage the cluster during computation
 #**output:
-#    returns [parameterList, values], containing, e.g., parameterList={'mass':[1,1,1,2,2,2,3,3,3], 'stiffness':[4,5,6, 4,5,6, 4,5,6]} and the result values of the parameter variation accoring to the parameterList, 
+#    returns [parameterList, values], containing, e.g., parameterList=\{'mass':[1,1,1,2,2,2,3,3,3], 'stiffness':[4,5,6, 4,5,6, 4,5,6]\} and the result values of the parameter variation accoring to the parameterList, 
 #           values=[7,8,9 ,3,4,5, 6,7,8] (depends on solution of problem ..., can also contain tuples, etc.)
 #**example:
-#   ParameterVariation(parameters={'mass':(1,10,10), 'stiffness':(1000,10000,10)}, parameterFunction=Test, useMultiProcessing=True)
+#if __name__ == '__main__':
+#    ParameterVariation(parameterFunction=Test, 
+#                       parameters={'mass':(1,10,10), 'stiffness':(1000,10000,10)}, 
+#                       useMultiProcessing=True)
 def ParameterVariation(parameterFunction, parameters, 
                        useLogSpace=False, debugMode=False, addComputationIndex=False,
                        useMultiProcessing=False, showProgress = True, parameterFunctionData={}, clusterHostNames=[],
@@ -461,7 +477,7 @@ def ParameterVariation(parameterFunction, parameters,
             
         parameterList += [parameterSet]
 
-    values = ProcessParameterList(parameterFunction, parameterList, addComputationIndex, useMultiProcessing, 
+    values = ProcessParameterList(parameterFunction, parameterList, useMultiProcessing, 
                                   showProgress = showProgress, numberOfThreads=numberOfThreads,
                                   resultsFile = resultsFile, parameters=parameters, 
                                   clusterHostNames=clusterHostNames, **kwargs)
@@ -501,7 +517,7 @@ def ParameterVariation(parameterFunction, parameters,
 #           values=[7,8,9 ,3,4,5, 6,7,8] (depends on solution of problem ..., can also contain tuples, etc.)
 #**notes: This function is still under development and shows an experimental state! 
 #**example:
-#   GeneticOptimization(objectiveFunction = fOpt, parameters={'mass':(1,10), 'stiffness':(1000,10000)})
+#GeneticOptimization(objectiveFunction = fOpt, parameters={'mass':(1,10), 'stiffness':(1000,10000)})
 def GeneticOptimization(objectiveFunction, parameters, 
                         populationSize=100,
                         numberOfGenerations=10,
@@ -642,7 +658,7 @@ def GeneticOptimization(objectiveFunction, parameters,
             print("===============\nevaluate population", popCnt, ":")
 
         totalEvaluations += len(currentGeneration)
-        values = ProcessParameterList(objectiveFunction, currentGeneration, addComputationIndex, useMultiProcessing, showProgress = showProgress, numberOfThreads=numberOfThreads,
+        values = ProcessParameterList(objectiveFunction, currentGeneration, useMultiProcessing, showProgress = showProgress, numberOfThreads=numberOfThreads,
                                       clusterHostNames=clusterHostNames, useDispyWebMonitor=useDispyWebMonitor)
 
         if (showProgress and useMultiProcessing and popCnt < numberOfGenerations-1): print("            #"+str(popCnt+1), end='')
@@ -1129,7 +1145,7 @@ def ComputeSensitivities(parameterFunction, parameters, scaledByReference=False,
         for cnt in range(0, len(parameterList)): 
             parameterList[cnt]['functionData'] = parameterFunctionData
 
-    values = ProcessParameterList(parameterFunction, parameterList, addComputationIndex, useMultiProcessing, 
+    values = ProcessParameterList(parameterFunction, parameterList, useMultiProcessing, 
                                   showProgress = showProgress, numberOfThreads=numberOfThreads,
                                   resultsFile = resultsFile, parameters=parameters)
 

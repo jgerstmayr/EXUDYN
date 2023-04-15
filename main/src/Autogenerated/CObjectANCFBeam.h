@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-12-13  19:36:38 (last modified)
+* @date         2023-04-05  13:57:34 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -32,7 +32,6 @@ public: // AUTO:
     Index2 nodeNumbers;                           //!< AUTO: two node numbers for beam element
     Real physicsLength;                           //!< AUTO:  [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives \f$\rho A L\f$; must be positive
     Vector3D crossSectionPenaltyFactor;           //!< AUTO:  [SI:1] additional penalty factors for cross section deformation, which are in total \f$k_{cs} = [f_{yy}\cdot k_{yy},\, f_{zz}\cdot k_{zz},\, f_{yz}\cdot k_{yz}]\tp\f$
-    Vector2D testBeamRectangularSize;             //!< AUTO:  [SI:m] test dimensions for mass matrix and other terms using standard rectangular cross section
     Real physicsMassPerLength;                    //!< AUTO:  [SI:kg/m] mass per length of beam; this data is used internally for computation
     Matrix3D physicsCrossSectionInertia;          //!< AUTO:  [SI:kg m] cross section mass moment of inertia tensor; this data is used internally for computation
     Vector3D physicsTorsionalBendingStiffness;    //!< AUTO:  [SI:Nm\f$^2\f$] bending and torsional stiffness vector;
@@ -43,7 +42,6 @@ public: // AUTO:
         nodeNumbers = Index2({EXUstd::InvalidIndex, EXUstd::InvalidIndex});
         physicsLength = 0.;
         crossSectionPenaltyFactor = Vector3D({1.,1.,1.});
-        testBeamRectangularSize = Vector2D({-1.,-1.});
         physicsMassPerLength = 0.;
         physicsCrossSectionInertia = EXUmath::zeroMatrix3D;
         physicsTorsionalBendingStiffness = 0.;

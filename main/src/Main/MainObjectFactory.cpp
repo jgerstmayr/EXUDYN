@@ -289,7 +289,6 @@ bool MainObjectFactory::DictHasValidName(const MainSystem& mainSystem, const py:
 
 	if (d.contains("name"))
 	{
-				
 		if (EPyUtils::DictItemIsValidString(d, "name"))
 		{
 			STDstring nameString = py::cast<std::string>(d["name"]); //! read out dictionary and cast to C++ type
@@ -305,9 +304,7 @@ bool MainObjectFactory::DictHasValidName(const MainSystem& mainSystem, const py:
 					errorFound = true;
 				}
 
-				//check if name exists:
-				//???use baseItem to check correct item
-				//if (baseItem.compare("node") == 0)
+				//check if name exists (this may be slow for > 50000 items with individual names):
 				if (baseItem == "node")
 				{
 					for (auto item : mainSystem.GetMainSystemData().GetMainNodes())
@@ -387,7 +384,7 @@ bool MainObjectFactory::DictHasValidName(const MainSystem& mainSystem, const py:
 	return hasName && !errorFound;
 }
 
-Index MainObjectFactory::AddMainNode(MainSystem& mainSystem, py::dict d)
+Index MainObjectFactory::AddMainNode(MainSystem& mainSystem, const py::dict& d)
 {
 	bool errorFound = false;
 
@@ -867,7 +864,7 @@ MainObject* MainObjectFactory::CreateMainObject(MainSystem& mainSystem, STDstrin
 	return object;
 }
 
-Index MainObjectFactory::AddMainObject(MainSystem& mainSystem, py::dict d)
+Index MainObjectFactory::AddMainObject(MainSystem& mainSystem, const py::dict& d)
 {
 	bool errorFound = false;
 
@@ -1053,7 +1050,7 @@ MainMarker* MainObjectFactory::CreateMainMarker(MainSystem& mainSystem, STDstrin
 	return marker;
 }
 
-Index MainObjectFactory::AddMainMarker(MainSystem& mainSystem, py::dict d)
+Index MainObjectFactory::AddMainMarker(MainSystem& mainSystem, const py::dict& d)
 {
 	bool errorFound = false;
 
@@ -1150,7 +1147,7 @@ MainLoad* MainObjectFactory::CreateMainLoad(MainSystem& mainSystem, STDstring lo
 }
 
 
-Index MainObjectFactory::AddMainLoad(MainSystem& mainSystem, py::dict d)
+Index MainObjectFactory::AddMainLoad(MainSystem& mainSystem, const py::dict& d)
 {
 	bool errorFound = false;
 
@@ -1280,7 +1277,7 @@ MainSensor* MainObjectFactory::CreateMainSensor(MainSystem& mainSystem, STDstrin
 }
 
 
-Index MainObjectFactory::AddMainSensor(MainSystem& mainSystem, py::dict d)
+Index MainObjectFactory::AddMainSensor(MainSystem& mainSystem, const py::dict& d)
 {
 	bool errorFound = false;
 

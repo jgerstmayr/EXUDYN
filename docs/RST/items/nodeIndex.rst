@@ -2,6 +2,8 @@
 Node
 ====
 
+Nodes provide coordinates for objects. Loads can be applied and Markers or Sensors can be attached to Nodes. The sorting of Nodes in the system (the order they are added to mbs) defines the order of system coordinates.
+
 .. toctree::
    :maxdepth: 2
 

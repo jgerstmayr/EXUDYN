@@ -6,7 +6,7 @@ and hereafter you can access all data and functions via 'solver'.
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-03-28 (last modfied)
+* @date         AUTO: 2023-04-07 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -91,7 +91,7 @@ and hereafter you can access all data and functions via 'solver'.
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-03-28 (last modfied)
+* @date         AUTO: 2023-04-07 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -116,7 +116,7 @@ public: // AUTO:
 
 public: // AUTO: 
   //! AUTO: default constructor with parameter initialization
-  MainSolverImplicitSecondOrder()
+  MainSolverImplicitSecondOrder(): MainSolverBase()
   {
     isInitialized = false;
   };
@@ -260,7 +260,7 @@ and hereafter you can access all data and functions via 'solver'.
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-03-28 (last modfied)
+* @date         AUTO: 2023-04-07 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

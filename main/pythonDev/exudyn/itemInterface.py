@@ -1234,13 +1234,12 @@ class VObjectANCFBeam:
     def __repr__(self):
         return str(dict(self))
 class ObjectANCFBeam:
-    def __init__(self, name = '', nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex()], physicsLength = 0., sectionData = exudyn.BeamSection(), crossSectionPenaltyFactor = [1.,1.,1.], testBeamRectangularSize = [-1.,-1.], visualization = {'show': True, 'sectionGeometry': exudyn.BeamSectionGeometry(), 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex()], physicsLength = 0., sectionData = exudyn.BeamSection(), crossSectionPenaltyFactor = [1.,1.,1.], visualization = {'show': True, 'sectionGeometry': exudyn.BeamSectionGeometry(), 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.nodeNumbers = nodeNumbers
         self.physicsLength = CheckForValidPReal(physicsLength,"physicsLength","ObjectANCFBeam")
         self.sectionData = sectionData
         self.crossSectionPenaltyFactor = crossSectionPenaltyFactor
-        self.testBeamRectangularSize = testBeamRectangularSize
         self.visualization = visualization
 
     def __iter__(self):
@@ -1250,7 +1249,6 @@ class ObjectANCFBeam:
         yield 'physicsLength', self.physicsLength
         yield 'sectionData', self.sectionData
         yield 'crossSectionPenaltyFactor', self.crossSectionPenaltyFactor
-        yield 'testBeamRectangularSize', self.testBeamRectangularSize
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VsectionGeometry', dict(self.visualization)["sectionGeometry"]
         yield 'Vcolor', dict(self.visualization)["color"]

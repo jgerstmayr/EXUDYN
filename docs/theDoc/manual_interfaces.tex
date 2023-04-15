@@ -37,13 +37,13 @@ You can create a new \texttt{SystemContainer}, which is a class that is initiali
 \pythonstyle
 \begin{lstlisting}[language=Python, firstnumber=1]
 
-exu.SystemContainer()
+SC = exu.SystemContainer()
 \end{lstlisting}
 
 
-Note that creating a second \texttt{exu.SystemContainer()} will be independent of \texttt{SC} and therefore usually makes no sense.
+Note that creating a second \texttt{exu.SystemContainer()} will be independent of \texttt{SC} and therefore makes no sense if you do not intend to work with two different containers.
 
-To add a MainSystem to system container SC and store as variable mbs, write:
+To add a MainSystem to system container \texttt{SC} and store as variable \texttt{mbs}, write:
 \pythonstyle
 \begin{lstlisting}[language=Python, firstnumber=1]
 
@@ -51,7 +51,7 @@ mbs = SC.AddSystem()
 \end{lstlisting}
 
 
-Furthermore, there are a couple of commands available directly in the \texttt{exudyn} module, given in the following subsections.Regarding the \mybold{(basic) module access}, functions are related to the \texttt{exudyn = exu} module, see these examples:
+Furthermore, there are a couple of commands available directly in the \texttt{exudyn} module, given in the following subsections. Regarding the \mybold{(basic) module access}, functions are related to the \texttt{exudyn = exu} module, see these examples:
 \pythonstyle
 \begin{lstlisting}[language=Python, firstnumber=1]
 
@@ -86,10 +86,10 @@ mbs2 = SC.AddSystem()
 #  print number of systems available:
 nSys = SC.NumberOfSystems()
 exu.Print(nSys) #or just print(nSys)
+#  delete reference to mbs and mbs2 (usually not necessary):
+del mbs, mbs2
 #  reset system container (mbs becomes invalid):
 SC.Reset()
-#  delete mbs (usually not necessary):
-del mbs
 \end{lstlisting}
 
 
@@ -97,7 +97,7 @@ If you run a parameter variation (check \texttt{Examples/parameterVariationExamp
 
 \mysubsubsection{Item index}
 \label{sec:itemIndex}
-Many functions will work with node numbers (\texttt{NodeIndex}), object numbers (\texttt{ObjectIndex}),marker numbers (\texttt{MarkerIndex}) and others. These numbers are special objects, which have been introduced in order to avoid mixing up, e.g., node and object numbers. 
+Many functions will work with node numbers (\texttt{NodeIndex}), object numbers (\texttt{ObjectIndex}),marker numbers (\texttt{MarkerIndex}) and others. These numbers are special Python objects, which have been introduced in order to avoid mixing up, e.g., node and object numbers. 
 
 For example, the command \texttt{mbs.AddNode(...)} returns a \texttt{NodeIndex}. For these indices, the following rules apply:
 \bi
@@ -115,7 +115,7 @@ For example, the command \texttt{mbs.AddNode(...)} returns a \texttt{NodeIndex}.
 As a key concept to working with \codeName\ , most data which is retrieved by C++ interface functions is copied.
 Experienced Python users may know that it is a key concept to Python to often use references instead of copying, which is
 sometimes error-prone but offers a computationally efficient behavior.
-There are only a few very important cases where data is references in \codeName\ , the main ones are 
+There are only a few very important cases where data is referenced in \codeName\ , the main ones are 
 \texttt{SystemContainer}, 
 \texttt{MainSystem}, 
 \texttt{VisualizationSettings}, and
@@ -134,6 +134,9 @@ mbs2=mbs                           #again, mbs2 and mbs refer to the same C++ ob
 og = mbs.AddObject(ObjectGround()) #copy data of ObjectGround() into C++
 o0 = mbs.GetObject(0)              #get copy of internal data as dictionary
 del o0                             #delete the local dictionary; C++ data not affected
+del mbs, mbs2                      #references to mbs deleted (C++ data still available)
+del SC                             #references to SystemContainer deleted
+#at this point, mbs and SC are not available any more (data may be cleaned up by Python)
 \end{lstlisting}
 
 
@@ -141,19 +144,19 @@ del o0                             #delete the local dictionary; C++ data not af
 \label{sec:cinterface:exceptions}
 There are several levels of type and argument checks, leading to different types of errors and exceptions. The according error messages are non-unique, because they may be raised in Python modules or in C++, and they may be raised on different levels of the code. Error messages depend on Python version and on your iPython console. Very often the exception may be called \texttt{ValueError}, but it mustnot mean that it is a wrong error, but it could also be, e.g., a wrong order of function calls.
 
-As an example, a type conversion error is raised when providing wrong argument types, e.g., try \texttt{exu.GetVersionString('abs')}:
+As an example, a type conversion error is raised when providing wrong argument types, e.g., try \texttt{exu.GetVersionString('abc')}:
 \pythonstyle
 \begin{lstlisting}[language=Python, firstnumber=1]
 
 Traceback (most recent call last):
 
 File "C:\Users\username\AppData\Local\Temp\ipykernel_24988\2212168679.py", line 1, in <module>
-    exu.GetVersionString('abs')
+    exu.GetVersionString('abc')
 
 TypeError: GetVersionString(): incompatible function arguments. The following argument types are supported:
     1. (addDetails: bool = False) -> str
 
-Invoked with: 'abs'
+Invoked with: 'abc'
 \end{lstlisting}
 
 
@@ -248,7 +251,7 @@ mbs = SC.AddSystem()
 
 
 
-The SystemContainer is the top level of structures in \codeName. The container holds all (multibody) systems, solvers and all other data structures for computation. Currently, only one container shall be used. In future, multiple containers might be usable at the same time.Regarding the \mybold{(basic) module access}, functions are related to the \texttt{exudyn = exu} module, see also the introduction of this chapter and this example:
+The SystemContainer is the top level of structures in \codeName. The container holds all (multibody) systems, solvers and all other data structures for computation. A SystemContainer is created by \texttt{SC = exu.SystemContainer()}, understanding \texttt{exu.SystemContainer} as a class like Python's internal list class, creating a list instance with \texttt{x=list()}. Currently, only one container shall be used. In future, multiple containers might be usable at the same time. Regarding the \mybold{(basic) module access}, functions are related to the \texttt{exudyn = exu} module, see also the introduction of this chapter and this example:
 \pythonstyle
 \begin{lstlisting}[language=Python, firstnumber=1]
 
@@ -297,7 +300,7 @@ mbs = SC.AddSystem()
 
 
 
-This is the structure which defines a (multibody) system. In C++, there is a MainSystem (links to Python) and a System (computational part). For that reason, the name is MainSystem on the Python side, but it is often just called 'system'. For compatibility, it is recommended to denote the variable holding this system as mbs, the multibody dynamics system. It can be created, visualized and computed. Use the following functions for system manipulation.
+This is the class which defines a (multibody) system. The MainSystem shall only be created by \texttt{SC.AddSystem()}, not with \texttt{exu.MainSystem()}, as the latter one would not be linked to a SystemContainer. In C++, there is a MainSystem (the part which links to Python) and a System (computational part). For that reason, the name is MainSystem on the Python side, but it is often just called 'system'. For compatibility, it is recommended to denote the variable holding this system as mbs, the multibody dynamics system. It can be created, visualized and computed. Use the following functions for system manipulation.
 \pythonstyle
 \begin{lstlisting}[language=Python, firstnumber=1]
 

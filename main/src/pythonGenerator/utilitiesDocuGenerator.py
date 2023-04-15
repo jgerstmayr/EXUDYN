@@ -403,14 +403,15 @@ def DictToItemsText(functionDict, tagList, addStr):
             strTag = RemoveIndentation(functionDict[tag].strip())
             #print(strTag)
             if tag == 'example':
+                strTag = functionDict[tag].strip('\n') #do not remove indentation, nor strip spaces, only blank lines
                 #print("example=", strTag)
                 sLatex += '\\vspace{-12pt}\\ei' #for global itemize list for function
                 sLatex += '\\begin{lstlisting}[language=Python, xleftmargin=36pt]\n'
-                sLatex += RemoveIndentation(strTag, '  ', False)
+                sLatex += RemoveIndentation(strTag, '  ', removeAllSpaces = False, removeIndentation = True)
                 if sLatex[-1] != '\n': sLatex+='\n'
                 sLatex += '\\end{lstlisting}' #' \\vspace{6pt}'
                 sLatex += '\\vspace{-24pt}\\bi\item[]\\vspace{-24pt}' #for global itemize list for function
-                sRST += '\n'+RSTcodeBlock(RemoveIndentation(strTag.strip(), '  ', False)+'\n', 'python')
+                sRST += '\n'+RSTcodeBlock(RemoveIndentation(strTag, '  ', removeAllSpaces = False, removeIndentation = True)+'\n', 'python')
             elif strTag.count("\n") > 0 and strTag.strip() != '': #multiple lines are replaced by list
                 sLatex += '\\vspace{-6pt}\n'+sSpaces+'\\begin{itemize}[leftmargin=1.2cm]\n'
                 sLatex += '\setlength{\itemindent}{-0.7cm}\n'

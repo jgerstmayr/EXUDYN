@@ -57,10 +57,17 @@ private:
 	bool interactiveMode;		//!< if this is true, every AddItem(...), ModifyItem(...), etc. causes Assemble() to be called; this guarantees that the system is always consistent to be drawn
 	MainSystemContainer* mainSystemContainerBacklink; //!< backlink used to avoid needing SC and mbs in functions -> mbs is sufficient for all purposes!
 	Index mainSystemIndex;		//!< index of mainSystem (mbs) in SystemContainer; used e.g. in graphics functions, but may also accessed via Python; -1 indicates that it is not initialized
-
+    bool useItemNames;          //!< if false, no names are added
 public:
-	//MainSystem() {};
-	//! destructor for correct deletion of derived classes
+
+    //! forbid calls of MainSystem constructor, as this would lead to an unusable system
+    static MainSystem* ForbidConstructor()
+    {
+        CHECKandTHROWstring("MainSystem() may not be called. Use AddSystem() of exudyn.SystemContainer() to create a MainSystem inside SystemContainer.");
+        return new MainSystem(); //this is never called
+    }
+
+    //! destructor for correct deletion of derived classes
 	virtual ~MainSystem() 
 	{
 		delete cSystem;
@@ -179,9 +186,9 @@ public:
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//   NODES
 	//! this is the hook to the object factory, handling all kinds of objects, nodes, ...
-	Index AddMainNode(py::dict d);
+	Index AddMainNode(const py::dict& d);
 	//! Add a MainNode with a python class
-	NodeIndex AddMainNodePyClass(py::object pyObject);
+	NodeIndex AddMainNodePyClass(const py::object& pyObject);
 	//! get node's dictionary by name; does not throw a error message
 	NodeIndex PyGetNodeNumber(STDstring name);
 	//! hook to read node's dictionary
@@ -216,9 +223,9 @@ public:
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//   OBJECTS
 	//! this is the hook to the object factory, handling all kinds of objects, nodes, ...
-	Index AddMainObject(py::dict d);
+	Index AddMainObject(const py::dict& d);
 	//! Add a MainObject with a python class
-	ObjectIndex AddMainObjectPyClass(py::object pyObject);
+	ObjectIndex AddMainObjectPyClass(const py::object& pyObject);
 	//! get object's dictionary by name; does not throw a error message
 	ObjectIndex PyGetObjectNumber(STDstring itemName);
 	//! hook to read object's dictionary
@@ -250,9 +257,9 @@ public:
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//   MARKER
 	//! this is the hook to the object factory, handling all kinds of objects, nodes, ...
-	Index AddMainMarker(py::dict d);
+	Index AddMainMarker(const py::dict& d);
 	//! Add a MainMarker with a python class
-	MarkerIndex AddMainMarkerPyClass(py::object pyObject);
+	MarkerIndex AddMainMarkerPyClass(const py::object& pyObject);
 	//! get marker's dictionary by name; does not throw a error message
 	MarkerIndex PyGetMarkerNumber(STDstring itemName);
 	//! hook to read marker's dictionary
@@ -275,9 +282,9 @@ public:
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//   LOAD
 	//! this is the hook to the object factory, handling all kinds of objects, nodes, ...
-	Index AddMainLoad(py::dict d);
+	Index AddMainLoad(const py::dict& d);
 	//! Add a MainLoad with a python class
-	LoadIndex AddMainLoadPyClass(py::object pyObject);
+	LoadIndex AddMainLoadPyClass(const py::object& pyObject);
 	//! get load's dictionary by name; does not throw a error message
 	LoadIndex PyGetLoadNumber(STDstring itemName);
 	//! hook to read load's dictionary
@@ -300,9 +307,9 @@ public:
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//   SENSOR
 	//! this is the hook to the object factory, handling all kinds of objects, nodes, ...
-	Index AddMainSensor(py::dict d);
+	Index AddMainSensor(const py::dict& d);
 	//! Add a MainSensor with a python class
-	SensorIndex AddMainSensorPyClass(py::object pyObject);
+	SensorIndex AddMainSensorPyClass(const py::object& pyObject);
 	//! get sensor's dictionary by name; does not throw a error message
 	SensorIndex PyGetSensorNumber(STDstring itemName);
 	//! hook to read sensor's dictionary

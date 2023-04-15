@@ -31,37 +31,48 @@
 #include "Utilities/AdvancedMath.h"
 #include "Utilities/Differentiation.h"
 
+#include "Utilities/ExceptionsTemplates.h" //for exceptions in solver steps
+
 
 //! special function which writes pyObject into local data
 void MainObjectANCFBeam::SetInternalBeamSection(const py::object& pyObject)
 {
-	if (py::isinstance<PyBeamSection>(pyObject)) //this must be the C-object
-	{
-		PyBeamSection bs(py::cast<PyBeamSection>(pyObject));
-		GetCObjectANCFBeam()->GetParameters().physicsAxialShearStiffness =
-			Vector3D({ bs.stiffnessMatrix(0,0),bs.stiffnessMatrix(1,1),bs.stiffnessMatrix(2,2) });
-		GetCObjectANCFBeam()->GetParameters().physicsTorsionalBendingStiffness =
-			Vector3D({ bs.stiffnessMatrix(3,3),bs.stiffnessMatrix(4,4),bs.stiffnessMatrix(5,5) });
+    GenericExceptionHandling([&]
+    {
+	    if (py::isinstance<PyBeamSection>(pyObject)) //this must be the C-object
+	    {
+		    PyBeamSection bs(py::cast<PyBeamSection>(pyObject));
 
-		GetCObjectANCFBeam()->GetParameters().physicsCrossSectionInertia = bs.inertia;
-		GetCObjectANCFBeam()->GetParameters().physicsMassPerLength = bs.massPerLength;
+            if (bs.stiffnessMatrix.NumberOfRows() != 6 ||
+                bs.stiffnessMatrix.NumberOfColumns() != 6
+                ) {pout << "ObjectANCFBeam::SetInternalBeamSection: stiffness matrix has size " << 
+                bs.stiffnessMatrix.NumberOfRows() << "," << bs.stiffnessMatrix.NumberOfColumns() << "\n";}
 
-		//CHECK that there are no parameters in BeamSection which are not processed:
-		PyBeamSection bsCheck;
-		bsCheck = GetInternalBeamSection();
-		if (!(bs.stiffnessMatrix == bsCheck.stiffnessMatrix))
-		{
-			PyError("ObjectANCFBeam: BeamSection stiffnessMatrix contains values which can not be used");
-		}
-		if (!(bs.inertia == bsCheck.inertia))
-		{
-			PyError("ObjectANCFBeam: BeamSection inertia contains values which can not be used");
-		}
-	}
-	else
-	{
-		PyError("ObjectANCFBeam: expected BeamSection, but received: " + STDstring(py::str(pyObject)));
-	}
+		    GetCObjectANCFBeam()->GetParameters().physicsAxialShearStiffness =
+			    Vector3D({ bs.stiffnessMatrix(0,0),bs.stiffnessMatrix(1,1),bs.stiffnessMatrix(2,2) });
+		    GetCObjectANCFBeam()->GetParameters().physicsTorsionalBendingStiffness =
+			    Vector3D({ bs.stiffnessMatrix(3,3),bs.stiffnessMatrix(4,4),bs.stiffnessMatrix(5,5) });
+
+		    GetCObjectANCFBeam()->GetParameters().physicsCrossSectionInertia = bs.inertia;
+		    GetCObjectANCFBeam()->GetParameters().physicsMassPerLength = bs.massPerLength;
+
+		    //CHECK that there are no parameters in BeamSection which are not processed:
+		    PyBeamSection bsCheck;
+		    bsCheck = GetInternalBeamSection();
+		    if (!(bs.stiffnessMatrix == bsCheck.stiffnessMatrix))
+		    {
+			    PyError("ObjectANCFBeam: BeamSection stiffnessMatrix contains values which can not be used");
+		    }
+		    if (!(bs.inertia == bsCheck.inertia))
+		    {
+			    PyError("ObjectANCFBeam: BeamSection inertia contains values which can not be used");
+		    }
+	    }
+	    else
+	    {
+		    PyError("ObjectANCFBeam: expected BeamSection, but received: " + STDstring(py::str(pyObject)));
+	    }
+    }, "ObjectANCFBeam::SetInternalBeamSection");
 }
 
 //! AUTO: special function which returns BeamSection converted from local data
@@ -98,7 +109,8 @@ SlimVector<CObjectANCFBeam::nSFperNode*CObjectANCFBeam::nNodes> CObjectANCFBeam:
 	Real val4 = 0.5 + x0;
 
 	return SlimVector<CObjectANCFBeam::nSFperNode * CObjectANCFBeam::nNodes>(
-		{ val1, val1 * y, val1 * z, val4, val4 * y, val4 * z });
+		{ val1, val1 * y, val1 * z, 
+          val4, val4 * y, val4 * z });
 }
 
 
@@ -110,7 +122,8 @@ SlimVector<CObjectANCFBeam::nSFperNode*CObjectANCFBeam::nNodes> CObjectANCFBeam:
 	Real z = localPosition[2];
 
 	return SlimVector<CObjectANCFBeam::nSFperNode * CObjectANCFBeam::nNodes>(
-		{ -fact, -fact * y, -fact * z, fact, fact * y, fact * z });
+		{ -fact, -fact * y, -fact * z, 
+           fact,  fact * y,  fact * z });
 }
 
 //! get derivative of compressed shape function vector for slopes
@@ -211,7 +224,7 @@ void CObjectANCFBeam::PreComputeMassTerms() const
 		Real rhoA = parameters.physicsMassPerLength;
 		const Index ns = nSFperNode * nNodes;   //number of shape functions
 		
-		if (parameters.testBeamRectangularSize[0] <= 0.) //default, use new approach, with inertia and only integration along x-axis
+		//if (parameters.testBeamRectangularSize[0] <= 0.) //default, use new approach, with inertia and only integration along x-axis
 		{
 			Real a = -0.5*L; //integration interval [a,b]
 			Real b = 0.5*L;
@@ -282,62 +295,63 @@ void CObjectANCFBeam::PreComputeMassTerms() const
 				EXUmath::MultMatrixTransposedMatrixAddTemplate(SY, SZ, precomputedMassMatrix); //add to mass matrix
 			}
 		}
-		else
-		{ //alternative (for validation) using assumed height and width of beam:
-			Real hY = parameters.testBeamRectangularSize[0]; //for testing !
-			Real hZ = parameters.testBeamRectangularSize[1]; //for testing !
+		//else
+		//{ //alternative (for validation) using assumed height and width of beam:
+		//	Real hY = parameters.testBeamRectangularSize[0]; //for testing !
+		//	Real hZ = parameters.testBeamRectangularSize[1]; //for testing !
 
-			Matrix Smat(EXUstd::dim3D, ns*EXUstd::dim3D); //shape matrix
-			const Vector2D& pInt = EXUmath::gaussRuleOrder3Points;
-			const Vector2D& wInt = EXUmath::gaussRuleOrder3Weights;
-			for (Index ix = 0; ix < pInt.NumberOfItems(); ix++) //shape functions are linear, so order 3 shall be enough!
-			{
-				Real px = pInt[ix];
-				Real wx = wInt[ix];
-				Real ax = -0.5*L; //integration interval [a,b]
-				Real bx = 0.5*L;
-				Real x = 0.5*(bx - ax)*px + 0.5*(bx + ax);
+		//	Matrix Smat(EXUstd::dim3D, ns*EXUstd::dim3D); //shape matrix
+		//	const Vector2D& pInt = EXUmath::gaussRuleOrder3Points;
+		//	const Vector2D& wInt = EXUmath::gaussRuleOrder3Weights;
+		//	for (Index ix = 0; ix < pInt.NumberOfItems(); ix++) //shape functions are linear, so order 3 shall be enough!
+		//	{
+		//		Real px = pInt[ix];
+		//		Real wx = wInt[ix];
+		//		Real ax = -0.5*L; //integration interval [a,b]
+		//		Real bx = 0.5*L;
+		//		Real x = 0.5*(bx - ax)*px + 0.5*(bx + ax);
 
-				for (Index iy = 0; iy < pInt.NumberOfItems(); iy++) //shape functions are linear, so order 3 shall be enough!
-				{
-					Real py = pInt[iy];
-					Real wy = wInt[iy];
-					Real ay = -0.5*hY; //integration interval [a,b]
-					Real by = 0.5*hY;
-					Real y = 0.5*(by - ay)*py + 0.5*(by + ay);
+		//		for (Index iy = 0; iy < pInt.NumberOfItems(); iy++) //shape functions are linear, so order 3 shall be enough!
+		//		{
+		//			Real py = pInt[iy];
+		//			Real wy = wInt[iy];
+		//			Real ay = -0.5*hY; //integration interval [a,b]
+		//			Real by = 0.5*hY;
+		//			Real y = 0.5*(by - ay)*py + 0.5*(by + ay);
 
-					for (Index iz = 0; iz < pInt.NumberOfItems(); iz++) //shape functions are linear, so order 3 shall be enough!
-					{
-						Real pz = pInt[iz];
-						Real wz = wInt[iz];
-						Real az = -0.5*hZ; //integration interval [a,b]
-						Real bz = 0.5*hZ;
-						Real z = 0.5*(bz - az)*pz + 0.5*(bz + az);
+		//			for (Index iz = 0; iz < pInt.NumberOfItems(); iz++) //shape functions are linear, so order 3 shall be enough!
+		//			{
+		//				Real pz = pInt[iz];
+		//				Real wz = wInt[iz];
+		//				Real az = -0.5*hZ; //integration interval [a,b]
+		//				Real bz = 0.5*hZ;
+		//				Real z = 0.5*(bz - az)*pz + 0.5*(bz + az);
 
-						Smat.SetAll(0.);
-						SlimVector<ns> SV = ComputeShapeFunctions(Vector3D({x,y,z}), L);
-						Real fact = rhoA/(hY*hZ) * (0.5*L*wx) * (0.5*hY*wy) * (0.5*hZ*wz);
-						for (Index i = 0; i < ns; i++)
-						{
-							for (Index k = 0; k < EXUstd::dim3D; k++)
-							{
-								Smat(k, i*EXUstd::dim3D + k) = SV[i];
-							}
-						}
-						precomputedMassMatrix += (fact*Smat).GetTransposed() * Smat;
-						//pout << "xyz=" << x << "," << y << "," << z << ":preM=" << precomputedMassMatrix << "\n\n";
-					}
-				}
-			}
-
-		}
+		//				Smat.SetAll(0.);
+		//				SlimVector<ns> SV = ComputeShapeFunctions(Vector3D({x,y,z}), L);
+		//				Real fact = rhoA/(hY*hZ) * (0.5*L*wx) * (0.5*hY*wy) * (0.5*hZ*wz);
+		//				for (Index i = 0; i < ns; i++)
+		//				{
+		//					for (Index k = 0; k < EXUstd::dim3D; k++)
+		//					{
+		//						Smat(k, i*EXUstd::dim3D + k) = SV[i];
+		//					}
+		//				}
+		//				precomputedMassMatrix += (fact*Smat).GetTransposed() * Smat;
+		//				//pout << "xyz=" << x << "," << y << "," << z << ":preM=" << precomputedMassMatrix << "\n\n";
+		//			}
+		//		}
+		//	}
+		//}
 
 		massMatrixComputed = true;
 	}
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//similar to 2013 implementation (very inefficient, use Lie group approach!):
+//! compute non-normalized (but close to unit-length) basis vector i
+//! the Z-slope "prescribes" orientation of the cross section, Y-basis is orthogonal to Z-slope
+//! similar to 2013 implementation (very inefficient, use Lie group approach!):
 template<class TReal>
 SlimVectorBase<TReal, 3> GetBasisI(Index i, TReal dr1dy, TReal dr2dy, TReal dr3dy, TReal dr1dz, TReal dr2dz, TReal dr3dz)
 {
@@ -362,7 +376,10 @@ SlimVectorBase<TReal, 3> GetBasisI(Index i, TReal dr1dy, TReal dr2dy, TReal dr3d
 }
 
 template<class TReal>
-SlimVectorBase<TReal, 3> GetBasisI_xI(Index i, TReal dr1dy, TReal dr2dy, TReal dr3dy, TReal dr1dz, TReal dr2dz, TReal dr3dz, TReal ddr1dydxi, TReal ddr2dydxi, TReal ddr3dydxi, TReal ddr1dzdxi, TReal ddr2dzdxi, TReal ddr3dzdxi)
+SlimVectorBase<TReal, 3> GetBasisI_xI(Index i, TReal dr1dy, TReal dr2dy, TReal dr3dy, 
+                                               TReal dr1dz, TReal dr2dz, TReal dr3dz, 
+                                               TReal ddr1dydxi, TReal ddr2dydxi, TReal ddr3dydxi, 
+                                               TReal ddr1dzdxi, TReal ddr2dzdxi, TReal ddr3dzdxi)
 {
 	switch (i)
 	{
@@ -395,30 +412,46 @@ template<class TReal=Real>
 SlimVectorBase<TReal, 3> GetLocalTwistAndCurvature(Real x, SlimVectorBase<TReal, 3> slopeY, SlimVectorBase<TReal, 3> slopeZ,
 	SlimVectorBase<TReal, 3> slopeYX, SlimVectorBase<TReal, 3> slopeZX)
 {
-	SlimVectorBase<TReal, 3> ei;
-	SlimVectorBase<TReal, 3> deidxi;
+    SlimVectorBase<TReal, 3> eiBar; //non-normalized (but close to unit length) cross section vectors
+    SlimVectorBase<TReal, 3> deiBarDxi;
+    std::array<SlimVectorBase<TReal, 3>,3> eiList; //normalized cross section vectors
 
-	SlimVectorBase<TReal, 3> k((TReal)0.);
+	SlimVectorBase<TReal, 3> k((TReal)0.); //global curvature
 	for (Index i = 0; i < EXUstd::dim3D; i++)
 	{
-		ei = GetBasisI(i, slopeY.X(), slopeY.Y(), slopeY.Z(), slopeZ.X(), slopeZ.Y(), slopeZ.Z());
-		deidxi = GetBasisI_xI(i, slopeY.X(), slopeY.Y(), slopeY.Z(), slopeZ.X(), slopeZ.Y(), slopeZ.Z(), slopeYX.X(), slopeYX.Y(), slopeYX.Z(), slopeZX.X(), slopeZX.Y(), slopeZX.Z());
+        eiBar = GetBasisI(i, slopeY.X(), slopeY.Y(), slopeY.Z(), slopeZ.X(), slopeZ.Y(), slopeZ.Z());
+        deiBarDxi = GetBasisI_xI(i, slopeY.X(), slopeY.Y(), slopeY.Z(),
+                                 slopeZ.X(), slopeZ.Y(), slopeZ.Z(), 
+                                 slopeYX.X(), slopeYX.Y(), slopeYX.Z(), 
+                                 slopeZX.X(), slopeZX.Y(), slopeZX.Z());
 
 		//**** NOTE: derivative of deidxi w.r.t. |ei| is missing in 2013 implementation
 		//d(ei_N)dxi = 1/|ei|*(I - np.outer(ei_N,ei_N))* deidxi ==> kappa+= 0.5/|ei|^2 * ei_N x ((I - 1//|ei|^2 * outer(ei,ei))*d(ei)dxi)
 		//should read: 
-		TReal eiNorm2 = ei.GetL2NormSquared(); 
+		TReal eiNorm2 = eiBar.GetL2NormSquared();
+        CHECKandTHROW(eiNorm2 != 0., "CObjectANCFBeam: GetLocalTwistAndCurvature: Basis vector has zero length; check initialization of NodePoint3DSlope23");
+        eiList[i] = eiBar * (1. / sqrt(eiNorm2));
+
 		//corrected version: (but not big difference ...):
 		ConstSizeMatrixBase<TReal, 9> IsubEiEi;
-		IsubEiEi.SetWithDiadicProduct(-ei, ei);
+		IsubEiEi.SetWithDiadicProduct(-eiBar, eiBar);
 		IsubEiEi(0, 0) += 1.;
 		IsubEiEi(1, 1) += 1.;
 		IsubEiEi(2, 2) += 1.;//[1.99762284e+000 8.96763007e-002 3.97492136e-128]
-		k += (0.5 / eiNorm2) * ei.CrossProduct(IsubEiEi * deidxi);  //k = 1/2 sum_i e_i x e_i' -> simplified written using e_i^{\bar}-Vectors (see the paper)
-		//k += (0.5 / eiNorm2) * ei.CrossProduct(deidxi);  //k = 1/2 sum_i e_i x e_i' -> simplified written using e_i^{\bar}-Vectors (see the paper)
+		//corrected:
+        k += (0.5 / eiNorm2) * eiBar.CrossProduct(IsubEiEi * deiBarDxi);  //k = 1/2 sum_i e_i x e_i' -> simplified written using e_i^{\bar}-Vectors (see the paper)
+        //original:
+		//k += (0.5 / eiNorm2) * eiBar.CrossProduct(deidxi);  //k = 1/2 sum_i e_i x e_i' -> simplified written using e_i^{\bar}-Vectors (see the paper)
 	}
 
-	return k;
+    //compute local curvature by projection of k into local (cross-section) frame given by eiList
+    SlimVectorBase<TReal, 3> kLocal((TReal)0.);
+    for (Index i = 0; i < EXUstd::dim3D; i++)
+    {
+        kLocal[i] += eiList[i] * k;
+    }
+
+	return kLocal;
 }
 
 //function to make interface to Autodiff:

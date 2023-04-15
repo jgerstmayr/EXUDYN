@@ -1583,11 +1583,11 @@ void GeneralContact::ComputeODE2RHS(const CSystem& cSystem, TemporaryComputation
 void GeneralContact::JacobianODE2LHS(const CSystem& cSystem, TemporaryComputationDataArray& tempArray, const NumericalDifferentiationSettings& numDiff,
 	GeneralMatrix& jacobianGM, Real factorODE2, Real factorODE2_t)
 {
-	STARTGLOBALTIMERmain(TScontactJacobian);
 	//if (verboseMode >= 3) pout  << "computeODE2RHS\n";
 	if (!isActive) { return; }
 
-	ComputeContactDataAndBoundingBoxes(cSystem, tempArray, false, false);
+    STARTGLOBALTIMERmain(TScontactJacobian);
+    ComputeContactDataAndBoundingBoxes(cSystem, tempArray, false, false);
 
 	Index nThreads = exuThreading::TaskManager::GetNumThreads();
 	SetNumberOfThreads(nThreads);

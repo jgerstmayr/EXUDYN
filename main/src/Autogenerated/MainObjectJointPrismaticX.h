@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-07-21  20:27:19 (last modified)
+* @date         2023-04-14  14:37:34 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -98,7 +98,7 @@ public: // AUTO:
     //! AUTO:  Get type name of object (without keyword 'Object'...!); could also be realized via a string -> type conversion?
     virtual const char* GetTypeName() const override
     {
-        return "JointRevolute";
+        return "JointPrismaticX";
     }
 
 

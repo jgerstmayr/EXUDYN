@@ -25,7 +25,6 @@ from exudyn.rigidBodyUtilities import RotationMatrix2RotZYZ, HT2rotationMatrix, 
 #  robot: robot class
 #  HT: actual pose as homogeneous transformaton matrix
 #  mode: rotational or translational part of the movement
-#  singularWeight: Weighting of singular configurations where the value would be infinity,default value=100
 #**output: velocity manipulability measure as scalar value, defined as $\sqrt(det(JJ^T))$
 #**author: Martin Sereinig
 #**notes: compute velocity dependent manipulability definded by Yoshikawa, see \cite{Yoshikawa1985}
@@ -33,15 +32,12 @@ def VelocityManipulability(robot, HT, mode):
     if mode == 'all':
         J = robot.Jacobian(HT, [], 'all')
 
-
     elif mode == 'rot':
         J = robot.Jacobian(HT, [], 'rot')
 
-
     elif mode == 'trans':
         J = robot.Jacobian(HT, [], 'trans')
-        
-        
+
     #check for singular Matrix not needed, no inverse is used
     mv2 = np.linalg.det(J@J.T)
     mv3 = np.max([0, mv2]) # to avoid negative values they are set to zero, same as corke
@@ -62,7 +58,7 @@ def VelocityManipulability(robot, HT, mode):
 #**output: force manipulability measure as scalar value, defined as $\sqrt((det(JJ^T))^{-1})$
 #**author: Martin Sereinig
 #**notes: compute force dependent manipulability definded by Yoshikawa, see \cite{Yoshikawa1985}
-def ForceManipulability(robot, HT, mode,singular_weight=100):
+def ForceManipulability(robot, HT, mode,singularWeight=100):
     if mode == 'all':
         J = robot.Jacobian( HT, [], 'all')
 
@@ -86,7 +82,7 @@ def ForceManipulability(robot, HT, mode,singular_weight=100):
         #JhelpPinv=np.linalg.pinv(Jhelp)
         #mf2 = np.linalg.det(JhelpPinv)
         #mf = np.max([0, mf2])      # to avoid negative values they are set to zero, same as corke
-        mf =singular_weight
+        mf =singularWeight
     return np.real(mf)
 
 

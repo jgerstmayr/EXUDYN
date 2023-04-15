@@ -522,10 +522,10 @@ Class function: AddObjectFFRFreducedOrderWithUserFunctions
 
   #example of a user function for forces:
   def UFforceFFRFreducedOrder(mbs, t, itemIndex, qReduced, qReduced_t):
-  return cms.UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
+      return cms.UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
   #example of a user function for mass matrix:
   def UFmassFFRFreducedOrder(mbs, t, itemIndex, qReduced, qReduced\_t):
-  return cms.UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced\_t)
+      return cms.UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced\_t)
 
 
 ----

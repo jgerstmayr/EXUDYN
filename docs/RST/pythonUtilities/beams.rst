@@ -107,15 +107,15 @@ Function: CreateReevingCurve
 
   #list with circle center, radius and side at which rope runs
   circleList = [[[0,0],0.2,'L'],
-  [[0,1],0.2,'L'],
-  [[0.8,0.8],0.4,'L'],
-  [[1,0],0.2,'L'],
-  [[0,0],0.2,'L'],
-  [[0,1],0.2,'L'],
-  ]
+                [[0,1],0.2,'L'],
+                [[0.8,0.8],0.4,'L'],
+                [[1,0],0.2,'L'],
+                [[0,0],0.2,'L'],
+                [[0,1],0.2,'L'],
+                ]
   [] = CreateReevingCurve(circleList,
-  removeLastLine=True, #allows closed curve
-  numberOfANCFnodes=50)
+                          removeLastLine=True, #allows closed curve
+                          numberOfANCFnodes=50)
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:

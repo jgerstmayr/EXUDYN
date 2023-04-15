@@ -59,7 +59,6 @@ namespace EXUmath
         TMatrix& jacobianGM, const Vector& f0, Vector& f1,
         TFUNC ComputeF1, Index columnOffset = 0, Index rowOffset = 0)
     {
-        Real xRefVal = 0;
         Real xStore, eps;// , epsInv;
         for (Index i = iBegin; i < iEnd; i++) //compute column i
         {

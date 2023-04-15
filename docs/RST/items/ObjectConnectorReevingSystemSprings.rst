@@ -9,8 +9,8 @@ A rD reeving system defined by a list of torque-free and friction-free sheaves o
 
 \ **Additional information for ObjectConnectorReevingSystemSprings**\ :
 
-* | The Object has the following types = \ ``Connector``\ 
-* | Requested marker type = \ ``_None``\ 
+* | This \ ``Object``\  has/provides the following types = \ ``Connector``\ 
+* | Requested \ ``Marker``\  type = \ ``_None``\ 
 * | \ **Short name**\  for Python = \ ``ReevingSystemSprings``\ 
 * | \ **Short name**\  for Python visualization object = \ ``VReevingSystemSprings``\ 
 
@@ -213,7 +213,12 @@ be helpful to damp undesired oscillatory shearing motion, however, it may also d
 Further details are given in the implementation and examples are provided in the \ ``Examples``\  and \ ``TestModels``\  folders.
 
 
+Relevant Examples and TestModels with weblink:
 
-\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+    \ `craneReevingSystem.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/craneReevingSystem.py>`_\  (Examples/), \ `reevingSystemSpringsTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/reevingSystemSpringsTest.py>`_\  (TestModels/)
+
+
+
+\ **The web version may not be complete. For details, consider also the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

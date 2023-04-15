@@ -1018,7 +1018,8 @@ class PyLatexRST:
         self.sRST += RemoveIndentation(LatexString2RST(description)) + '\n' #empty line needed for list
     
     #start class definition
-    def DefPyStartClass(self, cClass, pyClass, description, subSection = False, labelName=''):
+    def DefPyStartClass(self, cClass, pyClass, description, subSection = False, labelName='', 
+                        forbidPythonConstructor = False):
         if pyClass != '' and pyClass not in localListClassNames:
             localListClassNames.append(pyClass)
 
@@ -1027,10 +1028,15 @@ class PyLatexRST:
         if (cClass == ''): 
             #print("ERROR::DefPyStartClass: cClass must be a string")
             sectionName = '\\codeName' #for EXUDYN, work around
-            
+        
         if (cClass != ''):
             self.sPy += '    py::class_<' + cClass + '>(m, "' + pyClass + '")\n'
-            self.sPy += '        .def(py::init<>())\n'
+            if not forbidPythonConstructor:
+                self.sPy += '        .def(py::init<>())\n'
+            else:
+                # constructorCode = 'CHECKandTHROWstring("'+pyClass+'() may not be called from Python. '+forbidPythonConstructorStr+'");'            
+                # self.sPy += '        .def(py::init([]() { '+constructorCode+' } )) //!< AUTO: forbid constructor call from Python\n'
+                self.sPy += '        .def(py::init(&'+cClass+'::ForbidConstructor))'
     
         self.DefLatexStartClass(sectionName, description, subSection=subSection, labelName=labelName)
     

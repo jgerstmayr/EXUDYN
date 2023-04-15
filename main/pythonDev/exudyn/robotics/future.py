@@ -75,22 +75,21 @@ def MakeCorkeRobot(robotDic):
 
 #**function: calculates the analytical inverse kinematics for 3R elbow type serial robot manipulator
 #**input:
-#  robot: robot structure
+#  robotDic: robot dictionary
 #  HT: desired position and orientation for the end effector as 4x4 homogeneous transformation matrix as list of lists or np.array
 #**output: solutions, list of lists with posible joint angles [q1,q2,q3] (in radiant)
-#          to achive the desired position and orientation (4 posible solutions,schoulder left/right, ellbow up/down )
-#          left/down, left/up, right/up, right/down
+#          to achive the desired position (4 posible solutions,schoulder left/right, ellbow up/down ) in following order: left/down, left/up, right/up, right/down
 #**author: Martin Sereinig
 #**notes:  only applicable for standard Denavit-Hartenberg parameters
 #**status: testet with various configurations and joint angels
-def ComputeIK3R(robot, HT):
+def ComputeIK3R(robotDic, HT):
     ZERO = 10e-10
     # DH-parameters: [theta, d, a, alpha], according to P. Corke page 138
     qSolutions = np.empty((4, 3))
 
-    d1 = robot['links'][0]['stdDH'][1]
-    a2 = robot['links'][1]['stdDH'][2]
-    a3 = robot['links'][2]['stdDH'][2]
+    d1 = robotDic['links'][0]['stdDH'][1]
+    a2 = robotDic['links'][1]['stdDH'][2]
+    a3 = robotDic['links'][2]['stdDH'][2]
 
     Px = HT[0][3]
     Py = HT[1][3]
@@ -107,7 +106,7 @@ def ComputeIK3R(robot, HT):
         print('infinite solutions for th1,it is undefined but here set to 0')
     
     for i in range(len(qSolutions)):
-        HT01 = rob.DH2HT([qSolutions[i, 0]]+robot['links'][0]['stdDH'][1:4])
+        HT01 = rob.DH2HT([qSolutions[i, 0]]+robotDic['links'][0]['stdDH'][1:4])
         #print(HT01)
         Dhelp = ((Px-HT01[0][3])**2+(Py-HT01[1][3])**2+(Pz-HT01[2][3])**2-a2**2-a3**2)/(2*a2*a3)
         #print(Dhelp)
@@ -130,7 +129,7 @@ def ComputeIK3R(robot, HT):
     solutionsarray = np.array(qSolutions)
     index2delete = []
     for i in range(len(solutionsarray)):
-        TSol = rob.ComputeJointHT(robot, solutionsarray[i])[2]
+        TSol = rob.ComputeJointHT(robotDic, solutionsarray[i])[2]
         errorSolution = np.linalg.det(HT)-np.linalg.det(TSol)
 
         # print(errorSolution)
@@ -145,17 +144,17 @@ def ComputeIK3R(robot, HT):
 
 
 
-#**function: calculates the analytical inverse kinematics for Puma560 serial 6R robot manipulator
+#**function: calculates the analytical inverse kinematics for Puma560 serial 6R robotDic manipulator
 #**input:
-#  robot: robot structure
+#  robotDic: robotDictionary
 #  HT: desired position and orientation for the end effector as 4x4 homogeneous transformation matrix as list of lists or np.array
 #**output: qSolutions, list of lists with posible joint angles [q1,q2,q3,q4,q5,q6] (in radiant)
 #          to achive the desired position and orientation (8 posible solutions,schoulder left/right, ellbow up/down, wrist flipped/notflipped (rotated by pi) )
 #          left/down/notflipped, left/down/flipped, left/up/notflipped, left/up/flipped, right/up/notflipped, right/up/flipped, right/down/notflipped, right/down/flipped
 #**author: Martin Sereinig
 #**notes:  Usage for different manipulators with sperical wrist posible, only applicable for standard Denavit-Hartenberg parameters
-#**status: tested (compared with Robotcs, Vision and Control book of P. Corke
-def ComputeIKPuma560(robot, HT):
+#**status: tested (compared with robotDiccs, Vision and Control book of P. Corke
+def ComputeIKPuma560(robotDic, HT):
     # - Inverse kinematics for a PUMA 560,
     #   Paul and Zhang,
     #   The International Journal of Robotics Research,
@@ -167,13 +166,13 @@ def ComputeIKPuma560(robot, HT):
 
     # DH-parameters: [theta, d, a, alpha], according to P. Corke page 138
 
-    a2 = robot['links'][1]['stdDH'][2]
-    a3 = robot['links'][2]['stdDH'][2]
-    d3 = robot['links'][2]['stdDH'][1]
-    d4 = robot['links'][3]['stdDH'][1]
+    a2 = robotDic['links'][1]['stdDH'][2]
+    a3 = robotDic['links'][2]['stdDH'][2]
+    d3 = robotDic['links'][2]['stdDH'][1]
+    d4 = robotDic['links'][3]['stdDH'][1]
 
-    a5= robot['links'][4]['stdDH'][2]
-    d6= robot['links'][5]['stdDH'][1]
+    a5= robotDic['links'][4]['stdDH'][2]
+    d6= robotDic['links'][5]['stdDH'][1]
 
 
     # The following parameters are extracted from the homogeneous
@@ -181,7 +180,7 @@ def ComputeIKPuma560(robot, HT):
     # Positon of Wrist Center
     Px = HT[0][3]
     Py = HT[1][3]
-    Pz= HT[2][3] - robot['links'][0]['stdDH'][1]
+    Pz= HT[2][3] - robotDic['links'][0]['stdDH'][1]
 
     # Solve for theta(1)
     r = np.sqrt(Px**2 + Py**2)
@@ -249,11 +248,11 @@ def ComputeIKPuma560(robot, HT):
     for i in range(len(qSolution)):
         # we need to account for some random translations between the first and last 3
         # joints (d4) and also d6,a6,alpha6 in the final frame.
-        T13_1= rob.ComputeJointHT(robot, [qSolution[i][0], qSolution[i][1], qSolution[i][2], 0, 0, 0])[2]
+        T13_1= rob.ComputeJointHT(robotDic, [qSolution[i][0], qSolution[i][1], qSolution[i][2], 0, 0, 0])[2]
         # print(T13_1)
         Td4 = rob.HTtranslate([0, 0, d4])
         # print(Td4)
-        Tt = rob.HTtranslate([a5, 0, d6]) @ rob.HTrotateX(robot['links'][5]['stdDH'][3])
+        Tt = rob.HTtranslate([a5, 0, d6]) @ rob.HTrotateX(robotDic['links'][5]['stdDH'][3])
         # print(Tt)
         TR = np.linalg.inv(Td4)  @  np.linalg.inv(T13_1) @ HT @ np.linalg.inv(Tt)
 
@@ -262,7 +261,7 @@ def ComputeIKPuma560(robot, HT):
         eul= [RotationMatrix2RotZYZ(R, flip=True)]
         eul.append(RotationMatrix2RotZYZ(R, flip=False))
 
-        if (robot['links'][3]['stdDH'][3]) > 0:
+        if (robotDic['links'][3]['stdDH'][3]) > 0:
             eul[0][1] = -1*eul[0][1]
             eul[1][1] = -1*eul[1][1]
         qSolutions += ([[qSolution[i][0], qSolution[i][1], qSolution[i][2], eul[0][0], eul[0][1], eul[0][2]],
@@ -272,7 +271,7 @@ def ComputeIKPuma560(robot, HT):
 
 #**function: calculates the analytical inverse kinematics for UR type serial 6R robot manipulator without sperical wrist
 #**input:
-#  robot: robot structure
+#  robotDic: robot dictionary
 #  HT: desired position and orientation for the end effector as 4x4 homogeneous transformation matrix as list of lists or np.array
 #**output: solutions, list of lists with posible joint angles [q1,q2,q3,q4,q5,q6] (in radiant)
 #          to achive the desired position and orientation (8 posible solutions,schoulder left/right, ellbow up/down, wrist flipped/notflipped (rotated by pi) )
@@ -280,25 +279,25 @@ def ComputeIKPuma560(robot, HT):
 #**notes:  Usage for different manipulators without sperical wrist posible UR3,UR5,UR10, only applicable for standard Denavit-Hartenberg parameters
 #**author: Martin Sereinig
 #**status: under development, works for most configurations, singularities not checked -> ZeroConfiguration not working
-def ComputeIKUR(robot, HTdes):
+def ComputeIKUR(robotDic, HTdes):
     # - Inverse kinematics for a URType
     ZERO = 10e-8
     SolWarning = ['NoWarning']*4
 
     # DH-parameters: [theta, d, a, alpha], according to P. Corke page 138
-    a1 = robot['links'][0]['stdDH'][2]
-    a2 = robot['links'][1]['stdDH'][2]
-    a3 = robot['links'][2]['stdDH'][2]
-    a4 = robot['links'][3]['stdDH'][2]
-    a5 = robot['links'][4]['stdDH'][2]
-    a6 = robot['links'][5]['stdDH'][2]
+    a1 = robotDic['links'][0]['stdDH'][2]
+    a2 = robotDic['links'][1]['stdDH'][2]
+    a3 = robotDic['links'][2]['stdDH'][2]
+    a4 = robotDic['links'][3]['stdDH'][2]
+    a5 = robotDic['links'][4]['stdDH'][2]
+    a6 = robotDic['links'][5]['stdDH'][2]
 
-    d1 = robot['links'][0]['stdDH'][1]
-    d2 = robot['links'][1]['stdDH'][1]
-    d3 = robot['links'][2]['stdDH'][1]
-    d4 = robot['links'][3]['stdDH'][1]
-    d5 = robot['links'][4]['stdDH'][1]
-    d6 = robot['links'][5]['stdDH'][1]
+    d1 = robotDic['links'][0]['stdDH'][1]
+    d2 = robotDic['links'][1]['stdDH'][1]
+    d3 = robotDic['links'][2]['stdDH'][1]
+    d4 = robotDic['links'][3]['stdDH'][1]
+    d5 = robotDic['links'][4]['stdDH'][1]
+    d6 = robotDic['links'][5]['stdDH'][1]
     # The following parameters are extracted from the Homogeneous
     # Transformation as defined in equation 1, p. 34
     # Positon of Wrist Center
@@ -383,10 +382,10 @@ def ComputeIKUR(robot, HTdes):
 
         # Solve for theta(3), elbow up and elbow down
         for i in range(8):
-            HTJoint = rob.ComputeJointHT(robot, [Solutions[i, 0], 0*Solutions[i, 1], 0*Solutions[i, 2], 0*Solutions[i, 3], Solutions[i, 4], Solutions[i, 5]])
+            HTJoint = rob.ComputeJointHT(robotDic, [Solutions[i, 0], 0*Solutions[i, 1], 0*Solutions[i, 2], 0*Solutions[i, 3], Solutions[i, 4], Solutions[i, 5]])
             T01 = HTJoint[0]
-            T45 = rob.DH2HT([Solutions[i, 4]]+robot['links'][4]['stdDH'][1:4])
-            T56 = rob.DH2HT([Solutions[i, 5]]+robot['links'][5]['stdDH'][1:4])
+            T45 = rob.DH2HT([Solutions[i, 4]]+robotDic['links'][4]['stdDH'][1:4])
+            T56 = rob.DH2HT([Solutions[i, 5]]+robotDic['links'][5]['stdDH'][1:4])
             T14 = np.linalg.inv(T01) @ HTdes @ np.linalg.inv(T45 @ T56)
             argumentCosine= ((np.linalg.norm(T14[0:2, 3]))**2-a2**2-a3**2) / (2*(a2)*(a3))
             print(argumentCosine)
@@ -405,10 +404,10 @@ def ComputeIKUR(robot, HTdes):
 
                 # Solve for theta(4)
                 for i in range(8):
-                    HTJoint = rob.ComputeJointHT(robot, [Solutions[i, 0], Solutions[i, 1], Solutions[i, 2], 0*Solutions[i, 3], Solutions[i, 4], Solutions[i, 5]])
+                    HTJoint = rob.ComputeJointHT(robotDic, [Solutions[i, 0], Solutions[i, 1], Solutions[i, 2], 0*Solutions[i, 3], Solutions[i, 4], Solutions[i, 5]])
                     T03 = HTJoint[2]
-                    T45 = rob.DH2HT([Solutions[i, 4]]+robot['links'][4]['stdDH'][1:4])
-                    T56 = rob.DH2HT([Solutions[i, 5]]+robot['links'][5]['stdDH'][1:4])
+                    T45 = rob.DH2HT([Solutions[i, 4]]+robotDic['links'][4]['stdDH'][1:4])
+                    T56 = rob.DH2HT([Solutions[i, 5]]+robotDic['links'][5]['stdDH'][1:4])
                     T34 = np.linalg.inv(T03) @ HTdes @ np.linalg.inv(T45 @ T56)
                     Solutions[i, 3]= np.arctan2(T34[1][0], T34[0][0])
             else:
@@ -420,7 +419,7 @@ def ComputeIKUR(robot, HTdes):
     solutionsarray = np.array(Solutions)
     index2delete = []
     for i in range(len(solutionsarray)):
-        TSol = rob.ComputeJointHT(robot, solutionsarray[i])[5]
+        TSol = rob.ComputeJointHT(robotDic, solutionsarray[i])[5]
         errorSolution = np.linalg.det(HTdes)-np.linalg.det(TSol)
 
         # print(errorSolution)
@@ -461,9 +460,7 @@ if __name__ == '__main__':
 
     
     # choose robot to test 
-    robotModel= 'Puma560' # '3R'   'Puma560'    'UR'
-    
-    
+    robotModel= '3R' # '3R'   'Puma560'    'UR'
     
     if robotModel == '3R':
         # build robot from exudyn models
@@ -496,33 +493,55 @@ if __name__ == '__main__':
     qRand = (np.random.rand(numberOfJoints)*2 - np.ones(numberOfJoints) ) * np.pi
     
     # calculate forwarde kinematics    
-    HT0Corke = corkeRobot.fkine(qZero)
+    HTZeroCorke = corkeRobot.fkine(qZero)
     HTRandCorke = corkeRobot.fkine(qRand)
 
-    HT0Link = myRobotModel.LinkHT(qZero)
-    HTRandLink = myRobotModel.LinkHT(qRand)
+    HTZeroExu = myRobotModel.LinkHT(qZero)
+    HTRandExu = myRobotModel.LinkHT(qRand)
      
-     
-    # calculate inverse kinematics 
-    #MS Todo: compare inverse kinematics solution
-
+    HTZeroError = HTZeroCorke - HTZeroExu[-1]
+    HTRandError = HTRandCorke - HTRandExu[-1]
     
+    print('Forward kinematics check:\n zero config error = \n',HTZeroError)
+    print('Forward kinematics check:\n rand config error = \n',HTRandError)
+
+    # calculate inverse kinematics corke 
+
+    ikSolutionCorkeZero = corkeRobot.ikine_LM(HTZeroCorke,q0=qZero)
+    if ikSolutionCorkeZero.success==True:
+        print('corke solution found: \n qSolution=',ikSolutionCorkeZero.q)
+       
+    ikSolutionCorkeRand = corkeRobot.ikine_LM(HTRandCorke,q0=qRand-0.5)
+    if ikSolutionCorkeRand.success==True:
+        print('corke solution found: \n qSolution=',ikSolutionCorkeRand.q)
+    else:
+        print('corke no solution found for rand configuratio!')
    
-    
+
+
+    # calculate inverse kinematics exu 
+
+    if robotModel == '3R':
+        ikSolutionZeroExu = ComputeIK3R(myRobotDic, HTZeroExu[-1])
+        ikSolutionRandExu = ComputeIK3R(myRobotDic, HTRandExu[-1])
+        
+    elif robotModel == 'Puma560':
+        ikSolutionZeroExu = ComputeIK3R(myRobotDic, HTZeroExu[-1])
+        ikSolutionRandExu = ComputeIK3R(myRobotDic, HTRandExu[-1])
+        
+    # elif robotModel == 'UR':
+    #     ikSolutionZeroExu = ComputeIK3R(myRobotDic, HTZeroExu[-1])
+    #     ikSolutionRandExu = ComputeIK3R(myRobotDic, HTRandExu[-1])
 
 
 
+    #MS Todo: compare inverse kinematics solution  PUMA560 and UR
 
-
-
-
-
-
-
-
-
-
-
+    for sol in ikSolutionRandExu:
+        HTRandExuCheck = myRobotModel.LinkHT(sol)[-1]
+        HTErrorExu = HTRandExu[-1] - HTRandExuCheck
+        print('Error in position for solution q='+str(sol)+' \n Error=', HTErrorExu[0:3,3])
+        print('Error in orientation for solution q='+str(sol)+' \n Error=\n', HTErrorExu[0:3,0:3])
 
 
 

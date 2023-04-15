@@ -9,7 +9,7 @@ A Marker attached to all coordinates of an object (currently only body is possib
 
 \ **Additional information for MarkerObjectODE2Coordinates**\ :
 
-* | The Marker has the following types = \ ``Object``\ , \ ``Body``\ , \ ``Coordinate``\ 
+* | This \ ``Marker``\  has/provides the following types = \ ``Object``\ , \ ``Body``\ , \ ``Coordinate``\ 
 
 
 The item \ **MarkerObjectODE2Coordinates**\  with type = 'ObjectODE2Coordinates' has the following parameters:
@@ -29,8 +29,19 @@ The item VMarkerObjectODE2Coordinates has the following parameters:
   | set true, if item is shown in visualization and false if it is not shown
 
 
+----------
+
+.. _description-markerobjectode2coordinates:
+
+DESCRIPTION of MarkerObjectODE2Coordinates
+------------------------------------------
+
+Relevant Examples and TestModels with weblink:
+
+    \ `coordinateVectorConstraintGenericODE2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/coordinateVectorConstraintGenericODE2.py>`_\  (TestModels/)
 
 
-\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+
+\ **The web version may not be complete. For details, consider also the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

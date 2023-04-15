@@ -13,6 +13,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import numpy as np
+from exudyn.advancedUtilities import IsListOrArray
 
 #**function: filter output of sensors (using numpy savgol filter) as well as numerical differentiation to compute derivative of signal
 #**input:
@@ -149,6 +150,8 @@ def ComputeFFT(time, data):
     return [frequency, magnitude, phase]      
 
 
+
+
 #**function: Interpolate signal having time values with constant sampling rate in timeArray and according data in dataArray
 #**input: 
 #  time: time at which the data should be evaluated
@@ -160,9 +163,9 @@ def ComputeFFT(time, data):
 #  tolerance: this tolerance is used to check, if the timeArray has equidistant interpolation and if the found indices are correct; use e.g. 1e10 in order to ignore this tolerance
 #**notes: for interpolation of data WITHOUT constant data rate, use numpy.interp(time, timeArray, dataArray) in case that timeArray and dataArray are 1D arrays
 #**output: interpolated value
-def GetInterpolatedSignalValue(time, dataArray, timeArray=[], timeArrayIndex = -1, dataArrayIndex = -1, rangeWarning=True, tolerance=1e-6):
+def GetInterpolatedSignalValue(time, dataArray, timeArray=[], dataArrayIndex = -1, timeArrayIndex = -1, rangeWarning=True, tolerance=1e-6):
 
-    if type(timeArray) == list and len(timeArray) == 0:
+    if IsListOrArray(timeArray) and len(timeArray) == 0:
         timeArray=dataArray
     if dataArray.ndim != 1 and dataArrayIndex == -1:
         raise ValueError('GetInterpolatedSignalValue: in case of 2D dataArray, dataArrayIndex must be provided!')
@@ -211,12 +214,12 @@ def GetInterpolatedSignalValue(time, dataArray, timeArray=[], timeArrayIndex = -
         tA = dt*index + t0
         tB = tA+dt 
         #check if time index is correct:
-        if timeArrayIndex == -1:
+        if timeArrayIndex == -1: #1D array
+            if abs(tA-timeArray[index]) > tolerance or abs(tB-timeArray[index+1]) > tolerance :
+                print('Warning: GetInterpolatedSignalValue: timeArray does not seem to have constant sampling rate; use larger tolerance or numpy.interp(...) instead')
+        else: #2D array
             if (abs(tA-timeArray[index,timeArrayIndex]) > tolerance or 
                 abs(tB-timeArray[index+1,timeArrayIndex]) > tolerance):
-                print('Warning: GetInterpolatedSignalValue: timeArray does not seem to have constant sampling rate; use larger tolerance or numpy.interp(...) instead')
-        else:
-            if abs(tA-timeArray[index]) > tolerance or abs(tB-timeArray[index+1]) > tolerance :
                 print('Warning: GetInterpolatedSignalValue: timeArray does not seem to have constant sampling rate; use larger tolerance or numpy.interp(...) instead')
             
 
@@ -232,3 +235,67 @@ def GetInterpolatedSignalValue(time, dataArray, timeArray=[], timeArrayIndex = -
 
     return value
 
+
+
+#simple tests:
+if __name__ == '__main__':
+    
+    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #GetInterpolatedSignalValue
+    #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #create 1D signal
+    t = np.linspace(1,10,40)
+    x = np.sin(t)
+    
+    #coarsen
+    t2 = np.linspace(0,11,15)
+    x2 = np.array([GetInterpolatedSignalValue(ti, x, t, rangeWarning=False) for ti in t2])
+
+    #refine
+    t3 = np.linspace(0,11,90)
+    x3 = np.array([GetInterpolatedSignalValue(ti, x, t, rangeWarning=False) for ti in t3])
+    
+    from exudyn.plot import PlotSensor
+    PlotSensor(None, sensorNumbers=[np.vstack((t,x)).T, np.vstack((t2,x2)).T, np.vstack((t3,x3)).T], closeAll=True, title='1D array')
+    
+    #create 2D signal
+    t = np.linspace(1,10,40)
+    x = np.sin(t)
+    y = np.cos(t)
+    data = np.vstack((t,np.vstack((x,y)))).T
+    
+    #coarsen, data is 2D
+    t2 = np.linspace(0,11,15)
+    x2 = np.array([GetInterpolatedSignalValue(ti, dataArray=data, dataArrayIndex=1, timeArrayIndex=0, rangeWarning=False) for ti in t2])
+
+    #refine, data is 2D
+    t3 = np.linspace(0,11,90)
+    x3 = np.array([GetInterpolatedSignalValue(ti, dataArray=data, dataArrayIndex=2, timeArrayIndex=0, rangeWarning=False) for ti in t3])
+
+    #refine, use 'different' time and data arrays; both arrays are 2D arrays
+    t4 = np.linspace(0,11,45)
+    x4 = np.array([GetInterpolatedSignalValue(ti, dataArray=data, timeArray=data, dataArrayIndex=1, timeArrayIndex=0, rangeWarning=False) for ti in t4])
+    
+    #refine, use different time and data arrays; data is 2D, time is 1D
+    t5 = np.linspace(0,11,45)
+    x5 = np.array([GetInterpolatedSignalValue(ti, dataArray=data, timeArray=t, dataArrayIndex=2, rangeWarning=False) for ti in t5])
+
+    #refine, use different time and data arrays; data is 1D, time is 2D
+    t6 = np.linspace(0,11,45)
+    x6 = np.array([GetInterpolatedSignalValue(ti, dataArray=y, timeArray=data, timeArrayIndex=0, rangeWarning=False) for ti in t6])
+    
+    PlotSensor(None, sensorNumbers=[np.vstack((t,x)).T, np.vstack((t,y)).T, 
+                                    np.vstack((t2,x2)).T, np.vstack((t3,x3)).T, np.vstack((t4,x4)).T, np.vstack((t5,x5)).T, np.vstack((t6,x6)).T
+                                    ], newFigure=True, title='2D array')
+    
+    import time
+    ts = -time.time()    
+    t2 = np.linspace(0,11,500000)
+    x2 = np.array([GetInterpolatedSignalValue(ti, x, t, rangeWarning=False) for ti in t2])
+
+    #about 1.4 seconds on 3GHz i7 processor
+    print('5e5 x GetInterpolatedSignalValue takes', time.time()+ts, 'seconds')
+
+
+
+    

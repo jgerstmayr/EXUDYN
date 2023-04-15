@@ -42,6 +42,12 @@ protected: //
 	ResizableArray<MainSensor*> mainSensors;        //!< container for main sensors
 
 public: //
+    //! forbid calls of MainSystemData constructor, as this would lead to an unusable system
+    static MainSystemData* ForbidConstructor()
+    {
+        CHECKandTHROWstring("SystemData() may not be called. It is automatically created inside MainSystem and other usage of this class is not possible.");
+        return new MainSystemData(); //this is never called
+    }
 
 	//! Write (Reference) access to: cSystemData
 	CSystemData& GetCSystemData() { return *cSystemData; }

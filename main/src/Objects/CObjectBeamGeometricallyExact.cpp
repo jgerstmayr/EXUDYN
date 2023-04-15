@@ -189,13 +189,6 @@ void CObjectBeamGeometricallyExact::ComputeODE2LHS(Vector& ode2Lhs, Index object
 		parameters.physicsTorsionalBendingStiffness[0],
 		parameters.physicsTorsionalBendingStiffness[1],
 		parameters.physicsTorsionalBendingStiffness[2]});
-	//Matrix6D K6D(6, 6, 0.);
-	//K6D(0, 0) = parameters.physicsAxialShearStiffness[0];
-	//K6D(1, 1) = parameters.physicsAxialShearStiffness[1];
-	//K6D(2, 2) = parameters.physicsAxialShearStiffness[2];
-	//K6D(3, 3) = parameters.physicsTorsionalBendingStiffness[0];
-	//K6D(4, 4) = parameters.physicsTorsionalBendingStiffness[1];
-	//K6D(5, 5) = parameters.physicsTorsionalBendingStiffness[2];
 
 	//future: h0 must contain (pre-deformed) reference configuration!!!
 	Vector6D h0(0.);
@@ -208,12 +201,12 @@ void CObjectBeamGeometricallyExact::ComputeODE2LHS(Vector& ode2Lhs, Index object
 	ConstSizeVector<CNodeRigidBody::maxRotationCoordinates + nDim3D> res2(nNode0);
 
 	ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * nDim3D> Glocal;
-	Vector3D omegaBar;
+	Vector3D omegaLocal;
 	Real intFactL = 0.5*L; //integration weight, for quadratic velocity vector (approximated!)
 
 	for (Index i = 0; i < GetNumberOfNodes(); i++)
 	{
-		((CNodeRigidBody*)GetCNode(i))->CollectCurrentNodeData1(Glocal, omegaBar);
+		((CNodeRigidBody*)GetCNode(i))->CollectCurrentNodeData1(Glocal, omegaLocal);
 
 		EXUmath::MultVectorComponents(K6D, eps, res);
 		//EXUmath::MultMatrixVectorTemplate(K6D, eps, res);
@@ -223,18 +216,19 @@ void CObjectBeamGeometricallyExact::ComputeODE2LHS(Vector& ode2Lhs, Index object
 		Vector3D resRot({ res2[3], res2[4], res2[5] }); //this is the residual on incremental rotations
 
 		ConstSizeVector< CNodeRigidBody::maxRotationCoordinates> resRotPar; //residual on rotation parameters
+		Matrix3D A = ((CNodeRigidBody*)GetCNode(i))->GetRotationMatrix();
+		//EXUmath::ApplyTransformation33(A, Glocal); //not correct; K6D is in local coordinates => K6D*Glocal gives global equations
+		
 		EXUmath::MultMatrixTransposedVectorTemplate(Glocal, resRot, resRotPar);
-
-		resPos = ((CNodeRigidBody*)GetCNode(i))->GetRotationMatrix()*resPos; //resPos is transformed from local into global coordinates
-
+		resPos = (A*resPos); //resPos is transformed from local into global coordinates
 
 		//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 		//compute quadratic velocity vector per node:
-		Vector3D temp = intFactL * omegaBar.CrossProduct(parameters.physicsCrossSectionInertia * omegaBar);
+		Vector3D temp = intFactL * omegaLocal.CrossProduct(parameters.physicsCrossSectionInertia * omegaLocal);
 
 
 		ConstSizeVector<CNodeRigidBody::maxRotationCoordinates> forcesQV; //forces acting on rotation coordinates
-		EXUmath::MultMatrixTransposedVectorTemplate(Glocal, temp, forcesQV);
+		EXUmath::MultMatrixTransposedVectorTemplate(Glocal, temp, forcesQV); //using Glocal because of omegaLocal
 
 		Vector3D Glocal_tTheta_t(0.); //used twice!
 
@@ -277,10 +271,18 @@ void CObjectBeamGeometricallyExact::ComputeJacobianODE2_ODE2(EXUmath::MatrixCont
 	Index objectNumber, const ArrayIndex& ltg) const
 {
 	jacobianODE2.SetUseDenseMatrix(true);
-	//jacobianODE2.GetInternalDenseMatrix().SetNumberOfRowsAndColumns(ltg.NumberOfItems(), ltg.NumberOfItems());
-	jacobianODE2.GetInternalDenseMatrix().SetScalarMatrix(ltg.NumberOfItems(), 0.);
+	jacobianODE2.GetInternalDenseMatrix().SetNumberOfRowsAndColumns(ltg.NumberOfItems(), ltg.NumberOfItems());
+	Index dimJacobian = ltg.NumberOfItems();
+	//jacobianODE2.GetInternalDenseMatrix().SetScalarMatrix(dimJacobian, 0.);
 
 	const Index nDim3D = 3;
+	Index nNode0 = GetCNode(0)->GetNumberOfODE2Coordinates();
+	Index nNode1 = GetCNode(1)->GetNumberOfODE2Coordinates();
+	CHECKandTHROW( (nNode0 + nNode1 == dimJacobian) && 
+		(nNode0 <= (CNodeRigidBody::maxRotationCoordinates + nDim3D) ) &&
+		(nNode1 <= (CNodeRigidBody::maxRotationCoordinates + nDim3D) ),
+		"CObjectBeamGeometricallyExact::ComputeJacobianODE2_ODE2: nodal coordinates mismatch; the nodes cannot be used with this beam element");
+
 	//const Index nDisplacementCoordinates = 3;
 	//Index nNode0 = GetCNode(0)->GetNumberOfODE2Coordinates();
 	Real L = parameters.physicsLength;
@@ -307,39 +309,75 @@ void CObjectBeamGeometricallyExact::ComputeJacobianODE2_ODE2(EXUmath::MatrixCont
 	K6D(4, 4) = parameters.physicsTorsionalBendingStiffness[1];
 	K6D(5, 5) = parameters.physicsTorsionalBendingStiffness[2];
 
-	ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * nDim3D> Glocal;
 	Real Linv = 1./L; //integration weight, for quadratic velocity vector (approximated!)
 	K6D *= Linv* factorODE2;
+
+	//inefficient approach using large matrices:
+	ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * nDim3D> Glocal;
+	ConstSizeMatrix<2*(CNodeRigidBody::maxRotationCoordinates + nDim3D) * (2 * nDim3D)> P;
+	ConstSizeMatrix<2*(CNodeRigidBody::maxRotationCoordinates + nDim3D) * (2 * nDim3D)> KP;
+
+	P.SetNumberOfRowsAndColumns(2 * nDim3D, dimJacobian);
+	KP.SetNumberOfRowsAndColumns(2 * nDim3D, dimJacobian);
 
 	for (Index i = 0; i < GetNumberOfNodes(); i++)
 	{
 		Index nDC = ((CNodeRigidBody*)GetCNode(i))->GetNumberOfDisplacementCoordinates(); //standard = 3
 		((CNodeRigidBody*)GetCNode(i))->GetGlocal(Glocal);
-		Index nCoords = ((CNodeRigidBody*)GetCNode(i))->GetNumberOfODE2Coordinates();
 		const Index maxSize = CNodeRigidBody::maxRotationCoordinates + CNodeRigidBody::maxDisplacementCoordinates;
+		Index nCoords = ((CNodeRigidBody*)GetCNode(i))->GetNumberOfODE2Coordinates();
+
 		ConstSizeMatrix< maxSize*maxSize> Tnew;
-		ConstSizeMatrix< maxSize*maxSize> TnodeCoords(6,nCoords, 0.); //this is the mapping to node coordinates, if nodes are not Lie group nodes
+		ConstSizeMatrix< maxSize*maxSize> TnodeCoords(6, nCoords, 0.); //this is the mapping to node coordinates, if nodes are not Lie group nodes
 		TnodeCoords.SetSubmatrix(((CNodeRigidBody*)GetCNode(i))->GetRotationMatrix().GetTransposed(), 0, 0);
-		//TnodeCoords.SetSubmatrix(((CNodeRigidBody*)GetCNode(i))->GetRotationMatrix(), 0, 0);
 		TnodeCoords.SetSubmatrix(Glocal, nDC, nDC);
 
 		EXUmath::MultMatrixMatrixTemplate(TexpInv[i], TnodeCoords, Tnew);
+		P.SetSubmatrix(Tnew, 0, i*nNode0); //offset columns for second node
 
-
-
-		ConstSizeMatrix< maxSize*maxSize> temp;
-		ConstSizeMatrix< maxSize*maxSize> Klocal;
-		EXUmath::MultMatrixTransposedMatrixTemplate(Tnew, K6D, temp);
-		EXUmath::MultMatrixMatrixTemplate(temp, Tnew, Klocal);
-
-		//pout << "**********\n";
-		//pout << "K6D" << i << "=" << K6D << "\n";
-		//pout << "TexpInv" << i << "=" << TexpInv[i] << "\n";
-		//pout << "TnodeCoords" << i << "=" << TnodeCoords << "\n";
-		//pout << "Klocal" << i << "=" << Klocal << "\n";
-
-		jacobianODE2.GetInternalDenseMatrix().SetSubmatrix(Klocal, i*nCoords, i*nCoords, 1.);
+		EXUmath::MultMatrixMatrixTemplate(K6D, Tnew, TnodeCoords);
+		KP.SetSubmatrix(TnodeCoords, 0, i*nNode0); //offset columns for second node
 	}
+	//derivative of Glocal not considered!!!
+	EXUmath::MultMatrixTransposedMatrixTemplate(P, KP, jacobianODE2.GetInternalDenseMatrix()); //fill matrix directly into jacobian
+
+	//pout << "**********\n";
+	//pout << "K6D" << i << "=" << K6D << "\n";
+	//pout << "TexpInv" << i << "=" << TexpInv[i] << "\n";
+	//pout << "TnodeCoords" << i << "=" << TnodeCoords << "\n";
+	//pout << "Klocal" << i << "=" << Klocal << "\n";
+
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//wrong: does not include node-node coupling:
+	//for (Index i = 0; i < GetNumberOfNodes(); i++)
+	//{
+	//	Index nDC = ((CNodeRigidBody*)GetCNode(i))->GetNumberOfDisplacementCoordinates(); //standard = 3
+	//	((CNodeRigidBody*)GetCNode(i))->GetGlocal(Glocal);
+	//	Index nCoords = ((CNodeRigidBody*)GetCNode(i))->GetNumberOfODE2Coordinates();
+	//	const Index maxSize = CNodeRigidBody::maxRotationCoordinates + CNodeRigidBody::maxDisplacementCoordinates;
+	//	ConstSizeMatrix< maxSize*maxSize> Tnew;
+	//	ConstSizeMatrix< maxSize*maxSize> TnodeCoords(6,nCoords, 0.); //this is the mapping to node coordinates, if nodes are not Lie group nodes
+	//	TnodeCoords.SetSubmatrix(((CNodeRigidBody*)GetCNode(i))->GetRotationMatrix().GetTransposed(), 0, 0);
+	//	//TnodeCoords.SetSubmatrix(((CNodeRigidBody*)GetCNode(i))->GetRotationMatrix(), 0, 0);
+	//	TnodeCoords.SetSubmatrix(Glocal, nDC, nDC);
+
+	//	EXUmath::MultMatrixMatrixTemplate(TexpInv[i], TnodeCoords, Tnew);
+
+	//	ConstSizeMatrix< maxSize*maxSize> temp;
+	//	ConstSizeMatrix< maxSize*maxSize> Klocal;
+	//	EXUmath::MultMatrixTransposedMatrixTemplate(Tnew, K6D, temp);
+	//	EXUmath::MultMatrixMatrixTemplate(temp, Tnew, Klocal);
+
+	//	//pout << "**********\n";
+	//	//pout << "K6D" << i << "=" << K6D << "\n";
+	//	//pout << "TexpInv" << i << "=" << TexpInv[i] << "\n";
+	//	//pout << "TnodeCoords" << i << "=" << TnodeCoords << "\n";
+	//	//pout << "Klocal" << i << "=" << Klocal << "\n";
+
+	//	jacobianODE2.GetInternalDenseMatrix().SetSubmatrix(Klocal, 
+	//                                                     i*nCoords, i*nCoords, ==> this is wrong, should be: i*nNode0
+	//                                                     1.);
+	//}
 	//pout << "jac" << "=" << jacobianODE2.GetEXUdenseMatrix() << "\n";
 }
 

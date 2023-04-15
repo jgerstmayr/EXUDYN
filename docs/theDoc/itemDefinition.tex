@@ -19,7 +19,7 @@ A 3D point node for point masses or solid finite elements which has 3 displaceme
 
 \noindent \mybold{Additional information for NodePoint}:
 \bi
-  \item The Node has the following types = \texttt{Position}
+  \item This \texttt{Node} has/provides the following types = \texttt{Position}
   \item {\bf Short name} for Python = \texttt{Point}
   \item {\bf Short name} for Python visualization object = \texttt{VPoint}
 \ei\vspace{12pt} \noindent 
@@ -123,7 +123,7 @@ A 2D point node for point masses or solid finite elements which has 2 displaceme
 
 \noindent \mybold{Additional information for NodePoint2D}:
 \bi
-  \item The Node has the following types = \texttt{Position2D}, \texttt{Position}
+  \item This \texttt{Node} has/provides the following types = \texttt{Position2D}, \texttt{Position}
   \item {\bf Short name} for Python = \texttt{Point2D}
   \item {\bf Short name} for Python visualization object = \texttt{VPoint2D}
 \ei\vspace{12pt} \noindent 
@@ -225,7 +225,7 @@ A 3D rigid body node based on Euler parameters for rigid bodies or beams; the no
 
 \noindent \mybold{Additional information for NodeRigidBodyEP}:
 \bi
-  \item The Node has the following types = \texttt{Position}, \texttt{Orientation}, \texttt{RigidBody}, \texttt{RotationEulerParameters}
+  \item This \texttt{Node} has/provides the following types = \texttt{Position}, \texttt{Orientation}, \texttt{RigidBody}, \texttt{RotationEulerParameters}
   \item {\bf Short name} for Python = \texttt{RigidEP}
   \item {\bf Short name} for Python visualization object = \texttt{VRigidEP}
 \ei\vspace{12pt} \noindent 
@@ -363,7 +363,7 @@ A 3D rigid body node based on Euler / Tait-Bryan angles for rigid bodies or beam
 
 \noindent \mybold{Additional information for NodeRigidBodyRxyz}:
 \bi
-  \item The Node has the following types = \texttt{Position}, \texttt{Orientation}, \texttt{RigidBody}, \texttt{RotationRxyz}
+  \item This \texttt{Node} has/provides the following types = \texttt{Position}, \texttt{Orientation}, \texttt{RigidBody}, \texttt{RotationRxyz}
   \item {\bf Short name} for Python = \texttt{RigidRxyz}
   \item {\bf Short name} for Python visualization object = \texttt{VRigidRxyz}
 \ei\vspace{12pt} \noindent 
@@ -482,7 +482,7 @@ A 3D rigid body node based on rotation vector and Lie group methods for rigid bo
 
 \noindent \mybold{Additional information for NodeRigidBodyRotVecLG}:
 \bi
-  \item The Node has the following types = \texttt{Position}, \texttt{Orientation}, \texttt{RigidBody}, \texttt{RotationRotationVector}
+  \item This \texttt{Node} has/provides the following types = \texttt{Position}, \texttt{Orientation}, \texttt{RigidBody}, \texttt{RotationRotationVector}
   \item {\bf Short name} for Python = \texttt{RigidRotVecLG}
   \item {\bf Short name} for Python visualization object = \texttt{VRigidRotVecLG}
 \ei\vspace{12pt} \noindent 
@@ -534,6 +534,7 @@ The item \mybold{NodeRigidBodyRotVecLG} with type = 'RigidBodyRotVecLG' has the 
 Position & $\LU{0}{\pv}\cConfig = \LU{0}{[p_0,\,p_1,\,p_2]}\cConfig\tp= \LU{0}{\uv}\cConfig + \LU{0}{\pv}\cRef$ & global 3D position vector of node; $\uv\cRef=0$\\ \hline
 Displacement & $\LU{0}{\uv}\cConfig = [q_0,\,q_1,\,q_2]\cConfig\tp$ & global 3D displacement vector of node\\ \hline
 Velocity & $\LU{0}{\vv}\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2]\cConfig\tp$ & global 3D velocity vector of node\\ \hline
+Acceleration & $\LU{0}{\av}\cConfig = [\ddot q_0,\,\ddot q_1,\,\ddot q_2]\cConfig\tp$ & global 3D acceleration vector of node\\ \hline
 Coordinates & $\cv\cConfig = [q_0,\,q_1,\,q_2, \,\nu_0,\,\nu_1,\,\nu_2]\tp\cConfig$ &  coordinate vector of node, having 3 displacement coordinates and 3 Euler angles\\ \hline
 Coordinates\_t & $\dot\cv\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2, \,\dot \nu_0,\,\dot \nu_1,\,\dot \nu_2]\tp\cConfig$ &  velocity coordinates vector of node\\ \hline
 RotationMatrix & $[A_{00},\,A_{01},\,A_{02},\,A_{10},\,\ldots,\,A_{21},\,A_{22}]\cConfig\tp$ & vector with 9 components of the rotation matrix $\LU{0b}{\Rot}\cConfig$ in row-major format, in any configuration; the rotation matrix transforms local ($b$) to global (0) coordinates\\ \hline
@@ -594,7 +595,7 @@ A 2D rigid body node for rigid bodies or beams; the node has 2 displacement degr
 
 \noindent \mybold{Additional information for NodeRigidBody2D}:
 \bi
-  \item The Node has the following types = \texttt{Position2D}, \texttt{Orientation2D}, \texttt{Position}, \texttt{Orientation}, \texttt{RigidBody}
+  \item This \texttt{Node} has/provides the following types = \texttt{Position2D}, \texttt{Orientation2D}, \texttt{Position}, \texttt{Orientation}, \texttt{RigidBody}
   \item {\bf Short name} for Python = \texttt{Rigid2D}
   \item {\bf Short name} for Python visualization object = \texttt{VRigid2D}
 \ei\vspace{12pt} \noindent 
@@ -684,9 +685,9 @@ AngularAcceleration & $\LU{0}{\talpha}\cConfig = \LU{0}{[0,\,0,\,\ddot \psi_0]}\
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/HydraulicActuator2Arms.py}{\texttt{HydraulicActuator2Arms.py}} (Examples/)
 \item  ...
 
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3DeigTest.py}{\texttt{ANCFBeam3DeigTest.py}} (TestModels/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3Dtest.py}{\texttt{ANCFBeam3Dtest.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamEigTest.py}{\texttt{ANCFBeamEigTest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py}{\texttt{ANCFbeltDrive.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFgeneralContactCircle.py}{\texttt{ANCFgeneralContactCircle.py}} (TestModels/)
 \item  ...
 
 
@@ -704,7 +705,7 @@ A node with one \hac{ODE2} coordinate for one dimensional (1D) problems; use e.g
 
 \noindent \mybold{Additional information for Node1D}:
 \bi
-  \item The Node has the following types = \texttt{GenericODE2}
+  \item This \texttt{Node} has/provides the following types = \texttt{GenericODE2}
 \ei\vspace{12pt} \noindent 
 The item \mybold{Node1D} with type = '1D' has the following parameters:
 \vspace{-0.5cm}\\
@@ -792,7 +793,7 @@ A 2D point/slope vector node for planar Bernoulli-Euler ANCF (absolute nodal coo
 
 \noindent \mybold{Additional information for NodePoint2DSlope1}:
 \bi
-  \item The Node has the following types = \texttt{Position2D}, \texttt{Orientation2D}, \texttt{Point2DSlope1}, \texttt{Position}, \texttt{Orientation}
+  \item This \texttt{Node} has/provides the following types = \texttt{Position2D}, \texttt{Orientation2D}, \texttt{Point2DSlope1}, \texttt{Position}, \texttt{Orientation}
   \item {\bf Short name} for Python = \texttt{Point2DS1}
   \item {\bf Short name} for Python visualization object = \texttt{VPoint2DS1}
 \ei\vspace{12pt} \noindent 
@@ -835,9 +836,10 @@ The item \mybold{NodePoint2DSlope1} with type = 'Point2DSlope1' has the followin
 \begin{longtable}{| p{5cm} | p{5cm} | p{6cm} |} 
 \hline
 \bf output variable & \bf symbol & \bf description \\ \hline
-Position &  & global 3D position vector of node (=displacement+reference position)\\ \hline
-Displacement &  & global 3D displacement vector of node\\ \hline
-Velocity &  & global 3D velocity vector of node\\ \hline
+Position & $\LU{0}{\pv}\cConfig = [p_0,\, p_1,\,0]\cConfig\tp$ & global 3D position vector of node (=displacement+reference position)\\ \hline
+Displacement & $\LU{0}{\uv}\cConfig = [q_0,\, q_1,\,0]\cConfig\tp$ & global 3D displacement vector of node\\ \hline
+Velocity & $\LU{0}{\vv}\cConfig = [\dot q_0,\,\dot q_1,\,0]\cConfig\tp$ & global 3D velocity vector of node\\ \hline
+Acceleration & $\LU{0}{\av}\cConfig = [\ddot q_0,\,\ddot q_1,\,0]\cConfig\tp$ & global 3D acceleration vector of node\\ \hline
 Coordinates &  & coordinates vector of node (2 displacement coordinates + 2 slope vector coordinates)\\ \hline
 Coordinates\_t &  & velocity coordinates vector of node (derivative of the 2 displacement coordinates + 2 slope vector coordinates)\\ \hline
 Coordinates\_tt &  & acceleration coordinates vector of node (derivative of the 2 displacement coordinates + 2 slope vector coordinates)\\ \hline
@@ -881,7 +883,7 @@ A 3D point/slope vector node for spatial Bernoulli-Euler ANCF (absolute nodal co
 
 \noindent \mybold{Additional information for NodePoint3DSlope1}:
 \bi
-  \item The Node has the following types = \texttt{Position}
+  \item This \texttt{Node} has/provides the following types = \texttt{Position}
   \item {\bf Short name} for Python = \texttt{Point3DS1}
   \item {\bf Short name} for Python visualization object = \texttt{VPoint3DS1}
 \ei\vspace{12pt} \noindent 
@@ -924,9 +926,10 @@ The item \mybold{NodePoint3DSlope1} with type = 'Point3DSlope1' has the followin
 \begin{longtable}{| p{5cm} | p{5cm} | p{6cm} |} 
 \hline
 \bf output variable & \bf symbol & \bf description \\ \hline
-Position &  & global 3D position vector of node (=displacement+reference position)\\ \hline
-Displacement &  & global 3D displacement vector of node\\ \hline
-Velocity &  & global 3D velocity vector of node\\ \hline
+Position & $\LU{0}{\pv}\cConfig = [p_0,\, p_1,\, p_2]\cConfig\tp$ & global 3D position vector of node (=displacement+reference position)\\ \hline
+Displacement & $\LU{0}{\uv}\cConfig = [q_0,\, q_1,\, q_2]\cConfig\tp$ & global 3D displacement vector of node\\ \hline
+Velocity & $\LU{0}{\av}\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2]\cConfig\tp$ & global 3D velocity vector of node\\ \hline
+Acceleration & $\LU{0}{\av}\cConfig = [\ddot q_0,\,\ddot q_1,\,\ddot q_2]\cConfig\tp$ & global 3D acceleration vector of node\\ \hline
 Coordinates &  & coordinates vector of node (3 displacement coordinates + 3 slope vector coordinates)\\ \hline
 Coordinates\_t &  & velocity coordinates vector of node (derivative of the 3 displacement coordinates + 3 slope vector coordinates)\\ \hline
 Coordinates\_tt &  & acceleration coordinates vector of node (derivative of the 3 displacement coordinates + 3 slope vector coordinates)\\ \hline
@@ -943,7 +946,7 @@ A 3D point/slope vector node for spatial, shear and cross-section deformable ANC
 
 \noindent \mybold{Additional information for NodePoint3DSlope23}:
 \bi
-  \item The Node has the following types = \texttt{Position}, \texttt{Orientation}
+  \item This \texttt{Node} has/provides the following types = \texttt{Position}, \texttt{Orientation}
   \item {\bf Short name} for Python = \texttt{Point3DS23}
   \item {\bf Short name} for Python visualization object = \texttt{VPoint3DS23}
 \ei\vspace{12pt} \noindent 
@@ -986,20 +989,26 @@ The item \mybold{NodePoint3DSlope23} with type = 'Point3DSlope23' has the follow
 \begin{longtable}{| p{5cm} | p{5cm} | p{6cm} |} 
 \hline
 \bf output variable & \bf symbol & \bf description \\ \hline
-Position &  & global 3D position vector of node (=displacement+reference position)\\ \hline
-Displacement &  & global 3D displacement vector of node\\ \hline
-Velocity &  & global 3D velocity vector of node\\ \hline
-Coordinates &  & coordinates vector of node (3 displacement coordinates + 2 $\times$ 3 slope vector coordinates)\\ \hline
+Position & $\LU{0}{\pv}\cConfig = \LU{0}{[p_0,\, p_1,\, p_2]}\cConfig\tp$ & global 3D position vector of node (=displacement+reference position)\\ \hline
+Displacement & $\LU{0}{\uv}\cConfig = \LU{0}{[q_0,\, q_1,\, q_2]}\cConfig\tp$ & global 3D displacement vector of node\\ \hline
+Velocity & $\LU{0}{\av}\cConfig = \LU{0}{[\dot q_0,\,\dot q_1,\,\dot q_2]}\cConfig\tp$ & global 3D velocity vector of node\\ \hline
+Acceleration & $\LU{0}{\av}\cConfig = \LU{0}{[\ddot q_0,\,\ddot q_1,\,\ddot q_2]}\cConfig\tp$ & global 3D acceleration vector of node\\ \hline
+Coordinates &  & coordinate vector of node (relative to reference configuration)\\ \hline
 Coordinates\_t &  & velocity coordinates vector of node\\ \hline
 Coordinates\_tt &  & acceleration coordinates vector of node\\ \hline
+RotationMatrix & $[A_{00},\,A_{01},\,A_{02},\,A_{10},\,\ldots,\,A_{21},\,A_{22}]\cConfig\tp$ & vector with 9 components of the rotation matrix $\LU{0b}{\Rot}\cConfig$ in row-major format, in any configuration; the rotation matrix transforms local ($b$) to global (0) coordinates\\ \hline
+Rotation & $[\varphi_0,\,\varphi_1,\,\varphi_2]\tp\cConfig$ & vector with 3 components of the Euler / Tait-Bryan angles in xyz-sequence\\ \hline
+AngularVelocity & $\LU{0}{\tomega}\cConfig = \LU{0}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$ & global 3D angular velocity vector of node\\ \hline
+AngularVelocityLocal & $\LU{b}{\tomega}\cConfig = \LU{b}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$ & local (body-fixed)  3D angular velocity vector of node\\ \hline
 \end{longtable}
 \end{center}
 \vspace{6pt}\par\noindent\rule{\textwidth}{0.4pt}
 %
 \noindent For examples on NodePoint3DSlope23 see Relevant Examples and TestModels with weblink:
 \bi
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3DeigTest.py}{\texttt{ANCFBeam3DeigTest.py}} (TestModels/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3Dtest.py}{\texttt{ANCFBeam3Dtest.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamEigTest.py}{\texttt{ANCFBeamEigTest.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamTest.py}{\texttt{ANCFBeamTest.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geometricallyExactBeamTest.py}{\texttt{geometricallyExactBeamTest.py}} (TestModels/)
 
 \ei
 
@@ -1015,7 +1024,7 @@ A node containing a number of \hac{ODE2} variables; use e.g. for scalar dynamic 
 
 \noindent \mybold{Additional information for NodeGenericODE2}:
 \bi
-  \item The Node has the following types = \texttt{GenericODE2}
+  \item This \texttt{Node} has/provides the following types = \texttt{GenericODE2}
 \ei\vspace{12pt} \noindent 
 The item \mybold{NodeGenericODE2} with type = 'GenericODE2' has the following parameters:
 \vspace{-0.5cm}\\
@@ -1224,7 +1233,7 @@ A node containing a number of data (history) variables; use e.g. for contact (ac
 
 \noindent \mybold{Additional information for NodeGenericData}:
 \bi
-  \item The Node has the following types = \texttt{GenericData}
+  \item This \texttt{Node} has/provides the following types = \texttt{GenericData}
 \ei\vspace{12pt} \noindent 
 The item \mybold{NodeGenericData} with type = 'GenericData' has the following parameters:
 \vspace{-0.5cm}\\
@@ -1308,7 +1317,7 @@ A 3D point node fixed to ground. The node can be used as NodePoint, but it does 
 
 \noindent \mybold{Additional information for NodePointGround}:
 \bi
-  \item The Node has the following types = \texttt{Ground}, \texttt{Position2D}, \texttt{Position}, \texttt{Orientation}, \texttt{GenericODE2}
+  \item This \texttt{Node} has/provides the following types = \texttt{Ground}, \texttt{Position2D}, \texttt{Position}, \texttt{Orientation}, \texttt{GenericODE2}
   \item {\bf Short name} for Python = \texttt{PointGround}
   \item {\bf Short name} for Python visualization object = \texttt{VPointGround}
 \ei\vspace{12pt} \noindent 
@@ -1378,8 +1387,8 @@ Coordinates\_t & $\dot\cv\cConfig =[]$ & vector of length zero\\ \hline
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFtests2.py}{\texttt{ANCFtests2.py}} (Examples/)
 \item  ...
 
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3DeigTest.py}{\texttt{ANCFBeam3DeigTest.py}} (TestModels/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3Dtest.py}{\texttt{ANCFBeam3Dtest.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamEigTest.py}{\texttt{ANCFBeamEigTest.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamTest.py}{\texttt{ANCFBeamTest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py}{\texttt{ANCFbeltDrive.py}} (TestModels/)
 \item  ...
 
@@ -1404,7 +1413,7 @@ A ground object behaving like a rigid body, but having no degrees of freedom; us
 
 \noindent \mybold{Additional information for ObjectGround}:
 \bi
-  \item The Object has the following types = \texttt{Ground}, \texttt{Body}
+  \item This \texttt{Object} has/provides the following types = \texttt{Ground}, \texttt{Body}
 \ei\vspace{12pt} \noindent 
 The item \mybold{ObjectGround} with type = 'Ground' has the following parameters:
 \vspace{-0.5cm}\\
@@ -1550,8 +1559,8 @@ A 3D mass point which is attached to a position-based node, usually NodePoint.
 
 \noindent \mybold{Additional information for ObjectMassPoint}:
 \bi
-  \item The Object has the following types = \texttt{Body}, \texttt{SingleNoded}
-  \item Requested node type = \texttt{Position}
+  \item This \texttt{Object} has/provides the following types = \texttt{Body}, \texttt{SingleNoded}
+  \item Requested \texttt{Node} type = \texttt{Position}
   \item {\bf Short name} for Python = \texttt{MassPoint}
   \item {\bf Short name} for Python visualization object = \texttt{VMassPoint}
 \ei\vspace{12pt} \noindent 
@@ -1686,8 +1695,8 @@ A 2D mass point which is attached to a position-based 2D node.
 
 \noindent \mybold{Additional information for ObjectMassPoint2D}:
 \bi
-  \item The Object has the following types = \texttt{Body}, \texttt{SingleNoded}
-  \item Requested node type = \texttt{Position2D} + \texttt{Position}
+  \item This \texttt{Object} has/provides the following types = \texttt{Body}, \texttt{SingleNoded}
+  \item Requested \texttt{Node} type = \texttt{Position2D} + \texttt{Position}
   \item {\bf Short name} for Python = \texttt{MassPoint2D}
   \item {\bf Short name} for Python visualization object = \texttt{VMassPoint2D}
 \ei\vspace{12pt} \noindent 
@@ -1823,8 +1832,8 @@ A 1D (translational) mass which is attached to Node1D. Note, that the mass does 
 
 \noindent \mybold{Additional information for ObjectMass1D}:
 \bi
-  \item The Object has the following types = \texttt{Body}, \texttt{SingleNoded}
-  \item Requested node type = \texttt{GenericODE2}
+  \item This \texttt{Object} has/provides the following types = \texttt{Body}, \texttt{SingleNoded}
+  \item Requested \texttt{Node} type = \texttt{GenericODE2}
   \item {\bf Short name} for Python = \texttt{Mass1D}
   \item {\bf Short name} for Python visualization object = \texttt{VMass1D}
 \ei\vspace{12pt} \noindent 
@@ -1959,8 +1968,8 @@ A 1D rotational inertia (mass) which is attached to Node1D.
 
 \noindent \mybold{Additional information for ObjectRotationalMass1D}:
 \bi
-  \item The Object has the following types = \texttt{Body}, \texttt{SingleNoded}
-  \item Requested node type = \texttt{GenericODE2}
+  \item This \texttt{Object} has/provides the following types = \texttt{Body}, \texttt{SingleNoded}
+  \item Requested \texttt{Node} type = \texttt{GenericODE2}
   \item {\bf Short name} for Python = \texttt{Rotor1D}
   \item {\bf Short name} for Python visualization object = \texttt{VRotor1D}
 \ei\vspace{12pt} \noindent 
@@ -2096,8 +2105,8 @@ A 3D rigid body which is attached to a 3D rigid body node. The rotation parametr
 
 \noindent \mybold{Additional information for ObjectRigidBody}:
 \bi
-  \item The Object has the following types = \texttt{Body}, \texttt{SingleNoded}
-  \item Requested node type = \texttt{Position} + \texttt{Orientation} + \texttt{RigidBody}
+  \item This \texttt{Object} has/provides the following types = \texttt{Body}, \texttt{SingleNoded}
+  \item Requested \texttt{Node} type = \texttt{Position} + \texttt{Orientation} + \texttt{RigidBody}
   \item {\bf Short name} for Python = \texttt{RigidBody}
   \item {\bf Short name} for Python visualization object = \texttt{VRigidBody}
 \ei\vspace{12pt} \noindent 
@@ -2348,8 +2357,8 @@ A 2D rigid body which is attached to a rigid body 2D node. The body obtains coor
 
 \noindent \mybold{Additional information for ObjectRigidBody2D}:
 \bi
-  \item The Object has the following types = \texttt{Body}, \texttt{SingleNoded}
-  \item Requested node type = \texttt{Position2D} + \texttt{Orientation2D} + \texttt{Position} + \texttt{Orientation}
+  \item This \texttt{Object} has/provides the following types = \texttt{Body}, \texttt{SingleNoded}
+  \item Requested \texttt{Node} type = \texttt{Position2D} + \texttt{Orientation2D} + \texttt{Position} + \texttt{Orientation}
   \item {\bf Short name} for Python = \texttt{RigidBody2D}
   \item {\bf Short name} for Python visualization object = \texttt{VRigidBody2D}
 \ei\vspace{12pt} \noindent 
@@ -2532,8 +2541,8 @@ A system of $n$ second order ordinary differential equations (\hac{ODE2}), havin
 
 \noindent \mybold{Additional information for ObjectGenericODE2}:
 \bi
-  \item The Object has the following types = \texttt{Body}, \texttt{MultiNoded}, \texttt{SuperElement}
-  \item Requested node type: read detailed information of item
+  \item This \texttt{Object} has/provides the following types = \texttt{Body}, \texttt{MultiNoded}, \texttt{SuperElement}
+  \item Requested \texttt{Node} type: read detailed information of item
 \ei\vspace{12pt} \noindent 
 The item \mybold{ObjectGenericODE2} with type = 'GenericODE2' has the following parameters:
 \vspace{-0.5cm}\\
@@ -2811,8 +2820,8 @@ A special object to represent open kinematic trees using minimal coordinate form
 
 \noindent \mybold{Additional information for ObjectKinematicTree}:
 \bi
-  \item The Object has the following types = \texttt{Body}, \texttt{MultiNoded}, \texttt{SuperElement}
-  \item Requested node type = \texttt{GenericODE2}
+  \item This \texttt{Object} has/provides the following types = \texttt{Body}, \texttt{MultiNoded}, \texttt{SuperElement}
+  \item Requested \texttt{Node} type = \texttt{GenericODE2}
   \item {\bf Short name} for Python = \texttt{KinematicTree}
   \item {\bf Short name} for Python visualization object = \texttt{VKinematicTree}
 \ei\vspace{12pt} \noindent 
@@ -3044,8 +3053,8 @@ This object is used to represent equations modelled by the \hac{FFRF}. It contai
 
 \noindent \mybold{Additional information for ObjectFFRF}:
 \bi
-  \item The Object has the following types = \texttt{Body}, \texttt{MultiNoded}, \texttt{SuperElement}
-  \item Requested node type: read detailed information of item
+  \item This \texttt{Object} has/provides the following types = \texttt{Body}, \texttt{MultiNoded}, \texttt{SuperElement}
+  \item Requested \texttt{Node} type: read detailed information of item
 \ei\vspace{12pt} \noindent 
 The item \mybold{ObjectFFRF} with type = 'FFRF' has the following parameters:
 \vspace{-0.5cm}\\
@@ -3376,8 +3385,8 @@ This object is used to represent modally reduced flexible bodies using the \hac{
 
 \noindent \mybold{Additional information for ObjectFFRFreducedOrder}:
 \bi
-  \item The Object has the following types = \texttt{Body}, \texttt{MultiNoded}, \texttt{SuperElement}
-  \item Requested node type: read detailed information of item
+  \item This \texttt{Object} has/provides the following types = \texttt{Body}, \texttt{MultiNoded}, \texttt{SuperElement}
+  \item Requested \texttt{Node} type: read detailed information of item
   \item {\bf Short name} for Python = \texttt{CMSobject}
   \item {\bf Short name} for Python visualization object = \texttt{VCMSobject}
 \ei\vspace{12pt} \noindent 
@@ -3774,7 +3783,7 @@ A 2D cable finite element using 2 nodes of type NodePoint2DSlope1. The localPosi
 
 \noindent \mybold{Additional information for ObjectANCFCable2D}:
 \bi
-  \item Requested node type = \texttt{Position2D} + \texttt{Orientation2D} + \texttt{Point2DSlope1} + \texttt{Position} + \texttt{Orientation}
+  \item Requested \texttt{Node} type = \texttt{Position2D} + \texttt{Orientation2D} + \texttt{Point2DSlope1} + \texttt{Position} + \texttt{Orientation}
   \item {\bf Short name} for Python = \texttt{Cable2D}
   \item {\bf Short name} for Python visualization object = \texttt{VCable2D}
 \ei\vspace{12pt} \noindent 
@@ -4132,7 +4141,7 @@ A 2D cable finite element using 2 nodes of type NodePoint2DSlope1 and a axially 
 
 \noindent \mybold{Additional information for ObjectALEANCFCable2D}:
 \bi
-  \item Requested node type: read detailed information of item
+  \item Requested \texttt{Node} type: read detailed information of item
   \item {\bf Short name} for Python = \texttt{ALECable2D}
   \item {\bf Short name} for Python visualization object = \texttt{VALECable2D}
 \ei\vspace{12pt} \noindent 
@@ -4253,8 +4262,8 @@ OBJECT UNDER CONSTRUCTION: A 3D beam finite element based on the absolute nodal 
 
 \noindent \mybold{Additional information for ObjectANCFBeam}:
 \bi
-  \item The Object has the following types = \texttt{Body}, \texttt{MultiNoded}
-  \item Requested node type = \texttt{Position} + \texttt{Orientation}
+  \item This \texttt{Object} has/provides the following types = \texttt{Body}, \texttt{MultiNoded}
+  \item Requested \texttt{Node} type = \texttt{Position} + \texttt{Orientation}
   \item {\bf Short name} for Python = \texttt{ANCFBeam}
   \item {\bf Short name} for Python visualization object = \texttt{VANCFBeam}
 \ei\vspace{12pt} \noindent 
@@ -4272,7 +4281,6 @@ The item \mybold{ObjectANCFBeam} with type = 'ANCFBeam' has the following parame
     physicsLength &     PReal &      &     0. &      [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives $\rho A L$; must be positive\\ \hline
     sectionData &     BeamSection &      &     BeamSection() &     data as given by exudyn.BeamSection(), defining inertial, stiffness and damping parameters of beam section.\\ \hline
     crossSectionPenaltyFactor &     Vector3D &      &     [1.,1.,1.] &     \tabnewline  [SI:1] additional penalty factors for cross section deformation, which are in total $k_{cs} = [f_{yy}\cdot k_{yy},\, f_{zz}\cdot k_{zz},\, f_{yz}\cdot k_{yz}]\tp$\\ \hline
-    testBeamRectangularSize &     Vector2D &      &     [-1.,-1.] &     \tabnewline  [SI:m] test dimensions for mass matrix and other terms using standard rectangular cross section\\ \hline
     visualization &     VObjectANCFBeam &      &      &     parameters for visualization of item\\ \hline
 \end{longtable}
 \end{center}
@@ -4296,7 +4304,6 @@ The item \mybold{ObjectANCFBeam} with type = 'ANCFBeam' has the following parame
 \startTable{input parameter}{symbol}{description see tables above}
 \rowTable{physicsLength}{$L$}{}
 \rowTable{crossSectionPenaltyFactor}{$f_{cs} = [f_{yy},\,f_{zz},\,f_{yz}]\tp$}{}
-\rowTable{testBeamRectangularSize}{$[h_y,\, h_z]$}{}
 \finishTable
 
 \mybold{The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}:
@@ -4323,8 +4330,9 @@ RotationMatrix &  & rotation matrix of cross section rotation as 9D vector\\ \hl
 %
 \noindent For examples on ObjectANCFBeam see Relevant Examples and TestModels with weblink:
 \bi
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3DeigTest.py}{\texttt{ANCFBeam3DeigTest.py}} (TestModels/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3Dtest.py}{\texttt{ANCFBeam3Dtest.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamEigTest.py}{\texttt{ANCFBeamEigTest.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamTest.py}{\texttt{ANCFBeamTest.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geometricallyExactBeamTest.py}{\texttt{geometricallyExactBeamTest.py}} (TestModels/)
 
 \ei
 
@@ -4340,8 +4348,8 @@ A 2D geometrically exact beam finite element, currently using 2 nodes of type No
 
 \noindent \mybold{Additional information for ObjectBeamGeometricallyExact2D}:
 \bi
-  \item The Object has the following types = \texttt{Body}, \texttt{MultiNoded}
-  \item Requested node type = \texttt{Position2D} + \texttt{Orientation2D} + \texttt{Position} + \texttt{Orientation}
+  \item This \texttt{Object} has/provides the following types = \texttt{Body}, \texttt{MultiNoded}
+  \item Requested \texttt{Node} type = \texttt{Position2D} + \texttt{Orientation2D} + \texttt{Position} + \texttt{Orientation}
   \item {\bf Short name} for Python = \texttt{Beam2D}
   \item {\bf Short name} for Python visualization object = \texttt{VBeam2D}
 \ei\vspace{12pt} \noindent 
@@ -4424,10 +4432,8 @@ TorqueLocal &  & 3D vector of (local) torques, containing only bending moment (Z
 %
 \noindent For examples on ObjectBeamGeometricallyExact2D see Relevant Examples and TestModels with weblink:
 \bi
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3DeigTest.py}{\texttt{ANCFBeam3DeigTest.py}} (TestModels/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3Dtest.py}{\texttt{ANCFBeam3Dtest.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamEigTest.py}{\texttt{ANCFBeamEigTest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geometricallyExactBeam2Dtest.py}{\texttt{geometricallyExactBeam2Dtest.py}} (TestModels/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geometricallyExactBeam3Dtest.py}{\texttt{geometricallyExactBeam3Dtest.py}} (TestModels/)
 
 \ei
 
@@ -4443,8 +4449,8 @@ OBJECT UNDER CONSTRUCTION: A 3D geometrically exact beam finite element, current
 
 \noindent \mybold{Additional information for ObjectBeamGeometricallyExact}:
 \bi
-  \item The Object has the following types = \texttt{Body}, \texttt{MultiNoded}
-  \item Requested node type = \texttt{Position} + \texttt{Orientation}
+  \item This \texttt{Object} has/provides the following types = \texttt{Body}, \texttt{MultiNoded}
+  \item Requested \texttt{Node} type = \texttt{Position} + \texttt{Orientation}
   \item {\bf Short name} for Python = \texttt{Beam3D}
   \item {\bf Short name} for Python visualization object = \texttt{VBeam3D}
 \ei\vspace{12pt} \noindent 
@@ -4506,7 +4512,7 @@ CurvatureLocal &  & 3D vector of curvature, containing only curvature w.r.t. $z$
 %
 \noindent For examples on ObjectBeamGeometricallyExact see Relevant Examples and TestModels with weblink:
 \bi
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geometricallyExactBeam3Dtest.py}{\texttt{geometricallyExactBeam3Dtest.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geometricallyExactBeamTest.py}{\texttt{geometricallyExactBeamTest.py}} (TestModels/)
 
 \ei
 
@@ -4528,8 +4534,8 @@ A generic joint in 3D; constrains components of the absolute position and rotati
 
 \noindent \mybold{Additional information for ObjectJointGeneric}:
 \bi
-  \item The Object has the following types = \texttt{Connector}, \texttt{Constraint}
-  \item Requested marker type = \texttt{Position} + \texttt{Orientation}
+  \item This \texttt{Object} has/provides the following types = \texttt{Connector}, \texttt{Constraint}
+  \item Requested \texttt{Marker} type = \texttt{Position} + \texttt{Orientation}
   \item {\bf Short name} for Python = \texttt{GenericJoint}
   \item {\bf Short name} for Python visualization object = \texttt{VGenericJoint}
 \ei\vspace{12pt} \noindent 
@@ -4778,8 +4784,8 @@ A revolute joint in 3D; constrains the position of two rigid body markers and th
 
 \noindent \mybold{Additional information for ObjectJointRevoluteZ}:
 \bi
-  \item The Object has the following types = \texttt{Connector}, \texttt{Constraint}
-  \item Requested marker type = \texttt{Position} + \texttt{Orientation}
+  \item This \texttt{Object} has/provides the following types = \texttt{Connector}, \texttt{Constraint}
+  \item Requested \texttt{Marker} type = \texttt{Position} + \texttt{Orientation}
   \item {\bf Short name} for Python = \texttt{RevoluteJointZ}
   \item {\bf Short name} for Python visualization object = \texttt{VRevoluteJointZ}
 \ei\vspace{12pt} \noindent 
@@ -4948,8 +4954,8 @@ A prismatic joint in 3D; constrains the relative rotation of two rigid body mark
 
 \noindent \mybold{Additional information for ObjectJointPrismaticX}:
 \bi
-  \item The Object has the following types = \texttt{Connector}, \texttt{Constraint}
-  \item Requested marker type = \texttt{Position} + \texttt{Orientation}
+  \item This \texttt{Object} has/provides the following types = \texttt{Connector}, \texttt{Constraint}
+  \item Requested \texttt{Marker} type = \texttt{Position} + \texttt{Orientation}
   \item {\bf Short name} for Python = \texttt{PrismaticJointX}
   \item {\bf Short name} for Python visualization object = \texttt{VPrismaticJointX}
 \ei\vspace{12pt} \noindent 
@@ -5085,8 +5091,8 @@ A spherical joint, which constrains the relative translation between two positio
 
 \noindent \mybold{Additional information for ObjectJointSpherical}:
 \bi
-  \item The Object has the following types = \texttt{Connector}, \texttt{Constraint}
-  \item Requested marker type = \texttt{Position}
+  \item This \texttt{Object} has/provides the following types = \texttt{Connector}, \texttt{Constraint}
+  \item Requested \texttt{Marker} type = \texttt{Position}
   \item {\bf Short name} for Python = \texttt{SphericalJoint}
   \item {\bf Short name} for Python visualization object = \texttt{VSphericalJoint}
 \ei\vspace{12pt} \noindent 
@@ -5219,8 +5225,8 @@ A joint representing a rolling rigid disc (marker 1) on a flat surface (marker 0
 
 \noindent \mybold{Additional information for ObjectJointRollingDisc}:
 \bi
-  \item The Object has the following types = \texttt{Connector}, \texttt{Constraint}
-  \item Requested marker type = \texttt{Position} + \texttt{Orientation}
+  \item This \texttt{Object} has/provides the following types = \texttt{Connector}, \texttt{Constraint}
+  \item Requested \texttt{Marker} type = \texttt{Position} + \texttt{Orientation}
   \item {\bf Short name} for Python = \texttt{RollingDiscJoint}
   \item {\bf Short name} for Python visualization object = \texttt{VRollingDiscJoint}
 \ei\vspace{12pt} \noindent 
@@ -5385,8 +5391,8 @@ A revolute joint in 2D; constrains the absolute 2D position of two points given 
 
 \noindent \mybold{Additional information for ObjectJointRevolute2D}:
 \bi
-  \item The Object has the following types = \texttt{Connector}, \texttt{Constraint}
-  \item Requested marker type = \texttt{Position}
+  \item This \texttt{Object} has/provides the following types = \texttt{Connector}, \texttt{Constraint}
+  \item Requested \texttt{Marker} type = \texttt{Position}
   \item {\bf Short name} for Python = \texttt{RevoluteJoint2D}
   \item {\bf Short name} for Python visualization object = \texttt{VRevoluteJoint2D}
 \ei\vspace{12pt} \noindent 
@@ -5459,8 +5465,8 @@ A prismatic joint in 2D; allows the relative motion of two bodies, using two Rig
 
 \noindent \mybold{Additional information for ObjectJointPrismatic2D}:
 \bi
-  \item The Object has the following types = \texttt{Connector}, \texttt{Constraint}
-  \item Requested marker type = \texttt{Position} + \texttt{Orientation}
+  \item This \texttt{Object} has/provides the following types = \texttt{Connector}, \texttt{Constraint}
+  \item Requested \texttt{Marker} type = \texttt{Position} + \texttt{Orientation}
   \item {\bf Short name} for Python = \texttt{PrismaticJoint2D}
   \item {\bf Short name} for Python visualization object = \texttt{VPrismaticJoint2D}
 \ei\vspace{12pt} \noindent 
@@ -5522,9 +5528,9 @@ A specialized sliding joint (without rotation) in 2D between a Cable2D (marker1)
 
 \noindent \mybold{Additional information for ObjectJointSliding2D}:
 \bi
-  \item The Object has the following types = \texttt{Connector}, \texttt{Constraint}
-  \item Requested marker type = \texttt{\_None}
-  \item Requested node type = \texttt{GenericData}
+  \item This \texttt{Object} has/provides the following types = \texttt{Connector}, \texttt{Constraint}
+  \item Requested \texttt{Marker} type = \texttt{\_None}
+  \item Requested \texttt{Node} type = \texttt{GenericData}
   \item {\bf Short name} for Python = \texttt{SlidingJoint2D}
   \item {\bf Short name} for Python visualization object = \texttt{VSlidingJoint2D}
 \ei\vspace{12pt} \noindent 
@@ -5738,9 +5744,9 @@ A specialized axially moving joint (without rotation) in 2D between a ALE Cable2
 
 \noindent \mybold{Additional information for ObjectJointALEMoving2D}:
 \bi
-  \item The Object has the following types = \texttt{Connector}, \texttt{Constraint}
-  \item Requested marker type = \texttt{\_None}
-  \item Requested node type: read detailed information of item
+  \item This \texttt{Object} has/provides the following types = \texttt{Connector}, \texttt{Constraint}
+  \item Requested \texttt{Marker} type = \texttt{\_None}
+  \item Requested \texttt{Node} type: read detailed information of item
   \item {\bf Short name} for Python = \texttt{ALEMovingJoint2D}
   \item {\bf Short name} for Python visualization object = \texttt{VALEMovingJoint2D}
 \ei\vspace{12pt} \noindent 
@@ -5935,8 +5941,8 @@ An simple spring-damper element with additional force; connects to position-base
 
 \noindent \mybold{Additional information for ObjectConnectorSpringDamper}:
 \bi
-  \item The Object has the following types = \texttt{Connector}
-  \item Requested marker type = \texttt{Position}
+  \item This \texttt{Object} has/provides the following types = \texttt{Connector}
+  \item Requested \texttt{Marker} type = \texttt{Position}
   \item {\bf Short name} for Python = \texttt{SpringDamper}
   \item {\bf Short name} for Python visualization object = \texttt{VSpringDamper}
 \ei\vspace{12pt} \noindent 
@@ -6226,8 +6232,8 @@ An 3D spring-damper element, providing springs and dampers in three (global) dir
 
 \noindent \mybold{Additional information for ObjectConnectorCartesianSpringDamper}:
 \bi
-  \item The Object has the following types = \texttt{Connector}
-  \item Requested marker type = \texttt{Position}
+  \item This \texttt{Object} has/provides the following types = \texttt{Connector}
+  \item Requested \texttt{Marker} type = \texttt{Position}
   \item {\bf Short name} for Python = \texttt{CartesianSpringDamper}
   \item {\bf Short name} for Python visualization object = \texttt{VCartesianSpringDamper}
 \ei\vspace{12pt} \noindent 
@@ -6467,9 +6473,9 @@ An 3D spring-damper element acting on relative displacements and relative rotati
 
 \noindent \mybold{Additional information for ObjectConnectorRigidBodySpringDamper}:
 \bi
-  \item The Object has the following types = \texttt{Connector}
-  \item Requested marker type = \texttt{Position} + \texttt{Orientation}
-  \item Requested node type = \texttt{GenericData}
+  \item This \texttt{Object} has/provides the following types = \texttt{Connector}
+  \item Requested \texttt{Marker} type = \texttt{Position} + \texttt{Orientation}
+  \item Requested \texttt{Node} type = \texttt{GenericData}
   \item {\bf Short name} for Python = \texttt{RigidBodySpringDamper}
   \item {\bf Short name} for Python visualization object = \texttt{VRigidBodySpringDamper}
 \ei\vspace{12pt} \noindent 
@@ -6698,8 +6704,8 @@ An linear spring-damper element acting on relative translations along given axis
 
 \noindent \mybold{Additional information for ObjectConnectorLinearSpringDamper}:
 \bi
-  \item The Object has the following types = \texttt{Connector}
-  \item Requested marker type = \texttt{Position} + \texttt{Orientation}
+  \item This \texttt{Object} has/provides the following types = \texttt{Connector}
+  \item Requested \texttt{Marker} type = \texttt{Position} + \texttt{Orientation}
   \item {\bf Short name} for Python = \texttt{LinearSpringDamper}
   \item {\bf Short name} for Python visualization object = \texttt{VLinearSpringDamper}
 \ei\vspace{12pt} \noindent 
@@ -6876,9 +6882,9 @@ An torsional spring-damper element acting on relative rotations around Z-axis of
 
 \noindent \mybold{Additional information for ObjectConnectorTorsionalSpringDamper}:
 \bi
-  \item The Object has the following types = \texttt{Connector}
-  \item Requested marker type = \texttt{Orientation}
-  \item Requested node type = \texttt{GenericData}
+  \item This \texttt{Object} has/provides the following types = \texttt{Connector}
+  \item Requested \texttt{Marker} type = \texttt{Orientation}
+  \item Requested \texttt{Node} type = \texttt{GenericData}
   \item {\bf Short name} for Python = \texttt{TorsionalSpringDamper}
   \item {\bf Short name} for Python visualization object = \texttt{VTorsionalSpringDamper}
 \ei\vspace{12pt} \noindent 
@@ -7068,8 +7074,8 @@ A 1D (scalar) spring-damper element acting on single \hac{ODE2} coordinates; con
 
 \noindent \mybold{Additional information for ObjectConnectorCoordinateSpringDamper}:
 \bi
-  \item The Object has the following types = \texttt{Connector}
-  \item Requested marker type = \texttt{Coordinate}
+  \item This \texttt{Object} has/provides the following types = \texttt{Connector}
+  \item Requested \texttt{Marker} type = \texttt{Coordinate}
   \item {\bf Short name} for Python = \texttt{CoordinateSpringDamper}
   \item {\bf Short name} for Python visualization object = \texttt{VCoordinateSpringDamper}
 \ei\vspace{12pt} \noindent 
@@ -7271,9 +7277,9 @@ A 1D (scalar) spring-damper element acting on single \hac{ODE2} coordinates; sam
 
 \noindent \mybold{Additional information for ObjectConnectorCoordinateSpringDamperExt}:
 \bi
-  \item The Object has the following types = \texttt{Connector}
-  \item Requested marker type = \texttt{Coordinate}
-  \item Requested node type = \texttt{GenericData}
+  \item This \texttt{Object} has/provides the following types = \texttt{Connector}
+  \item Requested \texttt{Marker} type = \texttt{Coordinate}
+  \item Requested \texttt{Node} type = \texttt{GenericData}
   \item {\bf Short name} for Python = \texttt{CoordinateSpringDamperExt}
   \item {\bf Short name} for Python visualization object = \texttt{VCoordinateSpringDamperExt}
 \ei\vspace{12pt} \noindent 
@@ -7538,8 +7544,8 @@ A connector for additing forces due to gravitational fields beween two bodies, w
 
 \noindent \mybold{Additional information for ObjectConnectorGravity}:
 \bi
-  \item The Object has the following types = \texttt{Connector}
-  \item Requested marker type = \texttt{Position}
+  \item This \texttt{Object} has/provides the following types = \texttt{Connector}
+  \item Requested \texttt{Marker} type = \texttt{Position}
   \item {\bf Short name} for Python = \texttt{ConnectorGravity}
   \item {\bf Short name} for Python visualization object = \texttt{VConnectorGravity}
 \ei\vspace{12pt} \noindent 
@@ -7714,9 +7720,9 @@ A basic hydraulic actuator with pressure build up equations. The actuator follow
 
 \noindent \mybold{Additional information for ObjectConnectorHydraulicActuatorSimple}:
 \bi
-  \item The Object has the following types = \texttt{Connector}
-  \item Requested marker type = \texttt{Position}
-  \item Requested node type: read detailed information of item
+  \item This \texttt{Object} has/provides the following types = \texttt{Connector}
+  \item Requested \texttt{Marker} type = \texttt{Position}
+  \item Requested \texttt{Node} type: read detailed information of item
   \item {\bf Short name} for Python = \texttt{HydraulicActuatorSimple}
   \item {\bf Short name} for Python visualization object = \texttt{VHydraulicActuatorSimple}
 \ei\vspace{12pt} \noindent 
@@ -7858,7 +7864,7 @@ Force &  & force in actuator resulting as the difference of both pressures times
     valve positions as well as the actuator velocity and position (only for change of volume).
     
     The distance between the two marker points, which are usually the bushings or clevis mounts of the hydraulic cylinder, is
-    denoted as $L$. The stroke length $s in [0, L_s]$ is defined as
+    denoted as $L$. The stroke length $s \in [0, L_s]$ is defined as
     \be
       s = L - L_o
     \ee
@@ -7925,8 +7931,8 @@ A rD reeving system defined by a list of torque-free and friction-free sheaves o
 
 \noindent \mybold{Additional information for ObjectConnectorReevingSystemSprings}:
 \bi
-  \item The Object has the following types = \texttt{Connector}
-  \item Requested marker type = \texttt{\_None}
+  \item This \texttt{Object} has/provides the following types = \texttt{Connector}
+  \item Requested \texttt{Marker} type = \texttt{\_None}
   \item {\bf Short name} for Python = \texttt{ReevingSystemSprings}
   \item {\bf Short name} for Python visualization object = \texttt{VReevingSystemSprings}
 \ei\vspace{12pt} \noindent 
@@ -8137,9 +8143,9 @@ A (flexible) connector representing a rolling rigid disc (marker 1) on a flat su
 
 \noindent \mybold{Additional information for ObjectConnectorRollingDiscPenalty}:
 \bi
-  \item The Object has the following types = \texttt{Connector}
-  \item Requested marker type = \texttt{Position} + \texttt{Orientation}
-  \item Requested node type = \texttt{GenericData}
+  \item This \texttt{Object} has/provides the following types = \texttt{Connector}
+  \item Requested \texttt{Marker} type = \texttt{Position} + \texttt{Orientation}
+  \item Requested \texttt{Node} type = \texttt{GenericData}
   \item {\bf Short name} for Python = \texttt{RollingDiscPenalty}
   \item {\bf Short name} for Python visualization object = \texttt{VRollingDiscPenalty}
 \ei\vspace{12pt} \noindent 
@@ -8374,6 +8380,7 @@ RotationMatrix & $\LU{0,J1}{\Am} = [\LU{0}{\wv_{lat}},\, \LU{0}{\wv}_2,\, \LU{0}
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py}{\texttt{bicycleIftommBenchmark.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/leggedRobot.py}{\texttt{leggedRobot.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/carRollingDiscTest.py}{\texttt{carRollingDiscTest.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/laserScannerTest.py}{\texttt{laserScannerTest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mecanumWheelRollingDiscTest.py}{\texttt{mecanumWheelRollingDiscTest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rollingCoinPenaltyTest.py}{\texttt{rollingCoinPenaltyTest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rotatingTableTest.py}{\texttt{rotatingTableTest.py}} (TestModels/)
@@ -8395,9 +8402,9 @@ A contact connector representing a convex roll (marker 1) on a flat surface (mar
 
 \noindent \mybold{Additional information for ObjectContactConvexRoll}:
 \bi
-  \item The Object has the following types = \texttt{Connector}
-  \item Requested marker type = \texttt{Position} + \texttt{Orientation}
-  \item Requested node type = \texttt{GenericData}
+  \item This \texttt{Object} has/provides the following types = \texttt{Connector}
+  \item Requested \texttt{Marker} type = \texttt{Position} + \texttt{Orientation}
+  \item Requested \texttt{Node} type = \texttt{GenericData}
 \ei\vspace{12pt} \noindent 
 The item \mybold{ObjectContactConvexRoll} with type = 'ContactConvexRoll' has the following parameters:
 \vspace{-0.5cm}\\
@@ -8581,9 +8588,9 @@ A penalty-based contact condition for one coordinate; the contact gap $g$ is def
 
 \noindent \mybold{Additional information for ObjectContactCoordinate}:
 \bi
-  \item The Object has the following types = \texttt{Connector}
-  \item Requested marker type = \texttt{Coordinate}
-  \item Requested node type = \texttt{GenericData}
+  \item This \texttt{Object} has/provides the following types = \texttt{Connector}
+  \item Requested \texttt{Marker} type = \texttt{Coordinate}
+  \item Requested \texttt{Node} type = \texttt{GenericData}
 \ei\vspace{12pt} \noindent 
 The item \mybold{ObjectContactCoordinate} with type = 'ContactCoordinate' has the following parameters:
 \vspace{-0.5cm}\\
@@ -8643,9 +8650,9 @@ A very specialized penalty-based contact condition between a 2D circle (=marker0
 
 \noindent \mybold{Additional information for ObjectContactCircleCable2D}:
 \bi
-  \item The Object has the following types = \texttt{Connector}
-  \item Requested marker type = \texttt{\_None}
-  \item Requested node type = \texttt{GenericData}
+  \item This \texttt{Object} has/provides the following types = \texttt{Connector}
+  \item Requested \texttt{Marker} type = \texttt{\_None}
+  \item Requested \texttt{Node} type = \texttt{GenericData}
 \ei\vspace{12pt} \noindent 
 The item \mybold{ObjectContactCircleCable2D} with type = 'ContactCircleCable2D' has the following parameters:
 \vspace{-0.5cm}\\
@@ -8716,9 +8723,9 @@ A very specialized penalty-based contact/friction condition between a 2D circle 
 
 \noindent \mybold{Additional information for ObjectContactFrictionCircleCable2D}:
 \bi
-  \item The Object has the following types = \texttt{Connector}
-  \item Requested marker type = \texttt{\_None}
-  \item Requested node type = \texttt{GenericData}
+  \item This \texttt{Object} has/provides the following types = \texttt{Connector}
+  \item Requested \texttt{Marker} type = \texttt{\_None}
+  \item Requested \texttt{Node} type = \texttt{GenericData}
 \ei\vspace{12pt} \noindent 
 The item \mybold{ObjectContactFrictionCircleCable2D} with type = 'ContactFrictionCircleCable2D' has the following parameters:
 \vspace{-0.5cm}\\
@@ -9199,8 +9206,8 @@ Connector which enforces constant or prescribed distance between two bodies/node
 
 \noindent \mybold{Additional information for ObjectConnectorDistance}:
 \bi
-  \item The Object has the following types = \texttt{Connector}, \texttt{Constraint}
-  \item Requested marker type = \texttt{Position}
+  \item This \texttt{Object} has/provides the following types = \texttt{Connector}, \texttt{Constraint}
+  \item Requested \texttt{Marker} type = \texttt{Position}
   \item {\bf Short name} for Python = \texttt{DistanceConstraint}
   \item {\bf Short name} for Python visualization object = \texttt{VDistanceConstraint}
 \ei\vspace{12pt} \noindent 
@@ -9334,8 +9341,8 @@ A coordinate constraint which constrains two (scalar) coordinates of Marker[Node
 
 \noindent \mybold{Additional information for ObjectConnectorCoordinate}:
 \bi
-  \item The Object has the following types = \texttt{Connector}, \texttt{Constraint}
-  \item Requested marker type = \texttt{Coordinate}
+  \item This \texttt{Object} has/provides the following types = \texttt{Connector}, \texttt{Constraint}
+  \item Requested \texttt{Marker} type = \texttt{Coordinate}
   \item {\bf Short name} for Python = \texttt{CoordinateConstraint}
   \item {\bf Short name} for Python visualization object = \texttt{VCoordinateConstraint}
 \ei\vspace{12pt} \noindent 
@@ -9545,7 +9552,7 @@ Force & $\lambda_0$ & scalar constraint force (Lagrange multiplier)\\ \hline
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFtests2.py}{\texttt{ANCFtests2.py}} (Examples/)
 \item  ...
 
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3Dtest.py}{\texttt{ANCFBeam3Dtest.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamTest.py}{\texttt{ANCFBeamTest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py}{\texttt{ANCFbeltDrive.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py}{\texttt{ANCFcontactCircleTest.py}} (TestModels/)
 \item  ...
@@ -9565,8 +9572,8 @@ A constraint which constrains the coordinate vectors of two markers Marker[Node|
 
 \noindent \mybold{Additional information for ObjectConnectorCoordinateVector}:
 \bi
-  \item The Object has the following types = \texttt{Connector}, \texttt{Constraint}
-  \item Requested marker type = \texttt{Coordinate}
+  \item This \texttt{Object} has/provides the following types = \texttt{Connector}, \texttt{Constraint}
+  \item Requested \texttt{Marker} type = \texttt{Coordinate}
   \item {\bf Short name} for Python = \texttt{CoordinateVectorConstraint}
   \item {\bf Short name} for Python visualization object = \texttt{VCoordinateVectorConstraint}
 \ei\vspace{12pt} \noindent 
@@ -9795,8 +9802,8 @@ A system of $n$ \acf{ODE1}, having a system matrix, a rhs vector, but mostly it 
 
 \noindent \mybold{Additional information for ObjectGenericODE1}:
 \bi
-  \item The Object has the following types = \texttt{MultiNoded}
-  \item Requested node type: read detailed information of item
+  \item This \texttt{Object} has/provides the following types = \texttt{MultiNoded}
+  \item Requested \texttt{Node} type: read detailed information of item
 \ei\vspace{12pt} \noindent 
 The item \mybold{ObjectGenericODE1} with type = 'GenericODE1' has the following parameters:
 \vspace{-0.5cm}\\
@@ -9961,7 +9968,7 @@ Coordinates\_t &  & all \hac{ODE1} velocity coordinates\\ \hline
 %+++++++++++++++++++++++++++++++
 %+++++++++++++++++++++++++++++++
 \mysubsection{Markers}
-A Marker provides an interface between a large variety of Nodes / Objects and Connectors or Loads.
+A Marker provides an interface BETWEEN a large variety of Nodes / Bodies / Objects AND Connectors / Loads. To understand which markers are needed, see first the requested \texttt{Marker} type of the connector, constraint or joint. Hereafter, chose a \texttt{Marker} -- attached to a node, body or object -- with the according properties. The \texttt{Marker} may provide more information (e.g., position and orientation) than needed.
 %++++++
 
 %+++++++++++++++++++++++++++++++++++
@@ -9973,7 +9980,7 @@ A marker attached to the body mass; use this marker to apply a body-load (e.g. g
 
 \noindent \mybold{Additional information for MarkerBodyMass}:
 \bi
-  \item The Marker has the following types = \texttt{Object}, \texttt{Body}, \texttt{BodyMass}
+  \item This \texttt{Marker} has/provides the following types = \texttt{Object}, \texttt{Body}, \texttt{BodyMass}
 \ei\vspace{12pt} \noindent 
 The item \mybold{MarkerBodyMass} with type = 'BodyMass' has the following parameters:
 \vspace{-0.5cm}\\
@@ -10036,12 +10043,12 @@ The item \mybold{MarkerBodyMass} with type = 'BodyMass' has the following parame
 
 \mysubsubsection{MarkerBodyPosition}
 \label{sec:item:MarkerBodyPosition}
-A position body-marker attached to a local (body-fixed) position $\pLocB = [b_0,\; b_1,\; b_2]$ ($x$, $y$, and $z$ coordinates) of the body.
+A position body-marker attached to a local (body-fixed) position $\pLocB = [b_0,\; b_1,\; b_2]$ ($x$, $y$, and $z$ coordinates) of the body. It provides position information as well as the according derivatives (=velocity and derivative of position w.r.t. body coordinates). It can be used for connectors, joints or loads where position is required. If connectors also require orientation information, use a MarkerBodyRigid.
 \vspace{12pt}\\
 
 \noindent \mybold{Additional information for MarkerBodyPosition}:
 \bi
-  \item The Marker has the following types = \texttt{Object}, \texttt{Body}, \texttt{Position}
+  \item This \texttt{Marker} has/provides the following types = \texttt{Object}, \texttt{Body}, \texttt{Position}
 \ei\vspace{12pt} \noindent 
 The item \mybold{MarkerBodyPosition} with type = 'BodyPosition' has the following parameters:
 \vspace{-0.5cm}\\
@@ -10109,12 +10116,12 @@ The item \mybold{MarkerBodyPosition} with type = 'BodyPosition' has the followin
 
 \mysubsubsection{MarkerBodyRigid}
 \label{sec:item:MarkerBodyRigid}
-A rigid-body (position+orientation) body-marker attached to a local (body-fixed) position $\pLocB = [b_0,\; b_1,\; b_2]$ ($x$, $y$, and $z$ coordinates) of the body.
+A rigid-body (position+orientation) body-marker attached to a local (body-fixed) position $\pLocB = [b_0,\; b_1,\; b_2]$ ($x$, $y$, and $z$ coordinates) of the body. It provides position and orientation (rotation), as well as the according derivatives. It can be used for most connectors, joints or loads where either position, position and orientation, or orientation are required.
 \vspace{12pt}\\
 
 \noindent \mybold{Additional information for MarkerBodyRigid}:
 \bi
-  \item The Marker has the following types = \texttt{Object}, \texttt{Body}, \texttt{Position}, \texttt{Orientation}
+  \item This \texttt{Marker} has/provides the following types = \texttt{Object}, \texttt{Body}, \texttt{Position}, \texttt{Orientation}
 \ei\vspace{12pt} \noindent 
 The item \mybold{MarkerBodyRigid} with type = 'BodyRigid' has the following parameters:
 \vspace{-0.5cm}\\
@@ -10182,12 +10189,12 @@ The item \mybold{MarkerBodyRigid} with type = 'BodyRigid' has the following para
 
 \mysubsubsection{MarkerNodePosition}
 \label{sec:item:MarkerNodePosition}
-A node-Marker attached to a position-based node.
+A node-Marker attached to a position-based node. It can be used for connectors, joints or loads where position is required. If connectors also require orientation information, use a MarkerNodeRigid.
 \vspace{12pt}\\
 
 \noindent \mybold{Additional information for MarkerNodePosition}:
 \bi
-  \item The Marker has the following types = \texttt{Node}, \texttt{Position}
+  \item This \texttt{Marker} has/provides the following types = \texttt{Node}, \texttt{Position}
 \ei\vspace{12pt} \noindent 
 The item \mybold{MarkerNodePosition} with type = 'NodePosition' has the following parameters:
 \vspace{-0.5cm}\\
@@ -10250,12 +10257,12 @@ The item \mybold{MarkerNodePosition} with type = 'NodePosition' has the followin
 
 \mysubsubsection{MarkerNodeRigid}
 \label{sec:item:MarkerNodeRigid}
-A rigid-body (position+orientation) node-marker attached to a rigid-body node.
+A rigid-body (position+orientation) node-marker attached to a rigid-body node. It provides position and orientation (rotation), as well as the according derivatives. It can be used for most connectors, joints or loads where either position, position and orientation, or orientation are required.
 \vspace{12pt}\\
 
 \noindent \mybold{Additional information for MarkerNodeRigid}:
 \bi
-  \item The Marker has the following types = \texttt{Node}, \texttt{Position}, \texttt{Orientation}
+  \item This \texttt{Marker} has/provides the following types = \texttt{Node}, \texttt{Position}, \texttt{Orientation}
 \ei\vspace{12pt} \noindent 
 The item \mybold{MarkerNodeRigid} with type = 'NodeRigid' has the following parameters:
 \vspace{-0.5cm}\\
@@ -10303,7 +10310,7 @@ The item \mybold{MarkerNodeRigid} with type = 'NodeRigid' has the following para
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCraigBampton.py}{\texttt{NGsolveCraigBampton.py}} (Examples/)
 \item  ...
 
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3Dtest.py}{\texttt{ANCFBeam3Dtest.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamTest.py}{\texttt{ANCFBeamTest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py}{\texttt{ANCFbeltDrive.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py}{\texttt{ANCFcontactCircleTest.py}} (TestModels/)
 \item  ...
@@ -10323,7 +10330,7 @@ A node-Marker attached to a \hac{ODE2} coordinate of a node; this marker allows 
 
 \noindent \mybold{Additional information for MarkerNodeCoordinate}:
 \bi
-  \item The Marker has the following types = \texttt{Node}, \texttt{Coordinate}
+  \item This \texttt{Marker} has/provides the following types = \texttt{Node}, \texttt{Coordinate}
 \ei\vspace{12pt} \noindent 
 The item \mybold{MarkerNodeCoordinate} with type = 'NodeCoordinate' has the following parameters:
 \vspace{-0.5cm}\\
@@ -10372,8 +10379,8 @@ The item \mybold{MarkerNodeCoordinate} with type = 'NodeCoordinate' has the foll
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFtests2.py}{\texttt{ANCFtests2.py}} (Examples/)
 \item  ...
 
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3DeigTest.py}{\texttt{ANCFBeam3DeigTest.py}} (TestModels/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3Dtest.py}{\texttt{ANCFBeam3Dtest.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamEigTest.py}{\texttt{ANCFBeamEigTest.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamTest.py}{\texttt{ANCFBeamTest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py}{\texttt{ANCFbeltDrive.py}} (TestModels/)
 \item  ...
 
@@ -10392,7 +10399,7 @@ A node-Marker attached to all \hac{ODE2} coordinates of a node; IN CONTRAST to M
 
 \noindent \mybold{Additional information for MarkerNodeCoordinates}:
 \bi
-  \item The Marker has the following types = \texttt{Node}, \texttt{Coordinate}
+  \item This \texttt{Marker} has/provides the following types = \texttt{Node}, \texttt{Coordinate}
 \ei\vspace{12pt} \noindent 
 The item \mybold{MarkerNodeCoordinates} with type = 'NodeCoordinates' has the following parameters:
 \vspace{-0.5cm}\\
@@ -10444,7 +10451,7 @@ A node-Marker attached to a \hac{ODE1} coordinate of a node.
 
 \noindent \mybold{Additional information for MarkerNodeODE1Coordinate}:
 \bi
-  \item The Marker has the following types = \texttt{Node}, \texttt{Coordinate}
+  \item This \texttt{Marker} has/provides the following types = \texttt{Node}, \texttt{Coordinate}
 \ei\vspace{12pt} \noindent 
 The item \mybold{MarkerNodeODE1Coordinate} with type = 'NodeODE1Coordinate' has the following parameters:
 \vspace{-0.5cm}\\
@@ -10483,7 +10490,7 @@ A node-Marker attached to a a node containing rotation; the Marker measures a ro
 
 \noindent \mybold{Additional information for MarkerNodeRotationCoordinate}:
 \bi
-  \item The Marker has the following types = \texttt{Node}, \texttt{Orientation}, \texttt{Coordinate}
+  \item This \texttt{Marker} has/provides the following types = \texttt{Node}, \texttt{Coordinate}
 \ei\vspace{12pt} \noindent 
 The item \mybold{MarkerNodeRotationCoordinate} with type = 'NodeRotationCoordinate' has the following parameters:
 \vspace{-0.5cm}\\
@@ -10538,7 +10545,7 @@ A position marker attached to a SuperElement, such as ObjectFFRF, ObjectGenericO
 
 \noindent \mybold{Additional information for MarkerSuperElementPosition}:
 \bi
-  \item The Marker has the following types = \texttt{Object}, \texttt{Body}, \texttt{Position}
+  \item This \texttt{Marker} has/provides the following types = \texttt{Object}, \texttt{Body}, \texttt{Position}
 \ei\vspace{12pt} \noindent 
 The item \mybold{MarkerSuperElementPosition} with type = 'SuperElementPosition' has the following parameters:
 \vspace{-0.5cm}\\
@@ -10678,7 +10685,7 @@ A position and orientation (rigid-body) marker attached to a SuperElement, such 
 
 \noindent \mybold{Additional information for MarkerSuperElementRigid}:
 \bi
-  \item The Marker has the following types = \texttt{Object}, \texttt{Body}, \texttt{Position}, \texttt{Orientation}
+  \item This \texttt{Marker} has/provides the following types = \texttt{Object}, \texttt{Body}, \texttt{Position}, \texttt{Orientation}
 \ei\vspace{12pt} \noindent 
 The item \mybold{MarkerSuperElementRigid} with type = 'SuperElementRigid' has the following parameters:
 \vspace{-0.5cm}\\
@@ -10943,7 +10950,7 @@ A position and orientation (rigid-body) marker attached to a kinematic tree. The
 
 \noindent \mybold{Additional information for MarkerKinematicTreeRigid}:
 \bi
-  \item The Marker has the following types = \texttt{Object}, \texttt{Body}, \texttt{Position}, \texttt{Orientation}
+  \item This \texttt{Marker} has/provides the following types = \texttt{Object}, \texttt{Body}, \texttt{Position}, \texttt{Orientation}
 \ei\vspace{12pt} \noindent 
 The item \mybold{MarkerKinematicTreeRigid} with type = 'KinematicTreeRigid' has the following parameters:
 \vspace{-0.5cm}\\
@@ -11046,7 +11053,7 @@ A Marker attached to all coordinates of an object (currently only body is possib
 
 \noindent \mybold{Additional information for MarkerObjectODE2Coordinates}:
 \bi
-  \item The Marker has the following types = \texttt{Object}, \texttt{Body}, \texttt{Coordinate}
+  \item This \texttt{Marker} has/provides the following types = \texttt{Object}, \texttt{Body}, \texttt{Coordinate}
 \ei\vspace{12pt} \noindent 
 The item \mybold{MarkerObjectODE2Coordinates} with type = 'ObjectODE2Coordinates' has the following parameters:
 \vspace{-0.5cm}\\
@@ -11096,7 +11103,7 @@ A special Marker attached to a 2D ANCF beam finite element with cubic interpolat
 
 \noindent \mybold{Additional information for MarkerBodyCable2DShape}:
 \bi
-  \item The Marker has the following types = \texttt{Object}, \texttt{Body}, \texttt{Coordinate}
+  \item This \texttt{Marker} has/provides the following types = \texttt{Object}, \texttt{Body}, \texttt{Coordinate}
 \ei\vspace{12pt} \noindent 
 The item \mybold{MarkerBodyCable2DShape} with type = 'BodyCable2DShape' has the following parameters:
 \vspace{-0.5cm}\\
@@ -11160,7 +11167,7 @@ A special Marker attached to the coordinates of a 2D ANCF beam finite element wi
 
 \noindent \mybold{Additional information for MarkerBodyCable2DCoordinates}:
 \bi
-  \item The Marker has the following types = \texttt{Object}, \texttt{Body}, \texttt{Coordinate}
+  \item This \texttt{Marker} has/provides the following types = \texttt{Object}, \texttt{Body}, \texttt{Coordinate}
 \ei\vspace{12pt} \noindent 
 The item \mybold{MarkerBodyCable2DCoordinates} with type = 'BodyCable2DCoordinates' has the following parameters:
 \vspace{-0.5cm}\\
@@ -11209,7 +11216,7 @@ The item \mybold{MarkerBodyCable2DCoordinates} with type = 'BodyCable2DCoordinat
 %+++++++++++++++++++++++++++++++
 %+++++++++++++++++++++++++++++++
 \mysubsection{Loads}
-A Load applies a (usually constant) force, torque, mass-proportional or generalized load onto Nodes or Objects via Markers
+A Load applies a (usually constant) force, torque, mass-proportional or generalized load onto Nodes or Objects via Markers. The requested \texttt{Marker} types need to be provided by the used \text{Marker}. The marker may provide more types than requested. For non-constant loads, use either a \texttt{load...UserFunction} or change the load in every step by means of a \texttt{preStepUserFunction} in the \texttt{MainSystem} (mbs).
 %++++++
 
 %+++++++++++++++++++++++++++++++++++
@@ -11221,7 +11228,7 @@ Load with (3D) force vector; attached to position-based marker.
 
 \noindent \mybold{Additional information for LoadForceVector}:
 \bi
-  \item Requested marker type = \texttt{Position}
+  \item Requested \texttt{Marker} type = \texttt{Position}
   \item {\bf Short name} for Python = \texttt{Force}
   \item {\bf Short name} for Python visualization object = \texttt{VForce}
 \ei\vspace{12pt} \noindent 
@@ -11322,7 +11329,7 @@ Load with (3D) torque vector; attached to rigidbody-based marker.
 
 \noindent \mybold{Additional information for LoadTorqueVector}:
 \bi
-  \item Requested marker type = \texttt{Orientation}
+  \item Requested \texttt{Marker} type = \texttt{Orientation}
   \item {\bf Short name} for Python = \texttt{Torque}
   \item {\bf Short name} for Python visualization object = \texttt{VTorque}
 \ei\vspace{12pt} \noindent 
@@ -11405,7 +11412,7 @@ The item \mybold{LoadTorqueVector} with type = 'TorqueVector' has the following 
 
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py}{\texttt{ANCFbeltDrive.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFgeneralContactCircle.py}{\texttt{ANCFgeneralContactCircle.py}} (TestModels/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3Dtest.py}{\texttt{ANCFBeam3Dtest.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamTest.py}{\texttt{ANCFBeamTest.py}} (TestModels/)
 \item  ...
 
 
@@ -11423,7 +11430,7 @@ Load attached to MarkerBodyMass marker, applying a 3D vector load (e.g. the vect
 
 \noindent \mybold{Additional information for LoadMassProportional}:
 \bi
-  \item Requested marker type = \texttt{Body} + \texttt{BodyMass}
+  \item Requested \texttt{Marker} type = \texttt{Body} + \texttt{BodyMass}
   \item {\bf Short name} for Python = \texttt{Gravity}
   \item {\bf Short name} for Python visualization object = \texttt{VGravity}
 \ei\vspace{12pt} \noindent 
@@ -11537,7 +11544,7 @@ Load with scalar value, which is attached to a coordinate-based marker; the load
 
 \noindent \mybold{Additional information for LoadCoordinate}:
 \bi
-  \item Requested marker type = \texttt{Coordinate}
+  \item Requested \texttt{Marker} type = \texttt{Coordinate}
 \ei\vspace{12pt} \noindent 
 The item \mybold{LoadCoordinate} with type = 'Coordinate' has the following parameters:
 \vspace{-0.5cm}\\
