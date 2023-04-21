@@ -17,16 +17,14 @@ You can view and download this file on Github: `rigidBodyTutorial.py <https://gi
    #
    # Author:   Johannes Gerstmayr
    # Date:     2020-03-14
+   # Modified: 2023-04-18
    #
    # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
    #
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    
    import exudyn as exu
-   from exudyn.itemInterface import *
-   from exudyn.utilities import *
-   from exudyn.graphicsDataUtilities import *
-   
+   from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
    import numpy as np
    
    SC = exu.SystemContainer()
@@ -38,7 +36,7 @@ You can view and download this file on Github: `rigidBodyTutorial.py <https://gi
    p0 = [0,0,0] #origin of pendulum
    pMid0 = [bodyDim[0]*0.5,0,0] #center of mass, body0
    
-   #inertia with helper function
+   #inertia for cubic body with dimensions in sideLengths
    iCube = InertiaCuboid(density=5000, sideLengths=[1,0.1,0.1])
    print(iCube)
    
@@ -53,13 +51,14 @@ You can view and download this file on Github: `rigidBodyTutorial.py <https://gi
                         position = pMid0,
                         rotationMatrix = np.diag([1,1,1]),
                         angularVelocity = [0,0,0],
-                        gravity = g,
+                        gravity = g, #will automatically add a load on body
                         graphicsDataList = [graphicsBody])
    
    #ground body and marker
    oGround = mbs.AddObject(ObjectGround())
    markerGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
    
+   #markers are needed to link joints and bodies; also needed for loads
    #markers for rigid body:
    markerBody0J0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b0, localPosition=[-0.5*bodyDim[0],0,0]))
    
@@ -73,15 +72,19 @@ You can view and download this file on Github: `rigidBodyTutorial.py <https://gi
    
    simulationSettings = exu.SimulationSettings() #takes currently set values or default values
    
-   simulationSettings.timeIntegration.numberOfSteps = 100000
-   simulationSettings.timeIntegration.endTime = 4 #0.2 for testing
-   simulationSettings.timeIntegration.verboseMode = 1
+   tEnd = 4
+   stepSize = 1e-4 #could be larger, but then we do not see the simulation ...
    
+   simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
+   simulationSettings.timeIntegration.endTime = tEnd
+   simulationSettings.timeIntegration.verboseMode = 1 #to see some output
+   
+   #start graphics
    exu.StartRenderer()
-   mbs.WaitForUserToContinue()
+   mbs.WaitForUserToContinue() #wait until user presses space
    
-   exu.SolveDynamic(mbs, simulationSettings = simulationSettings,
-                    solverType=exu.DynamicSolverType.TrapezoidalIndex2)
+   #start generalized alpha solver
+   exu.SolveDynamic(mbs, simulationSettings = simulationSettings)
    
    SC.WaitForRenderEngineStopFlag()
    exu.StopRenderer() #safely close rendering window!

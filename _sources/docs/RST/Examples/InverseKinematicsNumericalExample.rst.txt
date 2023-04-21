@@ -74,7 +74,7 @@ You can view and download this file on Github: `InverseKinematicsNumericalExampl
        t = [0.4526, -0.1488, 0.5275] 
        T2 = [[1,0,0,0.3], [0,1,0,0.3], [0,0,1,0.3], [0,0,0,1]]
        T3 = HomogeneousTransformation(R, t)
-       sol = myIkine.SolveIkine(T3, q0 = [0, -np.pi/4, -np.pi/4, -np.pi/4, np.pi/4, np.pi/2])
+       sol = myIkine.Solve(T3, q0 = [0, -np.pi/4, -np.pi/4, -np.pi/4, np.pi/4, np.pi/2])
        print('success = {}\nq = {} rad'.format(sol[1], np.round(sol[0], 3)))
        
 

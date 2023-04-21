@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Rigid body and joints tutorial &mdash; Exudyn1.6.57.dev1 1.6.57.dev1 documentation</title>
+  <title>Rigid body and joints tutorial &mdash; Exudyn1.6.65.dev1 1.6.65.dev1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
@@ -39,7 +39,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.6.57.dev1
+            Exudyn1.6.65.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -86,7 +86,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.6.57.dev1</a>
+          <a href="../../index.html">Exudyn1.6.65.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -107,16 +107,19 @@
              
   <section id="rigid-body-and-joints-tutorial">
 <span id="sec-tutorial-rigidbodyjoints"></span><h1>Rigid body and joints tutorial<a class="headerlink" href="#rigid-body-and-joints-tutorial" title="Permalink to this heading"></a></h1>
-<p>The python source code of the first tutorial can be found in the file:</p>
+<p>The python source code of the first tutorial, based on the simple description of revolute joints, can be found in the file:</p>
 <blockquote>
 <div><p><code class="docutils literal notranslate"><span class="pre">main/pythonDev/Examples/rigidBodyTutorial3.py</span></code></p>
+</div></blockquote>
+<p>For alternative approaches, see</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">main/pythonDev/Examples/rigidBodyTutorial3withMarkers.py</span></code><code class="docutils literal notranslate"><span class="pre">main/pythonDev/Examples/rigidBodyTutorial2.py</span></code></p>
 </div></blockquote>
 <p>This tutorial will set up a multibody system containing a ground, two rigid bodies and two revolute joints driven by gravity, compare a 3D view of the example in  the figure above.</p>
 <a class="reference internal image-reference" href="../../_images/TutorialRigidBody1desc.png"><img alt="../../_images/TutorialRigidBody1desc.png" src="../../_images/TutorialRigidBody1desc.png" style="width: 400px;" /></a>
 <p>We first import the exudyn library and the interface for all nodes, objects, markers, loads and sensors:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
-<span class="kn">from</span> <span class="nn">exudyn.itemInterface</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="o">*</span> <span class="c1">#includes itemInterface, graphicsDataUtilities and rigidBodyUtilities</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span> <span class="c1">#for postprocessing</span>
 </pre></div>
 </div>
@@ -131,7 +134,7 @@
 <span class="n">g</span> <span class="o">=</span>     <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">9.81</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="c1">#gravity</span>
 <span class="n">L</span> <span class="o">=</span> <span class="mi">1</span>               <span class="c1">#length</span>
 <span class="n">w</span> <span class="o">=</span> <span class="mf">0.1</span>             <span class="c1">#width</span>
-<span class="n">bodyDim</span><span class="o">=</span><span class="p">[</span><span class="n">L</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="n">w</span><span class="p">]</span> <span class="c1">#body dimensions</span>
+<span class="n">bodyDim</span><span class="o">=</span><span class="p">[</span><span class="n">L</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="n">w</span><span class="p">]</span>     <span class="c1">#body dimensions</span>
 <span class="n">p0</span> <span class="o">=</span>    <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>     <span class="c1">#origin of pendulum</span>
 <span class="n">pMid0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">L</span><span class="o">*</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span> <span class="c1">#center of mass, body0</span>
 </pre></div>
@@ -144,6 +147,7 @@
 <p>For physical parameters of the rigid body, we can use the class <code class="docutils literal notranslate"><span class="pre">RigidBodyInertia</span></code>, which allows to define mass, center of mass (COM) and inertia parameters, as well as shifting COM or adding inertias.
 The <code class="docutils literal notranslate"><span class="pre">RigidBodyInertia</span></code> can be used directly to create rigid bodies. Special derived classes can be use to define rigid body inertias for cylinders, cubes, etc., so we use a cube here:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#first link:</span>
+<span class="c1">#inertia for cubic body with dimensions in sideLengths</span>
 <span class="n">iCube0</span> <span class="o">=</span> <span class="n">InertiaCuboid</span><span class="p">(</span><span class="n">density</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">sideLengths</span><span class="o">=</span><span class="n">bodyDim</span><span class="p">)</span>
 <span class="n">iCube0</span> <span class="o">=</span> <span class="n">iCube0</span><span class="o">.</span><span class="nf">Translated</span><span class="p">([</span><span class="o">-</span><span class="mf">0.25</span><span class="o">*</span><span class="n">L</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span> <span class="c1">#transform COM, COM not at reference point!</span>
 </pre></div>
@@ -158,7 +162,8 @@ The <code class="docutils literal notranslate"><span class="pre">RigidBodyInerti
 </pre></div>
 </div>
 <p>Now we have defined all data for the link (rigid body). We could use <code class="docutils literal notranslate"><span class="pre">mbs.AddNode(NodeRigidBodyEP(...))</span></code> and <code class="docutils literal notranslate"><span class="pre">mbs.AddObject(ObjectRigidBody(...))</span></code> to create a node and a body, but the <code class="docutils literal notranslate"><span class="pre">exudyn.rigidBodyUtilities</span></code> offer a much more comfortable function:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">n0</span><span class="p">,</span><span class="n">b0</span><span class="p">]</span><span class="o">=</span><span class="nf">AddRigidBody</span><span class="p">(</span><span class="n">mainSys</span> <span class="o">=</span> <span class="n">mbs</span><span class="p">,</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#create node, add body and gravity load:</span>
+<span class="p">[</span><span class="n">n0</span><span class="p">,</span><span class="n">b0</span><span class="p">]</span><span class="o">=</span><span class="nf">AddRigidBody</span><span class="p">(</span><span class="n">mainSys</span> <span class="o">=</span> <span class="n">mbs</span><span class="p">,</span>
                      <span class="n">inertia</span> <span class="o">=</span> <span class="n">iCube0</span><span class="p">,</span> <span class="c1">#includes COM</span>
                      <span class="n">nodeType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">NodeType</span><span class="o">.</span><span class="n">RotationEulerParameters</span><span class="p">,</span>
                      <span class="n">position</span> <span class="o">=</span> <span class="n">pMid0</span><span class="p">,</span>
@@ -173,7 +178,7 @@ We can use</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">RotationEulerParameters</span></code>: for fast computation, but leads to an additional algebraic equation and thus needs an implicit solver</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">RotationRxyz</span></code>: contains a singularity if the second angle reaches +/- 90 degrees, but no algebraic equations</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">RotationRotationVector</span></code>: basically contains a singularity for 0 degrees, but if used in combination with Lie group integrators, singularities are bypassed</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RotationRotationVector</span></code>: basically contains a singularity for 0 degrees, but if used in combination with Lie group integrators, singularities are bypassed; leads to fewest unknowns and usually less Newton iterations</p></li>
 </ul>
 <p>We now add a revolute joint around the (global) z-axis.
 We have several possibilities, which are shown in the following.
@@ -217,7 +222,7 @@ For the <strong>first two possibilities only</strong>, we need the following mar
 </pre></div>
 </div>
 <p>The second link and the according joint can be set up in a very similar way:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#second link:</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#second link, simple graphics:</span>
 <span class="n">graphicsBody1</span> <span class="o">=</span> <span class="nf">GraphicsDataRigidLink</span><span class="p">(</span><span class="n">p0</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">L</span><span class="p">],</span><span class="n">p1</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.5</span><span class="o">*</span><span class="n">L</span><span class="p">],</span>
                                       <span class="n">axis0</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">axis1</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">radius</span><span class="o">=</span><span class="p">[</span><span class="mf">0.06</span><span class="p">,</span><span class="mf">0.05</span><span class="p">],</span>
                                       <span class="n">thickness</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.12</span><span class="p">,</span><span class="mf">0.12</span><span class="p">],</span>
@@ -226,6 +231,7 @@ For the <strong>first two possibilities only</strong>, we need the following mar
 <span class="n">iCube1</span> <span class="o">=</span> <span class="n">InertiaCuboid</span><span class="p">(</span><span class="n">density</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">sideLengths</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
 
 <span class="n">pMid1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">L</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.5</span><span class="o">*</span><span class="n">L</span><span class="p">])</span> <span class="c1">#center of mass, body1</span>
+<span class="c1">#create node, add body and gravity load:</span>
 <span class="p">[</span><span class="n">n1</span><span class="p">,</span><span class="n">b1</span><span class="p">]</span><span class="o">=</span><span class="nf">AddRigidBody</span><span class="p">(</span><span class="n">mainSys</span> <span class="o">=</span> <span class="n">mbs</span><span class="p">,</span>
                      <span class="n">inertia</span> <span class="o">=</span> <span class="n">iCube1</span><span class="p">,</span>
                      <span class="n">nodeType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">NodeType</span><span class="o">.</span><span class="n">RotationEulerParameters</span><span class="p">,</span>
@@ -356,8 +362,8 @@ which may lead to very large files and may slow down simulation, but is used in 
 <p>If you entered everything correctly, the render window should show a nice animation of the 3D double pendulum after pressing the SPACE key.
 If we do not stop the renderer (<code class="docutils literal notranslate"><span class="pre">StopRenderer()</span></code>), it will stay open for further simulations. However, it is safer to always close the renderer at the end.</p>
 <p>As the simulation will run very fast, if you did not set <code class="docutils literal notranslate"><span class="pre">simulateInRealtime</span></code> to true. However, you can reload the stored solution and view the stored steps interactively:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sol</span> <span class="o">=</span> <span class="nf">LoadSolutionFile</span><span class="p">(</span><span class="s1">&#39;coordinatesSolution.txt&#39;</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">exudyn.interactive</span> <span class="kn">import</span> <span class="nf">SolutionViewer</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">exudyn.interactive</span> <span class="kn">import</span> <span class="nf">SolutionViewer</span>
+<span class="n">sol</span> <span class="o">=</span> <span class="nf">LoadSolutionFile</span><span class="p">(</span><span class="s1">&#39;coordinatesSolution.txt&#39;</span><span class="p">)</span>
 <span class="nf">SolutionViewer</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sol</span><span class="p">)</span>
 </pre></div>
 </div>

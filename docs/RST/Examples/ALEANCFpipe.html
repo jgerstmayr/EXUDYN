@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ALEANCFpipe.py &mdash; Exudyn1.6.57.dev1 1.6.57.dev1 documentation</title>
+  <title>ALEANCFpipe.py &mdash; Exudyn1.6.65.dev1 1.6.65.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -37,7 +37,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.57.dev1
+            Exudyn1.6.65.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -148,6 +148,7 @@
 <li class="toctree-l2"><a class="reference internal" href="rigidBodyTutorial.html">rigidBodyTutorial.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rigidBodyTutorial2.html">rigidBodyTutorial2.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rigidBodyTutorial3.html">rigidBodyTutorial3.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyTutorial3withMarkers.html">rigidBodyTutorial3withMarkers.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rigidPendulum.html">rigidPendulum.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rigidRotor3DbasicBehaviour.html">rigidRotor3DbasicBehaviour.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rigidRotor3DFWBW.html">rigidRotor3DFWBW.py</a></li>
@@ -160,6 +161,7 @@
 <li class="toctree-l2"><a class="reference internal" href="serialRobotKinematicTreeDigging.html">serialRobotKinematicTreeDigging.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="serialRobotTestDH2.html">serialRobotTestDH2.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="serialRobotTSD.html">serialRobotTSD.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simple4linkPendulumBing.html">simple4linkPendulumBing.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="simulateInteractively.html">simulateInteractively.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="SliderCrank.html">SliderCrank.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sliderCrank3DwithANCFbeltDrive.html">sliderCrank3DwithANCFbeltDrive.py</a></li>
@@ -198,7 +200,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.57.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.65.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -378,8 +380,8 @@
 <span class="linenos">156</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">numericalDifferentiation</span><span class="o">.</span><span class="n">minimumCoordinateSize</span> <span class="o">=</span> <span class="mf">1.e-3</span>
 <span class="linenos">157</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">numericalDifferentiation</span><span class="o">.</span><span class="n">relativeEpsilon</span> <span class="o">=</span> <span class="mf">1e-8</span> <span class="c1">#6.055454452393343e-06*0.0001 #eps^(1/3)</span>
 <span class="linenos">158</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">modifiedNewtonContractivity</span> <span class="o">=</span> <span class="mf">1e8</span>
-<span class="linenos">159</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">generalizedAlpha</span><span class="o">.</span><span class="n">useIndex2Constraints</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="linenos">160</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">generalizedAlpha</span><span class="o">.</span><span class="n">useNewmark</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="linenos">159</span><span class="c1"># simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True</span>
+<span class="linenos">160</span><span class="c1"># simulationSettings.timeIntegration.generalizedAlpha.useNewmark = False</span>
 <span class="linenos">161</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">generalizedAlpha</span><span class="o">.</span><span class="n">spectralRadius</span> <span class="o">=</span> <span class="mf">0.6</span> <span class="c1">#0.6 works well</span>
 <span class="linenos">162</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">pauseAfterEachStep</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="linenos">163</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">displayStatistics</span> <span class="o">=</span> <span class="kc">True</span>
@@ -400,44 +402,45 @@
 <span class="linenos">178</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StartRenderer</span><span class="p">()</span>
 <span class="linenos">179</span>    <span class="c1">#mbs.WaitForUserToContinue()</span>
 <span class="linenos">180</span>
-<span class="linenos">181</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="p">)</span>
-<span class="linenos">182</span>
-<span class="linenos">183</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">WaitForRenderEngineStopFlag</span><span class="p">()</span>
-<span class="linenos">184</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StopRenderer</span><span class="p">()</span> <span class="c1">#safely close rendering window!</span>
-<span class="linenos">185</span>
-<span class="linenos">186</span><span class="k">else</span><span class="p">:</span>
-<span class="linenos">187</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">numericalDifferentiation</span><span class="o">.</span><span class="n">relativeEpsilon</span> <span class="o">=</span> <span class="mf">1e-8</span> <span class="c1">#*100 #can be quite small; WHY?</span>
-<span class="linenos">188</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">numericalDifferentiation</span><span class="o">.</span><span class="n">doSystemWideDifferentiation</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="linenos">189</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">verboseMode</span> <span class="o">=</span> <span class="mi">2</span>
-<span class="linenos">190</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">numberOfLoadSteps</span>  <span class="o">=</span> <span class="mi">20</span><span class="c1">#20*2</span>
-<span class="linenos">191</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">loadStepGeometric</span> <span class="o">=</span> <span class="kc">True</span><span class="p">;</span>
-<span class="linenos">192</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">loadStepGeometricRange</span> <span class="o">=</span> <span class="mf">1e3</span><span class="p">;</span>
-<span class="linenos">193</span>
-<span class="linenos">194</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">relativeTolerance</span> <span class="o">=</span> <span class="mf">1e-5</span> <span class="c1">#1e-5*100</span>
-<span class="linenos">195</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">absoluteTolerance</span> <span class="o">=</span> <span class="mf">1e-10</span>
-<span class="linenos">196</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">maxIterations</span> <span class="o">=</span> <span class="mi">20</span> <span class="c1">#50 for bending into circle</span>
-<span class="linenos">197</span>
-<span class="linenos">198</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">discontinuous</span><span class="o">.</span><span class="n">iterationTolerance</span> <span class="o">=</span> <span class="mf">0.1</span>
-<span class="linenos">199</span>    <span class="c1">#simulationSettings.staticSolver.discontinuous.maxIterations = 5</span>
-<span class="linenos">200</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">pauseAfterEachStep</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="linenos">201</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">stabilizerODE2term</span> <span class="o">=</span> <span class="mi">100</span><span class="o">*</span><span class="mf">0.0</span>
-<span class="linenos">202</span>
-<span class="linenos">203</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StartRenderer</span><span class="p">()</span>
-<span class="linenos">204</span>
-<span class="linenos">205</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">SolveStatic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="p">)</span>
-<span class="linenos">206</span>
-<span class="linenos">207</span>    <span class="n">sol</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetODE2Coordinates</span><span class="p">()</span>
-<span class="linenos">208</span>    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span>
-<span class="linenos">209</span>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;tip displacement: x=&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">sol</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">4</span><span class="p">])</span><span class="o">+</span><span class="s1">&#39;, y=&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">sol</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">3</span><span class="p">]))</span>
-<span class="linenos">210</span>    <span class="n">sol_t</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetODE2Coordinates_t</span><span class="p">()</span>
-<span class="linenos">211</span>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;vALE=&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">sol_t</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
-<span class="linenos">212</span>
-<span class="linenos">213</span>    <span class="c1">#print(&#39;sol=&#39;+str(sol))</span>
-<span class="linenos">214</span>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;sol_t=&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">sol_t</span><span class="p">))</span>
-<span class="linenos">215</span>
+<span class="linenos">181</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="p">,</span>
+<span class="linenos">182</span>                     <span class="n">solverType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">DynamicSolverType</span><span class="o">.</span><span class="n">TrapezoidalIndex2</span><span class="p">)</span>
+<span class="linenos">183</span>
+<span class="linenos">184</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">WaitForRenderEngineStopFlag</span><span class="p">()</span>
+<span class="linenos">185</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StopRenderer</span><span class="p">()</span> <span class="c1">#safely close rendering window!</span>
+<span class="linenos">186</span>
+<span class="linenos">187</span><span class="k">else</span><span class="p">:</span>
+<span class="linenos">188</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">numericalDifferentiation</span><span class="o">.</span><span class="n">relativeEpsilon</span> <span class="o">=</span> <span class="mf">1e-8</span> <span class="c1">#*100 #can be quite small; WHY?</span>
+<span class="linenos">189</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">numericalDifferentiation</span><span class="o">.</span><span class="n">doSystemWideDifferentiation</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="linenos">190</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">verboseMode</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="linenos">191</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">numberOfLoadSteps</span>  <span class="o">=</span> <span class="mi">20</span><span class="c1">#20*2</span>
+<span class="linenos">192</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">loadStepGeometric</span> <span class="o">=</span> <span class="kc">True</span><span class="p">;</span>
+<span class="linenos">193</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">loadStepGeometricRange</span> <span class="o">=</span> <span class="mf">1e3</span><span class="p">;</span>
+<span class="linenos">194</span>
+<span class="linenos">195</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">relativeTolerance</span> <span class="o">=</span> <span class="mf">1e-5</span> <span class="c1">#1e-5*100</span>
+<span class="linenos">196</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">absoluteTolerance</span> <span class="o">=</span> <span class="mf">1e-10</span>
+<span class="linenos">197</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">maxIterations</span> <span class="o">=</span> <span class="mi">20</span> <span class="c1">#50 for bending into circle</span>
+<span class="linenos">198</span>
+<span class="linenos">199</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">discontinuous</span><span class="o">.</span><span class="n">iterationTolerance</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="linenos">200</span>    <span class="c1">#simulationSettings.staticSolver.discontinuous.maxIterations = 5</span>
+<span class="linenos">201</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">pauseAfterEachStep</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="linenos">202</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">stabilizerODE2term</span> <span class="o">=</span> <span class="mi">100</span><span class="o">*</span><span class="mf">0.0</span>
+<span class="linenos">203</span>
+<span class="linenos">204</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StartRenderer</span><span class="p">()</span>
+<span class="linenos">205</span>
+<span class="linenos">206</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">SolveStatic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="p">)</span>
+<span class="linenos">207</span>
+<span class="linenos">208</span>    <span class="n">sol</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetODE2Coordinates</span><span class="p">()</span>
+<span class="linenos">209</span>    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span>
+<span class="linenos">210</span>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;tip displacement: x=&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">sol</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">4</span><span class="p">])</span><span class="o">+</span><span class="s1">&#39;, y=&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">sol</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">3</span><span class="p">]))</span>
+<span class="linenos">211</span>    <span class="n">sol_t</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetODE2Coordinates_t</span><span class="p">()</span>
+<span class="linenos">212</span>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;vALE=&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">sol_t</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+<span class="linenos">213</span>
+<span class="linenos">214</span>    <span class="c1">#print(&#39;sol=&#39;+str(sol))</span>
+<span class="linenos">215</span>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;sol_t=&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">sol_t</span><span class="p">))</span>
 <span class="linenos">216</span>
-<span class="linenos">217</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">WaitForRenderEngineStopFlag</span><span class="p">()</span>
-<span class="linenos">218</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StopRenderer</span><span class="p">()</span> <span class="c1">#safely close rendering window!</span>
+<span class="linenos">217</span>
+<span class="linenos">218</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">WaitForRenderEngineStopFlag</span><span class="p">()</span>
+<span class="linenos">219</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StopRenderer</span><span class="p">()</span> <span class="c1">#safely close rendering window!</span>
 </pre></div>
 </div>
 </section>

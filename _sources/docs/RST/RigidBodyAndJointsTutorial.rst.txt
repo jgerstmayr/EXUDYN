@@ -4,9 +4,14 @@
 Rigid body and joints tutorial
 ==============================
 
-The python source code of the first tutorial can be found in the file:
+The python source code of the first tutorial, based on the simple description of revolute joints, can be found in the file:
 
    \ ``main/pythonDev/Examples/rigidBodyTutorial3.py``\ 
+
+For alternative approaches, see
+
+   \ ``main/pythonDev/Examples/rigidBodyTutorial3withMarkers.py``\ 
+   \ ``main/pythonDev/Examples/rigidBodyTutorial2.py``\ 
 
 This tutorial will set up a multibody system containing a ground, two rigid bodies and two revolute joints driven by gravity, compare a 3D view of the example in  the figure above.
 
@@ -23,8 +28,7 @@ We first import the exudyn library and the interface for all nodes, objects, mar
 .. code-block:: python
 
   import exudyn as exu
-  from exudyn.itemInterface import *
-  from exudyn.utilities import * 
+  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
   import numpy as np #for postprocessing
 
 
@@ -47,7 +51,7 @@ We define some geometrical parameters for lateron use.
   g =     [0,-9.81,0] #gravity
   L = 1               #length
   w = 0.1             #width
-  bodyDim=[L,w,w] #body dimensions
+  bodyDim=[L,w,w]     #body dimensions
   p0 =    [0,0,0]     #origin of pendulum
   pMid0 = np.array([L*0.5,0,0]) #center of mass, body0
 
@@ -70,6 +74,7 @@ The \ ``RigidBodyInertia``\  can be used directly to create rigid bodies. Specia
 .. code-block:: python
 
   #first link:
+  #inertia for cubic body with dimensions in sideLengths
   iCube0 = InertiaCuboid(density=5000, sideLengths=bodyDim)
   iCube0 = iCube0.Translated([-0.25*L,0,0]) #transform COM, COM not at reference point!
 
@@ -92,6 +97,7 @@ Now we have defined all data for the link (rigid body). We could use \ ``mbs.Add
 
 .. code-block:: python
 
+  #create node, add body and gravity load:
   [n0,b0]=AddRigidBody(mainSys = mbs,
                        inertia = iCube0, #includes COM
                        nodeType = exu.NodeType.RotationEulerParameters,
@@ -107,7 +113,7 @@ We can use
 
 +  \ ``RotationEulerParameters``\ : for fast computation, but leads to an additional algebraic equation and thus needs an implicit solver
 +  \ ``RotationRxyz``\ : contains a singularity if the second angle reaches +/- 90 degrees, but no algebraic equations
-+  \ ``RotationRotationVector``\ : basically contains a singularity for 0 degrees, but if used in combination with Lie group integrators, singularities are bypassed
++  \ ``RotationRotationVector``\ : basically contains a singularity for 0 degrees, but if used in combination with Lie group integrators, singularities are bypassed; leads to fewest unknowns and usually less Newton iterations
 
 
 We now add a revolute joint around the (global) z-axis. 
@@ -177,7 +183,7 @@ The second link and the according joint can be set up in a very similar way:
 
 .. code-block:: python
 
-  #second link:
+  #second link, simple graphics:
   graphicsBody1 = GraphicsDataRigidLink(p0=[0,0,-0.5*L],p1=[0,0,0.5*L], 
                                         axis0=[1,0,0], axis1=[0,0,0], radius=[0.06,0.05], 
                                         thickness = 0.1, width = [0.12,0.12], 
@@ -186,6 +192,7 @@ The second link and the according joint can be set up in a very similar way:
   iCube1 = InertiaCuboid(density=5000, sideLengths=[0.1,0.1,1])
 
   pMid1 = np.array([L,0,0]) + np.array([0,0,0.5*L]) #center of mass, body1
+  #create node, add body and gravity load:
   [n1,b1]=AddRigidBody(mainSys = mbs,
                        inertia = iCube1,
                        nodeType = exu.NodeType.RotationEulerParameters,
@@ -386,8 +393,8 @@ As the simulation will run very fast, if you did not set \ ``simulateInRealtime`
 
 .. code-block:: python
 
-  sol = LoadSolutionFile('coordinatesSolution.txt')
   from exudyn.interactive import SolutionViewer
+  sol = LoadSolutionFile('coordinatesSolution.txt')
   SolutionViewer(mbs, sol)
 
 

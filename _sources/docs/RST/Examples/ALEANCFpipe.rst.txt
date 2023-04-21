@@ -168,8 +168,8 @@ You can view and download this file on Github: `ALEANCFpipe.py <https://github.c
    simulationSettings.timeIntegration.newton.numericalDifferentiation.minimumCoordinateSize = 1.e-3
    simulationSettings.timeIntegration.newton.numericalDifferentiation.relativeEpsilon = 1e-8 #6.055454452393343e-06*0.0001 #eps^(1/3)
    simulationSettings.timeIntegration.newton.modifiedNewtonContractivity = 1e8
-   simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
-   simulationSettings.timeIntegration.generalizedAlpha.useNewmark = False
+   # simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
+   # simulationSettings.timeIntegration.generalizedAlpha.useNewmark = False
    simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.6 #0.6 works well 
    simulationSettings.pauseAfterEachStep = False
    simulationSettings.displayStatistics = True
@@ -190,7 +190,8 @@ You can view and download this file on Github: `ALEANCFpipe.py <https://github.c
        exu.StartRenderer()
        #mbs.WaitForUserToContinue()
    
-       exu.SolveDynamic(mbs, simulationSettings)
+       exu.SolveDynamic(mbs, simulationSettings, 
+                        solverType=exu.DynamicSolverType.TrapezoidalIndex2)
    
        SC.WaitForRenderEngineStopFlag()
        exu.StopRenderer() #safely close rendering window!

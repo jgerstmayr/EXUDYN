@@ -14,6 +14,7 @@ You can view and download this file on Github: `ANCFALEtest.py <https://github.c
    # This is an EXUDYN example
    #
    # Details:  ANCF ALE with under gravity
+   # Notes:    This example fails to solve with the current settings; needs to be reworked
    #
    # Author:   Johannes Gerstmayr
    # Date:     2020-02-17
@@ -42,7 +43,7 @@ You can view and download this file on Github: `ANCFALEtest.py <https://github.c
    useGraphics = True
    plotResults=False
    
-   tEnd = 5
+   tEnd = 2
    h= 1e-3
    
    SC = exu.SystemContainer()
@@ -50,7 +51,7 @@ You can view and download this file on Github: `ANCFALEtest.py <https://github.c
    
    #++++++++++++++++++++++++++++++++++
    #initialize variables        
-   vALE0=4 #initial velocity
+   vALE0=1 #initial velocity
    
    useGraphics = True
    if useGraphics:
@@ -217,8 +218,10 @@ You can view and download this file on Github: `ANCFALEtest.py <https://github.c
    simulationSettings.timeIntegration.startTime = 1
    simulationSettings.solutionSettings.appendToFile = True #continue solution
    simulationSettings.timeIntegration.endTime = tEnd
+   
    success = exu.SolveDynamic(mbs, simulationSettings, 
-                              exudyn.DynamicSolverType.TrapezoidalIndex2)
+                              exudyn.DynamicSolverType.TrapezoidalIndex2
+                              )
    
    if useGraphics:
        SC.WaitForRenderEngineStopFlag()

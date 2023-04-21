@@ -89,6 +89,7 @@ This section includes all Examples for Exudyn.They can also be found and downloa
    Examples/rigidBodyTutorial
    Examples/rigidBodyTutorial2
    Examples/rigidBodyTutorial3
+   Examples/rigidBodyTutorial3withMarkers
    Examples/rigidPendulum
    Examples/rigidRotor3DbasicBehaviour
    Examples/rigidRotor3DFWBW
@@ -101,6 +102,7 @@ This section includes all Examples for Exudyn.They can also be found and downloa
    Examples/serialRobotKinematicTreeDigging
    Examples/serialRobotTestDH2
    Examples/serialRobotTSD
+   Examples/simple4linkPendulumBing
    Examples/simulateInteractively
    Examples/SliderCrank
    Examples/sliderCrank3DwithANCFbeltDrive

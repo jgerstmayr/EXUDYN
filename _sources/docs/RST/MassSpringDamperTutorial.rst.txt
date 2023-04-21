@@ -13,8 +13,8 @@ We import the exudyn library and the interface for all nodes, objects, markers, 
 .. code-block:: python
 
   import exudyn as exu
-  from exudyn.itemInterface import *
-  import numpy as np #for postprocessing
+  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+  import numpy as np
 
 
 Next, we need a \ ``SystemContainer``\ , which contains all computable systems and add a new MainSystem \ ``mbs``\ .

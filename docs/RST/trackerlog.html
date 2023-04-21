@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Issue tracker &mdash; Exudyn1.6.57.dev1 1.6.57.dev1 documentation</title>
+  <title>Issue tracker &mdash; Exudyn1.6.65.dev1 1.6.65.dev1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
@@ -38,7 +38,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.6.57.dev1
+            Exudyn1.6.65.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -92,7 +92,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.6.57.dev1</a>
+          <a href="../../index.html">Exudyn1.6.65.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -117,15 +117,83 @@ The extension <code class="docutils literal notranslate"><span class="pre">.dev1
 BUG numbers refer to the according issue numbers.</p>
 <p>General information on current version:</p>
 <ul class="simple">
-<li><p>Exudyn version = 1.6.57.dev1,</p></li>
-<li><p>last change =  2023-04-15,</p></li>
-<li><p>Number of issues = 1515,</p></li>
-<li><p>Number of resolved issues = 1337 (57 in current version),</p></li>
+<li><p>Exudyn version = 1.6.65.dev1,</p></li>
+<li><p>last change =  2023-04-20,</p></li>
+<li><p>Number of issues = 1524,</p></li>
+<li><p>Number of resolved issues = 1345 (65 in current version),</p></li>
 </ul>
 <section id="version-1-6">
 <h2>Version 1.6<a class="headerlink" href="#version-1-6" title="Permalink to this heading"></a></h2>
 <blockquote>
 <div><ul class="simple">
+<li><dl class="simple">
+<dt>Version 1.6.65: resolved Issue 1521: ObjectFFRFreducedOrderInterface (extension)</dt><dd><ul>
+<li><p>description:  add LoadFromFile/SaveToFile similar to FEMinterface</p></li>
+<li><p><strong>notes:</strong> this function should be used to store CMS data if FEM is too large to load/store; CMS data still stores all node positions, triangle list (for visualization) and modeBasis for computation tasks; may be still large e.g. for many nodes and large number of modes</p></li>
+<li><p>date resolved: <strong>2023-04-20 21:06</strong>, date raised: 2023-04-20</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.6.64: resolved Issue 1519: FEMinterface (change)</dt><dd><ul>
+<li><p>description:  add version to LoadFromFile/SaveToFile function; store file version as first field to load/store in order to be able to load older data as well; use forceVersion=0 to load files in old format</p></li>
+<li><p><strong>notes:</strong> warning is printed if old file is loaded</p></li>
+<li><p>date resolved: <strong>2023-04-20 20:59</strong>, date raised: 2023-04-19</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.6.63: resolved Issue 1523: StrNodeType2NodeType (extension)</dt><dd><ul>
+<li><p>description:  add function to rigidBodyUtilities in order to make str to type conversion</p></li>
+<li><p>date resolved: <strong>2023-04-20 18:34</strong>, date raised: 2023-04-20</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.6.62: resolved Issue 1522: ObjectFFRFreducedOrderInterface (change)</dt><dd><ul>
+<li><p>description:  remove femInterface from internal variables, as it is only used for postProcessingModes; store postProcessingModes instead</p></li>
+<li><p>date resolved: <strong>2023-04-20 16:34</strong>, date raised: 2023-04-20</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.6.61: resolved Issue 1520: ImportFromAbaqusInputFile (change)</dt><dd><ul>
+<li><p>description:  use VolumeToSurfaceElements for creating of surface elements; add option to automatically create surface triangles</p></li>
+<li><p><strong>notes:</strong> by default, only surface triangles are created!</p></li>
+<li><p>date resolved: <strong>2023-04-20 15:44</strong>, date raised: 2023-04-20</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.6.60: resolved Issue 1518: ObjectFFRFreducedOrderInterface (fix)</dt><dd><ul>
+<li><p>description:  roundMassMatrix and roundStiffnessMatrix are not used</p></li>
+<li><p><strong>notes:</strong> added as arguments in RoundMatrix</p></li>
+<li><p>date resolved: <strong>2023-04-19 19:08</strong>, date raised: 2023-04-19</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.6.59: resolved Issue 1517: ImportFromAbaqusInputFile (extension)</dt><dd><ul>
+<li><p>description:  extended for Tet4 and Tet10 as well as C3D20R elements and added function ConvertTetToTrigs(…)</p></li>
+<li><p>date resolved: <strong>2023-04-19 18:14</strong>, date raised: 2023-04-19</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.6.58: resolved Issue 1515: unused header files (cleanup)</dt><dd><ul>
+<li><p>description:  remove unused header files for C, Main and Visu: JointPrismatic.h, JointRevolute.h</p></li>
+<li><p>date resolved: <strong>2023-04-16 13:03</strong>, date raised: 2023-04-16</p></li>
+</ul>
+</dd>
+</dl>
+</li>
 <li><dl class="simple">
 <dt>Version 1.6.57: resolved Issue 1269: LaserSensor (extension)</dt><dd><ul>
 <li><p>description:  add advanced distance sensors replicating laser scanner (with axis, revolution speed and initial direction)</p></li>
@@ -230,7 +298,7 @@ BUG numbers refer to the according issue numbers.</p>
 <li><dl class="simple">
 <dt>Version 1.6.45: resolved Issue 1496: AddMainObjectPyClass (check)</dt><dd><ul>
 <li><p>description:  C++: for adding objects, nodes, etc. currently py::object and py::dict is copied: check performance increase, if it is passed by reference</p></li>
-<li><p><strong>notes:</strong> tests show small performance improvements (10</p></li>
+<li><p><strong>notes:</strong> tests show small performance improvements (&lt;10 percent) for creation of items</p></li>
 <li><p>date resolved: <strong>2023-04-08 17:36</strong>, date raised: 2023-04-07</p></li>
 </ul>
 </dd>
@@ -11100,6 +11168,14 @@ BUG numbers refer to the according issue numbers.</p>
 <h2>Open issues<a class="headerlink" href="#open-issues" title="Permalink to this heading"></a></h2>
 <blockquote>
 <div><ul class="simple">
+<li><dl class="simple">
+<dt><strong>open issue 1516:</strong> solver failed function</dt><dd><ul>
+<li><p>description:  add function to check if solver failed, using stored solver structure as input; return True/False and string (optionally error code) describing failure</p></li>
+<li><p>date raised: 2023-04-19</p></li>
+</ul>
+</dd>
+</dl>
+</li>
 <li><dl class="simple">
 <dt><span class="textred">open issue 1512:</span> return value policy</dt><dd><ul>
 <li><p>description:  check return value policy of GeneralContact (as example for further decisions); see if reference in ALL access functions makes no problems if object is deleted on Python side</p></li>

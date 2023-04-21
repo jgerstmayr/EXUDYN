@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Module: rigidBodyUtilities &mdash; Exudyn1.6.57.dev1 1.6.57.dev1 documentation</title>
+  <title>Module: rigidBodyUtilities &mdash; Exudyn1.6.65.dev1 1.6.65.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -39,7 +39,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.57.dev1
+            Exudyn1.6.65.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -133,6 +133,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#function-ht2t66inverse">Function: HT2T66Inverse</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-inertiatensor2inertia6d">Function: InertiaTensor2Inertia6D</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-inertia6d2inertiatensor">Function: Inertia6D2InertiaTensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-strnodetype2nodetype">Function: StrNodeType2NodeType</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-getrigidbodynode">Function: GetRigidBodyNode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-addrigidbody">Function: AddRigidBody</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-addrevolutejoint">Function: AddRevoluteJoint</a></li>
@@ -186,7 +187,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.57.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.65.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -1320,9 +1321,26 @@ are included. A class for rigid body inertia creating and transformation is avai
 </div></blockquote>
 <hr class="docutils" />
 </section>
+<section id="function-strnodetype2nodetype">
+<span id="sec-rigidbodyutilities-strnodetype2nodetype"></span><h2>Function: StrNodeType2NodeType<a class="headerlink" href="#function-strnodetype2nodetype" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L1022">StrNodeType2NodeType</a>(<code class="docutils literal notranslate"><span class="pre">sNodeType</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">convert string into exudyn.NodeType; call e.g. with ‘NodeType.RotationEulerParameters’ or ‘RotationEulerParameters’</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>notes</em>:</div>
+<div class="line">function is not very fast, so should be avoided in time-critical situations</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+</section>
 <section id="function-getrigidbodynode">
 <span id="sec-rigidbodyutilities-getrigidbodynode"></span><h2>Function: GetRigidBodyNode<a class="headerlink" href="#function-getrigidbodynode" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L1031">GetRigidBodyNode</a>(<code class="docutils literal notranslate"><span class="pre">nodeType</span></code>, <code class="docutils literal notranslate"><span class="pre">position</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">velocity</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">rotationMatrix</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">rotationParameters</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">angularVelocity</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L1044">GetRigidBodyNode</a>(<code class="docutils literal notranslate"><span class="pre">nodeType</span></code>, <code class="docutils literal notranslate"><span class="pre">position</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">velocity</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">rotationMatrix</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">rotationParameters</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">angularVelocity</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -1349,7 +1367,7 @@ are included. A class for rigid body inertia creating and transformation is avai
 </section>
 <section id="function-addrigidbody">
 <span id="sec-rigidbodyutilities-addrigidbody"></span><h2>Function: AddRigidBody<a class="headerlink" href="#function-addrigidbody" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L1122">AddRigidBody</a>(<code class="docutils literal notranslate"><span class="pre">mainSys</span></code>, <code class="docutils literal notranslate"><span class="pre">inertia</span></code>, <code class="docutils literal notranslate"><span class="pre">nodeType</span> <span class="pre">=</span> <span class="pre">exu.NodeType.RotationEulerParameters</span></code>, <code class="docutils literal notranslate"><span class="pre">position</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">velocity</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">rotationMatrix</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">rotationParameters</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">angularVelocity</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">gravity</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">graphicsDataList</span> <span class="pre">=</span> <span class="pre">[]</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L1135">AddRigidBody</a>(<code class="docutils literal notranslate"><span class="pre">mainSys</span></code>, <code class="docutils literal notranslate"><span class="pre">inertia</span></code>, <code class="docutils literal notranslate"><span class="pre">nodeType</span> <span class="pre">=</span> <span class="pre">exu.NodeType.RotationEulerParameters</span></code>, <code class="docutils literal notranslate"><span class="pre">position</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">velocity</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">rotationMatrix</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">rotationParameters</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">angularVelocity</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">gravity</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">graphicsDataList</span> <span class="pre">=</span> <span class="pre">[]</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -1383,7 +1401,7 @@ are included. A class for rigid body inertia creating and transformation is avai
 </section>
 <section id="function-addrevolutejoint">
 <span id="sec-rigidbodyutilities-addrevolutejoint"></span><h2>Function: AddRevoluteJoint<a class="headerlink" href="#function-addrevolutejoint" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L1192">AddRevoluteJoint</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">body0</span></code>, <code class="docutils literal notranslate"><span class="pre">body1</span></code>, <code class="docutils literal notranslate"><span class="pre">point</span></code>, <code class="docutils literal notranslate"><span class="pre">axis</span></code>, <code class="docutils literal notranslate"><span class="pre">useGlobalFrame</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">showJoint</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">axisRadius</span> <span class="pre">=</span> <span class="pre">0.1</span></code>, <code class="docutils literal notranslate"><span class="pre">axisLength</span> <span class="pre">=</span> <span class="pre">0.4</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L1205">AddRevoluteJoint</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">body0</span></code>, <code class="docutils literal notranslate"><span class="pre">body1</span></code>, <code class="docutils literal notranslate"><span class="pre">point</span></code>, <code class="docutils literal notranslate"><span class="pre">axis</span></code>, <code class="docutils literal notranslate"><span class="pre">useGlobalFrame</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">showJoint</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">axisRadius</span> <span class="pre">=</span> <span class="pre">0.1</span></code>, <code class="docutils literal notranslate"><span class="pre">axisLength</span> <span class="pre">=</span> <span class="pre">0.4</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -1414,7 +1432,7 @@ are included. A class for rigid body inertia creating and transformation is avai
 </section>
 <section id="function-addprismaticjoint">
 <span id="sec-rigidbodyutilities-addprismaticjoint"></span><h2>Function: AddPrismaticJoint<a class="headerlink" href="#function-addprismaticjoint" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L1273">AddPrismaticJoint</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">body0</span></code>, <code class="docutils literal notranslate"><span class="pre">body1</span></code>, <code class="docutils literal notranslate"><span class="pre">point</span></code>, <code class="docutils literal notranslate"><span class="pre">axis</span></code>, <code class="docutils literal notranslate"><span class="pre">useGlobalFrame</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">showJoint</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">axisRadius</span> <span class="pre">=</span> <span class="pre">0.1</span></code>, <code class="docutils literal notranslate"><span class="pre">axisLength</span> <span class="pre">=</span> <span class="pre">0.4</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L1286">AddPrismaticJoint</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">body0</span></code>, <code class="docutils literal notranslate"><span class="pre">body1</span></code>, <code class="docutils literal notranslate"><span class="pre">point</span></code>, <code class="docutils literal notranslate"><span class="pre">axis</span></code>, <code class="docutils literal notranslate"><span class="pre">useGlobalFrame</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">showJoint</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">axisRadius</span> <span class="pre">=</span> <span class="pre">0.1</span></code>, <code class="docutils literal notranslate"><span class="pre">axisLength</span> <span class="pre">=</span> <span class="pre">0.4</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>

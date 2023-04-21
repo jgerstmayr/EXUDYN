@@ -10,6 +10,7 @@ This section includes all TestModels for Exudyn.They can also be found and downl
 .. toctree::
    :maxdepth: 2
     
+   TestModels/abaqusImportTest
    TestModels/ANCFBeamTest
    TestModels/ANCFcontactCircleTest
    TestModels/ANCFcontactFrictionTest
