@@ -72,6 +72,10 @@ You can view and download this file on Github: `NGsolveCraigBampton.py <https://
    # h = 0.6*a
    # nModes = 40
    
+   #for saving:
+   # h = 1.25*a
+   
+   
    rho = 1000
    Emodulus=1e7*10
    nu=0.3

@@ -2,6 +2,7 @@
 # This is an EXUDYN example
 #
 # Details:  ANCF ALE with under gravity
+# Notes:    This example fails to solve with the current settings; needs to be reworked
 #
 # Author:   Johannes Gerstmayr
 # Date:     2020-02-17
@@ -30,7 +31,7 @@ import matplotlib.ticker as ticker
 useGraphics = True
 plotResults=False
 
-tEnd = 5
+tEnd = 2
 h= 1e-3
 
 SC = exu.SystemContainer()
@@ -38,7 +39,7 @@ mbs = SC.AddSystem()
 
 #++++++++++++++++++++++++++++++++++
 #initialize variables        
-vALE0=4 #initial velocity
+vALE0=1 #initial velocity
 
 useGraphics = True
 if useGraphics:
@@ -205,8 +206,10 @@ simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.startTime = 1
 simulationSettings.solutionSettings.appendToFile = True #continue solution
 simulationSettings.timeIntegration.endTime = tEnd
+
 success = exu.SolveDynamic(mbs, simulationSettings, 
-                           exudyn.DynamicSolverType.TrapezoidalIndex2)
+                           exudyn.DynamicSolverType.TrapezoidalIndex2
+                           )
 
 if useGraphics:
     SC.WaitForRenderEngineStopFlag()

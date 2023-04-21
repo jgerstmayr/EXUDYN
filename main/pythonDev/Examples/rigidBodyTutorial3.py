@@ -11,8 +11,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
-from exudyn.itemInterface import *
-from exudyn.utilities import * #includes graphics and rigid body utilities
+from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
 import numpy as np
 
 SC = exu.SystemContainer()
@@ -54,27 +53,7 @@ graphicsCOM0 = GraphicsDataBasis(origin=iCube0.com, length=2*w)
 #%%++++++++++++++++++++++++++
 #revolute joint (free z-axis)
 
-#markers for ground and rigid body (not needed for option 3):
-markerGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
-markerBody0J0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b0, localPosition=[-0.5*L,0,0]))
-
-#example if wrong marker position is chosen:
-#markerBody0J0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b0, localPosition=[-0.4*L,0,0]))
-
-
-#revolute joint option 1:
-# mbs.AddObject(GenericJoint(markerNumbers=[markerGround, markerBody0J0], 
-#                            constrainedAxes=[1,1,1,1,1,0],
-#                            visualization=VObjectJointGeneric(axesRadius=0.2*w, axesLength=1.4*w)))
-
-#revolute joint option 2:
-# mbs.AddObject(ObjectJointRevoluteZ(markerNumbers = [markerGround, markerBody0J0], 
-#                                   rotationMarker0=np.eye(3),
-#                                   rotationMarker1=np.eye(3),
-#                                   visualization=VObjectJointRevoluteZ(axisRadius=0.2*w, axisLength=1.4*w)
-#                                   )) 
-
-#revolute joint option 3:
+#add joint directly with Python function from exudyn.rigidBodyUtilities
 AddRevoluteJoint(mbs, body0=oGround, body1=b0, point=[0,0,0], 
                   axis=[0,0,1], useGlobalFrame=True, showJoint=True,
                   axisRadius=0.2*w, axisLength=1.4*w)
@@ -103,14 +82,6 @@ AddRevoluteJoint(mbs, body0=b0, body1=b1, point=[L,0,0],
                   axis=[1,0,0], useGlobalFrame=True, showJoint=True,
                   axisRadius=0.2*w, axisLength=1.4*w)
 
-# #alternative with GenericJoint:
-# #markers for rigid body:
-# markerBody0J1 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b0, localPosition=[ 0.5*L,0,0]))
-# markerBody1J0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b1, localPosition=[0,0,-0.5*L]))
-# mbs.AddObject(GenericJoint(markerNumbers=[markerBody0J1, markerBody1J0], 
-#                             constrainedAxes=[1,1,1,0,1,1],
-#                             visualization=VObjectJointGeneric(axesRadius=0.2*w, axesLength=1.4*w)))
-
 #position sensor at tip of body1
 sens1=mbs.AddSensor(SensorBody(bodyNumber=b1, localPosition=[0,0,0.5*L],
                                fileName='solution/sensorPos.txt',
@@ -119,11 +90,6 @@ sens1=mbs.AddSensor(SensorBody(bodyNumber=b1, localPosition=[0,0,0.5*L],
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #assemble system before solving
 mbs.Assemble()
-if False:
-    mbs.systemData.Info() #show detailed information
-if False:
-    #from exudyn.utilities import DrawSystemGraph
-    DrawSystemGraph(mbs, useItemTypes=True) #draw nice graph of system
 
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 
@@ -142,23 +108,21 @@ SC.visualizationSettings.general.autoFitScene = False
 SC.visualizationSettings.nodes.drawNodesAsPoint=False
 SC.visualizationSettings.nodes.showBasis=True
 
-# exu.StartRenderer()
-# if 'renderState' in exu.sys: #reload old view
-#     SC.SetRenderState(exu.sys['renderState'])
-
-#mbs.WaitForUserToContinue() #stop before simulating
-
+#start solver
 exu.SolveDynamic(mbs, simulationSettings = simulationSettings,
                  solverType=exu.DynamicSolverType.TrapezoidalIndex2)
 
-# SC.WaitForRenderEngineStopFlag() #stop before closing
-# exu.StopRenderer() #safely close rendering window!
-
-sol = LoadSolutionFile('coordinatesSolution.txt')
+#load solution and viualize
 from exudyn.interactive import SolutionViewer
+sol = LoadSolutionFile('coordinatesSolution.txt')
 SolutionViewer(mbs, sol)
+#==>alternatively, we could also start the renderer prior to simulation!
 
-if False:
+if True:
+    #from exudyn.utilities import DrawSystemGraph
+    DrawSystemGraph(mbs, useItemTypes=True) #draw nice graph of system
+
+if True:
     from exudyn.plot import PlotSensor
     PlotSensor(mbs, [sens1],[1])
 

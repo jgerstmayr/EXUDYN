@@ -1016,7 +1016,20 @@ class InertiaCylinder(RigidBodyInertia):
         else:
             raise ValueError("InertiaCylinder: axis must be 0, 1 or 2!")
         
-        
+
+#**function: convert string into exudyn.NodeType; call e.g. with 'NodeType.RotationEulerParameters' or 'RotationEulerParameters'
+#**notes: function is not very fast, so should be avoided in time-critical situations
+def StrNodeType2NodeType(sNodeType):
+    s = str(sNodeType) #if called with type
+    s = s.replace('NodeType.','')
+    nodeTypes = exu.NodeType.__members__
+    if s in nodeTypes:
+        return nodeTypes[s]
+    else:
+        raise ValueError('StrNodeType2NodeType: no valid NodeType: "'+s+'"')
+    # for key in nodeTypes:
+    #     if s == str(key) or s == str(nodeTypes[key]):
+    #         return int(nodeTypes[key])
     
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: get node item interface according to nodeType, using initialization with position, velocity, angularVelocity and rotationMatrix

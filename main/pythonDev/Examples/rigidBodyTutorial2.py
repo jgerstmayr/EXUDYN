@@ -5,16 +5,14 @@
 #
 # Author:   Johannes Gerstmayr
 # Date:     2021-03-22
+# Modified: 2023-04-18
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
-from exudyn.itemInterface import *
-from exudyn.utilities import *
-#from exudyn.graphicsDataUtilities import *
-
+from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
 import numpy as np
 
 SC = exu.SystemContainer()
@@ -29,7 +27,7 @@ p0 =    [0,0,0]     #origin of pendulum
 pMid0 = np.array([bodyDim[0]*0.5,0,0]) #center of mass, body0
 
 #first link:
-#inertia with helper function
+#inertia for cubic body with dimensions in sideLengths
 iCube0 = InertiaCuboid(density=5000, sideLengths=[1,0.1,0.1])
 #print(iCube)
 
@@ -44,9 +42,10 @@ graphicsBody0 = GraphicsDataRigidLink(p0=[-0.5*bodyDim[0],0,0],p1=[0.5*bodyDim[0
                      position = pMid0,
                      rotationMatrix = np.diag([1,1,1]),
                      angularVelocity = [0,0,0],
-                     gravity = g,
+                     gravity = g, #will automatically add a load on body
                      graphicsDataList = [graphicsBody0])
 
+#markers are needed to link joints and bodies; also needed for loads
 #ground body and marker
 oGround = mbs.AddObject(ObjectGround())
 markerGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
@@ -55,6 +54,7 @@ markerGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[
 markerBody0J0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b0, localPosition=[-0.5*bodyDim[0],0,0]))
 
 #revolute joint (free z-axis)
+#could alternatively also be done with function AddRevoluteJoint
 mbs.AddObject(GenericJoint(markerNumbers=[markerGround, markerBody0J0], 
                            constrainedAxes=[1,1,1,1,1,0],
                            visualization=VObjectJointGeneric(axesRadius=0.01, axesLength=0.1)))
@@ -75,9 +75,10 @@ iCube1 = InertiaCuboid(density=5000, sideLengths=[0.1,0.1,1])
                      position = pMid1,
                      rotationMatrix = np.diag([1,1,1]),
                      angularVelocity = [0,0,0],
-                     gravity = g,
+                     gravity = g, #will automatically add a load on body
                      graphicsDataList = [graphicsBody1])
 
+#add sensor to body in order to measure and store global position over time
 sens1=mbs.AddSensor(SensorBody(bodyNumber=b1, localPosition=[0,0,0.5*bodyDim[0]],
                                fileName='solution/sensorPos.txt',
                                outputVariableType = exu.OutputVariableType.Position))
@@ -94,17 +95,12 @@ mbs.AddObject(GenericJoint(markerNumbers=[markerBody0J1, markerBody1J0],
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #assemble system and solve
 mbs.Assemble()
-if False:
-    mbs.systemData.Info() #show detailed information
-if False:
-    from exudyn.utilities import DrawSystemGraph
-    DrawSystemGraph(mbs, useItemTypes=True) #draw nice graph of system
 
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 
 tEnd = 4 #simulation time
-h = 1e-3 #step size
-simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
+stepSize = 1e-3 #step size
+simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
 simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.timeIntegration.verboseMode = 1
 simulationSettings.timeIntegration.simulateInRealtime = True
@@ -114,7 +110,7 @@ SC.visualizationSettings.openGL.multiSampling = 4
 SC.visualizationSettings.general.autoFitScene = False
 
 exu.StartRenderer()
-if 'renderState' in exu.sys: #reload old view
+if 'renderState' in exu.sys: #reload previous model view
     SC.SetRenderState(exu.sys['renderState'])
 
 mbs.WaitForUserToContinue() #stop before simulating
@@ -125,8 +121,8 @@ exu.SolveDynamic(mbs, simulationSettings = simulationSettings,
 SC.WaitForRenderEngineStopFlag() #stop before closing
 exu.StopRenderer() #safely close rendering window!
 
-if True:
-    from exudyn.plot import PlotSensor
-    PlotSensor(mbs, [sens1],[1])
+#plot some sensor output
+from exudyn.plot import PlotSensor
+PlotSensor(mbs, [sens1],[1])
 
 

@@ -9,15 +9,75 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi \small
-  \item Exudyn version = 1.6.57.dev1, 
-  \item last change =  2023-04-15, 
-  \item Number of issues = 1515, 
-  \item Number of resolved issues = 1337 (57 in current version), 
+  \item Exudyn version = 1.6.65.dev1, 
+  \item last change =  2023-04-20, 
+  \item Number of issues = 1524, 
+  \item Number of resolved issues = 1345 (65 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.6.65}:  resolved Issue 1521: {\bf ObjectFFRFreducedOrderInterface}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add LoadFromFile/SaveToFile similar to FEMinterface}
+    \item {\bf notes: this function should be used to store CMS data if FEM is too large to load/store; CMS data still stores all node positions, triangle list (for visualization) and modeBasis for computation tasks; may be still large e.g. for many nodes and large number of modes}
+    \item   date resolved: {\bf 2023-04-20 21:06},
+date raised: 2023-04-20 
+  \ei
+  \item[] {\bf Version 1.6.64}:  resolved Issue 1519: {\bf FEMinterface}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add version to LoadFromFile/SaveToFile function; store file version as first field to load/store in order to be able to load older data as well; use forceVersion=0 to load files in old format}
+    \item {\bf notes: warning is printed if old file is loaded}
+    \item   date resolved: {\bf 2023-04-20 20:59},
+date raised: 2023-04-19 
+  \ei
+  \item[] {\bf Version 1.6.63}:  resolved Issue 1523: {\bf StrNodeType2NodeType}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add function to rigidBodyUtilities in order to make str to type conversion}
+    \item   date resolved: {\bf 2023-04-20 18:34},
+date raised: 2023-04-20 
+  \ei
+  \item[] {\bf Version 1.6.62}:  resolved Issue 1522: {\bf ObjectFFRFreducedOrderInterface}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: remove femInterface from internal variables, as it is only used for postProcessingModes; store postProcessingModes instead}
+    \item   date resolved: {\bf 2023-04-20 16:34},
+date raised: 2023-04-20 
+  \ei
+  \item[] {\bf Version 1.6.61}:  resolved Issue 1520: {\bf ImportFromAbaqusInputFile}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: use VolumeToSurfaceElements for creating of surface elements; add option to automatically create surface triangles}
+    \item {\bf notes: by default, only surface triangles are created!}
+    \item   date resolved: {\bf 2023-04-20 15:44},
+date raised: 2023-04-20 
+  \ei
+  \item[] {\bf Version 1.6.60}:  resolved Issue 1518: {\bf ObjectFFRFreducedOrderInterface}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: roundMassMatrix and roundStiffnessMatrix are not used}
+    \item {\bf notes: added as arguments in RoundMatrix}
+    \item   date resolved: {\bf 2023-04-19 19:08},
+date raised: 2023-04-19 
+  \ei
+  \item[] {\bf Version 1.6.59}:  resolved Issue 1517: {\bf ImportFromAbaqusInputFile}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: extended for Tet4 and Tet10 as well as C3D20R elements and added function ConvertTetToTrigs(...)}
+    \item   date resolved: {\bf 2023-04-19 18:14},
+date raised: 2023-04-19 
+  \ei
+  \item[] {\bf Version 1.6.58}:  resolved Issue 1515: {\bf unused header files}
+(cleanup)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: remove unused header files for C, Main and Visu: JointPrismatic.h, JointRevolute.h}
+    \item   date resolved: {\bf 2023-04-16 13:03},
+date raised: 2023-04-16 
+  \ei
   \item[] {\bf Version 1.6.57}:  resolved Issue 1269: {\bf LaserSensor}
 (extension)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
@@ -109,7 +169,7 @@ date raised: 2023-04-08
 (check)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: C++: for adding objects, nodes, etc. currently py::object and py::dict is copied: check performance increase, if it is passed by reference}
-    \item {\bf notes: tests show small performance improvements (10%) for creation of items}
+    \item {\bf notes: tests show small performance improvements (<10 percent) for creation of items}
     \item   date resolved: {\bf 2023-04-08 17:36},
 date raised: 2023-04-07 
   \ei

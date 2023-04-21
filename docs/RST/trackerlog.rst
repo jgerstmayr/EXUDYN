@@ -19,15 +19,43 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.6.57.dev1, 
-+  last change =  2023-04-15, 
-+  Number of issues = 1515, 
-+  Number of resolved issues = 1337 (57 in current version), 
++  Exudyn version = 1.6.65.dev1, 
++  last change =  2023-04-20, 
++  Number of issues = 1524, 
++  Number of resolved issues = 1345 (65 in current version), 
 
 ***********
 Version 1.6
 ***********
 
+ * Version 1.6.65: resolved Issue 1521: ObjectFFRFreducedOrderInterface (extension)
+    - description:  add LoadFromFile/SaveToFile similar to FEMinterface
+    - **notes:** this function should be used to store CMS data if FEM is too large to load/store; CMS data still stores all node positions, triangle list (for visualization) and modeBasis for computation tasks; may be still large e.g. for many nodes and large number of modes
+    - date resolved: **2023-04-20 21:06**\ , date raised: 2023-04-20 
+ * Version 1.6.64: resolved Issue 1519: FEMinterface (change)
+    - description:  add version to LoadFromFile/SaveToFile function; store file version as first field to load/store in order to be able to load older data as well; use forceVersion=0 to load files in old format
+    - **notes:** warning is printed if old file is loaded
+    - date resolved: **2023-04-20 20:59**\ , date raised: 2023-04-19 
+ * Version 1.6.63: resolved Issue 1523: StrNodeType2NodeType (extension)
+    - description:  add function to rigidBodyUtilities in order to make str to type conversion
+    - date resolved: **2023-04-20 18:34**\ , date raised: 2023-04-20 
+ * Version 1.6.62: resolved Issue 1522: ObjectFFRFreducedOrderInterface (change)
+    - description:  remove femInterface from internal variables, as it is only used for postProcessingModes; store postProcessingModes instead
+    - date resolved: **2023-04-20 16:34**\ , date raised: 2023-04-20 
+ * Version 1.6.61: resolved Issue 1520: ImportFromAbaqusInputFile (change)
+    - description:  use VolumeToSurfaceElements for creating of surface elements; add option to automatically create surface triangles
+    - **notes:** by default, only surface triangles are created!
+    - date resolved: **2023-04-20 15:44**\ , date raised: 2023-04-20 
+ * Version 1.6.60: resolved Issue 1518: ObjectFFRFreducedOrderInterface (fix)
+    - description:  roundMassMatrix and roundStiffnessMatrix are not used
+    - **notes:** added as arguments in RoundMatrix
+    - date resolved: **2023-04-19 19:08**\ , date raised: 2023-04-19 
+ * Version 1.6.59: resolved Issue 1517: ImportFromAbaqusInputFile (extension)
+    - description:  extended for Tet4 and Tet10 as well as C3D20R elements and added function ConvertTetToTrigs(...)
+    - date resolved: **2023-04-19 18:14**\ , date raised: 2023-04-19 
+ * Version 1.6.58: resolved Issue 1515: unused header files (cleanup)
+    - description:  remove unused header files for C, Main and Visu: JointPrismatic.h, JointRevolute.h
+    - date resolved: **2023-04-16 13:03**\ , date raised: 2023-04-16 
  * Version 1.6.57: resolved Issue 1269: LaserSensor (extension)
     - description:  add advanced distance sensors replicating laser scanner (with axis, revolution speed and initial direction)
     - **notes:** added function AddLidar(...) into exudyn.robotics.utilities; see laserScannerTest.py
@@ -71,7 +99,7 @@ Version 1.6
     - date resolved: **2023-04-08 19:04**\ , date raised: 2023-04-08 
  * Version 1.6.45: resolved Issue 1496: AddMainObjectPyClass (check)
     - description:  C++: for adding objects, nodes, etc. currently py::object and py::dict is copied: check performance increase, if it is passed by reference
-    - **notes:** tests show small performance improvements (10
+    - **notes:** tests show small performance improvements (<10 percent) for creation of items
     - date resolved: **2023-04-08 17:36**\ , date raised: 2023-04-07 
  * Version 1.6.44: resolved Issue 1498: MarkerNodeRotationCoordinate (check)
     - description:  check if Orientation type is correct, see docu
@@ -4335,6 +4363,10 @@ Version 0.1
 ***********
 Open issues
 ***********
+
+ * **open issue 1516:** solver failed function
+    - description:  add function to check if solver failed, using stored solver structure as input; return True/False and string (optionally error code) describing failure
+    - date raised: 2023-04-19 
 
  * :textred:`open issue 1512:` return value policy 
     - description:  check return value policy of GeneralContact (as example for further decisions); see if reference in ALL access functions makes no problems if object is deleted on Python side

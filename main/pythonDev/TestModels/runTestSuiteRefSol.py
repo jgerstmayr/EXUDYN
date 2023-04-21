@@ -15,7 +15,7 @@ import sys
 def TestExamplesReferenceSolution():
     
     refSol = {
-        #results after 2021-09-27 (change to new CSystem JacobianODE2RHS implementation); error approx 1e-12, bBUT largest error in ANCFcontactCircleTest.py: 4e-6 (but should be ok)
+        'abaqusImportTest.py': 0.0005885208722206333,               #new 2023-04-20; 5 modes as 8 modes have sensitive "half mode included"
         'ANCFBeamTest.py': 1.010486312300459,                       #new 2023-04-04, after resolving local kappa bug
         'ANCFcontactCircleTest.py':-0.4842698420787613,
         'ANCFcontactFrictionTest.py':-0.014187561328096003,         #with old ObjectContactFrictionCircleCable2D until : 2022-03-09: -0.014188649931059739,
