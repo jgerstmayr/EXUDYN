@@ -20,8 +20,8 @@ BUG numbers refer to the according issue numbers.
 General information on current version:
  
 +  Exudyn version = 1.6.80.dev1, 
-+  last change =  2023-04-27, 
-+  Number of issues = 1539, 
++  last change =  2023-04-28, 
++  Number of issues = 1540, 
 +  Number of resolved issues = 1360 (80 in current version), 
 
 ***********
@@ -4411,6 +4411,10 @@ Version 0.1
 ***********
 Open issues
 ***********
+
+ * **open issue 1539:** item names          
+    - description:  remove stored string and replace by empty string in case of default item name
+    - date raised: 2023-04-28 
 
  * **open issue 1536:** mutable arguments   
     - description:  check and fix Python functions with mutable arguments such as [] or , with potential risk of changing internally in function, leading to unexpected behavior in second call

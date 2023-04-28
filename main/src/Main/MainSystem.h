@@ -57,7 +57,6 @@ private:
 	bool interactiveMode;		//!< if this is true, every AddItem(...), ModifyItem(...), etc. causes Assemble() to be called; this guarantees that the system is always consistent to be drawn
 	MainSystemContainer* mainSystemContainerBacklink; //!< backlink used to avoid needing SC and mbs in functions -> mbs is sufficient for all purposes!
 	Index mainSystemIndex;		//!< index of mainSystem (mbs) in SystemContainer; used e.g. in graphics functions, but may also accessed via Python; -1 indicates that it is not initialized
-    bool useItemNames;          //!< if false, no names are added
 public:
 
     //! forbid calls of MainSystem constructor, as this would lead to an unusable system

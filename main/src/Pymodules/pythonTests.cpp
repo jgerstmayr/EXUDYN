@@ -628,7 +628,7 @@ void PyTest()
 			//for (Index i = 0; i < (4 * nShift); i += 4)
 			ngstd::ParallelFor((NGSsizeType)(nShift), [&resultp, &v1p, &v2p](NGSsizeType j)
 			{
-				Index i = (Index)j * 4; //*4
+				Index i = (Index)j * 4; // *4
 				//resultp[i] = v1p[i] + v2p[i];
 				//resultp[i+1] = v1p[i+1] + v2p[i+1];
 				//optimize for latency; using 4 PReal speeds up only slightly
