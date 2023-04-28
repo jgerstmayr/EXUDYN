@@ -38,13 +38,14 @@ def TestExamplesReferenceSolution():
         'explicitLieGroupIntegratorPythonTest.py':149.8473939540758,
         'explicitLieGroupIntegratorTest.py':0.16164013319819065,
         'fourBarMechanismTest.py':-2.376335780518213,
+        'fourBarMechanismIftomm.py':0.1721665271840173,
         'generalContactFrictionTests.py':12.464092000879125,        #new 2022-07-11 (CState Parallel); #before 2022-01-25 (changed some velocity computation in GeneralContact): 10.133183086232139, #changed GeneralContact and implicit solver; before 2022-01-18: 10.132106712933348 , 
         'generalContactSpheresTest.py':-1.1138547720263323,         #new 2022-07-22 (parallel Lie group updates); new 2022-07-11 (CState Parallel); #before 2022-01-25(minor diff, due to round off errors in multithreading; now changed to 1 thread):-1.113854772026123, #changed GeneralContact and implicit solver; before 2022-01-18: -1.0947542400425323, #before 2021-12-02: -1.0947542400427703,
         'genericJointUserFunctionTest.py':1.1922383967562884,
         'genericODE2test.py':0.036045463499024655,                  #new 2022-07-11 (CState Parallel); #changed to some analytic Connector jacobians (CartSpringDamper), implicit solver(modified Newton restart, etc.); before 2022-01-18: 0.036045463498793825,
         'geneticOptimizationTest.py':0.10117518366826603,           #before 2022-02-20 (accuracy of internal sensors is higher); 0.10117518367051619, #changed to some analytic Connector jacobians (CartSpringDamper), implicit solver(modified Newton restart, etc.); before 2022-01-18: 0.10117518366934351,
         'geometricallyExactBeam2Dtest.py':-2.2115028353806547,
-        'geometricallyExactBeamTest.py':1.012821627943081,          #new 2023-04-06 may still include small errors in implementation
+        'geometricallyExactBeamTest.py':1.012821899294672,          #new 2023-04-06 may still include small errors in implementation
         'heavyTop.py':33.42312575174431,                            #new 2022-07-11 (CState Parallel); 
         'hydraulicActuatorSimpleTest.py':7.130440021870293,
         'kinematicTreeAndMBStest.py':2.6388120463802767e-05,        #original but too sensitive to disturbances: 263.88120463802767,

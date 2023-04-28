@@ -279,6 +279,9 @@ The arrows indicate, that, e.g., object 1 has node 1 and node 2 (indexes) and th
 Nodes provide the coordinates (and the degrees of freedom) to the system. They have no mass, stiffness or whatsoever assigned.
 Without nodes, the system has no unknown coordinates.
 Adding a node provides (for the system unknown) coordinates. In addition we also need equations for every nodal coordinate -- otherwise the system cannot be computed (NOTE: this is currently not checked by the preprocessor).
+In general, adding nodes and objects (e.g., to represent rigid bodies), leads to a \mybold{redundant coordinate formulation}. 
+In order to determine the degree of freedom, you may use the Gr{\"u}bler-Kutzbach criterion. This can also be done numerically, using the function \texttt{ComputeSystemDegreeOfFreedom}, see the module \texttt{exudyn.solver}.
+Furthermore, \mybold{minimal} coordinates can be used for open tree systems, using \texttt{ObjectKinematicTree}.
 
 \mysubsubsection{Objects}
 Objects are 'computational objects' and they provide equations to your system. Objects often provide derivatives and have measurable quantities (e.g. displacement) and they provide access, which can be used to apply, e.g., forces. Some of this functionality is only available in C++, but not in Python.

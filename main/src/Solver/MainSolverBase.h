@@ -116,13 +116,19 @@ public: //
 	//! set initialized flags flags true (called from cSolver.initializeSolver)
 	virtual void InitializeCheckInitialized(const MainSystem& mainSystem);
 
-	//! get solver name - needed for output file header and visualization window
-	virtual std::string GetSolverName() const 
-	{
-		return GetCSolver().GetSolverName();
-	}
+    //! get solver name - needed for output file header and visualization window
+    virtual std::string GetSolverName() const
+    {
+        return GetCSolver().GetSolverName();
+    }
 
-	//! return true, if static solver; needs to be overwritten in derived class
+    //! get solver error message after SolveSteps(...) or SolveSystem(...)
+    virtual std::string GetErrorString() const
+    {
+        return GetCSolver().GetErrorString();
+    }
+
+    //! return true, if static solver; needs to be overwritten in derived class
 	virtual bool IsStaticSolver() const 
 	{
 		return GetCSolver().IsStaticSolver();

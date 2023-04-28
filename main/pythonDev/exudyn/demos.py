@@ -25,8 +25,9 @@ def DemoInfo():
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: very simple demo to show that exudyn is correctly installed; does not require graphics; similar to Examples/myFirstExample.py
-def Demo1():
-    print('start demo1: verify that exudyn is running')
+def Demo1(showAll = True):
+    if showAll:
+        print('start demo1: verify that exudyn is running')
     import exudyn as exu               #EXUDYN package including C++ core part
     import exudyn.itemInterface as eii #conversion of data to exudyn dictionaries
     
@@ -44,15 +45,16 @@ def Demo1():
     simulationSettings.solutionSettings.coordinatesSolutionFileName = 'solution/demo1.txt'
 
     exu.SolveDynamic(mbs, simulationSettings)
-    print('results can be found in local directory: solution/demo1.txt')
-
-    DemoInfo()
+    if showAll:
+        print('results can be found in local directory: solution/demo1.txt')
+    
+        DemoInfo()
     
     return [mbs, SC]
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: advanced demo, showing that graphics is available; similar to Examples/rigid3Dexample.py
-def Demo2():
+def Demo2(showAll = True):
     import exudyn as exu
     import exudyn.itemInterface as eii #conversion of data to exudyn dictionaries
     from exudyn.utilities import GraphicsDataCheckerBoard, eulerParameters0, GraphicsDataSphere, \
@@ -62,7 +64,8 @@ def Demo2():
     SC = exu.SystemContainer()
     mbs = SC.AddSystem()
     
-    print('EXUDYN version='+exu.GetVersionString())
+    if showAll:
+        print('EXUDYN version='+exu.GetVersionString())
     
     #%%+++++++++++++++++++++++++++++++++++
     #background
@@ -128,23 +131,25 @@ def Demo2():
     SC.visualizationSettings.openGL.shadow = 0.3
     SC.visualizationSettings.openGL.light0position = [4,4,10,0]
     
-    exu.StartRenderer()
-    # exu.SolveDynamic(mbs, simulationSettings) #start simulation to show solution information in window !
-    mbs.WaitForUserToContinue()
+    if showAll:
+        exu.StartRenderer()
+        mbs.WaitForUserToContinue()
     
     simulationSettings.timeIntegration.numberOfSteps = 1*fact
     simulationSettings.timeIntegration.endTime = 0.001*fact*0.5*4
     exu.SolveDynamic(mbs, simulationSettings)
     
-    SC.WaitForRenderEngineStopFlag()
-    exu.StopRenderer() #safely close rendering window!
+    if showAll:
+        SC.WaitForRenderEngineStopFlag()
+        exu.StopRenderer() #safely close rendering window!
 
-    input("Press Enter to start SolutionViewer...")
+    if showAll:
+        input("Press Enter to start SolutionViewer...")
+    
+        from exudyn.interactive import SolutionViewer
+        SolutionViewer(mbs)
 
-    from exudyn.interactive import SolutionViewer
-    SolutionViewer(mbs)
-
-    DemoInfo()
+        DemoInfo()
 
     return [mbs, SC]
 

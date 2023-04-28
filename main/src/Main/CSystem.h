@@ -327,8 +327,6 @@ public:
 	//! factorAE_ODE2 is used to scale the ODE2-part of the jacobian, depending on index2 or index3 formulation (to avoid later multiplication at system level); 
 	//! factorAE_ODE2_t is used to scale the ODE2_t-part of the jacobian for velocity level constraints (to avoid later multiplication at system level); 
 	//! velocityLevel = velocityLevel constraints are used, if available; 
-	//! ALWAYS TRUE: fillIntoSystemMatrix=true: fill in g_q_ODE2, g_q_ODE2^T AND g_q_AE into system matrix at according positions
-	//! DEPRECATED: fillIntoSystemMatrix=false: fill in g_q_ODE2 into jacobian matrix at (0,0)
 	void JacobianAE(TemporaryComputationDataArray& tempArray, const NewtonSettings& newton, GeneralMatrix& jacobianGM,
 		Real factorAE_ODE2, Real factorAE_ODE2_t, Real factorAE_ODE1, bool velocityLevel = false, 
 		Real factorODE2_AE = 1., Real factorODE1_AE = 1., Real factorAE_AE=1.);// , bool fillIntoSystemMatrix = false);

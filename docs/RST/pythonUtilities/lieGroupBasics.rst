@@ -246,7 +246,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: TExpSE3
 ^^^^^^^^^^^^^^^^^
-`TExpSE3 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L234>`__\ (\ ``x``\ )
+`TExpSE3 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L236>`__\ (\ ``x``\ )
 
 - | \ *function description*\ :
   | compute the tangent operator corresponding to ExpSE3, see
@@ -254,6 +254,10 @@ Function: TExpSE3
   | 6D incremental motion vector as np.array
 - | \ *output*\ :
   | 6x6 matrix as np.array
+- | \ *author*\ :
+  | Stefan Holzinger
+- | \ *notes*\ :
+  | improved accuracy for very small angles as well as angles phi
 
 
 ----
@@ -262,7 +266,7 @@ Function: TExpSE3
 
 Function: TExpSE3Inv
 ^^^^^^^^^^^^^^^^^^^^
-`TExpSE3Inv <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L261>`__\ (\ ``x``\ )
+`TExpSE3Inv <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L282>`__\ (\ ``x``\ )
 
 - | \ *function description*\ :
   | compute the inverse of tangent operator TExpSE3, see
@@ -272,6 +276,8 @@ Function: TExpSE3Inv
   | 6x6 matrix as np.array
 - | \ *author*\ :
   | Stefan Holzinger
+- | \ *notes*\ :
+  | improved accuracy for very small angles as well as angles phi
 
 
 ----
@@ -280,7 +286,7 @@ Function: TExpSE3Inv
 
 Function: ExpR3xSO3
 ^^^^^^^^^^^^^^^^^^^
-`ExpR3xSO3 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L286>`__\ (\ ``x``\ )
+`ExpR3xSO3 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L314>`__\ (\ ``x``\ )
 
 - | \ *function description*\ :
   | compute the matrix exponential map on the Lie group R3xSO(3), see
@@ -298,7 +304,7 @@ Function: ExpR3xSO3
 
 Function: TExpR3xSO3
 ^^^^^^^^^^^^^^^^^^^^
-`TExpR3xSO3 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L297>`__\ (\ ``x``\ )
+`TExpR3xSO3 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L325>`__\ (\ ``x``\ )
 
 - | \ *function description*\ :
   | compute the tangent operator corresponding to ExpR3xSO3, see
@@ -316,7 +322,7 @@ Function: TExpR3xSO3
 
 Function: TExpR3xSO3Inv
 ^^^^^^^^^^^^^^^^^^^^^^^
-`TExpR3xSO3Inv <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L307>`__\ (\ ``x``\ )
+`TExpR3xSO3Inv <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L335>`__\ (\ ``x``\ )
 
 - | \ *function description*\ :
   | compute the inverse of tangent operator TExpR3xSO3
@@ -334,7 +340,7 @@ Function: TExpR3xSO3Inv
 
 Function: CompositionRuleDirectProductR3AndS3
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CompositionRuleDirectProductR3AndS3 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L331>`__\ (\ ``q0``\ , \ ``incrementalMotionVector``\ )
+`CompositionRuleDirectProductR3AndS3 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L359>`__\ (\ ``q0``\ , \ ``incrementalMotionVector``\ )
 
 - | \ *function description*\ :
   | compute composition operation for pairs in the Lie group R3xS3
@@ -353,7 +359,7 @@ Function: CompositionRuleDirectProductR3AndS3
 
 Function: CompositionRuleSemiDirectProductR3AndS3
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CompositionRuleSemiDirectProductR3AndS3 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L354>`__\ (\ ``q0``\ , \ ``incrementalMotionVector``\ )
+`CompositionRuleSemiDirectProductR3AndS3 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L382>`__\ (\ ``q0``\ , \ ``incrementalMotionVector``\ )
 
 - | \ *function description*\ :
   | compute composition operation for pairs in the Lie group R3 semiTimes S3 (corresponds to SE(3))
@@ -372,7 +378,7 @@ Function: CompositionRuleSemiDirectProductR3AndS3
 
 Function: CompositionRuleDirectProductR3AndR3RotVec
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CompositionRuleDirectProductR3AndR3RotVec <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L380>`__\ (\ ``q0``\ , \ ``incrementalMotionVector``\ )
+`CompositionRuleDirectProductR3AndR3RotVec <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L408>`__\ (\ ``q0``\ , \ ``incrementalMotionVector``\ )
 
 - | \ *function description*\ :
   | compute composition operation for pairs in the group obtained from the direct product of R3 and R3, see 
@@ -393,7 +399,7 @@ Function: CompositionRuleDirectProductR3AndR3RotVec
 
 Function: CompositionRuleSemiDirectProductR3AndR3RotVec
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CompositionRuleSemiDirectProductR3AndR3RotVec <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L405>`__\ (\ ``q0``\ , \ ``incrementalMotionVector``\ )
+`CompositionRuleSemiDirectProductR3AndR3RotVec <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L433>`__\ (\ ``q0``\ , \ ``incrementalMotionVector``\ )
 
 - | \ *function description*\ :
   | compute composition operation for pairs in the group obtained from the direct product of R3 and R3.
@@ -414,7 +420,7 @@ Function: CompositionRuleSemiDirectProductR3AndR3RotVec
 
 Function: CompositionRuleDirectProductR3AndR3RotXYZAngles
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CompositionRuleDirectProductR3AndR3RotXYZAngles <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L431>`__\ (\ ``q0``\ , \ ``incrementalMotionVector``\ )
+`CompositionRuleDirectProductR3AndR3RotXYZAngles <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L459>`__\ (\ ``q0``\ , \ ``incrementalMotionVector``\ )
 
 - | \ *function description*\ :
   | compute composition operation for pairs in the group obtained from the direct product of R3 and R3.
@@ -435,7 +441,7 @@ Function: CompositionRuleDirectProductR3AndR3RotXYZAngles
 
 Function: CompositionRuleSemiDirectProductR3AndR3RotXYZAngles
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CompositionRuleSemiDirectProductR3AndR3RotXYZAngles <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L456>`__\ (\ ``q0``\ , \ ``incrementalMotionVector``\ )
+`CompositionRuleSemiDirectProductR3AndR3RotXYZAngles <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L484>`__\ (\ ``q0``\ , \ ``incrementalMotionVector``\ )
 
 - | \ *function description*\ :
   | compute composition operation for pairs in the group obtained from the direct product of R3 and R3.
@@ -456,7 +462,7 @@ Function: CompositionRuleSemiDirectProductR3AndR3RotXYZAngles
 
 Function: CompositionRuleForEulerParameters
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CompositionRuleForEulerParameters <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L481>`__\ (\ ``q``\ , \ ``p``\ )
+`CompositionRuleForEulerParameters <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L509>`__\ (\ ``q``\ , \ ``p``\ )
 
 - | \ *function description*\ :
   | compute composition operation for Euler parameters (unit quaternions)
@@ -476,7 +482,7 @@ Function: CompositionRuleForEulerParameters
 
 Function: CompositionRuleForRotationVectors
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CompositionRuleForRotationVectors <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L497>`__\ (\ ``v0``\ , \ ``Omega``\ )
+`CompositionRuleForRotationVectors <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L525>`__\ (\ ``v0``\ , \ ``Omega``\ )
 
 - | \ *function description*\ :
   | compute composition operation for rotation vectors v0 and Omega, see
@@ -495,7 +501,7 @@ Function: CompositionRuleForRotationVectors
 
 Function: CompositionRuleRotXYZAnglesRotationVector
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CompositionRuleRotXYZAnglesRotationVector <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L520>`__\ (\ ``alpha0``\ , \ ``Omega``\ )
+`CompositionRuleRotXYZAnglesRotationVector <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L548>`__\ (\ ``alpha0``\ , \ ``Omega``\ )
 
 - | \ *function description*\ :
   | compute composition operation for RotXYZ angles, see

@@ -52,7 +52,9 @@ public:
 	{
 		InitCSolverBase();
 	}
-	virtual ~CSolverBase() {} //added for correct deletion of derived classes
+	virtual ~CSolverBase() {
+		StopThreadsAndCloseFiles();
+	} //added for correct deletion of derived classes
 
 	void InitCSolverBase()
 	{
@@ -100,6 +102,9 @@ public:
 	//! +++++ TO BE IMPLEMENTED IN DERIVED CLASS +++++
 	virtual const STDstring GetSolverName() const { CHECKandTHROWstring("CSolverBase::illegal call to GetSolverName"); return ""; }
 
+    //! get solver error string, using internally set flags
+    virtual const STDstring GetErrorString() const;
+
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//initialize routines
 	
@@ -134,6 +139,9 @@ public:
 	//! write concluding information (timer statistics, messages) and close files
 	virtual void FinalizeSolver(CSystem& computationalSystem, const SimulationSettings& simulationSettings);
 
+	//! finalize task manager and close open files (e.g. in FinalizeSolver or Destructor)
+	virtual void StopThreadsAndCloseFiles();
+		
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//! main solver part: calls multiple InitializeStep(...)/DiscontinuousIteration(...)/FinishStep(...); do step reduction if necessary; return true if success, false else
 	virtual bool SolveSteps(CSystem& computationalSystem, const SimulationSettings& simulationSettings);

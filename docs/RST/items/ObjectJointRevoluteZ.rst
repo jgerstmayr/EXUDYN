@@ -145,7 +145,8 @@ Definition of quantities
 Connector constraint equations
 ------------------------------
 
-\paragraphEquations for translational part (\ ``activeConnector = True``\ ):
+
+\ **Equations for translational part (\ ``activeConnector = True``\ )** :
 
 The translational index 3 constraints read,
 
@@ -161,20 +162,21 @@ and the translational index 2 constraints read
    \LU{0}{\Delta {\mathbf{v}}} = \Null
 
 
-\paragraphEquations for rotational part (\ ``activeConnector = True``\ ):
 
-Note that the axes are always given in global coordinates, compare the table in Section :ref:`sec-objectjointrevolutez-definitionofquantities`\ .
+\ **Equations for rotational part (\ ``activeConnector = True``\ )** :
+
+Note that the axes are always given in global coordinates, compare the table in Section :ref:`sec-objectjointrevolutez-definitionofquantities`\ ,
+and they include the transformations by \ :math:`\LU{m0,J0}{\Rot}`\  and \ :math:`\LU{m1,J1}{\Rot}`\ .
 The index 3 constraint equations read
 
 .. math::
    :label: eq-objectjointrevolutez-index3
 
-   \lambda_3 &=& 0 \\
-   \LU{0}{{\mathbf{t}}}_{x0}\tp \LU{0}{{\mathbf{t}}}_{y1} &=& 0 \\
-   \LU{0}{{\mathbf{t}}}_{x0}\tp \LU{0}{{\mathbf{t}}}_{z1} &=& 0
+   \LU{0}{{\mathbf{t}}}_{z0}\tp \LU{0}{{\mathbf{t}}}_{x1} &=& 0 \\
+   \LU{0}{{\mathbf{t}}}_{z0}\tp \LU{0}{{\mathbf{t}}}_{y1} &=& 0
 
 
-The index 2 constraints follow from the derivative of Eq. :eq:`eq-objectjointrevolutez-index3`\  w.r.t., and are given in the C++ code.
+The index 2 constraints follow from the derivative of Eq. :eq:`eq-objectjointrevolutez-index3`\  w.r.t.\ time, and are given in the C++ code.
 if \ ``activeConnector = False``\ , 
 
 .. math::

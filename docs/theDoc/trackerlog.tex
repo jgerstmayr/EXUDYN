@@ -9,15 +9,123 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi \small
-  \item Exudyn version = 1.6.65.dev1, 
-  \item last change =  2023-04-20, 
-  \item Number of issues = 1524, 
-  \item Number of resolved issues = 1345 (65 in current version), 
+  \item Exudyn version = 1.6.80.dev1, 
+  \item last change =  2023-04-27, 
+  \item Number of issues = 1539, 
+  \item Number of resolved issues = 1360 (80 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.6.80}:  resolved Issue 1538: {\bf taskmanager}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: fix problem with taskmanager shutdown due to issue 1532}
+    \item   date resolved: {\bf 2023-04-27 15:35},
+date raised: 2023-04-27 
+  \ei
+  \item[] {\bf Version 1.6.79}:  resolved Issue 1537: {\bf output.multiThreadingMode}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: has not been set correctly in solver so far; switch output.numberOfThreadsUsed and output.multiThreadingMode}
+    \item   date resolved: {\bf 2023-04-27 15:35},
+date raised: 2023-04-27 
+  \ei
+  \item[] {\bf Version 1.6.78}:  resolved Issue 1535: {\bf writeSensors}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add global flag to deactivate sensor file creating/writing and sensor storing; set flag in solver functions such as ComputeLinearizedSystem, etc. to avoid erasing sensor files or sensor data}
+    \item   date resolved: {\bf 2023-04-27 11:34},
+date raised: 2023-04-26 
+  \ei
+  \item[] {\bf Version 1.6.77}:  resolved Issue 1533: {\bf FinalizeSolver}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: call FinalizeSolver in ComputeLinearizedSystem, ComputeSystemDegreeOfFreedom, ComputeODE2Eigenvalues for consistency reason; also deactivate file writing and sensor writing and solverInformation writing}
+    \item   date resolved: {\bf 2023-04-26 19:25},
+date raised: 2023-04-26 
+  \ei
+  \item[] {\bf Version 1.6.76}:  resolved Issue 1532: {\bf CSolverBase.cpp}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: close output and sensor files in destructor of CSolverBase}
+    \item   date resolved: {\bf 2023-04-26 19:24},
+date raised: 2023-04-26 
+  \ei
+  \item[] {\bf Version 1.6.75}:  resolved Issue 1534: {\bf EXUlie}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: improve TExpSE3 and TExpSE3Inv regarding small values according to PhD thesis of Stefan Hante}
+    \item {\bf notes: improves numerical behavior and convergence of GeometricallyExactBeam}
+    \item   date resolved: {\bf 2023-04-26 18:33},
+date raised: 2023-04-26 
+  \ei
+  \item[] {\bf Version 1.6.74}:  resolved Issue 1531: {\bf OpenVR}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: change order of eye transformation and projection in OpenVRinterface GetCurrentViewProjectionMatrix to be consistent with master thesis}
+    \item   date resolved: {\bf 2023-04-26 16:49},
+date raised: 2023-04-26 
+  \ei
+  \item[] {\bf Version 1.6.73}:  resolved Issue 1530: {\bf ComputeSystemDegreeOfFreedom}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add exudyn.solver function to numerically compute DOF of constrained mechanisms}
+    \item   date resolved: {\bf 2023-04-26 11:16},
+date raised: 2023-04-26 
+  \ei
+  \item[] {\bf Version 1.6.72}:  resolved Issue 1528: {\bf structures and settings}
+(docu)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: function arguments in RST / html are inappropriately noted; fix; replace true/false with True/False}
+    \item   date resolved: {\bf 2023-04-26 09:16},
+date raised: 2023-04-26 
+  \ei
+  \item[] {\bf Version 1.6.71}:  resolved Issue 1527: {\bf GeneralContact}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add function UpdateContacts, which computes current bounding boxes and active contacts, to be used in access functions to GeneralContact if isActive=False (otherwise this is anyway done in contact computations of every computation step)}
+    \item   date resolved: {\bf 2023-04-23 20:15},
+date raised: 2023-04-23 
+  \ei
+  \item[] {\bf Version 1.6.70}:  resolved Issue 0935: {\bf GeneralContact}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add interface function to get contact pairs}
+    \item {\bf notes: function GetActiveContacts added to GeneralContact, which returns all active global contact indices for selected contact type}
+    \item   date resolved: {\bf 2023-04-23 20:13},
+date raised: 2022-02-10 
+  \ei
+  \item[] {\bf Version 1.6.69}:  resolved Issue 1516: {\bf solver failed function}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add function to check if solver failed, using stored solver structure as input; return True/False and string (optionally error code) describing failure}
+    \item {\bf notes: added function SolverSuccess() to exudyn.solver; returns success and error string as created by solver internal function GetErrorString(...)}
+    \item   date resolved: {\bf 2023-04-23 18:43},
+date raised: 2023-04-19 
+  \ei
+  \item[] {\bf Version 1.6.68}:  resolved Issue 1526: {\bf solver GetErrorString}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: MainSolverStatic, MainSolverExplicit, MainSolverImplicit now get function GetErrorString to obtain error string set if SolveSteps or SolveSystem failed (returned false)}
+    \item   date resolved: {\bf 2023-04-23 11:46},
+date raised: 2023-04-23 
+  \ei
+  \item[] {\bf Version 1.6.67}:  resolved Issue 1525: {\bf output.finishedSuccessfully}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: flag is now set both in SolveSteps(...) as well in SolveSystem(...) to indicate if solver has been successful or failed; practical flag for lateron determination of solver errors}
+    \item   date resolved: {\bf 2023-04-23 11:46},
+date raised: 2023-04-23 
+  \ei
+  \item[] {\bf Version 1.6.66}:  resolved Issue 1524: {\bf netgen STL file}
+(examples)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add example with netgen and STL files with meshing}
+    \item   date resolved: {\bf 2023-04-21 17:51},
+date raised: 2023-04-21 
+  \ei
   \item[] {\bf Version 1.6.65}:  resolved Issue 1521: {\bf ObjectFFRFreducedOrderInterface}
 (extension)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

@@ -64,7 +64,8 @@ DESCRIPTION of NodePoint
   | acceleration coordinates vector of node
 
 
-\paragraphDetailed information:
+
+\ **Detailed information:** 
 The node provides \ :math:`n_c=3`\  displacement coordinates. Equations of motion need to be provided by an according object (e.g., MassPoint, finite elements, ...).
 Usually, the nodal coordinates are provided in the global frame. However, the coordinate system is defined by the object (e.g. MassPoint uses global coordinates, but floating frame of reference objects use local frames).
 Note that for this very simple node, coordinates are identical to the nodal displacements, same for time derivatives. This is not the case, e.g. for nodes with orientation. 

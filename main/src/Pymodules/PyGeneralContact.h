@@ -227,8 +227,23 @@ public:
 		}
 	}
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    //! update contact interactions, e.g. for ShortestDistanceAlongLine or for getting items in box
+    void PyUpdateContacts(const MainSystem& mainSystem)
+    {
+        UpdateContacts(*mainSystem.GetCSystem());
+    }
 
-	//!convert internal data of GeneralContact to 
+    //! get contact interactions of itemIndex of type selectedTypeIndex, e.g. IndexSpheresMarkerBased with index 2
+    //! returns list of contacts, with global indices!
+    py::object PyGetActiveContacts(Contact::TypeIndex selectedTypeIndex, Index itemIndex)
+    {
+        ArrayIndex* activeContacts = GetActiveContacts(selectedTypeIndex, itemIndex);
+
+        return EPyUtils::ArrayIndex2NumPy(*activeContacts);
+    }
+
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    //!convert internal data of GeneralContact to 
 	py::object GetPythonObject() const
 	{
 

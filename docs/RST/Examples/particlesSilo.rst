@@ -208,6 +208,10 @@ You can view and download this file on Github: `particlesSilo.py <https://github
    mbs.Assemble()
    print("finish gContact")
    
+   items=gContact.GetItemsInBox(pMin=[-4,-4,0], pMax=[4,4,20])
+   print('n spheres=',len(items['MarkerBasedSpheres'])) 
+   
+   
    tEnd = 50
    #tEnd = h*100
    simulationSettings = exu.SimulationSettings()

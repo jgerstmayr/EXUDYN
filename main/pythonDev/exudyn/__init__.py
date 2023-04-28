@@ -90,16 +90,16 @@ except:
 
 #import very useful solver functionality into exudyn module (==> available as exu.SolveStatic, etc.)
 try:
-    from .solver import SolveStatic, SolveDynamic, ComputeODE2Eigenvalues
+    from .solver import SolveStatic, SolveDynamic, SolverSuccess, ComputeLinearizedSystem, ComputeSystemDegreeOfFreedom, ComputeODE2Eigenvalues
 except:
     #for run inside Visual Studio (exudynCPP lies in Release or Debug folders):
-    from solver import SolveStatic, SolveDynamic, ComputeODE2Eigenvalues
+    from solver import SolveStatic, SolveDynamic, SolverSuccess, ComputeLinearizedSystem, ComputeSystemDegreeOfFreedom, ComputeODE2Eigenvalues
 
 try:
     from .demos import Demo1, Demo2
 except:
     #for run inside Visual Studio (exudynCPP lies in Release or Debug folders):
-    from solver import Demo1, Demo2
+    from demos import Demo1, Demo2
 
 __version__ = GetVersionString() #add __version__ to exudyn module ...
 

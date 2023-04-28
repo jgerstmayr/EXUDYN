@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-04-07 (last modfied)
+* @date         AUTO: 2023-04-27 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -139,7 +139,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-04-07 (last modfied)
+* @date         AUTO: 2023-04-27 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -263,7 +263,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-04-07 (last modfied)
+* @date         AUTO: 2023-04-27 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -377,7 +377,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-04-07 (last modfied)
+* @date         AUTO: 2023-04-27 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -473,7 +473,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-04-07 (last modfied)
+* @date         AUTO: 2023-04-27 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -493,7 +493,8 @@ class SolverOutputData // AUTO:
 public: // AUTO: 
   Real cpuLastTimePrinted;                        //!< AUTO: CPU time when output has been printed last time
   Real cpuStartTime;                              //!< AUTO: CPU start time of computation (starts counting at computation of initial conditions)
-  bool finishedSuccessfully;                      //!< AUTO: flag is false until solver finshed successfully (can be used as external trigger)
+  bool finishedSuccessfully;                      //!< AUTO: flag is false until solver functions SolveSteps)...) or SolveSystem(...) finished successfully (can be used as external trigger)
+  bool initializationSuccessful;                  //!< AUTO: flag is set during call to InitializeSolver(...); reasons for failure are multiple, either inconsistent solver settings are used, files cannot be written (file locked), or initial conditions could not be computed 
   Index lastDiscontinuousIterationsCount;         //!< AUTO: discontinuous iterations count when written to console (or file) last time
   Real lastImageRecorded;                         //!< AUTO: simulation time when last image has been recorded
   Index lastNewtonJacobiCount;                    //!< AUTO: jacobian update count when written to console (or file) last time
@@ -519,6 +520,7 @@ public: // AUTO:
     cpuLastTimePrinted = 0.;
     cpuStartTime = 0.;
     finishedSuccessfully = false;
+    initializationSuccessful = false;
     lastDiscontinuousIterationsCount = 0;
     lastImageRecorded = 0.;
     lastNewtonJacobiCount = 0;
@@ -527,7 +529,7 @@ public: // AUTO:
     lastSolutionWritten = 0.;
     lastVerboseStepIndex = 0;
     multiThreadingMode = 0;
-    numberOfThreadsUsed = 0;
+    numberOfThreadsUsed = 1;
     stepInformation = 0;
     verboseMode = 0;
     verboseModeFile = 0;
@@ -548,6 +550,7 @@ public: // AUTO:
     os << "  cpuLastTimePrinted = " << cpuLastTimePrinted << "\n";
     os << "  cpuStartTime = " << cpuStartTime << "\n";
     os << "  finishedSuccessfully = " << finishedSuccessfully << "\n";
+    os << "  initializationSuccessful = " << initializationSuccessful << "\n";
     os << "  lastDiscontinuousIterationsCount = " << lastDiscontinuousIterationsCount << "\n";
     os << "  lastImageRecorded = " << lastImageRecorded << "\n";
     os << "  lastNewtonJacobiCount = " << lastNewtonJacobiCount << "\n";
@@ -582,7 +585,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-04-07 (last modfied)
+* @date         AUTO: 2023-04-27 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

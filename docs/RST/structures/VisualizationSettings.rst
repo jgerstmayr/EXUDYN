@@ -494,7 +494,7 @@ VSettingsWindow has the following items:
 * | **renderWindowSize** [type = Index2, default = [1024,768], size = 2]:
   | \ ``SC.visualizationSettings.window.renderWindowSize``\ 
   | initial size of OpenGL render window in pixel
-* | **ResetKeyPressUserFunction()** [type = void]:
+* | **ResetKeyPressUserFunction()** [return type = void]:
   | set keyPressUserFunction to zero (no function); because this cannot be assign to the variable itself
 * | **showMouseCoordinates** [type = bool, default = False]:
   | \ ``SC.visualizationSettings.window.showMouseCoordinates``\ 

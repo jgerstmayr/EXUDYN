@@ -272,25 +272,92 @@ namespace EXUlie {
 		incDisp = A * H.GetTranslation();
 	}
 
-	//! compute the tangent operator TExpSE3 corresponding to ExpSE3, see \cite{Bruels2011}
+	////! compute the tangent operator TExpSE3 corresponding to ExpSE3, see \cite{Bruels2011}
+	//inline Matrix6D TExpSE3(const Vector3D& incDisp, const Vector3D& incRot)
+	//{
+	//	Matrix3D dispSkew = RigidBodyMath::Vector2SkewMatrix(incDisp);
+	//	Matrix3D rotSkew = RigidBodyMath::Vector2SkewMatrix(incRot);
+
+	//	Real phi = incRot.GetL2Norm();
+	//	Real phiHalf = phi * 0.5;
+	//	Matrix3D TDispRotPlus = (-0.5)*dispSkew;
+	//	if (phi != 0.)
+	//	{
+	//		Real phi2 = phi * phi;
+	//		Real a = (2 * sin(phiHalf)*cos(phiHalf)) / phi;
+	//		Real b = 4 * EXUstd::Square(sin(phiHalf)) / (phi2);
+	//		TDispRotPlus += 0.5*(1. - b)*dispSkew;
+	//		TDispRotPlus += ((1. - a) / (phi2))*(dispSkew*rotSkew + rotSkew*dispSkew); //could be optimized with transposed!
+	//		TDispRotPlus += -(((a - b) / (phi2))*incRot*incDisp)* rotSkew;
+	//		TDispRotPlus += ((1. / (phi2))*(0.5*b - (3. / (phi2))*(1. - a))*(incRot*incDisp))*(rotSkew*rotSkew);
+	//	}
+	//	Matrix3D MTexpSO3 = TExpSO3(incRot);
+	//	Matrix6D Texp(6, 6);
+	//	Texp.SetSubmatrix(MTexpSO3, 0, 0);
+	//	Texp.SetSubmatrix(TDispRotPlus, 0, 3);
+	//	Texp.SetSubmatrix(EXUmath::zeroMatrix3D, 3, 0);
+	//	Texp.SetSubmatrix(MTexpSO3, 3, 3);
+
+	//	return Texp;
+	//}
+
+
+	//SH*
+	//! compute the tangent operator TExpSE3 corresponding to ExpSE3, see Phd thesis Stefan Hante (Hante, S.: Geometric Integration of a Constrained Cosserat Beam Model.
+	//! PhD thesis, Martin Luther University Halle - Wittenberg(2022). https://doi.org/10.25673/91397
 	inline Matrix6D TExpSE3(const Vector3D& incDisp, const Vector3D& incRot)
 	{
 		Matrix3D dispSkew = RigidBodyMath::Vector2SkewMatrix(incDisp);
 		Matrix3D rotSkew = RigidBodyMath::Vector2SkewMatrix(incRot);
-
 		Real phi = incRot.GetL2Norm();
-		Real phiHalf = phi * 0.5;
-		Matrix3D TDispRotPlus = (-0.5)*dispSkew;
-		if (phi != 0.)
+		Real phiSquared = EXUstd::Square(phi);
+		Real f2, f3, f4, f5;
+
+		// coefficient f2, see Phd thesis Stefan Hante, Table. 1, page 121
+		if (phi >= 1e-2)
 		{
-			Real phi2 = phi * phi;
-			Real a = (2 * sin(phiHalf)*cos(phiHalf)) / phi;
-			Real b = 4 * EXUstd::Square(sin(phiHalf)) / (phi2);
-			TDispRotPlus += 0.5*(1. - b)*dispSkew;
-			TDispRotPlus += ((1. - a) / (phi2))*(dispSkew*rotSkew + rotSkew*dispSkew); //could be optimized with transposed!
-			TDispRotPlus += -(((a - b) / (phi2))*incRot*incDisp)* rotSkew;
-			TDispRotPlus += ((1. / (phi2))*(0.5*b - (3. / (phi2))*(1. - a))*(incRot*incDisp))*(rotSkew*rotSkew);
+			f2 = (cos(phi) - 1) / phiSquared;
 		}
+		else
+		{
+			f2 = -0.5 + (1 / 24)*phiSquared - (1 / 720)*phiSquared*phiSquared;
+		}
+
+		// coefficient f3, see Phd thesis Stefan Hante, Table. 1, page 121
+		if (phi >= 1e-4)
+		{
+			f3 = (phi - sin(phi)) / (phi*phiSquared);
+		}
+		else
+		{
+			f3 = 1 / 6 - (1 / 24)*phiSquared - (1 / 720)*phiSquared*phiSquared;
+		}
+
+		// coefficient f4, see Phd thesis Stefan Hante, Table. 1, page 121
+		if (phi >= 1e-1)
+		{
+			f4 = (2 - 2 * cos(phi) - phi * sin(phi)) / (phiSquared*phiSquared);
+		}
+		else
+		{
+			f4 = 1 / 12 - (1 / 180)*phiSquared + (1 / 6720)*phiSquared*phiSquared - (1 / 453600)*phiSquared*phiSquared*phiSquared;
+		}
+
+		// coefficient f5, see Phd thesis Stefan Hante, Table. 1, page 121
+		if (phi >= 1e-1)
+		{
+			f5 = (phi*(2 + cos(phi)) - 3 * sin(phi)) / (phi * phiSquared * phiSquared);
+		}
+		else
+		{
+			f5 = 1 / 60 - (1 / 1260)*phiSquared + (1 / 60480)*phiSquared*phiSquared - (1 / 4989600)*phiSquared*phiSquared*phiSquared;
+		}
+
+		Matrix3D TDispRotPlus = f2 * dispSkew;
+		TDispRotPlus += f3 * (dispSkew * rotSkew + rotSkew * dispSkew);
+		TDispRotPlus += f4 * (incRot*incDisp)*rotSkew;
+		TDispRotPlus -= f5 * (incRot*incDisp)*rotSkew*rotSkew;
+
 		Matrix3D MTexpSO3 = TExpSO3(incRot);
 		Matrix6D Texp(6, 6);
 		Texp.SetSubmatrix(MTexpSO3, 0, 0);
@@ -302,29 +369,73 @@ namespace EXUlie {
 	}
 
 
-	//! compute the inverse of tangent operator TExpSE3, see \cite{Sonneville2014}
+	////! compute the inverse of tangent operator TExpSE3, see \cite{Sonneville2014}
+	//inline Matrix6D TExpSE3Inv(const Vector3D& incDisp, const Vector3D& incRot)
+	//{
+	//	Real phi = incRot.GetL2Norm();
+	//	Matrix3D Tuwm;
+	//	if (phi == 0.)
+	//	{
+	//		Tuwm = 0.5*RigidBodyMath::Vector2SkewMatrix(incDisp);
+	//	}
+	//	else
+	//	{
+	//		Real phi2 = phi * phi;
+	//		Real alpha = EXUmath::Sinc(phi);
+	//		Real beta = 2. * (1. - cos(phi)) / (phi2);
+	//		Matrix3D dispSkew = RigidBodyMath::Vector2SkewMatrix(incDisp);
+	//		Matrix3D rotSkew = RigidBodyMath::Vector2SkewMatrix(incRot);
+	//		
+	//		Tuwm = 0.5*dispSkew;
+	//		Tuwm += ((beta - alpha) / (beta*phi2))*(dispSkew*rotSkew + rotSkew*dispSkew);
+	//		Tuwm += ((1. + alpha -2. * beta) / (beta*phi2*phi2))*(incRot*incDisp)*(rotSkew * rotSkew);
+	//	}
+	//	Matrix3D MTexpSO3Inv = TExpSO3Inv(incRot);
+	//	Matrix6D Tinv(6,6);
+	//	Tinv.SetSubmatrix(MTexpSO3Inv, 0, 0);
+	//	Tinv.SetSubmatrix(Tuwm, 0, 3);
+	//	Tinv.SetSubmatrix(EXUmath::zeroMatrix3D, 3, 0);
+	//	Tinv.SetSubmatrix(MTexpSO3Inv, 3, 3);
+
+	//	return Tinv;
+	//}
+
+	//SH*
+	//! compute the inverse of tangent operator TExpSE3, see Phd thesis Stefan Hante (Hante, S.: Geometric Integration of a Constrained Cosserat Beam Model.
+	//! PhD thesis, Martin Luther University Halle - Wittenberg(2022). https://doi.org/10.25673/91397
 	inline Matrix6D TExpSE3Inv(const Vector3D& incDisp, const Vector3D& incRot)
 	{
 		Real phi = incRot.GetL2Norm();
-		Matrix3D Tuwm;
-		if (phi == 0.)
+		Real phiSquared = EXUstd::Square(phi);
+		Real f6, f8;
+		Matrix3D dispSkew = RigidBodyMath::Vector2SkewMatrix(incDisp);
+		Matrix3D rotSkew = RigidBodyMath::Vector2SkewMatrix(incRot);
+
+		// coefficient f6, see Phd thesis Stefan Hante, Table. 1, page 121
+		if (phi >= 1e-2)
 		{
-			Tuwm = 0.5*RigidBodyMath::Vector2SkewMatrix(incDisp);
+			f6 = (2 - phi * EXUmath::Cot(0.5*phi)) / (2 * phiSquared);
+		}
+			else
+		{
+			f6 = 1 / 12 + (1 / 720)*phiSquared + (1 / 30240)*EXUstd::Square(phiSquared);
+		}
+
+		// coefficient f8, see Phd thesis Stefan Hante, Table. 1, page 121
+		if (phi >= 2e-1)
+		{
+			f8 = (phi*sin(phi) + 4 * cos(phi) + phiSquared - 4) / (4 * EXUstd::Square(sin(0.5*phi)) * EXUstd::Square(phiSquared));
 		}
 		else
 		{
-			Real phi2 = phi * phi;
-			Real alpha = EXUmath::Sinc(phi);
-			Real beta = 2. * (1. - cos(phi)) / (phi2);
-			Matrix3D dispSkew = RigidBodyMath::Vector2SkewMatrix(incDisp);
-			Matrix3D rotSkew = RigidBodyMath::Vector2SkewMatrix(incRot);
-			
-			Tuwm = 0.5*dispSkew;
-			Tuwm += ((beta - alpha) / (beta*phi2))*(dispSkew*rotSkew + rotSkew*dispSkew);
-			Tuwm += ((1. + alpha -2. * beta) / (beta*phi2*phi2))*(incRot*incDisp)*(rotSkew * rotSkew);
+			f8 = 1 / 360 + (1 / 7560)*phiSquared + (1 / 201600)*EXUstd::Square(phiSquared) + (1 / 5987520)*phiSquared*phiSquared*phiSquared + (691 / 130767436800)*phiSquared*phiSquared*phiSquared*phiSquared;
 		}
+
+		// Matrix C2, see Phd thesis Stefan Hante, Sect.A.3, page 117
+		Matrix3D Tuwm = 0.5*dispSkew + f6 * (dispSkew * rotSkew + rotSkew * dispSkew) + f8 * (incRot*incDisp)*(rotSkew * rotSkew);
+
 		Matrix3D MTexpSO3Inv = TExpSO3Inv(incRot);
-		Matrix6D Tinv(6,6);
+		Matrix6D Tinv(6, 6);
 		Tinv.SetSubmatrix(MTexpSO3Inv, 0, 0);
 		Tinv.SetSubmatrix(Tuwm, 0, 3);
 		Tinv.SetSubmatrix(EXUmath::zeroMatrix3D, 3, 0);
@@ -332,6 +443,7 @@ namespace EXUlie {
 
 		return Tinv;
 	}
+
 };
 
 //! get difference of *thi frame to HT1 as logarithm of relative homogeneous transformations

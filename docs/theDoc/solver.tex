@@ -471,10 +471,10 @@ If $h_{new} \le h$, the current step is accepted, otherwise the step is recomput
 For more details, see Hairer et al.\ \cite{Hairer1987}.
 
 \mysubsubsection{Stability limit}
-Note that there are hard limitations for every explicit integration method regarding the step size. Especially for stiff systems (basically with high stiffness parameters and small masses, but also with restrictions to damping), the \mybold{step size $h$ has an upper limit}: $h < h_{lim}$. Above that limit the method is inherently unstable, which needs to be considered both for constant and automatic step size selection.
+Note that there are hard limitations for every explicit integration method regarding the step size. Especially for stiff systems (basically with high stiffness parameters and small masses, but also with restrictions to damping), the \mybold{step size} $h$ \mybold{has an upper limit}: $h < h_{lim}$. Above that limit the method is inherently unstable, which needs to be considered both for constant and automatic step size selection.
 
 \mysubsubsection{Explicit Lie group integrators}
-All explicit solvers including the automatic step size solvers (DOPRI5, ODE23) have been equiped with Lie group integration functionality -- details will be published soon and some tests are made, but handle this with care.
+All explicit solvers including the automatic step size solvers (DOPRI5, ODE23) have been equiped with Lie group integration functionality, see Holzinger et al.\ \cite{HolzingerArnoldGerst2023}.
 
 Basically, the integration formulas, see \refSection{sec:rungekuttamethod} are extended for special rotation parameters.
 Lie group integration is currently only available for \texttt{NodeRigidBodyRotVecLG} used in \texttt{ObjectRigidBody} (3D rigid body). 
@@ -525,6 +525,7 @@ Hereafter, the system equations are solved at the end of the time step ($T$) for
   \item For consistency reasons, one may set $\gamma_\FO = \gamma$, but \mybold{currently we use} $\gamma_T = \frac 1 2$, leading to no numerical damping for \hac{ODE1} variables $\yv$.
   \item In the extension to the so-called generalized-$\alpha$ method \cite{Chung1993}, algorithmic accelerations $\aalg$ are used in \eq{eq_Newmark_interpolation}. 
   \item Algorithmic accelerations are no longer equivalent to the time derivatives of displacements, $\aalg \neq \ddot \qv$; thus, both sets of variables are used independently. In case of Newmark or the implicit trapezoidal rule just use $\aalg = \ddot \qv$.
+  \item Implicit solvers are also available with Lie groups, if according rigid body nodes (\texttt{NodeRigidBodyRotVecLG}) are used, for theory see Holzinger et al.\ \cite{HolzingerArnoldGerst2023}.
 \ei
 %
 For generalized-$\alpha$, the algorithmic accelerations $\aalg$ are computed from the recurrence relation

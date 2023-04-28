@@ -76,7 +76,8 @@ DESCRIPTION of NodeRigidBodyEP
   | global 3D angular acceleration vector of node
 
 
-\paragraphDetailed information:
+
+\ **Detailed information:** 
 All coordinates \ :math:`{\mathbf{c}}\cConfig`\  lead to second order differential equations, but there is one additional constraint equation for the quaternions.
 The additional constraint equation, which needs to be provided by the object, reads
 
@@ -115,7 +116,7 @@ The derivatives of the angular velocity vectors w.r.t.\ the rotation velocity co
    \LU{b}{\tomega} &=& \LU{b}{{\mathbf{G}}} \dot \ttheta.
 
 
-For creating a \ ``NodeRigidBodyEP``\ , there is a \ ``rigidBodyUtilities``\  function \ ``AddRigidBody``\ , 
+For creating a \ ``NodeRigidBodyEP``\  together with a rigid body, there is a \ ``rigidBodyUtilities``\  function \ ``AddRigidBody``\ , 
 see Section :ref:`sec-rigidbodyutilities-addrigidbody`\ , which simplifies the setup of a rigid body significantely!
 
 

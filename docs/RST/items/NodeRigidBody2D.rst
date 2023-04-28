@@ -74,7 +74,8 @@ DESCRIPTION of NodeRigidBody2D
   | global 3D angular acceleration vector of node
 
 
-\paragraphDetailed information:
+
+\ **Detailed information:** 
 The node provides 2 displacement coordinates (displacement of \ :ref:`COM <COM>`\ , (\ :math:`q_0,q_1`\ ) ) and 1 rotation parameter (\ :math:`\theta_0`\ ). According equations need to be provided by an according object (e.g., RigidBody2D).
 Using the rotation parameter \ :math:`\theta_{0\mathrm{config}} = \psi_{0ref} + \psi_{0\mathrm{config}}`\ , the rotation matrix is defined as
 

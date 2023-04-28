@@ -41,18 +41,38 @@ extern STDstring GetExudynBuildVersionString(bool addDetails); //for sensor/solu
 namespace py = pybind11;	//for py::object
 
 #include "Utilities/Parallel.h" //include after 
-//
-//#ifdef USE_NGSOLVE_TASKMANAGER
-//#include "ngs-core-master/ngs_core.hpp"
-//#include <thread>         // std::thread
-//#include <mutex>          // std::mutex, std::unique_lock, std::defer_lock
-////using namespace ngstd;
-//#endif
+
+const STDstring CSolverBase::GetErrorString() const
+{
+    if (!output.initializationSuccessful)
+    {
+        return "initialization not successful";
+    }
+    if (!output.finishedSuccessfully)
+    {
+        STDstring s;
+        STDstring sep;
+        if (conv.stepReductionFailed) { s += sep + "reduction of step size reached minimum step size"; sep = "; "; }
+        if (conv.linearSolverFailed) { s += sep + "linear solver failed (Jacobian singular)"; sep = "; "; }
+        if (conv.stopNewton) { s += sep + "Newton has been stopped"; sep = "; "; }
+        if (conv.newtonConverged) { s += sep + "Newton did not converged"; sep = "; "; }
+        if (conv.newtonSolutionDiverged) { s += sep + "solution diverged"; sep = "; "; }
+        if (conv.massMatrixNotInvertible) { s += sep + "Mass matrix was not invertible"; sep = "; "; }
+        if (conv.discontinuousIterationSuccessful) { s += sep + "discontinuous iteration was not successful"; sep = "; "; }
+
+        if (s.size() == 0) { s += sep + "non-specific error, e.g., Python user function or internal exception"; sep = "; "; }
+
+        return s;
+    }
+    return "";
+}
+
 
 //! initialize all data,it,conv; set/compute initial conditions (solver-specific!); initialize output files
 bool CSolverBase::InitializeSolver(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
 {
 	//keep the following order!
+    //output.initializationSuccessful set in InitCSolverBase
 	InitCSolverBase(); //reset all data, such that multiple calls to SolveSystem give same results
 
 	PreInitializeSolverSpecific(computationalSystem, simulationSettings); //do solver specific things
@@ -64,7 +84,8 @@ bool CSolverBase::InitializeSolver(CSystem& computationalSystem, const Simulatio
 		InitializeSolverInitialConditions(computationalSystem, simulationSettings);
 
 		PostInitializeSolverSpecific(computationalSystem, simulationSettings); //do solver specific things
-		return true;
+        output.initializationSuccessful = true;
+        return true;
 	}
 	return false;
 }
@@ -157,66 +178,70 @@ void CSolverBase::InitializeSolverOutput(CSystem& computationalSystem, const Sim
 	//open sensor files
 	//for every sensor there is an according enty in sensorFileList (may be Null pointer)
 	//files need to be closed at any exit point!!!
-	for (auto item : computationalSystem.GetSystemData().GetCSensors())
-	{
-		Index cnt = 0;
-		if (item->GetWriteToFileFlag() && item->GetFileName().length() != 0)
-		{
-			std::ofstream* sensorFile = new std::ofstream;
-			file.sensorFileList.push_back(sensorFile);
-			auto fileMode = std::ofstream::out;
-			if (solutionSettings.sensorsAppendToFile) { fileMode = std::ofstream::app; }
 
-			CheckPathAndCreateDirectories(item->GetFileName());
-			sensorFile->open(item->GetFileName(), fileMode);
+    if (solutionSettings.sensorsStoreAndWriteFiles)
+    {
+        for (auto item : computationalSystem.GetSystemData().GetCSensors())
+        {
+            Index cnt = 0;
+            if (item->GetWriteToFileFlag() && item->GetFileName().length() != 0)
+            {
+                std::ofstream* sensorFile = new std::ofstream;
+                file.sensorFileList.push_back(sensorFile);
+                auto fileMode = std::ofstream::out;
+                if (solutionSettings.sensorsAppendToFile) { fileMode = std::ofstream::app; }
 
-			if (!sensorFile->is_open()) //failed to open file ...  e.g. invalid file name
-			{
-				SysError(STDstring("failed to open sensor file '") + item->GetFileName() + "' (sensor number " + EXUstd::ToString(cnt) + ")", file.solverFile);
-				file.sensorFileList.back() = nullptr; //mark this ofstream as unwriteable
-			}
-			else
-			{
-				sensorFile->precision(solutionSettings.outputPrecision);
-			}
-			cnt++;
-		}
-		else
-		{
-			file.sensorFileList.push_back(nullptr);
-		}
-		
-		//process for internal storage:
-		if (item->GetStoreInternalFlag())
-		{
-			if (!solutionSettings.sensorsAppendToFile || item->GetInternalStorage().NumberOfRows() == 0)
-			{
+                CheckPathAndCreateDirectories(item->GetFileName());
+                sensorFile->open(item->GetFileName(), fileMode);
 
-				Index stepsPlanned = 100; //allocate at least some space which makes no big problems
-				if (IsStaticSolver())
-				{
-					stepsPlanned = EXUstd::Maximum(simulationSettings.staticSolver.numberOfLoadSteps, stepsPlanned);
-				}
-				else
-				{ 
-					Real writeSteps = simulationSettings.timeIntegration.endTime - simulationSettings.timeIntegration.startTime;
-					if (simulationSettings.solutionSettings.sensorsWritePeriod != 0)
-					{
-						writeSteps /= simulationSettings.solutionSettings.sensorsWritePeriod;
-					}
-					stepsPlanned = EXUstd::Maximum((Index)writeSteps, stepsPlanned);
-					stepsPlanned = EXUstd::Minimum(10000, stepsPlanned); //not too big, if they are never computed ...!
-				}
+                if (!sensorFile->is_open()) //failed to open file ...  e.g. invalid file name
+                {
+                    SysError(STDstring("failed to open sensor file '") + item->GetFileName() + "' (sensor number " + EXUstd::ToString(cnt) + ")", file.solverFile);
+                    file.sensorFileList.back() = nullptr; //mark this ofstream as unwriteable
+                }
+                else
+                {
+                    sensorFile->precision(solutionSettings.outputPrecision);
+                }
+                cnt++;
+            }
+            else
+            {
+                file.sensorFileList.push_back(nullptr);
+            }
 
-				//pre-allocate data:
-				item->GetInternalStorage().SetNumberOfRowsAndColumns(stepsPlanned, 4); //typical size for position sensor; will be less optimal for Coordinates sensor with 100+ coordinates, but only log2(nSteps) memory allocations
+            //process for internal storage:
+            if (item->GetStoreInternalFlag())
+            {
+                if (!solutionSettings.sensorsAppendToFile || item->GetInternalStorage().NumberOfRows() == 0)
+                {
 
-				//this marks that sensor data is reset ...
-				item->GetInternalStorage().SetNumberOfRowsAndColumns(0, 0); 
+                    Index stepsPlanned = 100; //allocate at least some space which makes no big problems
+                    if (IsStaticSolver())
+                    {
+                        stepsPlanned = EXUstd::Maximum(simulationSettings.staticSolver.numberOfLoadSteps, stepsPlanned);
+                    }
+                    else
+                    {
+                        Real writeSteps = simulationSettings.timeIntegration.endTime - simulationSettings.timeIntegration.startTime;
+                        if (simulationSettings.solutionSettings.sensorsWritePeriod != 0)
+                        {
+                            writeSteps /= simulationSettings.solutionSettings.sensorsWritePeriod;
+                        }
+                        stepsPlanned = EXUstd::Maximum((Index)writeSteps, stepsPlanned);
+                        stepsPlanned = EXUstd::Minimum(10000, stepsPlanned); //not too big, if they are never computed ...!
+                    }
 
-			};
-		}
-	}
+                    //pre-allocate data:
+                    item->GetInternalStorage().SetNumberOfRowsAndColumns(stepsPlanned, 4); //typical size for position sensor; will be less optimal for Coordinates sensor with 100+ coordinates, but only log2(nSteps) memory allocations
+
+                    //this marks that sensor data is reset ...
+                    item->GetInternalStorage().SetNumberOfRowsAndColumns(0, 0);
+
+                };
+            }
+        }
+    }
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	if (IsVerboseCheck(1))
@@ -362,14 +387,13 @@ void CSolverBase::InitializeSolverData(CSystem& computationalSystem, const Simul
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//parallelization started
-	Index taskmanagerNumthreads = 1;
 	output.multiThreadingMode = 0; //no multithreading
 	output.numberOfThreadsUsed = 1;
 
 	if (exuThreading::TaskManager::IsRunning()) //should not happen; only if FinalizeSolver has not been called in last computation
 	{
 		PyWarning("Initialize Solver: TaskManager already/still running from previous computation; this may indicate a recursive/parallel solver call with numberOfThreads>1; exiting task manager now");
-		exuThreading::ExitTaskManager(taskmanagerNumthreads);
+		exuThreading::ExitTaskManager(1); //arg must be larger than 1 to stop active workers
 	}
 
 	//Eigen::initParallel(); //with C++11 and eigen 3.3 optional
@@ -385,27 +409,27 @@ void CSolverBase::InitializeSolverData(CSystem& computationalSystem, const Simul
 		//TaskManager::SetPajeTrace(true);
 		//PajeTrace::SetMaxTracefileSize(100000000);
 
-		taskmanagerNumthreads = exuThreading::EnterTaskManager(); //this is needed in order that any ParallelFor is executed in parallel during solving
+		exuThreading::EnterTaskManager(); //this is needed in order that any ParallelFor is executed in parallel during solving
 
-		if (exuThreading::TaskManager::GetNumThreads() == 1) //this reflects that taskmanager is not running!
+        output.numberOfThreadsUsed = exuThreading::TaskManager::GetNumThreads();
+        
+        if (output.numberOfThreadsUsed == 1) //this reflects that taskmanager is not running!
 		{
 			PyWarning("Initialize Solver: requested " + EXUstd::ToString(nThreads) + " threads, but taskmanager not available (Exudyn maybe not built with taskmanager?)");
 		}
 		else
 		{
-			//VerboseWrite(1, "EnterTaskManager with " + EXUstd::ToString(taskmanagerNumthreads) + " threads\n");
 			STDstring strThreading;
 #ifdef USE_MICROTHREADING
 			strThreading = " (tiny threading)";
 #endif 
 			VerboseWrite(1, STDstring("Start multi-threading with ") + 
-				EXUstd::ToString(exuThreading::TaskManager::GetNumThreads()) + " threads" + strThreading + "\n");
+				EXUstd::ToString(output.numberOfThreadsUsed) + " threads" + strThreading + "\n");
 
-			output.multiThreadingMode = exuThreading::TaskManager::GetNumThreads(); //no multithreading
 #ifdef USE_MICROTHREADING
-			output.numberOfThreadsUsed = 2; //mode 2 = microthreading
+			output.multiThreadingMode = 2; //mode 2 = microthreading
 #else
-			output.numberOfThreadsUsed = 1; //mode 1 = NGsolve original
+			output.multiThreadingMode = 1; //mode 1 = NGsolve original
 #endif
 
 		}
@@ -415,15 +439,12 @@ void CSolverBase::InitializeSolverData(CSystem& computationalSystem, const Simul
 		//this is needed to set back number of threads to 0, which otherwise causes that CSystem functions are still using parallel mode if there was a parallel run before
 		exuThreading::TaskManager::SetNumThreads(1); //necessary in order that computation functions have reserved correct size of arrays
 
-		//removed 2023-03-28
-		//taskmanagerNumthreads = exuThreading::EnterTaskManager(); 
-		//exuThreading::ExitTaskManager(taskmanagerNumthreads);
 	}
 	//pout << "numThreads after init=" << exuThreading::TaskManager::GetNumThreads() << "\n";
 
 	data.tempCompData = TemporaryComputationData();		//totally reset; for safety for now!
 	data.tempCompDataArray.EraseData();		//totally reset; for safety for now!
-	data.tempCompDataArray.SetNumberOfItems(taskmanagerNumthreads);
+	data.tempCompDataArray.SetNumberOfItems(output.numberOfThreadsUsed);
 }
 
 
@@ -563,13 +584,6 @@ bool CSolverBase::SolveSystem(CSystem& computationalSystem, const SimulationSett
 //! main solver part: calls multiple InitializeStep(...)/PerformStep(...); do step reduction if necessary; return true if success, false else
 void CSolverBase::FinalizeSolver(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
 {
-	Index nThreads = simulationSettings.parallel.numberOfThreads;
-	if (nThreads > 1 && exuThreading::TaskManager::GetNumThreads() > 1)
-	{
-		VerboseWrite(1, "Stop multi-threading\n");
-		exuThreading::ExitTaskManager(exuThreading::TaskManager::GetNumThreads());
-		exuThreading::TaskManager::SetNumThreads(1); //for next computation, if it is going to be serial
-	}
 
 	if (IsVerboseCheck(1))
 	{
@@ -679,7 +693,7 @@ void CSolverBase::FinalizeSolver(CSystem& computationalSystem, const SimulationS
 			ExuFile::BinaryWrite("EXUEND", file.solutionFile, bfs);
 		}
 
-		if (simulationSettings.solutionSettings.sensorsWriteFileFooter)
+		if (simulationSettings.solutionSettings.sensorsWriteFileFooter && simulationSettings.solutionSettings.sensorsStoreAndWriteFiles)
 		{
 			Index cnt = 0;
 			for (auto item : computationalSystem.GetSystemData().GetCSensors())
@@ -707,11 +721,26 @@ void CSolverBase::FinalizeSolver(CSystem& computationalSystem, const SimulationS
 
 	if (!conv.stepReductionFailed)
 	{
-        STDstring str = "Solver finished successfully";
-        if (computationalSystem.GetPostProcessData()->stopSimulation) { str += "(user stops)"; }
+		STDstring str = "Solver finished successfully";
+		if (computationalSystem.GetPostProcessData()->stopSimulation) { str += "(user stops)"; }
 		computationalSystem.GetPostProcessData()->SetSolverMessage(str);
 	}
 	else { computationalSystem.GetPostProcessData()->SetSolverMessage("Solver finished with errors"); }
+
+	StopThreadsAndCloseFiles();
+}
+
+void CSolverBase::StopThreadsAndCloseFiles()
+{
+	//Index nThreads = simulationSettings.parallel.numberOfThreads;
+	if (exuThreading::TaskManager::IsRunning())
+	{
+		VerboseWrite(1, "Stop multi-threading\n");
+        exuThreading::ExitTaskManager(1); // output.numberOfThreadsUsed);
+        exuThreading::TaskManager::SetNumThreads(1); //for next computation, if it is going to be serial
+        output.numberOfThreadsUsed = 1;
+        output.multiThreadingMode = 0;
+    }
 
 	//++++++++++++++++++++++++++++++++++
 	//final finalize: close files (NO EARLIER!)
@@ -742,6 +771,7 @@ bool CSolverBase::SolveSteps(CSystem& computationalSystem, const SimulationSetti
 
 	it.currentStepIndex = 0;
 	output.lastVerboseStepIndex = 0;
+    output.finishedSuccessfully = false; //this is set upon each call of SolveSteps, otherwise it could be true since previous call
 
 	conv.stepReductionFailed = false;
 	conv.jacobianUpdateRequested = true;	//for modified Newton, only request Newton at first step
@@ -843,6 +873,7 @@ bool CSolverBase::SolveSteps(CSystem& computationalSystem, const SimulationSetti
 		if (it.currentTime >= it.endTime - 1e-10) { simulationEndTimeReached = true; } //accept small tolerance
 	}//time integration loop
 
+    output.finishedSuccessfully = !conv.stepReductionFailed; //if only SolveSteps is called
 	return !conv.stepReductionFailed; //return success (true) or fail (false)
 }
 
@@ -1839,7 +1870,7 @@ void CSolverBase::WriteCoordinatesToFile(const CSystem& computationalSystem, con
 //! write unique sensor file header, depending on static/dynamic simulation
 void CSolverBase::WriteSensorsFileHeader(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
 {
-	if (!simulationSettings.solutionSettings.sensorsWriteFileHeader) { return; }
+	if (!simulationSettings.solutionSettings.sensorsWriteFileHeader || !simulationSettings.solutionSettings.sensorsStoreAndWriteFiles) { return; }
 
 	Index cnt = 0;
 	for (auto item : computationalSystem.GetSystemData().GetCSensors())
@@ -1884,6 +1915,8 @@ void CSolverBase::WriteSensorsFileHeader(CSystem& computationalSystem, const Sim
 //! write unique sensor solution file
 void CSolverBase::WriteSensorsToFile(const CSystem& computationalSystem, const SimulationSettings& simulationSettings)
 {
+    if (!simulationSettings.solutionSettings.sensorsStoreAndWriteFiles) { return; }
+
 	Real t = computationalSystem.GetSystemData().GetCData().currentState.time;
 	Real startTime = computationalSystem.GetSystemData().GetCData().initialState.time;
 

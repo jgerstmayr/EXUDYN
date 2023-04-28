@@ -19,15 +19,63 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.6.65.dev1, 
-+  last change =  2023-04-20, 
-+  Number of issues = 1524, 
-+  Number of resolved issues = 1345 (65 in current version), 
++  Exudyn version = 1.6.80.dev1, 
++  last change =  2023-04-27, 
++  Number of issues = 1539, 
++  Number of resolved issues = 1360 (80 in current version), 
 
 ***********
 Version 1.6
 ***********
 
+ * Version 1.6.80: resolved Issue 1538: taskmanager (fix)
+    - description:  fix problem with taskmanager shutdown due to issue 1532
+    - date resolved: **2023-04-27 15:35**\ , date raised: 2023-04-27 
+ * Version 1.6.79: resolved Issue 1537: output.multiThreadingMode (fix)
+    - description:  has not been set correctly in solver so far; switch output.numberOfThreadsUsed and output.multiThreadingMode
+    - date resolved: **2023-04-27 15:35**\ , date raised: 2023-04-27 
+ * Version 1.6.78: resolved Issue 1535: writeSensors (extension)
+    - description:  add global flag to deactivate sensor file creating/writing and sensor storing; set flag in solver functions such as ComputeLinearizedSystem, etc. to avoid erasing sensor files or sensor data
+    - date resolved: **2023-04-27 11:34**\ , date raised: 2023-04-26 
+ * Version 1.6.77: resolved Issue 1533: FinalizeSolver (fix)
+    - description:  call FinalizeSolver in ComputeLinearizedSystem, ComputeSystemDegreeOfFreedom, ComputeODE2Eigenvalues for consistency reason; also deactivate file writing and sensor writing and solverInformation writing
+    - date resolved: **2023-04-26 19:25**\ , date raised: 2023-04-26 
+ * Version 1.6.76: resolved Issue 1532: CSolverBase.cpp (fix)
+    - description:  close output and sensor files in destructor of CSolverBase
+    - date resolved: **2023-04-26 19:24**\ , date raised: 2023-04-26 
+ * Version 1.6.75: resolved Issue 1534: EXUlie (change)
+    - description:  improve TExpSE3 and TExpSE3Inv regarding small values according to PhD thesis of Stefan Hante
+    - **notes:** improves numerical behavior and convergence of GeometricallyExactBeam
+    - date resolved: **2023-04-26 18:33**\ , date raised: 2023-04-26 
+ * Version 1.6.74: resolved Issue 1531: OpenVR (fix)
+    - description:  change order of eye transformation and projection in OpenVRinterface GetCurrentViewProjectionMatrix to be consistent with master thesis
+    - date resolved: **2023-04-26 16:49**\ , date raised: 2023-04-26 
+ * Version 1.6.73: resolved Issue 1530: ComputeSystemDegreeOfFreedom (extension)
+    - description:  add exudyn.solver function to numerically compute DOF of constrained mechanisms
+    - date resolved: **2023-04-26 11:16**\ , date raised: 2023-04-26 
+ * Version 1.6.72: resolved Issue 1528: structures and settings (docu)
+    - description:  function arguments in RST / html are inappropriately noted; fix; replace true/false with True/False
+    - date resolved: **2023-04-26 09:16**\ , date raised: 2023-04-26 
+ * Version 1.6.71: resolved Issue 1527: GeneralContact (extension)
+    - description:  add function UpdateContacts, which computes current bounding boxes and active contacts, to be used in access functions to GeneralContact if isActive=False (otherwise this is anyway done in contact computations of every computation step)
+    - date resolved: **2023-04-23 20:15**\ , date raised: 2023-04-23 
+ * Version 1.6.70: resolved Issue 0935: GeneralContact (extension)
+    - description:  add interface function to get contact pairs
+    - **notes:** function GetActiveContacts added to GeneralContact, which returns all active global contact indices for selected contact type
+    - date resolved: **2023-04-23 20:13**\ , date raised: 2022-02-10 
+ * Version 1.6.69: resolved Issue 1516: solver failed function (extension)
+    - description:  add function to check if solver failed, using stored solver structure as input; return True/False and string (optionally error code) describing failure
+    - **notes:** added function SolverSuccess() to exudyn.solver; returns success and error string as created by solver internal function GetErrorString(...)
+    - date resolved: **2023-04-23 18:43**\ , date raised: 2023-04-19 
+ * Version 1.6.68: resolved Issue 1526: solver GetErrorString (extension)
+    - description:  MainSolverStatic, MainSolverExplicit, MainSolverImplicit now get function GetErrorString to obtain error string set if SolveSteps or SolveSystem failed (returned false)
+    - date resolved: **2023-04-23 11:46**\ , date raised: 2023-04-23 
+ * Version 1.6.67: resolved Issue 1525: output.finishedSuccessfully (extension)
+    - description:  flag is now set both in SolveSteps(...) as well in SolveSystem(...) to indicate if solver has been successful or failed; practical flag for lateron determination of solver errors
+    - date resolved: **2023-04-23 11:46**\ , date raised: 2023-04-23 
+ * Version 1.6.66: resolved Issue 1524: netgen STL file (examples)
+    - description:  add example with netgen and STL files with meshing
+    - date resolved: **2023-04-21 17:51**\ , date raised: 2023-04-21 
  * Version 1.6.65: resolved Issue 1521: ObjectFFRFreducedOrderInterface (extension)
     - description:  add LoadFromFile/SaveToFile similar to FEMinterface
     - **notes:** this function should be used to store CMS data if FEM is too large to load/store; CMS data still stores all node positions, triangle list (for visualization) and modeBasis for computation tasks; may be still large e.g. for many nodes and large number of modes
@@ -4364,9 +4412,13 @@ Version 0.1
 Open issues
 ***********
 
- * **open issue 1516:** solver failed function
-    - description:  add function to check if solver failed, using stored solver structure as input; return True/False and string (optionally error code) describing failure
-    - date raised: 2023-04-19 
+ * **open issue 1536:** mutable arguments   
+    - description:  check and fix Python functions with mutable arguments such as [] or , with potential risk of changing internally in function, leading to unexpected behavior in second call
+    - date raised: 2023-04-27 
+
+ * **open issue 1529:** solver              
+    - description:  solver functions GetSystemJacobian() and GetSystemMassMatrix() need to be extended with arg sparseTriplets=False; if True, it will return CSR sparse triplets, useful for large matrices, e.g. in eigenvalue computation in linearized system
+    - date raised: 2023-04-26 
 
  * :textred:`open issue 1512:` return value policy 
     - description:  check return value policy of GeneralContact (as example for further decisions); see if reference in ALL access functions makes no problems if object is deleted on Python side
@@ -4630,10 +4682,6 @@ Open issues
 
  * **open issue 0936:** GeneralContact      
     - description:  add interface function to get contact forces
-    - date raised: 2022-02-10 
-
- * **open issue 0935:** GeneralContact      
-    - description:  add interface function to get contact pairs
     - date raised: 2022-02-10 
 
  * **open issue 0927:** GeneralContact ANCF 

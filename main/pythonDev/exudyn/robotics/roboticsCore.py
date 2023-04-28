@@ -1162,7 +1162,10 @@ class InverseKinematicsNumerical():
         # sparse solver settings are faster for redundant mbs
         self.mbsIK.Assemble()   
         self.sysStateList = self.mbsIK.systemData.GetSystemState()
-        return
+
+    def __def__(self):
+        self.staticSolver.FinalizeSolver(self.mbsIK, self.simulationSettings)
+        
     # debugging helper function 
     def createVector(p0, p01): 
         x = [p0[0], p0[0] + p01[0]]

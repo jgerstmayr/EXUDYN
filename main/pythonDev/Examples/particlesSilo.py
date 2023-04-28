@@ -196,6 +196,10 @@ oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0],
 mbs.Assemble()
 print("finish gContact")
 
+items=gContact.GetItemsInBox(pMin=[-4,-4,0], pMax=[4,4,20])
+print('n spheres=',len(items['MarkerBasedSpheres'])) 
+
+
 tEnd = 50
 #tEnd = h*100
 simulationSettings = exu.SimulationSettings()

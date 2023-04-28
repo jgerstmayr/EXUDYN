@@ -151,6 +151,7 @@ if calcEig:
         exu.Print("ev=", f6)
         testRefVal += f6 #first bending eigenmode
 
+    staticSolver.FinalizeSolver(mbs, simulationSettings)
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++
 #TEST

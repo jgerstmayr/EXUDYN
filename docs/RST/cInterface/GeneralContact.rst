@@ -9,7 +9,7 @@ GeneralContact
 
 
 
-Structure to define general and highly efficient contact functionality in multibody systems\ (Note that GeneralContact is still developed, use with care.). For further explanations and theoretical backgrounds, see Section :ref:`seccontacttheory`\ .
+Structure to define general and highly efficient contact functionality in multibody systems\ (Note that GeneralContact is still developed, use with care.). For further explanations and theoretical backgrounds, see Section :ref:`seccontacttheory`\ . Internally, the contacts are stored with global indices, which are in the following list: [numberOfSpheresMarkerBased, numberOfANCFCable2D, numberOfTrigsRigidBodyBased], see alsothe output of GetPythonObject().
 
 .. code-block:: python
    :linenos:
@@ -103,6 +103,24 @@ Structure to define general and highly efficient contact functionality in multib
   | Get dictionary with position, radius and markerIndex for markerBasedSphere index, as returned e.g. from GetItemsInBox
 * | **ShortestDistanceAlongLine**\ (\ *pStart*\  = [0,0,0], \ *direction*\  = [1,0,0], \ *minDistance*\  = -1e-7, \ *maxDistance*\  = 1e7, \ *asDictionary*\  = False, \ *cylinderRadius*\  = 0, \ *typeIndex*\  = Contact.IndexEndOfEnumList): 
   | Find shortest distance to contact objects in GeneralContact along line with pStart (given as 3D list or numpy array) and direction (as 3D list or numpy array with no need to be normalized); the function returns the distance which is >= minDistance and < maxDistance; in case of beam elements, it measures the distance to the beam centerline; the distance is measured from pStart along given direction and can also be negative; if no item is found along line, the maxDistance is returned; if asDictionary=False, the result is a float, while otherwise details are returned as dictionary (including distance, velocityAlongLine (which is the object velocity in given direction and may be different from the time derivative of the distance; works similar to a laser Doppler vibrometer - LDV), itemIndex and itemType in GeneralContact); the cylinderRadius, if not equal to 0, will be used for spheres to find closest sphere along cylinder with given point and direction; the typeIndex can be set to a specific contact type, e.g., which are searched for (otherwise all objects are considered)
+* | **UpdateContacts**\ (\ *mainSystem*\ ): 
+  | Update contact sets, e.g. if no contact is simulated (isActive=False) but user functions need up-to-date contact states for GetItemsInBox(...) or for GetActiveContacts(...)
+  | *Example*:
+
+  .. code-block:: python
+
+     gContact.UpdateContacts(mbs)
+
+* | **GetActiveContacts**\ (\ *typeIndex*\ , \ *itemIndex*\ ): 
+  | Get list of global item numbers which are in contact with itemIndex of type typeIndex in case that the global itemIndex is smaller than the abs value of the contact pair index; a negative sign indicates that the contacting (spheres) is in Coloumb friction, a positive sign indicates a regularized friction region; for interpretation of global contact indices, see gContact.GetPythonObject() and documentation; requires either implicit contact computation or UpdateContacts(...) needs to be called prior to this function
+  | *Example*:
+
+  .. code-block:: python
+
+     #if explicit solver is used, we first need to update contacts:
+     gContact.UpdateContacts(mbs)\#obtain active contacts of marker based sphere 42:
+     gList = gContact.GetActiveContacts(exu.ContactTypeIndex.IndexSpheresMarkerBased, 42)
+
 * | **\_\_repr\_\_()**\ : 
   | return the string representation of the GeneralContact, containing basic information and statistics
 

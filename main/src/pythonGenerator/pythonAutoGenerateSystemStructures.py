@@ -213,7 +213,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
 
                 plr.SystemStructuresWriteDefRow(pythonName, typeName, Str2Latex(parameter['size']), 
                                             sString+defaultValueStr+sString, paramDescriptionStr, 
-                                            typicalPaths=typicalPaths)
+                                            typicalPaths=typicalPaths, isFunction=False)
                                 
 
             if (parameter['lineType'].find('F') != -1) and (parameter['cFlags'].find('P') != -1): #only if it is a function
@@ -221,21 +221,19 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                 functionName = Str2Latex(parameter['pythonName'])
                 argStr = parameter['args']
                 if (argStr != ''):
-                    functionName += '(...)'
+                    #functionName += '(...)' #now added in SystemStructuresWriteDefRow
                     argSplit = argStr.split(',') #split into list of args
                     argStr = ''
                     argSep = '' #no comma for first time
                     for item in argSplit:
                         argName = item.split(' ')[-1] #last word in args is the name of the argument, e.g. in const MainSystem& mainSystem ==> mainSystem
                         argName = Str2Latex(argName)
-                        argStr += argSep + argName
+                        argStr += argSep + argName.replace('=true','=True').replace('=false','=False')
                         argSep = ', '
-                else: 
-                    functionName += '()'
 
                 functionType = Str2Latex(parameter['type'])
-                if (len(functionName)>28): 
-                    functionType = '\\tabnewline ' + functionType
+                # if (len(functionName)>28):  #done now in SystemStructuresWriteDefRow
+                #     functionType = '\\tabnewline ' + functionType
 
                 # plr.sLatex += '    ' + functionName + ' & '
                 # plr.sLatex += '    ' + functionType + ' & '
@@ -245,7 +243,8 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                 # plr.sLatex += '    ' + Str2Latex(parameter['parameterDescription'], replaceCurlyBracket=False) + '\\\\ \\hline\n' #Str2Latex not used, must be latex compatible!!!
 
                 plr.SystemStructuresWriteDefRow(functionName, functionType, Str2Latex(parameter['size']), argStr, 
-                                            Str2Latex(parameter['parameterDescription'], replaceCurlyBracket=False))
+                                            Str2Latex(parameter['parameterDescription'], replaceCurlyBracket=False),
+                                            isFunction=True)
                 
         plr.sLatex += '	  \\end{longtable}\n'
         plr.sLatex += '	\\end{center}\n'
@@ -418,7 +417,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                     paramInitStr = paramStr+ '= '+'(const ' + typeStr+ '&)' + paramStrPure + 'Init'
                     #in this case, we need special typecast
                     if typeStr == 'Matrix3D' or typeStr == 'Matrix6D': #in linux casting from std::array<std::array<Real,...>> gives segmentation fault (overrides strangely)
-                        print('parameter '+parameter['pythonName']+' needs special treatment:', typeStr)
+                        #print('parameter '+parameter['pythonName']+' needs special treatment:', typeStr)
                         typeCastStr = 'py::object'
                         matDim = 3
                         if typeStr == 'Matrix6D':

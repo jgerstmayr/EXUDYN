@@ -226,6 +226,7 @@ void GeneralContact::Reset(bool freeMemory)
 
 		CallOnAllContacts(SetNumberOfItems, 0, EXU_NOARG);
 	}
+
 }
 
 Index TSboundingBoxes;
@@ -518,7 +519,10 @@ void GeneralContact::FinalizeContact(const CSystem& cSystem)//, Index3 searchTre
 	searchTreeBox.SetPMax(settings.searchTreeBoxMaxInit); //this initialization gives Empty()=true or the specified value
 
 	TemporaryComputationDataArray tempArray; //will allocate memory, but just done in finalize contact
-	if (searchTreeBox.Empty())
+    //data.tempCompDataArray.EraseData();		//totally reset; for safety for now!
+    tempArray.SetNumberOfItems(exuThreading::TaskManager::GetNumThreads());
+
+    if (searchTreeBox.Empty())
 	{
 		//pout << "auto compute searchTree box\n";
 		//CHECKandTHROWstring("GeneralContact::FinalizeContact(...): autocompute searchTreeBox not implemented (specify a valid range!)");
@@ -1291,8 +1295,8 @@ void GeneralContact::ComputeContactTrigsRigidBodyBased(TemporaryComputationDataA
 		//went inside parallel loop:
 		Index threadID = exuThreading::TaskManager::GetThreadId();
 		ResizableVector& ode2Lhs = tempArray[threadID].localODE2LHS;
-		//Index index2JacIndex = globalJacobianIndexOffsets[trigsRigidBodyBasedIndex] - globalContactIndexOffsets[trigsRigidBodyBasedIndex];
-		std::array<Vector3D, 3> trigPoints; //global triangle points
+
+        std::array<Vector3D, 3> trigPoints; //global triangle points
 		Vector3D trigPP; //point at shortest distance on triangle or triangle edges
 		Index inside;
 
@@ -2652,7 +2656,36 @@ bool GeneralContact::ShortestDistanceAlongLine(const Vector3D& pStart, const Vec
 }
 
 
+//! update contact interactions, e.g. for ShortestDistanceAlongLine or for getting items in box
+void GeneralContact::UpdateContacts(const CSystem& cSystem)
+{
+    STARTGLOBALTIMERmain(TScontactPostNewton);
+    Vector systemODE2Rhs; //dummy, unused
 
+    if (externFunctionsTempArray.NumberOfItems() != exuThreading::TaskManager::GetNumThreads())
+    {
+        externFunctionsTempArray.EraseData();		//totally reset; for safety for now!
+        externFunctionsTempArray.SetNumberOfItems(exuThreading::TaskManager::GetNumThreads());
+    }
+
+    ComputeContact<CCactiveSets>(cSystem, externFunctionsTempArray, systemODE2Rhs);
+
+    STOPGLOBALTIMERmain(TScontactPostNewton);
+}
+
+//! get contact interactions of itemIndex of type selectedTypeIndex, e.g. IndexSpheresMarkerBased with index 2
+//! returns list of contacts, with global indices!
+ArrayIndex* GeneralContact::GetActiveContacts(Contact::TypeIndex selectedTypeIndex, Index itemIndex)
+{
+    CHECKandTHROW(selectedTypeIndex < Contact::IndexEndOfEnumList && selectedTypeIndex >= 0, "GetContactInteractions: selectedTypeIndex must be within available types");
+    Index nItemsAvailable = globalContactIndexOffsets[selectedTypeIndex+1] - globalContactIndexOffsets[selectedTypeIndex];
+
+    CHECKandTHROW(itemIndex < nItemsAvailable, "GetContactInteractions: itemIndex is out of available range");
+    
+    Index globalIndex = itemIndex + globalContactIndexOffsets[selectedTypeIndex]; 
+
+    return allActiveContacts[globalIndex];
+}
 
 
 

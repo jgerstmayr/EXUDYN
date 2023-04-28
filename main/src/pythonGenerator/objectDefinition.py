@@ -180,7 +180,7 @@ equations =
       \LU{0}{\tomega} &=& \LU{0}{\Gm} \dot \ttheta, \\
       \LU{b}{\tomega} &=& \LU{b}{\Gm} \dot \ttheta.
     \eea
-    For creating a \texttt{NodeRigidBodyEP}, there is a \texttt{rigidBodyUtilities} function \texttt{AddRigidBody}, 
+    For creating a \texttt{NodeRigidBodyEP} together with a rigid body, there is a \texttt{rigidBodyUtilities} function \texttt{AddRigidBody}, 
     see \refSection{sec:rigidBodyUtilities:AddRigidBody}, which simplifies the setup of a rigid body significantely!
     %%RSTCOMPATIBLE
     %return ConstSizeMatrix<3*maxRotCoordinates>(3, 4, {  -2.*ep[1], 2.*ep[0],-2.*ep[3], 2.*ep[2],
@@ -286,7 +286,7 @@ equations =
       \LU{b}{\tomega} &=& \LU{b}{\Gm} \dot \ttheta.
     \eea
     
-    For creating a \texttt{NodeRigidBodyRxyz}, there is a \texttt{rigidBodyUtilities} function \texttt{AddRigidBody}, 
+    For creating a \texttt{NodeRigidBodyRxyz} together with a rigid body, there is a \texttt{rigidBodyUtilities} function \texttt{AddRigidBody}, 
     see \refSection{sec:rigidBodyUtilities:AddRigidBody}, which simplifies the setup of a rigid body significantely!
     %%RSTCOMPATIBLE
 /end
@@ -376,7 +376,7 @@ equations =
     %  \LU{b}{\tomega} &=& \LU{b}{\Gm} \dot \ttheta.
     %\eea
     
-    For creating a \texttt{NodeRigidBodyRotVecLG}, there is a \texttt{rigidBodyUtilities} function \texttt{AddRigidBody}, 
+    For creating a \texttt{NodeRigidBodyRotVecLG} together with a rigid body, there is a \texttt{rigidBodyUtilities} function \texttt{AddRigidBody}, 
     see \refSection{sec:rigidBodyUtilities:AddRigidBody}, which simplifies the setup of a rigid body significantely!
     %%RSTCOMPATIBLE
 /end
@@ -471,9 +471,6 @@ equations =
     %  \LU{0}{\tomega} &=& \LU{0}{\Gm} \dot \ttheta, \\
     %  \LU{b}{\tomega} &=& \LU{b}{\Gm} \dot \ttheta.
     %\eea
-    
-    For creating a \texttt{NodeRigidBodyRotVecLG}, there is a \texttt{rigidBodyUtilities} function \texttt{AddRigidBody}, 
-    see \refSection{sec:rigidBodyUtilities:AddRigidBody}, which simplifies the setup of a rigid body significantely!
 /end
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
 Vp,     M,      name,                           ,               ,       String,     "",                       ,       I,      "node's unique name"
@@ -7391,15 +7388,15 @@ equations =
     \ee
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \paragraph{Equations for rotational part (\texttt{activeConnector = True})}:\\
-    Note that the axes are always given in global coordinates, compare the table in \refSection{sec:ObjectJointRevoluteZ:DefinitionOfQuantities}.
+    Note that the axes are always given in global coordinates, compare the table in \refSection{sec:ObjectJointRevoluteZ:DefinitionOfQuantities},
+    and they include the transformations by $\LU{m0,J0}{\Rot}$ and $\LU{m1,J1}{\Rot}$.
     %
     The index 3 constraint equations read
     \bea \label{eq:ObjectJointRevoluteZ:index3}
-       \lambda_3 &=& 0 \\
-       \LU{0}{\tv}_{x0}\tp \LU{0}{\tv}_{y1} &=& 0 \\
-       \LU{0}{\tv}_{x0}\tp \LU{0}{\tv}_{z1} &=& 0
+       \LU{0}{\tv}_{z0}\tp \LU{0}{\tv}_{x1} &=& 0 \\
+       \LU{0}{\tv}_{z0}\tp \LU{0}{\tv}_{y1} &=& 0
     \eea
-    The index 2 constraints follow from the derivative of \eq{eq:ObjectJointRevoluteZ:index3} w.r.t., and are given in the C++ code.
+    The index 2 constraints follow from the derivative of \eq{eq:ObjectJointRevoluteZ:index3} w.r.t.\ time, and are given in the C++ code.
     %    
     if \texttt{activeConnector = False}, 
     \be

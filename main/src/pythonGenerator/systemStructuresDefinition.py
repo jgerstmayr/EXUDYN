@@ -114,6 +114,7 @@ V,  sensorsAppendToFile,                ,       , bool,                     fals
 V,  sensorsWriteFileHeader,             ,       , bool,                     true,       ,       P   , "flag (true/false); if true, file header is written for sensor output (turn off, e.g. for multiple runs of time integration)"
 V,  sensorsWriteFileFooter,             ,       , bool,                     false,      ,       P   , "flag (true/false); if true, file footer is written for sensor output (turn off, e.g. for multiple runs of time integration)"
 V,  sensorsWritePeriod,                 ,       , UReal,                    0.01,       ,       P   , "time span (period), determines how often the sensor output is written to file or internal storage during a simulation"
+V,  sensorsStoreAndWriteFiles,          ,       , bool,                     true,       ,       P   , "flag (true/false); if false, no sensor files will be created and no sensor data will be stored; this may be advantageous for benchmarking as well as for special solvers which should not overwrite existing results (e.g. ComputeODE2Eigenvalues); settings this value to False may cause problems if sensors are required to perform operations which are needed e.g. in UserSensors as input of loads, etc."
 #   
 V,  solutionInformation,                ,       , String,                   "",         ,       P   , "special information added to header of solution file (e.g. parameters and settings, modes, ...); character encoding my be UTF-8, restricted to characters in \refSection{sec:utf8}, but for compatibility, it is recommended to use ASCII characters only (95 characters, see wiki)"
 V,  solverInformationFileName,          ,       , FileName,                 "solverInformation.txt",,P, "filename and (relative) path of text file showing detailed information during solving; detail level according to yourSolver.verboseModeFile; if solutionSettings.appendToFile is true, the information is appended in every solution step; directory will be created if it does not exist; character encoding of string is up to your filesystem, but for compatibility, it is recommended to use letters, numbers and '\_' only"
@@ -960,7 +961,8 @@ appendToFile=True
 writePybindIncludes = True
 classDescription = "Solver internal structure for output modes, output timers and counters."
 #V|F,   pythonName,                   cplusplusName,      size, type,          defaultValue,            args,           cFlags, parameterDescription
-V,      finishedSuccessfully,       ,                  ,     bool,         false,                  ,   P,    "flag is false until solver finshed successfully (can be used as external trigger)"
+V,      finishedSuccessfully,       ,                  ,     bool,         false,                  ,   P,    "flag is false until solver functions SolveSteps)...) or SolveSystem(...) finished successfully (can be used as external trigger)"
+V,      initializationSuccessful,   ,                  ,     bool,         false,                  ,   P,    "flag is set during call to InitializeSolver(...); reasons for failure are multiple, either inconsistent solver settings are used, files cannot be written (file locked), or initial conditions could not be computed "
 #write to file and console
 V,      verboseMode,                ,                  ,     Index,        0,                      ,   P,    "this is a copy of the solvers verboseMode used for console output"
 V,      verboseModeFile,            ,                  ,     Index,        0,                      ,   P,    "this is a copy of the solvers verboseModeFile used for file"
@@ -1031,7 +1033,7 @@ V,      isInitialized,               ,                  ,     bool,             
 V,      initializedSystemSizes,      ,                  ,     Index4,            ,                  ,    ,   "index-array contains 4 integers: nODE2, nODE1, nAE and nData of initialization: this guaranties, that no function is called with wrong system sizes; DO not change these variables: can easily lead to crash! "
 #++++++++++++++++++++++++++++++++++++++++++++++
 #specialized functions for CSolverStatic:
-F,      MainSolverStatic,            ,               ,     ,                  "isInitialized = false;",,,  "constructor, in order to set valid state (settings not initialized at beginning)"
+F,      MainSolverStatic,            ,               ,     ,                  "isInitialized=false;",,,  "constructor, in order to set valid state (settings not initialized at beginning)"
 Fv,     GetCSolver,                  ,                ,    const CSolverBase& ,            "return cSolver;",,C,  "const access to cSolver"
 Fv,     GetCSolver,                  ,                ,    CSolverBase& ,                  "return cSolver;",,,  "reference access to cSolver"
 FvL,    CheckInitialized,            ,               ,     bool,              ,                  "const MainSystem& mainSystem",   DGPV,  "check if MainSolver and MainSystem are correctly initialized ==> otherwise raise SysError"
@@ -1039,6 +1041,7 @@ F,      ComputeLoadFactor,           ,                ,    Real,        "return 
 #++++++++++++++++++++++++++++++++++++++++++++++
 #this should be exactly the same as MainSolverImplicitSecondOrder
 #general functions:
+FvL,    GetErrorString,              ,                ,    "std::string", ,                     ,   CGPV,    "return error string if solver has not been successful"
 FvL,    GetSolverName,               ,                ,    "std::string", ,                     ,   CGPV,    "get solver name - needed for output file header and visualization window"
 FvL,    IsStaticSolver,              ,                ,    bool,        ,                       ,   CGPV,    "return true, if static solver; needs to be overwritten in derived class"
 FvL,    GetSimulationEndTime,        ,                ,    Real,        ,                       "const SimulationSettings& simulationSettings",   CGPV,    "compute simulation end time (depends on static or time integration solver)"
@@ -1174,6 +1177,7 @@ F,       SetUserFunctionPostNewton,,                   ,    void,            "Ge
 #++++++++++++++++++++++++++++++++++++++++++++++
 #this should be exactly the same as MainSolverStatic
 #general functions:
+FvL,    GetErrorString,              ,                ,    "std::string", ,                     ,   CGPV,    "return error string if solver has not been successful"
 FvL,    GetSolverName,               ,                ,    "std::string", ,                     ,   CGPV,    "get solver name - needed for output file header and visualization window"
 FvL,    IsStaticSolver,              ,                ,    bool,        ,                       ,   CGPV,    "return true, if static solver; needs to be overwritten in derived class"
 FvL,    GetSimulationEndTime,        ,                ,    Real,        ,                       "const SimulationSettings& simulationSettings",   CGPV,    "compute simulation end time (depends on static or time integration solver)"
@@ -1272,6 +1276,7 @@ F,      ComputeLoadFactor,           ,                ,     Real,  "return cSolv
 F,      GetNumberOfStages,           ,                ,    Index,       "return cSolver.nStages;",, CP,      "return number of stages in current method"
 F,      GetMethodOrder,              ,                ,    Index,       "return cSolver.rk.orderMethod;",,CP,"return order of method (higher value in methods with automatic step size, e.g., DOPRI5=5)"
 #++++++++++++++++++++++++++++++++++++++++++++++
+FvL,    GetErrorString,              ,                ,    "std::string", ,                     ,   CGPV,    "return error string if solver has not been successful"
 FvL,    GetSolverName,               ,                ,    "std::string", ,                     ,   CGPV,    "get solver name - needed for output file header and visualization window"
 FvL,    IsStaticSolver,              ,                ,    bool,        ,                       ,   CGPV,    "return true, if static solver; needs to be overwritten in derived class"
 FvL,    GetSimulationEndTime,        ,                ,    Real,        ,                       "const SimulationSettings& simulationSettings",   CGPV,    "compute simulation end time (depends on static or time integration solver)"

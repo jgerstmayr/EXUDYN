@@ -64,7 +64,8 @@ DESCRIPTION of NodePoint2D
   | acceleration coordinates vector of node
 
 
-\paragraphDetailed information:
+
+\ **Detailed information:** 
 The node provides \ :math:`n_c=2`\  displacement coordinates. Equations of motion need to be provided by an according object (e.g., MassPoint2D).
 Coordinates are identical to the nodal displacements, except for the third coordinate \ :math:`u_2`\ , which is zero, because \ :math:`q_2`\  does not exist. 
 

@@ -338,6 +338,7 @@ convLatexCommands={#(precommand,'_USE'/'',postcommand)
     # '\\smallListing':('','',''),
     'pytlisting':('\n.. code-block:: python\n','_USE','\n'),
     'lstlisting':('\n.. code-block:: \n','_USE','\n'),
+    '\\paragraph':('\n\\ **','_USE','** '),
     '\\myListing':('','',''),
     '\\setlength':('','',''),
     '\\vspace':('','',''),
@@ -363,6 +364,7 @@ convLatexCommands={#(precommand,'_USE'/'',postcommand)
     '\\refSectionA':(' :ref:`Section <','_USE','>`\\ '), #anonymous -> if no header given
     '\\refSection':('Section :ref:`','_USE','`\\ '), #anonymous -> if no header given
     '\\exuUrl':('`','_USE','`_','2nd'),
+    '\\url':('\\ `','_USE','`_\\ '),
     '\\ref':(' :ref:`','_USE','`\\ '),
     '\\fig':('\\ :numref:`','_USE','`\\ '), 
     #'\\fig':('Fig. :ref:`','_USE','`\\ '), 
@@ -752,7 +754,7 @@ def ReplaceLatexCommands(s, conversionDict, sectionMarkerText=''): #replace stri
                 if ('\\refSection' in key or key == '\\label' or key == '\\fig' or key == '\\ref'
                     or key == '\\eq' or key == '\\eqs' or key == '\\eqq'):
                     innerString=Latex2RSTlabel(innerString)
-                elif (value[1] == '_USE' and key != '\\exuUrl' 
+                elif (value[1] == '_USE' and key != '\\exuUrl' and key != '\\url' 
                       and ('\\ac' not in key) 
                       and key != '\\onlyRST' and key != '\\footnote' #final replacement in exterior loop!
                       and key != 'lstlisting' and key!='pytlisting'):
@@ -809,7 +811,8 @@ def ReplaceLatexCommands(s, conversionDict, sectionMarkerText=''): #replace stri
                 elif key == '\\mysubsubsubsection' or key == '\\mysubsubsubsectionlabel':
                     if 'label' in key: s += RSTlabelString(innerString2)+'\n'
                     s += '\n'+RSTheaderString(innerString, secOff + 3)
-                elif key == '\\exuUrl':
+                elif key == '\\exuUrl' or key == '\\url':
+                    if key == '\\url': innerString2=innerString
                     s += value[0]
                     s += innerString2 + ' <' + innerString + '>'
                     s += value[2]
@@ -1153,7 +1156,8 @@ class PyLatexRST:
         if example != '':
             exampleRST = example
             example = Str2Latex(example)
-            example = example.replace('\\\\','\\tabnewline\n    ')
+            example = example.replace('\\\\','\\tabnewline\n    ').replace('#','\\#')
+
             example = example.replace('\\TAB','\\phantom{XXXX}') #phantom spaces, not visible
             self.sLatex += '\\tabnewline \n    \\textcolor{steelblue}{{\\bf EXAMPLE}: \\tabnewline \n    \\texttt{' + example.replace("'","{\\textquotesingle}") + '}}'
             exampleRST = exampleRST.replace('\\#','#').replace('\\\\','\n')
@@ -1178,13 +1182,20 @@ class PyLatexRST:
     #for SystemStructures:
         
     #one row for definition of system structures
-    def SystemStructuresWriteDefRow(self, pythonName, typeName, sSize, sDefaultVal, description, typicalPaths = []):
+    def SystemStructuresWriteDefRow(self, pythonName, typeName, sSize, sDefaultVal, description, typicalPaths = [], isFunction=False):
         #latex:
         typeNameLatex = typeName
         if len(pythonName)>28:  #for space of pythonname over column width
             typeNameLatex = '\\tabnewline ' + typeName
 
-        self.sLatex += '    ' + pythonName + ' & '                
+        latexFuncStr = ''
+        if isFunction:
+            if sDefaultVal == '':
+                latexFuncStr = '()'
+            else:
+                latexFuncStr = '(...)'
+
+        self.sLatex += '    ' + pythonName+latexFuncStr + ' & '
         self.sLatex += '    ' + typeNameLatex + ' & '
         self.sLatex += '    ' + sSize + ' & '
         self.sLatex += '    ' + sDefaultVal + ' & '
@@ -1192,8 +1203,14 @@ class PyLatexRST:
         
 
         #RST:
-        s = '* | **' + pythonName + '** [type = ' + typeName
-        if sDefaultVal != '':
+        argStr = '('*isFunction
+        if sDefaultVal != '' and isFunction:
+            #s += ', default = ' + sDefaultVal
+            argStr += sDefaultVal
+        argStr += ')'*isFunction
+            
+        s = '* | **' + pythonName+argStr + '** [' + 'return '*isFunction + 'type = ' + typeName
+        if sDefaultVal != '' and not isFunction:
             s += ', default = ' + sDefaultVal
         if sSize != '':
             s += ', size = '+sSize

@@ -135,21 +135,21 @@ namespace ngstd
       sleep_usecs = 1000;
       active_workers = 0;
 
-      static int cnt = 0;
-      char buf[100];
-      if (use_paje_trace)
-		sprintf(buf, "ng%d.trace", cnt++);
-      else
-        buf[0] = 0;
+      //static int cnt = 0;
+  //    char buf[100];
+  //    if (use_paje_trace)
+		//sprintf(buf, "ng%d.trace", cnt++);
+  //    else
+  //      buf[0] = 0;
       //sprintf(buf, "");
-      trace = new PajeTrace(num_threads, buf);
+      //trace = new PajeTrace(num_threads, buf);
     }
 
 
   TaskManager :: ~TaskManager ()
   {
-    delete trace;
-    trace = nullptr;
+    //delete trace;
+    //trace = nullptr;
   }
 
 
@@ -165,25 +165,26 @@ namespace ngstd
         std::thread([this,i]() { this->Loop(i); }).detach();
       }
 
-    size_t alloc_size = num_threads*NgProfiler::SIZE;
-    NgProfiler::thread_times = new size_t[alloc_size];
-    for (size_t i = 0; i < alloc_size; i++)
-      NgProfiler::thread_times[i] = 0;
+    //size_t alloc_size = num_threads*NgProfiler::SIZE;
+    //NgProfiler::thread_times = new size_t[alloc_size];
+    //for (size_t i = 0; i < alloc_size; i++)
+    //  NgProfiler::thread_times[i] = 0;
 
     while (active_workers < num_threads-1)
       ;
   }
-  extern size_t dummy_thread_times[NgProfiler::SIZE];
+  //extern size_t dummy_thread_times[NgProfiler::SIZE];
   void TaskManager :: StopWorkers()
   {
     done = true;
 
     // collect timings
-    for (size_t i = 0; i < num_threads; i++)
-      for (size_t j = 0; j < NgProfiler::SIZE; j++)
-        NgProfiler::tottimes[j] += 1.0/3.1e9 * NgProfiler::thread_times[i*NgProfiler::SIZE+j];
-    delete [] NgProfiler::thread_times;
-    NgProfiler::thread_times = dummy_thread_times;
+    //for (size_t i = 0; i < num_threads; i++)
+    //  for (size_t j = 0; j < NgProfiler::SIZE; j++)
+    //    NgProfiler::tottimes[j] += 1.0/3.1e9 * NgProfiler::thread_times[i*NgProfiler::SIZE+j];
+    //delete [] NgProfiler::thread_times;
+    //NgProfiler::thread_times = dummy_thread_times;
+
     while (active_workers)
       ;
     delete sync[0];
@@ -196,7 +197,7 @@ namespace ngstd
                                  int antasks)
   {
 #ifdef USETRACER_IN_EXUDYN
-    trace->StartJob(jobnr, afunc.target_type());
+    //trace->StartJob(jobnr, afunc.target_type());
 #endif
 	/*
     for (int j = 0; j < num_nodes; j++)
@@ -324,7 +325,7 @@ namespace ngstd
       throw Exception (*ex);
 
 #ifdef USETRACER_IN_EXUDYN
-	trace->StopJob();
+	//trace->StopJob();
 #endif
     for (auto ap : sync)
       ap->load(); // memory_order_acquire);
@@ -332,13 +333,13 @@ namespace ngstd
     
   void TaskManager :: Loop(int thd)
   {
-    static Timer tADD("add entry counter");
-    static Timer tCASready1("spin-CAS ready tick1");
-    static Timer tCASready2("spin-CAS ready tick2");
-    static Timer tCASyield("spin-CAS yield");
-    static Timer tCAS1("spin-CAS wait");
-    static Timer texit("exit zone");
-    static Timer tdec("decrement");
+    //static Timer tADD("add entry counter");
+    //static Timer tCASready1("spin-CAS ready tick1");
+    //static Timer tCASready2("spin-CAS ready tick2");
+    //static Timer tCASyield("spin-CAS yield");
+    //static Timer tCAS1("spin-CAS wait");
+    //static Timer texit("exit zone");
+    //static Timer tdec("decrement");
     thread_id = thd;
 
     sync[thread_id] = new atomic<int>(0);
@@ -534,147 +535,147 @@ namespace ngstd
   }
 
 
-  list<tuple<string,double>> TaskManager :: Timing ()
-  {
-    /*
-    list<tuple<string,double>>timings;
-    double time =
-      RunTiming
-      ( [&] ()
-        {
-          ParallelJob ( [] (TaskInfo ti) { ; } ,
-                        TasksPerThread(1) );
-        });
-    timings.push_back (make_tuple("parallel job with 1 task per thread", time*1e9));
-    
-    time =
-      RunTiming
-      ( [&] ()
-        {
-          ParallelJob ( [] (TaskInfo ti) { ; } ,
-                        TasksPerThread(10) );
-        });
-    timings.push_back (make_tuple("parallel job with 10 tasks per thread", time*1e9));
-
-    time =
-      RunTiming
-      ( [&] ()
-        {
-          ParallelJob ( [] (TaskInfo ti) { ; } ,
-                        TasksPerThread(100) );
-        });
-    timings.push_back (make_tuple("parallel job with 100 tasks per thread", time*1e9));
-
-    return timings;
-    */
-
-
-    
-    // this is the old function moved from the py-interface:
-    list<tuple<string,double>>timings;           
-    double starttime, time;
-    double maxtime = 0.5;
-    size_t steps;
-    
-    starttime = WallTime();
-    steps = 0;
-    do
-      {
-        for (size_t i = 0; i < 1000; i++)
-          ParallelJob ( [] (TaskInfo ti) { ; },
-                        TasksPerThread(1));
-        steps += 1000;
-        time = WallTime()-starttime;
-      }
-    while (time < maxtime);
-    timings.push_back(make_tuple("ParallelJob 1 task/thread", time/steps*1e9));
-
-
-    starttime = WallTime();
-    steps = 0;
-    do
-      {
-        for (size_t i = 0; i < 1000; i++)
-          ParallelJob ( [] (TaskInfo ti) { ; },
-                        TasksPerThread(100));
-        steps += 1000;
-        time = WallTime()-starttime;
-      }
-    while (time < maxtime);
-    timings.push_back(make_tuple("ParallelJob 100 task/thread", time/steps*1e9));
-
-    
-    starttime = WallTime();
-    steps = 0;
-    do
-      {
-        for (int k = 0; k < 10000; k++)
-          {
-            SharedLoop2 sl(1000);
-            steps += 1;
-          }
-        time = WallTime()-starttime;
-      }
-    while (time < maxtime);
-    timings.push_back(make_tuple("SharedLoop init", time/steps*1e9));
-    
-    starttime = WallTime();
-    steps = 0;
-    do
-      {
-        for (int k = 0; k < 1000; k++)
-          {
-            SharedLoop2 sl(1000);
-            ParallelJob ( [&sl] (TaskInfo ti)
-                          {
-                            // auto beg = sl.begin();
-                            // auto end = sl.end();
-                          } );
-            steps += 1;
-          }
-        time = WallTime()-starttime;
-      }
-    while (time < maxtime);
-    timings.push_back(make_tuple("SharedLoop begin/end", time/steps*1e9));
-    
-    
-    starttime = WallTime();
-    steps = 0;
-    do
-      {
-        for (int k = 0; k < 1000; k++)
-          {
-            SharedLoop2 sl(1000);
-            ParallelJob ( [&sl] (TaskInfo ti)
-                          {
-							for (auto i : sl) {}
-                          } );
-            steps += 1000;
-          }
-        time = WallTime()-starttime;
-      }
-    while (time < maxtime);
-    timings.push_back(make_tuple("SharedLoop 1000", time/steps*1e9));
-    
-    starttime = WallTime();
-    steps = 0;
-    do
-      {
-        SharedLoop2 sl(1000000);
-        ParallelJob ( [&sl] (TaskInfo ti)
-                      {
-                        for (auto _ : sl)
-                          ; 
-                      } );
-        steps += 1000000;
-        time = WallTime()-starttime;
-      }
-    while (time < maxtime);
-    timings.push_back(make_tuple("SharedLoop 1000000", time/steps*1e9));
-    
-    return timings;
-  }
-  
+//  list<tuple<string,double>> TaskManager :: Timing ()
+//  {
+//    /*
+//    list<tuple<string,double>>timings;
+//    double time =
+//      RunTiming
+//      ( [&] ()
+//        {
+//          ParallelJob ( [] (TaskInfo ti) { ; } ,
+//                        TasksPerThread(1) );
+//        });
+//    timings.push_back (make_tuple("parallel job with 1 task per thread", time*1e9));
+//    
+//    time =
+//      RunTiming
+//      ( [&] ()
+//        {
+//          ParallelJob ( [] (TaskInfo ti) { ; } ,
+//                        TasksPerThread(10) );
+//        });
+//    timings.push_back (make_tuple("parallel job with 10 tasks per thread", time*1e9));
+//
+//    time =
+//      RunTiming
+//      ( [&] ()
+//        {
+//          ParallelJob ( [] (TaskInfo ti) { ; } ,
+//                        TasksPerThread(100) );
+//        });
+//    timings.push_back (make_tuple("parallel job with 100 tasks per thread", time*1e9));
+//
+//    return timings;
+//    */
+//
+//
+//    
+//    // this is the old function moved from the py-interface:
+//    list<tuple<string,double>>timings;           
+//    double starttime, time;
+//    double maxtime = 0.5;
+//    size_t steps;
+//    
+//    starttime = WallTime();
+//    steps = 0;
+//    do
+//      {
+//        for (size_t i = 0; i < 1000; i++)
+//          ParallelJob ( [] (TaskInfo ti) { ; },
+//                        TasksPerThread(1));
+//        steps += 1000;
+//        time = WallTime()-starttime;
+//      }
+//    while (time < maxtime);
+//    timings.push_back(make_tuple("ParallelJob 1 task/thread", time/steps*1e9));
+//
+//
+//    starttime = WallTime();
+//    steps = 0;
+//    do
+//      {
+//        for (size_t i = 0; i < 1000; i++)
+//          ParallelJob ( [] (TaskInfo ti) { ; },
+//                        TasksPerThread(100));
+//        steps += 1000;
+//        time = WallTime()-starttime;
+//      }
+//    while (time < maxtime);
+//    timings.push_back(make_tuple("ParallelJob 100 task/thread", time/steps*1e9));
+//
+//    
+//    starttime = WallTime();
+//    steps = 0;
+//    do
+//      {
+//        for (int k = 0; k < 10000; k++)
+//          {
+//            SharedLoop2 sl(1000);
+//            steps += 1;
+//          }
+//        time = WallTime()-starttime;
+//      }
+//    while (time < maxtime);
+//    timings.push_back(make_tuple("SharedLoop init", time/steps*1e9));
+//    
+//    starttime = WallTime();
+//    steps = 0;
+//    do
+//      {
+//        for (int k = 0; k < 1000; k++)
+//          {
+//            SharedLoop2 sl(1000);
+//            ParallelJob ( [&sl] (TaskInfo ti)
+//                          {
+//                            // auto beg = sl.begin();
+//                            // auto end = sl.end();
+//                          } );
+//            steps += 1;
+//          }
+//        time = WallTime()-starttime;
+//      }
+//    while (time < maxtime);
+//    timings.push_back(make_tuple("SharedLoop begin/end", time/steps*1e9));
+//    
+//    
+//    starttime = WallTime();
+//    steps = 0;
+//    do
+//      {
+//        for (int k = 0; k < 1000; k++)
+//          {
+//            SharedLoop2 sl(1000);
+//            ParallelJob ( [&sl] (TaskInfo ti)
+//                          {
+//							for (auto i : sl) {}
+//                          } );
+//            steps += 1000;
+//          }
+//        time = WallTime()-starttime;
+//      }
+//    while (time < maxtime);
+//    timings.push_back(make_tuple("SharedLoop 1000", time/steps*1e9));
+//    
+//    starttime = WallTime();
+//    steps = 0;
+//    do
+//      {
+//        SharedLoop2 sl(1000000);
+//        ParallelJob ( [&sl] (TaskInfo ti)
+//                      {
+//                        for (auto _ : sl)
+//                          ; 
+//                      } );
+//        steps += 1000000;
+//        time = WallTime()-starttime;
+//      }
+//    while (time < maxtime);
+//    timings.push_back(make_tuple("SharedLoop 1000000", time/steps*1e9));
+//    
+//    return timings;
+//  }
+//  
 }
 #pragma warning(default:4018) //conversion warning
 #pragma warning(default:4834) //conversion warning

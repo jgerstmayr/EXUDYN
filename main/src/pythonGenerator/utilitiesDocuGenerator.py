@@ -163,9 +163,12 @@ def SplitStringWithCommas(s):
     strList += [currentString.replace('{','\\{').replace('}','\\}')]
     return strList
 
+
+countMutableArgs = 0
 #*****************************************************
 #extract function arguments for function line without leading 'def '
-def GetFunctionArguments(functionLine):
+def GetFunctionArguments(functionLine, infoText):
+    global countMutableArgs
     argumentsList = []
     defaultArgumentsList = []
     
@@ -181,6 +184,11 @@ def GetFunctionArguments(functionLine):
         defaultArg = ''
         if len(val1) == 2:
             defaultArg = val1[1].strip()
+            if defaultArg.strip() == '[]' and countMutableArgs < 5:
+                countMutableArgs += 1
+                print('potential risk with mutable function argument [] found in function:',functionName,'('+infoText+')')
+                if countMutableArgs == 4:
+                    print('  ... further WARNINGS suppressed')
         defaultArgumentsList+=[defaultArg]
         
     return [functionName,argumentsList,defaultArgumentsList]
@@ -334,7 +342,7 @@ def ParsePythonFile(fileName):
                         while functionLine.strip()[-1] != ':': #read complete function definition
                             lineCnt+=1
                             functionLine += fileLines[lineCnt]
-                        [functionName, argumentsList, defaultArgumentsList]=GetFunctionArguments(functionLine)
+                        [functionName, argumentsList, defaultArgumentsList]=GetFunctionArguments(functionLine, fileName)
                         functionDict['functionName'] = Str2Latex(functionName)
                         functionDict['lineNumber'] = storedLineNumber
                         functionDict['argumentsList'] = argumentsList

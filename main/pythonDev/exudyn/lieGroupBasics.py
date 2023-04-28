@@ -231,48 +231,76 @@ def LogSE3(H):
 #**function: compute the tangent operator corresponding to ExpSE3, see \cite{Bruels2011}
 #**input: 6D incremental motion vector as np.array
 #**output: 6x6 matrix as np.array
+#**author: Stefan Holzinger
+#**notes: improved accuracy for very small angles as well as angles phi 
 def TExpSE3(x):
     U     = x[0:3]
     Omega = x[3:6]
     USkew     = Skew(U)
     OmegaSkew = Skew(Omega)
     phi = norm(Omega)
-    phiOverTwo = phi/2
-    if phi == 0.:
-        TUOmegaPlus = -0.5*USkew 
+   # phiOverTwo = 0.5*phi
+    
+    # coefficient f2, see Phd thesis Stefan Hante, Table. 1, page 121
+    if phi >= 1e-2:
+        f2 = (np.cos(phi) - 1) / phi**2
     else:
-        a = (2*sin(phiOverTwo)*cos(phiOverTwo))/phi
-        b = 4*(sin(phiOverTwo)**2)/(phi**2)
-        c1 = 0.5*(1-b)*USkew
-        c2 = ((1-a)/(phi**2))*(np.dot(USkew,OmegaSkew) + np.dot(OmegaSkew,USkew))
-        c3 = -((a-b)/(phi**2))*np.dot(np.dot(Omega,U), OmegaSkew)
-        c4 = (1/(phi**2))*(0.5*b - (3/(phi**2))*(1-a))*np.dot(Omega,U)*np.dot(OmegaSkew,OmegaSkew)
-        TUOmegaPlus = c1 + c2 + c3 + c4 - 0.5*USkew
+        f2 = -0.5 + (1/24)*phi**2 - (1/720)*phi**4
+
+    # coefficient f3, see Phd thesis Stefan Hante, Table. 1, page 121
+    if phi >= 1e-4:
+        f3 = (phi - np.sin(phi)) / phi**3
+    else:
+        f3 = 1/6 - (1/24)*phi**2 - (1/720)*phi**4     
+
+    # coefficient f4, see Phd thesis Stefan Hante, Table. 1, page 121
+    if phi >= 1e-1:
+        f4 = (2 - 2*np.cos(phi) - phi*np.sin(phi)) / phi**4
+    else:
+        f4 = 1/12 - (1/180)*phi**2 + (1/6720)*phi**4 - (1/453600)*phi**6
+        
+    # coefficient f5, see Phd thesis Stefan Hante, Table. 1, page 121
+    if phi >= 1e-1:
+        f5 = ( phi*(2 + np.cos(phi)) - 3*np.sin(phi)) / phi**5
+    else:
+        f5 = 1/60 - (1/1260)*phi**2 + (1/60480)*phi**4 - (1/4989600)*phi**6     
+    
+    TUOmegaPlus = f2*USkew + f3*( USkew @ OmegaSkew + OmegaSkew @ USkew ) + f4*np.dot(Omega,U)*OmegaSkew - f5*np.dot(Omega,U)*OmegaSkew**2
+    
     TexpSO3 = TExpSO3(Omega)
     T = np.block([[TexpSO3,         TUOmegaPlus],
                   [np.zeros((3,3)), TexpSO3]])
     return T
 
 
+
 #**function: compute the inverse of tangent operator TExpSE3, see \cite{Sonneville2014}
 #**input: 6D incremental motion vector as np.array
 #**output: 6x6 matrix as np.array
 #**author: Stefan Holzinger
+#**notes: improved accuracy for very small angles as well as angles phi 
 def TExpSE3Inv(x):
     U     = x[0:3]
     Omega = x[3:6]
+    USkew     = Skew(U)
+    OmegaSkew = Skew(Omega)
     phi = norm(Omega)
-    if phi == 0.0:
-        Tuwm = 0.5*Skew(U)
+    phiOverTwo = 0.5*phi
+    
+    # coefficient f6, see Phd thesis Stefan Hante, Table. 1, page 121
+    if phi >= 1e-2:
+        f6 = (2 - Cot(phiOverTwo)) / (2*phi**2)
     else:
-        alpha = Sinc(phi)
-        beta = 2*(1 - cos(phi))/phi**2 
-        USkew     = Skew(U)
-        OmegaSkew = Skew(Omega)
-        c1 = 0.5*USkew
-        c2 = ((beta-alpha)/(beta*phi**2))*(np.matmul(USkew,OmegaSkew) + np.matmul(OmegaSkew,USkew))
-        c3 = ((1 + alpha - 2*beta)/(beta*phi**4))*(np.dot(Omega,U))*np.matmul(OmegaSkew,OmegaSkew)
-        Tuwm = c1 + c2 + c3
+        f6 = 1/12 + (1/720)*phi**2 + (1/30240)*phi**4
+    
+    # coefficient f8, see Phd thesis Stefan Hante, Table. 1, page 121
+    if phi >= 2e-1:
+        f8 = (phi*np.sin(phi) + 4*np.cos(phi) + phi**2 - 4) / (4*np.sin(phiOverTwo)**2 * phi**4)
+    else:
+        f8 = 1/360 + (1/7560)*phi**2 + (1/201600)*phi**4 + (1/5987520)*phi**6 + (691/130767436800)*phi**8
+    
+    # Matrix C2, see Phd thesis Stefan Hante, Sect.A.3, page 117
+    Tuwm = 0.5*USkew + f6*( USkew @ OmegaSkew + OmegaSkew @ USkew ) + f8*np.dot(Omega,U)*OmegaSkew**2
     TexpSO3Inv = TExpSO3Inv(Omega) #NOTE: overrides the function TexpSO3Inv
     Tinv = np.block([[TexpSO3Inv,      Tuwm],
                      [np.zeros((3,3)), TexpSO3Inv]])

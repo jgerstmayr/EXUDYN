@@ -627,7 +627,7 @@ plr.DefPyFunctionAccess(cClass='', pyName='SetWriteToFile', cName='PySetWriteToF
                             description="set flag to write (True) or not write to console; default value of flagWriteToFile = False; flagAppend appends output to file, if set True; in order to finalize the file, write \\texttt{exu.SetWriteToFile('', False)} to close the output file",
                             argList=['filename', 'flagWriteToFile', 'flagAppend'],
                             defaultArgs=['', 'True', 'False'],
-                            example="exu.SetWriteToConsole(False) \\#no output to console\\\\exu.SetWriteToFile(filename='testOutput.log', flagWriteToFile=True, flagAppend=False)\\\\exu.Print('print this to file')\\\\exu.SetWriteToFile('', False) \\#terminate writing to file which closes the file"
+                            example="exu.SetWriteToConsole(False) #no output to console\\\\exu.SetWriteToFile(filename='testOutput.log', flagWriteToFile=True, flagAppend=False)\\\\exu.Print('print this to file')\\\\exu.SetWriteToFile('', False) #terminate writing to file which closes the file"
                             )
 
 plr.DefPyFunctionAccess(cClass='', pyName='SetPrintDelayMilliSeconds', cName='PySetPrintDelayMilliSeconds', 
@@ -1646,7 +1646,10 @@ plr.DefPyStartClass(classStr, pyClassStr, '',labelName='sec:GeneralContact',
 
 plr.AddDocu('Structure to define general and highly efficient contact functionality in multibody systems'+
             '\\footnote{Note that GeneralContact is still developed, use with care.}. For further explanations '+
-            'and theoretical backgrounds, see \\refSection{secContactTheory}.')
+            'and theoretical backgrounds, see \\refSection{secContactTheory}. '+
+            'Internally, the contacts are stored with global indices, which are in the following list: '+
+            '[numberOfSpheresMarkerBased, numberOfANCFCable2D, numberOfTrigsRigidBodyBased], see also'+
+            'the output of GetPythonObject().')
 
 plr.AddDocuCodeBlock(code="""
 #...
@@ -1718,7 +1721,7 @@ plr.DefLatexDataAccess('ancfCableMeasuringSegments','(default=20) number of segm
 #                                 description="WILL CHANGE IN FUTURE: Call this function after mbs.Assemble(); precompute some contact arrays (mainSystem needed) and set up necessary parameters for contact: friction, SearchTree, etc.; done after all contacts have been added; function performs checks; empty box will autocompute size!")
 plr.DefPyFunctionAccess(cClass=classStr, pyName='SetFrictionPairings', cName='SetFrictionPairings', 
                                argList=['frictionPairings'],
-                               example='\\#set 3 surface friction types, all being 0.1:\\\\gContact.SetFrictionPairings(0.1*np.ones((3,3)));',
+                               example='#set 3 surface friction types, all being 0.1:\\\\gContact.SetFrictionPairings(0.1*np.ones((3,3)));',
                                description="set Coulomb friction coefficients for pairings of materials (e.g., use material 0,1, then the entries (0,1) and (1,0) define the friction coefficients for this pairing); matrix should be symmetric!")
                 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='SetFrictionProportionalZone', cName='SetFrictionProportionalZone', 
@@ -1764,6 +1767,15 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='ShortestDistanceAlongLine', cNa
                                 defaultArgs=['(std::vector<Real>)Vector3D({0,0,0})','(std::vector<Real>)Vector3D({1,0,0})','-1e-7','1e7','False','0','Contact::IndexEndOfEnumList'],
                                 description="Find shortest distance to contact objects in GeneralContact along line with pStart (given as 3D list or numpy array) and direction (as 3D list or numpy array with no need to be normalized); the function returns the distance which is >= minDistance and < maxDistance; in case of beam elements, it measures the distance to the beam centerline; the distance is measured from pStart along given direction and can also be negative; if no item is found along line, the maxDistance is returned; if asDictionary=False, the result is a float, while otherwise details are returned as dictionary (including distance, velocityAlongLine (which is the object velocity in given direction and may be different from the time derivative of the distance; works similar to a laser Doppler vibrometer - LDV), itemIndex and itemType in GeneralContact); the cylinderRadius, if not equal to 0, will be used for spheres to find closest sphere along cylinder with given point and direction; the typeIndex can be set to a specific contact type, e.g., which are searched for (otherwise all objects are considered)")
 
+plr.DefPyFunctionAccess(cClass=classStr, pyName='UpdateContacts', cName='PyUpdateContacts', 
+                                argList=['mainSystem'],
+                                example='gContact.UpdateContacts(mbs)',
+                                description="Update contact sets, e.g. if no contact is simulated (isActive=False) but user functions need up-to-date contact states for GetItemsInBox(...) or for GetActiveContacts(...)")
+
+plr.DefPyFunctionAccess(cClass=classStr, pyName='GetActiveContacts', cName='PyGetActiveContacts', 
+                                argList=['typeIndex', 'itemIndex'],
+                                example='#if explicit solver is used, we first need to update contacts:\\\\gContact.UpdateContacts(mbs)\\\\#obtain active contacts of marker based sphere 42:\\\\gList = gContact.GetActiveContacts(exu.ContactTypeIndex.IndexSpheresMarkerBased, 42)',
+                                description="Get list of global item numbers which are in contact with itemIndex of type typeIndex in case that the global itemIndex is smaller than the abs value of the contact pair index; a negative sign indicates that the contacting (spheres) is in Coloumb friction, a positive sign indicates a regularized friction region; for interpretation of global contact indices, see gContact.GetPythonObject() and documentation; requires either implicit contact computation or UpdateContacts(...) needs to be called prior to this function")
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

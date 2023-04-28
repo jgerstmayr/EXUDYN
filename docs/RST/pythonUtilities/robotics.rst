@@ -536,7 +536,7 @@ Class function: \_\_init\_\_
 
 Class function: GetCurrentRobotHT
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`GetCurrentRobotHT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1177>`__\ (\ ``self``\ )
+`GetCurrentRobotHT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1180>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | Utility function to get current Homogeneous transformation of the robot to check inverse Kinematics solution
@@ -549,7 +549,7 @@ Class function: GetCurrentRobotHT
 
 Class function: InterpolateHTs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`InterpolateHTs <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1194>`__\ (\ ``self``\ , \ ``T1``\ , \ ``T2``\ , \ ``rotStep = np.pi/16``\ , \ ``minSteps = 1``\ )
+`InterpolateHTs <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1197>`__\ (\ ``self``\ , \ ``T1``\ , \ ``T2``\ , \ ``rotStep = np.pi/16``\ , \ ``minSteps = 1``\ )
 
 - | \ *classFunction*\ :
   | 
@@ -571,7 +571,7 @@ Class function: InterpolateHTs
 
 Class function: SolveSafe
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-`SolveSafe <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1235>`__\ (\ ``self``\ , \ ``T``\ , \ ``q0 = None``\ )
+`SolveSafe <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1238>`__\ (\ ``self``\ , \ ``T``\ , \ ``q0 = None``\ )
 
 - | \ *classFunction*\ :
   | This Method can be used to solve the inverse kinematics problem by solving
@@ -594,7 +594,7 @@ Class function: SolveSafe
 
 Class function: Solve
 ^^^^^^^^^^^^^^^^^^^^^
-`Solve <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1285>`__\ (\ ``self``\ , \ ``T``\ , \ ``q0 = None``\ )
+`Solve <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1288>`__\ (\ ``self``\ , \ ``T``\ , \ ``q0 = None``\ )
 
 - | \ *classFunction*\ :
   | This Method can be used to solve the inverse kinematics problem by solving

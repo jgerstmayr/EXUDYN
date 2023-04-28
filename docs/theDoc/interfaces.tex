@@ -79,6 +79,7 @@ General settings for exporting the solution (results) of a simulation.
     restartFileName &     FileName &      &     'restartFile.txt' &     filename and (relative) path of text file for storing solution after every restartWritePeriod if writeRestartFile=True; backup file is created with ending .bck, which should be used if restart file is crashed; use Python utility function InitializeFromRestartFile(...) to consistently restart\\ \hline
     restartWritePeriod &     UReal &      &     0.01 &     time span (period), determines how often the restart file is updated; this should be often enough to enable restart without too much loss of data; too low values may influence performance\\ \hline
     sensorsAppendToFile &     bool &      &     False &     flag (true/false); if true, sensor output is appended to existing file (otherwise created) or in case of internal storage, it is appended to existing currently stored data; this allows storing sensor values over different simulations\\ \hline
+    sensorsStoreAndWriteFiles &     bool &      &     True &     flag (true/false); if false, no sensor files will be created and no sensor data will be stored; this may be advantageous for benchmarking as well as for special solvers which should not overwrite existing results (e.g. ComputeODE2Eigenvalues); settings this value to False may cause problems if sensors are required to perform operations which are needed e.g. in UserSensors as input of loads, etc.\\ \hline
     sensorsWriteFileFooter &     bool &      &     False &     flag (true/false); if true, file footer is written for sensor output (turn off, e.g. for multiple runs of time integration)\\ \hline
     sensorsWriteFileHeader &     bool &      &     True &     flag (true/false); if true, file header is written for sensor output (turn off, e.g. for multiple runs of time integration)\\ \hline
     sensorsWritePeriod &     UReal &      &     0.01 &     time span (period), determines how often the sensor output is written to file or internal storage during a simulation\\ \hline
@@ -1073,7 +1074,8 @@ Solver internal structure for output modes, output timers and counters.
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
     cpuLastTimePrinted &     Real &      &     0. &     CPU time when output has been printed last time\\ \hline
     cpuStartTime &     Real &      &     0. &     CPU start time of computation (starts counting at computation of initial conditions)\\ \hline
-    finishedSuccessfully &     bool &      &     False &     flag is false until solver finshed successfully (can be used as external trigger)\\ \hline
+    finishedSuccessfully &     bool &      &     False &     flag is false until solver functions SolveSteps)...) or SolveSystem(...) finished successfully (can be used as external trigger)\\ \hline
+    initializationSuccessful &     bool &      &     False &     flag is set during call to InitializeSolver(...); reasons for failure are multiple, either inconsistent solver settings are used, files cannot be written (file locked), or initial conditions could not be computed \\ \hline
     InitializeData() &     void &      &      &     initialize SolverOutputData by assigning default values\\ \hline
     lastDiscontinuousIterationsCount &     \tabnewline Index &      &     0 &     discontinuous iterations count when written to console (or file) last time\\ \hline
     lastImageRecorded &     Real &      &     0. &     simulation time when last image has been recorded\\ \hline
@@ -1117,21 +1119,22 @@ and hereafter you can access all data and functions via 'solver'.
     output &     SolverOutputData &      &      &     output modes and timers for exporting solver information and solution\\ \hline
     timer &     CSolverTimer &      &      &     timer which measures the CPU time of solver sub functions\\ \hline
     CheckInitialized(...) &     bool &      &     mainSystem &     check if MainSolver and MainSystem are correctly initialized ==> otherwise raise SysError\\ \hline
-    ComputeAlgebraicEquations(...) &     \tabnewline \tabnewline void &      &     mainSystem, velocityLevel=false &     compute the algebraic equations in systemResidual in range(nODE2+nODE1, nODE2+nODE1+nAE)\\ \hline
-    ComputeJacobianAE(...) &     void &      &     mainSystem, scalarFactor\_ODE2=1., scalarFactor\_ODE2\_t=0., scalarFactor\_ODE1=1., velocityLevel=false &     add jacobian of algebraic equations (multiplied with factor) to systemJacobian in cSolver; the scalarFactors are scaling the derivatives w.r.t. \hac{ODE2} coordinates, ODE2\_t (velocity) coordinates and ODE1 coordinates; if velocityLevel == true, the constraints are evaluated at velocity level; the scalar factors scalarFactor\_ODE2=0 and scalarFactor\_ODE2 are used for the same ODE2 block in the jacobian\\ \hline
+    ComputeAlgebraicEquations(...) &     void &      &     mainSystem, velocityLevel=False &     compute the algebraic equations in systemResidual in range(nODE2+nODE1, nODE2+nODE1+nAE)\\ \hline
+    ComputeJacobianAE(...) &     void &      &     mainSystem, scalarFactor\_ODE2=1., scalarFactor\_ODE2\_t=0., scalarFactor\_ODE1=1., velocityLevel=False &     add jacobian of algebraic equations (multiplied with factor) to systemJacobian in cSolver; the scalarFactors are scaling the derivatives w.r.t. \hac{ODE2} coordinates, ODE2\_t (velocity) coordinates and ODE1 coordinates; if velocityLevel == true, the constraints are evaluated at velocity level; the scalar factors scalarFactor\_ODE2=0 and scalarFactor\_ODE2 are used for the same ODE2 block in the jacobian\\ \hline
     ComputeJacobianODE1RHS(...) &     void &      &     mainSystem, scalarFactor\_ODE2=1., scalarFactor\_ODE2\_t=0., scalarFactor\_ODE1=1. &     ADD jacobian of ODE1RHS (multiplied with factors for ODE2 and ODE1 coordinates) to the according rows (nODE2:nODE2+nODE1) of the exising systemJacobian in cSolver; it requires a prior call to ComputeJacobianODE2RHS(...); the scalar factors scalarFactor\_ODE2=0 and scalarFactor\_ODE2 are used for the same ODE2 block in the jacobian\\ \hline
     ComputeJacobianODE2RHS(...) &     void &      &     mainSystem, scalarFactor\_ODE2=1., scalarFactor\_ODE2\_t=0., scalarFactor\_ODE1=1. &     set systemJacobian to zero, size = (nODE2+nODE1+nAE) x (nODE2+nODE1+nAE), and add jacobian (multiplied with factors for ODE2 and ODE1 coordinates) of ODE2RHS to systemJacobian in cSolver; using (scalarFactor\_ODE2=-1,scalarFactor\_ODE2=0) gives the stiffness matrix (=derivatives of ODE2 coords) in the nODE2 x nODE2 part, while using (scalarFactor\_ODE2=0,scalarFactor\_ODE2=-1) gives the damping matrix (= derivatives of ODE2 velocity coordinates) in the same part; a superposition of these two parts makes sense for implicit solvers\\ \hline
     ComputeLoadFactor(...) &     Real &      &     simulationSettings &     for static solver, this is a factor in interval [0,1]; MUST be overwritten\\ \hline
     ComputeMassMatrix(...) &     void &      &     mainSystem, scalarFactor=1. &     compute systemMassMatrix (multiplied with factor) in cSolver and return mass nODE2 x nODE2 matrix\\ \hline
     ComputeNewtonJacobian(...) &     void &      &     mainSystem, simulationSettings &     compute jacobian for newton method of given solver method; store result in systemJacobian\\ \hline
     ComputeNewtonResidual(...) &     Real &      &     mainSystem, simulationSettings &     compute residual for Newton method (e.g. static or time step); store residual vector in systemResidual and return scalar residual (specific computation may depend on solver types)\\ \hline
-    ComputeNewtonUpdate(...) &     void &      &     mainSystem, simulationSettings, initial=true &     compute update for currentState from newtonSolution (decrement from residual and jacobian); if initial, this is for the initial update with newtonSolution=0\\ \hline
+    ComputeNewtonUpdate(...) &     void &      &     mainSystem, simulationSettings, initial=True &     compute update for currentState from newtonSolution (decrement from residual and jacobian); if initial, this is for the initial update with newtonSolution=0\\ \hline
     ComputeODE2RHS(...) &     void &      &     mainSystem &     compute the RHS of \hac{ODE2} equations in systemResidual in range(0,nODE2)\\ \hline
     DiscontinuousIteration(...) &     bool &      &     mainSystem, simulationSettings &     perform discontinuousIteration for static step / time step; CALLS ComputeNewtonResidual\\ \hline
     FinalizeSolver(...) &     void &      &     mainSystem, simulationSettings &     write concluding information (timer statistics, messages) and close files\\ \hline
     FinishStep(...) &     void &      &     mainSystem, simulationSettings &     finish static step / time step; write output of results to file\\ \hline
     GetAEsize() &     Index &      &      &     number of algebraic equations in solver\\ \hline
     GetDataSize() &     Index &      &      &     number of data (history) variables in solver\\ \hline
+    GetErrorString() &     std::string &      &      &     return error string if solver has not been successful\\ \hline
     GetNewtonSolution() &     NumpyVector &      &      &     get locally stored / last computed solution (=increment) of Newton\\ \hline
     GetODE1size() &     Index &      &      &     number of \hac{ODE1} equations in solver (not yet implemented)\\ \hline
     GetODE2size() &     Index &      &      &     number of \hac{ODE2} equations in solver\\ \hline
@@ -1140,20 +1143,20 @@ and hereafter you can access all data and functions via 'solver'.
     GetSystemJacobian() &     NumpyMatrix &      &      &     get locally stored / last computed system jacobian of solver\\ \hline
     GetSystemMassMatrix() &     NumpyMatrix &      &      &     get locally stored / last computed mass matrix of solver\\ \hline
     GetSystemResidual() &     NumpyVector &      &      &     get locally stored / last computed system residual\\ \hline
-    HasAutomaticStepSizeControl(...) &     \tabnewline \tabnewline bool &      &     mainSystem, simulationSettings &     return true, if solver supports automatic stepsize control, otherwise false\\ \hline
+    HasAutomaticStepSizeControl(...) &     bool &      &     mainSystem, simulationSettings &     return true, if solver supports automatic stepsize control, otherwise false\\ \hline
     IncreaseStepSize(...) &     void &      &     mainSystem, simulationSettings &     increase step size if convergence is good\\ \hline
     InitializeSolver(...) &     bool &      &     mainSystem, simulationSettings &     initialize solverSpecific,data,it,conv; set/compute initial conditions (solver-specific!); initialize output files\\ \hline
     InitializeSolverData(...) &     void &      &     mainSystem, simulationSettings &     initialize all data,it,conv; called from InitializeSolver()\\ \hline
-    InitializeSolverInitialConditions(...) &     \tabnewline \tabnewline void &      &     mainSystem, simulationSettings &     set/compute initial conditions (solver-specific!); called from InitializeSolver()\\ \hline
+    InitializeSolverInitialConditions(...) &     \tabnewline void &      &     mainSystem, simulationSettings &     set/compute initial conditions (solver-specific!); called from InitializeSolver()\\ \hline
     InitializeSolverOutput(...) &     void &      &     mainSystem, simulationSettings &     initialize output files; called from InitializeSolver()\\ \hline
-    InitializeSolverPreChecks(...) &     \tabnewline \tabnewline bool &      &     mainSystem, simulationSettings &     check if system is solvable; initialize dense/sparse computation modes\\ \hline
+    InitializeSolverPreChecks(...) &     bool &      &     mainSystem, simulationSettings &     check if system is solvable; initialize dense/sparse computation modes\\ \hline
     InitializeStep(...) &     void &      &     mainSystem, simulationSettings &     initialize static step / time step; Python-functions; do some outputs, checks, etc.\\ \hline
     IsStaticSolver() &     bool &      &      &     return true, if static solver; needs to be overwritten in derived class\\ \hline
     IsVerboseCheck(...) &     bool &      &     level &     return true, if file or console output is at or above the given level\\ \hline
     loadStepGeometricFactor &     Real &      &      &     multiplicative load step factor; this factor is computed from loadStepGeometric parameters in SolveSystem(...)\\ \hline
     Newton(...) &     bool &      &     mainSystem, simulationSettings &     perform Newton method for given solver method\\ \hline
-    PostInitializeSolverSpecific(...) &     \tabnewline \tabnewline void &      &     mainSystem, simulationSettings &     post-initialize for solver specific tasks; called at the end of InitializeSolver\\ \hline
-    PreInitializeSolverSpecific(...) &     \tabnewline \tabnewline void &      &     mainSystem, simulationSettings &     pre-initialize for solver specific tasks; called at beginning of InitializeSolver, right after Solver data reset\\ \hline
+    PostInitializeSolverSpecific(...) &     void &      &     mainSystem, simulationSettings &     post-initialize for solver specific tasks; called at the end of InitializeSolver\\ \hline
+    PreInitializeSolverSpecific(...) &     void &      &     mainSystem, simulationSettings &     pre-initialize for solver specific tasks; called at beginning of InitializeSolver, right after Solver data reset\\ \hline
     ReduceStepSize(...) &     bool &      &     mainSystem, simulationSettings, severity &     reduce step size (1..normal, 2..severe problems); return true, if reduction was successful\\ \hline
     SetSystemJacobian(...) &     void &      &     systemJacobian &     set locally stored system jacobian of solver; must have size nODE2+nODE1+nAE\\ \hline
     SetSystemMassMatrix(...) &     void &      &     systemMassMatrix &     set locally stored mass matrix of solver; must have size nODE2+nODE1+nAE\\ \hline
@@ -1192,15 +1195,15 @@ and hereafter you can access all data and functions via 'solver'.
     alphaF &     Real &      &      &     copy of parameter in timeIntegration.generalizedAlpha\\ \hline
     alphaM &     Real &      &      &     copy of parameter in timeIntegration.generalizedAlpha\\ \hline
     CheckInitialized(...) &     bool &      &     mainSystem &     check if MainSolver and MainSystem are correctly initialized ==> otherwise raise SysError\\ \hline
-    ComputeAlgebraicEquations(...) &     \tabnewline \tabnewline void &      &     mainSystem, velocityLevel=false &     compute the algebraic equations in systemResidual in range(nODE2+nODE1, nODE2+nODE1+nAE)\\ \hline
-    ComputeJacobianAE(...) &     void &      &     mainSystem, scalarFactor\_ODE2=1., scalarFactor\_ODE2\_t=0., scalarFactor\_ODE1=1., velocityLevel=false &     add jacobian of algebraic equations (multiplied with factor) to systemJacobian in cSolver; the scalarFactors are scaling the derivatives w.r.t. \hac{ODE2} coordinates, ODE2\_t (velocity) coordinates and ODE1 coordinates; if velocityLevel == true, the constraints are evaluated at velocity level; the scalar factors scalarFactor\_ODE2=0 and scalarFactor\_ODE2 are used for the same ODE2 block in the jacobian\\ \hline
+    ComputeAlgebraicEquations(...) &     void &      &     mainSystem, velocityLevel=False &     compute the algebraic equations in systemResidual in range(nODE2+nODE1, nODE2+nODE1+nAE)\\ \hline
+    ComputeJacobianAE(...) &     void &      &     mainSystem, scalarFactor\_ODE2=1., scalarFactor\_ODE2\_t=0., scalarFactor\_ODE1=1., velocityLevel=False &     add jacobian of algebraic equations (multiplied with factor) to systemJacobian in cSolver; the scalarFactors are scaling the derivatives w.r.t. \hac{ODE2} coordinates, ODE2\_t (velocity) coordinates and ODE1 coordinates; if velocityLevel == true, the constraints are evaluated at velocity level; the scalar factors scalarFactor\_ODE2=0 and scalarFactor\_ODE2 are used for the same ODE2 block in the jacobian\\ \hline
     ComputeJacobianODE1RHS(...) &     void &      &     mainSystem, scalarFactor\_ODE2=1., scalarFactor\_ODE2\_t=0., scalarFactor\_ODE1=1. &     ADD jacobian of ODE1RHS (multiplied with factors for ODE2 and ODE1 coordinates) to the according rows (nODE2:nODE2+nODE1) of the exising systemJacobian in cSolver; it requires a prior call to ComputeJacobianODE2RHS(...); the scalar factors scalarFactor\_ODE2=0 and scalarFactor\_ODE2 are used for the same ODE2 block in the jacobian\\ \hline
     ComputeJacobianODE2RHS(...) &     void &      &     mainSystem, scalarFactor\_ODE2=1., scalarFactor\_ODE2\_t=0., scalarFactor\_ODE1=1. &     set systemJacobian to zero, size = (nODE2+nODE1+nAE) x (nODE2+nODE1+nAE), and add jacobian (multiplied with factors for ODE2 and ODE1 coordinates) of ODE2RHS to systemJacobian in cSolver; using (scalarFactor\_ODE2=-1,scalarFactor\_ODE2=0) gives the stiffness matrix (=derivatives of ODE2 coords) in the nODE2 x nODE2 part, while using (scalarFactor\_ODE2=0,scalarFactor\_ODE2=-1) gives the damping matrix (= derivatives of ODE2 velocity coordinates) in the same part; a superposition of these two parts makes sense for implicit solvers\\ \hline
     ComputeLoadFactor(...) &     Real &      &     simulationSettings &     for static solver, this is a factor in interval [0,1]; MUST be overwritten\\ \hline
     ComputeMassMatrix(...) &     void &      &     mainSystem, scalarFactor=1. &     compute systemMassMatrix (multiplied with factor) in cSolver and return mass nODE2 x nODE2 matrix\\ \hline
     ComputeNewtonJacobian(...) &     void &      &     mainSystem, simulationSettings &     compute jacobian for newton method of given solver method; store result in systemJacobian\\ \hline
     ComputeNewtonResidual(...) &     Real &      &     mainSystem, simulationSettings &     compute residual for Newton method (e.g. static or time step); store residual vector in systemResidual and return scalar residual (specific computation may depend on solver types)\\ \hline
-    ComputeNewtonUpdate(...) &     void &      &     mainSystem, simulationSettings, initial=true &     compute update for currentState from newtonSolution (decrement from residual and jacobian); if initial, this is for the initial update with newtonSolution=0\\ \hline
+    ComputeNewtonUpdate(...) &     void &      &     mainSystem, simulationSettings, initial=True &     compute update for currentState from newtonSolution (decrement from residual and jacobian); if initial, this is for the initial update with newtonSolution=0\\ \hline
     ComputeODE1RHS(...) &     void &      &     mainSystem &     compute the RHS of \hac{ODE1} equations in systemResidual in range(0,nODE1)\\ \hline
     ComputeODE2RHS(...) &     void &      &     mainSystem &     compute the RHS of \hac{ODE2} equations in systemResidual in range(0,nODE2)\\ \hline
     DiscontinuousIteration(...) &     bool &      &     mainSystem, simulationSettings &     perform discontinuousIteration for static step / time step; CALLS ComputeNewtonResidual\\ \hline
@@ -1210,44 +1213,45 @@ and hereafter you can access all data and functions via 'solver'.
     GetAAlgorithmic() &     NumpyVector &      &      &     get locally stored / last computed algorithmic accelerations\\ \hline
     GetAEsize() &     Index &      &      &     number of algebraic equations in solver\\ \hline
     GetDataSize() &     Index &      &      &     number of data (history) variables in solver\\ \hline
+    GetErrorString() &     std::string &      &      &     return error string if solver has not been successful\\ \hline
     GetNewtonSolution() &     NumpyVector &      &      &     get locally stored / last computed solution (=increment) of Newton\\ \hline
     GetODE1size() &     Index &      &      &     number of \hac{ODE1} equations in solver (not yet implemented)\\ \hline
     GetODE2size() &     Index &      &      &     number of \hac{ODE2} equations in solver\\ \hline
     GetSimulationEndTime(...) &     Real &      &     simulationSettings &     compute simulation end time (depends on static or time integration solver)\\ \hline
     GetSolverName() &     std::string &      &      &     get solver name - needed for output file header and visualization window\\ \hline
-    GetStartOfStepStateAAlgorithmic() &     \tabnewline \tabnewline NumpyVector &      &      &     get locally stored / last computed algorithmic accelerations at start of step\\ \hline
+    GetStartOfStepStateAAlgorithmic() &     \tabnewline NumpyVector &      &      &     get locally stored / last computed algorithmic accelerations at start of step\\ \hline
     GetSystemJacobian() &     NumpyMatrix &      &      &     get locally stored / last computed system jacobian of solver\\ \hline
     GetSystemMassMatrix() &     NumpyMatrix &      &      &     get locally stored / last computed mass matrix of solver\\ \hline
     GetSystemResidual() &     NumpyVector &      &      &     get locally stored / last computed system residual\\ \hline
-    HasAutomaticStepSizeControl(...) &     \tabnewline \tabnewline bool &      &     mainSystem, simulationSettings &     return true, if solver supports automatic stepsize control, otherwise false\\ \hline
+    HasAutomaticStepSizeControl(...) &     bool &      &     mainSystem, simulationSettings &     return true, if solver supports automatic stepsize control, otherwise false\\ \hline
     IncreaseStepSize(...) &     void &      &     mainSystem, simulationSettings &     increase step size if convergence is good\\ \hline
     InitializeSolver(...) &     bool &      &     mainSystem, simulationSettings &     initialize solverSpecific,data,it,conv; set/compute initial conditions (solver-specific!); initialize output files\\ \hline
     InitializeSolverData(...) &     void &      &     mainSystem, simulationSettings &     initialize all data,it,conv; called from InitializeSolver()\\ \hline
-    InitializeSolverInitialConditions(...) &     \tabnewline \tabnewline void &      &     mainSystem, simulationSettings &     set/compute initial conditions (solver-specific!); called from InitializeSolver()\\ \hline
+    InitializeSolverInitialConditions(...) &     \tabnewline void &      &     mainSystem, simulationSettings &     set/compute initial conditions (solver-specific!); called from InitializeSolver()\\ \hline
     InitializeSolverOutput(...) &     void &      &     mainSystem, simulationSettings &     initialize output files; called from InitializeSolver()\\ \hline
-    InitializeSolverPreChecks(...) &     \tabnewline \tabnewline bool &      &     mainSystem, simulationSettings &     check if system is solvable; initialize dense/sparse computation modes\\ \hline
+    InitializeSolverPreChecks(...) &     bool &      &     mainSystem, simulationSettings &     check if system is solvable; initialize dense/sparse computation modes\\ \hline
     InitializeStep(...) &     void &      &     mainSystem, simulationSettings &     initialize static step / time step; Python-functions; do some outputs, checks, etc.\\ \hline
     IsStaticSolver() &     bool &      &      &     return true, if static solver; needs to be overwritten in derived class\\ \hline
     IsVerboseCheck(...) &     bool &      &     level &     return true, if file or console output is at or above the given level\\ \hline
     newmarkBeta &     Real &      &      &     copy of parameter in timeIntegration.generalizedAlpha\\ \hline
     newmarkGamma &     Real &      &      &     copy of parameter in timeIntegration.generalizedAlpha\\ \hline
     Newton(...) &     bool &      &     mainSystem, simulationSettings &     perform Newton method for given solver method\\ \hline
-    PostInitializeSolverSpecific(...) &     \tabnewline \tabnewline void &      &     mainSystem, simulationSettings &     post-initialize for solver specific tasks; called at the end of InitializeSolver\\ \hline
+    PostInitializeSolverSpecific(...) &     void &      &     mainSystem, simulationSettings &     post-initialize for solver specific tasks; called at the end of InitializeSolver\\ \hline
     PostNewton(...) &     Real &      &     mainSystem, simulationSettings &     call PostNewton for all relevant objects (contact, friction, ... iterations); returns error for discontinuous iteration\\ \hline
-    PreInitializeSolverSpecific(...) &     \tabnewline \tabnewline void &      &     mainSystem, simulationSettings &     pre-initialize for solver specific tasks; called at beginning of InitializeSolver, right after Solver data reset\\ \hline
+    PreInitializeSolverSpecific(...) &     void &      &     mainSystem, simulationSettings &     pre-initialize for solver specific tasks; called at beginning of InitializeSolver, right after Solver data reset\\ \hline
     ReduceStepSize(...) &     bool &      &     mainSystem, simulationSettings, severity &     reduce step size (1..normal, 2..severe problems); return true, if reduction was successful\\ \hline
     SetSystemJacobian(...) &     void &      &     systemJacobian &     set locally stored system jacobian of solver; must have size nODE2+nODE1+nAE\\ \hline
     SetSystemMassMatrix(...) &     void &      &     systemMassMatrix &     set locally stored mass matrix of solver; must have size nODE2+nODE1+nAE\\ \hline
     SetSystemResidual(...) &     void &      &     systemResidual &     set locally stored system residual; must have size nODE2+nODE1+nAE\\ \hline
-    SetUserFunctionComputeNewtonJacobian(...) &     \tabnewline \tabnewline void &      &     mainSystem, userFunction &     set user function\\ \hline
-    SetUserFunctionComputeNewtonResidual(...) &     \tabnewline \tabnewline void &      &     mainSystem, userFunction &     set user function\\ \hline
-    SetUserFunctionComputeNewtonUpdate(...) &     \tabnewline \tabnewline void &      &     mainSystem, userFunction &     set user function\\ \hline
-    SetUserFunctionDiscontinuousIteration(...) &     \tabnewline \tabnewline void &      &     mainSystem, userFunction &     set user function\\ \hline
-    SetUserFunctionFinishStep(...) &     \tabnewline \tabnewline void &      &     mainSystem, userFunction &     set user function\\ \hline
-    SetUserFunctionInitializeStep(...) &     \tabnewline \tabnewline void &      &     mainSystem, userFunction &     set user function\\ \hline
+    SetUserFunctionComputeNewtonJacobian(...) &     \tabnewline void &      &     mainSystem, userFunction &     set user function\\ \hline
+    SetUserFunctionComputeNewtonResidual(...) &     \tabnewline void &      &     mainSystem, userFunction &     set user function\\ \hline
+    SetUserFunctionComputeNewtonUpdate(...) &     \tabnewline void &      &     mainSystem, userFunction &     set user function\\ \hline
+    SetUserFunctionDiscontinuousIteration(...) &     \tabnewline void &      &     mainSystem, userFunction &     set user function\\ \hline
+    SetUserFunctionFinishStep(...) &     void &      &     mainSystem, userFunction &     set user function\\ \hline
+    SetUserFunctionInitializeStep(...) &     \tabnewline void &      &     mainSystem, userFunction &     set user function\\ \hline
     SetUserFunctionNewton(...) &     void &      &     mainSystem, userFunction &     set user function\\ \hline
-    SetUserFunctionPostNewton(...) &     \tabnewline \tabnewline void &      &     mainSystem, userFunction &     set user function\\ \hline
-    SetUserFunctionUpdateCurrentTime(...) &     \tabnewline \tabnewline void &      &     mainSystem, userFunction &     set user function\\ \hline
+    SetUserFunctionPostNewton(...) &     void &      &     mainSystem, userFunction &     set user function\\ \hline
+    SetUserFunctionUpdateCurrentTime(...) &     \tabnewline void &      &     mainSystem, userFunction &     set user function\\ \hline
     SolveSteps(...) &     bool &      &     mainSystem, simulationSettings &     main solver part: calls multiple InitializeStep(...)/ DiscontinuousIteration(...)/ FinishStep(...); do step reduction if necessary; return true if success, false else\\ \hline
     SolveSystem(...) &     bool &      &     mainSystem, simulationSettings &     solve System: InitializeSolver, SolveSteps, FinalizeSolver\\ \hline
     spectralRadius &     Real &      &      &     copy of parameter in timeIntegration.generalizedAlpha\\ \hline
@@ -1283,7 +1287,7 @@ and hereafter you can access all data and functions via 'solver'.
     ComputeMassMatrix(...) &     void &      &     mainSystem, scalarFactor=1. &     compute systemMassMatrix (multiplied with factor) in cSolver and return mass matrix\\ \hline
     ComputeNewtonJacobian(...) &     void &      &     mainSystem, simulationSettings &     compute jacobian for newton method of given solver method; store result in systemJacobian\\ \hline
     ComputeNewtonResidual(...) &     Real &      &     mainSystem, simulationSettings &     compute residual for Newton method (e.g. static or time step); store residual vector in systemResidual and return scalar residual (specific computation may depend on solver types)\\ \hline
-    ComputeNewtonUpdate(...) &     void &      &     mainSystem, simulationSettings, initial=true &     compute update for currentState from newtonSolution (decrement from residual and jacobian); if initial, this is for the initial update with newtonSolution=0\\ \hline
+    ComputeNewtonUpdate(...) &     void &      &     mainSystem, simulationSettings, initial=True &     compute update for currentState from newtonSolution (decrement from residual and jacobian); if initial, this is for the initial update with newtonSolution=0\\ \hline
     ComputeODE1RHS(...) &     void &      &     mainSystem &     compute the RHS of \hac{ODE1} equations in systemResidual in range(0,nODE1)\\ \hline
     ComputeODE2RHS(...) &     void &      &     mainSystem &     compute the RHS of \hac{ODE2} equations in systemResidual in range(0,nODE2)\\ \hline
     DiscontinuousIteration(...) &     bool &      &     mainSystem, simulationSettings &     perform discontinuousIteration for static step / time step; CALLS ComputeNewtonResidual\\ \hline
@@ -1291,6 +1295,7 @@ and hereafter you can access all data and functions via 'solver'.
     FinishStep(...) &     void &      &     mainSystem, simulationSettings &     finish static step / time step; write output of results to file\\ \hline
     GetAEsize() &     Index &      &      &     number of algebraic equations in solver\\ \hline
     GetDataSize() &     Index &      &      &     number of data (history) variables in solver\\ \hline
+    GetErrorString() &     std::string &      &      &     return error string if solver has not been successful\\ \hline
     GetMethodOrder() &     Index &      &      &     return order of method (higher value in methods with automatic step size, e.g., DOPRI5=5)\\ \hline
     GetNumberOfStages() &     Index &      &      &     return number of stages in current method\\ \hline
     GetODE1size() &     Index &      &      &     number of \hac{ODE1} equations in solver (not yet implemented)\\ \hline
@@ -1299,19 +1304,19 @@ and hereafter you can access all data and functions via 'solver'.
     GetSolverName() &     std::string &      &      &     get solver name - needed for output file header and visualization window\\ \hline
     GetSystemMassMatrix() &     NumpyMatrix &      &      &     get locally stored / last computed mass matrix of solver\\ \hline
     GetSystemResidual() &     NumpyVector &      &      &     get locally stored / last computed system residual\\ \hline
-    HasAutomaticStepSizeControl(...) &     \tabnewline \tabnewline bool &      &     mainSystem, simulationSettings &     return true, if solver supports automatic stepsize control, otherwise false\\ \hline
+    HasAutomaticStepSizeControl(...) &     bool &      &     mainSystem, simulationSettings &     return true, if solver supports automatic stepsize control, otherwise false\\ \hline
     IncreaseStepSize(...) &     void &      &     mainSystem, simulationSettings &     increase step size if convergence is good\\ \hline
     InitializeSolver(...) &     bool &      &     mainSystem, simulationSettings &     initialize solverSpecific,data,it,conv; set/compute initial conditions (solver-specific!); initialize output files\\ \hline
     InitializeSolverData(...) &     void &      &     mainSystem, simulationSettings &     initialize all data,it,conv; called from InitializeSolver()\\ \hline
-    InitializeSolverInitialConditions(...) &     \tabnewline \tabnewline void &      &     mainSystem, simulationSettings &     set/compute initial conditions (solver-specific!); called from InitializeSolver()\\ \hline
+    InitializeSolverInitialConditions(...) &     \tabnewline void &      &     mainSystem, simulationSettings &     set/compute initial conditions (solver-specific!); called from InitializeSolver()\\ \hline
     InitializeSolverOutput(...) &     void &      &     mainSystem, simulationSettings &     initialize output files; called from InitializeSolver()\\ \hline
-    InitializeSolverPreChecks(...) &     \tabnewline \tabnewline bool &      &     mainSystem, simulationSettings &     check if system is solvable; initialize dense/sparse computation modes\\ \hline
+    InitializeSolverPreChecks(...) &     bool &      &     mainSystem, simulationSettings &     check if system is solvable; initialize dense/sparse computation modes\\ \hline
     InitializeStep(...) &     void &      &     mainSystem, simulationSettings &     initialize static step / time step; Python-functions; do some outputs, checks, etc.\\ \hline
     IsStaticSolver() &     bool &      &      &     return true, if static solver; needs to be overwritten in derived class\\ \hline
     IsVerboseCheck(...) &     bool &      &     level &     return true, if file or console output is at or above the given level\\ \hline
     Newton(...) &     bool &      &     mainSystem, simulationSettings &     perform Newton method for given solver method\\ \hline
-    PostInitializeSolverSpecific(...) &     \tabnewline \tabnewline void &      &     mainSystem, simulationSettings &     post-initialize for solver specific tasks; called at the end of InitializeSolver\\ \hline
-    PreInitializeSolverSpecific(...) &     \tabnewline \tabnewline void &      &     mainSystem, simulationSettings &     pre-initialize for solver specific tasks; called at beginning of InitializeSolver, right after Solver data reset\\ \hline
+    PostInitializeSolverSpecific(...) &     void &      &     mainSystem, simulationSettings &     post-initialize for solver specific tasks; called at the end of InitializeSolver\\ \hline
+    PreInitializeSolverSpecific(...) &     void &      &     mainSystem, simulationSettings &     pre-initialize for solver specific tasks; called at beginning of InitializeSolver, right after Solver data reset\\ \hline
     ReduceStepSize(...) &     bool &      &     mainSystem, simulationSettings, severity &     reduce step size (1..normal, 2..severe problems); return true, if reduction was successful\\ \hline
     SetSystemMassMatrix(...) &     void &      &     systemMassMatrix &     set locally stored mass matrix of solver; must have size nODE2+nODE1+nAE\\ \hline
     SetSystemResidual(...) &     void &      &     systemResidual &     set locally stored system residual; must have size nODE2+nODE1+nAE\\ \hline

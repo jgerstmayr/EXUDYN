@@ -755,22 +755,25 @@ Matrix4DF OpenVRinterface::GetCurrentViewProjectionMatrix( vr::Hmd_Eye nEye )
 		//Matrix4DF mEye = m_mat4ProjectionLeft;
 		//matMVP = mPose * mEye;
 
-		//if (nEye == vr::Eye_Left)
-		//{
-		//	matMVP = m_mat4HMDPose * m_mat4eyePosLeft * m_mat4ProjectionLeft;
-		//}
-		//else if (nEye == vr::Eye_Right)
-		//{
-		//	matMVP = m_mat4HMDPose * m_mat4eyePosRight * m_mat4ProjectionRight;
-		//}
+		//according to master thesis:
 		if (nEye == vr::Eye_Left)
 		{
-			matMVP = m_mat4HMDPose * m_mat4ProjectionLeft * m_mat4eyePosLeft;
+			matMVP = m_mat4HMDPose * m_mat4eyePosLeft * m_mat4ProjectionLeft;
 		}
 		else if (nEye == vr::Eye_Right)
 		{
-			matMVP = m_mat4HMDPose * m_mat4ProjectionRight * m_mat4eyePosRight;
+			matMVP = m_mat4HMDPose * m_mat4eyePosRight * m_mat4ProjectionRight;
 		}
+		
+		//slightly different, but not consistent: #until V1.6.73
+		//if (nEye == vr::Eye_Left)
+		//{
+		//	matMVP = m_mat4HMDPose * m_mat4ProjectionLeft * m_mat4eyePosLeft;
+		//}
+		//else if (nEye == vr::Eye_Right)
+		//{
+		//	matMVP = m_mat4HMDPose * m_mat4ProjectionRight * m_mat4eyePosRight;
+		//}
 
 		//original, does not work with classic OpenGL:
 		//if (nEye == vr::Eye_Left)

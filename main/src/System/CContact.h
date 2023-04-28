@@ -347,7 +347,6 @@ protected:
 	ResizableArray<ResizableMatrix*> allRotationJacobians;			//!< d(omega)/dq_t; storage for precomputed jacobians of contacts OR rigid bodies
 	ResizableArray<ArrayIndex*> allLTGs;							//!< LTG mapping for every jacobian (nullptr if unused)
 
-	//TemporaryComputationDataArray tempArray; //will be moved to CSystem or Solver
 	//! the following lists need to be stored per thread:
 	ResizableArray<ArrayIndex*> addedObjects;						//!< array used when retreiving contact objects, storing which objects already have been added
 	ResizableArray<ResizableArray<bool>*> addedObjectsFlags;		//!< stores true/false if object has been added; this allows fast detection if objects have been added
@@ -356,6 +355,9 @@ protected:
 	ResizableArray<ArrayIndex*> foundPlanesTrianglesRigidBodyBased;			//!< indices of plane triangles; used to exclude edges coinciding with planes
 	ResizableArray<ArrayIndex*> foundEdgesTrianglesRigidBodyBased;			//!< indices of edge triangles; used to exclude edges with same projected points
 	//
+
+    //used by functions called directly via Python interface
+    TemporaryComputationDataArray externFunctionsTempArray; //will be moved to CSystem or Solver
 
 public:
 	GeneralContact()
@@ -527,6 +529,13 @@ public:
 	bool ShortestDistanceAlongLine(const Vector3D& pStart, const Vector3D& direction, Real minDistance, Real maxDistance,
 		Index& foundLocalIndex, Contact::TypeIndex& foundTypeIndex, Real& foundDistance, Real& foundVelocityAlongLine,
 		Real cylinderRadius=0, Contact::TypeIndex selectedTypeIndex = Contact::IndexEndOfEnumList);
+
+    //! update contact interactions, e.g. for ShortestDistanceAlongLine or for getting items in box
+    void UpdateContacts(const CSystem& cSystem);
+
+    //! get contact interactions of itemIndex of type selectedTypeIndex, e.g. IndexSpheresMarkerBased with index 2
+    //! returns list of contacts, with global indices!
+    ArrayIndex* GetActiveContacts(Contact::TypeIndex selectedTypeIndex, Index itemIndex);
 
 };
 #endif //USE_GENERAL_CONTACT
