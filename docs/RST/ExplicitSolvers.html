@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Explicit solvers &mdash; Exudyn1.6.65.dev1 1.6.65.dev1 documentation</title>
+  <title>Explicit solvers &mdash; Exudyn1.6.80.dev1 1.6.80.dev1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
@@ -39,7 +39,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.6.65.dev1
+            Exudyn1.6.80.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -95,7 +95,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.6.65.dev1</a>
+          <a href="../../index.html">Exudyn1.6.80.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -179,11 +179,11 @@ For more details, see Hairer et al. .</p>
 </section>
 <section id="stability-limit">
 <h2>Stability limit<a class="headerlink" href="#stability-limit" title="Permalink to this heading"></a></h2>
-<p>Note that there are hard limitations for every explicit integration method regarding the step size. Especially for stiff systems (basically with high stiffness parameters and small masses, but also with restrictions to damping), the <strong>step size :math:`h` has an upper limit</strong>: <span class="math notranslate nohighlight">\(h &lt; h_{lim}\)</span>. Above that limit the method is inherently unstable, which needs to be considered both for constant and automatic step size selection.</p>
+<p>Note that there are hard limitations for every explicit integration method regarding the step size. Especially for stiff systems (basically with high stiffness parameters and small masses, but also with restrictions to damping), the <strong>step size</strong> <span class="math notranslate nohighlight">\(h\)</span> <strong>has an upper limit</strong>: <span class="math notranslate nohighlight">\(h &lt; h_{lim}\)</span>. Above that limit the method is inherently unstable, which needs to be considered both for constant and automatic step size selection.</p>
 </section>
 <section id="explicit-lie-group-integrators">
 <h2>Explicit Lie group integrators<a class="headerlink" href="#explicit-lie-group-integrators" title="Permalink to this heading"></a></h2>
-<p>All explicit solvers including the automatic step size solvers (DOPRI5, ODE23) have been equiped with Lie group integration functionality – details will be published soon and some tests are made, but handle this with care.</p>
+<p>All explicit solvers including the automatic step size solvers (DOPRI5, ODE23) have been equiped with Lie group integration functionality, see Holzinger et al. .</p>
 <p>Basically, the integration formulas, see Section <a class="reference internal" href="#sec-rungekuttamethod"><span class="std std-ref">Explicit Runge-Kutta method</span></a> are extended for special rotation parameters.
 Lie group integration is currently only available for <code class="docutils literal notranslate"><span class="pre">NodeRigidBodyRotVecLG</span></code> used in <code class="docutils literal notranslate"><span class="pre">ObjectRigidBody</span></code> (3D rigid body).
 <code class="docutils literal notranslate"><span class="pre">FFRFreducedOrder</span></code> will be extended to such nodes in the near future.

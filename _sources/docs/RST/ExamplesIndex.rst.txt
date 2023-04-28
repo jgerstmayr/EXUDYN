@@ -59,6 +59,7 @@ This section includes all Examples for Exudyn.They can also be found and downloa
    Examples/multiMbsTest
    Examples/multiprocessingTest
    Examples/myFirstExample
+   Examples/netgenSTLtest
    Examples/NGsolveCMStutorial
    Examples/NGsolveCraigBampton
    Examples/NGsolveLinearFEM

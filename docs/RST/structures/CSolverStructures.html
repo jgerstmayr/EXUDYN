@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Solver substructures &mdash; Exudyn1.6.65.dev1 1.6.65.dev1 documentation</title>
+  <title>Solver substructures &mdash; Exudyn1.6.80.dev1 1.6.80.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -39,7 +39,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.65.dev1
+            Exudyn1.6.80.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -98,7 +98,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.65.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.80.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -207,27 +207,27 @@ There is plenty of possibilities to interact with the solvers, being it the extr
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>Reset(…)</strong> [type = void, default = useSolverTimer]:</div>
+<div class="line"><strong>Reset(useSolverTimer)</strong> [return type = void]:</div>
 <div class="line">reset solver timings to initial state by assigning default values; useSolverTimer sets the useTimer flag</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>StartTimer(…)</strong> [type = void, default = value]:</div>
+<div class="line"><strong>StartTimer(value)</strong> [return type = void]:</div>
 <div class="line">start timer function for a given variable; subtracts current CPU time from value</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>StopTimer(…)</strong> [type = void, default = value]:</div>
+<div class="line"><strong>StopTimer(value)</strong> [return type = void]:</div>
 <div class="line">stop timer function for a given variable; adds current CPU time to value</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>Sum()</strong> [type = Real]:</div>
+<div class="line"><strong>Sum()</strong> [return type = Real]:</div>
 <div class="line">compute sum of all timers (except for those counted multiple, e.g., jacobians</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>ToString()</strong> [type = String]:</div>
+<div class="line"><strong>ToString()</strong> [return type = String]:</div>
 <div class="line">converts the current timings to a string</div>
 </div>
 </li>
@@ -269,12 +269,12 @@ There is plenty of possibilities to interact with the solvers, being it the extr
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>CleanUpMemory()</strong> [type = void]:</div>
+<div class="line"><strong>CleanUpMemory()</strong> [return type = void]:</div>
 <div class="line">if desired, temporary data is cleaned up to safe memory</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>GetLinearSolverType()</strong> [type = LinearSolverType]:</div>
+<div class="line"><strong>GetLinearSolverType()</strong> [return type = LinearSolverType]:</div>
 <div class="line">return current linear solver type (dense/sparse)</div>
 </div>
 </li>
@@ -309,7 +309,7 @@ There is plenty of possibilities to interact with the solvers, being it the extr
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>SetLinearSolverType(…)</strong> [type = void, default = linearSolverType, reuseAnalyzedPattern]:</div>
+<div class="line"><strong>SetLinearSolverType(linearSolverType, reuseAnalyzedPattern)</strong> [return type = void]:</div>
 <div class="line">set linear solver type and matrix version: links system matrices to according dense/sparse versions</div>
 </div>
 </li>
@@ -471,7 +471,7 @@ There is plenty of possibilities to interact with the solvers, being it the extr
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>ToString()</strong> [type = String]:</div>
+<div class="line"><strong>ToString()</strong> [return type = String]:</div>
 <div class="line">convert iteration statistics to string; used for displayStatistics option</div>
 </div>
 </li>
@@ -503,7 +503,7 @@ There is plenty of possibilities to interact with the solvers, being it the extr
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>InitializeData()</strong> [type = void]:</div>
+<div class="line"><strong>InitializeData()</strong> [return type = void]:</div>
 <div class="line">initialize SolverConvergenceData by assigning default values</div>
 </div>
 </li>
@@ -576,11 +576,16 @@ There is plenty of possibilities to interact with the solvers, being it the extr
 </li>
 <li><div class="line-block">
 <div class="line"><strong>finishedSuccessfully</strong> [type = bool, default = False]:</div>
-<div class="line">flag is false until solver finshed successfully (can be used as external trigger)</div>
+<div class="line">flag is false until solver functions SolveSteps)…) or SolveSystem(…) finished successfully (can be used as external trigger)</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>InitializeData()</strong> [type = void]:</div>
+<div class="line"><strong>initializationSuccessful</strong> [type = bool, default = False]:</div>
+<div class="line">flag is set during call to InitializeSolver(…); reasons for failure are multiple, either inconsistent solver settings are used, files cannot be written (file locked), or initial conditions could not be computed</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>InitializeData()</strong> [return type = void]:</div>
 <div class="line">initialize SolverOutputData by assigning default values</div>
 </div>
 </li>

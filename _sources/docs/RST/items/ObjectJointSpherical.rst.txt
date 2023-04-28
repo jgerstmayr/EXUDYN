@@ -94,7 +94,8 @@ Definition of quantities
 Connector constraint equations
 ------------------------------
 
-\paragraph\ ``activeConnector = True``\ :
+
+\ **\ ``activeConnector = True``\ :** 
 If \ :math:`[j_0,\,\ldots,\,j_2] = [1,1,1]\tp`\ , meaning that all translational coordinates are fixed,
 the translational index 3 constraints read
 
@@ -129,7 +130,8 @@ and the translational index 2 constraints read for every component \ :math:`k \i
 
 
 
-\paragraph\ ``activeConnector = False``\ :
+
+\ **\ ``activeConnector = False``\ :** 
 
 .. math::
 

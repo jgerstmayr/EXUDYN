@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GeneralContact &mdash; Exudyn1.6.65.dev1 1.6.65.dev1 documentation</title>
+  <title>GeneralContact &mdash; Exudyn1.6.80.dev1 1.6.80.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -39,7 +39,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.65.dev1
+            Exudyn1.6.80.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -94,7 +94,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.65.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.80.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -115,7 +115,7 @@
              
   <section id="generalcontact">
 <span id="sec-generalcontact"></span><h1>GeneralContact<a class="headerlink" href="#generalcontact" title="Permalink to this heading"></a></h1>
-<p>Structure to define general and highly efficient contact functionality in multibody systems(Note that GeneralContact is still developed, use with care.). For further explanations and theoretical backgrounds, see Section <a class="reference internal" href="../../../index.html#seccontacttheory"><span class="std std-ref">Theory: Contact</span></a>.</p>
+<p>Structure to define general and highly efficient contact functionality in multibody systems(Note that GeneralContact is still developed, use with care.). For further explanations and theoretical backgrounds, see Section <a class="reference internal" href="../../../index.html#seccontacttheory"><span class="std std-ref">Theory: Contact</span></a>. Internally, the contacts are stored with global indices, which are in the following list: [numberOfSpheresMarkerBased, numberOfANCFCable2D, numberOfTrigsRigidBodyBased], see alsothe output of GetPythonObject().</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="c1">#...</span>
 <span class="linenos">2</span><span class="c1">#code snippet, must be placed anywhere before mbs.Assemble()</span>
 <span class="linenos">3</span><span class="c1">#Add GeneralContact to mbs:</span>
@@ -274,6 +274,26 @@
 <li><div class="line-block">
 <div class="line"><strong>ShortestDistanceAlongLine</strong>(<em>pStart</em> = [0,0,0], <em>direction</em> = [1,0,0], <em>minDistance</em> = -1e-7, <em>maxDistance</em> = 1e7, <em>asDictionary</em> = False, <em>cylinderRadius</em> = 0, <em>typeIndex</em> = Contact.IndexEndOfEnumList):</div>
 <div class="line">Find shortest distance to contact objects in GeneralContact along line with pStart (given as 3D list or numpy array) and direction (as 3D list or numpy array with no need to be normalized); the function returns the distance which is &gt;= minDistance and &lt; maxDistance; in case of beam elements, it measures the distance to the beam centerline; the distance is measured from pStart along given direction and can also be negative; if no item is found along line, the maxDistance is returned; if asDictionary=False, the result is a float, while otherwise details are returned as dictionary (including distance, velocityAlongLine (which is the object velocity in given direction and may be different from the time derivative of the distance; works similar to a laser Doppler vibrometer - LDV), itemIndex and itemType in GeneralContact); the cylinderRadius, if not equal to 0, will be used for spheres to find closest sphere along cylinder with given point and direction; the typeIndex can be set to a specific contact type, e.g., which are searched for (otherwise all objects are considered)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>UpdateContacts</strong>(<em>mainSystem</em>):</div>
+<div class="line">Update contact sets, e.g. if no contact is simulated (isActive=False) but user functions need up-to-date contact states for GetItemsInBox(…) or for GetActiveContacts(…)</div>
+<div class="line"><em>Example</em>:</div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">gContact</span><span class="o">.</span><span class="nf">UpdateContacts</span><span class="p">(</span><span class="n">mbs</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>GetActiveContacts</strong>(<em>typeIndex</em>, <em>itemIndex</em>):</div>
+<div class="line">Get list of global item numbers which are in contact with itemIndex of type typeIndex in case that the global itemIndex is smaller than the abs value of the contact pair index; a negative sign indicates that the contacting (spheres) is in Coloumb friction, a positive sign indicates a regularized friction region; for interpretation of global contact indices, see gContact.GetPythonObject() and documentation; requires either implicit contact computation or UpdateContacts(…) needs to be called prior to this function</div>
+<div class="line"><em>Example</em>:</div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#if explicit solver is used, we first need to update contacts:</span>
+<span class="n">gContact</span><span class="o">.</span><span class="nf">UpdateContacts</span><span class="p">(</span><span class="n">mbs</span><span class="p">)</span>\<span class="c1">#obtain active contacts of marker based sphere 42:</span>
+<span class="n">gList</span> <span class="o">=</span> <span class="n">gContact</span><span class="o">.</span><span class="nf">GetActiveContacts</span><span class="p">(</span><span class="n">exu</span><span class="o">.</span><span class="n">ContactTypeIndex</span><span class="o">.</span><span class="n">IndexSpheresMarkerBased</span><span class="p">,</span> <span class="mi">42</span><span class="p">)</span>
+</pre></div>
 </div>
 </li>
 <li><div class="line-block">

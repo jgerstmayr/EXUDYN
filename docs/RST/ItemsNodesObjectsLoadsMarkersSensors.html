@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Items: Nodes, Objects, Loads, Markers, Sensors, … &mdash; Exudyn1.6.65.dev1 1.6.65.dev1 documentation</title>
+  <title>Items: Nodes, Objects, Loads, Markers, Sensors, … &mdash; Exudyn1.6.80.dev1 1.6.80.dev1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
@@ -39,7 +39,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.6.65.dev1
+            Exudyn1.6.80.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -98,7 +98,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.6.65.dev1</a>
+          <a href="../../index.html">Exudyn1.6.80.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -131,7 +131,10 @@
 <h2>Nodes<a class="headerlink" href="#nodes" title="Permalink to this heading"></a></h2>
 <p>Nodes provide the coordinates (and the degrees of freedom) to the system. They have no mass, stiffness or whatsoever assigned.
 Without nodes, the system has no unknown coordinates.
-Adding a node provides (for the system unknown) coordinates. In addition we also need equations for every nodal coordinate – otherwise the system cannot be computed (NOTE: this is currently not checked by the preprocessor).</p>
+Adding a node provides (for the system unknown) coordinates. In addition we also need equations for every nodal coordinate – otherwise the system cannot be computed (NOTE: this is currently not checked by the preprocessor).
+In general, adding nodes and objects (e.g., to represent rigid bodies), leads to a <strong>redundant coordinate formulation</strong>.
+In order to determine the degree of freedom, you may use the Grübler-Kutzbach criterion. This can also be done numerically, using the function <code class="docutils literal notranslate"><span class="pre">ComputeSystemDegreeOfFreedom</span></code>, see the module <code class="docutils literal notranslate"><span class="pre">exudyn.solver</span></code>.
+Furthermore, <strong>minimal</strong> coordinates can be used for open tree systems, using <code class="docutils literal notranslate"><span class="pre">ObjectKinematicTree</span></code>.</p>
 </section>
 <section id="objects">
 <h2>Objects<a class="headerlink" href="#objects" title="Permalink to this heading"></a></h2>

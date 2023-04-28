@@ -33,6 +33,7 @@ This section includes all TestModels for Exudyn.They can also be found and downl
    TestModels/explicitLieGroupIntegratorPythonTest
    TestModels/explicitLieGroupIntegratorTest
    TestModels/fourBarMechanismTest
+   TestModels/fourBarMechanismIftomm
    TestModels/generalContactFrictionTests
    TestModels/generalContactSpheresTest
    TestModels/genericJointUserFunctionTest

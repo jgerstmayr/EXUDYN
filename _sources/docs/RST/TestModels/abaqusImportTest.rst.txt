@@ -78,7 +78,7 @@ You can view and download this file on Github: `abaqusImportTest.py <https://git
                #print('size of postProcessingModes:', sys.getsizeof(fem.postProcessingModes['matrix']) )
                exu.Print('===================')
        
-       nModes = 8
+       nModes = 5 #use 2,5,6,7 or 9 but not 8, as in case that symmetric modes are swapped (in Hex case), solution is completely different 
    
        pLeft = [0,0,0]
        pLeftMid = [0,0.5,0.5]
@@ -194,7 +194,7 @@ You can view and download this file on Github: `abaqusImportTest.py <https://git
    
    exu.Print('solution of abaqusImportTest=',result)
    
-   exudynTestGlobals.testError = (result - (0.000589574308391221)) 
+   exudynTestGlobals.testError = (result - (0.0005885208722206333)) 
    exudynTestGlobals.testResult = result
    
    #for small meshes in TestModels:

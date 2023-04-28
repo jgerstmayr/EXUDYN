@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>particlesSilo.py &mdash; Exudyn1.6.65.dev1 1.6.65.dev1 documentation</title>
+  <title>particlesSilo.py &mdash; Exudyn1.6.80.dev1 1.6.80.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -37,7 +37,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.65.dev1
+            Exudyn1.6.80.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -118,6 +118,7 @@
 <li class="toctree-l2"><a class="reference internal" href="multiMbsTest.html">multiMbsTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="multiprocessingTest.html">multiprocessingTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="myFirstExample.html">myFirstExample.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="netgenSTLtest.html">netgenSTLtest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolveCMStutorial.html">NGsolveCMStutorial.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolveCraigBampton.html">NGsolveCraigBampton.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolveLinearFEM.html">NGsolveLinearFEM.py</a></li>
@@ -200,7 +201,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.65.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.80.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -420,86 +421,90 @@
 <span class="linenos">196</span><span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
 <span class="linenos">197</span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;finish gContact&quot;</span><span class="p">)</span>
 <span class="linenos">198</span>
-<span class="linenos">199</span><span class="n">tEnd</span> <span class="o">=</span> <span class="mi">50</span>
-<span class="linenos">200</span><span class="c1">#tEnd = h*100</span>
-<span class="linenos">201</span><span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">()</span>
-<span class="linenos">202</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">linearSolverType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">LinearSolverType</span><span class="o">.</span><span class="n">EigenSparse</span>
-<span class="linenos">203</span><span class="c1">#simulationSettings.solutionSettings.writeSolutionToFile = True</span>
-<span class="linenos">204</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">writeSolutionToFile</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="linenos">205</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">solutionWritePeriod</span> <span class="o">=</span> <span class="mf">0.01</span>
-<span class="linenos">206</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">outputPrecision</span> <span class="o">=</span> <span class="mi">5</span> <span class="c1">#make files smaller</span>
-<span class="linenos">207</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">exportAccelerations</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="linenos">208</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">exportVelocities</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="linenos">209</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">coordinatesSolutionFileName</span> <span class="o">=</span> <span class="s1">&#39;solution/test.txt&#39;</span>
-<span class="linenos">210</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">displayComputationTime</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="linenos">211</span><span class="c1">#simulationSettings.displayStatistics = True</span>
-<span class="linenos">212</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">verboseMode</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="linenos">213</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">parallel</span><span class="o">.</span><span class="n">numberOfThreads</span> <span class="o">=</span> <span class="mi">8</span>
-<span class="linenos">214</span>
-<span class="linenos">215</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">numericalDifferentiation</span><span class="o">.</span><span class="n">forODE2</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="linenos">216</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">useModifiedNewton</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="linenos">217</span>
-<span class="linenos">218</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">graphicsUpdateInterval</span><span class="o">=</span><span class="mf">0.5</span><span class="o">*</span><span class="mi">4</span>
-<span class="linenos">219</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">circleTiling</span><span class="o">=</span><span class="mi">200</span>
-<span class="linenos">220</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">drawCoordinateSystem</span><span class="o">=</span><span class="kc">True</span>
-<span class="linenos">221</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">loads</span><span class="o">.</span><span class="n">show</span><span class="o">=</span><span class="kc">False</span>
-<span class="linenos">222</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">bodies</span><span class="o">.</span><span class="n">show</span><span class="o">=</span><span class="kc">True</span>
-<span class="linenos">223</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">markers</span><span class="o">.</span><span class="n">show</span><span class="o">=</span><span class="kc">False</span>
-<span class="linenos">224</span>
-<span class="linenos">225</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">show</span><span class="o">=</span><span class="kc">True</span>
-<span class="linenos">226</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">drawNodesAsPoint</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="linenos">227</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">defaultSize</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#must not be -1, otherwise uses autocomputed size</span>
-<span class="linenos">228</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">tiling</span> <span class="o">=</span> <span class="mi">4</span>
-<span class="linenos">229</span>
-<span class="linenos">230</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">renderWindowSize</span><span class="o">=</span><span class="p">[</span><span class="mi">1200</span><span class="p">,</span><span class="mi">1200</span><span class="p">]</span>
-<span class="linenos">231</span><span class="c1">#SC.visualizationSettings.window.renderWindowSize=[1024,1400]</span>
-<span class="linenos">232</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">multiSampling</span> <span class="o">=</span> <span class="mi">4</span>
-<span class="linenos">233</span><span class="c1">#improved OpenGL rendering</span>
-<span class="linenos">234</span>
-<span class="linenos">235</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">exportImages</span><span class="o">.</span><span class="n">saveImageFileName</span> <span class="o">=</span> <span class="s2">&quot;animation/frame&quot;</span>
-<span class="linenos">236</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">exportImages</span><span class="o">.</span><span class="n">saveImageTimeOut</span><span class="o">=</span><span class="mi">10000</span> <span class="c1">#5000 is too shot sometimes!</span>
-<span class="linenos">237</span>
-<span class="linenos">238</span><span class="k">if</span> <span class="kc">False</span><span class="p">:</span>
-<span class="linenos">239</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">recordImagesInterval</span> <span class="o">=</span> <span class="mf">0.005</span>
-<span class="linenos">240</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">graphicsUpdateInterval</span><span class="o">=</span><span class="mi">2</span>
+<span class="linenos">199</span><span class="n">items</span><span class="o">=</span><span class="n">gContact</span><span class="o">.</span><span class="nf">GetItemsInBox</span><span class="p">(</span><span class="n">pMin</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">pMax</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">20</span><span class="p">])</span>
+<span class="linenos">200</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;n spheres=&#39;</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">[</span><span class="s1">&#39;MarkerBasedSpheres&#39;</span><span class="p">]))</span>
+<span class="linenos">201</span>
+<span class="linenos">202</span>
+<span class="linenos">203</span><span class="n">tEnd</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="linenos">204</span><span class="c1">#tEnd = h*100</span>
+<span class="linenos">205</span><span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">()</span>
+<span class="linenos">206</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">linearSolverType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">LinearSolverType</span><span class="o">.</span><span class="n">EigenSparse</span>
+<span class="linenos">207</span><span class="c1">#simulationSettings.solutionSettings.writeSolutionToFile = True</span>
+<span class="linenos">208</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">writeSolutionToFile</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">209</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">solutionWritePeriod</span> <span class="o">=</span> <span class="mf">0.01</span>
+<span class="linenos">210</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">outputPrecision</span> <span class="o">=</span> <span class="mi">5</span> <span class="c1">#make files smaller</span>
+<span class="linenos">211</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">exportAccelerations</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="linenos">212</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">exportVelocities</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="linenos">213</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">coordinatesSolutionFileName</span> <span class="o">=</span> <span class="s1">&#39;solution/test.txt&#39;</span>
+<span class="linenos">214</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">displayComputationTime</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">215</span><span class="c1">#simulationSettings.displayStatistics = True</span>
+<span class="linenos">216</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">verboseMode</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="linenos">217</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">parallel</span><span class="o">.</span><span class="n">numberOfThreads</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="linenos">218</span>
+<span class="linenos">219</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">numericalDifferentiation</span><span class="o">.</span><span class="n">forODE2</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="linenos">220</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">useModifiedNewton</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="linenos">221</span>
+<span class="linenos">222</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">graphicsUpdateInterval</span><span class="o">=</span><span class="mf">0.5</span><span class="o">*</span><span class="mi">4</span>
+<span class="linenos">223</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">circleTiling</span><span class="o">=</span><span class="mi">200</span>
+<span class="linenos">224</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">drawCoordinateSystem</span><span class="o">=</span><span class="kc">True</span>
+<span class="linenos">225</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">loads</span><span class="o">.</span><span class="n">show</span><span class="o">=</span><span class="kc">False</span>
+<span class="linenos">226</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">bodies</span><span class="o">.</span><span class="n">show</span><span class="o">=</span><span class="kc">True</span>
+<span class="linenos">227</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">markers</span><span class="o">.</span><span class="n">show</span><span class="o">=</span><span class="kc">False</span>
+<span class="linenos">228</span>
+<span class="linenos">229</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">show</span><span class="o">=</span><span class="kc">True</span>
+<span class="linenos">230</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">drawNodesAsPoint</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="linenos">231</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">defaultSize</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#must not be -1, otherwise uses autocomputed size</span>
+<span class="linenos">232</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">tiling</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="linenos">233</span>
+<span class="linenos">234</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">renderWindowSize</span><span class="o">=</span><span class="p">[</span><span class="mi">1200</span><span class="p">,</span><span class="mi">1200</span><span class="p">]</span>
+<span class="linenos">235</span><span class="c1">#SC.visualizationSettings.window.renderWindowSize=[1024,1400]</span>
+<span class="linenos">236</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">multiSampling</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="linenos">237</span><span class="c1">#improved OpenGL rendering</span>
+<span class="linenos">238</span>
+<span class="linenos">239</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">exportImages</span><span class="o">.</span><span class="n">saveImageFileName</span> <span class="o">=</span> <span class="s2">&quot;animation/frame&quot;</span>
+<span class="linenos">240</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">exportImages</span><span class="o">.</span><span class="n">saveImageTimeOut</span><span class="o">=</span><span class="mi">10000</span> <span class="c1">#5000 is too shot sometimes!</span>
 <span class="linenos">241</span>
-<span class="linenos">242</span>
-<span class="linenos">243</span><span class="n">simulate</span><span class="o">=</span><span class="kc">True</span>
-<span class="linenos">244</span><span class="k">if</span> <span class="n">simulate</span><span class="p">:</span>
-<span class="linenos">245</span>    <span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
-<span class="linenos">246</span>        <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">autoFitScene</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="linenos">247</span>        <span class="n">exu</span><span class="o">.</span><span class="nf">StartRenderer</span><span class="p">()</span>
-<span class="linenos">248</span>        <span class="k">if</span> <span class="s1">&#39;renderState&#39;</span> <span class="ow">in</span> <span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">:</span>
-<span class="linenos">249</span>            <span class="n">SC</span><span class="o">.</span><span class="nf">SetRenderState</span><span class="p">(</span><span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span><span class="s1">&#39;renderState&#39;</span><span class="p">])</span>
-<span class="linenos">250</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">WaitForUserToContinue</span><span class="p">()</span>
-<span class="linenos">251</span>
-<span class="linenos">252</span>    <span class="c1">#initial gContact statistics</span>
-<span class="linenos">253</span>    <span class="c1">#simulationSettings.timeIntegration.numberOfSteps = 1</span>
-<span class="linenos">254</span>    <span class="c1">#simulationSettings.timeIntegration.endTime = h</span>
-<span class="linenos">255</span>    <span class="c1">#exu.SolveDynamic(mbs, simulationSettings, solverType=exu.DynamicSolverType.ExplicitEuler)</span>
-<span class="linenos">256</span>    <span class="c1">#print(gContact)</span>
-<span class="linenos">257</span>
-<span class="linenos">258</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tEnd</span><span class="o">/</span><span class="n">h</span><span class="p">)</span>
-<span class="linenos">259</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="n">tEnd</span>
-<span class="linenos">260</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="p">,</span> <span class="n">solverType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">DynamicSolverType</span><span class="o">.</span><span class="n">ExplicitEuler</span><span class="p">)</span>
-<span class="linenos">261</span>    <span class="c1">#print(gContact)</span>
-<span class="linenos">262</span>    <span class="c1">#p = mbs.GetNodeOutput(n, variableType=exu.OutputVariableType.Position)</span>
-<span class="linenos">263</span>    <span class="c1">#print(&quot;pEnd =&quot;, p[0], p[1])</span>
-<span class="linenos">264</span>    <span class="c1">#print(gContact)</span>
-<span class="linenos">265</span>
-<span class="linenos">266</span>    <span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
-<span class="linenos">267</span>        <span class="n">SC</span><span class="o">.</span><span class="nf">WaitForRenderEngineStopFlag</span><span class="p">()</span>
-<span class="linenos">268</span>        <span class="n">exu</span><span class="o">.</span><span class="nf">StopRenderer</span><span class="p">()</span> <span class="c1">#safely close rendering window!</span>
+<span class="linenos">242</span><span class="k">if</span> <span class="kc">False</span><span class="p">:</span>
+<span class="linenos">243</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">recordImagesInterval</span> <span class="o">=</span> <span class="mf">0.005</span>
+<span class="linenos">244</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">graphicsUpdateInterval</span><span class="o">=</span><span class="mi">2</span>
+<span class="linenos">245</span>
+<span class="linenos">246</span>
+<span class="linenos">247</span><span class="n">simulate</span><span class="o">=</span><span class="kc">True</span>
+<span class="linenos">248</span><span class="k">if</span> <span class="n">simulate</span><span class="p">:</span>
+<span class="linenos">249</span>    <span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
+<span class="linenos">250</span>        <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">autoFitScene</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="linenos">251</span>        <span class="n">exu</span><span class="o">.</span><span class="nf">StartRenderer</span><span class="p">()</span>
+<span class="linenos">252</span>        <span class="k">if</span> <span class="s1">&#39;renderState&#39;</span> <span class="ow">in</span> <span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">:</span>
+<span class="linenos">253</span>            <span class="n">SC</span><span class="o">.</span><span class="nf">SetRenderState</span><span class="p">(</span><span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span><span class="s1">&#39;renderState&#39;</span><span class="p">])</span>
+<span class="linenos">254</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">WaitForUserToContinue</span><span class="p">()</span>
+<span class="linenos">255</span>
+<span class="linenos">256</span>    <span class="c1">#initial gContact statistics</span>
+<span class="linenos">257</span>    <span class="c1">#simulationSettings.timeIntegration.numberOfSteps = 1</span>
+<span class="linenos">258</span>    <span class="c1">#simulationSettings.timeIntegration.endTime = h</span>
+<span class="linenos">259</span>    <span class="c1">#exu.SolveDynamic(mbs, simulationSettings, solverType=exu.DynamicSolverType.ExplicitEuler)</span>
+<span class="linenos">260</span>    <span class="c1">#print(gContact)</span>
+<span class="linenos">261</span>
+<span class="linenos">262</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tEnd</span><span class="o">/</span><span class="n">h</span><span class="p">)</span>
+<span class="linenos">263</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="n">tEnd</span>
+<span class="linenos">264</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="p">,</span> <span class="n">solverType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">DynamicSolverType</span><span class="o">.</span><span class="n">ExplicitEuler</span><span class="p">)</span>
+<span class="linenos">265</span>    <span class="c1">#print(gContact)</span>
+<span class="linenos">266</span>    <span class="c1">#p = mbs.GetNodeOutput(n, variableType=exu.OutputVariableType.Position)</span>
+<span class="linenos">267</span>    <span class="c1">#print(&quot;pEnd =&quot;, p[0], p[1])</span>
+<span class="linenos">268</span>    <span class="c1">#print(gContact)</span>
 <span class="linenos">269</span>
-<span class="linenos">270</span><span class="k">if</span> <span class="ow">not</span> <span class="n">simulate</span> <span class="ow">or</span> <span class="kc">True</span><span class="p">:</span>
-<span class="linenos">271</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">autoFitScene</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="linenos">272</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">graphicsUpdateInterval</span><span class="o">=</span><span class="mf">0.5</span>
-<span class="linenos">273</span>    <span class="kn">from</span> <span class="nn">exudyn.interactive</span> <span class="kn">import</span> <span class="nf">SolutionViewer</span>
-<span class="linenos">274</span>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;load solution file&#39;</span><span class="p">)</span>
-<span class="linenos">275</span>    <span class="c1">#sol = LoadSolutionFile(&#39;solution/test2.txt&#39;, safeMode=False)</span>
-<span class="linenos">276</span>    <span class="n">sol</span> <span class="o">=</span> <span class="nf">LoadSolutionFile</span><span class="p">(</span><span class="s1">&#39;solution/test.txt&#39;</span><span class="p">,</span> <span class="n">safeMode</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="c1">#, maxRows=100)</span>
-<span class="linenos">277</span>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;start SolutionViewer&#39;</span><span class="p">)</span>
-<span class="linenos">278</span>    <span class="nf">SolutionViewer</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sol</span><span class="p">)</span>
+<span class="linenos">270</span>    <span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
+<span class="linenos">271</span>        <span class="n">SC</span><span class="o">.</span><span class="nf">WaitForRenderEngineStopFlag</span><span class="p">()</span>
+<span class="linenos">272</span>        <span class="n">exu</span><span class="o">.</span><span class="nf">StopRenderer</span><span class="p">()</span> <span class="c1">#safely close rendering window!</span>
+<span class="linenos">273</span>
+<span class="linenos">274</span><span class="k">if</span> <span class="ow">not</span> <span class="n">simulate</span> <span class="ow">or</span> <span class="kc">True</span><span class="p">:</span>
+<span class="linenos">275</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">autoFitScene</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="linenos">276</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">graphicsUpdateInterval</span><span class="o">=</span><span class="mf">0.5</span>
+<span class="linenos">277</span>    <span class="kn">from</span> <span class="nn">exudyn.interactive</span> <span class="kn">import</span> <span class="nf">SolutionViewer</span>
+<span class="linenos">278</span>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;load solution file&#39;</span><span class="p">)</span>
+<span class="linenos">279</span>    <span class="c1">#sol = LoadSolutionFile(&#39;solution/test2.txt&#39;, safeMode=False)</span>
+<span class="linenos">280</span>    <span class="n">sol</span> <span class="o">=</span> <span class="nf">LoadSolutionFile</span><span class="p">(</span><span class="s1">&#39;solution/test.txt&#39;</span><span class="p">,</span> <span class="n">safeMode</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="c1">#, maxRows=100)</span>
+<span class="linenos">281</span>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;start SolutionViewer&#39;</span><span class="p">)</span>
+<span class="linenos">282</span>    <span class="nf">SolutionViewer</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sol</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>

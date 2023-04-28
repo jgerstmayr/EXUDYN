@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Issue tracker &mdash; Exudyn1.6.65.dev1 1.6.65.dev1 documentation</title>
+  <title>Issue tracker &mdash; Exudyn1.6.80.dev1 1.6.80.dev1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
@@ -38,7 +38,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.6.65.dev1
+            Exudyn1.6.80.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -92,7 +92,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.6.65.dev1</a>
+          <a href="../../index.html">Exudyn1.6.80.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -117,15 +117,138 @@ The extension <code class="docutils literal notranslate"><span class="pre">.dev1
 BUG numbers refer to the according issue numbers.</p>
 <p>General information on current version:</p>
 <ul class="simple">
-<li><p>Exudyn version = 1.6.65.dev1,</p></li>
-<li><p>last change =  2023-04-20,</p></li>
-<li><p>Number of issues = 1524,</p></li>
-<li><p>Number of resolved issues = 1345 (65 in current version),</p></li>
+<li><p>Exudyn version = 1.6.80.dev1,</p></li>
+<li><p>last change =  2023-04-28,</p></li>
+<li><p>Number of issues = 1540,</p></li>
+<li><p>Number of resolved issues = 1360 (80 in current version),</p></li>
 </ul>
 <section id="version-1-6">
 <h2>Version 1.6<a class="headerlink" href="#version-1-6" title="Permalink to this heading"></a></h2>
 <blockquote>
 <div><ul class="simple">
+<li><dl class="simple">
+<dt>Version 1.6.80: resolved Issue 1538: taskmanager (fix)</dt><dd><ul>
+<li><p>description:  fix problem with taskmanager shutdown due to issue 1532</p></li>
+<li><p>date resolved: <strong>2023-04-27 15:35</strong>, date raised: 2023-04-27</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.6.79: resolved Issue 1537: output.multiThreadingMode (fix)</dt><dd><ul>
+<li><p>description:  has not been set correctly in solver so far; switch output.numberOfThreadsUsed and output.multiThreadingMode</p></li>
+<li><p>date resolved: <strong>2023-04-27 15:35</strong>, date raised: 2023-04-27</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.6.78: resolved Issue 1535: writeSensors (extension)</dt><dd><ul>
+<li><p>description:  add global flag to deactivate sensor file creating/writing and sensor storing; set flag in solver functions such as ComputeLinearizedSystem, etc. to avoid erasing sensor files or sensor data</p></li>
+<li><p>date resolved: <strong>2023-04-27 11:34</strong>, date raised: 2023-04-26</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.6.77: resolved Issue 1533: FinalizeSolver (fix)</dt><dd><ul>
+<li><p>description:  call FinalizeSolver in ComputeLinearizedSystem, ComputeSystemDegreeOfFreedom, ComputeODE2Eigenvalues for consistency reason; also deactivate file writing and sensor writing and solverInformation writing</p></li>
+<li><p>date resolved: <strong>2023-04-26 19:25</strong>, date raised: 2023-04-26</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.6.76: resolved Issue 1532: CSolverBase.cpp (fix)</dt><dd><ul>
+<li><p>description:  close output and sensor files in destructor of CSolverBase</p></li>
+<li><p>date resolved: <strong>2023-04-26 19:24</strong>, date raised: 2023-04-26</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.6.75: resolved Issue 1534: EXUlie (change)</dt><dd><ul>
+<li><p>description:  improve TExpSE3 and TExpSE3Inv regarding small values according to PhD thesis of Stefan Hante</p></li>
+<li><p><strong>notes:</strong> improves numerical behavior and convergence of GeometricallyExactBeam</p></li>
+<li><p>date resolved: <strong>2023-04-26 18:33</strong>, date raised: 2023-04-26</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.6.74: resolved Issue 1531: OpenVR (fix)</dt><dd><ul>
+<li><p>description:  change order of eye transformation and projection in OpenVRinterface GetCurrentViewProjectionMatrix to be consistent with master thesis</p></li>
+<li><p>date resolved: <strong>2023-04-26 16:49</strong>, date raised: 2023-04-26</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.6.73: resolved Issue 1530: ComputeSystemDegreeOfFreedom (extension)</dt><dd><ul>
+<li><p>description:  add exudyn.solver function to numerically compute DOF of constrained mechanisms</p></li>
+<li><p>date resolved: <strong>2023-04-26 11:16</strong>, date raised: 2023-04-26</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.6.72: resolved Issue 1528: structures and settings (docu)</dt><dd><ul>
+<li><p>description:  function arguments in RST / html are inappropriately noted; fix; replace true/false with True/False</p></li>
+<li><p>date resolved: <strong>2023-04-26 09:16</strong>, date raised: 2023-04-26</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.6.71: resolved Issue 1527: GeneralContact (extension)</dt><dd><ul>
+<li><p>description:  add function UpdateContacts, which computes current bounding boxes and active contacts, to be used in access functions to GeneralContact if isActive=False (otherwise this is anyway done in contact computations of every computation step)</p></li>
+<li><p>date resolved: <strong>2023-04-23 20:15</strong>, date raised: 2023-04-23</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.6.70: resolved Issue 0935: GeneralContact (extension)</dt><dd><ul>
+<li><p>description:  add interface function to get contact pairs</p></li>
+<li><p><strong>notes:</strong> function GetActiveContacts added to GeneralContact, which returns all active global contact indices for selected contact type</p></li>
+<li><p>date resolved: <strong>2023-04-23 20:13</strong>, date raised: 2022-02-10</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.6.69: resolved Issue 1516: solver failed function (extension)</dt><dd><ul>
+<li><p>description:  add function to check if solver failed, using stored solver structure as input; return True/False and string (optionally error code) describing failure</p></li>
+<li><p><strong>notes:</strong> added function SolverSuccess() to exudyn.solver; returns success and error string as created by solver internal function GetErrorString(…)</p></li>
+<li><p>date resolved: <strong>2023-04-23 18:43</strong>, date raised: 2023-04-19</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.6.68: resolved Issue 1526: solver GetErrorString (extension)</dt><dd><ul>
+<li><p>description:  MainSolverStatic, MainSolverExplicit, MainSolverImplicit now get function GetErrorString to obtain error string set if SolveSteps or SolveSystem failed (returned false)</p></li>
+<li><p>date resolved: <strong>2023-04-23 11:46</strong>, date raised: 2023-04-23</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.6.67: resolved Issue 1525: output.finishedSuccessfully (extension)</dt><dd><ul>
+<li><p>description:  flag is now set both in SolveSteps(…) as well in SolveSystem(…) to indicate if solver has been successful or failed; practical flag for lateron determination of solver errors</p></li>
+<li><p>date resolved: <strong>2023-04-23 11:46</strong>, date raised: 2023-04-23</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.6.66: resolved Issue 1524: netgen STL file (examples)</dt><dd><ul>
+<li><p>description:  add example with netgen and STL files with meshing</p></li>
+<li><p>date resolved: <strong>2023-04-21 17:51</strong>, date raised: 2023-04-21</p></li>
+</ul>
+</dd>
+</dl>
+</li>
 <li><dl class="simple">
 <dt>Version 1.6.65: resolved Issue 1521: ObjectFFRFreducedOrderInterface (extension)</dt><dd><ul>
 <li><p>description:  add LoadFromFile/SaveToFile similar to FEMinterface</p></li>
@@ -11169,9 +11292,25 @@ BUG numbers refer to the according issue numbers.</p>
 <blockquote>
 <div><ul class="simple">
 <li><dl class="simple">
-<dt><strong>open issue 1516:</strong> solver failed function</dt><dd><ul>
-<li><p>description:  add function to check if solver failed, using stored solver structure as input; return True/False and string (optionally error code) describing failure</p></li>
-<li><p>date raised: 2023-04-19</p></li>
+<dt><strong>open issue 1539:</strong> item names</dt><dd><ul>
+<li><p>description:  remove stored string and replace by empty string in case of default item name</p></li>
+<li><p>date raised: 2023-04-28</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>open issue 1536:</strong> mutable arguments</dt><dd><ul>
+<li><p>description:  check and fix Python functions with mutable arguments such as [] or , with potential risk of changing internally in function, leading to unexpected behavior in second call</p></li>
+<li><p>date raised: 2023-04-27</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>open issue 1529:</strong> solver</dt><dd><ul>
+<li><p>description:  solver functions GetSystemJacobian() and GetSystemMassMatrix() need to be extended with arg sparseTriplets=False; if True, it will return CSR sparse triplets, useful for large matrices, e.g. in eigenvalue computation in linearized system</p></li>
+<li><p>date raised: 2023-04-26</p></li>
 </ul>
 </dd>
 </dl>
@@ -11699,14 +11838,6 @@ BUG numbers refer to the according issue numbers.</p>
 <li><dl class="simple">
 <dt><strong>open issue 0936:</strong> GeneralContact</dt><dd><ul>
 <li><p>description:  add interface function to get contact forces</p></li>
-<li><p>date raised: 2022-02-10</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt><strong>open issue 0935:</strong> GeneralContact</dt><dd><ul>
-<li><p>description:  add interface function to get contact pairs</p></li>
 <li><p>date raised: 2022-02-10</p></li>
 </ul>
 </dd>

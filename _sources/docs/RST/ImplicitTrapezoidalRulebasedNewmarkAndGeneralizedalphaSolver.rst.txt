@@ -37,6 +37,7 @@ Remarks:
 +  For consistency reasons, one may set \ :math:`\gamma_\FO = \gamma`\ , but \ **currently we use**\  \ :math:`\gamma_T = \frac 1 2`\ , leading to no numerical damping for \ :ref:`ODE1 <ODE1>`\  variables \ :math:`{\mathbf{y}}`\ .
 +  In the extension to the so-called generalized-\ :math:`\alpha`\  method , algorithmic accelerations \ :math:`\aalg`\  are used in Eq. :eq:`eq-newmark-interpolation`\ . 
 +  Algorithmic accelerations are no longer equivalent to the time derivatives of displacements, \ :math:`\aalg \neq \ddot {\mathbf{q}}`\ ; thus, both sets of variables are used independently. In case of Newmark or the implicit trapezoidal rule just use \ :math:`\aalg = \ddot {\mathbf{q}}`\ .
++  Implicit solvers are also available with Lie groups, if according rigid body nodes (\ ``NodeRigidBodyRotVecLG``\ ) are used, for theory see Holzinger et al. .
 
 For generalized-\ :math:`\alpha`\ , the algorithmic accelerations \ :math:`\aalg`\  are computed from the recurrence relation
 

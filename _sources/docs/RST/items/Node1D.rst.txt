@@ -50,7 +50,8 @@ DESCRIPTION of Node1D
   | \ :ref:`ODE2 <ODE2>`\  acceleration coordinate of node (in vector form)
 
 
-\paragraphDetailed information:
+
+\ **Detailed information:** 
 The current position/rotation coordinate of the 1D node is computed from
 
 .. math::

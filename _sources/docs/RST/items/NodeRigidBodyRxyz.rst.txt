@@ -74,7 +74,8 @@ DESCRIPTION of NodeRigidBodyRxyz
   | global 3D angular acceleration vector of node
 
 
-\paragraphDetailed information:
+
+\ **Detailed information:** 
 The node has 3 displacement coordinates \ :math:`[q_0,\,q_1,\,q_2]\tp`\  and 3 rotation coordinates \ :math:`[\psi_0,\,\psi_1,\,\psi_2]\tp`\  for consecutive rotations around the 0, 1 and 2-axis (\ :math:`x`\ , \ :math:`y`\  and \ :math:`z`\ ).
 All coordinates \ :math:`{\mathbf{c}}\cConfig`\  lead to second order differential equations.
 The rotation matrix \ :math:`\LU{0b}{\Rot}\cConfig`\  transforms a local (body-fixed) 3D position 
@@ -110,7 +111,7 @@ The derivatives of the angular velocity vectors w.r.t.\ the rotation velocity co
 
 
 
-For creating a \ ``NodeRigidBodyRxyz``\ , there is a \ ``rigidBodyUtilities``\  function \ ``AddRigidBody``\ , 
+For creating a \ ``NodeRigidBodyRxyz``\  together with a rigid body, there is a \ ``rigidBodyUtilities``\  function \ ``AddRigidBody``\ , 
 see Section :ref:`sec-rigidbodyutilities-addrigidbody`\ , which simplifies the setup of a rigid body significantely!
 
 

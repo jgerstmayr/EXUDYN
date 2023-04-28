@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Module: solver &mdash; Exudyn1.6.65.dev1 1.6.65.dev1 documentation</title>
+  <title>Module: solver &mdash; Exudyn1.6.80.dev1 1.6.80.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -39,7 +39,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.65.dev1
+            Exudyn1.6.80.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -90,7 +90,9 @@
 <li class="toctree-l3"><a class="reference internal" href="#function-solvererrormessage">Function: SolverErrorMessage</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-solvestatic">Function: SolveStatic</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-solvedynamic">Function: SolveDynamic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-solversuccess">Function: SolverSuccess</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-computelinearizedsystem">Function: ComputeLinearizedSystem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-computesystemdegreeoffreedom">Function: ComputeSystemDegreeOfFreedom</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-computeode2eigenvalues">Function: ComputeODE2Eigenvalues</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-checksolverinfostatistics">Function: CheckSolverInfoStatistics</a></li>
 </ul>
@@ -115,7 +117,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.65.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.80.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -145,11 +147,11 @@ Most of the solvers are implemented inside the C++ core.</p>
 </ul>
 <section id="function-solvererrormessage">
 <span id="sec-solver-solvererrormessage"></span><h2>Function: SolverErrorMessage<a class="headerlink" href="#function-solvererrormessage" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py#L22">SolverErrorMessage</a>(<code class="docutils literal notranslate"><span class="pre">solver</span></code>, <code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">isStatic</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">showCausingObjects</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">showCausingNodes</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">showHints</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py#L23">SolverErrorMessage</a>(<code class="docutils literal notranslate"><span class="pre">solver</span></code>, <code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">isStatic</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">showCausingObjects</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">showCausingNodes</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">showHints</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">helper function for unique error and helper messages</div>
+<div class="line">(internal) helper function for unique error and helper messages</div>
 </div>
 </li>
 </ul>
@@ -157,7 +159,7 @@ Most of the solvers are implemented inside the C++ core.</p>
 </section>
 <section id="function-solvestatic">
 <span id="sec-solver-solvestatic"></span><h2>Function: SolveStatic<a class="headerlink" href="#function-solvestatic" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py#L151">SolveStatic</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings</span> <span class="pre">=</span> <span class="pre">exudyn.SimulationSettings()</span></code>, <code class="docutils literal notranslate"><span class="pre">updateInitialValues</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">storeSolver</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">showHints</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">showCausingItems</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py#L152">SolveStatic</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings</span> <span class="pre">=</span> <span class="pre">exudyn.SimulationSettings()</span></code>, <code class="docutils literal notranslate"><span class="pre">updateInitialValues</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">storeSolver</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">showHints</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">showCausingItems</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -212,7 +214,7 @@ Most of the solvers are implemented inside the C++ core.</p>
 </section>
 <section id="function-solvedynamic">
 <span id="sec-solver-solvedynamic"></span><h2>Function: SolveDynamic<a class="headerlink" href="#function-solvedynamic" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py#L214">SolveDynamic</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings</span> <span class="pre">=</span> <span class="pre">exudyn.SimulationSettings()</span></code>, <code class="docutils literal notranslate"><span class="pre">solverType</span> <span class="pre">=</span> <span class="pre">exudyn.DynamicSolverType.GeneralizedAlpha</span></code>, <code class="docutils literal notranslate"><span class="pre">updateInitialValues</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">storeSolver</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">showHints</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">showCausingItems</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py#L215">SolveDynamic</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings</span> <span class="pre">=</span> <span class="pre">exudyn.SimulationSettings()</span></code>, <code class="docutils literal notranslate"><span class="pre">solverType</span> <span class="pre">=</span> <span class="pre">exudyn.DynamicSolverType.GeneralizedAlpha</span></code>, <code class="docutils literal notranslate"><span class="pre">updateInitialValues</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">storeSolver</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">showHints</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">showCausingItems</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -268,9 +270,48 @@ Most of the solvers are implemented inside the C++ core.</p>
 </div></blockquote>
 <hr class="docutils" />
 </section>
+<section id="function-solversuccess">
+<span id="sec-solver-solversuccess"></span><h2>Function: SolverSuccess<a class="headerlink" href="#function-solversuccess" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py#L310">SolverSuccess</a>(<code class="docutils literal notranslate"><span class="pre">solverStructure</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">return success (True/False) and error message of solver after SolveSteps(…), SolveSystem(…), SolveDynamic(…) or SolveStatic(…) have been called. May also be set if other higher level functions called e.g. SolveSystem(…)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line">solverStructure: solver structure, as stored in mbs.sys or as created e.g. by exudyn.MainSolverExplicit()</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">[success, errorString], returns success=True or False and in case of no success, information is provided in errorString</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>example</em>:</div>
+</div>
+</li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#assume MainSystem mbs, exu library and simulationSettings:</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">exu</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="p">)</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="p">[</span><span class="n">success</span><span class="p">,</span> <span class="n">msg</span><span class="p">]</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nf">SolverSuccess</span><span class="p">(</span><span class="n">mbs</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span><span class="s1">&#39;dynamicSolver&#39;</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;success=&#39;</span><span class="p">,</span><span class="n">success</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;error message=&#39;</span><span class="p">,</span><span class="n">msg</span><span class="p">)</span>
+<span class="c1">#alternative:</span>
+<span class="n">solver</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="n">MainSolverImplicitSecondOrder</span><span class="p">()</span>
+<span class="o">...</span>
+<span class="p">[</span><span class="n">success</span><span class="p">,</span> <span class="n">msg</span><span class="p">]</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nf">SolverSuccess</span><span class="p">(</span><span class="n">solver</span><span class="p">)</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+</section>
 <section id="function-computelinearizedsystem">
 <span id="sec-solver-computelinearizedsystem"></span><h2>Function: ComputeLinearizedSystem<a class="headerlink" href="#function-computelinearizedsystem" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py#L304">ComputeLinearizedSystem</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings</span> <span class="pre">=</span> <span class="pre">exudyn.SimulationSettings()</span></code>, <code class="docutils literal notranslate"><span class="pre">useSparseSolver</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py#L343">ComputeLinearizedSystem</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings</span> <span class="pre">=</span> <span class="pre">exudyn.SimulationSettings()</span></code>, <code class="docutils literal notranslate"><span class="pre">useSparseSolver</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -307,9 +348,44 @@ Most of the solvers are implemented inside the C++ core.</p>
 </div></blockquote>
 <hr class="docutils" />
 </section>
+<section id="function-computesystemdegreeoffreedom">
+<span id="sec-solver-computesystemdegreeoffreedom"></span><h2>Function: ComputeSystemDegreeOfFreedom<a class="headerlink" href="#function-computesystemdegreeoffreedom" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py#L388">ComputeSystemDegreeOfFreedom</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings</span> <span class="pre">=</span> <span class="pre">exudyn.SimulationSettings()</span></code>, <code class="docutils literal notranslate"><span class="pre">threshold</span> <span class="pre">=</span> <span class="pre">1e-12</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">useSVD</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">compute system DOF numerically, considering Grübler-Kutzbach formula as well as redundant constraints; uses numpy matrix rank or singular value decomposition of scipy (useSVD=True)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: MainSystem for which DOF shall be computed</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings</span></code>: used e.g. for settings regarding numerical differentiation; default settings may be used in most cases</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">threshold</span></code>: threshold factor for singular values which estimate the redundant constraints</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">useSVD</span></code>: use singular value decomposition directly, also showing SVD values if verbose=True</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">verbose</span></code>: if True, it will show the singular values and one may decide if the threshold shall be adapted</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">returns list of [dof, nRedundant, nODE2, nODE1, nAE, nPureAE], where: dof = the degree of freedom computed numerically, nRedundant=the number of redundant constraints, nODE2=number of ODE2 coordinates, nODE1=number of ODE1 coordinates, nAE=total number of constraints, nPureAE=number of constraints on algebraic variables (e.g., lambda=0) that are not coupled to ODE2 coordinates</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>notes</em>:</div>
+<div class="line">this approach may not always work! Currently only works with dense matrices, thus it will be slow for larger systems</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/fourBarMechanism3D.py">fourBarMechanism3D.py</a> (Ex)</p>
+</div></blockquote>
+<hr class="docutils" />
+</section>
 <section id="function-computeode2eigenvalues">
 <span id="sec-solver-computeode2eigenvalues"></span><h2>Function: ComputeODE2Eigenvalues<a class="headerlink" href="#function-computeode2eigenvalues" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py#L352">ComputeODE2Eigenvalues</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings</span> <span class="pre">=</span> <span class="pre">exudyn.SimulationSettings()</span></code>, <code class="docutils literal notranslate"><span class="pre">useSparseSolver</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">numberOfEigenvalues</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">constrainedCoordinates</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">convert2Frequencies</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">useAbsoluteValues</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py#L483">ComputeODE2Eigenvalues</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings</span> <span class="pre">=</span> <span class="pre">exudyn.SimulationSettings()</span></code>, <code class="docutils literal notranslate"><span class="pre">useSparseSolver</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">numberOfEigenvalues</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">constrainedCoordinates</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">convert2Frequencies</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">useAbsoluteValues</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -352,7 +428,7 @@ Most of the solvers are implemented inside the C++ core.</p>
 </section>
 <section id="function-checksolverinfostatistics">
 <span id="sec-solver-checksolverinfostatistics"></span><h2>Function: CheckSolverInfoStatistics<a class="headerlink" href="#function-checksolverinfostatistics" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py#L435">CheckSolverInfoStatistics</a>(<code class="docutils literal notranslate"><span class="pre">solverName</span></code>, <code class="docutils literal notranslate"><span class="pre">infoStat</span></code>, <code class="docutils literal notranslate"><span class="pre">numberOfEvaluations</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py#L574">CheckSolverInfoStatistics</a>(<code class="docutils literal notranslate"><span class="pre">solverName</span></code>, <code class="docutils literal notranslate"><span class="pre">infoStat</span></code>, <code class="docutils literal notranslate"><span class="pre">numberOfEvaluations</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>

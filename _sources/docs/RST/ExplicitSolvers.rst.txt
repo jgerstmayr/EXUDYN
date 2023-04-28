@@ -135,13 +135,13 @@ For more details, see Hairer et al. .
 Stability limit
 ---------------
 
-Note that there are hard limitations for every explicit integration method regarding the step size. Especially for stiff systems (basically with high stiffness parameters and small masses, but also with restrictions to damping), the \ **step size \ :math:`h`\  has an upper limit**\ : \ :math:`h < h_{lim}`\ . Above that limit the method is inherently unstable, which needs to be considered both for constant and automatic step size selection.
+Note that there are hard limitations for every explicit integration method regarding the step size. Especially for stiff systems (basically with high stiffness parameters and small masses, but also with restrictions to damping), the \ **step size**\  \ :math:`h`\  \ **has an upper limit**\ : \ :math:`h < h_{lim}`\ . Above that limit the method is inherently unstable, which needs to be considered both for constant and automatic step size selection.
 
 
 Explicit Lie group integrators
 ------------------------------
 
-All explicit solvers including the automatic step size solvers (DOPRI5, ODE23) have been equiped with Lie group integration functionality -- details will be published soon and some tests are made, but handle this with care.
+All explicit solvers including the automatic step size solvers (DOPRI5, ODE23) have been equiped with Lie group integration functionality, see Holzinger et al. .
 
 Basically, the integration formulas, see Section :ref:`sec-rungekuttamethod`\  are extended for special rotation parameters.
 Lie group integration is currently only available for \ ``NodeRigidBodyRotVecLG``\  used in \ ``ObjectRigidBody``\  (3D rigid body). 

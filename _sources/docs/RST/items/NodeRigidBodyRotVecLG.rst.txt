@@ -72,7 +72,8 @@ DESCRIPTION of NodeRigidBodyRotVecLG
   | local (body-fixed)  3D angular velocity vector of node
 
 
-\paragraphDetailed information:
+
+\ **Detailed information:** 
 For a detailed description on the rigid body dynamics formulation using this node, see Holzinger and Gerstmayr .
 
 The node has 3 displacement coordinates \ :math:`[q_0,\,q_1,\,q_2]\tp`\  and three rotation coordinates, which is the rotation vector 
@@ -99,7 +100,7 @@ A Lie group integrator must be used with this node, which is why the is used, th
 rotation parameter velocities are identical to the local angular velocity \ :math:`\LU{b}{\tomega}`\  and thus the 
 matrix \ :math:`\LU{b}{{\mathbf{G}}}`\  becomes the identity matrix.
 
-For creating a \ ``NodeRigidBodyRotVecLG``\ , there is a \ ``rigidBodyUtilities``\  function \ ``AddRigidBody``\ , 
+For creating a \ ``NodeRigidBodyRotVecLG``\  together with a rigid body, there is a \ ``rigidBodyUtilities``\  function \ ``AddRigidBody``\ , 
 see Section :ref:`sec-rigidbodyutilities-addrigidbody`\ , which simplifies the setup of a rigid body significantely!
 
 

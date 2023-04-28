@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>manualExplicitIntegrator.py &mdash; Exudyn1.6.65.dev1 1.6.65.dev1 documentation</title>
+  <title>manualExplicitIntegrator.py &mdash; Exudyn1.6.80.dev1 1.6.80.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -37,7 +37,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.65.dev1
+            Exudyn1.6.80.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -93,6 +93,7 @@
 <li class="toctree-l2"><a class="reference internal" href="explicitLieGroupIntegratorPythonTest.html">explicitLieGroupIntegratorPythonTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="explicitLieGroupIntegratorTest.html">explicitLieGroupIntegratorTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="fourBarMechanismTest.html">fourBarMechanismTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fourBarMechanismIftomm.html">fourBarMechanismIftomm.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generalContactFrictionTests.html">generalContactFrictionTests.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generalContactSpheresTest.html">generalContactSpheresTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="genericJointUserFunctionTest.html">genericJointUserFunctionTest.py</a></li>
@@ -145,7 +146,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.65.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.80.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -320,65 +321,66 @@
 <span class="linenos">151</span>        <span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s2">&quot;ev=&quot;</span><span class="p">,</span> <span class="n">f6</span><span class="p">)</span>
 <span class="linenos">152</span>        <span class="n">testRefVal</span> <span class="o">+=</span> <span class="n">f6</span> <span class="c1">#first bending eigenmode</span>
 <span class="linenos">153</span>
-<span class="linenos">154</span>
-<span class="linenos">155</span><span class="c1">#++++++++++++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos">156</span><span class="c1">#TEST</span>
-<span class="linenos">157</span><span class="k">def</span> <span class="nf">UserFunctionInitializeStep</span><span class="p">(</span><span class="n">mainSolver</span><span class="p">,</span> <span class="n">mainSys</span><span class="p">,</span> <span class="n">sims</span><span class="p">):</span>
-<span class="linenos">158</span>    <span class="c1">#exu.Print(&quot;t=&quot;, mainSolver.it.currentTime)</span>
-<span class="linenos">159</span>    <span class="n">mainSolver</span><span class="o">.</span><span class="n">UpdateCurrentTime</span><span class="p">(</span><span class="n">mainSys</span><span class="p">,</span> <span class="n">sims</span><span class="p">)</span>
-<span class="linenos">160</span>    <span class="n">mainSys</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">SetTime</span><span class="p">(</span><span class="n">mainSolver</span><span class="o">.</span><span class="n">it</span><span class="o">.</span><span class="n">currentTime</span><span class="p">);</span>
-<span class="linenos">161</span>    <span class="k">return</span> <span class="kc">True</span>
-<span class="linenos">162</span>
-<span class="linenos">163</span><span class="c1">#test for explicit integrator:</span>
-<span class="linenos">164</span><span class="k">def</span> <span class="nf">UserFunctionNewton</span><span class="p">(</span><span class="n">mainSolver</span><span class="p">,</span> <span class="n">mainSys</span><span class="p">,</span> <span class="n">sims</span><span class="p">):</span>
-<span class="linenos">165</span>
-<span class="linenos">166</span>    <span class="n">nODE2</span> <span class="o">=</span> <span class="n">mainSolver</span><span class="o">.</span><span class="n">GetODE2size</span><span class="p">()</span>
-<span class="linenos">167</span>    <span class="n">nAE</span> <span class="o">=</span> <span class="n">mainSolver</span><span class="o">.</span><span class="n">GetAEsize</span><span class="p">()</span>
-<span class="linenos">168</span>    <span class="c1">#nSys = nODE2+nAE</span>
-<span class="linenos">169</span>    <span class="c1">#print(&quot;u=&quot;, mainSys.systemData.GetODE2Coordinates())</span>
-<span class="linenos">170</span>    <span class="n">dynamicSolver</span><span class="o">.</span><span class="n">ComputeODE2RHS</span><span class="p">(</span><span class="n">mbs</span><span class="p">)</span>
-<span class="linenos">171</span>    <span class="n">res</span> <span class="o">=</span> <span class="n">dynamicSolver</span><span class="o">.</span><span class="n">GetSystemResidual</span><span class="p">()</span>
-<span class="linenos">172</span>    <span class="n">Fode2</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">nODE2</span><span class="p">]</span>
-<span class="linenos">173</span>    <span class="c1">#print(&quot;res=&quot;, Fode2)</span>
-<span class="linenos">174</span>
-<span class="linenos">175</span>    <span class="n">dynamicSolver</span><span class="o">.</span><span class="n">ComputeMassMatrix</span><span class="p">(</span><span class="n">mbs</span><span class="p">)</span>
-<span class="linenos">176</span>    <span class="n">M</span> <span class="o">=</span> <span class="n">dynamicSolver</span><span class="o">.</span><span class="n">GetSystemMassMatrix</span><span class="p">()</span>
-<span class="linenos">177</span>    <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">M</span><span class="p">,</span><span class="n">Fode2</span><span class="p">)</span> <span class="c1">#acceleration</span>
-<span class="linenos">178</span>
-<span class="linenos">179</span>    <span class="n">h</span> <span class="o">=</span> <span class="n">dynamicSolver</span><span class="o">.</span><span class="n">it</span><span class="o">.</span><span class="n">currentStepSize</span>
-<span class="linenos">180</span>
-<span class="linenos">181</span>    <span class="n">u0</span> <span class="o">=</span> <span class="n">mainSys</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetODE2Coordinates</span><span class="p">()</span>
-<span class="linenos">182</span>    <span class="n">v0</span> <span class="o">=</span> <span class="n">mainSys</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetODE2Coordinates_t</span><span class="p">()</span>
-<span class="linenos">183</span>
-<span class="linenos">184</span>    <span class="n">mainSys</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">SetODE2Coordinates</span><span class="p">(</span><span class="n">u0</span><span class="o">+</span><span class="n">h</span><span class="o">*</span><span class="n">v0</span><span class="p">)</span>
-<span class="linenos">185</span>    <span class="n">mainSys</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">SetODE2Coordinates_t</span><span class="p">(</span><span class="n">v0</span><span class="o">+</span><span class="n">h</span><span class="o">*</span><span class="n">a</span><span class="p">)</span>
-<span class="linenos">186</span>
-<span class="linenos">187</span>    <span class="k">return</span> <span class="kc">True</span>
-<span class="linenos">188</span>
-<span class="linenos">189</span><span class="n">dynamicSolver</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">MainSolverImplicitSecondOrder</span><span class="p">()</span>
-<span class="linenos">190</span>
-<span class="linenos">191</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="mi">5000</span> <span class="c1">#1000 steps for test suite/error</span>
-<span class="linenos">192</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="mf">0.05</span>              <span class="c1">#1s for test suite / error</span>
-<span class="linenos">193</span>
-<span class="linenos">194</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">generalizedAlpha</span><span class="o">.</span><span class="n">spectralRadius</span> <span class="o">=</span> <span class="mf">0.5</span>
-<span class="linenos">195</span><span class="c1">#simulationSettings.displayComputationTime = True</span>
-<span class="linenos">196</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">verboseMode</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="linenos">197</span>
-<span class="linenos">198</span><span class="c1">#dynamicSolver.SetUserFunctionInitializeStep(mbs, UserFunctionInitializeStep)</span>
-<span class="linenos">199</span><span class="n">dynamicSolver</span><span class="o">.</span><span class="n">SetUserFunctionNewton</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">UserFunctionNewton</span><span class="p">)</span>
-<span class="linenos">200</span>
-<span class="linenos">201</span><span class="n">dynamicSolver</span><span class="o">.</span><span class="n">SolveSystem</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="p">)</span>
-<span class="linenos">202</span><span class="c1">#exu.SolveDynamic(mbs, simulationSettings)</span>
-<span class="linenos">203</span>
-<span class="linenos">204</span><span class="n">uy</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">GetNodeOutput</span><span class="p">(</span><span class="n">nLast</span><span class="p">,</span><span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Position</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="c1">#y-coordinate of tip</span>
-<span class="linenos">205</span><span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s2">&quot;uy=&quot;</span><span class="p">,</span> <span class="n">uy</span><span class="p">)</span>
-<span class="linenos">206</span><span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s2">&quot;testResult=&quot;</span><span class="p">,</span> <span class="n">testRefVal</span> <span class="o">+</span> <span class="n">uy</span><span class="p">)</span>
-<span class="linenos">207</span><span class="n">exudynTestGlobals</span><span class="o">.</span><span class="n">testError</span> <span class="o">=</span> <span class="n">testRefVal</span> <span class="o">+</span> <span class="n">uy</span> <span class="o">-</span> <span class="p">(</span><span class="mf">2.280183538481952</span><span class="o">-</span><span class="mf">0.2204849087896498</span><span class="p">)</span> <span class="c1">#2020-01-16: 2.280183538481952-0.2204849087896498</span>
-<span class="linenos">208</span><span class="n">exudynTestGlobals</span><span class="o">.</span><span class="n">testResult</span> <span class="o">=</span> <span class="n">testRefVal</span> <span class="o">+</span> <span class="n">uy</span>
-<span class="linenos">209</span>
-<span class="linenos">210</span><span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span> <span class="c1">#only start graphics once, but after background is set</span>
-<span class="linenos">211</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">WaitForRenderEngineStopFlag</span><span class="p">()</span>
-<span class="linenos">212</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StopRenderer</span><span class="p">()</span> <span class="c1">#safely close rendering window!</span>
+<span class="linenos">154</span>    <span class="n">staticSolver</span><span class="o">.</span><span class="nf">FinalizeSolver</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="p">)</span>
+<span class="linenos">155</span>
+<span class="linenos">156</span><span class="c1">#++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">157</span><span class="c1">#TEST</span>
+<span class="linenos">158</span><span class="k">def</span> <span class="nf">UserFunctionInitializeStep</span><span class="p">(</span><span class="n">mainSolver</span><span class="p">,</span> <span class="n">mainSys</span><span class="p">,</span> <span class="n">sims</span><span class="p">):</span>
+<span class="linenos">159</span>    <span class="c1">#exu.Print(&quot;t=&quot;, mainSolver.it.currentTime)</span>
+<span class="linenos">160</span>    <span class="n">mainSolver</span><span class="o">.</span><span class="n">UpdateCurrentTime</span><span class="p">(</span><span class="n">mainSys</span><span class="p">,</span> <span class="n">sims</span><span class="p">)</span>
+<span class="linenos">161</span>    <span class="n">mainSys</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">SetTime</span><span class="p">(</span><span class="n">mainSolver</span><span class="o">.</span><span class="n">it</span><span class="o">.</span><span class="n">currentTime</span><span class="p">);</span>
+<span class="linenos">162</span>    <span class="k">return</span> <span class="kc">True</span>
+<span class="linenos">163</span>
+<span class="linenos">164</span><span class="c1">#test for explicit integrator:</span>
+<span class="linenos">165</span><span class="k">def</span> <span class="nf">UserFunctionNewton</span><span class="p">(</span><span class="n">mainSolver</span><span class="p">,</span> <span class="n">mainSys</span><span class="p">,</span> <span class="n">sims</span><span class="p">):</span>
+<span class="linenos">166</span>
+<span class="linenos">167</span>    <span class="n">nODE2</span> <span class="o">=</span> <span class="n">mainSolver</span><span class="o">.</span><span class="n">GetODE2size</span><span class="p">()</span>
+<span class="linenos">168</span>    <span class="n">nAE</span> <span class="o">=</span> <span class="n">mainSolver</span><span class="o">.</span><span class="n">GetAEsize</span><span class="p">()</span>
+<span class="linenos">169</span>    <span class="c1">#nSys = nODE2+nAE</span>
+<span class="linenos">170</span>    <span class="c1">#print(&quot;u=&quot;, mainSys.systemData.GetODE2Coordinates())</span>
+<span class="linenos">171</span>    <span class="n">dynamicSolver</span><span class="o">.</span><span class="n">ComputeODE2RHS</span><span class="p">(</span><span class="n">mbs</span><span class="p">)</span>
+<span class="linenos">172</span>    <span class="n">res</span> <span class="o">=</span> <span class="n">dynamicSolver</span><span class="o">.</span><span class="n">GetSystemResidual</span><span class="p">()</span>
+<span class="linenos">173</span>    <span class="n">Fode2</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">nODE2</span><span class="p">]</span>
+<span class="linenos">174</span>    <span class="c1">#print(&quot;res=&quot;, Fode2)</span>
+<span class="linenos">175</span>
+<span class="linenos">176</span>    <span class="n">dynamicSolver</span><span class="o">.</span><span class="n">ComputeMassMatrix</span><span class="p">(</span><span class="n">mbs</span><span class="p">)</span>
+<span class="linenos">177</span>    <span class="n">M</span> <span class="o">=</span> <span class="n">dynamicSolver</span><span class="o">.</span><span class="n">GetSystemMassMatrix</span><span class="p">()</span>
+<span class="linenos">178</span>    <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">M</span><span class="p">,</span><span class="n">Fode2</span><span class="p">)</span> <span class="c1">#acceleration</span>
+<span class="linenos">179</span>
+<span class="linenos">180</span>    <span class="n">h</span> <span class="o">=</span> <span class="n">dynamicSolver</span><span class="o">.</span><span class="n">it</span><span class="o">.</span><span class="n">currentStepSize</span>
+<span class="linenos">181</span>
+<span class="linenos">182</span>    <span class="n">u0</span> <span class="o">=</span> <span class="n">mainSys</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetODE2Coordinates</span><span class="p">()</span>
+<span class="linenos">183</span>    <span class="n">v0</span> <span class="o">=</span> <span class="n">mainSys</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetODE2Coordinates_t</span><span class="p">()</span>
+<span class="linenos">184</span>
+<span class="linenos">185</span>    <span class="n">mainSys</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">SetODE2Coordinates</span><span class="p">(</span><span class="n">u0</span><span class="o">+</span><span class="n">h</span><span class="o">*</span><span class="n">v0</span><span class="p">)</span>
+<span class="linenos">186</span>    <span class="n">mainSys</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">SetODE2Coordinates_t</span><span class="p">(</span><span class="n">v0</span><span class="o">+</span><span class="n">h</span><span class="o">*</span><span class="n">a</span><span class="p">)</span>
+<span class="linenos">187</span>
+<span class="linenos">188</span>    <span class="k">return</span> <span class="kc">True</span>
+<span class="linenos">189</span>
+<span class="linenos">190</span><span class="n">dynamicSolver</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">MainSolverImplicitSecondOrder</span><span class="p">()</span>
+<span class="linenos">191</span>
+<span class="linenos">192</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="mi">5000</span> <span class="c1">#1000 steps for test suite/error</span>
+<span class="linenos">193</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="mf">0.05</span>              <span class="c1">#1s for test suite / error</span>
+<span class="linenos">194</span>
+<span class="linenos">195</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">generalizedAlpha</span><span class="o">.</span><span class="n">spectralRadius</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="linenos">196</span><span class="c1">#simulationSettings.displayComputationTime = True</span>
+<span class="linenos">197</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">verboseMode</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="linenos">198</span>
+<span class="linenos">199</span><span class="c1">#dynamicSolver.SetUserFunctionInitializeStep(mbs, UserFunctionInitializeStep)</span>
+<span class="linenos">200</span><span class="n">dynamicSolver</span><span class="o">.</span><span class="n">SetUserFunctionNewton</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">UserFunctionNewton</span><span class="p">)</span>
+<span class="linenos">201</span>
+<span class="linenos">202</span><span class="n">dynamicSolver</span><span class="o">.</span><span class="n">SolveSystem</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="p">)</span>
+<span class="linenos">203</span><span class="c1">#exu.SolveDynamic(mbs, simulationSettings)</span>
+<span class="linenos">204</span>
+<span class="linenos">205</span><span class="n">uy</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">GetNodeOutput</span><span class="p">(</span><span class="n">nLast</span><span class="p">,</span><span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Position</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="c1">#y-coordinate of tip</span>
+<span class="linenos">206</span><span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s2">&quot;uy=&quot;</span><span class="p">,</span> <span class="n">uy</span><span class="p">)</span>
+<span class="linenos">207</span><span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s2">&quot;testResult=&quot;</span><span class="p">,</span> <span class="n">testRefVal</span> <span class="o">+</span> <span class="n">uy</span><span class="p">)</span>
+<span class="linenos">208</span><span class="n">exudynTestGlobals</span><span class="o">.</span><span class="n">testError</span> <span class="o">=</span> <span class="n">testRefVal</span> <span class="o">+</span> <span class="n">uy</span> <span class="o">-</span> <span class="p">(</span><span class="mf">2.280183538481952</span><span class="o">-</span><span class="mf">0.2204849087896498</span><span class="p">)</span> <span class="c1">#2020-01-16: 2.280183538481952-0.2204849087896498</span>
+<span class="linenos">209</span><span class="n">exudynTestGlobals</span><span class="o">.</span><span class="n">testResult</span> <span class="o">=</span> <span class="n">testRefVal</span> <span class="o">+</span> <span class="n">uy</span>
+<span class="linenos">210</span>
+<span class="linenos">211</span><span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span> <span class="c1">#only start graphics once, but after background is set</span>
+<span class="linenos">212</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">WaitForRenderEngineStopFlag</span><span class="p">()</span>
+<span class="linenos">213</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StopRenderer</span><span class="p">()</span> <span class="c1">#safely close rendering window!</span>
 </pre></div>
 </div>
 </section>

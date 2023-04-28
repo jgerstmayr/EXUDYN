@@ -142,7 +142,8 @@ Definition of quantities
 Connector constraint equations
 ------------------------------
 
-\paragraphEquations for translational part (\ ``activeConnector = True``\ ):
+
+\ **Equations for translational part (\ ``activeConnector = True``\ )** :
 
 The two translational index 3 constraints for a free motion along the local \ :math:`x`\ -axis read (in the coordinate system \ :math:`J0`\ ),
 
@@ -160,7 +161,8 @@ and the translational index 2 constraints read
    \LU{J0}{{\mathbf{v}}}_{z,m1} - \LU{J0}{{\mathbf{v}}}_{z,m0} &=& \Null
 
 
-\paragraphEquations for rotational part (\ ``activeConnector = True``\ ):
+
+\ **Equations for rotational part (\ ``activeConnector = True``\ )** :
 
 Note that the axes are always given in global coordinates, compare the table in 
 Section :ref:`sec-objectjointprismaticx-definitionofquantities`\ .

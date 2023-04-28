@@ -1266,7 +1266,7 @@ Class function: \_\_init\_\_
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `fourBarMechanismRedundant.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/fourBarMechanismRedundant.py>`_\  (TM)
+    \ `fourBarMechanismIftomm.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/fourBarMechanismIftomm.py>`_\  (TM)
 
 
 CLASS InertiaMassPoint(RigidBodyInertia) (in module rigidBodyUtilities)

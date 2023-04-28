@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NodeRigidBodyEP &mdash; Exudyn1.6.65.dev1 1.6.65.dev1 documentation</title>
+  <title>NodeRigidBodyEP &mdash; Exudyn1.6.80.dev1 1.6.80.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -39,7 +39,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.65.dev1
+            Exudyn1.6.80.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -111,7 +111,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.65.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.80.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -266,7 +266,7 @@
 </div>
 </li>
 </ul>
-<p>paragraphDetailed information:
+<p><strong>Detailed information:</strong>
 All coordinates <span class="math notranslate nohighlight">\({\mathbf{c}}\cConfig\)</span> lead to second order differential equations, but there is one additional constraint equation for the quaternions.
 The additional constraint equation, which needs to be provided by the object, reads</p>
 <div class="math notranslate nohighlight">
@@ -285,7 +285,7 @@ The additional constraint equation, which needs to be provided by the object, re
 <div class="math notranslate nohighlight">
 \[\begin{split}\LU{0}{\tomega} &amp;=&amp; \LU{0}{{\mathbf{G}}} \dot \ttheta, \\
 \LU{b}{\tomega} &amp;=&amp; \LU{b}{{\mathbf{G}}} \dot \ttheta.\end{split}\]</div>
-<p>For creating a <code class="docutils literal notranslate"><span class="pre">NodeRigidBodyEP</span></code>, there is a <code class="docutils literal notranslate"><span class="pre">rigidBodyUtilities</span></code> function <code class="docutils literal notranslate"><span class="pre">AddRigidBody</span></code>,
+<p>For creating a <code class="docutils literal notranslate"><span class="pre">NodeRigidBodyEP</span></code> together with a rigid body, there is a <code class="docutils literal notranslate"><span class="pre">rigidBodyUtilities</span></code> function <code class="docutils literal notranslate"><span class="pre">AddRigidBody</span></code>,
 see Section <a class="reference internal" href="../pythonUtilities/rigidBodyUtilities.html#sec-rigidbodyutilities-addrigidbody"><span class="std std-ref">Function: AddRigidBody</span></a>, which simplifies the setup of a rigid body significantely!</p>
 <p>Relevant Examples and TestModels with weblink:</p>
 <blockquote>

@@ -62,6 +62,9 @@ SolutionSettings has the following items:
 * | **sensorsAppendToFile** [type = bool, default = False]:
   | \ ``simulationSettings.solutionSettings.sensorsAppendToFile``\ 
   | flag (true/false); if true, sensor output is appended to existing file (otherwise created) or in case of internal storage, it is appended to existing currently stored data; this allows storing sensor values over different simulations
+* | **sensorsStoreAndWriteFiles** [type = bool, default = True]:
+  | \ ``simulationSettings.solutionSettings.sensorsStoreAndWriteFiles``\ 
+  | flag (true/false); if false, no sensor files will be created and no sensor data will be stored; this may be advantageous for benchmarking as well as for special solvers which should not overwrite existing results (e.g. ComputeODE2Eigenvalues); settings this value to False may cause problems if sensors are required to perform operations which are needed e.g. in UserSensors as input of loads, etc.
 * | **sensorsWriteFileFooter** [type = bool, default = False]:
   | \ ``simulationSettings.solutionSettings.sensorsWriteFileFooter``\ 
   | flag (true/false); if true, file footer is written for sensor output (turn off, e.g. for multiple runs of time integration)
