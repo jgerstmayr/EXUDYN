@@ -242,15 +242,23 @@ public:
 	void ComputeSystemODE1RHS(TemporaryComputationData& temp, Vector& systemODE1Rhs);
 
 	//! compute system right-hand-side (RHS) due to loads and add them to 'ode2rhs' for ODE2 part
-	void ComputeODE2Loads(TemporaryComputationDataArray& tempArray, Vector& systemODE2Rhs);
+	void ComputeODE2LoadsRHS(TemporaryComputationDataArray& tempArray, Vector& systemODE2Rhs);
 
 	//! compute part of load for 'ode2rhs' or to sparsevector; if fillSparseVector, values are added to temp.sparseVector; otherwise, filled directly into systemODE2Rhs
-	void ComputeODE2SingleLoad(Index loadIndex, TemporaryComputationData& temp, Real currentTime, Vector& systemODE2Rhs, bool fillSparseVector);
+	void ComputeODE2SingleLoad(Index loadIndex, TemporaryComputationData& temp, Real currentTime, Vector& systemODE2Rhs, 
+        bool fillSparseVector, bool fillInLocally=false);
+
+    //! compute LTG for ODE2 loads; separate between ltg for equations (action) and dependent coordinates
+    void ComputeODE2SingleLoadLTG(Index loadIndex, ArrayIndex& ltgODE2equations, ArrayIndex& ltgODE2coords, ArrayIndex& ltgODE1coords);
 
 	//! compute system right-hand-side (RHS) due to loads and add them to 'ode2rhs' for ODE2 part
 	void ComputeODE1Loads(TemporaryComputationData& temp, Vector& systemODE1Rhs);
 
-	//! add the projected action of Lagrange multipliers (reaction forces) to the ODE2 coordinates and add it to the ode2ReactionForces residual:
+    //! compute jacobian for loads on ODE2 equations
+    void JacobianODE2Loads(TemporaryComputationDataArray& tempArray, const NumericalDifferentiationSettings& numDiff,
+        GeneralMatrix& jacobianGM, Real factorODE2, Real factorODE2_t, Real factorODE1);
+
+    //! add the projected action of Lagrange multipliers (reaction forces) to the ODE2 coordinates and add it to the ode2ReactionForces residual:
 	//! ode2ReactionForces += C_{q2}^T * \lambda
 	void ComputeODE2ProjectedReactionForces(TemporaryComputationDataArray& tempArray, const Vector& reactionForces, Vector& ode2ReactionForces);
 
@@ -279,8 +287,9 @@ public:
 	//! compute numerical differentiation of ODE2RHS w.r.t. ODE2 and ODE2_t quantities; 
 	//! multiply (before added to jacobianGM) ODE2 with factorODE2 and ODE2_t with factorODE2_t
 	//! the jacobian is ADDed to jacobianGM, which needs to have according size; set entries to zero beforehand in order to obtain only the jacobian
+    //! computeLoadsJacobian is taken from static solver or time integration; 0=off, 1=ODE2+ODE1, 2=ODE2+ODE2_t+ODE1
 	void JacobianODE2RHS(TemporaryComputationDataArray& tempArray, const NumericalDifferentiationSettings& numDiff,
-		GeneralMatrix& jacobianGM, Real factorODE2, Real factorODE2_t, Real factorODE1);
+		GeneralMatrix& jacobianGM, Real factorODE2, Real factorODE2_t, Real factorODE1, Index computeLoadsJacobian);
 
 	//! compute numerical differentiation of ODE1RHS; result is a jacobian;  multiply the added entries with scalarFactor
 	//! the jacobian is ADDed to the given matrix, which needs to have according size; set entries to zero beforehand in order to obtain only the jacobian

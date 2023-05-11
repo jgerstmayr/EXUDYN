@@ -48,7 +48,12 @@ protected: //
 	ObjectContainer<ArrayIndex> localToGlobalODE2;		//!< CObject local to global ODE2 (Second order ODEs) coordinate indices transformation
 	ObjectContainer<ArrayIndex> localToGlobalODE1;		//!< CObject local to global ODE1 (first order ODEs) coordinate indices transformation
 	ObjectContainer<ArrayIndex> localToGlobalAE;		//!< CObject local to global AE (algebraic variables) coordinate indices transformation
-	ObjectContainer<ArrayIndex> localToGlobalData;		//!< CObject local to global Data coordinate indices transformation
+    ObjectContainer<ArrayIndex> localToGlobalData;		//!< CObject local to global Data coordinate indices transformation
+
+    ObjectContainer<ArrayIndex> loadsODE2dependencies;  //!< dependency of CLoads to global ODE2 coordinate indices; used for jacobians; only created if needed
+    ObjectContainer<ArrayIndex> loadsODE1dependencies;  //!< dependency of CLoads to global ODE1 coordinate indices; used for jacobians; only created if needed
+    ObjectContainer<ArrayIndex> loadsAEdependencies;    //!< dependency of CLoads to global AE coordinate indices; used for jacobians; only created if needed
+    bool loadsDependenciesInitialized;                  //!< this flag is set as soon as a first call from Jacobian has initialized loadsODE2dependencies, etc.; further initialization is not done until next call to Assemble()
 
 	Index numberOfCoordinatesODE2;						//!< global number of ODE2 coordinates (sum of all node ODE2 coordinates); must be synchronous to NumberOfItems in SystemState Vectors
 	Index numberOfCoordinatesODE1;						//!< global number of ODE1 coordinates (sum of all node ODE1 coordinates); must be synchronous to NumberOfItems in SystemState Vectors
@@ -67,7 +72,8 @@ public:
 	ResizableArray<Index> listComputeObjectODE2LhsNoUF;	//!< list of objects that need to evaluate ComputeObjectODE2Lhs, but have no user function
 	ResizableArray<Index> listComputeObjectODE1Rhs;		//!< list of objects that need to evaluate ComputeObjectODE1Rhs
 	ResizableArray<Index> listDiscontinuousIteration;	//!< list of objects that need discontinuous iteration (PostNewtonStep, PostDiscontinuousIteration)
-	ResizableArray<Index> listOfLoadsNoUF;				//!< list of loads without user functions (can be processes multithreaded)
+
+    ResizableArray<Index> listOfLoadsNoUF;				//!< list of loads without user functions (can be processes multithreaded)
 	ResizableArray<Index> listOfLoadsUF;				//!< list of loads WITH user functions (must be processed serially)
 
 	ResizableArray<Index> objectsBodyWithAE;			//!< list of objects that are bodies and have AE
@@ -127,6 +133,11 @@ public: //
 		localToGlobalODE1.Flush();
 		localToGlobalAE.Flush();
 		localToGlobalData.Flush();
+
+        loadsODE2dependencies.Flush();
+        loadsODE1dependencies.Flush();
+        loadsAEdependencies.Flush();
+        loadsDependenciesInitialized = false;
 
 		objectsBodyWithODE2Coords.Flush();
 		listComputeObjectODE2Lhs.Flush();
@@ -216,11 +227,11 @@ public: //
 	//! Read (Reference) access to:CObject local to global ODE2 (Second order ODEs) coordinate indices transformation without duplicates
 	const ObjectContainer<ArrayIndex>& GetLocalToGlobalODE2NumDiff() const { return localToGlobalODE2numDiff; }
 
-	//! Write (Reference) access to:CObject local to global ODE1 (first order ODEs) coordinate indices transformation
-	ObjectContainer<ArrayIndex>& GetLocalToGlobalODE1() { return localToGlobalODE1; }
-	//! Read (Reference) access to:CObject local to global ODE1 (first order ODEs) coordinate indices transformation
-	const ObjectContainer<ArrayIndex>& GetLocalToGlobalODE1() const { return localToGlobalODE1; }
-
+    //! Write (Reference) access to:CObject local to global ODE1 (first order ODEs) coordinate indices transformation
+    ObjectContainer<ArrayIndex>& GetLocalToGlobalODE1() { return localToGlobalODE1; }
+    //! Read (Reference) access to:CObject local to global ODE1 (first order ODEs) coordinate indices transformation
+    const ObjectContainer<ArrayIndex>& GetLocalToGlobalODE1() const { return localToGlobalODE1; }
+    
 	//! Write (Reference) access to:CObject local to global AE (algebraic variables) coordinate indices transformation
 	ObjectContainer<ArrayIndex>& GetLocalToGlobalAE() { return localToGlobalAE; }
 	//! Read (Reference) access to:CObject local to global AE (algebraic variables) coordinate indices transformation
@@ -230,6 +241,24 @@ public: //
 	ObjectContainer<ArrayIndex>& GetLocalToGlobalData() { return localToGlobalData; }
 	//! Read (Reference) access to:CObject local to global Data variable indices transformation
 	const ObjectContainer<ArrayIndex>& GetLocalToGlobalData() const { return localToGlobalData; }
+
+    //! Write (Reference) access to:CLoad dependencies on global ODE2 coordinates
+    ObjectContainer<ArrayIndex>& GetLoadsODE2dependencies() { return loadsODE2dependencies; }
+    //! Read (Reference) access to:CLoad dependencies on global ODE2 coordinates
+    const ObjectContainer<ArrayIndex>& GetLoadsODE2dependencies() const { return loadsODE2dependencies; }
+    //! Write (Reference) access to:CLoad dependencies on global ODE1 coordinates
+    ObjectContainer<ArrayIndex>& GetLoadsODE1dependencies() { return loadsODE1dependencies; }
+    //! Read (Reference) access to:CLoad dependencies on global ODE1 coordinates
+    const ObjectContainer<ArrayIndex>& GetLoadsODE1dependencies() const { return loadsODE1dependencies; }
+    //! Write (Reference) access to:CLoad dependencies on global AE coordinates
+    ObjectContainer<ArrayIndex>& GetLoadsAEdependencies() { return loadsAEdependencies; }
+    //! Read (Reference) access to:CLoad dependencies on global AE coordinates
+    const ObjectContainer<ArrayIndex>& GetLoadsAEdependencies() const { return loadsAEdependencies; }
+
+    //! Write (Reference) access to: loadsDependenciesInitialized
+    bool& LoadsDependenciesInitialized() { return loadsDependenciesInitialized; }
+    //! Read (Reference) access to: loadsDependenciesInitialized
+    const bool& LoadsDependenciesInitialized() const { return loadsDependenciesInitialized; }
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -274,7 +303,6 @@ public: //
     bool& HasLieGroupDUNodes() { return hasLieGroupDUNodes; }
     //! Read (Reference) access to: hasLieGroupDUNodes
     const bool& HasLieGroupDUNodes() const { return hasLieGroupDUNodes; }
-    
 
 	//! compute ODE2 ltg indices for marker (which either composes the ltg of a connector using two markers, or may be used e.g. for markers in CContact)
 	void ComputeMarkerODE2LTGarray(Index markerNumber, ArrayIndex& ltgListODE2, bool resetFlag = true) const;
@@ -303,7 +331,8 @@ public: //
 		os << "  localToGlobalODE1 = " << localToGlobalODE1 << "\n";
 		os << "  localToGlobalAE = " << localToGlobalAE << "\n";
 		os << "  localToGlobalData = " << localToGlobalData << "\n";
-		os << "  numberOfCoordinatesODE2 = " << numberOfCoordinatesODE2 << "\n";
+
+        os << "  numberOfCoordinatesODE2 = " << numberOfCoordinatesODE2 << "\n";
 		os << "  numberOfCoordinatesODE1 = " << numberOfCoordinatesODE1 << "\n";
 		os << "  numberOfCoordinatesAE = " << numberOfCoordinatesAE << "\n";
 		os << "  numberOfCoordinatesData = " << numberOfCoordinatesData << "\n";

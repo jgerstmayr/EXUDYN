@@ -780,7 +780,7 @@ void CSolverImplicitSecondOrderTimeInt::ComputeNewtonJacobian(CSystem& computati
 
 		//only K-matrix:
 		computationalSystem.JacobianODE2RHS(data.tempCompDataArray, newton.numericalDifferentiation, *(data.systemJacobian),
-			-scalODE2, -gammaPrime * scalODE2 * 0, -scalODE2 * 0);
+			-scalODE2, -gammaPrime * scalODE2 * 0, -scalODE2 * 0, simulationSettings.timeIntegration.computeLoadsJacobian);
 
 		LieGroupNodesApplyTangentOperator(computationalSystem, computationalSystem.GetSystemData().GetCData().currentState.ODE2Coords,
 			lieGroupDataNodes, 0, *(data.systemJacobian));
@@ -789,7 +789,7 @@ void CSolverImplicitSecondOrderTimeInt::ComputeNewtonJacobian(CSystem& computati
 
 		//rest:
 		computationalSystem.JacobianODE2RHS(data.tempCompDataArray, newton.numericalDifferentiation, *(data.systemJacobian),
-			-scalODE2 * 0, -gammaPrime * scalODE2, -scalODE2);
+			-scalODE2 * 0, -gammaPrime * scalODE2, -scalODE2, simulationSettings.timeIntegration.computeLoadsJacobian);
 
 
 		STOPTIMER(timer.jacobianODE2);
@@ -830,7 +830,7 @@ void CSolverImplicitSecondOrderTimeInt::ComputeNewtonJacobian(CSystem& computati
 		//Tangent stiffness
 		//K-Matrix; has no factor, only scaling
 		computationalSystem.JacobianODE2RHS(data.tempCompDataArray, newton.numericalDifferentiation, *(data.systemJacobian),
-			-scalODE2, -gammaPrime * scalODE2, -scalODE2); //RHS ==> -K; Residuals are scaled ==> scale also derivatives of ODE1 variables with scalODE2; time derivative additionally has factor gammaPrime
+			-scalODE2, -gammaPrime * scalODE2, -scalODE2, simulationSettings.timeIntegration.computeLoadsJacobian); //RHS ==> -K; Residuals are scaled ==> scale also derivatives of ODE1 variables with scalODE2; time derivative additionally has factor gammaPrime
 		STOPTIMER(timer.jacobianODE2);
 		//+++++++++++++++++++++++++++++
 		//compute ODE1 jacobian

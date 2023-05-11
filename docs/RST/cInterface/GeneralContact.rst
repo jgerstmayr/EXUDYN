@@ -75,7 +75,7 @@ Structure to define general and highly efficient contact functionality in multib
 
      gContact.SetSearchTreeInitSize([10,10,10])
 
-* | **SetSearchTreeBox**\ (\ *pMin*\ , \ *pMax*\ ): 
+* | **SetSearchTreeBox**\ (\ *pMin*\ \ *pMax*\ ): 
   | set geometric dimensions of searchTreeBox (point with minimum coordinates and point with maximum coordinates); if this box becomes smaller than the effective contact objects, contact computations may slow down significantly
   | *Example*:
 
@@ -84,13 +84,13 @@ Structure to define general and highly efficient contact functionality in multib
      gContact.SetSearchTreeBox(pMin=[-1,-1,-1],
          pMax=[1,1,1])
 
-* | **AddSphereWithMarker**\ (\ *markerIndex*\ , \ *radius*\ , \ *contactStiffness*\ , \ *contactDamping*\ , \ *frictionMaterialIndex*\ ): 
+* | **AddSphereWithMarker**\ (\ *markerIndex*\ \ *radius*\ \ *contactStiffness*\ \ *contactDamping*\ \ *frictionMaterialIndex*\ ): 
   | add contact object using a marker (Position or Rigid), radius and contact/friction parameters and return localIndex of the contact item in GeneralContact; frictionMaterialIndex refers to frictionPairings in GeneralContact; contact is possible between spheres (circles in 2D) (if intraSphereContact = True), spheres and triangles and between sphere (=circle) and ANCFCable2D; contactStiffness is computed as serial spring between contacting objects, while damping is computed as a parallel damper
-* | **AddANCFCable**\ (\ *objectIndex*\ , \ *halfHeight*\ , \ *contactStiffness*\ , \ *contactDamping*\ , \ *frictionMaterialIndex*\ ): 
+* | **AddANCFCable**\ (\ *objectIndex*\ \ *halfHeight*\ \ *contactStiffness*\ \ *contactDamping*\ \ *frictionMaterialIndex*\ ): 
   | add contact object for an ANCF cable element, using the objectIndex of the cable element and the cable's half height as an additional distance to contacting objects (currently not causing additional torque in case of friction), and return localIndex of the contact item in GeneralContact; currently only contact with spheres (circles in 2D) possible; contact computed using exact geometry of elements, finding max 3 intersecting contact regions
-* | **AddTrianglesRigidBodyBased**\ (\ *rigidBodyMarkerIndex*\ , \ *contactStiffness*\ , \ *contactDamping*\ , \ *frictionMaterialIndex*\ , \ *pointList*\ , \ *triangleList*\ ): 
+* | **AddTrianglesRigidBodyBased**\ (\ *rigidBodyMarkerIndex*\ \ *contactStiffness*\ \ *contactDamping*\ \ *frictionMaterialIndex*\ \ *pointList*\ \ *triangleList*\ ): 
   | add contact object using a rigidBodyMarker (of a body), contact/friction parameters, a list of points (as 3D numpy arrays or lists; coordinates relative to rigidBodyMarker) and a list of triangles (3 indices as numpy array or list) according to a mesh attached to the rigidBodyMarker; returns starting local index of trigsRigidBodyBased at which the triangles are stored; mesh can be produced with GraphicsData2TrigsAndPoints(...); contact is possible between sphere (circle) and Triangle but yet not between triangle and triangle; frictionMaterialIndex refers to frictionPairings in GeneralContact; contactStiffness is computed as serial spring between contacting objects, while damping is computed as a parallel damper (otherwise the smaller damper would always dominate); the triangle normal must point outwards, with the normal of a triangle given with local points (p0,p1,p2) defined as n=(p1-p0) x (p2-p0), see function ComputeTriangleNormal(...)
-* | **GetItemsInBox**\ (\ *pMin*\ , \ *pMax*\ ): 
+* | **GetItemsInBox**\ (\ *pMin*\ \ *pMax*\ ): 
   | Get all items in box defined by minimum coordinates given in pMin and maximum coordinates given by pMax, accepting 3D lists or numpy arrays; in case that no objects are found, False is returned; otherwise, a dictionary is returned, containing numpy arrays with indices of obtained MarkerBasedSpheres, TrigsRigidBodyBased, ANCFCable2D, ...; the indices refer to the local index in GeneralContact which can be evaluated e.g. by GetMarkerBasedSphere(localIndex)
   | *Example*:
 
@@ -101,7 +101,7 @@ Structure to define general and highly efficient contact functionality in multib
 
 * | **GetMarkerBasedSphere**\ (\ *localIndex*\ ): 
   | Get dictionary with position, radius and markerIndex for markerBasedSphere index, as returned e.g. from GetItemsInBox
-* | **ShortestDistanceAlongLine**\ (\ *pStart*\  = [0,0,0], \ *direction*\  = [1,0,0], \ *minDistance*\  = -1e-7, \ *maxDistance*\  = 1e7, \ *asDictionary*\  = False, \ *cylinderRadius*\  = 0, \ *typeIndex*\  = Contact.IndexEndOfEnumList): 
+* | **ShortestDistanceAlongLine**\ (\ *pStart*\  = [0,0,0]\ *direction*\  = [1,0,0]\ *minDistance*\  = -1e-7\ *maxDistance*\  = 1e7\ *asDictionary*\  = False\ *cylinderRadius*\  = 0\ *typeIndex*\  = Contact.IndexEndOfEnumList): 
   | Find shortest distance to contact objects in GeneralContact along line with pStart (given as 3D list or numpy array) and direction (as 3D list or numpy array with no need to be normalized); the function returns the distance which is >= minDistance and < maxDistance; in case of beam elements, it measures the distance to the beam centerline; the distance is measured from pStart along given direction and can also be negative; if no item is found along line, the maxDistance is returned; if asDictionary=False, the result is a float, while otherwise details are returned as dictionary (including distance, velocityAlongLine (which is the object velocity in given direction and may be different from the time derivative of the distance; works similar to a laser Doppler vibrometer - LDV), itemIndex and itemType in GeneralContact); the cylinderRadius, if not equal to 0, will be used for spheres to find closest sphere along cylinder with given point and direction; the typeIndex can be set to a specific contact type, e.g., which are searched for (otherwise all objects are considered)
 * | **UpdateContacts**\ (\ *mainSystem*\ ): 
   | Update contact sets, e.g. if no contact is simulated (isActive=False) but user functions need up-to-date contact states for GetItemsInBox(...) or for GetActiveContacts(...)
@@ -111,7 +111,7 @@ Structure to define general and highly efficient contact functionality in multib
 
      gContact.UpdateContacts(mbs)
 
-* | **GetActiveContacts**\ (\ *typeIndex*\ , \ *itemIndex*\ ): 
+* | **GetActiveContacts**\ (\ *typeIndex*\ \ *itemIndex*\ ): 
   | Get list of global item numbers which are in contact with itemIndex of type typeIndex in case that the global itemIndex is smaller than the abs value of the contact pair index; a negative sign indicates that the contacting (spheres) is in Coloumb friction, a positive sign indicates a regularized friction region; for interpretation of global contact indices, see gContact.GetPythonObject() and documentation; requires either implicit contact computation or UpdateContacts(...) needs to be called prior to this function
   | *Example*:
 

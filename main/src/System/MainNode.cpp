@@ -67,7 +67,8 @@ bool CMarker::GetOutputVariable(const CSystemData& cSystemData, OutputVariableTy
 	bool isSuccess = true;
 	if (EXUstd::IsOfType((Index)OutputVariableType::Coordinates + (Index)OutputVariableType::Coordinates_t, (Index)variableType))
 	{
-		if (configuration != ConfigurationType::Current)
+		if (configuration != ConfigurationType::Current || 
+            (((Index)GetType() & (Index)(Marker::Coordinates + Marker::Coordinate)) == 0)) //added 2023-05-01: otherwise, returns any data stored in markerData
 		{
 			isSuccess = false;
 		}

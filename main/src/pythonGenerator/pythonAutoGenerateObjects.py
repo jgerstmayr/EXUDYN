@@ -77,6 +77,7 @@ pyFunctionTypeConversion = {'PyFunctionGraphicsData': 'std::function<py::object(
 #this function finds out, if a parameter is set with a special Set...Safely function in C++
 def IsASetSafelyParameter(parameterType):
     if ((parameterType == 'String') or
+        (parameterType == 'ItemName') or 
         (parameterType == 'Vector2D') or 
         (parameterType == 'Vector3DList') or
         (parameterType == 'Matrix3DList') or
@@ -806,7 +807,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
     for parameter in parameterList:
         if (parameter['lineType'].find('V') != -1): #member variable: also include parent members for default initialization (name and V.show)
             strDefault = parameter['defaultValue']
-            if len(strDefault) | (parameter['type'] == 'String'): 
+            if len(strDefault) or (parameter['type'] == 'String'): 
                 cntDefaultParameters[DestinationNr(parameter['destination'])] += 1
 
     #constructor with default initialization:
@@ -820,7 +821,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                 if (parameter['lineType'].find('V') != -1 and
                     not IsInternalSetGetParameter(parameter['type']) ): #only if it is a variable and not variable with internal conversion; include parent members
                     strDefault = parameter['defaultValue']
-                    if len(strDefault) | (parameter['type'] == 'String'): #only add initialization if default value exists
+                    if len(strDefault) or (parameter['type'] == 'String'): #only add initialization if default value exists
                         if parameter['type'] == 'String':
                             strDefault = '"' + strDefault + '"'
                         tempStr=space8 + parameter['cplusplusName'] + ' = ' + strDefault + ';\n'

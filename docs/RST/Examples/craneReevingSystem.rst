@@ -13,8 +13,7 @@ You can view and download this file on Github: `craneReevingSystem.py <https://g
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    # This is an EXUDYN example
    #
-   # Details:  A one arm mechanism is actuated by the HydraulicActuatorSimple;
-   #           The actuator contains internal dynamics based on GenericODE1 node
+   # Details:  A crane model using the ReevingSystemSprings for the rope 
    #
    # Author:   Johannes Gerstmayr
    # Date:     2022-06-16

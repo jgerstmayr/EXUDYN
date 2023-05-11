@@ -21,7 +21,7 @@ def TestExamplesReferenceSolution():
         'ANCFcontactFrictionTest.py':-0.014187561328096003,         #with old ObjectContactFrictionCircleCable2D until : 2022-03-09: -0.014188649931059739,
         'ANCFgeneralContactCircle.py':-0.5816542531620952,          #new 2022-07-11 (CState Parallel); #before some update to contact module(iterations decreased!):-0.5816521429557808, #2022-02-01
         'ANCFmovingRigidBodyTest.py':-0.12893096934983617,          #new 2022-12-25; old solution differs for 1e-10 since several updates -0.12893096921737698,
-        'ANCFslidingAndALEjointTest.py':-4.426408390697862,         #before 2022-12-25(resolved BUG 1274): -4.426403044189653; with old ObjectContactFrictionCircleCable2D until: 2022-03-09: -4.42640304418963,
+        'ANCFslidingAndALEjointTest.py':-4.426408394755261,         #before 2023-05-01 (loads jacobian): -4.426408390697862,         #before 2022-12-25(resolved BUG 1274): -4.426403044189653; with old ObjectContactFrictionCircleCable2D until: 2022-03-09: -4.42640304418963,
         'carRollingDiscTest.py':-0.23940048717113782,
         'compareAbaqusAnsysRotorEigenfrequencies.py':0.0004185480476228555,
         'compareFullModifiedNewton.py':0.00020079676000188396,
@@ -45,7 +45,7 @@ def TestExamplesReferenceSolution():
         'genericODE2test.py':0.036045463499024655,                  #new 2022-07-11 (CState Parallel); #changed to some analytic Connector jacobians (CartSpringDamper), implicit solver(modified Newton restart, etc.); before 2022-01-18: 0.036045463498793825,
         'geneticOptimizationTest.py':0.10117518366826603,           #before 2022-02-20 (accuracy of internal sensors is higher); 0.10117518367051619, #changed to some analytic Connector jacobians (CartSpringDamper), implicit solver(modified Newton restart, etc.); before 2022-01-18: 0.10117518366934351,
         'geometricallyExactBeam2Dtest.py':-2.2115028353806547,
-        'geometricallyExactBeamTest.py':1.012821899294672,          #new 2023-04-06 may still include small errors in implementation
+        'geometricallyExactBeamTest.py':1.012822053539261,         #before 2023-05-05: 1.0128218992948643 (changed Texp function); new 2023-04-06 may still include small errors in implementation
         'heavyTop.py':33.42312575174431,                            #new 2022-07-11 (CState Parallel); 
         'hydraulicActuatorSimpleTest.py':7.130440021870293,
         'kinematicTreeAndMBStest.py':2.6388120463802767e-05,        #original but too sensitive to disturbances: 263.88120463802767,

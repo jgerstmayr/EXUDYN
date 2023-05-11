@@ -57,8 +57,6 @@ The SystemContainer is the top level of structures in Exudyn. The container hold
   | Wait for user to stop render engine (Press 'Q' or Escape-key); this command is used to have active response of the render window, e.g., to open the visualization dialog or use the right-mouse-button; behaves similar as mbs.WaitForUserToContinue()
 * | **RenderEngineZoomAll**\ (): 
   | Send zoom all signal, which will perform zoom all at next redraw request
-* | **RedrawAndSaveImage**\ (): 
-  | Redraw openGL scene and save image (command waits until process is finished)
 * | **AttachToRenderEngine**\ (): 
   | Links the SystemContainer to the render engine, such that the changes in the graphics structure drawn upon updates, etc.; done automatically on creation of SystemContainer; return False, if no renderer exists (e.g., compiled without GLFW) or cannot be linked (if other SystemContainer already linked)
 * | **DetachFromRenderEngine**\ (): 

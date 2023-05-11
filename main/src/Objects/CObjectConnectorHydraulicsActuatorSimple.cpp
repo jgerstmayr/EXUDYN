@@ -29,7 +29,7 @@ Index CObjectConnectorHydraulicActuatorSimple::GetODE1Size() const
 
 //compute the properties which are needed for computation of LHS and needed for OutputVariables
 void CObjectConnectorHydraulicActuatorSimple::ComputeConnectorProperties(const MarkerDataStructure& markerData, Index itemIndex,
-	Vector3D& relPos, Vector3D& relVel, Real& force, Vector3D& forceDirection) const
+	Vector3D& relPos, Vector3D& relVel, Real& linearVelocity, Real& force, Vector3D& forceDirection) const
 {
 	relPos = (markerData.GetMarkerData(1).position - markerData.GetMarkerData(0).position);
 
@@ -44,6 +44,8 @@ void CObjectConnectorHydraulicActuatorSimple::ComputeConnectorProperties(const M
 	forceDirection = actuatorLengthInv * relPos;
 	relVel = (markerData.GetMarkerData(1).velocity - markerData.GetMarkerData(0).velocity);
 
+	linearVelocity = forceDirection * relVel; //this quantity is difference from relVel.GetL2Norm()
+
 	//stiffness term; this is the term without the jacobian [delta l_vec]; compare Shabana MultibodyDynamics1998, page 119:
 	force = 0;
 	if (parameters.activeConnector)
@@ -55,7 +57,7 @@ void CObjectConnectorHydraulicActuatorSimple::ComputeConnectorProperties(const M
 		//pout << "force=" << force << ", p=" << p << "\n";
 
 		//damping term  + force:
-		force += parameters.actuatorDamping * relVel*forceDirection; // +parameters.force;
+		force += parameters.actuatorDamping * linearVelocity; // +parameters.force;
 
 	}
 }
@@ -74,9 +76,9 @@ void CObjectConnectorHydraulicActuatorSimple::ComputeODE2LHS(Vector& ode2Lhs, co
 
 	if (parameters.activeConnector)
 	{
-		Real force;
+		Real force, linearVelocity;
 		Vector3D relPos, relVel, forceDirection;
-		ComputeConnectorProperties(markerData, objectNumber, relPos, relVel, force, forceDirection);
+		ComputeConnectorProperties(markerData, objectNumber, relPos, relVel, linearVelocity, force, forceDirection);
 		Vector3D fVec = force * forceDirection;
 
 		//now link ode2Lhs Vector to partial result using the two jacobians
@@ -120,14 +122,39 @@ void CObjectConnectorHydraulicActuatorSimple::ComputeODE1RHS(Vector& ode1Rhs, co
 	Real stroke_t = actuatorLengthInv * (relPos * relVel); //stroke velocity; >0 means extension
 	Real stroke = actuatorLength - parameters.offsetLength;
 
-	Real V0act = parameters.referenceVolume0;
-	Real V1act = parameters.referenceVolume1;
+	Real V0act = parameters.hoseVolume0;
+	Real V1act = parameters.hoseVolume1;
+    Real effectiveBulkModulus0 = parameters.oilBulkModulus;
+    Real effectiveBulkModulus1 = parameters.oilBulkModulus;
 
 	if (parameters.useChamberVolumeChange)
 	{
 		V0act += parameters.chamberCrossSection0 * stroke;
-		V1act -= parameters.chamberCrossSection1 * stroke;
-	}
+		V1act += parameters.chamberCrossSection1 * (parameters.strokeLength - stroke);
+
+        //if volume is zero, this could only be if hoseVolume is also zero and this will raise an exception appr. 20 lines below
+        if (V0act != 0 && V1act != 0) 
+        {
+            Real valCylBulk0 = 0;
+            Real valCylBulk1 = 0;
+            Real valHoseBulk0 = 0;
+            Real valHoseBulk1 = 0;
+
+            if (parameters.cylinderBulkModulus != 0)
+            {
+                valCylBulk0 = (V0act - parameters.hoseVolume0) / (V0act * parameters.cylinderBulkModulus);
+                valCylBulk1 = (V1act - parameters.hoseVolume1) / (V1act * parameters.cylinderBulkModulus);
+            }
+            if (parameters.hoseBulkModulus != 0)
+            {
+                valHoseBulk0 = (parameters.hoseVolume0) / (V0act * parameters.hoseBulkModulus);
+                valHoseBulk1 = (parameters.hoseVolume1) / (V1act * parameters.hoseBulkModulus);
+            }
+
+            effectiveBulkModulus0 = 1. / (1. / parameters.oilBulkModulus + valCylBulk0 + valHoseBulk0);
+            effectiveBulkModulus1 = 1. / (1. / parameters.oilBulkModulus + valCylBulk1 + valHoseBulk1);
+        }
+    }
 
 	CHECKandTHROW(V0act != 0 && V1act != 0, "CObjectConnectorHydraulicActuatorSimple::ComputeODE1RHS: chamber volume vanished; further computation not possible!");
 
@@ -137,24 +164,24 @@ void CObjectConnectorHydraulicActuatorSimple::ComputeODE1RHS(Vector& ode1Rhs, co
 	//valve opening decides whether flow from pump (system pressure) or into tank
 	if (parameters.valveOpening0 >= 0) //pump, system pressure
 	{
-		ode1Rhs[0] = parameters.oilBulkModulus / V0act * (-parameters.chamberCrossSection0 * stroke_t +
+		ode1Rhs[0] = effectiveBulkModulus0 / V0act * (-parameters.chamberCrossSection0 * stroke_t +
 			parameters.valveOpening0 * parameters.nominalFlow*SignedSqrt(parameters.systemPressure-p[0]));
 	}
 	else //tank
 	{
-		ode1Rhs[0] = parameters.oilBulkModulus / V0act * (-parameters.chamberCrossSection0 * stroke_t +
+		ode1Rhs[0] = effectiveBulkModulus0 / V0act * (-parameters.chamberCrossSection0 * stroke_t +
 			parameters.valveOpening0 * parameters.nominalFlow*SignedSqrt(p[0] - parameters.tankPressure));
 	}
-
-	//valve opening decides whether flow from pump (system pressure) or into tank
+    
+    //valve opening decides whether flow from pump (system pressure) or into tank
 	if (parameters.valveOpening1 >= 0) //pump, system pressure
 	{
-		ode1Rhs[1] = parameters.oilBulkModulus / V1act * ( parameters.chamberCrossSection1 * stroke_t +
+		ode1Rhs[1] = effectiveBulkModulus1 / V1act * ( parameters.chamberCrossSection1 * stroke_t +
 			parameters.valveOpening1 * parameters.nominalFlow*SignedSqrt(parameters.systemPressure - p[1]));
 	}
 	else //tank
 	{
-		ode1Rhs[1] = parameters.oilBulkModulus / V1act * ( parameters.chamberCrossSection1 * stroke_t +
+		ode1Rhs[1] = effectiveBulkModulus1 / V1act * ( parameters.chamberCrossSection1 * stroke_t +
 			parameters.valveOpening1 * parameters.nominalFlow*SignedSqrt(p[1] - parameters.tankPressure));
 	}
 
@@ -178,15 +205,16 @@ JacobianType::Type CObjectConnectorHydraulicActuatorSimple::GetAvailableJacobian
 //! provide according output variable in "value"
 void CObjectConnectorHydraulicActuatorSimple::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
 {
-	Real force;
+	Real force, linearVelocity;
 	Vector3D relPos, relVel, forceDirection;
-	ComputeConnectorProperties(markerData, itemIndex, relPos, relVel, force, forceDirection);
+	ComputeConnectorProperties(markerData, itemIndex, relPos, relVel, linearVelocity, force, forceDirection);
 
 	switch (variableType)
 	{
 	case OutputVariableType::Distance: value.SetVector({ relPos.GetL2Norm() }); break;
 	case OutputVariableType::Displacement: value.CopyFrom(relPos); break;
 	case OutputVariableType::Velocity: value.CopyFrom(relVel); break;
+	case OutputVariableType::VelocityLocal: value.SetVector({ linearVelocity }); break;
 	case OutputVariableType::Force: value.CopyFrom(force*forceDirection); break;
 	default:
 		SysError("CObjectConnectorHydraulicActuatorSimple::GetOutputVariable failed"); //error should not occur, because types are checked!

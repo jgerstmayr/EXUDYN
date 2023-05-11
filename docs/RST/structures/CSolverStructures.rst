@@ -76,55 +76,6 @@ CSolverTimer has the following items:
 
 
 
-.. _sec-solverlocaldata:
-
-SolverLocalData
----------------
-
-Solver local data structure for solution vectors, system matrices and temporary vectors and data structures.
-
-SolverLocalData has the following items:
-
-* | **aAlgorithmic** [type = ResizableVectorParallel]:
-  | additional term needed for generalized alpha (current state)
-* | **CleanUpMemory()** [return type = void]:
-  | if desired, temporary data is cleaned up to safe memory
-* | **GetLinearSolverType()** [return type = LinearSolverType]:
-  | return current linear solver type (dense/sparse)
-* | **nAE** [type = Index, default = 0]:
-  | number of algebraic coordinates
-* | **nData** [type = Index, default = 0]:
-  | number of data coordinates
-* | **newtonSolution** [type = ResizableVectorParallel]:
-  | Newton decrement (computed from residual and jacobian)
-* | **nODE1** [type = Index, default = 0]:
-  | number of first order ordinary diff. eq. coordinates
-* | **nODE2** [type = Index, default = 0]:
-  | number of second order ordinary diff. eq. coordinates
-* | **nSys** [type = Index, default = 0]:
-  | number of system (unknown) coordinates = nODE2+nODE1+nAE
-* | **SetLinearSolverType(linearSolverType, reuseAnalyzedPattern)** [return type = void]:
-  | set linear solver type and matrix version: links system matrices to according dense/sparse versions
-* | **startAE** [type = Index, default = 0]:
-  | start of algebraic coordinates, but set to zero if nAE==0
-* | **startOfStepStateAAlgorithmic** [type = ResizableVectorParallel]:
-  | additional term needed for generalized alpha (startOfStep state)
-* | **systemResidual** [type = ResizableVectorParallel]:
-  | system residual vector (vectors will be linked to this vector!)
-* | **temp2ODE2** [type = ResizableVectorParallel]:
-  | second temporary vector for \ :ref:`ODE2 <ODE2>`\  quantities; use in static computation
-* | **tempODE1F0** [type = ResizableVectorParallel]:
-  | temporary vector for \ :ref:`ODE1 <ODE1>`\  Jacobian
-* | **tempODE1F1** [type = ResizableVectorParallel]:
-  | temporary vector for \ :ref:`ODE1 <ODE1>`\  Jacobian
-* | **tempODE2** [type = ResizableVectorParallel]:
-  | temporary vector for \ :ref:`ODE2 <ODE2>`\  quantities; use in initial accelerations and during Newton
-* | **tempODE2F0** [type = ResizableVectorParallel]:
-  | temporary vector for \ :ref:`ODE2 <ODE2>`\  Jacobian
-* | **tempODE2F1** [type = ResizableVectorParallel]:
-  | temporary vector for \ :ref:`ODE2 <ODE2>`\  Jacobian
-
-
 
 .. _sec-solveriterationdata:
 
@@ -170,7 +121,7 @@ SolverIterationData has the following items:
 * | **numberOfSteps** [type = Index, default = 0]:
   | number of time steps (if fixed size); \ :math:`n`\ 
 * | **recommendedStepSize** [type = Real, default = -1.]:
-  | recommended step size \ :math:`h_{recom}`\  after PostNewton(...): \ :math:`h_{recom} < 0`\ : no recommendation, \ :math:`h_{recom}==0`\ : use minimum step size, \ :math:`h_{recom}>0`\ : use specific step size, if no smaller size requested by other reason
+  | recommended step size \ :math:`h\_{recom}`\  after PostNewton(...): \ :math:`h\_{recom} < 0`\ : no recommendation, \ :math:`h\_{recom}==0`\ : use minimum step size, \ :math:`h\_{recom}>0`\ : use specific step size, if no smaller size requested by other reason
 * | **rejectedAutomaticStepSizeSteps** [type = Index, default = 0]:
   | count the number of rejected steps in case of automatic step size control (rejected steps are repeated with smaller step size)
 * | **rejectedModifiedNewtonSteps** [type = Index, default = 0]:
@@ -261,10 +212,6 @@ SolverOutputData has the following items:
   | multithreading mode that has been used: 0=None (serial), 1=NGsolve taskmanager, 2=MicroThreading (Exudyn)
 * | **numberOfThreadsUsed** [type = Index, default = 0]:
   | number of threads that have been used in simulation
-* | **sensorValuesTemp** [type = ResizableVector]:
-  | temporary vector for per sensor values (overwritten for every sensor; usually contains last sensor values)
-* | **sensorValuesTemp2** [type = ResizableVector]:
-  | additional temporary vector for per sensor values (overwritten for every sensor; usually contains time+last sensor values)
 * | **stepInformation** [type = Index, default = 0]:
   | this is a copy of the solvers stepInformation used for console output
 * | **verboseMode** [type = Index, default = 0]:

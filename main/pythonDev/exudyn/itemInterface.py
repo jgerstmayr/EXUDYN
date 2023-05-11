@@ -1786,7 +1786,7 @@ class VObjectConnectorHydraulicActuatorSimple:
     def __repr__(self):
         return str(dict(self))
 class ObjectConnectorHydraulicActuatorSimple:
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumbers = [], offsetLength = 0., strokeLength = 0., chamberCrossSection0 = 0., chamberCrossSection1 = 0., referenceVolume0 = 0., referenceVolume1 = 0., valveOpening0 = 0., valveOpening1 = 0., actuatorDamping = 0., oilBulkModulus = 0., nominalFlow = 0., systemPressure = 0., tankPressure = 0., useChamberVolumeChange = False, activeConnector = True, visualization = {'show': True, 'cylinderRadius': 0.05, 'rodRadius': 0.03, 'pistonRadius': 0.04, 'pistonLength': 0.001, 'rodMountRadius': 0.0, 'baseMountRadius': 0.0, 'baseMountLength': 0.0, 'colorCylinder': [-1.,-1.,-1.,-1.], 'colorPiston': [0.8,0.8,0.8,1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumbers = [], offsetLength = 0., strokeLength = 0., chamberCrossSection0 = 0., chamberCrossSection1 = 0., hoseVolume0 = 0., hoseVolume1 = 0., valveOpening0 = 0., valveOpening1 = 0., actuatorDamping = 0., oilBulkModulus = 0., cylinderBulkModulus = 0., hoseBulkModulus = 0., nominalFlow = 0., systemPressure = 0., tankPressure = 0., useChamberVolumeChange = False, activeConnector = True, visualization = {'show': True, 'cylinderRadius': 0.05, 'rodRadius': 0.03, 'pistonRadius': 0.04, 'pistonLength': 0.001, 'rodMountRadius': 0.0, 'baseMountRadius': 0.0, 'baseMountLength': 0.0, 'colorCylinder': [-1.,-1.,-1.,-1.], 'colorPiston': [0.8,0.8,0.8,1.]}):
         self.name = name
         self.markerNumbers = markerNumbers
         self.nodeNumbers = nodeNumbers
@@ -1794,12 +1794,14 @@ class ObjectConnectorHydraulicActuatorSimple:
         self.strokeLength = CheckForValidPReal(strokeLength,"strokeLength","ObjectConnectorHydraulicActuatorSimple")
         self.chamberCrossSection0 = CheckForValidPReal(chamberCrossSection0,"chamberCrossSection0","ObjectConnectorHydraulicActuatorSimple")
         self.chamberCrossSection1 = CheckForValidPReal(chamberCrossSection1,"chamberCrossSection1","ObjectConnectorHydraulicActuatorSimple")
-        self.referenceVolume0 = CheckForValidPReal(referenceVolume0,"referenceVolume0","ObjectConnectorHydraulicActuatorSimple")
-        self.referenceVolume1 = CheckForValidPReal(referenceVolume1,"referenceVolume1","ObjectConnectorHydraulicActuatorSimple")
+        self.hoseVolume0 = CheckForValidPReal(hoseVolume0,"hoseVolume0","ObjectConnectorHydraulicActuatorSimple")
+        self.hoseVolume1 = CheckForValidPReal(hoseVolume1,"hoseVolume1","ObjectConnectorHydraulicActuatorSimple")
         self.valveOpening0 = valveOpening0
         self.valveOpening1 = valveOpening1
         self.actuatorDamping = CheckForValidUReal(actuatorDamping,"actuatorDamping","ObjectConnectorHydraulicActuatorSimple")
         self.oilBulkModulus = CheckForValidPReal(oilBulkModulus,"oilBulkModulus","ObjectConnectorHydraulicActuatorSimple")
+        self.cylinderBulkModulus = CheckForValidUReal(cylinderBulkModulus,"cylinderBulkModulus","ObjectConnectorHydraulicActuatorSimple")
+        self.hoseBulkModulus = CheckForValidUReal(hoseBulkModulus,"hoseBulkModulus","ObjectConnectorHydraulicActuatorSimple")
         self.nominalFlow = CheckForValidPReal(nominalFlow,"nominalFlow","ObjectConnectorHydraulicActuatorSimple")
         self.systemPressure = systemPressure
         self.tankPressure = tankPressure
@@ -1816,12 +1818,14 @@ class ObjectConnectorHydraulicActuatorSimple:
         yield 'strokeLength', self.strokeLength
         yield 'chamberCrossSection0', self.chamberCrossSection0
         yield 'chamberCrossSection1', self.chamberCrossSection1
-        yield 'referenceVolume0', self.referenceVolume0
-        yield 'referenceVolume1', self.referenceVolume1
+        yield 'hoseVolume0', self.hoseVolume0
+        yield 'hoseVolume1', self.hoseVolume1
         yield 'valveOpening0', self.valveOpening0
         yield 'valveOpening1', self.valveOpening1
         yield 'actuatorDamping', self.actuatorDamping
         yield 'oilBulkModulus', self.oilBulkModulus
+        yield 'cylinderBulkModulus', self.cylinderBulkModulus
+        yield 'hoseBulkModulus', self.hoseBulkModulus
         yield 'nominalFlow', self.nominalFlow
         yield 'systemPressure', self.systemPressure
         yield 'tankPressure', self.tankPressure

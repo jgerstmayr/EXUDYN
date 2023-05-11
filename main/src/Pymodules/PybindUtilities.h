@@ -331,7 +331,8 @@ namespace EPyUtils {
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//! assign a string 'item' of a dictionary 'd' safely to 'str' and return false (if failed) and 1 of value has been set
-	inline bool SetStringSafely(const py::dict& d, const char* itemName, STDstring& destination)
+    template<class Tstring>
+	inline bool SetStringSafely(const py::dict& d, const char* itemName, Tstring& destination)
 	{
 		if (d.contains(itemName))
 		{
@@ -348,6 +349,7 @@ namespace EPyUtils {
 		//pout << d << "\n\n";
 		//return false;
 	}
+
 	template<typename T, Index size>
 	inline bool SetSlimVectorTemplateSafely(const py::dict& d, const char* item, SlimVectorBase<T, size>& destination)
 	{
@@ -633,20 +635,20 @@ namespace EPyUtils {
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//functions for py::object safe conversion:
 
-	//! assign a string of a py::object safely to 'str' and return false (if failed) and 1 of value has been set
-	inline bool SetStringSafely(const py::object& value, STDstring& destination)
-	{
-		if (py::isinstance<py::str>(value))
-		{
-			destination = py::cast<std::string>(value); //! read out dictionary and cast to C++ type
-			return true;
-		}
-		//PyError(STDstring("failed to convert to string: " + py::str(value)));
-		PyError(STDstring("failed to convert to string: " + py::cast<std::string>(value)));
-		return false;
-	}
+    //! assign a string of a py::object safely to 'str' and return false (if failed) and 1 of value has been set
+    template<class Tstring>
+    inline bool SetStringSafely(const py::object& value, Tstring& destination)
+    {
+        if (py::isinstance<py::str>(value))
+        {
+            destination = py::cast<std::string>(value); //! read out dictionary and cast to C++ type
+            return true;
+        }
+        PyError(STDstring("failed to convert to string: " + py::cast<std::string>(value)));
+        return false;
+    }
 
-	template<class T, Index size>
+    template<class T, Index size>
 	inline bool SetSlimVectorTemplateSafely(const py::object& value, SlimVectorBase<T, size>& destination)
 	{
 		if (py::isinstance<py::list>(value) || py::isinstance<py::array>(value))

@@ -13,6 +13,16 @@ import time
 file='src/pythonGenerator/exudynVersion.py'
 exec(open(file).read(), globals())
 
+try:
+    #create single __init__.pyi file from subfiles
+    oldDir = os.getcwd()
+    os.chdir(oldDir+'\src\pythonGenerator')
+    fileCS='createStubFiles.py'
+    exec(open(fileCS).read(), globals()) #must be executed in pythonGenerator dir
+    os.chdir(oldDir)
+except:
+    print('WARNING: stub files could not be merged!')
+    #raise ValueError('')
 
 #os.environ["CC"] = "gcc-8" #use gcc-8.4 on linux; does not work on windows
 #os.environ["CXX"] = "gcc-8"
@@ -111,7 +121,9 @@ else:
     is32bits = True
 
 addLibrary_dirs = []
-addPackageData = {}
+
+addPackageData = {'':['__init__.pyi']}
+
 #find whether 32 or 64 bits are used
 if isWindows:
     if is32bits:
@@ -123,20 +135,20 @@ if isWindows:
             print('WARNING: setup.py: openVR not tested for 32bits case; may work!')
             print(' **********************') 
             
-            #addPackageData = {'':['../../../libs/libs32/openvr_api.dll']}, #relative to exudyn; if this does not work on other platforms, copy .dll or .so file directly into exudyn directory
+            #addPackageData['']+=['../../../libs/libs32/openvr_api.dll'], #relative to exudyn; if this does not work on other platforms, copy .dll or .so file directly into exudyn directory
             import shutil
             shutil.copy2('libs/libs64/openvr_api.dll', 'pythonDev/exudyn/')
 
-            addPackageData = {'':['openvr_api.dll']} #relative to exudyn, copied there; if this does not work on other platforms, copy .dll or .so file directly into exudyn directory
+            addPackageData['']+=['openvr_api.dll'] #relative to exudyn, copied there; if this does not work on other platforms, copy .dll or .so file directly into exudyn directory
             print('add package data for openVR:', addPackageData)
     else:
         if useOpenVR:
             #this does not work without wildcard *; but does not add the .dll
-            #addPackageData = {'':['../../../libs/libs64/openvr*.dll']} #relative to exudyn; if this does not work on other platforms, copy .dll or .so file directly into exudyn directory
+            #addPackageData['']+=['../../../libs/libs64/openvr*.dll'] #relative to exudyn; if this does not work on other platforms, copy .dll or .so file directly into exudyn directory
             import shutil
             shutil.copy2('libs/libs64/openvr_api.dll', 'pythonDev/exudyn/')
 
-            addPackageData = {'':['openvr_api.dll']} #relative to exudyn, copied there; if this does not work on other platforms, copy .dll or .so file directly into exudyn directory
+            addPackageData['']+=['openvr_api.dll'] #relative to exudyn, copied there; if this does not work on other platforms, copy .dll or .so file directly into exudyn directory
             print('add package data for openVR:', addPackageData)
         
         addLibrary_dirs=['libs/libs64' ]

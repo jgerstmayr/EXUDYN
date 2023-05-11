@@ -202,7 +202,8 @@ void MainSolverBase::ComputeMassMatrix(MainSystem& mainSystem/*, const Simulatio
 }
 
 //! set systemJacobian to zero and add jacobian (multiplied with factor) of ODE2RHS to systemJacobian in cSolver
-void MainSolverBase::ComputeJacobianODE2RHS(MainSystem& mainSystem, Real scalarFactor_ODE2, Real scalarFactor_ODE2_t, Real scalarFactor_ODE1)
+void MainSolverBase::ComputeJacobianODE2RHS(MainSystem& mainSystem, Real scalarFactor_ODE2, Real scalarFactor_ODE2_t, Real scalarFactor_ODE1,
+    Index computeLoadsJacobian)
 {
 	CheckInitialized(mainSystem);
 
@@ -211,8 +212,9 @@ void MainSolverBase::ComputeJacobianODE2RHS(MainSystem& mainSystem, Real scalarF
 	GetCSolver().data.systemJacobian->SetNumberOfRowsAndColumns(nSys, nSys);
 	GetCSolver().data.systemJacobian->SetAllZero(); //entries are not set to zero inside jacobian computation!
 
+
 	mainSystem.cSystem->JacobianODE2RHS(GetCSolver().data.tempCompDataArray, GetCSolver().newton.numericalDifferentiation,
-		*(GetCSolver().data.systemJacobian), scalarFactor_ODE2, scalarFactor_ODE2_t, scalarFactor_ODE1); 
+		*(GetCSolver().data.systemJacobian), scalarFactor_ODE2, scalarFactor_ODE2_t, scalarFactor_ODE1, computeLoadsJacobian);
 }
 
 //! add jacobian (multiplied with factor) of ODE2RHS to systemJacobian in cSolver

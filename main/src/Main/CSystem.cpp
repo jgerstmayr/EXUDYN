@@ -415,13 +415,6 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 			{
 				PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type = SensorType::Node, contains invalid node number " + EXUstd::ToString(n));
 			}
-			//moved to checkPreAssembleConsistencies
-			//else if (!EXUstd::IsOfTypeAndNotNone(mainSystem.GetMainSystemData().GetMainNode(n).GetCNode()->GetOutputVariableTypes(), 
-			//	item->GetCSensor()->GetOutputVariableType()))
-			//{
-			//	PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + 
-			//		"', type = SensorType::Node: OutputVariableType '" + GetOutputVariableTypeString(item->GetCSensor()->GetOutputVariableType()) + "' is not available in node with node number " + EXUstd::ToString(n));
-			//}
 		}
 		else if (item->GetCSensor()->GetType() == SensorType::Object)
 		{
@@ -431,20 +424,6 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 				PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + 
 					"', type = SensorType::Object, contains invalid object number " + EXUstd::ToString(n));
 			}
-			////moved to checkPreAssembleConsistencies
-			//else if (EXUstd::IsOfType(mainSystem.GetMainSystemData().GetMainObjects()[n]->GetCObject()->GetType(), CObjectType::Body))
-			//{
-			//	PyError(STDstring("SensorObject ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() +
-			//		"', type = SensorType::Object: OutputVariableType '" + GetOutputVariableTypeString(item->GetCSensor()->GetOutputVariableType()) +
-			//		"' cannot be attached to a body. Use SensorBody instead");
-			//}
-			//else if (!EXUstd::IsOfTypeAndNotNone(mainSystem.GetMainSystemData().GetMainObjects()[n]->GetCObject()->GetOutputVariableTypes(), 
-			//	item->GetCSensor()->GetOutputVariableType()))
-			//{
-			//	PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() +
-			//		"', type = SensorType::Object: OutputVariableType '" + GetOutputVariableTypeString(item->GetCSensor()->GetOutputVariableType()) +
-			//		"' is not available in object with object number " + EXUstd::ToString(n));
-			//}
 		}
 		else if (item->GetCSensor()->GetType() == SensorType::Body)
 		{
@@ -453,18 +432,6 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 			{
 				PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type = SensorType::Body, contains invalid object number " + EXUstd::ToString(n));
 			}
-			//moved to checkPreAssembleConsistencies
-			//else if (!EXUstd::IsOfType(mainSystem.GetMainSystemData().GetMainObjects()[n]->GetCObject()->GetType(), CObjectType::Body))
-			//{
-			//	PyError(STDstring("SensorBody ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + 
-			//		"', type = SensorType::Body, contains invalid object (ID=" + EXUstd::ToString(n) + ") which is not of ObjectType::Body. Use SensorObject instead");
-			//}
-			//else if (!EXUstd::IsOfTypeAndNotNone(mainSystem.GetMainSystemData().GetMainObjects()[n]->GetCObject()->GetOutputVariableTypes(), 
-			//	item->GetCSensor()->GetOutputVariableType()))
-			//{
-			//	PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() +
-			//		"', type = SensorType::Body: OutputVariableType '" + GetOutputVariableTypeString(item->GetCSensor()->GetOutputVariableType()) + "' is not available in object with object number " + EXUstd::ToString(n));
-			//}
 		}
 		else if (item->GetCSensor()->GetType() == SensorType::SuperElement)
 		{
@@ -473,28 +440,6 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 			{
 				PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type = SensorType::SuperElement, contains invalid object number " + EXUstd::ToString(n));
 			}
-			//moved to checkPreAssembleConsistencies
-			//else if (!EXUstd::IsOfType(mainSystem.GetMainSystemData().GetMainObjects()[n]->GetCObject()->GetType(), CObjectType::SuperElement))
-			//{
-			//	PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type = SensorType::SuperElement, contains invalid object (ID=" + EXUstd::ToString(n) + ") which is not of ObjectType::Body");
-			//}
-			//else
-			//{
-			//	const CObjectSuperElement* cObjectSuperElement = (const CObjectSuperElement*)(mainSystem.GetMainSystemData().GetMainObjects()[n]->GetCObject());
-			//	const CSensorSuperElement* cSensorSuperElement = (const CSensorSuperElement*)(item->GetCSensor());
-			//	
-			//	if (!EXUstd::IsOfTypeAndNotNone(cObjectSuperElement->GetOutputVariableTypesSuperElement(cSensorSuperElement->GetMeshNodeNumber()), 
-			//		cSensorSuperElement->GetOutputVariableType()))
-			//	{
-			//		PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() +
-			//			"', type = SensorType::Body: OutputVariableType '" + GetOutputVariableTypeString(item->GetCSensor()->GetOutputVariableType()) + "' is not available in object with object number " + EXUstd::ToString(n));
-			//	}
-			//	if (!EXUstd::IndexIsInRange(cSensorSuperElement->GetMeshNodeNumber(), 0, cObjectSuperElement->GetNumberOfMeshNodes()))
-			//	{
-			//		PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() +
-			//			"', meshNodeNumber '" + EXUstd::ToString(cSensorSuperElement->GetMeshNodeNumber()) + "' is out of valid range [0, " + EXUstd::ToString(cObjectSuperElement->GetNumberOfMeshNodes()-1) + "]");
-			//	}
-			//}
 		}
 		else if (item->GetCSensor()->GetType() == SensorType::KinematicTree)
 		{
@@ -511,18 +456,6 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 			{
 				PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type = SensorType::Marker, contains invalid marker number " + EXUstd::ToString(n));
 			}
-			////moved to checkPreAssembleConsistencies
-			//else
-			//{
-			//	const CMarker& cMarker = *mainSystem.GetMainSystemData().GetMainMarkers()[n]->GetCMarker();
-			//	if (!( (EXUstd::IsOfType(cMarker.GetType(), Marker::Position) && (item->GetCSensor()->GetOutputVariableType() == OutputVariableType::Position || item->GetCSensor()->GetOutputVariableType() == OutputVariableType::Velocity)) ||
-			//		(EXUstd::IsOfType(cMarker.GetType(), Marker::Orientation) && (item->GetCSensor()->GetOutputVariableType() == OutputVariableType::Rotation || item->GetCSensor()->GetOutputVariableType() == OutputVariableType::AngularVelocityLocal)) ||
-			//		(EXUstd::IsOfType(cMarker.GetType(), Marker::Coordinate) && (item->GetCSensor()->GetOutputVariableType() == OutputVariableType::Coordinates || item->GetCSensor()->GetOutputVariableType() == OutputVariableType::Coordinates_t)) ) )
-			//	{
-			//		PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() +
-			//			"', type = SensorType::Marker: OutputVariableType '" + GetOutputVariableTypeString(item->GetCSensor()->GetOutputVariableType()) + "' is not available in marker with marker number " + EXUstd::ToString(n));
-			//	}
-			//}
 		}
 		else if (item->GetCSensor()->GetType() == SensorType::Load)
 		{
@@ -707,6 +640,12 @@ void CSystem::AssembleLTGLists(const MainSystem& mainSystem)
 
 	ObjectContainer<ArrayIndex>& listODE2numDiff = cSystemData.GetLocalToGlobalODE2NumDiff();
 	listODE2numDiff.Flush();
+
+    //reset load dependencies :
+    cSystemData.GetLoadsODE2dependencies().Flush();
+    cSystemData.GetLoadsODE1dependencies().Flush();
+    cSystemData.GetLoadsAEdependencies().Flush();
+    cSystemData.LoadsDependenciesInitialized() = false;
 
 	//temporary lists per object:
 	ArrayIndex ltgListODE2;
@@ -1588,7 +1527,7 @@ void CSystem::ComputeSystemODE2RHS(TemporaryComputationDataArray& tempArray, Vec
 	}
 
 	//STARTGLOBALTIMER(TScomputeLoads);
-	ComputeODE2Loads(tempArray, systemODE2Rhs);
+	ComputeODE2LoadsRHS(tempArray, systemODE2Rhs);
 	//STOPGLOBALTIMER(TScomputeLoads);
 
 }
@@ -1624,7 +1563,7 @@ void CSystem::ComputeSystemODE2RHS(TemporaryComputationDataArray& tempArray, Vec
 //		STOPGLOBALTIMER(TScomputeGeneralContact);
 //	}
 //	//STARTGLOBALTIMER(TScomputeLoads);
-//	ComputeODE2Loads(temp, systemODE2Rhs);
+//	ComputeODE2LoadsRHS(temp, systemODE2Rhs);
 //	//STOPGLOBALTIMER(TScomputeLoads);
 //}
 
@@ -1680,7 +1619,7 @@ void CSystem::ComputeSystemODE1RHS(TemporaryComputationData& temp, Vector& syste
 
 
 //! compute system right-hand-side (RHS) of second order ordinary differential equations (ODE) to 'ode2rhs' for ODE2 part
-void CSystem::ComputeODE2Loads(TemporaryComputationDataArray& tempArray, Vector& systemODE2Rhs)
+void CSystem::ComputeODE2LoadsRHS(TemporaryComputationDataArray& tempArray, Vector& systemODE2Rhs)
 {
 	//++++++++++++++++++++++++++++++++++++++++++++++++++
 	//compute loads ==> not needed in jacobian, except for follower loads, 
@@ -1743,7 +1682,8 @@ void CSystem::ComputeODE2Loads(TemporaryComputationDataArray& tempArray, Vector&
 
 
 //! compute part of load for 'ode2rhs' or to sparsevector; if fillSparseVector, values are added to temp.sparseVector; otherwise, filled directly into systemODE2Rhs
-void CSystem::ComputeODE2SingleLoad(Index loadIndex, TemporaryComputationData& temp, Real currentTime, Vector& systemODE2Rhs, bool fillSparseVector)
+void CSystem::ComputeODE2SingleLoad(Index loadIndex, TemporaryComputationData& temp, Real currentTime, Vector& systemODE2Rhs, 
+    bool fillSparseVector, bool fillInLocally)
 {
 	Vector3D loadVector3D(0); //initialization in order to avoid gcc warnings
 	Vector1D loadVector1D(0); //scalar loads...//initialization in order to avoid gcc warnings
@@ -1771,38 +1711,46 @@ void CSystem::ComputeODE2SingleLoad(Index loadIndex, TemporaryComputationData& t
 	bool applyLoad = false;		//loads are not applied to ground objects/nodes
 
 	//loads only applied to Marker::Body or Marker::Node
-	if (marker->GetType() & Marker::Body) //code for body markers
-	{
-		Index markerBodyNumber = marker->GetObjectNumber();
-		if (!((Index)cSystemData.GetCObjectBody(markerBodyNumber).GetType() & (Index)CObjectType::Ground)) //no action on ground objects!
-		{
-			ltg = &cSystemData.GetLocalToGlobalODE2()[markerBodyNumber];
-			if (ltg->NumberOfItems() != 0) { applyLoad = true; } //only apply load, if object is not attached to ground node!
-		}
-	}
-	else if (marker->GetType() & Marker::Node) //code for body markers
-	{
-		Index markerNodeNumber = marker->GetNodeNumber();
-		if (!cSystemData.GetCNodes()[markerNodeNumber]->IsGroundNode()) //if node has zero coordinates ==> ground node; no action on ground nodes!
-		{
-			if (((marker->GetType() & Marker::Position) || (marker->GetType() & Marker::Coordinate)) && !(marker->GetType() & Marker::ODE1))
-			{
-				nodeCoordinate = cSystemData.GetCNodes()[markerNodeNumber]->GetGlobalODE2CoordinateIndex();
-				applyLoad = true;
-			}
-			else if (EXUstd::IsOfType((Index)marker->GetType(), Marker::Coordinate + Marker::ODE1))
-			{
-				applyLoad = false; //belongs to ODE1 coordinates, but valid load
-			}
-			else
-			{
-				CHECKandTHROWstring("ERROR: CSystem::ComputeODE2SingleLoad, marker type not implemented!");
-			}
-		}
-	}
-	else { pout << "ERROR: CSystem::ComputeODE2SingleLoad: marker must be Body or Node type\n"; }
+    if (!fillInLocally)
+    {
+        if (marker->GetType() & Marker::Body) //code for body markers
+        {
+            Index markerBodyNumber = marker->GetObjectNumber();
+            if (!((Index)cSystemData.GetCObjectBody(markerBodyNumber).GetType() & (Index)CObjectType::Ground)) //no action on ground objects!
+            {
+                ltg = &cSystemData.GetLocalToGlobalODE2()[markerBodyNumber];
+                if (ltg->NumberOfItems() != 0) { applyLoad = true; } //only apply load, if object is not attached to ground node!
+            }
+        }
+        else if (marker->GetType() & Marker::Node) //code for body markers
+        {
+            Index markerNodeNumber = marker->GetNodeNumber();
+            if (!cSystemData.GetCNodes()[markerNodeNumber]->IsGroundNode()) //if node has zero coordinates ==> ground node; no action on ground nodes!
+            {
+                if (((marker->GetType() & Marker::Position) || (marker->GetType() & Marker::Coordinate)) && !(marker->GetType() & Marker::ODE1))
+                {
+                    nodeCoordinate = cSystemData.GetCNodes()[markerNodeNumber]->GetGlobalODE2CoordinateIndex();
+                    applyLoad = true;
+                }
+                else if (EXUstd::IsOfType((Index)marker->GetType(), Marker::Coordinate + Marker::ODE1))
+                {
+                    applyLoad = false; //belongs to ODE1 coordinates, but valid load
+                }
+                else
+                {
+                    CHECKandTHROWstring("ERROR: CSystem::ComputeODE2SingleLoad, marker type not implemented!");
+                }
+            }
+        }
+        else { CHECKandTHROWstring("CSystem::ComputeODE2SingleLoad: marker must be Body or Node type\n"); }
+    }
+    else 
+    { 
+        applyLoad = true; 
+        //systemODE2Rhs.SetAll(0.); //values are filled into vector
+    } //LTG already checked before call
 
-	if (applyLoad)
+    if (applyLoad)
 	{
 		//AccessFunctionType aft = GetAccessFunctionType(loadType, marker->GetType());
 		//==> lateron: depending on AccessFunctionType compute jacobians, put into markerDataStructure as in connectors
@@ -1863,46 +1811,224 @@ void CSystem::ComputeODE2SingleLoad(Index loadIndex, TemporaryComputationData& t
 		//ResizableArray<CObject*>& objectList = cSystemData.GetCObjects();
 		//pout << "genLoad=" << temp.generalizedLoad << "\n";
 
-		if (fillSparseVector)
-		{
-			if (ltg != nullptr) //must be object
-			{
-				for (Index k = 0; k < temp.generalizedLoad.NumberOfItems(); k++)
-				{
-					temp.sparseVector.AddIndexAndValue((*ltg)[k], loadFactor * temp.generalizedLoad[k]);
-					//systemODE2Rhs[(*ltg)[k]] += loadFactor * temp.generalizedLoad[k];
-				}
-			}
-			else //must be node
-			{
-				for (Index k = 0; k < temp.generalizedLoad.NumberOfItems(); k++)
-				{
-					temp.sparseVector.AddIndexAndValue(nodeCoordinate + k, loadFactor * temp.generalizedLoad[k]);
-					//systemODE2Rhs[nodeCoordinate + k] += loadFactor * temp.generalizedLoad[k];
-				}
-			}
-		}
-		else
-		{
-			if (ltg != nullptr) //must be object
-			{
-				for (Index k = 0; k < temp.generalizedLoad.NumberOfItems(); k++)
-				{
-					systemODE2Rhs[(*ltg)[k]] += loadFactor * temp.generalizedLoad[k];
-				}
-			}
-			else //must be node
-			{
-				for (Index k = 0; k < temp.generalizedLoad.NumberOfItems(); k++)
-				{
-					systemODE2Rhs[nodeCoordinate + k] += loadFactor * temp.generalizedLoad[k];
-				}
-			}
-		}
+        if (!fillInLocally)
+        {
+            if (fillSparseVector)
+            {
+                if (ltg != nullptr) //must be object
+                {
+                    for (Index k = 0; k < temp.generalizedLoad.NumberOfItems(); k++)
+                    {
+                        temp.sparseVector.AddIndexAndValue((*ltg)[k], loadFactor * temp.generalizedLoad[k]);
+                        //systemODE2Rhs[(*ltg)[k]] += loadFactor * temp.generalizedLoad[k];
+                    }
+                }
+                else //must be node
+                {
+                    for (Index k = 0; k < temp.generalizedLoad.NumberOfItems(); k++)
+                    {
+                        temp.sparseVector.AddIndexAndValue(nodeCoordinate + k, loadFactor * temp.generalizedLoad[k]);
+                        //systemODE2Rhs[nodeCoordinate + k] += loadFactor * temp.generalizedLoad[k];
+                    }
+                }
+            }
+            else
+            {
+                if (ltg != nullptr) //must be object
+                {
+                    for (Index k = 0; k < temp.generalizedLoad.NumberOfItems(); k++)
+                    {
+                        systemODE2Rhs[(*ltg)[k]] += loadFactor * temp.generalizedLoad[k];
+                    }
+                }
+                else //must be node
+                {
+                    for (Index k = 0; k < temp.generalizedLoad.NumberOfItems(); k++)
+                    {
+                        systemODE2Rhs[nodeCoordinate + k] += loadFactor * temp.generalizedLoad[k];
+                    }
+                }
+            }
+        }
+        else //local computation, for jacobian
+        {
+            Index nLoadCoordinates = temp.generalizedLoad.NumberOfItems();
+            CHECKandTHROW(systemODE2Rhs.NumberOfItems() == nLoadCoordinates, "ComputeODE2SingleLoad: Load jacobian: inconsistent size of generalized load vector and LTG");
+            for (Index k = 0; k < nLoadCoordinates; k++)
+            {
+                systemODE2Rhs[k] = loadFactor * temp.generalizedLoad[k];
+            }
+        }
 	}
 
 }
 
+
+//! compute LTG for ODE2 loads; separate between ltg for equations (action) and dependent coordinates
+void CSystem::ComputeODE2SingleLoadLTG(Index loadIndex, ArrayIndex& ltgODE2equations, ArrayIndex& ltgODE2coords, ArrayIndex& ltgODE1coords)
+{
+    ltgODE2coords.SetNumberOfItems0();
+    ltgODE1coords.SetNumberOfItems0();
+
+    CLoad* cLoad = cSystemData.GetCLoads()[(Index)loadIndex];
+    Index markerNumber = cLoad->GetMarkerNumber();
+    CMarker* marker = cSystemData.GetCMarkers()[markerNumber];
+    LoadType loadType = cLoad->GetType();
+
+    //loads only applied to Marker::Body or Marker::Node
+    if (marker->GetType() & Marker::Body) //code for body markers
+    {
+        Index markerBodyNumber = marker->GetObjectNumber();
+        if (!((Index)cSystemData.GetCObjectBody(markerBodyNumber).GetType() & (Index)CObjectType::Ground)) //no action on ground objects!
+        {
+            ltgODE2coords = cSystemData.GetLocalToGlobalODE2()[markerBodyNumber];
+        }
+    }
+    else if (marker->GetType() & Marker::Node) //code for body markers
+    {
+        Index markerNodeNumber = marker->GetNodeNumber();
+        if (!cSystemData.GetCNodes()[markerNodeNumber]->IsGroundNode()) //if node has zero coordinates ==> ground node; no action on ground nodes!
+        {
+            if (((marker->GetType() & Marker::Position) || (marker->GetType() & Marker::Coordinate)) && !(marker->GetType() & Marker::ODE1))
+            {
+                Index nodeCoordinate = cSystemData.GetCNodes()[markerNodeNumber]->GetGlobalODE2CoordinateIndex();
+                for (Index i = 0; i < cSystemData.GetCNodes()[markerNodeNumber]->GetNumberOfODE2Coordinates(); i++)
+                {
+                    ltgODE2coords.Append(nodeCoordinate++);
+                }
+            }
+            else if (EXUstd::IsOfType((Index)marker->GetType(), Marker::Coordinate + Marker::ODE1))
+            {
+                Index nodeCoordinate = cSystemData.GetCNodes()[markerNodeNumber]->GetGlobalODE1CoordinateIndex();
+                for (Index i = 0; i < cSystemData.GetCNodes()[markerNodeNumber]->GetNumberOfODE1Coordinates(); i++)
+                {
+                    ltgODE1coords.Append(nodeCoordinate++);
+                }
+            }
+            else
+            {
+                CHECKandTHROWstring("ERROR: CSystem::ComputeODE2SingleLoadLTG, marker type not implemented!");
+            }
+        }
+    }
+    else { pout << "ERROR: CSystem::ComputeODE2SingleLoadLTG: marker must be Body or Node type\n"; }
+
+    ltgODE2equations = ltgODE2coords;
+
+    if (cSystemData.GetLoadsODE2dependencies().NumberOfItems())
+    {
+        CHECKandTHROW(cSystemData.GetLoadsODE2dependencies().NumberOfItems() == cSystemData.GetCLoads().NumberOfItems(),
+            "CSystem::ComputeODE2SingleLoadLTG: inconsistent load dependencies");
+        ArrayIndex& dependencies = cSystemData.GetLoadsODE2dependencies()[loadIndex];
+        //CHECKandTHROW(dependencies.NumberOfItems() == 0,
+        //    "CSystem::ComputeODE2SingleLoadLTG: load dependencies not implemented");
+
+        for (Index item : dependencies)
+        {
+            ltgODE2coords.AppendIfItemNotFound(item); //this search takes n*n operations, but n should be very small
+        }
+    }
+    if (cSystemData.GetLoadsODE1dependencies().NumberOfItems())
+    {
+        CHECKandTHROW(cSystemData.GetLoadsODE1dependencies().NumberOfItems() == cSystemData.GetCLoads().NumberOfItems(),
+            "CSystem::ComputeODE2SingleLoadLTG: inconsistent load dependencies");
+        ArrayIndex& dependencies = cSystemData.GetLoadsODE1dependencies()[loadIndex];
+        //CHECKandTHROW(dependencies.NumberOfItems() == 0,
+        //    "CSystem::ComputeODE2SingleLoadLTG: load dependencies not implemented");
+
+        for (Index item : dependencies)
+        {
+            ltgODE1coords.AppendIfItemNotFound(item); //this search takes n*n operations, but n should be very small
+        }
+    }
+}
+
+//! precompute load dependency lists needed for jacobians of loads
+void CSystem::JacobianODE2Loads(TemporaryComputationDataArray& tempArray, const NumericalDifferentiationSettings& numDiff,
+    GeneralMatrix& jacobianGM, Real factorODE2, Real factorODE2_t, Real factorODE1)
+{
+
+    //compute dependencies not needed, as ltgs can be easily retrieved on the fly
+
+    //ComputeODE2LoadsJacobian:
+    //  check jacobian computation template first => what information do we need (LTG, etc.)?
+    //  ComputeSingleLoadMarkerLTG(ltg) => fill in ltg, also for node markers
+    //  add flag for ComputeSingleLoad: noLTG=true/false: will fill into local vector
+    TemporaryComputationData& temp = tempArray[0]; //always exists
+    //temp.jacobianODE2Container.ClearAllMatrices();
+
+    ResizableVector& f0 = temp.numericalJacobianf0;
+    ResizableVector& f1 = temp.numericalJacobianf1;
+    ResizableMatrix& localJacobian = temp.localJacobian;
+    Real currentTime = cSystemData.GetCData().currentState.time;
+
+    ArrayIndex& ltgODE2eq     = temp.tempIndex;
+    ArrayIndex& ltgODE2coords = temp.tempIndex2;
+    ArrayIndex& ltgODE1coords = temp.tempIndex3;
+    //ArrayIndex ltgODE2eq; //causes new => put into tempArray
+    //ArrayIndex ltgODE1coords; //causes new => put into tempArray
+    //ArrayIndex ltgODE2coords; //causes new => put into tempArray
+
+    //Index nODE2 = cSystemData.GetNumberOfCoordinatesODE2();
+    //Index nODE1 = cSystemData.GetNumberOfCoordinatesODE1();
+    Vector& xODE1 = cSystemData.GetCData().currentState.ODE1Coords;			//current coordinates ==> this is what is differentiated for
+    Vector& xODE2 = cSystemData.GetCData().currentState.ODE2Coords;			//current coordinates ==> this is what is differentiated for
+    Vector& xRefODE1 = cSystemData.GetCData().referenceState.ODE1Coords;	//reference coordinates; might be important for numerical differentiation
+    Vector& xRefODE2 = cSystemData.GetCData().referenceState.ODE2Coords;	//reference coordinates; might be important for numerical differentiation
+    Vector& xODE2_t = cSystemData.GetCData().currentState.ODE2Coords_t;		//for diff w.r.t. velocities
+
+    const bool fillSparseVector = false;
+    const bool fillInLocally = true;
+    bool addODE2_t = (factorODE2_t != 0.);
+
+    Index nLoads = cSystemData.GetCLoads().NumberOfItems();
+    for (Index j = 0; j < nLoads; j++)
+    {
+        ComputeODE2SingleLoadLTG(j, ltgODE2eq, ltgODE2coords, ltgODE1coords);
+        Index nLocalODE2eq = ltgODE2eq.NumberOfItems();
+        Index nLocalODE2coords = ltgODE2coords.NumberOfItems();
+        Index nLocalODE1coords = ltgODE1coords.NumberOfItems();
+
+        if (nLocalODE2eq != 0)
+        {
+            //pout << "load" << j << "jac LTGeq=" << ltgODE2eq << ", LTGco=" <<  ltgODE2coords << "\n";
+
+            f0.SetNumberOfItems(nLocalODE2eq);
+            f1.SetNumberOfItems(nLocalODE2eq);
+
+            ComputeODE2SingleLoad(j, temp, currentTime, f0, fillSparseVector, fillInLocally);
+            localJacobian.SetNumberOfRowsAndColumns(nLocalODE2eq, nLocalODE2coords); //needs not to be initialized, because the matrix is fully computed and then added to jacobianGM
+
+            AddNumDiffObject(numDiff, -factorODE2, xODE2, xRefODE2, localJacobian, f0, f1, ltgODE2coords, //- in factorODE2 is questionable ...
+                [this, &temp, &currentTime, &f1, &j, &fillSparseVector, &fillInLocally]
+            {
+                ComputeODE2SingleLoad(j, temp, currentTime, f1, fillSparseVector, fillInLocally);
+                //ComputeObjectODE1RHS(temp, object, f1, j);
+            }, true); //set values
+            //pout << "add jac=" << localJacobian << "\n";
+
+            if (addODE2_t)
+            {
+                AddNumDiffObject(numDiff, -factorODE2_t, xODE2_t, Vector(), localJacobian, f0, f1, ltgODE2coords,
+                    [this, &temp, &currentTime, &f1, &j, &fillSparseVector, &fillInLocally]
+                {
+                    ComputeODE2SingleLoad(j, temp, currentTime, f1, fillSparseVector, fillInLocally);
+                    //ComputeObjectODE1RHS(temp, object, f1, j);
+                }, false); //add values
+
+            }
+            //pout << "jac LTG=" << ltgODE2 << "\n";
+            //pout << "   jac =" << localJacobian << "\n";
+            jacobianGM.AddSubmatrix(localJacobian, 1., ltgODE2eq, ltgODE2coords, 0, 0);
+        }
+        if (ltgODE1coords.NumberOfItems() != 0)
+        {
+            CHECKandTHROWstring("JacobianODE2Loads: dependency on ODE1 coordinates not implemented; set computeLoadsJacobian=False in solver settings");
+        }
+
+
+    }
+}
 
 
 //! compute system right-hand-side (RHS) of first order ordinary differential equations (ODE) to 'ode1rhs' for ODE1 part
@@ -2272,7 +2398,7 @@ void CSystem::PostDiscontinuousIterationStep()
 //! multiply (before added to jacobianGM) ODE2 with factorODE2 and ODE2_t with factorODE2_t
 //! the jacobian is ADDed to jacobianGM, which needs to have according size; set entries to zero beforehand in order to obtain only the jacobian
 void CSystem::JacobianODE2RHS(TemporaryComputationDataArray& tempArray, const NumericalDifferentiationSettings& numDiff,
-	GeneralMatrix& jacobianGM, Real factorODE2, Real factorODE2_t, Real factorODE1)
+	GeneralMatrix& jacobianGM, Real factorODE2, Real factorODE2_t, Real factorODE1, Index computeLoadsJacobian)
 {
 	TemporaryComputationData& temp = tempArray[0]; //always exists
 	temp.jacobianODE2Container.ClearAllMatrices();
@@ -2476,7 +2602,7 @@ void CSystem::JacobianODE2RHS(TemporaryComputationDataArray& tempArray, const Nu
 		f0.SetNumberOfItems(nODE2);
 		f1.SetNumberOfItems(nODE2);
 		ComputeSystemODE2RHS(tempArray, f0); //compute nominal value for jacobian; same for Lie group and other nodes
-		//Real xRefVal = 0;
+        //Real xRefVal = 0;
 
 		if (diffODE2)
 		{
@@ -2493,7 +2619,7 @@ void CSystem::JacobianODE2RHS(TemporaryComputationDataArray& tempArray, const Nu
 					[this, &tempArray, &f1]
 				{
 					ComputeSystemODE2RHS(tempArray, f1);
-				});
+                });
             }
 		}
 
@@ -2517,14 +2643,24 @@ void CSystem::JacobianODE2RHS(TemporaryComputationDataArray& tempArray, const Nu
 	//pout << "ODE2jac=" << jacobian << "\n";
 	//cSystemData.isODE2RHSjacobianComputation = false; //hack! only for debugging
 
-	//this part is anyway done in parallel:
-	for (GeneralContact* gc : generalContacts) //usually only 1
-	{
-		STARTGLOBALTIMER(TScomputeGeneralContact);
-		gc->JacobianODE2LHS(*this, tempArray, numDiff, jacobianGM, -factorODE2, -factorODE2_t); //negative sign, because contact computes LHS jacobian!
-		STOPGLOBALTIMER(TScomputeGeneralContact);
-	}
+    if (!numDiff.doSystemWideDifferentiation) //otherwise these parts would appear twice!
+    {
+        if (computeLoadsJacobian) //in case of doSystemWideDifferentiation it is done already above
+        {
+            Real loadsFactorODE2_t = (computeLoadsJacobian > 1) ? factorODE2_t : 0.;
 
+            JacobianODE2Loads(tempArray, numDiff, jacobianGM, factorODE2, loadsFactorODE2_t, factorODE1);
+        }
+
+
+        //this part is anyway done in parallel:
+        for (GeneralContact* gc : generalContacts) //usually only 1
+        {
+            STARTGLOBALTIMER(TScomputeGeneralContact);
+            gc->JacobianODE2LHS(*this, tempArray, numDiff, jacobianGM, -factorODE2, -factorODE2_t); //negative sign, because contact computes LHS jacobian!
+            STOPGLOBALTIMER(TScomputeGeneralContact);
+        }
+    }
 
 }
 

@@ -19,15 +19,91 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.6.80.dev1, 
-+  last change =  2023-04-28, 
-+  Number of issues = 1540, 
-+  Number of resolved issues = 1360 (80 in current version), 
++  Exudyn version = 1.6.103.dev1, 
++  last change =  2023-05-10, 
++  Number of issues = 1564, 
++  Number of resolved issues = 1383 (103 in current version), 
 
 ***********
 Version 1.6
 ***********
 
+ * Version 1.6.103: resolved Issue 1561: stub files .pyi (extension)
+    - description:  add .pyi files to setup_tools, copying them from autogenerate folder; use try catch to avoid problems at other platforms
+    - date resolved: **2023-05-10 23:30**\ , date raised: 2023-05-09 
+ * Version 1.6.102: resolved Issue 1560: stub files .pyi (extension)
+    - description:  automatically create stub file for C++ classes such as MainSystem, SystemContainer, GeneralContact, ... by adding return type information and creating .pyi file; use temporary .pyi files in autogenerate folder
+    - date resolved: **2023-05-10 23:19**\ , date raised: 2023-05-09 
+ * Version 1.6.101: resolved Issue 1562: stub files .pyi (extension)
+    - description:  add .pyi files for enums from autoGeneratePyBindings
+    - date resolved: **2023-05-10 20:43**\ , date raised: 2023-05-09 
+ * Version 1.6.100: resolved Issue 1559: stub files .pyi (extension)
+    - description:  automatically create stub file for settings to alleviate auto-completion
+    - date resolved: **2023-05-10 08:39**\ , date raised: 2023-05-09 
+ * Version 1.6.99: resolved Issue 1557: stub files (check)
+    - description:  test creating stub files .pyi which are needed for MainSystem Python extensions
+    - **notes:** tested with Spyder 5.1.5 and Visual Studio Code 1.78
+    - date resolved: **2023-05-10 08:39**\ , date raised: 2023-05-07 
+ * Version 1.6.98: resolved Issue 1558: enum in global scope (fix)
+    - description:  pybind11 translates enums to global module scope, e.g. exudyn.ItemType.Marker is also available as exudyn.Marker; remove export_values() in pybind interface
+    - **notes:** if you by occasion used e.g. exu.DisplacementLocal instead of exu.OutputVariableType.DisplacementLocal you need to adapt your code!
+    - date resolved: **2023-05-09 18:30**\ , date raised: 2023-05-09 
+ * Version 1.6.97: resolved Issue 1556: IsValidPRealPInt, IsValidURealPInt (extension)
+    - description:  add functions to advancedUtilities for additional checks in Python functions
+    - date resolved: **2023-05-07 20:33**\ , date raised: 2023-05-07 
+ * Version 1.6.96: resolved Issue 1555: color4default (extension)
+    - description:  add default color to graphicsDataUtilities as a default value for items
+    - date resolved: **2023-05-07 18:12**\ , date raised: 2023-05-07 
+ * Version 1.6.95: resolved Issue 1554: NodePoint2D (change)
+    - description:  draw as sphere by default to improve visibility
+    - date resolved: **2023-05-07 16:31**\ , date raised: 2023-05-07 
+ * Version 1.6.94: resolved Issue 1539: item names (change)
+    - description:  remove stored string and replace by empty string in case of default item name
+    - **notes:** not changed: std::string has practically no effect on memory footprint of items; check memory footprint separately (LTG lists, etc.)!
+    - date resolved: **2023-05-05 23:32**\ , date raised: 2023-04-28 
+ * Version 1.6.93: resolved Issue 1553: AccelerationLocal, AngularAccelerationLocal (fix)
+    - description:  add missing values to Pybind interface
+    - date resolved: **2023-05-02 17:41**\ , date raised: 2023-05-02 
+ * Version 1.6.92: resolved Issue 1552: HydraulicActuator (extension)
+    - description:  add VelocityLocal as output variable, which provides the time derivative of the distance, being the actuator velocity; updated docu and fixed description for outputvariable Velocity
+    - date resolved: **2023-05-02 16:51**\ , date raised: 2023-05-02 
+ * Version 1.6.91: resolved Issue 1551: GeometricallyExactBeam (change)
+    - description:  evaluate rotation at midspan of beam
+    - date resolved: **2023-05-02 15:02**\ , date raised: 2023-05-02 
+ * Version 1.6.90: resolved Issue 1502: ANCFBeam (testing)
+    - description:  check for very large deformations
+    - **notes:** poor performance for large deformations caused by missing load jacobian
+    - date resolved: **2023-05-01 19:26**\ , date raised: 2023-04-08 
+ * Version 1.6.89: resolved Issue 1501: GeometricallyExactBeam (testing)
+    - description:  check for very large deformations
+    - **notes:** poor performance for large deformations caused by missing load jacobian
+    - date resolved: **2023-05-01 19:26**\ , date raised: 2023-04-08 
+ * Version 1.6.88: resolved Issue 1546: computeLoadsJacobian (change)
+    - description:  add flag in timeIntegration and staticSolver settings to turn on/off jacobian of loads; will be by default turned on in static solver, turned off in time integration; adapt your models
+    - date resolved: **2023-05-01 19:22**\ , date raised: 2023-05-01 
+ * Version 1.6.87: resolved Issue 1545: ComputeSingleLoads (extension)
+    - description:  adapt for Jacobian computation of loads
+    - date resolved: **2023-05-01 19:22**\ , date raised: 2023-05-01 
+ * Version 1.6.86: resolved Issue 1547: GetMarkerOutput (fix)
+    - description:  in case of OuputVariableType.Coordinates, add check if Marker is of type Coordinate or Coordinates
+    - date resolved: **2023-05-01 16:17**\ , date raised: 2023-05-01 
+ * Version 1.6.85: resolved Issue 1544: systemData.GetNodeLocalToGlobal (extension)
+    - description:  add systemData access functions for LTG mappings of nodes, useful to check node coordinates; works for ODE2, ODE1, AE and Data coordinates; useful to create load dependencies
+    - date resolved: **2023-04-29 22:03**\ , date raised: 2023-04-29 
+ * Version 1.6.84: resolved Issue 1543: systemData (extension)
+    - description:  add InfoLTG function which outputs LTG lists and load dependencies
+    - date resolved: **2023-04-29 22:03**\ , date raised: 2023-04-29 
+ * Version 1.6.83: resolved Issue 0483: URDF file (extension)
+    - description:  check importing an URDF file for robots, urdf_parser_py
+    - **notes:** not done: should be done instead by Corke robotics-toolbox
+    - date resolved: **2023-04-29 20:20**\ , date raised: 2020-12-04 
+ * Version 1.6.82: resolved Issue 1542: HydraulicsActuator (change)
+    - description:  changing referenceVolume0 and referenceVolume1 to hoseVolume0 and hoseVolume1 with different meaning according to referenced paper; adjust your models!
+    - **notes:** thanks to Qasim Khadim for provigind the model
+    - date resolved: **2023-04-29 01:11**\ , date raised: 2023-04-29 
+ * Version 1.6.81: resolved Issue 1541: HydraulicsActuator (extension)
+    - description:  extend model of effective bulk modulus acc. to paper https://doi.org/10.1007/s11044-019-09696-y
+    - date resolved: **2023-04-29 01:10**\ , date raised: 2023-04-28 
  * Version 1.6.80: resolved Issue 1538: taskmanager (fix)
     - description:  fix problem with taskmanager shutdown due to issue 1532
     - date resolved: **2023-04-27 15:35**\ , date raised: 2023-04-27 
@@ -4412,8 +4488,24 @@ Version 0.1
 Open issues
 ***********
 
- * **open issue 1539:** item names          
-    - description:  remove stored string and replace by empty string in case of default item name
+ * **open issue 1563:** MainSystem Python extensions
+    - description:  add Python utility functions for mbs, such as PlotSensor, SolveDynamic, ...; use identical interfaces to alleviate creation of .pyi files and documentation; add new flag mbsFunction as hint to put docu to MainSystem and make .pyi extension
+    - date raised: 2023-05-09 
+
+ * **open issue 1550:** GeometricallyExactBeam
+    - description:  add F_Lie\*Glocal_q term for Jacobian to improve convergence
+    - date raised: 2023-05-02 
+
+ * **open issue 1549:** KinematicTree       
+    - description:  consider extension w.r.t. rigid body node at basis (Lie group node in explicit integration...); add baseNode (default=invalid), inertia could be added via a separate rigid body?
+    - date raised: 2023-05-02 
+
+ * **open issue 1548:** ODE1 loads          
+    - description:  fully add Jacobian functionality for ODE1 loads and add test for ODE1 loads or recycle one
+    - date raised: 2023-05-01 
+
+ * **open issue 1540:** mutable args itemInterface
+    - description:  copy lists in itemInterfacein order to avoid change of default args by user n=NodePoint();n.referenceCoordinates[0]=42;n1=NodePoint()
     - date raised: 2023-04-28 
 
  * **open issue 1536:** mutable arguments   
@@ -4434,14 +4526,6 @@ Open issues
 
  * :textorange:`open issue 1504:` Reference/link      
     - description:  extend mbs and systemData functions for reference, e.g., GetODE2Coordinates; use different function with "Link" extension, e.g., GetODE2CoordinatesLink
-    - date raised: 2023-04-08 
-
- * :textorange:`open issue 1502:` ANCFBeam            
-    - description:  check for very large deformations
-    - date raised: 2023-04-08 
-
- * :textorange:`open issue 1501:` GeometricallyExactBeam
-    - description:  check for very large deformations
     - date raised: 2023-04-08 
 
  * :textorange:`open issue 1500:` ANCFBeam            
@@ -4553,7 +4637,7 @@ Open issues
     - date raised: 2022-09-21 
 
  * **open issue 1266:** matrix inverse      
-    - description:  add full pivoting mode for matrix inverse, to resolve redundant constraints
+    - description:  add full pivoting mode for matrix inverse, to resolve redundant constraints; consider Eigen FullPivotLU for dense matrices - see classEigen_1_1FullPivLU.html
     - date raised: 2022-09-21 
 
  * **open issue 1247:** UserFunctions       
@@ -4967,10 +5051,6 @@ Open issues
  * **open issue 0496:** controller          
     - description:  add possibility to differentiate loads w.r.t. sensor?/object/node (use additional sensor numbers which provide dependencies); add optional dependence on sensors; integrateors using ODE1 or discrete implementation
     - date raised: 2020-12-09 
-
- * **open issue 0483:** URDF file           
-    - description:  check importing an URDF file for robots, urdf_parser_py
-    - date raised: 2020-12-04 
 
  * **open issue 0452:** AVX objects         
     - description:  test AVX objects

@@ -290,8 +290,12 @@ void VisualizationNodePoint2D::UpdateGraphics(const VisualizationSettings& visua
 		cNode->GetOutputVariable(visualizationSettings.contour.outputVariable, ConfigurationType::Visualization, value);
 		EXUvis::ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, currentColor);
 	}
-	if (visualizationSettings.nodes.drawNodesAsPoint) { vSystem->graphicsData.AddSphere(pos, currentColor, itemID); }
-	else { vSystem->graphicsData.AddCircleXY(pos, radius, currentColor, 2 * visualizationSettings.nodes.tiling, itemID); }
+	//if (visualizationSettings.nodes.drawNodesAsPoint) { vSystem->graphicsData.AddSphere(pos, currentColor, itemID); }
+	//else { vSystem->graphicsData.AddCircleXY(pos, radius, currentColor, 2 * visualizationSettings.nodes.tiling, itemID); }
+    Index tiling = visualizationSettings.openGL.showFaces ? visualizationSettings.nodes.tiling : 2 * visualizationSettings.nodes.tiling;
+    if (visualizationSettings.nodes.drawNodesAsPoint) { tiling = 0; } //draw as point
+    EXUvis::DrawNode(pos, radius, currentColor, vSystem->graphicsData, itemID, visualizationSettings.openGL.showFaces, tiling);
+
 
 	if (visualizationSettings.nodes.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemID, "N", visualizationSettings.nodes.defaultColor); }
 }

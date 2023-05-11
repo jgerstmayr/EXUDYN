@@ -39,10 +39,10 @@ Data structure for definition of 2D and 3D beam (cross) section geometrical prop
   \begin{longtable}{| p{4.2cm} | p{2.5cm} | p{0.3cm} | p{3.0cm} | p{6cm} |}
     \hline
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
-    crossSectionRadiusY &     UReal &      &     0. &     $c_Y\,$ [SI:m] $Y$ radius for circular cross section\\ \hline
-    crossSectionRadiusZ &     UReal &      &     0. &     $c_Z\,$ [SI:m] $Z$ radius for circular cross section\\ \hline
+    crossSectionRadiusY &     UReal &      &     0. &     $c\_Y\,$ [SI:m] $Y$ radius for circular cross section\\ \hline
+    crossSectionRadiusZ &     UReal &      &     0. &     $c\_Z\,$ [SI:m] $Z$ radius for circular cross section\\ \hline
     crossSectionType &     CrossSectionType &      &     CrossSectionType::Polygon &     \tabnewline Type of cross section: Polygon, Circular, etc.\\ \hline
-    polygonalPoints &     Vector2DList &      &      &     $\pv_{pg}\,$ [SI: (m,m) ] list of polygonal ($Y,Z$) points in local beam cross section coordinates, defined in positive rotation direction\\ \hline
+    polygonalPoints &     Vector2DList &      &      &     $\pv\_{pg}\,$ [SI: (m,m) ] list of polygonal ($Y,Z$) points in local beam cross section coordinates, defined in positive rotation direction\\ \hline
 	  \end{longtable}
 	\end{center}
 
@@ -108,14 +108,14 @@ Settings for numerical differentiation of a function (needed for computation of 
   \begin{longtable}{| p{4.2cm} | p{2.5cm} | p{0.3cm} | p{3.0cm} | p{6cm} |}
     \hline
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
-    addReferenceCoordinatesToEpsilon &     \tabnewline bool &      &     False &     True: for the size estimation of the differentiation parameter, the reference coordinate $q^{Ref}_i$ is added to \hac{ODE2} coordinates --> see; False: only the current coordinate is used for size estimation of the differentiation parameter\\ \hline
+    addReferenceCoordinatesToEpsilon &     \tabnewline bool &      &     False &     True: for the size estimation of the differentiation parameter, the reference coordinate $q^{Ref}\_i$ is added to \hac{ODE2} coordinates --> see; False: only the current coordinate is used for size estimation of the differentiation parameter\\ \hline
     doSystemWideDifferentiation &     bool &      &     False &     True: system wide differentiation (e.g. all \hac{ODE2} equations w.r.t. all \hac{ODE2} coordinates); False: only local (object) differentiation\\ \hline
     forAE &     bool &      &     False &     flag (true/false); false = perform direct computation of jacobian for algebraic equations (AE), true = use numerical differentiation; as there must always exist an analytical implemented jacobian for AE, 'true' should only be used for verification\\ \hline
     forODE2 &     bool &      &     False &     flag (true/false); false = perform direct computation (e.g., using autodiff) of jacobian for ODE2 equations, true = use numerical differentiation; numerical differentiation is less efficient and may lead to numerical problems, but may smoothen problems of analytical derivatives; sometimes the analytical derivative may neglect terms\\ \hline
     forODE2connectors &     bool &      &     False &     flag (true/false); false: if also forODE2==false, perform direct computation of jacobian for ODE2 terms for connectors; else: use numerical differentiation; NOTE: THIS FLAG IS FOR DEVELOPMENT AND WILL BE ERASED IN FUTURE\\ \hline
     jacobianConnectorDerivative &     bool &      &     True &     True: for analytic Jacobians of connectors, the Jacobian derivative is computed, causing additional CPU costs and not beeing available for all connectors or markers (thus switching to numerical differentiation); False: Jacobian derivative is neglected in analytic Jacobians (but included in numerical Jacobians), which often has only minor influence on convergence\\ \hline
     minimumCoordinateSize &     UReal &      &     1e-2 &     minimum size of coordinates in relative differentiation parameter\\ \hline
-    relativeEpsilon &     UReal &      &     1e-7 &     relative differentiation parameter epsilon; the numerical differentiation parameter $\varepsilon$ follows from the formula ($\varepsilon = \varepsilon_\mathrm{relative}*max(q_{min}, |q_i + [q^{Ref}_i]|)$, with $\varepsilon_\mathrm{relative}$=relativeEpsilon, $q_{min} = $minimumCoordinateSize, $q_i$ is the current coordinate which is differentiated, and $qRef_i$ is the reference coordinate of the current coordinate\\ \hline
+    relativeEpsilon &     UReal &      &     1e-7 &     relative differentiation parameter epsilon; the numerical differentiation parameter $\varepsilon$ follows from the formula ($\varepsilon = \varepsilon\_\mathrm{relative}*max(q\_{min}, |q\_i + [q^{Ref}\_i]|)$, with $\varepsilon\_\mathrm{relative}$=relativeEpsilon, $q\_{min} = $minimumCoordinateSize, $q\_i$ is the current coordinate which is differentiated, and $qRef\_i$ is the reference coordinate of the current coordinate\\ \hline
 	  \end{longtable}
 	\end{center}
 
@@ -156,7 +156,7 @@ Settings for Newton method used in static or dynamic simulation.
     numericalDifferentiation &     NumericalDifferentiationSettings &      &      &     numerical differentiation parameters for numerical jacobian (e.g. Newton in static solver or implicit time integration)\\ \hline
     absoluteTolerance &     UReal &      &     1e-10 &     absolute tolerance of residual for Newton (needed e.g. if residual is fulfilled right at beginning); condition: sqrt(q*q)/numberOfCoordinates <= absoluteTolerance\\ \hline
     adaptInitialResidual &     bool &      &     True &     flag (true/false); false = standard; True: if initialResidual is very small (or zero), it may increase significantely in the first Newton iteration; to achieve relativeTolerance, the initialResidual will by updated by a higher residual within the first Newton iteration\\ \hline
-    maximumSolutionNorm &     UReal &      &     1e38 &     this is the maximum allowed value for solutionU.L2NormSquared() which is the square of the square norm (i.e., value=$u_1^2$+$u_2^2$+...), and solutionV/A...; if the norm of solution vectors is larger, Newton method is stopped; the default value is chosen such that it would still work for single precision numbers (float)\\ \hline
+    maximumSolutionNorm &     UReal &      &     1e38 &     this is the maximum allowed value for solutionU.L2NormSquared() which is the square of the square norm (i.e., value=$u\_1^2$+$u\_2^2$+...), and solutionV/A...; if the norm of solution vectors is larger, Newton method is stopped; the default value is chosen such that it would still work for single precision numbers (float)\\ \hline
     maxIterations &     UInt &      &     25 &     maximum number of iterations (including modified + restart Newton iterations); after that total number of iterations, the static/dynamic solver refines the step size or stops with an error\\ \hline
     maxModifiedNewtonIterations &     UInt &      &     8 &     maximum number of iterations for modified Newton (without Jacobian update); after that number of iterations, the modified Newton method gets a jacobian update and is further iterated\\ \hline
     maxModifiedNewtonRestartIterations &     \tabnewline UInt &      &     7 &     maximum number of iterations for modified Newton after a Jacobian update; after that number of iterations, the full Newton method is started for this step\\ \hline
@@ -235,26 +235,27 @@ General parameters used in time integration; specific parameters are provided in
     explicitIntegration &     ExplicitIntegrationSettings &      &      &     special parameters for explicit time integration\\ \hline
     generalizedAlpha &     GeneralizedAlphaSettings &      &      &     parameters for generalized-alpha, implicit trapezoidal rule or Newmark (options only apply for these methods)\\ \hline
     newton &     NewtonSettings &      &      &     parameters for Newton method; used for implicit time integration methods only\\ \hline
-    absoluteTolerance &     UReal &      &     1e-8 &     $a_{tol}$: if automaticStepSize=True, absolute tolerance for the error control; must fulfill $a_{tol} > 0$; see \refSection{sec:ExplicitSolver}\\ \hline
+    absoluteTolerance &     UReal &      &     1e-8 &     $a\_{tol}$: if automaticStepSize=True, absolute tolerance for the error control; must fulfill $a\_{tol} > 0$; see \refSection{sec:ExplicitSolver}\\ \hline
     adaptiveStep &     bool &      &     True &     True: the step size may be reduced if step fails; no automatic stepsize control\\ \hline
     adaptiveStepDecrease &     UReal &      &     0.5 &     Multiplicative factor (MUST BE: 0 < factor < 1) for step size to decrese due to discontinuousIteration or Newton errors\\ \hline
     adaptiveStepIncrease &     UReal &      &     2 &     Multiplicative factor (MUST BE > 1) for step size to increase after previous step reduction due to discontinuousIteration or Newton errors\\ \hline
     adaptiveStepRecoveryIterations &     \tabnewline UInt &      &     7 &     Number of max. (Newton iterations + discontinuous iterations) at which a step increase is considered; in order to immediately increase steps after reduction, chose a high value\\ \hline
     adaptiveStepRecoverySteps &     UInt &      &     10 &     Number of steps needed after which steps will be increased after previous step reduction due to discontinuousIteration or Newton errors\\ \hline
-    automaticStepSize &     bool &      &     True &     True: for specific integrators with error control (e.g., DOPRI5), compute automatic step size based on error estimation; False: constant step size (step may be reduced if adaptiveStep=True); the maximum stepSize reads $h = h_{max} = \frac{t_{end} - t_{start}}{n_{steps}}$\\ \hline
-    endTime &     UReal &      &     1 &     $t_{end}$: end time of time integration\\ \hline
-    initialStepSize &     UReal &      &     0 &     $h_{init}$: if automaticStepSize=True, initial step size; if initialStepSize==0, max. stepSize, which is (endTime-startTime)/numberOfSteps, is used as initial guess; a good choice of initialStepSize may help the solver to start up faster.\\ \hline
-    minimumStepSize &     PReal &      &     1e-8 &     $h_{min}$: if automaticStepSize=True or adaptiveStep=True: lower limit of time step size, before integrator stops with adaptiveStep; lower limit of automaticStepSize control (continues but raises warning)\\ \hline
-    numberOfSteps &     PInt &      &     100 &     $n_{steps}$: number of steps in time integration; (maximum) stepSize $h$ is computed from $h = \frac{t_{end} - t_{start}}{n_{steps}}$; for automatic stepsize control, this stepSize is the maximum steps size, $h_{max} = h$\\ \hline
+    automaticStepSize &     bool &      &     True &     True: for specific integrators with error control (e.g., DOPRI5), compute automatic step size based on error estimation; False: constant step size (step may be reduced if adaptiveStep=True); the maximum stepSize reads $h = h\_{max} = \frac{t\_{end} - t\_{start}}{n\_{steps}}$\\ \hline
+    computeLoadsJacobian &     UInt &      &     0 &     0:  jacobian of loads not considered (may lead to slow convergence or Newton failure); 1: in case of implicit integrators, compute (numerical) Jacobian of ODE2 and ODE1 coordinates for loads, causing additional computational costs; this is advantageous in cases where loads are related nonlinearly to coordinates; 2: also compute ODE2\_t dependencies for jacobian; note that computeLoadsJacobian has no effect in case of doSystemWideDifferentiation, as this anyway includes all load dependencies\\ \hline
+    endTime &     UReal &      &     1 &     $t\_{end}$: end time of time integration\\ \hline
+    initialStepSize &     UReal &      &     0 &     $h\_{init}$: if automaticStepSize=True, initial step size; if initialStepSize==0, max. stepSize, which is (endTime-startTime)/numberOfSteps, is used as initial guess; a good choice of initialStepSize may help the solver to start up faster.\\ \hline
+    minimumStepSize &     PReal &      &     1e-8 &     $h\_{min}$: if automaticStepSize=True or adaptiveStep=True: lower limit of time step size, before integrator stops with adaptiveStep; lower limit of automaticStepSize control (continues but raises warning)\\ \hline
+    numberOfSteps &     PInt &      &     100 &     $n\_{steps}$: number of steps in time integration; (maximum) stepSize $h$ is computed from $h = \frac{t\_{end} - t\_{start}}{n\_{steps}}$; for automatic stepsize control, this stepSize is the maximum steps size, $h\_{max} = h$\\ \hline
     realtimeFactor &     PReal &      &     1 &     if simulateInRealtime=True, this factor is used to make the simulation slower than realtime (factor < 1) or faster than realtime (factor > 1)\\ \hline
     realtimeWaitMicroseconds &     PInt &      &     1000 &     if simulateInRealtime=True, a loop runs which waits realtimeWaitMicroseconds until checking again if the realtime is reached; using larger values leads to less CPU usage but less accurate realtime accuracy; smaller values (< 1000) increase CPU usage but improve realtime accuracy\\ \hline
-    relativeTolerance &     UReal &      &     1e-8 &     $r_{tol}$: if automaticStepSize=True, relative tolerance for the error control; must fulfill $r_{tol} \ge 0$; see \refSection{sec:ExplicitSolver}\\ \hline
+    relativeTolerance &     UReal &      &     1e-8 &     $r\_{tol}$: if automaticStepSize=True, relative tolerance for the error control; must fulfill $r\_{tol} \ge 0$; see \refSection{sec:ExplicitSolver}\\ \hline
     reuseConstantMassMatrix &     bool &      &     True &     True: does not recompute constant mass matrices (e.g. of some finite elements, mass points, etc.); if False, it always recomputes the mass matrix (e.g. needed, if user changes mass parameters via Python)\\ \hline
     simulateInRealtime &     bool &      &     False &     True: simulate in realtime; the solver waits for computation of the next step until the CPU time reached the simulation time; if the simulation is slower than realtime, it simply continues\\ \hline
-    startTime &     UReal &      &     0 &     $t_{start}$: start time of time integration (usually set to zero)\\ \hline
+    startTime &     UReal &      &     0 &     $t\_{start}$: start time of time integration (usually set to zero)\\ \hline
     stepInformation &     UInt &      &     67 &     add up the following binary flags: 0 ... show only step time, 1 ... show time to go, 2 ... show newton iterations (Nit) per step or period, 4 ... show Newton jacobians (jac) per step or period, 8 ... show discontinuous iterations (Dit) per step or period, 16 ... show step size (dt), 32 ... show CPU time spent; 64 ... show adaptive step reduction warnings; 128 ... show step increase information; 1024 ... show every time step; time is usually shown in fractions of seconds (s), hours (h), or days\\ \hline
-    stepSizeMaxIncrease &     UReal &      &     2 &     $f_{maxInc}$: if automaticStepSize=True, maximum increase of step size per step, see \refSection{sec:ExplicitSolver}; make this factor smaller (but $> 1$) if too many rejected steps\\ \hline
-    stepSizeSafety &     UReal &      &     0.90 &     $r_{sfty}$: if automaticStepSize=True, a safety factor added to estimated optimal step size, in order to prevent from many rejected steps, see \refSection{sec:ExplicitSolver}. Make this factor smaller if many steps are rejected.\\ \hline
+    stepSizeMaxIncrease &     UReal &      &     2 &     $f\_{maxInc}$: if automaticStepSize=True, maximum increase of step size per step, see \refSection{sec:ExplicitSolver}; make this factor smaller (but $> 1$) if too many rejected steps\\ \hline
+    stepSizeSafety &     UReal &      &     0.90 &     $r\_{sfty}$: if automaticStepSize=True, a safety factor added to estimated optimal step size, in order to prevent from many rejected steps, see \refSection{sec:ExplicitSolver}. Make this factor smaller if many steps are rejected.\\ \hline
     verboseMode &     UInt &      &     0 &     0 ... no output, 1 ... show short step information every 2 seconds (every 30 seconds after 1 hour CPU time), 2 ... show every step information, 3 ... show also solution vector, 4 ... show also mass matrix and jacobian (implicit methods), 5 ... show also Jacobian inverse (implicit methods)\\ \hline
     verboseModeFile &     UInt &      &     0 &     same behaviour as verboseMode, but outputs all solver information to file\\ \hline
 	  \end{longtable}
@@ -281,6 +282,7 @@ Settings for static solver linear or nonlinear (Newton).
     adaptiveStepIncrease &     UReal &      &     2 &     Multiplicative factor (MUST BE > 1) for step size to increase after previous step reduction due to discontinuousIteration or Newton errors\\ \hline
     adaptiveStepRecoveryIterations &     \tabnewline UInt &      &     7 &     Number of max. (Newton iterations + discontinuous iterations) at which a step increase is considered; in order to immediately increase steps after reduction, chose a high value\\ \hline
     adaptiveStepRecoverySteps &     UInt &      &     4 &     Number of steps needed after which steps will be increased after previous step reduction due to discontinuousIteration or Newton errors\\ \hline
+    computeLoadsJacobian &     bool &      &     True &     True: compute (currently numerical) Jacobian for loads, causing additional computational costs; this is advantageous in cases where loads are related nonlinearly to coordinates; False: jacobian of loads not considered (may lead to slow convergence or Newton failure); note that computeLoadsJacobian has no effect in case of doSystemWideDifferentiation, as this anyway includes all load dependencies\\ \hline
     loadStepDuration &     PReal &      &     1 &     quasi-time for all load steps (added to current time in load steps)\\ \hline
     loadStepGeometric &     bool &      &     False &     if loadStepGeometric=false, the load steps are incremental (arithmetic series, e.g. 0.1,0.2,0.3,...); if true, the load steps are increased in a geometric series, e.g. for $n=8$ numberOfLoadSteps and $d = 1000$ loadStepGeometricRange, it follows: $1000^{1/8}/1000=0.00237$, $1000^{2/8}/1000=0.00562$, $1000^{3/8}/1000=0.0133$, ..., $1000^{7/8}/1000=0.422$, $1000^{8/8}/1000=1$\\ \hline
     loadStepGeometricRange &     PReal &      &     1000 &     if loadStepGeometric=true, the load steps are increased in a geometric series, see loadStepGeometric\\ \hline
@@ -952,41 +954,6 @@ Structure for timing in solver. Each Real variable is used to measure the CPU ti
 	\end{center}
 
 
-%+++++++++++++++++++++++++++++++++++
-
-\mysubsubsubsection{SolverLocalData}
-\label{sec:SolverLocalData}
-Solver local data structure for solution vectors, system matrices and temporary vectors and data structures.
-
-\noindent SolverLocalData has the following items:
-%reference manual TABLE
-\begin{center}
-  \footnotesize
-  \begin{longtable}{| p{4.2cm} | p{2.5cm} | p{0.3cm} | p{3.0cm} | p{6cm} |}
-    \hline
-    \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
-    aAlgorithmic &     ResizableVectorParallel &      &      &     additional term needed for generalized alpha (current state)\\ \hline
-    CleanUpMemory() &     void &      &      &     if desired, temporary data is cleaned up to safe memory\\ \hline
-    GetLinearSolverType() &     LinearSolverType &      &      &     return current linear solver type (dense/sparse)\\ \hline
-    nAE &     Index &      &     0 &     number of algebraic coordinates\\ \hline
-    nData &     Index &      &     0 &     number of data coordinates\\ \hline
-    newtonSolution &     ResizableVectorParallel &      &      &     Newton decrement (computed from residual and jacobian)\\ \hline
-    nODE1 &     Index &      &     0 &     number of first order ordinary diff. eq. coordinates\\ \hline
-    nODE2 &     Index &      &     0 &     number of second order ordinary diff. eq. coordinates\\ \hline
-    nSys &     Index &      &     0 &     number of system (unknown) coordinates = nODE2+nODE1+nAE\\ \hline
-    SetLinearSolverType(...) &     void &      &     linearSolverType, reuseAnalyzedPattern &     set linear solver type and matrix version: links system matrices to according dense/sparse versions\\ \hline
-    startAE &     Index &      &     0 &     start of algebraic coordinates, but set to zero if nAE==0\\ \hline
-    startOfStepStateAAlgorithmic &     ResizableVectorParallel &      &      &     additional term needed for generalized alpha (startOfStep state)\\ \hline
-    systemResidual &     ResizableVectorParallel &      &      &     system residual vector (vectors will be linked to this vector!)\\ \hline
-    temp2ODE2 &     ResizableVectorParallel &      &      &     second temporary vector for \hac{ODE2} quantities; use in static computation\\ \hline
-    tempODE1F0 &     ResizableVectorParallel &      &      &     temporary vector for \hac{ODE1} Jacobian\\ \hline
-    tempODE1F1 &     ResizableVectorParallel &      &      &     temporary vector for \hac{ODE1} Jacobian\\ \hline
-    tempODE2 &     ResizableVectorParallel &      &      &     temporary vector for \hac{ODE2} quantities; use in initial accelerations and during Newton\\ \hline
-    tempODE2F0 &     ResizableVectorParallel &      &      &     temporary vector for \hac{ODE2} Jacobian\\ \hline
-    tempODE2F1 &     ResizableVectorParallel &      &      &     temporary vector for \hac{ODE2} Jacobian\\ \hline
-	  \end{longtable}
-	\end{center}
-
 
 %+++++++++++++++++++++++++++++++++++
 
@@ -1018,7 +985,7 @@ Solver internal structure for counters, steps, step size, time, etc.; solution v
     newtonSteps &     Index &      &     0 &     number of current newton steps\\ \hline
     newtonStepsCount &     Index &      &     0 &     count total Newton steps\\ \hline
     numberOfSteps &     Index &      &     0 &     number of time steps (if fixed size); $n$\\ \hline
-    recommendedStepSize &     Real &      &     -1. &     recommended step size $h_{recom}$ after PostNewton(...): $h_{recom} < 0$: no recommendation, $h_{recom}==0$: use minimum step size, $h_{recom}>0$: use specific step size, if no smaller size requested by other reason\\ \hline
+    recommendedStepSize &     Real &      &     -1. &     recommended step size $h\_{recom}$ after PostNewton(...): $h\_{recom} < 0$: no recommendation, $h\_{recom}==0$: use minimum step size, $h\_{recom}>0$: use specific step size, if no smaller size requested by other reason\\ \hline
     rejectedAutomaticStepSizeSteps &     \tabnewline Index &      &     0 &     count the number of rejected steps in case of automatic step size control (rejected steps are repeated with smaller step size)\\ \hline
     rejectedModifiedNewtonSteps &     Index &      &     0 &     count the number of rejected modified Newton steps (switch to full Newton)\\ \hline
     startTime &     Real &      &     0. &     time at beginning of time integration\\ \hline
@@ -1086,8 +1053,6 @@ Solver internal structure for output modes, output timers and counters.
     lastVerboseStepIndex &     Index &      &     0 &     step index when last time written to console (or file)\\ \hline
     multiThreadingMode &     Index &      &     0 &     multithreading mode that has been used: 0=None (serial), 1=NGsolve taskmanager, 2=MicroThreading (Exudyn)\\ \hline
     numberOfThreadsUsed &     Index &      &     0 &     number of threads that have been used in simulation\\ \hline
-    sensorValuesTemp &     ResizableVector &      &      &     temporary vector for per sensor values (overwritten for every sensor; usually contains last sensor values)\\ \hline
-    sensorValuesTemp2 &     ResizableVector &      &      &     additional temporary vector for per sensor values (overwritten for every sensor; usually contains time+last sensor values)\\ \hline
     stepInformation &     Index &      &     0 &     this is a copy of the solvers stepInformation used for console output\\ \hline
     verboseMode &     Index &      &     0 &     this is a copy of the solvers verboseMode used for console output\\ \hline
     verboseModeFile &     Index &      &     0 &     this is a copy of the solvers verboseModeFile used for file\\ \hline
@@ -1122,7 +1087,7 @@ and hereafter you can access all data and functions via 'solver'.
     ComputeAlgebraicEquations(...) &     void &      &     mainSystem, velocityLevel=False &     compute the algebraic equations in systemResidual in range(nODE2+nODE1, nODE2+nODE1+nAE)\\ \hline
     ComputeJacobianAE(...) &     void &      &     mainSystem, scalarFactor\_ODE2=1., scalarFactor\_ODE2\_t=0., scalarFactor\_ODE1=1., velocityLevel=False &     add jacobian of algebraic equations (multiplied with factor) to systemJacobian in cSolver; the scalarFactors are scaling the derivatives w.r.t. \hac{ODE2} coordinates, ODE2\_t (velocity) coordinates and ODE1 coordinates; if velocityLevel == true, the constraints are evaluated at velocity level; the scalar factors scalarFactor\_ODE2=0 and scalarFactor\_ODE2 are used for the same ODE2 block in the jacobian\\ \hline
     ComputeJacobianODE1RHS(...) &     void &      &     mainSystem, scalarFactor\_ODE2=1., scalarFactor\_ODE2\_t=0., scalarFactor\_ODE1=1. &     ADD jacobian of ODE1RHS (multiplied with factors for ODE2 and ODE1 coordinates) to the according rows (nODE2:nODE2+nODE1) of the exising systemJacobian in cSolver; it requires a prior call to ComputeJacobianODE2RHS(...); the scalar factors scalarFactor\_ODE2=0 and scalarFactor\_ODE2 are used for the same ODE2 block in the jacobian\\ \hline
-    ComputeJacobianODE2RHS(...) &     void &      &     mainSystem, scalarFactor\_ODE2=1., scalarFactor\_ODE2\_t=0., scalarFactor\_ODE1=1. &     set systemJacobian to zero, size = (nODE2+nODE1+nAE) x (nODE2+nODE1+nAE), and add jacobian (multiplied with factors for ODE2 and ODE1 coordinates) of ODE2RHS to systemJacobian in cSolver; using (scalarFactor\_ODE2=-1,scalarFactor\_ODE2=0) gives the stiffness matrix (=derivatives of ODE2 coords) in the nODE2 x nODE2 part, while using (scalarFactor\_ODE2=0,scalarFactor\_ODE2=-1) gives the damping matrix (= derivatives of ODE2 velocity coordinates) in the same part; a superposition of these two parts makes sense for implicit solvers\\ \hline
+    ComputeJacobianODE2RHS(...) &     void &      &     mainSystem, scalarFactor\_ODE2=1., scalarFactor\_ODE2\_t=0., scalarFactor\_ODE1=1., computeLoadsJacobian=0 &     set systemJacobian to zero, size = (nODE2+nODE1+nAE) x (nODE2+nODE1+nAE), and add jacobian (multiplied with factors for ODE2 and ODE1 coordinates) of ODE2RHS to systemJacobian in cSolver; using (scalarFactor\_ODE2=-1,scalarFactor\_ODE2=0) gives the stiffness matrix (=derivatives of ODE2 coords) in the nODE2 x nODE2 part, while using (scalarFactor\_ODE2=0,scalarFactor\_ODE2=-1) gives the damping matrix (= derivatives of ODE2 velocity coordinates) in the same part; a superposition of these two parts makes sense for implicit solvers; if , Index computeLoadsJacobian=0, loads are not considered in the Jacobian computation; for , Index computeLoadsJacobian=1 the ODE2 and ODE1 derivatives of loads are included and for , Index computeLoadsJacobian=2, also the ODE2\_t dependencies are added\\ \hline
     ComputeLoadFactor(...) &     Real &      &     simulationSettings &     for static solver, this is a factor in interval [0,1]; MUST be overwritten\\ \hline
     ComputeMassMatrix(...) &     void &      &     mainSystem, scalarFactor=1. &     compute systemMassMatrix (multiplied with factor) in cSolver and return mass nODE2 x nODE2 matrix\\ \hline
     ComputeNewtonJacobian(...) &     void &      &     mainSystem, simulationSettings &     compute jacobian for newton method of given solver method; store result in systemJacobian\\ \hline
@@ -1198,7 +1163,7 @@ and hereafter you can access all data and functions via 'solver'.
     ComputeAlgebraicEquations(...) &     void &      &     mainSystem, velocityLevel=False &     compute the algebraic equations in systemResidual in range(nODE2+nODE1, nODE2+nODE1+nAE)\\ \hline
     ComputeJacobianAE(...) &     void &      &     mainSystem, scalarFactor\_ODE2=1., scalarFactor\_ODE2\_t=0., scalarFactor\_ODE1=1., velocityLevel=False &     add jacobian of algebraic equations (multiplied with factor) to systemJacobian in cSolver; the scalarFactors are scaling the derivatives w.r.t. \hac{ODE2} coordinates, ODE2\_t (velocity) coordinates and ODE1 coordinates; if velocityLevel == true, the constraints are evaluated at velocity level; the scalar factors scalarFactor\_ODE2=0 and scalarFactor\_ODE2 are used for the same ODE2 block in the jacobian\\ \hline
     ComputeJacobianODE1RHS(...) &     void &      &     mainSystem, scalarFactor\_ODE2=1., scalarFactor\_ODE2\_t=0., scalarFactor\_ODE1=1. &     ADD jacobian of ODE1RHS (multiplied with factors for ODE2 and ODE1 coordinates) to the according rows (nODE2:nODE2+nODE1) of the exising systemJacobian in cSolver; it requires a prior call to ComputeJacobianODE2RHS(...); the scalar factors scalarFactor\_ODE2=0 and scalarFactor\_ODE2 are used for the same ODE2 block in the jacobian\\ \hline
-    ComputeJacobianODE2RHS(...) &     void &      &     mainSystem, scalarFactor\_ODE2=1., scalarFactor\_ODE2\_t=0., scalarFactor\_ODE1=1. &     set systemJacobian to zero, size = (nODE2+nODE1+nAE) x (nODE2+nODE1+nAE), and add jacobian (multiplied with factors for ODE2 and ODE1 coordinates) of ODE2RHS to systemJacobian in cSolver; using (scalarFactor\_ODE2=-1,scalarFactor\_ODE2=0) gives the stiffness matrix (=derivatives of ODE2 coords) in the nODE2 x nODE2 part, while using (scalarFactor\_ODE2=0,scalarFactor\_ODE2=-1) gives the damping matrix (= derivatives of ODE2 velocity coordinates) in the same part; a superposition of these two parts makes sense for implicit solvers\\ \hline
+    ComputeJacobianODE2RHS(...) &     void &      &     mainSystem, scalarFactor\_ODE2=1., scalarFactor\_ODE2\_t=0., scalarFactor\_ODE1=1., computeLoadsJacobian=0 &     set systemJacobian to zero, size = (nODE2+nODE1+nAE) x (nODE2+nODE1+nAE), and add jacobian (multiplied with factors for ODE2 and ODE1 coordinates) of ODE2RHS to systemJacobian in cSolver; using (scalarFactor\_ODE2=-1,scalarFactor\_ODE2=0) gives the stiffness matrix (=derivatives of ODE2 coords) in the nODE2 x nODE2 part, while using (scalarFactor\_ODE2=0,scalarFactor\_ODE2=-1) gives the damping matrix (= derivatives of ODE2 velocity coordinates) in the same part; a superposition of these two parts makes sense for implicit solvers; if , Index computeLoadsJacobian=0, loads are not considered in the Jacobian computation; for , Index computeLoadsJacobian=1 the ODE2 and ODE1 derivatives of loads are included and for , Index computeLoadsJacobian=2, also the ODE2\_t dependencies are added\\ \hline
     ComputeLoadFactor(...) &     Real &      &     simulationSettings &     for static solver, this is a factor in interval [0,1]; MUST be overwritten\\ \hline
     ComputeMassMatrix(...) &     void &      &     mainSystem, scalarFactor=1. &     compute systemMassMatrix (multiplied with factor) in cSolver and return mass nODE2 x nODE2 matrix\\ \hline
     ComputeNewtonJacobian(...) &     void &      &     mainSystem, simulationSettings &     compute jacobian for newton method of given solver method; store result in systemJacobian\\ \hline

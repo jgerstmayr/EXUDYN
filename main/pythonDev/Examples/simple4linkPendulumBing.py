@@ -1,3 +1,15 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  4-link pendulum
+#
+# Author:   Bing AI with some help by Johannes Gerstmayr; note that doublePendulum2D.py did not exist prior to this model
+# Date:     2023-04-15
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 import exudyn as exu
 from exudyn.utilities import *
 

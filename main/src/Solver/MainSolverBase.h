@@ -349,7 +349,8 @@ public: //
 	virtual void ComputeMassMatrix(MainSystem& mainSystem/*, const SimulationSettings& simulationSettings*/, Real scalarFactor = 1.);
 
 	//! set systemJacobian to zero and add jacobian (multiplied with factor) of ODE2RHS to systemJacobian in cSolver
-	virtual void ComputeJacobianODE2RHS(MainSystem& mainSystem, Real scalarFactor_ODE2 = 1., Real scalarFactor_ODE2_t = 0., Real scalarFactor_ODE1 = 1.);
+	virtual void ComputeJacobianODE2RHS(MainSystem& mainSystem, Real scalarFactor_ODE2 = 1., Real scalarFactor_ODE2_t = 0., Real scalarFactor_ODE1 = 1.,
+        Index computeLoadsJacobian = 0);
 
 	//not needed:
 	////! add jacobian of ODE2RHS_t (multiplied with factor) to systemJacobian in cSolver

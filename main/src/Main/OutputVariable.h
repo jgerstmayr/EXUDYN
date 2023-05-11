@@ -6,7 +6,7 @@
 *
 * @author		Gerstmayr Johannes
 * @date			2018-05-17 (generated)
-* @pre			...
+* @pre			continuously extended for new types
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 * @note			Bug reports, support and further information:

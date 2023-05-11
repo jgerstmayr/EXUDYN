@@ -223,20 +223,20 @@ mbs = SC.AddSystem()
   StopRenderer() & Stop OpenGL rendering engine\\ \hline 
   IsRendererActive() & returns True if GLFW renderer is available and running; otherwise False\\ \hline 
   DoRendererIdleTasks(waitSeconds = 0) & Call this function in order to interact with Renderer window; use waitSeconds in order to run this idle tasks while animating a model (e.g. waitSeconds=0.04), use waitSeconds=0 without waiting, or use waitSeconds=-1 to wait until window is closed\\ \hline 
-  SolveStatic(mbs, simulationSettings = exudyn.SimulationSettings(), updateInitialValues = False, storeSolver = True) & Static solver function, mapped from module \texttt{solver}, to solve static equations (without inertia terms) of constrained rigid or flexible multibody system; for details on the Python interface see \refSection{sec:solver:SolveStatic}; for background on solvers, see \refSection{sec:solvers}\\ \hline 
-  SolveDynamic(mbs, simulationSettings = exudyn.SimulationSettings(), solverType = exudyn.DynamicSolverType.GeneralizedAlpha, updateInitialValues = False, storeSolver = True) & Dynamic solver function, mapped from module \texttt{solver}, to solve equations of motion of constrained rigid or flexible multibody system; for details on the Python interface see \refSection{sec:solver:SolveDynamic}; for background on solvers, see \refSection{sec:solvers}\\ \hline 
-  ComputeODE2Eigenvalues(mbs, simulationSettings = exudyn.SimulationSettings(), useSparseSolver = False, numberOfEigenvalues = -1, setInitialValues = True, convert2Frequencies = False) & Simple interface to scipy eigenvalue solver for eigenvalue analysis of the second order differential equations part in mbs, mapped from module \texttt{solver}; for details on the Python interface see \refSection{sec:solver:ComputeODE2Eigenvalues}\\ \hline 
+  SolveStatic(mbssimulationSettings = exudyn.SimulationSettings()updateInitialValues = FalsestoreSolver = True) & Static solver function, mapped from module \texttt{solver}, to solve static equations (without inertia terms) of constrained rigid or flexible multibody system; for details on the Python interface see \refSection{sec:solver:SolveStatic}; for background on solvers, see \refSection{sec:solvers}\\ \hline 
+  SolveDynamic(mbssimulationSettings = exudyn.SimulationSettings()solverType = exudyn.DynamicSolverType.GeneralizedAlphaupdateInitialValues = FalsestoreSolver = True) & Dynamic solver function, mapped from module \texttt{solver}, to solve equations of motion of constrained rigid or flexible multibody system; for details on the Python interface see \refSection{sec:solver:SolveDynamic}; for background on solvers, see \refSection{sec:solvers}\\ \hline 
+  ComputeODE2Eigenvalues(mbssimulationSettings = exudyn.SimulationSettings()useSparseSolver = FalsenumberOfEigenvalues = -1setInitialValues = Trueconvert2Frequencies = False) & Simple interface to scipy eigenvalue solver for eigenvalue analysis of the second order differential equations part in mbs, mapped from module \texttt{solver}; for details on the Python interface see \refSection{sec:solver:ComputeODE2Eigenvalues}\\ \hline 
   SetOutputPrecision(numberOfDigits) & Set the precision (integer) for floating point numbers written to console (reset when simulation is started!); NOTE: this affects only floats converted to strings inside C++ exudyn; if you print a float from Python, it is usually printed with 16 digits; if printing numpy arrays, 8 digits are used as standard, to be changed with numpy.set\_printoptions(precision=16); alternatively convert into a list\\ \hline 
   SetLinalgOutputFormatPython(flagPythonFormat) & True: use Python format for output of vectors and matrices; False: use matlab format\\ \hline 
   SetWriteToConsole(flag) & set flag to write (True) or not write to console; default = True\\ \hline 
-  SetWriteToFile(filename, flagWriteToFile = True, flagAppend = False) & set flag to write (True) or not write to console; default value of flagWriteToFile = False; flagAppend appends output to file, if set True; in order to finalize the file, write \texttt{exu.SetWriteToFile('', False)} to close the output file\tabnewline 
+  SetWriteToFile(filenameflagWriteToFile = TrueflagAppend = False) & set flag to write (True) or not write to console; default value of flagWriteToFile = False; flagAppend appends output to file, if set True; in order to finalize the file, write \texttt{exu.SetWriteToFile('', False)} to close the output file\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{exu.SetWriteToConsole(False) \#no output to console\tabnewline
     exu.SetWriteToFile(filename={\textquotesingle}testOutput.log{\textquotesingle}, flagWriteToFile=True, flagAppend=False)\tabnewline
     exu.Print({\textquotesingle}print this to file{\textquotesingle})\tabnewline
     exu.SetWriteToFile({\textquotesingle}{\textquotesingle}, False) \#terminate writing to file which closes the file}}\\ \hline 
   SetPrintDelayMilliSeconds(delayMilliSeconds) & add some delay (in milliSeconds) to printing to console, in order to let Spyder process the output; default = 0\\ \hline 
-  Print() & this allows printing via exudyn with similar syntax as in Python print(args) except for keyword arguments: print('test=',42); allows to redirect all output to file given by SetWriteToFile(...); does not output in case that SetWriteToConsole is set to False\\ \hline 
+  Print(*args) & this allows printing via exudyn with similar syntax as in Python print(args) except for keyword arguments: print('test=',42); allows to redirect all output to file given by SetWriteToFile(...); does not output in case that SetWriteToConsole is set to False\\ \hline 
   SuppressWarnings(flag) & set flag to suppress (=True) or enable (=False) warnings\\ \hline 
   InfoStat(writeOutput = True) & Retrieve list of global information on memory allocation and other counts as list:[array\_new\_counts, array\_delete\_counts, vector\_new\_counts, vector\_delete\_counts, matrix\_new\_counts, matrix\_delete\_counts, linkedDataVectorCast\_counts]; May be extended in future; if writeOutput==True, it additionally prints the statistics; counts for new vectors and matrices should not depend on numberOfSteps, except for some objects such as ObjectGenericODE2 and for (sensor) output to files; Not available if code is compiled with \_\_FAST\_EXUDYN\_LINALG flag\\ \hline 
   Go() & Creates a SystemContainer SC and a main multibody system mbs\\ \hline 
@@ -287,7 +287,6 @@ mbs = SC.AddSystem()
   RedrawAndSaveImage() & Redraw openGL scene and save image (command waits until process is finished)\\ \hline 
   WaitForRenderEngineStopFlag() & Wait for user to stop render engine (Press 'Q' or Escape-key); this command is used to have active response of the render window, e.g., to open the visualization dialog or use the right-mouse-button; behaves similar as mbs.WaitForUserToContinue()\\ \hline 
   RenderEngineZoomAll() & Send zoom all signal, which will perform zoom all at next redraw request\\ \hline 
-  RedrawAndSaveImage() & Redraw openGL scene and save image (command waits until process is finished)\\ \hline 
   AttachToRenderEngine() & Links the SystemContainer to the render engine, such that the changes in the graphics structure drawn upon updates, etc.; done automatically on creation of SystemContainer; return False, if no renderer exists (e.g., compiled without GLFW) or cannot be linked (if other SystemContainer already linked)\\ \hline 
   DetachFromRenderEngine() & Releases the SystemContainer from the render engine; return True if successfully released, False if no GLFW available or detaching failed\\ \hline 
   SendRedrawSignal() & This function is used to send a signal to the renderer that all MainSystems (mbs) shall be redrawn\\ \hline 
@@ -324,9 +323,9 @@ mbs = SC.AddSystem()
   WaitForUserToContinue(printMessage = True) & interrupt further computation until user input --> 'pause' function; this command runs a loop in the background to have active response of the render window, e.g., to open the visualization dialog or use the right-mouse-button; behaves similar as SC.WaitForRenderEngineStopFlagthis()\\ \hline 
   SendRedrawSignal() & this function is used to send a signal to the renderer that the scene shall be redrawn because the visualization state has been updated\\ \hline 
   GetRenderEngineStopFlag() & get the current stop simulation flag; True=user wants to stop simulation\\ \hline 
-  SetRenderEngineStopFlag() & set the current stop simulation flag; set to False, in order to continue a previously user-interrupted simulation\\ \hline 
+  SetRenderEngineStopFlag(stopFlag) & set the current stop simulation flag; set to False, in order to continue a previously user-interrupted simulation\\ \hline 
   ActivateRendering(flag = True) & activate (flag=True) or deactivate (flag=False) rendering for this system\\ \hline 
-  SetPreStepUserFunction() & Sets a user function PreStepUserFunction(mbs, t) executed at beginning of every computation step; in normal case return True; return False to stop simulation after current step\tabnewline 
+  SetPreStepUserFunction(value) & Sets a user function PreStepUserFunction(mbs, t) executed at beginning of every computation step; in normal case return True; return False to stop simulation after current step\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{def PreStepUserFunction(mbs, t):\tabnewline
      \phantom{XXXX} print(mbs.systemData.NumberOfNodes())\tabnewline
@@ -334,7 +333,7 @@ mbs = SC.AddSystem()
      \phantom{XXXX}  \phantom{XXXX} return False \tabnewline
      \phantom{XXXX} return True \tabnewline
      mbs.SetPreStepUserFunction(PreStepUserFunction)}}\\ \hline 
-  SetPostNewtonUserFunction() & Sets a user function PostNewtonUserFunction(mbs, t) executed after successful Newton iteration in implicit or static solvers and after step update of explicit solvers, but BEFORE PostNewton functions are called by the solver; function returns list [discontinuousError, recommendedStepSize], containing a error of the PostNewtonStep, which is compared to [solver].discontinuous.iterationTolerance. The recommendedStepSize shall be negative, if no recommendation is given, 0 in order to enforce minimum step size or a specific value to which the current step size will be reduced and the step will be repeated; use this function, e.g., to reduce step size after impact or change of data variables\tabnewline 
+  SetPostNewtonUserFunction(value) & Sets a user function PostNewtonUserFunction(mbs, t) executed after successful Newton iteration in implicit or static solvers and after step update of explicit solvers, but BEFORE PostNewton functions are called by the solver; function returns list [discontinuousError, recommendedStepSize], containing a error of the PostNewtonStep, which is compared to [solver].discontinuous.iterationTolerance. The recommendedStepSize shall be negative, if no recommendation is given, 0 in order to enforce minimum step size or a specific value to which the current step size will be reduced and the step will be repeated; use this function, e.g., to reduce step size after impact or change of data variables\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{def PostNewtonUserFunction(mbs, t):\tabnewline
      \phantom{XXXX} if(t>1): \tabnewline
@@ -396,14 +395,14 @@ nMP = mbs.AddNode(NodePoint2D(referenceCoordinates=[0,0]))
   GetNode(nodeNumber) & get node's dictionary by node number (type NodeIndex)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{nodeDict = mbs.GetNode(0)}}\\ \hline 
-  ModifyNode(nodeNumber, nodeDict) & modify node's dictionary by node number (type NodeIndex)\tabnewline 
+  ModifyNode(nodeNumbernodeDict) & modify node's dictionary by node number (type NodeIndex)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{mbs.ModifyNode(nodeNumber, nodeDict)}}\\ \hline 
   GetNodeDefaults(typeName) & get node's default values for a certain nodeType as (dictionary)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{nodeType = {\textquotesingle}Point{\textquotesingle}\tabnewline
     nodeDict = mbs.GetNodeDefaults(nodeType)}}\\ \hline 
-  GetNodeOutput(nodeNumber, variableType, configuration = ConfigurationType.Current) & get the ouput of the node specified with the OutputVariableType; output may be scalar or array (e.g. displacement vector)\tabnewline 
+  GetNodeOutput(nodeNumbervariableTypeconfiguration = exu.ConfigurationType.Current) & get the ouput of the node specified with the OutputVariableType; output may be scalar or array (e.g. displacement vector)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{mbs.GetNodeOutput(nodeNumber=0, variableType=exu.OutputVariableType.Displacement)}}\\ \hline 
   GetNodeODE2Index(nodeNumber) & get index in the global ODE2 coordinate vector for the first node coordinate of the specified node\tabnewline 
@@ -415,10 +414,10 @@ nMP = mbs.AddNode(NodePoint2D(referenceCoordinates=[0,0]))
   GetNodeAEIndex(nodeNumber) & get index in the global AE coordinate vector for the first node coordinate of the specified node\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{mbs.GetNodeAEIndex(nodeNumber=0)}}\\ \hline 
-  GetNodeParameter(nodeNumber, parameterName) & get nodes's parameter from node number (type NodeIndex) and parameterName; parameter names can be found for the specific items in the reference manual; for visualization parameters, use a 'V' as a prefix\tabnewline 
+  GetNodeParameter(nodeNumberparameterName) & get nodes's parameter from node number (type NodeIndex) and parameterName; parameter names can be found for the specific items in the reference manual; for visualization parameters, use a 'V' as a prefix\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{mbs.GetNodeParameter(0, {\textquotesingle}referenceCoordinates{\textquotesingle})}}\\ \hline 
-  SetNodeParameter(nodeNumber, parameterName, value) & set parameter 'parameterName' of node with node number (type NodeIndex) to value; parameter names can be found for the specific items in the reference manual; for visualization parameters, use a 'V' as a prefix\tabnewline 
+  SetNodeParameter(nodeNumberparameterNamevalue) & set parameter 'parameterName' of node with node number (type NodeIndex) to value; parameter names can be found for the specific items in the reference manual; for visualization parameters, use a 'V' as a prefix\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{mbs.SetNodeParameter(0, {\textquotesingle}Vshow{\textquotesingle}, True)}}\\ \hline 
 \end{longtable}
@@ -459,27 +458,27 @@ mbs.AddObject(ObjectMassPoint2D(physicsMass=10, nodeNumber=nMP ))
   GetObjectNumber(objectName) & get object's number by name (string)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{n = mbs.GetObjectNumber({\textquotesingle}heavy object{\textquotesingle})}}\\ \hline 
-  GetObject(objectNumber, addGraphicsData = False) & get object's dictionary by object number (type ObjectIndex); NOTE: visualization parameters have a prefix 'V'; in order to also get graphicsData written, use addGraphicsData=True (which is by default False, as it would spoil the information)\tabnewline 
+  GetObject(objectNumberaddGraphicsData = False) & get object's dictionary by object number (type ObjectIndex); NOTE: visualization parameters have a prefix 'V'; in order to also get graphicsData written, use addGraphicsData=True (which is by default False, as it would spoil the information)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{objectDict = mbs.GetObject(0)}}\\ \hline 
-  ModifyObject(objectNumber, objectDict) & modify object's dictionary by object number (type ObjectIndex); NOTE: visualization parameters have a prefix 'V'\tabnewline 
+  ModifyObject(objectNumberobjectDict) & modify object's dictionary by object number (type ObjectIndex); NOTE: visualization parameters have a prefix 'V'\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{mbs.ModifyObject(objectNumber, objectDict)}}\\ \hline 
   GetObjectDefaults(typeName) & get object's default values for a certain objectType as (dictionary)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{objectType = {\textquotesingle}MassPoint{\textquotesingle}\tabnewline
     objectDict = mbs.GetObjectDefaults(objectType)}}\\ \hline 
-  GetObjectOutput(objectNumber, variableType, configuration = ConfigurationType.Current) & get object's current output variable from object number (type ObjectIndex) and OutputVariableType; for connectors, it can only be computed for exu.ConfigurationType.Current configuration!\\ \hline 
-  GetObjectOutputBody(objectNumber, variableType, localPosition = [0,0,0], configuration = ConfigurationType.Current) & get body's output variable from object number (type ObjectIndex) and OutputVariableType, using the localPosition as defined in the body, and as used in MarkerBody and SensorBody\tabnewline 
+  GetObjectOutput(objectNumbervariableTypeconfiguration = exu.ConfigurationType.Current) & get object's current output variable from object number (type ObjectIndex) and OutputVariableType; for connectors, it can only be computed for exu.ConfigurationType.Current configuration!\\ \hline 
+  GetObjectOutputBody(objectNumbervariableTypelocalPosition = [0,0,0]configuration = exu.ConfigurationType.Current) & get body's output variable from object number (type ObjectIndex) and OutputVariableType, using the localPosition as defined in the body, and as used in MarkerBody and SensorBody\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{u = mbs.GetObjectOutputBody(objectNumber = 1, variableType = exu.OutputVariableType.Position, localPosition=[1,0,0], configuration = exu.ConfigurationType.Initial)}}\\ \hline 
-  GetObjectOutputSuperElement(objectNumber, variableType, meshNodeNumber, configuration = ConfigurationType.Current) & get output variable from mesh node number of object with type SuperElement (GenericODE2, FFRF, FFRFreduced - CMS) with specific OutputVariableType; the meshNodeNumber is the object's local node number, not the global node number!\tabnewline 
+  GetObjectOutputSuperElement(objectNumbervariableTypemeshNodeNumberconfiguration = exu.ConfigurationType.Current) & get output variable from mesh node number of object with type SuperElement (GenericODE2, FFRF, FFRFreduced - CMS) with specific OutputVariableType; the meshNodeNumber is the object's local node number, not the global node number!\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{u = mbs.GetObjectOutputSuperElement(objectNumber = 1, variableType = exu.OutputVariableType.Position, meshNodeNumber = 12, configuration = exu.ConfigurationType.Initial)}}\\ \hline 
-  GetObjectParameter(objectNumber, parameterName) & get objects's parameter from object number (type ObjectIndex) and parameterName; parameter names can be found for the specific items in the reference manual; for visualization parameters, use a 'V' as a prefix; NOTE that BodyGraphicsData cannot be get or set, use dictionary access instead\tabnewline 
+  GetObjectParameter(objectNumberparameterName) & get objects's parameter from object number (type ObjectIndex) and parameterName; parameter names can be found for the specific items in the reference manual; for visualization parameters, use a 'V' as a prefix; NOTE that BodyGraphicsData cannot be get or set, use dictionary access instead\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{mbs.GetObjectParameter(objectNumber = 0, parameterName = {\textquotesingle}nodeNumber{\textquotesingle})}}\\ \hline 
-  SetObjectParameter(objectNumber, parameterName, value) & set parameter 'parameterName' of object with object number (type ObjectIndex) to value;; parameter names can be found for the specific items in the reference manual; for visualization parameters, use a 'V' as a prefix; NOTE that BodyGraphicsData cannot be get or set, use dictionary access instead\tabnewline 
+  SetObjectParameter(objectNumberparameterNamevalue) & set parameter 'parameterName' of object with object number (type ObjectIndex) to value;; parameter names can be found for the specific items in the reference manual; for visualization parameters, use a 'V' as a prefix; NOTE that BodyGraphicsData cannot be get or set, use dictionary access instead\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{mbs.SetObjectParameter(objectNumber = 0, parameterName = {\textquotesingle}Vshow{\textquotesingle}, value=True)}}\\ \hline 
 \end{longtable}
@@ -523,16 +522,16 @@ mMP = mbs.AddMarker(MarkerNodePosition(nodeNumber = nMP))
   GetMarker(markerNumber) & get marker's dictionary by index\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{markerDict = mbs.GetMarker(0)}}\\ \hline 
-  ModifyMarker(markerNumber, markerDict) & modify marker's dictionary by index\tabnewline 
+  ModifyMarker(markerNumbermarkerDict) & modify marker's dictionary by index\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{mbs.ModifyMarker(markerNumber, markerDict)}}\\ \hline 
   GetMarkerDefaults(typeName) & get marker's default values for a certain markerType as (dictionary)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{markerType = {\textquotesingle}NodePosition{\textquotesingle}\tabnewline
     markerDict = mbs.GetMarkerDefaults(markerType)}}\\ \hline 
-  GetMarkerParameter(markerNumber, parameterName) & get markers's parameter from markerNumber and parameterName; parameter names can be found for the specific items in the reference manual\\ \hline 
-  SetMarkerParameter(markerNumber, parameterName, value) & set parameter 'parameterName' of marker with markerNumber to value; parameter names can be found for the specific items in the reference manual\\ \hline 
-  GetMarkerOutput(markerNumber, variableType, configuration = ConfigurationType.Current) & get the ouput of the marker specified with the OutputVariableType; currently only provides Displacement, Position and Velocity for position based markers, and RotationMatrix, Rotation and AngularVelocity(Local) for markers providing orientation; Coordinates and Coordinates\_t available for coordinate markers\tabnewline 
+  GetMarkerParameter(markerNumberparameterName) & get markers's parameter from markerNumber and parameterName; parameter names can be found for the specific items in the reference manual\\ \hline 
+  SetMarkerParameter(markerNumberparameterNamevalue) & set parameter 'parameterName' of marker with markerNumber to value; parameter names can be found for the specific items in the reference manual\\ \hline 
+  GetMarkerOutput(markerNumbervariableTypeconfiguration = exu.ConfigurationType.Current) & get the ouput of the marker specified with the OutputVariableType; currently only provides Displacement, Position and Velocity for position based markers, and RotationMatrix, Rotation and AngularVelocity(Local) for markers providing orientation; Coordinates and Coordinates\_t available for coordinate markers\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{mbs.GetMarkerOutput(markerNumber=0, variableType=exu.OutputVariableType.Position)}}\\ \hline 
 \end{longtable}
@@ -578,7 +577,7 @@ mbs.AddLoad(Force(markerNumber = mMP, loadVector=[0.001,0,0]))
   GetLoad(loadNumber) & get load's dictionary by index\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{loadDict = mbs.GetLoad(0)}}\\ \hline 
-  ModifyLoad(loadNumber, loadDict) & modify load's dictionary by index\tabnewline 
+  ModifyLoad(loadNumberloadDict) & modify load's dictionary by index\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{mbs.ModifyLoad(loadNumber, loadDict)}}\\ \hline 
   GetLoadDefaults(typeName) & get load's default values for a certain loadType as (dictionary)\tabnewline 
@@ -586,8 +585,8 @@ mbs.AddLoad(Force(markerNumber = mMP, loadVector=[0.001,0,0]))
     \texttt{loadType = {\textquotesingle}ForceVector{\textquotesingle}\tabnewline
     loadDict = mbs.GetLoadDefaults(loadType)}}\\ \hline 
   GetLoadValues(loadNumber) & Get current load values, specifically if user-defined loads are used; can be scalar or vector-valued return value\\ \hline 
-  GetLoadParameter(loadNumber, parameterName) & get loads's parameter from loadNumber and parameterName; parameter names can be found for the specific items in the reference manual\\ \hline 
-  SetLoadParameter(loadNumber, parameterName, value) & set parameter 'parameterName' of load with loadNumber to value; parameter names can be found for the specific items in the reference manual\\ \hline 
+  GetLoadParameter(loadNumberparameterName) & get loads's parameter from loadNumber and parameterName; parameter names can be found for the specific items in the reference manual\\ \hline 
+  SetLoadParameter(loadNumberparameterNamevalue) & set parameter 'parameterName' of load with loadNumber to value; parameter names can be found for the specific items in the reference manual\\ \hline 
 \end{longtable}
 \end{center}
 
@@ -637,17 +636,17 @@ PlotSensor(mbs, sMP, components=[0,1,2])
   GetSensor(sensorNumber) & get sensor's dictionary by index\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{sensorDict = mbs.GetSensor(0)}}\\ \hline 
-  ModifySensor(sensorNumber, sensorDict) & modify sensor's dictionary by index\tabnewline 
+  ModifySensor(sensorNumbersensorDict) & modify sensor's dictionary by index\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{mbs.ModifySensor(sensorNumber, sensorDict)}}\\ \hline 
   GetSensorDefaults(typeName) & get sensor's default values for a certain sensorType as (dictionary)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{sensorType = {\textquotesingle}Node{\textquotesingle}\tabnewline
     sensorDict = mbs.GetSensorDefaults(sensorType)}}\\ \hline 
-  GetSensorValues(sensorNumber, configuration = ConfigurationType.Current) & get sensors's values for configuration; can be a scalar or vector-valued return value!\\ \hline 
+  GetSensorValues(sensorNumberconfiguration = exu.ConfigurationType.Current) & get sensors's values for configuration; can be a scalar or vector-valued return value!\\ \hline 
   GetSensorStoredData(sensorNumber) & get sensors's internally stored data as matrix (all time points stored); rows are containing time and sensor values as obtained by sensor (e.g., time, and x, y, and z value of position)\\ \hline 
-  GetSensorParameter(sensorNumber, parameterName) & get sensors's parameter from sensorNumber and parameterName; parameter names can be found for the specific items in the reference manual\\ \hline 
-  SetSensorParameter(sensorNumber, parameterName, value) & set parameter 'parameterName' of sensor with sensorNumber to value; parameter names can be found for the specific items in the reference manual\\ \hline 
+  GetSensorParameter(sensorNumberparameterName) & get sensors's parameter from sensorNumber and parameterName; parameter names can be found for the specific items in the reference manual\\ \hline 
+  SetSensorParameter(sensorNumberparameterNamevalue) & set parameter 'parameterName' of sensor with sensorNumber to value; parameter names can be found for the specific items in the reference manual\\ \hline 
 \end{longtable}
 \end{center}
 
@@ -677,8 +676,10 @@ u = mbs.systemData.GetODE2Coordinates()
 #set initial ODE2 vector for next simulation:
 mbs.systemData.SetODE2Coordinates(coordinates=u,
                configuration=exu.ConfigurationType.Initial)
-#get detailed information as dictionary:
+#print detailed information on items:
 mbs.systemData.Info()
+#print LTG lists for objects and loads:
+mbs.systemData.InfoLTG()
 \end{lstlisting}
 
 \begin{center}
@@ -719,12 +720,21 @@ mbs.systemData.Info()
   GetTime(configurationType = exu.ConfigurationType.Current) & get configuration dependent time.\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{mbs.systemData.GetTime(exu.ConfigurationType.Initial)}}\\ \hline 
-  SetTime(newTime, configurationType = exu.ConfigurationType.Current) & set configuration dependent time; use this access with care, e.g. in user-defined solvers.\tabnewline 
+  SetTime(newTimeconfigurationType = exu.ConfigurationType.Current) & set configuration dependent time; use this access with care, e.g. in user-defined solvers.\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{mbs.systemData.SetTime(10., exu.ConfigurationType.Initial)}}\\ \hline 
-  Info() & print detailed system information for every item; for short information use print(mbs)\tabnewline 
+  AddODE2LoadDependencies(loadNumberglobalODE2coordinates) & advanced function for adding special dependencies of loads onto ODE2 coordinates, taking a list / numpy array of global ODE2 coordinates; this function needs to be called after Assemble() and needs to contain ODE2 coordinate indices; this list only affects implicit or static solvers if numericalDifferentiation.loadsJacobian=True; in this case, it may greatly improve convergence if loads with user functions depend on some system states, such as in a load with feedback control loop; the additional dependencies are not required, if doSystemWideDifferentiation=True, however the latter option being much less efficient!\tabnewline 
+    \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
+    \texttt{mbs.systemData.AddODE2LoadDependencies(0,[0,1,2])\tabnewline
+    \#add dependency of load 5 onto node 2 coordinates:\tabnewline
+    nodeLTG2 = mbs.systemData.GetNodeLTGODE2(2)\tabnewline
+    mbs.systemData.AddODE2LoadDependencies(5,nodeLTG2)}}\\ \hline 
+  Info() & print detailed information on every item; for short information use print(mbs)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{mbs.systemData.Info()}}\\ \hline 
+  InfoLTG() & print LTG information of objects and load dependencies\tabnewline 
+    \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
+    \texttt{mbs.systemData.InfoLTG()}}\\ \hline 
 \end{longtable}
 \end{center}
 
@@ -743,49 +753,49 @@ This section provides access functions to global coordinate vectors. Assigning i
   GetODE2Coordinates(configuration = exu.ConfigurationType.Current) & get ODE2 system coordinates (displacements) for given configuration (default: exu.Configuration.Current)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{uCurrent = mbs.systemData.GetODE2Coordinates()}}\\ \hline 
-  SetODE2Coordinates(coordinates, configuration = exu.ConfigurationType.Current) & set ODE2 system coordinates (displacements) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!\tabnewline 
+  SetODE2Coordinates(coordinatesconfiguration = exu.ConfigurationType.Current) & set ODE2 system coordinates (displacements) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{mbs.systemData.SetODE2Coordinates(uCurrent)}}\\ \hline 
   GetODE2Coordinates\_t(configuration = exu.ConfigurationType.Current) & get ODE2 system coordinates (velocities) for given configuration (default: exu.Configuration.Current)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{vCurrent = mbs.systemData.GetODE2Coordinates\_t()}}\\ \hline 
-  SetODE2Coordinates\_t(coordinates, configuration = exu.ConfigurationType.Current) & set ODE2 system coordinates (velocities) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!\tabnewline 
+  SetODE2Coordinates\_t(coordinatesconfiguration = exu.ConfigurationType.Current) & set ODE2 system coordinates (velocities) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{mbs.systemData.SetODE2Coordinates\_t(vCurrent)}}\\ \hline 
   GetODE2Coordinates\_tt(configuration = exu.ConfigurationType.Current) & get ODE2 system coordinates (accelerations) for given configuration (default: exu.Configuration.Current)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{vCurrent = mbs.systemData.GetODE2Coordinates\_tt()}}\\ \hline 
-  SetODE2Coordinates\_tt(coordinates, configuration = exu.ConfigurationType.Current) & set ODE2 system coordinates (accelerations) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!\tabnewline 
+  SetODE2Coordinates\_tt(coordinatesconfiguration = exu.ConfigurationType.Current) & set ODE2 system coordinates (accelerations) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{mbs.systemData.SetODE2Coordinates\_tt(aCurrent)}}\\ \hline 
   GetODE1Coordinates(configuration = exu.ConfigurationType.Current) & get ODE1 system coordinates (displacements) for given configuration (default: exu.Configuration.Current)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{qCurrent = mbs.systemData.GetODE1Coordinates()}}\\ \hline 
-  SetODE1Coordinates(coordinates, configuration = exu.ConfigurationType.Current) & set ODE1 system coordinates (velocities) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!\tabnewline 
+  SetODE1Coordinates(coordinatesconfiguration = exu.ConfigurationType.Current) & set ODE1 system coordinates (velocities) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{mbs.systemData.SetODE1Coordinates\_t(qCurrent)}}\\ \hline 
   GetODE1Coordinates\_t(configuration = exu.ConfigurationType.Current) & get ODE1 system coordinates (velocities) for given configuration (default: exu.Configuration.Current)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{qCurrent = mbs.systemData.GetODE1Coordinates\_t()}}\\ \hline 
-  SetODE1Coordinates\_t(coordinates, configuration = exu.ConfigurationType.Current) & set ODE1 system coordinates (displacements) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!\tabnewline 
+  SetODE1Coordinates\_t(coordinatesconfiguration = exu.ConfigurationType.Current) & set ODE1 system coordinates (displacements) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{mbs.systemData.SetODE1Coordinates(qCurrent)}}\\ \hline 
   GetAECoordinates(configuration = exu.ConfigurationType.Current) & get algebraic equations (AE) system coordinates for given configuration (default: exu.Configuration.Current)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{lambdaCurrent = mbs.systemData.GetAECoordinates()}}\\ \hline 
-  SetAECoordinates(coordinates, configuration = exu.ConfigurationType.Current) & set algebraic equations (AE) system coordinates for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!\tabnewline 
+  SetAECoordinates(coordinatesconfiguration = exu.ConfigurationType.Current) & set algebraic equations (AE) system coordinates for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{mbs.systemData.SetAECoordinates(lambdaCurrent)}}\\ \hline 
   GetDataCoordinates(configuration = exu.ConfigurationType.Current) & get system data coordinates for given configuration (default: exu.Configuration.Current)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{dataCurrent = mbs.systemData.GetDataCoordinates()}}\\ \hline 
-  SetDataCoordinates(coordinates, configuration = exu.ConfigurationType.Current) & set system data coordinates for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!\tabnewline 
+  SetDataCoordinates(coordinatesconfiguration = exu.ConfigurationType.Current) & set system data coordinates for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{mbs.systemData.SetDataCoordinates(dataCurrent)}}\\ \hline 
   GetSystemState(configuration = exu.ConfigurationType.Current) & get system state for given configuration (default: exu.Configuration.Current); state vectors do not include the non-state derivatives ODE1\_t and ODE2\_tt and the time; function is copying data - not highly efficient; format of pyList: [ODE2Coords, ODE2Coords\_t, ODE1Coords, AEcoords, dataCoords]\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{sysStateList = mbs.systemData.GetSystemState()}}\\ \hline 
-  SetSystemState(systemStateList, configuration = exu.ConfigurationType.Current) & set system data coordinates for given configuration (default: exu.Configuration.Current); invalid list of vectors / vector size may lead to system crash; write access to state vectors (but not the non-state derivatives ODE1\_t and ODE2\_tt and the time); function is copying data - not highly efficient; format of pyList: [ODE2Coords, ODE2Coords\_t, ODE1Coords, AEcoords, dataCoords]\tabnewline 
+  SetSystemState(systemStateListconfiguration = exu.ConfigurationType.Current) & set system data coordinates for given configuration (default: exu.Configuration.Current); invalid list of vectors / vector size may lead to system crash; write access to state vectors (but not the non-state derivatives ODE1\_t and ODE2\_tt and the time); function is copying data - not highly efficient; format of pyList: [ODE2Coords, ODE2Coords\_t, ODE1Coords, AEcoords, dataCoords]\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{mbs.systemData.SetSystemState(sysStateList, configuration = exu.ConfigurationType.Initial)}}\\ \hline 
 \end{longtable}
@@ -803,18 +813,30 @@ This section provides access functions the \ac{LTG}-lists for every object (body
 \begin{longtable}{| p{8cm} | p{8cm} |} 
 \hline
 {\bf function/structure name} & {\bf description}\\ \hline
-  GetObjectLTGODE2(objectNumber) & get local-to-global coordinate mapping (list of global coordinate indices) for ODE2 coordinates; only available after Assemble()\tabnewline 
+  GetObjectLTGODE2(objectNumber) & get object local-to-global coordinate mapping (list of global coordinate indices) for ODE2 coordinates; only available after Assemble()\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{ltgObject4 = mbs.systemData.GetObjectLTGODE2(4)}}\\ \hline 
-  GetObjectLTGODE1(objectNumber) & get local-to-global coordinate mapping (list of global coordinate indices) for ODE1 coordinates; only available after Assemble()\tabnewline 
+  GetObjectLTGODE1(objectNumber) & get object local-to-global coordinate mapping (list of global coordinate indices) for ODE1 coordinates; only available after Assemble()\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{ltgObject4 = mbs.systemData.GetObjectLTGODE1(4)}}\\ \hline 
-  GetObjectLTGAE(objectNumber) & get local-to-global coordinate mapping (list of global coordinate indices) for algebraic equations (AE) coordinates; only available after Assemble()\tabnewline 
+  GetObjectLTGAE(objectNumber) & get object local-to-global coordinate mapping (list of global coordinate indices) for algebraic equations (AE) coordinates; only available after Assemble()\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{ltgObject4 = mbs.systemData.GetObjectLTGODE2(4)}}\\ \hline 
-  GetObjectLTGData(objectNumber) & get local-to-global coordinate mapping (list of global coordinate indices) for data coordinates; only available after Assemble()\tabnewline 
+  GetObjectLTGData(objectNumber) & get object local-to-global coordinate mapping (list of global coordinate indices) for data coordinates; only available after Assemble()\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{ltgObject4 = mbs.systemData.GetObjectLTGData(4)}}\\ \hline 
+  GetNodeLTGODE2(nodeNumber) & get node local-to-global coordinate mapping (list of global coordinate indices) for ODE2 coordinates; only available after Assemble()\tabnewline 
+    \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
+    \texttt{ltgNode4 = mbs.systemData.GetNodeLTGODE2(4)}}\\ \hline 
+  GetNodeLTGODE1(nodeNumber) & get node local-to-global coordinate mapping (list of global coordinate indices) for ODE1 coordinates; only available after Assemble()\tabnewline 
+    \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
+    \texttt{ltgNode4 = mbs.systemData.GetNodeLTGODE1(4)}}\\ \hline 
+  GetNodeLTGAE(nodeNumber) & get node local-to-global coordinate mapping (list of global coordinate indices) for AE coordinates; only available after Assemble()\tabnewline 
+    \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
+    \texttt{ltgNode4 = mbs.systemData.GetNodeLTGAE(4)}}\\ \hline 
+  GetNodeLTGData(nodeNumber) & get node local-to-global coordinate mapping (list of global coordinate indices) for Data coordinates; only available after Assemble()\tabnewline 
+    \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
+    \texttt{ltgNode4 = mbs.systemData.GetNodeLTGData(4)}}\\ \hline 
 \end{longtable}
 \end{center}
 
@@ -866,23 +888,23 @@ gContact.SetFrictionPairings(...) #set friction pairings and adjust searchTree i
   SetSearchTreeCellSize(numberOfCells) & set number of cells of search tree (boxed search) in x, y and z direction\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{gContact.SetSearchTreeInitSize([10,10,10])}}\\ \hline 
-  SetSearchTreeBox(pMin, pMax) & set geometric dimensions of searchTreeBox (point with minimum coordinates and point with maximum coordinates); if this box becomes smaller than the effective contact objects, contact computations may slow down significantly\tabnewline 
+  SetSearchTreeBox(pMinpMax) & set geometric dimensions of searchTreeBox (point with minimum coordinates and point with maximum coordinates); if this box becomes smaller than the effective contact objects, contact computations may slow down significantly\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{gContact.SetSearchTreeBox(pMin=[-1,-1,-1],\tabnewline
      \phantom{XXXX} pMax=[1,1,1])}}\\ \hline 
-  AddSphereWithMarker(markerIndex, radius, contactStiffness, contactDamping, frictionMaterialIndex) & add contact object using a marker (Position or Rigid), radius and contact/friction parameters and return localIndex of the contact item in GeneralContact; frictionMaterialIndex refers to frictionPairings in GeneralContact; contact is possible between spheres (circles in 2D) (if intraSphereContact = True), spheres and triangles and between sphere (=circle) and ANCFCable2D; contactStiffness is computed as serial spring between contacting objects, while damping is computed as a parallel damper\\ \hline 
-  AddANCFCable(objectIndex, halfHeight, contactStiffness, contactDamping, frictionMaterialIndex) & add contact object for an ANCF cable element, using the objectIndex of the cable element and the cable's half height as an additional distance to contacting objects (currently not causing additional torque in case of friction), and return localIndex of the contact item in GeneralContact; currently only contact with spheres (circles in 2D) possible; contact computed using exact geometry of elements, finding max 3 intersecting contact regions\\ \hline 
-  AddTrianglesRigidBodyBased(rigidBodyMarkerIndex, contactStiffness, contactDamping, frictionMaterialIndex, pointList, triangleList) & add contact object using a rigidBodyMarker (of a body), contact/friction parameters, a list of points (as 3D numpy arrays or lists; coordinates relative to rigidBodyMarker) and a list of triangles (3 indices as numpy array or list) according to a mesh attached to the rigidBodyMarker; returns starting local index of trigsRigidBodyBased at which the triangles are stored; mesh can be produced with GraphicsData2TrigsAndPoints(...); contact is possible between sphere (circle) and Triangle but yet not between triangle and triangle; frictionMaterialIndex refers to frictionPairings in GeneralContact; contactStiffness is computed as serial spring between contacting objects, while damping is computed as a parallel damper (otherwise the smaller damper would always dominate); the triangle normal must point outwards, with the normal of a triangle given with local points (p0,p1,p2) defined as n=(p1-p0) x (p2-p0), see function ComputeTriangleNormal(...)\\ \hline 
-  GetItemsInBox(pMin, pMax) & Get all items in box defined by minimum coordinates given in pMin and maximum coordinates given by pMax, accepting 3D lists or numpy arrays; in case that no objects are found, False is returned; otherwise, a dictionary is returned, containing numpy arrays with indices of obtained MarkerBasedSpheres, TrigsRigidBodyBased, ANCFCable2D, ...; the indices refer to the local index in GeneralContact which can be evaluated e.g. by GetMarkerBasedSphere(localIndex)\tabnewline 
+  AddSphereWithMarker(markerIndexradiuscontactStiffnesscontactDampingfrictionMaterialIndex) & add contact object using a marker (Position or Rigid), radius and contact/friction parameters and return localIndex of the contact item in GeneralContact; frictionMaterialIndex refers to frictionPairings in GeneralContact; contact is possible between spheres (circles in 2D) (if intraSphereContact = True), spheres and triangles and between sphere (=circle) and ANCFCable2D; contactStiffness is computed as serial spring between contacting objects, while damping is computed as a parallel damper\\ \hline 
+  AddANCFCable(objectIndexhalfHeightcontactStiffnesscontactDampingfrictionMaterialIndex) & add contact object for an ANCF cable element, using the objectIndex of the cable element and the cable's half height as an additional distance to contacting objects (currently not causing additional torque in case of friction), and return localIndex of the contact item in GeneralContact; currently only contact with spheres (circles in 2D) possible; contact computed using exact geometry of elements, finding max 3 intersecting contact regions\\ \hline 
+  AddTrianglesRigidBodyBased(rigidBodyMarkerIndexcontactStiffnesscontactDampingfrictionMaterialIndexpointListtriangleList) & add contact object using a rigidBodyMarker (of a body), contact/friction parameters, a list of points (as 3D numpy arrays or lists; coordinates relative to rigidBodyMarker) and a list of triangles (3 indices as numpy array or list) according to a mesh attached to the rigidBodyMarker; returns starting local index of trigsRigidBodyBased at which the triangles are stored; mesh can be produced with GraphicsData2TrigsAndPoints(...); contact is possible between sphere (circle) and Triangle but yet not between triangle and triangle; frictionMaterialIndex refers to frictionPairings in GeneralContact; contactStiffness is computed as serial spring between contacting objects, while damping is computed as a parallel damper (otherwise the smaller damper would always dominate); the triangle normal must point outwards, with the normal of a triangle given with local points (p0,p1,p2) defined as n=(p1-p0) x (p2-p0), see function ComputeTriangleNormal(...)\\ \hline 
+  GetItemsInBox(pMinpMax) & Get all items in box defined by minimum coordinates given in pMin and maximum coordinates given by pMax, accepting 3D lists or numpy arrays; in case that no objects are found, False is returned; otherwise, a dictionary is returned, containing numpy arrays with indices of obtained MarkerBasedSpheres, TrigsRigidBodyBased, ANCFCable2D, ...; the indices refer to the local index in GeneralContact which can be evaluated e.g. by GetMarkerBasedSphere(localIndex)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{gContact.GetItemsInBox(pMin=[0,1,1],\tabnewline
      \phantom{XXXX} pMax=[2,3,2])}}\\ \hline 
   GetMarkerBasedSphere(localIndex) & Get dictionary with position, radius and markerIndex for markerBasedSphere index, as returned e.g. from GetItemsInBox\\ \hline 
-  ShortestDistanceAlongLine(pStart = [0,0,0], direction = [1,0,0], minDistance = -1e-7, maxDistance = 1e7, asDictionary = False, cylinderRadius = 0, typeIndex = Contact.IndexEndOfEnumList) & Find shortest distance to contact objects in GeneralContact along line with pStart (given as 3D list or numpy array) and direction (as 3D list or numpy array with no need to be normalized); the function returns the distance which is >= minDistance and < maxDistance; in case of beam elements, it measures the distance to the beam centerline; the distance is measured from pStart along given direction and can also be negative; if no item is found along line, the maxDistance is returned; if asDictionary=False, the result is a float, while otherwise details are returned as dictionary (including distance, velocityAlongLine (which is the object velocity in given direction and may be different from the time derivative of the distance; works similar to a laser Doppler vibrometer - LDV), itemIndex and itemType in GeneralContact); the cylinderRadius, if not equal to 0, will be used for spheres to find closest sphere along cylinder with given point and direction; the typeIndex can be set to a specific contact type, e.g., which are searched for (otherwise all objects are considered)\\ \hline 
+  ShortestDistanceAlongLine(pStart = [0,0,0]direction = [1,0,0]minDistance = -1e-7maxDistance = 1e7asDictionary = FalsecylinderRadius = 0typeIndex = Contact.IndexEndOfEnumList) & Find shortest distance to contact objects in GeneralContact along line with pStart (given as 3D list or numpy array) and direction (as 3D list or numpy array with no need to be normalized); the function returns the distance which is >= minDistance and < maxDistance; in case of beam elements, it measures the distance to the beam centerline; the distance is measured from pStart along given direction and can also be negative; if no item is found along line, the maxDistance is returned; if asDictionary=False, the result is a float, while otherwise details are returned as dictionary (including distance, velocityAlongLine (which is the object velocity in given direction and may be different from the time derivative of the distance; works similar to a laser Doppler vibrometer - LDV), itemIndex and itemType in GeneralContact); the cylinderRadius, if not equal to 0, will be used for spheres to find closest sphere along cylinder with given point and direction; the typeIndex can be set to a specific contact type, e.g., which are searched for (otherwise all objects are considered)\\ \hline 
   UpdateContacts(mainSystem) & Update contact sets, e.g. if no contact is simulated (isActive=False) but user functions need up-to-date contact states for GetItemsInBox(...) or for GetActiveContacts(...)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{gContact.UpdateContacts(mbs)}}\\ \hline 
-  GetActiveContacts(typeIndex, itemIndex) & Get list of global item numbers which are in contact with itemIndex of type typeIndex in case that the global itemIndex is smaller than the abs value of the contact pair index; a negative sign indicates that the contacting (spheres) is in Coloumb friction, a positive sign indicates a regularized friction region; for interpretation of global contact indices, see gContact.GetPythonObject() and documentation; requires either implicit contact computation or UpdateContacts(...) needs to be called prior to this function\tabnewline 
+  GetActiveContacts(typeIndexitemIndex) & Get list of global item numbers which are in contact with itemIndex of type typeIndex in case that the global itemIndex is smaller than the abs value of the contact pair index; a negative sign indicates that the contacting (spheres) is in Coloumb friction, a positive sign indicates a regularized friction region; for interpretation of global contact indices, see gContact.GetPythonObject() and documentation; requires either implicit contact computation or UpdateContacts(...) needs to be called prior to this function\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{\#if explicit solver is used, we first need to update contacts:\tabnewline
     gContact.UpdateContacts(mbs)\tabnewline
@@ -955,8 +977,8 @@ print(mc)
 \begin{longtable}{| p{8cm} | p{8cm} |} 
 \hline
 {\bf function/structure name} & {\bf description}\\ \hline
-  SetWithDenseMatrix(pyArray, useDenseMatrix = False) & set MatrixContainer with dense numpy array; array (=matrix) contains values and matrix size information; if useDenseMatrix=True, matrix will be stored internally as dense matrix, otherwise it will be converted and stored as sparse matrix (which may speed up computations for larger problems)\\ \hline 
-  SetWithSparseMatrixCSR(numberOfRowsInit, numberOfColumnsInit, pyArrayCSR, useDenseMatrix = True) & set with sparse CSR matrix format: numpy array 'pyArrayCSR' contains sparse triplet (row, col, value) per row; numberOfRows and numberOfColumns given extra; if useDenseMatrix=True, matrix will be converted and stored internally as dense matrix, otherwise it will be stored as sparse matrix\\ \hline 
+  SetWithDenseMatrix(pyArrayuseDenseMatrix = False) & set MatrixContainer with dense numpy array; array (=matrix) contains values and matrix size information; if useDenseMatrix=True, matrix will be stored internally as dense matrix, otherwise it will be converted and stored as sparse matrix (which may speed up computations for larger problems)\\ \hline 
+  SetWithSparseMatrixCSR(numberOfRowsInitnumberOfColumnsInitpyArrayCSRuseDenseMatrix = True) & set with sparse CSR matrix format: numpy array 'pyArrayCSR' contains sparse triplet (row, col, value) per row; numberOfRows and numberOfColumns given extra; if useDenseMatrix=True, matrix will be converted and stored internally as dense matrix, otherwise it will be stored as sparse matrix\\ \hline 
   GetPythonObject() & convert MatrixContainer to numpy array (dense) or dictionary (sparse): containing nr. of rows, nr. of columns, numpy matrix with sparse triplets\\ \hline 
   Convert2DenseMatrix() & convert MatrixContainer to dense numpy array (SLOW and may fail for too large sparse matrices)\\ \hline 
   UseDenseMatrix() & returns True if dense matrix is used, otherwise False\\ \hline 
@@ -1055,7 +1077,7 @@ The Matrix3DList is used to represent lists of 3D Matrices. . This is used to tr
 \hline
 {\bf function/structure name} & {\bf description}\\ \hline
   Append(pyArray) & add single 3D array or list of lists to Matrix3DList; array or lists must have appropriate dimension!\\ \hline 
-  GetPythonObject() & convert Matrix3DList into (copied) list of 2D numpy arrays\\ \hline 
+  GetPythonObject() & convert Matrix3DList into (copied) list of 3x3 numpy arrays\\ \hline 
   len(data) & return length of the Matrix3DList, using len(data) where data is the Matrix3DList\\ \hline 
   data[index]= ... & set list item 'index' with matrix, write: data[index] = ...\\ \hline 
   ... = data[index] & get copy of list item with 'index' as matrix\\ \hline 
@@ -1080,7 +1102,7 @@ The Matrix6DList is used to represent lists of 6D Matrices. . This is used to tr
 \hline
 {\bf function/structure name} & {\bf description}\\ \hline
   Append(pyArray) & add single 6D array or list of lists to Matrix6DList; array or lists must have appropriate dimension!\\ \hline 
-  GetPythonObject() & convert Matrix6DList into (copied) list of 2D numpy arrays\\ \hline 
+  GetPythonObject() & convert Matrix6DList into (copied) list of 6x6 numpy arrays\\ \hline 
   len(data) & return length of the Matrix6DList, using len(data) where data is the Matrix6DList\\ \hline 
   data[index]= ... & set list item 'index' with matrix, write: data[index] = ...\\ \hline 
   ... = data[index] & get copy of list item with 'index' as matrix\\ \hline 
@@ -1109,8 +1131,7 @@ mbs.AddSensor(SensorBody(bodyNumber=rigid, storeInternal=True,
 
 
 %++++++++++++++++++++
-\mysubsubsection{OutputVariableType}
-\label{sec:OutputVariableType}
+\mysubsection{OutputVariableType}
 This section shows the OutputVariableType structure, which is used for selecting output values, e.g. for GetObjectOutput(...) or for selecting variables for contour plot.
 
 Available output variables and the interpreation of the output variable can be found at the object definitions. 
@@ -1130,11 +1151,13 @@ Available output variables and the interpreation of the output variable can be f
   Velocity & measure (translational) velocity of node or object\\ \hline  
   VelocityLocal & measure local (translational) velocity, e.g. in local body or joint coordinates\\ \hline  
   Acceleration & measure (translational) acceleration of node or object\\ \hline  
+  AccelerationLocal & measure (translational) acceleration of node or object in local coordinates\\ \hline  
   RotationMatrix & measure rotation matrix of rigid body node or object\\ \hline  
   Rotation & measure, e.g., scalar rotation of 2D body, Euler angles of a 3D object or rotation within a joint\\ \hline  
   AngularVelocity & measure angular velocity of node or object\\ \hline  
   AngularVelocityLocal & measure local (body-fixed) angular velocity of node or object\\ \hline  
   AngularAcceleration & measure angular acceleration of node or object\\ \hline  
+  AngularAccelerationLocal & measure angular acceleration of node or object in local coordinates\\ \hline  
   Coordinates & measure the coordinates of a node or object; coordinates usually just contain displacements, but not the position values\\ \hline  
   Coordinates\_t & measure the time derivative of coordinates (= velocity coordinates) of a node or object\\ \hline  
   Coordinates\_tt & measure the second time derivative of coordinates (= acceleration coordinates) of a node or object\\ \hline  
@@ -1154,8 +1177,7 @@ Available output variables and the interpreation of the output variable can be f
 \end{center}
 
 %++++++++++++++++++++
-\mysubsubsection{ConfigurationType}
-\label{sec:ConfigurationType}
+\mysubsection{ConfigurationType}
 This section shows the ConfigurationType structure, which is used for selecting a configuration for reading or writing information to the module. Specifically, the ConfigurationType.Current configuration is usually used at the end of a solution process, to obtain result values, or the ConfigurationType.Initial is used to set initial values for a solution process.
 
 
@@ -1176,8 +1198,7 @@ This section shows the ConfigurationType structure, which is used for selecting 
 \end{center}
 
 %++++++++++++++++++++
-\mysubsubsection{ItemType}
-\label{sec:ItemType}
+\mysubsection{ItemType}
 This section shows the ItemType structure, which is used for defining types of indices, e.g., in render window and will be also used in item dictionaries in future.
 
 
@@ -1197,8 +1218,7 @@ This section shows the ItemType structure, which is used for defining types of i
 \end{center}
 
 %++++++++++++++++++++
-\mysubsubsection{NodeType}
-\label{sec:NodeType}
+\mysubsection{NodeType}
 This section shows the NodeType structure, which is used for defining node types for 3D rigid bodies.
 
 
@@ -1231,8 +1251,7 @@ This section shows the NodeType structure, which is used for defining node types
 \end{center}
 
 %++++++++++++++++++++
-\mysubsubsection{JointType}
-\label{sec:JointType}
+\mysubsection{JointType}
 This section shows the JointType structure, which is used for defining joint types, used in KinematicTree.
 
 
@@ -1253,8 +1272,7 @@ This section shows the JointType structure, which is used for defining joint typ
 \end{center}
 
 %++++++++++++++++++++
-\mysubsubsection{DynamicSolverType}
-\label{sec:DynamicSolverType}
+\mysubsection{DynamicSolverType}
 This section shows the DynamicSolverType structure, which is used for selecting dynamic solvers for simulation.
 
 
@@ -1278,8 +1296,23 @@ This section shows the DynamicSolverType structure, which is used for selecting 
 \end{center}
 
 %++++++++++++++++++++
-\mysubsubsection{KeyCode}
-\label{sec:KeyCode}
+\mysubsection{CrossSectionType}
+This section shows the CrossSectionType structure, which is used for defining beam cross section types.
+
+
+
+\begin{center}
+\footnotesize
+\begin{longtable}{| p{8cm} | p{8cm} |} 
+\hline
+{\bf function/structure name} & {\bf description}\\ \hline
+  Polygon & cross section profile defined by polygon\\ \hline  
+  Circular & cross section is circle or elliptic\\ \hline  
+\end{longtable}
+\end{center}
+
+%++++++++++++++++++++
+\mysubsection{KeyCode}
 This section shows the KeyCode structure, which is used for special key codes in keyPressUserFunction.
 
 
@@ -1311,8 +1344,7 @@ This section shows the KeyCode structure, which is used for special key codes in
 \end{center}
 
 %++++++++++++++++++++
-\mysubsubsection{LinearSolverType}
-\label{sec:LinearSolverType}
+\mysubsection{LinearSolverType}
 This section shows the LinearSolverType structure, which is used for selecting linear solver types, which are dense or sparse solvers.
 
 
@@ -1330,8 +1362,7 @@ This section shows the LinearSolverType structure, which is used for selecting l
 \end{center}
 
 %++++++++++++++++++++
-\mysubsubsection{ContactTypeIndex}
-\label{sec:ContactTypeIndex}
+\mysubsection{ContactTypeIndex}
 This section shows the ContactTypeIndex structure, which is in GeneralContact to select specific contact items, such as spheres, ANCFCable or triangle items.
 
 

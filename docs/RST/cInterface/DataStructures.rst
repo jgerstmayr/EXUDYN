@@ -52,9 +52,9 @@ The MatrixContainer is a versatile representation for dense and sparse matrices.
 
 \ The class **MatrixContainer** has the following **functions and structures**:
 
-* | **SetWithDenseMatrix**\ (\ *pyArray*\ , \ *useDenseMatrix*\  = False): 
+* | **SetWithDenseMatrix**\ (\ *pyArray*\ \ *useDenseMatrix*\  = False): 
   | set MatrixContainer with dense numpy array; array (=matrix) contains values and matrix size information; if useDenseMatrix=True, matrix will be stored internally as dense matrix, otherwise it will be converted and stored as sparse matrix (which may speed up computations for larger problems)
-* | **SetWithSparseMatrixCSR**\ (\ *numberOfRowsInit*\ , \ *numberOfColumnsInit*\ , \ *pyArrayCSR*\ , \ *useDenseMatrix*\  = True): 
+* | **SetWithSparseMatrixCSR**\ (\ *numberOfRowsInit*\ \ *numberOfColumnsInit*\ \ *pyArrayCSR*\ \ *useDenseMatrix*\  = True): 
   | set with sparse CSR matrix format: numpy array 'pyArrayCSR' contains sparse triplet (row, col, value) per row; numberOfRows and numberOfColumns given extra; if useDenseMatrix=True, matrix will be converted and stored internally as dense matrix, otherwise it will be stored as sparse matrix
 * | **GetPythonObject**\ (): 
   | convert MatrixContainer to numpy array (dense) or dictionary (sparse): containing nr. of rows, nr. of columns, numpy matrix with sparse triplets
@@ -185,7 +185,7 @@ Usage:
 * | **Append**\ (\ *pyArray*\ ): 
   | add single 3D array or list of lists to Matrix3DList; array or lists must have appropriate dimension!
 * | **GetPythonObject**\ (): 
-  | convert Matrix3DList into (copied) list of 2D numpy arrays
+  | convert Matrix3DList into (copied) list of 3x3 numpy arrays
 * | **len(data)**\ : 
   | return length of the Matrix3DList, using len(data) where data is the Matrix3DList
 * | **data[index]= ...**\ : 
@@ -218,7 +218,7 @@ Usage:
 * | **Append**\ (\ *pyArray*\ ): 
   | add single 6D array or list of lists to Matrix6DList; array or lists must have appropriate dimension!
 * | **GetPythonObject**\ (): 
-  | convert Matrix6DList into (copied) list of 2D numpy arrays
+  | convert Matrix6DList into (copied) list of 6x6 numpy arrays
 * | **len(data)**\ : 
   | return length of the Matrix6DList, using len(data) where data is the Matrix6DList
 * | **data[index]= ...**\ : 

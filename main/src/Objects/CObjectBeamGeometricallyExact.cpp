@@ -155,6 +155,7 @@ void CObjectBeamGeometricallyExact::ComputeMassMatrix(EXUmath::MatrixContainer& 
 
 }
 
+//#define useAverageRotation
 //! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'
 void CObjectBeamGeometricallyExact::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
 {
@@ -179,6 +180,12 @@ void CObjectBeamGeometricallyExact::ComputeODE2LHS(Vector& ode2Lhs, Index object
 	Matrix6D TexpInv[2];
 	TexpInv[0] = -1.*EXUlie::TExpSE3Inv(-incDisp, -incRot);
 	TexpInv[1] = EXUlie::TExpSE3Inv(incDisp, incRot);
+
+#ifdef useAverageRotation
+	Matrix3D A = ((CNodeRigidBody*)GetCNode(0))->GetRotationMatrix() * EXUlie::ExpSO3(0.5*incRot); //compute rotation at mid-span; is this correct?
+#endif
+
+
 	//pout << "incDisp=" << incDisp << ", ";
 	//pout << "incRot=" << incRot << "\n";
 
@@ -200,6 +207,7 @@ void CObjectBeamGeometricallyExact::ComputeODE2LHS(Vector& ode2Lhs, Index object
 	ConstSizeVector<CNodeRigidBody::maxRotationCoordinates + nDim3D> res(nNode0);
 	ConstSizeVector<CNodeRigidBody::maxRotationCoordinates + nDim3D> res2(nNode0);
 
+	ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * nDim3D> G;
 	ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * nDim3D> Glocal;
 	Vector3D omegaLocal;
 	Real intFactL = 0.5*L; //integration weight, for quadratic velocity vector (approximated!)
@@ -207,18 +215,23 @@ void CObjectBeamGeometricallyExact::ComputeODE2LHS(Vector& ode2Lhs, Index object
 	for (Index i = 0; i < GetNumberOfNodes(); i++)
 	{
 		((CNodeRigidBody*)GetCNode(i))->CollectCurrentNodeData1(Glocal, omegaLocal);
+		((CNodeRigidBody*)GetCNode(i))->GetG(G);
+		//omegaLocal = ((CNodeRigidBody*)GetCNode(i))->GetAngularVelocityLocal();
 
 		EXUmath::MultVectorComponents(K6D, eps, res);
 		//EXUmath::MultMatrixVectorTemplate(K6D, eps, res);
 		EXUmath::MultMatrixTransposedVectorTemplate(TexpInv[i], res, res2);
 
-		Vector3D resPos({ res2[0], res2[1], res2[2] }); //this is the residual on incremental rotations
+		Vector3D resPos({ res2[0], res2[1], res2[2] }); //this is the residual on incremental positions
 		Vector3D resRot({ res2[3], res2[4], res2[5] }); //this is the residual on incremental rotations
 
 		ConstSizeVector< CNodeRigidBody::maxRotationCoordinates> resRotPar; //residual on rotation parameters
+#ifndef useAverageRotation
 		Matrix3D A = ((CNodeRigidBody*)GetCNode(i))->GetRotationMatrix();
-		//EXUmath::ApplyTransformation33(A, Glocal); //not correct; K6D is in local coordinates => K6D*Glocal gives global equations
-		
+#endif
+		//EXUmath::ApplyTransformation33(A.GetTransposed(), G); //not correct; K6D is in local coordinates => K6D*Glocal gives global equations
+
+		//EXUmath::MultMatrixTransposedVectorTemplate(G, A*resRot, resRotPar);
 		EXUmath::MultMatrixTransposedVectorTemplate(Glocal, resRot, resRotPar);
 		resPos = (A*resPos); //resPos is transformed from local into global coordinates
 
@@ -301,6 +314,10 @@ void CObjectBeamGeometricallyExact::ComputeJacobianODE2_ODE2(EXUmath::MatrixCont
 	TexpInv[0] = -1.*EXUlie::TExpSE3Inv(-incDisp, -incRot);
 	TexpInv[1] = EXUlie::TExpSE3Inv(incDisp, incRot);
 
+#ifdef useAverageRotation
+	Matrix3D A = ((CNodeRigidBody*)GetCNode(0))->GetRotationMatrix() * EXUlie::ExpSO3(0.5*incRot); //compute rotation at mid-span
+#endif
+
 	Matrix6D K6D(6, 6, 0.);
 	K6D(0, 0) = parameters.physicsAxialShearStiffness[0];
 	K6D(1, 1) = parameters.physicsAxialShearStiffness[1];
@@ -313,6 +330,7 @@ void CObjectBeamGeometricallyExact::ComputeJacobianODE2_ODE2(EXUmath::MatrixCont
 	K6D *= Linv* factorODE2;
 
 	//inefficient approach using large matrices:
+	ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * nDim3D> G;
 	ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * nDim3D> Glocal;
 	ConstSizeMatrix<2*(CNodeRigidBody::maxRotationCoordinates + nDim3D) * (2 * nDim3D)> P;
 	ConstSizeMatrix<2*(CNodeRigidBody::maxRotationCoordinates + nDim3D) * (2 * nDim3D)> KP;
@@ -323,14 +341,23 @@ void CObjectBeamGeometricallyExact::ComputeJacobianODE2_ODE2(EXUmath::MatrixCont
 	for (Index i = 0; i < GetNumberOfNodes(); i++)
 	{
 		Index nDC = ((CNodeRigidBody*)GetCNode(i))->GetNumberOfDisplacementCoordinates(); //standard = 3
-		((CNodeRigidBody*)GetCNode(i))->GetGlocal(Glocal);
+		//((CNodeRigidBody*)GetCNode(i))->GetGlocal(Glocal);
+		((CNodeRigidBody*)GetCNode(i))->GetG(G);
 		const Index maxSize = CNodeRigidBody::maxRotationCoordinates + CNodeRigidBody::maxDisplacementCoordinates;
 		Index nCoords = ((CNodeRigidBody*)GetCNode(i))->GetNumberOfODE2Coordinates();
 
 		ConstSizeMatrix< maxSize*maxSize> Tnew;
 		ConstSizeMatrix< maxSize*maxSize> TnodeCoords(6, nCoords, 0.); //this is the mapping to node coordinates, if nodes are not Lie group nodes
-		TnodeCoords.SetSubmatrix(((CNodeRigidBody*)GetCNode(i))->GetRotationMatrix().GetTransposed(), 0, 0);
-		TnodeCoords.SetSubmatrix(Glocal, nDC, nDC);
+#ifndef useAverageRotation
+		Matrix3D A = ((CNodeRigidBody*)GetCNode(i))->GetRotationMatrix();
+#endif
+		TnodeCoords.SetSubmatrix(A.GetTransposed(), 0, 0);
+
+		EXUmath::ApplyTransformation33(A.GetTransposed(), G); //Glocal but with averaged rotations
+		TnodeCoords.SetSubmatrix(G, nDC, nDC);
+
+		//!!!!!!!!! MISSING !!!!!!!!!!!
+		//Glocal_q chain rule + RotT_q chain rule for position part
 
 		EXUmath::MultMatrixMatrixTemplate(TexpInv[i], TnodeCoords, Tnew);
 		P.SetSubmatrix(Tnew, 0, i*nNode0); //offset columns for second node

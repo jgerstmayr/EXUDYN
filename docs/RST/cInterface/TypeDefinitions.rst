@@ -23,11 +23,9 @@ This section defines a couple of structures (C++: enum aka enumeration type), wh
                             outputVariableType=exu.OutputVariableType.Displacement))
    #
 
-.. _sec-outputvariabletype:
-
-
+******************
 OutputVariableType
-==================
+******************
 
 This section shows the OutputVariableType structure, which is used for selecting output values, e.g. for GetObjectOutput(...) or for selecting variables for contour plot.
 
@@ -53,6 +51,8 @@ The OutputVariableType does not provide information about the size of the output
   | measure local (translational) velocity, e.g. in local body or joint coordinates
 * | **Acceleration**:
   | measure (translational) acceleration of node or object
+* | **AccelerationLocal**:
+  | measure (translational) acceleration of node or object in local coordinates
 * | **RotationMatrix**:
   | measure rotation matrix of rigid body node or object
 * | **Rotation**:
@@ -63,6 +63,8 @@ The OutputVariableType does not provide information about the size of the output
   | measure local (body-fixed) angular velocity of node or object
 * | **AngularAcceleration**:
   | measure angular acceleration of node or object
+* | **AngularAccelerationLocal**:
+  | measure angular acceleration of node or object in local coordinates
 * | **Coordinates**:
   | measure the coordinates of a node or object; coordinates usually just contain displacements, but not the position values
 * | **Coordinates\_t**:
@@ -96,11 +98,9 @@ The OutputVariableType does not provide information about the size of the output
 
 
 
-.. _sec-configurationtype:
-
-
+*****************
 ConfigurationType
-=================
+*****************
 
 This section shows the ConfigurationType structure, which is used for selecting a configuration for reading or writing information to the module. Specifically, the ConfigurationType.Current configuration is usually used at the end of a solution process, to obtain result values, or the ConfigurationType.Initial is used to set initial values for a solution process.
 
@@ -125,11 +125,9 @@ This section shows the ConfigurationType structure, which is used for selecting 
 
 
 
-.. _sec-itemtype:
-
-
+********
 ItemType
-========
+********
 
 This section shows the ItemType structure, which is used for defining types of indices, e.g., in render window and will be also used in item dictionaries in future.
 
@@ -152,11 +150,9 @@ This section shows the ItemType structure, which is used for defining types of i
 
 
 
-.. _sec-nodetype:
-
-
+********
 NodeType
-========
+********
 
 This section shows the NodeType structure, which is used for defining node types for 3D rigid bodies.
 
@@ -205,11 +201,9 @@ This section shows the NodeType structure, which is used for defining node types
 
 
 
-.. _sec-jointtype:
-
-
+*********
 JointType
-=========
+*********
 
 This section shows the JointType structure, which is used for defining joint types, used in KinematicTree.
 
@@ -234,11 +228,9 @@ This section shows the JointType structure, which is used for defining joint typ
 
 
 
-.. _sec-dynamicsolvertype:
-
-
+*****************
 DynamicSolverType
-=================
+*****************
 
 This section shows the DynamicSolverType structure, which is used for selecting dynamic solvers for simulation.
 
@@ -269,11 +261,26 @@ This section shows the DynamicSolverType structure, which is used for selecting 
 
 
 
-.. _sec-keycode:
+****************
+CrossSectionType
+****************
+
+This section shows the CrossSectionType structure, which is used for defining beam cross section types.
 
 
+
+\ The class **CrossSectionType** has the following **functions and structures**:
+
+* | **Polygon**:
+  | cross section profile defined by polygon
+* | **Circular**:
+  | cross section is circle or elliptic
+
+
+
+*******
 KeyCode
-=======
+*******
 
 This section shows the KeyCode structure, which is used for special key codes in keyPressUserFunction.
 
@@ -322,11 +329,9 @@ This section shows the KeyCode structure, which is used for special key codes in
 
 
 
-.. _sec-linearsolvertype:
-
-
+****************
 LinearSolverType
-================
+****************
 
 This section shows the LinearSolverType structure, which is used for selecting linear solver types, which are dense or sparse solvers.
 
@@ -345,11 +350,9 @@ This section shows the LinearSolverType structure, which is used for selecting l
 
 
 
-.. _sec-contacttypeindex:
-
-
+****************
 ContactTypeIndex
-================
+****************
 
 This section shows the ContactTypeIndex structure, which is in GeneralContact to select specific contact items, such as spheres, ANCFCable or triangle items.
 

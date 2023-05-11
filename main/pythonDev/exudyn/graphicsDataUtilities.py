@@ -57,6 +57,8 @@ color4lightgrey =  [0.7,0.7,0.7,1.]
 color4lightgrey2 = [0.85,0.85,0.85,1.]
 color4white =      [1.,1.,1.,1.]
 
+color4default =    [-1.,-1.,-1.,-1.] #indicates that default color is used
+
 #define a list of 16 colors for numbered colors
 color4list = [color4red, color4green, color4blue, 
               color4cyan, color4magenta, color4yellow,

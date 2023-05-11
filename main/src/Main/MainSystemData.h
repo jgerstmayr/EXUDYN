@@ -352,7 +352,7 @@ public: //
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	//local to global ODE2 transformation lists; returned as python list
+	//! local to global ODE2 transformation lists; returned as python list
 	std::vector<Index> PyGetObjectLocalToGlobalODE2(Index objectNumber)
 	{
 		if (objectNumber >= cSystemData->GetLocalToGlobalODE2().NumberOfItems())
@@ -362,7 +362,7 @@ public: //
 		}
 		return cSystemData->GetLocalToGlobalODE2()[objectNumber];
 	}
-	//local to global ODE1 transformation lists; returned as python list
+	//! local to global ODE1 transformation lists; returned as python list
 	std::vector<Index> PyGetObjectLocalToGlobalODE1(Index objectNumber)
 	{
 		if (objectNumber >= cSystemData->GetLocalToGlobalODE1().NumberOfItems())
@@ -372,7 +372,7 @@ public: //
 		}
 		return cSystemData->GetLocalToGlobalODE1()[objectNumber];
 	}
-	//local to global AE transformation lists; returned as python list
+	//! local to global AE transformation lists; returned as python list
 	std::vector<Index> PyGetObjectLocalToGlobalAE(Index objectNumber)
 	{
 		if (objectNumber >= cSystemData->GetLocalToGlobalAE().NumberOfItems())
@@ -382,7 +382,7 @@ public: //
 		}
 		return cSystemData->GetLocalToGlobalAE()[objectNumber];
 	}
-	//local to global Data transformation lists; returned as python list
+	//! local to global Data transformation lists; returned as python list
 	std::vector<Index> PyGetObjectLocalToGlobalData(Index objectNumber)
 	{
 		if (objectNumber >= cSystemData->GetLocalToGlobalData().NumberOfItems())
@@ -393,8 +393,140 @@ public: //
 		return cSystemData->GetLocalToGlobalData()[objectNumber];
 	}
 
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    //! create and return list of LTG list for node; slow as it creates a new std::vector
+    std::vector<Index> PyGetNodeLocalToGlobalODE2(Index nodeNumber)
+    {
+        if (nodeNumber >= cSystemData->GetCNodes().NumberOfItems())
+        {
+            PyError("GetNodeLocalToGlobalODE2: illegal index");
+            return std::vector<Index>();
+        }
+        std::vector<Index> indexList;
+        Index n = cSystemData->GetCNode(nodeNumber).GetNumberOfODE2Coordinates();
 
-	//! get current (computation) time
+        if (EXUstd::IsOfType(cSystemData->GetCNode(nodeNumber).GetNodeGroup(), CNodeGroup::ODE2variables) &&
+            n != 0)
+        {
+            Index cntStart = cSystemData->GetCNode(nodeNumber).GetGlobalODE2CoordinateIndex();
+            for (Index i = 0; i < n; i++)
+            {
+                indexList.push_back(cntStart++);
+            }
+        }
+        return indexList;
+    }
+
+    //! create and return list of LTG list for node; slow as it creates a new std::vector
+    std::vector<Index> PyGetNodeLocalToGlobalODE1(Index nodeNumber)
+    {
+        if (nodeNumber >= cSystemData->GetCNodes().NumberOfItems())
+        {
+            PyError("GetNodeLocalToGlobalODE1: illegal index");
+            return std::vector<Index>();
+        }
+        std::vector<Index> indexList;
+        Index n = cSystemData->GetCNode(nodeNumber).GetNumberOfODE1Coordinates();
+
+        if (EXUstd::IsOfType(cSystemData->GetCNode(nodeNumber).GetNodeGroup(), CNodeGroup::ODE1variables) &&
+            n != 0)
+        {
+            Index cntStart = cSystemData->GetCNode(nodeNumber).GetGlobalODE1CoordinateIndex();
+            for (Index i = 0; i < n; i++)
+            {
+                indexList.push_back(cntStart++);
+            }
+        }
+        return indexList;
+    }
+
+    //! create and return list of LTG list for node; slow as it creates a new std::vector
+    std::vector<Index> PyGetNodeLocalToGlobalAE(Index nodeNumber)
+    {
+        if (nodeNumber >= cSystemData->GetCNodes().NumberOfItems())
+        {
+            PyError("GetNodeLocalToGlobalAE: illegal index");
+            return std::vector<Index>();
+        }
+        std::vector<Index> indexList;
+        Index n = cSystemData->GetCNode(nodeNumber).GetNumberOfAECoordinates();
+
+        if (EXUstd::IsOfType(cSystemData->GetCNode(nodeNumber).GetNodeGroup(), CNodeGroup::AEvariables) &&
+            n != 0)
+        {
+            Index cntStart = cSystemData->GetCNode(nodeNumber).GetGlobalAECoordinateIndex();
+            for (Index i = 0; i < n; i++)
+            {
+                indexList.push_back(cntStart++);
+            }
+        }
+        return indexList;
+    }
+
+    //! create and return list of LTG list for node; slow as it creates a new std::vector
+    std::vector<Index> PyGetNodeLocalToGlobalData(Index nodeNumber)
+    {
+        if (nodeNumber >= cSystemData->GetCNodes().NumberOfItems())
+        {
+            PyError("GetNodeLocalToGlobalData: illegal index");
+            return std::vector<Index>();
+        }
+        std::vector<Index> indexList;
+        Index n = cSystemData->GetCNode(nodeNumber).GetNumberOfDataCoordinates();
+
+        if (EXUstd::IsOfType(cSystemData->GetCNode(nodeNumber).GetNodeGroup(), CNodeGroup::DataVariables) &&
+            n != 0)
+        {
+            Index cntStart = cSystemData->GetCNode(nodeNumber).GetGlobalDataCoordinateIndex();
+            for (Index i = 0; i < n; i++)
+            {
+                indexList.push_back(cntStart++);
+            }
+        }
+        return indexList;
+    }
+
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    //Loads
+
+    //! pybind add load dependencies
+    void PyAddODE2LoadDependencies(Index loadNumber, const std::vector<Index>& globalODE2coordinates)
+    {
+        Index nLoads = cSystemData->GetCLoads().NumberOfItems();
+        if (loadNumber >= nLoads)
+        {
+            PyError("AddODE2LoadDependencies: invalid load number");
+        }
+
+        //check if load dependencies are initialized:
+        if (cSystemData->GetLoadsODE2dependencies().NumberOfItems() == 0)
+        {
+            ArrayIndex emptyArray;
+            for (Index i=0; i < nLoads; i++)
+            {
+                cSystemData->GetLoadsODE2dependencies().Append(emptyArray);
+            }
+        }
+        else if (cSystemData->GetLoadsODE2dependencies().NumberOfItems() != nLoads)
+        {
+            PyError("AddODE2LoadDependencies: inconsistent size of systemData.loadsODE2dependencies; call Assemble() first");
+        }
+        Index nODE2 = cSystemData->GetNumberOfCoordinatesODE2();
+        for (Index k = 0; k < globalODE2coordinates.size(); k++)
+        {
+            Index c = globalODE2coordinates[k];
+            if (!EXUstd::IndexIsInRange(c, 0, nODE2))
+            {
+                PyError(STDstring("AddODE2LoadDependencies: coordinate index ")+EXUstd::ToString(k)+" is "+ EXUstd::ToString(c)+" which is not in valid range [0,"+ EXUstd::ToString(nODE2)+"]");
+            }
+            cSystemData->GetLoadsODE2dependencies()[loadNumber].Append(c);
+        }
+    }
+
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//! get current (computation) time
 	Real PyGetCurrentTime()
 	{
 		PyWarning("mbs.systemData.GetCurrentTime() is DEPRECATED! use mbs.systemData.GetTime(exu.ConfigurationType.Current) instead");
@@ -474,6 +606,44 @@ public: //
 
 		return info;
 	}
+
+    STDstring PyInfoLTG() const
+    {
+        STDstring info;
+        Index cnt;
+        cnt = 0;
+        for (auto item : cSystemData->GetLocalToGlobalODE2()) {
+            info += "object " + EXUstd::ToString(cnt++) + " ODE2 LTG=" + EXUstd::ToString(*item) + "\n";
+        }
+        cnt = 0;
+        for (auto item : cSystemData->GetLocalToGlobalODE1()) {
+            info += "object " + EXUstd::ToString(cnt++) + " ODE1 LTG=" + EXUstd::ToString(*item) + "\n";
+        }
+        cnt = 0;
+        for (auto item : cSystemData->GetLocalToGlobalAE()) {
+            info += "object " + EXUstd::ToString(cnt++) + " AE LTG  =" + EXUstd::ToString(*item) + "\n";
+        }
+        cnt = 0;
+        for (auto item : cSystemData->GetLocalToGlobalData()) {
+            info += "object " + EXUstd::ToString(cnt++) + " Data LTG=" + EXUstd::ToString(*item) + "\n";
+        }
+
+        //load dependencies:
+        cnt = 0;
+        for (auto item : cSystemData->GetLoadsODE2dependencies()) {
+            info += "load " + EXUstd::ToString(cnt++) + " ODE2 dependencies=" + EXUstd::ToString(*item) + "\n";
+        }
+        cnt = 0;
+        for (auto item : cSystemData->GetLoadsODE1dependencies()) {
+            info += "load " + EXUstd::ToString(cnt++) + " ODE1 dependencies=" + EXUstd::ToString(*item) + "\n";
+        }
+        cnt = 0;
+        for (auto item : cSystemData->GetLoadsAEdependencies()) {
+            info += "load " + EXUstd::ToString(cnt++) + " AE dependencies  =" + EXUstd::ToString(*item) + "\n";
+        }
+
+        return info;
+    }
 
 	//! print information summary on system
 	STDstring PyInfoSummary() const

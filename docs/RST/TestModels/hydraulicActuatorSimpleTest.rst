@@ -104,7 +104,7 @@ You can view and download this file on Github: `hydraulicActuatorSimpleTest.py <
                                                nodeNumbers=[nODE1],
                                                offsetLength=LH0, strokeLength=LH0*0.5, 
                                                chamberCrossSection0=A[0], chamberCrossSection1=A[1],
-                                               referenceVolume0=V0, referenceVolume1=V1,
+                                               hoseVolume0=V0, hoseVolume1=V1,
                                                valveOpening0=0, valveOpening1=0,
                                                oilBulkModulus=Eoil, actuatorDamping=dampingHA, nominalFlow=Qn, 
                                                systemPressure=pS, tankPressure=pT,

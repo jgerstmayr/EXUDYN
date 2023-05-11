@@ -14,6 +14,7 @@
 import numpy as np
 from math import sin, cos, pi, sqrt
 from enum import Enum
+import copy 
 
 import exudyn
 
@@ -89,7 +90,11 @@ class ExpectedType(Enum):
     Unsigned = 2
     Bool = 4
     Int = 8
+    PInt = 8+1
+    UInt = 8+2
     Real = 16
+    PReal = 16+1
+    UReal = 16+2
     Vector = 32
     Matrix = 64
     RigidBodyInertia = 128
@@ -101,15 +106,17 @@ class ExpectedType(Enum):
 
 #**function: internal function which is used to raise common errors in case of wrong types; dim is used for vectors and square matrices, cols is used for non-square matrices
 def RaiseTypeError(where='', argumentName='', received = None, expectedType = None, dim=None, cols=None):
-    errStr = 'ERROR in ' + where + ' in argument ' + argumentName + ': expected type=' + expectedType.name
-    if expectedType == ExpectedType.Vector:
+    t = copy.copy(expectedType)
+        
+    errStr = 'ERROR in ' + where + ' in argument ' + argumentName + ': expected type=' + t.name
+    if t == ExpectedType.Vector:
         errStr += ' (as list or numpy array)'
-    elif expectedType == ExpectedType.Matrix:
+    elif t == ExpectedType.Matrix:
         errStr += ' (as list of lists or numpy array)'
         
     if dim != None:
         ncols = cols
-        if expectedType == ExpectedType.Matrix and cols == None: 
+        if t == ExpectedType.Matrix and cols == None: 
             ncols = dim  #square Matrix
         if ncols != None:
             errStr += ', expected size = (' + str(dim) + ',' + str(ncols) + ')'
@@ -141,6 +148,18 @@ def IsValidRealInt(x):
         or isinstance(x, np.double)
         or isinstance(x, np.integer)
         ):
+        return True
+    return False
+
+#**function: return True, if x is valid Real/Int and positive
+def IsValidPRealInt(x):
+    if IsValidRealInt(x) and x > 0:
+        return True
+    return False
+
+#**function: return True, if x is valid Real/Int and unsigned (non-negative)
+def IsValidURealInt(x):
+    if IsValidRealInt(x) and x >= 0:
         return True
     return False
 

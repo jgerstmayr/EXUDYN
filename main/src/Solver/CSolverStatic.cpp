@@ -216,7 +216,8 @@ void CSolverStatic::ComputeNewtonJacobian(CSystem& computationalSystem, const Si
 	//Tangent stiffness
 	//compute jacobian (w.r.t. U ==> also add V); jacobianAE used as temporary matrix
 	STARTTIMER(timer.jacobianODE2);
-	computationalSystem.JacobianODE2RHS(data.tempCompDataArray, newton.numericalDifferentiation, *(data.systemJacobian), 1., 0., 1.); //ODE2_t part not needed, but ODE1 included!
+	computationalSystem.JacobianODE2RHS(data.tempCompDataArray, newton.numericalDifferentiation, *(data.systemJacobian), 
+        1., 0., 1., simulationSettings.staticSolver.computeLoadsJacobian); //ODE2_t part not needed, but ODE1 included!
 	STOPTIMER(timer.jacobianODE2);
 
 	STARTTIMER(timer.jacobianAE);

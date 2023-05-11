@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-07-21  19:28:51 (last modified)
+* @date         2023-04-29  00:36:19 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -120,12 +120,14 @@ public: // AUTO:
         cObjectConnectorHydraulicActuatorSimple->GetParameters().strokeLength = py::cast<Real>(d["strokeLength"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectConnectorHydraulicActuatorSimple->GetParameters().chamberCrossSection0 = py::cast<Real>(d["chamberCrossSection0"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectConnectorHydraulicActuatorSimple->GetParameters().chamberCrossSection1 = py::cast<Real>(d["chamberCrossSection1"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectConnectorHydraulicActuatorSimple->GetParameters().referenceVolume0 = py::cast<Real>(d["referenceVolume0"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectConnectorHydraulicActuatorSimple->GetParameters().referenceVolume1 = py::cast<Real>(d["referenceVolume1"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        cObjectConnectorHydraulicActuatorSimple->GetParameters().hoseVolume0 = py::cast<Real>(d["hoseVolume0"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        cObjectConnectorHydraulicActuatorSimple->GetParameters().hoseVolume1 = py::cast<Real>(d["hoseVolume1"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectConnectorHydraulicActuatorSimple->GetParameters().valveOpening0 = py::cast<Real>(d["valveOpening0"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectConnectorHydraulicActuatorSimple->GetParameters().valveOpening1 = py::cast<Real>(d["valveOpening1"]); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "actuatorDamping")) { cObjectConnectorHydraulicActuatorSimple->GetParameters().actuatorDamping = py::cast<Real>(d["actuatorDamping"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         cObjectConnectorHydraulicActuatorSimple->GetParameters().oilBulkModulus = py::cast<Real>(d["oilBulkModulus"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        cObjectConnectorHydraulicActuatorSimple->GetParameters().cylinderBulkModulus = py::cast<Real>(d["cylinderBulkModulus"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        cObjectConnectorHydraulicActuatorSimple->GetParameters().hoseBulkModulus = py::cast<Real>(d["hoseBulkModulus"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectConnectorHydraulicActuatorSimple->GetParameters().nominalFlow = py::cast<Real>(d["nominalFlow"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectConnectorHydraulicActuatorSimple->GetParameters().systemPressure = py::cast<Real>(d["systemPressure"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectConnectorHydraulicActuatorSimple->GetParameters().tankPressure = py::cast<Real>(d["tankPressure"]); /* AUTO:  read out dictionary and cast to C++ type*/
@@ -156,12 +158,14 @@ public: // AUTO:
         d["strokeLength"] = (Real)cObjectConnectorHydraulicActuatorSimple->GetParameters().strokeLength; //! AUTO: cast variables into python (not needed for standard types) 
         d["chamberCrossSection0"] = (Real)cObjectConnectorHydraulicActuatorSimple->GetParameters().chamberCrossSection0; //! AUTO: cast variables into python (not needed for standard types) 
         d["chamberCrossSection1"] = (Real)cObjectConnectorHydraulicActuatorSimple->GetParameters().chamberCrossSection1; //! AUTO: cast variables into python (not needed for standard types) 
-        d["referenceVolume0"] = (Real)cObjectConnectorHydraulicActuatorSimple->GetParameters().referenceVolume0; //! AUTO: cast variables into python (not needed for standard types) 
-        d["referenceVolume1"] = (Real)cObjectConnectorHydraulicActuatorSimple->GetParameters().referenceVolume1; //! AUTO: cast variables into python (not needed for standard types) 
+        d["hoseVolume0"] = (Real)cObjectConnectorHydraulicActuatorSimple->GetParameters().hoseVolume0; //! AUTO: cast variables into python (not needed for standard types) 
+        d["hoseVolume1"] = (Real)cObjectConnectorHydraulicActuatorSimple->GetParameters().hoseVolume1; //! AUTO: cast variables into python (not needed for standard types) 
         d["valveOpening0"] = (Real)cObjectConnectorHydraulicActuatorSimple->GetParameters().valveOpening0; //! AUTO: cast variables into python (not needed for standard types) 
         d["valveOpening1"] = (Real)cObjectConnectorHydraulicActuatorSimple->GetParameters().valveOpening1; //! AUTO: cast variables into python (not needed for standard types) 
         d["actuatorDamping"] = (Real)cObjectConnectorHydraulicActuatorSimple->GetParameters().actuatorDamping; //! AUTO: cast variables into python (not needed for standard types) 
         d["oilBulkModulus"] = (Real)cObjectConnectorHydraulicActuatorSimple->GetParameters().oilBulkModulus; //! AUTO: cast variables into python (not needed for standard types) 
+        d["cylinderBulkModulus"] = (Real)cObjectConnectorHydraulicActuatorSimple->GetParameters().cylinderBulkModulus; //! AUTO: cast variables into python (not needed for standard types) 
+        d["hoseBulkModulus"] = (Real)cObjectConnectorHydraulicActuatorSimple->GetParameters().hoseBulkModulus; //! AUTO: cast variables into python (not needed for standard types) 
         d["nominalFlow"] = (Real)cObjectConnectorHydraulicActuatorSimple->GetParameters().nominalFlow; //! AUTO: cast variables into python (not needed for standard types) 
         d["systemPressure"] = (Real)cObjectConnectorHydraulicActuatorSimple->GetParameters().systemPressure; //! AUTO: cast variables into python (not needed for standard types) 
         d["tankPressure"] = (Real)cObjectConnectorHydraulicActuatorSimple->GetParameters().tankPressure; //! AUTO: cast variables into python (not needed for standard types) 
@@ -191,12 +195,14 @@ public: // AUTO:
         else if (parameterName.compare("strokeLength") == 0) { return py::cast((Real)cObjectConnectorHydraulicActuatorSimple->GetParameters().strokeLength);} //! AUTO: get parameter
         else if (parameterName.compare("chamberCrossSection0") == 0) { return py::cast((Real)cObjectConnectorHydraulicActuatorSimple->GetParameters().chamberCrossSection0);} //! AUTO: get parameter
         else if (parameterName.compare("chamberCrossSection1") == 0) { return py::cast((Real)cObjectConnectorHydraulicActuatorSimple->GetParameters().chamberCrossSection1);} //! AUTO: get parameter
-        else if (parameterName.compare("referenceVolume0") == 0) { return py::cast((Real)cObjectConnectorHydraulicActuatorSimple->GetParameters().referenceVolume0);} //! AUTO: get parameter
-        else if (parameterName.compare("referenceVolume1") == 0) { return py::cast((Real)cObjectConnectorHydraulicActuatorSimple->GetParameters().referenceVolume1);} //! AUTO: get parameter
+        else if (parameterName.compare("hoseVolume0") == 0) { return py::cast((Real)cObjectConnectorHydraulicActuatorSimple->GetParameters().hoseVolume0);} //! AUTO: get parameter
+        else if (parameterName.compare("hoseVolume1") == 0) { return py::cast((Real)cObjectConnectorHydraulicActuatorSimple->GetParameters().hoseVolume1);} //! AUTO: get parameter
         else if (parameterName.compare("valveOpening0") == 0) { return py::cast((Real)cObjectConnectorHydraulicActuatorSimple->GetParameters().valveOpening0);} //! AUTO: get parameter
         else if (parameterName.compare("valveOpening1") == 0) { return py::cast((Real)cObjectConnectorHydraulicActuatorSimple->GetParameters().valveOpening1);} //! AUTO: get parameter
         else if (parameterName.compare("actuatorDamping") == 0) { return py::cast((Real)cObjectConnectorHydraulicActuatorSimple->GetParameters().actuatorDamping);} //! AUTO: get parameter
         else if (parameterName.compare("oilBulkModulus") == 0) { return py::cast((Real)cObjectConnectorHydraulicActuatorSimple->GetParameters().oilBulkModulus);} //! AUTO: get parameter
+        else if (parameterName.compare("cylinderBulkModulus") == 0) { return py::cast((Real)cObjectConnectorHydraulicActuatorSimple->GetParameters().cylinderBulkModulus);} //! AUTO: get parameter
+        else if (parameterName.compare("hoseBulkModulus") == 0) { return py::cast((Real)cObjectConnectorHydraulicActuatorSimple->GetParameters().hoseBulkModulus);} //! AUTO: get parameter
         else if (parameterName.compare("nominalFlow") == 0) { return py::cast((Real)cObjectConnectorHydraulicActuatorSimple->GetParameters().nominalFlow);} //! AUTO: get parameter
         else if (parameterName.compare("systemPressure") == 0) { return py::cast((Real)cObjectConnectorHydraulicActuatorSimple->GetParameters().systemPressure);} //! AUTO: get parameter
         else if (parameterName.compare("tankPressure") == 0) { return py::cast((Real)cObjectConnectorHydraulicActuatorSimple->GetParameters().tankPressure);} //! AUTO: get parameter
@@ -227,12 +233,14 @@ public: // AUTO:
         else if (parameterName.compare("strokeLength") == 0) { cObjectConnectorHydraulicActuatorSimple->GetParameters().strokeLength = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("chamberCrossSection0") == 0) { cObjectConnectorHydraulicActuatorSimple->GetParameters().chamberCrossSection0 = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("chamberCrossSection1") == 0) { cObjectConnectorHydraulicActuatorSimple->GetParameters().chamberCrossSection1 = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("referenceVolume0") == 0) { cObjectConnectorHydraulicActuatorSimple->GetParameters().referenceVolume0 = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("referenceVolume1") == 0) { cObjectConnectorHydraulicActuatorSimple->GetParameters().referenceVolume1 = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("hoseVolume0") == 0) { cObjectConnectorHydraulicActuatorSimple->GetParameters().hoseVolume0 = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("hoseVolume1") == 0) { cObjectConnectorHydraulicActuatorSimple->GetParameters().hoseVolume1 = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("valveOpening0") == 0) { cObjectConnectorHydraulicActuatorSimple->GetParameters().valveOpening0 = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("valveOpening1") == 0) { cObjectConnectorHydraulicActuatorSimple->GetParameters().valveOpening1 = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("actuatorDamping") == 0) { cObjectConnectorHydraulicActuatorSimple->GetParameters().actuatorDamping = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("oilBulkModulus") == 0) { cObjectConnectorHydraulicActuatorSimple->GetParameters().oilBulkModulus = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("cylinderBulkModulus") == 0) { cObjectConnectorHydraulicActuatorSimple->GetParameters().cylinderBulkModulus = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("hoseBulkModulus") == 0) { cObjectConnectorHydraulicActuatorSimple->GetParameters().hoseBulkModulus = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("nominalFlow") == 0) { cObjectConnectorHydraulicActuatorSimple->GetParameters().nominalFlow = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("systemPressure") == 0) { cObjectConnectorHydraulicActuatorSimple->GetParameters().systemPressure = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("tankPressure") == 0) { cObjectConnectorHydraulicActuatorSimple->GetParameters().tankPressure = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

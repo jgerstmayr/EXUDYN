@@ -834,11 +834,12 @@ def ReplaceLatexCommands(s, conversionDict, sectionMarkerText=''): #replace stri
 #a class that handles triples of strings: Pybind, Latex, RST
 class PyLatexRST:
     #initialize strings
-    def __init__(self, sPy='', sLatex='', sRST=''):
+    def __init__(self, sPy='', sLatex='', sRST='', sPyi=''):
         
         self.sPy = sPy
         self.sLatex = sLatex
         self.sRST = sRST
+        self.sPyi = sPyi
         self.rstFileLists = [] #contains tuples (filename, text)
         self.rstCurrentFileName = '' #if this is non-empty, it will be stored in list with current text
 
@@ -1001,6 +1002,28 @@ class PyLatexRST:
         self.sLatex += '\\end{center}\n'
         self.sRST += '\n\n' #empty line closes list block
 
+    def DefStartEnumClass(self, className, description, subSection=False, labelName='', cClass=None):
+        if cClass==None:
+            cClass = className
+            
+        self.sPy +=	'  py::enum_<' + cClass + '>(m, "' + className + '")\n'
+        self.DefLatexStartClass(className, description, subSection=False, labelName='')
+        
+        self.sPyi += '\nclass '+className+'(Enum):\n'
+
+    #add a enum value and definition to pybind interface and to latex documentation
+    def AddEnumValue(self, className, itemName, description):
+        self.sPy += '		.value("' + itemName + '", ' + className + '::' + itemName + ')    //' + description + '\n'
+
+        #this function is for enums
+        if className not in localListEnumNames:
+            localListEnumNames.append(className)
+
+        #self.sLatex += '  ' + Str2Latex(itemName) + ' & ' + Str2Latex(description) + '\\\\ \\hline \n'
+        self.DefLatexDataAccess(itemName, description) #Str2Latex(...) done inside function
+
+        self.sPyi += ' '*4 + itemName + ' = int\n' #is int correct?
+
     #start a new section
     def DefLatexStartClass(self, sectionName, description, subSection=False, labelName=''):
     
@@ -1039,9 +1062,18 @@ class PyLatexRST:
             else:
                 # constructorCode = 'CHECKandTHROWstring("'+pyClass+'() may not be called from Python. '+forbidPythonConstructorStr+'");'            
                 # self.sPy += '        .def(py::init([]() { '+constructorCode+' } )) //!< AUTO: forbid constructor call from Python\n'
-                self.sPy += '        .def(py::init(&'+cClass+'::ForbidConstructor))'
+                self.sPy += '        .def(py::init(&'+cClass+'::ForbidConstructor))\n'
     
         self.DefLatexStartClass(sectionName, description, subSection=subSection, labelName=labelName)
+
+        classInfo = 'exudyn module'
+        if pyClass != '': #in case of basic module, stubs are not needed => information 
+            classInfo = 'class '+pyClass
+
+        self.sPyi += '\n#stub information for '+classInfo+' functions\n'
+        if pyClass != '': #in case of basic module, stubs are not needed => information 
+            self.sPyi += 'class ' + pyClass + ':\n'
+        
     
     def DefPyFinishClass(self, cClass):
         
@@ -1052,10 +1084,16 @@ class PyLatexRST:
         self.sRST += '\n'
 
     #add latex table entry / RST list entry for data variable
-    def DefLatexDataAccess(self, name, description): 
+    def DefLatexDataAccess(self, name, description, dataType = '', isExudyn = False): 
         self.sLatex += '  ' + Str2Latex(name) + ' & '+Str2Latex(description) + '\\\\ \\hline  \n'
         self.sRST += '* | ' + '**'+Str2Latex(name)+'**:\n'
         self.sRST += RemoveIndentation(LatexString2RST(description), '  | ') + '\n'
+        
+        if dataType != '':
+            if not isExudyn:
+                self.sPyi += ' '*4
+            self.sPyi += name + ':' + dataType+'\n'
+            
         
     #************************************************
     #helper functions to create manual pybinding to access functions in classes
@@ -1065,7 +1103,9 @@ class PyLatexRST:
     #options= additional manual options (e.g. memory model)
     #example = string, which is put into latex documentation
     #isLambdaFunction = True: cName is intepreted as lambda function and copied into pybind definition
-    def DefPyFunctionAccess(self, cClass, pyName, cName, description, argList=[], defaultArgs=[], example='', options='', isLambdaFunction = False): 
+    def DefPyFunctionAccess(self, cClass, pyName, cName, description, argList=[], defaultArgs=[], 
+                            example='', options='', isLambdaFunction = False, 
+                            argTypes=[], returnType = ''): 
         
         if pyName not in localListFunctionNames:
             localListFunctionNames.append(pyName)
@@ -1125,17 +1165,19 @@ class PyLatexRST:
             sRadd += '('
         if len(argList):
             for i in range(len(argList)):
-                self.sPy += ', py::arg("' + argList[i] + '")'
-                sLadd += argList[i]
-                sRadd += '\\ *'+argList[i]+'*\\ '
+                sSep = ''
+                if argList[i] != '*args': #won't work in pybind interface (see comment in Pybind11 docs)
+                    self.sPy += ', py::arg("' + argList[i] + '")'
+
+                sLadd += sSep+argList[i]
+                sRadd += sSep+'\\ *'+argList[i]+'*\\ '
                 if (defaultArgs[i] != ''):
-                    self.sPy += ' = ' + ReplaceDefaultArgsCpp(defaultArgs[i])
+                    if argList[i] != '*args': #won't work in pybind interface (see comment in Pybind11 docs)
+                        self.sPy += ' = ' + ReplaceDefaultArgsCpp(defaultArgs[i])
                     sLadd += ' = ' + ReplaceDefaultArgsLatex(defaultArgs[i])
                     sRadd += ' = ' + ReplaceDefaultArgsLatex(defaultArgs[i])
-                sLadd += ', '
-                sRadd += ', '
-            sLadd = sLadd[:-2] #remove last ', '
-            sRadd = sRadd[:-2] #remove last ', '
+                sSep = ', '
+
         self.sLatex += sLadd
         self.sRST += sRadd
         
@@ -1166,16 +1208,28 @@ class PyLatexRST:
             self.sRST += '  '+RSTcodeBlock(RemoveIndentation(exampleRST,'   '+'  ', False).replace('\\TAB','  '), 'python') + '\n' #TAB=2 spaces +2 spaces surrounding
         self.sLatex += '\\\\ \\hline \n'
 
-    #add a enum value and definition to pybind interface and to latex documentation
-    def AddEnumValue(self, className, itemName, description):
-        self.sPy += '		.value("' + itemName + '", ' + className + '::' + itemName + ')    //' + description + '\n'
+        pyiIndent = ''
+        if cClass != '': #in case of basic module, stubs are not needed => information 
+            pyiIndent = ' '*4
+        if returnType != '':
+            hasTypes = (len(argTypes) == len(argList)) and (len(argList) != 0)
+            # if len(argTypes) != len(argList):
+            #     raise ValueError('DefPyFunctionAccess: inconsistent argList / argTypes')
 
-        #this function is for enums
-        if className not in localListEnumNames:
-            localListEnumNames.append(className)
+            argString = 'self'*(cClass!='')
+            if len(argList):
+                sepArg = ', '*(argString!='')
+                for i in range(len(argList)):
+                    argString += sepArg + argList[i]
+                    if hasTypes and argTypes[i]!='':
+                        argString += ': '+argTypes[i]
+                    elif i < len(defaultArgs):
+                        argString += '='+ReplaceDefaultArgsLatex(defaultArgs[i].replace('exu.',''))
+                    sepArg = ', '
 
-        #self.sLatex += '  ' + Str2Latex(itemName) + ' & ' + Str2Latex(description) + '\\\\ \\hline \n'
-        self.DefLatexDataAccess(itemName, description) #Str2Latex(...) done inside function
+            self.sPyi += pyiIndent+'@overload\n'
+            self.sPyi += pyiIndent+'def ' + pyName + '(' + argString + ') -> '+returnType+': ...\n'
+
 
     #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

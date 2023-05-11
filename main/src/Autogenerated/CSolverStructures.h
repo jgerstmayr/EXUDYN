@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-04-27 (last modfied)
+* @date         AUTO: 2023-05-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -139,7 +139,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-04-27 (last modfied)
+* @date         AUTO: 2023-05-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -263,7 +263,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-04-27 (last modfied)
+* @date         AUTO: 2023-05-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -377,7 +377,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-04-27 (last modfied)
+* @date         AUTO: 2023-05-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -473,7 +473,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-04-27 (last modfied)
+* @date         AUTO: 2023-05-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -504,13 +504,13 @@ public: // AUTO:
   Index lastVerboseStepIndex;                     //!< AUTO: step index when last time written to console (or file)
   Index multiThreadingMode;                       //!< AUTO: multithreading mode that has been used: 0=None (serial), 1=NGsolve taskmanager, 2=MicroThreading (Exudyn)
   Index numberOfThreadsUsed;                      //!< AUTO: number of threads that have been used in simulation
-  ResizableVector sensorValuesTemp;               //!< AUTO: temporary vector for per sensor values (overwritten for every sensor; usually contains last sensor values)
-  ResizableVector sensorValuesTemp2;              //!< AUTO: additional temporary vector for per sensor values (overwritten for every sensor; usually contains time+last sensor values)
   Index stepInformation;                          //!< AUTO: this is a copy of the solvers stepInformation used for console output
   Index verboseMode;                              //!< AUTO: this is a copy of the solvers verboseMode used for console output
   Index verboseModeFile;                          //!< AUTO: this is a copy of the solvers verboseModeFile used for file
   bool writeToSolutionFile;                       //!< AUTO: if false, no solution file is generated and no file is written
   bool writeToSolverFile;                         //!< AUTO: if false, no solver output file is generated and no file is written
+  ResizableVector sensorValuesTemp;               //!< AUTO: temporary vector for per sensor values (overwritten for every sensor; usually contains last sensor values)
+  ResizableVector sensorValuesTemp2;              //!< AUTO: additional temporary vector for per sensor values (overwritten for every sensor; usually contains time+last sensor values)
 
 
 public: // AUTO: 
@@ -529,7 +529,7 @@ public: // AUTO:
     lastSolutionWritten = 0.;
     lastVerboseStepIndex = 0;
     multiThreadingMode = 0;
-    numberOfThreadsUsed = 1;
+    numberOfThreadsUsed = 0;
     stepInformation = 0;
     verboseMode = 0;
     verboseModeFile = 0;
@@ -585,7 +585,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-04-27 (last modfied)
+* @date         AUTO: 2023-05-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

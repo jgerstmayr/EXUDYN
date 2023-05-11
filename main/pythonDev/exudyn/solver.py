@@ -577,7 +577,7 @@ def CheckSolverInfoStatistics(solverName, infoStat, numberOfEvaluations):
     newCnt = max(stat[0],stat[2],stat[4]) #array, vector, matrix new counts
 
     if newCnt > solverCheckMemoryAllocationsThreshold and newCnt >= numberOfEvaluations:
-        exudyn.Print("WARNING: "+solverName+" detected large amount ("+str(newCnt)+") of memory allocations, which seem to occur in every time step; solver may be slow")
+        exudyn.Print("WARNING: "+solverName+" detected large amount ("+str(newCnt)+") of memory allocations, which seem to occur in every time step; this may be due to user functions; solver may be slow")
 
     #print("newcnt=", newCnt)
 
