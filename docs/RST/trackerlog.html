@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Issue tracker &mdash; Exudyn1.6.80.dev1 1.6.80.dev1 documentation</title>
+  <title>Issue tracker &mdash; Exudyn1.6.103.dev1 1.6.103.dev1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
@@ -38,7 +38,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.6.80.dev1
+            Exudyn1.6.103.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -92,7 +92,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.6.80.dev1</a>
+          <a href="../../index.html">Exudyn1.6.103.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -117,15 +117,206 @@ The extension <code class="docutils literal notranslate"><span class="pre">.dev1
 BUG numbers refer to the according issue numbers.</p>
 <p>General information on current version:</p>
 <ul class="simple">
-<li><p>Exudyn version = 1.6.80.dev1,</p></li>
-<li><p>last change =  2023-04-28,</p></li>
-<li><p>Number of issues = 1540,</p></li>
-<li><p>Number of resolved issues = 1360 (80 in current version),</p></li>
+<li><p>Exudyn version = 1.6.103.dev1,</p></li>
+<li><p>last change =  2023-05-10,</p></li>
+<li><p>Number of issues = 1564,</p></li>
+<li><p>Number of resolved issues = 1383 (103 in current version),</p></li>
 </ul>
 <section id="version-1-6">
 <h2>Version 1.6<a class="headerlink" href="#version-1-6" title="Permalink to this heading"></a></h2>
 <blockquote>
 <div><ul class="simple">
+<li><dl class="simple">
+<dt>Version 1.6.103: resolved Issue 1561: stub files .pyi (extension)</dt><dd><ul>
+<li><p>description:  add .pyi files to setup_tools, copying them from autogenerate folder; use try catch to avoid problems at other platforms</p></li>
+<li><p>date resolved: <strong>2023-05-10 23:30</strong>, date raised: 2023-05-09</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.6.102: resolved Issue 1560: stub files .pyi (extension)</dt><dd><ul>
+<li><p>description:  automatically create stub file for C++ classes such as MainSystem, SystemContainer, GeneralContact, … by adding return type information and creating .pyi file; use temporary .pyi files in autogenerate folder</p></li>
+<li><p>date resolved: <strong>2023-05-10 23:19</strong>, date raised: 2023-05-09</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.6.101: resolved Issue 1562: stub files .pyi (extension)</dt><dd><ul>
+<li><p>description:  add .pyi files for enums from autoGeneratePyBindings</p></li>
+<li><p>date resolved: <strong>2023-05-10 20:43</strong>, date raised: 2023-05-09</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.6.100: resolved Issue 1559: stub files .pyi (extension)</dt><dd><ul>
+<li><p>description:  automatically create stub file for settings to alleviate auto-completion</p></li>
+<li><p>date resolved: <strong>2023-05-10 08:39</strong>, date raised: 2023-05-09</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.6.99: resolved Issue 1557: stub files (check)</dt><dd><ul>
+<li><p>description:  test creating stub files .pyi which are needed for MainSystem Python extensions</p></li>
+<li><p><strong>notes:</strong> tested with Spyder 5.1.5 and Visual Studio Code 1.78</p></li>
+<li><p>date resolved: <strong>2023-05-10 08:39</strong>, date raised: 2023-05-07</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.6.98: resolved Issue 1558: enum in global scope (fix)</dt><dd><ul>
+<li><p>description:  pybind11 translates enums to global module scope, e.g. exudyn.ItemType.Marker is also available as exudyn.Marker; remove export_values() in pybind interface</p></li>
+<li><p><strong>notes:</strong> if you by occasion used e.g. exu.DisplacementLocal instead of exu.OutputVariableType.DisplacementLocal you need to adapt your code!</p></li>
+<li><p>date resolved: <strong>2023-05-09 18:30</strong>, date raised: 2023-05-09</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.6.97: resolved Issue 1556: IsValidPRealPInt, IsValidURealPInt (extension)</dt><dd><ul>
+<li><p>description:  add functions to advancedUtilities for additional checks in Python functions</p></li>
+<li><p>date resolved: <strong>2023-05-07 20:33</strong>, date raised: 2023-05-07</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.6.96: resolved Issue 1555: color4default (extension)</dt><dd><ul>
+<li><p>description:  add default color to graphicsDataUtilities as a default value for items</p></li>
+<li><p>date resolved: <strong>2023-05-07 18:12</strong>, date raised: 2023-05-07</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.6.95: resolved Issue 1554: NodePoint2D (change)</dt><dd><ul>
+<li><p>description:  draw as sphere by default to improve visibility</p></li>
+<li><p>date resolved: <strong>2023-05-07 16:31</strong>, date raised: 2023-05-07</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.6.94: resolved Issue 1539: item names (change)</dt><dd><ul>
+<li><p>description:  remove stored string and replace by empty string in case of default item name</p></li>
+<li><p><strong>notes:</strong> not changed: std::string has practically no effect on memory footprint of items; check memory footprint separately (LTG lists, etc.)!</p></li>
+<li><p>date resolved: <strong>2023-05-05 23:32</strong>, date raised: 2023-04-28</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.6.93: resolved Issue 1553: AccelerationLocal, AngularAccelerationLocal (fix)</dt><dd><ul>
+<li><p>description:  add missing values to Pybind interface</p></li>
+<li><p>date resolved: <strong>2023-05-02 17:41</strong>, date raised: 2023-05-02</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.6.92: resolved Issue 1552: HydraulicActuator (extension)</dt><dd><ul>
+<li><p>description:  add VelocityLocal as output variable, which provides the time derivative of the distance, being the actuator velocity; updated docu and fixed description for outputvariable Velocity</p></li>
+<li><p>date resolved: <strong>2023-05-02 16:51</strong>, date raised: 2023-05-02</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.6.91: resolved Issue 1551: GeometricallyExactBeam (change)</dt><dd><ul>
+<li><p>description:  evaluate rotation at midspan of beam</p></li>
+<li><p>date resolved: <strong>2023-05-02 15:02</strong>, date raised: 2023-05-02</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.6.90: resolved Issue 1502: ANCFBeam (testing)</dt><dd><ul>
+<li><p>description:  check for very large deformations</p></li>
+<li><p><strong>notes:</strong> poor performance for large deformations caused by missing load jacobian</p></li>
+<li><p>date resolved: <strong>2023-05-01 19:26</strong>, date raised: 2023-04-08</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.6.89: resolved Issue 1501: GeometricallyExactBeam (testing)</dt><dd><ul>
+<li><p>description:  check for very large deformations</p></li>
+<li><p><strong>notes:</strong> poor performance for large deformations caused by missing load jacobian</p></li>
+<li><p>date resolved: <strong>2023-05-01 19:26</strong>, date raised: 2023-04-08</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.6.88: resolved Issue 1546: computeLoadsJacobian (change)</dt><dd><ul>
+<li><p>description:  add flag in timeIntegration and staticSolver settings to turn on/off jacobian of loads; will be by default turned on in static solver, turned off in time integration; adapt your models</p></li>
+<li><p>date resolved: <strong>2023-05-01 19:22</strong>, date raised: 2023-05-01</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.6.87: resolved Issue 1545: ComputeSingleLoads (extension)</dt><dd><ul>
+<li><p>description:  adapt for Jacobian computation of loads</p></li>
+<li><p>date resolved: <strong>2023-05-01 19:22</strong>, date raised: 2023-05-01</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.6.86: resolved Issue 1547: GetMarkerOutput (fix)</dt><dd><ul>
+<li><p>description:  in case of OuputVariableType.Coordinates, add check if Marker is of type Coordinate or Coordinates</p></li>
+<li><p>date resolved: <strong>2023-05-01 16:17</strong>, date raised: 2023-05-01</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.6.85: resolved Issue 1544: systemData.GetNodeLocalToGlobal (extension)</dt><dd><ul>
+<li><p>description:  add systemData access functions for LTG mappings of nodes, useful to check node coordinates; works for ODE2, ODE1, AE and Data coordinates; useful to create load dependencies</p></li>
+<li><p>date resolved: <strong>2023-04-29 22:03</strong>, date raised: 2023-04-29</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.6.84: resolved Issue 1543: systemData (extension)</dt><dd><ul>
+<li><p>description:  add InfoLTG function which outputs LTG lists and load dependencies</p></li>
+<li><p>date resolved: <strong>2023-04-29 22:03</strong>, date raised: 2023-04-29</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.6.83: resolved Issue 0483: URDF file (extension)</dt><dd><ul>
+<li><p>description:  check importing an URDF file for robots, urdf_parser_py</p></li>
+<li><p><strong>notes:</strong> not done: should be done instead by Corke robotics-toolbox</p></li>
+<li><p>date resolved: <strong>2023-04-29 20:20</strong>, date raised: 2020-12-04</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.6.82: resolved Issue 1542: HydraulicsActuator (change)</dt><dd><ul>
+<li><p>description:  changing referenceVolume0 and referenceVolume1 to hoseVolume0 and hoseVolume1 with different meaning according to referenced paper; adjust your models!</p></li>
+<li><p><strong>notes:</strong> thanks to Qasim Khadim for provigind the model</p></li>
+<li><p>date resolved: <strong>2023-04-29 01:11</strong>, date raised: 2023-04-29</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.6.81: resolved Issue 1541: HydraulicsActuator (extension)</dt><dd><ul>
+<li><p>description:  extend model of effective bulk modulus acc. to paper <a class="reference external" href="https://doi.org/10.1007/s11044-019-09696-y">https://doi.org/10.1007/s11044-019-09696-y</a></p></li>
+<li><p>date resolved: <strong>2023-04-29 01:10</strong>, date raised: 2023-04-28</p></li>
+</ul>
+</dd>
+</dl>
+</li>
 <li><dl class="simple">
 <dt>Version 1.6.80: resolved Issue 1538: taskmanager (fix)</dt><dd><ul>
 <li><p>description:  fix problem with taskmanager shutdown due to issue 1532</p></li>
@@ -7467,7 +7658,7 @@ BUG numbers refer to the according issue numbers.</p>
 </li>
 <li><dl class="simple">
 <dt>Version 1.0.108: resolved Issue 0554: explicit integrator (extension)</dt><dd><ul>
-<li><p>description:  add explicit integrator with automatic step size control (DOPRI5, ODE23); checkout Section <a class="reference internal" href="ExplicitSolvers.html#sec-explicitsolver"><span class="std std-ref">Explicit solvers</span></a> for description of explicit solvers and Section <a class="reference internal" href="cInterface/TypeDefinitions.html#sec-dynamicsolvertype"><span class="std std-ref">DynamicSolverType</span></a> for available solver types</p></li>
+<li><p>description:  add explicit integrator with automatic step size control (DOPRI5, ODE23); checkout Section <a class="reference internal" href="ExplicitSolvers.html#sec-explicitsolver"><span class="std std-ref">Explicit solvers</span></a> for description of explicit solvers and Section <span class="xref std std-ref">sec-dynamicsolvertype</span> for available solver types</p></li>
 <li><p>date resolved: <strong>2021-01-25 00:54</strong>, date raised: 2021-01-24</p></li>
 </ul>
 </dd>
@@ -11292,8 +11483,40 @@ BUG numbers refer to the according issue numbers.</p>
 <blockquote>
 <div><ul class="simple">
 <li><dl class="simple">
-<dt><strong>open issue 1539:</strong> item names</dt><dd><ul>
-<li><p>description:  remove stored string and replace by empty string in case of default item name</p></li>
+<dt><strong>open issue 1563:</strong> MainSystem Python extensions</dt><dd><ul>
+<li><p>description:  add Python utility functions for mbs, such as PlotSensor, SolveDynamic, …; use identical interfaces to alleviate creation of .pyi files and documentation; add new flag mbsFunction as hint to put docu to MainSystem and make .pyi extension</p></li>
+<li><p>date raised: 2023-05-09</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>open issue 1550:</strong> GeometricallyExactBeam</dt><dd><ul>
+<li><p>description:  add F_Lie*Glocal_q term for Jacobian to improve convergence</p></li>
+<li><p>date raised: 2023-05-02</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>open issue 1549:</strong> KinematicTree</dt><dd><ul>
+<li><p>description:  consider extension w.r.t. rigid body node at basis (Lie group node in explicit integration…); add baseNode (default=invalid), inertia could be added via a separate rigid body?</p></li>
+<li><p>date raised: 2023-05-02</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>open issue 1548:</strong> ODE1 loads</dt><dd><ul>
+<li><p>description:  fully add Jacobian functionality for ODE1 loads and add test for ODE1 loads or recycle one</p></li>
+<li><p>date raised: 2023-05-01</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>open issue 1540:</strong> mutable args itemInterface</dt><dd><ul>
+<li><p>description:  copy lists in itemInterfacein order to avoid change of default args by user n=NodePoint();n.referenceCoordinates[0]=42;n1=NodePoint()</p></li>
 <li><p>date raised: 2023-04-28</p></li>
 </ul>
 </dd>
@@ -11334,22 +11557,6 @@ BUG numbers refer to the according issue numbers.</p>
 <li><dl class="simple">
 <dt><span class="textorange">open issue 1504:</span> Reference/link</dt><dd><ul>
 <li><p>description:  extend mbs and systemData functions for reference, e.g., GetODE2Coordinates; use different function with “Link” extension, e.g., GetODE2CoordinatesLink</p></li>
-<li><p>date raised: 2023-04-08</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt><span class="textorange">open issue 1502:</span> ANCFBeam</dt><dd><ul>
-<li><p>description:  check for very large deformations</p></li>
-<li><p>date raised: 2023-04-08</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt><span class="textorange">open issue 1501:</span> GeometricallyExactBeam</dt><dd><ul>
-<li><p>description:  check for very large deformations</p></li>
 <li><p>date raised: 2023-04-08</p></li>
 </ul>
 </dd>
@@ -11573,7 +11780,7 @@ BUG numbers refer to the according issue numbers.</p>
 </li>
 <li><dl class="simple">
 <dt><strong>open issue 1266:</strong> matrix inverse</dt><dd><ul>
-<li><p>description:  add full pivoting mode for matrix inverse, to resolve redundant constraints</p></li>
+<li><p>description:  add full pivoting mode for matrix inverse, to resolve redundant constraints; consider Eigen FullPivotLU for dense matrices - see classEigen_1_1FullPivLU.html</p></li>
 <li><p>date raised: 2022-09-21</p></li>
 </ul>
 </dd>
@@ -12399,14 +12606,6 @@ BUG numbers refer to the according issue numbers.</p>
 <dt><strong>open issue 0496:</strong> controller</dt><dd><ul>
 <li><p>description:  add possibility to differentiate loads w.r.t. sensor?/object/node (use additional sensor numbers which provide dependencies); add optional dependence on sensors; integrateors using ODE1 or discrete implementation</p></li>
 <li><p>date raised: 2020-12-09</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt><strong>open issue 0483:</strong> URDF file</dt><dd><ul>
-<li><p>description:  check importing an URDF file for robots, urdf_parser_py</p></li>
-<li><p>date raised: 2020-12-04</p></li>
 </ul>
 </dd>
 </dl>

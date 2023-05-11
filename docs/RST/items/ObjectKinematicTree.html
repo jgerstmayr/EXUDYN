@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ObjectKinematicTree &mdash; Exudyn1.6.80.dev1 1.6.80.dev1 documentation</title>
+  <title>ObjectKinematicTree &mdash; Exudyn1.6.103.dev1 1.6.103.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -39,7 +39,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.80.dev1
+            Exudyn1.6.103.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -100,7 +100,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.80.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.103.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -122,7 +122,7 @@
              
   <section id="objectkinematictree">
 <span id="sec-item-objectkinematictree"></span><h1>ObjectKinematicTree<a class="headerlink" href="#objectkinematictree" title="Permalink to this heading"></a></h1>
-<p>A special object to represent open kinematic trees using minimal coordinate formulation (NOT FULLY TESTED!). The kinematic tree is defined by lists of joint types, parents, inertia parameters (w.r.t. COM), etc.per link (body) and given joint (pre) transformations from the previous joint. Every joint / link is defined by the position and orientation of the previous joint and a coordinate transformation (incl.translation) from the previous link’s to this link’s joint coordinates. The joint can be combined with a marker, which allows to attach connectors as well as joints to represent closed loop mechanisms. Efficient models can be created by using tree structures in combination with constraints and very long chains should be avoided and replaced by (smaller) jointed chains if possible. The class Robot from exudyn.robotics can also be used to create kinematic trees, which are then exported as KinematicTree or as redundant multibody system. Use specialized settings in VisualizationSettings.bodies.kinematicTree for showing joint frames and other properties.</p>
+<p>A special object to represent open kinematic trees using minimal coordinate formulation. The kinematic tree is defined by lists of joint types, parents, inertia parameters (w.r.t. COM), etc.per link (body) and given joint (pre) transformations from the previous joint. Every joint / link is defined by the position and orientation of the previous joint and a coordinate transformation (incl.translation) from the previous link’s to this link’s joint coordinates. The joint can be combined with a marker, which allows to attach connectors as well as joints to represent closed loop mechanisms. Efficient models can be created by using tree structures in combination with constraints and very long chains should be avoided and replaced by (smaller) jointed chains if possible. The class Robot from exudyn.robotics can also be used to create kinematic trees, which are then exported as KinematicTree or as redundant multibody system. Use specialized settings in VisualizationSettings.bodies.kinematicTree for showing joint frames and other properties.</p>
 <p><strong>Additional information for ObjectKinematicTree</strong>:</p>
 <ul>
 <li><div class="line-block">
@@ -325,8 +325,9 @@ or <code class="docutils literal notranslate"><span class="pre">SensorSuperEleme
 <section id="id1">
 <h2>Equations of motion<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">KinematicTree</span></code> has one node of type <code class="docutils literal notranslate"><span class="pre">NodeGenericODE2</span></code> with <span class="math notranslate nohighlight">\(n\)</span> coordinates.
-The equations of motion are built by special multibody algorithms. Currently, there is only the
-so-called Composite-Rigid-Body (CRB) algorithm implemented.
+The equations of motion are built by special multibody algorithms, following Featherstone .
+For a short introduction into this topic, see Chapter 3 of citeSiciliano2016.
+Currently, there is only the so-called Composite-Rigid-Body (CRB) algorithm implemented.
 This algorithm does not show the highest performance, but creates the mass matrix <span class="math notranslate nohighlight">\({\mathbf{M}}_{CRB}\)</span> and forces <span class="math notranslate nohighlight">\({\mathbf{f}}_{CRB}\)</span>in a conventional form. The equations read</p>
 <div class="math notranslate nohighlight" id="equation-eq-kinematictree-eom">
 <span class="eqno">(25)<a class="headerlink" href="#equation-eq-kinematictree-eom" title="Permalink to this equation"></a></span>\[{\mathbf{M}}_{CRB}({\mathbf{q}}) \ddot {\mathbf{q}} = {\mathbf{f}}_{CRB}({\mathbf{q}},\dot {\mathbf{q}}) + {\mathbf{f}} + {\mathbf{f}}_{PD} + {\mathbf{f}}_{user}(mbs, t, i_N,{\mathbf{q}},\dot {\mathbf{q}})\]</div>
@@ -343,7 +344,7 @@ dependencies – if a control law is feeds back measured quantities and couples 
 This leads to worse performance (up to non-convergence) of implicit solvers.</p>
 <p>The control force <span class="math notranslate nohighlight">\({\mathbf{f}}_{PD}\)</span> realizes a simple linear control law</p>
 <div class="math notranslate nohighlight">
-\[{\mathbf{f}}_{PD} = {\mathbf{P}} . ({\mathbf{u}}_o - {\mathbf{q}}) + {\mathbf{D}} . ({\mathbf{v}}_o - \dot {\mathbf{q}})\]</div>
+\[{\mathbf{f}}_{PD} = {\mathbf{P}} \cdot ({\mathbf{u}}_o - {\mathbf{q}}) + {\mathbf{D}} \cdot ({\mathbf{v}}_o - \dot {\mathbf{q}})\]</div>
 <p>Here, the ‘.’ operator represents an element-wise multiplication of two vectors, resulting in a vector.
 The force <span class="math notranslate nohighlight">\({\mathbf{f}}_{PD}\)</span> at the <a class="reference internal" href="../Abbreviations.html#rhs"><span class="std std-ref">RHS</span></a> acts in direction of prescribed joint motion <span class="math notranslate nohighlight">\({\mathbf{u}}_o\)</span> and
 prescribed joint velocities <span class="math notranslate nohighlight">\({\mathbf{v}}_o\)</span> multiplied with proportional and ‘derivative’ factors <span class="math notranslate nohighlight">\(P\)</span> and <span class="math notranslate nohighlight">\(D\)</span>.

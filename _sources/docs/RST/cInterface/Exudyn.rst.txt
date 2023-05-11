@@ -39,11 +39,11 @@ These are the access functions to the Exudyn module. General usage is explained 
   | returns True if GLFW renderer is available and running; otherwise False
 * | **DoRendererIdleTasks**\ (\ *waitSeconds*\  = 0): 
   | Call this function in order to interact with Renderer window; use waitSeconds in order to run this idle tasks while animating a model (e.g. waitSeconds=0.04), use waitSeconds=0 without waiting, or use waitSeconds=-1 to wait until window is closed
-* | **SolveStatic**\ (\ *mbs*\ , \ *simulationSettings*\  = exudyn.SimulationSettings(), \ *updateInitialValues*\  = False, \ *storeSolver*\  = True): 
+* | **SolveStatic**\ (\ *mbs*\ \ *simulationSettings*\  = exudyn.SimulationSettings()\ *updateInitialValues*\  = False\ *storeSolver*\  = True): 
   | Static solver function, mapped from module \ ``solver``\ , to solve static equations (without inertia terms) of constrained rigid or flexible multibody system; for details on the Python interface see Section :ref:`sec-solver-solvestatic`\ ; for background on solvers, see Section :ref:`sec-solvers`\ 
-* | **SolveDynamic**\ (\ *mbs*\ , \ *simulationSettings*\  = exudyn.SimulationSettings(), \ *solverType*\  = exudyn.DynamicSolverType.GeneralizedAlpha, \ *updateInitialValues*\  = False, \ *storeSolver*\  = True): 
+* | **SolveDynamic**\ (\ *mbs*\ \ *simulationSettings*\  = exudyn.SimulationSettings()\ *solverType*\  = exudyn.DynamicSolverType.GeneralizedAlpha\ *updateInitialValues*\  = False\ *storeSolver*\  = True): 
   | Dynamic solver function, mapped from module \ ``solver``\ , to solve equations of motion of constrained rigid or flexible multibody system; for details on the Python interface see Section :ref:`sec-solver-solvedynamic`\ ; for background on solvers, see Section :ref:`sec-solvers`\ 
-* | **ComputeODE2Eigenvalues**\ (\ *mbs*\ , \ *simulationSettings*\  = exudyn.SimulationSettings(), \ *useSparseSolver*\  = False, \ *numberOfEigenvalues*\  = -1, \ *setInitialValues*\  = True, \ *convert2Frequencies*\  = False): 
+* | **ComputeODE2Eigenvalues**\ (\ *mbs*\ \ *simulationSettings*\  = exudyn.SimulationSettings()\ *useSparseSolver*\  = False\ *numberOfEigenvalues*\  = -1\ *setInitialValues*\  = True\ *convert2Frequencies*\  = False): 
   | Simple interface to scipy eigenvalue solver for eigenvalue analysis of the second order differential equations part in mbs, mapped from module \ ``solver``\ ; for details on the Python interface see Section :ref:`sec-solver-computeode2eigenvalues`\ 
 * | **SetOutputPrecision**\ (\ *numberOfDigits*\ ): 
   | Set the precision (integer) for floating point numbers written to console (reset when simulation is started!); NOTE: this affects only floats converted to strings inside C++ exudyn; if you print a float from Python, it is usually printed with 16 digits; if printing numpy arrays, 8 digits are used as standard, to be changed with numpy.set_printoptions(precision=16); alternatively convert into a list
@@ -51,7 +51,7 @@ These are the access functions to the Exudyn module. General usage is explained 
   | True: use Python format for output of vectors and matrices; False: use matlab format
 * | **SetWriteToConsole**\ (\ *flag*\ ): 
   | set flag to write (True) or not write to console; default = True
-* | **SetWriteToFile**\ (\ *filename*\ , \ *flagWriteToFile*\  = True, \ *flagAppend*\  = False): 
+* | **SetWriteToFile**\ (\ *filename*\ \ *flagWriteToFile*\  = True\ *flagAppend*\  = False): 
   | set flag to write (True) or not write to console; default value of flagWriteToFile = False; flagAppend appends output to file, if set True; in order to finalize the file, write \ ``exu.SetWriteToFile('', False)``\  to close the output file
   | *Example*:
 
@@ -64,7 +64,7 @@ These are the access functions to the Exudyn module. General usage is explained 
 
 * | **SetPrintDelayMilliSeconds**\ (\ *delayMilliSeconds*\ ): 
   | add some delay (in milliSeconds) to printing to console, in order to let Spyder process the output; default = 0
-* | **Print**\ (): 
+* | **Print**\ (\ **args*\ ): 
   | this allows printing via exudyn with similar syntax as in Python print(args) except for keyword arguments: print('test=',42); allows to redirect all output to file given by SetWriteToFile(...); does not output in case that SetWriteToConsole is set to False
 * | **SuppressWarnings**\ (\ *flag*\ ): 
   | set flag to suppress (=True) or enable (=False) warnings

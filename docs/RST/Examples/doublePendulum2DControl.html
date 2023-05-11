@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>doublePendulum2DControl.py &mdash; Exudyn1.6.103.dev1 1.6.103.dev1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/clipboard.min.js"></script>
+        <script src="../../../_static/copybutton.js"></script>
+        <script src="../../../_static/js/rtd_search_config.js"></script>
+        <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn1.6.103.dev1
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Exudyn.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NotationIndex.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TheoryAndFormulationsIndex.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../SolversIndex.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../pythonUtilities/index.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structures/StructuresAndSettingsIndex.html">Structures and Settings</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Misc</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ExamplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TestModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn1.6.103.dev1</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">doublePendulum2DControl.py</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/RST/Examples/doublePendulum2DControl.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="doublependulum2dcontrol-py">
+<span id="examples-doublependulum2dcontrol"></span><h1>doublePendulum2DControl.py<a class="headerlink" href="#doublependulum2dcontrol-py" title="Permalink to this heading"></a></h1>
+<p>You can view and download this file on Github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/doublePendulum2DControl.py">doublePendulum2DControl.py</a></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">  1</span><span class="c1">#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">  2</span><span class="c1"># This is an EXUDYN example</span>
+<span class="linenos">  3</span><span class="c1">#</span>
+<span class="linenos">  4</span><span class="c1"># Details:  Double pendulum with added torques for control;</span>
+<span class="linenos">  5</span><span class="c1">#           This example shows jacobian settings for considering dependencies of controlled loads</span>
+<span class="linenos">  6</span><span class="c1">#</span>
+<span class="linenos">  7</span><span class="c1"># Author:   Johannes Gerstmayr (with &quot;help&quot; of Bing AI)</span>
+<span class="linenos">  8</span><span class="c1"># Date:     2023-05-01</span>
+<span class="linenos">  9</span><span class="c1">#</span>
+<span class="linenos"> 10</span><span class="c1"># Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See &#39;LICENSE.txt&#39; for more details.</span>
+<span class="linenos"> 11</span><span class="c1">#</span>
+<span class="linenos"> 12</span><span class="c1">#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos"> 13</span>
+<span class="linenos"> 14</span>
+<span class="linenos"> 15</span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
+<span class="linenos"> 16</span><span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="linenos"> 17</span><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sin</span><span class="p">,</span> <span class="n">cos</span><span class="p">,</span> <span class="n">pi</span>
+<span class="linenos"> 18</span>
+<span class="linenos"> 19</span><span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
+<span class="linenos"> 20</span><span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
+<span class="linenos"> 21</span>
+<span class="linenos"> 22</span><span class="c1"># create nodes:</span>
+<span class="linenos"> 23</span><span class="n">n0</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">NodeRigidBody2D</span><span class="p">(</span><span class="n">referenceCoordinates</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">initialVelocities</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+<span class="linenos"> 24</span><span class="n">n1</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">NodeRigidBody2D</span><span class="p">(</span><span class="n">referenceCoordinates</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">initialVelocities</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+<span class="linenos"> 25</span>
+<span class="linenos"> 26</span><span class="c1"># create bodies:</span>
+<span class="linenos"> 27</span><span class="n">b0</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">RigidBody2D</span><span class="p">(</span><span class="n">physicsMass</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">physicsInertia</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">n0</span><span class="p">,</span>
+<span class="linenos"> 28</span>       <span class="n">visualization</span><span class="o">=</span><span class="nc">VRigidBody2D</span><span class="p">(</span><span class="n">graphicsData</span><span class="o">=</span><span class="p">[</span><span class="nf">GraphicsDataLine</span><span class="p">([[</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]])])))</span>
+<span class="linenos"> 29</span><span class="n">b1</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">RigidBody2D</span><span class="p">(</span><span class="n">physicsMass</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">physicsInertia</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">n1</span><span class="p">,</span>
+<span class="linenos"> 30</span>                 <span class="n">visualization</span><span class="o">=</span><span class="nc">VRigidBody2D</span><span class="p">(</span><span class="n">graphicsData</span><span class="o">=</span><span class="p">[</span><span class="nf">GraphicsDataLine</span><span class="p">([[</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]])])))</span>
+<span class="linenos"> 31</span>
+<span class="linenos"> 32</span><span class="c1"># add markers and loads:</span>
+<span class="linenos"> 33</span><span class="n">oGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectGround</span><span class="p">())</span>
+<span class="linenos"> 34</span><span class="n">mGround</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerBodyRigid</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">oGround</span><span class="p">,</span> <span class="n">localPosition</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">]))</span>
+<span class="linenos"> 35</span><span class="n">m00</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerBodyRigid</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">b0</span><span class="p">,</span> <span class="n">localPosition</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">]))</span>
+<span class="linenos"> 36</span><span class="n">m01</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerBodyRigid</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">b0</span><span class="p">,</span> <span class="n">localPosition</span><span class="o">=</span><span class="p">[</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">]))</span>
+<span class="linenos"> 37</span><span class="n">m10</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerBodyRigid</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">b1</span><span class="p">,</span> <span class="n">localPosition</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">]))</span>
+<span class="linenos"> 38</span><span class="c1">#m12 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b1, localPosition=[ 0.5, 0., 0.]))</span>
+<span class="linenos"> 39</span>
+<span class="linenos"> 40</span><span class="c1"># add joints:</span>
+<span class="linenos"> 41</span><span class="n">jg0</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">RevoluteJoint2D</span><span class="p">(</span><span class="n">markerNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">mGround</span><span class="p">,</span><span class="n">m00</span><span class="p">]))</span>
+<span class="linenos"> 42</span><span class="n">j01</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">RevoluteJoint2D</span><span class="p">(</span><span class="n">markerNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">m01</span><span class="p">,</span><span class="n">m10</span><span class="p">]))</span>
+<span class="linenos"> 43</span>
+<span class="linenos"> 44</span><span class="c1"># add loads:</span>
+<span class="linenos"> 45</span>
+<span class="linenos"> 46</span><span class="n">mLoad0</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerNodePosition</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">n0</span><span class="p">))</span>
+<span class="linenos"> 47</span><span class="n">mLoad1</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerNodePosition</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">n1</span><span class="p">))</span>
+<span class="linenos"> 48</span>
+<span class="linenos"> 49</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddLoad</span><span class="p">(</span><span class="nc">Force</span><span class="p">(</span><span class="n">markerNumber</span><span class="o">=</span><span class="n">mLoad0</span><span class="p">,</span> <span class="n">loadVector</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">9.81</span><span class="o">*</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+<span class="linenos"> 50</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddLoad</span><span class="p">(</span><span class="nc">Force</span><span class="p">(</span><span class="n">markerNumber</span><span class="o">=</span><span class="n">mLoad1</span><span class="p">,</span> <span class="n">loadVector</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">9.81</span><span class="o">*</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+<span class="linenos"> 51</span>
+<span class="linenos"> 52</span><span class="c1">#%%++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos"> 53</span><span class="c1">#add controller using loads</span>
+<span class="linenos"> 54</span><span class="n">nGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">NodePointGround</span><span class="p">(</span><span class="n">visualization</span><span class="o">=</span><span class="nc">VNodePointGround</span><span class="p">(</span><span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span> <span class="p">)</span>
+<span class="linenos"> 55</span><span class="n">mCGround</span><span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerNodeCoordinate</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">nGround</span><span class="p">,</span> <span class="n">coordinate</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+<span class="linenos"> 56</span><span class="n">mRotNode0</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerNodeCoordinate</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">n0</span><span class="p">,</span> <span class="n">coordinate</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+<span class="linenos"> 57</span><span class="n">mRotNode1</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerNodeCoordinate</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">n1</span><span class="p">,</span> <span class="n">coordinate</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+<span class="linenos"> 58</span>
+<span class="linenos"> 59</span><span class="k">def</span> <span class="nf">UFtorque1</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">load</span><span class="p">):</span>
+<span class="linenos"> 60</span>    <span class="n">omega</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="linenos"> 61</span>    <span class="n">phi0</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetMarkerOutput</span><span class="p">(</span><span class="n">mRotNode0</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Coordinates</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos"> 62</span>    <span class="n">deltaPhi</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetMarkerOutput</span><span class="p">(</span><span class="n">mRotNode1</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Coordinates</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">phi0</span>
+<span class="linenos"> 63</span>
+<span class="linenos"> 64</span>    <span class="n">phi0_t</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetMarkerOutput</span><span class="p">(</span><span class="n">mRotNode0</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Coordinates_t</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos"> 65</span>    <span class="n">deltaPhi_t</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetMarkerOutput</span><span class="p">(</span><span class="n">mRotNode1</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Coordinates_t</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">phi0_t</span>
+<span class="linenos"> 66</span>
+<span class="linenos"> 67</span>    <span class="n">phiDesired</span> <span class="o">=</span> <span class="o">-</span><span class="n">pi</span><span class="o">*</span><span class="mf">0.5</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">omega</span><span class="o">*</span><span class="n">pi</span><span class="o">*</span><span class="n">t</span><span class="p">)</span>
+<span class="linenos"> 68</span>    <span class="n">phiDesired_t</span> <span class="o">=</span> <span class="o">-</span><span class="n">pi</span><span class="o">*</span><span class="mf">0.5</span><span class="o">*</span><span class="n">omega</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">omega</span><span class="o">*</span><span class="n">pi</span><span class="o">*</span><span class="n">t</span><span class="p">)</span>
+<span class="linenos"> 69</span>
+<span class="linenos"> 70</span>    <span class="n">k</span> <span class="o">=</span> <span class="mi">5000</span>
+<span class="linenos"> 71</span>    <span class="n">d</span> <span class="o">=</span> <span class="mf">0.02</span><span class="o">*</span><span class="n">k</span>
+<span class="linenos"> 72</span>    <span class="n">torque</span> <span class="o">=</span> <span class="n">k</span><span class="o">*</span><span class="p">(</span><span class="n">phiDesired</span><span class="o">-</span><span class="n">deltaPhi</span><span class="p">)</span> <span class="o">+</span> <span class="n">d</span><span class="o">*</span><span class="p">(</span><span class="n">phiDesired_t</span><span class="o">-</span><span class="n">deltaPhi_t</span><span class="p">)</span>
+<span class="linenos"> 73</span>    <span class="k">return</span> <span class="n">torque</span>
+<span class="linenos"> 74</span>
+<span class="linenos"> 75</span><span class="k">def</span> <span class="nf">UFtorque0</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">load</span><span class="p">):</span>
+<span class="linenos"> 76</span>    <span class="n">phi0</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetMarkerOutput</span><span class="p">(</span><span class="n">mRotNode0</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Coordinates</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos"> 77</span>    <span class="n">omega</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="linenos"> 78</span>    <span class="n">phiDesired</span> <span class="o">=</span> <span class="n">pi</span><span class="o">*</span><span class="mf">0.5</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">omega</span><span class="o">*</span><span class="n">pi</span><span class="o">*</span><span class="n">t</span><span class="p">)</span>
+<span class="linenos"> 79</span>    <span class="n">phi0_t</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetMarkerOutput</span><span class="p">(</span><span class="n">mRotNode0</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Coordinates_t</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos"> 80</span>    <span class="n">phiDesired_t</span> <span class="o">=</span> <span class="n">pi</span><span class="o">*</span><span class="mf">0.5</span><span class="o">*</span><span class="n">omega</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">omega</span><span class="o">*</span><span class="n">pi</span><span class="o">*</span><span class="n">t</span><span class="p">)</span>
+<span class="linenos"> 81</span>    <span class="n">k</span> <span class="o">=</span> <span class="mi">5000</span> <span class="c1">#*100</span>
+<span class="linenos"> 82</span>    <span class="n">d</span> <span class="o">=</span> <span class="mf">0.02</span><span class="o">*</span><span class="n">k</span>
+<span class="linenos"> 83</span>    <span class="n">torque</span> <span class="o">=</span> <span class="n">k</span><span class="o">*</span><span class="p">(</span><span class="n">phiDesired</span><span class="o">-</span><span class="n">phi0</span><span class="p">)</span> <span class="o">+</span> <span class="n">d</span><span class="o">*</span><span class="p">(</span><span class="n">phiDesired_t</span><span class="o">-</span><span class="n">phi0_t</span><span class="p">)</span>
+<span class="linenos"> 84</span>
+<span class="linenos"> 85</span>    <span class="k">return</span> <span class="n">torque</span> <span class="o">-</span> <span class="n">UFtorque1</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="c1">#torque1 also acting on body0</span>
+<span class="linenos"> 86</span>
+<span class="linenos"> 87</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddLoad</span><span class="p">(</span><span class="nc">LoadCoordinate</span><span class="p">(</span><span class="n">markerNumber</span> <span class="o">=</span> <span class="n">mRotNode0</span><span class="p">,</span>
+<span class="linenos"> 88</span>                           <span class="n">load</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">loadUserFunction</span> <span class="o">=</span> <span class="n">UFtorque0</span><span class="p">))</span>
+<span class="linenos"> 89</span>
+<span class="linenos"> 90</span>
+<span class="linenos"> 91</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddLoad</span><span class="p">(</span><span class="nc">LoadCoordinate</span><span class="p">(</span><span class="n">markerNumber</span> <span class="o">=</span> <span class="n">mRotNode1</span><span class="p">,</span>
+<span class="linenos"> 92</span>                           <span class="n">load</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">loadUserFunction</span> <span class="o">=</span> <span class="n">UFtorque1</span><span class="p">))</span>
+<span class="linenos"> 93</span>
+<span class="linenos"> 94</span>
+<span class="linenos"> 95</span><span class="c1"># add time integration scheme:</span>
+<span class="linenos"> 96</span><span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
+<span class="linenos"> 97</span><span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">()</span>
+<span class="linenos"> 98</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="linenos"> 99</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="linenos">100</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">simulateInRealtime</span> <span class="o">=</span><span class="n">q</span> <span class="kc">True</span>
+<span class="linenos">101</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">writeSolutionToFile</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">102</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">solutionWritePeriod</span> <span class="o">=</span> <span class="mf">0.01</span>
+<span class="linenos">103</span>
+<span class="linenos">104</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">verboseMode</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="linenos">105</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">displayStatistics</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">106</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">displayComputationTime</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">107</span>
+<span class="linenos">108</span><span class="n">exu</span><span class="o">.</span><span class="nf">StartRenderer</span><span class="p">()</span>
+<span class="linenos">109</span><span class="n">mbs</span><span class="o">.</span><span class="nf">WaitForUserToContinue</span><span class="p">()</span>
+<span class="linenos">110</span><span class="n">exu</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span><span class="n">simulationSettings</span><span class="p">)</span>
+<span class="linenos">111</span><span class="n">exu</span><span class="o">.</span><span class="nf">StopRenderer</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MainSolverStatic &mdash; Exudyn1.6.80.dev1 1.6.80.dev1 documentation</title>
+  <title>MainSolverStatic &mdash; Exudyn1.6.103.dev1 1.6.103.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -37,7 +37,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.80.dev1
+            Exudyn1.6.103.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -89,7 +89,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.80.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.103.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -163,8 +163,8 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>ComputeJacobianODE2RHS(mainSystem, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1.)</strong> [return type = void]:</div>
-<div class="line">set systemJacobian to zero, size = (nODE2+nODE1+nAE) x (nODE2+nODE1+nAE), and add jacobian (multiplied with factors for ODE2 and ODE1 coordinates) of ODE2RHS to systemJacobian in cSolver; using (scalarFactor_ODE2=-1,scalarFactor_ODE2=0) gives the stiffness matrix (=derivatives of ODE2 coords) in the nODE2 x nODE2 part, while using (scalarFactor_ODE2=0,scalarFactor_ODE2=-1) gives the damping matrix (= derivatives of ODE2 velocity coordinates) in the same part; a superposition of these two parts makes sense for implicit solvers</div>
+<div class="line"><strong>ComputeJacobianODE2RHS(mainSystem, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1., computeLoadsJacobian=0)</strong> [return type = void]:</div>
+<div class="line">set systemJacobian to zero, size = (nODE2+nODE1+nAE) x (nODE2+nODE1+nAE), and add jacobian (multiplied with factors for ODE2 and ODE1 coordinates) of ODE2RHS to systemJacobian in cSolver; using (scalarFactor_ODE2=-1,scalarFactor_ODE2=0) gives the stiffness matrix (=derivatives of ODE2 coords) in the nODE2 x nODE2 part, while using (scalarFactor_ODE2=0,scalarFactor_ODE2=-1) gives the damping matrix (= derivatives of ODE2 velocity coordinates) in the same part; a superposition of these two parts makes sense for implicit solvers; if , Index computeLoadsJacobian=0, loads are not considered in the Jacobian computation; for , Index computeLoadsJacobian=1 the ODE2 and ODE1 derivatives of loads are included and for , Index computeLoadsJacobian=2, also the ODE2_t dependencies are added</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -457,8 +457,8 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>ComputeJacobianODE2RHS(mainSystem, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1.)</strong> [return type = void]:</div>
-<div class="line">set systemJacobian to zero, size = (nODE2+nODE1+nAE) x (nODE2+nODE1+nAE), and add jacobian (multiplied with factors for ODE2 and ODE1 coordinates) of ODE2RHS to systemJacobian in cSolver; using (scalarFactor_ODE2=-1,scalarFactor_ODE2=0) gives the stiffness matrix (=derivatives of ODE2 coords) in the nODE2 x nODE2 part, while using (scalarFactor_ODE2=0,scalarFactor_ODE2=-1) gives the damping matrix (= derivatives of ODE2 velocity coordinates) in the same part; a superposition of these two parts makes sense for implicit solvers</div>
+<div class="line"><strong>ComputeJacobianODE2RHS(mainSystem, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1., computeLoadsJacobian=0)</strong> [return type = void]:</div>
+<div class="line">set systemJacobian to zero, size = (nODE2+nODE1+nAE) x (nODE2+nODE1+nAE), and add jacobian (multiplied with factors for ODE2 and ODE1 coordinates) of ODE2RHS to systemJacobian in cSolver; using (scalarFactor_ODE2=-1,scalarFactor_ODE2=0) gives the stiffness matrix (=derivatives of ODE2 coords) in the nODE2 x nODE2 part, while using (scalarFactor_ODE2=0,scalarFactor_ODE2=-1) gives the damping matrix (= derivatives of ODE2 velocity coordinates) in the same part; a superposition of these two parts makes sense for implicit solvers; if , Index computeLoadsJacobian=0, loads are not considered in the Jacobian computation; for , Index computeLoadsJacobian=1 the ODE2 and ODE1 derivatives of loads are included and for , Index computeLoadsJacobian=2, also the ODE2_t dependencies are added</div>
 </div>
 </li>
 <li><div class="line-block">

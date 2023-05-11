@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Exudyn &mdash; Exudyn1.6.80.dev1 1.6.80.dev1 documentation</title>
+  <title>Exudyn &mdash; Exudyn1.6.103.dev1 1.6.103.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -37,7 +37,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.80.dev1
+            Exudyn1.6.103.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -66,6 +66,16 @@
 <li class="toctree-l2"><a class="reference internal" href="GeneralContact.html">GeneralContact</a></li>
 <li class="toctree-l2"><a class="reference internal" href="DataStructures.html">Data structures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html">Type definitions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#outputvariabletype">OutputVariableType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#configurationtype">ConfigurationType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#itemtype">ItemType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#nodetype">NodeType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#jointtype">JointType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#dynamicsolvertype">DynamicSolverType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#crosssectiontype">CrossSectionType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#keycode">KeyCode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#linearsolvertype">LinearSolverType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#contacttypeindex">ContactTypeIndex</a></li>
 </ul>
 </li>
 </ul>
@@ -89,7 +99,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.80.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.103.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -160,17 +170,17 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>SolveStatic</strong>(<em>mbs</em>, <em>simulationSettings</em> = exudyn.SimulationSettings(), <em>updateInitialValues</em> = False, <em>storeSolver</em> = True):</div>
+<div class="line"><strong>SolveStatic</strong>(<em>mbs</em><em>simulationSettings</em> = exudyn.SimulationSettings()<em>updateInitialValues</em> = False<em>storeSolver</em> = True):</div>
 <div class="line">Static solver function, mapped from module <code class="docutils literal notranslate"><span class="pre">solver</span></code>, to solve static equations (without inertia terms) of constrained rigid or flexible multibody system; for details on the Python interface see Section <a class="reference internal" href="../pythonUtilities/solver.html#sec-solver-solvestatic"><span class="std std-ref">Function: SolveStatic</span></a>; for background on solvers, see Section <a class="reference internal" href="../Solvers.html#sec-solvers"><span class="std std-ref">Solvers</span></a></div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>SolveDynamic</strong>(<em>mbs</em>, <em>simulationSettings</em> = exudyn.SimulationSettings(), <em>solverType</em> = exudyn.DynamicSolverType.GeneralizedAlpha, <em>updateInitialValues</em> = False, <em>storeSolver</em> = True):</div>
+<div class="line"><strong>SolveDynamic</strong>(<em>mbs</em><em>simulationSettings</em> = exudyn.SimulationSettings()<em>solverType</em> = exudyn.DynamicSolverType.GeneralizedAlpha<em>updateInitialValues</em> = False<em>storeSolver</em> = True):</div>
 <div class="line">Dynamic solver function, mapped from module <code class="docutils literal notranslate"><span class="pre">solver</span></code>, to solve equations of motion of constrained rigid or flexible multibody system; for details on the Python interface see Section <a class="reference internal" href="../pythonUtilities/solver.html#sec-solver-solvedynamic"><span class="std std-ref">Function: SolveDynamic</span></a>; for background on solvers, see Section <a class="reference internal" href="../Solvers.html#sec-solvers"><span class="std std-ref">Solvers</span></a></div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>ComputeODE2Eigenvalues</strong>(<em>mbs</em>, <em>simulationSettings</em> = exudyn.SimulationSettings(), <em>useSparseSolver</em> = False, <em>numberOfEigenvalues</em> = -1, <em>setInitialValues</em> = True, <em>convert2Frequencies</em> = False):</div>
+<div class="line"><strong>ComputeODE2Eigenvalues</strong>(<em>mbs</em><em>simulationSettings</em> = exudyn.SimulationSettings()<em>useSparseSolver</em> = False<em>numberOfEigenvalues</em> = -1<em>setInitialValues</em> = True<em>convert2Frequencies</em> = False):</div>
 <div class="line">Simple interface to scipy eigenvalue solver for eigenvalue analysis of the second order differential equations part in mbs, mapped from module <code class="docutils literal notranslate"><span class="pre">solver</span></code>; for details on the Python interface see Section <a class="reference internal" href="../pythonUtilities/solver.html#sec-solver-computeode2eigenvalues"><span class="std std-ref">Function: ComputeODE2Eigenvalues</span></a></div>
 </div>
 </li>
@@ -190,7 +200,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>SetWriteToFile</strong>(<em>filename</em>, <em>flagWriteToFile</em> = True, <em>flagAppend</em> = False):</div>
+<div class="line"><strong>SetWriteToFile</strong>(<em>filename</em><em>flagWriteToFile</em> = True<em>flagAppend</em> = False):</div>
 <div class="line">set flag to write (True) or not write to console; default value of flagWriteToFile = False; flagAppend appends output to file, if set True; in order to finalize the file, write <code class="docutils literal notranslate"><span class="pre">exu.SetWriteToFile('',</span> <span class="pre">False)</span></code> to close the output file</div>
 <div class="line"><em>Example</em>:</div>
 </div>
@@ -207,7 +217,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>Print</strong>():</div>
+<div class="line"><strong>Print</strong>(<a href="#id1"><span class="problematic" id="id2">**</span></a>args*):</div>
 <div class="line">this allows printing via exudyn with similar syntax as in Python print(args) except for keyword arguments: print(‘test=’,42); allows to redirect all output to file given by SetWriteToFile(…); does not output in case that SetWriteToConsole is set to False</div>
 </div>
 </li>

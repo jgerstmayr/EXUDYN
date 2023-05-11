@@ -30,8 +30,10 @@ This is the data structure of a system which contains Objects (bodies/constraint
    #set initial ODE2 vector for next simulation:
    mbs.systemData.SetODE2Coordinates(coordinates=u,
                   configuration=exu.ConfigurationType.Initial)
-   #get detailed information as dictionary:
+   #print detailed information on items:
    mbs.systemData.Info()
+   #print LTG lists for objects and loads:
+   mbs.systemData.InfoLTG()
 
 \ The class **MainSystemData** has the following **functions and structures**:
 
@@ -123,7 +125,7 @@ This is the data structure of a system which contains Objects (bodies/constraint
 
      mbs.systemData.GetTime(exu.ConfigurationType.Initial)
 
-* | **SetTime**\ (\ *newTime*\ , \ *configurationType*\  = exu.ConfigurationType.Current): 
+* | **SetTime**\ (\ *newTime*\ \ *configurationType*\  = exu.ConfigurationType.Current): 
   | set configuration dependent time; use this access with care, e.g. in user-defined solvers.
   | *Example*:
 
@@ -131,13 +133,31 @@ This is the data structure of a system which contains Objects (bodies/constraint
 
      mbs.systemData.SetTime(10., exu.ConfigurationType.Initial)
 
+* | **AddODE2LoadDependencies**\ (\ *loadNumber*\ \ *globalODE2coordinates*\ ): 
+  | advanced function for adding special dependencies of loads onto ODE2 coordinates, taking a list / numpy array of global ODE2 coordinates; this function needs to be called after Assemble() and needs to contain ODE2 coordinate indices; this list only affects implicit or static solvers if numericalDifferentiation.loadsJacobian=True; in this case, it may greatly improve convergence if loads with user functions depend on some system states, such as in a load with feedback control loop; the additional dependencies are not required, if doSystemWideDifferentiation=True, however the latter option being much less efficient!
+  | *Example*:
+
+  .. code-block:: python
+
+     mbs.systemData.AddODE2LoadDependencies(0,[0,1,2])\#add dependency of load 5 onto node 2 coordinates:
+     nodeLTG2 = mbs.systemData.GetNodeLTGODE2(2)
+     mbs.systemData.AddODE2LoadDependencies(5,nodeLTG2)
+
 * | **Info**\ (): 
-  | print detailed system information for every item; for short information use print(mbs)
+  | print detailed information on every item; for short information use print(mbs)
   | *Example*:
 
   .. code-block:: python
 
      mbs.systemData.Info()
+
+* | **InfoLTG**\ (): 
+  | print LTG information of objects and load dependencies
+  | *Example*:
+
+  .. code-block:: python
+
+     mbs.systemData.InfoLTG()
 
 
 
@@ -163,7 +183,7 @@ This section provides access functions to global coordinate vectors. Assigning i
 
      uCurrent = mbs.systemData.GetODE2Coordinates()
 
-* | **SetODE2Coordinates**\ (\ *coordinates*\ , \ *configuration*\  = exu.ConfigurationType.Current): 
+* | **SetODE2Coordinates**\ (\ *coordinates*\ \ *configuration*\  = exu.ConfigurationType.Current): 
   | set ODE2 system coordinates (displacements) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!
   | *Example*:
 
@@ -179,7 +199,7 @@ This section provides access functions to global coordinate vectors. Assigning i
 
      vCurrent = mbs.systemData.GetODE2Coordinates_t()
 
-* | **SetODE2Coordinates\_t**\ (\ *coordinates*\ , \ *configuration*\  = exu.ConfigurationType.Current): 
+* | **SetODE2Coordinates\_t**\ (\ *coordinates*\ \ *configuration*\  = exu.ConfigurationType.Current): 
   | set ODE2 system coordinates (velocities) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!
   | *Example*:
 
@@ -195,7 +215,7 @@ This section provides access functions to global coordinate vectors. Assigning i
 
      vCurrent = mbs.systemData.GetODE2Coordinates_tt()
 
-* | **SetODE2Coordinates\_tt**\ (\ *coordinates*\ , \ *configuration*\  = exu.ConfigurationType.Current): 
+* | **SetODE2Coordinates\_tt**\ (\ *coordinates*\ \ *configuration*\  = exu.ConfigurationType.Current): 
   | set ODE2 system coordinates (accelerations) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!
   | *Example*:
 
@@ -211,7 +231,7 @@ This section provides access functions to global coordinate vectors. Assigning i
 
      qCurrent = mbs.systemData.GetODE1Coordinates()
 
-* | **SetODE1Coordinates**\ (\ *coordinates*\ , \ *configuration*\  = exu.ConfigurationType.Current): 
+* | **SetODE1Coordinates**\ (\ *coordinates*\ \ *configuration*\  = exu.ConfigurationType.Current): 
   | set ODE1 system coordinates (velocities) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!
   | *Example*:
 
@@ -227,7 +247,7 @@ This section provides access functions to global coordinate vectors. Assigning i
 
      qCurrent = mbs.systemData.GetODE1Coordinates_t()
 
-* | **SetODE1Coordinates\_t**\ (\ *coordinates*\ , \ *configuration*\  = exu.ConfigurationType.Current): 
+* | **SetODE1Coordinates\_t**\ (\ *coordinates*\ \ *configuration*\  = exu.ConfigurationType.Current): 
   | set ODE1 system coordinates (displacements) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!
   | *Example*:
 
@@ -243,7 +263,7 @@ This section provides access functions to global coordinate vectors. Assigning i
 
      lambdaCurrent = mbs.systemData.GetAECoordinates()
 
-* | **SetAECoordinates**\ (\ *coordinates*\ , \ *configuration*\  = exu.ConfigurationType.Current): 
+* | **SetAECoordinates**\ (\ *coordinates*\ \ *configuration*\  = exu.ConfigurationType.Current): 
   | set algebraic equations (AE) system coordinates for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!
   | *Example*:
 
@@ -259,7 +279,7 @@ This section provides access functions to global coordinate vectors. Assigning i
 
      dataCurrent = mbs.systemData.GetDataCoordinates()
 
-* | **SetDataCoordinates**\ (\ *coordinates*\ , \ *configuration*\  = exu.ConfigurationType.Current): 
+* | **SetDataCoordinates**\ (\ *coordinates*\ \ *configuration*\  = exu.ConfigurationType.Current): 
   | set system data coordinates for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!
   | *Example*:
 
@@ -275,7 +295,7 @@ This section provides access functions to global coordinate vectors. Assigning i
 
      sysStateList = mbs.systemData.GetSystemState()
 
-* | **SetSystemState**\ (\ *systemStateList*\ , \ *configuration*\  = exu.ConfigurationType.Current): 
+* | **SetSystemState**\ (\ *systemStateList*\ \ *configuration*\  = exu.ConfigurationType.Current): 
   | set system data coordinates for given configuration (default: exu.Configuration.Current); invalid list of vectors / vector size may lead to system crash; write access to state vectors (but not the non-state derivatives ODE1_t and ODE2_tt and the time); function is copying data - not highly efficient; format of pyList: [ODE2Coords, ODE2Coords_t, ODE1Coords, AEcoords, dataCoords]
   | *Example*:
 
@@ -300,7 +320,7 @@ This section provides access functions the \ :ref:`LTG <LTG>`\ -lists for every 
 \ The class **MainSystemData** has the following **functions and structures** regarding **object LTG coordinate mappings**:
 
 * | **GetObjectLTGODE2**\ (\ *objectNumber*\ ): 
-  | get local-to-global coordinate mapping (list of global coordinate indices) for ODE2 coordinates; only available after Assemble()
+  | get object local-to-global coordinate mapping (list of global coordinate indices) for ODE2 coordinates; only available after Assemble()
   | *Example*:
 
   .. code-block:: python
@@ -308,7 +328,7 @@ This section provides access functions the \ :ref:`LTG <LTG>`\ -lists for every 
      ltgObject4 = mbs.systemData.GetObjectLTGODE2(4)
 
 * | **GetObjectLTGODE1**\ (\ *objectNumber*\ ): 
-  | get local-to-global coordinate mapping (list of global coordinate indices) for ODE1 coordinates; only available after Assemble()
+  | get object local-to-global coordinate mapping (list of global coordinate indices) for ODE1 coordinates; only available after Assemble()
   | *Example*:
 
   .. code-block:: python
@@ -316,7 +336,7 @@ This section provides access functions the \ :ref:`LTG <LTG>`\ -lists for every 
      ltgObject4 = mbs.systemData.GetObjectLTGODE1(4)
 
 * | **GetObjectLTGAE**\ (\ *objectNumber*\ ): 
-  | get local-to-global coordinate mapping (list of global coordinate indices) for algebraic equations (AE) coordinates; only available after Assemble()
+  | get object local-to-global coordinate mapping (list of global coordinate indices) for algebraic equations (AE) coordinates; only available after Assemble()
   | *Example*:
 
   .. code-block:: python
@@ -324,12 +344,44 @@ This section provides access functions the \ :ref:`LTG <LTG>`\ -lists for every 
      ltgObject4 = mbs.systemData.GetObjectLTGODE2(4)
 
 * | **GetObjectLTGData**\ (\ *objectNumber*\ ): 
-  | get local-to-global coordinate mapping (list of global coordinate indices) for data coordinates; only available after Assemble()
+  | get object local-to-global coordinate mapping (list of global coordinate indices) for data coordinates; only available after Assemble()
   | *Example*:
 
   .. code-block:: python
 
      ltgObject4 = mbs.systemData.GetObjectLTGData(4)
+
+* | **GetNodeLTGODE2**\ (\ *nodeNumber*\ ): 
+  | get node local-to-global coordinate mapping (list of global coordinate indices) for ODE2 coordinates; only available after Assemble()
+  | *Example*:
+
+  .. code-block:: python
+
+     ltgNode4 = mbs.systemData.GetNodeLTGODE2(4)
+
+* | **GetNodeLTGODE1**\ (\ *nodeNumber*\ ): 
+  | get node local-to-global coordinate mapping (list of global coordinate indices) for ODE1 coordinates; only available after Assemble()
+  | *Example*:
+
+  .. code-block:: python
+
+     ltgNode4 = mbs.systemData.GetNodeLTGODE1(4)
+
+* | **GetNodeLTGAE**\ (\ *nodeNumber*\ ): 
+  | get node local-to-global coordinate mapping (list of global coordinate indices) for AE coordinates; only available after Assemble()
+  | *Example*:
+
+  .. code-block:: python
+
+     ltgNode4 = mbs.systemData.GetNodeLTGAE(4)
+
+* | **GetNodeLTGData**\ (\ *nodeNumber*\ ): 
+  | get node local-to-global coordinate mapping (list of global coordinate indices) for Data coordinates; only available after Assemble()
+  | *Example*:
+
+  .. code-block:: python
+
+     ltgNode4 = mbs.systemData.GetNodeLTGData(4)
 
 
 

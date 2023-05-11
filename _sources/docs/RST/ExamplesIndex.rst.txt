@@ -35,6 +35,7 @@ This section includes all Examples for Exudyn.They can also be found and downloa
    Examples/coordinateSpringDamper
    Examples/craneReevingSystem
    Examples/dispyParameterVariationExample
+   Examples/doublePendulum2D
    Examples/finiteSegmentMethod
    Examples/flexiblePendulumANCF
    Examples/flexibleRotor3Dtest

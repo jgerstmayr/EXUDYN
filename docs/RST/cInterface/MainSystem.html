@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MainSystem &mdash; Exudyn1.6.80.dev1 1.6.80.dev1 documentation</title>
+  <title>MainSystem &mdash; Exudyn1.6.103.dev1 1.6.103.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -37,7 +37,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.80.dev1
+            Exudyn1.6.103.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -73,6 +73,16 @@
 <li class="toctree-l2"><a class="reference internal" href="GeneralContact.html">GeneralContact</a></li>
 <li class="toctree-l2"><a class="reference internal" href="DataStructures.html">Data structures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html">Type definitions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#outputvariabletype">OutputVariableType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#configurationtype">ConfigurationType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#itemtype">ItemType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#nodetype">NodeType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#jointtype">JointType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#dynamicsolvertype">DynamicSolverType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#crosssectiontype">CrossSectionType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#keycode">KeyCode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#linearsolvertype">LinearSolverType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#contacttypeindex">ContactTypeIndex</a></li>
 </ul>
 </li>
 </ul>
@@ -96,7 +106,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.80.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.103.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -176,7 +186,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>SetRenderEngineStopFlag</strong>():</div>
+<div class="line"><strong>SetRenderEngineStopFlag</strong>(<em>stopFlag</em>):</div>
 <div class="line">set the current stop simulation flag; set to False, in order to continue a previously user-interrupted simulation</div>
 </div>
 </li>
@@ -186,7 +196,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>SetPreStepUserFunction</strong>():</div>
+<div class="line"><strong>SetPreStepUserFunction</strong>(<em>value</em>):</div>
 <div class="line">Sets a user function PreStepUserFunction(mbs, t) executed at beginning of every computation step; in normal case return True; return False to stop simulation after current step</div>
 <div class="line"><em>Example</em>:</div>
 </div>
@@ -200,7 +210,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>SetPostNewtonUserFunction</strong>():</div>
+<div class="line"><strong>SetPostNewtonUserFunction</strong>(<em>value</em>):</div>
 <div class="line">Sets a user function PostNewtonUserFunction(mbs, t) executed after successful Newton iteration in implicit or static solvers and after step update of explicit solvers, but BEFORE PostNewton functions are called by the solver; function returns list [discontinuousError, recommendedStepSize], containing a error of the PostNewtonStep, which is compared to [solver].discontinuous.iterationTolerance. The recommendedStepSize shall be negative, if no recommendation is given, 0 in order to enforce minimum step size or a specific value to which the current step size will be reduced and the step will be repeated; use this function, e.g., to reduce step size after impact or change of data variables</div>
 <div class="line"><em>Example</em>:</div>
 </div>
@@ -322,7 +332,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>ModifyNode</strong>(<em>nodeNumber</em>, <em>nodeDict</em>):</div>
+<div class="line"><strong>ModifyNode</strong>(<em>nodeNumber</em><em>nodeDict</em>):</div>
 <div class="line">modify node’s dictionary by node number (type NodeIndex)</div>
 <div class="line"><em>Example</em>:</div>
 </div>
@@ -341,7 +351,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>GetNodeOutput</strong>(<em>nodeNumber</em>, <em>variableType</em>, <em>configuration</em> = ConfigurationType.Current):</div>
+<div class="line"><strong>GetNodeOutput</strong>(<em>nodeNumber</em><em>variableType</em><em>configuration</em> = exu.ConfigurationType.Current):</div>
 <div class="line">get the ouput of the node specified with the OutputVariableType; output may be scalar or array (e.g. displacement vector)</div>
 <div class="line"><em>Example</em>:</div>
 </div>
@@ -377,7 +387,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>GetNodeParameter</strong>(<em>nodeNumber</em>, <em>parameterName</em>):</div>
+<div class="line"><strong>GetNodeParameter</strong>(<em>nodeNumber</em><em>parameterName</em>):</div>
 <div class="line">get nodes’s parameter from node number (type NodeIndex) and parameterName; parameter names can be found for the specific items in the reference manual; for visualization parameters, use a ‘V’ as a prefix</div>
 <div class="line"><em>Example</em>:</div>
 </div>
@@ -386,7 +396,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>SetNodeParameter</strong>(<em>nodeNumber</em>, <em>parameterName</em>, <em>value</em>):</div>
+<div class="line"><strong>SetNodeParameter</strong>(<em>nodeNumber</em><em>parameterName</em><em>value</em>):</div>
 <div class="line">set parameter ‘parameterName’ of node with node number (type NodeIndex) to value; parameter names can be found for the specific items in the reference manual; for visualization parameters, use a ‘V’ as a prefix</div>
 <div class="line"><em>Example</em>:</div>
 </div>
@@ -434,7 +444,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>GetObject</strong>(<em>objectNumber</em>, <em>addGraphicsData</em> = False):</div>
+<div class="line"><strong>GetObject</strong>(<em>objectNumber</em><em>addGraphicsData</em> = False):</div>
 <div class="line">get object’s dictionary by object number (type ObjectIndex); NOTE: visualization parameters have a prefix ‘V’; in order to also get graphicsData written, use addGraphicsData=True (which is by default False, as it would spoil the information)</div>
 <div class="line"><em>Example</em>:</div>
 </div>
@@ -443,7 +453,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>ModifyObject</strong>(<em>objectNumber</em>, <em>objectDict</em>):</div>
+<div class="line"><strong>ModifyObject</strong>(<em>objectNumber</em><em>objectDict</em>):</div>
 <div class="line">modify object’s dictionary by object number (type ObjectIndex); NOTE: visualization parameters have a prefix ‘V’</div>
 <div class="line"><em>Example</em>:</div>
 </div>
@@ -462,12 +472,12 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>GetObjectOutput</strong>(<em>objectNumber</em>, <em>variableType</em>, <em>configuration</em> = ConfigurationType.Current):</div>
+<div class="line"><strong>GetObjectOutput</strong>(<em>objectNumber</em><em>variableType</em><em>configuration</em> = exu.ConfigurationType.Current):</div>
 <div class="line">get object’s current output variable from object number (type ObjectIndex) and OutputVariableType; for connectors, it can only be computed for exu.ConfigurationType.Current configuration!</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>GetObjectOutputBody</strong>(<em>objectNumber</em>, <em>variableType</em>, <em>localPosition</em> = [0,0,0], <em>configuration</em> = ConfigurationType.Current):</div>
+<div class="line"><strong>GetObjectOutputBody</strong>(<em>objectNumber</em><em>variableType</em><em>localPosition</em> = [0,0,0]<em>configuration</em> = exu.ConfigurationType.Current):</div>
 <div class="line">get body’s output variable from object number (type ObjectIndex) and OutputVariableType, using the localPosition as defined in the body, and as used in MarkerBody and SensorBody</div>
 <div class="line"><em>Example</em>:</div>
 </div>
@@ -476,7 +486,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>GetObjectOutputSuperElement</strong>(<em>objectNumber</em>, <em>variableType</em>, <em>meshNodeNumber</em>, <em>configuration</em> = ConfigurationType.Current):</div>
+<div class="line"><strong>GetObjectOutputSuperElement</strong>(<em>objectNumber</em><em>variableType</em><em>meshNodeNumber</em><em>configuration</em> = exu.ConfigurationType.Current):</div>
 <div class="line">get output variable from mesh node number of object with type SuperElement (GenericODE2, FFRF, FFRFreduced - CMS) with specific OutputVariableType; the meshNodeNumber is the object’s local node number, not the global node number!</div>
 <div class="line"><em>Example</em>:</div>
 </div>
@@ -485,7 +495,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>GetObjectParameter</strong>(<em>objectNumber</em>, <em>parameterName</em>):</div>
+<div class="line"><strong>GetObjectParameter</strong>(<em>objectNumber</em><em>parameterName</em>):</div>
 <div class="line">get objects’s parameter from object number (type ObjectIndex) and parameterName; parameter names can be found for the specific items in the reference manual; for visualization parameters, use a ‘V’ as a prefix; NOTE that BodyGraphicsData cannot be get or set, use dictionary access instead</div>
 <div class="line"><em>Example</em>:</div>
 </div>
@@ -494,7 +504,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>SetObjectParameter</strong>(<em>objectNumber</em>, <em>parameterName</em>, <em>value</em>):</div>
+<div class="line"><strong>SetObjectParameter</strong>(<em>objectNumber</em><em>parameterName</em><em>value</em>):</div>
 <div class="line">set parameter ‘parameterName’ of object with object number (type ObjectIndex) to value;; parameter names can be found for the specific items in the reference manual; for visualization parameters, use a ‘V’ as a prefix; NOTE that BodyGraphicsData cannot be get or set, use dictionary access instead</div>
 <div class="line"><em>Example</em>:</div>
 </div>
@@ -551,7 +561,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>ModifyMarker</strong>(<em>markerNumber</em>, <em>markerDict</em>):</div>
+<div class="line"><strong>ModifyMarker</strong>(<em>markerNumber</em><em>markerDict</em>):</div>
 <div class="line">modify marker’s dictionary by index</div>
 <div class="line"><em>Example</em>:</div>
 </div>
@@ -570,17 +580,17 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>GetMarkerParameter</strong>(<em>markerNumber</em>, <em>parameterName</em>):</div>
+<div class="line"><strong>GetMarkerParameter</strong>(<em>markerNumber</em><em>parameterName</em>):</div>
 <div class="line">get markers’s parameter from markerNumber and parameterName; parameter names can be found for the specific items in the reference manual</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>SetMarkerParameter</strong>(<em>markerNumber</em>, <em>parameterName</em>, <em>value</em>):</div>
+<div class="line"><strong>SetMarkerParameter</strong>(<em>markerNumber</em><em>parameterName</em><em>value</em>):</div>
 <div class="line">set parameter ‘parameterName’ of marker with markerNumber to value; parameter names can be found for the specific items in the reference manual</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>GetMarkerOutput</strong>(<em>markerNumber</em>, <em>variableType</em>, <em>configuration</em> = ConfigurationType.Current):</div>
+<div class="line"><strong>GetMarkerOutput</strong>(<em>markerNumber</em><em>variableType</em><em>configuration</em> = exu.ConfigurationType.Current):</div>
 <div class="line">get the ouput of the marker specified with the OutputVariableType; currently only provides Displacement, Position and Velocity for position based markers, and RotationMatrix, Rotation and AngularVelocity(Local) for markers providing orientation; Coordinates and Coordinates_t available for coordinate markers</div>
 <div class="line"><em>Example</em>:</div>
 </div>
@@ -639,7 +649,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>ModifyLoad</strong>(<em>loadNumber</em>, <em>loadDict</em>):</div>
+<div class="line"><strong>ModifyLoad</strong>(<em>loadNumber</em><em>loadDict</em>):</div>
 <div class="line">modify load’s dictionary by index</div>
 <div class="line"><em>Example</em>:</div>
 </div>
@@ -663,12 +673,12 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>GetLoadParameter</strong>(<em>loadNumber</em>, <em>parameterName</em>):</div>
+<div class="line"><strong>GetLoadParameter</strong>(<em>loadNumber</em><em>parameterName</em>):</div>
 <div class="line">get loads’s parameter from loadNumber and parameterName; parameter names can be found for the specific items in the reference manual</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>SetLoadParameter</strong>(<em>loadNumber</em>, <em>parameterName</em>, <em>value</em>):</div>
+<div class="line"><strong>SetLoadParameter</strong>(<em>loadNumber</em><em>parameterName</em><em>value</em>):</div>
 <div class="line">set parameter ‘parameterName’ of load with loadNumber to value; parameter names can be found for the specific items in the reference manual</div>
 </div>
 </li>
@@ -729,7 +739,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>ModifySensor</strong>(<em>sensorNumber</em>, <em>sensorDict</em>):</div>
+<div class="line"><strong>ModifySensor</strong>(<em>sensorNumber</em><em>sensorDict</em>):</div>
 <div class="line">modify sensor’s dictionary by index</div>
 <div class="line"><em>Example</em>:</div>
 </div>
@@ -748,7 +758,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>GetSensorValues</strong>(<em>sensorNumber</em>, <em>configuration</em> = ConfigurationType.Current):</div>
+<div class="line"><strong>GetSensorValues</strong>(<em>sensorNumber</em><em>configuration</em> = exu.ConfigurationType.Current):</div>
 <div class="line">get sensors’s values for configuration; can be a scalar or vector-valued return value!</div>
 </div>
 </li>
@@ -758,12 +768,12 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>GetSensorParameter</strong>(<em>sensorNumber</em>, <em>parameterName</em>):</div>
+<div class="line"><strong>GetSensorParameter</strong>(<em>sensorNumber</em><em>parameterName</em>):</div>
 <div class="line">get sensors’s parameter from sensorNumber and parameterName; parameter names can be found for the specific items in the reference manual</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>SetSensorParameter</strong>(<em>sensorNumber</em>, <em>parameterName</em>, <em>value</em>):</div>
+<div class="line"><strong>SetSensorParameter</strong>(<em>sensorNumber</em><em>parameterName</em><em>value</em>):</div>
 <div class="line">set parameter ‘parameterName’ of sensor with sensorNumber to value; parameter names can be found for the specific items in the reference manual</div>
 </div>
 </li>

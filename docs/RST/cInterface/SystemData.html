@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SystemData &mdash; Exudyn1.6.80.dev1 1.6.80.dev1 documentation</title>
+  <title>SystemData &mdash; Exudyn1.6.103.dev1 1.6.103.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -37,7 +37,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.80.dev1
+            Exudyn1.6.103.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -70,6 +70,16 @@
 <li class="toctree-l2"><a class="reference internal" href="GeneralContact.html">GeneralContact</a></li>
 <li class="toctree-l2"><a class="reference internal" href="DataStructures.html">Data structures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html">Type definitions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#outputvariabletype">OutputVariableType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#configurationtype">ConfigurationType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#itemtype">ItemType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#nodetype">NodeType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#jointtype">JointType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#dynamicsolvertype">DynamicSolverType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#crosssectiontype">CrossSectionType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#keycode">KeyCode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#linearsolvertype">LinearSolverType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#contacttypeindex">ContactTypeIndex</a></li>
 </ul>
 </li>
 </ul>
@@ -93,7 +103,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.80.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.103.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -131,8 +141,10 @@
 <span class="linenos">14</span><span class="c1">#set initial ODE2 vector for next simulation:</span>
 <span class="linenos">15</span><span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">SetODE2Coordinates</span><span class="p">(</span><span class="n">coordinates</span><span class="o">=</span><span class="n">u</span><span class="p">,</span>
 <span class="linenos">16</span>               <span class="n">configuration</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">ConfigurationType</span><span class="o">.</span><span class="n">Initial</span><span class="p">)</span>
-<span class="linenos">17</span><span class="c1">#get detailed information as dictionary:</span>
+<span class="linenos">17</span><span class="c1">#print detailed information on items:</span>
 <span class="linenos">18</span><span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">Info</span><span class="p">()</span>
+<span class="linenos">19</span><span class="c1">#print LTG lists for objects and loads:</span>
+<span class="linenos">20</span><span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">InfoLTG</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>The class <strong>MainSystemData</strong> has the following <strong>functions and structures</strong>:</p>
@@ -237,7 +249,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>SetTime</strong>(<em>newTime</em>, <em>configurationType</em> = exu.ConfigurationType.Current):</div>
+<div class="line"><strong>SetTime</strong>(<em>newTime</em><em>configurationType</em> = exu.ConfigurationType.Current):</div>
 <div class="line">set configuration dependent time; use this access with care, e.g. in user-defined solvers.</div>
 <div class="line"><em>Example</em>:</div>
 </div>
@@ -246,11 +258,31 @@
 </div>
 </li>
 <li><div class="line-block">
+<div class="line"><strong>AddODE2LoadDependencies</strong>(<em>loadNumber</em><em>globalODE2coordinates</em>):</div>
+<div class="line">advanced function for adding special dependencies of loads onto ODE2 coordinates, taking a list / numpy array of global ODE2 coordinates; this function needs to be called after Assemble() and needs to contain ODE2 coordinate indices; this list only affects implicit or static solvers if numericalDifferentiation.loadsJacobian=True; in this case, it may greatly improve convergence if loads with user functions depend on some system states, such as in a load with feedback control loop; the additional dependencies are not required, if doSystemWideDifferentiation=True, however the latter option being much less efficient!</div>
+<div class="line"><em>Example</em>:</div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">AddODE2LoadDependencies</span><span class="p">(</span><span class="mi">0</span><span class="p">,[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>\<span class="c1">#add dependency of load 5 onto node 2 coordinates:</span>
+<span class="n">nodeLTG2</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetNodeLTGODE2</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">AddODE2LoadDependencies</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="n">nodeLTG2</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><div class="line-block">
 <div class="line"><strong>Info</strong>():</div>
-<div class="line">print detailed system information for every item; for short information use print(mbs)</div>
+<div class="line">print detailed information on every item; for short information use print(mbs)</div>
 <div class="line"><em>Example</em>:</div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">Info</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>InfoLTG</strong>():</div>
+<div class="line">print LTG information of objects and load dependencies</div>
+<div class="line"><em>Example</em>:</div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">InfoLTG</span><span class="p">()</span>
 </pre></div>
 </div>
 </li>
@@ -270,7 +302,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>SetODE2Coordinates</strong>(<em>coordinates</em>, <em>configuration</em> = exu.ConfigurationType.Current):</div>
+<div class="line"><strong>SetODE2Coordinates</strong>(<em>coordinates</em><em>configuration</em> = exu.ConfigurationType.Current):</div>
 <div class="line">set ODE2 system coordinates (displacements) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!</div>
 <div class="line"><em>Example</em>:</div>
 </div>
@@ -288,7 +320,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>SetODE2Coordinates_t</strong>(<em>coordinates</em>, <em>configuration</em> = exu.ConfigurationType.Current):</div>
+<div class="line"><strong>SetODE2Coordinates_t</strong>(<em>coordinates</em><em>configuration</em> = exu.ConfigurationType.Current):</div>
 <div class="line">set ODE2 system coordinates (velocities) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!</div>
 <div class="line"><em>Example</em>:</div>
 </div>
@@ -306,7 +338,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>SetODE2Coordinates_tt</strong>(<em>coordinates</em>, <em>configuration</em> = exu.ConfigurationType.Current):</div>
+<div class="line"><strong>SetODE2Coordinates_tt</strong>(<em>coordinates</em><em>configuration</em> = exu.ConfigurationType.Current):</div>
 <div class="line">set ODE2 system coordinates (accelerations) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!</div>
 <div class="line"><em>Example</em>:</div>
 </div>
@@ -324,7 +356,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>SetODE1Coordinates</strong>(<em>coordinates</em>, <em>configuration</em> = exu.ConfigurationType.Current):</div>
+<div class="line"><strong>SetODE1Coordinates</strong>(<em>coordinates</em><em>configuration</em> = exu.ConfigurationType.Current):</div>
 <div class="line">set ODE1 system coordinates (velocities) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!</div>
 <div class="line"><em>Example</em>:</div>
 </div>
@@ -342,7 +374,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>SetODE1Coordinates_t</strong>(<em>coordinates</em>, <em>configuration</em> = exu.ConfigurationType.Current):</div>
+<div class="line"><strong>SetODE1Coordinates_t</strong>(<em>coordinates</em><em>configuration</em> = exu.ConfigurationType.Current):</div>
 <div class="line">set ODE1 system coordinates (displacements) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!</div>
 <div class="line"><em>Example</em>:</div>
 </div>
@@ -360,7 +392,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>SetAECoordinates</strong>(<em>coordinates</em>, <em>configuration</em> = exu.ConfigurationType.Current):</div>
+<div class="line"><strong>SetAECoordinates</strong>(<em>coordinates</em><em>configuration</em> = exu.ConfigurationType.Current):</div>
 <div class="line">set algebraic equations (AE) system coordinates for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!</div>
 <div class="line"><em>Example</em>:</div>
 </div>
@@ -378,7 +410,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>SetDataCoordinates</strong>(<em>coordinates</em>, <em>configuration</em> = exu.ConfigurationType.Current):</div>
+<div class="line"><strong>SetDataCoordinates</strong>(<em>coordinates</em><em>configuration</em> = exu.ConfigurationType.Current):</div>
 <div class="line">set system data coordinates for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!</div>
 <div class="line"><em>Example</em>:</div>
 </div>
@@ -396,7 +428,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>SetSystemState</strong>(<em>systemStateList</em>, <em>configuration</em> = exu.ConfigurationType.Current):</div>
+<div class="line"><strong>SetSystemState</strong>(<em>systemStateList</em><em>configuration</em> = exu.ConfigurationType.Current):</div>
 <div class="line">set system data coordinates for given configuration (default: exu.Configuration.Current); invalid list of vectors / vector size may lead to system crash; write access to state vectors (but not the non-state derivatives ODE1_t and ODE2_tt and the time); function is copying data - not highly efficient; format of pyList: [ODE2Coords, ODE2Coords_t, ODE1Coords, AEcoords, dataCoords]</div>
 <div class="line"><em>Example</em>:</div>
 </div>
@@ -413,7 +445,7 @@
 <ul>
 <li><div class="line-block">
 <div class="line"><strong>GetObjectLTGODE2</strong>(<em>objectNumber</em>):</div>
-<div class="line">get local-to-global coordinate mapping (list of global coordinate indices) for ODE2 coordinates; only available after Assemble()</div>
+<div class="line">get object local-to-global coordinate mapping (list of global coordinate indices) for ODE2 coordinates; only available after Assemble()</div>
 <div class="line"><em>Example</em>:</div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ltgObject4</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetObjectLTGODE2</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
@@ -422,7 +454,7 @@
 </li>
 <li><div class="line-block">
 <div class="line"><strong>GetObjectLTGODE1</strong>(<em>objectNumber</em>):</div>
-<div class="line">get local-to-global coordinate mapping (list of global coordinate indices) for ODE1 coordinates; only available after Assemble()</div>
+<div class="line">get object local-to-global coordinate mapping (list of global coordinate indices) for ODE1 coordinates; only available after Assemble()</div>
 <div class="line"><em>Example</em>:</div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ltgObject4</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetObjectLTGODE1</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
@@ -431,7 +463,7 @@
 </li>
 <li><div class="line-block">
 <div class="line"><strong>GetObjectLTGAE</strong>(<em>objectNumber</em>):</div>
-<div class="line">get local-to-global coordinate mapping (list of global coordinate indices) for algebraic equations (AE) coordinates; only available after Assemble()</div>
+<div class="line">get object local-to-global coordinate mapping (list of global coordinate indices) for algebraic equations (AE) coordinates; only available after Assemble()</div>
 <div class="line"><em>Example</em>:</div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ltgObject4</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetObjectLTGODE2</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
@@ -440,10 +472,46 @@
 </li>
 <li><div class="line-block">
 <div class="line"><strong>GetObjectLTGData</strong>(<em>objectNumber</em>):</div>
-<div class="line">get local-to-global coordinate mapping (list of global coordinate indices) for data coordinates; only available after Assemble()</div>
+<div class="line">get object local-to-global coordinate mapping (list of global coordinate indices) for data coordinates; only available after Assemble()</div>
 <div class="line"><em>Example</em>:</div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ltgObject4</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetObjectLTGData</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>GetNodeLTGODE2</strong>(<em>nodeNumber</em>):</div>
+<div class="line">get node local-to-global coordinate mapping (list of global coordinate indices) for ODE2 coordinates; only available after Assemble()</div>
+<div class="line"><em>Example</em>:</div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ltgNode4</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetNodeLTGODE2</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>GetNodeLTGODE1</strong>(<em>nodeNumber</em>):</div>
+<div class="line">get node local-to-global coordinate mapping (list of global coordinate indices) for ODE1 coordinates; only available after Assemble()</div>
+<div class="line"><em>Example</em>:</div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ltgNode4</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetNodeLTGODE1</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>GetNodeLTGAE</strong>(<em>nodeNumber</em>):</div>
+<div class="line">get node local-to-global coordinate mapping (list of global coordinate indices) for AE coordinates; only available after Assemble()</div>
+<div class="line"><em>Example</em>:</div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ltgNode4</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetNodeLTGAE</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>GetNodeLTGData</strong>(<em>nodeNumber</em>):</div>
+<div class="line">get node local-to-global coordinate mapping (list of global coordinate indices) for Data coordinates; only available after Assemble()</div>
+<div class="line"><em>Example</em>:</div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ltgNode4</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetNodeLTGData</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>

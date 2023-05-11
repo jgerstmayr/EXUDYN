@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GeneralContact &mdash; Exudyn1.6.80.dev1 1.6.80.dev1 documentation</title>
+  <title>GeneralContact &mdash; Exudyn1.6.103.dev1 1.6.103.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -39,7 +39,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.80.dev1
+            Exudyn1.6.103.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -71,6 +71,16 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="DataStructures.html">Data structures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html">Type definitions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#outputvariabletype">OutputVariableType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#configurationtype">ConfigurationType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#itemtype">ItemType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#nodetype">NodeType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#jointtype">JointType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#dynamicsolvertype">DynamicSolverType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#crosssectiontype">CrossSectionType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#keycode">KeyCode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#linearsolvertype">LinearSolverType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#contacttypeindex">ContactTypeIndex</a></li>
 </ul>
 </li>
 </ul>
@@ -94,7 +104,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.80.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.103.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -232,7 +242,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>SetSearchTreeBox</strong>(<em>pMin</em>, <em>pMax</em>):</div>
+<div class="line"><strong>SetSearchTreeBox</strong>(<em>pMin</em><em>pMax</em>):</div>
 <div class="line">set geometric dimensions of searchTreeBox (point with minimum coordinates and point with maximum coordinates); if this box becomes smaller than the effective contact objects, contact computations may slow down significantly</div>
 <div class="line"><em>Example</em>:</div>
 </div>
@@ -242,22 +252,22 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>AddSphereWithMarker</strong>(<em>markerIndex</em>, <em>radius</em>, <em>contactStiffness</em>, <em>contactDamping</em>, <em>frictionMaterialIndex</em>):</div>
+<div class="line"><strong>AddSphereWithMarker</strong>(<em>markerIndex</em><em>radius</em><em>contactStiffness</em><em>contactDamping</em><em>frictionMaterialIndex</em>):</div>
 <div class="line">add contact object using a marker (Position or Rigid), radius and contact/friction parameters and return localIndex of the contact item in GeneralContact; frictionMaterialIndex refers to frictionPairings in GeneralContact; contact is possible between spheres (circles in 2D) (if intraSphereContact = True), spheres and triangles and between sphere (=circle) and ANCFCable2D; contactStiffness is computed as serial spring between contacting objects, while damping is computed as a parallel damper</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>AddANCFCable</strong>(<em>objectIndex</em>, <em>halfHeight</em>, <em>contactStiffness</em>, <em>contactDamping</em>, <em>frictionMaterialIndex</em>):</div>
+<div class="line"><strong>AddANCFCable</strong>(<em>objectIndex</em><em>halfHeight</em><em>contactStiffness</em><em>contactDamping</em><em>frictionMaterialIndex</em>):</div>
 <div class="line">add contact object for an ANCF cable element, using the objectIndex of the cable element and the cable’s half height as an additional distance to contacting objects (currently not causing additional torque in case of friction), and return localIndex of the contact item in GeneralContact; currently only contact with spheres (circles in 2D) possible; contact computed using exact geometry of elements, finding max 3 intersecting contact regions</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>AddTrianglesRigidBodyBased</strong>(<em>rigidBodyMarkerIndex</em>, <em>contactStiffness</em>, <em>contactDamping</em>, <em>frictionMaterialIndex</em>, <em>pointList</em>, <em>triangleList</em>):</div>
+<div class="line"><strong>AddTrianglesRigidBodyBased</strong>(<em>rigidBodyMarkerIndex</em><em>contactStiffness</em><em>contactDamping</em><em>frictionMaterialIndex</em><em>pointList</em><em>triangleList</em>):</div>
 <div class="line">add contact object using a rigidBodyMarker (of a body), contact/friction parameters, a list of points (as 3D numpy arrays or lists; coordinates relative to rigidBodyMarker) and a list of triangles (3 indices as numpy array or list) according to a mesh attached to the rigidBodyMarker; returns starting local index of trigsRigidBodyBased at which the triangles are stored; mesh can be produced with GraphicsData2TrigsAndPoints(…); contact is possible between sphere (circle) and Triangle but yet not between triangle and triangle; frictionMaterialIndex refers to frictionPairings in GeneralContact; contactStiffness is computed as serial spring between contacting objects, while damping is computed as a parallel damper (otherwise the smaller damper would always dominate); the triangle normal must point outwards, with the normal of a triangle given with local points (p0,p1,p2) defined as n=(p1-p0) x (p2-p0), see function ComputeTriangleNormal(…)</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>GetItemsInBox</strong>(<em>pMin</em>, <em>pMax</em>):</div>
+<div class="line"><strong>GetItemsInBox</strong>(<em>pMin</em><em>pMax</em>):</div>
 <div class="line">Get all items in box defined by minimum coordinates given in pMin and maximum coordinates given by pMax, accepting 3D lists or numpy arrays; in case that no objects are found, False is returned; otherwise, a dictionary is returned, containing numpy arrays with indices of obtained MarkerBasedSpheres, TrigsRigidBodyBased, ANCFCable2D, …; the indices refer to the local index in GeneralContact which can be evaluated e.g. by GetMarkerBasedSphere(localIndex)</div>
 <div class="line"><em>Example</em>:</div>
 </div>
@@ -272,7 +282,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>ShortestDistanceAlongLine</strong>(<em>pStart</em> = [0,0,0], <em>direction</em> = [1,0,0], <em>minDistance</em> = -1e-7, <em>maxDistance</em> = 1e7, <em>asDictionary</em> = False, <em>cylinderRadius</em> = 0, <em>typeIndex</em> = Contact.IndexEndOfEnumList):</div>
+<div class="line"><strong>ShortestDistanceAlongLine</strong>(<em>pStart</em> = [0,0,0]<em>direction</em> = [1,0,0]<em>minDistance</em> = -1e-7<em>maxDistance</em> = 1e7<em>asDictionary</em> = False<em>cylinderRadius</em> = 0<em>typeIndex</em> = Contact.IndexEndOfEnumList):</div>
 <div class="line">Find shortest distance to contact objects in GeneralContact along line with pStart (given as 3D list or numpy array) and direction (as 3D list or numpy array with no need to be normalized); the function returns the distance which is &gt;= minDistance and &lt; maxDistance; in case of beam elements, it measures the distance to the beam centerline; the distance is measured from pStart along given direction and can also be negative; if no item is found along line, the maxDistance is returned; if asDictionary=False, the result is a float, while otherwise details are returned as dictionary (including distance, velocityAlongLine (which is the object velocity in given direction and may be different from the time derivative of the distance; works similar to a laser Doppler vibrometer - LDV), itemIndex and itemType in GeneralContact); the cylinderRadius, if not equal to 0, will be used for spheres to find closest sphere along cylinder with given point and direction; the typeIndex can be set to a specific contact type, e.g., which are searched for (otherwise all objects are considered)</div>
 </div>
 </li>
@@ -286,7 +296,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>GetActiveContacts</strong>(<em>typeIndex</em>, <em>itemIndex</em>):</div>
+<div class="line"><strong>GetActiveContacts</strong>(<em>typeIndex</em><em>itemIndex</em>):</div>
 <div class="line">Get list of global item numbers which are in contact with itemIndex of type typeIndex in case that the global itemIndex is smaller than the abs value of the contact pair index; a negative sign indicates that the contacting (spheres) is in Coloumb friction, a positive sign indicates a regularized friction region; for interpretation of global contact indices, see gContact.GetPythonObject() and documentation; requires either implicit contact computation or UpdateContacts(…) needs to be called prior to this function</div>
 <div class="line"><em>Example</em>:</div>
 </div>

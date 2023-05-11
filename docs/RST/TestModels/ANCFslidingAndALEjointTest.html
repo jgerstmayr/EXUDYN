@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ANCFslidingAndALEjointTest.py &mdash; Exudyn1.6.80.dev1 1.6.80.dev1 documentation</title>
+  <title>ANCFslidingAndALEjointTest.py &mdash; Exudyn1.6.103.dev1 1.6.103.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -37,7 +37,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.80.dev1
+            Exudyn1.6.103.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -146,7 +146,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.80.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.103.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -402,7 +402,7 @@
 <span class="linenos">232</span><span class="n">sol</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetODE2Coordinates</span><span class="p">();</span>
 <span class="linenos">233</span><span class="n">uStatic</span> <span class="o">=</span> <span class="n">sol</span><span class="p">[</span><span class="n">nc</span><span class="p">];</span> <span class="c1">#y-displacement of first node of four bar mechanism</span>
 <span class="linenos">234</span><span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s1">&#39;static solution of cable1 =&#39;</span><span class="p">,</span><span class="n">uStatic</span><span class="p">)</span>
-<span class="linenos">235</span><span class="n">exudynTestGlobals</span><span class="o">.</span><span class="n">testError</span> <span class="o">=</span> <span class="n">uStatic</span> <span class="o">-</span> <span class="p">(</span><span class="o">-</span><span class="mf">2.1973218869310713</span><span class="p">)</span> <span class="c1">#before 2022-03-09 (old ObjectContactFrictionCircleCable2D): -2.197321886974786     2020-03-05(corrected Cable2DshapeMarker): -2.197321886974786 #2019-12-26:  2.1973218859908146</span>
+<span class="linenos">235</span><span class="n">exudynTestGlobals</span><span class="o">.</span><span class="n">testError</span> <span class="o">=</span> <span class="n">uStatic</span> <span class="o">-</span> <span class="p">(</span><span class="o">-</span><span class="mf">2.1973218891272532</span><span class="p">)</span> <span class="c1">#before 2023-05-01 (new loads jacobian): -2.1973218869310713 #before 2022-03-09 (old ObjectContactFrictionCircleCable2D): -2.197321886974786     2020-03-05(corrected Cable2DshapeMarker): -2.197321886974786 #2019-12-26:  2.1973218859908146</span>
 <span class="linenos">236</span><span class="n">exudynTestGlobals</span><span class="o">.</span><span class="n">testResult</span> <span class="o">=</span> <span class="n">uStatic</span>
 <span class="linenos">237</span>
 <span class="linenos">238</span><span class="c1">#++++++++++++++++++++++++++++++++++++++++</span>
@@ -459,7 +459,7 @@
 <span class="linenos">289</span><span class="n">uDynamic</span> <span class="o">=</span> <span class="n">sol</span><span class="p">[</span><span class="n">nc</span><span class="p">];</span> <span class="c1">#y-displacement of first node of four bar mechanism</span>
 <span class="linenos">290</span><span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s1">&#39;dynamic solution of cable1 =&#39;</span><span class="p">,</span><span class="n">uDynamic</span><span class="p">)</span>
 <span class="linenos">291</span>
-<span class="linenos">292</span><span class="n">exudynTestGlobals</span><span class="o">.</span><span class="n">testError</span> <span class="o">+=</span> <span class="n">uDynamic</span> <span class="o">-</span> <span class="p">(</span><span class="o">-</span><span class="mf">2.229086503625397</span><span class="p">)</span> <span class="c1">#before 2022-12-25(resolved BUG 1274): -2.229081157258582; before 2022-03-09 (old ObjectContactFrictionCircleCable2D) : (-2.2290811574753953)   #2020-03-05(corrected Cable2DshapeMarker): -2.2290811574753953 #2019-12-26: -2.2290811558815617; 2019-12-18: -2.229126333291627</span>
+<span class="linenos">292</span><span class="n">exudynTestGlobals</span><span class="o">.</span><span class="n">testError</span> <span class="o">+=</span> <span class="n">uDynamic</span> <span class="o">-</span> <span class="p">(</span><span class="o">-</span><span class="mf">2.2290865056280076</span><span class="p">)</span> <span class="c1">#before 2023-05-01 (loads jacobian): -2.229086503625397 #before 2022-12-25(resolved BUG 1274): -2.229081157258582; before 2022-03-09 (old ObjectContactFrictionCircleCable2D) : (-2.2290811574753953)   #2020-03-05(corrected Cable2DshapeMarker): -2.2290811574753953 #2019-12-26: -2.2290811558815617; 2019-12-18: -2.229126333291627</span>
 <span class="linenos">293</span><span class="n">exudynTestGlobals</span><span class="o">.</span><span class="n">testResult</span> <span class="o">+=</span> <span class="n">uDynamic</span>
 <span class="linenos">294</span>
 <span class="linenos">295</span><span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s1">&#39;result of ANCFslidingAndALEjointTest=&#39;</span><span class="p">,</span><span class="n">exudynTestGlobals</span><span class="o">.</span><span class="n">testResult</span><span class="p">)</span>

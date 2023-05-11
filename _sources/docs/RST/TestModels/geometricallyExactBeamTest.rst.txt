@@ -398,7 +398,7 @@ You can view and download this file on Github: `geometricallyExactBeamTest.py <h
    
    
    exu.Print('Solution of geometricallyExactBeamTest=', testErrorSum)
-   exudynTestGlobals.testError = testErrorSum - (1.012821627943081) 
+   exudynTestGlobals.testError = testErrorSum - (1.012822053539261) 
    exudynTestGlobals.testResult = testErrorSum
    
    

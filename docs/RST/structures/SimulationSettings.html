@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Simulation settings &mdash; Exudyn1.6.80.dev1 1.6.80.dev1 documentation</title>
+  <title>Simulation settings &mdash; Exudyn1.6.103.dev1 1.6.103.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -39,7 +39,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.80.dev1
+            Exudyn1.6.103.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -104,7 +104,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.80.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.103.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -303,7 +303,7 @@
 <li><div class="line-block">
 <div class="line"><strong>addReferenceCoordinatesToEpsilon</strong> [type = bool, default = False]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.newton.numericalDifferentiation.addReferenceCoordinatesToEpsilon</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.numericalDifferentiation.addReferenceCoordinatesToEpsilon</span></code></div>
-<div class="line">True: for the size estimation of the differentiation parameter, the reference coordinate <span class="math notranslate nohighlight">\(q^{Ref}_i\)</span> is added to <a class="reference internal" href="../Abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> coordinates –&gt; see; False: only the current coordinate is used for size estimation of the differentiation parameter</div>
+<div class="line">True: for the size estimation of the differentiation parameter, the reference coordinate <span class="math notranslate nohighlight">\(q^{Ref}\_i\)</span> is added to <a class="reference internal" href="../Abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> coordinates –&gt; see; False: only the current coordinate is used for size estimation of the differentiation parameter</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -345,7 +345,7 @@
 <li><div class="line-block">
 <div class="line"><strong>relativeEpsilon</strong> [type = UReal, default = 1e-7]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.newton.numericalDifferentiation.relativeEpsilon</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.numericalDifferentiation.relativeEpsilon</span></code></div>
-<div class="line">relative differentiation parameter epsilon; the numerical differentiation parameter <span class="math notranslate nohighlight">\(\varepsilon\)</span> follows from the formula (<span class="math notranslate nohighlight">\(\varepsilon = \varepsilon_\mathrm{relative}*max(q_{min}, |q_i + [q^{Ref}_i]|)\)</span>, with <span class="math notranslate nohighlight">\(\varepsilon_\mathrm{relative}\)</span>=relativeEpsilon, <span class="math notranslate nohighlight">\(q_{min} =\)</span>minimumCoordinateSize, <span class="math notranslate nohighlight">\(q_i\)</span> is the current coordinate which is differentiated, and <span class="math notranslate nohighlight">\(qRef_i\)</span> is the reference coordinate of the current coordinate</div>
+<div class="line">relative differentiation parameter epsilon; the numerical differentiation parameter <span class="math notranslate nohighlight">\(\varepsilon\)</span> follows from the formula (<span class="math notranslate nohighlight">\(\varepsilon = \varepsilon\_\mathrm{relative}*max(q\_{min}, |q\_i + [q^{Ref}\_i]|)\)</span>, with <span class="math notranslate nohighlight">\(\varepsilon\_\mathrm{relative}\)</span>=relativeEpsilon, <span class="math notranslate nohighlight">\(q\_{min} =\)</span>minimumCoordinateSize, <span class="math notranslate nohighlight">\(q\_i\)</span> is the current coordinate which is differentiated, and <span class="math notranslate nohighlight">\(qRef\_i\)</span> is the reference coordinate of the current coordinate</div>
 </div>
 </li>
 </ul>
@@ -401,7 +401,7 @@
 <li><div class="line-block">
 <div class="line"><strong>maximumSolutionNorm</strong> [type = UReal, default = 1e38]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.newton.maximumSolutionNorm</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.maximumSolutionNorm</span></code></div>
-<div class="line">this is the maximum allowed value for solutionU.L2NormSquared() which is the square of the square norm (i.e., value=<span class="math notranslate nohighlight">\(u_1^2\)</span>+<span class="math notranslate nohighlight">\(u_2^2\)</span>+…), and solutionV/A…; if the norm of solution vectors is larger, Newton method is stopped; the default value is chosen such that it would still work for single precision numbers (float)</div>
+<div class="line">this is the maximum allowed value for solutionU.L2NormSquared() which is the square of the square norm (i.e., value=<span class="math notranslate nohighlight">\(u\_1^2\)</span>+<span class="math notranslate nohighlight">\(u\_2^2\)</span>+…), and solutionV/A…; if the norm of solution vectors is larger, Newton method is stopped; the default value is chosen such that it would still work for single precision numbers (float)</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -541,7 +541,7 @@
 <li><div class="line-block">
 <div class="line"><strong>dynamicSolverType</strong> [type = DynamicSolverType, default = DynamicSolverType::DOPRI5]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.explicitIntegration.dynamicSolverType</span></code></div>
-<div class="line">selection of explicit solver type (DOPRI5, ExplicitEuler, ExplicitMidpoint, RK44, RK67, …), for detailed description see DynamicSolverType, Section <a class="reference internal" href="../cInterface/TypeDefinitions.html#sec-dynamicsolvertype"><span class="std std-ref">DynamicSolverType</span></a>, but only referring to explicit solvers.</div>
+<div class="line">selection of explicit solver type (DOPRI5, ExplicitEuler, ExplicitMidpoint, RK44, RK67, …), for detailed description see DynamicSolverType, Section <span class="xref std std-ref">sec-dynamicsolvertype</span>, but only referring to explicit solvers.</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -590,7 +590,7 @@
 <li><div class="line-block">
 <div class="line"><strong>absoluteTolerance</strong> [type = UReal, default = 1e-8]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.absoluteTolerance</span></code></div>
-<div class="line"><span class="math notranslate nohighlight">\(a_{tol}\)</span>: if automaticStepSize=True, absolute tolerance for the error control; must fulfill <span class="math notranslate nohighlight">\(a_{tol} &gt; 0\)</span>; see Section <a class="reference internal" href="../ExplicitSolvers.html#sec-explicitsolver"><span class="std std-ref">Explicit solvers</span></a></div>
+<div class="line"><span class="math notranslate nohighlight">\(a\_{tol}\)</span>: if automaticStepSize=True, absolute tolerance for the error control; must fulfill <span class="math notranslate nohighlight">\(a\_{tol} &gt; 0\)</span>; see Section <a class="reference internal" href="../ExplicitSolvers.html#sec-explicitsolver"><span class="std std-ref">Explicit solvers</span></a></div>
 </div>
 </li>
 <li><div class="line-block">
@@ -626,31 +626,37 @@
 <li><div class="line-block">
 <div class="line"><strong>automaticStepSize</strong> [type = bool, default = True]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.automaticStepSize</span></code></div>
-<div class="line">True: for specific integrators with error control (e.g., DOPRI5), compute automatic step size based on error estimation; False: constant step size (step may be reduced if adaptiveStep=True); the maximum stepSize reads <span class="math notranslate nohighlight">\(h = h_{max} = \frac{t_{end} - t_{start}}{n_{steps}}\)</span></div>
+<div class="line">True: for specific integrators with error control (e.g., DOPRI5), compute automatic step size based on error estimation; False: constant step size (step may be reduced if adaptiveStep=True); the maximum stepSize reads <span class="math notranslate nohighlight">\(h = h\_{max} = \frac{t\_{end} - t\_{start}}{n\_{steps}}\)</span></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>computeLoadsJacobian</strong> [type = UInt, default = 0]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.computeLoadsJacobian</span></code></div>
+<div class="line">0:  jacobian of loads not considered (may lead to slow convergence or Newton failure); 1: in case of implicit integrators, compute (numerical) Jacobian of ODE2 and ODE1 coordinates for loads, causing additional computational costs; this is advantageous in cases where loads are related nonlinearly to coordinates; 2: also compute ODE2_t dependencies for jacobian; note that computeLoadsJacobian has no effect in case of doSystemWideDifferentiation, as this anyway includes all load dependencies</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>endTime</strong> [type = UReal, default = 1]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.endTime</span></code></div>
-<div class="line"><span class="math notranslate nohighlight">\(t_{end}\)</span>: end time of time integration</div>
+<div class="line"><span class="math notranslate nohighlight">\(t\_{end}\)</span>: end time of time integration</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>initialStepSize</strong> [type = UReal, default = 0]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.initialStepSize</span></code></div>
-<div class="line"><span class="math notranslate nohighlight">\(h_{init}\)</span>: if automaticStepSize=True, initial step size; if initialStepSize==0, max. stepSize, which is (endTime-startTime)/numberOfSteps, is used as initial guess; a good choice of initialStepSize may help the solver to start up faster.</div>
+<div class="line"><span class="math notranslate nohighlight">\(h\_{init}\)</span>: if automaticStepSize=True, initial step size; if initialStepSize==0, max. stepSize, which is (endTime-startTime)/numberOfSteps, is used as initial guess; a good choice of initialStepSize may help the solver to start up faster.</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>minimumStepSize</strong> [type = PReal, default = 1e-8]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.minimumStepSize</span></code></div>
-<div class="line"><span class="math notranslate nohighlight">\(h_{min}\)</span>: if automaticStepSize=True or adaptiveStep=True: lower limit of time step size, before integrator stops with adaptiveStep; lower limit of automaticStepSize control (continues but raises warning)</div>
+<div class="line"><span class="math notranslate nohighlight">\(h\_{min}\)</span>: if automaticStepSize=True or adaptiveStep=True: lower limit of time step size, before integrator stops with adaptiveStep; lower limit of automaticStepSize control (continues but raises warning)</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>numberOfSteps</strong> [type = PInt, default = 100]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.numberOfSteps</span></code></div>
-<div class="line"><span class="math notranslate nohighlight">\(n_{steps}\)</span>: number of steps in time integration; (maximum) stepSize <span class="math notranslate nohighlight">\(h\)</span> is computed from <span class="math notranslate nohighlight">\(h = \frac{t_{end} - t_{start}}{n_{steps}}\)</span>; for automatic stepsize control, this stepSize is the maximum steps size, <span class="math notranslate nohighlight">\(h_{max} = h\)</span></div>
+<div class="line"><span class="math notranslate nohighlight">\(n\_{steps}\)</span>: number of steps in time integration; (maximum) stepSize <span class="math notranslate nohighlight">\(h\)</span> is computed from <span class="math notranslate nohighlight">\(h = \frac{t\_{end} - t\_{start}}{n\_{steps}}\)</span>; for automatic stepsize control, this stepSize is the maximum steps size, <span class="math notranslate nohighlight">\(h\_{max} = h\)</span></div>
 </div>
 </li>
 <li><div class="line-block">
@@ -668,7 +674,7 @@
 <li><div class="line-block">
 <div class="line"><strong>relativeTolerance</strong> [type = UReal, default = 1e-8]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.relativeTolerance</span></code></div>
-<div class="line"><span class="math notranslate nohighlight">\(r_{tol}\)</span>: if automaticStepSize=True, relative tolerance for the error control; must fulfill <span class="math notranslate nohighlight">\(r_{tol} \ge 0\)</span>; see Section <a class="reference internal" href="../ExplicitSolvers.html#sec-explicitsolver"><span class="std std-ref">Explicit solvers</span></a></div>
+<div class="line"><span class="math notranslate nohighlight">\(r\_{tol}\)</span>: if automaticStepSize=True, relative tolerance for the error control; must fulfill <span class="math notranslate nohighlight">\(r\_{tol} \ge 0\)</span>; see Section <a class="reference internal" href="../ExplicitSolvers.html#sec-explicitsolver"><span class="std std-ref">Explicit solvers</span></a></div>
 </div>
 </li>
 <li><div class="line-block">
@@ -686,7 +692,7 @@
 <li><div class="line-block">
 <div class="line"><strong>startTime</strong> [type = UReal, default = 0]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.startTime</span></code></div>
-<div class="line"><span class="math notranslate nohighlight">\(t_{start}\)</span>: start time of time integration (usually set to zero)</div>
+<div class="line"><span class="math notranslate nohighlight">\(t\_{start}\)</span>: start time of time integration (usually set to zero)</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -698,13 +704,13 @@
 <li><div class="line-block">
 <div class="line"><strong>stepSizeMaxIncrease</strong> [type = UReal, default = 2]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.stepSizeMaxIncrease</span></code></div>
-<div class="line"><span class="math notranslate nohighlight">\(f_{maxInc}\)</span>: if automaticStepSize=True, maximum increase of step size per step, see Section <a class="reference internal" href="../ExplicitSolvers.html#sec-explicitsolver"><span class="std std-ref">Explicit solvers</span></a>; make this factor smaller (but <span class="math notranslate nohighlight">\(&gt; 1\)</span>) if too many rejected steps</div>
+<div class="line"><span class="math notranslate nohighlight">\(f\_{maxInc}\)</span>: if automaticStepSize=True, maximum increase of step size per step, see Section <a class="reference internal" href="../ExplicitSolvers.html#sec-explicitsolver"><span class="std std-ref">Explicit solvers</span></a>; make this factor smaller (but <span class="math notranslate nohighlight">\(&gt; 1\)</span>) if too many rejected steps</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>stepSizeSafety</strong> [type = UReal, default = 0.90]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.stepSizeSafety</span></code></div>
-<div class="line"><span class="math notranslate nohighlight">\(r_{sfty}\)</span>: if automaticStepSize=True, a safety factor added to estimated optimal step size, in order to prevent from many rejected steps, see Section <a class="reference internal" href="../ExplicitSolvers.html#sec-explicitsolver"><span class="std std-ref">Explicit solvers</span></a>. Make this factor smaller if many steps are rejected.</div>
+<div class="line"><span class="math notranslate nohighlight">\(r\_{sfty}\)</span>: if automaticStepSize=True, a safety factor added to estimated optimal step size, in order to prevent from many rejected steps, see Section <a class="reference internal" href="../ExplicitSolvers.html#sec-explicitsolver"><span class="std std-ref">Explicit solvers</span></a>. Make this factor smaller if many steps are rejected.</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -766,6 +772,12 @@
 <div class="line"><strong>adaptiveStepRecoverySteps</strong> [type = UInt, default = 4]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolverSettings.adaptiveStepRecoverySteps</span></code></div>
 <div class="line">Number of steps needed after which steps will be increased after previous step reduction due to discontinuousIteration or Newton errors</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>computeLoadsJacobian</strong> [type = bool, default = True]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolverSettings.computeLoadsJacobian</span></code></div>
+<div class="line">True: compute (currently numerical) Jacobian for loads, causing additional computational costs; this is advantageous in cases where loads are related nonlinearly to coordinates; False: jacobian of loads not considered (may lead to slow convergence or Newton failure); note that computeLoadsJacobian has no effect in case of doSystemWideDifferentiation, as this anyway includes all load dependencies</div>
 </div>
 </li>
 <li><div class="line-block">

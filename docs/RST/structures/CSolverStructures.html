@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Solver substructures &mdash; Exudyn1.6.80.dev1 1.6.80.dev1 documentation</title>
+  <title>Solver substructures &mdash; Exudyn1.6.103.dev1 1.6.103.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -39,7 +39,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.80.dev1
+            Exudyn1.6.103.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -70,7 +70,6 @@
 <li class="toctree-l2"><a class="reference internal" href="VisualizationSettings.html">Visualization settings</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Solver substructures</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#csolvertimer">CSolverTimer</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#solverlocaldata">SolverLocalData</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#solveriterationdata">SolverIterationData</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#solverconvergencedata">SolverConvergenceData</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#solveroutputdata">SolverOutputData</a></li>
@@ -98,7 +97,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.80.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.103.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -258,108 +257,6 @@ There is plenty of possibilities to interact with the solvers, being it the extr
 </li>
 </ul>
 </section>
-<section id="solverlocaldata">
-<span id="sec-solverlocaldata"></span><h2>SolverLocalData<a class="headerlink" href="#solverlocaldata" title="Permalink to this heading"></a></h2>
-<p>Solver local data structure for solution vectors, system matrices and temporary vectors and data structures.</p>
-<p>SolverLocalData has the following items:</p>
-<ul>
-<li><div class="line-block">
-<div class="line"><strong>aAlgorithmic</strong> [type = ResizableVectorParallel]:</div>
-<div class="line">additional term needed for generalized alpha (current state)</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><strong>CleanUpMemory()</strong> [return type = void]:</div>
-<div class="line">if desired, temporary data is cleaned up to safe memory</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><strong>GetLinearSolverType()</strong> [return type = LinearSolverType]:</div>
-<div class="line">return current linear solver type (dense/sparse)</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><strong>nAE</strong> [type = Index, default = 0]:</div>
-<div class="line">number of algebraic coordinates</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><strong>nData</strong> [type = Index, default = 0]:</div>
-<div class="line">number of data coordinates</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><strong>newtonSolution</strong> [type = ResizableVectorParallel]:</div>
-<div class="line">Newton decrement (computed from residual and jacobian)</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><strong>nODE1</strong> [type = Index, default = 0]:</div>
-<div class="line">number of first order ordinary diff. eq. coordinates</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><strong>nODE2</strong> [type = Index, default = 0]:</div>
-<div class="line">number of second order ordinary diff. eq. coordinates</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><strong>nSys</strong> [type = Index, default = 0]:</div>
-<div class="line">number of system (unknown) coordinates = nODE2+nODE1+nAE</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><strong>SetLinearSolverType(linearSolverType, reuseAnalyzedPattern)</strong> [return type = void]:</div>
-<div class="line">set linear solver type and matrix version: links system matrices to according dense/sparse versions</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><strong>startAE</strong> [type = Index, default = 0]:</div>
-<div class="line">start of algebraic coordinates, but set to zero if nAE==0</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><strong>startOfStepStateAAlgorithmic</strong> [type = ResizableVectorParallel]:</div>
-<div class="line">additional term needed for generalized alpha (startOfStep state)</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><strong>systemResidual</strong> [type = ResizableVectorParallel]:</div>
-<div class="line">system residual vector (vectors will be linked to this vector!)</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><strong>temp2ODE2</strong> [type = ResizableVectorParallel]:</div>
-<div class="line">second temporary vector for <a class="reference internal" href="../Abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> quantities; use in static computation</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><strong>tempODE1F0</strong> [type = ResizableVectorParallel]:</div>
-<div class="line">temporary vector for <a class="reference internal" href="../Abbreviations.html#ode1"><span class="std std-ref">ODE1</span></a> Jacobian</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><strong>tempODE1F1</strong> [type = ResizableVectorParallel]:</div>
-<div class="line">temporary vector for <a class="reference internal" href="../Abbreviations.html#ode1"><span class="std std-ref">ODE1</span></a> Jacobian</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><strong>tempODE2</strong> [type = ResizableVectorParallel]:</div>
-<div class="line">temporary vector for <a class="reference internal" href="../Abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> quantities; use in initial accelerations and during Newton</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><strong>tempODE2F0</strong> [type = ResizableVectorParallel]:</div>
-<div class="line">temporary vector for <a class="reference internal" href="../Abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> Jacobian</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><strong>tempODE2F1</strong> [type = ResizableVectorParallel]:</div>
-<div class="line">temporary vector for <a class="reference internal" href="../Abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> Jacobian</div>
-</div>
-</li>
-</ul>
-</section>
 <section id="solveriterationdata">
 <span id="sec-solveriterationdata"></span><h2>SolverIterationData<a class="headerlink" href="#solveriterationdata" title="Permalink to this heading"></a></h2>
 <p>Solver internal structure for counters, steps, step size, time, etc.; solution vectors, residuals, etc. are SolverLocalData. The given default values are overwritten by the simulationSettings when initializing the solver.</p>
@@ -452,7 +349,7 @@ There is plenty of possibilities to interact with the solvers, being it the extr
 </li>
 <li><div class="line-block">
 <div class="line"><strong>recommendedStepSize</strong> [type = Real, default = -1.]:</div>
-<div class="line">recommended step size <span class="math notranslate nohighlight">\(h_{recom}\)</span> after PostNewton(…): <span class="math notranslate nohighlight">\(h_{recom} &lt; 0\)</span>: no recommendation, <span class="math notranslate nohighlight">\(h_{recom}==0\)</span>: use minimum step size, <span class="math notranslate nohighlight">\(h_{recom}&gt;0\)</span>: use specific step size, if no smaller size requested by other reason</div>
+<div class="line">recommended step size <span class="math notranslate nohighlight">\(h\_{recom}\)</span> after PostNewton(…): <span class="math notranslate nohighlight">\(h\_{recom} &lt; 0\)</span>: no recommendation, <span class="math notranslate nohighlight">\(h\_{recom}==0\)</span>: use minimum step size, <span class="math notranslate nohighlight">\(h\_{recom}&gt;0\)</span>: use specific step size, if no smaller size requested by other reason</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -632,16 +529,6 @@ There is plenty of possibilities to interact with the solvers, being it the extr
 <li><div class="line-block">
 <div class="line"><strong>numberOfThreadsUsed</strong> [type = Index, default = 0]:</div>
 <div class="line">number of threads that have been used in simulation</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><strong>sensorValuesTemp</strong> [type = ResizableVector]:</div>
-<div class="line">temporary vector for per sensor values (overwritten for every sensor; usually contains last sensor values)</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><strong>sensorValuesTemp2</strong> [type = ResizableVector]:</div>
-<div class="line">additional temporary vector for per sensor values (overwritten for every sensor; usually contains time+last sensor values)</div>
 </div>
 </li>
 <li><div class="line-block">
