@@ -20,10 +20,10 @@ from math import sin, cos, pi, sqrt
 import exudyn
 from exudyn.basicUtilities import *
 from exudyn.advancedUtilities import *
-
 from exudyn.rigidBodyUtilities import *
 from exudyn.graphicsDataUtilities import *
 from exudyn.itemInterface import *
+# import exudyn.mainSystemExtensions
 
 #for compatibility with older models:
 from exudyn.beams import GenerateStraightLineANCFCable2D, GenerateSlidingJoint, GenerateAleSlidingJoint
@@ -99,7 +99,7 @@ def HighlightItem(SC, mbs, itemNumber, itemType=exudyn.ItemType.Object, showNumb
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-#**function: internal function used for AddDistanceSensor
+#**function: internal function used for CreateDistanceSensor
 def __UFsensorDistance(mbs, t, sensorNumbers, factors, configuration):
 
     generalContactIndex = int(factors[0])
@@ -155,9 +155,10 @@ def __UFsensorDistance(mbs, t, sensorNumbers, factors, configuration):
 #  meshTrigs: list of trigs (3 node indices each), as returned by GraphicsData2PointsAndTrigs()
 #  rigidBodyMarkerIndex: rigid body marker to which the triangles are fixed on (ground or moving object)
 #  searchTreeCellSize: size of search tree (X,Y,Z); use larger values in directions where more triangles are located
-#**output: returns [ngc, gContact]: ngc is the number of GeneralContact in mbs, to be used in AddDistanceSensor; keep the gContact as deletion may corrupt data
-#**notes: should be used by AddDistanceSensor(...) and AddLidar(...) for simple initialization of GeneralContact
-def DistanceSensorSetupGeometry(mbs, meshPoints, meshTrigs, rigidBodyMarkerIndex, searchTreeCellSize=[8,8,8]):
+#**output: int; returns ngc, which is the number of GeneralContact in mbs, to be used in CreateDistanceSensor(...); keep the gContact as deletion may corrupt data
+#**notes: should be used by CreateDistanceSensor(...) and AddLidar(...) for simple initialization of GeneralContact; old name: DistanceSensorSetupGeometry(...)
+#**belongsTo: MainSystem
+def CreateDistanceSensorGeometry(mbs, meshPoints, meshTrigs, rigidBodyMarkerIndex, searchTreeCellSize=[8,8,8]):
     gContact = mbs.AddGeneralContact()
     gContact.SetFrictionPairings(0*np.eye(1)) #may not be empty
     gContact.SetSearchTreeCellSize(numberOfCells=searchTreeCellSize)
@@ -171,8 +172,9 @@ def DistanceSensorSetupGeometry(mbs, meshPoints, meshTrigs, rigidBodyMarkerIndex
 
     return ngc
 
-#**function: Function to add distance sensor based on GeneralContact to mbs; sensor can be either placed on absolute position or attached to rigid body marker; in case of marker, dirSensor is relative to the marker
+#**function: Function to create distance sensor based on GeneralContact in mbs; sensor can be either placed on absolute position or attached to rigid body marker; in case of marker, dirSensor is relative to the marker
 #**input:
+#  mbs: the MainSystem where distance sensor is created
 #  generalContactIndex: the number of the GeneralContact object in mbs; the index of the GeneralContact object which has been added with last AddGeneralContact(...) command is generalContactIndex=mbs.NumberOfGeneralContacts()-1
 #  positionOrMarker: either a 3D position as list or np.array, or a MarkerIndex with according rigid body marker
 #  dirSensor: the direction (no need to normalize) along which the distance is measured (must not be normalized); in case of marker, the direction is relative to marker orientation if marker contains orientation (BodyRigid, NodeRigid)
@@ -186,9 +188,10 @@ def DistanceSensorSetupGeometry(mbs, meshPoints, meshTrigs, rigidBodyMarkerIndex
 #  addGraphicsObject: if True, the distance sensor is also visualized graphically in a simplified manner with a red line having the length of dirSensor; NOTE that updates are ONLY performed during computation, not in visualization; for this reason, solutionSettings.sensorsWritePeriod should be accordingly small
 #  drawDisplaced: if True, the red line is drawn backwards such that it moves along the measured surface; if False, the beam is fixed to marker or position
 #  color: optional color for 'laser beam' to be drawn
-#**output: creates sensor and returns according sensor number of SensorUserFunction
-#**notes: use generalContactIndex = DistanceSensorSetupGeometry(...) before to create GeneralContact module containing geometry
-def AddDistanceSensor(mbs, generalContactIndex,
+#**output: SensorIndex; creates sensor and returns according sensor number of SensorUserFunction
+#**notes: use generalContactIndex = CreateDistanceSensorGeometry(...) before to create GeneralContact module containing geometry; old name: AddDistanceSensor(...)
+#**belongsTo: MainSystem
+def CreateDistanceSensor(mbs, generalContactIndex,
                       positionOrMarker, dirSensor, minDistance=-1e7, 
                       maxDistance=1e7, cylinderRadius=0, 
                       selectedTypeIndex=exudyn.ContactTypeIndex.IndexEndOfEnumList,
@@ -207,7 +210,7 @@ def AddDistanceSensor(mbs, generalContactIndex,
         except:
             p0list = [0,0,0] #this was just a trial, otherwise initialize with zeros (e.g. for special objects where this does not work)
     else:
-        raise ValueError('AddDistanceSensor: positionOrMarker must be either MarkerIndex or 3D position as list or numpy.array')
+        raise ValueError('CreateDistanceSensor: positionOrMarker must be either MarkerIndex or 3D position as list or numpy.array')
 
     graphicsObject = -1 #signals that there is no graphics object
     sign = 1.
@@ -840,7 +843,8 @@ def AnimateSolution(mbs, solution, rowIncrement = 1, timeout=0.04, createImages 
 #   showLegend: shows legend for different item types
 #   layoutDistanceFactor: this factor influences the arrangement of labels; larger distance values lead to circle-like results
 #   layoutIterations: more iterations lead to better arrangement of the layout, but need more time for larger systems (use 1000-10000 to get good results)
-#**output: [nx, G, items] with nx being networkx, G the graph and item what is returned by nx.draw\_networkx\_labels(...)
+#**output: [Any, Any, Any]; returns [networkx, G, items] with nx being networkx, G the graph and item what is returned by nx.draw\_networkx\_labels(...)
+#**belongsTo: MainSystem
 def DrawSystemGraph(mbs, showLoads=True, showSensors=True, useItemNames = False, 
                     useItemTypes = False, addItemTypeNames=True, multiLine=True, fontSizeFactor=1., 
                     layoutDistanceFactor=3., layoutIterations=100, showLegend = True):
@@ -897,7 +901,7 @@ def DrawSystemGraph(mbs, showLoads=True, showSensors=True, useItemNames = False,
             nodeName = nodeName + 'Ground'
     
         if useItemNames:
-            itemName=item['name']+str(i)
+            itemName=item['name'] #+str(i)
         elif useItemTypes:
             itemName=item['nodeType']+str(i)
             if addItemTypeNames:
@@ -921,7 +925,7 @@ def DrawSystemGraph(mbs, showLoads=True, showSensors=True, useItemNames = False,
         item = mbs.GetMarker(i)
         itemName=itemType+str(i)
         if useItemNames:
-            itemName=item['name']+str(i)
+            itemName=item['name']#+str(i)
         elif useItemTypes:
             itemName=item['markerType']+str(i)
             if addItemTypeNames:
@@ -955,7 +959,7 @@ def DrawSystemGraph(mbs, showLoads=True, showSensors=True, useItemNames = False,
         itemName=objectType+str(i)
     
         if useItemNames:
-            itemName=item['name']+str(i)
+            itemName=item['name']#+str(i)
         elif useItemTypes:
             itemName=item['objectType']+str(i)
             if addItemTypeNames:
@@ -1042,7 +1046,7 @@ def DrawSystemGraph(mbs, showLoads=True, showSensors=True, useItemNames = False,
             item = mbs.GetLoad(i)
             itemName=itemType+str(i)
             if useItemNames:
-                itemName=item['name']+str(i)
+                itemName=item['name']#+str(i)
             elif useItemTypes:
                 itemName=item['loadType']+str(i)
                 if addItemTypeNames:
@@ -1072,7 +1076,7 @@ def DrawSystemGraph(mbs, showLoads=True, showSensors=True, useItemNames = False,
             item = mbs.GetSensor(i)
             itemName=itemType+str(i)
             if useItemNames:
-                itemName=item['name']+str(i)
+                itemName=item['name']#+str(i)
             elif useItemTypes:
                 itemName=item['sensorType']+str(i)
                 if addItemTypeNames:

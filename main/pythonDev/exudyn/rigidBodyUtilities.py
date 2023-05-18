@@ -1119,6 +1119,7 @@ def GetRigidBodyNode(nodeType,
 
     return nodeItem
 
+#soon: DEPRECATED (use MainSystem function instead): 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: adds a node (with str(exu.NodeType. ...)) and body for a given rigid body; all quantities (esp. velocity and angular velocity) are given in global coordinates!
 #**input:
@@ -1193,7 +1194,7 @@ def AddRigidBody(mainSys, inertia,
     return [nodeNumber, bodyNumber]
 
 
-#**function: add revolute joint between two bodies; definition of joint position and axis in global coordinates (alternatively in body0 local coordinates) for reference configuration of bodies; all markers, markerRotation and other quantities are automatically computed
+#**function: DEPRECATED (use MainSystem function instead): add revolute joint between two bodies; definition of joint position and axis in global coordinates (alternatively in body0 local coordinates) for reference configuration of bodies; all markers, markerRotation and other quantities are automatically computed
 #**input:
 #  mbs: the MainSystem to which the joint and markers shall be added
 #  body0: a object number for body0, must be rigid body or ground object
@@ -1274,7 +1275,7 @@ def AddRevoluteJoint(mbs, body0, body1, point, axis, useGlobalFrame=True,
     return [oJoint, mBody0, mBody1]
 
 
-#**function: add prismatic joint between two bodies; definition of joint position and axis in global coordinates (alternatively in body0 local coordinates) for reference configuration of bodies; all markers, markerRotation and other quantities are automatically computed
+#**function: DEPRECATED (use MainSystem function instead): add prismatic joint between two bodies; definition of joint position and axis in global coordinates (alternatively in body0 local coordinates) for reference configuration of bodies; all markers, markerRotation and other quantities are automatically computed
 #**input:
 #  mbs: the MainSystem to which the joint and markers shall be added
 #  body0: a object number for body0, must be rigid body or ground object

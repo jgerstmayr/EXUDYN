@@ -872,8 +872,9 @@ which draws the according object in red and others gray/transparent (but sometim
 	%
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-\item Why does \mybold{type auto completion} not work for mbs (MainSystem)?
+\item Why does \mybold{type auto completion} / intellisense not work for mbs (MainSystem)?
 \bi
+\item[$\ra$] UPDATE 2023-05-11 (V1.6.103): type completion now also works for functions\, types and structures: tested in Spyder 5.2.2 and Visual Studio Code 1.78.1); with an added stub file (.pyi) the standard type completion fetches information about structures or functions; this even works for \texttt{SC.visualizationSettings.bodies.kinematicTree.showJointFrames}. If you still have problems, try to restart your environment / computer or switch to a different version
 \item[$\ra$] UPDATE 2020-06-01: with Spyder 4, using Python 3.7, type auto completion works much better, but may find too many completions.
 \item[$\ra$] most Python environments (e.g., with Spyder 3) only have information up to the first sub-structure, e.g., \texttt{SC=exu.SystemContainer()} provides full access to SC in the type completion, but \texttt{mbs=SC.AddSystem()} is at the second sub-structure of the module and is not accessible.
 \item[$\ra$] WORKAROUND: type \texttt{mbs=MainSystem()} \mybold{before} the \texttt{mbs=SC.AddSystem()} command and the interpreter will know what type mbs is. This also works for settings, e.g., simulation settings 'Newton'.

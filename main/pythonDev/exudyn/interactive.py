@@ -729,7 +729,7 @@ def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPe
 #++++++++++++++++++++++++++++++++++++++++++++
 #**function: open interactive dialog and visulation (animate) solution loaded with LoadSolutionFile(...); Change slider 'Increment' to change the automatic increment of time frames; Change mode between continuous run, one cycle (fits perfect for animation recording) or 'Static' (to change Solution steps manually with the mouse); update period also lets you change the speed of animation; Press Run / Stop button to start/stop interactive mode (updating of grpahics)
 #**input: 
-#  mainSystem: the system used for animation
+#  mainSystem: the system used for visualization of solution (solution is loaded into visualization state of that system)
 #  solution: solution dictionary previously loaded with exudyn.utilities.LoadSolutionFile(...); will be played from first to last row; if solution=='', it tries to load the file coordinatesSolutionFileName as stored in mbs.sys['simulationSettings'], which are the simulationSettings of the previous simulation
 #  rowIncrement: can be set larger than 1 in order to skip solution frames: e.g. rowIncrement=10 visualizes every 10th row (frame)
 #  timeout: in seconds is used between frames in order to limit the speed of animation; e.g. use timeout=0.04 to achieve approximately 25 frames per second
@@ -738,7 +738,8 @@ def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPe
 #  fontSize: define font size for labels in InteractiveDialog
 #  title: if empty, it uses default; otherwise define specific title
 #  checkRenderEngineStopFlag: if True, stopping renderer (pressing Q or Escape) also causes stopping the interactive dialog
-#**output: updates current visualization state, renders the scene continuously (after pressing button 'Run')
+#**output: None; updates current visualization state, renders the scene continuously (after pressing button 'Run')
+#**belongsTo: MainSystem
 #**example:
 ##HERE, mbs must contain same model as solution stored in coordinatesSolution.txt
 #

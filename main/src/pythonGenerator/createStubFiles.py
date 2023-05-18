@@ -23,9 +23,10 @@ destFile=  '../../../main/pythonDev/exudyn/__init__.pyi'
 #main files
 filesParsed=[
               'stubHeader.pyi',
-              'stubEnums.pyi',
-              'stubSystemStructures.pyi',
-              'stubAutoBindings.pyi',
+              'generated/stubEnums.pyi',
+              'generated/stubSystemStructures.pyi',
+              'generated/stubAutoBindings.pyi',
+              'generated/stubAutoBindingsExt.pyi',
             ]
 
 mergedFile=''

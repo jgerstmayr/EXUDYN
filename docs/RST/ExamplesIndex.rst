@@ -116,6 +116,7 @@ This section includes all Examples for Exudyn.They can also be found and downloa
    Examples/SpringDamperMasspointSystem
    Examples/SpringDamperMassUserFunction
    Examples/springDamperTutorial
+   Examples/springDamperTutorialNew
    Examples/springDamperUserFunctionNumbaJIT
    Examples/springsDeactivateConnectors
    Examples/SpringWithConstraints

@@ -521,6 +521,7 @@ def RSTheaderString(header, level):
         s += '^'*len(header)+'\n'
     else:
         raise ValueError('WriteRSTheader: unknown header level: '+str(level))
+    # print('header=\n',s)
     return s
 
 #start searching for { and matching } bracket, including sub-brackets
@@ -1007,7 +1008,7 @@ class PyLatexRST:
             cClass = className
             
         self.sPy +=	'  py::enum_<' + cClass + '>(m, "' + className + '")\n'
-        self.DefLatexStartClass(className, description, subSection=False, labelName='')
+        self.DefLatexStartClass(className, description, subSection=subSection, labelName='')
         
         self.sPyi += '\nclass '+className+'(Enum):\n'
 
@@ -1164,8 +1165,8 @@ class PyLatexRST:
             sLadd += '('
             sRadd += '('
         if len(argList):
+            sSep = ''
             for i in range(len(argList)):
-                sSep = ''
                 if argList[i] != '*args': #won't work in pybind interface (see comment in Pybind11 docs)
                     self.sPy += ', py::arg("' + argList[i] + '")'
 

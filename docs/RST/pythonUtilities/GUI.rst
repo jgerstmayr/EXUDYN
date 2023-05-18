@@ -21,7 +21,9 @@ Function: GetTkRootAndNewWindow
   | get new or current root and new window app; return list of [tkRoot, tkWindow, tkRuns]
 
 
+
 ----
+
 
 .. _sec-gui-tkrootexists:
 
@@ -33,7 +35,9 @@ Function: TkRootExists
   | this function returns True, if tkinter has already a root window (which is assumed to have already a mainloop running)
 
 
+
 ----
+
 
 .. _sec-gui-editdictionarywithtypeinfo:
 

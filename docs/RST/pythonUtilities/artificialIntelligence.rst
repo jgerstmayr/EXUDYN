@@ -13,8 +13,10 @@ For standard machine learning algorithms, install e.g. stable_baselines3 using '
 - Date:      2022-05-21 (created) 
 
 
+.. _sec-module-artificialintelligence-class-openaigyminterfaceenv(env):
+
 CLASS OpenAIGymInterfaceEnv(Env) (in module artificialIntelligence)
--------------------------------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 **class description**: 
 
     interface class to set up Exudyn model which can be used as model in open AI gym;

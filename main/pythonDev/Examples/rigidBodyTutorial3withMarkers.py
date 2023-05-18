@@ -1,18 +1,19 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  3D rigid body tutorial with 2 bodies and revolute joints, using new utilities functions
+# Details:  3D rigid body tutorial with 2 bodies and revolute joints, using Marker-style approach
 #
 # Author:   Johannes Gerstmayr
 # Date:     2021-08-05
+# Date:     2023-05-16 (updated to MainSystem Python extensions)
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
-from exudyn.itemInterface import *
 from exudyn.utilities import * #includes graphicsDataUtilities and rigidBodyUtilities
+import exudyn.mainSystemExtensions #will be included by exudyn.utilities in future
 import numpy as np
 
 SC = exu.SystemContainer()
@@ -33,6 +34,7 @@ oGround = mbs.AddObject(ObjectGround())
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++
 #first link:
+#create inertia paramters (mass, center of mass (COM) and inertia tensor at reference point)
 iCube0 = InertiaCuboid(density=5000, sideLengths=bodyDim)
 iCube0 = iCube0.Translated([-0.25*L,0,0]) #transform COM, COM not at reference point!
 
@@ -42,13 +44,11 @@ graphicsBody0 = GraphicsDataRigidLink(p0=[-0.5*L,0,0],p1=[0.5*L,0,0],
                                      thickness = w, width = [1.2*w,1.2*w], color=color4red)
 graphicsCOM0 = GraphicsDataBasis(origin=iCube0.com, length=2*w)
 
-[n0,b0]=AddRigidBody(mainSys = mbs,
-                     inertia = iCube0, #includes COM
-                     nodeType = exu.NodeType.RotationEulerParameters,
-                     position = pMid0,
-                     rotationMatrix = np.diag([1,1,1]),
-                     gravity = g,
-                     graphicsDataList = [graphicsCOM0, graphicsBody0])
+#create rigid body; we could use other formulation, e.g., by selecting nodeType = exu.NodeType.RotationRotationVector
+b0=mbs.CreateRigidBody(inertia = iCube0, #includes COM
+                       referencePosition = pMid0,
+                       gravity = g,
+                       graphicsDataList = [graphicsCOM0, graphicsBody0])
 
 
 #%%++++++++++++++++++++++++++
@@ -79,14 +79,10 @@ graphicsBody1 = GraphicsDataRigidLink(p0=[0,0,-0.5*L],p1=[0,0,0.5*L],
 iCube1 = InertiaCuboid(density=5000, sideLengths=[0.1,0.1,1])
 
 pMid1 = np.array([L,0,0]) + np.array([0,0,0.5*L]) #center of mass, body1
-[n1,b1]=AddRigidBody(mainSys = mbs,
-                     inertia = iCube1,
-                     nodeType = exu.NodeType.RotationEulerParameters,
-                     position = pMid1,
-                     rotationMatrix = np.diag([1,1,1]),
-                     angularVelocity = [0,0,0],
-                     gravity = g,
-                     graphicsDataList = [graphicsBody1])
+b1=mbs.CreateRigidBody(inertia = iCube1,
+                            referencePosition = pMid1,
+                            gravity = g,
+                            graphicsDataList = [graphicsBody1])
 
 #revolute joint (free x-axis)
 # #alternative with GenericJoint:
@@ -108,8 +104,7 @@ mbs.Assemble()
 if False:
     mbs.systemData.Info() #show detailed information
 if False:
-    #from exudyn.utilities import DrawSystemGraph
-    DrawSystemGraph(mbs, useItemTypes=True) #draw nice graph of system
+    mbs.DrawSystemGraph(useItemTypes=True) #draw nice graph of system
 
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 
@@ -128,24 +123,24 @@ SC.visualizationSettings.general.autoFitScene = False
 SC.visualizationSettings.nodes.drawNodesAsPoint=False
 SC.visualizationSettings.nodes.showBasis=True
 
+# uncomment to start visualization during simulation
 # exu.StartRenderer()
 # if 'renderState' in exu.sys: #reload old view
 #     SC.SetRenderState(exu.sys['renderState'])
 
 #mbs.WaitForUserToContinue() #stop before simulating
 
-exu.SolveDynamic(mbs, simulationSettings = simulationSettings,
+mbs.SolveDynamic(simulationSettings = simulationSettings,
                  solverType=exu.DynamicSolverType.TrapezoidalIndex2)
 
 # SC.WaitForRenderEngineStopFlag() #stop before closing
 # exu.StopRenderer() #safely close rendering window!
 
-sol = LoadSolutionFile('coordinatesSolution.txt')
-from exudyn.interactive import SolutionViewer
-SolutionViewer(mbs, sol)
+#start post processing
+mbs.SolutionViewer()
 
 if False:
-    from exudyn.plot import PlotSensor
-    PlotSensor(mbs, [sens1],[1])
+    #plot sensor sens1, y-component [1]
+    mbs.PlotSensor(sensorNumbers=[sens1],components=[1],closeAll=True)
 
 

@@ -751,7 +751,7 @@ try: #still close file if crashes
     pybindFile = directoryString+'pybind_modules.h'
     getSetFile = directoryString+'DictionariesGetSet.h'
     latexFile = '../../../docs/theDoc/interfaces.tex'
-    stubFile  = '../../../main/src/pythonGenerator/stubSystemStructures.pyi'
+    stubFile  = '../../../main/src/pythonGenerator/generated/stubSystemStructures.pyi'
 
     file=open(pybindFile,'w')  #clear file by one write access
     file.write('// AUTO:  ++++++++++++++++++++++\n')

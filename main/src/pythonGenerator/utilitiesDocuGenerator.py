@@ -30,6 +30,7 @@ filesParsed=[
              'interactive.py',
              'kinematicTree.py',
              'lieGroupBasics.py', #Stefan Holzinger
+             'mainSystemExtensions.py', 
              'physics.py',
              'plot.py',
              'processing.py',
@@ -47,8 +48,10 @@ filesParsed=[
              #'lieGroupIntegration.py', #Stefan Holzinger
              ]
 
-docuTags = ['classFunction','class','function','input','output','author','date','notes','example','status']
+docuTags = ['classFunction','class','function','input','output','author','date','notes','example','status','belongsTo']
 headerTags = ['Details','Author','Date','Copyright','References','Notes','Example']
+
+argListMBSconvert = {'mbs':'self', 'mainSystem':'self'} #for conversion to class function
 
 #function = basic/brief notes on function
 #additionally, there are the following dictionary items:
@@ -187,7 +190,7 @@ def GetFunctionArguments(functionLine, infoText):
             if defaultArg.strip() == '[]' and countMutableArgs < 5:
                 countMutableArgs += 1
                 print('potential risk with mutable function argument [] found in function:',functionName,'('+infoText+')')
-                if countMutableArgs == 4:
+                if countMutableArgs == 5:
                     print('  ... further WARNINGS suppressed')
         defaultArgumentsList+=[defaultArg]
         
@@ -385,7 +388,7 @@ def ParsePythonFile(fileName):
 #*****************************************************
 #convert tags of tagList in functionDict to latex and RST
 mycnt = 0
-def DictToItemsText(functionDict, tagList, addStr):
+def DictToItemsText(functionDict, tagList, addStr, eraseInput=''):
     global mycnt
     sLatex = ''
     sRST = ''
@@ -452,9 +455,12 @@ def DictToItemsText(functionDict, tagList, addStr):
 
 #*****************************************************
 #write single function description into latex code
-def WriteFunctionDescription2LatexRST(functionDict, moduleNamePython, pythonFileName, isClassFunction = False, className=''):
+def WriteFunctionDescription2LatexRST(functionDict, moduleNamePython, pythonFileName, isClassFunction = False, 
+                                      className='', createPyiFile=False, redirectBelongsTo=False):
     sLatex = ''
     sRST = ''
+    sPyi = ''
+    sPy = ''
     argList = functionDict['argumentsList']
     argDefault = functionDict['defaultArgumentsList']
     addStr = ''
@@ -470,18 +476,31 @@ def WriteFunctionDescription2LatexRST(functionDict, moduleNamePython, pythonFile
     lineNumberStr = '' #will be e.g: '#L122'
     if functionDict['lineNumber'] != 0:
         lineNumberStr = '\#L'+str(functionDict['lineNumber']+1)
-    sLatex += '\\begin{flushleft}\n'
     #github link:
     url = 'https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/'+pythonFileName +lineNumberStr
-    sLatex += '\\noindent '+addStr+'{def {\\bf \exuUrl{'+url
-    sLatex += '}{' + functionName +'}{' '}}}'
-    
-    #relative file link:
-    #sLatex += '\\noindent '+addStr+'{def \\mybold{\exuUrl{file:../../main/pythonDev/exudyn/' + moduleNamePython +'.py'+'}{' + functionName +'}{' '}}}'
-    sLabel = 'sec:'+ moduleNamePython + ':' + classLabelStr + functionName.replace('\\_','_')
-    sLatex += '\\label{'+sLabel+'}\n'
 
-    sRST += RSTlabelString(Latex2RSTlabel(sLabel))+'\n'
+    #if not createPyiFile:
+    if True:
+        sLatex += '\\begin{flushleft}\n'
+        sLatex += '\\noindent '+addStr+'{def {\\bf \exuUrl{'+url
+        sLatex += '}{' + functionName +'}{' '}}}'
+    # else:
+    #     sLatex += '\\noindent '+addStr+'{def '
+    #     sLatex += '}{\\bf ' + functionName +'}{' '}'
+    
+        #relative file link:
+        #sLatex += '\\noindent '+addStr+'{def \\mybold{\exuUrl{file:../../main/pythonDev/exudyn/' + moduleNamePython +'.py'+'}{' + functionName +'}{' '}}}'
+        sLabel = 'sec:'
+        if not createPyiFile:
+            sLabel += moduleNamePython 
+        else:
+            sLabel += 'mainsystemextensions'
+        sLabel += ':' + classLabelStr + functionName.replace('\\_','_')
+        
+        if not redirectBelongsTo:
+            sLatex += '\\label{'+sLabel+'}\n'
+            sRST += RSTlabelString(Latex2RSTlabel(sLabel))+'\n'
+
 
     #see also https://github.com/sphinx-doc/sphinx/issues/3921
     if isClassFunction:
@@ -491,35 +510,85 @@ def WriteFunctionDescription2LatexRST(functionDict, moduleNamePython, pythonFile
     else:
         title = 'Function: '+functionName
         sRST += title + '\n'
-        sRST += '^'*len(title) + '\n'        
-    sRST += RSTurl(functionName, url, False) + '_\\ (' #add another _ to make url anonymous (otherwise warning, as function name my be duplicated)
+        sRST += '^'*len(title) + '\n'    
+    if True: #not createPyiFile:
+        sRST += RSTurl(functionName, url, False) + '_\\ (' #add another _ to make url anonymous (otherwise warning, as function name my be duplicated)
+    else:
+        sRST += '\\ **'+functionName+'**\\ ('
+
+    if createPyiFile:
+        sPyi += ' '*4+'@overload\n'
+        sPyi += ' '*4+'def '+functionName+'('
+
 
     sLatex += '('
     sep = ''
+    sepPyi = ''
     for i in range(len(argList)):
-        if len(argList[i].strip()) != 0:
-            sLatex += sep+'{\\it '+argList[i]+'}'
-            sRST += sep + '\\ ``' + argList[i].replace('\\_','_')
-            if len(argDefault[i]) != 0:
-                sLatex += '= '+argDefault[i]
-                sRST += ' = '+argDefault[i] 
-            sep = ', '
-            sRST += '``\\ '
-        
-    [sDictLatex, sDictRST] = DictToItemsText(functionDict, docuTags, addStr)
+        argStrip = argList[i].strip()
+        if len(argStrip) != 0:
+            if not createPyiFile or (argStrip not in argListMBSconvert):
+                sLatex += sep+'{\\it '+argList[i]+'}'
+                sRST += sep + '\\ ``' + argList[i].replace('\\_','_')
+                if len(argDefault[i]) != 0:
+                    sLatex += '= '+argDefault[i]
+                    sRST += ' = '+argDefault[i] 
 
+                sep = ', '
+                sRST += '``\\ '
+            
+            if createPyiFile:
+                modArg = argList[i]
+                for key, value in argListMBSconvert.items():
+                    modArg = modArg.replace(key,value)
+                sAdd = sepPyi + modArg
+                if len(argDefault[i]) != 0:
+                    sAdd += '='+argDefault[i]
+                sepPyi = ', '
+                
+                sPyi += sAdd
+                #sPy += sAdd
+                #sPyReturn += sAdd
+
+    if createPyiFile:
+        output = functionDict['output']
+        output = output.split(';')[0].strip()
+        # print('output=',output)
+        
+        sPyi += ') -> '+output+': ...\n\n' #for now, we do not know the return type
+        #sPyReturn += ')\n\n' 
+        #sPy += '):\n'+sPyReturn
+    
+        functionDict = copy.deepcopy(functionDict)
+        if 'example' in functionDict:
+            del functionDict['example']
+        
+        if 'input' in functionDict:
+            s = functionDict['input']
+            pEOL = s.find('\n',1) #start at character 1, as first character may be \n
+
+            if not pEOL or ('mbs:' not in s[:pEOL] and 'mainSystem:' not in s[:pEOL]):
+                print('ERROR: invalid input description for pyi extension')
+                print(functionName)
+            else:
+                functionDict['input'] = functionDict['input'][pEOL+1:]
+    sRST += ')\n\n'
     sLatex += ')\n'
     sLatex += '\\end{flushleft}\n'
-    sLatex += '\setlength{\itemindent}{0.7cm}\n'
-    sLatex += '\\begin{itemize}[leftmargin=0.7cm]\n'
-    sLatex += sDictLatex
-    sLatex += '\\vspace{12pt}\\end{itemize}\n%\n'
     
-    sRST += ')\n\n' + sDictRST
+    if not redirectBelongsTo:
+        sLatex += '\setlength{\itemindent}{0.7cm}\n'
+        sLatex += '\\begin{itemize}[leftmargin=0.7cm]\n'
+        [sDictLatex, sDictRST] = DictToItemsText(functionDict, docuTags, addStr)
     
-    #sRST += DictToItemsText(functionDict, docuTags, addStr)
+        sLatex += sDictLatex
+        
+        sRST += sDictRST
+        sLatex += '\\vspace{12pt}\\end{itemize}\n%\n'
+
     
-    return [sLatex,sRST]
+    
+    return [sLatex,sRST,sPyi,sPy]
 
 
 #%%*****************************************************
@@ -530,6 +599,21 @@ print('create documentation for exudyn utilities')
 #parse all files:
 listRST = [] #creates tuple of modulename and RST content
 sLatex = ''
+sPyi = ''
+latexExtensions = {} #for C++ extension functions
+rstExtensions = {} #for C++ extension functions
+pyiExtensions = {} #for stub files of C++ extension functions
+pyExtensions = ''  #for extension of C++ class, added lateron to mainSystemExtensions; ONLY one string
+
+with open('mainSystemExtensionsHeader.py','r') as f:
+    pyExtensions = f.read()
+
+#write headers, as we need the text already updated in mainSystemExtensions.py
+file=io.open(fileDir+'mainSystemExtensions.py','w',encoding='utf8')  #clear file by one write access
+file.write(pyExtensions)
+file.close()
+
+
 for fileName in filesParsed:
     sRST = ''
     [functionList,classList,header] = ParsePythonFile(fileDir+fileName)
@@ -549,36 +633,41 @@ for fileName in filesParsed:
 
     sRST += RSTlabelString('sec-module-'+moduleNameLatex.replace('.','-'))+'\n'
     sRST += RSTheaderString('Module: '+moduleNameLatex, sectionLevel)+'\n'
-
-    #*****************************************************
-    if 'Details' in header: #write details as intro to section
-        sLatex += header['Details'] #+ '\n'
-        sRST += LatexString2RSTspecial(RemoveIndentation(header['Details']))
-        #print('header=\n'+sRST)
-    if len(header)>1:
-        sLatex += '\\begin{itemize}[leftmargin=1.4cm]\n'
-        sLatex += '\\setlength{\itemindent}{-1.4cm}\n'
+    
+    if moduleNamePython != 'mainSystemExtensions': #no description for this!
+        #*****************************************************
+        if 'Details' in header: #write details as intro to section
+            sLatex += header['Details'] #+ '\n'
+            sRST += LatexString2RSTspecial(RemoveIndentation(header['Details']))
+            #print('header=\n'+sRST)
+        if len(header)>1:
+            sLatex += '\\begin{itemize}[leftmargin=1.4cm]\n'
+            sLatex += '\\setlength{\itemindent}{-1.4cm}\n'
+            sRST += '\n'
+            for tag in headerTags:
+                if tag in header and tag != 'Details' and tag != 'Copyright':
+                    if header[tag].find('\\') == -1:
+                        sLatex += '\\item[]' + tag + ': ' + header[tag] #+ '\n'
+                        sRST += '- '+ tag + ': ' + LatexString2RSTspecial(header[tag].replace('\n',' ')) + '\n'
+                    else:
+                        sRST += '- | ' + tag.strip() + ':'+'\n'
+                        listString = header[tag].split('\\\\')
+                        sLatex += '\\item[]' + tag + ':' + '\n' #+ listString[0] + ' \n'
+                        sLatex += '\\vspace{-22pt}'
+                        sLatex += '\\begin{itemize}[leftmargin=0.5cm]\n'
+                        sLatex += '\\setlength{\itemindent}{-0.5cm}\n'
+                        for i in range(len(listString)-0):
+                            sTag = listString[i+0]
+                            sLatex += '\\item[]' + sTag.replace('\n',' ') + '\n'
+                            sRST += '  | '+ LatexString2RSTspecial(sTag.replace('\n',' ').strip()) + '\n'
+                        sLatex += '\\ei\n'
+                        
+            sLatex += '\\ei\n'
         sRST += '\n'
-        for tag in headerTags:
-            if tag in header and tag != 'Details' and tag != 'Copyright':
-                if header[tag].find('\\') == -1:
-                    sLatex += '\\item[]' + tag + ': ' + header[tag] #+ '\n'
-                    sRST += '- '+ tag + ': ' + LatexString2RSTspecial(header[tag].replace('\n',' ')) + '\n'
-                else:
-                    sRST += '- | ' + tag.strip() + ':'+'\n'
-                    listString = header[tag].split('\\\\')
-                    sLatex += '\\item[]' + tag + ':' + '\n' #+ listString[0] + ' \n'
-                    sLatex += '\\vspace{-22pt}'
-                    sLatex += '\\begin{itemize}[leftmargin=0.5cm]\n'
-                    sLatex += '\\setlength{\itemindent}{-0.5cm}\n'
-                    for i in range(len(listString)-0):
-                        sTag = listString[i+0]
-                        sLatex += '\\item[]' + sTag.replace('\n',' ') + '\n'
-                        sRST += '  | '+ LatexString2RSTspecial(sTag.replace('\n',' ').strip()) + '\n'
-                    sLatex += '\\ei\n'
-                    
-        sLatex += '\\ei\n'
-    sRST += '\n'
+    else:
+        mseText = 'NOTE: This module only contains links for extensions of C++ classes. The description is available in the respective descriptions of the C++ interface.\n'
+        sLatex += mseText 
+        sRST += mseText 
 
     #*****************************************************
     isFirstFunction = True
@@ -587,28 +676,94 @@ for fileName in filesParsed:
         if 'functionName' not in funcDict:
             print('SpecialAppend: missing functionName in: ',funcDict)
 
-        SpecialAppend(localListFunctionNames, funcDict['functionName'])
 
-        if not isFirstFunction:
+        belongsTo = ''
+        if 'belongsTo' in funcDict:
+            belongsTo = funcDict['belongsTo'].strip()
+
+        SpecialAppend(localListFunctionNames, funcDict['functionName'].replace(belongsTo,''))
+
+        functionDescription = funcDict['function']
+        functionName = funcDict['functionName']
+
+        if not isFirstFunction and moduleNamePython != 'mainSystemExtensions':# and not belongsTo:
             sLatex += "\\noindent\\rule{8cm}{0.75pt}\\vspace{1pt} \\\\ \n"
-            sRST += "\n----\n" #horizontal ruler
+            sRST += "\n\n----\n\n" #horizontal ruler
             #sLatex += "\\hline\\vspace{3pt}\\\\ \n"
-        [sFuncLatex, sFuncRST] = WriteFunctionDescription2LatexRST(funcDict, moduleNamePython, fileName)
-        sLatex += sFuncLatex
-        sRST += sFuncRST
-        
+            
         #++++++++++++++++++++++++++++++++++++
         #add example references for function
         sExamples = ''
         sExamplesRST = ''
         if addExampleReferences:
-            [sExamples,sExamplesRST] = GenerateLatexStrKeywordExamples('UtilityFunction', funcDict['functionName'], '', useLatex=False)
-            sLatex += sExamples
-            sRST += '\n'+sExamplesRST
+            exampleFunctionName = funcDict['functionName'].replace(belongsTo,'')
+            [sExamples,sExamplesRST] = GenerateLatexStrKeywordExamples('UtilityFunction', exampleFunctionName, '', useLatex=False)
+        
+        if belongsTo != '':
+            belongsTo = funcDict['belongsTo'].strip()
+            del funcDict['belongsTo']
+
+            funcDict['function'] = functionDescription+' - NOTE that this function is added to MainSystem via Python function '+funcDict['functionName']+'.'
+            funcDict['functionName'] = funcDict['functionName'].replace(belongsTo,'') 
+            
+            [sFuncLatex, sFuncRST, sPyi, sPy] = WriteFunctionDescription2LatexRST(funcDict, moduleNamePython, fileName, 
+                                                                                  createPyiFile=True)
+            
+            if belongsTo not in latexExtensions:
+                latexExtensions[belongsTo] = ''
+                rstExtensions[belongsTo] = ''
+                pyiExtensions[belongsTo] = ''
+            
+            #exu.MainSystem.PlotSensor = exu.plot.PlotSensor
+            moduleAdd = ('exu.'+moduleNamePython+'.')*(moduleNamePython!='mainSystemExtensions')
+            
+            sPy = '\n#link '+belongsTo+' function to Python function:\n'
+            sPy += 'exu.'+belongsTo+'.'+funcDict['functionName']+ '=' +  moduleAdd+functionName + '\n\n'
+            
+            latexExtensions[belongsTo] += sFuncLatex+'\n'
+            rstExtensions[belongsTo] += '\n'+sFuncRST
+            pyiExtensions[belongsTo] += sPyi
+            pyExtensions += sPy
+
+            if addExampleReferences:
+                latexExtensions[belongsTo] += sExamples
+                rstExtensions[belongsTo] += '\n'+sExamplesRST
+
+            #for original function description:
+
+            funcDict['function'] = functionDescription
+            funcDict['functionName'] = functionName
+
+        #add remaining part to original latex and RST
+        if moduleNamePython != 'mainSystemExtensions': #no description for this!
+            [sFuncLatex, sFuncRST, sPyi, sPy] = WriteFunctionDescription2LatexRST(funcDict, moduleNamePython, fileName, 
+                                                                                  createPyiFile=False, 
+                                                                                  redirectBelongsTo=(belongsTo != ''))
+
+            sLatex += sFuncLatex
+            sRST += sFuncRST
+
+            if belongsTo:
+                textAdd = 'this function is directly available in MainSystem (mbs); it should be directly called as mbs.'+funcDict['functionName']+'(...).'
+                textAdd += ' For description of the interface, see the MainSystem Python extensions, '
+                mseLabel = 'sec:mainsystemextensions' + ':' + funcDict['functionName'] .replace('\\_','_')
+
+
+                textAddRST = textAdd + ' :ref:`'+Latex2RSTlabel(mseLabel)+'`\\ '+'\n'
+                textAdd += '\\refSection{'+mseLabel+'}.\n'
+                
+                sRST += '\n'+'- | **NOTE**\\ : '+textAddRST + '\n'
+                sLatex += '\\bi\n  \\item \mybold{NOTE}: ' + textAdd + '\n\\ei\n'
+
+            if addExampleReferences and not belongsTo:
+                sLatex += sExamples
+                sRST += '\n'+sExamplesRST
+        
 
         isFirstFunction=False
 
     #insert class descriptions with functions
+    #there is no MainSystem extensions part here!
     for classDict in classList:
         SpecialAppend(localListClassNames, classDict['className'])
         
@@ -616,7 +771,8 @@ for fileName in filesParsed:
         #sLatex += '\\bi'
         sLatex += '\\noindent\\textcolor{steelblue}{{\\bf class description}}: ' + classDict['class']
 
-        sRST += '\n' + RSTheaderString('CLASS '+classDict['className']+' (in module '+moduleNameLatex+')', sectionLevel+1)
+        sRST += RSTlabelString('sec-module-'+moduleNameLatex.replace('.','-')+'-class-'+Latex2RSTlabel(classDict['className']))
+        sRST += '\n' + RSTheaderString('CLASS '+classDict['className']+' (in module '+moduleNameLatex+')', level = 4)#sectionLevel)
         sRST += RSTmarkup('class description','**', False)+': ' + '\n\n' + \
             RemoveIndentation(LatexString2RSTspecial( classDict['class'] ), '    ') #+ '\n'
 
@@ -644,7 +800,7 @@ for fileName in filesParsed:
                 sRST += "\n----\n" #horizontal ruler
 
                 #sLatex += "\\hline\\vspace{3pt}\\\\ \n"
-            [sFuncLatex, sFuncRST] = WriteFunctionDescription2LatexRST(funcDict, moduleNamePython, fileName, isClassFunction=True, className=classDict['className'])
+            [sFuncLatex, sFuncRST, sPyi, sPy] = WriteFunctionDescription2LatexRST(funcDict, moduleNamePython, fileName, isClassFunction=True, className=classDict['className'], createPyiFile=False)
             sLatex += sFuncLatex
             sRST += sFuncRST
 
@@ -735,6 +891,32 @@ sConfHelper += ']\n\n'
 with open(rstDir+'confHelperPyUtilities.py', 'w') as f:
     f.write(sConfHelper)
 
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++        
+#write stub file (.pyi) information and documentation extension for e.g. MainSystem
+for key in latexExtensions:
+    file=io.open('generated/'+key+'Ext.rst','w',encoding='utf8')  #clear file by one write access
+    file.write(rstExtensions[key])
+    file.close()
+
+    file=io.open(theDocDir+'/'+key+'Ext.tex','w',encoding='utf8')  #clear file by one write access
+    file.write(latexExtensions[key])
+    file.close()
+
+    file=io.open('generated/stubAutoBindingsExt.pyi','w',encoding='utf8')  #clear file by one write access
+    file.write('\n'+'class '+key+':\n')
+    file.write(pyiExtensions[key])
+    file.close()
+
+    file=io.open('generated/stubAutoBindingsExt.pyi','w',encoding='utf8')  #clear file by one write access
+    file.write('\n'+'class '+key+':\n')
+    file.write(pyiExtensions[key])
+    file.close()
+
+
+file=io.open(fileDir+'mainSystemExtensions.py','w',encoding='utf8')  #clear file by one write access
+file.write(pyExtensions)
+file.close()
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++        
 

@@ -1,10 +1,10 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  3D rigid body tutorial with 2 bodies and revolute joints, using new utilities functions
+# Details:  3D rigid body tutorial with 2 bodies and revolute joints, using new mainSystemExtension functionality
 #
 # Author:   Johannes Gerstmayr
-# Date:     2021-08-05
+# Date:     2023-05-16
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
@@ -12,6 +12,7 @@
 
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+import exudyn.mainSystemExtensions #will be included by exudyn.utilities in future
 import numpy as np
 
 SC = exu.SystemContainer()
@@ -36,27 +37,18 @@ iCube0 = InertiaCuboid(density=5000, sideLengths=bodyDim)
 iCube0 = iCube0.Translated([-0.25*L,0,0]) #transform COM, COM not at reference point!
 
 #graphics for body
-graphicsBody0 = GraphicsDataRigidLink(p0=[-0.5*L,0,0],p1=[0.5*L,0,0], 
-                                     axis0=[0,0,1], axis1=[0,0,0], radius=[0.5*w,0.5*w], 
-                                     thickness = w, width = [1.2*w,1.2*w], color=color4red)
-graphicsCOM0 = GraphicsDataBasis(origin=iCube0.com, length=2*w)
+graphicsBody0 = GraphicsDataOrthoCubePoint(centerPoint=[0,0,0],size=[L,w,w],color=color4red)
+graphicsCOM0 = GraphicsDataBasis(origin=iCube0.com, length=2*w) #COM frame
 
-[n0,b0]=AddRigidBody(mainSys = mbs,
-                     inertia = iCube0, #includes COM
-                     nodeType = exu.NodeType.RotationEulerParameters,
-                     position = pMid0,
-                     rotationMatrix = np.diag([1,1,1]),
-                     gravity = g,
-                     graphicsDataList = [graphicsCOM0, graphicsBody0])
-
-
-#%%++++++++++++++++++++++++++
-#revolute joint (free z-axis)
-
-#add joint directly with Python function from exudyn.rigidBodyUtilities
-AddRevoluteJoint(mbs, body0=oGround, body1=b0, point=[0,0,0], 
-                  axis=[0,0,1], useGlobalFrame=True, showJoint=True,
-                  axisRadius=0.2*w, axisLength=1.4*w)
+#create rigid node and body
+b0=mbs.CreateRigidBody(inertia = iCube0, #includes COM
+                       referencePosition = pMid0,
+                       gravity = g,
+                       graphicsDataList = [graphicsCOM0, graphicsBody0])
+#revolute joint (free z-axis), axis and position given in global coordinates
+#  using reference configuration
+mbs.CreateRevoluteJoint(bodyNumbers=[oGround, b0], position=[0,0,0], 
+                        axis=[0,0,1], axisRadius=0.2*w, axisLength=1.4*w)
 
 
 #%%++++++++++++++++++++++++++
@@ -65,22 +57,15 @@ graphicsBody1 = GraphicsDataRigidLink(p0=[0,0,-0.5*L],p1=[0,0,0.5*L],
                                      axis0=[1,0,0], axis1=[0,0,0], radius=[0.06,0.05], 
                                      thickness = 0.1, width = [0.12,0.12], color=color4lightgreen)
 
-iCube1 = InertiaCuboid(density=5000, sideLengths=[0.1,0.1,1])
+b1=mbs.CreateRigidBody(inertia = InertiaCuboid(density=5000, sideLengths=[0.1,0.1,1]),
+                            referencePosition = np.array([L,0,0]) + np.array([0,0,0.5*L]), #center of mass, body1
+                            gravity = g,
+                            graphicsDataList = [graphicsBody1])
 
-pMid1 = np.array([L,0,0]) + np.array([0,0,0.5*L]) #center of mass, body1
-[n1,b1]=AddRigidBody(mainSys = mbs,
-                     inertia = iCube1,
-                     nodeType = exu.NodeType.RotationEulerParameters,
-                     position = pMid1,
-                     rotationMatrix = np.diag([1,1,1]),
-                     angularVelocity = [0,0,0],
-                     gravity = g,
-                     graphicsDataList = [graphicsBody1])
-
-#revolute joint (free x-axis)
-AddRevoluteJoint(mbs, body0=b0, body1=b1, point=[L,0,0], 
-                  axis=[1,0,0], useGlobalFrame=True, showJoint=True,
-                  axisRadius=0.2*w, axisLength=1.4*w)
+#revolute joint (free x-axis), axis and position given in global coordinates, 
+#  using reference configuration
+mbs.CreateRevoluteJoint(bodyNumbers=[b0, b1], position=[L,0,0], 
+                        axis=[1,0,0], axisRadius=0.2*w, axisLength=1.4*w)
 
 #position sensor at tip of body1
 sens1=mbs.AddSensor(SensorBody(bodyNumber=b1, localPosition=[0,0,0.5*L],
@@ -98,32 +83,25 @@ h = 1e-3 #step size
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.timeIntegration.verboseMode = 1
-#simulationSettings.timeIntegration.simulateInRealtime = True
 simulationSettings.solutionSettings.solutionWritePeriod = 0.005 #store every 5 ms
 
 SC.visualizationSettings.window.renderWindowSize=[1600,1200]
 SC.visualizationSettings.openGL.multiSampling = 4
-SC.visualizationSettings.general.autoFitScene = False
 
-SC.visualizationSettings.nodes.drawNodesAsPoint=False
 SC.visualizationSettings.nodes.showBasis=True
 
 #start solver
-exu.SolveDynamic(mbs, simulationSettings = simulationSettings,
+mbs.SolveDynamic(simulationSettings = simulationSettings,
                  solverType=exu.DynamicSolverType.TrapezoidalIndex2)
 
-#load solution and viualize
-from exudyn.interactive import SolutionViewer
-sol = LoadSolutionFile('coordinatesSolution.txt')
-SolutionViewer(mbs, sol)
-#==>alternatively, we could also start the renderer prior to simulation!
+#load solution and visualize
+mbs.SolutionViewer()
 
-if True:
-    #from exudyn.utilities import DrawSystemGraph
-    DrawSystemGraph(mbs, useItemTypes=True) #draw nice graph of system
 
 if True:
     from exudyn.plot import PlotSensor
-    PlotSensor(mbs, [sens1],[1])
+    mbs.PlotSensor(sensorNumbers=[sens1],components=[1],closeAll=True)
 
+if False:
+    mbs.DrawSystemGraph(useItemTypes=True) #draw nice graph of system
 

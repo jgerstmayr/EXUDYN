@@ -121,13 +121,14 @@ def SolverErrorMessage(solver, mbs, isStatic=False,
     return s
 
 
-#**function: solves the static mbs problem using simulationSettings; check theDoc.pdf for MainSolverStatic for further details of the static solver; NOTE that this function is directly available from exudyn (using exudyn.SolveStatic(...))
+#**function: solves the static mbs problem using simulationSettings; check theDoc.pdf for MainSolverStatic for further details of the static solver; this function is also available in exudyn (using exudyn.SolveStatic(...))
 #**input:
 #   mbs: the MainSystem containing the assembled system; note that mbs may be changed upon several runs of this function
 #   simulationSettings: specific simulation settings out of exu.SimulationSettings(), as described in \refSection{sec:SolutionSettings}; use options for newton, discontinuous settings, etc., from staticSolver sub-items
 #   updateInitialValues: if True, the results are written to initial values, such at a consecutive simulation uses the results of this simulation as the initial values of the next simulation
 #   storeSolver: if True, the staticSolver object is stored in the mbs.sys dictionary as mbs.sys['staticSolver'], and simulationSettings are stored as mbs.sys['simulationSettings']
-#**output: returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf \refSection{sec:solverSubstructures} and the items described in \refSection{sec:MainSolverStatic})
+#**output: bool; returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf \refSection{sec:solverSubstructures} and the items described in \refSection{sec:MainSolverStatic})
+#**belongsTo: MainSystem
 #**example:
 # import exudyn as exu
 # from exudyn.itemInterface import *
@@ -181,7 +182,7 @@ def SolveStatic(mbs, simulationSettings = exudyn.SimulationSettings(),
 
     return success
 
-#**function: solves the dynamic mbs problem using simulationSettings and solver type; check theDoc.pdf for MainSolverImplicitSecondOrder for further details of the dynamic solver; NOTE that this function is directly available from exudyn (using exudyn.SolveDynamic(...))
+#**function: solves the dynamic mbs problem using simulationSettings and solver type; check theDoc.pdf for MainSolverImplicitSecondOrder for further details of the dynamic solver; this function is also available in exudyn (using exudyn.SolveDynamic(...))
 #**input:
 #   mbs: the MainSystem containing the assembled system; note that mbs may be changed upon several runs of this function
 #   simulationSettings: specific simulation settings out of exu.SimulationSettings(), as described in \refSection{sec:SolutionSettings}; use options for newton, discontinuous settings, etc., from timeIntegration; therein, implicit second order solvers use settings from generalizedAlpha and explict solvers from explicitIntegration; be careful with settings, as the influence accuracy (step size!), convergence and performance (see special \refSection{sec:overview:basics:speedup})
@@ -190,7 +191,8 @@ def SolveStatic(mbs, simulationSettings = exudyn.SimulationSettings(),
 #   storeSolver: if True, the staticSolver object is stored in the mbs.sys dictionary as mbs.sys['staticSolver'], and simulationSettings are stored as mbs.sys['simulationSettings']
 #   showHints: show additional hints, if solver fails
 #   showCausingItems: if linear solver fails, this option helps to identify objects, etc. which are related to a singularity in the linearized system matrix
-#**output: returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf \refSection{sec:solverSubstructures} and the items described in \refSection{sec:MainSolverStatic})
+#**output: bool; returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf \refSection{sec:solverSubstructures} and the items described in \refSection{sec:MainSolverStatic})
+#**belongsTo: MainSystem
 #**example:
 # import exudyn as exu
 # from exudyn.itemInterface import *
@@ -333,7 +335,8 @@ def RestoreSimulationSettings(simulationSettings, store):
 #   mbs: the MainSystem containing the assembled system
 #   simulationSettings: specific simulation settings used for computation of jacobian (e.g., sparse mode in static solver enables sparse computation)
 #   useSparseSolver: if False (only for small systems), all eigenvalues are computed in dense mode (slow for large systems!); if True, only the numberOfEigenvalues are computed (numberOfEigenvalues must be set!); Currently, the matrices are exported only in DENSE MODE from mbs! NOTE that the sparsesolver accuracy is much less than the dense solver
-#**output: [M, K, D]; list containing numpy mass matrix M, stiffness matrix K and damping matrix D
+#**output: [ArrayLike, ArrayLike, ArrayLike]; [M, K, D]; list containing numpy mass matrix M, stiffness matrix K and damping matrix D
+#**belongsTo: MainSystem
 #**example:
 #  #take any example from the Examples or TestModels folder, e.g., 'cartesianSpringDamper.py' and run it
 #  #then execute the following commands in the console (or add it to the file):
@@ -383,8 +386,9 @@ def ComputeLinearizedSystem(mbs,
 #  threshold: threshold factor for singular values which estimate the redundant constraints
 #  useSVD: use singular value decomposition directly, also showing SVD values if verbose=True
 #  verbose: if True, it will show the singular values and one may decide if the threshold shall be adapted
-#**output: returns list of [dof, nRedundant, nODE2, nODE1, nAE, nPureAE], where: dof = the degree of freedom computed numerically, nRedundant=the number of redundant constraints, nODE2=number of ODE2 coordinates, nODE1=number of ODE1 coordinates, nAE=total number of constraints, nPureAE=number of constraints on algebraic variables (e.g., lambda=0) that are not coupled to ODE2 coordinates
+#**output: List[int]; returns list of [dof, nRedundant, nODE2, nODE1, nAE, nPureAE], where: dof = the degree of freedom computed numerically, nRedundant=the number of redundant constraints, nODE2=number of ODE2 coordinates, nODE1=number of ODE1 coordinates, nAE=total number of constraints, nPureAE=number of constraints on algebraic variables (e.g., lambda=0) that are not coupled to ODE2 coordinates
 #**notes: this approach may not always work! Currently only works with dense matrices, thus it will be slow for larger systems
+#**belongsTo: MainSystem
 def ComputeSystemDegreeOfFreedom(mbs, 
                 simulationSettings = exudyn.SimulationSettings(),
                 threshold = 1e-12, verbose=False, useSVD=False):
@@ -473,7 +477,8 @@ def ComputeSystemDegreeOfFreedom(mbs,
 #   constrainedCoordinates: if this list is non-empty, the integer indices represent constrained coordinates of the system, which are fixed during eigenvalue/vector computation; according rows/columns of mass and stiffness matrices are erased
 #   convert2Frequencies: if True, the eigen values are converted into frequencies (Hz) and the output is [eigenFrequencies, eigenVectors]
 #   useAbsoluteValues: if True, abs(eigenvalues) is used, which avoids problems for small (close to zero) eigen values; needed, when converting to frequencies
-#**output: [eigenValues, eigenVectors]; eigenValues being a numpy array of eigen values ($\omega_i^2$, being the squared eigen frequencies in ($\omega_i$ in rad/s)!), eigenVectors a numpy array containing the eigenvectors in every column
+#**output: [ArrayLike, ArrayLike]; [eigenValues, eigenVectors]; eigenValues being a numpy array of eigen values ($\omega_i^2$, being the squared eigen frequencies in ($\omega_i$ in rad/s)!), eigenVectors a numpy array containing the eigenvectors in every column
+#**belongsTo: MainSystem
 #**example:
 #  #take any example from the Examples or TestModels folder, e.g., 'cartesianSpringDamper.py' and run it
 #  #then execute the following commands in the console (or add it to the file):

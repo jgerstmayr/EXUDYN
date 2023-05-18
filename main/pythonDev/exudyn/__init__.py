@@ -101,6 +101,13 @@ except:
     #for run inside Visual Studio (exudynCPP lies in Release or Debug folders):
     from demos import Demo1, Demo2
 
+try:
+    from .mainSystemExtensions import JointPreCheckCalc #import just some function, will assign MainSystem patches
+except:
+    #for run inside Visual Studio (exudynCPP lies in Release or Debug folders):
+    from mainSystemExtensions import JointPreCheckCalc
+
+
 __version__ = GetVersionString() #add __version__ to exudyn module ...
 
 

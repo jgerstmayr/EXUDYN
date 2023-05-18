@@ -9,15 +9,65 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi \small
-  \item Exudyn version = 1.6.103.dev1, 
-  \item last change =  2023-05-10, 
-  \item Number of issues = 1564, 
-  \item Number of resolved issues = 1383 (103 in current version), 
+  \item Exudyn version = 1.6.110.dev1, 
+  \item last change =  2023-05-17, 
+  \item Number of issues = 1575, 
+  \item Number of resolved issues = 1390 (110 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.6.110}:  resolved Issue 1574: {\bf Python utilities}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: classes not appearing in table of contents on RTD}
+    \item   date resolved: {\bf 2023-05-17 20:21},
+date raised: 2023-05-16 
+  \ei
+  \item[] {\bf Version 1.6.109}:  resolved Issue 1572: {\bf CreateRigidBody}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: added to MainSystem to enable mbs.CreateRigidBody(...)}
+    \item   date resolved: {\bf 2023-05-16 11:54},
+date raised: 2023-05-16 
+  \ei
+  \item[] {\bf Version 1.6.108}:  resolved Issue 1568: {\bf mainSystemExtensions}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: create first sample of Python extensions for basic joints}
+    \item   date resolved: {\bf 2023-05-15 18:13},
+date raised: 2023-05-15 
+  \ei
+  \item[] {\bf Version 1.6.107}:  resolved Issue 1567: {\bf DrawSystemGraph}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: in case of showItemNames, no item numbers are shown as they confuse with numbers used in names}
+    \item   date resolved: {\bf 2023-05-15 17:18},
+date raised: 2023-05-15 
+  \ei
+  \item[] {\bf Version 1.6.106}:  resolved Issue 1566: {\bf AddDistanceSensor(...)}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: function RENAMED into CreateDistanceSensor(...) to be consistent with future naming; also renamed DistanceSensorSetupGeometry(...) into CreateDistanceSensorGeometry(...)}
+    \item   date resolved: {\bf 2023-05-15 11:34},
+date raised: 2023-05-15 
+  \ei
+  \item[] {\bf Version 1.6.105}:  resolved Issue 1563: {\bf MainSystem Python extensions}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add Python utility functions for mbs, such as PlotSensor, SolveDynamic, ...; use identical interfaces to alleviate creation of .pyi files and documentation; add new flag mbsFunction as hint to put docu to MainSystem and make .pyi extension}
+    \item {\bf notes: see \refSection{sec:mainsystem:pythonExtensions} for extended functionality}
+    \item   date resolved: {\bf 2023-05-15 01:17},
+date raised: 2023-05-09 
+  \ei
+  \item[] {\bf Version 1.6.104}:  resolved Issue 1564: {\bf Type definitions}
+(docu)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: fix header structure in latex and RST for Type Definitions}
+    \item   date resolved: {\bf 2023-05-11 11:30},
+date raised: 2023-05-11 
+  \ei
   \item[] {\bf Version 1.6.103}:  resolved Issue 1561: {\bf stub files .pyi}
 (extension)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
@@ -42,7 +92,7 @@ date raised: 2023-05-09
   \item[] {\bf Version 1.6.100}:  resolved Issue 1559: {\bf stub files .pyi}
 (extension)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
-    \item {description: automatically create stub file for settings to alleviate auto-completion}
+    \item {description: automatically create stub file for settings to alleviate auto-completion; type completion now also works for functions, types and structures: tested in Spyder and Visual Studio Code}
     \item   date resolved: {\bf 2023-05-10 08:39},
 date raised: 2023-05-09 
   \ei

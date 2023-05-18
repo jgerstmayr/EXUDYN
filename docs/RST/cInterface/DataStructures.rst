@@ -37,7 +37,7 @@ The MatrixContainer is a versatile representation for dense and sparse matrices.
    mc.SetWithDenseMatrix(pyArray, useDenseMatrix = True)
    
    #Set empty matrix:
-   mc.SetWithDenseMatrix(], bool useDenseMatrix = True)
+   mc.SetWithDenseMatrix([]], bool useDenseMatrix = True)
    
    #Set with list of lists, stored as sparse matrix:
    mc.SetWithDenseMatrix([[1,2],[3,4]], bool useDenseMatrix = False)
@@ -52,9 +52,9 @@ The MatrixContainer is a versatile representation for dense and sparse matrices.
 
 \ The class **MatrixContainer** has the following **functions and structures**:
 
-* | **SetWithDenseMatrix**\ (\ *pyArray*\ \ *useDenseMatrix*\  = False): 
-  | set MatrixContainer with dense numpy array; array (=matrix) contains values and matrix size information; if useDenseMatrix=True, matrix will be stored internally as dense matrix, otherwise it will be converted and stored as sparse matrix (which may speed up computations for larger problems)
-* | **SetWithSparseMatrixCSR**\ (\ *numberOfRowsInit*\ \ *numberOfColumnsInit*\ \ *pyArrayCSR*\ \ *useDenseMatrix*\  = True): 
+* | **SetWithDenseMatrix**\ (\ *pyArray*\ , \ *useDenseMatrix*\  = False): 
+  | set MatrixContainer with dense numpy array of size (n x m); array (=matrix) contains values and matrix size information; if useDenseMatrix=True, matrix will be stored internally as dense matrix, otherwise it will be converted and stored as sparse matrix (which may speed up computations for larger problems)
+* | **SetWithSparseMatrixCSR**\ (\ *numberOfRowsInit*\ , \ *numberOfColumnsInit*\ , \ *pyArrayCSR*\ , \ *useDenseMatrix*\  = True): 
   | set with sparse CSR matrix format: numpy array 'pyArrayCSR' contains sparse triplet (row, col, value) per row; numberOfRows and numberOfColumns given extra; if useDenseMatrix=True, matrix will be converted and stored internally as dense matrix, otherwise it will be stored as sparse matrix
 * | **GetPythonObject**\ (): 
   | convert MatrixContainer to numpy array (dense) or dictionary (sparse): containing nr. of rows, nr. of columns, numpy matrix with sparse triplets

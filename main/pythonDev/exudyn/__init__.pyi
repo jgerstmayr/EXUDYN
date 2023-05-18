@@ -13,6 +13,7 @@
 #from typing import Dict, List, Optional
 
 from typing import (
+    Annotated, 
     Any,
     # ByteString,
     # Callable,
@@ -24,6 +25,7 @@ from typing import (
     # Iterable,
     # Iterator,
     List,
+    Literal,
     # Mapping,
     # NoReturn,
     # Optional,
@@ -36,11 +38,33 @@ from typing import (
     # Text,
     Tuple, #for Tuple[int, int]
     # Type,
-    # TypeVar,
+    TypeVar,
     Union,
 )
-from numpy.typing import ArrayLike
+from numpy.typing import ArrayLike, NDArray
 from enum import Enum
+import numpy as np
+
+
+#DType = TypeVar("DType", bound=np.generic)
+# NPreal3D = Annotated[NDArray[float], Literal[3]]
+# NPint3D = Annotated[NDArray[int], Literal[3]]
+
+#type variables for size in numpy arrays
+T1 = TypeVar("T1", bound=int)
+T2 = TypeVar("T2", bound=int)
+
+# Dimension types represented as typles
+Shape = Tuple
+Shape1D = Shape[T1]
+Shape2D = Shape[T1, T2]
+# Shape3D = Shape[T1, T2, T3]
+# ShapeND = Shape[T1, ...]
+# ShapeNDType = TypeVar("ShapeNDType", bound=ShapeND)
+
+#LENGTH = Literal[2]
+#NDArray[Shape2D[3,3], np.float64]
+
 
 import exudyn
 from exudyn import (ObjectIndex, NodeIndex, MarkerIndex, LoadIndex, SensorIndex,
@@ -49,62 +73,68 @@ from exudyn import (ObjectIndex, NodeIndex, MarkerIndex, LoadIndex, SensorIndex,
                     # MatrixContainer, 
                     # VisualizationSettings, #could be erased in future
                     )
+from exudyn.graphicsDataUtilities import color4red, color4default
 
-# class ItemType(Enum):
-#     _None = 0
-#     Node = 1
-#     Object = 2
-#     Marker = 3
-#     Load = 4
-#     Sensor = 5
-
-# class LinearSolverSettings:
-#     ignoreRedundantConstraints: bool
-#     ignoreSingularJacobian: bool
-#     pivotTreshold: bool
-#     reuseAnalyzedPattern: bool
-#     showCausingItems: bool
-
-# class Parallel:
-#     multithreadedLLimitJacobians: int
-#     multithreadedLLimitLoads: int
-#     multithreadedLLimitMassMatrices: int
-#     multithreadedLLimitResiduals: int
-#     numberOfThreads: int
-#     taskSplitMinItems: int
-#     taskSplitTasksPerThread: int
-  
-# class SimulationSettings:
-#     linearSolverSettings: LinearSolverSettings
-#     parallel: Parallel
-    
-  
-# class SystemContainer:
-#     visualizationSettings: VisualizationSettings
-#     def __init__(self): ...
-#     @overload
-#     def AddSystem(self) -> exudyn.MainSystem: ...
-#     @overload
-#     def GetVersionString(self) -> str: ...
 
 # class MainSystem:
 #     @overload
-#     def AddNode(self, pyObject: dict) -> exudyn.NodeIndex: ...
+#     def CreateMassPoint(self,#node quantities
+#                                 referenceCoordinates = [0.,0.,0.],
+#                                 initialCoordinates = [0.,0.,0.],
+#                                 initialVelocities = [0.,0.,0.],
+#                                 #object quantities:
+#                                 physicsMass=0,
+#                                 gravity = [0.,0.,0.],
+#                                 graphicsDataList = [],
+#                                 #graphics, mixed
+#                                 drawSize = -1,
+#                                 color =  [-1.,-1.,-1.,-1.],
+#                                 show = True, #if graphicsDataList is empty, node is shown, otherwise body is shown
+#                                 name = '',   #both for node and object
+#                                 create2D = False, #NodePoint2D, MassPoint2D
+#                                 returnDict = False, #if True, returns dictionary of all data
+#                                 ) -> Union[ObjectIndex, dict]: ...
+    
 #     @overload
-#     def GetNode(self, nodeNumber: int) -> dict: ...
-#     @overload
-#     def GetLoad(self, loadNumber=-1) -> dict: ...
-#     def GetMarker(self, markerNumber=[0.,0.]) -> dict: ...
+#     def CreateSpringDamper(self,
+#                                   bodyOrNode0:int, bodyOrNode1:int,
+#                                   localPosition0: list = [0.,0.,0.],
+#                                   localPosition1: list = [0.,0.,0.],
+#                                   #
+#                                   referenceLength = None, 
+#                                   stiffness: float = 0., damping: float = 0., force: float = 0.,
+#                                   velocityOffset: float = 0., 
+#                                   show=True, drawSize: float=-1, color=[-1.,-1.,-1.,-1.],
+#                                   ) -> ObjectIndex: ...
 
 #     @overload
-#     def AddObject(self, pyObject: dict) -> exudyn.ObjectIndex: ...
-#     # @overload
-#     # def AddMassPoint(self, referenceCoordinates: list = [0.,0.,0.],
-#     #                            initialCoordinates: list = [0.,0.,0.],
-#     #                            initialVelocities: list = [0.,0.,0.],
-#     #                            physicsMass: float=0,
-#     #                            gravity: list = [0.,0.,0.],
-#     #                            graphicsDataList: list = []) -> exudyn.ObjectIndex: ...
+#     def CreateRevoluteJoint(mbs, bodyNumber0:ObjectIndex, bodyNumber1:ObjectIndex, 
+#                                   position:[float,float,float], 
+#                                   axis:[float,float,float], useGlobalFrame=True, 
+#                                   show=True, axisRadius=0.1, axisLength=0.4,
+#                                   color=[-1.,-1.,-1.,-1.]) -> [ObjectIndex, MarkerIndex, MarkerIndex]: ...
+
+#     @overload
+#     def CreatePrismaticJoint(mbs, bodyNumber0:ObjectIndex, bodyNumber1:ObjectIndex, 
+#                                   position:[float,float,float], 
+#                                   axis:[float,float,float], useGlobalFrame=True, 
+#                                   show=True, axisRadius=0.1, axisLength=0.4,
+#                                   color=[-1.,-1.,-1.,-1.]) -> [ObjectIndex, MarkerIndex, MarkerIndex]: ...
+
+#     @overload
+#     def CreateGenericJoint(mbs, bodyNumber0:ObjectIndex, bodyNumber1:ObjectIndex, 
+#                                   position:[float,float,float], rotation0=np.eye(3),
+#                                   constrainedAxes=[1,1,1, 1,1,1], useGlobalFrame=True, 
+#                                   show=True, axesRadius=0.1, axesLength=0.4,
+#                                   color=[-1.,-1.,-1.,-1.]) -> [ObjectIndex, MarkerIndex, MarkerIndex]: ...
+    
+    # @overload
+    # def AddMassPoint(self, referenceCoordinates: list = [0.,0.,0.],
+    #                            initialCoordinates: list = [0.,0.,0.],
+    #                            initialVelocities: list = [0.,0.,0.],
+    #                            physicsMass: float=0,
+    #                            gravity: list = [0.,0.,0.],
+    #                            graphicsDataList: list = []) -> exudyn.ObjectIndex: ...
 
 class OutputVariableType(Enum):
     _None = int
@@ -263,23 +293,23 @@ class Vector2DList:
 #stub information for class Vector6DList functions
 class Vector6DList:
     @overload
-    def Append(self, pyArray: [float,float,float]) -> None: ...
+    def Append(self, pyArray: [float,float,float,float,float,float]) -> None: ...
     @overload
-    def GetPythonObject(self) -> List[[float,float,float]]: ...
+    def GetPythonObject(self) -> List[[float,float,float,float,float,float]]: ...
 
 #stub information for class Matrix3DList functions
 class Matrix3DList:
     @overload
-    def Append(self, pyArray: ArrayLike) -> None: ...
+    def Append(self, pyArray: NDArray[Shape2D[3,3], float]) -> None: ...
     @overload
-    def GetPythonObject(self) -> List[ArrayLike]: ...
+    def GetPythonObject(self) -> List[NDArray[Shape2D[3,3], float]]: ...
 
 #stub information for class Matrix6DList functions
 class Matrix6DList:
     @overload
-    def Append(self, pyArray: ArrayLike) -> None: ...
+    def Append(self, pyArray: NDArray[Shape2D[6,6], float]) -> None: ...
     @overload
-    def GetPythonObject(self) -> List[ArrayLike]: ...
+    def GetPythonObject(self) -> List[NDArray[Shape2D[6,6], float]]: ...
 
 #This is the stub file for system structures, such as SimulationSettings and VisualizationSettings
 #This file will greatly improve autocompletion
@@ -1005,7 +1035,7 @@ class MainSystem:
     @overload
     def Reset(self) -> None: ...
     @overload
-    def GetSystemContainer(self) -> MainSystem: ...
+    def GetSystemContainer(self) -> SystemContainer: ...
     @overload
     def WaitForUserToContinue(self, printMessage=True) -> None: ...
     @overload
@@ -1198,3 +1228,56 @@ def Go() -> None: ...
 def InvalidIndex() -> int: ...
 variables:dict
 sys:dict
+
+class MainSystem:
+    @overload
+    def SolutionViewer(self, solution=[], rowIncrement=1, timeout=0.04, runOnStart=True, runMode=2, fontSize=12, title='', checkRenderEngineStopFlag=True) -> None: ...
+
+    @overload
+    def CreateMassPoint(self, name='', referenceCoordinates=[0.,0.,0.], initialCoordinates=[0.,0.,0.], initialVelocities=[0.,0.,0.], physicsMass=0, gravity=[0.,0.,0.], graphicsDataList=[], drawSize=-1, color=[-1.,-1.,-1.,-1.], show=True, create2D=False, returnDict=False) -> Union[dict, ObjectIndex]: ...
+
+    @overload
+    def CreateRigidBody(self, name='', referencePosition=[0.,0.,0.], referenceRotationMatrix=np.eye(3), initialVelocity=[0.,0.,0.], initialAngularVelocity=[0.,0.,0.], initialDisplacement=None, initialRotationMatrix=None, inertia=None, gravity=[0.,0.,0.], nodeType=exudyn.NodeType.RotationEulerParameters, graphicsDataList=[], drawSize=-1, color=[-1.,-1.,-1.,-1.], show=True, create2D=False, returnDict=False) -> Union[dict, ObjectIndex]: ...
+
+    @overload
+    def CreateSpringDamper(self, name='', bodyOrNodeList=[None, None], localPosition0=[0.,0.,0.], localPosition1=[0.,0.,0.], referenceLength=None, stiffness=0., damping=0., force=0., velocityOffset=0., show=True, drawSize=-1, color=color4default) -> ObjectIndex: ...
+
+    @overload
+    def CreateRevoluteJoint(self, name='', bodyNumbers=[None, None], position=[], axis=[], useGlobalFrame=True, show=True, axisRadius=0.1, axisLength=0.4, color=color4default) -> [ObjectIndex, MarkerIndex, MarkerIndex]: ...
+
+    @overload
+    def CreatePrismaticJoint(self, name='', bodyNumbers=[None, None], position=[], axis=[], useGlobalFrame=True, show=True, axisRadius=0.1, axisLength=0.4, color=color4default) -> [ObjectIndex, MarkerIndex, MarkerIndex]: ...
+
+    @overload
+    def CreateSphericalJoint(self, name='', bodyNumbers=[None, None], position=[], constrainedAxes=[1,1,1], useGlobalFrame=True, show=True, jointRadius=0.1, color=color4default) -> [ObjectIndex, MarkerIndex, MarkerIndex]: ...
+
+    @overload
+    def CreateGenericJoint(self, name='', bodyNumbers=[None, None], position=[], rotationMatrixAxes=np.eye(3), constrainedAxes=[1,1,1, 1,1,1], useGlobalFrame=True, show=True, axesRadius=0.1, axesLength=0.4, color=color4default) -> [ObjectIndex, MarkerIndex, MarkerIndex]: ...
+
+    @overload
+    def PlotSensor(self, sensorNumbers=[], components=0, xLabel='time (s)', yLabel=None, labels=[], colorCodeOffset=0, newFigure=True, closeAll=False, componentsX=[], title='', figureName='', fontSize=16, colors=[], lineStyles=[], lineWidths=[], markerStyles=[], markerSizes=[], markerDensity=0.08, rangeX=[], rangeY=[], majorTicksX=10, majorTicksY=10, offsets=[], factors=[], subPlot=[], sizeInches=[6.4,4.8], fileName='', useXYZcomponents=True, **kwargs) -> [Any, Any, Any, Any]: ...
+
+    @overload
+    def SolveStatic(self, simulationSettings=exudyn.SimulationSettings(), updateInitialValues=False, storeSolver=True, showHints=False, showCausingItems=True) -> bool: ...
+
+    @overload
+    def SolveDynamic(self, simulationSettings=exudyn.SimulationSettings(), solverType=exudyn.DynamicSolverType.GeneralizedAlpha, updateInitialValues=False, storeSolver=True, showHints=False, showCausingItems=True) -> bool: ...
+
+    @overload
+    def ComputeLinearizedSystem(self, simulationSettings=exudyn.SimulationSettings(), useSparseSolver=False) -> [ArrayLike, ArrayLike, ArrayLike]: ...
+
+    @overload
+    def ComputeSystemDegreeOfFreedom(self, simulationSettings=exudyn.SimulationSettings(), threshold=1e-12, verbose=False, useSVD=False) -> List[int]: ...
+
+    @overload
+    def ComputeODE2Eigenvalues(self, simulationSettings=exudyn.SimulationSettings(), useSparseSolver=False, numberOfEigenvalues=0, constrainedCoordinates=[], convert2Frequencies=False, useAbsoluteValues=True) -> [ArrayLike, ArrayLike]: ...
+
+    @overload
+    def CreateDistanceSensorGeometry(self, meshPoints, meshTrigs, rigidBodyMarkerIndex, searchTreeCellSize=[8,8,8]) -> int: ...
+
+    @overload
+    def CreateDistanceSensor(self, generalContactIndex, positionOrMarker, dirSensor, minDistance=-1e7, maxDistance=1e7, cylinderRadius=0, selectedTypeIndex=exudyn.ContactTypeIndex.IndexEndOfEnumList, storeInternal=False, fileName='', measureVelocity=False, addGraphicsObject=False, drawDisplaced=True, color=color4red) -> SensorIndex: ...
+
+    @overload
+    def DrawSystemGraph(self, showLoads=True, showSensors=True, useItemNames=False, useItemTypes=False, addItemTypeNames=True, multiLine=True, fontSizeFactor=1., layoutDistanceFactor=3., layoutIterations=100, showLegend=True) -> [Any, Any, Any]: ...
+

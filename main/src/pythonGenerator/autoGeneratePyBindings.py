@@ -23,6 +23,10 @@ from autoGenerateHelper import PyLatexRST, GetDateStr, RSTlabelString
 
 from autoGenerateHelper import localListFunctionNames, localListClassNames, localListEnumNames
 
+theDocDir = '../../../docs/theDoc/'
+rstDir='../../../docs/RST/'
+
+
 localListFunctionNames.clear()
 localListClassNames.clear()
 localListEnumNames.clear()
@@ -32,8 +36,10 @@ returnedArray = 'List[float]'   #stub type for for returned numpy array
 listOrArray = 'List[float]'     #stub type for input as list or numpy array
 vector2D = '[float,float]'#stub type for Vector3D
 vector3D = '[float,float,float]'#stub type for Vector3D
-vector6D = '[float,float,float]'#stub type for Vector3D
-# vector3D = 'NPreal3D'#stub type for Vector3D
+vector6D = '[float,float,float,float,float,float]'#stub type for Vector6D
+
+matrix3D = 'NDArray[Shape2D[3,3], float]'#stub type for Matrix3D
+matrix6D = 'NDArray[Shape2D[6,6], float]'#stub type for Matrix6D
 
 import io   #for utf-8 encoding
 import copy
@@ -252,6 +258,7 @@ plr = PyLatexRST('','', '') #PythonLatexRST
 
 plr.AddDocu(text='This section defines a couple of structures (C++: enum aka enumeration type), which are used to select, e.g., a configuration type or a variable type. In the background, these types are integer numbers, but for safety, the types should be used as type variables. See this examples:\n\n', 
             section='Type definitions', sectionLevel=1,sectionLabel='sec:cinterface:typedef')
+
 #sLenum = '\section{}\n \n\n'
 plr.AddDocuCodeBlock("""
 #Conversion to integer is possible: 
@@ -920,7 +927,7 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='Reset', cName='Reset',
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='GetSystemContainer', cName='GetMainSystemContainer', 
                         description="return the systemContainer where the mainSystem (mbs) was created",
-                        returnType='MainSystem',
+                        returnType='SystemContainer',
                         )
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='WaitForUserToContinue', cName='WaitForUserToContinue', 
@@ -1036,6 +1043,35 @@ plr.DefLatexDataAccess('systemData','Access to SystemData structure; enables acc
                        )
 
 plr.DefLatexFinishTable()#only finalize latex table
+
+plr.DefLatexStartClass('MainSystem Python extensions','This section represents [experimental] extensions to MainSystem, which are direct calls to Python functions, such as PlotSensor or SolveDynamic; these extensions allow a more intuitive interaction with the MainSystem class, see the following example. For activation, import \\texttt{exudyn.mainSystemExtensions} or \\texttt{exudyn.utilities}', subSection=True,labelName='sec:mainsystem:pythonExtensions')
+
+plr.AddDocuCodeBlock(code="""
+import exudyn as exu           
+from exudyn.utilities import * 
+#alternative: import exudyn.mainSystemExtensions
+SC = exu.SystemContainer()
+mbs = SC.AddSystem()
+#
+#create rigid body
+b1=mbs.CreateRigidBody(inertia = InertiaCuboid(density=5000, sideLengths=[0.1,0.1,1]),
+                            referencePosition = [1,0,0], 
+                            gravity = [0,0,-9.81])
+#
+mbs.Assemble()
+#call solver function directly from mbs:
+mbs.ComputeSystemDegreeOfFreedom()
+simulationSettings = exu.SimulationSettings()
+mbs.SolveDynamic(simulationSettings)
+#
+#plot sensor sBody0 directly from mbs:
+mbs.PlotSensor(...)
+""")
+
+plr.sLatex += '\\input{MainSystemExt.tex}\n\n'
+
+with open('generated/MainSystemExt.rst', 'r') as f:
+    plr.sRST += f.read()
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -2245,7 +2281,7 @@ pyArray = np.array(matrix)
 mc.SetWithDenseMatrix(pyArray, useDenseMatrix = True)
 
 #Set empty matrix:
-mc.SetWithDenseMatrix(], bool useDenseMatrix = True)
+mc.SetWithDenseMatrix([]], bool useDenseMatrix = True)
 
 #Set with list of lists, stored as sparse matrix:
 mc.SetWithDenseMatrix([[1,2],[3,4]], bool useDenseMatrix = False)
@@ -2266,7 +2302,7 @@ plr.sPy += '        .def(py::init<const py::object&>(), py::arg("matrix"))\n' #c
 plr.DefPyFunctionAccess(cClass=classStr, pyName='SetWithDenseMatrix', cName='SetWithDenseMatrix', 
                         argList=['pyArray','useDenseMatrix'],
                         defaultArgs=['','False'],
-                        description="set MatrixContainer with dense numpy array; array (=matrix) contains values and matrix size information; if useDenseMatrix=True, matrix will be stored internally as dense matrix, otherwise it will be converted and stored as sparse matrix (which may speed up computations for larger problems)",
+                        description="set MatrixContainer with dense numpy array of size (n x m); array (=matrix) contains values and matrix size information; if useDenseMatrix=True, matrix will be stored internally as dense matrix, otherwise it will be converted and stored as sparse matrix (which may speed up computations for larger problems)",
                         argTypes=['ArrayLike',''],
                         returnType='None',
                         )
@@ -2494,13 +2530,13 @@ plr.sPy += '        .def(py::init<const py::object&>(), py::arg("listOfArrays"))
 plr.DefPyFunctionAccess(cClass=classStr, pyName='Append', cName='PyAppend', 
                        argList=['pyArray'],
                        description="add single 3D array or list of lists to Matrix3DList; array or lists must have appropriate dimension!",
-                       argTypes=['ArrayLike'],
+                       argTypes=[matrix3D],
                        returnType='None',
                        )
                                                                                                     
 plr.DefPyFunctionAccess(cClass=classStr, pyName='GetPythonObject', cName='GetPythonObject', 
                        description="convert Matrix3DList into (copied) list of 3x3 numpy arrays",
-                       returnType='List[ArrayLike]',
+                       returnType='List['+matrix3D+']',
                        )
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='__len__', 
@@ -2550,13 +2586,13 @@ plr.sPy += '        .def(py::init<const py::object&>(), py::arg("listOfArrays"))
 plr.DefPyFunctionAccess(cClass=classStr, pyName='Append', cName='PyAppend', 
                        argList=['pyArray'],
                        description="add single 6D array or list of lists to Matrix6DList; array or lists must have appropriate dimension!",
-                       argTypes=['ArrayLike'],
+                       argTypes=[matrix6D],
                        returnType='None',
                        )
                                                                                                     
 plr.DefPyFunctionAccess(cClass=classStr, pyName='GetPythonObject', cName='GetPythonObject', 
                        description="convert Matrix6DList into (copied) list of 6x6 numpy arrays",
-                       returnType='List[ArrayLike]',
+                       returnType='List['+matrix6D+']',
                        )
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='__len__', 
@@ -2598,7 +2634,7 @@ plr.CreateNewRSTfile('') #this finalizes the list
 
 directoryString = '../Autogenerated/'
 pybindFile = directoryString + 'pybind_manual_classes.h'
-latexFile = '../../../docs/theDoc/manual_interfaces.tex'
+latexFile = theDocDir+'manual_interfaces.tex'
 
 file=open(pybindFile,'w')  #clear file by one write access
 file.write('// AUTO:  ++++++++++++++++++++++\n')
@@ -2619,7 +2655,7 @@ file.close()
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #RST files
 #rstFile = '../../../docs/RST/cInterface/exudyn.rst'
-rstDir = '../../../docs/RST/cInterface/'
+rstDirInt = '../../../docs/RST/cInterface/'
 rstIndexFile = 'CInterfaceIndex.rst'
 #create primary toc
 indexRST = """
@@ -2636,7 +2672,7 @@ Python-C++ command interface
 for (file, text) in plr.rstFileLists:
     indexRST += '   '+file+'\n'
 
-    file=io.open(rstDir+file+'.rst','w',encoding='utf8')  #clear file by one write access
+    file=io.open(rstDirInt+file+'.rst','w',encoding='utf8')  #clear file by one write access
     file.write(text)
     #file.write(plr.RSTStr())
     file.close()
@@ -2644,18 +2680,18 @@ for (file, text) in plr.rstFileLists:
 indexRST += '\n'
 
 
-file=io.open(rstDir+rstIndexFile,'w',encoding='utf8')  #clear file by one write access
+file=io.open(rstDirInt+rstIndexFile,'w',encoding='utf8')  #clear file by one write access
 file.write(indexRST)
 file.close()
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #stub file .pyi (will be merged with general file)
-file=io.open('stubAutoBindings.pyi','w',encoding='utf8')  #clear file by one write access
+file=io.open('generated/stubAutoBindings.pyi','w',encoding='utf8')  #clear file by one write access
 file.write(savedPyi)
 #file.write(plr.sPyi)
 file.close()
 
-file=io.open('stubEnums.pyi','w',encoding='utf8')  #clear file by one write access
+file=io.open('generated/stubEnums.pyi','w',encoding='utf8')  #clear file by one write access
 file.write(sStubEnums)
 file.close()
 

@@ -96,6 +96,7 @@ class ExpectedType(Enum):
     PReal = 16+1
     UReal = 16+2
     Vector = 32
+    IntVector = 32+8
     Matrix = 64
     RigidBodyInertia = 128
     NodeIndex = 256
@@ -103,25 +104,31 @@ class ExpectedType(Enum):
     MarkerIndex = 1024
     LoadIndex = 2048
     SensorIndex = 4096
+    String = 8192
 
 #**function: internal function which is used to raise common errors in case of wrong types; dim is used for vectors and square matrices, cols is used for non-square matrices
 def RaiseTypeError(where='', argumentName='', received = None, expectedType = None, dim=None, cols=None):
     t = copy.copy(expectedType)
+    
+    errStr = 'ERROR in ' + where + ' in argument ' + argumentName + ': '
+    
+    if type(t) != str:
+        errStr += 'expected type=' + t.name
+        if t == ExpectedType.Vector or t == ExpectedType.IntVector:
+            errStr += ' (as list or numpy array)'
+        elif t == ExpectedType.Matrix:
+            errStr += ' (as list of lists or numpy array)'
         
-    errStr = 'ERROR in ' + where + ' in argument ' + argumentName + ': expected type=' + t.name
-    if t == ExpectedType.Vector:
-        errStr += ' (as list or numpy array)'
-    elif t == ExpectedType.Matrix:
-        errStr += ' (as list of lists or numpy array)'
-        
-    if dim != None:
-        ncols = cols
-        if t == ExpectedType.Matrix and cols == None: 
-            ncols = dim  #square Matrix
-        if ncols != None:
-            errStr += ', expected size = (' + str(dim) + ',' + str(ncols) + ')'
-        else:
-            errStr += ', expected size = ' + str(dim) 
+        if dim != None:
+            ncols = cols
+            if t == ExpectedType.Matrix and cols == None: 
+                ncols = dim  #square Matrix
+            if ncols != None:
+                errStr += ', expected size = (' + str(dim) + ',' + str(ncols) + ')'
+            else:
+                errStr += ', expected size = ' + str(dim) 
+    else:
+        errStr += expectedType
             
     receivedStr = ', <argument can not be converted to string>'
     try:
@@ -190,6 +197,21 @@ def IsVector(v, expectedSize=None):
         if not IsValidRealInt(x): return False
 
     return True
+
+#**function: check if v is a valid vector with floats or ints; if expectedSize!=None, the length is also checked
+def IsIntVector(v, expectedSize=None):
+    if type(v) != list and type(v) != np.ndarray:
+        return False
+
+    if expectedSize!=None:
+        if len(v) != expectedSize:
+            return False
+
+    for x in v:
+        if not IsInteger(x): return False
+
+    return True
+
 
 #**function: check if v is a valid vector with floats or ints; if expectedSize!=None, the length is also checked
 def IsSquareMatrix(m, expectedSize=None):

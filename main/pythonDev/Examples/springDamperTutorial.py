@@ -58,7 +58,7 @@ mbs.AddLoad(LoadCoordinate(markerNumber = nodeMarker,
                                          load = f))
 
 #add sensor:
-mbs.AddSensor(SensorObject(objectNumber=nC, fileName='groundForce.txt', 
+mbs.AddSensor(SensorObject(objectNumber=nC, fileName='solution/groundForce.txt', 
                            outputVariableType=exu.OutputVariableType.Force))
 
 print(mbs)
@@ -118,7 +118,7 @@ plt.plot(data[:,0], data[:,1], 'b-', label='displacement (m); numerical solution
 plt.plot(refSol[:,0], refSol[:,1], 'r-', label='displacement (m); exact solution')
 
 #show force in constraint/support:
-data = np.loadtxt('groundForce.txt', comments='#', delimiter=',')
+data = np.loadtxt('solution/groundForce.txt', comments='#', delimiter=',')
 plt.plot(data[:,0], data[:,1]*1e-3, 'g-', label='force (kN)') #numerical solution
 
 ax=plt.gca() # get current axes

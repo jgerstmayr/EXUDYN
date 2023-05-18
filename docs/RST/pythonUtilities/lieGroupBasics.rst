@@ -29,7 +29,9 @@ Function: Sinc
   | Stefan Holzinger
 
 
+
 ----
+
 
 .. _sec-liegroupbasics-cot:
 
@@ -47,7 +49,9 @@ Function: Cot
   | Stefan Holzinger
 
 
+
 ----
+
 
 .. _sec-liegroupbasics-r3xso3matrix2rotationmatrix:
 
@@ -65,7 +69,9 @@ Function: R3xSO3Matrix2RotationMatrix
   | Stefan Holzinger
 
 
+
 ----
+
 
 .. _sec-liegroupbasics-r3xso3matrix2translation:
 
@@ -83,7 +89,9 @@ Function: R3xSO3Matrix2Translation
   | Stefan Holzinger
 
 
+
 ----
+
 
 .. _sec-liegroupbasics-r3xso3matrix:
 
@@ -102,7 +110,9 @@ Function: R3xSO3Matrix
   | Stefan Holzinger
 
 
+
 ----
+
 
 .. _sec-liegroupbasics-expso3:
 
@@ -120,7 +130,9 @@ Function: ExpSO3
   | Stefan Holzinger
 
 
+
 ----
+
 
 .. _sec-liegroupbasics-exps3:
 
@@ -139,7 +151,9 @@ Function: ExpS3
   | Stefan Holzinger
 
 
+
 ----
+
 
 .. _sec-liegroupbasics-logso3:
 
@@ -159,7 +173,9 @@ Function: LogSO3
   | improved accuracy for very small angles as well as angles phi close to pi AS WELL AS at phi=pi
 
 
+
 ----
+
 
 .. _sec-liegroupbasics-texpso3:
 
@@ -177,7 +193,9 @@ Function: TExpSO3
   | Stefan Holzinger
 
 
+
 ----
+
 
 .. _sec-liegroupbasics-texpso3inv:
 
@@ -196,7 +214,9 @@ Function: TExpSO3Inv
   | Stefan Holzinger
 
 
+
 ----
+
 
 .. _sec-liegroupbasics-expse3:
 
@@ -218,7 +238,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
     \ `serialRobotInverseKinematics.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotInverseKinematics.py>`_\  (Ex)
 
 
+
 ----
+
 
 .. _sec-liegroupbasics-logse3:
 
@@ -240,7 +262,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
     \ `serialRobotInverseKinematics.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotInverseKinematics.py>`_\  (Ex)
 
 
+
 ----
+
 
 .. _sec-liegroupbasics-texpse3:
 
@@ -260,7 +284,9 @@ Function: TExpSE3
   | improved accuracy for very small angles as well as angles phi
 
 
+
 ----
+
 
 .. _sec-liegroupbasics-texpse3inv:
 
@@ -280,7 +306,9 @@ Function: TExpSE3Inv
   | improved accuracy for very small angles as well as angles phi
 
 
+
 ----
+
 
 .. _sec-liegroupbasics-expr3xso3:
 
@@ -298,7 +326,9 @@ Function: ExpR3xSO3
   | Stefan Holzinger
 
 
+
 ----
+
 
 .. _sec-liegroupbasics-texpr3xso3:
 
@@ -316,7 +346,9 @@ Function: TExpR3xSO3
   | Stefan Holzinger
 
 
+
 ----
+
 
 .. _sec-liegroupbasics-texpr3xso3inv:
 
@@ -334,7 +366,9 @@ Function: TExpR3xSO3Inv
   | Stefan Holzinger
 
 
+
 ----
+
 
 .. _sec-liegroupbasics-compositionruledirectproductr3ands3:
 
@@ -353,7 +387,9 @@ Function: CompositionRuleDirectProductR3AndS3
   | Stefan Holzinger
 
 
+
 ----
+
 
 .. _sec-liegroupbasics-compositionrulesemidirectproductr3ands3:
 
@@ -372,7 +408,9 @@ Function: CompositionRuleSemiDirectProductR3AndS3
   | Stefan Holzinger
 
 
+
 ----
+
 
 .. _sec-liegroupbasics-compositionruledirectproductr3andr3rotvec:
 
@@ -393,7 +431,9 @@ Function: CompositionRuleDirectProductR3AndR3RotVec
   | Stefan Holzinger
 
 
+
 ----
+
 
 .. _sec-liegroupbasics-compositionrulesemidirectproductr3andr3rotvec:
 
@@ -414,7 +454,9 @@ Function: CompositionRuleSemiDirectProductR3AndR3RotVec
   | Stefan Holzinger
 
 
+
 ----
+
 
 .. _sec-liegroupbasics-compositionruledirectproductr3andr3rotxyzangles:
 
@@ -435,7 +477,9 @@ Function: CompositionRuleDirectProductR3AndR3RotXYZAngles
   | Stefan Holzinger
 
 
+
 ----
+
 
 .. _sec-liegroupbasics-compositionrulesemidirectproductr3andr3rotxyzangles:
 
@@ -456,7 +500,9 @@ Function: CompositionRuleSemiDirectProductR3AndR3RotXYZAngles
   | Stefan Holzinger
 
 
+
 ----
+
 
 .. _sec-liegroupbasics-compositionruleforeulerparameters:
 
@@ -476,7 +522,9 @@ Function: CompositionRuleForEulerParameters
   | Stefan Holzinger
 
 
+
 ----
+
 
 .. _sec-liegroupbasics-compositionruleforrotationvectors:
 
@@ -495,7 +543,9 @@ Function: CompositionRuleForRotationVectors
   | Stefan Holzinger
 
 
+
 ----
+
 
 .. _sec-liegroupbasics-compositionrulerotxyzanglesrotationvector:
 

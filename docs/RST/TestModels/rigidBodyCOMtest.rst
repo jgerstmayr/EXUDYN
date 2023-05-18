@@ -80,14 +80,11 @@ You can view and download this file on Github: `rigidBodyCOMtest.py <https://git
        #exu.Print("RBinertia trans=", RBinertia)
        #exu.Print("inertia6D=", RBinertia.GetInertia6D())
        #exu.Print("inertia.com=", RBinertia.com)
-       mPosLast = mbs.AddMarker(MarkerBodyRigid(bodyNumber = oGround, 
-                                                   localPosition=[0,0,zOff]))
+       oRBlast = oGround
    
        #create a chain of bodies:
        for i in range(nBodies):
            omega0 = [0,0,0] #arbitrary initial angular velocity
-           ep0 = eulerParameters0 #no rotation
-           ep_t0 = AngularVelocity2EulerParameters_t(omega0, ep0)
            
            #Rotxyz:
            #ep0 = [0,0,0]
@@ -104,22 +101,21 @@ You can view and download this file on Github: `rigidBodyCOMtest.py <https://git
            d=0.02
            oGraphicsCOM = GraphicsDataOrthoCubeLines(-d+com[0],-d+com[1],-d+com[2], d+com[0],d+com[1],d+com[2], [0.1,0.8,0.1,1])
    
-           [nRB, oRB] = AddRigidBody(mainSys=mbs, inertia=RBinertia, 
-                                     #nodeType=exu.NodeType.RotationRxyz,
-                                     nodeType=exu.NodeType.RotationEulerParameters,
-                                     position=p0, velocity=v0,
-                                     rotationParameters=ep0, angularVelocity=omega0, 
+           rDict = mbs.CreateRigidBody(inertia=RBinertia, 
+                                     referencePosition=p0, 
+                                     initialVelocity=v0,initialAngularVelocity=omega0, 
                                      gravity=[0.,-9.81,0.],
-                                     graphicsDataList=[oGraphics,oGraphicsCOM])
-   
-           mPos = mbs.AddMarker(MarkerBodyRigid(bodyNumber = oRB, localPosition = VAdd([-sx,0.,0],com)))
+                                     graphicsDataList=[oGraphics,oGraphicsCOM],returnDict=True)
+           oRB = rDict['bodyNumber']
+           nRB = rDict['nodeNumber']
    
            val=0
            if i==0: val=1
-           mbs.AddObject(GenericJoint(markerNumbers = [mPos, mPosLast], constrainedAxes=[1,1,1, val,val,0]))
+           mbs.CreateGenericJoint(bodyNumbers=[oRB, oRBlast], position=VAdd([-sx,0.,0],com), 
+                                  constrainedAxes=[1,1,1, val,val,0], useGlobalFrame=False)
    
-           #marker for next chain body
-           mPosLast = mbs.AddMarker(MarkerBodyRigid(bodyNumber = oRB, localPosition = VAdd([sx,0.,0],com)))
+           #for next chain body
+           oRBlast = oRB
    
        sCoords=mbs.AddSensor(SensorNode(nodeNumber=nRB, storeInternal=True,#fileName="solution/sensor"+str(case)+".txt", 
                                 outputVariableType=exu.OutputVariableType.Coordinates))
@@ -156,7 +152,7 @@ You can view and download this file on Github: `rigidBodyCOMtest.py <https://git
        exu.StartRenderer()
        mbs.WaitForUserToContinue()
    
-   exu.SolveDynamic(mbs, simulationSettings)
+   mbs.SolveDynamic(simulationSettings)
    
    
    

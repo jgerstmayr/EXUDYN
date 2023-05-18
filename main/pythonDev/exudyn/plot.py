@@ -197,8 +197,9 @@ def PlotSensorDefaults():
 #        minorTicksYon: if True, turn minor ticks for y-axis on
 #        fileCommentChar: if exists, defines the comment character in files (\#, %, ...)
 #        fileDelimiterChar: if exists, defines the character indicating the columns for data (',', ' ', ';', ...)
-#**output: plots the sensor data; returns [plt, fig, ax, line] in which plt is matplotlib.pyplot, fig is the figure (or None), ax is the axis (or None) and line is the return value of plt.plot (or None) which could be changed hereafter
+#**output: [Any, Any, Any, Any]; plots the sensor data; returns [plt, fig, ax, line] in which plt is matplotlib.pyplot, fig is the figure (or None), ax is the axis (or None) and line is the return value of plt.plot (or None) which could be changed hereafter
 #**notes: adjust default values by modifying the variables exudyn.plot.plotSensorDefault..., e.g., exudyn.plot.plotSensorDefaultFontSize
+#**belongsTo: MainSystem
 #**example: 
 ##assume to have some position-based nodes 0 and 1:
 #s0=mbs.AddSensor(SensorNode(nodeNumber=0, fileName='s0.txt',
@@ -825,7 +826,7 @@ def LoadImage(fileName, trianglesAsLines = True, verbose=False):
         
     return {'linePoints':listLines, 'lineColors':listLineColors, 'triangles':listTriangles}
 
-#**function: plot image data as provided by LoadImage(...) using matplotlib; (currently) only plots lines; triangles are not processed
+#**function: plot 2D or 3D vector image data as provided by LoadImage(...) using matplotlib
 #**input:
 #  imageData: dictionary as provided by LoadImage(...) 
 #  HT: homogeneous transformation, used to transform coordinates; lines are drawn in (x,y) plane

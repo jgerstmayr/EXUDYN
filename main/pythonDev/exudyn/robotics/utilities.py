@@ -13,7 +13,7 @@
 import numpy as np
 from math import sin, cos
 import exudyn
-from exudyn.utilities import AddDistanceSensor
+from exudyn.utilities import CreateDistanceSensor
 
 #**function: Function to add many distance sensors to represent Lidar; sensors can be either placed on absolute position or attached to rigid body marker
 #**input:
@@ -36,7 +36,7 @@ from exudyn.utilities import AddDistanceSensor
 #  drawDisplaced: if True, the red line is drawn backwards such that it moves along the measured surface; if False, the beam is fixed to marker or position
 #  color: optional color for 'laser beam' to be drawn
 #**output: creates sensor and returns list of sensor numbers for all laser sensors
-#**notes: use generalContactIndex = DistanceSensorSetupGeometry(...) before to create GeneralContact module containing geometry
+#**notes: use generalContactIndex = CreateDistanceSensorGeometry(...) before to create GeneralContact module containing geometry
 def AddLidar(mbs, generalContactIndex,
             positionOrMarker, minDistance=-1e7, 
             maxDistance=1e7, cylinderRadius=0, lineLength=1,
@@ -54,7 +54,7 @@ def AddLidar(mbs, generalContactIndex,
         phi = i/numberOfSensors*phiRange+angleStart
         dirSensor = np.array([L*sin(phi)*cos(a), L*cos(phi)*cos(a),L*sin(a)])#@rotation
         #print(dirSensor, positionOrMarker)
-        sensorList += [AddDistanceSensor(mbs, generalContactIndex, positionOrMarker=positionOrMarker, 
+        sensorList += [CreateDistanceSensor(mbs, generalContactIndex, positionOrMarker=positionOrMarker, 
                                          dirSensor=dirSensor,minDistance=0, maxDistance=maxDistance, 
                                          cylinderRadius=0, storeInternal=True, 
                                          fileName=fileName, measureVelocity=True, addGraphicsObject=True,
