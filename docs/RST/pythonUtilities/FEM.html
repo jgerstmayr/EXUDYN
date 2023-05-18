@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Module: FEM &mdash; Exudyn1.6.103.dev1 1.6.103.dev1 documentation</title>
+  <title>Module: FEM &mdash; Exudyn1.6.110.dev1 1.6.110.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -39,7 +39,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.103.dev1
+            Exudyn1.6.110.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -88,14 +88,20 @@
 <li class="toctree-l3"><a class="reference internal" href="#function-readnodalcoordinatesfromansystxt">Function: ReadNodalCoordinatesFromAnsysTxt</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-readelementsfromansystxt">Function: ReadElementsFromAnsysTxt</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-cmsobjectcomputenorm">Function: CMSObjectComputeNorm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-materialbaseclass-in-module-fem">CLASS MaterialBaseClass (in module FEM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-kirchhoffmaterial-materialbaseclass-in-module-fem">CLASS KirchhoffMaterial(MaterialBaseClass) (in module FEM)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#class-function-strain2stress">Class function: Strain2Stress</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#class-function-strainvector2stressvector">Class function: StrainVector2StressVector</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#class-function-strainvector2stressvector2d">Class function: StrainVector2StressVector2D</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#class-function-lameparameters">Class function: LameParameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-finiteelement-in-module-fem">CLASS FiniteElement (in module FEM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-tet4-finiteelement-in-module-fem">CLASS Tet4(FiniteElement) (in module FEM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-objectffrfinterface-in-module-fem">CLASS ObjectFFRFinterface (in module FEM)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#class-function-init">Class function: __init__</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#class-function-addobjectffrf">Class function: AddObjectFFRF</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#class-function-ufforce">Class function: UFforce</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#class-function-ufmassgenericode2">Class function: UFmassGenericODE2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-objectffrfreducedorderinterface-in-module-fem">CLASS ObjectFFRFreducedOrderInterface (in module FEM)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#sec-fem-objectffrfreducedorderinterface-init">Class function: __init__</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#class-function-savetofile">Class function: SaveToFile</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#class-function-loadfromfile">Class function: LoadFromFile</a></li>
@@ -103,6 +109,8 @@
 <li class="toctree-l3"><a class="reference internal" href="#class-function-ufmassffrfreducedorder">Class function: UFmassFFRFreducedOrder</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#class-function-ufforceffrfreducedorder">Class function: UFforceFFRFreducedOrder</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#class-function-addobjectffrfreducedorder">Class function: AddObjectFFRFreducedOrder</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-hcbstaticmodeselection-enum-in-module-fem">CLASS HCBstaticModeSelection(Enum) (in module FEM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-feminterface-in-module-fem">CLASS FEMinterface (in module FEM)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#sec-fem-feminterface-init">Class function: __init__</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#sec-fem-feminterface-savetofile">Class function: SaveToFile</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#sec-fem-feminterface-loadfromfile">Class function: LoadFromFile</a></li>
@@ -153,6 +161,7 @@
 <li class="toctree-l2"><a class="reference internal" href="interactive.html">Module: interactive</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kinematicTree.html">Module: kinematicTree</a></li>
 <li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html">Module: lieGroupBasics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mainSystemExtensions.html">Module: mainSystemExtensions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="physics.html">Module: physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plot.html">Module: plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="processing.html">Module: processing</a></li>
@@ -186,7 +195,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.103.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.110.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -590,15 +599,16 @@
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/netgenSTLtest.py">netgenSTLtest.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCMStutorial.py">NGsolveCMStutorial.py</a> (Ex)</p>
 </div></blockquote>
+</section>
 <section id="class-materialbaseclass-in-module-fem">
-<h3>CLASS MaterialBaseClass (in module FEM)<a class="headerlink" href="#class-materialbaseclass-in-module-fem" title="Permalink to this heading"></a></h3>
+<span id="sec-module-fem-class-materialbaseclass"></span><h2>CLASS MaterialBaseClass (in module FEM)<a class="headerlink" href="#class-materialbaseclass-in-module-fem" title="Permalink to this heading"></a></h2>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>material base class, e.g., for FiniteElement</p>
 </div></blockquote>
 </section>
 <section id="class-kirchhoffmaterial-materialbaseclass-in-module-fem">
-<h3>CLASS KirchhoffMaterial(MaterialBaseClass) (in module FEM)<a class="headerlink" href="#class-kirchhoffmaterial-materialbaseclass-in-module-fem" title="Permalink to this heading"></a></h3>
+<span id="sec-module-fem-class-kirchhoffmaterial-materialbaseclass"></span><h2>CLASS KirchhoffMaterial(MaterialBaseClass) (in module FEM)<a class="headerlink" href="#class-kirchhoffmaterial-materialbaseclass-in-module-fem" title="Permalink to this heading"></a></h2>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>class for representation of Kirchhoff (linear elastic, 3D and 2D) material</p>
@@ -610,7 +620,6 @@
 </div>
 </li>
 </ul>
-</section>
 </section>
 <section id="class-function-strain2stress">
 <span id="sec-fem-kirchhoffmaterial-materialbaseclass-strain2stress"></span><h2>Class function: Strain2Stress<a class="headerlink" href="#class-function-strain2stress" title="Permalink to this heading"></a></h2>
@@ -667,29 +676,29 @@
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/CMSexampleCourse.py">CMSexampleCourse.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/netgenSTLtest.py">netgenSTLtest.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCMStutorial.py">NGsolveCMStutorial.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCraigBampton.py">NGsolveCraigBampton.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py">NGsolvePistonEngine.py</a> (Ex)</p>
 </div></blockquote>
+</section>
 <section id="class-finiteelement-in-module-fem">
-<h3>CLASS FiniteElement (in module FEM)<a class="headerlink" href="#class-finiteelement-in-module-fem" title="Permalink to this heading"></a></h3>
+<span id="sec-module-fem-class-finiteelement"></span><h2>CLASS FiniteElement (in module FEM)<a class="headerlink" href="#class-finiteelement-in-module-fem" title="Permalink to this heading"></a></h2>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>finite element base class for lateron implementations of other finite elements</p>
 </div></blockquote>
 </section>
 <section id="class-tet4-finiteelement-in-module-fem">
-<h3>CLASS Tet4(FiniteElement) (in module FEM)<a class="headerlink" href="#class-tet4-finiteelement-in-module-fem" title="Permalink to this heading"></a></h3>
+<span id="sec-module-fem-class-tet4-finiteelement"></span><h2>CLASS Tet4(FiniteElement) (in module FEM)<a class="headerlink" href="#class-tet4-finiteelement-in-module-fem" title="Permalink to this heading"></a></h2>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>simplistic 4-noded tetrahedral interface to compute strain/stress at nodal points</p>
 </div></blockquote>
 </section>
 <section id="class-objectffrfinterface-in-module-fem">
-<h3>CLASS ObjectFFRFinterface (in module FEM)<a class="headerlink" href="#class-objectffrfinterface-in-module-fem" title="Permalink to this heading"></a></h3>
+<span id="sec-module-fem-class-objectffrfinterface"></span><h2>CLASS ObjectFFRFinterface (in module FEM)<a class="headerlink" href="#class-objectffrfinterface-in-module-fem" title="Permalink to this heading"></a></h2>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>compute terms necessary for ObjectFFRF
 class used internally in FEMinterface to compute ObjectFFRF object
 this class holds all data for ObjectFFRF user functions</p>
 </div></blockquote>
-</section>
 </section>
 <section id="class-function-init">
 <span id="sec-fem-objectffrfinterface-init"></span><h2>Class function: __init__<a class="headerlink" href="#class-function-init" title="Permalink to this heading"></a></h2>
@@ -757,15 +766,15 @@ this class holds all data for ObjectFFRF user functions</p>
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest2.py">objectFFRFTest2.py</a> (TM)</p>
 </div></blockquote>
+</section>
 <section id="class-objectffrfreducedorderinterface-in-module-fem">
-<h3>CLASS ObjectFFRFreducedOrderInterface (in module FEM)<a class="headerlink" href="#class-objectffrfreducedorderinterface-in-module-fem" title="Permalink to this heading"></a></h3>
+<span id="sec-module-fem-class-objectffrfreducedorderinterface"></span><h2>CLASS ObjectFFRFreducedOrderInterface (in module FEM)<a class="headerlink" href="#class-objectffrfreducedorderinterface-in-module-fem" title="Permalink to this heading"></a></h2>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>compute terms necessary for ObjectFFRFreducedOrder
 class used internally in FEMinterface to compute ObjectFFRFreducedOrder dictionary
 this class holds all data for ObjectFFRFreducedOrder user functions</p>
 </div></blockquote>
-</section>
 </section>
 <section id="sec-fem-objectffrfreducedorderinterface-init">
 <span id="id3"></span><h2>Class function: __init__<a class="headerlink" href="#sec-fem-objectffrfreducedorderinterface-init" title="Permalink to this heading"></a></h2>
@@ -927,8 +936,9 @@ this class holds all data for ObjectFFRFreducedOrder user functions</p>
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/CMSexampleCourse.py">CMSexampleCourse.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/netgenSTLtest.py">netgenSTLtest.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCMStutorial.py">NGsolveCMStutorial.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCraigBampton.py">NGsolveCraigBampton.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py">NGsolvePistonEngine.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/abaqusImportTest.py">abaqusImportTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/NGsolveCrankShaftTest.py">NGsolveCrankShaftTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderAccelerations.py">objectFFRFreducedOrderAccelerations.py</a> (TM)</p>
 </div></blockquote>
+</section>
 <section id="class-hcbstaticmodeselection-enum-in-module-fem">
-<h3>CLASS HCBstaticModeSelection(Enum) (in module FEM)<a class="headerlink" href="#class-hcbstaticmodeselection-enum-in-module-fem" title="Permalink to this heading"></a></h3>
+<span id="sec-module-fem-class-hcbstaticmodeselection-enum"></span><h2>CLASS HCBstaticModeSelection(Enum) (in module FEM)<a class="headerlink" href="#class-hcbstaticmodeselection-enum-in-module-fem" title="Permalink to this heading"></a></h2>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>helper calss for function ComputeHurtyCraigBamptonModes, declaring some computation options. It offers the following options:</p>
@@ -941,7 +951,7 @@ this class holds all data for ObjectFFRFreducedOrder user functions</p>
 </div></blockquote>
 </section>
 <section id="class-feminterface-in-module-fem">
-<h3>CLASS FEMinterface (in module FEM)<a class="headerlink" href="#class-feminterface-in-module-fem" title="Permalink to this heading"></a></h3>
+<span id="sec-module-fem-class-feminterface"></span><h2>CLASS FEMinterface (in module FEM)<a class="headerlink" href="#class-feminterface-in-module-fem" title="Permalink to this heading"></a></h2>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>general interface to different FEM / mesh imports and export to EXUDYN functions
@@ -950,7 +960,6 @@ do mesh operations, compute eigenmodes and reduced basis, etc.
 load/store the data efficiently with LoadFromFile(…), SaveToFile(…)  if import functions are slow
 export to EXUDYN objects</p>
 </div></blockquote>
-</section>
 </section>
 <section id="sec-fem-feminterface-init">
 <span id="id9"></span><h2>Class function: __init__<a class="headerlink" href="#sec-fem-feminterface-init" title="Permalink to this heading"></a></h2>

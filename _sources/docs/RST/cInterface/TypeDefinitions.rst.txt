@@ -23,9 +23,8 @@ This section defines a couple of structures (C++: enum aka enumeration type), wh
                             outputVariableType=exu.OutputVariableType.Displacement))
    #
 
-******************
 OutputVariableType
-******************
+==================
 
 This section shows the OutputVariableType structure, which is used for selecting output values, e.g. for GetObjectOutput(...) or for selecting variables for contour plot.
 
@@ -98,9 +97,8 @@ The OutputVariableType does not provide information about the size of the output
 
 
 
-*****************
 ConfigurationType
-*****************
+=================
 
 This section shows the ConfigurationType structure, which is used for selecting a configuration for reading or writing information to the module. Specifically, the ConfigurationType.Current configuration is usually used at the end of a solution process, to obtain result values, or the ConfigurationType.Initial is used to set initial values for a solution process.
 
@@ -125,9 +123,8 @@ This section shows the ConfigurationType structure, which is used for selecting 
 
 
 
-********
 ItemType
-********
+========
 
 This section shows the ItemType structure, which is used for defining types of indices, e.g., in render window and will be also used in item dictionaries in future.
 
@@ -150,9 +147,8 @@ This section shows the ItemType structure, which is used for defining types of i
 
 
 
-********
 NodeType
-********
+========
 
 This section shows the NodeType structure, which is used for defining node types for 3D rigid bodies.
 
@@ -201,9 +197,8 @@ This section shows the NodeType structure, which is used for defining node types
 
 
 
-*********
 JointType
-*********
+=========
 
 This section shows the JointType structure, which is used for defining joint types, used in KinematicTree.
 
@@ -228,9 +223,8 @@ This section shows the JointType structure, which is used for defining joint typ
 
 
 
-*****************
 DynamicSolverType
-*****************
+=================
 
 This section shows the DynamicSolverType structure, which is used for selecting dynamic solvers for simulation.
 
@@ -261,9 +255,8 @@ This section shows the DynamicSolverType structure, which is used for selecting 
 
 
 
-****************
 CrossSectionType
-****************
+================
 
 This section shows the CrossSectionType structure, which is used for defining beam cross section types.
 
@@ -278,9 +271,8 @@ This section shows the CrossSectionType structure, which is used for defining be
 
 
 
-*******
 KeyCode
-*******
+=======
 
 This section shows the KeyCode structure, which is used for special key codes in keyPressUserFunction.
 
@@ -329,9 +321,8 @@ This section shows the KeyCode structure, which is used for special key codes in
 
 
 
-****************
 LinearSolverType
-****************
+================
 
 This section shows the LinearSolverType structure, which is used for selecting linear solver types, which are dense or sparse solvers.
 
@@ -350,9 +341,8 @@ This section shows the LinearSolverType structure, which is used for selecting l
 
 
 
-****************
 ContactTypeIndex
-****************
+================
 
 This section shows the ContactTypeIndex structure, which is in GeneralContact to select specific contact items, such as spheres, ANCFCable or triangle items.
 

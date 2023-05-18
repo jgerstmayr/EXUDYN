@@ -34,7 +34,9 @@ Function: MakeCorkeRobot
   | Important note:  d(khali)=a(corke)  and r(khali)=d(corke)
 
 
+
 ----
+
 
 .. _sec-future-computeik3r:
 
@@ -58,7 +60,9 @@ Function: ComputeIK3R
   | testet with various configurations and joint angels
 
 
+
 ----
+
 
 .. _sec-future-computeikpuma560:
 
@@ -83,7 +87,9 @@ Function: ComputeIKPuma560
   | tested (compared with robotDiccs, Vision and Control book of P. Corke
 
 
+
 ----
+
 
 .. _sec-future-computeikur:
 

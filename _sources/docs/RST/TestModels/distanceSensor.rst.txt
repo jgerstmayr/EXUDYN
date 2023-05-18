@@ -163,7 +163,7 @@ You can view and download this file on Github: `distanceSensor.py <https://githu
    
    #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    # for i in range(10):
-   #     sDist0 = AddDistanceSensor(mbs, positionOrMarker=[i*2*radius,-1.3*radius,4*radius], dirSensor=[0,0,-2*radius], minDistance=0, maxDistance=2*t+4*radius, 
+   #     sDist0 = CreateDistanceSensor(mbs, positionOrMarker=[i*2*radius,-1.3*radius,4*radius], dirSensor=[0,0,-2*radius], minDistance=0, maxDistance=2*t+4*radius, 
    #                                cylinderRadius=radius*0.5, storeInternal=True, addGraphicsObject=True)
    
    #alternative way:
@@ -179,20 +179,20 @@ You can view and download this file on Github: `distanceSensor.py <https://githu
    #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    #add sensors
    ngc = mbs.NumberOfGeneralContacts()-1 #index of GeneralContact object that has been added last (0 here ...)
-   sDistanceSphere = AddDistanceSensor(mbs, ngc, positionOrMarker=[2*radius,4*radius,radius], dirSensor=[0,-2*radius,0], minDistance=0, maxDistance=1*t+4*radius, measureVelocity=True, 
+   sDistanceSphere = CreateDistanceSensor(mbs, ngc, positionOrMarker=[2*radius,4*radius,radius], dirSensor=[0,-2*radius,0], minDistance=0, maxDistance=1*t+4*radius, measureVelocity=True, 
                               cylinderRadius=radius*0.5, storeInternal=True, addGraphicsObject=True, selectedTypeIndex=exu.ContactTypeIndex.IndexSpheresMarkerBased)
    
-   sDistanceSphere2 = AddDistanceSensor(mbs, ngc, positionOrMarker=[2*radius,0,4*radius], dirSensor=[0,0,-2*radius], minDistance=0, maxDistance=1*t+4*radius, measureVelocity=True, 
+   sDistanceSphere2 = CreateDistanceSensor(mbs, ngc, positionOrMarker=[2*radius,0,4*radius], dirSensor=[0,0,-2*radius], minDistance=0, maxDistance=1*t+4*radius, measureVelocity=True, 
                               cylinderRadius=radius*0.5, storeInternal=True, addGraphicsObject=True, selectedTypeIndex=exu.ContactTypeIndex.IndexSpheresMarkerBased)
    
-   sDistanceTable = AddDistanceSensor(mbs, ngc, positionOrMarker=mTable, dirSensor=[0,0,-2*radius], 
+   sDistanceTable = CreateDistanceSensor(mbs, ngc, positionOrMarker=mTable, dirSensor=[0,0,-2*radius], 
                                       minDistance=-10, maxDistance=1*t+4*radius, measureVelocity=True, 
                                       cylinderRadius=0, storeInternal=True, addGraphicsObject=True)#, selectedTypeIndex=exu.ContactTypeIndex.IndexSpheresMarkerBased)
    
-   sANCF = AddDistanceSensor(mbs, ngc, positionOrMarker=[-L*1.5,0,0], dirSensor=[0,-0.1,0], minDistance=0, maxDistance=L, measureVelocity=True, 
+   sANCF = CreateDistanceSensor(mbs, ngc, positionOrMarker=[-L*1.5,0,0], dirSensor=[0,-0.1,0], minDistance=0, maxDistance=L, measureVelocity=True, 
                              storeInternal=True, addGraphicsObject=True)
    
-   sANCFdist = AddDistanceSensor(mbs, ngc, positionOrMarker=[-0.6061511314921351,0,0], dirSensor=[0,-0.1,0], minDistance=0, maxDistance=L, measureVelocity=True, 
+   sANCFdist = CreateDistanceSensor(mbs, ngc, positionOrMarker=[-0.6061511314921351,0,0], dirSensor=[0,-0.1,0], minDistance=0, maxDistance=L, measureVelocity=True, 
                              storeInternal=True, addGraphicsObject=True)
    
    sANCFdisp = mbs.AddSensor(SensorNode(nodeNumber=ancf[0][-1], storeInternal=True, outputVariableType=exu.OutputVariableType.Displacement))

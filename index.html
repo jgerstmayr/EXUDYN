@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Exudyn documentation &mdash; Exudyn1.6.103.dev1 1.6.103.dev1 documentation</title>
+  <title>Exudyn documentation &mdash; Exudyn1.6.110.dev1 1.6.110.dev1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
@@ -36,7 +36,7 @@
           
           
           <a href="#" class="icon icon-home">
-            Exudyn1.6.103.dev1
+            Exudyn1.6.110.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -78,7 +78,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="#">Exudyn1.6.103.dev1</a>
+          <a href="#">Exudyn1.6.110.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -274,6 +274,7 @@
 <li class="toctree-l2"><a class="reference internal" href="docs/RST/cInterface/Exudyn.html">Exudyn</a></li>
 <li class="toctree-l2"><a class="reference internal" href="docs/RST/cInterface/SystemContainer.html">SystemContainer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="docs/RST/cInterface/MainSystem.html">MainSystem</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/cInterface/MainSystem.html#mainsystem-python-extensions">MainSystem Python extensions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/cInterface/MainSystem.html#mainsystem-node">MainSystem: Node</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/cInterface/MainSystem.html#mainsystem-object">MainSystem: Object</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/cInterface/MainSystem.html#mainsystem-marker">MainSystem: Marker</a></li>
@@ -299,17 +300,19 @@
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/cInterface/DataStructures.html#matrix6dlist">Matrix6DList</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="docs/RST/cInterface/TypeDefinitions.html">Type definitions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="docs/RST/cInterface/TypeDefinitions.html#outputvariabletype">OutputVariableType</a></li>
-<li class="toctree-l2"><a class="reference internal" href="docs/RST/cInterface/TypeDefinitions.html#configurationtype">ConfigurationType</a></li>
-<li class="toctree-l2"><a class="reference internal" href="docs/RST/cInterface/TypeDefinitions.html#itemtype">ItemType</a></li>
-<li class="toctree-l2"><a class="reference internal" href="docs/RST/cInterface/TypeDefinitions.html#nodetype">NodeType</a></li>
-<li class="toctree-l2"><a class="reference internal" href="docs/RST/cInterface/TypeDefinitions.html#jointtype">JointType</a></li>
-<li class="toctree-l2"><a class="reference internal" href="docs/RST/cInterface/TypeDefinitions.html#dynamicsolvertype">DynamicSolverType</a></li>
-<li class="toctree-l2"><a class="reference internal" href="docs/RST/cInterface/TypeDefinitions.html#crosssectiontype">CrossSectionType</a></li>
-<li class="toctree-l2"><a class="reference internal" href="docs/RST/cInterface/TypeDefinitions.html#keycode">KeyCode</a></li>
-<li class="toctree-l2"><a class="reference internal" href="docs/RST/cInterface/TypeDefinitions.html#linearsolvertype">LinearSolverType</a></li>
-<li class="toctree-l2"><a class="reference internal" href="docs/RST/cInterface/TypeDefinitions.html#contacttypeindex">ContactTypeIndex</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs/RST/cInterface/TypeDefinitions.html">Type definitions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/cInterface/TypeDefinitions.html#outputvariabletype">OutputVariableType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/cInterface/TypeDefinitions.html#configurationtype">ConfigurationType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/cInterface/TypeDefinitions.html#itemtype">ItemType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/cInterface/TypeDefinitions.html#nodetype">NodeType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/cInterface/TypeDefinitions.html#jointtype">JointType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/cInterface/TypeDefinitions.html#dynamicsolvertype">DynamicSolverType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/cInterface/TypeDefinitions.html#crosssectiontype">CrossSectionType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/cInterface/TypeDefinitions.html#keycode">KeyCode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/cInterface/TypeDefinitions.html#linearsolvertype">LinearSolverType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/cInterface/TypeDefinitions.html#contacttypeindex">ContactTypeIndex</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -320,23 +323,21 @@
 <li class="toctree-l1"><a class="reference internal" href="docs/RST/pythonUtilities/index.html">Python Utility Functions</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="docs/RST/pythonUtilities/pythonUtilities.html">Python Utility Functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="docs/RST/pythonUtilities/artificialIntelligence.html">Module: artificialIntelligence</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/artificialIntelligence.html#class-openaigyminterfaceenv-env-in-module-artificialintelligence">CLASS OpenAIGymInterfaceEnv(Env) (in module artificialIntelligence)</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="docs/RST/pythonUtilities/artificialIntelligence.html#class-function-init">Class function: __init__</a></li>
-<li class="toctree-l4"><a class="reference internal" href="docs/RST/pythonUtilities/artificialIntelligence.html#class-function-creatembs">Class function: CreateMBS</a></li>
-<li class="toctree-l4"><a class="reference internal" href="docs/RST/pythonUtilities/artificialIntelligence.html#class-function-setupspaces">Class function: SetupSpaces</a></li>
-<li class="toctree-l4"><a class="reference internal" href="docs/RST/pythonUtilities/artificialIntelligence.html#class-function-mapaction2mbs">Class function: MapAction2MBS</a></li>
-<li class="toctree-l4"><a class="reference internal" href="docs/RST/pythonUtilities/artificialIntelligence.html#class-function-output2stateanddone">Class function: Output2StateAndDone</a></li>
-<li class="toctree-l4"><a class="reference internal" href="docs/RST/pythonUtilities/artificialIntelligence.html#class-function-state2initialvalues">Class function: State2InitialValues</a></li>
-<li class="toctree-l4"><a class="reference internal" href="docs/RST/pythonUtilities/artificialIntelligence.html#class-function-testmodel">Class function: TestModel</a></li>
-<li class="toctree-l4"><a class="reference internal" href="docs/RST/pythonUtilities/artificialIntelligence.html#class-function-setsolver">Class function: SetSolver</a></li>
-<li class="toctree-l4"><a class="reference internal" href="docs/RST/pythonUtilities/artificialIntelligence.html#class-function-preinitializesolver">Class function: PreInitializeSolver</a></li>
-<li class="toctree-l4"><a class="reference internal" href="docs/RST/pythonUtilities/artificialIntelligence.html#class-function-integratestep">Class function: IntegrateStep</a></li>
-<li class="toctree-l4"><a class="reference internal" href="docs/RST/pythonUtilities/artificialIntelligence.html#class-function-step">Class function: step</a></li>
-<li class="toctree-l4"><a class="reference internal" href="docs/RST/pythonUtilities/artificialIntelligence.html#class-function-reset">Class function: reset</a></li>
-<li class="toctree-l4"><a class="reference internal" href="docs/RST/pythonUtilities/artificialIntelligence.html#class-function-render">Class function: render</a></li>
-<li class="toctree-l4"><a class="reference internal" href="docs/RST/pythonUtilities/artificialIntelligence.html#class-function-close">Class function: close</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/artificialIntelligence.html#class-openaigyminterfaceenv-env-in-module-artificialintelligence">CLASS OpenAIGymInterfaceEnv(Env) (in module artificialIntelligence)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/artificialIntelligence.html#class-function-init">Class function: __init__</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/artificialIntelligence.html#class-function-creatembs">Class function: CreateMBS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/artificialIntelligence.html#class-function-setupspaces">Class function: SetupSpaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/artificialIntelligence.html#class-function-mapaction2mbs">Class function: MapAction2MBS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/artificialIntelligence.html#class-function-output2stateanddone">Class function: Output2StateAndDone</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/artificialIntelligence.html#class-function-state2initialvalues">Class function: State2InitialValues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/artificialIntelligence.html#class-function-testmodel">Class function: TestModel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/artificialIntelligence.html#class-function-setsolver">Class function: SetSolver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/artificialIntelligence.html#class-function-preinitializesolver">Class function: PreInitializeSolver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/artificialIntelligence.html#class-function-integratestep">Class function: IntegrateStep</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/artificialIntelligence.html#class-function-step">Class function: step</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/artificialIntelligence.html#class-function-reset">Class function: reset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/artificialIntelligence.html#class-function-render">Class function: render</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/artificialIntelligence.html#class-function-close">Class function: close</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="docs/RST/pythonUtilities/basicUtilities.html">Module: basicUtilities</a><ul>
@@ -383,38 +384,30 @@
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/FEM.html#function-readmatrixdofmappingvectorfromansystxt">Function: ReadMatrixDOFmappingVectorFromAnsysTxt</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/FEM.html#function-readnodalcoordinatesfromansystxt">Function: ReadNodalCoordinatesFromAnsysTxt</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/FEM.html#function-readelementsfromansystxt">Function: ReadElementsFromAnsysTxt</a></li>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/FEM.html#function-cmsobjectcomputenorm">Function: CMSObjectComputeNorm</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="docs/RST/pythonUtilities/FEM.html#class-materialbaseclass-in-module-fem">CLASS MaterialBaseClass (in module FEM)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="docs/RST/pythonUtilities/FEM.html#class-kirchhoffmaterial-materialbaseclass-in-module-fem">CLASS KirchhoffMaterial(MaterialBaseClass) (in module FEM)</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/FEM.html#function-cmsobjectcomputenorm">Function: CMSObjectComputeNorm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/FEM.html#class-materialbaseclass-in-module-fem">CLASS MaterialBaseClass (in module FEM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/FEM.html#class-kirchhoffmaterial-materialbaseclass-in-module-fem">CLASS KirchhoffMaterial(MaterialBaseClass) (in module FEM)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/FEM.html#class-function-strain2stress">Class function: Strain2Stress</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/FEM.html#class-function-strainvector2stressvector">Class function: StrainVector2StressVector</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/FEM.html#class-function-strainvector2stressvector2d">Class function: StrainVector2StressVector2D</a></li>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/FEM.html#class-function-lameparameters">Class function: LameParameters</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="docs/RST/pythonUtilities/FEM.html#class-finiteelement-in-module-fem">CLASS FiniteElement (in module FEM)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="docs/RST/pythonUtilities/FEM.html#class-tet4-finiteelement-in-module-fem">CLASS Tet4(FiniteElement) (in module FEM)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="docs/RST/pythonUtilities/FEM.html#class-objectffrfinterface-in-module-fem">CLASS ObjectFFRFinterface (in module FEM)</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/FEM.html#class-function-lameparameters">Class function: LameParameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/FEM.html#class-finiteelement-in-module-fem">CLASS FiniteElement (in module FEM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/FEM.html#class-tet4-finiteelement-in-module-fem">CLASS Tet4(FiniteElement) (in module FEM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/FEM.html#class-objectffrfinterface-in-module-fem">CLASS ObjectFFRFinterface (in module FEM)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/FEM.html#class-function-init">Class function: __init__</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/FEM.html#class-function-addobjectffrf">Class function: AddObjectFFRF</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/FEM.html#class-function-ufforce">Class function: UFforce</a></li>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/FEM.html#class-function-ufmassgenericode2">Class function: UFmassGenericODE2</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="docs/RST/pythonUtilities/FEM.html#class-objectffrfreducedorderinterface-in-module-fem">CLASS ObjectFFRFreducedOrderInterface (in module FEM)</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/FEM.html#class-function-ufmassgenericode2">Class function: UFmassGenericODE2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/FEM.html#class-objectffrfreducedorderinterface-in-module-fem">CLASS ObjectFFRFreducedOrderInterface (in module FEM)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/FEM.html#sec-fem-objectffrfreducedorderinterface-init">Class function: __init__</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/FEM.html#class-function-savetofile">Class function: SaveToFile</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/FEM.html#class-function-loadfromfile">Class function: LoadFromFile</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/FEM.html#class-function-addobjectffrfreducedorderwithuserfunctions">Class function: AddObjectFFRFreducedOrderWithUserFunctions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/FEM.html#class-function-ufmassffrfreducedorder">Class function: UFmassFFRFreducedOrder</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/FEM.html#class-function-ufforceffrfreducedorder">Class function: UFforceFFRFreducedOrder</a></li>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/FEM.html#class-function-addobjectffrfreducedorder">Class function: AddObjectFFRFreducedOrder</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="docs/RST/pythonUtilities/FEM.html#class-hcbstaticmodeselection-enum-in-module-fem">CLASS HCBstaticModeSelection(Enum) (in module FEM)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="docs/RST/pythonUtilities/FEM.html#class-feminterface-in-module-fem">CLASS FEMinterface (in module FEM)</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/FEM.html#class-function-addobjectffrfreducedorder">Class function: AddObjectFFRFreducedOrder</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/FEM.html#class-hcbstaticmodeselection-enum-in-module-fem">CLASS HCBstaticModeSelection(Enum) (in module FEM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/FEM.html#class-feminterface-in-module-fem">CLASS FEMinterface (in module FEM)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/FEM.html#sec-fem-feminterface-init">Class function: __init__</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/FEM.html#sec-fem-feminterface-savetofile">Class function: SaveToFile</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/FEM.html#sec-fem-feminterface-loadfromfile">Class function: LoadFromFile</a></li>
@@ -505,10 +498,8 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="docs/RST/pythonUtilities/interactive.html">Module: interactive</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/interactive.html#function-animatemodes">Function: AnimateModes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/interactive.html#function-solutionviewer">Function: SolutionViewer</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="docs/RST/pythonUtilities/interactive.html#class-interactivedialog-in-module-interactive">CLASS InteractiveDialog (in module interactive)</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/interactive.html#function-solutionviewer">Function: SolutionViewer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/interactive.html#class-interactivedialog-in-module-interactive">CLASS InteractiveDialog (in module interactive)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/interactive.html#class-function-init">Class function: __init__</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/interactive.html#class-function-onquit">Class function: OnQuit</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/interactive.html#class-function-startsimulation">Class function: StartSimulation</a></li>
@@ -528,18 +519,14 @@
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/kinematicTree.html#function-jointtransformmotionsubspace66">Function: JointTransformMotionSubspace66</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/kinematicTree.html#function-jointtransformmotionsubspace">Function: JointTransformMotionSubspace</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/kinematicTree.html#function-crm">Function: CRM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/kinematicTree.html#function-crf">Function: CRF</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="docs/RST/pythonUtilities/kinematicTree.html#class-kinematictree33-in-module-kinematictree">CLASS KinematicTree33 (in module kinematicTree)</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/kinematicTree.html#function-crf">Function: CRF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/kinematicTree.html#class-kinematictree33-in-module-kinematictree">CLASS KinematicTree33 (in module kinematicTree)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/kinematicTree.html#class-function-init">Class function: __init__</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/kinematicTree.html#class-function-size">Class function: Size</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/kinematicTree.html#class-function-xl">Class function: XL</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/kinematicTree.html#class-function-forwarddynamicscrb">Class function: ForwardDynamicsCRB</a></li>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/kinematicTree.html#class-function-computemassmatrixandforceterms">Class function: ComputeMassMatrixAndForceTerms</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="docs/RST/pythonUtilities/kinematicTree.html#class-kinematictree66-in-module-kinematictree">CLASS KinematicTree66 (in module kinematicTree)</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/kinematicTree.html#class-function-computemassmatrixandforceterms">Class function: ComputeMassMatrixAndForceTerms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/kinematicTree.html#class-kinematictree66-in-module-kinematictree">CLASS KinematicTree66 (in module kinematicTree)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/kinematicTree.html#sec-kinematictree-kinematictree66-init">Class function: __init__</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/kinematicTree.html#sec-kinematictree-kinematictree66-size">Class function: Size</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/kinematicTree.html#sec-kinematictree-kinematictree66-xl">Class function: XL</a></li>
@@ -577,6 +564,7 @@
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/lieGroupBasics.html#function-compositionrulerotxyzanglesrotationvector">Function: CompositionRuleRotXYZAnglesRotationVector</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="docs/RST/pythonUtilities/mainSystemExtensions.html">Module: mainSystemExtensions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="docs/RST/pythonUtilities/physics.html">Module: physics</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/physics.html#function-stribeckfunction">Function: StribeckFunction</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/physics.html#function-regularizedfrictionstep">Function: RegularizedFrictionStep</a></li>
@@ -667,10 +655,8 @@
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/rigidBodyUtilities.html#function-getrigidbodynode">Function: GetRigidBodyNode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/rigidBodyUtilities.html#function-addrigidbody">Function: AddRigidBody</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/rigidBodyUtilities.html#function-addrevolutejoint">Function: AddRevoluteJoint</a></li>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/rigidBodyUtilities.html#function-addprismaticjoint">Function: AddPrismaticJoint</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="docs/RST/pythonUtilities/rigidBodyUtilities.html#class-rigidbodyinertia-in-module-rigidbodyutilities">CLASS RigidBodyInertia (in module rigidBodyUtilities)</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/rigidBodyUtilities.html#function-addprismaticjoint">Function: AddPrismaticJoint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/rigidBodyUtilities.html#class-rigidbodyinertia-in-module-rigidbodyutilities">CLASS RigidBodyInertia (in module rigidBodyUtilities)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/rigidBodyUtilities.html#class-function-init">Class function: __init__</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/rigidBodyUtilities.html#class-function-add">Class function: __add__</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/rigidBodyUtilities.html#class-function-iadd">Class function: __iadd__</a></li>
@@ -682,67 +668,41 @@
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/rigidBodyUtilities.html#class-function-translated">Class function: Translated</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/rigidBodyUtilities.html#class-function-rotated">Class function: Rotated</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/rigidBodyUtilities.html#class-function-transformed">Class function: Transformed</a></li>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/rigidBodyUtilities.html#class-function-getinertia6d">Class function: GetInertia6D</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="docs/RST/pythonUtilities/rigidBodyUtilities.html#class-inertiacuboid-rigidbodyinertia-in-module-rigidbodyutilities">CLASS InertiaCuboid(RigidBodyInertia) (in module rigidBodyUtilities)</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/rigidBodyUtilities.html#sec-rigidbodyutilities-inertiacuboid-rigidbodyinertia-init">Class function: __init__</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="docs/RST/pythonUtilities/rigidBodyUtilities.html#class-inertiarodx-rigidbodyinertia-in-module-rigidbodyutilities">CLASS InertiaRodX(RigidBodyInertia) (in module rigidBodyUtilities)</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/rigidBodyUtilities.html#sec-rigidbodyutilities-inertiarodx-rigidbodyinertia-init">Class function: __init__</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="docs/RST/pythonUtilities/rigidBodyUtilities.html#class-inertiamasspoint-rigidbodyinertia-in-module-rigidbodyutilities">CLASS InertiaMassPoint(RigidBodyInertia) (in module rigidBodyUtilities)</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/rigidBodyUtilities.html#sec-rigidbodyutilities-inertiamasspoint-rigidbodyinertia-init">Class function: __init__</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="docs/RST/pythonUtilities/rigidBodyUtilities.html#class-inertiasphere-rigidbodyinertia-in-module-rigidbodyutilities">CLASS InertiaSphere(RigidBodyInertia) (in module rigidBodyUtilities)</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/rigidBodyUtilities.html#sec-rigidbodyutilities-inertiasphere-rigidbodyinertia-init">Class function: __init__</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="docs/RST/pythonUtilities/rigidBodyUtilities.html#class-inertiahollowsphere-rigidbodyinertia-in-module-rigidbodyutilities">CLASS InertiaHollowSphere(RigidBodyInertia) (in module rigidBodyUtilities)</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/rigidBodyUtilities.html#sec-rigidbodyutilities-inertiahollowsphere-rigidbodyinertia-init">Class function: __init__</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="docs/RST/pythonUtilities/rigidBodyUtilities.html#class-inertiacylinder-rigidbodyinertia-in-module-rigidbodyutilities">CLASS InertiaCylinder(RigidBodyInertia) (in module rigidBodyUtilities)</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/rigidBodyUtilities.html#class-function-getinertia6d">Class function: GetInertia6D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/rigidBodyUtilities.html#class-inertiacuboid-rigidbodyinertia-in-module-rigidbodyutilities">CLASS InertiaCuboid(RigidBodyInertia) (in module rigidBodyUtilities)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/rigidBodyUtilities.html#sec-rigidbodyutilities-inertiacuboid-rigidbodyinertia-init">Class function: __init__</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/rigidBodyUtilities.html#class-inertiarodx-rigidbodyinertia-in-module-rigidbodyutilities">CLASS InertiaRodX(RigidBodyInertia) (in module rigidBodyUtilities)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/rigidBodyUtilities.html#sec-rigidbodyutilities-inertiarodx-rigidbodyinertia-init">Class function: __init__</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/rigidBodyUtilities.html#class-inertiamasspoint-rigidbodyinertia-in-module-rigidbodyutilities">CLASS InertiaMassPoint(RigidBodyInertia) (in module rigidBodyUtilities)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/rigidBodyUtilities.html#sec-rigidbodyutilities-inertiamasspoint-rigidbodyinertia-init">Class function: __init__</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/rigidBodyUtilities.html#class-inertiasphere-rigidbodyinertia-in-module-rigidbodyutilities">CLASS InertiaSphere(RigidBodyInertia) (in module rigidBodyUtilities)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/rigidBodyUtilities.html#sec-rigidbodyutilities-inertiasphere-rigidbodyinertia-init">Class function: __init__</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/rigidBodyUtilities.html#class-inertiahollowsphere-rigidbodyinertia-in-module-rigidbodyutilities">CLASS InertiaHollowSphere(RigidBodyInertia) (in module rigidBodyUtilities)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/rigidBodyUtilities.html#sec-rigidbodyutilities-inertiahollowsphere-rigidbodyinertia-init">Class function: __init__</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/rigidBodyUtilities.html#class-inertiacylinder-rigidbodyinertia-in-module-rigidbodyutilities">CLASS InertiaCylinder(RigidBodyInertia) (in module rigidBodyUtilities)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/rigidBodyUtilities.html#sec-rigidbodyutilities-inertiacylinder-rigidbodyinertia-init">Class function: __init__</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.html">Module: robotics</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.html#function-stddh2ht">Function: StdDH2HT</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.html#function-moddhkk2ht">Function: ModDHKK2HT</a></li>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.html#function-projectangletopmpi">Function: projectAngleToPMPi</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.html#class-vrobotlink-in-module-robotics">CLASS VRobotLink (in module robotics)</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.html#class-function-init">Class function: __init__</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.html#class-robotlink-in-module-robotics">CLASS RobotLink (in module robotics)</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.html#function-projectangletopmpi">Function: projectAngleToPMPi</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.html#class-vrobotlink-in-module-robotics">CLASS VRobotLink (in module robotics)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.html#class-function-init">Class function: __init__</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.html#class-robotlink-in-module-robotics">CLASS RobotLink (in module robotics)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.html#sec-roboticscore-robotlink-init">Class function: __init__</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.html#class-function-setpdcontrol">Class function: SetPDcontrol</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.html#class-function-haspdcontrol">Class function: HasPDcontrol</a></li>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.html#class-function-getpdcontrol">Class function: GetPDcontrol</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.html#class-vrobottool-in-module-robotics">CLASS VRobotTool (in module robotics)</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.html#sec-roboticscore-vrobottool-init">Class function: __init__</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.html#class-robottool-in-module-robotics">CLASS RobotTool (in module robotics)</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.html#sec-roboticscore-robottool-init">Class function: __init__</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.html#class-vrobotbase-in-module-robotics">CLASS VRobotBase (in module robotics)</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.html#sec-roboticscore-vrobotbase-init">Class function: __init__</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.html#class-robotbase-in-module-robotics">CLASS RobotBase (in module robotics)</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.html#sec-roboticscore-robotbase-init">Class function: __init__</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.html#class-robot-in-module-robotics">CLASS Robot (in module robotics)</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.html#class-function-getpdcontrol">Class function: GetPDcontrol</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.html#class-vrobottool-in-module-robotics">CLASS VRobotTool (in module robotics)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.html#sec-roboticscore-vrobottool-init">Class function: __init__</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.html#class-robottool-in-module-robotics">CLASS RobotTool (in module robotics)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.html#sec-roboticscore-robottool-init">Class function: __init__</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.html#class-vrobotbase-in-module-robotics">CLASS VRobotBase (in module robotics)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.html#sec-roboticscore-vrobotbase-init">Class function: __init__</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.html#class-robotbase-in-module-robotics">CLASS RobotBase (in module robotics)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.html#sec-roboticscore-robotbase-init">Class function: __init__</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.html#class-robot-in-module-robotics">CLASS Robot (in module robotics)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.html#sec-roboticscore-robot-init">Class function: __init__</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.html#class-function-addlink">Class function: AddLink</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.html#class-function-isserialrobot">Class function: IsSerialRobot</a></li>
@@ -761,10 +721,8 @@
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.html#class-function-createredundantcoordinatembs">Class function: CreateRedundantCoordinateMBS</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.html#class-function-getkinematictree66">Class function: GetKinematicTree66</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.html#class-function-getlinkgraphicsdata">Class function: GetLinkGraphicsData</a></li>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.html#class-function-buildfromdictionary">Class function: BuildFromDictionary</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.html#class-inversekinematicsnumerical-in-module-robotics">CLASS InverseKinematicsNumerical() (in module robotics)</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.html#class-function-buildfromdictionary">Class function: BuildFromDictionary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.html#class-inversekinematicsnumerical-in-module-robotics">CLASS InverseKinematicsNumerical() (in module robotics)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.html#sec-roboticscore-inversekinematicsnumerical-init">Class function: __init__</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.html#class-function-getcurrentrobotht">Class function: GetCurrentRobotHT</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/robotics.html#class-function-interpolatehts">Class function: InterpolateHTs</a></li>
@@ -850,8 +808,8 @@
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/utilities.html#function-showonlyobjects">Function: ShowOnlyObjects</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/utilities.html#function-highlightitem">Function: HighlightItem</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/utilities.html#function-ufsensordistance">Function: __UFsensorDistance</a></li>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/utilities.html#function-distancesensorsetupgeometry">Function: DistanceSensorSetupGeometry</a></li>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/utilities.html#function-adddistancesensor">Function: AddDistanceSensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/utilities.html#function-createdistancesensorgeometry">Function: CreateDistanceSensorGeometry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/utilities.html#function-createdistancesensor">Function: CreateDistanceSensor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/utilities.html#function-ufsensorrecord">Function: UFsensorRecord</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/utilities.html#function-addsensorrecorder">Function: AddSensorRecorder</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/utilities.html#function-loadsolutionfile">Function: LoadSolutionFile</a></li>
@@ -869,10 +827,8 @@
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/utilities.html#function-drawsystemgraph">Function: DrawSystemGraph</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/utilities.html#function-createtcpipconnection">Function: CreateTCPIPconnection</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/utilities.html#function-tcpipsendreceive">Function: TCPIPsendReceive</a></li>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/utilities.html#function-closetcpipconnection">Function: CloseTCPIPconnection</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="docs/RST/pythonUtilities/utilities.html#class-tcpipdata-in-module-utilities">CLASS TCPIPdata (in module utilities)</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/utilities.html#function-closetcpipconnection">Function: CloseTCPIPconnection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/pythonUtilities/utilities.html#class-tcpipdata-in-module-utilities">CLASS TCPIPdata (in module utilities)</a></li>
 </ul>
 </li>
 </ul>
@@ -1555,6 +1511,7 @@
 <li class="toctree-l2"><a class="reference internal" href="docs/RST/Examples/SpringDamperMasspointSystem.html">SpringDamperMasspointSystem.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="docs/RST/Examples/SpringDamperMassUserFunction.html">SpringDamperMassUserFunction.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="docs/RST/Examples/springDamperTutorial.html">springDamperTutorial.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs/RST/Examples/springDamperTutorialNew.html">springDamperTutorialNew.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="docs/RST/Examples/springDamperUserFunctionNumbaJIT.html">springDamperUserFunctionNumbaJIT.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="docs/RST/Examples/springsDeactivateConnectors.html">springsDeactivateConnectors.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="docs/RST/Examples/SpringWithConstraints.html">SpringWithConstraints.py</a></li>

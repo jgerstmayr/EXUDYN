@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Module: robotics &mdash; Exudyn1.6.103.dev1 1.6.103.dev1 documentation</title>
+  <title>Module: robotics &mdash; Exudyn1.6.110.dev1 1.6.110.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -39,7 +39,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.103.dev1
+            Exudyn1.6.110.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -74,6 +74,7 @@
 <li class="toctree-l2"><a class="reference internal" href="interactive.html">Module: interactive</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kinematicTree.html">Module: kinematicTree</a></li>
 <li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html">Module: lieGroupBasics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mainSystemExtensions.html">Module: mainSystemExtensions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="physics.html">Module: physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plot.html">Module: plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="processing.html">Module: processing</a></li>
@@ -82,15 +83,22 @@
 <li class="toctree-l3"><a class="reference internal" href="#function-stddh2ht">Function: StdDH2HT</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-moddhkk2ht">Function: ModDHKK2HT</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-projectangletopmpi">Function: projectAngleToPMPi</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-vrobotlink-in-module-robotics">CLASS VRobotLink (in module robotics)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#class-function-init">Class function: __init__</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-robotlink-in-module-robotics">CLASS RobotLink (in module robotics)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#sec-roboticscore-robotlink-init">Class function: __init__</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#class-function-setpdcontrol">Class function: SetPDcontrol</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#class-function-haspdcontrol">Class function: HasPDcontrol</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#class-function-getpdcontrol">Class function: GetPDcontrol</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-vrobottool-in-module-robotics">CLASS VRobotTool (in module robotics)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#sec-roboticscore-vrobottool-init">Class function: __init__</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-robottool-in-module-robotics">CLASS RobotTool (in module robotics)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#sec-roboticscore-robottool-init">Class function: __init__</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-vrobotbase-in-module-robotics">CLASS VRobotBase (in module robotics)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#sec-roboticscore-vrobotbase-init">Class function: __init__</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-robotbase-in-module-robotics">CLASS RobotBase (in module robotics)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#sec-roboticscore-robotbase-init">Class function: __init__</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-robot-in-module-robotics">CLASS Robot (in module robotics)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#sec-roboticscore-robot-init">Class function: __init__</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#class-function-addlink">Class function: AddLink</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#class-function-isserialrobot">Class function: IsSerialRobot</a></li>
@@ -110,6 +118,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#class-function-getkinematictree66">Class function: GetKinematicTree66</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#class-function-getlinkgraphicsdata">Class function: GetLinkGraphicsData</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#class-function-buildfromdictionary">Class function: BuildFromDictionary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-inversekinematicsnumerical-in-module-robotics">CLASS InverseKinematicsNumerical() (in module robotics)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#sec-roboticscore-inversekinematicsnumerical-init">Class function: __init__</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#class-function-getcurrentrobotht">Class function: GetCurrentRobotHT</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#class-function-interpolatehts">Class function: InterpolateHTs</a></li>
@@ -145,7 +154,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.103.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.110.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -232,13 +241,13 @@ import this library e.g. with import exudyn.robotics as robotics</p>
 </div>
 </li>
 </ul>
+</section>
 <section id="class-vrobotlink-in-module-robotics">
-<h3>CLASS VRobotLink (in module robotics)<a class="headerlink" href="#class-vrobotlink-in-module-robotics" title="Permalink to this heading"></a></h3>
+<span id="sec-module-robotics-class-vrobotlink"></span><h2>CLASS VRobotLink (in module robotics)<a class="headerlink" href="#class-vrobotlink-in-module-robotics" title="Permalink to this heading"></a></h2>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>class to define visualization of RobotLink</p>
 </div></blockquote>
-</section>
 </section>
 <section id="class-function-init">
 <span id="sec-roboticscore-vrobotlink-init"></span><h2>Class function: __init__<a class="headerlink" href="#class-function-init" title="Permalink to this heading"></a></h2>
@@ -265,13 +274,13 @@ import this library e.g. with import exudyn.robotics as robotics</p>
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py">humanRobotInteraction.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/InverseKinematicsNumericalExample.py">InverseKinematicsNumericalExample.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreePendulum.py">kinematicTreePendulum.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotFlexible.py">serialRobotFlexible.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotInteractiveLimits.py">serialRobotInteractiveLimits.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py">kinematicTreeAndMBStest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeConstraintTest.py">kinematicTreeConstraintTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/movingGroundRobotTest.py">movingGroundRobotTest.py</a> (TM)</p>
 </div></blockquote>
+</section>
 <section id="class-robotlink-in-module-robotics">
-<h3>CLASS RobotLink (in module robotics)<a class="headerlink" href="#class-robotlink-in-module-robotics" title="Permalink to this heading"></a></h3>
+<span id="sec-module-robotics-class-robotlink"></span><h2>CLASS RobotLink (in module robotics)<a class="headerlink" href="#class-robotlink-in-module-robotics" title="Permalink to this heading"></a></h2>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>class to define one link of a robot</p>
 </div></blockquote>
-</section>
 </section>
 <section id="sec-roboticscore-robotlink-init">
 <span id="id7"></span><h2>Class function: __init__<a class="headerlink" href="#sec-roboticscore-robotlink-init" title="Permalink to this heading"></a></h2>
@@ -336,13 +345,13 @@ import this library e.g. with import exudyn.robotics as robotics</p>
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py">humanRobotInteraction.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/InverseKinematicsNumericalExample.py">InverseKinematicsNumericalExample.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py">kinematicTreeAndMBS.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreePendulum.py">kinematicTreePendulum.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotFlexible.py">serialRobotFlexible.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py">kinematicTreeAndMBStest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeConstraintTest.py">kinematicTreeConstraintTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/movingGroundRobotTest.py">movingGroundRobotTest.py</a> (TM)</p>
 </div></blockquote>
+</section>
 <section id="class-vrobottool-in-module-robotics">
-<h3>CLASS VRobotTool (in module robotics)<a class="headerlink" href="#class-vrobottool-in-module-robotics" title="Permalink to this heading"></a></h3>
+<span id="sec-module-robotics-class-vrobottool"></span><h2>CLASS VRobotTool (in module robotics)<a class="headerlink" href="#class-vrobottool-in-module-robotics" title="Permalink to this heading"></a></h2>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>class to define visualization of RobotTool</p>
 </div></blockquote>
-</section>
 </section>
 <section id="sec-roboticscore-vrobottool-init">
 <span id="id15"></span><h2>Class function: __init__<a class="headerlink" href="#sec-roboticscore-vrobottool-init" title="Permalink to this heading"></a></h2>
@@ -358,13 +367,13 @@ import this library e.g. with import exudyn.robotics as robotics</p>
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py">humanRobotInteraction.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/InverseKinematicsNumericalExample.py">InverseKinematicsNumericalExample.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py">kinematicTreeAndMBS.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreePendulum.py">kinematicTreePendulum.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotFlexible.py">serialRobotFlexible.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py">kinematicTreeAndMBStest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeConstraintTest.py">kinematicTreeConstraintTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/movingGroundRobotTest.py">movingGroundRobotTest.py</a> (TM)</p>
 </div></blockquote>
+</section>
 <section id="class-robottool-in-module-robotics">
-<h3>CLASS RobotTool (in module robotics)<a class="headerlink" href="#class-robottool-in-module-robotics" title="Permalink to this heading"></a></h3>
+<span id="sec-module-robotics-class-robottool"></span><h2>CLASS RobotTool (in module robotics)<a class="headerlink" href="#class-robottool-in-module-robotics" title="Permalink to this heading"></a></h2>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>define tool of robot: containing graphics and HT (may add features in future)</p>
 </div></blockquote>
-</section>
 </section>
 <section id="sec-roboticscore-robottool-init">
 <span id="id24"></span><h2>Class function: __init__<a class="headerlink" href="#sec-roboticscore-robottool-init" title="Permalink to this heading"></a></h2>
@@ -386,13 +395,13 @@ import this library e.g. with import exudyn.robotics as robotics</p>
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py">humanRobotInteraction.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/InverseKinematicsNumericalExample.py">InverseKinematicsNumericalExample.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py">kinematicTreeAndMBS.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreePendulum.py">kinematicTreePendulum.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotFlexible.py">serialRobotFlexible.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py">kinematicTreeAndMBStest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeConstraintTest.py">kinematicTreeConstraintTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/movingGroundRobotTest.py">movingGroundRobotTest.py</a> (TM)</p>
 </div></blockquote>
+</section>
 <section id="class-vrobotbase-in-module-robotics">
-<h3>CLASS VRobotBase (in module robotics)<a class="headerlink" href="#class-vrobotbase-in-module-robotics" title="Permalink to this heading"></a></h3>
+<span id="sec-module-robotics-class-vrobotbase"></span><h2>CLASS VRobotBase (in module robotics)<a class="headerlink" href="#class-vrobotbase-in-module-robotics" title="Permalink to this heading"></a></h2>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>class to define visualization of RobotBase</p>
 </div></blockquote>
-</section>
 </section>
 <section id="sec-roboticscore-vrobotbase-init">
 <span id="id33"></span><h2>Class function: __init__<a class="headerlink" href="#sec-roboticscore-vrobotbase-init" title="Permalink to this heading"></a></h2>
@@ -408,13 +417,13 @@ import this library e.g. with import exudyn.robotics as robotics</p>
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py">humanRobotInteraction.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/InverseKinematicsNumericalExample.py">InverseKinematicsNumericalExample.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py">kinematicTreeAndMBS.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreePendulum.py">kinematicTreePendulum.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotFlexible.py">serialRobotFlexible.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py">kinematicTreeAndMBStest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeConstraintTest.py">kinematicTreeConstraintTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/movingGroundRobotTest.py">movingGroundRobotTest.py</a> (TM)</p>
 </div></blockquote>
+</section>
 <section id="class-robotbase-in-module-robotics">
-<h3>CLASS RobotBase (in module robotics)<a class="headerlink" href="#class-robotbase-in-module-robotics" title="Permalink to this heading"></a></h3>
+<span id="sec-module-robotics-class-robotbase"></span><h2>CLASS RobotBase (in module robotics)<a class="headerlink" href="#class-robotbase-in-module-robotics" title="Permalink to this heading"></a></h2>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>define base of robot: containing graphics and HT (may add features in future)</p>
 </div></blockquote>
-</section>
 </section>
 <section id="sec-roboticscore-robotbase-init">
 <span id="id42"></span><h2>Class function: __init__<a class="headerlink" href="#sec-roboticscore-robotbase-init" title="Permalink to this heading"></a></h2>
@@ -436,13 +445,13 @@ import this library e.g. with import exudyn.robotics as robotics</p>
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py">humanRobotInteraction.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/InverseKinematicsNumericalExample.py">InverseKinematicsNumericalExample.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py">kinematicTreeAndMBS.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreePendulum.py">kinematicTreePendulum.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotFlexible.py">serialRobotFlexible.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py">kinematicTreeAndMBStest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeConstraintTest.py">kinematicTreeConstraintTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/movingGroundRobotTest.py">movingGroundRobotTest.py</a> (TM)</p>
 </div></blockquote>
+</section>
 <section id="class-robot-in-module-robotics">
-<h3>CLASS Robot (in module robotics)<a class="headerlink" href="#class-robot-in-module-robotics" title="Permalink to this heading"></a></h3>
+<span id="sec-module-robotics-class-robot"></span><h2>CLASS Robot (in module robotics)<a class="headerlink" href="#class-robot-in-module-robotics" title="Permalink to this heading"></a></h2>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>class to define a robot</p>
 </div></blockquote>
-</section>
 </section>
 <section id="sec-roboticscore-robot-init">
 <span id="id51"></span><h2>Class function: __init__<a class="headerlink" href="#sec-roboticscore-robot-init" title="Permalink to this heading"></a></h2>
@@ -732,8 +741,9 @@ import this library e.g. with import exudyn.robotics as robotics</p>
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py">humanRobotInteraction.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/InverseKinematicsNumericalExample.py">InverseKinematicsNumericalExample.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py">kinematicTreeAndMBS.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreePendulum.py">kinematicTreePendulum.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotFlexible.py">serialRobotFlexible.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py">kinematicTreeAndMBStest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeConstraintTest.py">kinematicTreeConstraintTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/movingGroundRobotTest.py">movingGroundRobotTest.py</a> (TM)</p>
 </div></blockquote>
+</section>
 <section id="class-inversekinematicsnumerical-in-module-robotics">
-<h3>CLASS InverseKinematicsNumerical() (in module robotics)<a class="headerlink" href="#class-inversekinematicsnumerical-in-module-robotics" title="Permalink to this heading"></a></h3>
+<span id="sec-module-robotics-class-inversekinematicsnumerical"></span><h2>CLASS InverseKinematicsNumerical() (in module robotics)<a class="headerlink" href="#class-inversekinematicsnumerical-in-module-robotics" title="Permalink to this heading"></a></h2>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>This class can be used to solve the inverse kinematics problem using a multibody system
@@ -751,7 +761,6 @@ by solving the static problem of a serial robot</p>
 </div>
 </li>
 </ul>
-</section>
 </section>
 <section id="sec-roboticscore-inversekinematicsnumerical-init">
 <span id="id60"></span><h2>Class function: __init__<a class="headerlink" href="#sec-roboticscore-inversekinematicsnumerical-init" title="Permalink to this heading"></a></h2>

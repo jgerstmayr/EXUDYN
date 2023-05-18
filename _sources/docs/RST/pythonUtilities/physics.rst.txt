@@ -34,7 +34,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
     \ `massSpringFrictionInteractive.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/massSpringFrictionInteractive.py>`_\  (Ex)
 
 
+
 ----
+
 
 .. _sec-physics-regularizedfrictionstep:
 
@@ -46,7 +48,9 @@ Function: RegularizedFrictionStep
   | helper function for RegularizedFriction(...)
 
 
+
 ----
+
 
 .. _sec-physics-regularizedfriction:
 
@@ -73,7 +77,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
     \ `massSpringFrictionInteractive.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/massSpringFrictionInteractive.py>`_\  (Ex)
 
 
+
 ----
+
 
 .. _sec-physics-vonmisesstress:
 
@@ -89,7 +95,9 @@ Function: VonMisesStress
   | returns scalar equivalent von-Mises stress or np.array of von-Mises stresses for all stress6D
 
 
+
 ----
+
 
 .. _sec-physics-ufvonmisesstress:
 

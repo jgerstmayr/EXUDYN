@@ -39,7 +39,7 @@ Function: AddLidar
 - | \ *output*\ :
   | creates sensor and returns list of sensor numbers for all laser sensors
 - | \ *notes*\ :
-  | use generalContactIndex = DistanceSensorSetupGeometry(...) before to create GeneralContact module containing geometry
+  | use generalContactIndex = CreateDistanceSensorGeometry(...) before to create GeneralContact module containing geometry
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 

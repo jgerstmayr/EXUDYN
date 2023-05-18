@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Type definitions &mdash; Exudyn1.6.103.dev1 1.6.103.dev1 documentation</title>
+  <title>Type definitions &mdash; Exudyn1.6.110.dev1 1.6.110.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -37,7 +37,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.103.dev1
+            Exudyn1.6.110.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -65,17 +65,19 @@
 <li class="toctree-l2"><a class="reference internal" href="SystemData.html">SystemData</a></li>
 <li class="toctree-l2"><a class="reference internal" href="GeneralContact.html">GeneralContact</a></li>
 <li class="toctree-l2"><a class="reference internal" href="DataStructures.html">Data structures</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Type definitions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#outputvariabletype">OutputVariableType</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#configurationtype">ConfigurationType</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#itemtype">ItemType</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#nodetype">NodeType</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#jointtype">JointType</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#dynamicsolvertype">DynamicSolverType</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#crosssectiontype">CrossSectionType</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#keycode">KeyCode</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#linearsolvertype">LinearSolverType</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#contacttypeindex">ContactTypeIndex</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Type definitions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#outputvariabletype">OutputVariableType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#configurationtype">ConfigurationType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#itemtype">ItemType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nodetype">NodeType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#jointtype">JointType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dynamicsolvertype">DynamicSolverType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#crosssectiontype">CrossSectionType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#keycode">KeyCode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#linearsolvertype">LinearSolverType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#contacttypeindex">ContactTypeIndex</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -99,7 +101,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.103.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.110.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -133,9 +135,8 @@
 <span class="linenos">10</span><span class="c1">#</span>
 </pre></div>
 </div>
-</section>
 <section id="outputvariabletype">
-<h1>OutputVariableType<a class="headerlink" href="#outputvariabletype" title="Permalink to this heading"></a></h1>
+<h2>OutputVariableType<a class="headerlink" href="#outputvariabletype" title="Permalink to this heading"></a></h2>
 <p>This section shows the OutputVariableType structure, which is used for selecting output values, e.g. for GetObjectOutput(…) or for selecting variables for contour plot.</p>
 <p>Available output variables and the interpreation of the output variable can be found at the object definitions.
 The OutputVariableType does not provide information about the size of the output variable, which can be either scalar or a list (vector). For vector output quantities, the contour plot option offers an additional parameter for selection of the component of the OutputVariableType. The components are usually out of 0,1,2, representing x,y,zcomponents (e.g., of displacements, velocities, …), or 0,1,2,3,4,5representing xx,yy,zz,yz,xz,xycomponents (e.g., of strain or stress). In order to compute a norm, chose component=-1, which will result in the quadratic norm for other vectors and to a norm specified for stresses (if no norm is defined for an outputVariable, it does not compute anything)</p>
@@ -294,7 +295,7 @@ The OutputVariableType does not provide information about the size of the output
 </ul>
 </section>
 <section id="configurationtype">
-<h1>ConfigurationType<a class="headerlink" href="#configurationtype" title="Permalink to this heading"></a></h1>
+<h2>ConfigurationType<a class="headerlink" href="#configurationtype" title="Permalink to this heading"></a></h2>
 <p>This section shows the ConfigurationType structure, which is used for selecting a configuration for reading or writing information to the module. Specifically, the ConfigurationType.Current configuration is usually used at the end of a solution process, to obtain result values, or the ConfigurationType.Initial is used to set initial values for a solution process.</p>
 <p>The class <strong>ConfigurationType</strong> has the following <strong>functions and structures</strong>:</p>
 <ul>
@@ -336,7 +337,7 @@ The OutputVariableType does not provide information about the size of the output
 </ul>
 </section>
 <section id="itemtype">
-<h1>ItemType<a class="headerlink" href="#itemtype" title="Permalink to this heading"></a></h1>
+<h2>ItemType<a class="headerlink" href="#itemtype" title="Permalink to this heading"></a></h2>
 <p>This section shows the ItemType structure, which is used for defining types of indices, e.g., in render window and will be also used in item dictionaries in future.</p>
 <p>The class <strong>ItemType</strong> has the following <strong>functions and structures</strong>:</p>
 <ul>
@@ -373,7 +374,7 @@ The OutputVariableType does not provide information about the size of the output
 </ul>
 </section>
 <section id="nodetype">
-<h1>NodeType<a class="headerlink" href="#nodetype" title="Permalink to this heading"></a></h1>
+<h2>NodeType<a class="headerlink" href="#nodetype" title="Permalink to this heading"></a></h2>
 <p>This section shows the NodeType structure, which is used for defining node types for 3D rigid bodies.</p>
 <p>The class <strong>NodeType</strong> has the following <strong>functions and structures</strong>:</p>
 <ul>
@@ -475,7 +476,7 @@ The OutputVariableType does not provide information about the size of the output
 </ul>
 </section>
 <section id="jointtype">
-<h1>JointType<a class="headerlink" href="#jointtype" title="Permalink to this heading"></a></h1>
+<h2>JointType<a class="headerlink" href="#jointtype" title="Permalink to this heading"></a></h2>
 <p>This section shows the JointType structure, which is used for defining joint types, used in KinematicTree.</p>
 <p>The class <strong>JointType</strong> has the following <strong>functions and structures</strong>:</p>
 <ul>
@@ -517,7 +518,7 @@ The OutputVariableType does not provide information about the size of the output
 </ul>
 </section>
 <section id="dynamicsolvertype">
-<h1>DynamicSolverType<a class="headerlink" href="#dynamicsolvertype" title="Permalink to this heading"></a></h1>
+<h2>DynamicSolverType<a class="headerlink" href="#dynamicsolvertype" title="Permalink to this heading"></a></h2>
 <p>This section shows the DynamicSolverType structure, which is used for selecting dynamic solvers for simulation.</p>
 <p>The class <strong>DynamicSolverType</strong> has the following <strong>functions and structures</strong>:</p>
 <ul>
@@ -574,7 +575,7 @@ The OutputVariableType does not provide information about the size of the output
 </ul>
 </section>
 <section id="crosssectiontype">
-<h1>CrossSectionType<a class="headerlink" href="#crosssectiontype" title="Permalink to this heading"></a></h1>
+<h2>CrossSectionType<a class="headerlink" href="#crosssectiontype" title="Permalink to this heading"></a></h2>
 <p>This section shows the CrossSectionType structure, which is used for defining beam cross section types.</p>
 <p>The class <strong>CrossSectionType</strong> has the following <strong>functions and structures</strong>:</p>
 <ul>
@@ -591,7 +592,7 @@ The OutputVariableType does not provide information about the size of the output
 </ul>
 </section>
 <section id="keycode">
-<h1>KeyCode<a class="headerlink" href="#keycode" title="Permalink to this heading"></a></h1>
+<h2>KeyCode<a class="headerlink" href="#keycode" title="Permalink to this heading"></a></h2>
 <p>This section shows the KeyCode structure, which is used for special key codes in keyPressUserFunction.</p>
 <p>The class <strong>KeyCode</strong> has the following <strong>functions and structures</strong>:</p>
 <ul>
@@ -686,7 +687,7 @@ The OutputVariableType does not provide information about the size of the output
 </ul>
 </section>
 <section id="linearsolvertype">
-<h1>LinearSolverType<a class="headerlink" href="#linearsolvertype" title="Permalink to this heading"></a></h1>
+<h2>LinearSolverType<a class="headerlink" href="#linearsolvertype" title="Permalink to this heading"></a></h2>
 <p>This section shows the LinearSolverType structure, which is used for selecting linear solver types, which are dense or sparse solvers.</p>
 <p>The class <strong>LinearSolverType</strong> has the following <strong>functions and structures</strong>:</p>
 <ul>
@@ -713,7 +714,7 @@ The OutputVariableType does not provide information about the size of the output
 </ul>
 </section>
 <section id="contacttypeindex">
-<h1>ContactTypeIndex<a class="headerlink" href="#contacttypeindex" title="Permalink to this heading"></a></h1>
+<h2>ContactTypeIndex<a class="headerlink" href="#contacttypeindex" title="Permalink to this heading"></a></h2>
 <p>This section shows the ContactTypeIndex structure, which is in GeneralContact to select specific contact items, such as spheres, ANCFCable or triangle items.</p>
 <p>The class <strong>ContactTypeIndex</strong> has the following <strong>functions and structures</strong>:</p>
 <ul>
@@ -738,6 +739,7 @@ The OutputVariableType does not provide information about the size of the output
 </div>
 </li>
 </ul>
+</section>
 </section>
 
 

@@ -29,7 +29,9 @@ Function: MassCOMinertia2T66
   | 6x6 numpy array for further use in minimal coordinates formulation
 
 
+
 ----
+
 
 .. _sec-kinematictree-inertia2t66:
 
@@ -49,7 +51,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
     \ `kinematicTreeAndMBS.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py>`_\  (Ex)
 
 
+
 ----
+
 
 .. _sec-kinematictree-inertia66tomasscominertia:
 
@@ -68,7 +72,9 @@ Function: Inertia66toMassCOMinertia
   | \ ``inertia``\ : 3x3 matrix (list of lists / 2D array) w.r.t. center of mass
 
 
+
 ----
+
 
 .. _sec-kinematictree-jointtransformmotionsubspace66:
 
@@ -84,7 +90,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
     \ `kinematicTreeAndMBS.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py>`_\  (Ex)
 
 
+
 ----
+
 
 .. _sec-kinematictree-jointtransformmotionsubspace:
 
@@ -100,7 +108,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
     \ `kinematicTreeAndMBS.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py>`_\  (Ex)
 
 
+
 ----
+
 
 .. _sec-kinematictree-crm:
 
@@ -112,7 +122,9 @@ Function: CRM
   | computes cross product operator for motion from 6D vector v; CRM(v) @ m computes the cross product of v and motion m
 
 
+
 ----
+
 
 .. _sec-kinematictree-crf:
 
@@ -124,8 +136,10 @@ Function: CRF
   | computes cross product operator for force from 6D vector v; CRF(v) @ f computes the cross product of v and force f
 
 
+.. _sec-module-kinematictree-class-kinematictree33:
+
 CLASS KinematicTree33 (in module kinematicTree)
------------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 **class description**: 
 
     class to define a kinematic tree in Python, which can be used for building serial or tree-structured multibody systems
@@ -218,8 +232,10 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
     \ `kinematicTreeAndMBS.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py>`_\  (Ex)
 
 
+.. _sec-module-kinematictree-class-kinematictree66:
+
 CLASS KinematicTree66 (in module kinematicTree)
------------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 **class description**: 
 
     class to define a kinematic tree, which can be used for building serial or tree-structured multibody systems

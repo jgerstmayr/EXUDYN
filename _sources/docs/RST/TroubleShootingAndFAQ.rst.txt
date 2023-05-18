@@ -311,8 +311,9 @@ FAQ
   |  →  Usually, this is an ERROR in your code, it does not make sense to mix up these indexes!
   |  →  In the exceptional case, that you want to convert numbers, see beginning of Section :ref:`sec-pcpp-command-interface`\ .
 
-+  Why does \ **type auto completion**\  not work for mbs (MainSystem)?
++  Why does \ **type auto completion**\  / intellisense not work for mbs (MainSystem)?
 
+  |  →  UPDATE 2023-05-11 (V1.6.103): type completion now also works for functions\, types and structures: tested in Spyder 5.2.2 and Visual Studio Code 1.78.1); with an added stub file (.pyi) the standard type completion fetches information about structures or functions; this even works for \ ``SC.visualizationSettings.bodies.kinematicTree.showJointFrames``\ . If you still have problems, try to restart your environment / computer or switch to a different version
   |  →  UPDATE 2020-06-01: with Spyder 4, using Python 3.7, type auto completion works much better, but may find too many completions.
   |  →  most Python environments (e.g., with Spyder 3) only have information up to the first sub-structure, e.g., \ ``SC=exu.SystemContainer()``\  provides full access to SC in the type completion, but \ ``mbs=SC.AddSystem()``\  is at the second sub-structure of the module and is not accessible.
   |  →  WORKAROUND: type \ ``mbs=MainSystem()``\  \ **before**\  the \ ``mbs=SC.AddSystem()``\  command and the interpreter will know what type mbs is. This also works for settings, e.g., simulation settings 'Newton'.

@@ -19,15 +19,37 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.6.103.dev1, 
-+  last change =  2023-05-10, 
-+  Number of issues = 1564, 
-+  Number of resolved issues = 1383 (103 in current version), 
++  Exudyn version = 1.6.110.dev1, 
++  last change =  2023-05-17, 
++  Number of issues = 1575, 
++  Number of resolved issues = 1390 (110 in current version), 
 
 ***********
 Version 1.6
 ***********
 
+ * Version 1.6.110: resolved Issue 1574: Python utilities (fix)
+    - description:  classes not appearing in table of contents on RTD
+    - date resolved: **2023-05-17 20:21**\ , date raised: 2023-05-16 
+ * Version 1.6.109: resolved Issue 1572: CreateRigidBody (extension)
+    - description:  added to MainSystem to enable mbs.CreateRigidBody(...)
+    - date resolved: **2023-05-16 11:54**\ , date raised: 2023-05-16 
+ * Version 1.6.108: resolved Issue 1568: mainSystemExtensions (extension)
+    - description:  create first sample of Python extensions for basic joints
+    - date resolved: **2023-05-15 18:13**\ , date raised: 2023-05-15 
+ * Version 1.6.107: resolved Issue 1567: DrawSystemGraph (change)
+    - description:  in case of showItemNames, no item numbers are shown as they confuse with numbers used in names
+    - date resolved: **2023-05-15 17:18**\ , date raised: 2023-05-15 
+ * Version 1.6.106: resolved Issue 1566: AddDistanceSensor(...) (change)
+    - description:  function RENAMED into CreateDistanceSensor(...) to be consistent with future naming; also renamed DistanceSensorSetupGeometry(...) into CreateDistanceSensorGeometry(...)
+    - date resolved: **2023-05-15 11:34**\ , date raised: 2023-05-15 
+ * Version 1.6.105: resolved Issue 1563: MainSystem Python extensions (extension)
+    - description:  add Python utility functions for mbs, such as PlotSensor, SolveDynamic, ...; use identical interfaces to alleviate creation of .pyi files and documentation; add new flag mbsFunction as hint to put docu to MainSystem and make .pyi extension
+    - **notes:** see Section :ref:`sec-mainsystem-pythonextensions`\  for extended functionality
+    - date resolved: **2023-05-15 01:17**\ , date raised: 2023-05-09 
+ * Version 1.6.104: resolved Issue 1564: Type definitions (docu)
+    - description:  fix header structure in latex and RST for Type Definitions
+    - date resolved: **2023-05-11 11:30**\ , date raised: 2023-05-11 
  * Version 1.6.103: resolved Issue 1561: stub files .pyi (extension)
     - description:  add .pyi files to setup_tools, copying them from autogenerate folder; use try catch to avoid problems at other platforms
     - date resolved: **2023-05-10 23:30**\ , date raised: 2023-05-09 
@@ -38,7 +60,7 @@ Version 1.6
     - description:  add .pyi files for enums from autoGeneratePyBindings
     - date resolved: **2023-05-10 20:43**\ , date raised: 2023-05-09 
  * Version 1.6.100: resolved Issue 1559: stub files .pyi (extension)
-    - description:  automatically create stub file for settings to alleviate auto-completion
+    - description:  automatically create stub file for settings to alleviate auto-completion; type completion now also works for functions, types and structures: tested in Spyder and Visual Studio Code
     - date resolved: **2023-05-10 08:39**\ , date raised: 2023-05-09 
  * Version 1.6.99: resolved Issue 1557: stub files (check)
     - description:  test creating stub files .pyi which are needed for MainSystem Python extensions
@@ -4488,9 +4510,25 @@ Version 0.1
 Open issues
 ***********
 
- * **open issue 1563:** MainSystem Python extensions
-    - description:  add Python utility functions for mbs, such as PlotSensor, SolveDynamic, ...; use identical interfaces to alleviate creation of .pyi files and documentation; add new flag mbsFunction as hint to put docu to MainSystem and make .pyi extension
-    - date raised: 2023-05-09 
+ * **open issue 1573:** mainSystemExtensions
+    - description:  Adapt tutorials to new functionality
+    - date raised: 2023-05-16 
+
+ * **open issue 1571:** mainSystemExtensions
+    - description:  adapt Examples to Python extensions (SolveDynamic, CreateRigidBody, CreateGenericJoint, ...)
+    - date raised: 2023-05-15 
+
+ * **open issue 1570:** mainSystemExtensions
+    - description:  adapt TestModels to Python extensions
+    - date raised: 2023-05-15 
+
+ * **open issue 1569:** mainSystemExtensions
+    - description:  add mini-examples for extensions
+    - date raised: 2023-05-15 
+
+ * **open issue 1565:** utilities InitializeFromRestartFile
+    - description:  finalize C++ functionality and Python function
+    - date raised: 2023-05-14 
 
  * **open issue 1550:** GeometricallyExactBeam
     - description:  add F_Lie\*Glocal_q term for Jacobian to improve convergence

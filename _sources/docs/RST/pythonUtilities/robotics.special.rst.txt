@@ -32,7 +32,9 @@ Function: VelocityManipulability
   | compute velocity dependent manipulability definded by Yoshikawa, see
 
 
+
 ----
+
 
 .. _sec-special-forcemanipulability:
 
@@ -55,7 +57,9 @@ Function: ForceManipulability
   | compute force dependent manipulability definded by Yoshikawa, see
 
 
+
 ----
+
 
 .. _sec-special-stiffnessmanipulability:
 
@@ -82,7 +86,9 @@ Function: StiffnessManipulability
   | this function is \ **currently under development**\  and under testing!
 
 
+
 ----
+
 
 .. _sec-special-jointjacobian:
 
@@ -103,7 +109,9 @@ Function: JointJacobian
   | runs over number of HTs given in HT (may be less than number of links), caclulations in link coordinate system located at the end of each link regarding Standard  Denavid-Hartenberg parameters, see
 
 
+
 ----
+
 
 .. _sec-special-massmatrix:
 
@@ -131,7 +139,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
     \ `solverFunctionsTestEigenvalues.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/solverFunctionsTestEigenvalues.py>`_\  (Ex), \ `ACFtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py>`_\  (TM), \ `manualExplicitIntegrator.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/manualExplicitIntegrator.py>`_\  (TM), \ `objectFFRFreducedOrderAccelerations.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderAccelerations.py>`_\  (TM), \ `objectFFRFreducedOrderShowModes.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderShowModes.py>`_\  (TM), \ `objectFFRFreducedOrderStressModesTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderStressModesTest.py>`_\  (TM), \ `objectFFRFreducedOrderTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderTest.py>`_\  (TM), \ `objectFFRFTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest.py>`_\  (TM)
 
 
+
 ----
+
 
 .. _sec-special-dynamicmanipulability:
 
@@ -159,7 +169,9 @@ Function: DynamicManipulability
   | this function is \ **currently under development**\  and under testing!
 
 
+
 ----
+
 
 .. _sec-special-calculateallmeasures:
 

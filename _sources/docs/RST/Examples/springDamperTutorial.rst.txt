@@ -70,7 +70,7 @@ You can view and download this file on Github: `springDamperTutorial.py <https:/
                                             load = f))
    
    #add sensor:
-   mbs.AddSensor(SensorObject(objectNumber=nC, fileName='groundForce.txt', 
+   mbs.AddSensor(SensorObject(objectNumber=nC, fileName='solution/groundForce.txt', 
                               outputVariableType=exu.OutputVariableType.Force))
    
    print(mbs)
@@ -130,7 +130,7 @@ You can view and download this file on Github: `springDamperTutorial.py <https:/
    plt.plot(refSol[:,0], refSol[:,1], 'r-', label='displacement (m); exact solution')
    
    #show force in constraint/support:
-   data = np.loadtxt('groundForce.txt', comments='#', delimiter=',')
+   data = np.loadtxt('solution/groundForce.txt', comments='#', delimiter=',')
    plt.plot(data[:,0], data[:,1]*1e-3, 'g-', label='force (kN)') #numerical solution
    
    ax=plt.gca() # get current axes

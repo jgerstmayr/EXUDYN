@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Module: utilities &mdash; Exudyn1.6.103.dev1 1.6.103.dev1 documentation</title>
+  <title>Module: utilities &mdash; Exudyn1.6.110.dev1 1.6.110.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -37,7 +37,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.103.dev1
+            Exudyn1.6.110.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -72,6 +72,7 @@
 <li class="toctree-l2"><a class="reference internal" href="interactive.html">Module: interactive</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kinematicTree.html">Module: kinematicTree</a></li>
 <li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html">Module: lieGroupBasics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mainSystemExtensions.html">Module: mainSystemExtensions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="physics.html">Module: physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plot.html">Module: plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="processing.html">Module: processing</a></li>
@@ -89,8 +90,8 @@
 <li class="toctree-l3"><a class="reference internal" href="#function-showonlyobjects">Function: ShowOnlyObjects</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-highlightitem">Function: HighlightItem</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-ufsensordistance">Function: __UFsensorDistance</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#function-distancesensorsetupgeometry">Function: DistanceSensorSetupGeometry</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#function-adddistancesensor">Function: AddDistanceSensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-createdistancesensorgeometry">Function: CreateDistanceSensorGeometry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-createdistancesensor">Function: CreateDistanceSensor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-ufsensorrecord">Function: UFsensorRecord</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-addsensorrecorder">Function: AddSensorRecorder</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-loadsolutionfile">Function: LoadSolutionFile</a></li>
@@ -109,6 +110,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#function-createtcpipconnection">Function: CreateTCPIPconnection</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-tcpipsendreceive">Function: TCPIPsendReceive</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-closetcpipconnection">Function: CloseTCPIPconnection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-tcpipdata-in-module-utilities">CLASS TCPIPdata (in module utilities)</a></li>
 </ul>
 </li>
 </ul>
@@ -130,7 +132,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.103.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.110.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -208,94 +210,37 @@ This library requires numpy (as well as time and copy)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">internal function used for AddDistanceSensor</div>
+<div class="line">internal function used for CreateDistanceSensor</div>
 </div>
 </li>
 </ul>
-<hr class="docutils" />
 </section>
-<section id="function-distancesensorsetupgeometry">
-<span id="sec-utilities-distancesensorsetupgeometry"></span><h2>Function: DistanceSensorSetupGeometry<a class="headerlink" href="#function-distancesensorsetupgeometry" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L160">DistanceSensorSetupGeometry</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">meshPoints</span></code>, <code class="docutils literal notranslate"><span class="pre">meshTrigs</span></code>, <code class="docutils literal notranslate"><span class="pre">rigidBodyMarkerIndex</span></code>, <code class="docutils literal notranslate"><span class="pre">searchTreeCellSize</span> <span class="pre">=</span> <span class="pre">[8,8,8]</span></code>)</p>
+<hr class="docutils" />
+<section id="function-createdistancesensorgeometry">
+<h2>Function: CreateDistanceSensorGeometry<a class="headerlink" href="#function-createdistancesensorgeometry" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L161">CreateDistanceSensorGeometry</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">meshPoints</span></code>, <code class="docutils literal notranslate"><span class="pre">meshTrigs</span></code>, <code class="docutils literal notranslate"><span class="pre">rigidBodyMarkerIndex</span></code>, <code class="docutils literal notranslate"><span class="pre">searchTreeCellSize</span> <span class="pre">=</span> <span class="pre">[8,8,8]</span></code>)</p>
 <ul>
 <li><div class="line-block">
-<div class="line"><em>function description</em>:</div>
-<div class="line">Add geometry for distance sensor given by points and triangles (point indices) to mbs; use a rigid body marker where the geometry is put on;</div>
-<div class="line">Creates a GeneralContact for efficient search on background. If you have several sets of points and trigs, first merge them or add them manually to the contact</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><em>input</em>:</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: MainSystem where contact is created</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">meshPoints</span></code>: list of points (3D), as returned by GraphicsData2PointsAndTrigs()</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">meshTrigs</span></code>: list of trigs (3 node indices each), as returned by GraphicsData2PointsAndTrigs()</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">rigidBodyMarkerIndex</span></code>: rigid body marker to which the triangles are fixed on (ground or moving object)</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">searchTreeCellSize</span></code>: size of search tree (X,Y,Z); use larger values in directions where more triangles are located</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><em>output</em>:</div>
-<div class="line">returns [ngc, gContact]: ngc is the number of GeneralContact in mbs, to be used in AddDistanceSensor; keep the gContact as deletion may corrupt data</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><em>notes</em>:</div>
-<div class="line">should be used by AddDistanceSensor(…) and AddLidar(…) for simple initialization of GeneralContact</div>
+<div class="line"><strong>NOTE</strong>: this function is directly available in MainSystem (mbs); it should be directly called as mbs.CreateDistanceSensorGeometry(…). For description of the interface, see the MainSystem Python extensions,  <a class="reference internal" href="../cInterface/MainSystem.html#sec-mainsystemextensions-createdistancesensorgeometry"><span class="std std-ref">Function: CreateDistanceSensorGeometry</span></a></div>
 </div>
 </li>
 </ul>
-<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
-<blockquote>
-<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/laserScannerTest.py">laserScannerTest.py</a> (TM)</p>
-</div></blockquote>
-<hr class="docutils" />
 </section>
-<section id="function-adddistancesensor">
-<span id="sec-utilities-adddistancesensor"></span><h2>Function: AddDistanceSensor<a class="headerlink" href="#function-adddistancesensor" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L191">AddDistanceSensor</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">generalContactIndex</span></code>, <code class="docutils literal notranslate"><span class="pre">positionOrMarker</span></code>, <code class="docutils literal notranslate"><span class="pre">dirSensor</span></code>, <code class="docutils literal notranslate"><span class="pre">minDistance</span> <span class="pre">=</span> <span class="pre">-1e7</span></code>, <code class="docutils literal notranslate"><span class="pre">maxDistance</span> <span class="pre">=</span> <span class="pre">1e7</span></code>, <code class="docutils literal notranslate"><span class="pre">cylinderRadius</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">selectedTypeIndex</span> <span class="pre">=</span> <span class="pre">exudyn.ContactTypeIndex.IndexEndOfEnumList</span></code>, <code class="docutils literal notranslate"><span class="pre">storeInternal</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">fileName</span> <span class="pre">=</span> <span class="pre">''</span></code>, <code class="docutils literal notranslate"><span class="pre">measureVelocity</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">addGraphicsObject</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">drawDisplaced</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">color4red</span></code>)</p>
+<hr class="docutils" />
+<section id="function-createdistancesensor">
+<h2>Function: CreateDistanceSensor<a class="headerlink" href="#function-createdistancesensor" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L194">CreateDistanceSensor</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">generalContactIndex</span></code>, <code class="docutils literal notranslate"><span class="pre">positionOrMarker</span></code>, <code class="docutils literal notranslate"><span class="pre">dirSensor</span></code>, <code class="docutils literal notranslate"><span class="pre">minDistance</span> <span class="pre">=</span> <span class="pre">-1e7</span></code>, <code class="docutils literal notranslate"><span class="pre">maxDistance</span> <span class="pre">=</span> <span class="pre">1e7</span></code>, <code class="docutils literal notranslate"><span class="pre">cylinderRadius</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">selectedTypeIndex</span> <span class="pre">=</span> <span class="pre">exudyn.ContactTypeIndex.IndexEndOfEnumList</span></code>, <code class="docutils literal notranslate"><span class="pre">storeInternal</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">fileName</span> <span class="pre">=</span> <span class="pre">''</span></code>, <code class="docutils literal notranslate"><span class="pre">measureVelocity</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">addGraphicsObject</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">drawDisplaced</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">color4red</span></code>)</p>
 <ul>
 <li><div class="line-block">
-<div class="line"><em>function description</em>:</div>
-<div class="line">Function to add distance sensor based on GeneralContact to mbs; sensor can be either placed on absolute position or attached to rigid body marker; in case of marker, dirSensor is relative to the marker</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><em>input</em>:</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">generalContactIndex</span></code>: the number of the GeneralContact object in mbs; the index of the GeneralContact object which has been added with last AddGeneralContact(…) command is generalContactIndex=mbs.NumberOfGeneralContacts()-1</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">positionOrMarker</span></code>: either a 3D position as list or np.array, or a MarkerIndex with according rigid body marker</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">dirSensor</span></code>: the direction (no need to normalize) along which the distance is measured (must not be normalized); in case of marker, the direction is relative to marker orientation if marker contains orientation (BodyRigid, NodeRigid)</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">minDistance</span></code>: the minimum distance which is accepted; smaller distance will be ignored</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">maxDistance</span></code>: the maximum distance which is accepted; items being at maxDistance or futher are ignored; if no items are found, the function returns maxDistance</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">cylinderRadius</span></code>: in case of spheres (selectedTypeIndex=ContactTypeIndex.IndexSpheresMarkerBased), a cylinder can be used which measures the shortest distance at a certain radius (geometrically interpreted as cylinder)</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">selectedTypeIndex</span></code>: either this type has default value, meaning that all items in GeneralContact are measured, or there is a specific type index, which is the only type that is considered during measurement</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">storeInternal</span></code>: like with any SensorUserFunction, setting to True stores sensor data internally</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">fileName</span></code>: if defined, recorded data of SensorUserFunction is written to specified file</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">measureVelocity</span></code>: if True, the sensor measures additionally the velocity (component 0=distance, component 1=velocity); velocity is the velocity in direction ‘dirSensor’ and does not account for changes in geometry, thus it may be different from the time derivative of the distance!</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">addGraphicsObject</span></code>: if True, the distance sensor is also visualized graphically in a simplified manner with a red line having the length of dirSensor; NOTE that updates are ONLY performed during computation, not in visualization; for this reason, solutionSettings.sensorsWritePeriod should be accordingly small</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">drawDisplaced</span></code>: if True, the red line is drawn backwards such that it moves along the measured surface; if False, the beam is fixed to marker or position</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">color</span></code>: optional color for ‘laser beam’ to be drawn</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><em>output</em>:</div>
-<div class="line">creates sensor and returns according sensor number of SensorUserFunction</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><em>notes</em>:</div>
-<div class="line">use generalContactIndex = DistanceSensorSetupGeometry(…) before to create GeneralContact module containing geometry</div>
+<div class="line"><strong>NOTE</strong>: this function is directly available in MainSystem (mbs); it should be directly called as mbs.CreateDistanceSensor(…). For description of the interface, see the MainSystem Python extensions,  <a class="reference internal" href="../cInterface/MainSystem.html#sec-mainsystemextensions-createdistancesensor"><span class="std std-ref">Function: CreateDistanceSensor</span></a></div>
 </div>
 </li>
 </ul>
-<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
-<blockquote>
-<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/distanceSensor.py">distanceSensor.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/laserScannerTest.py">laserScannerTest.py</a> (TM)</p>
-</div></blockquote>
 <hr class="docutils" />
 </section>
 <section id="function-ufsensorrecord">
 <span id="sec-utilities-ufsensorrecord"></span><h2>Function: UFsensorRecord<a class="headerlink" href="#function-ufsensorrecord" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L240">UFsensorRecord</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">t</span></code>, <code class="docutils literal notranslate"><span class="pre">sensorNumbers</span></code>, <code class="docutils literal notranslate"><span class="pre">factors</span></code>, <code class="docutils literal notranslate"><span class="pre">configuration</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L243">UFsensorRecord</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">t</span></code>, <code class="docutils literal notranslate"><span class="pre">sensorNumbers</span></code>, <code class="docutils literal notranslate"><span class="pre">factors</span></code>, <code class="docutils literal notranslate"><span class="pre">configuration</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -312,7 +257,7 @@ This library requires numpy (as well as time and copy)</p>
 </section>
 <section id="function-addsensorrecorder">
 <span id="sec-utilities-addsensorrecorder"></span><h2>Function: AddSensorRecorder<a class="headerlink" href="#function-addsensorrecorder" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L261">AddSensorRecorder</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">sensorNumber</span></code>, <code class="docutils literal notranslate"><span class="pre">endTime</span></code>, <code class="docutils literal notranslate"><span class="pre">sensorsWritePeriod</span></code>, <code class="docutils literal notranslate"><span class="pre">sensorOutputSize</span> <span class="pre">=</span> <span class="pre">3</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L264">AddSensorRecorder</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">sensorNumber</span></code>, <code class="docutils literal notranslate"><span class="pre">endTime</span></code>, <code class="docutils literal notranslate"><span class="pre">sensorsWritePeriod</span></code>, <code class="docutils literal notranslate"><span class="pre">sensorOutputSize</span> <span class="pre">=</span> <span class="pre">3</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -347,7 +292,7 @@ This library requires numpy (as well as time and copy)</p>
 </section>
 <section id="function-loadsolutionfile">
 <span id="sec-utilities-loadsolutionfile"></span><h2>Function: LoadSolutionFile<a class="headerlink" href="#function-loadsolutionfile" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L288">LoadSolutionFile</a>(<code class="docutils literal notranslate"><span class="pre">fileName</span></code>, <code class="docutils literal notranslate"><span class="pre">safeMode</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">maxRows</span> <span class="pre">=</span> <span class="pre">-1</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">hasHeader</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L291">LoadSolutionFile</a>(<code class="docutils literal notranslate"><span class="pre">fileName</span></code>, <code class="docutils literal notranslate"><span class="pre">safeMode</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">maxRows</span> <span class="pre">=</span> <span class="pre">-1</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">hasHeader</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -377,7 +322,7 @@ This library requires numpy (as well as time and copy)</p>
 </section>
 <section id="function-numpyint8arraytostring">
 <span id="sec-utilities-numpyint8arraytostring"></span><h2>Function: NumpyInt8ArrayToString<a class="headerlink" href="#function-numpyint8arraytostring" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L419">NumpyInt8ArrayToString</a>(<code class="docutils literal notranslate"><span class="pre">npArray</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L422">NumpyInt8ArrayToString</a>(<code class="docutils literal notranslate"><span class="pre">npArray</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -389,7 +334,7 @@ This library requires numpy (as well as time and copy)</p>
 </section>
 <section id="function-binaryreadindex">
 <span id="sec-utilities-binaryreadindex"></span><h2>Function: BinaryReadIndex<a class="headerlink" href="#function-binaryreadindex" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L426">BinaryReadIndex</a>(<code class="docutils literal notranslate"><span class="pre">file</span></code>, <code class="docutils literal notranslate"><span class="pre">intType</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L429">BinaryReadIndex</a>(<code class="docutils literal notranslate"><span class="pre">file</span></code>, <code class="docutils literal notranslate"><span class="pre">intType</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -401,7 +346,7 @@ This library requires numpy (as well as time and copy)</p>
 </section>
 <section id="function-binaryreadreal">
 <span id="sec-utilities-binaryreadreal"></span><h2>Function: BinaryReadReal<a class="headerlink" href="#function-binaryreadreal" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L432">BinaryReadReal</a>(<code class="docutils literal notranslate"><span class="pre">file</span></code>, <code class="docutils literal notranslate"><span class="pre">realType</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L435">BinaryReadReal</a>(<code class="docutils literal notranslate"><span class="pre">file</span></code>, <code class="docutils literal notranslate"><span class="pre">realType</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -413,7 +358,7 @@ This library requires numpy (as well as time and copy)</p>
 </section>
 <section id="function-binaryreadstring">
 <span id="sec-utilities-binaryreadstring"></span><h2>Function: BinaryReadString<a class="headerlink" href="#function-binaryreadstring" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L438">BinaryReadString</a>(<code class="docutils literal notranslate"><span class="pre">file</span></code>, <code class="docutils literal notranslate"><span class="pre">intType</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L441">BinaryReadString</a>(<code class="docutils literal notranslate"><span class="pre">file</span></code>, <code class="docutils literal notranslate"><span class="pre">intType</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -425,7 +370,7 @@ This library requires numpy (as well as time and copy)</p>
 </section>
 <section id="function-binaryreadarrayindex">
 <span id="sec-utilities-binaryreadarrayindex"></span><h2>Function: BinaryReadArrayIndex<a class="headerlink" href="#function-binaryreadarrayindex" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L444">BinaryReadArrayIndex</a>(<code class="docutils literal notranslate"><span class="pre">file</span></code>, <code class="docutils literal notranslate"><span class="pre">intType</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L447">BinaryReadArrayIndex</a>(<code class="docutils literal notranslate"><span class="pre">file</span></code>, <code class="docutils literal notranslate"><span class="pre">intType</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -437,7 +382,7 @@ This library requires numpy (as well as time and copy)</p>
 </section>
 <section id="function-binaryreadrealvector">
 <span id="sec-utilities-binaryreadrealvector"></span><h2>Function: BinaryReadRealVector<a class="headerlink" href="#function-binaryreadrealvector" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L451">BinaryReadRealVector</a>(<code class="docutils literal notranslate"><span class="pre">file</span></code>, <code class="docutils literal notranslate"><span class="pre">intType</span></code>, <code class="docutils literal notranslate"><span class="pre">realType</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L454">BinaryReadRealVector</a>(<code class="docutils literal notranslate"><span class="pre">file</span></code>, <code class="docutils literal notranslate"><span class="pre">intType</span></code>, <code class="docutils literal notranslate"><span class="pre">realType</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -454,7 +399,7 @@ This library requires numpy (as well as time and copy)</p>
 </section>
 <section id="function-loadbinarysolutionfile">
 <span id="sec-utilities-loadbinarysolutionfile"></span><h2>Function: LoadBinarySolutionFile<a class="headerlink" href="#function-loadbinarysolutionfile" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L467">LoadBinarySolutionFile</a>(<code class="docutils literal notranslate"><span class="pre">fileName</span></code>, <code class="docutils literal notranslate"><span class="pre">maxRows</span> <span class="pre">=</span> <span class="pre">-1</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L470">LoadBinarySolutionFile</a>(<code class="docutils literal notranslate"><span class="pre">fileName</span></code>, <code class="docutils literal notranslate"><span class="pre">maxRows</span> <span class="pre">=</span> <span class="pre">-1</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -478,7 +423,7 @@ This library requires numpy (as well as time and copy)</p>
 </section>
 <section id="function-recoversolutionfile">
 <span id="sec-utilities-recoversolutionfile"></span><h2>Function: RecoverSolutionFile<a class="headerlink" href="#function-recoversolutionfile" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L653">RecoverSolutionFile</a>(<code class="docutils literal notranslate"><span class="pre">fileName</span></code>, <code class="docutils literal notranslate"><span class="pre">newFileName</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">0</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L656">RecoverSolutionFile</a>(<code class="docutils literal notranslate"><span class="pre">fileName</span></code>, <code class="docutils literal notranslate"><span class="pre">newFileName</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">0</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -502,7 +447,7 @@ This library requires numpy (as well as time and copy)</p>
 </section>
 <section id="function-initializefromrestartfile">
 <span id="sec-utilities-initializefromrestartfile"></span><h2>Function: InitializeFromRestartFile<a class="headerlink" href="#function-initializefromrestartfile" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L709">InitializeFromRestartFile</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings</span></code>, <code class="docutils literal notranslate"><span class="pre">restartFileName</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L712">InitializeFromRestartFile</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings</span></code>, <code class="docutils literal notranslate"><span class="pre">restartFileName</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -527,7 +472,7 @@ This library requires numpy (as well as time and copy)</p>
 </section>
 <section id="function-setsolutionstate">
 <span id="sec-utilities-setsolutionstate"></span><h2>Function: SetSolutionState<a class="headerlink" href="#function-setsolutionstate" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L770">SetSolutionState</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">solution</span></code>, <code class="docutils literal notranslate"><span class="pre">row</span></code>, <code class="docutils literal notranslate"><span class="pre">configuration</span> <span class="pre">=</span> <span class="pre">exudyn.ConfigurationType.Current</span></code>, <code class="docutils literal notranslate"><span class="pre">sendRedrawSignal</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L773">SetSolutionState</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">solution</span></code>, <code class="docutils literal notranslate"><span class="pre">row</span></code>, <code class="docutils literal notranslate"><span class="pre">configuration</span> <span class="pre">=</span> <span class="pre">exudyn.ConfigurationType.Current</span></code>, <code class="docutils literal notranslate"><span class="pre">sendRedrawSignal</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -539,7 +484,7 @@ This library requires numpy (as well as time and copy)</p>
 </section>
 <section id="function-animatesolution">
 <span id="sec-utilities-animatesolution"></span><h2>Function: AnimateSolution<a class="headerlink" href="#function-animatesolution" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L802">AnimateSolution</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">solution</span></code>, <code class="docutils literal notranslate"><span class="pre">rowIncrement</span> <span class="pre">=</span> <span class="pre">1</span></code>, <code class="docutils literal notranslate"><span class="pre">timeout</span> <span class="pre">=</span> <span class="pre">0.04</span></code>, <code class="docutils literal notranslate"><span class="pre">createImages</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">runLoop</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L805">AnimateSolution</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">solution</span></code>, <code class="docutils literal notranslate"><span class="pre">rowIncrement</span> <span class="pre">=</span> <span class="pre">1</span></code>, <code class="docutils literal notranslate"><span class="pre">timeout</span> <span class="pre">=</span> <span class="pre">0.04</span></code>, <code class="docutils literal notranslate"><span class="pre">createImages</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">runLoop</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -566,47 +511,22 @@ This library requires numpy (as well as time and copy)</p>
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py">NGsolvePistonEngine.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidRotor3Dnutation.py">rigidRotor3Dnutation.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/SliderCrank.py">SliderCrank.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/slidercrankWithMassSpring.py">slidercrankWithMassSpring.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/switchingConstraintsPendulum.py">switchingConstraintsPendulum.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sliderCrankFloatingTest.py">sliderCrankFloatingTest.py</a> (TM)</p>
 </div></blockquote>
-<hr class="docutils" />
 </section>
+<hr class="docutils" />
 <section id="function-drawsystemgraph">
-<span id="sec-utilities-drawsystemgraph"></span><h2>Function: DrawSystemGraph<a class="headerlink" href="#function-drawsystemgraph" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L844">DrawSystemGraph</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">showLoads</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">showSensors</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">useItemNames</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">useItemTypes</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">addItemTypeNames</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">multiLine</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">fontSizeFactor</span> <span class="pre">=</span> <span class="pre">1.</span></code>, <code class="docutils literal notranslate"><span class="pre">layoutDistanceFactor</span> <span class="pre">=</span> <span class="pre">3.</span></code>, <code class="docutils literal notranslate"><span class="pre">layoutIterations</span> <span class="pre">=</span> <span class="pre">100</span></code>, <code class="docutils literal notranslate"><span class="pre">showLegend</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<h2>Function: DrawSystemGraph<a class="headerlink" href="#function-drawsystemgraph" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L848">DrawSystemGraph</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">showLoads</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">showSensors</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">useItemNames</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">useItemTypes</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">addItemTypeNames</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">multiLine</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">fontSizeFactor</span> <span class="pre">=</span> <span class="pre">1.</span></code>, <code class="docutils literal notranslate"><span class="pre">layoutDistanceFactor</span> <span class="pre">=</span> <span class="pre">3.</span></code>, <code class="docutils literal notranslate"><span class="pre">layoutIterations</span> <span class="pre">=</span> <span class="pre">100</span></code>, <code class="docutils literal notranslate"><span class="pre">showLegend</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
 <ul>
 <li><div class="line-block">
-<div class="line"><em>function description</em>:</div>
-<div class="line">helper function which draws system graph of a MainSystem (mbs); several options let adjust the appearance of the graph; the graph visualization uses randomizer, which results in different graphs after every run!</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><em>input</em>:</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: MainSystem to be operated with</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">showLoads</span></code>: toggle appearance of loads in mbs</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">showSensors</span></code>: toggle appearance of sensors in mbs</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">useItemNames</span></code>: if True, object names are shown instead of basic object types (Node, Load, …)</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">useItemTypes</span></code>: if True, object type names (MassPoint, JointRevolute, …) are shown instead of basic object types (Node, Load, …); Note that Node, Object, is omitted at the beginning of itemName (as compared to theDoc.pdf); item classes become clear from the legend</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">addItemTypeNames</span></code>: if True, type nymes (Node, Load, etc.) are added</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">multiLine</span></code>: if True, labels are multiline, improving readability</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">fontSizeFactor</span></code>: use this factor to scale fonts, allowing to fit larger graphs on the screen with values &lt; 1</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">showLegend</span></code>: shows legend for different item types</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">layoutDistanceFactor</span></code>: this factor influences the arrangement of labels; larger distance values lead to circle-like results</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">layoutIterations</span></code>: more iterations lead to better arrangement of the layout, but need more time for larger systems (use 1000-10000 to get good results)</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><em>output</em>:</div>
-<div class="line">[nx, G, items] with nx being networkx, G the graph and item what is returned by nx.draw_networkx_labels(…)</div>
+<div class="line"><strong>NOTE</strong>: this function is directly available in MainSystem (mbs); it should be directly called as mbs.DrawSystemGraph(…). For description of the interface, see the MainSystem Python extensions,  <a class="reference internal" href="../cInterface/MainSystem.html#sec-mainsystemextensions-drawsystemgraph"><span class="std std-ref">Function: DrawSystemGraph</span></a></div>
 </div>
 </li>
 </ul>
-<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
-<blockquote>
-<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/fourBarMechanism3D.py">fourBarMechanism3D.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial3.py">rigidBodyTutorial3.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial3withMarkers.py">rigidBodyTutorial3withMarkers.py</a> (Ex)</p>
-</div></blockquote>
 <hr class="docutils" />
 </section>
 <section id="function-createtcpipconnection">
 <span id="sec-utilities-createtcpipconnection"></span><h2>Function: CreateTCPIPconnection<a class="headerlink" href="#function-createtcpipconnection" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L1243">CreateTCPIPconnection</a>(<code class="docutils literal notranslate"><span class="pre">sendSize</span></code>, <code class="docutils literal notranslate"><span class="pre">receiveSize</span></code>, <code class="docutils literal notranslate"><span class="pre">IPaddress</span> <span class="pre">=</span> <span class="pre">'127.0.0.1'</span></code>, <code class="docutils literal notranslate"><span class="pre">port</span> <span class="pre">=</span> <span class="pre">52421</span></code>, <code class="docutils literal notranslate"><span class="pre">bigEndian</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L1247">CreateTCPIPconnection</a>(<code class="docutils literal notranslate"><span class="pre">sendSize</span></code>, <code class="docutils literal notranslate"><span class="pre">receiveSize</span></code>, <code class="docutils literal notranslate"><span class="pre">IPaddress</span> <span class="pre">=</span> <span class="pre">'127.0.0.1'</span></code>, <code class="docutils literal notranslate"><span class="pre">port</span> <span class="pre">=</span> <span class="pre">52421</span></code>, <code class="docutils literal notranslate"><span class="pre">bigEndian</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -676,7 +596,7 @@ This library requires numpy (as well as time and copy)</p>
 </section>
 <section id="function-tcpipsendreceive">
 <span id="sec-utilities-tcpipsendreceive"></span><h2>Function: TCPIPsendReceive<a class="headerlink" href="#function-tcpipsendreceive" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L1276">TCPIPsendReceive</a>(<code class="docutils literal notranslate"><span class="pre">TCPIPobject</span></code>, <code class="docutils literal notranslate"><span class="pre">sendData</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L1280">TCPIPsendReceive</a>(<code class="docutils literal notranslate"><span class="pre">TCPIPobject</span></code>, <code class="docutils literal notranslate"><span class="pre">sendData</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -713,7 +633,7 @@ This library requires numpy (as well as time and copy)</p>
 </section>
 <section id="function-closetcpipconnection">
 <span id="sec-utilities-closetcpipconnection"></span><h2>Function: CloseTCPIPconnection<a class="headerlink" href="#function-closetcpipconnection" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L1289">CloseTCPIPconnection</a>(<code class="docutils literal notranslate"><span class="pre">TCPIPobject</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L1293">CloseTCPIPconnection</a>(<code class="docutils literal notranslate"><span class="pre">TCPIPobject</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -725,13 +645,13 @@ This library requires numpy (as well as time and copy)</p>
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/TCPIPexudynMatlab.py">TCPIPexudynMatlab.py</a> (Ex)</p>
 </div></blockquote>
+</section>
 <section id="class-tcpipdata-in-module-utilities">
-<h3>CLASS TCPIPdata (in module utilities)<a class="headerlink" href="#class-tcpipdata-in-module-utilities" title="Permalink to this heading"></a></h3>
+<span id="sec-module-utilities-class-tcpipdata"></span><h2>CLASS TCPIPdata (in module utilities)<a class="headerlink" href="#class-tcpipdata-in-module-utilities" title="Permalink to this heading"></a></h2>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>helper class for CreateTCPIPconnection and for TCPIPsendReceive</p>
 </div></blockquote>
-</section>
 </section>
 </section>
 

@@ -25,7 +25,9 @@ Function: GetVersionPlatformString
   | If exudyn C++ module is not available, it outputs the Python version
 
 
+
 ----
+
 
 .. _sec-processing-processparameterlist:
 
@@ -66,7 +68,9 @@ Function: ProcessParameterList
 
 
 
+
 ----
+
 
 .. _sec-processing-parametervariation:
 
@@ -108,7 +112,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
     \ `dispyParameterVariationExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/dispyParameterVariationExample.py>`_\  (Ex), \ `parameterVariationExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/parameterVariationExample.py>`_\  (Ex), \ `geneticOptimizationTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geneticOptimizationTest.py>`_\  (TM)
 
 
+
 ----
+
 
 .. _sec-processing-geneticoptimization:
 
@@ -157,7 +163,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
     \ `geneticOptimizationSliderCrank.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/geneticOptimizationSliderCrank.py>`_\  (Ex), \ `geneticOptimizationTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geneticOptimizationTest.py>`_\  (TM)
 
 
+
 ----
+
 
 .. _sec-processing-minimize:
 
@@ -198,7 +206,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
     \ `minimizeExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/minimizeExample.py>`_\  (Ex)
 
 
+
 ----
+
 
 .. _sec-processing-computesensitivities:
 
@@ -236,7 +246,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
     \ `ComputeSensitivitiesExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ComputeSensitivitiesExample.py>`_\  (Ex)
 
 
+
 ----
+
 
 .. _sec-processing-plotoptimizationresults2d:
 
@@ -259,7 +271,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
     \ `geneticOptimizationSliderCrank.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/geneticOptimizationSliderCrank.py>`_\  (Ex), \ `minimizeExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/minimizeExample.py>`_\  (Ex), \ `geneticOptimizationTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geneticOptimizationTest.py>`_\  (TM)
 
 
+
 ----
+
 
 .. _sec-processing-plotsensitivityresults:
 

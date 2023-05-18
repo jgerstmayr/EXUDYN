@@ -26,7 +26,9 @@ Function: CompressedRowSparseToDenseMatrix
   | a dense matrix as np.array
 
 
+
 ----
+
 
 .. _sec-fem-mapsparsematrixindices:
 
@@ -38,7 +40,9 @@ Function: MapSparseMatrixIndices
   | resort a sparse matrix (internal CSR format) with given sorting for rows and columns; changes matrix directly! used for ANSYS matrix import
 
 
+
 ----
+
 
 .. _sec-fem-vectordiadicunitmatrix3d:
 
@@ -50,7 +54,9 @@ Function: VectorDiadicUnitMatrix3D
   | compute diadic product of vector v and a 3D unit matrix = diadic(v,I\ :math:`_{3x3}`\ ); used for ObjectFFRF and CMS implementation
 
 
+
 ----
+
 
 .. _sec-fem-cycliccomparereversed:
 
@@ -62,7 +68,9 @@ Function: CyclicCompareReversed
   | compare cyclic two lists, reverse second list; return True, if any cyclic shifted lists are same, False otherwise
 
 
+
 ----
+
 
 .. _sec-fem-addentrytocompressedrowsparsearray:
 
@@ -75,7 +83,9 @@ Function: AddEntryToCompressedRowSparseArray
   | value is either added to existing entry (avoid duplicates) or a new entry is appended
 
 
+
 ----
+
 
 .. _sec-fem-csrtorowsandcolumns:
 
@@ -87,7 +97,9 @@ Function: CSRtoRowsAndColumns
   | compute rows and columns of a compressed sparse matrix and return as tuple: (rows,columns)
 
 
+
 ----
+
 
 .. _sec-fem-csrtoscipysparsecsr:
 
@@ -103,7 +115,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
     \ `ACFtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py>`_\  (TM)
 
 
+
 ----
+
 
 .. _sec-fem-scipysparsecsrtocsr:
 
@@ -115,7 +129,9 @@ Function: ScipySparseCSRtoCSR
   | convert scipy.sparse csr matrix to internal compressed CSR
 
 
+
 ----
+
 
 .. _sec-fem-resortindicesofcsrmatrix:
 
@@ -128,7 +144,9 @@ Function: ResortIndicesOfCSRmatrix
   | needed for import from NGsolve
 
 
+
 ----
+
 
 .. _sec-fem-resortindicesofngvector:
 
@@ -140,7 +158,9 @@ Function: ResortIndicesOfNGvector
   | resort indices of given NGsolve vector in XXXYYYZZZ format to XYZXYZXYZ format
 
 
+
 ----
+
 
 .. _sec-fem-resortindicesexudyn2ngvector:
 
@@ -152,7 +172,9 @@ Function: ResortIndicesExudyn2NGvector
   | resort indices of given Exudyun vector XYZXYZXYZ to NGsolve vector in XXXYYYZZZ format
 
 
+
 ----
+
 
 .. _sec-fem-converthextotrigs:
 
@@ -170,7 +192,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
     \ `objectFFRFTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest.py>`_\  (TM)
 
 
+
 ----
+
 
 .. _sec-fem-converttettotrigs:
 
@@ -184,7 +208,9 @@ Function: ConvertTetToTrigs
   | works for Tet10 elements, but does only take the corner nodes for drawing!
 
 
+
 ----
+
 
 .. _sec-fem-convertdensetocompressedrowmatrix:
 
@@ -196,7 +222,9 @@ Function: ConvertDenseToCompressedRowMatrix
   | convert numpy.array dense matrix to (internal) compressed row format
 
 
+
 ----
+
 
 .. _sec-fem-readmatrixfromansysmmf:
 
@@ -237,7 +265,9 @@ Function: ReadMatrixFromAnsysMMF
   | !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
+
 ----
+
 
 .. _sec-fem-readmatrixdofmappingvectorfromansystxt:
 
@@ -251,7 +281,9 @@ Function: ReadMatrixDOFmappingVectorFromAnsysTxt
   | the resulting sorted vector is already converted to 0-based indices
 
 
+
 ----
+
 
 .. _sec-fem-readnodalcoordinatesfromansystxt:
 
@@ -279,7 +311,9 @@ Function: ReadNodalCoordinatesFromAnsysTxt
   | coordinates as .txt file.
 
 
+
 ----
+
 
 .. _sec-fem-readelementsfromansystxt:
 
@@ -307,7 +341,9 @@ Function: ReadElementsFromAnsysTxt
   | as .txt file.
 
 
+
 ----
+
 
 .. _sec-fem-cmsobjectcomputenorm:
 
@@ -331,16 +367,20 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
     \ `netgenSTLtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/netgenSTLtest.py>`_\  (Ex), \ `NGsolveCMStutorial.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCMStutorial.py>`_\  (Ex)
 
 
+.. _sec-module-fem-class-materialbaseclass:
+
 CLASS MaterialBaseClass (in module FEM)
----------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 **class description**: 
 
     material base class, e.g., for FiniteElement
 
 
 
+.. _sec-module-fem-class-kirchhoffmaterial(materialbaseclass):
+
 CLASS KirchhoffMaterial(MaterialBaseClass) (in module FEM)
-----------------------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 **class description**: 
 
     class for representation of Kirchhoff (linear elastic, 3D and 2D) material
@@ -398,24 +438,30 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
     \ `CMSexampleCourse.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/CMSexampleCourse.py>`_\  (Ex), \ `netgenSTLtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/netgenSTLtest.py>`_\  (Ex), \ `NGsolveCMStutorial.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCMStutorial.py>`_\  (Ex), \ `NGsolveCraigBampton.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCraigBampton.py>`_\  (Ex), \ `NGsolvePistonEngine.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py>`_\  (Ex)
 
 
+.. _sec-module-fem-class-finiteelement:
+
 CLASS FiniteElement (in module FEM)
------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 **class description**: 
 
     finite element base class for lateron implementations of other finite elements
 
 
 
+.. _sec-module-fem-class-tet4(finiteelement):
+
 CLASS Tet4(FiniteElement) (in module FEM)
------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 **class description**: 
 
     simplistic 4-noded tetrahedral interface to compute strain/stress at nodal points
 
 
 
+.. _sec-module-fem-class-objectffrfinterface:
+
 CLASS ObjectFFRFinterface (in module FEM)
------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 **class description**: 
 
     compute terms necessary for ObjectFFRF
@@ -483,8 +529,10 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
     \ `objectFFRFTest2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest2.py>`_\  (TM)
 
 
+.. _sec-module-fem-class-objectffrfreducedorderinterface:
+
 CLASS ObjectFFRFreducedOrderInterface (in module FEM)
------------------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 **class description**: 
 
     compute terms necessary for ObjectFFRFreducedOrder
@@ -624,8 +672,10 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
     \ `CMSexampleCourse.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/CMSexampleCourse.py>`_\  (Ex), \ `netgenSTLtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/netgenSTLtest.py>`_\  (Ex), \ `NGsolveCMStutorial.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCMStutorial.py>`_\  (Ex), \ `NGsolveCraigBampton.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCraigBampton.py>`_\  (Ex), \ `NGsolvePistonEngine.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py>`_\  (Ex), \ `abaqusImportTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/abaqusImportTest.py>`_\  (TM), \ `NGsolveCrankShaftTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/NGsolveCrankShaftTest.py>`_\  (TM), \ `objectFFRFreducedOrderAccelerations.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderAccelerations.py>`_\  (TM)
 
 
+.. _sec-module-fem-class-hcbstaticmodeselection(enum):
+
 CLASS HCBstaticModeSelection(Enum) (in module FEM)
---------------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 **class description**: 
 
     helper calss for function ComputeHurtyCraigBamptonModes, declaring some computation options. It offers the following options:
@@ -640,8 +690,10 @@ CLASS HCBstaticModeSelection(Enum) (in module FEM)
 
 
 
+.. _sec-module-fem-class-feminterface:
+
 CLASS FEMinterface (in module FEM)
-----------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 **class description**: 
 
     general interface to different FEM / mesh imports and export to EXUDYN functions

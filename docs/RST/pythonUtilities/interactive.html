@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Module: interactive &mdash; Exudyn1.6.103.dev1 1.6.103.dev1 documentation</title>
+  <title>Module: interactive &mdash; Exudyn1.6.110.dev1 1.6.110.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -39,7 +39,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.103.dev1
+            Exudyn1.6.110.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -74,6 +74,7 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Module: interactive</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#function-animatemodes">Function: AnimateModes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-solutionviewer">Function: SolutionViewer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-interactivedialog-in-module-interactive">CLASS InteractiveDialog (in module interactive)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#class-function-init">Class function: __init__</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#class-function-onquit">Class function: OnQuit</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#class-function-startsimulation">Class function: StartSimulation</a></li>
@@ -88,6 +89,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="kinematicTree.html">Module: kinematicTree</a></li>
 <li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html">Module: lieGroupBasics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mainSystemExtensions.html">Module: mainSystemExtensions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="physics.html">Module: physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plot.html">Module: plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="processing.html">Module: processing</a></li>
@@ -121,7 +123,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.103.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.110.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -189,54 +191,20 @@
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/CMSexampleCourse.py">CMSexampleCourse.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/netgenSTLtest.py">netgenSTLtest.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCMStutorial.py">NGsolveCMStutorial.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCraigBampton.py">NGsolveCraigBampton.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py">NGsolvePistonEngine.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderShowModes.py">objectFFRFreducedOrderShowModes.py</a> (TM)</p>
 </div></blockquote>
-<hr class="docutils" />
 </section>
+<hr class="docutils" />
 <section id="function-solutionviewer">
-<span id="sec-interactive-solutionviewer"></span><h2>Function: SolutionViewer<a class="headerlink" href="#function-solutionviewer" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py#L751">SolutionViewer</a>(<code class="docutils literal notranslate"><span class="pre">mainSystem</span></code>, <code class="docutils literal notranslate"><span class="pre">solution</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">rowIncrement</span> <span class="pre">=</span> <span class="pre">1</span></code>, <code class="docutils literal notranslate"><span class="pre">timeout</span> <span class="pre">=</span> <span class="pre">0.04</span></code>, <code class="docutils literal notranslate"><span class="pre">runOnStart</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">runMode</span> <span class="pre">=</span> <span class="pre">2</span></code>, <code class="docutils literal notranslate"><span class="pre">fontSize</span> <span class="pre">=</span> <span class="pre">12</span></code>, <code class="docutils literal notranslate"><span class="pre">title</span> <span class="pre">=</span> <span class="pre">''</span></code>, <code class="docutils literal notranslate"><span class="pre">checkRenderEngineStopFlag</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<h2>Function: SolutionViewer<a class="headerlink" href="#function-solutionviewer" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py#L752">SolutionViewer</a>(<code class="docutils literal notranslate"><span class="pre">mainSystem</span></code>, <code class="docutils literal notranslate"><span class="pre">solution</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">rowIncrement</span> <span class="pre">=</span> <span class="pre">1</span></code>, <code class="docutils literal notranslate"><span class="pre">timeout</span> <span class="pre">=</span> <span class="pre">0.04</span></code>, <code class="docutils literal notranslate"><span class="pre">runOnStart</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">runMode</span> <span class="pre">=</span> <span class="pre">2</span></code>, <code class="docutils literal notranslate"><span class="pre">fontSize</span> <span class="pre">=</span> <span class="pre">12</span></code>, <code class="docutils literal notranslate"><span class="pre">title</span> <span class="pre">=</span> <span class="pre">''</span></code>, <code class="docutils literal notranslate"><span class="pre">checkRenderEngineStopFlag</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
 <ul>
 <li><div class="line-block">
-<div class="line"><em>function description</em>:</div>
-<div class="line">open interactive dialog and visulation (animate) solution loaded with LoadSolutionFile(…); Change slider ‘Increment’ to change the automatic increment of time frames; Change mode between continuous run, one cycle (fits perfect for animation recording) or ‘Static’ (to change Solution steps manually with the mouse); update period also lets you change the speed of animation; Press Run / Stop button to start/stop interactive mode (updating of grpahics)</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><em>input</em>:</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">mainSystem</span></code>: the system used for animation</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">solution</span></code>: solution dictionary previously loaded with exudyn.utilities.LoadSolutionFile(…); will be played from first to last row; if solution==’’, it tries to load the file coordinatesSolutionFileName as stored in mbs.sys[‘simulationSettings’], which are the simulationSettings of the previous simulation</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">rowIncrement</span></code>: can be set larger than 1 in order to skip solution frames: e.g. rowIncrement=10 visualizes every 10th row (frame)</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">timeout</span></code>: in seconds is used between frames in order to limit the speed of animation; e.g. use timeout=0.04 to achieve approximately 25 frames per second</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">runOnStart</span></code>: immediately go into ‘Run’ mode</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">runMode</span></code>: 0=continuous run, 1=one cycle, 2=static (use slider/mouse to vary time steps)</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">fontSize</span></code>: define font size for labels in InteractiveDialog</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">title</span></code>: if empty, it uses default; otherwise define specific title</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">checkRenderEngineStopFlag</span></code>: if True, stopping renderer (pressing Q or Escape) also causes stopping the interactive dialog</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><em>output</em>:</div>
-<div class="line">updates current visualization state, renders the scene continuously (after pressing button ‘Run’)</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><em>example</em>:</div>
+<div class="line"><strong>NOTE</strong>: this function is directly available in MainSystem (mbs); it should be directly called as mbs.SolutionViewer(…). For description of the interface, see the MainSystem Python extensions,  <a class="reference internal" href="../cInterface/MainSystem.html#sec-mainsystemextensions-solutionviewer"><span class="std std-ref">Function: SolutionViewer</span></a></div>
 </div>
 </li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#HERE, mbs must contain same model as solution stored in coordinatesSolution.txt</span>
-<span class="c1">#adjust autoFitScence, otherwise it may lead to unwanted fit to scene</span>
-<span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">autoFitScene</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="kn">from</span> <span class="nn">exudyn.interactive</span> <span class="kn">import</span> <span class="nf">SolutionViewer</span> <span class="c1">#import function</span>
-<span class="n">sol</span> <span class="o">=</span> <span class="nf">LoadSolutionFile</span><span class="p">(</span><span class="s1">&#39;coordinatesSolution.txt&#39;</span><span class="p">)</span> <span class="c1">#load solution: adjust to your file name</span>
-<span class="nf">SolutionViewer</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sol</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
-<blockquote>
-<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addPrismaticJoint.py">addPrismaticJoint.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py">addRevoluteJoint.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveALE.py">beltDriveALE.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveReevingSystem.py">beltDriveReevingSystem.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDrivesComparison.py">beltDrivesComparison.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py">ACFtest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py">ANCFbeltDrive.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFgeneralContactCircle.py">ANCFgeneralContactCircle.py</a> (TM)</p>
-</div></blockquote>
+</section>
 <section id="class-interactivedialog-in-module-interactive">
-<h3>CLASS InteractiveDialog (in module interactive)<a class="headerlink" href="#class-interactivedialog-in-module-interactive" title="Permalink to this heading"></a></h3>
+<span id="sec-module-interactive-class-interactivedialog"></span><h2>CLASS InteractiveDialog (in module interactive)<a class="headerlink" href="#class-interactivedialog-in-module-interactive" title="Permalink to this heading"></a></h2>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>create an interactive dialog, which allows to interact with simulations
@@ -298,7 +266,6 @@ for examples, see <code class="docutils literal notranslate"><span class="pre">s
        <span class="s1">&#39;sizeInches&#39;</span><span class="p">:(</span><span class="mi">12</span><span class="p">,</span><span class="mi">12</span><span class="p">)}</span>       <span class="c1">#specific x and y size of figure in inches (using 100 dpi)</span>
 </pre></div>
 </div>
-</section>
 </section>
 <section id="class-function-init">
 <span id="sec-interactive-interactivedialog-init"></span><h2>Class function: __init__<a class="headerlink" href="#class-function-init" title="Permalink to this heading"></a></h2>

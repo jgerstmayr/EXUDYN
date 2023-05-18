@@ -28,7 +28,9 @@ Function: Manipulator4Rsimple
   | the 4th joint is used to simulate a paralell kinematics manipulator
 
 
+
 ----
+
 
 .. _sec-models-manipulator3rsimple:
 
@@ -51,7 +53,9 @@ Function: Manipulator3RSimple
   | alpha=[pi/2 0 0];
 
 
+
 ----
+
 
 .. _sec-models-manipulatorpanda:
 
@@ -76,7 +80,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
     \ `InverseKinematicsNumericalExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/InverseKinematicsNumericalExample.py>`_\  (Ex), \ `serialRobotInverseKinematics.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotInverseKinematics.py>`_\  (Ex)
 
 
+
 ----
+
 
 .. _sec-models-manipulatorur5:
 
@@ -100,7 +106,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
     \ `InverseKinematicsNumericalExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/InverseKinematicsNumericalExample.py>`_\  (Ex), \ `serialRobotInverseKinematics.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotInverseKinematics.py>`_\  (Ex)
 
 
+
 ----
+
 
 .. _sec-models-manipulatorpuma560:
 
@@ -123,7 +131,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
     \ `humanRobotInteraction.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py>`_\  (Ex), \ `InverseKinematicsNumericalExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/InverseKinematicsNumericalExample.py>`_\  (Ex), \ `serialRobotInverseKinematics.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotInverseKinematics.py>`_\  (Ex), \ `serialRobotKinematicTreeDigging.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTreeDigging.py>`_\  (Ex)
 
 
+
 ----
+
 
 .. _sec-models-linkdict2robot:
 
@@ -153,7 +163,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
     \ `serialRobotInverseKinematics.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotInverseKinematics.py>`_\  (Ex)
 
 
+
 ----
+
 
 .. _sec-models-linkdictmoddhkk2robot:
 

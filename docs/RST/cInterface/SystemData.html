@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SystemData &mdash; Exudyn1.6.103.dev1 1.6.103.dev1 documentation</title>
+  <title>SystemData &mdash; Exudyn1.6.110.dev1 1.6.110.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -37,7 +37,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.103.dev1
+            Exudyn1.6.110.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -70,16 +70,6 @@
 <li class="toctree-l2"><a class="reference internal" href="GeneralContact.html">GeneralContact</a></li>
 <li class="toctree-l2"><a class="reference internal" href="DataStructures.html">Data structures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html">Type definitions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#outputvariabletype">OutputVariableType</a></li>
-<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#configurationtype">ConfigurationType</a></li>
-<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#itemtype">ItemType</a></li>
-<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#nodetype">NodeType</a></li>
-<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#jointtype">JointType</a></li>
-<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#dynamicsolvertype">DynamicSolverType</a></li>
-<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#crosssectiontype">CrossSectionType</a></li>
-<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#keycode">KeyCode</a></li>
-<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#linearsolvertype">LinearSolverType</a></li>
-<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html#contacttypeindex">ContactTypeIndex</a></li>
 </ul>
 </li>
 </ul>
@@ -103,7 +93,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.103.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.110.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -249,7 +239,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>SetTime</strong>(<em>newTime</em><em>configurationType</em> = exu.ConfigurationType.Current):</div>
+<div class="line"><strong>SetTime</strong>(<em>newTime</em>, <em>configurationType</em> = exu.ConfigurationType.Current):</div>
 <div class="line">set configuration dependent time; use this access with care, e.g. in user-defined solvers.</div>
 <div class="line"><em>Example</em>:</div>
 </div>
@@ -258,7 +248,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>AddODE2LoadDependencies</strong>(<em>loadNumber</em><em>globalODE2coordinates</em>):</div>
+<div class="line"><strong>AddODE2LoadDependencies</strong>(<em>loadNumber</em>, <em>globalODE2coordinates</em>):</div>
 <div class="line">advanced function for adding special dependencies of loads onto ODE2 coordinates, taking a list / numpy array of global ODE2 coordinates; this function needs to be called after Assemble() and needs to contain ODE2 coordinate indices; this list only affects implicit or static solvers if numericalDifferentiation.loadsJacobian=True; in this case, it may greatly improve convergence if loads with user functions depend on some system states, such as in a load with feedback control loop; the additional dependencies are not required, if doSystemWideDifferentiation=True, however the latter option being much less efficient!</div>
 <div class="line"><em>Example</em>:</div>
 </div>
@@ -302,7 +292,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>SetODE2Coordinates</strong>(<em>coordinates</em><em>configuration</em> = exu.ConfigurationType.Current):</div>
+<div class="line"><strong>SetODE2Coordinates</strong>(<em>coordinates</em>, <em>configuration</em> = exu.ConfigurationType.Current):</div>
 <div class="line">set ODE2 system coordinates (displacements) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!</div>
 <div class="line"><em>Example</em>:</div>
 </div>
@@ -320,7 +310,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>SetODE2Coordinates_t</strong>(<em>coordinates</em><em>configuration</em> = exu.ConfigurationType.Current):</div>
+<div class="line"><strong>SetODE2Coordinates_t</strong>(<em>coordinates</em>, <em>configuration</em> = exu.ConfigurationType.Current):</div>
 <div class="line">set ODE2 system coordinates (velocities) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!</div>
 <div class="line"><em>Example</em>:</div>
 </div>
@@ -338,7 +328,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>SetODE2Coordinates_tt</strong>(<em>coordinates</em><em>configuration</em> = exu.ConfigurationType.Current):</div>
+<div class="line"><strong>SetODE2Coordinates_tt</strong>(<em>coordinates</em>, <em>configuration</em> = exu.ConfigurationType.Current):</div>
 <div class="line">set ODE2 system coordinates (accelerations) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!</div>
 <div class="line"><em>Example</em>:</div>
 </div>
@@ -356,7 +346,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>SetODE1Coordinates</strong>(<em>coordinates</em><em>configuration</em> = exu.ConfigurationType.Current):</div>
+<div class="line"><strong>SetODE1Coordinates</strong>(<em>coordinates</em>, <em>configuration</em> = exu.ConfigurationType.Current):</div>
 <div class="line">set ODE1 system coordinates (velocities) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!</div>
 <div class="line"><em>Example</em>:</div>
 </div>
@@ -374,7 +364,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>SetODE1Coordinates_t</strong>(<em>coordinates</em><em>configuration</em> = exu.ConfigurationType.Current):</div>
+<div class="line"><strong>SetODE1Coordinates_t</strong>(<em>coordinates</em>, <em>configuration</em> = exu.ConfigurationType.Current):</div>
 <div class="line">set ODE1 system coordinates (displacements) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!</div>
 <div class="line"><em>Example</em>:</div>
 </div>
@@ -392,7 +382,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>SetAECoordinates</strong>(<em>coordinates</em><em>configuration</em> = exu.ConfigurationType.Current):</div>
+<div class="line"><strong>SetAECoordinates</strong>(<em>coordinates</em>, <em>configuration</em> = exu.ConfigurationType.Current):</div>
 <div class="line">set algebraic equations (AE) system coordinates for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!</div>
 <div class="line"><em>Example</em>:</div>
 </div>
@@ -410,7 +400,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>SetDataCoordinates</strong>(<em>coordinates</em><em>configuration</em> = exu.ConfigurationType.Current):</div>
+<div class="line"><strong>SetDataCoordinates</strong>(<em>coordinates</em>, <em>configuration</em> = exu.ConfigurationType.Current):</div>
 <div class="line">set system data coordinates for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!</div>
 <div class="line"><em>Example</em>:</div>
 </div>
@@ -428,7 +418,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>SetSystemState</strong>(<em>systemStateList</em><em>configuration</em> = exu.ConfigurationType.Current):</div>
+<div class="line"><strong>SetSystemState</strong>(<em>systemStateList</em>, <em>configuration</em> = exu.ConfigurationType.Current):</div>
 <div class="line">set system data coordinates for given configuration (default: exu.Configuration.Current); invalid list of vectors / vector size may lead to system crash; write access to state vectors (but not the non-state derivatives ODE1_t and ODE2_tt and the time); function is copying data - not highly efficient; format of pyList: [ODE2Coords, ODE2Coords_t, ODE1Coords, AEcoords, dataCoords]</div>
 <div class="line"><em>Example</em>:</div>
 </div>

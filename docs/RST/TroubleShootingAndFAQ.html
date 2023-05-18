@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Trouble shooting and FAQ &mdash; Exudyn1.6.103.dev1 1.6.103.dev1 documentation</title>
+  <title>Trouble shooting and FAQ &mdash; Exudyn1.6.110.dev1 1.6.110.dev1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
@@ -39,7 +39,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.6.103.dev1
+            Exudyn1.6.110.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -93,7 +93,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.6.103.dev1</a>
+          <a href="../../index.html">Exudyn1.6.110.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -432,10 +432,11 @@ Solver stopped! use showHints=True to show helpful information
 </div>
 </div></blockquote>
 <ul class="simple">
-<li><p>Why does <strong>type auto completion</strong> not work for mbs (MainSystem)?</p></li>
+<li><p>Why does <strong>type auto completion</strong> / intellisense not work for mbs (MainSystem)?</p></li>
 </ul>
 <blockquote>
 <div><div class="line-block">
+<div class="line">→  UPDATE 2023-05-11 (V1.6.103): type completion now also works for functions, types and structures: tested in Spyder 5.2.2 and Visual Studio Code 1.78.1); with an added stub file (.pyi) the standard type completion fetches information about structures or functions; this even works for <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.bodies.kinematicTree.showJointFrames</span></code>. If you still have problems, try to restart your environment / computer or switch to a different version</div>
 <div class="line">→  UPDATE 2020-06-01: with Spyder 4, using Python 3.7, type auto completion works much better, but may find too many completions.</div>
 <div class="line">→  most Python environments (e.g., with Spyder 3) only have information up to the first sub-structure, e.g., <code class="docutils literal notranslate"><span class="pre">SC=exu.SystemContainer()</span></code> provides full access to SC in the type completion, but <code class="docutils literal notranslate"><span class="pre">mbs=SC.AddSystem()</span></code> is at the second sub-structure of the module and is not accessible.</div>
 <div class="line">→  WORKAROUND: type <code class="docutils literal notranslate"><span class="pre">mbs=MainSystem()</span></code> <strong>before</strong> the <code class="docutils literal notranslate"><span class="pre">mbs=SC.AddSystem()</span></code> command and the interpreter will know what type mbs is. This also works for settings, e.g., simulation settings ‘Newton’.</div>

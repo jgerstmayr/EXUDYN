@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Issue tracker &mdash; Exudyn1.6.103.dev1 1.6.103.dev1 documentation</title>
+  <title>Issue tracker &mdash; Exudyn1.6.110.dev1 1.6.110.dev1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
@@ -38,7 +38,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.6.103.dev1
+            Exudyn1.6.110.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -92,7 +92,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.6.103.dev1</a>
+          <a href="../../index.html">Exudyn1.6.110.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -117,15 +117,72 @@ The extension <code class="docutils literal notranslate"><span class="pre">.dev1
 BUG numbers refer to the according issue numbers.</p>
 <p>General information on current version:</p>
 <ul class="simple">
-<li><p>Exudyn version = 1.6.103.dev1,</p></li>
-<li><p>last change =  2023-05-10,</p></li>
-<li><p>Number of issues = 1564,</p></li>
-<li><p>Number of resolved issues = 1383 (103 in current version),</p></li>
+<li><p>Exudyn version = 1.6.110.dev1,</p></li>
+<li><p>last change =  2023-05-17,</p></li>
+<li><p>Number of issues = 1575,</p></li>
+<li><p>Number of resolved issues = 1390 (110 in current version),</p></li>
 </ul>
 <section id="version-1-6">
 <h2>Version 1.6<a class="headerlink" href="#version-1-6" title="Permalink to this heading"></a></h2>
 <blockquote>
 <div><ul class="simple">
+<li><dl class="simple">
+<dt>Version 1.6.110: resolved Issue 1574: Python utilities (fix)</dt><dd><ul>
+<li><p>description:  classes not appearing in table of contents on RTD</p></li>
+<li><p>date resolved: <strong>2023-05-17 20:21</strong>, date raised: 2023-05-16</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.6.109: resolved Issue 1572: CreateRigidBody (extension)</dt><dd><ul>
+<li><p>description:  added to MainSystem to enable mbs.CreateRigidBody(…)</p></li>
+<li><p>date resolved: <strong>2023-05-16 11:54</strong>, date raised: 2023-05-16</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.6.108: resolved Issue 1568: mainSystemExtensions (extension)</dt><dd><ul>
+<li><p>description:  create first sample of Python extensions for basic joints</p></li>
+<li><p>date resolved: <strong>2023-05-15 18:13</strong>, date raised: 2023-05-15</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.6.107: resolved Issue 1567: DrawSystemGraph (change)</dt><dd><ul>
+<li><p>description:  in case of showItemNames, no item numbers are shown as they confuse with numbers used in names</p></li>
+<li><p>date resolved: <strong>2023-05-15 17:18</strong>, date raised: 2023-05-15</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.6.106: resolved Issue 1566: AddDistanceSensor(…) (change)</dt><dd><ul>
+<li><p>description:  function RENAMED into CreateDistanceSensor(…) to be consistent with future naming; also renamed DistanceSensorSetupGeometry(…) into CreateDistanceSensorGeometry(…)</p></li>
+<li><p>date resolved: <strong>2023-05-15 11:34</strong>, date raised: 2023-05-15</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.6.105: resolved Issue 1563: MainSystem Python extensions (extension)</dt><dd><ul>
+<li><p>description:  add Python utility functions for mbs, such as PlotSensor, SolveDynamic, …; use identical interfaces to alleviate creation of .pyi files and documentation; add new flag mbsFunction as hint to put docu to MainSystem and make .pyi extension</p></li>
+<li><p><strong>notes:</strong> see Section <a class="reference internal" href="cInterface/MainSystem.html#sec-mainsystem-pythonextensions"><span class="std std-ref">MainSystem Python extensions</span></a> for extended functionality</p></li>
+<li><p>date resolved: <strong>2023-05-15 01:17</strong>, date raised: 2023-05-09</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.6.104: resolved Issue 1564: Type definitions (docu)</dt><dd><ul>
+<li><p>description:  fix header structure in latex and RST for Type Definitions</p></li>
+<li><p>date resolved: <strong>2023-05-11 11:30</strong>, date raised: 2023-05-11</p></li>
+</ul>
+</dd>
+</dl>
+</li>
 <li><dl class="simple">
 <dt>Version 1.6.103: resolved Issue 1561: stub files .pyi (extension)</dt><dd><ul>
 <li><p>description:  add .pyi files to setup_tools, copying them from autogenerate folder; use try catch to avoid problems at other platforms</p></li>
@@ -152,7 +209,7 @@ BUG numbers refer to the according issue numbers.</p>
 </li>
 <li><dl class="simple">
 <dt>Version 1.6.100: resolved Issue 1559: stub files .pyi (extension)</dt><dd><ul>
-<li><p>description:  automatically create stub file for settings to alleviate auto-completion</p></li>
+<li><p>description:  automatically create stub file for settings to alleviate auto-completion; type completion now also works for functions, types and structures: tested in Spyder and Visual Studio Code</p></li>
 <li><p>date resolved: <strong>2023-05-10 08:39</strong>, date raised: 2023-05-09</p></li>
 </ul>
 </dd>
@@ -11483,9 +11540,41 @@ BUG numbers refer to the according issue numbers.</p>
 <blockquote>
 <div><ul class="simple">
 <li><dl class="simple">
-<dt><strong>open issue 1563:</strong> MainSystem Python extensions</dt><dd><ul>
-<li><p>description:  add Python utility functions for mbs, such as PlotSensor, SolveDynamic, …; use identical interfaces to alleviate creation of .pyi files and documentation; add new flag mbsFunction as hint to put docu to MainSystem and make .pyi extension</p></li>
-<li><p>date raised: 2023-05-09</p></li>
+<dt><strong>open issue 1573:</strong> mainSystemExtensions</dt><dd><ul>
+<li><p>description:  Adapt tutorials to new functionality</p></li>
+<li><p>date raised: 2023-05-16</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>open issue 1571:</strong> mainSystemExtensions</dt><dd><ul>
+<li><p>description:  adapt Examples to Python extensions (SolveDynamic, CreateRigidBody, CreateGenericJoint, …)</p></li>
+<li><p>date raised: 2023-05-15</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>open issue 1570:</strong> mainSystemExtensions</dt><dd><ul>
+<li><p>description:  adapt TestModels to Python extensions</p></li>
+<li><p>date raised: 2023-05-15</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>open issue 1569:</strong> mainSystemExtensions</dt><dd><ul>
+<li><p>description:  add mini-examples for extensions</p></li>
+<li><p>date raised: 2023-05-15</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>open issue 1565:</strong> utilities InitializeFromRestartFile</dt><dd><ul>
+<li><p>description:  finalize C++ functionality and Python function</p></li>
+<li><p>date raised: 2023-05-14</p></li>
 </ul>
 </dd>
 </dl>
