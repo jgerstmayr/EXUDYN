@@ -21,7 +21,7 @@ import exudyn as exu
 import exudyn.plot
 import exudyn.solver
 import exudyn.interactive
-import exudyn.robotics
+#import exudyn.robotics
 import exudyn.utilities
 
 from exudyn.rigidBodyUtilities import GetRigidBodyNode, ComputeOrthonormalBasis, \

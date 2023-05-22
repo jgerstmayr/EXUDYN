@@ -19,15 +19,18 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.6.118.dev1, 
-+  last change =  2023-05-21, 
-+  Number of issues = 1582, 
-+  Number of resolved issues = 1398 (118 in current version), 
++  Exudyn version = 1.6.119.dev1, 
++  last change =  2023-05-22, 
++  Number of issues = 1583, 
++  Number of resolved issues = 1399 (119 in current version), 
 
 ***********
 Version 1.6
 ***********
 
+ * Version 1.6.119: resolved Issue 1582: mainSystemExtensions (fix)
+    - description:  remove import of tkinter and matplotlib to resolve errors when loading exudyn and these libs are not installed
+    - date resolved: **2023-05-22 10:54**\ , date raised: 2023-05-22 
  * Version 1.6.118: resolved Issue 1577: examples (fix)
     - description:  test if all Examples are still running
     - date resolved: **2023-05-20 22:23**\ , date raised: 2023-05-20 

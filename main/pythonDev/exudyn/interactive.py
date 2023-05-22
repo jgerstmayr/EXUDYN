@@ -14,11 +14,8 @@
 import numpy as np #LoadSolutionFile
 from math import sin, pi #for animation
 #import time        
-import tkinter
-import tkinter.font as tkFont
 import copy		   #copy numpy objects
 import exudyn
-from exudyn.GUI import GetTkRootAndNewWindow
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -103,6 +100,15 @@ class InteractiveDialog:
                  doTimeIntegration = True, runOnStart = False, 
                  addLabelStringVariables=False, addSliderVariables=False, 
                  checkRenderEngineStopFlag = True, userOnChange=None):
+        
+        try:
+            import tkinter
+            import tkinter.font as tkFont
+            from exudyn.GUI import GetTkRootAndNewWindow
+        except:
+            raise ValueError('ERROR: InteractiveDialog: tkinter is not installed; InteractiveDialog or SolutionViewer are therefore not available')
+
+        
         #store init arguments
         self.mbs = mbs
         self.simulationFunction = simulationFunction
@@ -162,15 +168,12 @@ class InteractiveDialog:
         self.widgets = [] #store tk widgets as list, for later access
         self.labelStringVariables = [] #store string variables to modify widget text hereafter
         self.sliderVariables = [] #store string variables to modify widget text hereafter
-        firstItem = True
+
         for item in dialogItems:
-            callFunction = 0
             text = ''
             setGrid = False
             # sticky = 'NSEW'
            
-            if 'callFunction' in item:
-                callFunction = item['callFunction']
             if 'text' in item:
                 text = item['text']
             # if 'sticky' in item:
@@ -506,7 +509,6 @@ class InteractiveDialog:
 
     #**classFunction: function which performs short simulation for given period        
     def RunSimulationPeriod(self):
-        cnt = self.counter
         deltaT = self.period
         h = self.stepSize
         mbs = self.mbs

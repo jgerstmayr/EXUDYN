@@ -12,10 +12,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-import matplotlib
-import matplotlib.pyplot as plt
 import numpy as np #for loading
-import matplotlib.ticker as ticker
 import exudyn #for sensor index
 from exudyn.advancedUtilities import PlotLineCode
 
@@ -235,6 +232,13 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel='time (s)', yLabel=No
                fileName='', useXYZcomponents=True, **kwargs):
     #could also be imported from exudyn.utilities import PlotLineCode
     #CC = ['k-','g-','b-','r-','c-','m-','y-','k:','g:','b:','r:','c:','m:','y:','k--','g--','b--','r--','c--','m--','y--','k-.','g-.','b-.','r-.','c-.','m-.','y-.']
+    try:
+        import matplotlib
+        import matplotlib.pyplot as plt
+        import matplotlib.ticker as ticker
+    except:
+        raise ValueError('ERROR: PlotSensor: matplotlib is not installed; PlotSensor is therefore not available')
+
     
     for key in kwargs:
         if (key!='minorTicksXon' and key!='minorTicksYon' and key!='sizeInches' 
@@ -848,8 +852,13 @@ def PlotImage(imageData, HT = np.eye(4), axesEqual=True, plot3D=False, lineWidth
               triangleEdgeColors='black', triangleEdgeWidths=0.5, removeAxes = True, orthogonalProjection=True,
               title = '', figureName='', fileName = '', fontSize = 16, closeAll = False,
               azim=0., elev=0.):
+
     from matplotlib import collections  as mc #plot does not accept colors
+    import matplotlib.pyplot as plt
+    import matplotlib
+
     from exudyn.rigidBodyUtilities import HT2rotationMatrix, HT2translation
+
     linePoints = imageData['linePoints']
     lineColors = imageData['lineColors']
     triangles = imageData['triangles']
