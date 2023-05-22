@@ -174,13 +174,13 @@ You can view and download this file on Github: `particlesTest.py <https://github
        #initial gContact statistics
        #simulationSettings.timeIntegration.numberOfSteps = 1
        #simulationSettings.timeIntegration.endTime = h
-       #exu.SolveDynamic(mbs, simulationSettings, solverType=exu.DynamicSolverType.ExplicitEuler)
+       #mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.ExplicitEuler)
        #print(gContact)
    
        simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
        simulationSettings.timeIntegration.endTime = tEnd
        simulationSettings.timeIntegration.explicitIntegration.computeEndOfStepAccelerations = False #increase performance, accelerations less accurate
-       exu.SolveDynamic(mbs, simulationSettings, solverType=exu.DynamicSolverType.RK67)
+       mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.RK67)
        print(gContact)
        #p = mbs.GetNodeOutput(n, variableType=exu.OutputVariableType.Position)
        #print("pEnd =", p[0], p[1])
@@ -192,8 +192,8 @@ You can view and download this file on Github: `particlesTest.py <https://github
    else:
        SC.visualizationSettings.general.autoFitScene = False
        SC.visualizationSettings.general.graphicsUpdateInterval=0.5
-       from exudyn.interactive import SolutionViewer
+       
        sol = LoadSolutionFile('particles.txt')
-       SolutionViewer(mbs, sol)
+       mbs.SolutionViewer(sol)
 
 

@@ -5,6 +5,10 @@ The python source code of the first tutorial can be found in the file:
 
    \ ``main/pythonDev/Examples/springDamperTutorial.py``\ 
 
+A similar version based on a simplified approach (using a 3D mass point) is available as
+
+   \ ``main/pythonDev/Examples/springDamperTutorialNew.py``\ 
+
 This tutorial will set up a mass point and a spring damper, dynamically compute the solution and evaluate the reference solution.
 
 
@@ -14,7 +18,7 @@ We import the exudyn library and the interface for all nodes, objects, markers, 
 
   import exudyn as exu
   from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
-  import numpy as np
+  import numpy as np #for postprocessing
 
 
 Next, we need a \ ``SystemContainer``\ , which contains all computable systems and add a new MainSystem \ ``mbs``\ .
@@ -26,11 +30,14 @@ Per default, you always should name your system 'mbs' (multibody system), in ord
   mbs = SC.AddSystem()
 
 
-In order to check, which version you are using, you can printout the current Exudyn version. This version is in line with the issue tracker and marks the number of open/closed issues added to Exudyn :
+In order to check, which version you are using, you can printout the current Exudyn version. 
+The version shown is in line with the issue tracker and marks the number of open/closed issues added to Exudyn .
+Adding \ ``True``\  as argument will also print platform-specific information, which is helpful 
+in case of reporting some compatibility issues:
 
 .. code-block:: python
 
-  print('EXUDYN version='+exu.__version__)
+  print('EXUDYN version='+exu.GetVersionString(True))
 
 
 Using the powerful Python language, we can define some variables for our problem, which will also be used for the analytical solution:
@@ -128,8 +135,8 @@ As our system is fully set, we can print the overall information and assemble th
 
 .. code-block:: python
 
-  print(mbs)
-  mbs.Assemble()
+  print(mbs)     #show system properties
+  mbs.Assemble() #prepare for simulation
 
 
 We will use time integration and therefore define a number of steps (fixed step size; must be provided) and the total time span for the simulation:
@@ -149,6 +156,16 @@ All settings for simulation, see according reference section, can be provided in
   simulationSettings.solutionSettings.sensorsWritePeriod = 5e-3  #output interval of sensors
   simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h) #must be integer
   simulationSettings.timeIntegration.endTime = tEnd
+  simulationSettings.displayComputationTime = True               #show how fast
+
+
+In order to see some solver output, we must set \ ``verboseMode``\  to 1 (higher values gives detailed output per step).
+Furthermore, we can show information on computation time (which may cost some overhead in computation!):
+
+.. code-block:: python
+
+  simulationSettings.timeIntegration.verboseMode = 1             #show some solver output
+  simulationSettings.displayComputationTime = True               #show how fast
 
 
 We are using a generalized alpha solver, where numerical damping is needed for index 3 constraints. As we have only spring-dampers, we can set the spectral radius to 1, meaning no numerical damping:
@@ -163,7 +180,7 @@ In order to visualize the results online, a renderer can be started. As our comp
 .. code-block:: python
 
   exu.StartRenderer()              #start graphics visualization
-  #mbs.WaitForUserToContinue()     #wait for pressing SPACE bar to continue (in render window!)
+  #mbs.WaitForUserToContinue()     #wait for SPACE bar or 'Q' to continue (in render window!)
 
 
 As the simulation is still very fast, we will not see the motion of our node. Using a very small step size of, e.g., \ ``h=1e-7``\  in the lines above allows us to visualize the resulting oscillations in realtime.
@@ -176,7 +193,7 @@ Finally, we start the solver, by telling which system to be solved, solver type 
 
 
 
-After simulation, our renderer needs to be stopped (otherwise it would stay in background and prohibit further simulations). 
+After simulation, our renderer needs to be stopped (otherwise it will stop unsafely as soon as the Python kernel is stopped or restarted). 
 Sometimes you would like to wait until closing the render window, using \ ``WaitForRenderEngineStopFlag()``\ :
 
 .. code-block:: python
@@ -184,6 +201,8 @@ Sometimes you would like to wait until closing the render window, using \ ``Wait
   #SC.WaitForRenderEngineStopFlag()#wait for pressing 'Q' to quit
   exu.StopRenderer()               #safely close rendering window!
 
+
+If you run this code, e.g. in Spyder or Visual Studio Code, it may take a 1-2 seconds to complete. However, the time spent is only related to some overhead in the Python environment and for the visualization. The simulation itself will only take around 3-10 milliseconds, in which a large overhead is due to file writing.
 
 There are several ways to evaluate results, see the reference pages. In the following we take the final value of node \ ``n1``\  and read its 3D position vector:
 

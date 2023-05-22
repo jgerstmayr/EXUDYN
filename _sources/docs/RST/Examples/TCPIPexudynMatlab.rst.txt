@@ -166,7 +166,7 @@ You can view and download this file on Github: `TCPIPexudynMatlab.py <https://gi
        exu.StartRenderer()
        
        
-       exu.SolveDynamic(mbs, simulationSettings)
+       mbs.SolveDynamic(simulationSettings)
        
        SC.WaitForRenderEngineStopFlag()
        exu.StopRenderer() #safely close rendering window!

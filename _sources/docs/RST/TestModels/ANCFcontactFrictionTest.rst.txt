@@ -13,11 +13,12 @@ You can view and download this file on Github: `ANCFcontactFrictionTest.py <http
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    # This is an EXUDYN example
    #
-   # Details:  Test model for cable with contact and friction
+   # Details:  Test model for cable with contact and friction; test model for ObjectContactFrictionCircleCable2D,
+   #           which models frictional contact between 2D ANCF element and circular object, using contact and stick-slip friction;
    #
    # Author:   Johannes Gerstmayr
-   # Date:     2019-12-16 (last modified)
    # Date:     2019-08-15 (created)
+   # Date:     2022-07-20 (last modified)
    #
    # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
    #
@@ -71,6 +72,10 @@ You can view and download this file on Github: `ANCFcontactFrictionTest.py <http
    cableList=[]        #for cable elements
    nodeList=[]  #for nodes of cable
    markerList=[]       #for nodes
+   
+   #%%+++++++++++++++++++++
+   #create nodes and cable elements; 
+   #alternatively, GenerateStraightLineANCFCable2D from exudyn.beams could be used
    nc0 = mbs.AddNode(Point2DS1(referenceCoordinates=[0,0,1,0]))
    nodeList+=[nc0]
    nElements = 8 #32*4
@@ -84,6 +89,7 @@ You can view and download this file on Github: `ANCFcontactFrictionTest.py <http
                                   nodeNumbers=[int(nc0)+i,int(nc0)+i+1]))
        cableList+=[elem]
    
+   #%%+++++++++++++++++++++
    mANCF0 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nc0, coordinate=0))
    mANCF1 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nc0, coordinate=1))
    mANCF2 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nc0, coordinate=3))
@@ -149,7 +155,8 @@ You can view and download this file on Github: `ANCFcontactFrictionTest.py <http
                                                     useSegmentNormals=False, #for this test
                                                     circleRadius = r2))
    
-   
+   #%%++++++++++++++++++++++++++++++++++
+   #finally assemble and start computation
    mbs.Assemble()
    #exu.Print(mbs)
    
@@ -197,7 +204,7 @@ You can view and download this file on Github: `ANCFcontactFrictionTest.py <http
    solveDynamic = True
    if solveDynamic: 
    
-       exu.SolveDynamic(mbs, simulationSettings)
+       mbs.SolveDynamic(simulationSettings)
    
        sol = mbs.systemData.GetODE2Coordinates()
        u = sol[len(sol)-3]
@@ -218,7 +225,7 @@ You can view and download this file on Github: `ANCFcontactFrictionTest.py <http
        simulationSettings.staticSolver.pauseAfterEachStep = False
        simulationSettings.staticSolver.stabilizerODE2term = 50 
    
-       exu.SolveStatic(mbs, simulationSettings)
+       mbs.SolveStatic(simulationSettings)
    
        sol = mbs.systemData.GetODE2Coordinates()
        n = len(sol)

@@ -183,7 +183,7 @@ You can view and download this file on Github: `explicitLieGroupIntegratorPython
    dynamicSolver.SetUserFunctionNewton(mbs, UserFunctionNewtonLieGroupRK4)
    
    dynamicSolver.SolveSystem(mbs, simulationSettings)
-   #exu.SolveDynamic(mbs, simulationSettings)
+   #mbs.SolveDynamic(simulationSettings)
    
    omegay=mbs.GetNodeOutput(nRB,exu.OutputVariableType.AngularVelocity)[1] #y-component of angular vel
    exu.Print("explicitLieGroupIntegratorPythonTest=", omegay)
@@ -199,13 +199,13 @@ You can view and download this file on Github: `explicitLieGroupIntegratorPython
    
    if useGraphics:
    
-       from exudyn.plot import PlotSensor
+       
    
        fileVerif = '../../../docs/verification/HeavyTopSolution/HeavyTop_TimeBodyAngularVelocity_RK4.txt'
        
-       PlotSensor(mbs, sensorNumbers=[sAngVelLoc]*3, labels=['omega X','omega Y','omega Z'],
+       mbs.PlotSensor(sensorNumbers=[sAngVelLoc]*3, labels=['omega X','omega Y','omega Z'],
                   components=[0,1,2],yLabel='angular velocity (rad/s)', closeAll=True)
-       PlotSensor(mbs, sensorNumbers=[fileVerif]*3,newFigure=False, colorCodeOffset=3+7,
+       mbs.PlotSensor(sensorNumbers=[fileVerif]*3,newFigure=False, colorCodeOffset=3+7,
                   labels=['omega ref X','omega ref Y','omega ref Z'], #markerStyles=['^ ','x ','o '], 
                   components=[0,1,2],yLabel='angular velocity (rad/s)')
    

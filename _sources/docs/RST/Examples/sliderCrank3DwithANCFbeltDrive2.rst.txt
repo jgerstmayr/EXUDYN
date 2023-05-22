@@ -923,7 +923,7 @@ You can view and download this file on Github: `sliderCrank3DwithANCFbeltDrive2.
    #Rendering
    exu.StartRenderer()                 #start graphics visualization
    mbs.WaitForUserToContinue()         #wait for pressing SPACE bar to continue
-   exu.SolveDynamic(mbs, sims)
+   mbs.SolveDynamic(sims)
    SC.WaitForRenderEngineStopFlag()    #wait for pressing 'Q' to quit
    exu.StopRenderer()                  #safely close rendering window!
    

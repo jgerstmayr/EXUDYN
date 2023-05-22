@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NGsolveCMStutorial.py &mdash; Exudyn1.6.110.dev1 1.6.110.dev1 documentation</title>
+  <title>NGsolveCMStutorial.py &mdash; Exudyn1.6.118.dev1 1.6.118.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -37,7 +37,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.110.dev1
+            Exudyn1.6.118.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -202,7 +202,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.110.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.118.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -599,11 +599,11 @@
 <span class="linenos">373</span>
 <span class="linenos">374</span>        <span class="c1">#SC.RedrawAndSaveImage()</span>
 <span class="linenos">375</span>        <span class="k">if</span> <span class="kc">True</span><span class="p">:</span>
-<span class="linenos">376</span>            <span class="c1"># exu.SolveDynamic(mbs, solverType=exu.DynamicSolverType.TrapezoidalIndex2,</span>
+<span class="linenos">376</span>            <span class="c1"># mbs.SolveDynamic(solverType=exu.DynamicSolverType.TrapezoidalIndex2,</span>
 <span class="linenos">377</span>            <span class="c1">#                   simulationSettings=simulationSettings)</span>
-<span class="linenos">378</span>            <span class="n">exu</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="o">=</span><span class="n">simulationSettings</span><span class="p">)</span>
+<span class="linenos">378</span>            <span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="o">=</span><span class="n">simulationSettings</span><span class="p">)</span>
 <span class="linenos">379</span>        <span class="k">else</span><span class="p">:</span>
-<span class="linenos">380</span>            <span class="n">exu</span><span class="o">.</span><span class="nf">SolveStatic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="o">=</span><span class="n">simulationSettings</span><span class="p">)</span>
+<span class="linenos">380</span>            <span class="n">mbs</span><span class="o">.</span><span class="nf">SolveStatic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="o">=</span><span class="n">simulationSettings</span><span class="p">)</span>
 <span class="linenos">381</span>
 <span class="linenos">382</span>        <span class="c1"># uTip = mbs.GetSensorValues(sensTipDispl)[1]</span>
 <span class="linenos">383</span>        <span class="c1"># print(&quot;nModes=&quot;, nModes, &quot;, tip displacement=&quot;, uTip)</span>
@@ -617,8 +617,8 @@
 <span class="linenos">391</span>            <span class="n">exu</span><span class="o">.</span><span class="nf">StopRenderer</span><span class="p">()</span> <span class="c1">#safely close rendering window!</span>
 <span class="linenos">392</span>
 <span class="linenos">393</span>        <span class="k">if</span> <span class="kc">False</span><span class="p">:</span>
-<span class="linenos">394</span>            <span class="kn">from</span> <span class="nn">exudyn.plot</span> <span class="kn">import</span> <span class="nf">PlotSensor</span>
-<span class="linenos">395</span>            <span class="nf">PlotSensor</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sensorNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">sensBushingVel</span><span class="p">],</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="linenos">394</span>
+<span class="linenos">395</span>            <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sensorNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">sensBushingVel</span><span class="p">],</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 <span class="linenos">396</span>
 <span class="linenos">397</span><span class="c1">#%%</span>
 <span class="linenos">398</span><span class="k">if</span> <span class="kc">False</span><span class="p">:</span>

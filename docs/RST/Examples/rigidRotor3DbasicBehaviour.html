@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>rigidRotor3DbasicBehaviour.py &mdash; Exudyn1.6.110.dev1 1.6.110.dev1 documentation</title>
+  <title>rigidRotor3DbasicBehaviour.py &mdash; Exudyn1.6.118.dev1 1.6.118.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -37,7 +37,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.110.dev1
+            Exudyn1.6.118.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -202,7 +202,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.110.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.118.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -431,7 +431,7 @@
 <span class="linenos">205</span><span class="n">mbs</span><span class="o">.</span><span class="nf">WaitForUserToContinue</span><span class="p">()</span>    <span class="c1">#wait for pressing SPACE bar to continue</span>
 <span class="linenos">206</span>
 <span class="linenos">207</span><span class="c1">#simulate some time to get steady-state solution:</span>
-<span class="linenos">208</span><span class="n">exu</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="p">)</span>
+<span class="linenos">208</span><span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="p">)</span>
 <span class="linenos">209</span><span class="n">state</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetSystemState</span><span class="p">()</span>
 <span class="linenos">210</span>
 <span class="linenos">211</span><span class="c1">#now simulate the steady state solution and record</span>
@@ -453,7 +453,7 @@
 <span class="linenos">227</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">exportImages</span><span class="o">.</span><span class="n">saveImageFileName</span> <span class="o">=</span> <span class="s2">&quot;images/frame&quot;</span>
 <span class="linenos">228</span>
 <span class="linenos">229</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">SetSystemState</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">configuration</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">ConfigurationType</span><span class="o">.</span><span class="n">Initial</span><span class="p">)</span>
-<span class="linenos">230</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="p">)</span>
+<span class="linenos">230</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="p">)</span>
 <span class="linenos">231</span>
 <span class="linenos">232</span><span class="c1">#SC.WaitForRenderEngineStopFlag()#wait for pressing &#39;Q&#39; to quit</span>
 <span class="linenos">233</span><span class="n">exu</span><span class="o">.</span><span class="nf">StopRenderer</span><span class="p">()</span>               <span class="c1">#safely close rendering window!</span>

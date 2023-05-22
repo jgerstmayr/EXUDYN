@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>hydraulicActuatorSimpleTest.py &mdash; Exudyn1.6.110.dev1 1.6.110.dev1 documentation</title>
+  <title>hydraulicActuatorSimpleTest.py &mdash; Exudyn1.6.118.dev1 1.6.118.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -37,7 +37,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.110.dev1
+            Exudyn1.6.118.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -106,6 +106,7 @@
 <li class="toctree-l2"><a class="reference internal" href="kinematicTreeAndMBStest.html">kinematicTreeAndMBStest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kinematicTreeConstraintTest.html">kinematicTreeConstraintTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kinematicTreeTest.html">kinematicTreeTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mainSystemExtensionsTests.html">mainSystemExtensionsTests.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="manualExplicitIntegrator.html">manualExplicitIntegrator.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mecanumWheelRollingDiscTest.html">mecanumWheelRollingDiscTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="objectFFRFreducedOrderAccelerations.html">objectFFRFreducedOrderAccelerations.py</a></li>
@@ -146,7 +147,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.110.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.118.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -325,7 +326,7 @@
 <span class="linenos">155</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StartRenderer</span><span class="p">()</span>
 <span class="linenos">156</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">WaitForUserToContinue</span><span class="p">()</span>
 <span class="linenos">157</span>
-<span class="linenos">158</span><span class="n">exu</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="p">,</span> <span class="n">showHints</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="linenos">158</span><span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="p">,</span> <span class="n">showHints</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="linenos">159</span>
 <span class="linenos">160</span><span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
 <span class="linenos">161</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">WaitForRenderEngineStopFlag</span><span class="p">()</span>
@@ -339,12 +340,12 @@
 <span class="linenos">169</span><span class="c1"># pressures= [6441296.09086297 3008420.04232005]</span>
 <span class="linenos">170</span><span class="c1"># velocity= [-0.0050061   0.20338669  0.        ]</span>
 <span class="linenos">171</span>
-<span class="linenos">172</span><span class="c1"># from exudyn.plot import PlotSensor</span>
-<span class="linenos">173</span><span class="c1"># PlotSensor(mbs, sensorNumbers=sForce, components=exudyn.plot.componentNorm, labels=[&#39;connector force norm&#39;], yLabel=&#39;force (N)&#39;, closeAll=True)</span>
-<span class="linenos">174</span><span class="c1"># PlotSensor(mbs, sensorNumbers=sDistance, components=0)</span>
-<span class="linenos">175</span><span class="c1"># PlotSensor(mbs, sensorNumbers=[sPressures]*2, components=[0,1], labels=[&#39;p1&#39;, &#39;p2&#39;], yLabel=&#39;pressure (N/m^2)&#39;)</span>
+<span class="linenos">172</span><span class="c1">#</span>
+<span class="linenos">173</span><span class="c1"># mbs.PlotSensor(sensorNumbers=sForce, components=exudyn.plot.componentNorm, labels=[&#39;connector force norm&#39;], yLabel=&#39;force (N)&#39;, closeAll=True)</span>
+<span class="linenos">174</span><span class="c1"># mbs.PlotSensor(sensorNumbers=sDistance, components=0)</span>
+<span class="linenos">175</span><span class="c1"># mbs.PlotSensor(sensorNumbers=[sPressures]*2, components=[0,1], labels=[&#39;p1&#39;, &#39;p2&#39;], yLabel=&#39;pressure (N/m^2)&#39;)</span>
 <span class="linenos">176</span>
-<span class="linenos">177</span><span class="c1">#PlotSensor(mbs, sensorNumbers=p01, components=0, labels=[&#39;differential hydraulic force&#39;], yLabel=&#39;hydraulic force (N)&#39;)</span>
+<span class="linenos">177</span><span class="c1">#mbs.PlotSensor(sensorNumbers=p01, components=0, labels=[&#39;differential hydraulic force&#39;], yLabel=&#39;hydraulic force (N)&#39;)</span>
 <span class="linenos">178</span>
 <span class="linenos">179</span><span class="c1">#compute error for test suite:</span>
 <span class="linenos">180</span><span class="n">sol2</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetODE2Coordinates</span><span class="p">();</span>

@@ -265,7 +265,7 @@ You can view and download this file on Github: `superElementRigidJointTest.py <h
    
        mbs.WaitForUserToContinue() #press space to continue
    
-   exu.SolveDynamic(mbs, simulationSettings)
+   mbs.SolveDynamic(simulationSettings)
        
    if useGraphics:
        SC.WaitForRenderEngineStopFlag()
@@ -285,9 +285,9 @@ You can view and download this file on Github: `superElementRigidJointTest.py <h
    ##++++++++++++++++++++++++++++++++++++++++++++++q+++++++
    #plot results
    if useGraphics:
-       from exudyn.plot import PlotSensor
        
-       PlotSensor(mbs, sDisp, components=1, closeAll=True, labels=['uMid,linear'])
+       
+       mbs.PlotSensor(sDisp, components=1, closeAll=True, labels=['uMid,linear'])
    
 
 

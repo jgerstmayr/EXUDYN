@@ -213,7 +213,7 @@ You can view and download this file on Github: `ANCFmovingRigidBodyTest.py <http
    
    #mbs.WaitForUserToContinue()
    
-   exu.SolveStatic(mbs, simulationSettings) 
+   mbs.SolveStatic(simulationSettings) 
    
    #prolong solution for next computation
    u = mbs.systemData.GetODE2Coordinates()
@@ -258,7 +258,7 @@ You can view and download this file on Github: `ANCFmovingRigidBodyTest.py <http
        simulationSettings.timeIntegration.verboseModeFile = 0
    
        
-       exu.SolveDynamic(mbs, simulationSettings)
+       mbs.SolveDynamic(simulationSettings)
        
    
    if useGraphics: 

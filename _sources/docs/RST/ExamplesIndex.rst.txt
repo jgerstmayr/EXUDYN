@@ -102,7 +102,6 @@ This section includes all Examples for Exudyn.They can also be found and downloa
    Examples/serialRobotInverseKinematics
    Examples/serialRobotKinematicTree
    Examples/serialRobotKinematicTreeDigging
-   Examples/serialRobotTestDH2
    Examples/serialRobotTSD
    Examples/simple4linkPendulumBing
    Examples/simulateInteractively

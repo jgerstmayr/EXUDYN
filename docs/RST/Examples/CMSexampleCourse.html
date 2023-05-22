@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CMSexampleCourse.py &mdash; Exudyn1.6.110.dev1 1.6.110.dev1 documentation</title>
+  <title>CMSexampleCourse.py &mdash; Exudyn1.6.118.dev1 1.6.118.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -37,7 +37,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.110.dev1
+            Exudyn1.6.118.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -202,7 +202,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.110.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.118.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -672,7 +672,7 @@
 <span class="linenos">446</span>    <span class="k">if</span> <span class="s1">&#39;renderState&#39;</span> <span class="ow">in</span> <span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">:</span> <span class="n">SC</span><span class="o">.</span><span class="nf">SetRenderState</span><span class="p">(</span><span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span><span class="s1">&#39;renderState&#39;</span><span class="p">])</span> <span class="c1">#load last model view</span>
 <span class="linenos">447</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">WaitForUserToContinue</span><span class="p">()</span> <span class="c1">#press space to continue</span>
 <span class="linenos">448</span>
-<span class="linenos">449</span><span class="n">exu</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="c1">#solverType=exu.DynamicSolverType.TrapezoidalIndex2,</span>
+<span class="linenos">449</span><span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="c1">#solverType=exu.DynamicSolverType.TrapezoidalIndex2,</span>
 <span class="linenos">450</span>                  <span class="n">simulationSettings</span><span class="o">=</span><span class="n">simulationSettings</span><span class="p">)</span>
 <span class="linenos">451</span>
 <span class="linenos">452</span><span class="k">if</span> <span class="n">addSensors</span><span class="p">:</span>
@@ -692,8 +692,8 @@
 <span class="linenos">466</span><span class="k">if</span> <span class="kc">False</span><span class="p">:</span> <span class="c1">#use this to reload the solution and use SolutionViewer</span>
 <span class="linenos">467</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">autoFitScene</span><span class="o">=</span><span class="kc">False</span> <span class="c1">#if reloaded view settings</span>
 <span class="linenos">468</span>
-<span class="linenos">469</span>    <span class="kn">from</span> <span class="nn">exudyn.interactive</span> <span class="kn">import</span> <span class="nf">SolutionViewer</span>
-<span class="linenos">470</span>    <span class="nf">SolutionViewer</span><span class="p">(</span><span class="n">mbs</span><span class="p">)</span> <span class="c1">#can also be entered in IPython ...</span>
+<span class="linenos">469</span>
+<span class="linenos">470</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">SolutionViewer</span><span class="p">()</span> <span class="c1">#can also be entered in IPython ...</span>
 <span class="linenos">471</span>
 <span class="linenos">472</span>
 <span class="linenos">473</span><span class="c1"># # Plot sensor</span>
@@ -702,8 +702,8 @@
 <span class="linenos">476</span>
 <span class="linenos">477</span>
 <span class="linenos">478</span><span class="k">if</span> <span class="n">addSensors</span><span class="p">:</span>
-<span class="linenos">479</span>    <span class="kn">from</span> <span class="nn">exudyn.plot</span> <span class="kn">import</span> <span class="nf">PlotSensor</span>
-<span class="linenos">480</span>    <span class="nf">PlotSensor</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sensorNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">sMidDispl</span><span class="p">,</span><span class="n">sMidDispl</span><span class="p">,</span><span class="n">sMidDispl</span><span class="p">],</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+<span class="linenos">479</span>
+<span class="linenos">480</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sensorNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">sMidDispl</span><span class="p">,</span><span class="n">sMidDispl</span><span class="p">,</span><span class="n">sMidDispl</span><span class="p">],</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
 <span class="linenos">481</span>
 <span class="linenos">482</span>
 <span class="linenos">483</span><span class="c1"># In[ ]:</span>

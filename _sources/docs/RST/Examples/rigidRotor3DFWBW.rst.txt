@@ -224,7 +224,7 @@ You can view and download this file on Github: `rigidRotor3DFWBW.py <https://git
        mbs.WaitForUserToContinue()    #wait for pressing SPACE bar to continue
        
        #start solver:
-       exu.SolveDynamic(mbs, simulationSettings)
+       mbs.SolveDynamic(simulationSettings)
        
        #SC.WaitForRenderEngineStopFlag()#wait for pressing 'Q' to quit
        exu.StopRenderer()               #safely close rendering window!

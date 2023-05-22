@@ -537,7 +537,7 @@ You can view and download this file on Github: `PARTS_ATEs_moving.py <https://gi
        simulationSettings.displayStatistics = True
            
        
-       exu.SolveDynamic(mbs, simulationSettings)
+       mbs.SolveDynamic(simulationSettings)
    
        
    if useGraphics: #only start graphics once, but after background is set

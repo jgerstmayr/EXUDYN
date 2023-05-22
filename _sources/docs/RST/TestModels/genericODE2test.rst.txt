@@ -122,7 +122,7 @@ You can view and download this file on Github: `genericODE2test.py <https://gith
    
    simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1 #SHOULD work with 0.9 as well
    
-   exu.SolveDynamic(mbs, simulationSettings)
+   mbs.SolveDynamic(simulationSettings)
    
    u1 = mbs.GetNodeOutput(n1, exu.OutputVariableType.Coordinates)
    #exu.Print("u1 =", u1)

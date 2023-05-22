@@ -120,7 +120,7 @@ You can view and download this file on Github: `3SpringsDistance.py <https://git
        simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
        simulationSettings.displayStatistics = True
    
-       exu.SolveDynamic(mbs, simulationSettings)
+       mbs.SolveDynamic(simulationSettings)
    
    else:
        simulationSettings.solutionSettings.coordinatesSolutionFileName = "staticSolution.txt"
@@ -130,7 +130,7 @@ You can view and download this file on Github: `3SpringsDistance.py <https://git
        simulationSettings.staticSolver.newton.absoluteTolerance = 1e-1
        simulationSettings.staticSolver.verboseMode = 2
    
-       exu.SolveStatic(mbs, simulationSettings)
+       mbs.SolveStatic(simulationSettings)
    
    SC.WaitForRenderEngineStopFlag()
    exu.StopRenderer() #safely close rendering window!

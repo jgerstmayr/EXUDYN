@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>bicycleIftommBenchmark.py &mdash; Exudyn1.6.110.dev1 1.6.110.dev1 documentation</title>
+  <title>bicycleIftommBenchmark.py &mdash; Exudyn1.6.118.dev1 1.6.118.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -37,7 +37,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.110.dev1
+            Exudyn1.6.118.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -202,7 +202,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.110.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.118.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -613,8 +613,8 @@
 <span class="linenos">387</span>        <span class="n">SC</span><span class="o">.</span><span class="nf">SetRenderState</span><span class="p">(</span><span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span> <span class="s1">&#39;renderState&#39;</span> <span class="p">])</span>
 <span class="linenos">388</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">WaitForUserToContinue</span><span class="p">()</span>
 <span class="linenos">389</span>
-<span class="linenos">390</span><span class="n">exu</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="p">,</span> <span class="n">solverType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">DynamicSolverType</span><span class="o">.</span><span class="n">TrapezoidalIndex2</span><span class="p">)</span>
-<span class="linenos">391</span><span class="c1">#exu.SolveDynamic(mbs, simulationSettings, showHints=True)</span>
+<span class="linenos">390</span><span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="p">,</span> <span class="n">solverType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">DynamicSolverType</span><span class="o">.</span><span class="n">TrapezoidalIndex2</span><span class="p">)</span>
+<span class="linenos">391</span><span class="c1">#mbs.SolveDynamic(simulationSettings, showHints=True)</span>
 <span class="linenos">392</span>
 <span class="linenos">393</span>
 <span class="linenos">394</span><span class="c1">#%%+++++++++++++++++++++++++++++</span>
@@ -626,23 +626,23 @@
 <span class="linenos">400</span><span class="k">if</span> <span class="n">addSensors</span><span class="p">:</span>
 <span class="linenos">401</span>    <span class="c1">#plot results</span>
 <span class="linenos">402</span>
-<span class="linenos">403</span>    <span class="kn">from</span> <span class="nn">exudyn.plot</span> <span class="kn">import</span> <span class="nf">PlotSensor</span>
+<span class="linenos">403</span>
 <span class="linenos">404</span>
 <span class="linenos">405</span>    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="linenos">406</span>    <span class="kn">import</span> <span class="nn">matplotlib.ticker</span> <span class="k">as</span> <span class="nn">ticker</span>
 <span class="linenos">407</span>    <span class="n">plt</span><span class="o">.</span><span class="nf">close</span><span class="p">(</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
 <span class="linenos">408</span>
 <span class="linenos">409</span>
-<span class="linenos">410</span>    <span class="c1"># PlotSensor(mbs, sensorNumbers=[sBpos,sBpos,sBpos], components=[0,1,2])</span>
+<span class="linenos">410</span>    <span class="c1"># mbs.PlotSensor(sensorNumbers=[sBpos,sBpos,sBpos], components=[0,1,2])</span>
 <span class="linenos">411</span>    <span class="c1">#plt.figure(&#39;lateral position&#39;)</span>
-<span class="linenos">412</span>    <span class="c1">#PlotSensor(mbs, sensorNumbers=[sBpos], components=[1])</span>
+<span class="linenos">412</span>    <span class="c1">#mbs.PlotSensor(sensorNumbers=[sBpos], components=[1])</span>
 <span class="linenos">413</span>
 <span class="linenos">414</span>    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="s1">&#39;forward velocity&#39;</span><span class="p">)</span>
-<span class="linenos">415</span>    <span class="nf">PlotSensor</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sensorNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">sForwardVel</span><span class="p">],</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-<span class="linenos">416</span>    <span class="c1"># PlotSensor(mbs, sensorNumbers=[sBvelLocal,sBvelLocal,sBvelLocal], components=[0,1,2])</span>
+<span class="linenos">415</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sensorNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">sForwardVel</span><span class="p">],</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="linenos">416</span>    <span class="c1"># mbs.PlotSensor(sensorNumbers=[sBvelLocal,sBvelLocal,sBvelLocal], components=[0,1,2])</span>
 <span class="linenos">417</span>
 <span class="linenos">418</span>    <span class="c1"># plt.figure(&#39;local ang velocities&#39;)</span>
-<span class="linenos">419</span>    <span class="c1"># PlotSensor(mbs, sensorNumbers=[sBAngVelLocal,sBAngVelLocal,sBAngVelLocal], components=[0,1,2])</span>
+<span class="linenos">419</span>    <span class="c1"># mbs.PlotSensor(sensorNumbers=[sBAngVelLocal,sBAngVelLocal,sBAngVelLocal], components=[0,1,2])</span>
 <span class="linenos">420</span>    <span class="c1"># if False:</span>
 <span class="linenos">421</span>    <span class="c1">#     import matplotlib.pyplot as plt</span>
 <span class="linenos">422</span>    <span class="c1">#     import matplotlib.ticker as ticker</span>
@@ -655,32 +655,32 @@
 <span class="linenos">429</span>    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data2</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">data2</span><span class="p">[:,</span><span class="mi">3</span><span class="o">+</span><span class="mi">8</span><span class="p">],</span> <span class="s1">&#39;g:&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
 <span class="linenos">430</span>
 <span class="linenos">431</span>    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="s1">&#39;steer vel&#39;</span><span class="p">)</span>
-<span class="linenos">432</span>    <span class="nf">PlotSensor</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sensorNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">sSteerVel</span><span class="p">],</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+<span class="linenos">432</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sensorNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">sSteerVel</span><span class="p">],</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
 <span class="linenos">433</span>    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data2</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="n">data2</span><span class="p">[:,</span><span class="mi">8</span><span class="o">+</span><span class="mi">8</span><span class="p">],</span> <span class="s1">&#39;g:&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
 <span class="linenos">434</span>
 <span class="linenos">435</span>    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="s1">&#39;steer ang&#39;</span><span class="p">)</span>
-<span class="linenos">436</span>    <span class="nf">PlotSensor</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sensorNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">sSteerAngle</span><span class="p">],</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+<span class="linenos">436</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sensorNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">sSteerAngle</span><span class="p">],</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
 <span class="linenos">437</span>    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data2</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="n">data2</span><span class="p">[:,</span><span class="mi">7</span><span class="o">+</span><span class="mi">8</span><span class="p">],</span> <span class="s1">&#39;g:&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
 <span class="linenos">438</span>
 <span class="linenos">439</span>    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="s1">&#39;roll&#39;</span><span class="p">)</span>
-<span class="linenos">440</span>    <span class="nf">PlotSensor</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sensorNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">sBrot</span><span class="p">],</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="linenos">440</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sensorNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">sBrot</span><span class="p">],</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 <span class="linenos">441</span>    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data2</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">data2</span><span class="p">[:,</span><span class="mi">1</span><span class="o">+</span><span class="mi">8</span><span class="p">],</span> <span class="s1">&#39;g:&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
 <span class="linenos">442</span>
 <span class="linenos">443</span>    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="s1">&#39;roll ang vel&#39;</span><span class="p">)</span>
-<span class="linenos">444</span>    <span class="nf">PlotSensor</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sensorNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">sBAngVelLocal</span><span class="p">],</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="linenos">444</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sensorNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">sBAngVelLocal</span><span class="p">],</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 <span class="linenos">445</span>    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data2</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">data2</span><span class="p">[:,</span><span class="mi">2</span><span class="o">+</span><span class="mi">8</span><span class="p">],</span> <span class="s1">&#39;g:&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
 <span class="linenos">446</span>
 <span class="linenos">447</span>
 <span class="linenos">448</span>    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="s1">&#39;potential energy&#39;</span><span class="p">)</span>
-<span class="linenos">449</span>    <span class="nf">PlotSensor</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sensorNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">sEnergy</span><span class="p">],</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="linenos">449</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sensorNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">sEnergy</span><span class="p">],</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 <span class="linenos">450</span>    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data2</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">data2</span><span class="p">[:,</span><span class="mi">4</span><span class="o">+</span><span class="mi">8</span><span class="p">],</span> <span class="s1">&#39;g:&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
 <span class="linenos">451</span>
 <span class="linenos">452</span>    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="s1">&#39;kinetic energy&#39;</span><span class="p">)</span>
-<span class="linenos">453</span>    <span class="nf">PlotSensor</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sensorNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">sEnergy</span><span class="p">],</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="linenos">453</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sensorNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">sEnergy</span><span class="p">],</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 <span class="linenos">454</span>    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data2</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">data2</span><span class="p">[:,</span><span class="mi">5</span><span class="o">+</span><span class="mi">8</span><span class="p">],</span> <span class="s1">&#39;g:&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
 <span class="linenos">455</span>
 <span class="linenos">456</span>    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="s1">&#39;total energy&#39;</span><span class="p">)</span>
-<span class="linenos">457</span>    <span class="nf">PlotSensor</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sensorNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">sEnergy</span><span class="p">],</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+<span class="linenos">457</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sensorNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">sEnergy</span><span class="p">],</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
 <span class="linenos">458</span>
 <span class="linenos">459</span>    <span class="n">dataE</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s1">&#39;solution/sensorKineticPotentialEnergy.txt&#39;</span><span class="p">,</span> <span class="n">comments</span><span class="o">=</span><span class="s1">&#39;#&#39;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
 <span class="linenos">460</span>    <span class="n">performance</span> <span class="o">=</span> <span class="mi">100</span><span class="o">*</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">dataE</span><span class="p">[:,</span><span class="mi">3</span><span class="p">])</span> <span class="o">-</span> <span class="nb">min</span><span class="p">(</span><span class="n">dataE</span><span class="p">[:,</span><span class="mi">3</span><span class="p">]))</span> <span class="o">/</span> <span class="n">dataE</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>

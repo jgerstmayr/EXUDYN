@@ -79,7 +79,7 @@ You can view and download this file on Github: `rigidPendulum.py <https://github
    exu.StartRenderer()
    
    
-   exu.SolveDynamic(mbs, simulationSettings)
+   mbs.SolveDynamic(simulationSettings)
    
    SC.WaitForRenderEngineStopFlag()
    exu.StopRenderer() #safely close rendering window!

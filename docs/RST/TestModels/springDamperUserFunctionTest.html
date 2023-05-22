@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>springDamperUserFunctionTest.py &mdash; Exudyn1.6.110.dev1 1.6.110.dev1 documentation</title>
+  <title>springDamperUserFunctionTest.py &mdash; Exudyn1.6.118.dev1 1.6.118.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -37,7 +37,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.110.dev1
+            Exudyn1.6.118.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -106,6 +106,7 @@
 <li class="toctree-l2"><a class="reference internal" href="kinematicTreeAndMBStest.html">kinematicTreeAndMBStest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kinematicTreeConstraintTest.html">kinematicTreeConstraintTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kinematicTreeTest.html">kinematicTreeTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mainSystemExtensionsTests.html">mainSystemExtensionsTests.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="manualExplicitIntegrator.html">manualExplicitIntegrator.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mecanumWheelRollingDiscTest.html">mecanumWheelRollingDiscTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="objectFFRFreducedOrderAccelerations.html">objectFFRFreducedOrderAccelerations.py</a></li>
@@ -146,7 +147,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.110.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.118.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -288,7 +289,7 @@
 <span class="linenos">118</span><span class="c1">#mbs.WaitForUserToContinue()    #wait for pressing SPACE bar to continue</span>
 <span class="linenos">119</span>
 <span class="linenos">120</span><span class="c1">#start solver:</span>
-<span class="linenos">121</span><span class="n">exu</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="p">)</span>
+<span class="linenos">121</span><span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="p">)</span>
 <span class="linenos">122</span>
 <span class="linenos">123</span><span class="c1">#SC.WaitForRenderEngineStopFlag()#wait for pressing &#39;Q&#39; to quit</span>
 <span class="linenos">124</span><span class="c1">#exu.StopRenderer()               #safely close rendering window!</span>
@@ -303,9 +304,9 @@
 <span class="linenos">133</span><span class="c1">#+++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
 <span class="linenos">134</span>
 <span class="linenos">135</span><span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
-<span class="linenos">136</span>    <span class="kn">from</span> <span class="nn">exudyn.plot</span> <span class="kn">import</span> <span class="nf">PlotSensor</span>
+<span class="linenos">136</span>
 <span class="linenos">137</span>
-<span class="linenos">138</span>    <span class="nf">PlotSensor</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sCoords</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">closeAll</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">138</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sCoords</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">closeAll</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>

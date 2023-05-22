@@ -170,7 +170,7 @@ You can view and download this file on Github: `slidercrankWithMassSpring.py <ht
    initCrank = True
    if initCrank:
        #turn crank to 90Â° as enforced by constraintCrankAngle
-       exu.SolveStatic(mbs, simulationSettings)
+       mbs.SolveStatic(simulationSettings)
        
        #use static solution as initial conditions for dynamic solution
        currentState = mbs.systemData.GetSystemState()
@@ -202,7 +202,7 @@ You can view and download this file on Github: `slidercrankWithMassSpring.py <ht
    SC.visualizationSettings.bodies.defaultSize = [dSize]*3
    SC.visualizationSettings.connectors.defaultSize = dSize
    
-   exu.SolveDynamic(mbs, simulationSettings)
+   mbs.SolveDynamic(simulationSettings)
        
    if exudynTestGlobals.useGraphics: 
        #+++++++++++++++++++++++++++++++++++++

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>kinematicTreeTest.py &mdash; Exudyn1.6.110.dev1 1.6.110.dev1 documentation</title>
+  <title>kinematicTreeTest.py &mdash; Exudyn1.6.118.dev1 1.6.118.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -24,7 +24,7 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="manualExplicitIntegrator.py" href="manualExplicitIntegrator.html" />
+    <link rel="next" title="mainSystemExtensionsTests.py" href="mainSystemExtensionsTests.html" />
     <link rel="prev" title="kinematicTreeConstraintTest.py" href="kinematicTreeConstraintTest.html" /> 
 </head>
 
@@ -37,7 +37,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.110.dev1
+            Exudyn1.6.118.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -106,6 +106,7 @@
 <li class="toctree-l2"><a class="reference internal" href="kinematicTreeAndMBStest.html">kinematicTreeAndMBStest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kinematicTreeConstraintTest.html">kinematicTreeConstraintTest.py</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">kinematicTreeTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mainSystemExtensionsTests.html">mainSystemExtensionsTests.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="manualExplicitIntegrator.html">manualExplicitIntegrator.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mecanumWheelRollingDiscTest.html">mecanumWheelRollingDiscTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="objectFFRFreducedOrderAccelerations.html">objectFFRFreducedOrderAccelerations.py</a></li>
@@ -146,7 +147,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.110.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.118.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -283,7 +284,7 @@
 <span class="linenos">113</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StartRenderer</span><span class="p">()</span>              <span class="c1">#start graphics visualization</span>
 <span class="linenos">114</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">WaitForUserToContinue</span><span class="p">()</span>    <span class="c1">#wait for pressing SPACE bar to continue</span>
 <span class="linenos">115</span>
-<span class="linenos">116</span><span class="n">exu</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="p">,</span> <span class="n">solverType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">DynamicSolverType</span><span class="o">.</span><span class="n">RK44</span><span class="p">)</span>
+<span class="linenos">116</span><span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="p">,</span> <span class="n">solverType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">DynamicSolverType</span><span class="o">.</span><span class="n">RK44</span><span class="p">)</span>
 <span class="linenos">117</span>
 <span class="linenos">118</span><span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
 <span class="linenos">119</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">WaitForRenderEngineStopFlag</span><span class="p">()</span><span class="c1">#wait for pressing &#39;Q&#39; to quit</span>
@@ -308,7 +309,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="kinematicTreeConstraintTest.html" class="btn btn-neutral float-left" title="kinematicTreeConstraintTest.py" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="manualExplicitIntegrator.html" class="btn btn-neutral float-right" title="manualExplicitIntegrator.py" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="mainSystemExtensionsTests.html" class="btn btn-neutral float-right" title="mainSystemExtensionsTests.py" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

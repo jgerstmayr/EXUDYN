@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Rigid body and joints tutorial &mdash; Exudyn1.6.110.dev1 1.6.110.dev1 documentation</title>
+  <title>Rigid body and joints tutorial &mdash; Exudyn1.6.118.dev1 1.6.118.dev1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
@@ -39,7 +39,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.6.110.dev1
+            Exudyn1.6.118.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -86,7 +86,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.6.110.dev1</a>
+          <a href="../../index.html">Exudyn1.6.118.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -153,42 +153,37 @@ The <code class="docutils literal notranslate"><span class="pre">RigidBodyInerti
 </pre></div>
 </div>
 <p>Note that the COM is translated in axial direction, while it would be at the body’s local position [0,0,0] by default!</p>
-<p>For visualization, we need to add some graphics for the body defined as a 3D RigidLink object and we additionally draw a basis (three RGB-vectors) at the COM:</p>
+<p>For visualization, we add some graphics for the body defined as a 3D cube with center point and dimensions; additionally we draw a basis (three RGB-vectors) at the COM:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#graphics for body</span>
-<span class="n">graphicsBody0</span> <span class="o">=</span> <span class="nf">GraphicsDataRigidLink</span><span class="p">(</span><span class="n">p0</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">L</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">p1</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="o">*</span><span class="n">L</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-                                     <span class="n">axis0</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">axis1</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">radius</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="o">*</span><span class="n">w</span><span class="p">,</span><span class="mf">0.5</span><span class="o">*</span><span class="n">w</span><span class="p">],</span>
-                                     <span class="n">thickness</span><span class="o">=</span><span class="n">w</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="p">[</span><span class="mf">1.2</span><span class="o">*</span><span class="n">w</span><span class="p">,</span><span class="mf">1.2</span><span class="o">*</span><span class="n">w</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">color4red</span><span class="p">)</span>
+<span class="n">graphicsBody0</span> <span class="o">=</span> <span class="nf">GraphicsDataOrthoCubePoint</span><span class="p">(</span><span class="n">centerPoint</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="n">L</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="n">w</span><span class="p">],</span><span class="n">color</span><span class="o">=</span><span class="n">color4red</span><span class="p">)</span>
 <span class="n">graphicsCOM0</span> <span class="o">=</span> <span class="nf">GraphicsDataBasis</span><span class="p">(</span><span class="n">origin</span><span class="o">=</span><span class="n">iCube0</span><span class="o">.</span><span class="n">com</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">w</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Now we have defined all data for the link (rigid body). We could use <code class="docutils literal notranslate"><span class="pre">mbs.AddNode(NodeRigidBodyEP(...))</span></code> and <code class="docutils literal notranslate"><span class="pre">mbs.AddObject(ObjectRigidBody(...))</span></code> to create a node and a body, but the <code class="docutils literal notranslate"><span class="pre">exudyn.rigidBodyUtilities</span></code> offer a much more comfortable function:</p>
+<p>Now we have defined all data for the link (rigid body). We could use <code class="docutils literal notranslate"><span class="pre">mbs.AddNode(NodeRigidBodyEP(...))</span></code> and <code class="docutils literal notranslate"><span class="pre">mbs.AddObject(ObjectRigidBody(...))</span></code> to create a node and a body, but the <code class="docutils literal notranslate"><span class="pre">MainSystem</span></code> since V1.6.110 offers a much more comfortable function:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#create node, add body and gravity load:</span>
-<span class="p">[</span><span class="n">n0</span><span class="p">,</span><span class="n">b0</span><span class="p">]</span><span class="o">=</span><span class="nf">AddRigidBody</span><span class="p">(</span><span class="n">mainSys</span> <span class="o">=</span> <span class="n">mbs</span><span class="p">,</span>
-                     <span class="n">inertia</span> <span class="o">=</span> <span class="n">iCube0</span><span class="p">,</span> <span class="c1">#includes COM</span>
-                     <span class="n">nodeType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">NodeType</span><span class="o">.</span><span class="n">RotationEulerParameters</span><span class="p">,</span>
-                     <span class="n">position</span> <span class="o">=</span> <span class="n">pMid0</span><span class="p">,</span>
-                     <span class="n">rotationMatrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]),</span>
-                     <span class="n">gravity</span> <span class="o">=</span> <span class="n">g</span><span class="p">,</span>
-                     <span class="n">graphicsDataList</span> <span class="o">=</span> <span class="p">[</span><span class="n">graphicsBody0</span><span class="p">,</span> <span class="n">graphicsCOM0</span><span class="p">])</span>
+<span class="n">b0</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">CreateRigidBody</span><span class="p">(</span><span class="n">inertia</span> <span class="o">=</span> <span class="n">iCube0</span><span class="p">,</span> <span class="c1">#includes COM</span>
+                       <span class="n">referencePosition</span> <span class="o">=</span> <span class="n">pMid0</span><span class="p">,</span>
+                       <span class="n">gravity</span> <span class="o">=</span> <span class="n">g</span><span class="p">,</span>
+                       <span class="n">graphicsDataList</span> <span class="o">=</span> <span class="p">[</span><span class="n">graphicsCOM0</span><span class="p">,</span> <span class="n">graphicsBody0</span><span class="p">])</span>
 </pre></div>
 </div>
-<p>which also adds a gravity load and could also set initial velocities, if wanted.
-The <code class="docutils literal notranslate"><span class="pre">nodeType</span></code> specifies the underlying model for the rigid body node, see Section <span class="xref std std-ref">sec-nodetype</span>.
+<p>which also adds a gravity load and could also set initial velocities, if wanted. Note that much more options are available for this function, e.g.,
+we could define a <code class="docutils literal notranslate"><span class="pre">nodeType</span></code> for the underlying formulation of the rigid body node, see Section <a class="reference internal" href="cInterface/TypeDefinitions.html#sec-nodetype"><span class="std std-ref">NodeType</span></a>.
 We can use</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">RotationEulerParameters</span></code>: for fast computation, but leads to an additional algebraic equation and thus needs an implicit solver</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">RotationRxyz</span></code>: contains a singularity if the second angle reaches +/- 90 degrees, but no algebraic equations</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">RotationRotationVector</span></code>: basically contains a singularity for 0 degrees, but if used in combination with Lie group integrators, singularities are bypassed; leads to fewest unknowns and usually less Newton iterations</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RotationRotationVector</span></code>: for usage with Lie group integrators, especially with explicit integration, singularities are bypassed; leads to fewest unknowns and usually less Newton iterations</p></li>
 </ul>
 <p>We now add a revolute joint around the (global) z-axis.
 We have several possibilities, which are shown in the following.
-For the <strong>first two possibilities only</strong>, we need the following markers</p>
+For the <strong>first two possibilities only</strong>, following <code class="docutils literal notranslate"><span class="pre">rigidBodyTutorial3withMarkers.py</span></code>, we need the following markers</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#markers for ground and rigid body (not needed for option 3):</span>
 <span class="n">markerGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerBodyRigid</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">oGround</span><span class="p">,</span> <span class="n">localPosition</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
 <span class="n">markerBody0J0</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerBodyRigid</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">b0</span><span class="p">,</span> <span class="n">localPosition</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">L</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
 </pre></div>
 </div>
-<p>The very general option 1 is to use the <code class="docutils literal notranslate"><span class="pre">GenericJoint</span></code>, that can be used to define any kind of joint with translations and rotations fixed or free,</p>
+<p>The very general <strong>option 1</strong> is to use the <code class="docutils literal notranslate"><span class="pre">GenericJoint</span></code>, that can be used to define any kind of joint with translations and rotations fixed or free,</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#revolute joint option 1:</span>
 <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">GenericJoint</span><span class="p">(</span><span class="n">markerNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">markerGround</span><span class="p">,</span> <span class="n">markerBody0J0</span><span class="p">],</span>
                            <span class="n">constrainedAxes</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
@@ -197,7 +192,7 @@ For the <strong>first two possibilities only</strong>, we need the following mar
 </pre></div>
 </div>
 <p>In addition, transformation matrices (<code class="docutils literal notranslate"><span class="pre">rotationMarker0/1</span></code>) can be added, see the joint description.</p>
-<p>Option 2 is using the revolute joint, which allows a free rotation around the local z-axis of marker 0 (<code class="docutils literal notranslate"><span class="pre">markerGround</span></code> in our example)</p>
+<p><strong>Option 2</strong> is using the revolute joint, which allows a free rotation around the local z-axis of marker 0 (<code class="docutils literal notranslate"><span class="pre">markerGround</span></code> in our example)</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#revolute joint option 2:</span>
 <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectJointRevoluteZ</span><span class="p">(</span><span class="n">markerNumbers</span> <span class="o">=</span> <span class="p">[</span><span class="n">markerGround</span><span class="p">,</span> <span class="n">markerBody0J0</span><span class="p">],</span>
                                    <span class="n">rotationMarker0</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
@@ -213,46 +208,39 @@ For the <strong>first two possibilities only</strong>, we need the following mar
 <span class="n">markerBody0J0</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerBodyRigid</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">b0</span><span class="p">,</span> <span class="n">localPosition</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">0.4</span><span class="o">*</span><span class="n">L</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
 </pre></div>
 </div>
-<p><span class="math notranslate nohighlight">\(\ra\)</span> you will see a misalignment of the two parts of the joint by <code class="docutils literal notranslate"><span class="pre">0.1*L</span></code>.</p>
-<p>Due to the fact that the definition of markers for general joints is tedious, there is a utility function, which allows to attach revolute joints immediately to bodies and defining the rotation axis only once for the joint:</p>
+<p><span class="math notranslate nohighlight">\(\ra\)</span> you will see a misalignment of the two parts of the joint by <code class="docutils literal notranslate"><span class="pre">0.1*L</span></code>.
+The latter approach is very general and will also work for any kind of flexible bodies.</p>
+<p>Due to the fact that the definition of markers for general joints is tedious, <strong>option 3</strong> is based on a MainSystem function, which allows to attach revolute joints immediately to bodies and defining the rotation axis only once for the joint:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#revolute joint option 3:</span>
-<span class="nf">AddRevoluteJoint</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">body0</span><span class="o">=</span><span class="n">oGround</span><span class="p">,</span> <span class="n">body1</span><span class="o">=</span><span class="n">b0</span><span class="p">,</span> <span class="n">point</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-                 <span class="n">axis</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">useGlobalFrame</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">showJoint</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                 <span class="n">axisRadius</span><span class="o">=</span><span class="mf">0.2</span><span class="o">*</span><span class="n">w</span><span class="p">,</span> <span class="n">axisLength</span><span class="o">=</span><span class="mf">1.4</span><span class="o">*</span><span class="n">w</span><span class="p">)</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">CreateRevoluteJoint</span><span class="p">(</span><span class="n">bodyNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">oGround</span><span class="p">,</span> <span class="n">b0</span><span class="p">],</span> <span class="n">position</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                        <span class="n">axis</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">axisRadius</span><span class="o">=</span><span class="mf">0.2</span><span class="o">*</span><span class="n">w</span><span class="p">,</span> <span class="n">axisLength</span><span class="o">=</span><span class="mf">1.4</span><span class="o">*</span><span class="n">w</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The second link and the according joint can be set up in a very similar way:</p>
+<p>For the latter option, there are more arguments that may be specified, e.g., the axis and position can also be defined in the local frame of the first body.</p>
+<p>The second link and the according joint can be set up in a very similar way.
+For visualization, we need to add some graphics for the body defined as a RigidLink GraphicsData function:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#second link, simple graphics:</span>
 <span class="n">graphicsBody1</span> <span class="o">=</span> <span class="nf">GraphicsDataRigidLink</span><span class="p">(</span><span class="n">p0</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">L</span><span class="p">],</span><span class="n">p1</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.5</span><span class="o">*</span><span class="n">L</span><span class="p">],</span>
                                       <span class="n">axis0</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">axis1</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">radius</span><span class="o">=</span><span class="p">[</span><span class="mf">0.06</span><span class="p">,</span><span class="mf">0.05</span><span class="p">],</span>
                                       <span class="n">thickness</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.12</span><span class="p">,</span><span class="mf">0.12</span><span class="p">],</span>
                                       <span class="n">color</span><span class="o">=</span><span class="n">color4lightgreen</span><span class="p">)</span>
 
-<span class="n">iCube1</span> <span class="o">=</span> <span class="n">InertiaCuboid</span><span class="p">(</span><span class="n">density</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">sideLengths</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
-
-<span class="n">pMid1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">L</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.5</span><span class="o">*</span><span class="n">L</span><span class="p">])</span> <span class="c1">#center of mass, body1</span>
-<span class="c1">#create node, add body and gravity load:</span>
-<span class="p">[</span><span class="n">n1</span><span class="p">,</span><span class="n">b1</span><span class="p">]</span><span class="o">=</span><span class="nf">AddRigidBody</span><span class="p">(</span><span class="n">mainSys</span> <span class="o">=</span> <span class="n">mbs</span><span class="p">,</span>
-                     <span class="n">inertia</span> <span class="o">=</span> <span class="n">iCube1</span><span class="p">,</span>
-                     <span class="n">nodeType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">NodeType</span><span class="o">.</span><span class="n">RotationEulerParameters</span><span class="p">,</span>
-                     <span class="n">position</span> <span class="o">=</span> <span class="n">pMid1</span><span class="p">,</span>
-                     <span class="n">rotationMatrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]),</span>
-                     <span class="n">angularVelocity</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-                     <span class="n">gravity</span> <span class="o">=</span> <span class="n">g</span><span class="p">,</span>
-                     <span class="n">graphicsDataList</span> <span class="o">=</span> <span class="p">[</span><span class="n">graphicsBody1</span><span class="p">])</span>
+<span class="n">b1</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">CreateRigidBody</span><span class="p">(</span><span class="n">inertia</span> <span class="o">=</span> <span class="n">InertiaCuboid</span><span class="p">(</span><span class="n">density</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">sideLengths</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span><span class="mi">1</span><span class="p">]),</span>
+                       <span class="n">referencePosition</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">L</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.5</span><span class="o">*</span><span class="n">L</span><span class="p">]),</span>
+                       <span class="n">gravity</span> <span class="o">=</span> <span class="n">g</span><span class="p">,</span>
+                       <span class="n">graphicsDataList</span> <span class="o">=</span> <span class="p">[</span><span class="n">graphicsBody1</span><span class="p">])</span>
 </pre></div>
 </div>
 <p>The revolute joint in this case has a free rotation around the global x-axis:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#revolute joint (free x-axis)</span>
-<span class="nf">AddRevoluteJoint</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">body0</span><span class="o">=</span><span class="n">b0</span><span class="p">,</span> <span class="n">body1</span><span class="o">=</span><span class="n">b1</span><span class="p">,</span> <span class="n">point</span><span class="o">=</span><span class="p">[</span><span class="n">L</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-                 <span class="n">axis</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">useGlobalFrame</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">showJoint</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                 <span class="n">axisRadius</span><span class="o">=</span><span class="mf">0.2</span><span class="o">*</span><span class="n">w</span><span class="p">,</span> <span class="n">axisLength</span><span class="o">=</span><span class="mf">1.4</span><span class="o">*</span><span class="n">w</span><span class="p">)</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">CreateRevoluteJoint</span><span class="p">(</span><span class="n">bodyNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">b0</span><span class="p">,</span> <span class="n">b1</span><span class="p">],</span> <span class="n">position</span><span class="o">=</span><span class="p">[</span><span class="n">L</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                        <span class="n">axis</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">axisRadius</span><span class="o">=</span><span class="mf">0.2</span><span class="o">*</span><span class="n">w</span><span class="p">,</span> <span class="n">axisLength</span><span class="o">=</span><span class="mf">1.4</span><span class="o">*</span><span class="n">w</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Finally, we also add a sensor for some output of the double pendulum:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#position sensor at tip of body1</span>
-<span class="n">sens1</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorBody</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">b1</span><span class="p">,</span> <span class="n">localPosition</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.5</span><span class="o">*</span><span class="n">L</span><span class="p">],</span>
-                               <span class="n">fileName</span><span class="o">=</span><span class="s1">&#39;solution/sensorPos.txt&#39;</span><span class="p">,</span>
+<span class="n">sens1</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorBody</span><span class="p">(</span><span class="n">bodyNumber</span> <span class="o">=</span> <span class="n">b1</span><span class="p">,</span> <span class="n">localPosition</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.5</span><span class="o">*</span><span class="n">L</span><span class="p">],</span>
+                               <span class="n">fileName</span> <span class="o">=</span> <span class="s1">&#39;solution/sensorPos.txt&#39;</span><span class="p">,</span>
                                <span class="n">outputVariableType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Position</span><span class="p">))</span>
 </pre></div>
 </div>
@@ -297,12 +285,37 @@ The meaning of markers can be seen in the graphical representation described bel
 <span class="o">...</span>
 </pre></div>
 </div>
-<p>A graphical representation of the internal structure of the model can be shown using the command <code class="docutils literal notranslate"><span class="pre">DrawSystemGraph</span></code>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nf">DrawSystemGraph</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">useItemTypes</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1">#draw nice graph of system</span>
+<p>Sometimes it is hard to understand the degree of freedom for the constrained system. Furthermore, we may have added – by error –
+redundant constraints, which are not solvable or at least cause solver problems. Both can be checked with the command
+<a href="#id1"><span class="problematic" id="id2">``</span></a><a href="#id3"><span class="problematic" id="id4">``</span></a>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="nf">ComputeSystemDegreeOfFreedom</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1">#print out DOF and further information</span>
 </pre></div>
 </div>
-<p>For the output see the figure below. Note that obviously, markers are always needed to connect objects (or nodes) as well as loads. We can also see, that 2 markers MarkerBodyRigid1 and MarkerBodyRigid2 are unused, which is no further problem for the model and also does not require additional computational resources (except for some bytes of memory). Having isolated nodes or joints that are not connected (or having too many connections) may indicate that you did something wrong in setting up your model.</p>
-<a class="reference internal image-reference" href="../../_images/DrawSystemGraphExample.png"><img alt="../../_images/DrawSystemGraphExample.png" src="../../_images/DrawSystemGraphExample.png" style="width: 400px;" /></a>
+<p>This will print:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ODE2</span> <span class="n">coordinates</span>          <span class="o">=</span> <span class="mi">14</span>
+<span class="n">total</span> <span class="n">constraints</span>         <span class="o">=</span> <span class="mi">12</span>
+<span class="n">redundant</span> <span class="n">constraints</span>     <span class="o">=</span> <span class="mi">0</span>
+<span class="n">pure</span> <span class="n">algebraic</span> <span class="n">constraints</span><span class="o">=</span> <span class="mi">0</span>
+<span class="n">degree</span> <span class="n">of</span> <span class="n">freedom</span>         <span class="o">=</span> <span class="mi">2</span>
+</pre></div>
+</div>
+<p>We see that there are 14 ODE2 coordinates from the two nodes that are based on Euler parameters. The two joints add <span class="math notranslate nohighlight">\(2\times 5\)</span> constraints and there are 2 additional Euler parameter constraints, giving a degree of freedom of 2 (as expected …).</p>
+<p>You can try and duplicate the code for the second revolute joint <code class="docutils literal notranslate"><span class="pre">mbs.CreateRevoluteJoint(bodyNumbers=[b0,</span> <span class="pre">b1],</span> <span class="pre">...)</span></code>, such that we add two identical joints. This will give</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ODE2</span> <span class="n">coordinates</span>          <span class="o">=</span> <span class="mi">14</span>
+<span class="n">total</span> <span class="n">constraints</span>         <span class="o">=</span> <span class="mi">17</span>
+<span class="n">redundant</span> <span class="n">constraints</span>     <span class="o">=</span> <span class="mi">5</span>
+<span class="n">pure</span> <span class="n">algebraic</span> <span class="n">constraints</span><span class="o">=</span> <span class="mi">0</span>
+<span class="n">degree</span> <span class="n">of</span> <span class="n">freedom</span>         <span class="o">=</span> <span class="mi">2</span>
+</pre></div>
+</div>
+<p>which clearly shows the 5 redundant constraints, which will lead to a solver failure. In practical cases, redundant constraints may be much more involved, but can be detected in this way.</p>
+<p>A graphical representation of the internal structure of the model can be shown using the command <code class="docutils literal notranslate"><span class="pre">DrawSystemGraph</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="nf">DrawSystemGraph</span><span class="p">(</span><span class="n">useItemTypes</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1">#draw nice graph of system</span>
+</pre></div>
+</div>
+<p>For the output see the figure below. Note that obviously, markers are always needed to connect objects (or nodes) as well as loads. We can also see, that 2 markers MarkerBodyRigid1 and MarkerBodyRigid2 are unused, which is no further problem for the model and also does not require additional computational resources (except for some bytes of memory). Having isolated nodes or joints that are not connected (or having too many connections) may indicate that you did something wrong in setting up your model.
+Furthermore, it can be seen that the function <code class="docutils literal notranslate"><span class="pre">CreateRigidBody</span></code> added a body <code class="docutils literal notranslate"><span class="pre">ObjectRigidBody</span></code>, a node <code class="docutils literal notranslate"><span class="pre">NodeRigidBodyEP</span></code>, a <code class="docutils literal notranslate"><span class="pre">LoadMassProportional</span></code> for gravity load with a <code class="docutils literal notranslate"><span class="pre">MarkerBodyMass</span></code>, and the function <code class="docutils literal notranslate"><span class="pre">CreateRevoluteJoint</span></code> created two <code class="docutils literal notranslate"><span class="pre">MarkerBodyRigid</span></code> and a <code class="docutils literal notranslate"><span class="pre">ObjectJointRevoluteZ</span></code> which represents a revolute joint about a Z-axis in the joint coordinate system. For further information, consult the respective pages in the Items reference manual.</p>
+<a class="reference internal image-reference" href="../../_images/DrawSystemGraphExample.png"><img alt="../../_images/DrawSystemGraphExample.png" src="../../_images/DrawSystemGraphExample.png" style="width: 600px;" /></a>
 <p>Before starting our simulation, we should adjust the solver parameters, especially the end time and the step size (no automatic step size for implicit solvers available!):</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">()</span> <span class="c1">#takes currently set values or default values</span>
 
@@ -322,12 +335,12 @@ while solution can be viewed using the <code class="docutils literal notranslate
 With <code class="docutils literal notranslate"><span class="pre">solutionWritePeriod</span></code> you can adjust the frequency which is used to store the solution of the whole model,
 which may lead to very large files and may slow down simulation, but is used in the <code class="docutils literal notranslate"><span class="pre">SolutionViewer()</span></code> to reload the solution after simulation.</p>
 <p>In order to improve visualization, there are hundreds of options, see Visualization settings in Section <a class="reference internal" href="structures/VisualizationSettings.html#sec-vsettingsgeneral"><span class="std std-ref">VSettingsGeneral</span></a>, some of them used here:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">renderWindowSize</span><span class="o">=</span><span class="p">[</span><span class="mi">1600</span><span class="p">,</span><span class="mi">1200</span><span class="p">]</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">renderWindowSize</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1600</span><span class="p">,</span><span class="mi">1200</span><span class="p">]</span>
 <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">multiSampling</span> <span class="o">=</span> <span class="mi">4</span>  <span class="c1">#improved OpenGL rendering</span>
 <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">autoFitScene</span> <span class="o">=</span> <span class="kc">False</span>
 
-<span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">drawNodesAsPoint</span><span class="o">=</span><span class="kc">False</span>
-<span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">showBasis</span><span class="o">=</span><span class="kc">True</span> <span class="c1">#shows three RGB (=xyz) lines for node basis</span>
+<span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">drawNodesAsPoint</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">showBasis</span> <span class="o">=</span> <span class="kc">True</span> <span class="c1">#shows three RGB (=xyz) lines for node basis</span>
 </pre></div>
 </div>
 <p>The option <code class="docutils literal notranslate"><span class="pre">autoFitScene</span></code> is used in order to avoid zooming while loading the last saved render state, see below.</p>
@@ -344,13 +357,13 @@ which may lead to very large files and may slow down simulation, but is used in 
 </div>
 <p>the function <code class="docutils literal notranslate"><span class="pre">WaitForUserToContinue()</span></code> waits with simulation until we press SPACE bar. This allows us to make some pre-checks.</p>
 <p>Finally, the <strong>index 2</strong> (velocity level) implicit time integration (simulation) is started with:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">exu</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">simulationSettings</span><span class="p">,</span>
-                 <span class="n">solverType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">DynamicSolverType</span><span class="o">.</span><span class="n">TrapezoidalIndex2</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">simulationSettings</span><span class="p">,</span>
+                 <span class="n">solverType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">DynamicSolverType</span><span class="o">.</span><span class="n">TrapezoidalIndex2</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>This solver is used in the present example, but should be considered with care as it leads to (small) drift of position constraints, linearly increasing in time. Using sufficiently small time steps, this effect is often negligible on the advantage of having a <strong>energy-conserving integrator</strong> (guaranteed for linear systems, but very often also for the nonlinear multibody system). Due to the velocity level, the integrator is less sensitive to consistent initial conditions on position level and compatible to frequent step size changes, however, initial jumps in velocities may never damp out in undamped systems.</p>
-<p>Alternatively, an <strong>index 3</strong> implicit time integration – the generalized-<span class="math notranslate nohighlight">\(\alpha\)</span> method – is started with:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">exu</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">simulationSettings</span><span class="p">)</span>
+<p>Alternatively, an <strong>index 3</strong> implicit time integration – the generalized-<span class="math notranslate nohighlight">\(\alpha\)</span> method – is started with the default settings for <code class="docutils literal notranslate"><span class="pre">solverType</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">simulationSettings</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Note that the <strong>generalized-:math:`alpha` method</strong> includes numerical damping (adjusted with the spectral radius) for stabilization of index 3 constraints. This leads to effects every time the integrator is (re-)started, e.g., when adapting time step sizes. For fixed step sizes, this is <strong>the recommended integrator</strong>.</p>
@@ -362,14 +375,14 @@ which may lead to very large files and may slow down simulation, but is used in 
 <p>If you entered everything correctly, the render window should show a nice animation of the 3D double pendulum after pressing the SPACE key.
 If we do not stop the renderer (<code class="docutils literal notranslate"><span class="pre">StopRenderer()</span></code>), it will stay open for further simulations. However, it is safer to always close the renderer at the end.</p>
 <p>As the simulation will run very fast, if you did not set <code class="docutils literal notranslate"><span class="pre">simulateInRealtime</span></code> to true. However, you can reload the stored solution and view the stored steps interactively:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">exudyn.interactive</span> <span class="kn">import</span> <span class="nf">SolutionViewer</span>
-<span class="n">sol</span> <span class="o">=</span> <span class="nf">LoadSolutionFile</span><span class="p">(</span><span class="s1">&#39;coordinatesSolution.txt&#39;</span><span class="p">)</span>
-<span class="nf">SolutionViewer</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sol</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="nf">SolutionViewer</span><span class="p">()</span>
+<span class="c1">#alternatively, we could load solution from a file:</span>
+<span class="c1">#sol = LoadSolutionFile(&#39;coordinatesSolution.txt&#39;)</span>
+<span class="c1">#mbs.SolutionViewer(sol)</span>
 </pre></div>
 </div>
 <p>Finally, we can plot our sensor, drawing the y-component of the sensor (check out the many options in <code class="docutils literal notranslate"><span class="pre">PlotSensor(...)</span></code> to conveniently represent results!):</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">exudyn.plot</span> <span class="kn">import</span> <span class="nf">PlotSensor</span>
-<span class="nf">PlotSensor</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="p">[</span><span class="n">sens1</span><span class="p">],[</span><span class="mi">1</span><span class="p">])</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sensorNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">sens1</span><span class="p">],</span><span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">closeAll</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><strong>Congratulations</strong>! You completed the rigid body tutorial, which gives you the ability to model multibody systems. Note that much more complicated models are possible, including feedback control or flexible bodies, see the Examples!</p>

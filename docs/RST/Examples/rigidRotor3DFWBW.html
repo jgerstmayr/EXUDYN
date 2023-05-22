@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>rigidRotor3DFWBW.py &mdash; Exudyn1.6.110.dev1 1.6.110.dev1 documentation</title>
+  <title>rigidRotor3DFWBW.py &mdash; Exudyn1.6.118.dev1 1.6.118.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -37,7 +37,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.110.dev1
+            Exudyn1.6.118.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -202,7 +202,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.110.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.118.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -438,7 +438,7 @@
 <span class="linenos">212</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">WaitForUserToContinue</span><span class="p">()</span>    <span class="c1">#wait for pressing SPACE bar to continue</span>
 <span class="linenos">213</span>
 <span class="linenos">214</span>    <span class="c1">#start solver:</span>
-<span class="linenos">215</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="p">)</span>
+<span class="linenos">215</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="p">)</span>
 <span class="linenos">216</span>
 <span class="linenos">217</span>    <span class="c1">#SC.WaitForRenderEngineStopFlag()#wait for pressing &#39;Q&#39; to quit</span>
 <span class="linenos">218</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StopRenderer</span><span class="p">()</span>               <span class="c1">#safely close rendering window!</span>

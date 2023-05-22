@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>serialRobotTest.py &mdash; Exudyn1.6.110.dev1 1.6.110.dev1 documentation</title>
+  <title>serialRobotTest.py &mdash; Exudyn1.6.118.dev1 1.6.118.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -37,7 +37,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.110.dev1
+            Exudyn1.6.118.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -106,6 +106,7 @@
 <li class="toctree-l2"><a class="reference internal" href="kinematicTreeAndMBStest.html">kinematicTreeAndMBStest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kinematicTreeConstraintTest.html">kinematicTreeConstraintTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kinematicTreeTest.html">kinematicTreeTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mainSystemExtensionsTests.html">mainSystemExtensionsTests.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="manualExplicitIntegrator.html">manualExplicitIntegrator.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mecanumWheelRollingDiscTest.html">mecanumWheelRollingDiscTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="objectFFRFreducedOrderAccelerations.html">objectFFRFreducedOrderAccelerations.py</a></li>
@@ -146,7 +147,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.110.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.118.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -419,7 +420,7 @@
 <span class="linenos">249</span>
 <span class="linenos">250</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">generalizedAlpha</span><span class="o">.</span><span class="n">computeInitialAccelerations</span><span class="o">=</span><span class="kc">True</span>
 <span class="linenos">251</span>
-<span class="linenos">252</span><span class="n">exu</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="p">)</span>
+<span class="linenos">252</span><span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="p">)</span>
 <span class="linenos">253</span>
 <span class="linenos">254</span><span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
 <span class="linenos">255</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">autoFitScene</span><span class="o">=</span><span class="kc">False</span>
@@ -427,8 +428,8 @@
 <span class="linenos">257</span>    <span class="k">if</span> <span class="s1">&#39;renderState&#39;</span> <span class="ow">in</span> <span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">:</span>
 <span class="linenos">258</span>        <span class="n">SC</span><span class="o">.</span><span class="nf">SetRenderState</span><span class="p">(</span><span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span><span class="s1">&#39;renderState&#39;</span><span class="p">])</span>
 <span class="linenos">259</span>
-<span class="linenos">260</span>    <span class="kn">from</span> <span class="nn">exudyn.interactive</span> <span class="kn">import</span> <span class="nf">SolutionViewer</span>
-<span class="linenos">261</span>    <span class="nf">SolutionViewer</span><span class="p">(</span><span class="n">mbs</span><span class="p">)</span>
+<span class="linenos">260</span>
+<span class="linenos">261</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">SolutionViewer</span><span class="p">()</span>
 <span class="linenos">262</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StopRenderer</span><span class="p">()</span>
 <span class="linenos">263</span>
 <span class="linenos">264</span><span class="n">lastRenderState</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">GetRenderState</span><span class="p">()</span> <span class="c1">#store model view</span>
@@ -456,11 +457,11 @@
 <span class="linenos">286</span><span class="c1">#exu.Print(&#39;error=&#39;, exudynTestGlobals.testError)</span>
 <span class="linenos">287</span>
 <span class="linenos">288</span><span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
-<span class="linenos">289</span>    <span class="kn">from</span> <span class="nn">exudyn.plot</span> <span class="kn">import</span> <span class="nf">PlotSensor</span>
+<span class="linenos">289</span>
 <span class="linenos">290</span>
-<span class="linenos">291</span>    <span class="nf">PlotSensor</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sJointTorque</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">closeAll</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">yLabel</span><span class="o">=</span><span class="s1">&#39;joint torques (Nm)&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;joint torques&#39;</span><span class="p">)</span>
+<span class="linenos">291</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sJointTorque</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">closeAll</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">yLabel</span><span class="o">=</span><span class="s1">&#39;joint torques (Nm)&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;joint torques&#39;</span><span class="p">)</span>
 <span class="linenos">292</span>
-<span class="linenos">293</span>    <span class="nf">PlotSensor</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sJointRot</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">yLabel</span><span class="o">=</span><span class="s1">&#39;joint angles (rad)&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;joint angles&#39;</span><span class="p">)</span>
+<span class="linenos">293</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sJointRot</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">yLabel</span><span class="o">=</span><span class="s1">&#39;joint angles (rad)&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;joint angles&#39;</span><span class="p">)</span>
 <span class="linenos">294</span>
 <span class="linenos">295</span>    <span class="c1">#V1.2.40, P39: with D[-1]=0.05: since 2022-04-22:</span>
 <span class="linenos">296</span>    <span class="c1"># sensor torque 0 = [  0.           0.         -12.68901871]</span>

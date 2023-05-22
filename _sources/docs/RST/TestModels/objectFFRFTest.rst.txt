@@ -595,7 +595,7 @@ You can view and download this file on Github: `objectFFRFTest.py <https://githu
        
        mbs.WaitForUserToContinue() #press space to continue
    
-   exu.SolveDynamic(mbs, simulationSettings)
+   mbs.SolveDynamic(simulationSettings)
    
    data = mbs.GetSensorStoredData(sDisp)
    #data = np.loadtxt(fileDir+'nMidDisplacement'+modeNames[testMode]+'test.txt', comments='#', delimiter=',')
@@ -616,9 +616,9 @@ You can view and download this file on Github: `objectFFRFTest.py <https://githu
    #plot results
    cList=['r-','g-','b-','k-','c-','r:','g:','b:','k:','c:']
    if useGraphics:
-       from exudyn.plot import PlotSensor
        
-       PlotSensor(mbs, sDisp, components=0, closeAll=True)
+       
+       mbs.PlotSensor(sDisp, components=0, closeAll=True)
    
    
 

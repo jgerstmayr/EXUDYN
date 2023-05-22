@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>particlesSilo.py &mdash; Exudyn1.6.110.dev1 1.6.110.dev1 documentation</title>
+  <title>particlesSilo.py &mdash; Exudyn1.6.118.dev1 1.6.118.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -37,7 +37,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.110.dev1
+            Exudyn1.6.118.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -202,7 +202,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.110.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.118.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -482,12 +482,12 @@
 <span class="linenos">256</span>    <span class="c1">#initial gContact statistics</span>
 <span class="linenos">257</span>    <span class="c1">#simulationSettings.timeIntegration.numberOfSteps = 1</span>
 <span class="linenos">258</span>    <span class="c1">#simulationSettings.timeIntegration.endTime = h</span>
-<span class="linenos">259</span>    <span class="c1">#exu.SolveDynamic(mbs, simulationSettings, solverType=exu.DynamicSolverType.ExplicitEuler)</span>
+<span class="linenos">259</span>    <span class="c1">#mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.ExplicitEuler)</span>
 <span class="linenos">260</span>    <span class="c1">#print(gContact)</span>
 <span class="linenos">261</span>
 <span class="linenos">262</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tEnd</span><span class="o">/</span><span class="n">h</span><span class="p">)</span>
 <span class="linenos">263</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="n">tEnd</span>
-<span class="linenos">264</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="p">,</span> <span class="n">solverType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">DynamicSolverType</span><span class="o">.</span><span class="n">ExplicitEuler</span><span class="p">)</span>
+<span class="linenos">264</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="p">,</span> <span class="n">solverType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">DynamicSolverType</span><span class="o">.</span><span class="n">ExplicitEuler</span><span class="p">)</span>
 <span class="linenos">265</span>    <span class="c1">#print(gContact)</span>
 <span class="linenos">266</span>    <span class="c1">#p = mbs.GetNodeOutput(n, variableType=exu.OutputVariableType.Position)</span>
 <span class="linenos">267</span>    <span class="c1">#print(&quot;pEnd =&quot;, p[0], p[1])</span>
@@ -500,12 +500,12 @@
 <span class="linenos">274</span><span class="k">if</span> <span class="ow">not</span> <span class="n">simulate</span> <span class="ow">or</span> <span class="kc">True</span><span class="p">:</span>
 <span class="linenos">275</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">autoFitScene</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="linenos">276</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">graphicsUpdateInterval</span><span class="o">=</span><span class="mf">0.5</span>
-<span class="linenos">277</span>    <span class="kn">from</span> <span class="nn">exudyn.interactive</span> <span class="kn">import</span> <span class="nf">SolutionViewer</span>
+<span class="linenos">277</span>
 <span class="linenos">278</span>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;load solution file&#39;</span><span class="p">)</span>
 <span class="linenos">279</span>    <span class="c1">#sol = LoadSolutionFile(&#39;solution/test2.txt&#39;, safeMode=False)</span>
 <span class="linenos">280</span>    <span class="n">sol</span> <span class="o">=</span> <span class="nf">LoadSolutionFile</span><span class="p">(</span><span class="s1">&#39;solution/test.txt&#39;</span><span class="p">,</span> <span class="n">safeMode</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="c1">#, maxRows=100)</span>
 <span class="linenos">281</span>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;start SolutionViewer&#39;</span><span class="p">)</span>
-<span class="linenos">282</span>    <span class="nf">SolutionViewer</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sol</span><span class="p">)</span>
+<span class="linenos">282</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">SolutionViewer</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>

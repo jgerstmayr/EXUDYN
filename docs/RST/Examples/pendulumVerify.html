@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pendulumVerify.py &mdash; Exudyn1.6.110.dev1 1.6.110.dev1 documentation</title>
+  <title>pendulumVerify.py &mdash; Exudyn1.6.118.dev1 1.6.118.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -37,7 +37,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.110.dev1
+            Exudyn1.6.118.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -202,7 +202,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.110.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.118.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -248,7 +248,7 @@
 <span class="linenos"> 22</span>
 <span class="linenos"> 23</span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="linenos"> 24</span>
-<span class="linenos"> 25</span><span class="c1">#import timeit</span>
+<span class="linenos"> 25</span><span class="kn">import</span> <span class="nn">time</span>
 <span class="linenos"> 26</span>
 <span class="linenos"> 27</span><span class="kn">import</span> <span class="nn">exudyn.basicUtilities</span> <span class="k">as</span> <span class="nn">eb</span>
 <span class="linenos"> 28</span><span class="kn">import</span> <span class="nn">exudyn.rigidBodyUtilities</span> <span class="k">as</span> <span class="nn">rb</span>
@@ -563,9 +563,9 @@
 <span class="linenos">337</span>
 <span class="linenos">338</span>    <span class="c1">#SC.RedrawAndSaveImage()</span>
 <span class="linenos">339</span>    <span class="k">if</span> <span class="kc">False</span><span class="p">:</span>
-<span class="linenos">340</span>        <span class="n">exu</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="o">=</span><span class="n">simulationSettings</span><span class="p">)</span>
+<span class="linenos">340</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="o">=</span><span class="n">simulationSettings</span><span class="p">)</span>
 <span class="linenos">341</span>    <span class="k">else</span><span class="p">:</span>
-<span class="linenos">342</span>        <span class="n">exu</span><span class="o">.</span><span class="nf">SolveStatic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="o">=</span><span class="n">simulationSettings</span><span class="p">)</span>
+<span class="linenos">342</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">SolveStatic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="o">=</span><span class="n">simulationSettings</span><span class="p">)</span>
 <span class="linenos">343</span>
 <span class="linenos">344</span>    <span class="c1"># print(&quot;tip1=&quot;,mbs.GetSensorValues(sensTip))</span>
 <span class="linenos">345</span>

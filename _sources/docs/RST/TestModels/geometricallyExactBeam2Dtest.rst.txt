@@ -153,8 +153,8 @@ You can view and download this file on Github: `geometricallyExactBeam2Dtest.py 
        exu.StartRenderer()
        mbs.WaitForUserToContinue()
    
-   #exu.SolveDynamic(mbs, simulationSettings)
-   exu.SolveStatic(mbs, simulationSettings)
+   #mbs.SolveDynamic(simulationSettings)
+   mbs.SolveStatic(simulationSettings)
            
    uLast = mbs.GetNodeOutput(nodeList[-1], exu.OutputVariableType.Coordinates)
    exu.Print("n =",nElements,", uTip =", uLast[0:2])

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>serialRobotInverseKinematics.py &mdash; Exudyn1.6.110.dev1 1.6.110.dev1 documentation</title>
+  <title>serialRobotInverseKinematics.py &mdash; Exudyn1.6.118.dev1 1.6.118.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -37,7 +37,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.110.dev1
+            Exudyn1.6.118.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -202,7 +202,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.110.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.118.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -469,7 +469,7 @@
 <span class="linenos">243</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">WaitForUserToContinue</span><span class="p">()</span>
 <span class="linenos">244</span>
 <span class="linenos">245</span><span class="c1"># hte the simulation with the set up simulationsettings is started</span>
-<span class="linenos">246</span><span class="n">exu</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="p">,</span>
+<span class="linenos">246</span><span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="p">,</span>
 <span class="linenos">247</span>                 <span class="c1">#solverType = exudyn.DynamicSolverType.TrapezoidalIndex2, # different solver types can be used depending on the problem</span>
 <span class="linenos">248</span>                 <span class="n">showHints</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="linenos">249</span>
@@ -481,8 +481,8 @@
 <span class="linenos">255</span><span class="c1">#%%++++++++++++++++++++++++++++++++++++++++++++</span>
 <span class="linenos">256</span><span class="k">if</span> <span class="kc">True</span><span class="p">:</span>
 <span class="linenos">257</span>    <span class="c1"># import the solution viewer which loads</span>
-<span class="linenos">258</span>    <span class="kn">from</span> <span class="nn">exudyn.interactive</span> <span class="kn">import</span> <span class="nf">SolutionViewer</span>
-<span class="linenos">259</span>    <span class="nf">SolutionViewer</span><span class="p">(</span><span class="n">mbs</span><span class="p">)</span>
+<span class="linenos">258</span>
+<span class="linenos">259</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">SolutionViewer</span><span class="p">()</span>
 <span class="linenos">260</span><span class="c1">#%%++++++++++++++++++++++++++++++++++++++++++++</span>
 <span class="linenos">261</span>
 <span class="linenos">262</span>
@@ -491,12 +491,12 @@
 <span class="linenos">265</span>
 <span class="linenos">266</span><span class="c1">#%%++++++++++++++++++++++++++++++++++++++++++++</span>
 <span class="linenos">267</span><span class="k">if</span> <span class="kc">True</span><span class="p">:</span>
-<span class="linenos">268</span>    <span class="kn">from</span> <span class="nn">exudyn.plot</span> <span class="kn">import</span> <span class="nf">PlotSensor</span>
+<span class="linenos">268</span>
 <span class="linenos">269</span>    <span class="n">labels</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="linenos">270</span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">):</span>
 <span class="linenos">271</span>        <span class="n">labels</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;joint &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span>
 <span class="linenos">272</span>    <span class="c1"># plot data from the sensor sJoints 6 times and take the values 0 to 5 in the steps</span>
-<span class="linenos">273</span>    <span class="nf">PlotSensor</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sensorNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">sJoints</span><span class="p">]</span><span class="o">*</span><span class="mi">6</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">6</span><span class="p">)),</span> <span class="n">yLabel</span><span class="o">=</span><span class="s1">&#39;joint coordinates&#39;</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">)</span>
+<span class="linenos">273</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sensorNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">sJoints</span><span class="p">]</span><span class="o">*</span><span class="mi">6</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">6</span><span class="p">)),</span> <span class="n">yLabel</span><span class="o">=</span><span class="s1">&#39;joint coordinates&#39;</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>

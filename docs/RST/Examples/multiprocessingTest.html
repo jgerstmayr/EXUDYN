@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>multiprocessingTest.py &mdash; Exudyn1.6.110.dev1 1.6.110.dev1 documentation</title>
+  <title>multiprocessingTest.py &mdash; Exudyn1.6.118.dev1 1.6.118.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -37,7 +37,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.110.dev1
+            Exudyn1.6.118.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -202,7 +202,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.110.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.118.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -229,65 +229,67 @@
 <span class="linenos"> 3</span><span class="c1">#</span>
 <span class="linenos"> 4</span><span class="c1"># Details:  This example shows how to use parallel computation of EXUDYN models</span>
 <span class="linenos"> 5</span><span class="c1">#           Using multiprocessing, several instances of EXUDYN are executed (graphics DISABLED!!!)</span>
-<span class="linenos"> 6</span><span class="c1">#</span>
-<span class="linenos"> 7</span><span class="c1"># Author:   Johannes Gerstmayr</span>
-<span class="linenos"> 8</span><span class="c1"># Date:     2020-11-12</span>
-<span class="linenos"> 9</span><span class="c1">#</span>
-<span class="linenos">10</span><span class="c1"># Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See &#39;LICENSE.txt&#39; for more details.</span>
+<span class="linenos"> 6</span><span class="c1">#           This represents a very simple possibility to run parallel simulations;</span>
+<span class="linenos"> 7</span><span class="c1">#           More advanced parameter variation is available in exudyn.processing.ParameterVariation(...)</span>
+<span class="linenos"> 8</span><span class="c1">#</span>
+<span class="linenos"> 9</span><span class="c1"># Author:   Johannes Gerstmayr</span>
+<span class="linenos">10</span><span class="c1"># Date:     2020-11-12</span>
 <span class="linenos">11</span><span class="c1">#</span>
-<span class="linenos">12</span><span class="c1">#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos">13</span>
-<span class="linenos">14</span>
-<span class="linenos">15</span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
-<span class="linenos">16</span><span class="kn">from</span> <span class="nn">exudyn.itemInterface</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="linenos">17</span><span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="linenos">18</span>
-<span class="linenos">19</span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="linenos">20</span><span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Pool</span>
-<span class="linenos">21</span>
-<span class="linenos">22</span><span class="c1">#function, which creates and runs model; executed in parallel!</span>
-<span class="linenos">23</span><span class="k">def</span> <span class="nf">TestExudyn</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-<span class="linenos">24</span>
-<span class="linenos">25</span>    <span class="c1">#create an environment for mini example</span>
-<span class="linenos">26</span>    <span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
-<span class="linenos">27</span>    <span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
-<span class="linenos">28</span>
-<span class="linenos">29</span>    <span class="n">oGround</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectGround</span><span class="p">(</span><span class="n">referencePosition</span><span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
-<span class="linenos">30</span>    <span class="n">nGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">NodePointGround</span><span class="p">(</span><span class="n">referenceCoordinates</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
-<span class="linenos">31</span>
-<span class="linenos">32</span>    <span class="n">testError</span><span class="o">=</span><span class="mi">1</span> <span class="c1">#set default error, if failed</span>
-<span class="linenos">33</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s2">&quot;start mini example for class ObjectMass1D&quot;</span><span class="p">)</span>
-<span class="linenos">34</span>
-<span class="linenos">35</span>    <span class="n">node</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">Node1D</span><span class="p">(</span><span class="n">referenceCoordinates</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-<span class="linenos">36</span>                              <span class="n">initialCoordinates</span><span class="o">=</span><span class="p">[</span><span class="mf">0.</span><span class="p">],</span>
-<span class="linenos">37</span>                              <span class="n">initialVelocities</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="o">*</span><span class="n">x</span><span class="p">]))</span>
-<span class="linenos">38</span>    <span class="n">mass</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">Mass1D</span><span class="p">(</span><span class="n">nodeNumber</span> <span class="o">=</span> <span class="n">node</span><span class="p">,</span> <span class="n">physicsMass</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
-<span class="linenos">39</span>
-<span class="linenos">40</span>    <span class="c1">#assemble and solve system for default parameters</span>
-<span class="linenos">41</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
-<span class="linenos">42</span>    <span class="c1">#exu.SolveDynamic(mbs, exu.SimulationSettings())</span>
-<span class="linenos">43</span>
-<span class="linenos">44</span>    <span class="n">h</span><span class="o">=</span><span class="mf">1e-6</span>
-<span class="linenos">45</span>    <span class="n">tEnd</span> <span class="o">=</span> <span class="mi">10</span>
-<span class="linenos">46</span>    <span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">()</span>
-<span class="linenos">47</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tEnd</span><span class="o">/</span><span class="n">h</span><span class="p">)</span>
-<span class="linenos">48</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="n">tEnd</span>
-<span class="linenos">49</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">coordinatesSolutionFileName</span> <span class="o">=</span> <span class="s2">&quot;coordinatesSolution&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">+</span><span class="s2">&quot;.txt&quot;</span>
-<span class="linenos">50</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">writeSolutionToFile</span> <span class="o">=</span> <span class="kc">True</span> <span class="c1">#no concurrent writing to files ...!</span>
-<span class="linenos">51</span>    <span class="c1">#exu.StartRenderer() #don&#39;t do this in parallelization: will crash</span>
-<span class="linenos">52</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="p">)</span>
-<span class="linenos">53</span>    <span class="c1">#exu.StopRenderer() #don&#39;t do this in parallelization: will crash</span>
-<span class="linenos">54</span>
-<span class="linenos">55</span>    <span class="c1">#check result, get current mass position at local position [0,0,0]</span>
-<span class="linenos">56</span>    <span class="n">result</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetObjectOutputBody</span><span class="p">(</span><span class="n">mass</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Position</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
-<span class="linenos">57</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;result &quot;</span><span class="p">,</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">,</span><span class="n">result</span><span class="p">)</span>
-<span class="linenos">58</span>    <span class="k">return</span> <span class="n">result</span>
-<span class="linenos">59</span>    <span class="c1">#final x-coordinate of position shall be 2</span>
-<span class="linenos">60</span>
-<span class="linenos">61</span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-<span class="linenos">62</span>    <span class="n">vInput</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">)</span>
-<span class="linenos">63</span>    <span class="k">with</span> <span class="n">Pool</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">vInput</span><span class="p">))</span> <span class="k">as</span> <span class="n">p</span><span class="p">:</span>
-<span class="linenos">64</span>        <span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">TestExudyn</span><span class="p">,</span> <span class="n">vInput</span><span class="p">))</span>
+<span class="linenos">12</span><span class="c1"># Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See &#39;LICENSE.txt&#39; for more details.</span>
+<span class="linenos">13</span><span class="c1">#</span>
+<span class="linenos">14</span><span class="c1">#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">15</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
+<span class="linenos">18</span><span class="kn">from</span> <span class="nn">exudyn.itemInterface</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="linenos">19</span><span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="linenos">20</span>
+<span class="linenos">21</span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="linenos">22</span><span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Pool</span>
+<span class="linenos">23</span>
+<span class="linenos">24</span><span class="c1">#function, which creates and runs model; executed in parallel!</span>
+<span class="linenos">25</span><span class="k">def</span> <span class="nf">TestExudyn</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="linenos">26</span>
+<span class="linenos">27</span>    <span class="c1">#create an environment for mini example</span>
+<span class="linenos">28</span>    <span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
+<span class="linenos">29</span>    <span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
+<span class="linenos">30</span>
+<span class="linenos">31</span>    <span class="n">oGround</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectGround</span><span class="p">(</span><span class="n">referencePosition</span><span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+<span class="linenos">32</span>    <span class="n">nGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">NodePointGround</span><span class="p">(</span><span class="n">referenceCoordinates</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+<span class="linenos">33</span>
+<span class="linenos">34</span>    <span class="n">testError</span><span class="o">=</span><span class="mi">1</span> <span class="c1">#set default error, if failed</span>
+<span class="linenos">35</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s2">&quot;start mini example for class ObjectMass1D&quot;</span><span class="p">)</span>
+<span class="linenos">36</span>
+<span class="linenos">37</span>    <span class="n">node</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">Node1D</span><span class="p">(</span><span class="n">referenceCoordinates</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos">38</span>                              <span class="n">initialCoordinates</span><span class="o">=</span><span class="p">[</span><span class="mf">0.</span><span class="p">],</span>
+<span class="linenos">39</span>                              <span class="n">initialVelocities</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="o">*</span><span class="n">x</span><span class="p">]))</span>
+<span class="linenos">40</span>    <span class="n">mass</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">Mass1D</span><span class="p">(</span><span class="n">nodeNumber</span> <span class="o">=</span> <span class="n">node</span><span class="p">,</span> <span class="n">physicsMass</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+<span class="linenos">41</span>
+<span class="linenos">42</span>    <span class="c1">#assemble and solve system for default parameters</span>
+<span class="linenos">43</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
+<span class="linenos">44</span>    <span class="c1">#mbs.SolveDynamic(exu.SimulationSettings())</span>
+<span class="linenos">45</span>
+<span class="linenos">46</span>    <span class="n">h</span><span class="o">=</span><span class="mf">1e-6</span>
+<span class="linenos">47</span>    <span class="n">tEnd</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="linenos">48</span>    <span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">()</span>
+<span class="linenos">49</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tEnd</span><span class="o">/</span><span class="n">h</span><span class="p">)</span>
+<span class="linenos">50</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="n">tEnd</span>
+<span class="linenos">51</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">coordinatesSolutionFileName</span> <span class="o">=</span> <span class="s2">&quot;coordinatesSolution&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">+</span><span class="s2">&quot;.txt&quot;</span>
+<span class="linenos">52</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">writeSolutionToFile</span> <span class="o">=</span> <span class="kc">True</span> <span class="c1">#no concurrent writing to files ...!</span>
+<span class="linenos">53</span>    <span class="c1">#exu.StartRenderer() #don&#39;t do this in parallelization: will crash</span>
+<span class="linenos">54</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="p">)</span>
+<span class="linenos">55</span>    <span class="c1">#exu.StopRenderer() #don&#39;t do this in parallelization: will crash</span>
+<span class="linenos">56</span>
+<span class="linenos">57</span>    <span class="c1">#check result, get current mass position at local position [0,0,0]</span>
+<span class="linenos">58</span>    <span class="n">result</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetObjectOutputBody</span><span class="p">(</span><span class="n">mass</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Position</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos">59</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;result &quot;</span><span class="p">,</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">,</span><span class="n">result</span><span class="p">)</span>
+<span class="linenos">60</span>    <span class="k">return</span> <span class="n">result</span>
+<span class="linenos">61</span>    <span class="c1">#final x-coordinate of position shall be 2</span>
+<span class="linenos">62</span>
+<span class="linenos">63</span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+<span class="linenos">64</span>    <span class="n">vInput</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">)</span> <span class="c1">#start 20 tasks in parallel ...</span>
+<span class="linenos">65</span>    <span class="k">with</span> <span class="n">Pool</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">vInput</span><span class="p">))</span> <span class="k">as</span> <span class="n">p</span><span class="p">:</span>
+<span class="linenos">66</span>        <span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">TestExudyn</span><span class="p">,</span> <span class="n">vInput</span><span class="p">))</span>
 </pre></div>
 </div>
 </section>

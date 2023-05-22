@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>coordinateVectorConstraintGenericODE2.py &mdash; Exudyn1.6.110.dev1 1.6.110.dev1 documentation</title>
+  <title>coordinateVectorConstraintGenericODE2.py &mdash; Exudyn1.6.118.dev1 1.6.118.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -37,7 +37,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.110.dev1
+            Exudyn1.6.118.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -106,6 +106,7 @@
 <li class="toctree-l2"><a class="reference internal" href="kinematicTreeAndMBStest.html">kinematicTreeAndMBStest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kinematicTreeConstraintTest.html">kinematicTreeConstraintTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kinematicTreeTest.html">kinematicTreeTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mainSystemExtensionsTests.html">mainSystemExtensionsTests.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="manualExplicitIntegrator.html">manualExplicitIntegrator.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mecanumWheelRollingDiscTest.html">mecanumWheelRollingDiscTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="objectFFRFreducedOrderAccelerations.html">objectFFRFreducedOrderAccelerations.py</a></li>
@@ -146,7 +147,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.110.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.118.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -329,7 +330,7 @@
 <span class="linenos">159</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StartRenderer</span><span class="p">()</span>
 <span class="linenos">160</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">WaitForUserToContinue</span><span class="p">()</span>
 <span class="linenos">161</span>
-<span class="linenos">162</span><span class="n">exu</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="p">)</span>
+<span class="linenos">162</span><span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="p">)</span>
 <span class="linenos">163</span>
 <span class="linenos">164</span><span class="n">p0</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">GetNodeOutput</span><span class="p">(</span><span class="n">nR0</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Position</span><span class="p">)</span>
 <span class="linenos">165</span><span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s2">&quot;p0=&quot;</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">p0</span><span class="p">))</span>
@@ -346,13 +347,13 @@
 <span class="linenos">176</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">WaitForRenderEngineStopFlag</span><span class="p">()</span>
 <span class="linenos">177</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StopRenderer</span><span class="p">()</span> <span class="c1">#safely close rendering window!</span>
 <span class="linenos">178</span>
-<span class="linenos">179</span>    <span class="kn">from</span> <span class="nn">exudyn.plot</span> <span class="kn">import</span> <span class="nf">PlotSensor</span><span class="p">,</span> <span class="nf">PlotSensorDefaults</span>
+<span class="linenos">179</span>    <span class="kn">from</span> <span class="nn">exudyn.plot</span> <span class="kn">import</span> <span class="nf">PlotSensorDefaults</span>
 <span class="linenos">180</span>    <span class="nf">PlotSensorDefaults</span><span class="p">()</span><span class="o">.</span><span class="n">fontSize</span> <span class="o">=</span> <span class="mi">12</span>
 <span class="linenos">181</span>    <span class="c1"># PlotSensorDefaults().markerStyles=[&#39;x&#39;,&#39;o &#39;,&#39;v &#39;,&#39;^ &#39;,&#39;s &#39;]</span>
-<span class="linenos">182</span>    <span class="c1"># PlotSensor(mbs, [sPos0,sPos0,sPos1,sPos1], components=[0,1,0,1], closeAll=True)</span>
+<span class="linenos">182</span>    <span class="c1"># mbs.PlotSensor([sPos0,sPos0,sPos1,sPos1], components=[0,1,0,1], closeAll=True)</span>
 <span class="linenos">183</span>
 <span class="linenos">184</span>    <span class="c1">#if reference solution computed:</span>
-<span class="linenos">185</span>    <span class="nf">PlotSensor</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="p">[</span><span class="n">sPos0</span><span class="p">,</span><span class="n">sPos0</span><span class="p">,</span><span class="n">sPos1</span><span class="p">,</span><span class="n">sPos1</span><span class="p">,</span><span class="n">fileNameDouble</span><span class="p">],</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">closeAll</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">185</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">([</span><span class="n">sPos0</span><span class="p">,</span><span class="n">sPos0</span><span class="p">,</span><span class="n">sPos1</span><span class="p">,</span><span class="n">sPos1</span><span class="p">,</span><span class="n">fileNameDouble</span><span class="p">],</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">closeAll</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="linenos">186</span>               <span class="n">markerStyles</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="s1">&#39;x&#39;</span><span class="p">],</span> <span class="n">lineStyles</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;-&#39;</span><span class="p">,</span><span class="s1">&#39;-&#39;</span><span class="p">,</span><span class="s1">&#39;-&#39;</span><span class="p">,</span><span class="s1">&#39;-&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">])</span>
 </pre></div>
 </div>

@@ -108,7 +108,7 @@ You can view and download this file on Github: `stlFileImport.py <https://github
    
    mbs.WaitForUserToContinue() #stop before simulating
    
-   exu.SolveDynamic(mbs, simulationSettings = simulationSettings,
+   mbs.SolveDynamic(simulationSettings = simulationSettings,
                     solverType=exu.DynamicSolverType.TrapezoidalIndex2)
    
    SC.WaitForRenderEngineStopFlag() #stop before closing

@@ -117,7 +117,7 @@ You can view and download this file on Github: `dispyParameterVariationExample.p
        simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1 #no damping
        
        #start solver:
-       exu.SolveDynamic(mbs, simulationSettings)
+       mbs.SolveDynamic(simulationSettings)
    
        # +++++++++++++++++++++++++++++++++++++++++++++++++++++
        # evaluate difference between reference and optimized solution
@@ -202,7 +202,7 @@ You can view and download this file on Github: `dispyParameterVariationExample.p
        
    #%% post processing of all computed variations
        if True:
-           from exudyn.plot import PlotSensor
+           
            #extract solution from return values
            valuesPlot = []
            for item in values: 
@@ -210,6 +210,7 @@ You can view and download this file on Github: `dispyParameterVariationExample.p
            
            #plot first 8 results:
            for i in range(len(values)):
+               from exudyn.plot import PlotSensor
                PlotSensor(0, sensorNumbers=values[i][1], labels='result'+str(i), newFigure=(i==0),
                           colorCodeOffset=i, fontSize=12, closeAll=(i==0))
            

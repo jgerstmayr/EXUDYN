@@ -112,7 +112,7 @@ You can view and download this file on Github: `ComputeSensitivitiesExample.py <
        mbs.Assemble()
        
        #start solver:
-       exu.SolveDynamic(mbs, simulationSettings)
+       mbs.SolveDynamic(simulationSettings)
        
    
    

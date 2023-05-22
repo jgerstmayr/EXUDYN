@@ -138,16 +138,16 @@ You can view and download this file on Github: `lugreFrictionODE1.py <https://gi
    
        
    sims.timeIntegration.numberOfSteps = int(tEnd/h)
-   exu.SolveDynamic(mbs, solverType=solverType, simulationSettings=sims)
+   mbs.SolveDynamic(solverType=solverType, simulationSettings=sims)
    
    
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++
    if True:
-       from exudyn.plot import PlotSensor
-       PlotSensor(mbs, [], closeAll=True)
+       
+       mbs.PlotSensor([], closeAll=True)
    
-       PlotSensor(mbs, sCoords1,[0,1,2], labels=['LuGre pos','LuGre vel','Lugre Z'])
-       PlotSensor(mbs, sFriction1,0, colorCodeOffset=3, newFigure=False, labels=['LuGre force'])
+       mbs.PlotSensor(sCoords1,[0,1,2], labels=['LuGre pos','LuGre vel','Lugre Z'])
+       mbs.PlotSensor(sFriction1,0, colorCodeOffset=3, newFigure=False, labels=['LuGre force'])
    
 
 

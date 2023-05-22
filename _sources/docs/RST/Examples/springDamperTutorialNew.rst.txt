@@ -25,7 +25,6 @@ You can view and download this file on Github: `springDamperTutorialNew.py <http
    
    import exudyn as exu
    from exudyn.utilities import *
-   import exudyn.mainSystemExtensions #for mbs bindings
    
    import numpy as np #for postprocessing
    
@@ -89,7 +88,7 @@ You can view and download this file on Github: `springDamperTutorialNew.py <http
    mbs.WaitForUserToContinue()    #wait for pressing SPACE bar to continue
    
    #start solver:
-   exu.SolveDynamic(mbs, simulationSettings, 
+   mbs.SolveDynamic(simulationSettings, 
                     solverType=exu.DynamicSolverType.TrapezoidalIndex2)
    
    SC.WaitForRenderEngineStopFlag()#wait for pressing 'Q' to quit
@@ -116,12 +115,13 @@ You can view and download this file on Github: `springDamperTutorialNew.py <http
        refSol[i,1] = np.exp(-omega0*dRel*t)*(C1*np.cos(omega*t) + C2*np.sin(omega*t))+x0
    
    #use PlotSensor functionality to plot data:
-   mbs.PlotSensor(sensorNumbers=[sDisp], components=[0], labels='displacement (m); numerical solution', closeAll=True)
    mbs.PlotSensor(sensorNumbers=[refSol], components=[0], labels='displacement (m); exact solution', 
-                  colorCodeOffset=1, newFigure=False)
+                  colorCodeOffset=2, closeAll=True) #color code offset to have same colors as in original example
+   mbs.PlotSensor(sensorNumbers=[sDisp], components=[0], labels='displacement (m); numerical solution', 
+                  colorCodeOffset=0, newFigure=False)
    
    mbs.PlotSensor(sensorNumbers=[sForce], labels='force (kN)', 
-                  colorCodeOffset=2, factors=[1e-3], newFigure=False)
+                  colorCodeOffset=1, factors=[1e-3], newFigure=False)
    
    
 

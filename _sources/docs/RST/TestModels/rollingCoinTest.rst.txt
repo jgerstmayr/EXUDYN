@@ -132,7 +132,7 @@ You can view and download this file on Github: `rollingCoinTest.py <https://gith
        exu.StartRenderer()
        mbs.WaitForUserToContinue()
    
-   exu.SolveDynamic(mbs, simulationSettings)
+   mbs.SolveDynamic(simulationSettings)
    
    p0=mbs.GetObjectOutput(oRolling, exu.OutputVariableType.Position)
    exu.Print('solution of rollingCoinTest=',p0[0]) #use x-coordinate
@@ -148,9 +148,9 @@ You can view and download this file on Github: `rollingCoinTest.py <https://gith
        ##++++++++++++++++++++++++++++++++++++++++++++++q+++++++
        #plot results
        if True:
-           from exudyn.plot import PlotSensor
            
-           PlotSensor(mbs, sTrail, componentsX=[0],components=[1], closeAll=True, title='wheel trail')
+           
+           mbs.PlotSensor(sTrail, componentsX=[0],components=[1], closeAll=True, title='wheel trail')
    
    
            # import matplotlib.pyplot as plt

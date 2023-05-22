@@ -83,6 +83,6 @@ You can view and download this file on Github: `simple4linkPendulumBing.py <http
    
    exu.StartRenderer()
    mbs.WaitForUserToContinue()
-   exu.SolveDynamic(mbs,simulationSettings)
+   mbs.SolveDynamic(simulationSettings)
    exu.StopRenderer()
 

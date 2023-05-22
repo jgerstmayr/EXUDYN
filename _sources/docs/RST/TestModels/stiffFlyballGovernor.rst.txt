@@ -347,7 +347,7 @@ You can view and download this file on Github: `stiffFlyballGovernor.py <https:/
        dynamicSolver.SetUserFunctionNewton(mbs, UserFunctionNewtonLieGroupRK4)
    
    dynamicSolver.SolveSystem(mbs, simulationSettings)
-   #exu.SolveDynamic(mbs, simulationSettings)
+   #mbs.SolveDynamic(simulationSettings)
    
    if useGraphics: #only start graphics once, but after background is set
        #SC.WaitForRenderEngineStopFlag()
@@ -400,10 +400,10 @@ You can view and download this file on Github: `stiffFlyballGovernor.py <https:/
    #v 3 = [ 1.91975841e-16 -5.60155553e+00 -4.90500111e-10]
    
    if useGraphics:
-       from exudyn.plot import PlotSensor
        
-       PlotSensor(mbs, sPos, components=[0,1,2], closeAll=True)
-       PlotSensor(mbs, sRot, components=[0,1,2])
+       
+       mbs.PlotSensor(sPos, components=[0,1,2], closeAll=True)
+       mbs.PlotSensor(sRot, components=[0,1,2])
    
        if False:
            import matplotlib.pyplot as plt

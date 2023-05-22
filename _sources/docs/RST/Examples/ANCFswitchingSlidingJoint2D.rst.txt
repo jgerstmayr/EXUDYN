@@ -237,11 +237,11 @@ You can view and download this file on Github: `ANCFswitchingSlidingJoint2D.py <
    
    
    exu.StartRenderer()
-   exu.SolveDynamic(mbs, simulationSettings)
+   mbs.SolveDynamic(simulationSettings)
    
    if False:
        for i in range(5000): #2500
-           exu.SolveDynamic(mbs, simulationSettings)
+           mbs.SolveDynamic(simulationSettings)
    
            if mbs.GetRenderEngineStopFlag():
                print('stopped by user')

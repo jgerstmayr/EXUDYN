@@ -322,7 +322,7 @@ You can view and download this file on Github: `mecanumWheelRollingDiscTest.py <
        exu.StartRenderer()
        mbs.WaitForUserToContinue()
    
-   exu.SolveDynamic(mbs, simulationSettings)
+   mbs.SolveDynamic(simulationSettings)
    
    p0=mbs.GetObjectOutputBody(bCar, exu.OutputVariableType.Position, localPosition=[0,0,0])
    exu.Print('solution of mecanumWheelRollingDiscTest=',p0[0]) #use x-coordinate
@@ -338,11 +338,11 @@ You can view and download this file on Github: `mecanumWheelRollingDiscTest.py <
    ##++++++++++++++++++++++++++++++++++++++++++++++q+++++++
    #plot results
    if useGraphics:
-       from exudyn.plot import PlotSensor
        
-       PlotSensor(mbs, sTrail, componentsX=[0]*4, components=[1]*4, title='wheel trails', closeAll=True,
+       
+       mbs.PlotSensor(sTrail, componentsX=[0]*4, components=[1]*4, title='wheel trails', closeAll=True,
                   markerStyles=['x ','o ','^ ','D '], markerSizes=12)
-       PlotSensor(mbs, sForce, components=[1]*4, title='wheel forces')
+       mbs.PlotSensor(sForce, components=[1]*4, title='wheel forces')
        
 
 

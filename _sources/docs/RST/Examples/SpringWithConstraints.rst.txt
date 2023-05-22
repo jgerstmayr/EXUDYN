@@ -94,7 +94,7 @@ You can view and download this file on Github: `SpringWithConstraints.py <https:
    
    #exu.StartRenderer()
    ##exu.InfoStat()
-   #exu.SolveDynamic(mbs, simulationSettings)
+   #mbs.SolveDynamic(simulationSettings)
    ##exu.InfoStat()
    #SC.WaitForRenderEngineStopFlag()
    #exu.StopRenderer() #safely close rendering window!
@@ -102,7 +102,7 @@ You can view and download this file on Github: `SpringWithConstraints.py <https:
    simulationSettings.staticSolver.newton.numericalDifferentiation.relativeEpsilon = 0.1
    simulationSettings.staticSolver.verboseMode = 3
    exu.StartRenderer()
-   exu.SolveStatic(mbs, simulationSettings)
+   mbs.SolveStatic(simulationSettings)
    SC.WaitForRenderEngineStopFlag()
    exu.StopRenderer() #safely close rendering window!
    

@@ -119,12 +119,12 @@ You can view and download this file on Github: `plotSensorExamples.py <https://g
    #mbs.WaitForUserToContinue()    #wait for pressing SPACE bar to continue
    
    #start solver:
-   exu.SolveDynamic(mbs, simulationSettings, solverType=exu.DynamicSolverType.ExplicitEuler)
+   mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.ExplicitEuler)
    dispExplicit=mbs.GetSensorStoredData(sDisp)
    velExplicit=mbs.GetSensorStoredData(sVel)
    omegaExplicit=mbs.GetSensorStoredData(sOmega)
    
-   exu.SolveDynamic(mbs, simulationSettings)#, solverType=exu.DynamicSolverType.ExplicitEuler)
+   mbs.SolveDynamic(simulationSettings)#, solverType=exu.DynamicSolverType.ExplicitEuler)
    
    #SC.WaitForRenderEngineStopFlag()#wait for pressing 'Q' to quit
    # exu.StopRenderer()               #safely close rendering window!
@@ -136,57 +136,57 @@ You can view and download this file on Github: `plotSensorExamples.py <https://g
    # data=mbs.GetSensorStoredData(0)
    # print('sensor data=',data)
    
-   from exudyn.plot import PlotSensor
+   
    
    
    # import matplotlib.pyplot as plt
-   PlotSensor(mbs, sensorNumbers=sDisp, components=0, closeAll=True)
+   mbs.PlotSensor(sensorNumbers=sDisp, components=0, closeAll=True)
    
-   PlotSensor(mbs, sVel, 0) #SIMPLEST command to plot x-coordinate of velocity sensor
+   mbs.PlotSensor(sVel, 0) #SIMPLEST command to plot x-coordinate of velocity sensor
    
    #compare difference of sensors:
-   PlotSensor(mbs, sensorNumbers=sVel, components=0, newFigure=False, colorCodeOffset=1, 
+   mbs.PlotSensor(sensorNumbers=sVel, components=0, newFigure=False, colorCodeOffset=1, 
                offsets=[-velExplicit], labels='difference of velocity \nof expl./impl. integrator')
    
-   PlotSensor(mbs, sensorNumbers=sForce, components=0, newFigure=False, factors=[1e-3], colorCodeOffset=2)
+   mbs.PlotSensor(sensorNumbers=sForce, components=0, newFigure=False, factors=[1e-3], colorCodeOffset=2)
    
    #internal data and file names; compute difference to external data:
    extData = np.loadtxt('solution/sDisp.txt', comments='#', delimiter=',')
-   PlotSensor(mbs, sensorNumbers=['solution/sDisp.txt',sDisp,sDisp], components=0, xLabel='time in seconds',
+   mbs.PlotSensor(sensorNumbers=['solution/sDisp.txt',sDisp,sDisp], components=0, xLabel='time in seconds',
                offsets=[0,0,-extData],
                markerStyles=['','x',''], lineStyles=['-','','-'], markerDensity=0.05,
                labels=['Displacement from file','Displacement internal','diff between file and \ninternal data (precision)'])
    
-   PlotSensor(mbs, sensorNumbers=sOmega, components=[0,1,2],
+   mbs.PlotSensor(sensorNumbers=sOmega, components=[0,1,2],
              yLabel='angular velocities with offset 0\nand scaled with $\\frac{180}{\pi}$', 
              factors=180/pi, offsets=0,fontSize=12,title='angular velocities',
              lineWidths=[3,5,1], lineStyles=['-',':','-.'], colors=['r','g','b'])
    
-   PlotSensor(mbs, sensorNumbers=[sRot]*3+[sOmega]*3, components=[0,1,2]*2, 
+   mbs.PlotSensor(sensorNumbers=[sRot]*3+[sOmega]*3, components=[0,1,2]*2, 
              colorCodeOffset=3, newFigure=True, fontSize=14, 
              yLabel='Tait-Bryan rotations $\\alpha, \\beta, \\gamma$ and\n angular velocities around $x,y,z$',
              title='compare rotations and angular velocities')
    
-   PlotSensor(mbs, sensorNumbers=sRot, components=[0,1,2], markerStyles=['* ','x','^ '], #add space after marker symbol to draw empty
+   mbs.PlotSensor(sensorNumbers=sRot, components=[0,1,2], markerStyles=['* ','x','^ '], #add space after marker symbol to draw empty
                lineWidths=2, markerSizes=12, markerDensity=15)
    
    
    #create subplots:
    subs=[3,2]
-   PlotSensor(mbs, sensorNumbers=sOmega, components=0, newFigure=True,  subPlot=[*subs,1])
-   PlotSensor(mbs, sensorNumbers=sOmega, components=1, newFigure=False, subPlot=[*subs,2])
-   PlotSensor(mbs, sensorNumbers=sOmega, components=2, newFigure=False, subPlot=[*subs,3])
-   PlotSensor(mbs, sensorNumbers=sPos,   components=0, newFigure=False, subPlot=[*subs,4])
-   PlotSensor(mbs, sensorNumbers=sPos,   components=1, newFigure=False, subPlot=[*subs,5])
-   PlotSensor(mbs, sensorNumbers=sPos,   components=2, newFigure=False, subPlot=[*subs,6])
+   mbs.PlotSensor(sensorNumbers=sOmega, components=0, newFigure=True,  subPlot=[*subs,1])
+   mbs.PlotSensor(sensorNumbers=sOmega, components=1, newFigure=False, subPlot=[*subs,2])
+   mbs.PlotSensor(sensorNumbers=sOmega, components=2, newFigure=False, subPlot=[*subs,3])
+   mbs.PlotSensor(sensorNumbers=sPos,   components=0, newFigure=False, subPlot=[*subs,4])
+   mbs.PlotSensor(sensorNumbers=sPos,   components=1, newFigure=False, subPlot=[*subs,5])
+   mbs.PlotSensor(sensorNumbers=sPos,   components=2, newFigure=False, subPlot=[*subs,6])
    
    #compare different simulation results (could also be done with stored files ...):
    omegaImplicit=mbs.GetSensorStoredData(sOmega)
-   PlotSensor(mbs, sensorNumbers=[sOmega,sOmega], components=[0,0], newFigure=True,  subPlot=[1,3,1],
+   mbs.PlotSensor(sensorNumbers=[sOmega,sOmega], components=[0,0], newFigure=True,  subPlot=[1,3,1],
               offsets=[0.,omegaExplicit-omegaImplicit], sizeInches=[12,4], labels=['omegaX impl.','omegaX expl.'])
-   PlotSensor(mbs, sensorNumbers=[sOmega,sOmega], components=[1,1], newFigure=False, subPlot=[1,3,2],
+   mbs.PlotSensor(sensorNumbers=[sOmega,sOmega], components=[1,1], newFigure=False, subPlot=[1,3,2],
               offsets=[0.,omegaExplicit-omegaImplicit], sizeInches=[12,4], labels=['omegaX impl.','omegaX expl.'])
-   PlotSensor(mbs, sensorNumbers=[sOmega,sOmega], components=[2,2], newFigure=False, subPlot=[1,3,3],
+   mbs.PlotSensor(sensorNumbers=[sOmega,sOmega], components=[2,2], newFigure=False, subPlot=[1,3,3],
               offsets=[0.,omegaExplicit-omegaImplicit], sizeInches=[12,4], labels=['omegaY impl.','omegaY expl.'],
               fileName='solution/fig_omega.pdf')
    
@@ -195,12 +195,12 @@ You can view and download this file on Github: `plotSensorExamples.py <https://g
    data = 0.*mbs.GetSensorStoredData(sDisp) #create data set
    data[:,1] = mbs.GetSensorStoredData(sDisp)[:,1] #x
    data[:,2] = mbs.GetSensorStoredData(sVel)[:,1]  #y
-   PlotSensor(mbs, sensorNumbers=[sDummy], componentsX=[0], components=[1], xLabel='Position', yLabel='Velocity',
+   mbs.PlotSensor(sensorNumbers=[sDummy], componentsX=[0], components=[1], xLabel='Position', yLabel='Velocity',
               offsets=[data], labels='velocity over displacement', title='Phase plot',
               rangeX=[-0.01,0.04],rangeY=[-1,1], majorTicksX=6, majorTicksY=6)
    
    ##plot y over x:
-   #PlotSensor(mbs, sensorNumbers=s0, componentsX=[0], components=[1], xLabel='x-Position', yLabel='y-Position')
+   #mbs.PlotSensor(sensorNumbers=s0, componentsX=[0], components=[1], xLabel='x-Position', yLabel='y-Position')
    
    
    

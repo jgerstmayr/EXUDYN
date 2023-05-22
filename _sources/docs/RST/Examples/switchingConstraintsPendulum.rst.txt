@@ -99,7 +99,7 @@ You can view and download this file on Github: `switchingConstraintsPendulum.py 
    
    exu.StartRenderer()
    
-   exu.SolveDynamic(mbs, simulationSettings)
+   mbs.SolveDynamic(simulationSettings)
    print('end time =',mbs.systemData.GetTime()) #time after time integration ...
    #print('solution =',mbs.systemData.GetODE2Coordinates()) #solution coordinates after time integration ...
    

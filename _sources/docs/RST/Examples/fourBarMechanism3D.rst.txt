@@ -134,13 +134,6 @@ You can view and download this file on Github: `fourBarMechanism3D.py <https://g
                                    constrainedAxes=constrainedAxes3,
                                    visualization=VObjectJointGeneric(axesRadius=0.2*w, axesLength=1.4*w)))
    
-       # #revolute joint option:
-       # AddRevoluteJoint(mbs, body0=oGround, body1=b0, point=[0,0,0], 
-       #                   axis=[0,0,1], useGlobalFrame=True, showJoint=True,
-       #                   axisRadius=0.2*w, axisLength=1.4*w)
-   
-   
-   
        #position sensor at tip of body1
        sens1=mbs.AddSensor(SensorBody(bodyNumber=b1, localPosition=[0,0,0.5*L],
                                       fileName='solution/sensorPos.txt',
@@ -153,7 +146,7 @@ You can view and download this file on Github: `fourBarMechanism3D.py <https://g
            mbs.systemData.Info() #show detailed information
        if False:
            #from exudyn.utilities import DrawSystemGraph
-           DrawSystemGraph(mbs, useItemTypes=True) #draw nice graph of system
+           mbs.DrawSystemGraph(useItemTypes=True) #draw nice graph of system
    
        simulationSettings = exu.SimulationSettings() #takes currently set values or default values
    
@@ -187,28 +180,28 @@ You can view and download this file on Github: `fourBarMechanism3D.py <https://g
            mbs.WaitForUserToContinue() #stop before simulating
    
        try: #solver will raise exception in case 1
-           exu.SolveDynamic(mbs, simulationSettings = simulationSettings)
+           mbs.SolveDynamic(simulationSettings = simulationSettings)
        except:
            pass
                                     
-       # exu.SolveDynamic(mbs, simulationSettings = simulationSettings,
+       # mbs.SolveDynamic(simulationSettings = simulationSettings,
        #                  solverType=exu.DynamicSolverType.TrapezoidalIndex2)
        if useGraphics:
            SC.WaitForRenderEngineStopFlag() #stop before closing
            exu.StopRenderer() #safely close rendering window!
    
        #check redundant constraints and DOF:
-       exu.ComputeSystemDegreeOfFreedom(mbs, verbose=True)
+       mbs.ComputeSystemDegreeOfFreedom(verbose=True)
    
    
    if False:
        sol = LoadSolutionFile('coordinatesSolution.txt')
-       from exudyn.interactive import SolutionViewer
-       SolutionViewer(mbs, sol)
+       
+       mbs.SolutionViewer(sol)
    
    if False:
-       from exudyn.plot import PlotSensor
-       PlotSensor(mbs, [sens1],[1])
+       
+       mbs.PlotSensor([sens1],[1])
    
    
 

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ANCFBeamTest.py &mdash; Exudyn1.6.110.dev1 1.6.110.dev1 documentation</title>
+  <title>ANCFBeamTest.py &mdash; Exudyn1.6.118.dev1 1.6.118.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -37,7 +37,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.110.dev1
+            Exudyn1.6.118.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -106,6 +106,7 @@
 <li class="toctree-l2"><a class="reference internal" href="kinematicTreeAndMBStest.html">kinematicTreeAndMBStest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kinematicTreeConstraintTest.html">kinematicTreeConstraintTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kinematicTreeTest.html">kinematicTreeTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mainSystemExtensionsTests.html">mainSystemExtensionsTests.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="manualExplicitIntegrator.html">manualExplicitIntegrator.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mecanumWheelRollingDiscTest.html">mecanumWheelRollingDiscTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="objectFFRFreducedOrderAccelerations.html">objectFFRFreducedOrderAccelerations.py</a></li>
@@ -146,7 +147,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.110.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.118.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -247,368 +248,372 @@
 <span class="linenos"> 77</span>    <span class="n">ks3</span><span class="o">=</span><span class="mi">1</span> <span class="c1">#shear correction, bending</span>
 <span class="linenos"> 78</span>    <span class="n">ff</span><span class="o">=</span><span class="mi">1</span> <span class="c1">#drawing factor</span>
 <span class="linenos"> 79</span>
-<span class="linenos"> 80</span>    <span class="k">if</span> <span class="n">case</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">case</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-<span class="linenos"> 81</span>        <span class="n">caseName</span> <span class="o">=</span> <span class="n">cases</span><span class="p">[</span><span class="n">case</span><span class="p">]</span>
-<span class="linenos"> 82</span>
-<span class="linenos"> 83</span>        <span class="n">L</span> <span class="o">=</span> <span class="mi">2</span> <span class="c1">#length of beam</span>
-<span class="linenos"> 84</span>        <span class="n">w</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="c1">#width of beam</span>
-<span class="linenos"> 85</span>        <span class="n">h</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="c1">#height Y</span>
-<span class="linenos"> 86</span>
-<span class="linenos"> 87</span>        <span class="n">fTip</span> <span class="o">=</span> <span class="mf">5e5</span><span class="o">*</span><span class="n">h</span><span class="o">**</span><span class="mi">3</span>
-<span class="linenos"> 88</span>        <span class="k">if</span> <span class="n">case</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-<span class="linenos"> 89</span>            <span class="n">fTip</span> <span class="o">*=</span> <span class="mi">1000</span>
-<span class="linenos"> 90</span>
-<span class="linenos"> 91</span>        <span class="n">Em</span> <span class="o">=</span> <span class="mf">2.07e11</span>
-<span class="linenos"> 92</span>        <span class="n">rho</span> <span class="o">=</span> <span class="mf">1e2</span>
-<span class="linenos"> 93</span>
-<span class="linenos"> 94</span>        <span class="n">A</span><span class="o">=</span><span class="n">h</span><span class="o">*</span><span class="n">w</span>
-<span class="linenos"> 95</span>        <span class="n">nu</span> <span class="o">=</span> <span class="mf">0.3</span>              <span class="c1"># Poisson ratio</span>
-<span class="linenos"> 96</span>        <span class="n">ks2</span><span class="o">=</span> <span class="mi">10</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">nu</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">12</span><span class="o">+</span><span class="mi">11</span><span class="o">*</span><span class="n">nu</span><span class="p">)</span>
-<span class="linenos"> 97</span>        <span class="n">ks3</span><span class="o">=</span><span class="n">ks2</span>
-<span class="linenos"> 98</span>
-<span class="linenos"> 99</span>    <span class="k">elif</span> <span class="n">case</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-<span class="linenos">100</span>        <span class="n">L</span> <span class="o">=</span> <span class="mi">2</span> <span class="c1">#length of beam</span>
-<span class="linenos">101</span>        <span class="n">h</span> <span class="o">=</span> <span class="mf">0.2</span> <span class="c1">#height Y</span>
-<span class="linenos">102</span>        <span class="n">w</span> <span class="o">=</span> <span class="mf">0.4</span> <span class="c1">#width Z of beam</span>
-<span class="linenos">103</span>        <span class="n">Em</span> <span class="o">=</span> <span class="mf">2.07e11</span>
-<span class="linenos">104</span>        <span class="n">rho</span> <span class="o">=</span> <span class="mf">1e2</span>
-<span class="linenos">105</span>
-<span class="linenos">106</span>        <span class="n">A</span><span class="o">=</span><span class="n">h</span><span class="o">*</span><span class="n">w</span>
-<span class="linenos">107</span>
-<span class="linenos">108</span>        <span class="n">nu</span> <span class="o">=</span> <span class="mf">0.3</span>              <span class="c1"># Poisson ratio</span>
-<span class="linenos">109</span>        <span class="n">ks1</span><span class="o">=</span> <span class="mf">0.5768</span> <span class="c1">#torsion correction factor if J=Jyy+Jzz</span>
-<span class="linenos">110</span>        <span class="n">ks2</span><span class="o">=</span> <span class="mf">0.8331</span>
-<span class="linenos">111</span>        <span class="n">ks3</span><span class="o">=</span> <span class="mf">0.7961</span>
-<span class="linenos">112</span>
-<span class="linenos">113</span>        <span class="n">MxTip</span> <span class="o">=</span> <span class="mf">0.5e6</span>
-<span class="linenos">114</span>        <span class="n">MyTip</span> <span class="o">=</span> <span class="mf">2e6</span>
-<span class="linenos">115</span>
-<span class="linenos">116</span>        <span class="n">csFact</span> <span class="o">=</span> <span class="mi">10</span>
-<span class="linenos">117</span>    <span class="k">elif</span> <span class="n">case</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">or</span> <span class="n">case</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span> <span class="c1">#Princeton beam example</span>
-<span class="linenos">118</span>        <span class="n">L</span> <span class="o">=</span> <span class="mf">0.508</span>       <span class="c1">#length of beam</span>
-<span class="linenos">119</span>        <span class="n">h</span> <span class="o">=</span> <span class="mf">12.3777e-3</span>  <span class="c1">#height Y; 12.3777e-3 with Obrezkov&#39;s paper</span>
-<span class="linenos">120</span>        <span class="n">w</span> <span class="o">=</span> <span class="mf">3.2024e-3</span>   <span class="c1">#width Z of beam</span>
-<span class="linenos">121</span>        <span class="n">Em</span> <span class="o">=</span> <span class="mf">71.7e9</span>
-<span class="linenos">122</span>        <span class="n">ks1</span><span class="o">=</span><span class="mf">0.198</span>
-<span class="linenos">123</span>        <span class="n">nu</span> <span class="o">=</span> <span class="mf">0.31</span>
-<span class="linenos">124</span>
-<span class="linenos">125</span>        <span class="n">ks2</span><span class="o">=</span><span class="mi">1</span>
-<span class="linenos">126</span>        <span class="n">ks3</span><span class="o">=</span><span class="mi">1</span>
-<span class="linenos">127</span>        <span class="c1"># ks2=0.9</span>
-<span class="linenos">128</span>        <span class="c1"># ks3=0.9</span>
-<span class="linenos">129</span>
+<span class="linenos"> 80</span>    <span class="c1">#define beam parameters and loads for different cases</span>
+<span class="linenos"> 81</span>    <span class="k">if</span> <span class="n">case</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">case</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+<span class="linenos"> 82</span>        <span class="n">caseName</span> <span class="o">=</span> <span class="n">cases</span><span class="p">[</span><span class="n">case</span><span class="p">]</span>
+<span class="linenos"> 83</span>
+<span class="linenos"> 84</span>        <span class="n">L</span> <span class="o">=</span> <span class="mi">2</span> <span class="c1">#length of beam</span>
+<span class="linenos"> 85</span>        <span class="n">w</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="c1">#width of beam</span>
+<span class="linenos"> 86</span>        <span class="n">h</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="c1">#height Y</span>
+<span class="linenos"> 87</span>
+<span class="linenos"> 88</span>        <span class="n">fTip</span> <span class="o">=</span> <span class="mf">5e5</span><span class="o">*</span><span class="n">h</span><span class="o">**</span><span class="mi">3</span>
+<span class="linenos"> 89</span>        <span class="k">if</span> <span class="n">case</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+<span class="linenos"> 90</span>            <span class="n">fTip</span> <span class="o">*=</span> <span class="mi">1000</span>
+<span class="linenos"> 91</span>
+<span class="linenos"> 92</span>        <span class="n">Em</span> <span class="o">=</span> <span class="mf">2.07e11</span>
+<span class="linenos"> 93</span>        <span class="n">rho</span> <span class="o">=</span> <span class="mf">1e2</span>
+<span class="linenos"> 94</span>
+<span class="linenos"> 95</span>        <span class="n">A</span><span class="o">=</span><span class="n">h</span><span class="o">*</span><span class="n">w</span>
+<span class="linenos"> 96</span>        <span class="n">nu</span> <span class="o">=</span> <span class="mf">0.3</span>              <span class="c1"># Poisson ratio</span>
+<span class="linenos"> 97</span>        <span class="n">ks2</span><span class="o">=</span> <span class="mi">10</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">nu</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">12</span><span class="o">+</span><span class="mi">11</span><span class="o">*</span><span class="n">nu</span><span class="p">)</span>
+<span class="linenos"> 98</span>        <span class="n">ks3</span><span class="o">=</span><span class="n">ks2</span>
+<span class="linenos"> 99</span>
+<span class="linenos">100</span>    <span class="k">elif</span> <span class="n">case</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+<span class="linenos">101</span>        <span class="n">L</span> <span class="o">=</span> <span class="mi">2</span> <span class="c1">#length of beam</span>
+<span class="linenos">102</span>        <span class="n">h</span> <span class="o">=</span> <span class="mf">0.2</span> <span class="c1">#height Y</span>
+<span class="linenos">103</span>        <span class="n">w</span> <span class="o">=</span> <span class="mf">0.4</span> <span class="c1">#width Z of beam</span>
+<span class="linenos">104</span>        <span class="n">Em</span> <span class="o">=</span> <span class="mf">2.07e11</span>
+<span class="linenos">105</span>        <span class="n">rho</span> <span class="o">=</span> <span class="mf">1e2</span>
+<span class="linenos">106</span>
+<span class="linenos">107</span>        <span class="n">A</span><span class="o">=</span><span class="n">h</span><span class="o">*</span><span class="n">w</span>
+<span class="linenos">108</span>
+<span class="linenos">109</span>        <span class="n">nu</span> <span class="o">=</span> <span class="mf">0.3</span>              <span class="c1"># Poisson ratio</span>
+<span class="linenos">110</span>        <span class="n">ks1</span><span class="o">=</span> <span class="mf">0.5768</span> <span class="c1">#torsion correction factor if J=Jyy+Jzz</span>
+<span class="linenos">111</span>        <span class="n">ks2</span><span class="o">=</span> <span class="mf">0.8331</span>
+<span class="linenos">112</span>        <span class="n">ks3</span><span class="o">=</span> <span class="mf">0.7961</span>
+<span class="linenos">113</span>
+<span class="linenos">114</span>        <span class="n">MxTip</span> <span class="o">=</span> <span class="mf">0.5e6</span>
+<span class="linenos">115</span>        <span class="n">MyTip</span> <span class="o">=</span> <span class="mf">2e6</span>
+<span class="linenos">116</span>
+<span class="linenos">117</span>        <span class="n">csFact</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="linenos">118</span>    <span class="k">elif</span> <span class="n">case</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">or</span> <span class="n">case</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span> <span class="c1">#Princeton beam example</span>
+<span class="linenos">119</span>        <span class="n">L</span> <span class="o">=</span> <span class="mf">0.508</span>       <span class="c1">#length of beam</span>
+<span class="linenos">120</span>        <span class="n">h</span> <span class="o">=</span> <span class="mf">12.3777e-3</span>  <span class="c1">#height Y; 12.3777e-3 with Obrezkov&#39;s paper</span>
+<span class="linenos">121</span>        <span class="n">w</span> <span class="o">=</span> <span class="mf">3.2024e-3</span>   <span class="c1">#width Z of beam</span>
+<span class="linenos">122</span>        <span class="n">Em</span> <span class="o">=</span> <span class="mf">71.7e9</span>
+<span class="linenos">123</span>        <span class="n">ks1</span><span class="o">=</span><span class="mf">0.198</span>
+<span class="linenos">124</span>        <span class="n">nu</span> <span class="o">=</span> <span class="mf">0.31</span>
+<span class="linenos">125</span>
+<span class="linenos">126</span>        <span class="n">ks2</span><span class="o">=</span><span class="mi">1</span>
+<span class="linenos">127</span>        <span class="n">ks3</span><span class="o">=</span><span class="mi">1</span>
+<span class="linenos">128</span>        <span class="c1"># ks2=0.9</span>
+<span class="linenos">129</span>        <span class="c1"># ks3=0.9</span>
 <span class="linenos">130</span>
-<span class="linenos">131</span>        <span class="n">rho</span> <span class="o">=</span> <span class="mf">1e2</span>       <span class="c1">#unused</span>
-<span class="linenos">132</span>        <span class="n">A</span><span class="o">=</span><span class="n">h</span><span class="o">*</span><span class="n">w</span>
-<span class="linenos">133</span>
-<span class="linenos">134</span>        <span class="n">MxTip</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="linenos">135</span>        <span class="n">MyTip</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="linenos">136</span>        <span class="k">if</span> <span class="n">case</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
-<span class="linenos">137</span>            <span class="n">fTip</span> <span class="o">=</span> <span class="mf">8.896</span>    <span class="c1">#F2</span>
-<span class="linenos">138</span>        <span class="k">elif</span> <span class="n">case</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
-<span class="linenos">139</span>            <span class="n">fTip</span> <span class="o">=</span> <span class="mf">13.345</span> <span class="c1">#F3</span>
-<span class="linenos">140</span>        <span class="c1">#if kk==0: exu.Print(&#39;load=&#39;, fTip)</span>
-<span class="linenos">141</span>
-<span class="linenos">142</span>        <span class="n">beta</span> <span class="o">=</span> <span class="n">betaDegree</span><span class="o">/</span><span class="mi">180</span><span class="o">*</span><span class="n">pi</span> <span class="c1">#beta=0 =&gt; negative y-axis</span>
-<span class="linenos">143</span>        <span class="n">bodyFixedLoad</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="linenos">144</span>
-<span class="linenos">145</span>        <span class="n">csFact</span> <span class="o">=</span> <span class="mi">10</span>
-<span class="linenos">146</span>
-<span class="linenos">147</span>    <span class="n">Gm</span> <span class="o">=</span> <span class="n">Em</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">nu</span><span class="p">))</span>      <span class="c1"># Shear modulus</span>
-<span class="linenos">148</span>
-<span class="linenos">149</span>    <span class="c1"># Cross-section properties</span>
-<span class="linenos">150</span>    <span class="n">Iyy</span> <span class="o">=</span> <span class="n">h</span><span class="o">*</span><span class="n">w</span><span class="o">**</span><span class="mi">3</span><span class="o">/</span><span class="mi">12</span> <span class="c1"># Second moment of area of the beam cross-section</span>
-<span class="linenos">151</span>    <span class="n">Izz</span> <span class="o">=</span> <span class="n">w</span><span class="o">*</span><span class="n">h</span><span class="o">**</span><span class="mi">3</span><span class="o">/</span><span class="mi">12</span> <span class="c1"># Second moment of area of the beam cross-section</span>
-<span class="linenos">152</span>    <span class="n">J</span> <span class="o">=</span> <span class="p">(</span><span class="n">Iyy</span><span class="o">+</span><span class="n">Izz</span><span class="p">)</span>   <span class="c1"># approximation; Polar moment of area of the beam cross-section</span>
-<span class="linenos">153</span>
-<span class="linenos">154</span>    <span class="n">sectionData</span><span class="o">.</span><span class="n">stiffnessMatrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="n">Em</span><span class="o">*</span><span class="n">A</span><span class="p">,</span> <span class="n">Gm</span><span class="o">*</span><span class="n">A</span><span class="o">*</span><span class="n">ks2</span><span class="p">,</span> <span class="n">Gm</span><span class="o">*</span><span class="n">A</span><span class="o">*</span><span class="n">ks3</span><span class="p">,</span> <span class="n">Gm</span><span class="o">*</span><span class="n">J</span><span class="o">*</span><span class="n">ks1</span><span class="p">,</span> <span class="n">Em</span><span class="o">*</span><span class="n">Iyy</span><span class="p">,</span> <span class="n">Em</span><span class="o">*</span><span class="n">Izz</span><span class="p">])</span>
-<span class="linenos">155</span>
+<span class="linenos">131</span>
+<span class="linenos">132</span>        <span class="n">rho</span> <span class="o">=</span> <span class="mf">1e2</span>       <span class="c1">#unused</span>
+<span class="linenos">133</span>        <span class="n">A</span><span class="o">=</span><span class="n">h</span><span class="o">*</span><span class="n">w</span>
+<span class="linenos">134</span>
+<span class="linenos">135</span>        <span class="n">MxTip</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">136</span>        <span class="n">MyTip</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">137</span>        <span class="k">if</span> <span class="n">case</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+<span class="linenos">138</span>            <span class="n">fTip</span> <span class="o">=</span> <span class="mf">8.896</span>    <span class="c1">#F2</span>
+<span class="linenos">139</span>        <span class="k">elif</span> <span class="n">case</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+<span class="linenos">140</span>            <span class="n">fTip</span> <span class="o">=</span> <span class="mf">13.345</span> <span class="c1">#F3</span>
+<span class="linenos">141</span>        <span class="c1">#if kk==0: exu.Print(&#39;load=&#39;, fTip)</span>
+<span class="linenos">142</span>
+<span class="linenos">143</span>        <span class="n">beta</span> <span class="o">=</span> <span class="n">betaDegree</span><span class="o">/</span><span class="mi">180</span><span class="o">*</span><span class="n">pi</span> <span class="c1">#beta=0 =&gt; negative y-axis</span>
+<span class="linenos">144</span>        <span class="n">bodyFixedLoad</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="linenos">145</span>
+<span class="linenos">146</span>        <span class="n">csFact</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="linenos">147</span>
+<span class="linenos">148</span>    <span class="n">Gm</span> <span class="o">=</span> <span class="n">Em</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">nu</span><span class="p">))</span>      <span class="c1"># Shear modulus</span>
+<span class="linenos">149</span>
+<span class="linenos">150</span>    <span class="c1">#compute sectionData</span>
+<span class="linenos">151</span>
+<span class="linenos">152</span>    <span class="c1"># Cross-section properties</span>
+<span class="linenos">153</span>    <span class="n">Iyy</span> <span class="o">=</span> <span class="n">h</span><span class="o">*</span><span class="n">w</span><span class="o">**</span><span class="mi">3</span><span class="o">/</span><span class="mi">12</span> <span class="c1"># Second moment of area of the beam cross-section</span>
+<span class="linenos">154</span>    <span class="n">Izz</span> <span class="o">=</span> <span class="n">w</span><span class="o">*</span><span class="n">h</span><span class="o">**</span><span class="mi">3</span><span class="o">/</span><span class="mi">12</span> <span class="c1"># Second moment of area of the beam cross-section</span>
+<span class="linenos">155</span>    <span class="n">J</span> <span class="o">=</span> <span class="p">(</span><span class="n">Iyy</span><span class="o">+</span><span class="n">Izz</span><span class="p">)</span>   <span class="c1"># approximation; Polar moment of area of the beam cross-section</span>
 <span class="linenos">156</span>
-<span class="linenos">157</span>    <span class="n">rhoA</span> <span class="o">=</span> <span class="n">rho</span><span class="o">*</span><span class="n">A</span>
+<span class="linenos">157</span>    <span class="n">sectionData</span><span class="o">.</span><span class="n">stiffnessMatrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="n">Em</span><span class="o">*</span><span class="n">A</span><span class="p">,</span> <span class="n">Gm</span><span class="o">*</span><span class="n">A</span><span class="o">*</span><span class="n">ks2</span><span class="p">,</span> <span class="n">Gm</span><span class="o">*</span><span class="n">A</span><span class="o">*</span><span class="n">ks3</span><span class="p">,</span> <span class="n">Gm</span><span class="o">*</span><span class="n">J</span><span class="o">*</span><span class="n">ks1</span><span class="p">,</span> <span class="n">Em</span><span class="o">*</span><span class="n">Iyy</span><span class="p">,</span> <span class="n">Em</span><span class="o">*</span><span class="n">Izz</span><span class="p">])</span>
 <span class="linenos">158</span>
-<span class="linenos">159</span>    <span class="k">if</span> <span class="kc">False</span><span class="p">:</span>
-<span class="linenos">160</span>        <span class="c1">#linear solution:</span>
-<span class="linenos">161</span>        <span class="n">uzTip</span> <span class="o">=</span> <span class="n">fTip</span><span class="o">*</span><span class="n">L</span><span class="o">**</span><span class="mi">3</span><span class="o">/</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">Em</span><span class="o">*</span><span class="n">Iyy</span><span class="p">)</span>
-<span class="linenos">162</span>        <span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s1">&#39;uz linear=&#39;</span><span class="p">,</span><span class="n">uzTip</span><span class="p">)</span>
-<span class="linenos">163</span>        <span class="n">uyTip</span> <span class="o">=</span> <span class="n">fTip</span><span class="o">*</span><span class="n">L</span><span class="o">**</span><span class="mi">3</span><span class="o">/</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">Em</span><span class="o">*</span><span class="n">Izz</span><span class="p">)</span>
-<span class="linenos">164</span>        <span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s1">&#39;uy linear=&#39;</span><span class="p">,</span><span class="n">uyTip</span><span class="p">)</span>
-<span class="linenos">165</span>
-<span class="linenos">166</span>    <span class="n">sectionData</span><span class="o">.</span><span class="n">inertia</span><span class="o">=</span> <span class="n">rho</span><span class="o">*</span><span class="n">J</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-<span class="linenos">167</span>    <span class="n">sectionData</span><span class="o">.</span><span class="n">massPerLength</span> <span class="o">=</span> <span class="n">rhoA</span>
+<span class="linenos">159</span>
+<span class="linenos">160</span>    <span class="n">rhoA</span> <span class="o">=</span> <span class="n">rho</span><span class="o">*</span><span class="n">A</span>
+<span class="linenos">161</span>
+<span class="linenos">162</span>    <span class="k">if</span> <span class="kc">False</span><span class="p">:</span>
+<span class="linenos">163</span>        <span class="c1">#linear solution:</span>
+<span class="linenos">164</span>        <span class="n">uzTip</span> <span class="o">=</span> <span class="n">fTip</span><span class="o">*</span><span class="n">L</span><span class="o">**</span><span class="mi">3</span><span class="o">/</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">Em</span><span class="o">*</span><span class="n">Iyy</span><span class="p">)</span>
+<span class="linenos">165</span>        <span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s1">&#39;uz linear=&#39;</span><span class="p">,</span><span class="n">uzTip</span><span class="p">)</span>
+<span class="linenos">166</span>        <span class="n">uyTip</span> <span class="o">=</span> <span class="n">fTip</span><span class="o">*</span><span class="n">L</span><span class="o">**</span><span class="mi">3</span><span class="o">/</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">Em</span><span class="o">*</span><span class="n">Izz</span><span class="p">)</span>
+<span class="linenos">167</span>        <span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s1">&#39;uy linear=&#39;</span><span class="p">,</span><span class="n">uyTip</span><span class="p">)</span>
 <span class="linenos">168</span>
-<span class="linenos">169</span>    <span class="n">sectionGeometry</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">BeamSectionGeometry</span><span class="p">()</span>
-<span class="linenos">170</span>
-<span class="linenos">171</span>    <span class="c1">#points, in positive rotation sense viewing in x-direction, points in [Y,Z]-plane</span>
-<span class="linenos">172</span>    <span class="c1">#points do not need to be closed!</span>
-<span class="linenos">173</span>    <span class="n">lp</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">Vector2DList</span><span class="p">()</span>
-<span class="linenos">174</span>    <span class="k">if</span> <span class="kc">True</span><span class="p">:</span>
-<span class="linenos">175</span>        <span class="n">lp</span><span class="o">.</span><span class="nf">Append</span><span class="p">([</span><span class="n">h</span><span class="o">*</span><span class="n">ff</span><span class="p">,</span><span class="o">-</span><span class="n">w</span><span class="o">*</span><span class="n">ff</span><span class="p">])</span>
-<span class="linenos">176</span>        <span class="n">lp</span><span class="o">.</span><span class="nf">Append</span><span class="p">([</span><span class="n">h</span><span class="o">*</span><span class="n">ff</span><span class="p">,</span><span class="n">w</span><span class="o">*</span><span class="n">ff</span><span class="p">])</span>
-<span class="linenos">177</span>        <span class="n">lp</span><span class="o">.</span><span class="nf">Append</span><span class="p">([</span><span class="o">-</span><span class="n">h</span><span class="o">*</span><span class="n">ff</span><span class="p">,</span><span class="n">w</span><span class="o">*</span><span class="n">ff</span><span class="p">])</span>
-<span class="linenos">178</span>        <span class="n">lp</span><span class="o">.</span><span class="nf">Append</span><span class="p">([</span><span class="o">-</span><span class="n">h</span><span class="o">*</span><span class="n">ff</span><span class="p">,</span><span class="o">-</span><span class="n">w</span><span class="o">*</span><span class="n">ff</span><span class="p">])</span>
-<span class="linenos">179</span>
-<span class="linenos">180</span>    <span class="n">sectionGeometry</span><span class="o">.</span><span class="n">polygonalPoints</span> <span class="o">=</span> <span class="n">lp</span>
-<span class="linenos">181</span>    <span class="c1">#exu.Print(&#39;HERE\n&#39;,sectionGeometry.polygonalPoints)</span>
-<span class="linenos">182</span>    <span class="n">nGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">NodePointGround</span><span class="p">(</span><span class="n">referenceCoordinates</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span> <span class="c1">#ground node for coordinate constraint</span>
-<span class="linenos">183</span>    <span class="n">mnGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerNodeCoordinate</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">nGround</span><span class="p">,</span> <span class="n">coordinate</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
-<span class="linenos">184</span>
-<span class="linenos">185</span>
-<span class="linenos">186</span>    <span class="n">eY</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
-<span class="linenos">187</span>    <span class="n">eZ</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
-<span class="linenos">188</span>    <span class="n">lElem</span> <span class="o">=</span> <span class="n">L</span><span class="o">/</span><span class="n">nElements</span>
-<span class="linenos">189</span>    <span class="k">if</span> <span class="n">compute3D</span><span class="p">:</span>
-<span class="linenos">190</span>        <span class="n">initialRotations</span> <span class="o">=</span> <span class="n">eY</span><span class="o">+</span><span class="n">eZ</span>
-<span class="linenos">191</span>        <span class="n">n0</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">NodePoint3DSlope23</span><span class="p">(</span><span class="n">referenceCoordinates</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">initialRotations</span><span class="p">))</span>
-<span class="linenos">192</span>        <span class="n">nInit</span> <span class="o">=</span> <span class="n">n0</span>
-<span class="linenos">193</span>        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nElements</span><span class="p">):</span>
-<span class="linenos">194</span>            <span class="n">n1</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">NodePoint3DSlope23</span><span class="p">(</span><span class="n">referenceCoordinates</span><span class="o">=</span><span class="p">[</span><span class="n">lElem</span><span class="o">*</span><span class="p">(</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">initialRotations</span><span class="p">))</span>
-<span class="linenos">195</span>
-<span class="linenos">196</span>            <span class="n">oBeam</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectANCFBeam</span><span class="p">(</span><span class="n">nodeNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">n0</span><span class="p">,</span><span class="n">n1</span><span class="p">],</span> <span class="n">physicsLength</span> <span class="o">=</span> <span class="n">lElem</span><span class="p">,</span>
-<span class="linenos">197</span>                                                   <span class="n">sectionData</span> <span class="o">=</span> <span class="n">sectionData</span><span class="p">,</span>
-<span class="linenos">198</span>                                                   <span class="n">crossSectionPenaltyFactor</span> <span class="o">=</span> <span class="p">[</span><span class="n">csFact</span><span class="p">,</span><span class="n">csFact</span><span class="p">,</span><span class="n">csFact</span><span class="p">],</span>
-<span class="linenos">199</span>                                                   <span class="n">visualization</span><span class="o">=</span><span class="nc">VANCFBeam</span><span class="p">(</span><span class="n">sectionGeometry</span><span class="o">=</span><span class="n">sectionGeometry</span><span class="p">)))</span>
-<span class="linenos">200</span>            <span class="n">n0</span> <span class="o">=</span> <span class="n">n1</span>
-<span class="linenos">201</span>
-<span class="linenos">202</span>
-<span class="linenos">203</span>        <span class="n">mTip</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerNodeRigid</span><span class="p">(</span><span class="n">nodeNumber</span> <span class="o">=</span> <span class="n">n1</span><span class="p">))</span>
-<span class="linenos">204</span>        <span class="k">if</span> <span class="n">fTip</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-<span class="linenos">205</span>            <span class="k">if</span> <span class="n">case</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
-<span class="linenos">206</span>                <span class="n">mbs</span><span class="o">.</span><span class="nf">AddLoad</span><span class="p">(</span><span class="nc">Force</span><span class="p">(</span><span class="n">markerNumber</span><span class="o">=</span><span class="n">mTip</span><span class="p">,</span> <span class="n">loadVector</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="n">fTip</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">bodyFixed</span> <span class="o">=</span> <span class="n">bodyFixedLoad</span><span class="p">))</span>
-<span class="linenos">207</span>            <span class="k">elif</span> <span class="n">case</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">:</span>
-<span class="linenos">208</span>                <span class="n">mbs</span><span class="o">.</span><span class="nf">AddLoad</span><span class="p">(</span><span class="nc">Force</span><span class="p">(</span><span class="n">markerNumber</span><span class="o">=</span><span class="n">mTip</span><span class="p">,</span> <span class="n">loadVector</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="n">fTip</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">beta</span><span class="p">),</span><span class="n">fTip</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">beta</span><span class="p">)],</span> <span class="n">bodyFixed</span> <span class="o">=</span> <span class="n">bodyFixedLoad</span><span class="p">))</span>
-<span class="linenos">209</span>
-<span class="linenos">210</span>        <span class="k">if</span> <span class="n">MxTip</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">MyTip</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-<span class="linenos">211</span>            <span class="n">mbs</span><span class="o">.</span><span class="nf">AddLoad</span><span class="p">(</span><span class="nc">Torque</span><span class="p">(</span><span class="n">markerNumber</span><span class="o">=</span><span class="n">mTip</span><span class="p">,</span> <span class="n">loadVector</span> <span class="o">=</span> <span class="p">[</span><span class="n">MxTip</span><span class="p">,</span> <span class="n">MyTip</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span><span class="c1">#, bodyFixed = True ))</span>
-<span class="linenos">212</span>
-<span class="linenos">213</span>        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">9</span><span class="p">):</span>
-<span class="linenos">214</span>            <span class="c1">#if i != 4 and i != 8: #exclude constraining the slope lengths</span>
-<span class="linenos">215</span>            <span class="k">if</span> <span class="kc">True</span><span class="p">:</span>
-<span class="linenos">216</span>                <span class="n">nm0</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerNodeCoordinate</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">nInit</span><span class="p">,</span> <span class="n">coordinate</span><span class="o">=</span><span class="n">i</span><span class="p">))</span>
-<span class="linenos">217</span>                <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">CoordinateConstraint</span><span class="p">(</span><span class="n">markerNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">mnGround</span><span class="p">,</span> <span class="n">nm0</span><span class="p">]))</span>
-<span class="linenos">218</span>
-<span class="linenos">219</span>
-<span class="linenos">220</span>    <span class="c1"># exu.Print(mbs)</span>
-<span class="linenos">221</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
+<span class="linenos">169</span>    <span class="n">sectionData</span><span class="o">.</span><span class="n">inertia</span><span class="o">=</span> <span class="n">rho</span><span class="o">*</span><span class="n">J</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="linenos">170</span>    <span class="n">sectionData</span><span class="o">.</span><span class="n">massPerLength</span> <span class="o">=</span> <span class="n">rhoA</span>
+<span class="linenos">171</span>
+<span class="linenos">172</span>    <span class="n">sectionGeometry</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">BeamSectionGeometry</span><span class="p">()</span>
+<span class="linenos">173</span>
+<span class="linenos">174</span>    <span class="c1">#points, in positive rotation sense viewing in x-direction, points in [Y,Z]-plane</span>
+<span class="linenos">175</span>    <span class="c1">#points do not need to be closed!</span>
+<span class="linenos">176</span>    <span class="n">lp</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">Vector2DList</span><span class="p">()</span>
+<span class="linenos">177</span>    <span class="k">if</span> <span class="kc">True</span><span class="p">:</span>
+<span class="linenos">178</span>        <span class="n">lp</span><span class="o">.</span><span class="nf">Append</span><span class="p">([</span><span class="n">h</span><span class="o">*</span><span class="n">ff</span><span class="p">,</span><span class="o">-</span><span class="n">w</span><span class="o">*</span><span class="n">ff</span><span class="p">])</span>
+<span class="linenos">179</span>        <span class="n">lp</span><span class="o">.</span><span class="nf">Append</span><span class="p">([</span><span class="n">h</span><span class="o">*</span><span class="n">ff</span><span class="p">,</span><span class="n">w</span><span class="o">*</span><span class="n">ff</span><span class="p">])</span>
+<span class="linenos">180</span>        <span class="n">lp</span><span class="o">.</span><span class="nf">Append</span><span class="p">([</span><span class="o">-</span><span class="n">h</span><span class="o">*</span><span class="n">ff</span><span class="p">,</span><span class="n">w</span><span class="o">*</span><span class="n">ff</span><span class="p">])</span>
+<span class="linenos">181</span>        <span class="n">lp</span><span class="o">.</span><span class="nf">Append</span><span class="p">([</span><span class="o">-</span><span class="n">h</span><span class="o">*</span><span class="n">ff</span><span class="p">,</span><span class="o">-</span><span class="n">w</span><span class="o">*</span><span class="n">ff</span><span class="p">])</span>
+<span class="linenos">182</span>
+<span class="linenos">183</span>    <span class="n">sectionGeometry</span><span class="o">.</span><span class="n">polygonalPoints</span> <span class="o">=</span> <span class="n">lp</span>
+<span class="linenos">184</span>    <span class="c1">#exu.Print(&#39;HERE\n&#39;,sectionGeometry.polygonalPoints)</span>
+<span class="linenos">185</span>    <span class="n">nGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">NodePointGround</span><span class="p">(</span><span class="n">referenceCoordinates</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span> <span class="c1">#ground node for coordinate constraint</span>
+<span class="linenos">186</span>    <span class="n">mnGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerNodeCoordinate</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">nGround</span><span class="p">,</span> <span class="n">coordinate</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+<span class="linenos">187</span>
+<span class="linenos">188</span>
+<span class="linenos">189</span>    <span class="n">eY</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos">190</span>    <span class="n">eZ</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+<span class="linenos">191</span>    <span class="n">lElem</span> <span class="o">=</span> <span class="n">L</span><span class="o">/</span><span class="n">nElements</span>
+<span class="linenos">192</span>    <span class="k">if</span> <span class="n">compute3D</span><span class="p">:</span>
+<span class="linenos">193</span>        <span class="n">initialRotations</span> <span class="o">=</span> <span class="n">eY</span><span class="o">+</span><span class="n">eZ</span>
+<span class="linenos">194</span>        <span class="c1">#create beam nodes and elements</span>
+<span class="linenos">195</span>        <span class="n">n0</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">NodePoint3DSlope23</span><span class="p">(</span><span class="n">referenceCoordinates</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">initialRotations</span><span class="p">))</span>
+<span class="linenos">196</span>        <span class="n">nInit</span> <span class="o">=</span> <span class="n">n0</span>
+<span class="linenos">197</span>        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nElements</span><span class="p">):</span>
+<span class="linenos">198</span>            <span class="n">n1</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">NodePoint3DSlope23</span><span class="p">(</span><span class="n">referenceCoordinates</span><span class="o">=</span><span class="p">[</span><span class="n">lElem</span><span class="o">*</span><span class="p">(</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">initialRotations</span><span class="p">))</span>
+<span class="linenos">199</span>
+<span class="linenos">200</span>            <span class="n">oBeam</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectANCFBeam</span><span class="p">(</span><span class="n">nodeNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">n0</span><span class="p">,</span><span class="n">n1</span><span class="p">],</span> <span class="n">physicsLength</span> <span class="o">=</span> <span class="n">lElem</span><span class="p">,</span>
+<span class="linenos">201</span>                                                   <span class="n">sectionData</span> <span class="o">=</span> <span class="n">sectionData</span><span class="p">,</span>
+<span class="linenos">202</span>                                                   <span class="n">crossSectionPenaltyFactor</span> <span class="o">=</span> <span class="p">[</span><span class="n">csFact</span><span class="p">,</span><span class="n">csFact</span><span class="p">,</span><span class="n">csFact</span><span class="p">],</span>
+<span class="linenos">203</span>                                                   <span class="n">visualization</span><span class="o">=</span><span class="nc">VANCFBeam</span><span class="p">(</span><span class="n">sectionGeometry</span><span class="o">=</span><span class="n">sectionGeometry</span><span class="p">)))</span>
+<span class="linenos">204</span>            <span class="n">n0</span> <span class="o">=</span> <span class="n">n1</span>
+<span class="linenos">205</span>
+<span class="linenos">206</span>
+<span class="linenos">207</span>        <span class="n">mTip</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerNodeRigid</span><span class="p">(</span><span class="n">nodeNumber</span> <span class="o">=</span> <span class="n">n1</span><span class="p">))</span>
+<span class="linenos">208</span>        <span class="k">if</span> <span class="n">fTip</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+<span class="linenos">209</span>            <span class="k">if</span> <span class="n">case</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+<span class="linenos">210</span>                <span class="n">mbs</span><span class="o">.</span><span class="nf">AddLoad</span><span class="p">(</span><span class="nc">Force</span><span class="p">(</span><span class="n">markerNumber</span><span class="o">=</span><span class="n">mTip</span><span class="p">,</span> <span class="n">loadVector</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="n">fTip</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">bodyFixed</span> <span class="o">=</span> <span class="n">bodyFixedLoad</span><span class="p">))</span>
+<span class="linenos">211</span>            <span class="k">elif</span> <span class="n">case</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">:</span>
+<span class="linenos">212</span>                <span class="n">mbs</span><span class="o">.</span><span class="nf">AddLoad</span><span class="p">(</span><span class="nc">Force</span><span class="p">(</span><span class="n">markerNumber</span><span class="o">=</span><span class="n">mTip</span><span class="p">,</span> <span class="n">loadVector</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="n">fTip</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">beta</span><span class="p">),</span><span class="n">fTip</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">beta</span><span class="p">)],</span> <span class="n">bodyFixed</span> <span class="o">=</span> <span class="n">bodyFixedLoad</span><span class="p">))</span>
+<span class="linenos">213</span>
+<span class="linenos">214</span>        <span class="k">if</span> <span class="n">MxTip</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">MyTip</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+<span class="linenos">215</span>            <span class="n">mbs</span><span class="o">.</span><span class="nf">AddLoad</span><span class="p">(</span><span class="nc">Torque</span><span class="p">(</span><span class="n">markerNumber</span><span class="o">=</span><span class="n">mTip</span><span class="p">,</span> <span class="n">loadVector</span> <span class="o">=</span> <span class="p">[</span><span class="n">MxTip</span><span class="p">,</span> <span class="n">MyTip</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span><span class="c1">#, bodyFixed = True ))</span>
+<span class="linenos">216</span>
+<span class="linenos">217</span>        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">9</span><span class="p">):</span>
+<span class="linenos">218</span>            <span class="c1">#if i != 4 and i != 8: #exclude constraining the slope lengths</span>
+<span class="linenos">219</span>            <span class="k">if</span> <span class="kc">True</span><span class="p">:</span>
+<span class="linenos">220</span>                <span class="n">nm0</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerNodeCoordinate</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">nInit</span><span class="p">,</span> <span class="n">coordinate</span><span class="o">=</span><span class="n">i</span><span class="p">))</span>
+<span class="linenos">221</span>                <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">CoordinateConstraint</span><span class="p">(</span><span class="n">markerNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">mnGround</span><span class="p">,</span> <span class="n">nm0</span><span class="p">]))</span>
 <span class="linenos">222</span>
-<span class="linenos">223</span>    <span class="n">tEnd</span> <span class="o">=</span> <span class="mi">100</span>     <span class="c1">#end time of simulation</span>
-<span class="linenos">224</span>    <span class="n">stepSize</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="mf">0.01</span><span class="o">*</span><span class="mf">0.1</span>    <span class="c1">#step size; leads to 1000 steps</span>
-<span class="linenos">225</span>
-<span class="linenos">226</span>    <span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">()</span>
-<span class="linenos">227</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">solutionWritePeriod</span> <span class="o">=</span> <span class="mf">2e-2</span>  <span class="c1">#output interval general</span>
-<span class="linenos">228</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">sensorsWritePeriod</span> <span class="o">=</span> <span class="mf">1e-1</span>  <span class="c1">#output interval of sensors</span>
-<span class="linenos">229</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tEnd</span><span class="o">/</span><span class="n">stepSize</span><span class="p">)</span> <span class="c1">#must be integer</span>
-<span class="linenos">230</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="n">tEnd</span>
-<span class="linenos">231</span>    <span class="c1">#simulationSettings.solutionSettings.solutionInformation = &quot;This is the info\nNew line\n and another new line \n&quot;</span>
-<span class="linenos">232</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">generalizedAlpha</span><span class="o">.</span><span class="n">spectralRadius</span> <span class="o">=</span> <span class="mf">0.5</span>
-<span class="linenos">233</span>    <span class="c1">#simulationSettings.timeIntegration.simulateInRealtime=True</span>
-<span class="linenos">234</span>    <span class="c1">#simulationSettings.timeIntegration.realtimeFactor=0.1</span>
-<span class="linenos">235</span>
-<span class="linenos">236</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">verboseMode</span> <span class="o">=</span> <span class="n">verbose</span>
-<span class="linenos">237</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">verboseMode</span> <span class="o">=</span> <span class="n">verbose</span>
-<span class="linenos">238</span>
-<span class="linenos">239</span>    <span class="c1">#simulationSettings.parallel.numberOfThreads = 4</span>
-<span class="linenos">240</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">useModifiedNewton</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="linenos">241</span>    <span class="c1">#simulationSettings.timeIntegration.newton.numericalDifferentiation.minimumCoordinateSize = 1e0</span>
+<span class="linenos">223</span>
+<span class="linenos">224</span>    <span class="c1"># exu.Print(mbs)</span>
+<span class="linenos">225</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
+<span class="linenos">226</span>
+<span class="linenos">227</span>    <span class="n">tEnd</span> <span class="o">=</span> <span class="mi">100</span>     <span class="c1">#end time of simulation</span>
+<span class="linenos">228</span>    <span class="n">stepSize</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="mf">0.01</span><span class="o">*</span><span class="mf">0.1</span>    <span class="c1">#step size; leads to 1000 steps</span>
+<span class="linenos">229</span>
+<span class="linenos">230</span>    <span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">()</span>
+<span class="linenos">231</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">solutionWritePeriod</span> <span class="o">=</span> <span class="mf">2e-2</span>  <span class="c1">#output interval general</span>
+<span class="linenos">232</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">sensorsWritePeriod</span> <span class="o">=</span> <span class="mf">1e-1</span>  <span class="c1">#output interval of sensors</span>
+<span class="linenos">233</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tEnd</span><span class="o">/</span><span class="n">stepSize</span><span class="p">)</span> <span class="c1">#must be integer</span>
+<span class="linenos">234</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="n">tEnd</span>
+<span class="linenos">235</span>    <span class="c1">#simulationSettings.solutionSettings.solutionInformation = &quot;This is the info\nNew line\n and another new line \n&quot;</span>
+<span class="linenos">236</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">generalizedAlpha</span><span class="o">.</span><span class="n">spectralRadius</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="linenos">237</span>    <span class="c1">#simulationSettings.timeIntegration.simulateInRealtime=True</span>
+<span class="linenos">238</span>    <span class="c1">#simulationSettings.timeIntegration.realtimeFactor=0.1</span>
+<span class="linenos">239</span>
+<span class="linenos">240</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">verboseMode</span> <span class="o">=</span> <span class="n">verbose</span>
+<span class="linenos">241</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">verboseMode</span> <span class="o">=</span> <span class="n">verbose</span>
 <span class="linenos">242</span>
-<span class="linenos">243</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">numericalDifferentiation</span><span class="o">.</span><span class="n">relativeEpsilon</span> <span class="o">=</span> <span class="mf">1e-4</span>
-<span class="linenos">244</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">relativeTolerance</span> <span class="o">=</span> <span class="mf">1e-6</span>
-<span class="linenos">245</span>
-<span class="linenos">246</span>    <span class="c1"># simulationSettings.displayComputationTime = True</span>
-<span class="linenos">247</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">linearSolverType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">LinearSolverType</span><span class="o">.</span><span class="n">EigenSparse</span>
-<span class="linenos">248</span>    <span class="c1"># simulationSettings.parallel.numberOfThreads = 4</span>
+<span class="linenos">243</span>    <span class="c1">#simulationSettings.parallel.numberOfThreads = 4</span>
+<span class="linenos">244</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">useModifiedNewton</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">245</span>    <span class="c1">#simulationSettings.timeIntegration.newton.numericalDifferentiation.minimumCoordinateSize = 1e0</span>
+<span class="linenos">246</span>
+<span class="linenos">247</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">numericalDifferentiation</span><span class="o">.</span><span class="n">relativeEpsilon</span> <span class="o">=</span> <span class="mf">1e-4</span>
+<span class="linenos">248</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">relativeTolerance</span> <span class="o">=</span> <span class="mf">1e-6</span>
 <span class="linenos">249</span>
-<span class="linenos">250</span>    <span class="c1">#simulationSettings.staticSolver.newton.numericalDifferentiation.relativeEpsilon = 5e-5</span>
-<span class="linenos">251</span>    <span class="c1">#simulationSettings.staticSolver.newton.numericalDifferentiation.forODE2 = True</span>
-<span class="linenos">252</span>    <span class="c1">#simulationSettings.staticSolver.newton.relativeTolerance = 1e-6</span>
-<span class="linenos">253</span>    <span class="c1"># simulationSettings.staticSolver.newton.numericalDifferentiation.relativeEpsilon = 1e-4</span>
-<span class="linenos">254</span>
-<span class="linenos">255</span>    <span class="k">if</span> <span class="n">nElements</span> <span class="o">&gt;</span> <span class="mi">32</span> <span class="ow">and</span> <span class="n">case</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span> <span class="c1">#change tolerance, because otherwise no convergence</span>
-<span class="linenos">256</span>        <span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">relativeTolerance</span> <span class="o">=</span> <span class="mf">1e-6</span>
-<span class="linenos">257</span>    <span class="k">if</span> <span class="n">case</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span> <span class="c1">#tolerance changed from 1e-8 to 5e-10 to achieve values of paper (1024 has difference at last digit in paper)</span>
-<span class="linenos">258</span>        <span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">relativeTolerance</span> <span class="o">=</span> <span class="mf">0.5e-9</span>
-<span class="linenos">259</span>
-<span class="linenos">260</span>
-<span class="linenos">261</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">numberOfLoadSteps</span> <span class="o">=</span> <span class="mi">5</span>
-<span class="linenos">262</span>
+<span class="linenos">250</span>    <span class="c1"># simulationSettings.displayComputationTime = True</span>
+<span class="linenos">251</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">linearSolverType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">LinearSolverType</span><span class="o">.</span><span class="n">EigenSparse</span>
+<span class="linenos">252</span>    <span class="c1"># simulationSettings.parallel.numberOfThreads = 4</span>
+<span class="linenos">253</span>
+<span class="linenos">254</span>    <span class="c1">#simulationSettings.staticSolver.newton.numericalDifferentiation.relativeEpsilon = 5e-5</span>
+<span class="linenos">255</span>    <span class="c1">#simulationSettings.staticSolver.newton.numericalDifferentiation.forODE2 = True</span>
+<span class="linenos">256</span>    <span class="c1">#simulationSettings.staticSolver.newton.relativeTolerance = 1e-6</span>
+<span class="linenos">257</span>    <span class="c1"># simulationSettings.staticSolver.newton.numericalDifferentiation.relativeEpsilon = 1e-4</span>
+<span class="linenos">258</span>
+<span class="linenos">259</span>    <span class="k">if</span> <span class="n">nElements</span> <span class="o">&gt;</span> <span class="mi">32</span> <span class="ow">and</span> <span class="n">case</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span> <span class="c1">#change tolerance, because otherwise no convergence</span>
+<span class="linenos">260</span>        <span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">relativeTolerance</span> <span class="o">=</span> <span class="mf">1e-6</span>
+<span class="linenos">261</span>    <span class="k">if</span> <span class="n">case</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span> <span class="c1">#tolerance changed from 1e-8 to 5e-10 to achieve values of paper (1024 has difference at last digit in paper)</span>
+<span class="linenos">262</span>        <span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">relativeTolerance</span> <span class="o">=</span> <span class="mf">0.5e-9</span>
 <span class="linenos">263</span>
-<span class="linenos">264</span>    <span class="c1">#add some drawing parameters for this example</span>
-<span class="linenos">265</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">drawNodesAsPoint</span><span class="o">=</span><span class="kc">False</span>
-<span class="linenos">266</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">defaultSize</span><span class="o">=</span><span class="mf">0.01</span>
+<span class="linenos">264</span>
+<span class="linenos">265</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">numberOfLoadSteps</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="linenos">266</span>
 <span class="linenos">267</span>
-<span class="linenos">268</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">bodies</span><span class="o">.</span><span class="n">beams</span><span class="o">.</span><span class="n">axialTiling</span> <span class="o">=</span> <span class="mi">50</span>
-<span class="linenos">269</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">drawWorldBasis</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="linenos">270</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">worldBasisSize</span> <span class="o">=</span> <span class="mf">0.1</span>
-<span class="linenos">271</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">multiSampling</span> <span class="o">=</span> <span class="mi">4</span>
-<span class="linenos">272</span>
-<span class="linenos">273</span>
-<span class="linenos">274</span>    <span class="c1"># [M, K, D] = exu.solver.ComputeLinearizedSystem(mbs, simulationSettings, useSparseSolver=True)</span>
-<span class="linenos">275</span>    <span class="c1"># exu.Print(&#39;M=&#39;,M.round(1))</span>
+<span class="linenos">268</span>    <span class="c1">#add some drawing parameters for this example</span>
+<span class="linenos">269</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">drawNodesAsPoint</span><span class="o">=</span><span class="kc">False</span>
+<span class="linenos">270</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">defaultSize</span><span class="o">=</span><span class="mf">0.01</span>
+<span class="linenos">271</span>
+<span class="linenos">272</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">bodies</span><span class="o">.</span><span class="n">beams</span><span class="o">.</span><span class="n">axialTiling</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="linenos">273</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">drawWorldBasis</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">274</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">worldBasisSize</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="linenos">275</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">multiSampling</span> <span class="o">=</span> <span class="mi">4</span>
 <span class="linenos">276</span>
-<span class="linenos">277</span>    <span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
-<span class="linenos">278</span>        <span class="n">exu</span><span class="o">.</span><span class="nf">StartRenderer</span><span class="p">()</span>
-<span class="linenos">279</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">WaitForUserToContinue</span><span class="p">()</span>
+<span class="linenos">277</span>
+<span class="linenos">278</span>    <span class="c1"># [M, K, D] = exu.solver.ComputeLinearizedSystem(mbs, simulationSettings, useSparseSolver=True)</span>
+<span class="linenos">279</span>    <span class="c1"># exu.Print(&#39;M=&#39;,M.round(1))</span>
 <span class="linenos">280</span>
-<span class="linenos">281</span>    <span class="c1"># if computeEigenmodes:</span>
-<span class="linenos">282</span>    <span class="c1">#     nModes = 3*(1+int(compute3D))</span>
-<span class="linenos">283</span>    <span class="c1">#     nRigidModes = 3*(1+int(compute3D))</span>
-<span class="linenos">284</span>    <span class="c1">#     if compute2D:</span>
-<span class="linenos">285</span>    <span class="c1">#         constrainedCoordinates=[0,1,mbs.systemData.ODE2Size()-2]</span>
-<span class="linenos">286</span>    <span class="c1">#     else:</span>
-<span class="linenos">287</span>    <span class="c1">#         constrainedCoordinates=[0,1,2,5,mbs.systemData.ODE2Size()-8,mbs.systemData.ODE2Size()-7]</span>
-<span class="linenos">288</span>
-<span class="linenos">289</span>    <span class="c1">#     # constrainedCoordinates=[]</span>
-<span class="linenos">290</span>
-<span class="linenos">291</span>    <span class="c1">#     compeig=exu.ComputeODE2Eigenvalues(mbs, simulationSettings, useSparseSolver=False,</span>
-<span class="linenos">292</span>    <span class="c1">#                                 numberOfEigenvalues= nRigidModes+nModes,</span>
-<span class="linenos">293</span>    <span class="c1">#                                 constrainedCoordinates=constrainedCoordinates,</span>
-<span class="linenos">294</span>    <span class="c1">#                                 convert2Frequencies= False)</span>
-<span class="linenos">295</span>
-<span class="linenos">296</span>    <span class="c1">#     exu.Print(&#39;eigvalues=&#39;,np.sqrt(compeig[0][nRigidModes:]))</span>
-<span class="linenos">297</span>
-<span class="linenos">298</span>    <span class="c1">#     if False: #show modes:</span>
-<span class="linenos">299</span>    <span class="c1">#         for i in range(nModes):</span>
-<span class="linenos">300</span>    <span class="c1">#             iMode = nRigidModes+i</span>
-<span class="linenos">301</span>    <span class="c1">#             mbs.systemData.SetODE2Coordinates(5*compeig[1][:,iMode], exudyn.ConfigurationType.Visualization)</span>
-<span class="linenos">302</span>    <span class="c1">#             mbs.systemData.SetTime(np.sqrt(compeig[0][iMode]), exudyn.ConfigurationType.Visualization)</span>
-<span class="linenos">303</span>    <span class="c1">#             mbs.SendRedrawSignal()</span>
-<span class="linenos">304</span>
-<span class="linenos">305</span>    <span class="c1">#             mbs.WaitForUserToContinue()</span>
-<span class="linenos">306</span>
-<span class="linenos">307</span>    <span class="c1"># else:</span>
-<span class="linenos">308</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">SolveStatic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="p">)</span>
-<span class="linenos">309</span>    <span class="c1"># exu.SolveDynamic(mbs, simulationSettings)</span>
-<span class="linenos">310</span>    <span class="c1">#exu.SolveDynamic(mbs, simulationSettings, solverType = exu.DynamicSolverType.RK44)</span>
-<span class="linenos">311</span>
-<span class="linenos">312</span>
-<span class="linenos">313</span>    <span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
-<span class="linenos">314</span>        <span class="n">SC</span><span class="o">.</span><span class="nf">WaitForRenderEngineStopFlag</span><span class="p">()</span>
-<span class="linenos">315</span>        <span class="n">exu</span><span class="o">.</span><span class="nf">StopRenderer</span><span class="p">()</span> <span class="c1">#safely close rendering window!</span>
+<span class="linenos">281</span>    <span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
+<span class="linenos">282</span>        <span class="n">exu</span><span class="o">.</span><span class="nf">StartRenderer</span><span class="p">()</span>
+<span class="linenos">283</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">WaitForUserToContinue</span><span class="p">()</span>
+<span class="linenos">284</span>
+<span class="linenos">285</span>    <span class="c1"># if computeEigenmodes:</span>
+<span class="linenos">286</span>    <span class="c1">#     nModes = 3*(1+int(compute3D))</span>
+<span class="linenos">287</span>    <span class="c1">#     nRigidModes = 3*(1+int(compute3D))</span>
+<span class="linenos">288</span>    <span class="c1">#     if compute2D:</span>
+<span class="linenos">289</span>    <span class="c1">#         constrainedCoordinates=[0,1,mbs.systemData.ODE2Size()-2]</span>
+<span class="linenos">290</span>    <span class="c1">#     else:</span>
+<span class="linenos">291</span>    <span class="c1">#         constrainedCoordinates=[0,1,2,5,mbs.systemData.ODE2Size()-8,mbs.systemData.ODE2Size()-7]</span>
+<span class="linenos">292</span>
+<span class="linenos">293</span>    <span class="c1">#     # constrainedCoordinates=[]</span>
+<span class="linenos">294</span>
+<span class="linenos">295</span>    <span class="c1">#     compeig=mbs.ComputeODE2Eigenvalues(simulationSettings, useSparseSolver=False,</span>
+<span class="linenos">296</span>    <span class="c1">#                                 numberOfEigenvalues= nRigidModes+nModes,</span>
+<span class="linenos">297</span>    <span class="c1">#                                 constrainedCoordinates=constrainedCoordinates,</span>
+<span class="linenos">298</span>    <span class="c1">#                                 convert2Frequencies= False)</span>
+<span class="linenos">299</span>
+<span class="linenos">300</span>    <span class="c1">#     exu.Print(&#39;eigvalues=&#39;,np.sqrt(compeig[0][nRigidModes:]))</span>
+<span class="linenos">301</span>
+<span class="linenos">302</span>    <span class="c1">#     if False: #show modes:</span>
+<span class="linenos">303</span>    <span class="c1">#         for i in range(nModes):</span>
+<span class="linenos">304</span>    <span class="c1">#             iMode = nRigidModes+i</span>
+<span class="linenos">305</span>    <span class="c1">#             mbs.systemData.SetODE2Coordinates(5*compeig[1][:,iMode], exudyn.ConfigurationType.Visualization)</span>
+<span class="linenos">306</span>    <span class="c1">#             mbs.systemData.SetTime(np.sqrt(compeig[0][iMode]), exudyn.ConfigurationType.Visualization)</span>
+<span class="linenos">307</span>    <span class="c1">#             mbs.SendRedrawSignal()</span>
+<span class="linenos">308</span>
+<span class="linenos">309</span>    <span class="c1">#             mbs.WaitForUserToContinue()</span>
+<span class="linenos">310</span>
+<span class="linenos">311</span>    <span class="c1"># else:</span>
+<span class="linenos">312</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">SolveStatic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="p">)</span>
+<span class="linenos">313</span>    <span class="c1"># mbs.SolveDynamic(simulationSettings)</span>
+<span class="linenos">314</span>    <span class="c1">#mbs.SolveDynamic(simulationSettings, solverType = exu.DynamicSolverType.RK44)</span>
+<span class="linenos">315</span>
 <span class="linenos">316</span>
-<span class="linenos">317</span>    <span class="c1">##evaluate final (=current) output values</span>
-<span class="linenos">318</span>    <span class="n">uTip</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetNodeOutput</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Displacement</span><span class="p">)</span>
-<span class="linenos">319</span>
-<span class="linenos">320</span>    <span class="n">errorFact</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="linenos">321</span>    <span class="k">if</span> <span class="n">case</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
-<span class="linenos">322</span>        <span class="n">errorFact</span> <span class="o">*=</span> <span class="mi">100</span>
+<span class="linenos">317</span>    <span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
+<span class="linenos">318</span>        <span class="n">SC</span><span class="o">.</span><span class="nf">WaitForRenderEngineStopFlag</span><span class="p">()</span>
+<span class="linenos">319</span>        <span class="n">exu</span><span class="o">.</span><span class="nf">StopRenderer</span><span class="p">()</span> <span class="c1">#safely close rendering window!</span>
+<span class="linenos">320</span>
+<span class="linenos">321</span>    <span class="c1">##evaluate final (=current) output values</span>
+<span class="linenos">322</span>    <span class="n">uTip</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetNodeOutput</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Displacement</span><span class="p">)</span>
 <span class="linenos">323</span>
-<span class="linenos">324</span>    <span class="n">testErrorSum</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">uTip</span><span class="p">)</span>
-<span class="linenos">325</span>
-<span class="linenos">326</span>
+<span class="linenos">324</span>    <span class="n">errorFact</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="linenos">325</span>    <span class="k">if</span> <span class="n">case</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+<span class="linenos">326</span>        <span class="n">errorFact</span> <span class="o">*=</span> <span class="mi">100</span>
 <span class="linenos">327</span>
-<span class="linenos">328</span>    <span class="k">if</span> <span class="n">case</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
-<span class="linenos">329</span>        <span class="n">pTip</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetNodeOutput</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Position</span><span class="p">)</span>
-<span class="linenos">330</span>        <span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s1">&#39;ne=&#39;</span><span class="p">,</span><span class="n">nElements</span><span class="p">,</span> <span class="s1">&#39;, ux=&#39;</span><span class="p">,</span><span class="n">L</span><span class="o">-</span><span class="n">pTip</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;, uy=&#39;</span><span class="p">,</span><span class="n">pTip</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-<span class="linenos">331</span>    <span class="k">elif</span> <span class="n">case</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-<span class="linenos">332</span>        <span class="n">rotTip</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetNodeOutput</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Rotation</span><span class="p">)</span>
-<span class="linenos">333</span>        <span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s1">&#39;ne=&#39;</span><span class="p">,</span><span class="n">nElements</span><span class="p">,</span> <span class="s1">&#39;, u=&#39;</span><span class="p">,</span><span class="nb">list</span><span class="p">(</span><span class="n">uTip</span><span class="p">))</span>
-<span class="linenos">334</span>        <span class="c1"># exu.Print(&#39;ne=&#39;,nElements, &#39;, rot=&#39;,rotTip)</span>
-<span class="linenos">335</span>    <span class="k">elif</span> <span class="n">case</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">or</span> <span class="n">case</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
-<span class="linenos">336</span>        <span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s1">&#39;ne=&#39;</span><span class="p">,</span> <span class="n">nElements</span><span class="p">,</span> <span class="s1">&#39;, beta=&#39;</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">beta</span><span class="o">*</span><span class="mi">180</span><span class="o">/</span><span class="n">pi</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="s1">&#39;, u=&#39;</span><span class="p">,</span><span class="n">uTip</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">7</span><span class="p">))</span>
-<span class="linenos">337</span>
-<span class="linenos">338</span>
-<span class="linenos">339</span><span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s1">&#39;Solution of ANCFBeam3Dtest=&#39;</span><span class="p">,</span> <span class="n">testErrorSum</span><span class="p">)</span>
-<span class="linenos">340</span><span class="n">exudynTestGlobals</span><span class="o">.</span><span class="n">testError</span> <span class="o">=</span> <span class="n">testErrorSum</span> <span class="o">-</span> <span class="p">(</span><span class="mf">1.010486312300459</span> <span class="p">)</span>
-<span class="linenos">341</span><span class="n">exudynTestGlobals</span><span class="o">.</span><span class="n">testResult</span> <span class="o">=</span> <span class="n">testErrorSum</span>
+<span class="linenos">328</span>    <span class="n">testErrorSum</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">uTip</span><span class="p">)</span>
+<span class="linenos">329</span>
+<span class="linenos">330</span>
+<span class="linenos">331</span>
+<span class="linenos">332</span>    <span class="k">if</span> <span class="n">case</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+<span class="linenos">333</span>        <span class="n">pTip</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetNodeOutput</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Position</span><span class="p">)</span>
+<span class="linenos">334</span>        <span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s1">&#39;ne=&#39;</span><span class="p">,</span><span class="n">nElements</span><span class="p">,</span> <span class="s1">&#39;, ux=&#39;</span><span class="p">,</span><span class="n">L</span><span class="o">-</span><span class="n">pTip</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;, uy=&#39;</span><span class="p">,</span><span class="n">pTip</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="linenos">335</span>    <span class="k">elif</span> <span class="n">case</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+<span class="linenos">336</span>        <span class="n">rotTip</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetNodeOutput</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Rotation</span><span class="p">)</span>
+<span class="linenos">337</span>        <span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s1">&#39;ne=&#39;</span><span class="p">,</span><span class="n">nElements</span><span class="p">,</span> <span class="s1">&#39;, u=&#39;</span><span class="p">,</span><span class="nb">list</span><span class="p">(</span><span class="n">uTip</span><span class="p">))</span>
+<span class="linenos">338</span>        <span class="c1"># exu.Print(&#39;ne=&#39;,nElements, &#39;, rot=&#39;,rotTip)</span>
+<span class="linenos">339</span>    <span class="k">elif</span> <span class="n">case</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">or</span> <span class="n">case</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+<span class="linenos">340</span>        <span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s1">&#39;ne=&#39;</span><span class="p">,</span> <span class="n">nElements</span><span class="p">,</span> <span class="s1">&#39;, beta=&#39;</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">beta</span><span class="o">*</span><span class="mi">180</span><span class="o">/</span><span class="n">pi</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="s1">&#39;, u=&#39;</span><span class="p">,</span><span class="n">uTip</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">7</span><span class="p">))</span>
+<span class="linenos">341</span>
 <span class="linenos">342</span>
-<span class="linenos">343</span>
-<span class="linenos">344</span>
-<span class="linenos">345</span><span class="c1"># case= 0/CantileverLinear2011</span>
-<span class="linenos">346</span><span class="c1">#NachbagauerPechsteinIrschikGerstmayrMUBO2011 (2D):</span>
-<span class="linenos">347</span><span class="c1"># ne=1,   9.12273046eâ€“8, 6.16666566eâ€“4, 0.000193</span>
-<span class="linenos">348</span><span class="c1"># ne=2,   1.61293091eâ€“7, 7.61594059eâ€“4, 4.831eâ€“5</span>
-<span class="linenos">349</span><span class="c1"># ne=4,   1.81763233eâ€“7, 7.97825954eâ€“4, 1.208eâ€“5</span>
-<span class="linenos">350</span><span class="c1"># ne=256, 1.88847418eâ€“7, 8.09900305eâ€“4, 2.945eâ€“9</span>
-<span class="linenos">351</span><span class="c1">#Exudyn: ksFact=1</span>
-<span class="linenos">352</span><span class="c1"># ne= 1 , ux= 9.122730637578513e-08 , uy= 0.0006166665660910789</span>
-<span class="linenos">353</span><span class="c1"># ne= 2 , ux= 1.612930911054633e-07 , uy= 0.0007615940599560586</span>
-<span class="linenos">354</span><span class="c1"># ne= 4 , ux= 1.8176323512975046e-07 , uy= 0.0007978259537503566</span>
-<span class="linenos">355</span><span class="c1"># ne= 8 , ux= 1.8706537496804287e-07 , uy= 0.0008068839288072378</span>
-<span class="linenos">356</span><span class="c1"># ne= 16 , ux= 1.8840244964124508e-07 , uy= 0.0008091484226773518</span>
-<span class="linenos">357</span><span class="c1"># ne= 32 , ux= 1.887374359021976e-07 , uy= 0.0008097145461515286</span>
-<span class="linenos">358</span><span class="c1"># ne= 64 , ux= 1.888212299849812e-07 , uy= 0.0008098560770202866</span>
-<span class="linenos">359</span><span class="c1"># ne= 128 , ux= 1.8884218011550047e-07 , uy= 0.000809891459736643</span>
-<span class="linenos">360</span><span class="c1"># ne= 256 , ux= 1.8884741770364144e-07 , uy= 0.0008099003054122335</span>
-<span class="linenos">361</span>
-<span class="linenos">362</span>
-<span class="linenos">363</span><span class="c1"># case= 1/Cantilever2011</span>
-<span class="linenos">364</span><span class="c1">#NachbagauerPechsteinIrschikGerstmayrMUBO2011 (2D):</span>
-<span class="linenos">365</span><span class="c1"># ne=1,    0.07140274, 0.54225823, 0.168310</span>
-<span class="linenos">366</span><span class="c1"># ne=2,    0.12379212, 0.65687111, 0.053697</span>
-<span class="linenos">367</span><span class="c1"># ne=4,    0.14346767, 0.69593561, 0.014633</span>
-<span class="linenos">368</span><span class="c1"># ne=1024, 0.15097103, 0.71056837, 2.280eâ€“7</span>
-<span class="linenos">369</span>
-<span class="linenos">370</span><span class="c1">#Exudyn: ksFact=1</span>
-<span class="linenos">371</span><span class="c1"># ne= 1 , ux= 0.07140273975041422 , uy= 0.5422582285449739</span>
-<span class="linenos">372</span><span class="c1"># ne= 2 , ux= 0.12379212054619537 , uy= 0.6568711099777776</span>
-<span class="linenos">373</span><span class="c1"># ne= 4 , ux= 0.14346766617229956 , uy= 0.695935613449867</span>
-<span class="linenos">374</span><span class="c1"># ne= 8 , ux= 0.14904162148449163 , uy= 0.7068152604035266</span>
-<span class="linenos">375</span><span class="c1"># ne= 16 , ux= 0.15048521526298897 , uy= 0.709623891842095</span>
-<span class="linenos">376</span><span class="c1"># ne= 32 , ux= 0.15084943688011565 , uy= 0.7103320154655514</span>
-<span class="linenos">377</span><span class="c1"># ne= 64 , ux= 0.15094070328691145 , uy= 0.7105094267817303</span>
-<span class="linenos">378</span><span class="c1"># ne= 128 , ux= 0.15096353326024237 , uy= 0.7105538037895819</span>
-<span class="linenos">379</span><span class="c1"># ne= 256 , ux= 0.15096924149743085 , uy= 0.7105648993600513</span>
-<span class="linenos">380</span><span class="c1"># ne= 512 , ux= 0.15097066651939461 , uy= 0.7105676689547459</span>
-<span class="linenos">381</span><span class="c1"># ne= 1024 , ux= 0.15097102364723924 , uy= 0.7105683631862169</span>
-<span class="linenos">382</span>
-<span class="linenos">383</span><span class="c1"># case = 2:</span>
-<span class="linenos">384</span><span class="c1">#2013 CND, Nachbagauer Gruber Gerstmayr (static, 3D); &quot;Structural and Continuum Mechanics Approaches for a 3D Shear Deformable ANCF Beam Finite Element: Application to Static and Linearized Dynamic Examples&quot;</span>
-<span class="linenos">385</span><span class="c1">#Table 4:</span>
-<span class="linenos">386</span><span class="c1"># SMF</span>
-<span class="linenos">387</span><span class="c1"># 8,  1.0943e-4, 1.8638e-4, 1.8117e-2</span>
-<span class="linenos">388</span><span class="c1"># 32, 1.0943e-4, 1.8625e-4, 1.8117e-2</span>
-<span class="linenos">389</span><span class="c1"># ANSYS</span>
-<span class="linenos">390</span><span class="c1"># 40, 1.0939e-4, 1.8646e-4, 1.8117e-2</span>
-<span class="linenos">391</span><span class="c1">#Exudyn, ksFact=10:</span>
-<span class="linenos">392</span><span class="c1"># ne= 8 , u= [-0.00010900977088157404, -0.0001902100873246334, -0.01811732779800177]</span>
-<span class="linenos">393</span><span class="c1"># ne= 32 , u= [-0.00010941122286522997, -0.00018667435478355072, -0.01811739809277171]</span>
-<span class="linenos">394</span><span class="c1"># ne= 128 , u= [-0.00010943631319815239, -0.000186451835025629, -0.018117402461210096]</span>
-<span class="linenos">395</span><span class="c1">#==&gt; in 2013 paper, element performed slightly better, especially in ux and uy terms</span>
-<span class="linenos">396</span>
-<span class="linenos">397</span><span class="c1"># case = 3:</span>
-<span class="linenos">398</span><span class="c1">#Princeton beam with ANSYS (Leonid Obrezkov / Aki Mikkola / Marko Matikainen et al.,</span>
-<span class="linenos">399</span><span class="c1">#       Performance review of locking alleviation methods for continuum ANCF beam elements,</span>
-<span class="linenos">400</span><span class="c1">#       Nonlinear Dynamics, Vol. 109, pp. 31â€“546, May 2022</span>
-<span class="linenos">401</span><span class="c1"># beta=[0 15 30 45 60 75 90];</span>
-<span class="linenos">402</span><span class="k">if</span> <span class="p">(</span><span class="n">case</span><span class="o">==</span><span class="mi">3</span> <span class="ow">or</span> <span class="n">case</span> <span class="o">==</span> <span class="mi">4</span><span class="p">)</span> <span class="ow">and</span> <span class="kc">False</span><span class="p">:</span>
-<span class="linenos">403</span>    <span class="c1"># F2=8.896</span>
-<span class="linenos">404</span>    <span class="c1"># % ANSYS beam (10-199 el)</span>
-<span class="linenos">405</span>    <span class="n">ANSYSF2y</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.071417630E-002</span><span class="p">,</span>  <span class="mf">1.061328706E-002</span><span class="p">,</span> <span class="mf">1.011169630E-002</span><span class="p">,</span>  <span class="mf">8.837226265E-003</span><span class="p">,</span> <span class="mf">6.604665004E-003</span><span class="p">,</span> <span class="mf">3.538889001E-003</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
-<span class="linenos">406</span>    <span class="n">ANSYSF2z</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mf">4.208232124E-002</span><span class="p">,</span> <span class="mf">7.939482948E-002</span><span class="p">,</span> <span class="mf">0.108987937</span><span class="p">,</span>  <span class="mf">0.129887616</span><span class="p">,</span> <span class="mf">0.142194370</span><span class="p">,</span> <span class="mf">0.146245978</span><span class="p">])</span>
-<span class="linenos">407</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s1">&#39;refsol ANSYS F2=8.896:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span><span class="n">ANSYSF2y</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">ANSYSF2z</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span><span class="n">sep</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-<span class="linenos">408</span>    <span class="c1"># % ANSYS solid (el) (4x12x500) - finer mesh doesn&#39;t have much influence see in Size effect file</span>
-<span class="linenos">409</span>    <span class="c1"># ANSYS_solid_y=[1.069752828E-002 1.057180106E-002 9.938278402E-003 8.686786771E-003 6.500006282E-003 3.481999513E-003 0];</span>
-<span class="linenos">410</span>    <span class="c1"># ANSYS_solid_z=[0 4.101165651E-002 7.696749069E-002 0.105976311 0.127251299 0.139594740 0.143848652];</span>
-<span class="linenos">411</span>
-<span class="linenos">412</span>    <span class="c1"># F3=13.345</span>
-<span class="linenos">413</span>    <span class="c1"># % ANSYS beam (10-199 el)</span>
-<span class="linenos">414</span>    <span class="n">ANSYSF3y</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.606423724E-002</span><span class="p">,</span> <span class="mf">1.645825752E-002</span><span class="p">,</span> <span class="mf">1.665873206E-002</span><span class="p">,</span> <span class="mf">1.518618440E-002</span><span class="p">,</span> <span class="mf">1.157837500E-002</span><span class="p">,</span> <span class="mf">6.248967384E-003</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
-<span class="linenos">415</span>    <span class="n">ANSYSF3z</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span>                <span class="mf">6.435812858E-002</span><span class="p">,</span> <span class="mf">0.117735994</span><span class="p">,</span>      <span class="mf">0.156467239</span><span class="p">,</span>      <span class="mf">0.181861627</span><span class="p">,</span>      <span class="mf">0.196097131</span><span class="p">,</span>      <span class="mf">0.200677707</span><span class="p">])</span>
-<span class="linenos">416</span>    <span class="c1"># % ANSYS solid (el) (4x12x500) - finer mesh see in Size effect file</span>
-<span class="linenos">417</span>    <span class="c1">#ANSYS_solid_y=[1.603700622E-002 1.637026068E-002 1.640440775E-002 1.485055210E-002 1.127173264E-002 6.062461977E-003  0])</span>
-<span class="linenos">418</span>    <span class="c1">#ANSYS_solid_z=[0 6.270699533E-002 0.113752002 0.153554457 0.179978534  0.192972233 0.197669499])</span>
-<span class="linenos">419</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s1">&#39;refsol ANSYS F3=13.345:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span><span class="n">ANSYSF3y</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">ANSYSF3z</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span><span class="n">sep</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-<span class="linenos">420</span><span class="c1">#Exudyn results for Princeton beam:</span>
-<span class="linenos">421</span><span class="c1">#not exactly the same, but around the previous values with HOTINT</span>
-<span class="linenos">422</span><span class="c1">#using 16 elements, csFact=10 (no influence)</span>
-<span class="linenos">423</span><span class="c1"># F2=8.896</span>
-<span class="linenos">424</span><span class="c1"># case= 3, PrincetonBeam</span>
-<span class="linenos">425</span><span class="c1"># ne= 16 , beta= 0.0 , u= [-0.0001352 -0.0107023  0.       ]</span>
-<span class="linenos">426</span><span class="c1"># ne= 16 , beta= 15.0 , u= [-0.0022414 -0.0106295  0.0421374]</span>
-<span class="linenos">427</span><span class="c1"># ne= 16 , beta= 30.0 , u= [-0.0076567 -0.0101861  0.0794434]</span>
-<span class="linenos">428</span><span class="c1"># ne= 16 , beta= 45.0 , u= [-0.0143664 -0.0089529  0.1089703]</span>
-<span class="linenos">429</span><span class="c1"># ne= 16 , beta= 60.0 , u= [-0.0204225 -0.0067182  0.1297877]</span>
-<span class="linenos">430</span><span class="c1"># ne= 16 , beta= 75.0 , u= [-0.0245093 -0.0036079  0.1420319]</span>
-<span class="linenos">431</span><span class="c1"># ne= 16 , beta= 90.0 , u= [-0.0259403 -0.         0.1460608]</span>
-<span class="linenos">432</span>
-<span class="linenos">433</span><span class="c1"># F3=13.345</span>
-<span class="linenos">434</span><span class="c1"># case= 4, PrincetonBeam</span>
-<span class="linenos">435</span><span class="c1"># ne= 16 , beta= 0.0 , u= [-0.0003039 -0.0160454  0.       ]</span>
-<span class="linenos">436</span><span class="c1"># ne= 16 , beta= 15.0 , u= [-0.005319  -0.0165469  0.064622 ]</span>
-<span class="linenos">437</span><span class="c1"># ne= 16 , beta= 30.0 , u= [-0.0171901 -0.0169316  0.1179818]</span>
-<span class="linenos">438</span><span class="c1"># ne= 16 , beta= 45.0 , u= [-0.0303357 -0.0155488  0.1565214]</span>
-<span class="linenos">439</span><span class="c1"># ne= 16 , beta= 60.0 , u= [-0.0411035 -0.0118996  0.1817173]</span>
-<span class="linenos">440</span><span class="c1"># ne= 16 , beta= 75.0 , u= [-0.0479101 -0.0064334  0.1958343]</span>
-<span class="linenos">441</span><span class="c1"># ne= 16 , beta= 90.0 , u= [-0.0502184 -0.         0.2003738]</span>
+<span class="linenos">343</span><span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s1">&#39;Solution of ANCFBeam3Dtest=&#39;</span><span class="p">,</span> <span class="n">testErrorSum</span><span class="p">)</span>
+<span class="linenos">344</span><span class="n">exudynTestGlobals</span><span class="o">.</span><span class="n">testError</span> <span class="o">=</span> <span class="n">testErrorSum</span> <span class="o">-</span> <span class="p">(</span><span class="mf">1.010486312300459</span> <span class="p">)</span>
+<span class="linenos">345</span><span class="n">exudynTestGlobals</span><span class="o">.</span><span class="n">testResult</span> <span class="o">=</span> <span class="n">testErrorSum</span>
+<span class="linenos">346</span>
+<span class="linenos">347</span>
+<span class="linenos">348</span>
+<span class="linenos">349</span><span class="c1"># case= 0/CantileverLinear2011</span>
+<span class="linenos">350</span><span class="c1">#NachbagauerPechsteinIrschikGerstmayrMUBO2011 (2D):</span>
+<span class="linenos">351</span><span class="c1"># ne=1,   9.12273046eâ€“8, 6.16666566eâ€“4, 0.000193</span>
+<span class="linenos">352</span><span class="c1"># ne=2,   1.61293091eâ€“7, 7.61594059eâ€“4, 4.831eâ€“5</span>
+<span class="linenos">353</span><span class="c1"># ne=4,   1.81763233eâ€“7, 7.97825954eâ€“4, 1.208eâ€“5</span>
+<span class="linenos">354</span><span class="c1"># ne=256, 1.88847418eâ€“7, 8.09900305eâ€“4, 2.945eâ€“9</span>
+<span class="linenos">355</span><span class="c1">#Exudyn: ksFact=1</span>
+<span class="linenos">356</span><span class="c1"># ne= 1 , ux= 9.122730637578513e-08 , uy= 0.0006166665660910789</span>
+<span class="linenos">357</span><span class="c1"># ne= 2 , ux= 1.612930911054633e-07 , uy= 0.0007615940599560586</span>
+<span class="linenos">358</span><span class="c1"># ne= 4 , ux= 1.8176323512975046e-07 , uy= 0.0007978259537503566</span>
+<span class="linenos">359</span><span class="c1"># ne= 8 , ux= 1.8706537496804287e-07 , uy= 0.0008068839288072378</span>
+<span class="linenos">360</span><span class="c1"># ne= 16 , ux= 1.8840244964124508e-07 , uy= 0.0008091484226773518</span>
+<span class="linenos">361</span><span class="c1"># ne= 32 , ux= 1.887374359021976e-07 , uy= 0.0008097145461515286</span>
+<span class="linenos">362</span><span class="c1"># ne= 64 , ux= 1.888212299849812e-07 , uy= 0.0008098560770202866</span>
+<span class="linenos">363</span><span class="c1"># ne= 128 , ux= 1.8884218011550047e-07 , uy= 0.000809891459736643</span>
+<span class="linenos">364</span><span class="c1"># ne= 256 , ux= 1.8884741770364144e-07 , uy= 0.0008099003054122335</span>
+<span class="linenos">365</span>
+<span class="linenos">366</span>
+<span class="linenos">367</span><span class="c1"># case= 1/Cantilever2011</span>
+<span class="linenos">368</span><span class="c1">#NachbagauerPechsteinIrschikGerstmayrMUBO2011 (2D):</span>
+<span class="linenos">369</span><span class="c1"># ne=1,    0.07140274, 0.54225823, 0.168310</span>
+<span class="linenos">370</span><span class="c1"># ne=2,    0.12379212, 0.65687111, 0.053697</span>
+<span class="linenos">371</span><span class="c1"># ne=4,    0.14346767, 0.69593561, 0.014633</span>
+<span class="linenos">372</span><span class="c1"># ne=1024, 0.15097103, 0.71056837, 2.280eâ€“7</span>
+<span class="linenos">373</span>
+<span class="linenos">374</span><span class="c1">#Exudyn: ksFact=1</span>
+<span class="linenos">375</span><span class="c1"># ne= 1 , ux= 0.07140273975041422 , uy= 0.5422582285449739</span>
+<span class="linenos">376</span><span class="c1"># ne= 2 , ux= 0.12379212054619537 , uy= 0.6568711099777776</span>
+<span class="linenos">377</span><span class="c1"># ne= 4 , ux= 0.14346766617229956 , uy= 0.695935613449867</span>
+<span class="linenos">378</span><span class="c1"># ne= 8 , ux= 0.14904162148449163 , uy= 0.7068152604035266</span>
+<span class="linenos">379</span><span class="c1"># ne= 16 , ux= 0.15048521526298897 , uy= 0.709623891842095</span>
+<span class="linenos">380</span><span class="c1"># ne= 32 , ux= 0.15084943688011565 , uy= 0.7103320154655514</span>
+<span class="linenos">381</span><span class="c1"># ne= 64 , ux= 0.15094070328691145 , uy= 0.7105094267817303</span>
+<span class="linenos">382</span><span class="c1"># ne= 128 , ux= 0.15096353326024237 , uy= 0.7105538037895819</span>
+<span class="linenos">383</span><span class="c1"># ne= 256 , ux= 0.15096924149743085 , uy= 0.7105648993600513</span>
+<span class="linenos">384</span><span class="c1"># ne= 512 , ux= 0.15097066651939461 , uy= 0.7105676689547459</span>
+<span class="linenos">385</span><span class="c1"># ne= 1024 , ux= 0.15097102364723924 , uy= 0.7105683631862169</span>
+<span class="linenos">386</span>
+<span class="linenos">387</span><span class="c1"># case = 2:</span>
+<span class="linenos">388</span><span class="c1">#2013 CND, Nachbagauer Gruber Gerstmayr (static, 3D); &quot;Structural and Continuum Mechanics Approaches for a 3D Shear Deformable ANCF Beam Finite Element: Application to Static and Linearized Dynamic Examples&quot;</span>
+<span class="linenos">389</span><span class="c1">#Table 4:</span>
+<span class="linenos">390</span><span class="c1"># SMF</span>
+<span class="linenos">391</span><span class="c1"># 8,  1.0943e-4, 1.8638e-4, 1.8117e-2</span>
+<span class="linenos">392</span><span class="c1"># 32, 1.0943e-4, 1.8625e-4, 1.8117e-2</span>
+<span class="linenos">393</span><span class="c1"># ANSYS</span>
+<span class="linenos">394</span><span class="c1"># 40, 1.0939e-4, 1.8646e-4, 1.8117e-2</span>
+<span class="linenos">395</span><span class="c1">#Exudyn, ksFact=10:</span>
+<span class="linenos">396</span><span class="c1"># ne= 8 , u= [-0.00010900977088157404, -0.0001902100873246334, -0.01811732779800177]</span>
+<span class="linenos">397</span><span class="c1"># ne= 32 , u= [-0.00010941122286522997, -0.00018667435478355072, -0.01811739809277171]</span>
+<span class="linenos">398</span><span class="c1"># ne= 128 , u= [-0.00010943631319815239, -0.000186451835025629, -0.018117402461210096]</span>
+<span class="linenos">399</span><span class="c1">#==&gt; in 2013 paper, element performed slightly better, especially in ux and uy terms</span>
+<span class="linenos">400</span>
+<span class="linenos">401</span><span class="c1"># case = 3:</span>
+<span class="linenos">402</span><span class="c1">#Princeton beam with ANSYS (Leonid Obrezkov / Aki Mikkola / Marko Matikainen et al.,</span>
+<span class="linenos">403</span><span class="c1">#       Performance review of locking alleviation methods for continuum ANCF beam elements,</span>
+<span class="linenos">404</span><span class="c1">#       Nonlinear Dynamics, Vol. 109, pp. 31â€“546, May 2022</span>
+<span class="linenos">405</span><span class="c1"># beta=[0 15 30 45 60 75 90];</span>
+<span class="linenos">406</span><span class="k">if</span> <span class="p">(</span><span class="n">case</span><span class="o">==</span><span class="mi">3</span> <span class="ow">or</span> <span class="n">case</span> <span class="o">==</span> <span class="mi">4</span><span class="p">)</span> <span class="ow">and</span> <span class="kc">False</span><span class="p">:</span>
+<span class="linenos">407</span>    <span class="c1"># F2=8.896</span>
+<span class="linenos">408</span>    <span class="c1"># % ANSYS beam (10-199 el)</span>
+<span class="linenos">409</span>    <span class="n">ANSYSF2y</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.071417630E-002</span><span class="p">,</span>  <span class="mf">1.061328706E-002</span><span class="p">,</span> <span class="mf">1.011169630E-002</span><span class="p">,</span>  <span class="mf">8.837226265E-003</span><span class="p">,</span> <span class="mf">6.604665004E-003</span><span class="p">,</span> <span class="mf">3.538889001E-003</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="linenos">410</span>    <span class="n">ANSYSF2z</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mf">4.208232124E-002</span><span class="p">,</span> <span class="mf">7.939482948E-002</span><span class="p">,</span> <span class="mf">0.108987937</span><span class="p">,</span>  <span class="mf">0.129887616</span><span class="p">,</span> <span class="mf">0.142194370</span><span class="p">,</span> <span class="mf">0.146245978</span><span class="p">])</span>
+<span class="linenos">411</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s1">&#39;refsol ANSYS F2=8.896:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span><span class="n">ANSYSF2y</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">ANSYSF2z</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span><span class="n">sep</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+<span class="linenos">412</span>    <span class="c1"># % ANSYS solid (el) (4x12x500) - finer mesh doesn&#39;t have much influence see in Size effect file</span>
+<span class="linenos">413</span>    <span class="c1"># ANSYS_solid_y=[1.069752828E-002 1.057180106E-002 9.938278402E-003 8.686786771E-003 6.500006282E-003 3.481999513E-003 0];</span>
+<span class="linenos">414</span>    <span class="c1"># ANSYS_solid_z=[0 4.101165651E-002 7.696749069E-002 0.105976311 0.127251299 0.139594740 0.143848652];</span>
+<span class="linenos">415</span>
+<span class="linenos">416</span>    <span class="c1"># F3=13.345</span>
+<span class="linenos">417</span>    <span class="c1"># % ANSYS beam (10-199 el)</span>
+<span class="linenos">418</span>    <span class="n">ANSYSF3y</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.606423724E-002</span><span class="p">,</span> <span class="mf">1.645825752E-002</span><span class="p">,</span> <span class="mf">1.665873206E-002</span><span class="p">,</span> <span class="mf">1.518618440E-002</span><span class="p">,</span> <span class="mf">1.157837500E-002</span><span class="p">,</span> <span class="mf">6.248967384E-003</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="linenos">419</span>    <span class="n">ANSYSF3z</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span>                <span class="mf">6.435812858E-002</span><span class="p">,</span> <span class="mf">0.117735994</span><span class="p">,</span>      <span class="mf">0.156467239</span><span class="p">,</span>      <span class="mf">0.181861627</span><span class="p">,</span>      <span class="mf">0.196097131</span><span class="p">,</span>      <span class="mf">0.200677707</span><span class="p">])</span>
+<span class="linenos">420</span>    <span class="c1"># % ANSYS solid (el) (4x12x500) - finer mesh see in Size effect file</span>
+<span class="linenos">421</span>    <span class="c1">#ANSYS_solid_y=[1.603700622E-002 1.637026068E-002 1.640440775E-002 1.485055210E-002 1.127173264E-002 6.062461977E-003  0])</span>
+<span class="linenos">422</span>    <span class="c1">#ANSYS_solid_z=[0 6.270699533E-002 0.113752002 0.153554457 0.179978534  0.192972233 0.197669499])</span>
+<span class="linenos">423</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s1">&#39;refsol ANSYS F3=13.345:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span><span class="n">ANSYSF3y</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">ANSYSF3z</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span><span class="n">sep</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+<span class="linenos">424</span><span class="c1">#Exudyn results for Princeton beam:</span>
+<span class="linenos">425</span><span class="c1">#not exactly the same, but around the previous values with HOTINT</span>
+<span class="linenos">426</span><span class="c1">#using 16 elements, csFact=10 (no influence)</span>
+<span class="linenos">427</span><span class="c1"># F2=8.896</span>
+<span class="linenos">428</span><span class="c1"># case= 3, PrincetonBeam</span>
+<span class="linenos">429</span><span class="c1"># ne= 16 , beta= 0.0 , u= [-0.0001352 -0.0107023  0.       ]</span>
+<span class="linenos">430</span><span class="c1"># ne= 16 , beta= 15.0 , u= [-0.0022414 -0.0106295  0.0421374]</span>
+<span class="linenos">431</span><span class="c1"># ne= 16 , beta= 30.0 , u= [-0.0076567 -0.0101861  0.0794434]</span>
+<span class="linenos">432</span><span class="c1"># ne= 16 , beta= 45.0 , u= [-0.0143664 -0.0089529  0.1089703]</span>
+<span class="linenos">433</span><span class="c1"># ne= 16 , beta= 60.0 , u= [-0.0204225 -0.0067182  0.1297877]</span>
+<span class="linenos">434</span><span class="c1"># ne= 16 , beta= 75.0 , u= [-0.0245093 -0.0036079  0.1420319]</span>
+<span class="linenos">435</span><span class="c1"># ne= 16 , beta= 90.0 , u= [-0.0259403 -0.         0.1460608]</span>
+<span class="linenos">436</span>
+<span class="linenos">437</span><span class="c1"># F3=13.345</span>
+<span class="linenos">438</span><span class="c1"># case= 4, PrincetonBeam</span>
+<span class="linenos">439</span><span class="c1"># ne= 16 , beta= 0.0 , u= [-0.0003039 -0.0160454  0.       ]</span>
+<span class="linenos">440</span><span class="c1"># ne= 16 , beta= 15.0 , u= [-0.005319  -0.0165469  0.064622 ]</span>
+<span class="linenos">441</span><span class="c1"># ne= 16 , beta= 30.0 , u= [-0.0171901 -0.0169316  0.1179818]</span>
+<span class="linenos">442</span><span class="c1"># ne= 16 , beta= 45.0 , u= [-0.0303357 -0.0155488  0.1565214]</span>
+<span class="linenos">443</span><span class="c1"># ne= 16 , beta= 60.0 , u= [-0.0411035 -0.0118996  0.1817173]</span>
+<span class="linenos">444</span><span class="c1"># ne= 16 , beta= 75.0 , u= [-0.0479101 -0.0064334  0.1958343]</span>
+<span class="linenos">445</span><span class="c1"># ne= 16 , beta= 90.0 , u= [-0.0502184 -0.         0.2003738]</span>
 </pre></div>
 </div>
 </section>

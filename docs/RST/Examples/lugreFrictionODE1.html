@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lugreFrictionODE1.py &mdash; Exudyn1.6.110.dev1 1.6.110.dev1 documentation</title>
+  <title>lugreFrictionODE1.py &mdash; Exudyn1.6.118.dev1 1.6.118.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -37,7 +37,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.110.dev1
+            Exudyn1.6.118.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -202,7 +202,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.110.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.118.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -352,16 +352,16 @@
 <span class="linenos">126</span>
 <span class="linenos">127</span>
 <span class="linenos">128</span><span class="n">sims</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tEnd</span><span class="o">/</span><span class="n">h</span><span class="p">)</span>
-<span class="linenos">129</span><span class="n">exu</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">solverType</span><span class="o">=</span><span class="n">solverType</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="o">=</span><span class="n">sims</span><span class="p">)</span>
+<span class="linenos">129</span><span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">solverType</span><span class="o">=</span><span class="n">solverType</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="o">=</span><span class="n">sims</span><span class="p">)</span>
 <span class="linenos">130</span>
 <span class="linenos">131</span>
 <span class="linenos">132</span><span class="c1">#+++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
 <span class="linenos">133</span><span class="k">if</span> <span class="kc">True</span><span class="p">:</span>
-<span class="linenos">134</span>    <span class="kn">from</span> <span class="nn">exudyn.plot</span> <span class="kn">import</span> <span class="nf">PlotSensor</span>
-<span class="linenos">135</span>    <span class="nf">PlotSensor</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="p">[],</span> <span class="n">closeAll</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">134</span>
+<span class="linenos">135</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">([],</span> <span class="n">closeAll</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="linenos">136</span>
-<span class="linenos">137</span>    <span class="nf">PlotSensor</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sCoords1</span><span class="p">,[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;LuGre pos&#39;</span><span class="p">,</span><span class="s1">&#39;LuGre vel&#39;</span><span class="p">,</span><span class="s1">&#39;Lugre Z&#39;</span><span class="p">])</span>
-<span class="linenos">138</span>    <span class="nf">PlotSensor</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sFriction1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="n">colorCodeOffset</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">newFigure</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;LuGre force&#39;</span><span class="p">])</span>
+<span class="linenos">137</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sCoords1</span><span class="p">,[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;LuGre pos&#39;</span><span class="p">,</span><span class="s1">&#39;LuGre vel&#39;</span><span class="p">,</span><span class="s1">&#39;Lugre Z&#39;</span><span class="p">])</span>
+<span class="linenos">138</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sFriction1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="n">colorCodeOffset</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">newFigure</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;LuGre force&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
 </section>

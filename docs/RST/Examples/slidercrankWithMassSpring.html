@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>slidercrankWithMassSpring.py &mdash; Exudyn1.6.110.dev1 1.6.110.dev1 documentation</title>
+  <title>slidercrankWithMassSpring.py &mdash; Exudyn1.6.118.dev1 1.6.118.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -37,7 +37,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.110.dev1
+            Exudyn1.6.118.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -202,7 +202,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.110.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.118.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -384,7 +384,7 @@
 <span class="linenos">158</span><span class="n">initCrank</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="linenos">159</span><span class="k">if</span> <span class="n">initCrank</span><span class="p">:</span>
 <span class="linenos">160</span>    <span class="c1">#turn crank to 90Â° as enforced by constraintCrankAngle</span>
-<span class="linenos">161</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">SolveStatic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="p">)</span>
+<span class="linenos">161</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">SolveStatic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="p">)</span>
 <span class="linenos">162</span>
 <span class="linenos">163</span>    <span class="c1">#use static solution as initial conditions for dynamic solution</span>
 <span class="linenos">164</span>    <span class="n">currentState</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetSystemState</span><span class="p">()</span>
@@ -416,7 +416,7 @@
 <span class="linenos">190</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">bodies</span><span class="o">.</span><span class="n">defaultSize</span> <span class="o">=</span> <span class="p">[</span><span class="n">dSize</span><span class="p">]</span><span class="o">*</span><span class="mi">3</span>
 <span class="linenos">191</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">connectors</span><span class="o">.</span><span class="n">defaultSize</span> <span class="o">=</span> <span class="n">dSize</span>
 <span class="linenos">192</span>
-<span class="linenos">193</span><span class="n">exu</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="p">)</span>
+<span class="linenos">193</span><span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="p">)</span>
 <span class="linenos">194</span>
 <span class="linenos">195</span><span class="k">if</span> <span class="n">exudynTestGlobals</span><span class="o">.</span><span class="n">useGraphics</span><span class="p">:</span>
 <span class="linenos">196</span>    <span class="c1">#+++++++++++++++++++++++++++++++++++++</span>

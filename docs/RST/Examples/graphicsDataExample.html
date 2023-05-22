@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>graphicsDataExample.py &mdash; Exudyn1.6.110.dev1 1.6.110.dev1 documentation</title>
+  <title>graphicsDataExample.py &mdash; Exudyn1.6.118.dev1 1.6.118.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -37,7 +37,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.110.dev1
+            Exudyn1.6.118.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -202,7 +202,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.110.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.118.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -283,9 +283,9 @@
 <span class="linenos">57</span><span class="c1"># graphicsCube = GraphicsDataOrthoCubePoint(size= [L,b,b], color= color4dodgerblue, addEdges=True)</span>
 <span class="linenos">58</span><span class="c1"># graphicsJoint = GraphicsDataCylinder(pAxis=[-0.5*L,0,-0.6*b], vAxis= [0,0,1.2*b], radius = 0.55*b, color=color4darkgrey, addEdges=True)</span>
 <span class="linenos">59</span>
-<span class="linenos">60</span><span class="nf">AddRigidBody</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">inertia</span> <span class="o">=</span> <span class="n">InertiaSphere</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span>
-<span class="linenos">61</span>             <span class="n">position</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-<span class="linenos">62</span>             <span class="n">angularVelocity</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos">60</span><span class="n">mbs</span><span class="o">.</span><span class="nf">CreateRigidBody</span><span class="p">(</span><span class="n">inertia</span> <span class="o">=</span> <span class="n">InertiaSphere</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span>
+<span class="linenos">61</span>             <span class="n">referencePosition</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos">62</span>             <span class="n">initialAngularVelocity</span> <span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
 <span class="linenos">63</span>             <span class="n">graphicsDataList</span> <span class="o">=</span> <span class="p">[</span><span class="nf">GraphicsDataSphere</span><span class="p">(</span><span class="n">radius</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color4orange</span><span class="p">,</span> <span class="n">nTiles</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>
 <span class="linenos">64</span>                                                    <span class="n">addEdges</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">addFaces</span><span class="o">=</span><span class="kc">True</span><span class="p">)])</span>
 <span class="linenos">65</span>
@@ -306,7 +306,7 @@
 <span class="linenos">80</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">renderWindowSize</span><span class="o">=</span><span class="p">[</span><span class="mi">1920</span><span class="p">,</span><span class="mi">1200</span><span class="p">]</span>
 <span class="linenos">81</span>
 <span class="linenos">82</span><span class="n">exu</span><span class="o">.</span><span class="nf">StartRenderer</span><span class="p">()</span>
-<span class="linenos">83</span><span class="n">exu</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="p">)</span>
+<span class="linenos">83</span><span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="p">)</span>
 <span class="linenos">84</span>
 <span class="linenos">85</span><span class="n">SC</span><span class="o">.</span><span class="nf">WaitForRenderEngineStopFlag</span><span class="p">()</span>
 <span class="linenos">86</span><span class="n">exu</span><span class="o">.</span><span class="nf">StopRenderer</span><span class="p">()</span> <span class="c1">#safely close rendering window!</span>

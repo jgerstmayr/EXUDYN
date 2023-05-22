@@ -817,7 +817,7 @@ You can view and download this file on Github: `NGsolvePistonEngine.py <https://
            
            simulate = True #set false to show last stored solution
            if simulate:
-               exu.SolveDynamic(mbs, simulationSettings)
+               mbs.SolveDynamic(simulationSettings)
            else:
                SC.visualizationSettings.general.autoFitScene = False
                sol = LoadSolutionFile('coordinatesSolution.txt')
@@ -825,8 +825,8 @@ You can view and download this file on Github: `NGsolvePistonEngine.py <https://
                    AnimateSolution(mbs, solution=sol, rowIncrement = 1, timeout=0.01, 
                                    createImages = False, runLoop = True)
                else: #interact with animation
-                   from exudyn.interactive import SolutionViewer
-                   SolutionViewer(mbs, sol, rowIncrement=1, timeout=0.02)
+                   
+                   mbs.SolutionViewer(sol, rowIncrement=1, timeout=0.02)
    
    
            if False: #draw with matplotlib, export as pdf

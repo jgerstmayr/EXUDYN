@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>carRollingDiscTest.py &mdash; Exudyn1.6.110.dev1 1.6.110.dev1 documentation</title>
+  <title>carRollingDiscTest.py &mdash; Exudyn1.6.118.dev1 1.6.118.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -37,7 +37,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.110.dev1
+            Exudyn1.6.118.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -106,6 +106,7 @@
 <li class="toctree-l2"><a class="reference internal" href="kinematicTreeAndMBStest.html">kinematicTreeAndMBStest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kinematicTreeConstraintTest.html">kinematicTreeConstraintTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kinematicTreeTest.html">kinematicTreeTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mainSystemExtensionsTests.html">mainSystemExtensionsTests.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="manualExplicitIntegrator.html">manualExplicitIntegrator.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mecanumWheelRollingDiscTest.html">mecanumWheelRollingDiscTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="objectFFRFreducedOrderAccelerations.html">objectFFRFreducedOrderAccelerations.py</a></li>
@@ -146,7 +147,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.110.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.118.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -172,268 +173,265 @@
 <span class="linenos">  2</span><span class="c1"># This is an EXUDYN example</span>
 <span class="linenos">  3</span><span class="c1">#</span>
 <span class="linenos">  4</span><span class="c1"># Details:  car with wheels modeled by ObjectConnectorRollingDiscPenalty</span>
-<span class="linenos">  5</span><span class="c1">#           formulation is still under development and needs more testing</span>
-<span class="linenos">  6</span><span class="c1">#</span>
-<span class="linenos">  7</span><span class="c1"># Author:   Johannes Gerstmayr</span>
-<span class="linenos">  8</span><span class="c1"># Date:     2020-06-19</span>
-<span class="linenos">  9</span><span class="c1">#</span>
-<span class="linenos"> 10</span><span class="c1"># Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See &#39;LICENSE.txt&#39; for more details.</span>
-<span class="linenos"> 11</span><span class="c1">#</span>
-<span class="linenos"> 12</span><span class="c1">#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos"> 13</span>
-<span class="linenos"> 14</span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
-<span class="linenos"> 15</span><span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="linenos"> 16</span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="linenos"> 17</span>
-<span class="linenos"> 18</span><span class="n">useGraphics</span> <span class="o">=</span> <span class="kc">True</span> <span class="c1">#without test</span>
-<span class="linenos"> 19</span><span class="c1">#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos"> 20</span><span class="c1">#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:</span>
-<span class="linenos"> 21</span><span class="k">try</span><span class="p">:</span> <span class="c1">#only if called from test suite</span>
-<span class="linenos"> 22</span>    <span class="kn">from</span> <span class="nn">modelUnitTests</span> <span class="kn">import</span> <span class="n">exudynTestGlobals</span> <span class="c1">#for globally storing test results</span>
-<span class="linenos"> 23</span>    <span class="n">useGraphics</span> <span class="o">=</span> <span class="n">exudynTestGlobals</span><span class="o">.</span><span class="n">useGraphics</span>
-<span class="linenos"> 24</span><span class="k">except</span><span class="p">:</span>
-<span class="linenos"> 25</span>    <span class="k">class</span> <span class="nc">ExudynTestGlobals</span><span class="p">:</span>
-<span class="linenos"> 26</span>        <span class="k">pass</span>
-<span class="linenos"> 27</span>    <span class="n">exudynTestGlobals</span> <span class="o">=</span> <span class="n">ExudynTestGlobals</span><span class="p">()</span>
-<span class="linenos"> 28</span><span class="c1">#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos"> 29</span>
-<span class="linenos"> 30</span><span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
-<span class="linenos"> 31</span><span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
-<span class="linenos"> 32</span>
-<span class="linenos"> 33</span><span class="n">g</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">9.81</span><span class="p">]</span>     <span class="c1">#gravity in m/s^2</span>
-<span class="linenos"> 34</span>
-<span class="linenos"> 35</span><span class="n">doBreaking</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="linenos"> 36</span>
-<span class="linenos"> 37</span><span class="c1">#++++++++++++++++++++++++++++++</span>
-<span class="linenos"> 38</span><span class="c1">#wheel parameters:</span>
-<span class="linenos"> 39</span><span class="n">rhoWheel</span> <span class="o">=</span> <span class="mi">500</span>      <span class="c1">#density kg/m^3</span>
-<span class="linenos"> 40</span><span class="n">rWheel</span> <span class="o">=</span> <span class="mf">0.4</span>            <span class="c1">#radius of disc in m</span>
-<span class="linenos"> 41</span><span class="n">wWheel</span> <span class="o">=</span> <span class="mf">0.1</span>             <span class="c1">#width of disc in m, just for drawing</span>
-<span class="linenos"> 42</span><span class="n">p0Wheel</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">rWheel</span><span class="p">]</span>        <span class="c1">#origin of disc center point at reference, such that initial contact point is at [0,0,0]</span>
-<span class="linenos"> 43</span><span class="n">initialRotationCar</span> <span class="o">=</span> <span class="nf">RotationMatrixZ</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="linenos"> 44</span>
-<span class="linenos"> 45</span><span class="n">v0</span> <span class="o">=</span> <span class="o">-</span><span class="mi">5</span><span class="o">*</span><span class="mi">0</span> <span class="c1">#initial car velocity in y-direction</span>
-<span class="linenos"> 46</span><span class="n">omega0Wheel</span> <span class="o">=</span> <span class="p">[</span><span class="n">v0</span><span class="o">/</span><span class="n">rWheel</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>                   <span class="c1">#initial angular velocity around z-axis</span>
-<span class="linenos"> 47</span>
-<span class="linenos"> 48</span><span class="c1">#v0 = [0,0,0]                                   #initial translational velocity</span>
-<span class="linenos"> 49</span><span class="c1">#print(&quot;v0Car=&quot;,v0)</span>
-<span class="linenos"> 50</span>
-<span class="linenos"> 51</span><span class="c1">#++++++++++++++++++++++++++++++</span>
-<span class="linenos"> 52</span><span class="c1">#car parameters:</span>
-<span class="linenos"> 53</span><span class="n">p0Car</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">rWheel</span><span class="p">]</span>        <span class="c1">#origin of disc center point at reference, such that initial contact point is at [0,0,0]</span>
-<span class="linenos"> 54</span><span class="n">lCar</span> <span class="o">=</span> <span class="mi">3</span>
-<span class="linenos"> 55</span><span class="n">wCar</span> <span class="o">=</span> <span class="mi">2</span>
-<span class="linenos"> 56</span><span class="n">hCar</span> <span class="o">=</span> <span class="n">rWheel</span>
-<span class="linenos"> 57</span><span class="n">mCar</span> <span class="o">=</span> <span class="mi">500</span>
-<span class="linenos"> 58</span><span class="n">omega0Car</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>                   <span class="c1">#initial angular velocity around z-axis</span>
-<span class="linenos"> 59</span><span class="n">v0Car</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="n">v0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>                  <span class="c1">#initial velocity of car center point</span>
-<span class="linenos"> 60</span>
-<span class="linenos"> 61</span><span class="c1">#inertia for infinitely small ring:</span>
-<span class="linenos"> 62</span><span class="n">inertiaWheel</span> <span class="o">=</span> <span class="n">InertiaCylinder</span><span class="p">(</span><span class="n">density</span><span class="o">=</span><span class="n">rhoWheel</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="n">wWheel</span><span class="p">,</span> <span class="n">outerRadius</span><span class="o">=</span><span class="n">rWheel</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="linenos"> 63</span><span class="c1">#exu.Print(inertiaWheel)</span>
-<span class="linenos"> 64</span>
-<span class="linenos"> 65</span><span class="n">inertiaCar</span> <span class="o">=</span> <span class="n">InertiaCuboid</span><span class="p">(</span><span class="n">density</span><span class="o">=</span><span class="n">mCar</span><span class="o">/</span><span class="p">(</span><span class="n">lCar</span><span class="o">*</span><span class="n">wCar</span><span class="o">*</span><span class="n">hCar</span><span class="p">),</span><span class="n">sideLengths</span><span class="o">=</span><span class="p">[</span><span class="n">wCar</span><span class="p">,</span> <span class="n">lCar</span><span class="p">,</span> <span class="n">hCar</span><span class="p">])</span>
-<span class="linenos"> 66</span><span class="c1">#exu.Print(inertiaCar)</span>
-<span class="linenos"> 67</span>
-<span class="linenos"> 68</span><span class="n">graphicsCar</span> <span class="o">=</span> <span class="nf">GraphicsDataOrthoCubePoint</span><span class="p">(</span><span class="n">centerPoint</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="n">wCar</span><span class="o">-</span><span class="mf">1.1</span><span class="o">*</span><span class="n">wWheel</span><span class="p">,</span> <span class="n">lCar</span><span class="p">,</span> <span class="n">hCar</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">color4lightred</span><span class="p">)</span>
-<span class="linenos"> 69</span><span class="p">[</span><span class="n">nCar</span><span class="p">,</span><span class="n">bCar</span><span class="p">]</span><span class="o">=</span><span class="nf">AddRigidBody</span><span class="p">(</span><span class="n">mainSys</span> <span class="o">=</span> <span class="n">mbs</span><span class="p">,</span>
-<span class="linenos"> 70</span>                         <span class="n">inertia</span> <span class="o">=</span> <span class="n">inertiaCar</span><span class="p">,</span>
-<span class="linenos"> 71</span>                         <span class="n">nodeType</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">exu</span><span class="o">.</span><span class="n">NodeType</span><span class="o">.</span><span class="n">RotationEulerParameters</span><span class="p">),</span>
-<span class="linenos"> 72</span>                         <span class="n">position</span> <span class="o">=</span> <span class="n">p0Car</span><span class="p">,</span>
-<span class="linenos"> 73</span>                         <span class="n">rotationMatrix</span> <span class="o">=</span> <span class="n">initialRotationCar</span><span class="p">,</span>
-<span class="linenos"> 74</span>                         <span class="n">angularVelocity</span> <span class="o">=</span> <span class="n">omega0Car</span><span class="p">,</span>
-<span class="linenos"> 75</span>                         <span class="n">velocity</span><span class="o">=</span><span class="n">v0Car</span><span class="p">,</span>
-<span class="linenos"> 76</span>                         <span class="n">gravity</span> <span class="o">=</span> <span class="n">g</span><span class="p">,</span>
-<span class="linenos"> 77</span>                         <span class="n">graphicsDataList</span> <span class="o">=</span> <span class="p">[</span><span class="n">graphicsCar</span><span class="p">])</span>
-<span class="linenos"> 78</span>
-<span class="linenos"> 79</span><span class="n">nWheels</span> <span class="o">=</span> <span class="mi">4</span>
-<span class="linenos"> 80</span><span class="n">markerWheels</span><span class="o">=</span><span class="p">[]</span>
-<span class="linenos"> 81</span><span class="n">markerCarAxles</span><span class="o">=</span><span class="p">[]</span>
-<span class="linenos"> 82</span><span class="n">oRollingDiscs</span><span class="o">=</span><span class="p">[]</span>
-<span class="linenos"> 83</span>
-<span class="linenos"> 84</span><span class="c1"># car setup:</span>
-<span class="linenos"> 85</span><span class="c1"># ^Y, lCar</span>
-<span class="linenos"> 86</span><span class="c1"># | W2 +---+ W3</span>
-<span class="linenos"> 87</span><span class="c1"># |    |   |</span>
-<span class="linenos"> 88</span><span class="c1"># |    | + | car center point</span>
-<span class="linenos"> 89</span><span class="c1"># |    |   |</span>
-<span class="linenos"> 90</span><span class="c1"># | W0 +---+ W1</span>
-<span class="linenos"> 91</span><span class="c1"># +----&gt;X, wCar</span>
-<span class="linenos"> 92</span>
-<span class="linenos"> 93</span><span class="c1">#ground body and marker</span>
-<span class="linenos"> 94</span><span class="n">gGround</span> <span class="o">=</span> <span class="nf">GraphicsDataOrthoCubePoint</span><span class="p">(</span><span class="n">centerPoint</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">0.001</span><span class="p">],</span><span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="mi">30</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mf">0.002</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">color4lightgrey</span><span class="p">)</span>
-<span class="linenos"> 95</span><span class="n">oGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectGround</span><span class="p">(</span><span class="n">visualization</span><span class="o">=</span><span class="nc">VObjectGround</span><span class="p">(</span><span class="n">graphicsData</span><span class="o">=</span><span class="p">[</span><span class="n">gGround</span><span class="p">])))</span>
-<span class="linenos"> 96</span><span class="n">markerGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerBodyRigid</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">oGround</span><span class="p">,</span> <span class="n">localPosition</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
-<span class="linenos"> 97</span>
-<span class="linenos"> 98</span><span class="n">sCarVel</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorBody</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">bCar</span><span class="p">,</span> <span class="c1">#fileName=&#39;solution/rollingDiscCarVel.txt&#39;,</span>
-<span class="linenos"> 99</span>                                   <span class="n">storeInternal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<span class="linenos">100</span>                                   <span class="n">outputVariableType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Velocity</span><span class="p">))</span>
-<span class="linenos">101</span>
-<span class="linenos">102</span><span class="n">sAngVels</span><span class="o">=</span><span class="p">[]</span>
-<span class="linenos">103</span><span class="n">sWheelPos</span><span class="o">=</span><span class="p">[]</span>
-<span class="linenos">104</span><span class="n">sRollPos</span><span class="o">=</span><span class="p">[]</span>
-<span class="linenos">105</span><span class="n">sRollForce</span><span class="o">=</span><span class="p">[]</span>
-<span class="linenos">106</span>
+<span class="linenos">  5</span><span class="c1">#</span>
+<span class="linenos">  6</span><span class="c1"># Author:   Johannes Gerstmayr</span>
+<span class="linenos">  7</span><span class="c1"># Date:     2020-06-19</span>
+<span class="linenos">  8</span><span class="c1">#</span>
+<span class="linenos">  9</span><span class="c1"># Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See &#39;LICENSE.txt&#39; for more details.</span>
+<span class="linenos"> 10</span><span class="c1">#</span>
+<span class="linenos"> 11</span><span class="c1">#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos"> 12</span>
+<span class="linenos"> 13</span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
+<span class="linenos"> 14</span><span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="linenos"> 15</span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="linenos"> 16</span>
+<span class="linenos"> 17</span><span class="n">useGraphics</span> <span class="o">=</span> <span class="kc">True</span> <span class="c1">#without test</span>
+<span class="linenos"> 18</span><span class="c1">#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos"> 19</span><span class="c1">#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:</span>
+<span class="linenos"> 20</span><span class="k">try</span><span class="p">:</span> <span class="c1">#only if called from test suite</span>
+<span class="linenos"> 21</span>    <span class="kn">from</span> <span class="nn">modelUnitTests</span> <span class="kn">import</span> <span class="n">exudynTestGlobals</span> <span class="c1">#for globally storing test results</span>
+<span class="linenos"> 22</span>    <span class="n">useGraphics</span> <span class="o">=</span> <span class="n">exudynTestGlobals</span><span class="o">.</span><span class="n">useGraphics</span>
+<span class="linenos"> 23</span><span class="k">except</span><span class="p">:</span>
+<span class="linenos"> 24</span>    <span class="k">class</span> <span class="nc">ExudynTestGlobals</span><span class="p">:</span>
+<span class="linenos"> 25</span>        <span class="k">pass</span>
+<span class="linenos"> 26</span>    <span class="n">exudynTestGlobals</span> <span class="o">=</span> <span class="n">ExudynTestGlobals</span><span class="p">()</span>
+<span class="linenos"> 27</span><span class="c1">#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos"> 28</span>
+<span class="linenos"> 29</span><span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
+<span class="linenos"> 30</span><span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
+<span class="linenos"> 31</span>
+<span class="linenos"> 32</span><span class="n">g</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">9.81</span><span class="p">]</span>     <span class="c1">#gravity in m/s^2</span>
+<span class="linenos"> 33</span>
+<span class="linenos"> 34</span><span class="n">doBreaking</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="linenos"> 35</span>
+<span class="linenos"> 36</span><span class="c1">#++++++++++++++++++++++++++++++</span>
+<span class="linenos"> 37</span><span class="c1">#wheel parameters:</span>
+<span class="linenos"> 38</span><span class="n">rhoWheel</span> <span class="o">=</span> <span class="mi">500</span>      <span class="c1">#density kg/m^3</span>
+<span class="linenos"> 39</span><span class="n">rWheel</span> <span class="o">=</span> <span class="mf">0.4</span>            <span class="c1">#radius of disc in m</span>
+<span class="linenos"> 40</span><span class="n">wWheel</span> <span class="o">=</span> <span class="mf">0.1</span>             <span class="c1">#width of disc in m, just for drawing</span>
+<span class="linenos"> 41</span><span class="n">p0Wheel</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">rWheel</span><span class="p">]</span>        <span class="c1">#origin of disc center point at reference, such that initial contact point is at [0,0,0]</span>
+<span class="linenos"> 42</span><span class="n">initialRotationCar</span> <span class="o">=</span> <span class="nf">RotationMatrixZ</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="linenos"> 43</span>
+<span class="linenos"> 44</span><span class="n">v0</span> <span class="o">=</span> <span class="o">-</span><span class="mi">5</span><span class="o">*</span><span class="mi">0</span> <span class="c1">#initial car velocity in y-direction</span>
+<span class="linenos"> 45</span><span class="n">omega0Wheel</span> <span class="o">=</span> <span class="p">[</span><span class="n">v0</span><span class="o">/</span><span class="n">rWheel</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>                   <span class="c1">#initial angular velocity around z-axis</span>
+<span class="linenos"> 46</span>
+<span class="linenos"> 47</span><span class="c1">#v0 = [0,0,0]                                   #initial translational velocity</span>
+<span class="linenos"> 48</span><span class="c1">#print(&quot;v0Car=&quot;,v0)</span>
+<span class="linenos"> 49</span>
+<span class="linenos"> 50</span><span class="c1">#%%++++++++++++++++++++++++++++++</span>
+<span class="linenos"> 51</span><span class="c1">#car parameters and inertia:</span>
+<span class="linenos"> 52</span><span class="n">p0Car</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">rWheel</span><span class="p">]</span>        <span class="c1">#origin of disc center point at reference, such that initial contact point is at [0,0,0]</span>
+<span class="linenos"> 53</span><span class="n">lCar</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="linenos"> 54</span><span class="n">wCar</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="linenos"> 55</span><span class="n">hCar</span> <span class="o">=</span> <span class="n">rWheel</span>
+<span class="linenos"> 56</span><span class="n">mCar</span> <span class="o">=</span> <span class="mi">500</span>
+<span class="linenos"> 57</span><span class="n">omega0Car</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>                   <span class="c1">#initial angular velocity around z-axis</span>
+<span class="linenos"> 58</span><span class="n">v0Car</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="n">v0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>                  <span class="c1">#initial velocity of car center point</span>
+<span class="linenos"> 59</span>
+<span class="linenos"> 60</span><span class="c1">#inertia for infinitely small ring:</span>
+<span class="linenos"> 61</span><span class="n">inertiaWheel</span> <span class="o">=</span> <span class="n">InertiaCylinder</span><span class="p">(</span><span class="n">density</span><span class="o">=</span><span class="n">rhoWheel</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="n">wWheel</span><span class="p">,</span> <span class="n">outerRadius</span><span class="o">=</span><span class="n">rWheel</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="linenos"> 62</span><span class="c1">#exu.Print(inertiaWheel)</span>
+<span class="linenos"> 63</span>
+<span class="linenos"> 64</span><span class="n">inertiaCar</span> <span class="o">=</span> <span class="n">InertiaCuboid</span><span class="p">(</span><span class="n">density</span><span class="o">=</span><span class="n">mCar</span><span class="o">/</span><span class="p">(</span><span class="n">lCar</span><span class="o">*</span><span class="n">wCar</span><span class="o">*</span><span class="n">hCar</span><span class="p">),</span><span class="n">sideLengths</span><span class="o">=</span><span class="p">[</span><span class="n">wCar</span><span class="p">,</span> <span class="n">lCar</span><span class="p">,</span> <span class="n">hCar</span><span class="p">])</span>
+<span class="linenos"> 65</span><span class="c1">#exu.Print(inertiaCar)</span>
+<span class="linenos"> 66</span>
+<span class="linenos"> 67</span><span class="c1">#%%++++++++++++++++++++++++++++++</span>
+<span class="linenos"> 68</span><span class="c1">#create car node and body:</span>
+<span class="linenos"> 69</span><span class="n">graphicsCar</span> <span class="o">=</span> <span class="nf">GraphicsDataOrthoCubePoint</span><span class="p">(</span><span class="n">centerPoint</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="n">wCar</span><span class="o">-</span><span class="mf">1.1</span><span class="o">*</span><span class="n">wWheel</span><span class="p">,</span> <span class="n">lCar</span><span class="p">,</span> <span class="n">hCar</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">color4lightred</span><span class="p">)</span>
+<span class="linenos"> 70</span><span class="p">[</span><span class="n">nCar</span><span class="p">,</span><span class="n">bCar</span><span class="p">]</span><span class="o">=</span><span class="nf">AddRigidBody</span><span class="p">(</span><span class="n">mainSys</span> <span class="o">=</span> <span class="n">mbs</span><span class="p">,</span>
+<span class="linenos"> 71</span>                         <span class="n">inertia</span> <span class="o">=</span> <span class="n">inertiaCar</span><span class="p">,</span>
+<span class="linenos"> 72</span>                         <span class="n">nodeType</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">exu</span><span class="o">.</span><span class="n">NodeType</span><span class="o">.</span><span class="n">RotationEulerParameters</span><span class="p">),</span>
+<span class="linenos"> 73</span>                         <span class="n">position</span> <span class="o">=</span> <span class="n">p0Car</span><span class="p">,</span>
+<span class="linenos"> 74</span>                         <span class="n">rotationMatrix</span> <span class="o">=</span> <span class="n">initialRotationCar</span><span class="p">,</span>
+<span class="linenos"> 75</span>                         <span class="n">angularVelocity</span> <span class="o">=</span> <span class="n">omega0Car</span><span class="p">,</span>
+<span class="linenos"> 76</span>                         <span class="n">velocity</span><span class="o">=</span><span class="n">v0Car</span><span class="p">,</span>
+<span class="linenos"> 77</span>                         <span class="n">gravity</span> <span class="o">=</span> <span class="n">g</span><span class="p">,</span>
+<span class="linenos"> 78</span>                         <span class="n">graphicsDataList</span> <span class="o">=</span> <span class="p">[</span><span class="n">graphicsCar</span><span class="p">])</span>
+<span class="linenos"> 79</span>
+<span class="linenos"> 80</span><span class="n">nWheels</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="linenos"> 81</span><span class="n">markerWheels</span><span class="o">=</span><span class="p">[]</span>
+<span class="linenos"> 82</span><span class="n">markerCarAxles</span><span class="o">=</span><span class="p">[]</span>
+<span class="linenos"> 83</span><span class="n">oRollingDiscs</span><span class="o">=</span><span class="p">[]</span>
+<span class="linenos"> 84</span>
+<span class="linenos"> 85</span><span class="c1"># car setup:</span>
+<span class="linenos"> 86</span><span class="c1"># ^Y, lCar</span>
+<span class="linenos"> 87</span><span class="c1"># | W2 +---+ W3</span>
+<span class="linenos"> 88</span><span class="c1"># |    |   |</span>
+<span class="linenos"> 89</span><span class="c1"># |    | + | car center point</span>
+<span class="linenos"> 90</span><span class="c1"># |    |   |</span>
+<span class="linenos"> 91</span><span class="c1"># | W0 +---+ W1</span>
+<span class="linenos"> 92</span><span class="c1"># +----&gt;X, wCar</span>
+<span class="linenos"> 93</span>
+<span class="linenos"> 94</span><span class="c1">#ground body and marker</span>
+<span class="linenos"> 95</span><span class="n">gGround</span> <span class="o">=</span> <span class="nf">GraphicsDataOrthoCubePoint</span><span class="p">(</span><span class="n">centerPoint</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">0.001</span><span class="p">],</span><span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="mi">30</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mf">0.002</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">color4lightgrey</span><span class="p">)</span>
+<span class="linenos"> 96</span><span class="n">oGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectGround</span><span class="p">(</span><span class="n">visualization</span><span class="o">=</span><span class="nc">VObjectGround</span><span class="p">(</span><span class="n">graphicsData</span><span class="o">=</span><span class="p">[</span><span class="n">gGround</span><span class="p">])))</span>
+<span class="linenos"> 97</span><span class="n">markerGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerBodyRigid</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">oGround</span><span class="p">,</span> <span class="n">localPosition</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+<span class="linenos"> 98</span>
+<span class="linenos"> 99</span><span class="n">sCarVel</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorBody</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">bCar</span><span class="p">,</span> <span class="c1">#fileName=&#39;solution/rollingDiscCarVel.txt&#39;,</span>
+<span class="linenos">100</span>                                   <span class="n">storeInternal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">101</span>                                   <span class="n">outputVariableType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Velocity</span><span class="p">))</span>
+<span class="linenos">102</span>
+<span class="linenos">103</span><span class="n">sAngVels</span><span class="o">=</span><span class="p">[]</span>
+<span class="linenos">104</span><span class="n">sWheelPos</span><span class="o">=</span><span class="p">[]</span>
+<span class="linenos">105</span><span class="n">sRollPos</span><span class="o">=</span><span class="p">[]</span>
+<span class="linenos">106</span><span class="n">sRollForce</span><span class="o">=</span><span class="p">[]</span>
 <span class="linenos">107</span>
-<span class="linenos">108</span><span class="k">for</span> <span class="n">iWheel</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nWheels</span><span class="p">):</span>
-<span class="linenos">109</span>    <span class="c1">#additional graphics for visualization of rotation:</span>
-<span class="linenos">110</span>    <span class="n">graphicsWheel</span> <span class="o">=</span> <span class="nf">GraphicsDataOrthoCubePoint</span><span class="p">(</span><span class="n">centerPoint</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="n">wWheel</span><span class="o">*</span><span class="mf">1.1</span><span class="p">,</span><span class="mf">0.7</span><span class="o">*</span><span class="n">rWheel</span><span class="p">,</span><span class="mf">0.7</span><span class="o">*</span><span class="n">rWheel</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">color4lightred</span><span class="p">)</span>
-<span class="linenos">111</span>
-<span class="linenos">112</span>    <span class="n">dx</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">wCar</span>
-<span class="linenos">113</span>    <span class="n">dy</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">lCar</span>
-<span class="linenos">114</span>    <span class="k">if</span> <span class="n">iWheel</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span> <span class="n">dy</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
-<span class="linenos">115</span>    <span class="k">if</span> <span class="n">iWheel</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">iWheel</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span> <span class="n">dx</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
-<span class="linenos">116</span>
-<span class="linenos">117</span>    <span class="n">kRolling</span> <span class="o">=</span> <span class="mf">1e5</span>
-<span class="linenos">118</span>    <span class="n">dRolling</span> <span class="o">=</span> <span class="n">kRolling</span><span class="o">*</span><span class="mf">0.01</span>
-<span class="linenos">119</span>
-<span class="linenos">120</span>    <span class="n">rSteering</span> <span class="o">=</span> <span class="mi">5</span>
-<span class="linenos">121</span>    <span class="n">phiZwheelLeft</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="linenos">122</span>    <span class="n">phiZwheelRight</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="linenos">123</span>    <span class="k">if</span> <span class="n">rSteering</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-<span class="linenos">124</span>        <span class="n">phiZwheelLeft</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan</span><span class="p">(</span><span class="n">lCar</span><span class="o">/</span><span class="n">rSteering</span><span class="p">)</span> <span class="c1">#5/180*np.pi   #steering angle</span>
-<span class="linenos">125</span>        <span class="n">phiZwheelRight</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan</span><span class="p">(</span><span class="n">lCar</span><span class="o">/</span><span class="p">(</span><span class="n">wCar</span><span class="o">+</span><span class="n">rSteering</span><span class="p">))</span> <span class="c1">#5/180*np.pi   #steering angle</span>
-<span class="linenos">126</span>
-<span class="linenos">127</span>    <span class="n">initialRotationWheelLeft</span> <span class="o">=</span> <span class="nf">RotationMatrixZ</span><span class="p">(</span><span class="n">phiZwheelLeft</span><span class="p">)</span>
-<span class="linenos">128</span>    <span class="n">initialRotationWheelRight</span> <span class="o">=</span> <span class="nf">RotationMatrixZ</span><span class="p">(</span><span class="n">phiZwheelRight</span><span class="p">)</span>
-<span class="linenos">129</span>
-<span class="linenos">130</span>    <span class="n">initialRotation</span> <span class="o">=</span> <span class="nf">RotationMatrixZ</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="linenos">131</span>    <span class="k">if</span> <span class="n">iWheel</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-<span class="linenos">132</span>        <span class="n">initialRotation</span> <span class="o">=</span> <span class="n">initialRotationWheelLeft</span>
-<span class="linenos">133</span>    <span class="k">if</span> <span class="n">iWheel</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
-<span class="linenos">134</span>        <span class="n">initialRotation</span> <span class="o">=</span> <span class="n">initialRotationWheelRight</span>
-<span class="linenos">135</span>
-<span class="linenos">136</span>    <span class="c1">#v0Wheel = Skew(omega0Wheel) @ initialRotationWheel @ [0,0,rWheel]   #initial angular velocity of center point</span>
-<span class="linenos">137</span>    <span class="n">v0Wheel</span> <span class="o">=</span> <span class="n">v0Car</span> <span class="c1">#approx.</span>
-<span class="linenos">138</span>
-<span class="linenos">139</span>    <span class="n">pOff</span> <span class="o">=</span> <span class="p">[</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos">108</span><span class="c1">#%%++++++++++++++++++++++++++++++</span>
+<span class="linenos">109</span><span class="c1">#create wheels bodies and nodes:</span>
+<span class="linenos">110</span><span class="k">for</span> <span class="n">iWheel</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nWheels</span><span class="p">):</span>
+<span class="linenos">111</span>    <span class="c1">#additional graphics for visualization of rotation:</span>
+<span class="linenos">112</span>    <span class="n">graphicsWheel</span> <span class="o">=</span> <span class="nf">GraphicsDataOrthoCubePoint</span><span class="p">(</span><span class="n">centerPoint</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="n">wWheel</span><span class="o">*</span><span class="mf">1.1</span><span class="p">,</span><span class="mf">0.7</span><span class="o">*</span><span class="n">rWheel</span><span class="p">,</span><span class="mf">0.7</span><span class="o">*</span><span class="n">rWheel</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">color4lightred</span><span class="p">)</span>
+<span class="linenos">113</span>
+<span class="linenos">114</span>    <span class="n">dx</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">wCar</span>
+<span class="linenos">115</span>    <span class="n">dy</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">lCar</span>
+<span class="linenos">116</span>    <span class="k">if</span> <span class="n">iWheel</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span> <span class="n">dy</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
+<span class="linenos">117</span>    <span class="k">if</span> <span class="n">iWheel</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">iWheel</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span> <span class="n">dx</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
+<span class="linenos">118</span>
+<span class="linenos">119</span>    <span class="n">kRolling</span> <span class="o">=</span> <span class="mf">1e5</span>
+<span class="linenos">120</span>    <span class="n">dRolling</span> <span class="o">=</span> <span class="n">kRolling</span><span class="o">*</span><span class="mf">0.01</span>
+<span class="linenos">121</span>
+<span class="linenos">122</span>    <span class="n">rSteering</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="linenos">123</span>    <span class="n">phiZwheelLeft</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">124</span>    <span class="n">phiZwheelRight</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">125</span>    <span class="k">if</span> <span class="n">rSteering</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+<span class="linenos">126</span>        <span class="n">phiZwheelLeft</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan</span><span class="p">(</span><span class="n">lCar</span><span class="o">/</span><span class="n">rSteering</span><span class="p">)</span> <span class="c1">#5/180*np.pi   #steering angle</span>
+<span class="linenos">127</span>        <span class="n">phiZwheelRight</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan</span><span class="p">(</span><span class="n">lCar</span><span class="o">/</span><span class="p">(</span><span class="n">wCar</span><span class="o">+</span><span class="n">rSteering</span><span class="p">))</span> <span class="c1">#5/180*np.pi   #steering angle</span>
+<span class="linenos">128</span>
+<span class="linenos">129</span>    <span class="n">initialRotationWheelLeft</span> <span class="o">=</span> <span class="nf">RotationMatrixZ</span><span class="p">(</span><span class="n">phiZwheelLeft</span><span class="p">)</span>
+<span class="linenos">130</span>    <span class="n">initialRotationWheelRight</span> <span class="o">=</span> <span class="nf">RotationMatrixZ</span><span class="p">(</span><span class="n">phiZwheelRight</span><span class="p">)</span>
+<span class="linenos">131</span>
+<span class="linenos">132</span>    <span class="n">initialRotation</span> <span class="o">=</span> <span class="nf">RotationMatrixZ</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="linenos">133</span>    <span class="k">if</span> <span class="n">iWheel</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+<span class="linenos">134</span>        <span class="n">initialRotation</span> <span class="o">=</span> <span class="n">initialRotationWheelLeft</span>
+<span class="linenos">135</span>    <span class="k">if</span> <span class="n">iWheel</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+<span class="linenos">136</span>        <span class="n">initialRotation</span> <span class="o">=</span> <span class="n">initialRotationWheelRight</span>
+<span class="linenos">137</span>
+<span class="linenos">138</span>    <span class="c1">#v0Wheel = Skew(omega0Wheel) @ initialRotationWheel @ [0,0,rWheel]   #initial angular velocity of center point</span>
+<span class="linenos">139</span>    <span class="n">v0Wheel</span> <span class="o">=</span> <span class="n">v0Car</span> <span class="c1">#approx.</span>
 <span class="linenos">140</span>
-<span class="linenos">141</span>
-<span class="linenos">142</span>    <span class="c1">#add wheel body</span>
-<span class="linenos">143</span>    <span class="p">[</span><span class="n">n0</span><span class="p">,</span><span class="n">b0</span><span class="p">]</span><span class="o">=</span><span class="nf">AddRigidBody</span><span class="p">(</span><span class="n">mainSys</span> <span class="o">=</span> <span class="n">mbs</span><span class="p">,</span>
-<span class="linenos">144</span>                         <span class="n">inertia</span> <span class="o">=</span> <span class="n">inertiaWheel</span><span class="p">,</span>
-<span class="linenos">145</span>                         <span class="n">nodeType</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">exu</span><span class="o">.</span><span class="n">NodeType</span><span class="o">.</span><span class="n">RotationEulerParameters</span><span class="p">),</span>
-<span class="linenos">146</span>                         <span class="n">position</span> <span class="o">=</span> <span class="nf">VAdd</span><span class="p">(</span><span class="n">p0Wheel</span><span class="p">,</span><span class="n">pOff</span><span class="p">),</span>
-<span class="linenos">147</span>                         <span class="n">rotationMatrix</span> <span class="o">=</span> <span class="n">initialRotation</span><span class="p">,</span> <span class="c1">#np.diag([1,1,1]),</span>
-<span class="linenos">148</span>                         <span class="n">angularVelocity</span> <span class="o">=</span> <span class="n">omega0Wheel</span><span class="p">,</span>
-<span class="linenos">149</span>                         <span class="n">velocity</span><span class="o">=</span><span class="n">v0Wheel</span><span class="p">,</span>
-<span class="linenos">150</span>                         <span class="n">gravity</span> <span class="o">=</span> <span class="n">g</span><span class="p">,</span>
-<span class="linenos">151</span>                         <span class="n">graphicsDataList</span> <span class="o">=</span> <span class="p">[</span><span class="n">graphicsWheel</span><span class="p">])</span>
-<span class="linenos">152</span>
-<span class="linenos">153</span>    <span class="c1">#markers for rigid body:</span>
-<span class="linenos">154</span>    <span class="n">mWheel</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerBodyRigid</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">b0</span><span class="p">,</span> <span class="n">localPosition</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
-<span class="linenos">155</span>    <span class="n">markerWheels</span> <span class="o">+=</span> <span class="p">[</span><span class="n">mWheel</span><span class="p">]</span>
-<span class="linenos">156</span>
-<span class="linenos">157</span>    <span class="n">mCarAxle</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerBodyRigid</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">bCar</span><span class="p">,</span> <span class="n">localPosition</span><span class="o">=</span><span class="n">pOff</span><span class="p">))</span>
-<span class="linenos">158</span>    <span class="n">markerCarAxles</span> <span class="o">+=</span> <span class="p">[</span><span class="n">mCarAxle</span><span class="p">]</span>
-<span class="linenos">159</span>
-<span class="linenos">160</span>    <span class="n">lockedAxis0</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="linenos">161</span>    <span class="k">if</span> <span class="n">doBreaking</span><span class="p">:</span> <span class="n">lockedAxis0</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="linenos">162</span>    <span class="c1">#if iWheel==0 or iWheel==1: freeAxis = 1 #lock rotation</span>
-<span class="linenos">163</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">GenericJoint</span><span class="p">(</span><span class="n">markerNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">mWheel</span><span class="p">,</span><span class="n">mCarAxle</span><span class="p">],</span><span class="n">rotationMarker1</span><span class="o">=</span><span class="n">initialRotation</span><span class="p">,</span>
-<span class="linenos">164</span>                               <span class="n">constrainedAxes</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">lockedAxis0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]))</span> <span class="c1">#revolute joint for wheel</span>
-<span class="linenos">165</span>
-<span class="linenos">166</span>    <span class="c1">#does not work, because revolute joint does not accept off-axis</span>
-<span class="linenos">167</span>    <span class="c1">#kSuspension = 1e4</span>
-<span class="linenos">168</span>    <span class="c1">#dSuspension = kSuspension*0.01</span>
-<span class="linenos">169</span>    <span class="c1">#mbs.AddObject(CartesianSpringDamper(markerNumbers=[mWheel,mCarAxle],stiffness=[0,0,kSuspension],damping=[0,0,dSuspension]))</span>
-<span class="linenos">170</span>
-<span class="linenos">171</span>    <span class="n">nGeneric</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">NodeGenericData</span><span class="p">(</span><span class="n">initialCoordinates</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">numberOfDataCoordinates</span><span class="o">=</span><span class="mi">3</span><span class="p">))</span>
-<span class="linenos">172</span>    <span class="n">oRolling</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectConnectorRollingDiscPenalty</span><span class="p">(</span><span class="n">markerNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">markerGround</span><span class="p">,</span> <span class="n">mWheel</span><span class="p">],</span> <span class="n">nodeNumber</span> <span class="o">=</span> <span class="n">nGeneric</span><span class="p">,</span>
-<span class="linenos">173</span>                                                  <span class="n">discRadius</span><span class="o">=</span><span class="n">rWheel</span><span class="p">,</span> <span class="n">dryFriction</span><span class="o">=</span><span class="p">[</span><span class="mf">0.4</span><span class="p">,</span><span class="mf">0.4</span><span class="p">],</span>
-<span class="linenos">174</span>                                                  <span class="n">dryFrictionProportionalZone</span><span class="o">=</span><span class="mf">1e-1</span><span class="p">,</span>
-<span class="linenos">175</span>                                                  <span class="n">rollingFrictionViscous</span><span class="o">=</span><span class="mf">0.2</span><span class="o">*</span><span class="mi">0</span><span class="p">,</span>
-<span class="linenos">176</span>                                                  <span class="n">contactStiffness</span><span class="o">=</span><span class="n">kRolling</span><span class="p">,</span> <span class="n">contactDamping</span><span class="o">=</span><span class="n">dRolling</span><span class="p">,</span>
-<span class="linenos">177</span>                                                  <span class="n">visualization</span><span class="o">=</span><span class="nc">VObjectConnectorRollingDiscPenalty</span><span class="p">(</span><span class="n">discWidth</span><span class="o">=</span><span class="n">wWheel</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color4blue</span><span class="p">)))</span>
-<span class="linenos">178</span>    <span class="n">oRollingDiscs</span> <span class="o">+=</span> <span class="p">[</span><span class="n">oRolling</span><span class="p">]</span>
-<span class="linenos">179</span>
-<span class="linenos">180</span>    <span class="n">strNum</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">iWheel</span><span class="p">)</span>
-<span class="linenos">181</span>    <span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
-<span class="linenos">182</span>        <span class="n">sAngVels</span><span class="o">+=</span><span class="p">[</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorBody</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">b0</span><span class="p">,</span> <span class="c1">#fileName=&#39;solution/rollingDiscAngVelLocal&#39;+strNum+&#39;.txt&#39;,</span>
-<span class="linenos">183</span>                                 <span class="n">storeInternal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<span class="linenos">184</span>                                 <span class="n">outputVariableType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">AngularVelocityLocal</span><span class="p">))]</span>
-<span class="linenos">185</span>
-<span class="linenos">186</span>        <span class="n">sWheelPos</span><span class="o">+=</span><span class="p">[</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorBody</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">b0</span><span class="p">,</span> <span class="c1">#fileName=&#39;solution/rollingDiscPos&#39;+strNum+&#39;.txt&#39;,</span>
-<span class="linenos">187</span>                                     <span class="n">storeInternal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<span class="linenos">188</span>                                     <span class="n">outputVariableType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Position</span><span class="p">))]</span>
-<span class="linenos">189</span>
-<span class="linenos">190</span>        <span class="n">sRollPos</span><span class="o">+=</span><span class="p">[</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorObject</span><span class="p">(</span><span class="n">objectNumber</span><span class="o">=</span><span class="n">oRolling</span><span class="p">,</span> <span class="c1">#fileName=&#39;solution/rollingDiscTrail&#39;+strNum+&#39;.txt&#39;,</span>
-<span class="linenos">191</span>                                            <span class="n">storeInternal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<span class="linenos">192</span>                                            <span class="n">outputVariableType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Position</span><span class="p">))]</span>
-<span class="linenos">193</span>
-<span class="linenos">194</span>        <span class="n">sRollForce</span><span class="o">+=</span><span class="p">[</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorObject</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;wheelForce&#39;</span><span class="o">+</span><span class="n">strNum</span><span class="p">,</span><span class="n">objectNumber</span><span class="o">=</span><span class="n">oRolling</span><span class="p">,</span> <span class="c1">#fileName=&#39;solution/rollingDiscForce&#39;+strNum+&#39;.txt&#39;,</span>
-<span class="linenos">195</span>                                               <span class="n">storeInternal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<span class="linenos">196</span>                                               <span class="n">outputVariableType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">ForceLocal</span><span class="p">))]</span>
-<span class="linenos">197</span>
-<span class="linenos">198</span>
-<span class="linenos">199</span>
-<span class="linenos">200</span><span class="k">def</span> <span class="nf">UFtorque</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">torque</span><span class="p">):</span>
-<span class="linenos">201</span>    <span class="k">if</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">:</span>
-<span class="linenos">202</span>        <span class="k">return</span> <span class="n">torque</span>
-<span class="linenos">203</span>    <span class="k">else</span><span class="p">:</span>
-<span class="linenos">204</span>        <span class="k">return</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos">141</span>    <span class="n">pOff</span> <span class="o">=</span> <span class="p">[</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos">142</span>
+<span class="linenos">143</span>
+<span class="linenos">144</span>    <span class="c1">#add wheel body</span>
+<span class="linenos">145</span>    <span class="p">[</span><span class="n">n0</span><span class="p">,</span><span class="n">b0</span><span class="p">]</span><span class="o">=</span><span class="nf">AddRigidBody</span><span class="p">(</span><span class="n">mainSys</span> <span class="o">=</span> <span class="n">mbs</span><span class="p">,</span>
+<span class="linenos">146</span>                         <span class="n">inertia</span> <span class="o">=</span> <span class="n">inertiaWheel</span><span class="p">,</span>
+<span class="linenos">147</span>                         <span class="n">nodeType</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">exu</span><span class="o">.</span><span class="n">NodeType</span><span class="o">.</span><span class="n">RotationEulerParameters</span><span class="p">),</span>
+<span class="linenos">148</span>                         <span class="n">position</span> <span class="o">=</span> <span class="nf">VAdd</span><span class="p">(</span><span class="n">p0Wheel</span><span class="p">,</span><span class="n">pOff</span><span class="p">),</span>
+<span class="linenos">149</span>                         <span class="n">rotationMatrix</span> <span class="o">=</span> <span class="n">initialRotation</span><span class="p">,</span> <span class="c1">#np.diag([1,1,1]),</span>
+<span class="linenos">150</span>                         <span class="n">angularVelocity</span> <span class="o">=</span> <span class="n">omega0Wheel</span><span class="p">,</span>
+<span class="linenos">151</span>                         <span class="n">velocity</span><span class="o">=</span><span class="n">v0Wheel</span><span class="p">,</span>
+<span class="linenos">152</span>                         <span class="n">gravity</span> <span class="o">=</span> <span class="n">g</span><span class="p">,</span>
+<span class="linenos">153</span>                         <span class="n">graphicsDataList</span> <span class="o">=</span> <span class="p">[</span><span class="n">graphicsWheel</span><span class="p">])</span>
+<span class="linenos">154</span>
+<span class="linenos">155</span>    <span class="c1">#markers for rigid body:</span>
+<span class="linenos">156</span>    <span class="n">mWheel</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerBodyRigid</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">b0</span><span class="p">,</span> <span class="n">localPosition</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+<span class="linenos">157</span>    <span class="n">markerWheels</span> <span class="o">+=</span> <span class="p">[</span><span class="n">mWheel</span><span class="p">]</span>
+<span class="linenos">158</span>
+<span class="linenos">159</span>    <span class="n">mCarAxle</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerBodyRigid</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">bCar</span><span class="p">,</span> <span class="n">localPosition</span><span class="o">=</span><span class="n">pOff</span><span class="p">))</span>
+<span class="linenos">160</span>    <span class="n">markerCarAxles</span> <span class="o">+=</span> <span class="p">[</span><span class="n">mCarAxle</span><span class="p">]</span>
+<span class="linenos">161</span>
+<span class="linenos">162</span>    <span class="n">lockedAxis0</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">163</span>    <span class="k">if</span> <span class="n">doBreaking</span><span class="p">:</span> <span class="n">lockedAxis0</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="linenos">164</span>    <span class="c1">#if iWheel==0 or iWheel==1: freeAxis = 1 #lock rotation</span>
+<span class="linenos">165</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">GenericJoint</span><span class="p">(</span><span class="n">markerNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">mWheel</span><span class="p">,</span><span class="n">mCarAxle</span><span class="p">],</span><span class="n">rotationMarker1</span><span class="o">=</span><span class="n">initialRotation</span><span class="p">,</span>
+<span class="linenos">166</span>                               <span class="n">constrainedAxes</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">lockedAxis0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]))</span> <span class="c1">#revolute joint for wheel</span>
+<span class="linenos">167</span>
+<span class="linenos">168</span>    <span class="n">nGeneric</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">NodeGenericData</span><span class="p">(</span><span class="n">initialCoordinates</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">numberOfDataCoordinates</span><span class="o">=</span><span class="mi">3</span><span class="p">))</span>
+<span class="linenos">169</span>    <span class="n">oRolling</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectConnectorRollingDiscPenalty</span><span class="p">(</span><span class="n">markerNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">markerGround</span><span class="p">,</span> <span class="n">mWheel</span><span class="p">],</span> <span class="n">nodeNumber</span> <span class="o">=</span> <span class="n">nGeneric</span><span class="p">,</span>
+<span class="linenos">170</span>                                                  <span class="n">discRadius</span><span class="o">=</span><span class="n">rWheel</span><span class="p">,</span> <span class="n">dryFriction</span><span class="o">=</span><span class="p">[</span><span class="mf">0.4</span><span class="p">,</span><span class="mf">0.4</span><span class="p">],</span>
+<span class="linenos">171</span>                                                  <span class="n">dryFrictionProportionalZone</span><span class="o">=</span><span class="mf">1e-1</span><span class="p">,</span>
+<span class="linenos">172</span>                                                  <span class="n">rollingFrictionViscous</span><span class="o">=</span><span class="mf">0.2</span><span class="o">*</span><span class="mi">0</span><span class="p">,</span>
+<span class="linenos">173</span>                                                  <span class="n">contactStiffness</span><span class="o">=</span><span class="n">kRolling</span><span class="p">,</span> <span class="n">contactDamping</span><span class="o">=</span><span class="n">dRolling</span><span class="p">,</span>
+<span class="linenos">174</span>                                                  <span class="n">visualization</span><span class="o">=</span><span class="nc">VObjectConnectorRollingDiscPenalty</span><span class="p">(</span><span class="n">discWidth</span><span class="o">=</span><span class="n">wWheel</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color4blue</span><span class="p">)))</span>
+<span class="linenos">175</span>    <span class="n">oRollingDiscs</span> <span class="o">+=</span> <span class="p">[</span><span class="n">oRolling</span><span class="p">]</span>
+<span class="linenos">176</span>
+<span class="linenos">177</span>    <span class="n">strNum</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">iWheel</span><span class="p">)</span>
+<span class="linenos">178</span>    <span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
+<span class="linenos">179</span>        <span class="n">sAngVels</span><span class="o">+=</span><span class="p">[</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorBody</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">b0</span><span class="p">,</span> <span class="c1">#fileName=&#39;solution/rollingDiscAngVelLocal&#39;+strNum+&#39;.txt&#39;,</span>
+<span class="linenos">180</span>                                 <span class="n">storeInternal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">181</span>                                 <span class="n">outputVariableType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">AngularVelocityLocal</span><span class="p">))]</span>
+<span class="linenos">182</span>
+<span class="linenos">183</span>        <span class="n">sWheelPos</span><span class="o">+=</span><span class="p">[</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorBody</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">b0</span><span class="p">,</span> <span class="c1">#fileName=&#39;solution/rollingDiscPos&#39;+strNum+&#39;.txt&#39;,</span>
+<span class="linenos">184</span>                                     <span class="n">storeInternal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">185</span>                                     <span class="n">outputVariableType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Position</span><span class="p">))]</span>
+<span class="linenos">186</span>
+<span class="linenos">187</span>        <span class="n">sRollPos</span><span class="o">+=</span><span class="p">[</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorObject</span><span class="p">(</span><span class="n">objectNumber</span><span class="o">=</span><span class="n">oRolling</span><span class="p">,</span> <span class="c1">#fileName=&#39;solution/rollingDiscTrail&#39;+strNum+&#39;.txt&#39;,</span>
+<span class="linenos">188</span>                                            <span class="n">storeInternal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">189</span>                                            <span class="n">outputVariableType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Position</span><span class="p">))]</span>
+<span class="linenos">190</span>
+<span class="linenos">191</span>        <span class="n">sRollForce</span><span class="o">+=</span><span class="p">[</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorObject</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;wheelForce&#39;</span><span class="o">+</span><span class="n">strNum</span><span class="p">,</span><span class="n">objectNumber</span><span class="o">=</span><span class="n">oRolling</span><span class="p">,</span> <span class="c1">#fileName=&#39;solution/rollingDiscForce&#39;+strNum+&#39;.txt&#39;,</span>
+<span class="linenos">192</span>                                               <span class="n">storeInternal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">193</span>                                               <span class="n">outputVariableType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">ForceLocal</span><span class="p">))]</span>
+<span class="linenos">194</span>
+<span class="linenos">195</span>
+<span class="linenos">196</span><span class="c1">#user function for time-dependent torque on two wheels 0,1</span>
+<span class="linenos">197</span><span class="k">def</span> <span class="nf">UFtorque</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">torque</span><span class="p">):</span>
+<span class="linenos">198</span>    <span class="k">if</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">:</span>
+<span class="linenos">199</span>        <span class="k">return</span> <span class="n">torque</span>
+<span class="linenos">200</span>    <span class="k">else</span><span class="p">:</span>
+<span class="linenos">201</span>        <span class="k">return</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos">202</span>
+<span class="linenos">203</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddLoad</span><span class="p">(</span><span class="nc">Torque</span><span class="p">(</span><span class="n">markerNumber</span><span class="o">=</span><span class="n">markerWheels</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">loadVector</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">200</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">bodyFixed</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">loadVectorUserFunction</span><span class="o">=</span><span class="n">UFtorque</span><span class="p">))</span>
+<span class="linenos">204</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddLoad</span><span class="p">(</span><span class="nc">Torque</span><span class="p">(</span><span class="n">markerNumber</span><span class="o">=</span><span class="n">markerWheels</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">loadVector</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">200</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">bodyFixed</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">loadVectorUserFunction</span><span class="o">=</span><span class="n">UFtorque</span><span class="p">))</span>
 <span class="linenos">205</span>
-<span class="linenos">206</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddLoad</span><span class="p">(</span><span class="nc">Torque</span><span class="p">(</span><span class="n">markerNumber</span><span class="o">=</span><span class="n">markerWheels</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">loadVector</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">200</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">bodyFixed</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">loadVectorUserFunction</span><span class="o">=</span><span class="n">UFtorque</span><span class="p">))</span>
-<span class="linenos">207</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddLoad</span><span class="p">(</span><span class="nc">Torque</span><span class="p">(</span><span class="n">markerNumber</span><span class="o">=</span><span class="n">markerWheels</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">loadVector</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">200</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">bodyFixed</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">loadVectorUserFunction</span><span class="o">=</span><span class="n">UFtorque</span><span class="p">))</span>
+<span class="linenos">206</span>
+<span class="linenos">207</span><span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
 <span class="linenos">208</span>
-<span class="linenos">209</span>
-<span class="linenos">210</span><span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
-<span class="linenos">211</span>
-<span class="linenos">212</span><span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">()</span> <span class="c1">#takes currently set values or default values</span>
+<span class="linenos">209</span><span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">()</span> <span class="c1">#takes currently set values or default values</span>
+<span class="linenos">210</span>
+<span class="linenos">211</span><span class="n">tEnd</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="c1">#40#1.2</span>
+<span class="linenos">212</span><span class="n">h</span><span class="o">=</span><span class="mf">0.002</span> <span class="c1">#no visual differences for step sizes smaller than 0.0005</span>
 <span class="linenos">213</span>
-<span class="linenos">214</span><span class="n">tEnd</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="c1">#40#1.2</span>
-<span class="linenos">215</span><span class="n">h</span><span class="o">=</span><span class="mf">0.002</span> <span class="c1">#no visual differences for step sizes smaller than 0.0005</span>
-<span class="linenos">216</span>
-<span class="linenos">217</span><span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
-<span class="linenos">218</span>    <span class="n">tEnd</span> <span class="o">=</span> <span class="mi">4</span>
-<span class="linenos">219</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StartRenderer</span><span class="p">()</span>
-<span class="linenos">220</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">WaitForUserToContinue</span><span class="p">()</span>
-<span class="linenos">221</span>
-<span class="linenos">222</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tEnd</span><span class="o">/</span><span class="n">h</span><span class="p">)</span>
-<span class="linenos">223</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="n">tEnd</span>
-<span class="linenos">224</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">verboseMode</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="linenos">225</span>
+<span class="linenos">214</span><span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
+<span class="linenos">215</span>    <span class="n">tEnd</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="linenos">216</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StartRenderer</span><span class="p">()</span>
+<span class="linenos">217</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">WaitForUserToContinue</span><span class="p">()</span>
+<span class="linenos">218</span>
+<span class="linenos">219</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tEnd</span><span class="o">/</span><span class="n">h</span><span class="p">)</span>
+<span class="linenos">220</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="n">tEnd</span>
+<span class="linenos">221</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">verboseMode</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="linenos">222</span>
+<span class="linenos">223</span>
+<span class="linenos">224</span><span class="c1">#simulationSettings.timeIntegration.discontinuous.ignoreMaxIterations = False #reduce step size for contact switching</span>
+<span class="linenos">225</span><span class="c1">#simulationSettings.timeIntegration.discontinuous.iterationTolerance = 0.1</span>
 <span class="linenos">226</span>
-<span class="linenos">227</span><span class="c1">#simulationSettings.timeIntegration.discontinuous.ignoreMaxIterations = False #reduce step size for contact switching</span>
-<span class="linenos">228</span><span class="c1">#simulationSettings.timeIntegration.discontinuous.iterationTolerance = 0.1</span>
-<span class="linenos">229</span>
-<span class="linenos">230</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">show</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="linenos">231</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">drawNodesAsPoint</span>  <span class="o">=</span> <span class="kc">False</span>
-<span class="linenos">232</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">showBasis</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="linenos">233</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">basisSize</span> <span class="o">=</span> <span class="mf">0.015</span>
-<span class="linenos">234</span>
-<span class="linenos">235</span><span class="n">exu</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="p">,</span> <span class="n">solverType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">DynamicSolverType</span><span class="o">.</span><span class="n">TrapezoidalIndex2</span><span class="p">)</span>
-<span class="linenos">236</span>
-<span class="linenos">237</span><span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
-<span class="linenos">238</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">WaitForRenderEngineStopFlag</span><span class="p">()</span>
-<span class="linenos">239</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StopRenderer</span><span class="p">()</span> <span class="c1">#safely close rendering window!</span>
-<span class="linenos">240</span>
-<span class="linenos">241</span><span class="n">c</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">GetNodeOutput</span><span class="p">(</span><span class="n">n0</span><span class="p">,</span> <span class="n">variableType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Coordinates</span><span class="p">)</span>
-<span class="linenos">242</span><span class="n">u</span><span class="o">=</span><span class="nb">sum</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
-<span class="linenos">243</span><span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s2">&quot;carRollingDiscTest u=&quot;</span><span class="p">,</span><span class="n">u</span><span class="p">)</span>
+<span class="linenos">227</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">show</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">228</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">drawNodesAsPoint</span>  <span class="o">=</span> <span class="kc">False</span>
+<span class="linenos">229</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">showBasis</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">230</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">basisSize</span> <span class="o">=</span> <span class="mf">0.015</span>
+<span class="linenos">231</span>
+<span class="linenos">232</span><span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="p">,</span> <span class="n">solverType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">DynamicSolverType</span><span class="o">.</span><span class="n">TrapezoidalIndex2</span><span class="p">)</span>
+<span class="linenos">233</span>
+<span class="linenos">234</span><span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
+<span class="linenos">235</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">WaitForRenderEngineStopFlag</span><span class="p">()</span>
+<span class="linenos">236</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StopRenderer</span><span class="p">()</span> <span class="c1">#safely close rendering window!</span>
+<span class="linenos">237</span>
+<span class="linenos">238</span><span class="n">c</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">GetNodeOutput</span><span class="p">(</span><span class="n">n0</span><span class="p">,</span> <span class="n">variableType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Coordinates</span><span class="p">)</span>
+<span class="linenos">239</span><span class="n">u</span><span class="o">=</span><span class="nb">sum</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+<span class="linenos">240</span><span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s2">&quot;carRollingDiscTest u=&quot;</span><span class="p">,</span><span class="n">u</span><span class="p">)</span>
+<span class="linenos">241</span>
+<span class="linenos">242</span><span class="n">exudynTestGlobals</span><span class="o">.</span><span class="n">testError</span> <span class="o">=</span> <span class="n">u</span> <span class="o">-</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.23940048717113419</span><span class="p">)</span> <span class="c1">#2020-12-18: -0.23940048717113419</span>
+<span class="linenos">243</span><span class="n">exudynTestGlobals</span><span class="o">.</span><span class="n">testResult</span> <span class="o">=</span> <span class="n">u</span>
 <span class="linenos">244</span>
-<span class="linenos">245</span><span class="n">exudynTestGlobals</span><span class="o">.</span><span class="n">testError</span> <span class="o">=</span> <span class="n">u</span> <span class="o">-</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.23940048717113419</span><span class="p">)</span> <span class="c1">#2020-12-18: -0.23940048717113419</span>
-<span class="linenos">246</span><span class="n">exudynTestGlobals</span><span class="o">.</span><span class="n">testResult</span> <span class="o">=</span> <span class="n">u</span>
-<span class="linenos">247</span>
-<span class="linenos">248</span><span class="c1">##++++++++++++++++++++++++++++++++++++++++++++++q+++++++</span>
-<span class="linenos">249</span><span class="c1">#plot results</span>
-<span class="linenos">250</span><span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
-<span class="linenos">251</span>    <span class="kn">from</span> <span class="nn">exudyn.plot</span> <span class="kn">import</span> <span class="nf">PlotSensor</span>
-<span class="linenos">252</span>
-<span class="linenos">253</span>    <span class="nf">PlotSensor</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span><span class="n">sensorNumbers</span><span class="o">=</span><span class="n">sCarVel</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;car velocitiy&#39;</span><span class="p">,</span> <span class="n">closeAll</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="linenos">254</span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
-<span class="linenos">255</span>        <span class="nf">PlotSensor</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sensorNumbers</span><span class="o">=</span><span class="n">sRollPos</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">componentsX</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-<span class="linenos">256</span>                   <span class="n">labels</span><span class="o">=</span><span class="s1">&#39;wheel trail &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">newFigure</span><span class="o">=</span><span class="p">(</span><span class="n">i</span><span class="o">==</span><span class="mi">0</span><span class="p">),</span> <span class="n">colorCodeOffset</span><span class="o">=</span><span class="n">i</span><span class="p">)</span>
-<span class="linenos">257</span>        <span class="c1">#trail and wheel pos are almost same, just if car slightly tilts, there is a deviation</span>
-<span class="linenos">258</span>        <span class="nf">PlotSensor</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sensorNumbers</span><span class="o">=</span><span class="n">sWheelPos</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">componentsX</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-<span class="linenos">259</span>                   <span class="n">labels</span><span class="o">=</span><span class="s1">&#39;wheel pos &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">newFigure</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">colorCodeOffset</span><span class="o">=</span><span class="n">i</span><span class="o">+</span><span class="mi">7</span><span class="p">,</span>
-<span class="linenos">260</span>                   <span class="n">lineStyles</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">markerStyles</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
-<span class="linenos">261</span>
-<span class="linenos">262</span>    <span class="nf">PlotSensor</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sensorNumbers</span><span class="o">=</span><span class="n">sRollForce</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="mi">4</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;wheel contact forces&#39;</span><span class="p">)</span>
-<span class="linenos">263</span>
-<span class="linenos">264</span>    <span class="nf">PlotSensor</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sensorNumbers</span><span class="o">=</span><span class="n">sRollForce</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mi">4</span><span class="o">+</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="mi">4</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;wheel lateral (X) and drive/acceleration (Y) forces&#39;</span><span class="p">)</span>
-<span class="linenos">265</span>
-<span class="linenos">266</span>    <span class="nf">PlotSensor</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sensorNumbers</span><span class="o">=</span><span class="n">sAngVels</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mi">4</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;wheel local angular velocity&#39;</span><span class="p">)</span>
+<span class="linenos">245</span><span class="c1">##++++++++++++++++++++++++++++++++++++++++++++++q+++++++</span>
+<span class="linenos">246</span><span class="c1">#plot results</span>
+<span class="linenos">247</span><span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
+<span class="linenos">248</span>
+<span class="linenos">249</span>
+<span class="linenos">250</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sensorNumbers</span><span class="o">=</span><span class="n">sCarVel</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;car velocitiy&#39;</span><span class="p">,</span> <span class="n">closeAll</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">251</span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+<span class="linenos">252</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sensorNumbers</span><span class="o">=</span><span class="n">sRollPos</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">componentsX</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="linenos">253</span>                   <span class="n">labels</span><span class="o">=</span><span class="s1">&#39;wheel trail &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">newFigure</span><span class="o">=</span><span class="p">(</span><span class="n">i</span><span class="o">==</span><span class="mi">0</span><span class="p">),</span> <span class="n">colorCodeOffset</span><span class="o">=</span><span class="n">i</span><span class="p">)</span>
+<span class="linenos">254</span>        <span class="c1">#trail and wheel pos are almost same, just if car slightly tilts, there is a deviation</span>
+<span class="linenos">255</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sensorNumbers</span><span class="o">=</span><span class="n">sWheelPos</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">componentsX</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="linenos">256</span>                   <span class="n">labels</span><span class="o">=</span><span class="s1">&#39;wheel pos &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">newFigure</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">colorCodeOffset</span><span class="o">=</span><span class="n">i</span><span class="o">+</span><span class="mi">7</span><span class="p">,</span>
+<span class="linenos">257</span>                   <span class="n">lineStyles</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">markerStyles</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="linenos">258</span>
+<span class="linenos">259</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sensorNumbers</span><span class="o">=</span><span class="n">sRollForce</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="mi">4</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;wheel contact forces&#39;</span><span class="p">)</span>
+<span class="linenos">260</span>
+<span class="linenos">261</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sensorNumbers</span><span class="o">=</span><span class="n">sRollForce</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mi">4</span><span class="o">+</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="mi">4</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;wheel lateral (X) and drive/acceleration (Y) forces&#39;</span><span class="p">)</span>
+<span class="linenos">262</span>
+<span class="linenos">263</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sensorNumbers</span><span class="o">=</span><span class="n">sAngVels</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mi">4</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;wheel local angular velocity&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>

@@ -192,7 +192,7 @@ You can view and download this file on Github: `ANCFslidingJoint2Drigid.py <http
        exu.StartRenderer()
        mbs.WaitForUserToContinue()
    
-       exu.SolveDynamic(mbs, simulationSettings)
+       mbs.SolveDynamic(simulationSettings)
    
        SC.WaitForRenderEngineStopFlag()
        exu.StopRenderer() #safely close rendering window!
@@ -217,7 +217,7 @@ You can view and download this file on Github: `ANCFslidingJoint2Drigid.py <http
    
        exu.StartRenderer()
    
-       exu.SolveStatic(mbs, simulationSettings)
+       mbs.SolveStatic(simulationSettings)
    
        #sol = mbs.systemData.GetODE2Coordinates()
        #n = len(sol)

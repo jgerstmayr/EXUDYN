@@ -204,7 +204,7 @@ You can view and download this file on Github: `ANCFcontactCircle2.py <https://g
    if solveDynamic: 
        exu.StartRenderer()
    
-       exu.SolveDynamic(mbs, simulationSettings)
+       mbs.SolveDynamic(simulationSettings)
    
        SC.WaitForRenderEngineStopFlag()
        exu.StopRenderer() #safely close rendering window!
@@ -229,7 +229,7 @@ You can view and download this file on Github: `ANCFcontactCircle2.py <https://g
        exu.StartRenderer()
    
        mbs.WaitForUserToContinue()
-       exu.SolveStatic(mbs, simulationSettings)
+       mbs.SolveStatic(simulationSettings)
    
        #sol = mbs.systemData.GetODE2Coordinates()
        #n = len(sol)

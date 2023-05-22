@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>finiteSegmentMethod.py &mdash; Exudyn1.6.110.dev1 1.6.110.dev1 documentation</title>
+  <title>finiteSegmentMethod.py &mdash; Exudyn1.6.118.dev1 1.6.118.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -37,7 +37,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.110.dev1
+            Exudyn1.6.118.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -202,7 +202,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.110.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.118.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -347,10 +347,10 @@
 <span class="linenos">121</span><span class="n">exu</span><span class="o">.</span><span class="nf">StartRenderer</span><span class="p">()</span>
 <span class="linenos">122</span>
 <span class="linenos">123</span><span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;Trap&quot;</span><span class="p">:</span>
-<span class="linenos">124</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="p">,</span>
+<span class="linenos">124</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="p">,</span>
 <span class="linenos">125</span>                     <span class="n">solverType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">DynamicSolverType</span><span class="o">.</span><span class="n">TrapezoidalIndex2</span><span class="p">)</span>
 <span class="linenos">126</span><span class="k">else</span><span class="p">:</span>
-<span class="linenos">127</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="p">)</span>
+<span class="linenos">127</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="p">)</span>
 <span class="linenos">128</span>
 <span class="linenos">129</span>
 <span class="linenos">130</span><span class="n">SC</span><span class="o">.</span><span class="nf">WaitForRenderEngineStopFlag</span><span class="p">()</span>
@@ -359,8 +359,8 @@
 <span class="linenos">133</span>
 <span class="linenos">134</span>
 <span class="linenos">135</span><span class="k">if</span> <span class="kc">True</span> <span class="ow">and</span> <span class="n">useANCF</span><span class="p">:</span>
-<span class="linenos">136</span>    <span class="kn">from</span> <span class="nn">exudyn.plot</span> <span class="kn">import</span> <span class="nf">PlotSensor</span>
-<span class="linenos">137</span>    <span class="nf">PlotSensor</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sensorNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">sTipCable</span><span class="p">,</span> <span class="n">sTipSegment</span><span class="p">],</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span> <span class="c1">#plot y components</span>
+<span class="linenos">136</span>
+<span class="linenos">137</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sensorNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">sTipCable</span><span class="p">,</span> <span class="n">sTipSegment</span><span class="p">],</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span> <span class="c1">#plot y components</span>
 </pre></div>
 </div>
 </section>

@@ -89,7 +89,7 @@ You can view and download this file on Github: `pendulum2Dconstraint.py <https:/
    
    #mbs.WaitForUserToContinue()
    #exu.InfoStat()
-   exu.SolveDynamic(mbs, simulationSettings, 
+   mbs.SolveDynamic(simulationSettings, 
                     # solverType=exu.DynamicSolverType.TrapezoidalIndex2
                     )
    #exu.InfoStat()
@@ -101,8 +101,8 @@ You can view and download this file on Github: `pendulum2Dconstraint.py <https:/
    print("ODE2=",nODE2)
    
    #plot constraint error:
-   from exudyn.plot import PlotSensor
-   PlotSensor(mbs, sensorNumbers=sDist, offsets=[-L], closeAll=True)
+   
+   mbs.PlotSensor(sensorNumbers=sDist, offsets=[-L], closeAll=True)
    
    #old way, better use PlotSensor:
    import matplotlib.pyplot as plt

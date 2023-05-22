@@ -254,7 +254,7 @@ You can view and download this file on Github: `ANCFmovingRigidbody.py <https://
    if solveDynamic: 
        exu.StartRenderer()
    
-       exu.SolveDynamic(mbs, simulationSettings)
+       mbs.SolveDynamic(simulationSettings)
    
        SC.WaitForRenderEngineStopFlag()
        exu.StopRenderer() #safely close rendering window!
@@ -277,7 +277,7 @@ You can view and download this file on Github: `ANCFmovingRigidbody.py <https://
    
        exu.StartRenderer()
    
-       exu.SolveStatic(mbs, simulationSettings)
+       mbs.SolveStatic(simulationSettings)
    
        sol = mbs.systemData.GetODE2Coordinates()
        n = len(sol)

@@ -13,7 +13,8 @@ You can view and download this file on Github: `netgenSTLtest.py <https://github
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    # This is an EXUDYN example
    #
-   # Details:  Example to import .stl mesh, mesh with Netgen, create FEM model, reduced order CMS and simulate under gravity
+   # Details:  Example to import .stl mesh, mesh with Netgen, create FEM model, 
+   #           reduced order CMS and simulate under gravity
    #
    # Author:   Johannes Gerstmayr 
    # Date:     2023-04-21
@@ -253,11 +254,11 @@ You can view and download this file on Github: `netgenSTLtest.py <https://github
    
            #SC.RedrawAndSaveImage()
            if True:
-               # exu.SolveDynamic(mbs, solverType=exu.DynamicSolverType.TrapezoidalIndex2, 
+               # mbs.SolveDynamic(solverType=exu.DynamicSolverType.TrapezoidalIndex2, 
                #                   simulationSettings=simulationSettings)
-               exu.SolveDynamic(mbs, simulationSettings=simulationSettings)
+               mbs.SolveDynamic(simulationSettings=simulationSettings)
            else:
-               exu.SolveStatic(mbs, simulationSettings=simulationSettings)
+               mbs.SolveStatic(simulationSettings=simulationSettings)
    
            # uTip = mbs.GetSensorValues(sensTipDispl)[1]
            # print("nModes=", nModes, ", tip displacement=", uTip)
@@ -271,8 +272,8 @@ You can view and download this file on Github: `netgenSTLtest.py <https://github
                exu.StopRenderer() #safely close rendering window!
            
            if False:
-               from exudyn.plot import PlotSensor
-               PlotSensor(mbs, sensorNumbers=[sensBushingVel], components=[1])
+               
+               mbs.PlotSensor(sensorNumbers=[sensBushingVel], components=[1])
    
    #%%
    if False:

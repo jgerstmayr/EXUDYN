@@ -125,7 +125,7 @@ You can view and download this file on Github: `kinematicTreeTest.py <https://gi
        exu.StartRenderer()              #start graphics visualization
        mbs.WaitForUserToContinue()    #wait for pressing SPACE bar to continue
    
-   exu.SolveDynamic(mbs, simulationSettings, solverType = exu.DynamicSolverType.RK44)
+   mbs.SolveDynamic(simulationSettings, solverType = exu.DynamicSolverType.RK44)
    
    if useGraphics:
        SC.WaitForRenderEngineStopFlag()#wait for pressing 'Q' to quit

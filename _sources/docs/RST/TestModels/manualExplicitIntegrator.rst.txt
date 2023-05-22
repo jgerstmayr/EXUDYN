@@ -212,7 +212,7 @@ You can view and download this file on Github: `manualExplicitIntegrator.py <htt
    dynamicSolver.SetUserFunctionNewton(mbs, UserFunctionNewton)
    
    dynamicSolver.SolveSystem(mbs, simulationSettings)
-   #exu.SolveDynamic(mbs, simulationSettings)
+   #mbs.SolveDynamic(simulationSettings)
    
    uy=mbs.GetNodeOutput(nLast,exu.OutputVariableType.Position)[1] #y-coordinate of tip
    exu.Print("uy=", uy)

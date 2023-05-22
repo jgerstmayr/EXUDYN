@@ -13,7 +13,7 @@ You can view and download this file on Github: `addRevoluteJoint.py <https://git
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    # This is an EXUDYN example
    #
-   # Details:  Test for AddRevoluteJoint utility function
+   # Details:  Test for CreateRevoluteJoint utility function
    #
    # Author:   Johannes Gerstmayr 
    # Date:     2021-07-01
@@ -72,11 +72,12 @@ You can view and download this file on Github: `addRevoluteJoint.py <https://git
    
        ep0 = eulerParameters0 #no rotation
        graphicsBody = GraphicsDataOrthoCubePoint([0,0,0], [0.96*L,d,d], color4steelblue)
-       [nRB, oRB] = AddRigidBody(mbs, inertia, nodeType=exu.NodeType.RotationEulerParameters,
-                                 position=p0,
-                                 rotationMatrix=Alist[i],
+       oRB = mbs.CreateRigidBody(inertia=inertia, 
+                                 referencePosition=p0,
+                                 referenceRotationMatrix=Alist[i],
                                  gravity=g,
                                  graphicsDataList=[graphicsBody])
+       nRB= mbs.GetObject(oRB)['nodeNumber']
    
        body0 = bodyLast
        body1 = oRB
@@ -87,11 +88,13 @@ You can view and download this file on Github: `addRevoluteJoint.py <https://git
        axis = axisList[i]
        doLocal = False
        if doLocal:
-           AddRevoluteJoint(mbs, body0, body1, [0.5*L,0,0], Alast.T@axis, useGlobalFrame=False, 
-                             axisRadius=0.6*d, axisLength=1.2*d)
+           mbs.CreateRevoluteJoint(bodyNumbers=[body0, body1], 
+                                   position=[0.5*L,0,0], axis=Alast.T@axis, useGlobalFrame=False, 
+                                   axisRadius=0.6*d, axisLength=1.2*d)
        else:
-           AddRevoluteJoint(mbs, body0, body1, point, axis, useGlobalFrame=True, 
-                             axisRadius=0.6*d, axisLength=1.2*d)
+           mbs.CreateRevoluteJoint(bodyNumbers=[body0, body1], 
+                                   position=point, axis=axis, useGlobalFrame=True, 
+                                   axisRadius=0.6*d, axisLength=1.2*d)
    
        if False:
            mPos0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber = oRB, localPosition = [-0.5*L,0,0]))
@@ -155,13 +158,13 @@ You can view and download this file on Github: `addRevoluteJoint.py <https://git
    else:
        simulationSettings.solutionSettings.writeSolutionToFile = False
    
-   #exu.SolveDynamic(mbs, simulationSettings, solverType=exu.DynamicSolverType.TrapezoidalIndex2)
-   exu.SolveDynamic(mbs, simulationSettings, showHints=True)
+   #mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.TrapezoidalIndex2)
+   mbs.SolveDynamic(simulationSettings, showHints=True)
    
    if True: #use this to reload the solution and use SolutionViewer
        #sol = LoadSolutionFile('coordinatesSolution.txt')
-       from exudyn.interactive import SolutionViewer
-       SolutionViewer(mbs) #can also be entered in IPython ...
+       
+       mbs.SolutionViewer() #can also be entered in IPython ...
    
    
    u0 = mbs.GetNodeOutput(nRB, exu.OutputVariableType.Displacement)

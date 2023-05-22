@@ -131,7 +131,7 @@ You can view and download this file on Github: `solverExplicitODE1ODE2test.py <h
            sims.timeIntegration.relativeTolerance = 1e-4
    
            solverType = exu.DynamicSolverType.DOPRI5
-           exu.SolveDynamic(mbs, solverType=solverType, simulationSettings=sims)
+           mbs.SolveDynamic(solverType=solverType, simulationSettings=sims)
            if printResults:
                exu.Print(str(solverType)+", h="+str(h)+", tol="+str(sims.timeIntegration.absoluteTolerance), 
                      ", val=", mbs.GetSensorValues(sCoords1)[0]-ref)
@@ -144,13 +144,13 @@ You can view and download this file on Github: `solverExplicitODE1ODE2test.py <h
        for i in range(3-offset):
            h=1e-1*10**-i
            sims.timeIntegration.numberOfSteps = int(tEnd/h)
-           exu.SolveDynamic(mbs, solverType=exu.DynamicSolverType.RK67, simulationSettings=sims)
+           mbs.SolveDynamic(solverType=exu.DynamicSolverType.RK67, simulationSettings=sims)
            err += abs(mbs.GetSensorValues(sCoords1)[0]-ref) + abs(mbs.GetSensorValues(sCoords2)[0]-ref)
            if printResults:
                exu.Print("h=10**-"+str(i+1), ", val=", mbs.GetSensorValues(sCoords1)[0]-ref)
        h=5e-4
        sims.timeIntegration.numberOfSteps = int(tEnd/h)
-       exu.SolveDynamic(mbs, solverType=exu.DynamicSolverType.RK67, simulationSettings=sims)
+       mbs.SolveDynamic(solverType=exu.DynamicSolverType.RK67, simulationSettings=sims)
        if printResults:
            exu.Print("h=5e-4  ",", val=", mbs.GetSensorValues(sCoords1)[0]-ref)
    
@@ -159,7 +159,7 @@ You can view and download this file on Github: `solverExplicitODE1ODE2test.py <h
        for i in range(4-offset):
            h=1e-1*10**-i
            sims.timeIntegration.numberOfSteps = int(tEnd/h)
-           exu.SolveDynamic(mbs, solverType=exu.DynamicSolverType.RK44, simulationSettings=sims)
+           mbs.SolveDynamic(solverType=exu.DynamicSolverType.RK44, simulationSettings=sims)
            err += abs(mbs.GetSensorValues(sCoords1)[0]-ref) + abs(mbs.GetSensorValues(sCoords2)[0]-ref)
            if printResults:
                exu.Print("h=10**-"+str(i+1), ", val=", mbs.GetSensorValues(sCoords1)[0]-ref)
@@ -169,7 +169,7 @@ You can view and download this file on Github: `solverExplicitODE1ODE2test.py <h
        for i in range(5-offset*2):
            h=1e-1*10**-i
            sims.timeIntegration.numberOfSteps = int(tEnd/h)
-           exu.SolveDynamic(mbs, solverType=exu.DynamicSolverType.RK33, simulationSettings=sims)
+           mbs.SolveDynamic(solverType=exu.DynamicSolverType.RK33, simulationSettings=sims)
            err += abs(mbs.GetSensorValues(sCoords1)[0]-ref) + abs(mbs.GetSensorValues(sCoords2)[0]-ref)
            if printResults:
                exu.Print("h=10**-"+str(i+1), ", val=", mbs.GetSensorValues(sCoords1)[0]-ref)
@@ -179,7 +179,7 @@ You can view and download this file on Github: `solverExplicitODE1ODE2test.py <h
        for i in range(4-offset*2):
            h=1e-2*10**-i
            sims.timeIntegration.numberOfSteps = int(tEnd/h)
-           exu.SolveDynamic(mbs, solverType=exu.DynamicSolverType.ExplicitMidpoint, simulationSettings=sims)
+           mbs.SolveDynamic(solverType=exu.DynamicSolverType.ExplicitMidpoint, simulationSettings=sims)
            err += abs(mbs.GetSensorValues(sCoords1)[0]-ref) + abs(mbs.GetSensorValues(sCoords2)[0]-ref)
            if printResults:
                exu.Print("h=10**-"+str(i+1), ", val=", mbs.GetSensorValues(sCoords1)[0]-ref)
@@ -229,9 +229,9 @@ You can view and download this file on Github: `solverExplicitODE1ODE2test.py <h
    
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++
    if False:
-       from exudyn.plot import PlotSensor
-       PlotSensor(mbs, [sCoords1],[1])
-       PlotSensor(mbs, [sCoords2],[1])
+       
+       mbs.PlotSensor([sCoords1],[1])
+       mbs.PlotSensor([sCoords2],[1])
    
 
 

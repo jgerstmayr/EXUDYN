@@ -118,7 +118,7 @@ You can view and download this file on Github: `geneticOptimizationTest.py <http
        
        simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1 #no damping
        
-       exu.SolveDynamic(mbs, simulationSettings)
+       mbs.SolveDynamic(simulationSettings)
        
        #+++++++++++++++++++++++++++++++++++++++++++++++++++++
        #evaluate difference between reference and optimized solution

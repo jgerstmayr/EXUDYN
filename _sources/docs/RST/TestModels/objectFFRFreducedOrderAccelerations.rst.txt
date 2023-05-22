@@ -235,7 +235,7 @@ You can view and download this file on Github: `objectFFRFreducedOrderAccelerati
    
        mbs.WaitForUserToContinue() #press space to continue
    
-   exu.SolveDynamic(mbs, simulationSettings)
+   mbs.SolveDynamic(simulationSettings)
        
    
    data=mbs.GetSensorStoredData(sCMSacc)
@@ -260,7 +260,7 @@ You can view and download this file on Github: `objectFFRFreducedOrderAccelerati
        import matplotlib.ticker as ticker
        
        from exudyn.signalProcessing import FilterSensorOutput, FilterSignal
-       # from exudyn.plot import PlotSensor
+       # 
    
        cList=['r-','g-','b-','k-','c-','r:','g:','b:','k:','c:']
     

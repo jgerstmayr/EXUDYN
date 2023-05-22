@@ -14,6 +14,8 @@ You can view and download this file on Github: `massSpringFrictionInteractive.py
    # This is an EXUDYN example
    #
    # Details:  Example with 1D spring-mass-damper and friction system
+   #           In renderer window you see a long band, where you need zoom into 
+   #           the mass-spring-damper to see the effect
    #
    # Author:   Johannes Gerstmayr
    # Date:     2020-01-10
@@ -26,7 +28,6 @@ You can view and download this file on Github: `massSpringFrictionInteractive.py
    
    import exudyn as exu
    from exudyn.utilities import *
-   from exudyn.itemInterface import *
    from exudyn.interactive import InteractiveDialog
    from exudyn.physics import StribeckFunction, RegularizedFriction
    

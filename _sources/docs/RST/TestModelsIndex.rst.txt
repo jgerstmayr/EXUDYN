@@ -46,6 +46,7 @@ This section includes all TestModels for Exudyn.They can also be found and downl
    TestModels/kinematicTreeAndMBStest
    TestModels/kinematicTreeConstraintTest
    TestModels/kinematicTreeTest
+   TestModels/mainSystemExtensionsTests
    TestModels/manualExplicitIntegrator
    TestModels/mecanumWheelRollingDiscTest
    TestModels/objectFFRFreducedOrderAccelerations

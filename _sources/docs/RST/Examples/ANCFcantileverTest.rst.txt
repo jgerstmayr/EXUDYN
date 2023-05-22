@@ -110,7 +110,7 @@ You can view and download this file on Github: `ANCFcantileverTest.py <https://g
    
    if doDynamicSimulation:
        exu.StartRenderer()
-       exu.SolveDynamic(mbs, simulationSettings)
+       mbs.SolveDynamic(simulationSettings)
        SC.WaitForRenderEngineStopFlag()
        exu.StopRenderer() #safely close rendering window!
    else:
@@ -129,8 +129,8 @@ You can view and download this file on Github: `ANCFcantileverTest.py <https://g
            mbs.SetLoadParameter(nLoad, 'loadVector', [0, -loadValue,0])
            print('load vector=' + str(mbs.GetLoadParameter(nLoad, 'loadVector')) )
        
-           exu.SolveStatic(mbs, simulationSettings, updateInitialValues=True)
-           #exu.SolveStatic(mbs, simulationSettings, updateInitialValues=False) #second solve to increase accuracy
+           mbs.SolveStatic(simulationSettings, updateInitialValues=True)
+           #mbs.SolveStatic(simulationSettings, updateInitialValues=False) #second solve to increase accuracy
        
            sol = mbs.systemData.GetODE2Coordinates()
            

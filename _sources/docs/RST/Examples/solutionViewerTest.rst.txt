@@ -74,11 +74,12 @@ You can view and download this file on Github: `solutionViewerTest.py <https://g
    
        ep0 = eulerParameters0 #no rotation
        graphicsBody = GraphicsDataOrthoCubePoint([0,0,0], [0.96*L,d,d], color4steelblue)
-       [nRB, oRB] = AddRigidBody(mbs, inertia, nodeType=exu.NodeType.RotationEulerParameters,
-                                 position=p0,
-                                 rotationMatrix=Alist[i],
+       oRB = mbs.CreateRigidBody(inertia=inertia,
+                                 referencePosition=p0,
+                                 referenceRotationMatrix=Alist[i],
                                  gravity=g,
                                  graphicsDataList=[graphicsBody])
+       nRB= mbs.GetObject(oRB)['nodeNumber']
    
        body0 = bodyLast
        body1 = oRB
@@ -87,10 +88,12 @@ You can view and download this file on Github: `solutionViewerTest.py <https://g
        #                                 configuration=exu.ConfigurationType.Reference)
        #axis = [0,0,1]
        axis = axisList[i]
-       AddRevoluteJoint(mbs, body0, body1, [0.5*L,0,0], Alast.T@axis, useGlobalFrame=False, 
-                             axisRadius=0.6*d, axisLength=1.2*d)
-       # AddRevoluteJoint(mbs, body0, body1, point, axis, useGlobalFrame=True, 
-       #                   axisRadius=0.6*d, axisLength=1.2*d)
+       mbs.CreateRevoluteJoint(bodyNumbers=[body0, body1], position=[0.5*L,0,0], 
+                               axis=Alast.T@axis, useGlobalFrame=False, 
+                               axisRadius=0.6*d, axisLength=1.2*d)
+       # mbs.CreateRevoluteJoint(bodyNumbers=[body0, body1], position=point, 
+       #                         axis=axis, useGlobalFrame=True, 
+       #                         axisRadius=0.6*d, axisLength=1.2*d)
    
        bodyLast = oRB
        
@@ -104,7 +107,7 @@ You can view and download this file on Github: `solutionViewerTest.py <https://g
    
    simulationSettings = exu.SimulationSettings() #takes currently set values or default values
    
-   tEnd = 5
+   tEnd = 1
    h=0.0005  #use small step size to detext contact switching
    
    simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
@@ -120,6 +123,7 @@ You can view and download this file on Github: `solutionViewerTest.py <https://g
    simulationSettings.timeIntegration.newton.useModifiedNewton = True
    #simulationSettings.timeIntegration.newton.modifiedNewtonJacUpdatePerStep = True
    simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+   # simulationSettings.parallel.numberOfThreads=4
    
    SC.visualizationSettings.nodes.show = True
    SC.visualizationSettings.nodes.drawNodesAsPoint  = False
@@ -146,13 +150,13 @@ You can view and download this file on Github: `solutionViewerTest.py <https://g
    else:
        simulationSettings.solutionSettings.writeSolutionToFile = False
    
-   #exu.SolveDynamic(mbs, simulationSettings, solverType=exu.DynamicSolverType.TrapezoidalIndex2)
-   exu.SolveDynamic(mbs, simulationSettings, showHints=True)
+   #mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.TrapezoidalIndex2)
+   mbs.SolveDynamic(simulationSettings, showHints=True)
    
    if True: #use this to reload the solution and use SolutionViewer
        #sol = LoadSolutionFile('coordinatesSolution.txt')
-       from exudyn.interactive import SolutionViewer
-       SolutionViewer(mbs) #can also be entered in IPython ...
+       
+       mbs.SolutionViewer() #can also be entered in IPython ...
    
    
    u0 = mbs.GetNodeOutput(nRB, exu.OutputVariableType.Displacement)

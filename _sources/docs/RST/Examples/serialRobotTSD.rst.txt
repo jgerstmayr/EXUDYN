@@ -328,15 +328,15 @@ You can view and download this file on Github: `serialRobotTSD.py <https://githu
            SC.SetRenderState(exu.sys['renderState'])
        mbs.WaitForUserToContinue()
        
-   exu.SolveDynamic(mbs, simulationSettings, showHints=True)
+   mbs.SolveDynamic(simulationSettings, showHints=True)
    
    
    if useGraphics:
        SC.visualizationSettings.general.autoFitScene = False
        exu.StopRenderer()
    
-   from exudyn.interactive import SolutionViewer
-   SolutionViewer(mbs)
+   
+   mbs.SolutionViewer()
    
    lastRenderState = SC.GetRenderState() #store model view
    

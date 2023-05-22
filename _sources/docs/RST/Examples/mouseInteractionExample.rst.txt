@@ -15,7 +15,8 @@ You can view and download this file on Github: `mouseInteractionExample.py <http
    #
    # Details: This is the first interactive mouse motion example; 
    #          use your mouse to drag the end of the chain;
-   #          models a chain of 3D rigid bodies connected with revolute joints
+   #          models a chain of 3D rigid bodies connected with revolute joints;
+   #          may require RESTART of python kernel to work properly!
    #
    # Author:   Johannes Gerstmayr
    # Date:     2020-12-06
@@ -128,7 +129,7 @@ You can view and download this file on Github: `mouseInteractionExample.py <http
        if not mbs.variables['activateMouseDrag'] == True:
            return 0
        p = SC.GetCurrentMouseCoordinates(True)
-       #p = SC.GetRenderState()['openGLcoordinates']
+       p = SC.GetRenderState()['openGLcoordinates']
        #print("u=",u)
        return k*(Ltot-0.5*sx+u-p[0]) + d*v
    
@@ -241,7 +242,7 @@ You can view and download this file on Github: `mouseInteractionExample.py <http
        SC.visualizationSettings.window.keyPressUserFunction = UFkeyPress
    
    
-   exu.SolveDynamic(mbs, simulationSettings)
+   mbs.SolveDynamic(simulationSettings)
    SC.visualizationSettings.window.ResetKeyPressUserFunction()
    
    if useGraphics:

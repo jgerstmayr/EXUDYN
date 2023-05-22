@@ -144,7 +144,7 @@ You can view and download this file on Github: `rollingCoinPenaltyTest.py <https
        exu.StartRenderer()
        mbs.WaitForUserToContinue()
    
-   exu.SolveDynamic(mbs, simulationSettings)
+   mbs.SolveDynamic(simulationSettings)
    
    p0=mbs.GetObjectOutput(oRolling, exu.OutputVariableType.Position)
    exu.Print('solution of rollingCoinPenaltyTest=',p0[0]) #use x-coordinate
@@ -160,14 +160,14 @@ You can view and download this file on Github: `rollingCoinPenaltyTest.py <https
        ##++++++++++++++++++++++++++++++++++++++++++++++q+++++++
        #plot results
        if True:
-           from exudyn.plot import PlotSensor
            
-           PlotSensor(mbs, sTrail, componentsX=[0],components=[1], closeAll=True, title='wheel trail')
+           
+           mbs.PlotSensor(sTrail, componentsX=[0],components=[1], closeAll=True, title='wheel trail')
    
-           PlotSensor(mbs, sPos, components=[0,1,2], title='wheel position')
-           PlotSensor(mbs, sForce, components=[0,1,2], title='wheel force')
+           mbs.PlotSensor(sPos, components=[0,1,2], title='wheel position')
+           mbs.PlotSensor(sForce, components=[0,1,2], title='wheel force')
    
-           PlotSensor(mbs, sAngVel, components=[0], title='wheel local angular velocity')
+           mbs.PlotSensor(sAngVel, components=[0], title='wheel local angular velocity')
    
 
 

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NGsolvePistonEngine.py &mdash; Exudyn1.6.110.dev1 1.6.110.dev1 documentation</title>
+  <title>NGsolvePistonEngine.py &mdash; Exudyn1.6.118.dev1 1.6.118.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -37,7 +37,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.110.dev1
+            Exudyn1.6.118.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -202,7 +202,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.110.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.118.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -1031,7 +1031,7 @@
 <span class="linenos">805</span>
 <span class="linenos">806</span>        <span class="n">simulate</span> <span class="o">=</span> <span class="kc">True</span> <span class="c1">#set false to show last stored solution</span>
 <span class="linenos">807</span>        <span class="k">if</span> <span class="n">simulate</span><span class="p">:</span>
-<span class="linenos">808</span>            <span class="n">exu</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="p">)</span>
+<span class="linenos">808</span>            <span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="p">)</span>
 <span class="linenos">809</span>        <span class="k">else</span><span class="p">:</span>
 <span class="linenos">810</span>            <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">autoFitScene</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="linenos">811</span>            <span class="n">sol</span> <span class="o">=</span> <span class="nf">LoadSolutionFile</span><span class="p">(</span><span class="s1">&#39;coordinatesSolution.txt&#39;</span><span class="p">)</span>
@@ -1039,8 +1039,8 @@
 <span class="linenos">813</span>                <span class="nf">AnimateSolution</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">solution</span><span class="o">=</span><span class="n">sol</span><span class="p">,</span> <span class="n">rowIncrement</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
 <span class="linenos">814</span>                                <span class="n">createImages</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">runLoop</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
 <span class="linenos">815</span>            <span class="k">else</span><span class="p">:</span> <span class="c1">#interact with animation</span>
-<span class="linenos">816</span>                <span class="kn">from</span> <span class="nn">exudyn.interactive</span> <span class="kn">import</span> <span class="nf">SolutionViewer</span>
-<span class="linenos">817</span>                <span class="nf">SolutionViewer</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sol</span><span class="p">,</span> <span class="n">rowIncrement</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
+<span class="linenos">816</span>
+<span class="linenos">817</span>                <span class="n">mbs</span><span class="o">.</span><span class="nf">SolutionViewer</span><span class="p">(</span><span class="n">sol</span><span class="p">,</span> <span class="n">rowIncrement</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
 <span class="linenos">818</span>
 <span class="linenos">819</span>
 <span class="linenos">820</span>        <span class="k">if</span> <span class="kc">False</span><span class="p">:</span> <span class="c1">#draw with matplotlib, export as pdf</span>

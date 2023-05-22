@@ -234,7 +234,7 @@ You can view and download this file on Github: `ANCFslidingAndALEjointTest.py <h
    vInit = mbs.systemData.GetODE2Coordinates_t(configuration = exu.ConfigurationType.Initial)
    
    #start static calculation
-   exu.SolveStatic(mbs, simulationSettings) 
+   mbs.SolveStatic(simulationSettings) 
    
    #++++++++++++++++++++++++++++++++++++++++
    #compute error for test suite:
@@ -290,7 +290,7 @@ You can view and download this file on Github: `ANCFslidingAndALEjointTest.py <h
        simulationSettings.timeIntegration.verboseMode = 1
        simulationSettings.displayStatistics = True
        
-       exu.SolveDynamic(mbs, simulationSettings)
+       mbs.SolveDynamic(simulationSettings)
        
    if useGraphics: 
        #SC.WaitForRenderEngineStopFlag()

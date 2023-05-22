@@ -13,7 +13,8 @@ You can view and download this file on Github: `coordinateSpringDamper.py <https
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    # This is an EXUDYN example
    #
-   # Details:  Example with 1D spring-mass-damper system; includes exact reference solution
+   # Details:  Example with 1D spring-mass-damper system; 
+   #           Compare viscous damping or friction (useFriction=True); includes exact reference solution
    #
    # Author:   Johannes Gerstmayr
    # Date:     2019-08-15
@@ -21,22 +22,17 @@ You can view and download this file on Github: `coordinateSpringDamper.py <https
    # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
    #
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-   import sys
-   sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
    
    import exudyn as exu
-   from exudyn.itemInterface import *
    from exudyn.utilities import *
-   
-   from modelUnitTests import RunAllModelUnitTests, TestInterface
    
    SC = exu.SystemContainer()
    mbs = SC.AddSystem()
    
    print('EXUDYN version='+exu.GetVersionString())
+   useGraphics=True
+   useFriction = False
    
-   testInterface = TestInterface(exudyn = exu, systemContainer = SC, useGraphics=False)
-   #RunAllModelUnitTests(mbs, testInterface)
    
    L=0.5
    mass = 1.6
@@ -71,8 +67,11 @@ You can view and download this file on Github: `coordinateSpringDamper.py <https
    nodeCoordinateMarker2  = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= n1, coordinate = 2))
    
    #Spring-Dampers
-   mbs.AddObject(CoordinateSpringDamper(markerNumbers = [groundCoordinateMarker, nodeCoordinateMarker0], 
-                                        stiffness = k, damping = d, dryFriction=0*fFriction, dryFrictionProportionalZone=0.01)) #offset must be zero, because coordinates just represent the displacements
+   mbs.AddObject(CoordinateSpringDamperExt(markerNumbers = [groundCoordinateMarker, nodeCoordinateMarker0], 
+                                        stiffness = k, 
+                                        damping = d*(1-useFriction), 
+                                        fDynamicFriction=0.2*fFriction*useFriction,
+                                        frictionProportionalZone=0.01)) #offset must be zero, because coordinates just represent the displacements
    mbs.AddObject(CoordinateSpringDamper(markerNumbers = [groundCoordinateMarker, nodeCoordinateMarker1], stiffness = k)) 
    mbs.AddObject(CoordinateSpringDamper(markerNumbers = [groundCoordinateMarker, nodeCoordinateMarker2], stiffness = k)) 
    
@@ -83,7 +82,7 @@ You can view and download this file on Github: `coordinateSpringDamper.py <https
    print(mbs)
    mbs.Assemble()
    
-   simulationSettings = testInterface.exu.SimulationSettings()
+   simulationSettings = exu.SimulationSettings()
    tEnd = 1 #1
    steps = 1000    #1000
    simulationSettings.solutionSettings.solutionWritePeriod = 1e-3
@@ -92,14 +91,14 @@ You can view and download this file on Github: `coordinateSpringDamper.py <https
    
    simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1 #SHOULD work with 0.9 as well
    
-   if testInterface.useGraphics: 
-       testInterface.exu.StartRenderer()
+   if useGraphics: 
+       exu.StartRenderer()
    
-   testInterface.exu.SolveDynamic(mbs, simulationSettings)
+   mbs.SolveDynamic(simulationSettings)
    
-   if testInterface.useGraphics: 
-       testInterface.SC.WaitForRenderEngineStopFlag()
-       testInterface.exu.StopRenderer() #safely close rendering window!
+   if useGraphics: 
+       SC.WaitForRenderEngineStopFlag()
+       exu.StopRenderer() #safely close rendering window!
    
    
    u = mbs.GetNodeOutput(n1, exu.OutputVariableType.Position)

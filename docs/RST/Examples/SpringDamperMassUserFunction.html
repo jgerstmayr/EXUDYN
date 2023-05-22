@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SpringDamperMassUserFunction.py &mdash; Exudyn1.6.110.dev1 1.6.110.dev1 documentation</title>
+  <title>SpringDamperMassUserFunction.py &mdash; Exudyn1.6.118.dev1 1.6.118.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -37,7 +37,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.110.dev1
+            Exudyn1.6.118.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -202,7 +202,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.110.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.118.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -322,7 +322,7 @@
 <span class="linenos"> 96</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">contour</span><span class="o">.</span><span class="n">outputVariable</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Displacement</span>
 <span class="linenos"> 97</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">contour</span><span class="o">.</span><span class="n">outputVariableComponent</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#y-component</span>
 <span class="linenos"> 98</span>
-<span class="linenos"> 99</span><span class="n">exu</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="p">,</span> <span class="n">solverType</span> <span class="o">=</span>  <span class="n">exudyn</span><span class="o">.</span><span class="nc">DynamicSolverType</span><span class="o">.</span><span class="n">ExplicitMidpoint</span><span class="p">)</span>
+<span class="linenos"> 99</span><span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="p">,</span> <span class="n">solverType</span> <span class="o">=</span>  <span class="n">exudyn</span><span class="o">.</span><span class="nc">DynamicSolverType</span><span class="o">.</span><span class="n">ExplicitMidpoint</span><span class="p">)</span>
 <span class="linenos">100</span><span class="c1">#u = mbs.GetNodeOutput(nBodies-2, exu.OutputVariableType.Position) #tip node</span>
 <span class="linenos">101</span><span class="c1">#print(&#39;dynamic tip displacement (y)=&#39;, u[1]) #dense: -11.085967426937412, sparse:-11.085967426937431</span>
 <span class="linenos">102</span>
@@ -331,7 +331,7 @@
 <span class="linenos">105</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">absoluteTolerance</span> <span class="o">=</span> <span class="mf">1e-1</span>
 <span class="linenos">106</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">verboseMode</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="linenos">107</span>
-<span class="linenos">108</span><span class="n">exu</span><span class="o">.</span><span class="nf">SolveStatic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="p">)</span>
+<span class="linenos">108</span><span class="n">mbs</span><span class="o">.</span><span class="nf">SolveStatic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="p">)</span>
 <span class="linenos">109</span>
 <span class="linenos">110</span><span class="n">u</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetNodeOutput</span><span class="p">(</span><span class="n">nBodies</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Position</span><span class="p">)</span> <span class="c1">#tip node</span>
 <span class="linenos">111</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;static tip displacement (y)=&#39;</span><span class="p">,</span> <span class="n">u</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>

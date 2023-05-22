@@ -114,7 +114,7 @@ You can view and download this file on Github: `rigid3Dexample.py <https://githu
    exu.StartRenderer()
    mbs.WaitForUserToContinue()
    
-   exu.SolveDynamic(mbs, simulationSettings)
+   mbs.SolveDynamic(simulationSettings)
    
    SC.WaitForRenderEngineStopFlag()
    exu.StopRenderer() #safely close rendering window!

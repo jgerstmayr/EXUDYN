@@ -136,7 +136,7 @@ You can view and download this file on Github: `genericJointUserFunctionTest.py 
        exu.StartRenderer()
        mbs.WaitForUserToContinue()
    
-   exu.SolveDynamic(mbs, simulationSettings)#, experimentalNewSolver=True)
+   mbs.SolveDynamic(simulationSettings)#, experimentalNewSolver=True)
    
    
    #+++++++++++++++++++++++++++++++++++++++++++++

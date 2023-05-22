@@ -80,6 +80,6 @@ You can view and download this file on Github: `doublePendulum2D.py <https://git
    #simulate:
    exu.StartRenderer()
    mbs.WaitForUserToContinue()
-   exu.SolveDynamic(mbs,simulationSettings)
+   mbs.SolveDynamic(simulationSettings)
    exu.StopRenderer()
 

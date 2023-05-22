@@ -38,7 +38,7 @@ Function: SolveStatic
 
 Function: SolveDynamic
 ^^^^^^^^^^^^^^^^^^^^^^
-`SolveDynamic <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L217>`__\ (\ ``mbs``\ , \ ``simulationSettings = exudyn.SimulationSettings()``\ , \ ``solverType = exudyn.DynamicSolverType.GeneralizedAlpha``\ , \ ``updateInitialValues = False``\ , \ ``storeSolver = True``\ , \ ``showHints = False``\ , \ ``showCausingItems = True``\ )
+`SolveDynamic <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L218>`__\ (\ ``mbs``\ , \ ``simulationSettings = exudyn.SimulationSettings()``\ , \ ``solverType = exudyn.DynamicSolverType.GeneralizedAlpha``\ , \ ``updateInitialValues = False``\ , \ ``storeSolver = True``\ , \ ``showHints = False``\ , \ ``showCausingItems = True``\ )
 
 
 - | **NOTE**\ : this function is directly available in MainSystem (mbs); it should be directly called as mbs.SolveDynamic(...). For description of the interface, see the MainSystem Python extensions,  :ref:`sec-mainsystemextensions-solvedynamic`\ 
@@ -52,7 +52,7 @@ Function: SolveDynamic
 
 Function: SolverSuccess
 ^^^^^^^^^^^^^^^^^^^^^^^
-`SolverSuccess <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L312>`__\ (\ ``solverStructure``\ )
+`SolverSuccess <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L313>`__\ (\ ``solverStructure``\ )
 
 - | \ *function description*\ :
   | return success (True/False) and error message of solver after SolveSteps(...), SolveSystem(...), SolveDynamic(...) or SolveStatic(...) have been called. May also be set if other higher level functions called e.g. SolveSystem(...)
@@ -66,7 +66,7 @@ Function: SolverSuccess
 
   #assume MainSystem mbs, exu library and simulationSettings:
   try:
-      exu.SolveDynamic(mbs, simulationSettings)
+      mbs.SolveDynamic(simulationSettings)
   except:
       [success, msg] = exu.SolverSuccess(mbs.sys['dynamicSolver'])
       print('success=',success)
@@ -83,7 +83,7 @@ Function: SolverSuccess
 
 Function: ComputeLinearizedSystem
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ComputeLinearizedSystem <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L346>`__\ (\ ``mbs``\ , \ ``simulationSettings = exudyn.SimulationSettings()``\ , \ ``useSparseSolver = False``\ )
+`ComputeLinearizedSystem <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L364>`__\ (\ ``mbs``\ , \ ``simulationSettings = exudyn.SimulationSettings()``\ , \ ``useSparseSolver = False``\ )
 
 
 - | **NOTE**\ : this function is directly available in MainSystem (mbs); it should be directly called as mbs.ComputeLinearizedSystem(...). For description of the interface, see the MainSystem Python extensions,  :ref:`sec-mainsystemextensions-computelinearizedsystem`\ 
@@ -92,23 +92,23 @@ Function: ComputeLinearizedSystem
 
 ----
 
-Function: ComputeSystemDegreeOfFreedom
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ComputeSystemDegreeOfFreedom <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L392>`__\ (\ ``mbs``\ , \ ``simulationSettings = exudyn.SimulationSettings()``\ , \ ``threshold = 1e-12``\ , \ ``verbose = False``\ , \ ``useSVD = False``\ )
+Function: ComputeODE2Eigenvalues
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`ComputeODE2Eigenvalues <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L437>`__\ (\ ``mbs``\ , \ ``simulationSettings = exudyn.SimulationSettings()``\ , \ ``useSparseSolver = False``\ , \ ``numberOfEigenvalues = 0``\ , \ ``constrainedCoordinates = []``\ , \ ``convert2Frequencies = False``\ , \ ``useAbsoluteValues = True``\ )
 
 
-- | **NOTE**\ : this function is directly available in MainSystem (mbs); it should be directly called as mbs.ComputeSystemDegreeOfFreedom(...). For description of the interface, see the MainSystem Python extensions,  :ref:`sec-mainsystemextensions-computesystemdegreeoffreedom`\ 
+- | **NOTE**\ : this function is directly available in MainSystem (mbs); it should be directly called as mbs.ComputeODE2Eigenvalues(...). For description of the interface, see the MainSystem Python extensions,  :ref:`sec-mainsystemextensions-computeode2eigenvalues`\ 
 
 
 
 ----
 
-Function: ComputeODE2Eigenvalues
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ComputeODE2Eigenvalues <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L488>`__\ (\ ``mbs``\ , \ ``simulationSettings = exudyn.SimulationSettings()``\ , \ ``useSparseSolver = False``\ , \ ``numberOfEigenvalues = 0``\ , \ ``constrainedCoordinates = []``\ , \ ``convert2Frequencies = False``\ , \ ``useAbsoluteValues = True``\ )
+Function: ComputeSystemDegreeOfFreedom
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`ComputeSystemDegreeOfFreedom <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L558>`__\ (\ ``mbs``\ , \ ``simulationSettings = exudyn.SimulationSettings()``\ , \ ``threshold = 1e-12``\ , \ ``verbose = False``\ , \ ``useSVD = False``\ )
 
 
-- | **NOTE**\ : this function is directly available in MainSystem (mbs); it should be directly called as mbs.ComputeODE2Eigenvalues(...). For description of the interface, see the MainSystem Python extensions,  :ref:`sec-mainsystemextensions-computeode2eigenvalues`\ 
+- | **NOTE**\ : this function is directly available in MainSystem (mbs); it should be directly called as mbs.ComputeSystemDegreeOfFreedom(...). For description of the interface, see the MainSystem Python extensions,  :ref:`sec-mainsystemextensions-computesystemdegreeoffreedom`\ 
 
 
 
@@ -119,7 +119,7 @@ Function: ComputeODE2Eigenvalues
 
 Function: CheckSolverInfoStatistics
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CheckSolverInfoStatistics <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L579>`__\ (\ ``solverName``\ , \ ``infoStat``\ , \ ``numberOfEvaluations``\ )
+`CheckSolverInfoStatistics <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L640>`__\ (\ ``solverName``\ , \ ``infoStat``\ , \ ``numberOfEvaluations``\ )
 
 - | \ *function description*\ :
   | helper function for solvers to check e.g. if high number of memory allocations happened during simulation

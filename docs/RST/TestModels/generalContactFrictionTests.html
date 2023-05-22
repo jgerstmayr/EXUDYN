@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>generalContactFrictionTests.py &mdash; Exudyn1.6.110.dev1 1.6.110.dev1 documentation</title>
+  <title>generalContactFrictionTests.py &mdash; Exudyn1.6.118.dev1 1.6.118.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -37,7 +37,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.110.dev1
+            Exudyn1.6.118.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -106,6 +106,7 @@
 <li class="toctree-l2"><a class="reference internal" href="kinematicTreeAndMBStest.html">kinematicTreeAndMBStest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kinematicTreeConstraintTest.html">kinematicTreeConstraintTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kinematicTreeTest.html">kinematicTreeTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mainSystemExtensionsTests.html">mainSystemExtensionsTests.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="manualExplicitIntegrator.html">manualExplicitIntegrator.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mecanumWheelRollingDiscTest.html">mecanumWheelRollingDiscTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="objectFFRFreducedOrderAccelerations.html">objectFFRFreducedOrderAccelerations.py</a></li>
@@ -146,7 +147,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.110.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.118.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -565,8 +566,8 @@
 <span class="linenos">395</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tEnd</span><span class="o">/</span><span class="n">h</span><span class="p">)</span>
 <span class="linenos">396</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="n">tEnd</span>
 <span class="linenos">397</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">explicitIntegration</span><span class="o">.</span><span class="n">computeEndOfStepAccelerations</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1">#increase performance, accelerations less accurate</span>
-<span class="linenos">398</span><span class="n">exu</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="p">,</span> <span class="n">solverType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">DynamicSolverType</span><span class="o">.</span><span class="n">ExplicitEuler</span><span class="p">)</span>
-<span class="linenos">399</span><span class="c1"># exu.SolveDynamic(mbs, simulationSettings, solverType=exu.DynamicSolverType.ODE23)</span>
+<span class="linenos">398</span><span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="p">,</span> <span class="n">solverType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">DynamicSolverType</span><span class="o">.</span><span class="n">ExplicitEuler</span><span class="p">)</span>
+<span class="linenos">399</span><span class="c1"># mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.ODE23)</span>
 <span class="linenos">400</span>
 <span class="linenos">401</span><span class="c1">#compute error:</span>
 <span class="linenos">402</span><span class="n">uSum</span><span class="o">=</span><span class="mi">0</span>
@@ -589,18 +590,18 @@
 <span class="linenos">419</span>    <span class="k">if</span> <span class="kc">True</span><span class="p">:</span>
 <span class="linenos">420</span>        <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">autoFitScene</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="linenos">421</span>        <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">graphicsUpdateInterval</span><span class="o">=</span><span class="mf">0.02</span>
-<span class="linenos">422</span>        <span class="kn">from</span> <span class="nn">exudyn.interactive</span> <span class="kn">import</span> <span class="nf">SolutionViewer</span>
+<span class="linenos">422</span>
 <span class="linenos">423</span>        <span class="n">sol</span> <span class="o">=</span> <span class="nf">LoadSolutionFile</span><span class="p">(</span><span class="s1">&#39;solution/coordinatesSolution.txt&#39;</span><span class="p">,</span> <span class="n">safeMode</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="c1">#, maxRows=100)</span>
 <span class="linenos">424</span>        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;start SolutionViewer&#39;</span><span class="p">)</span>
-<span class="linenos">425</span>        <span class="nf">SolutionViewer</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sol</span><span class="p">)</span>
+<span class="linenos">425</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">SolutionViewer</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span>
 <span class="linenos">426</span>
 <span class="linenos">427</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StopRenderer</span><span class="p">()</span> <span class="c1">#safely close rendering window!</span>
 <span class="linenos">428</span>
 <span class="linenos">429</span><span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
-<span class="linenos">430</span>    <span class="kn">from</span> <span class="nn">exudyn.plot</span> <span class="kn">import</span> <span class="nf">PlotSensor</span>
+<span class="linenos">430</span>
 <span class="linenos">431</span>
-<span class="linenos">432</span>    <span class="nf">PlotSensor</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="p">[],</span> <span class="n">closeAll</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="linenos">433</span>    <span class="nf">PlotSensor</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="p">[</span><span class="n">sNode3</span><span class="p">]</span><span class="o">*</span><span class="mi">3</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="n">figureName</span><span class="o">=</span><span class="s1">&#39;node stair&#39;</span><span class="p">)</span>
+<span class="linenos">432</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">([],</span> <span class="n">closeAll</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">433</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">([</span><span class="n">sNode3</span><span class="p">]</span><span class="o">*</span><span class="mi">3</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="n">figureName</span><span class="o">=</span><span class="s1">&#39;node stair&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>

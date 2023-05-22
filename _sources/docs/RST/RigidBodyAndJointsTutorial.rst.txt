@@ -81,44 +81,39 @@ The \ ``RigidBodyInertia``\  can be used directly to create rigid bodies. Specia
 
 Note that the COM is translated in axial direction, while it would be at the body's local position [0,0,0] by default!
 
-For visualization, we need to add some graphics for the body defined as a 3D RigidLink object and we additionally draw a basis (three RGB-vectors) at the COM:
+For visualization, we add some graphics for the body defined as a 3D cube with center point and dimensions; additionally we draw a basis (three RGB-vectors) at the COM:
 
 .. code-block:: python
 
   #graphics for body
-  graphicsBody0 = GraphicsDataRigidLink(p0=[-0.5*L,0,0],p1=[0.5*L,0,0], 
-                                       axis0=[0,0,1], axis1=[0,0,0], radius=[0.5*w,0.5*w], 
-                                       thickness=w, width=[1.2*w,1.2*w], color=color4red)
+  graphicsBody0 = GraphicsDataOrthoCubePoint(centerPoint=[0,0,0],size=[L,w,w],color=color4red)
   graphicsCOM0 = GraphicsDataBasis(origin=iCube0.com, length=2*w)
 
 
 
-Now we have defined all data for the link (rigid body). We could use \ ``mbs.AddNode(NodeRigidBodyEP(...))``\  and \ ``mbs.AddObject(ObjectRigidBody(...))``\  to create a node and a body, but the \ ``exudyn.rigidBodyUtilities``\  offer a much more comfortable function:
+Now we have defined all data for the link (rigid body). We could use \ ``mbs.AddNode(NodeRigidBodyEP(...))``\  and \ ``mbs.AddObject(ObjectRigidBody(...))``\  to create a node and a body, but the \ ``MainSystem``\  since V1.6.110 offers a much more comfortable function:
 
 .. code-block:: python
 
   #create node, add body and gravity load:
-  [n0,b0]=AddRigidBody(mainSys = mbs,
-                       inertia = iCube0, #includes COM
-                       nodeType = exu.NodeType.RotationEulerParameters,
-                       position = pMid0,
-                       rotationMatrix = np.diag([1,1,1]),
-                       gravity = g,
-                       graphicsDataList = [graphicsBody0, graphicsCOM0])
+  b0=mbs.CreateRigidBody(inertia = iCube0, #includes COM
+                         referencePosition = pMid0,
+                         gravity = g,
+                         graphicsDataList = [graphicsCOM0, graphicsBody0])
 
 
-which also adds a gravity load and could also set initial velocities, if wanted. 
-The \ ``nodeType``\  specifies the underlying model for the rigid body node, see Section :ref:`sec-nodetype`\ .
+which also adds a gravity load and could also set initial velocities, if wanted. Note that much more options are available for this function, e.g.,
+we could define a \ ``nodeType``\  for the underlying formulation of the rigid body node, see Section :ref:`sec-nodetype`\ .
 We can use 
 
 +  \ ``RotationEulerParameters``\ : for fast computation, but leads to an additional algebraic equation and thus needs an implicit solver
 +  \ ``RotationRxyz``\ : contains a singularity if the second angle reaches +/- 90 degrees, but no algebraic equations
-+  \ ``RotationRotationVector``\ : basically contains a singularity for 0 degrees, but if used in combination with Lie group integrators, singularities are bypassed; leads to fewest unknowns and usually less Newton iterations
++  \ ``RotationRotationVector``\ : for usage with Lie group integrators, especially with explicit integration, singularities are bypassed; leads to fewest unknowns and usually less Newton iterations
 
 
 We now add a revolute joint around the (global) z-axis. 
 We have several possibilities, which are shown in the following.
-For the \ **first two possibilities only**\ , we need the following markers
+For the \ **first two possibilities only**\ , following \ ``rigidBodyTutorial3withMarkers.py``\ , we need the following markers
 
 .. code-block:: python
 
@@ -128,7 +123,7 @@ For the \ **first two possibilities only**\ , we need the following markers
 
 
 
-The very general option 1 is to use the \ ``GenericJoint``\ , that can be used to define any kind of joint with translations and rotations fixed or free,
+The very general \ **option 1**\  is to use the \ ``GenericJoint``\ , that can be used to define any kind of joint with translations and rotations fixed or free,
 
 .. code-block:: python
 
@@ -141,7 +136,7 @@ The very general option 1 is to use the \ ``GenericJoint``\ , that can be used t
 
 In addition, transformation matrices (\ ``rotationMarker0/1``\ ) can be added, see the joint description.
 
-Option 2 is using the revolute joint, which allows a free rotation around the local z-axis of marker 0 (\ ``markerGround``\  in our example)
+\ **Option 2**\  is using the revolute joint, which allows a free rotation around the local z-axis of marker 0 (\ ``markerGround``\  in our example)
 
 .. code-block:: python
 
@@ -165,21 +160,23 @@ Note that an error in the definition of markers for the joints can be also detec
 
 
 \ :math:`\ra`\  you will see a misalignment of the two parts of the joint by \ ``0.1*L``\ .
+The latter approach is very general and will also work for any kind of flexible bodies.
 
-Due to the fact that the definition of markers for general joints is tedious, there is a utility function, which allows to attach revolute joints immediately to bodies and defining the rotation axis only once for the joint:
+Due to the fact that the definition of markers for general joints is tedious, \ **option 3**\  is based on a MainSystem function, which allows to attach revolute joints immediately to bodies and defining the rotation axis only once for the joint:
 
 .. code-block:: python
 
   #revolute joint option 3:
-  AddRevoluteJoint(mbs, body0=oGround, body1=b0, point=[0,0,0], 
-                   axis=[0,0,1], useGlobalFrame=True, showJoint=True,
-                   axisRadius=0.2*w, axisLength=1.4*w)
+  mbs.CreateRevoluteJoint(bodyNumbers=[oGround, b0], position=[0,0,0], 
+                          axis=[0,0,1], axisRadius=0.2*w, axisLength=1.4*w)
+
+
+For the latter option, there are more arguments that may be specified, e.g., the axis and position can also be defined in the local frame of the first body.
 
 
 
-
-
-The second link and the according joint can be set up in a very similar way:
+The second link and the according joint can be set up in a very similar way.
+For visualization, we need to add some graphics for the body defined as a RigidLink GraphicsData function:
 
 .. code-block:: python
 
@@ -189,18 +186,10 @@ The second link and the according joint can be set up in a very similar way:
                                         thickness = 0.1, width = [0.12,0.12], 
                                         color=color4lightgreen)
 
-  iCube1 = InertiaCuboid(density=5000, sideLengths=[0.1,0.1,1])
-
-  pMid1 = np.array([L,0,0]) + np.array([0,0,0.5*L]) #center of mass, body1
-  #create node, add body and gravity load:
-  [n1,b1]=AddRigidBody(mainSys = mbs,
-                       inertia = iCube1,
-                       nodeType = exu.NodeType.RotationEulerParameters,
-                       position = pMid1,
-                       rotationMatrix = np.diag([1,1,1]),
-                       angularVelocity = [0,0,0],
-                       gravity = g,
-                       graphicsDataList = [graphicsBody1])
+  b1=mbs.CreateRigidBody(inertia = InertiaCuboid(density=5000, sideLengths=[0.1,0.1,1]),
+                         referencePosition = np.array([L,0,0.5*L]), 
+                         gravity = g,
+                         graphicsDataList = [graphicsBody1])
 
 
 
@@ -209,9 +198,8 @@ The revolute joint in this case has a free rotation around the global x-axis:
 .. code-block:: python
 
   #revolute joint (free x-axis)
-  AddRevoluteJoint(mbs, body0=b0, body1=b1, point=[L,0,0], 
-                   axis=[1,0,0], useGlobalFrame=True, showJoint=True,
-                   axisRadius=0.2*w, axisLength=1.4*w)
+  mbs.CreateRevoluteJoint(bodyNumbers=[b0, b1], position=[L,0,0], 
+                          axis=[1,0,0], axisRadius=0.2*w, axisLength=1.4*w)
 
 
 
@@ -220,8 +208,8 @@ Finally, we also add a sensor for some output of the double pendulum:
 .. code-block:: python
 
   #position sensor at tip of body1
-  sens1=mbs.AddSensor(SensorBody(bodyNumber=b1, localPosition=[0,0,0.5*L],
-                                 fileName='solution/sensorPos.txt',
+  sens1=mbs.AddSensor(SensorBody(bodyNumber = b1, localPosition = [0,0,0.5*L],
+                                 fileName = 'solution/sensorPos.txt',
                                  outputVariableType = exu.OutputVariableType.Position))
 
 
@@ -285,19 +273,55 @@ which results in the following output (shortened):
 
 
 
+Sometimes it is hard to understand the degree of freedom for the constrained system. Furthermore, we may have added -- by error --
+redundant constraints, which are not solvable or at least cause solver problems. Both can be checked with the command
+\ ````\ :
+
+.. code-block:: python
+
+  mbs.ComputeSystemDegreeOfFreedom(verbose=True) #print out DOF and further information
+
+
+This will print:
+
+.. code-block:: 
+
+  ODE2 coordinates          = 14
+  total constraints         = 12
+  redundant constraints     = 0
+  pure algebraic constraints= 0
+  degree of freedom         = 2
+
+
+We see that there are 14 ODE2 coordinates from the two nodes that are based on Euler parameters. The two joints add \ :math:`2\times 5`\  constraints and there are 2 additional Euler parameter constraints, giving a degree of freedom of 2 (as expected ...).
+
+You can try and duplicate the code for the second revolute joint \ ``mbs.CreateRevoluteJoint(bodyNumbers=[b0, b1], ...)``\ , such that we add two identical joints. This will give 
+
+.. code-block:: 
+
+  ODE2 coordinates          = 14
+  total constraints         = 17
+  redundant constraints     = 5
+  pure algebraic constraints= 0
+  degree of freedom         = 2
+
+
+which clearly shows the 5 redundant constraints, which will lead to a solver failure. In practical cases, redundant constraints may be much more involved, but can be detected in this way.
+
 A graphical representation of the internal structure of the model can be shown using the command \ ``DrawSystemGraph``\ :
 
 .. code-block:: python
 
-  DrawSystemGraph(mbs, useItemTypes=True) #draw nice graph of system
+  mbs.DrawSystemGraph(useItemTypes=True) #draw nice graph of system
 
 
 For the output see the figure below. Note that obviously, markers are always needed to connect objects (or nodes) as well as loads. We can also see, that 2 markers MarkerBodyRigid1 and MarkerBodyRigid2 are unused, which is no further problem for the model and also does not require additional computational resources (except for some bytes of memory). Having isolated nodes or joints that are not connected (or having too many connections) may indicate that you did something wrong in setting up your model.
+Furthermore, it can be seen that the function \ ``CreateRigidBody``\  added a body \ ``ObjectRigidBody``\ , a node \ ``NodeRigidBodyEP``\ , a \ ``LoadMassProportional``\  for gravity load with a \ ``MarkerBodyMass``\ , and the function \ ``CreateRevoluteJoint``\  created two \ ``MarkerBodyRigid``\  and a \ ``ObjectJointRevoluteZ``\  which represents a revolute joint about a Z-axis in the joint coordinate system. For further information, consult the respective pages in the Items reference manual.
 
 
 
 .. image:: ../theDoc/figures/DrawSystemGraphExample.png
-   :width: 400
+   :width: 600
 
 
 
@@ -329,12 +353,12 @@ In order to improve visualization, there are hundreds of options, see Visualizat
 
 .. code-block:: python
 
-  SC.visualizationSettings.window.renderWindowSize=[1600,1200]
+  SC.visualizationSettings.window.renderWindowSize = [1600,1200]
   SC.visualizationSettings.openGL.multiSampling = 4  #improved OpenGL rendering
   SC.visualizationSettings.general.autoFitScene = False
 
-  SC.visualizationSettings.nodes.drawNodesAsPoint=False
-  SC.visualizationSettings.nodes.showBasis=True #shows three RGB (=xyz) lines for node basis
+  SC.visualizationSettings.nodes.drawNodesAsPoint = False
+  SC.visualizationSettings.nodes.showBasis = True #shows three RGB (=xyz) lines for node basis
 
 
 The option \ ``autoFitScene``\  is used in order to avoid zooming while loading the last saved render state, see below.
@@ -363,17 +387,17 @@ Finally, the \ **index 2**\  (velocity level) implicit time integration (simulat
 
 .. code-block:: python
 
-  exu.SolveDynamic(mbs, simulationSettings = simulationSettings,
-                   solverType=exu.DynamicSolverType.TrapezoidalIndex2)
+  mbs.SolveDynamic(simulationSettings = simulationSettings,
+                   solverType = exu.DynamicSolverType.TrapezoidalIndex2)
 
 
 This solver is used in the present example, but should be considered with care as it leads to (small) drift of position constraints, linearly increasing in time. Using sufficiently small time steps, this effect is often negligible on the advantage of having a \ **energy-conserving integrator**\  (guaranteed for linear systems, but very often also for the nonlinear multibody system). Due to the velocity level, the integrator is less sensitive to consistent initial conditions on position level and compatible to frequent step size changes, however, initial jumps in velocities may never damp out in undamped systems.
 
-Alternatively, an \ **index 3**\  implicit time integration -- the generalized-\ :math:`\alpha`\  method -- is started with:
+Alternatively, an \ **index 3**\  implicit time integration -- the generalized-\ :math:`\alpha`\  method -- is started with the default settings for \ ``solverType``\ :
 
 .. code-block:: python
 
-  exu.SolveDynamic(mbs, simulationSettings = simulationSettings)
+  mbs.SolveDynamic(simulationSettings = simulationSettings)
 
 
 Note that the \ **generalized-\ :math:`\alpha`\  method**\  includes numerical damping (adjusted with the spectral radius) for stabilization of index 3 constraints. This leads to effects every time the integrator is (re-)started, e.g., when adapting time step sizes. For fixed step sizes, this is \ **the recommended integrator**\ .
@@ -393,9 +417,10 @@ As the simulation will run very fast, if you did not set \ ``simulateInRealtime`
 
 .. code-block:: python
 
-  from exudyn.interactive import SolutionViewer
-  sol = LoadSolutionFile('coordinatesSolution.txt')
-  SolutionViewer(mbs, sol)
+  mbs.SolutionViewer()
+  #alternatively, we could load solution from a file:
+  #sol = LoadSolutionFile('coordinatesSolution.txt')
+  #mbs.SolutionViewer(sol)
 
 
 
@@ -403,8 +428,7 @@ Finally, we can plot our sensor, drawing the y-component of the sensor (check ou
 
 .. code-block:: python
 
-  from exudyn.plot import PlotSensor
-  PlotSensor(mbs, [sens1],[1])
+  mbs.PlotSensor(sensorNumbers=[sens1],components=[1],closeAll=True)
 
 
 

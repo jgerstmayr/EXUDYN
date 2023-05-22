@@ -197,7 +197,7 @@ You can view and download this file on Github: `HydraulicsUserFunction.py <https
    exu.StartRenderer()
    mbs.WaitForUserToContinue()
    
-   exu.SolveDynamic(mbs, simulationSettings, showHints=False)
+   mbs.SolveDynamic(simulationSettings, showHints=False)
    
    SC.WaitForRenderEngineStopFlag()
    exu.StopRenderer() #safely close rendering window!
@@ -210,16 +210,16 @@ You can view and download this file on Github: `HydraulicsUserFunction.py <https
    # pressures= [6441369.55769344 3008417.92678142]
    # velocity= [-0.00500595  0.20338301  0.        ]
    
-   from exudyn.plot import PlotSensor
-   PlotSensor(mbs, sensorNumbers=sForce, components=exudyn.plot.componentNorm, labels=['connector force norm'], yLabel='force (N)', closeAll=False)
+   
+   mbs.PlotSensor(sensorNumbers=sForce, components=exudyn.plot.componentNorm, labels=['connector force norm'], yLabel='force (N)', closeAll=False)
    
    
-   PlotSensor(mbs, sensorNumbers=sDistance, components=0)
-   PlotSensor(mbs, sensorNumbers=[sPressures]*2, components=[0,1], labels=['p1', 'p2'], yLabel='pressure (N/m^2)')
+   mbs.PlotSensor(sensorNumbers=sDistance, components=0)
+   mbs.PlotSensor(sensorNumbers=[sPressures]*2, components=[0,1], labels=['p1', 'p2'], yLabel='pressure (N/m^2)')
    
    p01 = mbs.GetSensorStoredData(sPressures)
    p01[:,1] = A[0]*p01[:,1] - A[1]*p01[:,2]
-   PlotSensor(mbs, sensorNumbers=p01, components=0, labels=['differential hydraulic force'], yLabel='hydraulic force (N)')
+   mbs.PlotSensor(sensorNumbers=p01, components=0, labels=['differential hydraulic force'], yLabel='hydraulic force (N)')
    
 
 

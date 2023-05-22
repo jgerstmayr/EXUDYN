@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mass-Spring-Damper tutorial &mdash; Exudyn1.6.110.dev1 1.6.110.dev1 documentation</title>
+  <title>Mass-Spring-Damper tutorial &mdash; Exudyn1.6.118.dev1 1.6.118.dev1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
@@ -37,7 +37,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.6.110.dev1
+            Exudyn1.6.118.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -84,7 +84,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.6.110.dev1</a>
+          <a href="../../index.html">Exudyn1.6.118.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -109,11 +109,15 @@
 <blockquote>
 <div><p><code class="docutils literal notranslate"><span class="pre">main/pythonDev/Examples/springDamperTutorial.py</span></code></p>
 </div></blockquote>
+<p>A similar version based on a simplified approach (using a 3D mass point) is available as</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">main/pythonDev/Examples/springDamperTutorialNew.py</span></code></p>
+</div></blockquote>
 <p>This tutorial will set up a mass point and a spring damper, dynamically compute the solution and evaluate the reference solution.</p>
 <p>We import the exudyn library and the interface for all nodes, objects, markers, loads and sensors:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
 <span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="o">*</span> <span class="c1">#includes itemInterface, graphicsDataUtilities and rigidBodyUtilities</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span> <span class="c1">#for postprocessing</span>
 </pre></div>
 </div>
 <p>Next, we need a <code class="docutils literal notranslate"><span class="pre">SystemContainer</span></code>, which contains all computable systems and add a new MainSystem <code class="docutils literal notranslate"><span class="pre">mbs</span></code>.
@@ -122,8 +126,11 @@ Per default, you always should name your system ‘mbs’ (multibody system), in
 <span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>In order to check, which version you are using, you can printout the current Exudyn version. This version is in line with the issue tracker and marks the number of open/closed issues added to Exudyn :</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;EXUDYN version=&#39;</span><span class="o">+</span><span class="n">exu</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+<p>In order to check, which version you are using, you can printout the current Exudyn version.
+The version shown is in line with the issue tracker and marks the number of open/closed issues added to Exudyn .
+Adding <code class="docutils literal notranslate"><span class="pre">True</span></code> as argument will also print platform-specific information, which is helpful
+in case of reporting some compatibility issues:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;EXUDYN version=&#39;</span><span class="o">+</span><span class="n">exu</span><span class="o">.</span><span class="nf">GetVersionString</span><span class="p">(</span><span class="kc">True</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>Using the powerful Python language, we can define some variables for our problem, which will also be used for the analytical solution:</p>
@@ -189,8 +196,8 @@ which is in fact of type <code class="docutils literal notranslate"><span class=
 </div>
 <p>Note that sensors can be attached, e.g., to nodes, bodies, objects (constraints) or loads.
 As our system is fully set, we can print the overall information and assemble the system to make it ready for simulation:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">mbs</span><span class="p">)</span>
-<span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">mbs</span><span class="p">)</span>     <span class="c1">#show system properties</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span> <span class="c1">#prepare for simulation</span>
 </pre></div>
 </div>
 <p>We will use time integration and therefore define a number of steps (fixed step size; must be provided) and the total time span for the simulation:</p>
@@ -204,6 +211,13 @@ As our system is fully set, we can print the overall information and assemble th
 <span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">sensorsWritePeriod</span> <span class="o">=</span> <span class="mf">5e-3</span>  <span class="c1">#output interval of sensors</span>
 <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tEnd</span><span class="o">/</span><span class="n">h</span><span class="p">)</span> <span class="c1">#must be integer</span>
 <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="n">tEnd</span>
+<span class="n">simulationSettings</span><span class="o">.</span><span class="n">displayComputationTime</span> <span class="o">=</span> <span class="kc">True</span>               <span class="c1">#show how fast</span>
+</pre></div>
+</div>
+<p>In order to see some solver output, we must set <code class="docutils literal notranslate"><span class="pre">verboseMode</span></code> to 1 (higher values gives detailed output per step).
+Furthermore, we can show information on computation time (which may cost some overhead in computation!):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">verboseMode</span> <span class="o">=</span> <span class="mi">1</span>             <span class="c1">#show some solver output</span>
+<span class="n">simulationSettings</span><span class="o">.</span><span class="n">displayComputationTime</span> <span class="o">=</span> <span class="kc">True</span>               <span class="c1">#show how fast</span>
 </pre></div>
 </div>
 <p>We are using a generalized alpha solver, where numerical damping is needed for index 3 constraints. As we have only spring-dampers, we can set the spectral radius to 1, meaning no numerical damping:</p>
@@ -212,7 +226,7 @@ As our system is fully set, we can print the overall information and assemble th
 </div>
 <p>In order to visualize the results online, a renderer can be started. As our computation will be very fast, it is a good idea to wait for the user to press SPACE, before starting the simulation (uncomment second line):</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">exu</span><span class="o">.</span><span class="nf">StartRenderer</span><span class="p">()</span>              <span class="c1">#start graphics visualization</span>
-<span class="c1">#mbs.WaitForUserToContinue()     #wait for pressing SPACE bar to continue (in render window!)</span>
+<span class="c1">#mbs.WaitForUserToContinue()     #wait for SPACE bar or &#39;Q&#39; to continue (in render window!)</span>
 </pre></div>
 </div>
 <p>As the simulation is still very fast, we will not see the motion of our node. Using a very small step size of, e.g., <code class="docutils literal notranslate"><span class="pre">h=1e-7</span></code> in the lines above allows us to visualize the resulting oscillations in realtime.</p>
@@ -220,12 +234,13 @@ As our system is fully set, we can print the overall information and assemble th
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">exu</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>After simulation, our renderer needs to be stopped (otherwise it would stay in background and prohibit further simulations).
+<p>After simulation, our renderer needs to be stopped (otherwise it will stop unsafely as soon as the Python kernel is stopped or restarted).
 Sometimes you would like to wait until closing the render window, using <code class="docutils literal notranslate"><span class="pre">WaitForRenderEngineStopFlag()</span></code>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#SC.WaitForRenderEngineStopFlag()#wait for pressing &#39;Q&#39; to quit</span>
 <span class="n">exu</span><span class="o">.</span><span class="nf">StopRenderer</span><span class="p">()</span>               <span class="c1">#safely close rendering window!</span>
 </pre></div>
 </div>
+<p>If you run this code, e.g. in Spyder or Visual Studio Code, it may take a 1-2 seconds to complete. However, the time spent is only related to some overhead in the Python environment and for the visualization. The simulation itself will only take around 3-10 milliseconds, in which a large overhead is due to file writing.</p>
 <p>There are several ways to evaluate results, see the reference pages. In the following we take the final value of node <code class="docutils literal notranslate"><span class="pre">n1</span></code> and read its 3D position vector:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#evaluate final (=current) output values</span>
 <span class="n">u</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetNodeOutput</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Position</span><span class="p">)</span>

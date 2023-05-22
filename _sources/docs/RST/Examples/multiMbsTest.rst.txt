@@ -92,7 +92,7 @@ You can view and download this file on Github: `multiMbsTest.py <https://github.
        
        mbs.WaitForUserToContinue() #stop before simulating
        
-       exu.SolveDynamic(mbs, simulationSettings = simulationSettings,
+       mbs.SolveDynamic(simulationSettings = simulationSettings,
                         solverType=exu.DynamicSolverType.TrapezoidalIndex2)
        
        # SC.WaitForRenderEngineStopFlag() #stop before closing
@@ -131,8 +131,8 @@ You can view and download this file on Github: `multiMbsTest.py <https://github.
    exu.StopRenderer() #safely close rendering window!
    
    if False:
-       from exudyn.plot import PlotSensor
-       PlotSensor(mbs, [sens1],[1])
+       
+       mbs.PlotSensor([sens1],[1])
    
    
 

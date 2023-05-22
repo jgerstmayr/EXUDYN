@@ -201,7 +201,7 @@ You can view and download this file on Github: `objectFFRFreducedOrderTest.py <h
    
        mbs.WaitForUserToContinue() #press space to continue
    
-   exu.SolveDynamic(mbs, simulationSettings)
+   mbs.SolveDynamic(simulationSettings)
        
    
    # data = np.loadtxt(fileDir+'nMidDisplacementCMS'+str(nModes)+'Test.txt', comments='#', delimiter=',')
@@ -222,9 +222,9 @@ You can view and download this file on Github: `objectFFRFreducedOrderTest.py <h
    #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
    #plot results
    if useGraphics:
-       from exudyn.plot import PlotSensor
        
-       PlotSensor(mbs, [fileDir+'nMidDisplacementCMS8.txt',sDisp,fileDir+'nMidDisplacementFFRF.txt'],
+       
+       mbs.PlotSensor([fileDir+'nMidDisplacementCMS8.txt',sDisp,fileDir+'nMidDisplacementFFRF.txt'],
                   components=1, closeAll=True)
    
    
