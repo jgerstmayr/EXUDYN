@@ -2,8 +2,8 @@
 # This is an EXUDYN example
 #
 # Details:  Test of Node1D, Mass1D and Rotor1D for drivetrains;4-piston compressor
-#           Uses different constraints to realize the drivetrain, 
-#           specifically joints to connect 3D bodies and 1D drivetrain
+#           Uses different constraints to realize the drivetrain; 
+#           includes joints to connect 3D bodies and 1D drivetrain;
 #           the crank is elastically supported (except z-direction); 
 #           this makes a direct coupling of the rotation angle to the drivetrain more difficult
 #
@@ -31,6 +31,7 @@ except:
         pass
     exudynTestGlobals = ExudynTestGlobals()
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# useGraphics = False
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -63,7 +64,7 @@ inertiaCrank = InertiaCuboid(density=rho, sideLengths=[L0,a,a])
 
 
 omega0 = [0,0,2*pi*100*0]    #initial angular velocity of bodies
-ep0 = eulerParameters0
+#ep0 = eulerParameters0
 p0 = [0,0,0]        #reference position / COM of crank
 v0 = [0,0,0]     #initial translational velocity
 
@@ -73,13 +74,15 @@ gGraphics0b = GraphicsDataOrthoCube(-0.5*L0,-a*0.9,-a*0.9+4*a,0.5*L0,a*0.9,a*0.9
 gGraphics0c = GraphicsDataCylinder([0.5*L0,0,-a],[0,0,6*a],a, color4darkgrey)
 gGraphics0d = GraphicsDataCylinder([-0.5*L0,0,3*a],[0,0,4*a],a, color4darkgrey)
 
-[nRB0, oRB0] = AddRigidBody(mainSys=mbs, inertia=inertiaCrank, 
-                          #nodeType=exu.NodeType.RotationRxyz,
-                          nodeType=exu.NodeType.RotationEulerParameters,
-                          position=p0, velocity=v0,
-                          rotationParameters=ep0, angularVelocity=omega0, 
+oRB0 = mbs.CreateRigidBody(inertia=inertiaCrank, 
+                          referencePosition=p0, 
+                          referenceRotationMatrix=np.eye(3),
+                          initialVelocity=v0,
+                          initialAngularVelocity=omega0, 
                           gravity=[0.,-9.81*0,0.],
                           graphicsDataList=[gGraphics0,gGraphics0b,gGraphics0c,gGraphics0d])
+
+nRB0 = mbs.GetObject(oRB0)['nodeNumber']
 
 mGround0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber = oGround, localPosition = [0,0,-a]))
 mRigid0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber = oRB0, localPosition = [0,0,-a]))
@@ -140,28 +143,32 @@ for i in range(4):
     color1= color4grey
     gGraphics1 = GraphicsDataOrthoCube(-0.5*L1,-a*0.9,-a*0.9,0.5*L1,a*0.9,a*0.9, color1)
     omega1 = [0,0,0]    #initial angular velocity of bodies
-    #ep1 = eulerParameters0
-    ep1 = RotationMatrix2EulerParameters(A@A2)
+
     p1 = [0.5*L0+0.5*L1,0,2*a+offZ]        #reference position / COM of crank
     p1 = list(v2 + A @ np.array(p1))
     
     v1 = [0,0,0]     #initial translational velocity
     
-    [nRB1, oRB1] = AddRigidBody(mainSys=mbs, inertia=inertiaConrod, 
-                              #nodeType=exu.NodeType.RotationRxyz,
-                              nodeType=exu.NodeType.RotationEulerParameters,
-                              position=p1, velocity=v1,
-                              rotationParameters=ep1, angularVelocity=omega1, 
+    oRB1 = mbs.CreateRigidBody(inertia=inertiaConrod, 
+                              referencePosition=p1, 
+                              referenceRotationMatrix=A@A2, 
+                              initialAngularVelocity=omega1, 
+                              initialVelocity=v1,
                               gravity=[0.,-9.81*0,0.],
                               graphicsDataList=[gGraphics1])
     
+    
     locPos0 = list(Acrank @ np.array([0.5*L0,0,a+offZ]))
-    mRigid01 = mbs.AddMarker(MarkerBodyRigid(bodyNumber = oRB0, localPosition = locPos0))  #connection crank->conrod
-    mRigid10 = mbs.AddMarker(MarkerBodyRigid(bodyNumber = oRB1, localPosition = [-0.5*L1,0,-a]))#connection conrod->crank
-    mRigid11 = mbs.AddMarker(MarkerBodyRigid(bodyNumber = oRB1, localPosition = [ 0.5*L1,0,0])) #connection to piston
-    mbs.AddObject(GenericJoint(markerNumbers = [mRigid01,mRigid10], 
-                               constrainedAxes=[1,1,1, 1,1,0],
-                               visualization= VObjectJointGeneric(axesRadius=0.5*a,axesLength=2*a)))
+    mbs.CreateGenericJoint(bodyNumbers=[oRB0,oRB1], 
+                           position=locPos0, constrainedAxes=[1,1,1, 1,1,0],
+                           useGlobalFrame=False,
+                           axesRadius=0.5*a,axesLength=2*a)
+    #alternative, using markers and objects:
+    # mRigid01 = mbs.AddMarker(MarkerBodyRigid(bodyNumber = oRB0, localPosition = locPos0))  #connection crank->conrod
+    # mRigid10 = mbs.AddMarker(MarkerBodyRigid(bodyNumber = oRB1, localPosition = [-0.5*L1,0,-a]))#connection conrod->crank
+    # mbs.AddObject(GenericJoint(markerNumbers = [mRigid01,mRigid10], 
+    #                            constrainedAxes=[1,1,1, 1,1,0],
+    #                            visualization= VObjectJointGeneric(axesRadius=0.5*a,axesLength=2*a)))
         
     #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #add piston as Mass1D:
@@ -169,22 +176,27 @@ for i in range(4):
     axPiston = list(A @ np.array([L2,0,0]))
     refPosPiston = list(A @ np.array([0.5*L0+L1-offsetPiston,0,2*a+offZ]))
     gGraphicsPiston = GraphicsDataCylinder(pAxis=[0,0,0],vAxis=axPiston, radius=2*a, color=color4steelblue)
-    n1D1 = mbs.AddNode(Node1D(referenceCoordinates=[0]))
     pistonMass = 0.2
     if i==3: 
         pistonMass *=1.5 #add disturbance into system ...
         gGraphicsPiston = GraphicsDataCylinder(pAxis=[0,0,0],vAxis=axPiston, radius=2*a, color=color4red)
 
+    n1D1 = mbs.AddNode(Node1D(referenceCoordinates=[0]))
     oPiston1 = mbs.AddObject(Mass1D(physicsMass = pistonMass, 
                                     nodeNumber = n1D1,
                                     referencePosition=refPosPiston,
                                     referenceRotation=A,
                                     visualization=VObjectMass1D(graphicsData=[gGraphicsPiston])))
-
-    mPiston = mbs.AddMarker(MarkerBodyRigid(bodyNumber = oPiston1, localPosition = [ 0,0,0]))
-    mbs.AddObject(SphericalJoint(markerNumbers=[mRigid11,mPiston], 
-                                 constrainedAxes=[1,1,0],
-                                 visualization=VObjectJointSpherical(jointRadius=1.5*a)))
+    
+    mbs.CreateSphericalJoint(bodyNumbers=[oPiston1,oRB1], position=[0,0,0],
+                             constrainedAxes=[1,1,0], useGlobalFrame=False,
+                             jointRadius=1.5*a)
+    #alternatively, using markers and objects:
+    # mRigid11 = mbs.AddMarker(MarkerBodyRigid(bodyNumber = oRB1, localPosition = [ 0.5*L1,0,0])) #connection to piston
+    # mPiston = mbs.AddMarker(MarkerBodyRigid(bodyNumber = oPiston1, localPosition = [ 0,0,0]))
+    # mbs.AddObject(SphericalJoint(markerNumbers=[mRigid11,mPiston], 
+    #                              constrainedAxes=[1,1,0],
+    #                              visualization=VObjectJointSpherical(jointRadius=1.5*a)))
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -321,11 +333,13 @@ if useGraphics:
         SC.SetRenderState(lastRenderState) #load last model view
     mbs.WaitForUserToContinue()
 
-exu.SolveDynamic(mbs, simulationSettings)
+mbs.SolveDynamic(simulationSettings)
 
-
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 phiCrank = mbs.GetSensorValues(sCrankAngle)[2]
 phiFlyWheel = mbs.GetSensorValues(sFlyWheelAngle) #scalar coordinate!
+
+phiCrankData = mbs.GetSensorStoredData(sCrankAngle)[:,2:4] #y,z values
 
 exu.Print("phiCrank",phiCrank)
 exu.Print("phiFlyWheel",phiFlyWheel)
@@ -340,11 +354,12 @@ if useGraphics:
 
     lastRenderState = SC.GetRenderState() #store model view for next simulation
 
+mbs.PlotSensor(sensorNumbers=[sFlyWheelAngle], 
+           components=[0], closeAll=True, offsets=-phiCrankData,
+           labels=['crank angle - flywheel angle'])
 
 if useGraphics:
-    from exudyn.plot import PlotSensor
-    
-    PlotSensor(mbs, sensorNumbers=[sCrankPos, sCrankAngVel, sCrankAngle, sFlyWheelAngVel, sFlyWheelAngle], 
+    mbs.PlotSensor(sensorNumbers=[sCrankPos, sCrankAngVel, sCrankAngle, sFlyWheelAngVel, sFlyWheelAngle], 
                components=[0,2,2,2,0], markerStyles=['^ ','o ','H ','x','v '],closeAll=True,markerSizes=12,
                labels=['crank position','crank angular velocity','crank angle','flywheel angular velocity', 'flywheel angle'])
     

@@ -108,7 +108,7 @@ if computeDynamic:
     simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
     simulationSettings.displayStatistics = True
 
-    exu.SolveDynamic(mbs, simulationSettings)
+    mbs.SolveDynamic(simulationSettings)
 
 else:
     simulationSettings.solutionSettings.coordinatesSolutionFileName = "staticSolution.txt"
@@ -118,7 +118,7 @@ else:
     simulationSettings.staticSolver.newton.absoluteTolerance = 1e-1
     simulationSettings.staticSolver.verboseMode = 2
 
-    exu.SolveStatic(mbs, simulationSettings)
+    mbs.SolveStatic(simulationSettings)
 
 SC.WaitForRenderEngineStopFlag()
 exu.StopRenderer() #safely close rendering window!

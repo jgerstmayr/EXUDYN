@@ -87,12 +87,12 @@ simulationSettings.timeIntegration.verboseMode = 1
 exu.Print("Run perfSpringDamperExplicit WITHOUT CPU timing:")
 #Solve twice (with/without computation time!)
 simulationSettings.timeIntegration.explicitIntegration.computeEndOfStepAccelerations = False #increase performance, accelerations less accurate
-exu.SolveDynamic(mbs, simulationSettings, solverType=exu.DynamicSolverType.ExplicitEuler)
+mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.ExplicitEuler)
 
 exu.Print("Run perfSpringDamperExplicit WITH CPU timing:")
 simulationSettings.displayStatistics = True
 simulationSettings.displayComputationTime = True
-exu.SolveDynamic(mbs, simulationSettings, solverType=exu.DynamicSolverType.ExplicitEuler)
+mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.ExplicitEuler)
 
 #evaluate final (=current) output values
 pos = mbs.GetNodeOutput(n1, exu.OutputVariableType.Position)

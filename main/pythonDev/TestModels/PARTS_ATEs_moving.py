@@ -525,7 +525,7 @@ if computeDynamic:
     simulationSettings.displayStatistics = True
         
     
-    exu.SolveDynamic(mbs, simulationSettings)
+    mbs.SolveDynamic(simulationSettings)
 
     
 if useGraphics: #only start graphics once, but after background is set

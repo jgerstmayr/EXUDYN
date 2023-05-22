@@ -118,7 +118,7 @@ You can view and download this file on Github: `solutionViewerMultipleSimulation
    
        simulationSettings.staticSolver.loadStepStart = loadSteps
        # simulationSettings.staticSolver.numberOfLoadSteps = 5
-       exu.SolveStatic(mbs, simulationSettings, updateInitialValues=True)
+       mbs.SolveStatic(simulationSettings, updateInitialValues=True)
    
        #**************************************************
        #after first STEP, add this:
@@ -138,9 +138,9 @@ You can view and download this file on Github: `solutionViewerMultipleSimulation
    
    if True:
        #%%
-       from exudyn.interactive import SolutionViewer
+       
        t=LoadSolutionFile('solution/coordinatesSolution.txt', verbose=False, safeMode=True)
-       SolutionViewer(mbs,solution=t)
+       mbs.SolutionViewer(solution=t)
    
    
 

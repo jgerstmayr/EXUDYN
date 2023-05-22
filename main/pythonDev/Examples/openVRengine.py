@@ -422,7 +422,7 @@ for engine in engines:
     # if 'renderState' in exu.sys:
     #     SC.SetRenderState(exu.sys[ 'renderState' ])
     
-    exu.SolveDynamic(mbs, simulationSettings)
+    mbs.SolveDynamic(simulationSettings)
     
     exu.StopRenderer() #safely close rendering window!
     

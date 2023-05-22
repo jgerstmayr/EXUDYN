@@ -1,7 +1,8 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  Test with ConvexContact
+# Details:  Test with ObjectContactConvexRoll, which models a roll of a mechanum wheel or any other roll
+#           which is described by a polynomial profile
 #
 # Author:   Peter Manzl
 # Date:     2021-12-21
@@ -92,7 +93,7 @@ if useGraphics:
     sims.timeIntegration.stepInformation = 3+128+256
     exu.StartRenderer()
     mbs.WaitForUserToContinue()
-exu.SolveDynamic(mbs, sims)
+mbs.SolveDynamic(sims)
 if useGraphics: 
     SC.WaitForRenderEngineStopFlag()
     exu.StopRenderer() #safely close rendering window!
@@ -106,15 +107,15 @@ if useGraphics:
     pos = mbs.GetSensorStoredData(sBody)
     exu.Print('End Pos: {}'.format(pos[-1,:]))
     
-    from exudyn.plot import PlotSensor
-    PlotSensor(mbs,sBody,[0,1,2])
+    
+    mbs.PlotSensor(sBody,[0,1,2])
     
     
 if useGraphics and False:
     SC.visualizationSettings.general.autoFitScene = False
     SC.visualizationSettings.general.graphicsUpdateInterval=0.02
-    from exudyn.interactive import SolutionViewer
+    
     sol = LoadSolutionFile('solution/coordinatesSolution.txt', safeMode=True)#, maxRows=100)
     print('start SolutionViewer')
-    SolutionViewer(mbs, sol)
+    mbs.SolutionViewer(sol)
 

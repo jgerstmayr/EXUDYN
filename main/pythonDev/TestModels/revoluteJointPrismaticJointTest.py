@@ -67,11 +67,12 @@ for i in range(5):
 
     ep0 = eulerParameters0 #no rotation
     graphicsBody = GraphicsDataOrthoCubePoint([0,0,0], [L,d,d], color4steelblue)
-    [nRB, oRB] = AddRigidBody(mbs, inertia, nodeType=exu.NodeType.RotationEulerParameters,
-                              position=p0,
-                              rotationMatrix=A0,
+    oRB = mbs.CreateRigidBody(inertia=inertia, 
+                              referencePosition=p0,
+                              referenceRotationMatrix=A0,
                               gravity=g,
                               graphicsDataList=[graphicsBody])
+    nRB= mbs.GetObject(oRB)['nodeNumber']
 
     mPos0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber = oRB, localPosition = [-0.5*L,0,0]))
     mPos1 = mbs.AddMarker(MarkerBodyRigid(bodyNumber = oRB, localPosition = [ 0.5*L,0,0]))
@@ -158,13 +159,13 @@ if useGraphics:
 else:
     simulationSettings.solutionSettings.writeSolutionToFile = False
 
-#exu.SolveDynamic(mbs, simulationSettings, solverType=exu.DynamicSolverType.TrapezoidalIndex2)
-exu.SolveDynamic(mbs, simulationSettings, showHints=True)
+#mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.TrapezoidalIndex2)
+mbs.SolveDynamic(simulationSettings, showHints=True)
 
 if False: #use this to reload the solution and use SolutionViewer
     sol = LoadSolutionFile('coordinatesSolution.txt')
-    from exudyn.interactive import SolutionViewer
-    SolutionViewer(mbs, sol)
+    
+    mbs.SolutionViewer(sol)
 
 
 u0 = mbs.GetNodeOutput(nRB, exu.OutputVariableType.Displacement)

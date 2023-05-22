@@ -219,7 +219,7 @@ simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.timeIntegration.explicitIntegration.computeEndOfStepAccelerations = False #increase performance, accelerations less accurate
 simulationSettings.timeIntegration.explicitIntegration.computeMassMatrixInversePerBody = True ##2022-12-16: increase performance for multi-threading, Newton increment faster by factor 6 for 8 threads
 
-exu.SolveDynamic(mbs, simulationSettings, solverType=exu.DynamicSolverType.ExplicitEuler)
+mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.ExplicitEuler)
 
 u = mbs.GetNodeOutput(sNodeNum, exu.OutputVariableType.Coordinates)
 uSum = u[0] + u[1] + u[2]
@@ -239,7 +239,7 @@ if useGraphics:
     exu.StopRenderer() #safely close rendering window!
 
 if useGraphics:
-    from exudyn.plot import PlotSensor
-    # PlotSensor(mbs, [sNode], [2])
-    PlotSensor(mbs, [sNode,sNode], [0,1])
+    
+    # mbs.PlotSensor([sNode], [2])
+    mbs.PlotSensor([sNode,sNode], [0,1])
     

@@ -208,7 +208,7 @@ for mode in range(2):
             SC.SetRenderState(exu.sys['renderState'])
         mbs.WaitForUserToContinue()
     
-    exu.SolveDynamic(mbs, simulationSettings, 
+    mbs.SolveDynamic(simulationSettings, 
                      solverType=exu.DynamicSolverType.TrapezoidalIndex2,
                      #showHints=True
                      )
@@ -229,15 +229,15 @@ exudynTestGlobals.testResult = uTest
 
 #%%+++++++++++++++++++++++
 if useGraphics:
-    from exudyn.plot import PlotSensor
-    PlotSensor(mbs,closeAll=True) 
-    PlotSensor(mbs, sensorNumbers=[sForce], components=[2]) 
-    PlotSensor(mbs, sensorNumbers=sAngVel, components=[0,1,2]) 
-    PlotSensor(mbs, sensorNumbers=sAngVelLocal, components=[0,1,2]) 
-    PlotSensor(mbs, sensorNumbers=sAngAcc, components=[0,1,2]) 
+    
+    mbs.PlotSensor(closeAll=True) 
+    mbs.PlotSensor(sensorNumbers=[sForce], components=[2]) 
+    mbs.PlotSensor(sensorNumbers=sAngVel, components=[0,1,2]) 
+    mbs.PlotSensor(sensorNumbers=sAngVelLocal, components=[0,1,2]) 
+    mbs.PlotSensor(sensorNumbers=sAngAcc, components=[0,1,2]) 
 
-    PlotSensor(mbs, sensorNumbers=sTrailVel, components=[0,1,2]) 
-    PlotSensor(mbs, sensorNumbers=sTrailVel, components=exu.plot.componentNorm, 
+    mbs.PlotSensor(sensorNumbers=sTrailVel, components=[0,1,2]) 
+    mbs.PlotSensor(sensorNumbers=sTrailVel, components=exu.plot.componentNorm, 
                newFigure=False, colorCodeOffset=3, labels=['trail velocity norm']) 
 
     forceEnd=mbs.GetSensorValues(sensorNumber=sForce)

@@ -155,7 +155,7 @@ if useGraphics:
     exu.StartRenderer()
     mbs.WaitForUserToContinue()
 
-exu.SolveDynamic(mbs, simulationSettings, showHints=False)
+mbs.SolveDynamic(simulationSettings, showHints=False)
 
 if useGraphics:
     SC.WaitForRenderEngineStopFlag()
@@ -169,12 +169,12 @@ exu.Print('velocity=', mbs.GetSensorValues(sVelocity))
 # pressures= [6441296.09086297 3008420.04232005]
 # velocity= [-0.0050061   0.20338669  0.        ]
 
-# from exudyn.plot import PlotSensor
-# PlotSensor(mbs, sensorNumbers=sForce, components=exudyn.plot.componentNorm, labels=['connector force norm'], yLabel='force (N)', closeAll=True)
-# PlotSensor(mbs, sensorNumbers=sDistance, components=0)
-# PlotSensor(mbs, sensorNumbers=[sPressures]*2, components=[0,1], labels=['p1', 'p2'], yLabel='pressure (N/m^2)')
+# 
+# mbs.PlotSensor(sensorNumbers=sForce, components=exudyn.plot.componentNorm, labels=['connector force norm'], yLabel='force (N)', closeAll=True)
+# mbs.PlotSensor(sensorNumbers=sDistance, components=0)
+# mbs.PlotSensor(sensorNumbers=[sPressures]*2, components=[0,1], labels=['p1', 'p2'], yLabel='pressure (N/m^2)')
 
-#PlotSensor(mbs, sensorNumbers=p01, components=0, labels=['differential hydraulic force'], yLabel='hydraulic force (N)')
+#mbs.PlotSensor(sensorNumbers=p01, components=0, labels=['differential hydraulic force'], yLabel='hydraulic force (N)')
 
 #compute error for test suite:
 sol2 = mbs.systemData.GetODE2Coordinates(); 

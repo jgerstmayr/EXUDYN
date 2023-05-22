@@ -25,6 +25,7 @@ mbs = SC.AddSystem()
 
 import numpy as np
 
+import time
 import timeit
 
 import exudyn.basicUtilities as eb
@@ -274,7 +275,7 @@ if True: #now import mesh as mechanical model to EXUDYN
 
 
     if doStatic:
-        exu.SolveStatic(mbs, simulationSettings=simulationSettings, showHints=True)
+        mbs.SolveStatic(simulationSettings=simulationSettings, showHints=True)
         uTipNum = -mbs.GetSensorValues(sTip)[1]
         print("uTipNumerical=", uTipNum, ", uTipAnalytical=",uTip)
         #HCB:
@@ -288,7 +289,7 @@ if True: #now import mesh as mechanical model to EXUDYN
         #10 modes HCB (two interfaces:tip/support):
         #uTipNumerical= 0.013867428098277693 (nearly identical with other case)
     else:
-        exu.SolveDynamic(mbs, #solverType=exu.DynamicSolverType.TrapezoidalIndex2, 
+        mbs.SolveDynamic(#solverType=exu.DynamicSolverType.TrapezoidalIndex2, 
                           simulationSettings=simulationSettings)
         uTipNum = -mbs.GetSensorValues(sTip)[1]
         print("uTipNumerical=", uTipNum)

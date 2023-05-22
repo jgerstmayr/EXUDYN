@@ -80,7 +80,7 @@ def Simulate(SC, mbs):
     
     mbs.WaitForUserToContinue() #stop before simulating
     
-    exu.SolveDynamic(mbs, simulationSettings = simulationSettings,
+    mbs.SolveDynamic(simulationSettings = simulationSettings,
                      solverType=exu.DynamicSolverType.TrapezoidalIndex2)
     
     # SC.WaitForRenderEngineStopFlag() #stop before closing
@@ -119,7 +119,7 @@ SC2.WaitForRenderEngineStopFlag() #stop before closing
 exu.StopRenderer() #safely close rendering window!
 
 if False:
-    from exudyn.plot import PlotSensor
-    PlotSensor(mbs, [sens1],[1])
+    
+    mbs.PlotSensor([sens1],[1])
 
 

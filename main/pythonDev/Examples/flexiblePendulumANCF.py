@@ -123,7 +123,7 @@ if useGraphics:
     exu.StartRenderer()
     mbs.WaitForUserToContinue()
 
-success = exu.SolveDynamic(mbs, simulationSettings, 
+success = mbs.SolveDynamic(simulationSettings, 
                            exudyn.DynamicSolverType.TrapezoidalIndex2)
 
 if useGraphics:
@@ -135,9 +135,9 @@ if useGraphics:
 #%%++++++++++++++++++
     if True:
         import matplotlib.pyplot as plt
-        from exudyn.plot import PlotSensor
+        
         from exudyn.signalProcessing import FilterSensorOutput
 
-        PlotSensor(mbs, sensorNumbers=[sPos,sPos], components=[0,1], 
+        mbs.PlotSensor(sensorNumbers=[sPos,sPos], components=[0,1], 
                    title='ang vel', closeAll=True,
                    markerStyles=['','x ','o '], lineStyles=['-','',''])

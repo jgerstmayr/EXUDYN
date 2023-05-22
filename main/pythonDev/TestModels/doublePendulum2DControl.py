@@ -57,6 +57,7 @@ mCGround= mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
 mRotNode0 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n0, coordinate=2))
 mRotNode1 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n1, coordinate=2))
 
+#load user function, first joint:
 def UFtorque1(mbs, t, load):
     omega = 0.5
     phi0 = mbs.GetMarkerOutput(mRotNode0, exu.OutputVariableType.Coordinates)[0]
@@ -73,6 +74,7 @@ def UFtorque1(mbs, t, load):
     torque = k*(phiDesired-deltaPhi) + d*(phiDesired_t-deltaPhi_t)
     return torque
 
+#load user function, second joint:
 def UFtorque0(mbs, t, load):
     phi0 = mbs.GetMarkerOutput(mRotNode0, exu.OutputVariableType.Coordinates)[0]
     omega = 0.5
@@ -98,7 +100,8 @@ mbs.Assemble()
 #add dependencies of load user functions on nodal coordinates:
 ltgN0 = mbs.systemData.GetNodeLTGODE2(n0)
 ltgN1 = mbs.systemData.GetNodeLTGODE2(n1)
-#both loads depend on both bodies
+#both loads depend on both bodies; this information needs to be added in order that
+#  the solver knows dependencies when computing Jacobians
 mbs.systemData.AddODE2LoadDependencies(lTorque0, list(ltgN0)+list(ltgN1))
 mbs.systemData.AddODE2LoadDependencies(lTorque1, list(ltgN0)+list(ltgN1))
 
@@ -120,5 +123,5 @@ simulationSettings.displayComputationTime = True
 
 exu.StartRenderer()
 mbs.WaitForUserToContinue()
-exu.SolveDynamic(mbs,simulationSettings)
+mbs.SolveDynamic(simulationSettings)
 exu.StopRenderer()

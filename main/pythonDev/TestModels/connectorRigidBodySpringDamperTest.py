@@ -1,7 +1,9 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  Test for RigidBodySpringDamper with springForceTorqueUserFunction 
+# Details:  Test for RigidBodySpringDamper with springForceTorqueUserFunction;
+#           the RigidBodySpringDamper can be used to model complicance effects in joints where 
+#           one axis undergoes large rotations, and the other rotations are small
 #
 # Author:   Johannes Gerstmayr
 # Date:     2021-01-07
@@ -87,7 +89,7 @@ if useGraphics:
     mbs.WaitForUserToContinue()    #wait for pressing SPACE bar to continue
 
 #start solver:
-exu.SolveDynamic(mbs, simulationSettings)
+mbs.SolveDynamic(simulationSettings)
 
 if useGraphics:
     SC.WaitForRenderEngineStopFlag()#wait for pressing 'Q' to quit

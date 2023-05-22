@@ -77,6 +77,7 @@ for case in caseList:
     ks3=1 #shear correction, bending
     ff=1 #drawing factor
 
+    #define beam parameters and loads for different cases
     if case == 0 or case == 1:
         caseName = cases[case]
 
@@ -146,6 +147,8 @@ for case in caseList:
     
     Gm = Em/(2*(1+nu))      # Shear modulus
 
+    #compute sectionData
+    
     # Cross-section properties
     Iyy = h*w**3/12 # Second moment of area of the beam cross-section
     Izz = w*h**3/12 # Second moment of area of the beam cross-section
@@ -188,6 +191,7 @@ for case in caseList:
     lElem = L/nElements
     if compute3D:
         initialRotations = eY+eZ
+        #create beam nodes and elements
         n0 = mbs.AddNode(NodePoint3DSlope23(referenceCoordinates=[0,0,0]+initialRotations))
         nInit = n0
         for k in range(nElements):
@@ -288,7 +292,7 @@ for case in caseList:
     
     #     # constrainedCoordinates=[]
         
-    #     compeig=exu.ComputeODE2Eigenvalues(mbs, simulationSettings, useSparseSolver=False, 
+    #     compeig=mbs.ComputeODE2Eigenvalues(simulationSettings, useSparseSolver=False, 
     #                                 numberOfEigenvalues= nRigidModes+nModes, 
     #                                 constrainedCoordinates=constrainedCoordinates,
     #                                 convert2Frequencies= False)
@@ -305,9 +309,9 @@ for case in caseList:
     #             mbs.WaitForUserToContinue()
 
     # else:
-    exu.SolveStatic(mbs, simulationSettings)
-    # exu.SolveDynamic(mbs, simulationSettings)
-    #exu.SolveDynamic(mbs, simulationSettings, solverType = exu.DynamicSolverType.RK44)
+    mbs.SolveStatic(simulationSettings)
+    # mbs.SolveDynamic(simulationSettings)
+    #mbs.SolveDynamic(simulationSettings, solverType = exu.DynamicSolverType.RK44)
     
 
     if useGraphics:

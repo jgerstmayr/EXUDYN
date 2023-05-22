@@ -190,8 +190,8 @@ if useGraphics:
     #mbs.WaitForUserToContinue()    #wait for pressing SPACE bar to continue
 
 #start solver:
-exu.SolveDynamic(mbs, solverType=exu.DynamicSolverType.TrapezoidalIndex2, simulationSettings=simulationSettings)
-#exu.SolveDynamic(mbs, solverType=exu.DynamicSolverType.RK67, simulationSettings=simulationSettings)
+mbs.SolveDynamic(solverType=exu.DynamicSolverType.TrapezoidalIndex2, simulationSettings=simulationSettings)
+#mbs.SolveDynamic(solverType=exu.DynamicSolverType.RK67, simulationSettings=simulationSettings)
 
 if useGraphics:
     #SC.WaitForRenderEngineStopFlag()#wait for pressing 'Q' to quit
@@ -205,13 +205,13 @@ exudynTestGlobals.testResult = u[1]
 
 
 if useGraphics:
-    from exudyn.plot import PlotSensor
+    
     import matplotlib.pyplot as plt
     plt.close('all')
 
-    PlotSensor(mbs, sensorNumbers=[sPos, sPosRef], components=[1,1], figureName='Pos')
-    PlotSensor(mbs, sensorNumbers=[sVel, sVelRef], components=[1,1], figureName='Vel')
-    PlotSensor(mbs, sensorNumbers=[sAcc, sAccRef], components=[1,1], figureName='Acc')
+    mbs.PlotSensor(sensorNumbers=[sPos, sPosRef], components=[1,1], figureName='Pos')
+    mbs.PlotSensor(sensorNumbers=[sVel, sVelRef], components=[1,1], figureName='Vel')
+    mbs.PlotSensor(sensorNumbers=[sAcc, sAccRef], components=[1,1], figureName='Acc')
 
 
 

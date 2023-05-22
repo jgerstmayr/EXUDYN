@@ -175,7 +175,7 @@ if useGraphics:
     mbs.WaitForUserToContinue()
 
 
-exu.SolveDynamic(mbs, simulationSettings, 
+mbs.SolveDynamic(simulationSettings, 
                  #solverType=exu.DynamicSolverType.TrapezoidalIndex2 #in this case, drift shows up significantly!
                  )
 
@@ -184,12 +184,12 @@ if useGraphics:
     exu.StopRenderer() #safely close rendering window!
 
 if True:
-    from exudyn.plot import PlotSensor
+    
 
-    PlotSensor(mbs, sPos1, components=[0,1,2], labels=['pos X','pos Y','pos Z'], closeAll=True)
-    PlotSensor(mbs, sOmega1, components=[0,1,2], labels=['omega X','omega Y','omega Z'])
-    PlotSensor(mbs, sLength, components=[0], labels=['length'])
-    PlotSensor(mbs, sLength_t, components=[0], labels=['vel'])
+    mbs.PlotSensor(sPos1, components=[0,1,2], labels=['pos X','pos Y','pos Z'], closeAll=True)
+    mbs.PlotSensor(sOmega1, components=[0,1,2], labels=['omega X','omega Y','omega Z'])
+    mbs.PlotSensor(sLength, components=[0], labels=['length'])
+    mbs.PlotSensor(sLength_t, components=[0], labels=['vel'])
 
 
 

@@ -1,7 +1,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  ANCF cable element contact with circle
+# Details:  ANCF cable element contact with circle; test model fo ObjectContactCircleCable2D
 #
 # Author:   Johannes Gerstmayr
 # Date:     2019-09-01
@@ -118,29 +118,27 @@ if useContact:
             nodeData = mbs.AddNode(NodeGenericData(initialCoordinates=[1],numberOfDataCoordinates=1)) #start with gap!
             mbs.AddObject(ObjectContactCoordinate(markerNumbers=[mGround, mNC], nodeNumber = nodeData, contactStiffness = cStiffness, contactDamping=0*cDamping, offset = -1))
 
-useCircleContact = True
-if useCircleContact:
-    nSegments = 4 #number of contact segments; must be consistent between nodedata and contact element
-    initialGapList = [0.1]*nSegments #initial gap of 0.1
+nSegments = 4 #number of contact segments; must be consistent between nodedata and contact element
+initialGapList = [0.1]*nSegments #initial gap of 0.1
 
-    mGroundCircle = mbs.AddMarker(MarkerBodyPosition(bodyNumber = oGround, localPosition=[0.75*L,-0.5,0])) 
-    mGroundCircle2 = mbs.AddMarker(MarkerBodyPosition(bodyNumber = oGround, localPosition=[0.25*L,-0.15,0])) 
+mGroundCircle = mbs.AddMarker(MarkerBodyPosition(bodyNumber = oGround, localPosition=[0.75*L,-0.5,0])) 
+mGroundCircle2 = mbs.AddMarker(MarkerBodyPosition(bodyNumber = oGround, localPosition=[0.25*L,-0.15,0])) 
 
-    #mCable = mbs.AddMarker(MarkerBodyCable2DShape(bodyNumber=elem, numberOfSegments = nSegments))
-    #nodeDataContactCable = mbs.AddNode(NodeGenericData(initialCoordinates=initialGapList,numberOfDataCoordinates=nSegments))
-    #mbs.AddObject(ObjectContactCircleCable2D(markerNumbers=[mGroundCircle, mCable], nodeNumber = nodeDataContactCable, 
-    #                                         numberOfContactSegments=nSegments, contactStiffness = cStiffness, contactDamping=cDamping, 
-    #                                         circleRadius = 0.4, offset = 0))
-    for i in range(len(cableList)):
-        mCable = mbs.AddMarker(MarkerBodyCable2DShape(bodyNumber=cableList[i], numberOfSegments = nSegments))
-        nodeDataContactCable = mbs.AddNode(NodeGenericData(initialCoordinates=initialGapList,numberOfDataCoordinates=nSegments))
-        mbs.AddObject(ObjectContactCircleCable2D(markerNumbers=[mGroundCircle, mCable], nodeNumber = nodeDataContactCable, 
-                                                 numberOfContactSegments=nSegments, contactStiffness = cStiffness, contactDamping=0*cDamping, 
-                                                 circleRadius = 0.2, offset = 0))
-        nodeDataContactCable = mbs.AddNode(NodeGenericData(initialCoordinates=initialGapList,numberOfDataCoordinates=nSegments))
-        mbs.AddObject(ObjectContactCircleCable2D(markerNumbers=[mGroundCircle2, mCable], nodeNumber = nodeDataContactCable, 
-                                                 numberOfContactSegments=nSegments, contactStiffness = cStiffness, contactDamping=0*cDamping, 
-                                                 circleRadius = 0.1, offset = 0))
+#mCable = mbs.AddMarker(MarkerBodyCable2DShape(bodyNumber=elem, numberOfSegments = nSegments))
+#nodeDataContactCable = mbs.AddNode(NodeGenericData(initialCoordinates=initialGapList,numberOfDataCoordinates=nSegments))
+#mbs.AddObject(ObjectContactCircleCable2D(markerNumbers=[mGroundCircle, mCable], nodeNumber = nodeDataContactCable, 
+#                                         numberOfContactSegments=nSegments, contactStiffness = cStiffness, contactDamping=cDamping, 
+#                                         circleRadius = 0.4, offset = 0))
+for i in range(len(cableList)):
+    mCable = mbs.AddMarker(MarkerBodyCable2DShape(bodyNumber=cableList[i], numberOfSegments = nSegments))
+    nodeDataContactCable = mbs.AddNode(NodeGenericData(initialCoordinates=initialGapList,numberOfDataCoordinates=nSegments))
+    mbs.AddObject(ObjectContactCircleCable2D(markerNumbers=[mGroundCircle, mCable], nodeNumber = nodeDataContactCable, 
+                                             numberOfContactSegments=nSegments, contactStiffness = cStiffness, contactDamping=0*cDamping, 
+                                             circleRadius = 0.2, offset = 0))
+    nodeDataContactCable = mbs.AddNode(NodeGenericData(initialCoordinates=initialGapList,numberOfDataCoordinates=nSegments))
+    mbs.AddObject(ObjectContactCircleCable2D(markerNumbers=[mGroundCircle2, mCable], nodeNumber = nodeDataContactCable, 
+                                             numberOfContactSegments=nSegments, contactStiffness = cStiffness, contactDamping=0*cDamping, 
+                                             circleRadius = 0.1, offset = 0))
     
 
 #mbs.systemData.Info()
@@ -189,7 +187,7 @@ if useGraphics:
     exu.StartRenderer()
 
 #mbs.WaitForUserToContinue()
-exu.SolveStatic(mbs, simulationSettings) #183 Newton iterations, 0.114 seconds
+mbs.SolveStatic(simulationSettings) #183 Newton iterations, 0.114 seconds
 
 sol = mbs.systemData.GetODE2Coordinates()
 n = len(sol)

@@ -67,7 +67,7 @@ SC.visualizationSettings.openGL.lineWidth = 2
 exu.StartRenderer()
 
 
-exu.SolveDynamic(mbs, simulationSettings)
+mbs.SolveDynamic(simulationSettings)
 
 SC.WaitForRenderEngineStopFlag()
 exu.StopRenderer() #safely close rendering window!

@@ -20,6 +20,17 @@ Function: SolutionViewer
   | \ ``checkRenderEngineStopFlag``\ : if True, stopping renderer (pressing Q or Escape) also causes stopping the interactive dialog
 - | \ *output*\ :
   | None; updates current visualization state, renders the scene continuously (after pressing button 'Run')
+- | \ *example*\ :
+
+.. code-block:: python
+
+  #HERE, mbs must contain same model as solution stored in coordinatesSolution.txt
+  #adjust autoFitScence, otherwise it may lead to unwanted fit to scene
+  SC.visualizationSettings.general.autoFitScene = False
+  from exudyn.interactive import SolutionViewer #import function
+  sol = LoadSolutionFile('coordinatesSolution.txt') #load solution: adjust to your file name
+  mbs.SolutionViewer(sol) #call via MainSystem
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
@@ -31,7 +42,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: CreateMassPoint
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateMassPoint <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L101>`__\ (\ ``name = ''``\ , \ ``referenceCoordinates = [0.,0.,0.]``\ , \ ``initialCoordinates = [0.,0.,0.]``\ , \ ``initialVelocities = [0.,0.,0.]``\ , \ ``physicsMass = 0``\ , \ ``gravity = [0.,0.,0.]``\ , \ ``graphicsDataList = []``\ , \ ``drawSize = -1``\ , \ ``color = [-1.,-1.,-1.,-1.]``\ , \ ``show = True``\ , \ ``create2D = False``\ , \ ``returnDict = False``\ )
+`CreateMassPoint <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L118>`__\ (\ ``name = ''``\ , \ ``referenceCoordinates = [0.,0.,0.]``\ , \ ``initialCoordinates = [0.,0.,0.]``\ , \ ``initialVelocities = [0.,0.,0.]``\ , \ ``physicsMass = 0``\ , \ ``gravity = [0.,0.,0.]``\ , \ ``graphicsDataList = []``\ , \ ``drawSize = -1``\ , \ ``color = [-1.,-1.,-1.,-1.]``\ , \ ``show = True``\ , \ ``create2D = False``\ , \ ``returnDict = False``\ )
 
 - | \ *function description*\ :
   | helper function to create 2D or 3D mass point object and node, using arguments as in NodePoint and MassPoint
@@ -51,10 +62,29 @@ Function: CreateMassPoint
   | \ ``returnDict``\ : if False, returns object index; if True, returns dict of all information on created object and node
 - | \ *output*\ :
   | Union[dict, ObjectIndex]; returns mass point object index or dict with all data on request (if returnDict=True)
+- | \ *example*\ :
+
+.. code-block:: python
+
+  import exudyn as exu
+  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+  import numpy as np
+  SC = exu.SystemContainer()
+  mbs = SC.AddSystem()
+  b0=mbs.CreateMassPoint(referenceCoordinates = [0,0,0],
+                         initialVelocities = [2,5,0],
+                         physicsMass = 1, gravity = [0,-9.81,0],
+                         drawSize = 0.5, color=color4blue)
+  mbs.Assemble()
+  simulationSettings = exu.SimulationSettings() #takes currently set values or default values
+  simulationSettings.timeIntegration.numberOfSteps = 1000
+  simulationSettings.timeIntegration.endTime = 2
+  mbs.SolveDynamic(simulationSettings = simulationSettings)
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `springDamperTutorialNew.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/springDamperTutorialNew.py>`_\  (Ex)
+    \ `springDamperTutorialNew.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/springDamperTutorialNew.py>`_\  (Ex), \ `mainSystemExtensionsTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mainSystemExtensionsTests.py>`_\  (TM)
 
 
 
@@ -62,7 +92,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: CreateRigidBody
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateRigidBody <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L208>`__\ (\ ``name = ''``\ , \ ``referencePosition = [0.,0.,0.]``\ , \ ``referenceRotationMatrix = np.eye(3)``\ , \ ``initialVelocity = [0.,0.,0.]``\ , \ ``initialAngularVelocity = [0.,0.,0.]``\ , \ ``initialDisplacement = None``\ , \ ``initialRotationMatrix = None``\ , \ ``inertia = None``\ , \ ``gravity = [0.,0.,0.]``\ , \ ``nodeType = exudyn.NodeType.RotationEulerParameters``\ , \ ``graphicsDataList = []``\ , \ ``drawSize = -1``\ , \ ``color = [-1.,-1.,-1.,-1.]``\ , \ ``show = True``\ , \ ``create2D = False``\ , \ ``returnDict = False``\ )
+`CreateRigidBody <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L247>`__\ (\ ``name = ''``\ , \ ``referencePosition = [0.,0.,0.]``\ , \ ``referenceRotationMatrix = np.eye(3)``\ , \ ``initialVelocity = [0.,0.,0.]``\ , \ ``initialAngularVelocity = [0.,0.,0.]``\ , \ ``initialDisplacement = None``\ , \ ``initialRotationMatrix = None``\ , \ ``inertia = None``\ , \ ``gravity = [0.,0.,0.]``\ , \ ``nodeType = exudyn.NodeType.RotationEulerParameters``\ , \ ``graphicsDataList = []``\ , \ ``drawSize = -1``\ , \ ``color = [-1.,-1.,-1.,-1.]``\ , \ ``show = True``\ , \ ``create2D = False``\ , \ ``returnDict = False``\ )
 
 - | \ *function description*\ :
   | helper function to create 3D (or 2D) rigid body object and node; all quantities are global (angular velocity, etc.)
@@ -85,10 +115,33 @@ Function: CreateRigidBody
   | \ ``returnDict``\ : if False, returns object index; if True, returns dict of all information on created object and node
 - | \ *output*\ :
   | Union[dict, ObjectIndex]; returns rigid body object index (or dict with 'nodeNumber', 'objectNumber' and possibly 'loadNumber' and 'markerBodyMass' if returnDict=True)
+- | \ *example*\ :
+
+.. code-block:: python
+
+  import exudyn as exu
+  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+  import numpy as np
+  SC = exu.SystemContainer()
+  mbs = SC.AddSystem()
+  b0 = mbs.CreateRigidBody(inertia = InertiaCuboid(density=5000,
+                                                   sideLengths=[1,0.1,0.1]),
+                           referencePosition = [1,0,0],
+                           initialVelocity = [2,5,0],
+                           initialAngularVelocity = [5,0.5,0.7],
+                           gravity = [0,-9.81,0],
+                           graphicsDataList = [GraphicsDataOrthoCubePoint(size=[1,0.1,0.1],
+                                                                        color=color4red)])
+  mbs.Assemble()
+  simulationSettings = exu.SimulationSettings() #takes currently set values or default values
+  simulationSettings.timeIntegration.numberOfSteps = 1000
+  simulationSettings.timeIntegration.endTime = 2
+  mbs.SolveDynamic(simulationSettings = simulationSettings)
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `rigidBodyTutorial3.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial3.py>`_\  (Ex), \ `rigidBodyTutorial3withMarkers.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial3withMarkers.py>`_\  (Ex), \ `rigidBodyCOMtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rigidBodyCOMtest.py>`_\  (TM)
+    \ `addPrismaticJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addPrismaticJoint.py>`_\  (Ex), \ `addRevoluteJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py>`_\  (Ex), \ `graphicsDataExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/graphicsDataExample.py>`_\  (Ex), \ `rigidBodyTutorial3.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial3.py>`_\  (Ex), \ `rigidBodyTutorial3withMarkers.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial3withMarkers.py>`_\  (Ex), \ `driveTrainTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/driveTrainTest.py>`_\  (TM), \ `mainSystemExtensionsTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mainSystemExtensionsTests.py>`_\  (TM), \ `perf3DRigidBodies.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/perf3DRigidBodies.py>`_\  (TM)
 
 
 
@@ -96,30 +149,111 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: CreateSpringDamper
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateSpringDamper <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L404>`__\ (\ ``name = ''``\ , \ ``bodyOrNodeList = [None, None]``\ , \ ``localPosition0 = [0.,0.,0.]``\ , \ ``localPosition1 = [0.,0.,0.]``\ , \ ``referenceLength = None``\ , \ ``stiffness = 0.``\ , \ ``damping = 0.``\ , \ ``force = 0.``\ , \ ``velocityOffset = 0.``\ , \ ``show = True``\ , \ ``drawSize = -1``\ , \ ``color = color4default``\ )
+`CreateSpringDamper <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L469>`__\ (\ ``name = ''``\ , \ ``bodyOrNodeList = [None, None]``\ , \ ``localPosition0 = [0.,0.,0.]``\ , \ ``localPosition1 = [0.,0.,0.]``\ , \ ``referenceLength = None``\ , \ ``stiffness = 0.``\ , \ ``damping = 0.``\ , \ ``force = 0.``\ , \ ``velocityOffset = 0.``\ , \ ``show = True``\ , \ ``drawSize = -1``\ , \ ``color = color4default``\ )
 
 - | \ *function description*\ :
-  | helper function to create SpringDamper connector, using arguments from ObjectConnectorSpringDamper
+  | helper function to create SpringDamper connector, using arguments from ObjectConnectorSpringDamper; similar interface as CreateDistanceConstraint(...)
   | - NOTE that this function is added to MainSystem via Python function MainSystemCreateSpringDamper.
 - | \ *input*\ :
   | \ ``name``\ : name string for connector; markers get Marker0:name and Marker1:name
   | \ ``bodyOrNodeList``\ : a list of object numbers (with specific localPosition0/1) or node numbers; may also be of mixed types
-  | \ ``localPosition0``\ : local position on body0, if not a node number
-  | \ ``localPosition1``\ : local position on body1, if not a node number
-  | \ ``referenceLength``\ : if None, length is computed from reference position of bodies or nodes; if True, this reference length is used for spring
-  | \ ``stiffness``\ : stiffness coefficient
-  | \ ``damping``\ : damping coefficient
-  | \ ``force``\ : additional force applied
-  | \ ``velocityOffset``\ : if referenceLength is changed over time, the velocityOffset may be changed accordingly to emulate a reference motion
+  | \ ``localPosition0``\ : local position (as 3D list or numpy array) on body0, if not a node number
+  | \ ``localPosition1``\ : local position (as 3D list or numpy array) on body1, if not a node number
+  | \ ``referenceLength``\ : if None, length is computed from reference position of bodies or nodes; if not None, this scalar reference length is used for spring
+  | \ ``stiffness``\ : scalar stiffness coefficient
+  | \ ``damping``\ : scalar damping coefficient
+  | \ ``force``\ : scalar additional force applied
+  | \ ``velocityOffset``\ : scalar offset: if referenceLength is changed over time, the velocityOffset may be changed accordingly to emulate a reference motion
   | \ ``show``\ : if True, connector visualization is drawn
   | \ ``drawSize``\ : general drawing size of connector
   | \ ``color``\ : color of connector
 - | \ *output*\ :
   | ObjectIndex; returns index of newly created object
+- | \ *example*\ :
+
+.. code-block:: python
+
+  import exudyn as exu
+  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+  import numpy as np
+  SC = exu.SystemContainer()
+  mbs = SC.AddSystem()
+  b0 = mbs.CreateMassPoint(referenceCoordinates = [2,0,0],
+                           initialVelocities = [2,5,0],
+                           physicsMass = 1, gravity = [0,-9.81,0],
+                           drawSize = 0.5, color=color4blue)
+  oGround = mbs.AddObject(ObjectGround())
+  #add vertical spring
+  oSD = mbs.CreateSpringDamper(bodyOrNodeList=[oGround, b0],
+                               localPosition0=[2,1,0],
+                               localPosition1=[0,0,0],
+                               stiffness=1e4, damping=1e2,
+                               drawSize=0.2)
+  mbs.Assemble()
+  simulationSettings = exu.SimulationSettings() #takes currently set values or default values
+  simulationSettings.timeIntegration.numberOfSteps = 1000
+  simulationSettings.timeIntegration.endTime = 2
+  SC.visualizationSettings.nodes.drawNodesAsPoint=False
+  mbs.SolveDynamic(simulationSettings = simulationSettings)
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `springDamperTutorialNew.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/springDamperTutorialNew.py>`_\  (Ex)
+    \ `springDamperTutorialNew.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/springDamperTutorialNew.py>`_\  (Ex), \ `mainSystemExtensionsTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mainSystemExtensionsTests.py>`_\  (TM)
+
+
+
+.. _sec-mainsystemextensions-createcartesianspringdamper:
+
+Function: CreateCartesianSpringDamper
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`CreateCartesianSpringDamper <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L605>`__\ (\ ``name = ''``\ , \ ``bodyOrNodeList = [None, None]``\ , \ ``localPosition0 = [0.,0.,0.]``\ , \ ``localPosition1 = [0.,0.,0.]``\ , \ ``stiffness = [0.,0.,0.]``\ , \ ``damping = [0.,0.,0.]``\ , \ ``offset = [0.,0.,0.]``\ , \ ``show = True``\ , \ ``drawSize = -1``\ , \ ``color = color4default``\ )
+
+- | \ *function description*\ :
+  | helper function to create CartesianSpringDamper connector, using arguments from ObjectConnectorCartesianSpringDamper
+  | - NOTE that this function is added to MainSystem via Python function MainSystemCreateCartesianSpringDamper.
+- | \ *input*\ :
+  | \ ``name``\ : name string for connector; markers get Marker0:name and Marker1:name
+  | \ ``bodyOrNodeList``\ : a list of object numbers (with specific localPosition0/1) or node numbers; may also be of mixed types
+  | \ ``localPosition0``\ : local position (as 3D list or numpy array) on body0, if not a node number
+  | \ ``localPosition1``\ : local position (as 3D list or numpy array) on body1, if not a node number
+  | \ ``stiffness``\ : stiffness coefficients (as 3D list or numpy array)
+  | \ ``damping``\ : damping coefficients (as 3D list or numpy array)
+  | \ ``offset``\ : offset vector (as 3D list or numpy array)
+  | \ ``show``\ : if True, connector visualization is drawn
+  | \ ``drawSize``\ : general drawing size of connector
+  | \ ``color``\ : color of connector
+- | \ *output*\ :
+  | ObjectIndex; returns index of newly created object
+- | \ *example*\ :
+
+.. code-block:: python
+
+  import exudyn as exu
+  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+  import numpy as np
+  SC = exu.SystemContainer()
+  mbs = SC.AddSystem()
+  b0 = mbs.CreateMassPoint(referenceCoordinates = [7,0,0],
+                            physicsMass = 1, gravity = [0,-9.81,0],
+                            drawSize = 0.5, color=color4blue)
+  oGround = mbs.AddObject(ObjectGround())
+  oSD = mbs.CreateCartesianSpringDamper(bodyOrNodeList=[oGround, b0],
+                                localPosition0=[7.5,1,0],
+                                localPosition1=[0,0,0],
+                                stiffness=[200,2000,0], damping=[2,20,0],
+                                drawSize=0.2)
+  mbs.Assemble()
+  simulationSettings = exu.SimulationSettings() #takes currently set values or default values
+  simulationSettings.timeIntegration.numberOfSteps = 1000
+  simulationSettings.timeIntegration.endTime = 2
+  SC.visualizationSettings.nodes.drawNodesAsPoint=False
+  mbs.SolveDynamic(simulationSettings = simulationSettings)
+
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
+
+    \ `mainSystemExtensionsTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mainSystemExtensionsTests.py>`_\  (TM)
 
 
 
@@ -127,7 +261,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: CreateRevoluteJoint
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateRevoluteJoint <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L514>`__\ (\ ``name = ''``\ , \ ``bodyNumbers = [None, None]``\ , \ ``position = []``\ , \ ``axis = []``\ , \ ``useGlobalFrame = True``\ , \ ``show = True``\ , \ ``axisRadius = 0.1``\ , \ ``axisLength = 0.4``\ , \ ``color = color4default``\ )
+`CreateRevoluteJoint <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L712>`__\ (\ ``name = ''``\ , \ ``bodyNumbers = [None, None]``\ , \ ``position = []``\ , \ ``axis = []``\ , \ ``useGlobalFrame = True``\ , \ ``show = True``\ , \ ``axisRadius = 0.1``\ , \ ``axisLength = 0.4``\ , \ ``color = color4default``\ )
 
 - | \ *function description*\ :
   | Create revolute joint between two bodies; definition of joint position and axis in global coordinates (alternatively in body0 local coordinates) for reference configuration of bodies; all markers, markerRotation and other quantities are automatically computed
@@ -144,10 +278,34 @@ Function: CreateRevoluteJoint
   | \ ``color``\ : color of connector
 - | \ *output*\ :
   | [ObjectIndex, MarkerIndex, MarkerIndex]; returns list [oJoint, mBody0, mBody1], containing the joint object number, and the two rigid body markers on body0/1 for the joint
+- | \ *example*\ :
+
+.. code-block:: python
+
+  import exudyn as exu
+  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+  import numpy as np
+  SC = exu.SystemContainer()
+  mbs = SC.AddSystem()
+  b0 = mbs.CreateRigidBody(inertia = InertiaCuboid(density=5000,
+                                                   sideLengths=[1,0.1,0.1]),
+                           referencePosition = [3,0,0],
+                           gravity = [0,-9.81,0],
+                           graphicsDataList = [GraphicsDataOrthoCubePoint(size=[1,0.1,0.1],
+                                                                        color=color4steelblue)])
+  oGround = mbs.AddObject(ObjectGround())
+  mbs.CreateRevoluteJoint(bodyNumbers=[oGround, b0], position=[2.5,0,0], axis=[0,0,1],
+                          useGlobalFrame=True, axisRadius=0.02, axisLength=0.14)
+  mbs.Assemble()
+  simulationSettings = exu.SimulationSettings() #takes currently set values or default values
+  simulationSettings.timeIntegration.numberOfSteps = 1000
+  simulationSettings.timeIntegration.endTime = 2
+  mbs.SolveDynamic(simulationSettings = simulationSettings)
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `rigidBodyTutorial3.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial3.py>`_\  (Ex)
+    \ `addRevoluteJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py>`_\  (Ex), \ `rigidBodyTutorial3.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial3.py>`_\  (Ex), \ `solutionViewerTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/solutionViewerTest.py>`_\  (Ex), \ `mainSystemExtensionsTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mainSystemExtensionsTests.py>`_\  (TM), \ `perf3DRigidBodies.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/perf3DRigidBodies.py>`_\  (TM)
 
 
 
@@ -155,7 +313,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: CreatePrismaticJoint
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreatePrismaticJoint <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L587>`__\ (\ ``name = ''``\ , \ ``bodyNumbers = [None, None]``\ , \ ``position = []``\ , \ ``axis = []``\ , \ ``useGlobalFrame = True``\ , \ ``show = True``\ , \ ``axisRadius = 0.1``\ , \ ``axisLength = 0.4``\ , \ ``color = color4default``\ )
+`CreatePrismaticJoint <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L810>`__\ (\ ``name = ''``\ , \ ``bodyNumbers = [None, None]``\ , \ ``position = []``\ , \ ``axis = []``\ , \ ``useGlobalFrame = True``\ , \ ``show = True``\ , \ ``axisRadius = 0.1``\ , \ ``axisLength = 0.4``\ , \ ``color = color4default``\ )
 
 - | \ *function description*\ :
   | Create prismatic joint between two bodies; definition of joint position and axis in global coordinates (alternatively in body0 local coordinates) for reference configuration of bodies; all markers, markerRotation and other quantities are automatically computed
@@ -172,6 +330,35 @@ Function: CreatePrismaticJoint
   | \ ``color``\ : color of connector
 - | \ *output*\ :
   | [ObjectIndex, MarkerIndex, MarkerIndex]; returns list [oJoint, mBody0, mBody1], containing the joint object number, and the two rigid body markers on body0/1 for the joint
+- | \ *example*\ :
+
+.. code-block:: python
+
+  import exudyn as exu
+  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+  import numpy as np
+  SC = exu.SystemContainer()
+  mbs = SC.AddSystem()
+  b0 = mbs.CreateRigidBody(inertia = InertiaCuboid(density=5000,
+                                                   sideLengths=[1,0.1,0.1]),
+                           referencePosition = [4,0,0],
+                           initialVelocity = [0,4,0],
+                           gravity = [0,-9.81,0],
+                           graphicsDataList = [GraphicsDataOrthoCubePoint(size=[1,0.1,0.1],
+                                                                        color=color4steelblue)])
+  oGround = mbs.AddObject(ObjectGround())
+  mbs.CreatePrismaticJoint(bodyNumbers=[oGround, b0], position=[3.5,0,0], axis=[0,1,0],
+                           useGlobalFrame=True, axisRadius=0.02, axisLength=1)
+  mbs.Assemble()
+  simulationSettings = exu.SimulationSettings() #takes currently set values or default values
+  simulationSettings.timeIntegration.numberOfSteps = 1000
+  simulationSettings.timeIntegration.endTime = 2
+  mbs.SolveDynamic(simulationSettings = simulationSettings)
+
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
+
+    \ `addPrismaticJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addPrismaticJoint.py>`_\  (Ex), \ `mainSystemExtensionsTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mainSystemExtensionsTests.py>`_\  (TM)
 
 
 
@@ -179,7 +366,7 @@ Function: CreatePrismaticJoint
 
 Function: CreateSphericalJoint
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateSphericalJoint <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L653>`__\ (\ ``name = ''``\ , \ ``bodyNumbers = [None, None]``\ , \ ``position = []``\ , \ ``constrainedAxes = [1,1,1]``\ , \ ``useGlobalFrame = True``\ , \ ``show = True``\ , \ ``jointRadius = 0.1``\ , \ ``color = color4default``\ )
+`CreateSphericalJoint <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L900>`__\ (\ ``name = ''``\ , \ ``bodyNumbers = [None, None]``\ , \ ``position = []``\ , \ ``constrainedAxes = [1,1,1]``\ , \ ``useGlobalFrame = True``\ , \ ``show = True``\ , \ ``jointRadius = 0.1``\ , \ ``color = color4default``\ )
 
 - | \ *function description*\ :
   | Create spherical joint between two bodies; definition of joint position in global coordinates (alternatively in body0 local coordinates) for reference configuration of bodies; all markers are automatically computed
@@ -195,6 +382,35 @@ Function: CreateSphericalJoint
   | \ ``color``\ : color of connector
 - | \ *output*\ :
   | [ObjectIndex, MarkerIndex, MarkerIndex]; returns list [oJoint, mBody0, mBody1], containing the joint object number, and the two rigid body markers on body0/1 for the joint
+- | \ *example*\ :
+
+.. code-block:: python
+
+  import exudyn as exu
+  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+  import numpy as np
+  SC = exu.SystemContainer()
+  mbs = SC.AddSystem()
+  b0 = mbs.CreateRigidBody(inertia = InertiaCuboid(density=5000,
+                                                   sideLengths=[1,0.1,0.1]),
+                           referencePosition = [5,0,0],
+                           initialAngularVelocity = [5,0,0],
+                           gravity = [0,-9.81,0],
+                           graphicsDataList = [GraphicsDataOrthoCubePoint(size=[1,0.1,0.1],
+                                                                        color=color4orange)])
+  oGround = mbs.AddObject(ObjectGround())
+  mbs.CreateSphericalJoint(bodyNumbers=[oGround, b0], position=[5.5,0,0],
+                           useGlobalFrame=True, jointRadius=0.06)
+  mbs.Assemble()
+  simulationSettings = exu.SimulationSettings() #takes currently set values or default values
+  simulationSettings.timeIntegration.numberOfSteps = 1000
+  simulationSettings.timeIntegration.endTime = 2
+  mbs.SolveDynamic(simulationSettings = simulationSettings)
+
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
+
+    \ `driveTrainTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/driveTrainTest.py>`_\  (TM), \ `mainSystemExtensionsTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mainSystemExtensionsTests.py>`_\  (TM)
 
 
 
@@ -202,7 +418,7 @@ Function: CreateSphericalJoint
 
 Function: CreateGenericJoint
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateGenericJoint <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L710>`__\ (\ ``name = ''``\ , \ ``bodyNumbers = [None, None]``\ , \ ``position = []``\ , \ ``rotationMatrixAxes = np.eye(3)``\ , \ ``constrainedAxes = [1,1,1, 1,1,1]``\ , \ ``useGlobalFrame = True``\ , \ ``show = True``\ , \ ``axesRadius = 0.1``\ , \ ``axesLength = 0.4``\ , \ ``color = color4default``\ )
+`CreateGenericJoint <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L983>`__\ (\ ``name = ''``\ , \ ``bodyNumbers = [None, None]``\ , \ ``position = []``\ , \ ``rotationMatrixAxes = np.eye(3)``\ , \ ``constrainedAxes = [1,1,1, 1,1,1]``\ , \ ``useGlobalFrame = True``\ , \ ``show = True``\ , \ ``axesRadius = 0.1``\ , \ ``axesLength = 0.4``\ , \ ``color = color4default``\ )
 
 - | \ *function description*\ :
   | Create generic joint between two bodies; definition of joint position (position) and axes (rotationMatrixAxes) in global coordinates (useGlobalFrame=True) or in local coordinates of body0 (useGlobalFrame=False), where rotationMatrixAxes is an additional rotation to body0; all markers, markerRotation and other quantities are automatically computed
@@ -221,10 +437,99 @@ Function: CreateGenericJoint
   | \ ``color``\ : color of connector
 - | \ *output*\ :
   | [ObjectIndex, MarkerIndex, MarkerIndex]; returns list [oJoint, mBody0, mBody1], containing the joint object number, and the two rigid body markers on body0/1 for the joint
+- | \ *example*\ :
+
+.. code-block:: python
+
+  import exudyn as exu
+  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+  import numpy as np
+  SC = exu.SystemContainer()
+  mbs = SC.AddSystem()
+  b0 = mbs.CreateRigidBody(inertia = InertiaCuboid(density=5000,
+                                                   sideLengths=[1,0.1,0.1]),
+                           referencePosition = [6,0,0],
+                           initialAngularVelocity = [0,8,0],
+                           gravity = [0,-9.81,0],
+                           graphicsDataList = [GraphicsDataOrthoCubePoint(size=[1,0.1,0.1],
+                                                                        color=color4orange)])
+  oGround = mbs.AddObject(ObjectGround())
+  mbs.CreateGenericJoint(bodyNumbers=[oGround, b0], position=[5.5,0,0],
+                         constrainedAxes=[1,1,1, 1,0,0],
+                         rotationMatrixAxes=RotationMatrixX(0.125*pi), #tilt axes
+                         useGlobalFrame=True, axesRadius=0.02, axesLength=0.2)
+  mbs.Assemble()
+  simulationSettings = exu.SimulationSettings() #takes currently set values or default values
+  simulationSettings.timeIntegration.numberOfSteps = 1000
+  simulationSettings.timeIntegration.endTime = 2
+  mbs.SolveDynamic(simulationSettings = simulationSettings)
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `rigidBodyCOMtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rigidBodyCOMtest.py>`_\  (TM)
+    \ `driveTrainTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/driveTrainTest.py>`_\  (TM), \ `mainSystemExtensionsTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mainSystemExtensionsTests.py>`_\  (TM), \ `rigidBodyCOMtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rigidBodyCOMtest.py>`_\  (TM)
+
+
+
+.. _sec-mainsystemextensions-createdistanceconstraint:
+
+Function: CreateDistanceConstraint
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`CreateDistanceConstraint <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L1086>`__\ (\ ``name = ''``\ , \ ``bodyOrNodeList = [None, None]``\ , \ ``localPosition0 = [0.,0.,0.]``\ , \ ``localPosition1 = [0.,0.,0.]``\ , \ ``distance = None``\ , \ ``show = True``\ , \ ``drawSize = -1.``\ , \ ``color = color4default``\ )
+
+- | \ *function description*\ :
+  | Create distance joint between two bodies; definition of joint positions in local coordinates of bodies or nodes; if distance=None, it is computed automatically from reference length; all markers are automatically computed
+  | - NOTE that this function is added to MainSystem via Python function MainSystemCreateDistanceConstraint.
+- | \ *input*\ :
+  | \ ``name``\ : name string for joint; markers get Marker0:name and Marker1:name
+  | \ ``bodyOrNodeList``\ : a list of object numbers (with specific localPosition0/1) or node numbers; may also be of mixed types
+  | \ ``localPosition0``\ : local position (as 3D list or numpy array) on body0, if not a node number
+  | \ ``localPosition1``\ : local position (as 3D list or numpy array) on body1, if not a node number
+  | \ ``distance``\ : if None, distance is computed from reference position of bodies or nodes; if not None, this distance (which must be always larger than zero) is prescribed between the two positions
+  | \ ``show``\ : if True, connector visualization is drawn
+  | \ ``drawSize``\ : general drawing size of node
+  | \ ``color``\ : color of connector
+- | \ *output*\ :
+  | [ObjectIndex, MarkerIndex, MarkerIndex]; returns list [oJoint, mBody0, mBody1], containing the joint object number, and the two rigid body markers on body0/1 for the joint
+- | \ *example*\ :
+
+.. code-block:: python
+
+  import exudyn as exu
+  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+  import numpy as np
+  SC = exu.SystemContainer()
+  mbs = SC.AddSystem()
+  b0 = mbs.CreateRigidBody(inertia = InertiaCuboid(density=5000,
+                                                    sideLengths=[1,0.1,0.1]),
+                            referencePosition = [6,0,0],
+                            gravity = [0,-9.81,0],
+                            graphicsDataList = [GraphicsDataOrthoCubePoint(size=[1,0.1,0.1],
+                                                                        color=color4orange)])
+  m1 = mbs.CreateMassPoint(referenceCoordinates=[5.5,-1,0],
+                           physicsMass=1, drawSize = 0.2)
+  n1 = mbs.GetObject(m1)['nodeNumber']
+  oGround = mbs.AddObject(ObjectGround())
+  mbs.CreateDistanceConstraint(bodyOrNodeList=[oGround, b0],
+                               localPosition0 = [6.5,1,0],
+                               localPosition1 = [0.5,0,0],
+                               distance=None, #automatically computed
+                               drawSize=0.06)
+  mbs.CreateDistanceConstraint(bodyOrNodeList=[b0, n1],
+                               localPosition0 = [-0.5,0,0],
+                               localPosition1 = [0.,0.,0.], #must be [0,0,0] for Node
+                               distance=None, #automatically computed
+                               drawSize=0.06)
+  mbs.Assemble()
+  simulationSettings = exu.SimulationSettings() #takes currently set values or default values
+  simulationSettings.timeIntegration.numberOfSteps = 1000
+  simulationSettings.timeIntegration.endTime = 2
+  mbs.SolveDynamic(simulationSettings = simulationSettings)
+
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
+
+    \ `mainSystemExtensionsTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mainSystemExtensionsTests.py>`_\  (TM)
 
 
 
@@ -279,6 +584,35 @@ Function: PlotSensor
   | [Any, Any, Any, Any]; plots the sensor data; returns [plt, fig, ax, line] in which plt is matplotlib.pyplot, fig is the figure (or None), ax is the axis (or None) and line is the return value of plt.plot (or None) which could be changed hereafter
 - | \ *notes*\ :
   | adjust default values by modifying the variables exudyn.plot.plotSensorDefault..., e.g., exudyn.plot.plotSensorDefaultFontSize
+- | \ *example*\ :
+
+.. code-block:: python
+
+  #assume to have some position-based nodes 0 and 1:
+  s0=mbs.AddSensor(SensorNode(nodeNumber=0, fileName='s0.txt',
+                              outputVariableType=exu.OutputVariableType.Position))
+  s1=mbs.AddSensor(SensorNode(nodeNumber=1, fileName='s1.txt',
+                              outputVariableType=exu.OutputVariableType.Position))
+  mbs.PlotSensor(s0, 0) #plot x-coordinate
+  #plot x for s0 and z for s1:
+  mbs.PlotSensor(sensorNumbers=[s0,s1], components=[0,2], yLabel='this is the position in meter')
+  mbs.PlotSensor(sensorNumbers=s0, components=plot.componentNorm) #norm of position
+  mbs.PlotSensor(sensorNumbers=s0, components=[0,1,2], factors=1000., title='Answers to the big questions')
+  mbs.PlotSensor(sensorNumbers=s0, components=[0,1,2,3],
+             yLabel='Coordantes with offset 1\nand scaled with $\\frac{1}{1000}$',
+             factors=1e-3, offsets=1,fontSize=12, closeAll=True)
+  #assume to have body sensor sBody, marker sensor sMarker:
+  mbs.PlotSensor(sensorNumbers=[sBody]*3+[sMarker]*3, components=[0,1,2,0,1,2],
+             colorCodeOffset=3, newFigure=False, fontSize=10,
+             yLabel='Rotation $\\alpha, \\beta, \\gamma$ and\n Position $x,y,z$',
+             title='compare marker and body sensor')
+  #assume having file plotSensorNode.txt:
+  mbs.PlotSensor(sensorNumbers=[s0]*3+ [filedir+'plotSensorNode.txt']*3,
+             components=[0,1,2]*2)
+  #plot y over x:
+  mbs.PlotSensor(sensorNumbers=s0, componentsX=[0], components=[1], xLabel='x-Position', yLabel='y-Position')
+  #for further examples, see also Examples/plotSensorExamples.py
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
@@ -301,6 +635,31 @@ Function: SolveStatic
   | \ ``storeSolver``\ : if True, the staticSolver object is stored in the mbs.sys dictionary as mbs.sys['staticSolver'], and simulationSettings are stored as mbs.sys['simulationSettings']
 - | \ *output*\ :
   | bool; returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf Section :ref:`sec-solversubstructures`\  and the items described in Section :ref:`sec-mainsolverstatic`\ )
+- | \ *example*\ :
+
+.. code-block:: python
+
+  import exudyn as exu
+  from exudyn.itemInterface import *
+  SC = exu.SystemContainer()
+  mbs = SC.AddSystem()
+  #create simple system:
+  ground = mbs.AddObject(ObjectGround())
+  mbs.AddNode(NodePoint())
+  body = mbs.AddObject(MassPoint(physicsMass=1, nodeNumber=0))
+  m0 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=ground))
+  m1 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=body))
+  mbs.AddObject(CartesianSpringDamper(markerNumbers=[m0,m1], stiffness=[100,100,100]))
+  mbs.AddLoad(LoadForceVector(markerNumber=m1, loadVector=[10,10,10]))
+  mbs.Assemble()
+  simulationSettings = exu.SimulationSettings()
+  simulationSettings.timeIntegration.endTime = 10
+  success = mbs.SolveStatic(simulationSettings, storeSolver = True)
+  print("success =", success)
+  print("iterations = ", mbs.sys['staticSolver'].it)
+  print("pos=", mbs.GetObjectOutputBody(body,localPosition=[0,0,0],
+        variableType=exu.OutputVariableType.Position))
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
@@ -312,7 +671,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: SolveDynamic
 ^^^^^^^^^^^^^^^^^^^^^^
-`SolveDynamic <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L217>`__\ (\ ``simulationSettings = exudyn.SimulationSettings()``\ , \ ``solverType = exudyn.DynamicSolverType.GeneralizedAlpha``\ , \ ``updateInitialValues = False``\ , \ ``storeSolver = True``\ , \ ``showHints = False``\ , \ ``showCausingItems = True``\ )
+`SolveDynamic <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L218>`__\ (\ ``simulationSettings = exudyn.SimulationSettings()``\ , \ ``solverType = exudyn.DynamicSolverType.GeneralizedAlpha``\ , \ ``updateInitialValues = False``\ , \ ``storeSolver = True``\ , \ ``showHints = False``\ , \ ``showCausingItems = True``\ )
 
 - | \ *function description*\ :
   | solves the dynamic mbs problem using simulationSettings and solver type; check theDoc.pdf for MainSolverImplicitSecondOrder for further details of the dynamic solver; this function is also available in exudyn (using exudyn.SolveDynamic(...))
@@ -326,6 +685,32 @@ Function: SolveDynamic
   | \ ``showCausingItems``\ : if linear solver fails, this option helps to identify objects, etc. which are related to a singularity in the linearized system matrix
 - | \ *output*\ :
   | bool; returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf Section :ref:`sec-solversubstructures`\  and the items described in Section :ref:`sec-mainsolverstatic`\ )
+- | \ *example*\ :
+
+.. code-block:: python
+
+  import exudyn as exu
+  from exudyn.itemInterface import *
+  SC = exu.SystemContainer()
+  mbs = SC.AddSystem()
+  #create simple system:
+  ground = mbs.AddObject(ObjectGround())
+  mbs.AddNode(NodePoint())
+  body = mbs.AddObject(MassPoint(physicsMass=1, nodeNumber=0))
+  m0 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=ground))
+  m1 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=body))
+  mbs.AddObject(CartesianSpringDamper(markerNumbers=[m0,m1], stiffness=[100,100,100]))
+  mbs.AddLoad(LoadForceVector(markerNumber=m1, loadVector=[10,10,10]))
+  #
+  mbs.Assemble()
+  simulationSettings = exu.SimulationSettings()
+  simulationSettings.timeIntegration.endTime = 10
+  success = mbs.SolveDynamic(simulationSettings, storeSolver = True)
+  print("success =", success)
+  print("iterations = ", mbs.sys['dynamicSolver'].it)
+  print("pos=", mbs.GetObjectOutputBody(body,localPosition=[0,0,0],
+        variableType=exu.OutputVariableType.Position))
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
@@ -337,7 +722,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: ComputeLinearizedSystem
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ComputeLinearizedSystem <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L346>`__\ (\ ``simulationSettings = exudyn.SimulationSettings()``\ , \ ``useSparseSolver = False``\ )
+`ComputeLinearizedSystem <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L364>`__\ (\ ``simulationSettings = exudyn.SimulationSettings()``\ , \ ``useSparseSolver = False``\ )
 
 - | \ *function description*\ :
   | compute linearized system of equations for ODE2 part of mbs, not considering the effects of algebraic constraints
@@ -347,35 +732,37 @@ Function: ComputeLinearizedSystem
   | \ ``useSparseSolver``\ : if False (only for small systems), all eigenvalues are computed in dense mode (slow for large systems!); if True, only the numberOfEigenvalues are computed (numberOfEigenvalues must be set!); Currently, the matrices are exported only in DENSE MODE from mbs! NOTE that the sparsesolver accuracy is much less than the dense solver
 - | \ *output*\ :
   | [ArrayLike, ArrayLike, ArrayLike]; [M, K, D]; list containing numpy mass matrix M, stiffness matrix K and damping matrix D
+- | \ *example*\ :
+
+.. code-block:: python
+
+  import exudyn as exu
+  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+  import numpy as np
+  SC = exu.SystemContainer()
+  mbs = SC.AddSystem()
+  #
+  b0 = mbs.CreateMassPoint(referenceCoordinates = [2,0,0],
+                           initialVelocities = [2*0,5,0],
+                           physicsMass = 1, gravity = [0,-9.81,0],
+                           drawSize = 0.5, color=color4blue)
+  #
+  oGround = mbs.AddObject(ObjectGround())
+  #add vertical spring
+  oSD = mbs.CreateSpringDamper(bodyOrNodeList=[oGround, b0],
+                               localPosition0=[2,1,0],
+                               localPosition1=[0,0,0],
+                               stiffness=1e4, damping=1e2,
+                               drawSize=0.2)
+  #
+  mbs.Assemble()
+  [M,K,D] = mbs.ComputeLinearizedSystem()
+  exu.Print('M=\n',M,'\nK=\n',K,'\nD=\n',D)
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `ANCFBeamEigTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamEigTest.py>`_\  (TM), \ `ANCFBeamTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamTest.py>`_\  (TM), \ `geometricallyExactBeamTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geometricallyExactBeamTest.py>`_\  (TM)
-
-
-
-.. _sec-mainsystemextensions-computesystemdegreeoffreedom:
-
-Function: ComputeSystemDegreeOfFreedom
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ComputeSystemDegreeOfFreedom <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L392>`__\ (\ ``simulationSettings = exudyn.SimulationSettings()``\ , \ ``threshold = 1e-12``\ , \ ``verbose = False``\ , \ ``useSVD = False``\ )
-
-- | \ *function description*\ :
-  | compute system DOF numerically, considering Grübler-Kutzbach formula as well as redundant constraints; uses numpy matrix rank or singular value decomposition of scipy (useSVD=True)
-  | - NOTE that this function is added to MainSystem via Python function ComputeSystemDegreeOfFreedom.
-- | \ *input*\ :
-  | \ ``simulationSettings``\ : used e.g. for settings regarding numerical differentiation; default settings may be used in most cases
-  | \ ``threshold``\ : threshold factor for singular values which estimate the redundant constraints
-  | \ ``useSVD``\ : use singular value decomposition directly, also showing SVD values if verbose=True
-  | \ ``verbose``\ : if True, it will show the singular values and one may decide if the threshold shall be adapted
-- | \ *output*\ :
-  | List[int]; returns list of [dof, nRedundant, nODE2, nODE1, nAE, nPureAE], where: dof = the degree of freedom computed numerically, nRedundant=the number of redundant constraints, nODE2=number of ODE2 coordinates, nODE1=number of ODE1 coordinates, nAE=total number of constraints, nPureAE=number of constraints on algebraic variables (e.g., lambda=0) that are not coupled to ODE2 coordinates
-- | \ *notes*\ :
-  | this approach may not always work! Currently only works with dense matrices, thus it will be slow for larger systems
-
-Relevant Examples (Ex) and TestModels (TM) with weblink to github:
-
-    \ `fourBarMechanism3D.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/fourBarMechanism3D.py>`_\  (Ex)
+    \ `ANCFBeamEigTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamEigTest.py>`_\  (TM), \ `ANCFBeamTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamTest.py>`_\  (TM), \ `geometricallyExactBeamTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geometricallyExactBeamTest.py>`_\  (TM), \ `mainSystemExtensionsTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mainSystemExtensionsTests.py>`_\  (TM)
 
 
 
@@ -383,7 +770,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: ComputeODE2Eigenvalues
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ComputeODE2Eigenvalues <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L488>`__\ (\ ``simulationSettings = exudyn.SimulationSettings()``\ , \ ``useSparseSolver = False``\ , \ ``numberOfEigenvalues = 0``\ , \ ``constrainedCoordinates = []``\ , \ ``convert2Frequencies = False``\ , \ ``useAbsoluteValues = True``\ )
+`ComputeODE2Eigenvalues <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L437>`__\ (\ ``simulationSettings = exudyn.SimulationSettings()``\ , \ ``useSparseSolver = False``\ , \ ``numberOfEigenvalues = 0``\ , \ ``constrainedCoordinates = []``\ , \ ``convert2Frequencies = False``\ , \ ``useAbsoluteValues = True``\ )
 
 - | \ *function description*\ :
   | compute eigenvalues for unconstrained ODE2 part of mbs, not considering the effects of algebraic constraints; the computation is done for the initial values of the mbs, independently of previous computations. If you would like to use the current state for the eigenvalue computation, you need to copy the current state to the initial state (using GetSystemState,SetSystemState, see Section :ref:`sec-mbs-systemdata`\ ); note that mass and stiffness matrix are computed in dense mode so far, while eigenvalues are computed according to useSparseSolver.
@@ -397,10 +784,91 @@ Function: ComputeODE2Eigenvalues
   | \ ``useAbsoluteValues``\ : if True, abs(eigenvalues) is used, which avoids problems for small (close to zero) eigen values; needed, when converting to frequencies
 - | \ *output*\ :
   | [ArrayLike, ArrayLike]; [eigenValues, eigenVectors]; eigenValues being a numpy array of eigen values (\ :math:`\omega_i^2`\ , being the squared eigen frequencies in (\ :math:`\omega_i`\  in rad/s)!), eigenVectors a numpy array containing the eigenvectors in every column
+- | \ *example*\ :
+
+.. code-block:: python
+
+   #take any example from the Examples or TestModels folder, e.g., 'cartesianSpringDamper.py' and run it
+   #specific example:
+  import exudyn as exu
+  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+  import numpy as np
+  SC = exu.SystemContainer()
+  mbs = SC.AddSystem()
+  #
+  b0 = mbs.CreateMassPoint(referenceCoordinates = [2,0,0],
+                           initialVelocities = [2*0,5,0],
+                           physicsMass = 1, gravity = [0,-9.81,0],
+                           drawSize = 0.5, color=color4blue)
+  #
+  oGround = mbs.AddObject(ObjectGround())
+  #add vertical spring
+  oSD = mbs.CreateSpringDamper(bodyOrNodeList=[oGround, b0],
+                               localPosition0=[2,1,0],
+                               localPosition1=[0,0,0],
+                               stiffness=1e4, damping=1e2,
+                               drawSize=0.2)
+  #
+  mbs.Assemble()
+  #
+  [eigenvalues, eigenvectors] = mbs.ComputeODE2Eigenvalues()
+   #==>eigenvalues contain the eigenvalues of the ODE2 part of the system in the current configuration
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `nMassOscillatorInteractive.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/nMassOscillatorInteractive.py>`_\  (Ex), \ `ANCFBeamEigTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamEigTest.py>`_\  (TM), \ `ANCFBeamTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamTest.py>`_\  (TM), \ `computeODE2EigenvaluesTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/computeODE2EigenvaluesTest.py>`_\  (TM), \ `geometricallyExactBeamTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geometricallyExactBeamTest.py>`_\  (TM)
+    \ `nMassOscillatorInteractive.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/nMassOscillatorInteractive.py>`_\  (Ex), \ `ANCFBeamEigTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamEigTest.py>`_\  (TM), \ `ANCFBeamTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamTest.py>`_\  (TM), \ `computeODE2EigenvaluesTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/computeODE2EigenvaluesTest.py>`_\  (TM), \ `geometricallyExactBeamTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geometricallyExactBeamTest.py>`_\  (TM), \ `mainSystemExtensionsTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mainSystemExtensionsTests.py>`_\  (TM)
+
+
+
+.. _sec-mainsystemextensions-computesystemdegreeoffreedom:
+
+Function: ComputeSystemDegreeOfFreedom
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`ComputeSystemDegreeOfFreedom <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L558>`__\ (\ ``simulationSettings = exudyn.SimulationSettings()``\ , \ ``threshold = 1e-12``\ , \ ``verbose = False``\ , \ ``useSVD = False``\ )
+
+- | \ *function description*\ :
+  | compute system DOF numerically, considering Grübler-Kutzbach formula as well as redundant constraints; uses numpy matrix rank or singular value decomposition of scipy (useSVD=True)
+  | - NOTE that this function is added to MainSystem via Python function ComputeSystemDegreeOfFreedom.
+- | \ *input*\ :
+  | \ ``simulationSettings``\ : used e.g. for settings regarding numerical differentiation; default settings may be used in most cases
+  | \ ``threshold``\ : threshold factor for singular values which estimate the redundant constraints
+  | \ ``useSVD``\ : use singular value decomposition directly, also showing SVD values if verbose=True
+  | \ ``verbose``\ : if True, it will show the singular values and one may decide if the threshold shall be adapted
+- | \ *output*\ :
+  | List[int]; returns list of [dof, nRedundant, nODE2, nODE1, nAE, nPureAE], where: dof = the degree of freedom computed numerically, nRedundant=the number of redundant constraints, nODE2=number of ODE2 coordinates, nODE1=number of ODE1 coordinates, nAE=total number of constraints, nPureAE=number of constraints on algebraic variables (e.g., lambda=0) that are not coupled to ODE2 coordinates
+- | \ *notes*\ :
+  | this approach may not always work! Currently only works with dense matrices, thus it will be slow for larger systems
+- | \ *example*\ :
+
+.. code-block:: python
+
+  import exudyn as exu
+  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+  import numpy as np
+  SC = exu.SystemContainer()
+  mbs = SC.AddSystem()
+  #
+  b0 = mbs.CreateRigidBody(inertia = InertiaCuboid(density=5000,
+                                                   sideLengths=[1,0.1,0.1]),
+                           referencePosition = [6,0,0],
+                           initialAngularVelocity = [0,8,0],
+                           gravity = [0,-9.81,0],
+                           graphicsDataList = [GraphicsDataOrthoCubePoint(size=[1,0.1,0.1],
+                                                                        color=color4orange)])
+  oGround = mbs.AddObject(ObjectGround())
+  mbs.CreateGenericJoint(bodyNumbers=[oGround, b0], position=[5.5,0,0],
+                         constrainedAxes=[1,1,1, 1,0,0],
+                         rotationMatrixAxes=RotationMatrixX(0.125*pi), #tilt axes
+                         useGlobalFrame=True, axesRadius=0.02, axesLength=0.2)
+  #
+  mbs.Assemble()
+  res = mbs.ComputeSystemDegreeOfFreedom(verbose=1) #print out details
+
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
+
+    \ `fourBarMechanism3D.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/fourBarMechanism3D.py>`_\  (Ex), \ `rigidBodyTutorial3.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial3.py>`_\  (Ex), \ `mainSystemExtensionsTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mainSystemExtensionsTests.py>`_\  (TM)
 
 
 
@@ -408,7 +876,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: CreateDistanceSensorGeometry
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateDistanceSensorGeometry <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L161>`__\ (\ ``meshPoints``\ , \ ``meshTrigs``\ , \ ``rigidBodyMarkerIndex``\ , \ ``searchTreeCellSize = [8,8,8]``\ )
+`CreateDistanceSensorGeometry <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L160>`__\ (\ ``meshPoints``\ , \ ``meshTrigs``\ , \ ``rigidBodyMarkerIndex``\ , \ ``searchTreeCellSize = [8,8,8]``\ )
 
 - | \ *function description*\ :
   | Add geometry for distance sensor given by points and triangles (point indices) to mbs; use a rigid body marker where the geometry is put on;
@@ -434,7 +902,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: CreateDistanceSensor
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateDistanceSensor <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L194>`__\ (\ ``generalContactIndex``\ , \ ``positionOrMarker``\ , \ ``dirSensor``\ , \ ``minDistance = -1e7``\ , \ ``maxDistance = 1e7``\ , \ ``cylinderRadius = 0``\ , \ ``selectedTypeIndex = exudyn.ContactTypeIndex.IndexEndOfEnumList``\ , \ ``storeInternal = False``\ , \ ``fileName = ''``\ , \ ``measureVelocity = False``\ , \ ``addGraphicsObject = False``\ , \ ``drawDisplaced = True``\ , \ ``color = color4red``\ )
+`CreateDistanceSensor <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L193>`__\ (\ ``generalContactIndex``\ , \ ``positionOrMarker``\ , \ ``dirSensor``\ , \ ``minDistance = -1e7``\ , \ ``maxDistance = 1e7``\ , \ ``cylinderRadius = 0``\ , \ ``selectedTypeIndex = exudyn.ContactTypeIndex.IndexEndOfEnumList``\ , \ ``storeInternal = False``\ , \ ``fileName = ''``\ , \ ``measureVelocity = False``\ , \ ``addGraphicsObject = False``\ , \ ``drawDisplaced = True``\ , \ ``color = color4red``\ )
 
 - | \ *function description*\ :
   | Function to create distance sensor based on GeneralContact in mbs; sensor can be either placed on absolute position or attached to rigid body marker; in case of marker, dirSensor is relative to the marker
@@ -468,7 +936,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: DrawSystemGraph
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-`DrawSystemGraph <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L848>`__\ (\ ``showLoads = True``\ , \ ``showSensors = True``\ , \ ``useItemNames = False``\ , \ ``useItemTypes = False``\ , \ ``addItemTypeNames = True``\ , \ ``multiLine = True``\ , \ ``fontSizeFactor = 1.``\ , \ ``layoutDistanceFactor = 3.``\ , \ ``layoutIterations = 100``\ , \ ``showLegend = True``\ )
+`DrawSystemGraph <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L847>`__\ (\ ``showLoads = True``\ , \ ``showSensors = True``\ , \ ``useItemNames = False``\ , \ ``useItemTypes = False``\ , \ ``addItemTypeNames = True``\ , \ ``multiLine = True``\ , \ ``fontSizeFactor = 1.``\ , \ ``layoutDistanceFactor = 3.``\ , \ ``layoutIterations = 100``\ , \ ``showLegend = True``\ )
 
 - | \ *function description*\ :
   | helper function which draws system graph of a MainSystem (mbs); several options let adjust the appearance of the graph; the graph visualization uses randomizer, which results in different graphs after every run!
@@ -489,5 +957,5 @@ Function: DrawSystemGraph
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `fourBarMechanism3D.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/fourBarMechanism3D.py>`_\  (Ex), \ `rigidBodyTutorial3.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial3.py>`_\  (Ex), \ `rigidBodyTutorial3withMarkers.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial3withMarkers.py>`_\  (Ex)
+    \ `fourBarMechanism3D.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/fourBarMechanism3D.py>`_\  (Ex), \ `rigidBodyTutorial3.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial3.py>`_\  (Ex), \ `rigidBodyTutorial3withMarkers.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial3withMarkers.py>`_\  (Ex), \ `mainSystemExtensionsTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mainSystemExtensionsTests.py>`_\  (TM)
 

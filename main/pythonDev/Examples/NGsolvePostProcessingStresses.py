@@ -259,7 +259,7 @@ if __name__ == '__main__': #needed to use multiprocessing for mode computation
         
             mbs.WaitForUserToContinue() #press space to continue
         
-        exu.SolveDynamic(mbs, solverType=exu.DynamicSolverType.TrapezoidalIndex2, 
+        mbs.SolveDynamic(solverType=exu.DynamicSolverType.TrapezoidalIndex2, 
                          simulationSettings=simulationSettings)
             
         

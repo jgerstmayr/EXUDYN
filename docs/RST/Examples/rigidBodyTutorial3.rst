@@ -24,7 +24,6 @@ You can view and download this file on Github: `rigidBodyTutorial3.py <https://g
    
    import exudyn as exu
    from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
-   import exudyn.mainSystemExtensions #will be included by exudyn.utilities in future
    import numpy as np
    
    SC = exu.SystemContainer()
@@ -70,7 +69,7 @@ You can view and download this file on Github: `rigidBodyTutorial3.py <https://g
                                         thickness = 0.1, width = [0.12,0.12], color=color4lightgreen)
    
    b1=mbs.CreateRigidBody(inertia = InertiaCuboid(density=5000, sideLengths=[0.1,0.1,1]),
-                               referencePosition = np.array([L,0,0]) + np.array([0,0,0.5*L]), #center of mass, body1
+                               referencePosition = np.array([L,0,0.5*L]), #reference pos = center of mass, body1
                                gravity = g,
                                graphicsDataList = [graphicsBody1])
    
@@ -87,6 +86,8 @@ You can view and download this file on Github: `rigidBodyTutorial3.py <https://g
    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++
    #assemble system before solving
    mbs.Assemble()
+   
+   mbs.ComputeSystemDegreeOfFreedom(verbose=True) #print out DOF and further information
    
    simulationSettings = exu.SimulationSettings() #takes currently set values or default values
    
@@ -111,7 +112,7 @@ You can view and download this file on Github: `rigidBodyTutorial3.py <https://g
    
    
    if True:
-       from exudyn.plot import PlotSensor
+       
        mbs.PlotSensor(sensorNumbers=[sens1],components=[1],closeAll=True)
    
    if False:

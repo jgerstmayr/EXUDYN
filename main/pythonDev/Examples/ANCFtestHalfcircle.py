@@ -143,7 +143,7 @@ if solveDynamic:
     
     mbs.SetPreStepUserFunction(UFchangeLoad)
 
-    exu.SolveDynamic(mbs, simulationSettings)
+    mbs.SolveDynamic(simulationSettings)
     #v = mbs.CallObjectFunction(1,'GetAngularVelocity',{'localPosition':[L/2,0,0],'configuration':'Current'})
     #print('angular vel='+str(v))
     SC.WaitForRenderEngineStopFlag()
@@ -185,7 +185,7 @@ else:
             #    cableDict['physicsReferenceAxialStrain'] = 0.1*curvatureValue
             #    mbs.ModifyObject(nCable, cableDict)
         
-            exu.SolveStatic(mbs, simulationSettings)
+            mbs.SolveStatic(simulationSettings)
 
             sol = mbs.systemData.GetODE2Coords()
             mbs.systemData.SetODE2Coords(coords=sol, configurationType=exu.ConfigurationType.Initial) #set initial conditions for next step
@@ -202,7 +202,7 @@ else:
     else:
         simulationSettings.staticSolver.numberOfLoadSteps = 1
         simulationSettings.staticSolver.adaptiveStep = True
-        exu.SolveStatic(mbs, simulationSettings)
+        mbs.SolveStatic(simulationSettings)
 
 
     SC.WaitForRenderEngineStopFlag()

@@ -205,7 +205,7 @@ exu.StartRenderer()              #start graphics visualization
 mbs.WaitForUserToContinue()    #wait for pressing SPACE bar to continue
 
 #simulate some time to get steady-state solution:
-exu.SolveDynamic(mbs, simulationSettings)
+mbs.SolveDynamic(simulationSettings)
 state = mbs.systemData.GetSystemState()
 
 #now simulate the steady state solution and record
@@ -227,7 +227,7 @@ if createAnimation:
     SC.visualizationSettings.exportImages.saveImageFileName = "images/frame"
 
     mbs.systemData.SetSystemState(state, configuration=exu.ConfigurationType.Initial)
-    exu.SolveDynamic(mbs, simulationSettings)
+    mbs.SolveDynamic(simulationSettings)
 
 #SC.WaitForRenderEngineStopFlag()#wait for pressing 'Q' to quit
 exu.StopRenderer()               #safely close rendering window!

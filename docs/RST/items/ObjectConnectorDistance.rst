@@ -21,8 +21,8 @@ The item \ **ObjectConnectorDistance**\  with type = 'ConnectorDistance' has the
   | constraints's unique name
 * | **markerNumbers** [\ :math:`[m0,m1]\tp`\ , type = ArrayMarkerIndex, default = [ invalid [-1], invalid [-1] ]]:
   | list of markers used in connector
-* | **distance** [\ :math:`d_0`\ , type = UReal, default = 0.]:
-  | prescribed distance [SI:m] of the used markers
+* | **distance** [\ :math:`d_0`\ , type = PReal, default = 0.]:
+  | prescribed distance [SI:m] of the used markers; must by greater than zero
 * | **activeConnector** [type = Bool, default = True]:
   | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
 * | **visualization** [type = VObjectConnectorDistance]:
@@ -105,6 +105,14 @@ If \ ``activeConnector = True``\ , the index 3 algebraic equation reads
    \left|\LU{0}{\Delta{\mathbf{p}}}\right| - d_0 = 0
 
 
+Due to the fact that the force direction is given by
+
+.. math::
+
+   \frac{1}{|\LU{0}{\Delta{\mathbf{p}}}|}\LU{0}{\Delta{\mathbf{p}}} ,
+
+
+the prescribed distance \ :math:`d_0`\  may not be zero. This would, otherwise, result in a change of the number of constraints.
 The index 2 (velocity level) algebraic equation reads
 
 .. math::

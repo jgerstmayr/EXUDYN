@@ -207,7 +207,7 @@ You can view and download this file on Github: `fourBarMechanismIftomm.py <https
            SC.SetRenderState(exu.sys[ 'renderState' ])
        mbs.WaitForUserToContinue()
    
-   exu.SolveDynamic(mbs, simulationSettings)
+   mbs.SolveDynamic(simulationSettings)
    
    
    if useGraphics:
@@ -217,10 +217,10 @@ You can view and download this file on Github: `fourBarMechanismIftomm.py <https
        ##++++++++++++++++++++++++++++++++++++++++++++++q+++++++
        #plot results
        if True:
-           from exudyn.plot import PlotSensor
-           PlotSensor(mbs, sensorNumbers=[listSensors[0],listSensors[1],], 
+           
+           mbs.PlotSensor(sensorNumbers=[listSensors[0],listSensors[1],], 
                       components=[0,0], closeAll=True)
-           PlotSensor(mbs, sensorNumbers=[sUser], title='Energy error')
+           mbs.PlotSensor(sensorNumbers=[sUser], title='Energy error')
    
    if addSensors:
        #x=np.loadtxt('solution/energyDoubleFourBar.txt',comments='#', delimiter=',')

@@ -558,7 +558,7 @@ You can view and download this file on Github: `beltDriveReevingSystem.py <https
                mbs.SetObjectParameter(obj, 'frictionStiffness', 1e-8) #do not set to zero, as it needs to do some initialization...
                
        # simulationSettings.solutionSettings.appendToFile=False
-       exu.SolveStatic(mbs, simulationSettings, updateInitialValues=True)
+       mbs.SolveStatic(simulationSettings, updateInitialValues=True)
        # simulationSettings.solutionSettings.appendToFile=True    
    
        #check total force on support, expect: supportLeftX \approx 2*preStretch*EA
@@ -581,15 +581,15 @@ You can view and download this file on Github: `beltDriveReevingSystem.py <https
        mbs.SetPreStepUserFunction(PreStepUserFunction)
    
    if True:
-       exu.SolveDynamic(mbs, simulationSettings, solverType=exu.DynamicSolverType.TrapezoidalIndex2) #183 Newton iterations, 0.114 seconds
-   #exu.SolveDynamic(mbs, simulationSettings)
+       mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.TrapezoidalIndex2) #183 Newton iterations, 0.114 seconds
+   #mbs.SolveDynamic(simulationSettings)
    
    if useGraphics and False:
        SC.visualizationSettings.general.autoFitScene = False
        SC.visualizationSettings.general.graphicsUpdateInterval=0.02
-       from exudyn.interactive import SolutionViewer
+       
        sol = LoadSolutionFile('solution_nosync/testCoords.txt', safeMode=True)#, maxRows=100)
-       SolutionViewer(mbs, sol)
+       mbs.SolutionViewer(sol)
    
    
    if useGraphics: 
@@ -614,9 +614,9 @@ You can view and download this file on Github: `beltDriveReevingSystem.py <https
                   
        import matplotlib.pyplot as plt
        import matplotlib.ticker as ticker
-       from exudyn.plot import PlotSensor, DataArrayFromSensorList
+       from exudyn.plot import DataArrayFromSensorList
    
-       PlotSensor(mbs, closeAll=True)
+       mbs.PlotSensor(closeAll=True)
        
        #compute axial offset, to normalize results:
        nodePos0 = mbs.GetSensorValues(sCable0Pos[0])
@@ -650,14 +650,14 @@ You can view and download this file on Github: `beltDriveReevingSystem.py <https
        if correctXoffset:
            dataVel=ShiftXoff(dataVel,xOff, reevingDict['totalLength'])
        
-       PlotSensor(mbs, sensorNumbers=[dataVel], components=0, labels=['axial velocity'], 
+       mbs.PlotSensor(sensorNumbers=[dataVel], components=0, labels=['axial velocity'], 
                   xLabel='axial position (m)', yLabel='velocity (m/s)')
    
        #axial force over beam length:
        dataForce = DataArrayFromSensorList(mbs, sensorNumbers=sAxialForce, positionList=positionList2Node)
        if correctXoffset:
            dataForce = ShiftXoff(dataForce,xOff, reevingDict['totalLength'])
-       PlotSensor(mbs, sensorNumbers=[dataForce], components=0, labels=['axial force'], colorCodeOffset=2,
+       mbs.PlotSensor(sensorNumbers=[dataForce], components=0, labels=['axial force'], colorCodeOffset=2,
                   xLabel='axial position (m)', yLabel='axial force (N)')
    
    
@@ -686,7 +686,7 @@ You can view and download this file on Github: `beltDriveReevingSystem.py <https
                dataExp[i+na,0] = x0+x
                dataExp[i+na,1] = val
    
-           PlotSensor(mbs, sensorNumbers=[dataExp], components=0, labels=['analytical Eytelwein'], colorCodeOffset=3, newFigure=False,
+           mbs.PlotSensor(sensorNumbers=[dataExp], components=0, labels=['analytical Eytelwein'], colorCodeOffset=3, newFigure=False,
                       lineStyles=[''], markerStyles=['x '], markerDensity=2*na)
    
        #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -705,9 +705,9 @@ You can view and download this file on Github: `beltDriveReevingSystem.py <https
        contactForcesTotal[:,1:] += contactForces[1][:,1:]
    
        #plot contact forces over beam length:
-       PlotSensor(mbs, sensorNumbers=[contactForcesTotal,contactForcesTotal], components=[0,1], labels=['tangential force','normal force'], 
+       mbs.PlotSensor(sensorNumbers=[contactForcesTotal,contactForcesTotal], components=[0,1], labels=['tangential force','normal force'], 
                   xLabel='axial position (m)', yLabel='contact forces (N)', newFigure=True)
-       # PlotSensor(mbs, sensorNumbers=[contactForces[1],contactForces[1]], components=[0,1], labels=['tangential force','normal force'], 
+       # mbs.PlotSensor(sensorNumbers=[contactForces[1],contactForces[1]], components=[0,1], labels=['tangential force','normal force'], 
        #            xLabel='axial position (m)', yLabel='contact forces (N)', newFigure=False)
    
        contactDisp =[[],[]] #slip and gap
@@ -720,9 +720,9 @@ You can view and download this file on Github: `beltDriveReevingSystem.py <https
                    contactDisp[i][row,0] = positionListSegments[row]
                    contactDisp[i][row, 1:] = values[k*2:k*2+2]
    
-       PlotSensor(mbs, sensorNumbers=[contactDisp[0],contactDisp[0]], components=[0,1], labels=['slip','gap'], 
+       mbs.PlotSensor(sensorNumbers=[contactDisp[0],contactDisp[0]], components=[0,1], labels=['slip','gap'], 
                   xLabel='axial position (m)', yLabel='slip, gap (m)', newFigure=True)
-       PlotSensor(mbs, sensorNumbers=[contactDisp[1],contactDisp[1]], components=[0,1], labels=['slip','gap'], 
+       mbs.PlotSensor(sensorNumbers=[contactDisp[1],contactDisp[1]], components=[0,1], labels=['slip','gap'], 
                   xLabel='axial position (m)', yLabel='slip, gap (m)', newFigure=False)
    
    
@@ -749,7 +749,7 @@ You can view and download this file on Github: `beltDriveReevingSystem.py <https
    
        #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    
-       PlotSensor(mbs, sensorNumbers=[sWheelRot[0], sWheelRot[1]], components=[2,2])#,sWheelRot[1]
+       mbs.PlotSensor(sensorNumbers=[sWheelRot[0], sWheelRot[1]], components=[2,2])#,sWheelRot[1]
        #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    
    

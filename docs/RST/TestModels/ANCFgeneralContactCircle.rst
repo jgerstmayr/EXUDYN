@@ -292,16 +292,16 @@ You can view and download this file on Github: `ANCFgeneralContactCircle.py <htt
        exu.StartRenderer()
        mbs.WaitForUserToContinue()
    
-   exu.SolveDynamic(mbs, simulationSettings) #183 Newton iterations, 0.114 seconds
+   mbs.SolveDynamic(simulationSettings) #183 Newton iterations, 0.114 seconds
    
    
    if useGraphics and False:
        SC.visualizationSettings.general.autoFitScene = False
        SC.visualizationSettings.general.graphicsUpdateInterval=0.02
-       from exudyn.interactive import SolutionViewer
+       
        sol = LoadSolutionFile('solution/coordinatesSolution.txt', safeMode=True)#, maxRows=100)
        print('start SolutionViewer')
-       SolutionViewer(mbs, sol)
+       mbs.SolutionViewer(sol)
    
    
    if useGraphics: 
@@ -309,9 +309,9 @@ You can view and download this file on Github: `ANCFgeneralContactCircle.py <htt
        exu.StopRenderer() #safely close rendering window!
        
        if len(sAngVel) != 0:
-           from exudyn.plot import PlotSensor
-           PlotSensor(mbs, sensorNumbers=[sAngVel[0],sAngVel[1]], components=2, closeAll=True)
-           PlotSensor(mbs, sensorNumbers=sensorsNode, componentsX=0, components=1, 
+           
+           mbs.PlotSensor(sensorNumbers=[sAngVel[0],sAngVel[1]], components=2, closeAll=True)
+           mbs.PlotSensor(sensorNumbers=sensorsNode, componentsX=0, components=1, 
                       xLabel='PositionX', newFigure=True, title='trajectories of 4 nodes')
            
    #print representative result:

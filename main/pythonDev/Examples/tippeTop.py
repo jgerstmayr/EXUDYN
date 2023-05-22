@@ -171,9 +171,9 @@ if simulate:
 
     simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
     simulationSettings.timeIntegration.endTime = tEnd
-    exu.SolveDynamic(mbs, simulationSettings, solverType=exu.DynamicSolverType.ExplicitEuler)
-    # exu.SolveDynamic(mbs, simulationSettings, solverType=exu.DynamicSolverType.ExplicitMidpoint)
-    #exu.SolveDynamic(mbs, simulationSettings)
+    mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.ExplicitEuler)
+    # mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.ExplicitMidpoint)
+    #mbs.SolveDynamic(simulationSettings)
 
     if useGraphics:
         SC.WaitForRenderEngineStopFlag()
@@ -181,6 +181,6 @@ if simulate:
 
 if not simulate or True:
     SC.visualizationSettings.general.autoFitScene = False
-    from exudyn.interactive import SolutionViewer
+    
     sol = LoadSolutionFile('coordinatesSolution.txt')
-    SolutionViewer(mbs, sol)
+    mbs.SolutionViewer(sol)

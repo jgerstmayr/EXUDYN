@@ -253,7 +253,7 @@ if useGraphics:
     mbs.WaitForUserToContinue()
 
 
-exu.SolveDynamic(mbs, simulationSettings,
+mbs.SolveDynamic(simulationSettings,
                  # solverType=exu.DynamicSolverType.TrapezoidalIndex2
                  )
 
@@ -304,8 +304,8 @@ if useGraphics:
 
 if False:
     #%%+++++++++++++++++++++++
-    from exudyn.interactive import SolutionViewer
-    SolutionViewer(mbs)
+    
+    mbs.SolutionViewer()
     
 
 

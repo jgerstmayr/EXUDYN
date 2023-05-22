@@ -64,7 +64,7 @@ These are the access functions to the Exudyn module. General usage is explained 
 
 * | **SetPrintDelayMilliSeconds**\ (\ *delayMilliSeconds*\ ): 
   | add some delay (in milliSeconds) to printing to console, in order to let Spyder process the output; default = 0
-* | **Print**\ (\ **args*\ ): 
+* | **Print**\ (\ *\*args*\ ): 
   | this allows printing via exudyn with similar syntax as in Python print(args) except for keyword arguments: print('test=',42); allows to redirect all output to file given by SetWriteToFile(...); does not output in case that SetWriteToConsole is set to False
 * | **SuppressWarnings**\ (\ *flag*\ ): 
   | set flag to suppress (=True) or enable (=False) warnings

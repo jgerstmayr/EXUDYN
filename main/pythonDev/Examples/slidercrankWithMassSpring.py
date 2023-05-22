@@ -158,7 +158,7 @@ simulationSettings = exu.SimulationSettings() #takes currently set values or def
 initCrank = True
 if initCrank:
     #turn crank to 90° as enforced by constraintCrankAngle
-    exu.SolveStatic(mbs, simulationSettings)
+    mbs.SolveStatic(simulationSettings)
     
     #use static solution as initial conditions for dynamic solution
     currentState = mbs.systemData.GetSystemState()
@@ -190,7 +190,7 @@ SC.visualizationSettings.markers.defaultSize = dSize
 SC.visualizationSettings.bodies.defaultSize = [dSize]*3
 SC.visualizationSettings.connectors.defaultSize = dSize
 
-exu.SolveDynamic(mbs, simulationSettings)
+mbs.SolveDynamic(simulationSettings)
     
 if exudynTestGlobals.useGraphics: 
     #+++++++++++++++++++++++++++++++++++++

@@ -87,7 +87,7 @@ if computeDynamic:
     simulationSettings.timeIntegration.newton.useModifiedNewton = False
     simulationSettings.timeIntegration.newton.numericalDifferentiation.minimumCoordinateSize = 1
     simulationSettings.timeIntegration.newton.numericalDifferentiation.relativeEpsilon = 6.055454452393343e-06 #eps^(1/3)
-    simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
+    # simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
     simulationSettings.displayStatistics = True
 
     SC.visualizationSettings.nodes.showNumbers = True
@@ -96,7 +96,8 @@ if computeDynamic:
     SC.visualizationSettings.nodes.defaultSize = 0.05
 
     exu.InfoStat()
-    exu.SolveDynamic(mbs, simulationSettings)
+    mbs.SolveDynamic(simulationSettings, 
+                     solverType=exu.DynamicSolverType.TrapezoidalIndex2)
     exu.InfoStat()
 
 else:
@@ -113,7 +114,7 @@ else:
     SC.visualizationSettings.connectors.showNumbers = True
     SC.visualizationSettings.nodes.defaultSize = 0.05
 
-    exu.SolveStatic(mbs, simulationSettings)
+    mbs.SolveStatic(simulationSettings)
 
 #time.sleep(0.5)
 

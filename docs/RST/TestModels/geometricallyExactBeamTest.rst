@@ -339,7 +339,7 @@ You can view and download this file on Github: `geometricallyExactBeamTest.py <h
        
        #     # constrainedCoordinates=[]
            
-       #     compeig=exu.ComputeODE2Eigenvalues(mbs, simulationSettings, useSparseSolver=False, 
+       #     compeig=mbs.ComputeODE2Eigenvalues(simulationSettings, useSparseSolver=False, 
        #                                 numberOfEigenvalues= nRigidModes+nModes, 
        #                                 constrainedCoordinates=constrainedCoordinates,
        #                                 convert2Frequencies= False)
@@ -356,9 +356,9 @@ You can view and download this file on Github: `geometricallyExactBeamTest.py <h
        #             mbs.WaitForUserToContinue()
    
        # else:
-       exu.SolveStatic(mbs, simulationSettings)
-       # exu.SolveDynamic(mbs, simulationSettings)
-       #exu.SolveDynamic(mbs, simulationSettings, solverType = exu.DynamicSolverType.RK44)
+       mbs.SolveStatic(simulationSettings)
+       # mbs.SolveDynamic(simulationSettings)
+       #mbs.SolveDynamic(simulationSettings, solverType = exu.DynamicSolverType.RK44)
    
        #check jacobian
        if False:

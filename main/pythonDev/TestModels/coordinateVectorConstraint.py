@@ -66,15 +66,12 @@ else:
     mCoordsGround = mbs.AddMarker(MarkerNodeCoordinates(nodeNumber=nGround))
     mCoords0 = mbs.AddMarker(MarkerNodeCoordinates(nodeNumber=nR0))
     
-    # mbs.AddObject(CoordinateVectorConstraint(markerNumbers=[mCoordsGround, mCoords0],
-    #                                           scalingMarker0=[], scalingMarker1=[],
-    #                                           quadraticTermMarker0=[], quadraticTermMarker1=np.array([[1,1]]),
-    #                                           offset=[L**2],
-    #                                           visualization=VCoordinateVectorConstraint(show=False)))
+    #constraint user function:
     def UFconstraint(mbs, t, itemNumber, q, q_t,velocityLevel):
         #print("q=", q, ", q_t=", q_t)
         return [np.sqrt(q[0]**2 + q[1]**2) - L]
 
+    #constraint jacobian user function:
     def UFjacobian(mbs, t, itemNumber, q, q_t,velocityLevel):
         #print("q=", q, ", q_t=", q_t)
         jac  = np.zeros((1,2))
@@ -90,8 +87,6 @@ else:
                                              jacobianUserFunction=UFjacobian,
                                              visualization=VCoordinateVectorConstraint(show=False)))
         
-
-
 #
 mbs.AddLoad(Force(markerNumber = mTip0, loadVector = [0, -mass*g, 0])) 
 
@@ -103,7 +98,7 @@ sPos0 = mbs.AddSensor(SensorNode(nodeNumber = nR0, storeInternal = True,
                                  outputVariableType=exu.OutputVariableType.Position))
 
 
-
+#for double pendulum, we add a second link
 if doublePendulum:
     graphicsSphere = GraphicsDataSphere(point=[0,0,0], radius=r, color=color4red, nTiles = 16)
     nR1 = mbs.AddNode(Point2D(referenceCoordinates=[L*2,0]))
@@ -120,10 +115,12 @@ if doublePendulum:
         mCoords0 = mbs.AddMarker(MarkerNodeCoordinates(nodeNumber=nR0))
         mCoords1 = mbs.AddMarker(MarkerNodeCoordinates(nodeNumber=nR1))
  
+        #constraint user function:
         def UFconstraint2(mbs, t, itemNumber, q, q_t,velocityLevel):
             #print("q=", q, ", q_t=", q_t)
             return [np.sqrt((q[2]-q[0])**2 + (q[3]-q[1])**2) - L]
 
+        #constraint jacobian user function:
         def UFjacobian2(mbs, t, itemNumber, q, q_t,velocityLevel):
             #print("q=", q, ", q_t=", q_t)
             jac  = np.zeros((1,4))
@@ -177,7 +174,7 @@ if useGraphics:
     exu.StartRenderer()
     mbs.WaitForUserToContinue()
 
-exu.SolveDynamic(mbs, simulationSettings)
+mbs.SolveDynamic(simulationSettings)
 
 p0=mbs.GetObjectOutputBody(oR0, exu.OutputVariableType.Position, localPosition=[0,0,0])
 exu.Print("p0=", list(p0))
@@ -192,21 +189,9 @@ exudynTestGlobals.testResult = u
 if useGraphics:
     SC.WaitForRenderEngineStopFlag()
     exu.StopRenderer() #safely close rendering window!
-
-    from exudyn.plot import PlotSensor
     
     if doublePendulum:
-        PlotSensor(mbs, [sPos0,sPos0,sPos1,sPos1], components=[0,1,0,1], closeAll=True)
+        mbs.PlotSensor([sPos0,sPos0,sPos1,sPos1], components=[0,1,0,1], closeAll=True)
     else:
-        PlotSensor(mbs, [sPos0,sPos0], components=[0,1], closeAll=True)
-
-    #if reference solution computed:
-    # if doublePendulum:
-    #     PlotSensor(mbs, [sPos0,sPos0,sPos1,sPos1,fileNameDouble], components=[0,1,0,1,1], closeAll=True, 
-    #                markerStyles=['','','','','x'], lineStyles=['-','-','-','-',''])
-    # else:
-    #     PlotSensor(mbs, [sPos0,sPos0,fileNameSingle], components=[0,1,1], closeAll=True, 
-    #                markerStyles=['','','x'], lineStyles=['-','-',''])
-
-
+        mbs.PlotSensor([sPos0,sPos0], components=[0,1], closeAll=True)
 

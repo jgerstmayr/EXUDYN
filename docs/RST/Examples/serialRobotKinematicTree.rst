@@ -364,8 +364,8 @@ You can view and download this file on Github: `serialRobotKinematicTree.py <htt
            SC.SetRenderState(exu.sys['renderState'])
        mbs.WaitForUserToContinue()
        
-   exu.SolveDynamic(mbs, simulationSettings, showHints=True)
-   # exu.SolveDynamic(mbs, simulationSettings, 
+   mbs.SolveDynamic(simulationSettings, showHints=True)
+   # mbs.SolveDynamic(simulationSettings, 
    #                  solverType=exu.DynamicSolverType.RK33,
    #                  showHints=True)
    
@@ -374,8 +374,8 @@ You can view and download this file on Github: `serialRobotKinematicTree.py <htt
        SC.visualizationSettings.general.autoFitScene = False
        exu.StopRenderer()
    
-   from exudyn.interactive import SolutionViewer
-   SolutionViewer(mbs)
+   
+   mbs.SolutionViewer()
    
    
    if not useKinematicTree:

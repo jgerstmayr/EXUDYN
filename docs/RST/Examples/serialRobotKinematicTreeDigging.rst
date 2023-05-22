@@ -466,8 +466,8 @@ You can view and download this file on Github: `serialRobotKinematicTreeDigging.
        
    # pTCP = mbs.GetSensorValues(sTCP)
    # print('pTCP=',pTCP)
-   #exu.SolveDynamic(mbs, simulationSettings, showHints=True)
-   exu.SolveDynamic(mbs, simulationSettings, 
+   #mbs.SolveDynamic(simulationSettings, showHints=True)
+   mbs.SolveDynamic(simulationSettings, 
                      #solverType=exu.DynamicSolverType.RK44,
                      solverType=exu.DynamicSolverType.ExplicitEuler,
                      showHints=True)
@@ -481,11 +481,11 @@ You can view and download this file on Github: `serialRobotKinematicTreeDigging.
    #%%++++++++++
        SC.visualizationSettings.general.autoFitScene = False
        # SC.visualizationSettings.general.graphicsUpdateInterval=0.5
-       from exudyn.interactive import SolutionViewer
+       
        print('load solution file')
        sol = LoadSolutionFile('solution/test7.sol', safeMode=True)#, maxRows=100)
        print('start SolutionViewer')
-       SolutionViewer(mbs, sol)
+       mbs.SolutionViewer(sol)
     
    
    

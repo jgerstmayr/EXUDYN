@@ -114,25 +114,25 @@ You can view and download this file on Github: `kinematicTreePendulum.py <https:
    
        mbs.WaitForUserToContinue() #press space to continue
    
-   from exudyn.plot import PlotSensor
    
    
-   exu.SolveDynamic(mbs, simulationSettings, solverType = exu.DynamicSolverType.ExplicitMidpoint)
-   PlotSensor(mbs, sensorNumbers=sCoords, components=0, labels='Explicit Midpoint', colorCodeOffset=2, closeAll=True)
    
-   exu.SolveDynamic(mbs, simulationSettings, solverType = exu.DynamicSolverType.RK33)
-   PlotSensor(mbs, sensorNumbers=sCoords, components=0, labels='Heun', colorCodeOffset=1, newFigure=False)
+   mbs.SolveDynamic(simulationSettings, solverType = exu.DynamicSolverType.ExplicitMidpoint)
+   mbs.PlotSensor(sensorNumbers=sCoords, components=0, labels='Explicit Midpoint', colorCodeOffset=2, closeAll=True)
    
-   exu.SolveDynamic(mbs, simulationSettings, solverType = exu.DynamicSolverType.RK44)
-   PlotSensor(mbs, sensorNumbers=sCoords, components=0, labels='Runge Kutta 44', newFigure=False)
+   mbs.SolveDynamic(simulationSettings, solverType = exu.DynamicSolverType.RK33)
+   mbs.PlotSensor(sensorNumbers=sCoords, components=0, labels='Heun', colorCodeOffset=1, newFigure=False)
+   
+   mbs.SolveDynamic(simulationSettings, solverType = exu.DynamicSolverType.RK44)
+   mbs.PlotSensor(sensorNumbers=sCoords, components=0, labels='Runge Kutta 44', newFigure=False)
    
    
-   #exu.SolveDynamic(mbs, simulationSettings)
+   #mbs.SolveDynamic(simulationSettings)
    
    simulationSettings.timeIntegration.numberOfSteps = int(7/h)
    simulationSettings.timeIntegration.endTime = 7
-   exu.SolveDynamic(mbs, simulationSettings, solverType = exu.DynamicSolverType.ExplicitEuler)
-   PlotSensor(mbs, sensorNumbers=sCoords, components=0, yLabel='pendulum angle', labels=['Explicit Euler'], colorCodeOffset=3, newFigure=False)
+   mbs.SolveDynamic(simulationSettings, solverType = exu.DynamicSolverType.ExplicitEuler)
+   mbs.PlotSensor(sensorNumbers=sCoords, components=0, yLabel='pendulum angle', labels=['Explicit Euler'], colorCodeOffset=3, newFigure=False)
    
    if useGraphics:
        #SC.WaitForRenderEngineStopFlag()

@@ -210,7 +210,7 @@ for case in range(2):
 #    mbs.WaitForUserToContinue()
     
     #alternative solver command
-    #exu.SolveDynamic(mbs, simulationSettings)
+    #mbs.SolveDynamic(simulationSettings)
 
 
 

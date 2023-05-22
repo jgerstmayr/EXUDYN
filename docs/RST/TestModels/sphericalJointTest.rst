@@ -120,7 +120,7 @@ You can view and download this file on Github: `sphericalJointTest.py <https://g
        exu.StartRenderer()
        mbs.WaitForUserToContinue()
    
-   exu.SolveDynamic(mbs, simulationSettings)
+   mbs.SolveDynamic(simulationSettings)
    
    #+++++++++++++++++++++++++++++++++++++++++++++
    sol = mbs.systemData.GetODE2Coordinates(); 

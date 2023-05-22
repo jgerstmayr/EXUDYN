@@ -151,7 +151,7 @@ You can view and download this file on Github: `heavyTop.py <https://github.com/
        exu.StartRenderer()
        mbs.WaitForUserToContinue()
    
-   exu.SolveDynamic(mbs, simulationSettings)
+   mbs.SolveDynamic(simulationSettings)
    
    if useGraphics:
        SC.WaitForRenderEngineStopFlag()
@@ -184,15 +184,15 @@ You can view and download this file on Github: `heavyTop.py <https://github.com/
    #compute exact solution:
    
    if useGraphics:
-       from exudyn.plot import PlotSensor
+       
        fileRef = '../../../docs/verification/HeavyTopSolution/HeavyTop_TimeEulerParameter_RK4.txt'
-       PlotSensor(mbs, sCoords[0], components=[3,4,5,6], labels=['theta 0','theta 1','theta 2','theta 3'], 
+       mbs.PlotSensor(sCoords[0], components=[3,4,5,6], labels=['theta 0','theta 1','theta 2','theta 3'], 
                   closeAll=True, offsets=[1.,0,0,0], yLabel='Euler parameters') #offsets for reference coords
-       PlotSensor(mbs, fileRef, components=[0,1,2,3], labels=['theta 0 ref','theta 1 ref','theta 2 ref','theta 3 ref'], 
+       mbs.PlotSensor(fileRef, components=[0,1,2,3], labels=['theta 0 ref','theta 1 ref','theta 2 ref','theta 3 ref'], 
                   colorCodeOffset=7, newFigure=False)
        
-       PlotSensor(mbs, sAngVel[0], components=[0,1,2], labels=['omega X','omega Y','omega Z'])
-       PlotSensor(mbs, sPos[0], components=[0,1,2])
+       mbs.PlotSensor(sAngVel[0], components=[0,1,2], labels=['omega X','omega Y','omega Z'])
+       mbs.PlotSensor(sPos[0], components=[0,1,2])
    
        # if False:
        #     import matplotlib.pyplot as plt

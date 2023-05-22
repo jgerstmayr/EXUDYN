@@ -134,7 +134,7 @@ if useGraphics:
     exu.StartRenderer()
     mbs.WaitForUserToContinue()
 
-success = exu.SolveDynamic(mbs, simulationSettings, 
+success = mbs.SolveDynamic(simulationSettings, 
                            exudyn.DynamicSolverType.TrapezoidalIndex2)
 
 if useGraphics:
@@ -146,10 +146,10 @@ if useGraphics:
 #%%++++++++++++++++++
     if True:
         import matplotlib.pyplot as plt
-        from exudyn.plot import PlotSensor
+        
         from exudyn.signalProcessing import FilterSensorOutput
 
-        PlotSensor(mbs, sensorNumbers=[sRot, sAngVel, sAngAcc], components=[0,2,2], 
+        mbs.PlotSensor(sensorNumbers=[sRot, sAngVel, sAngAcc], components=[0,2,2], 
                    title='ang vel', closeAll=True,
                    markerStyles=['','x ','o '], lineStyles=['-','',''])
         dataRot = mbs.GetSensorStoredData(sRot)
@@ -165,7 +165,7 @@ if useGraphics:
         plt.legend()
 
         #+++++++++++++++++++
-        PlotSensor(mbs, sensorNumbers=[sVel, sAcc], components=[1,1], 
+        mbs.PlotSensor(sensorNumbers=[sVel, sAcc], components=[1,1], 
                    title='velocities', 
                    markerStyles=['x ','o '], lineStyles=['',''])
         dataPos = mbs.GetSensorStoredData(sPos)

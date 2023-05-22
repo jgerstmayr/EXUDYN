@@ -125,7 +125,7 @@ if useGraphics:
     exu.StartRenderer()
     mbs.WaitForUserToContinue()
 
-exu.SolveDynamic(mbs, simulationSettings)
+mbs.SolveDynamic(simulationSettings)
 
 p0=mbs.GetObjectOutputBody(oR0, exu.OutputVariableType.Position, localPosition=[0,0,0])
 exu.Print("p0=", p0)
@@ -143,9 +143,9 @@ if useGraphics:
     SC.WaitForRenderEngineStopFlag()
     exu.StopRenderer() #safely close rendering window!
 
-    from exudyn.plot import PlotSensor
     
-    PlotSensor(mbs, [sRot1, sRot2], components=[0,2], closeAll=True, markerStyles=['x','+'])
+    
+    mbs.PlotSensor([sRot1, sRot2], components=[0,2], closeAll=True, markerStyles=['x','+'])
 
     # import matplotlib.pyplot as plt
     # import matplotlib.ticker as ticker

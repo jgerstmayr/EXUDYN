@@ -174,7 +174,7 @@ SC.visualizationSettings.nodes.showBasis=True
 if useGraphics:
     exu.StartRenderer()
 
-exu.SolveDynamic(mbs, simulationSettings)
+mbs.SolveDynamic(simulationSettings)
 
 
 u0 = mbs.GetNodeOutput(nRB, exu.OutputVariableType.Displacement)

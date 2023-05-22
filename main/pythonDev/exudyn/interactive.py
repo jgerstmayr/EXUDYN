@@ -748,7 +748,7 @@ def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPe
 #
 #from exudyn.interactive import SolutionViewer #import function
 #sol = LoadSolutionFile('coordinatesSolution.txt') #load solution: adjust to your file name
-#SolutionViewer(mbs, sol)
+#mbs.SolutionViewer(sol) #call via MainSystem
 def SolutionViewer(mainSystem, solution=[], rowIncrement = 1, timeout=0.04, runOnStart = True, runMode=2, 
                    fontSize=12, title='', checkRenderEngineStopFlag=True):
 

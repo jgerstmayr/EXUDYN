@@ -264,22 +264,22 @@ exu.StartRenderer()
 mbs.WaitForUserToContinue()
 
 #use %timeit to measure time!
-exu.SolveDynamic(mbs, simulationSettings, showHints=False)
+mbs.SolveDynamic(simulationSettings, showHints=False)
 
 
 if True: #use this to reload the solution and use SolutionViewer
     SC.visualizationSettings.general.autoFitScene = False
-    from exudyn.interactive import SolutionViewer
-    SolutionViewer(mbs) #can also be entered in IPython ...
+    
+    mbs.SolutionViewer() #can also be entered in IPython ...
 
 exu.StopRenderer() #safely close rendering window!
 
-from exudyn.plot import PlotSensor
-PlotSensor(mbs, sensorNumbers=[sForce,sForce2], components=[exudyn.plot.componentNorm]*2, labels=['connector force arm1','connector force arm1'], yLabel='force (N)', closeAll=True)
-PlotSensor(mbs, sensorNumbers=[sDistance,sDistance2], components=0)
-PlotSensor(mbs, sensorNumbers=[sPressures]*2+[sPressures2]*2, components=[0,1,0,1], labels=['p0 arm1', 'p1 arm1', 'p0 arm2', 'p1 arm2'], yLabel='pressure (N/m^2)')
+
+mbs.PlotSensor(sensorNumbers=[sForce,sForce2], components=[exudyn.plot.componentNorm]*2, labels=['connector force arm1','connector force arm1'], yLabel='force (N)', closeAll=True)
+mbs.PlotSensor(sensorNumbers=[sDistance,sDistance2], components=0)
+mbs.PlotSensor(sensorNumbers=[sPressures]*2+[sPressures2]*2, components=[0,1,0,1], labels=['p0 arm1', 'p1 arm1', 'p0 arm2', 'p1 arm2'], yLabel='pressure (N/m^2)')
 
 #p01 = mbs.GetSensorStoredData(sPressures)
 #p01[:,1] = A[0]*p01[:,1] - A[1]*p01[:,2]
-#PlotSensor(mbs, sensorNumbers=p01, components=0, labels=['differential hydraulic force'], yLabel='hydraulic force (N)')
+#mbs.PlotSensor(sensorNumbers=p01, components=0, labels=['differential hydraulic force'], yLabel='hydraulic force (N)')
 

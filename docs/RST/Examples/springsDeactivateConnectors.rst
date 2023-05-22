@@ -98,7 +98,7 @@ You can view and download this file on Github: `springsDeactivateConnectors.py <
    
    for i in range(800): #1000
        print('iteration '+str(i)+':')
-       exu.SolveDynamic(mbs, simulationSettings, solverType = exudyn.DynamicSolverType.DOPRI5)
+       mbs.SolveDynamic(simulationSettings, solverType = exudyn.DynamicSolverType.DOPRI5)
    
        for spring in springList:
            dist = mbs.GetObjectOutput(spring, exu.OutputVariableType.Distance)

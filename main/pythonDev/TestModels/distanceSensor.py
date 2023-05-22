@@ -151,7 +151,7 @@ for oIndex in ancf[1]:
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # for i in range(10):
-#     sDist0 = CreateDistanceSensor(mbs, positionOrMarker=[i*2*radius,-1.3*radius,4*radius], dirSensor=[0,0,-2*radius], minDistance=0, maxDistance=2*t+4*radius, 
+#     sDist0 = mbs.CreateDistanceSensor(positionOrMarker=[i*2*radius,-1.3*radius,4*radius], dirSensor=[0,0,-2*radius], minDistance=0, maxDistance=2*t+4*radius, 
 #                                cylinderRadius=radius*0.5, storeInternal=True, addGraphicsObject=True)
 
 #alternative way:
@@ -167,20 +167,20 @@ for oIndex in ancf[1]:
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #add sensors
 ngc = mbs.NumberOfGeneralContacts()-1 #index of GeneralContact object that has been added last (0 here ...)
-sDistanceSphere = CreateDistanceSensor(mbs, ngc, positionOrMarker=[2*radius,4*radius,radius], dirSensor=[0,-2*radius,0], minDistance=0, maxDistance=1*t+4*radius, measureVelocity=True, 
+sDistanceSphere = mbs.CreateDistanceSensor(ngc, positionOrMarker=[2*radius,4*radius,radius], dirSensor=[0,-2*radius,0], minDistance=0, maxDistance=1*t+4*radius, measureVelocity=True, 
                            cylinderRadius=radius*0.5, storeInternal=True, addGraphicsObject=True, selectedTypeIndex=exu.ContactTypeIndex.IndexSpheresMarkerBased)
 
-sDistanceSphere2 = CreateDistanceSensor(mbs, ngc, positionOrMarker=[2*radius,0,4*radius], dirSensor=[0,0,-2*radius], minDistance=0, maxDistance=1*t+4*radius, measureVelocity=True, 
+sDistanceSphere2 = mbs.CreateDistanceSensor(ngc, positionOrMarker=[2*radius,0,4*radius], dirSensor=[0,0,-2*radius], minDistance=0, maxDistance=1*t+4*radius, measureVelocity=True, 
                            cylinderRadius=radius*0.5, storeInternal=True, addGraphicsObject=True, selectedTypeIndex=exu.ContactTypeIndex.IndexSpheresMarkerBased)
 
-sDistanceTable = CreateDistanceSensor(mbs, ngc, positionOrMarker=mTable, dirSensor=[0,0,-2*radius], 
+sDistanceTable = mbs.CreateDistanceSensor(ngc, positionOrMarker=mTable, dirSensor=[0,0,-2*radius], 
                                    minDistance=-10, maxDistance=1*t+4*radius, measureVelocity=True, 
                                    cylinderRadius=0, storeInternal=True, addGraphicsObject=True)#, selectedTypeIndex=exu.ContactTypeIndex.IndexSpheresMarkerBased)
 
-sANCF = CreateDistanceSensor(mbs, ngc, positionOrMarker=[-L*1.5,0,0], dirSensor=[0,-0.1,0], minDistance=0, maxDistance=L, measureVelocity=True, 
+sANCF = mbs.CreateDistanceSensor(ngc, positionOrMarker=[-L*1.5,0,0], dirSensor=[0,-0.1,0], minDistance=0, maxDistance=L, measureVelocity=True, 
                           storeInternal=True, addGraphicsObject=True)
 
-sANCFdist = CreateDistanceSensor(mbs, ngc, positionOrMarker=[-0.6061511314921351,0,0], dirSensor=[0,-0.1,0], minDistance=0, maxDistance=L, measureVelocity=True, 
+sANCFdist = mbs.CreateDistanceSensor(ngc, positionOrMarker=[-0.6061511314921351,0,0], dirSensor=[0,-0.1,0], minDistance=0, maxDistance=L, measureVelocity=True, 
                           storeInternal=True, addGraphicsObject=True)
 
 sANCFdisp = mbs.AddSensor(SensorNode(nodeNumber=ancf[0][-1], storeInternal=True, outputVariableType=exu.OutputVariableType.Displacement))
@@ -227,7 +227,7 @@ if useGraphics:
     mbs.WaitForUserToContinue()
 
 
-exu.SolveDynamic(mbs, simulationSettings, 
+mbs.SolveDynamic(simulationSettings, 
                  #solverType=exu.DynamicSolverType.ExplicitEuler,
                  solverType=exu.DynamicSolverType.RK44,
                  )
@@ -256,15 +256,15 @@ exudynTestGlobals.testResult = u
         
 #%%
 if useGraphics:
-    from exudyn.plot import PlotSensor
-    PlotSensor(mbs, closeAll=True)
-    PlotSensor(mbs, sDistanceSphere, components=0, colorCodeOffset=0, labels=['y-axis'])
-    PlotSensor(mbs, sDistanceSphere2, components=0, colorCodeOffset=1, newFigure=False, labels=['z-axis'])
-    PlotSensor(mbs, sDistanceTable, components=0, colorCodeOffset=2, newFigure=False, labels=['table z-dist'])
+    
+    mbs.PlotSensor(closeAll=True)
+    mbs.PlotSensor(sDistanceSphere, components=0, colorCodeOffset=0, labels=['y-axis'])
+    mbs.PlotSensor(sDistanceSphere2, components=0, colorCodeOffset=1, newFigure=False, labels=['z-axis'])
+    mbs.PlotSensor(sDistanceTable, components=0, colorCodeOffset=2, newFigure=False, labels=['table z-dist'])
 
-    PlotSensor(mbs, sDistanceSphere, components=1, colorCodeOffset=3, newFigure=False, labels=['LDV'])
-    PlotSensor(mbs, sANCFdist, components=0, colorCodeOffset=5, newFigure=False, labels=['ANCF distance'])
-    PlotSensor(mbs, sANCFdisp, components=1, colorCodeOffset=6, newFigure=False, labels=['ANCF displacement'], factors=[-1])
-    # PlotSensor(mbs, sVelocitySphere, components=0, closeAll=True)
+    mbs.PlotSensor(sDistanceSphere, components=1, colorCodeOffset=3, newFigure=False, labels=['LDV'])
+    mbs.PlotSensor(sANCFdist, components=0, colorCodeOffset=5, newFigure=False, labels=['ANCF distance'])
+    mbs.PlotSensor(sANCFdisp, components=1, colorCodeOffset=6, newFigure=False, labels=['ANCF displacement'], factors=[-1])
+    # mbs.PlotSensor(sVelocitySphere, components=0, closeAll=True)
     
 

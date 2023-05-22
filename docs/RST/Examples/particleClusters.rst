@@ -285,7 +285,7 @@ You can view and download this file on Github: `particleClusters.py <https://git
    
        simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
        simulationSettings.timeIntegration.endTime = tEnd
-       exu.SolveDynamic(mbs, simulationSettings, solverType=exu.DynamicSolverType.ExplicitEuler)
+       mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.ExplicitEuler)
    
        p = mbs.GetSensorValues(sNode)
        #after one second (200 particles, h=0.0001):
@@ -297,13 +297,13 @@ You can view and download this file on Github: `particleClusters.py <https://git
            exu.StopRenderer() #safely close rendering window!
        
        if True:
-           from exudyn.plot import PlotSensor
-           PlotSensor(mbs, sensorNumbers=[sNode,sNode,sNode], components=[0,1,2], closeAll=True)
+           
+           mbs.PlotSensor(sensorNumbers=[sNode,sNode,sNode], components=[0,1,2], closeAll=True)
    else:
        SC.visualizationSettings.general.autoFitScene = False
        SC.visualizationSettings.general.graphicsUpdateInterval=0.1
-       from exudyn.interactive import SolutionViewer
+       
        sol = LoadSolutionFile('particles.txt')
-       SolutionViewer(mbs, sol)
+       mbs.SolutionViewer(sol)
 
 

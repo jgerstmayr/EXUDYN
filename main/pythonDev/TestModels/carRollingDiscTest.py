@@ -2,7 +2,6 @@
 # This is an EXUDYN example
 #
 # Details:  car with wheels modeled by ObjectConnectorRollingDiscPenalty
-#           formulation is still under development and needs more testing
 #
 # Author:   Johannes Gerstmayr
 # Date:     2020-06-19
@@ -48,8 +47,8 @@ omega0Wheel = [v0/rWheel,0,0]                   #initial angular velocity around
 #v0 = [0,0,0]                                   #initial translational velocity
 #print("v0Car=",v0)
 
-#++++++++++++++++++++++++++++++
-#car parameters:
+#%%++++++++++++++++++++++++++++++
+#car parameters and inertia:
 p0Car = [0,0,rWheel]        #origin of disc center point at reference, such that initial contact point is at [0,0,0]
 lCar = 3
 wCar = 2
@@ -65,6 +64,8 @@ inertiaWheel = InertiaCylinder(density=rhoWheel, length=wWheel, outerRadius=rWhe
 inertiaCar = InertiaCuboid(density=mCar/(lCar*wCar*hCar),sideLengths=[wCar, lCar, hCar])
 #exu.Print(inertiaCar)
 
+#%%++++++++++++++++++++++++++++++
+#create car node and body:
 graphicsCar = GraphicsDataOrthoCubePoint(centerPoint=[0,0,0],size=[wCar-1.1*wWheel, lCar, hCar], color=color4lightred)
 [nCar,bCar]=AddRigidBody(mainSys = mbs, 
                          inertia = inertiaCar, 
@@ -104,7 +105,8 @@ sWheelPos=[]
 sRollPos=[]
 sRollForce=[]
 
-
+#%%++++++++++++++++++++++++++++++
+#create wheels bodies and nodes:
 for iWheel in range(nWheels):
     #additional graphics for visualization of rotation:
     graphicsWheel = GraphicsDataOrthoCubePoint(centerPoint=[0,0,0],size=[wWheel*1.1,0.7*rWheel,0.7*rWheel], color=color4lightred)
@@ -163,11 +165,6 @@ for iWheel in range(nWheels):
     mbs.AddObject(GenericJoint(markerNumbers=[mWheel,mCarAxle],rotationMarker1=initialRotation,
                                constrainedAxes=[1,1,1,lockedAxis0,1,1])) #revolute joint for wheel
 
-    #does not work, because revolute joint does not accept off-axis
-    #kSuspension = 1e4
-    #dSuspension = kSuspension*0.01
-    #mbs.AddObject(CartesianSpringDamper(markerNumbers=[mWheel,mCarAxle],stiffness=[0,0,kSuspension],damping=[0,0,dSuspension]))
-
     nGeneric = mbs.AddNode(NodeGenericData(initialCoordinates=[0,0,0], numberOfDataCoordinates=3))
     oRolling = mbs.AddObject(ObjectConnectorRollingDiscPenalty(markerNumbers=[markerGround, mWheel], nodeNumber = nGeneric,
                                                   discRadius=rWheel, dryFriction=[0.4,0.4], 
@@ -196,7 +193,7 @@ for iWheel in range(nWheels):
                                                outputVariableType = exu.OutputVariableType.ForceLocal))]
 
 
-
+#user function for time-dependent torque on two wheels 0,1
 def UFtorque(mbs, t, torque):
     if t < 4:
         return torque
@@ -232,7 +229,7 @@ SC.visualizationSettings.nodes.drawNodesAsPoint  = False
 SC.visualizationSettings.nodes.showBasis = True
 SC.visualizationSettings.nodes.basisSize = 0.015
 
-exu.SolveDynamic(mbs, simulationSettings, solverType=exu.DynamicSolverType.TrapezoidalIndex2)
+mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.TrapezoidalIndex2)
 
 if useGraphics:
     SC.WaitForRenderEngineStopFlag()
@@ -248,20 +245,20 @@ exudynTestGlobals.testResult = u
 ##++++++++++++++++++++++++++++++++++++++++++++++q+++++++
 #plot results
 if useGraphics:
-    from exudyn.plot import PlotSensor
     
-    PlotSensor(mbs,sensorNumbers=sCarVel, components=[0,1,2], title='car velocitiy', closeAll=True)
+    
+    mbs.PlotSensor(sensorNumbers=sCarVel, components=[0,1,2], title='car velocitiy', closeAll=True)
     for i in range(4):
-        PlotSensor(mbs, sensorNumbers=sRollPos[i], componentsX=0, components=1, 
+        mbs.PlotSensor(sensorNumbers=sRollPos[i], componentsX=0, components=1, 
                    labels='wheel trail '+str(i), newFigure=(i==0), colorCodeOffset=i)
         #trail and wheel pos are almost same, just if car slightly tilts, there is a deviation
-        PlotSensor(mbs, sensorNumbers=sWheelPos[i], componentsX=0, components=1, 
+        mbs.PlotSensor(sensorNumbers=sWheelPos[i], componentsX=0, components=1, 
                    labels='wheel pos '+str(i), newFigure=False, colorCodeOffset=i+7,
                    lineStyles='', markerStyles='x')
     
-    PlotSensor(mbs, sensorNumbers=sRollForce, components=[2]*4, title='wheel contact forces')
+    mbs.PlotSensor(sensorNumbers=sRollForce, components=[2]*4, title='wheel contact forces')
 
-    PlotSensor(mbs, sensorNumbers=sRollForce*2, components=[0]*4+[1]*4, title='wheel lateral (X) and drive/acceleration (Y) forces')
+    mbs.PlotSensor(sensorNumbers=sRollForce*2, components=[0]*4+[1]*4, title='wheel lateral (X) and drive/acceleration (Y) forces')
 
-    PlotSensor(mbs, sensorNumbers=sAngVels, components=[0]*4, title='wheel local angular velocity')
+    mbs.PlotSensor(sensorNumbers=sAngVels, components=[0]*4, title='wheel local angular velocity')
 

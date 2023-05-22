@@ -520,7 +520,9 @@ void GeneralContact::FinalizeContact(const CSystem& cSystem)//, Index3 searchTre
 
 	TemporaryComputationDataArray tempArray; //will allocate memory, but just done in finalize contact
     //data.tempCompDataArray.EraseData();		//totally reset; for safety for now!
-    tempArray.SetNumberOfItems(exuThreading::TaskManager::GetNumThreads());
+    Index nThreads = exuThreading::TaskManager::GetNumThreads();
+    tempArray.SetNumberOfItems(nThreads);
+    SetNumberOfThreads(nThreads);
 
     if (searchTreeBox.Empty())
 	{
@@ -556,6 +558,10 @@ void GeneralContact::ComputeContactDataAndBoundingBoxes(const CSystem& cSystem, 
 
 	if (verboseMode >= 2) pout << "  **update Data, BB=" << updateBoundingBoxes << ", ST=" << addToSearchTree << "\n";
 	Index nThreads = exuThreading::TaskManager::GetNumThreads(); //must agree with tempArray
+    tempArray.SetNumberOfItems(nThreads);
+    SetNumberOfThreads(nThreads);
+    //CHECKandTHROW(tempArray.NumberOfItems() == nThreads, "GeneralContact::ComputeContactDataAndBoundingBoxes: inconsistent tempArray and number of threads; try to restart kernel!");
+
 
 	ComputeDataAndBBmarkerBasedSpheres(cSystem.GetSystemData(), tempArray, nThreads, updateBoundingBoxes);
 	ComputeDataAndBBancfCable2D(cSystem.GetSystemData(), tempArray, nThreads, updateBoundingBoxes);
@@ -782,8 +788,11 @@ void GeneralContact::ComputeDataAndBBtrigsRigidBodyBased(const CSystemData& syst
 template<Index opMode>
 void GeneralContact::ComputeContact(const CSystem& cSystem, TemporaryComputationDataArray& tempArray, Vector& systemODE2Rhs)
 {
-	Index nThreads = exuThreading::TaskManager::GetNumThreads();
-	SetNumberOfThreads(nThreads);
+    Index nThreads = exuThreading::TaskManager::GetNumThreads(); //must agree with tempArray
+    tempArray.SetNumberOfItems(nThreads);
+    SetNumberOfThreads(nThreads);
+    CHECKandTHROW(tempArray.NumberOfItems() == nThreads, "GeneralContact::ComputeContact: inconsistent tempArray and number of threads; try to restart kernel!");
+
 	if (verboseMode >= 2) { pout << "ComputeContact: start\n"; }
 
 	//not needed if CCode2rhsFromActiveSets:
@@ -2662,10 +2671,12 @@ void GeneralContact::UpdateContacts(const CSystem& cSystem)
     STARTGLOBALTIMERmain(TScontactPostNewton);
     Vector systemODE2Rhs; //dummy, unused
 
-    if (externFunctionsTempArray.NumberOfItems() != exuThreading::TaskManager::GetNumThreads())
+    Index nThreads = exuThreading::TaskManager::GetNumThreads(); //must agree with tempArray
+    if (externFunctionsTempArray.NumberOfItems() != nThreads)
     {
         externFunctionsTempArray.EraseData();		//totally reset; for safety for now!
-        externFunctionsTempArray.SetNumberOfItems(exuThreading::TaskManager::GetNumThreads());
+        externFunctionsTempArray.SetNumberOfItems(nThreads);
+        SetNumberOfThreads(nThreads);
     }
 
     ComputeContact<CCactiveSets>(cSystem, externFunctionsTempArray, systemODE2Rhs);

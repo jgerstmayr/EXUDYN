@@ -175,7 +175,7 @@ solveDynamic = False
 if solveDynamic: 
     exu.StartRenderer()
 
-    exu.SolveDynamic(mbs, simulationSettings)
+    mbs.SolveDynamic(simulationSettings)
 
     SC.WaitForRenderEngineStopFlag()
     exu.StopRenderer() #safely close rendering window!
@@ -195,7 +195,7 @@ else:
     exu.StartRenderer()
 
     #mbs.WaitForUserToContinue()
-    exu.SolveStatic(mbs, simulationSettings)
+    mbs.SolveStatic(simulationSettings)
 
     sol = mbs.systemData.GetODE2Coordinates()
     n = len(sol)

@@ -44,7 +44,7 @@ def Demo1(showAll = True):
     simulationSettings.timeIntegration.verboseMode=1 #provide some output
     simulationSettings.solutionSettings.coordinatesSolutionFileName = 'solution/demo1.txt'
 
-    exu.SolveDynamic(mbs, simulationSettings)
+    mbs.SolveDynamic(simulationSettings)
     if showAll:
         print('results can be found in local directory: solution/demo1.txt')
     
@@ -137,7 +137,7 @@ def Demo2(showAll = True):
     
     simulationSettings.timeIntegration.numberOfSteps = 1*fact
     simulationSettings.timeIntegration.endTime = 0.001*fact*0.5*4
-    exu.SolveDynamic(mbs, simulationSettings)
+    mbs.SolveDynamic(simulationSettings)
     
     if showAll:
         SC.WaitForRenderEngineStopFlag()
@@ -147,7 +147,7 @@ def Demo2(showAll = True):
         input("Press Enter to start SolutionViewer...")
     
         from exudyn.interactive import SolutionViewer
-        SolutionViewer(mbs)
+        mbs.SolutionViewer()
 
         DemoInfo()
 

@@ -332,7 +332,7 @@ if useLieGroup:
     solverType = exu.DynamicSolverType.RK44
     simulationSettings.timeIntegration.stepSizeSafety = 0.5 #almost no step rejection
     
-exu.SolveDynamic(mbs, simulationSettings, solverType=solverType)
+mbs.SolveDynamic(simulationSettings, solverType=solverType)
 print(mbs.sys['dynamicSolver'].it)
 
 

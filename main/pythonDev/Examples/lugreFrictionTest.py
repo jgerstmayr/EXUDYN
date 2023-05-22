@@ -259,7 +259,7 @@ if useGraphics:
     
 if True:
     sims.timeIntegration.numberOfSteps = int(tEnd/h)
-    exu.SolveDynamic(mbs, solverType=solverType, simulationSettings=sims)
+    mbs.SolveDynamic(solverType=solverType, simulationSettings=sims)
 
 
 if useGraphics:
@@ -271,23 +271,23 @@ if useLugre:
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++
 if True:
-    from exudyn.plot import PlotSensor
-    PlotSensor(mbs, [], closeAll=True)
+    
+    mbs.PlotSensor([], closeAll=True)
 
     if useLugre:
-        PlotSensor(mbs, sCoords1,[0,1,2])
-        PlotSensor(mbs, sFriction1,0, colorCodeOffset=3, newFigure=False)
+        mbs.PlotSensor(sCoords1,[0,1,2])
+        mbs.PlotSensor(sFriction1,0, colorCodeOffset=3, newFigure=False)
     else:
         if useLugreFast:
-            PlotSensor(mbs, 'solution/lugreCoordsRef2.txt',[0,1,2],
+            mbs.PlotSensor('solution/lugreCoordsRef2.txt',[0,1,2],
                        labels=['LuGre pos','LuGre vel','Lugre Z'])
-            PlotSensor(mbs, 'solution/lugreForceRef2.txt',0, colorCodeOffset=3, newFigure=False, labels=['LuGre force'])
+            mbs.PlotSensor('solution/lugreForceRef2.txt',0, colorCodeOffset=3, newFigure=False, labels=['LuGre force'])
         else:
-            PlotSensor(mbs, 'solution/lugreCoordsRef1e7Impl.txt',[0,1,2],
+            mbs.PlotSensor('solution/lugreCoordsRef1e7Impl.txt',[0,1,2],
                        labels=['LuGre pos','LuGre vel','Lugre Z'])
-            PlotSensor(mbs, 'solution/lugreForceRef1e7Impl.txt',0, colorCodeOffset=3, newFigure=False, labels=['LuGre force'])
+            mbs.PlotSensor('solution/lugreForceRef1e7Impl.txt',0, colorCodeOffset=3, newFigure=False, labels=['LuGre force'])
     if useLugrePos:
-        PlotSensor(mbs, [sCoords2,sCoords2_t,sCSD2,sData2,sData2],[0,0,0,0,1], lineStyles='--', yLabel='coordinates, force', newFigure=False,
+        mbs.PlotSensor([sCoords2,sCoords2_t,sCSD2,sData2,sData2],[0,0,0,0,1], lineStyles='--', yLabel='coordinates, force', newFigure=False,
                    labels=['pos','vel','spring force','stick','last sticking pos'],
                    markerStyles=['','','','x','o '], markerDensity=200)
 

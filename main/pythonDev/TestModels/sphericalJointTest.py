@@ -108,7 +108,7 @@ if useGraphics:
     exu.StartRenderer()
     mbs.WaitForUserToContinue()
 
-exu.SolveDynamic(mbs, simulationSettings)
+mbs.SolveDynamic(simulationSettings)
 
 #+++++++++++++++++++++++++++++++++++++++++++++
 sol = mbs.systemData.GetODE2Coordinates(); 

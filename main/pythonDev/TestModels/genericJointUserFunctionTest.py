@@ -124,7 +124,7 @@ if useGraphics:
     exu.StartRenderer()
     mbs.WaitForUserToContinue()
 
-exu.SolveDynamic(mbs, simulationSettings)#, experimentalNewSolver=True)
+mbs.SolveDynamic(simulationSettings)#, experimentalNewSolver=True)
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++

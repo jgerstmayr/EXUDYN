@@ -34,7 +34,7 @@ You can view and download this file on Github: `pendulumVerify.py <https://githu
    
    import numpy as np
    
-   #import timeit
+   import time
    
    import exudyn.basicUtilities as eb
    import exudyn.rigidBodyUtilities as rb
@@ -349,9 +349,9 @@ You can view and download this file on Github: `pendulumVerify.py <https://githu
    
        #SC.RedrawAndSaveImage()
        if False:
-           exu.SolveDynamic(mbs, simulationSettings=simulationSettings)
+           mbs.SolveDynamic(simulationSettings=simulationSettings)
        else:
-           exu.SolveStatic(mbs, simulationSettings=simulationSettings)
+           mbs.SolveStatic(simulationSettings=simulationSettings)
    
        # print("tip1=",mbs.GetSensorValues(sensTip))
            

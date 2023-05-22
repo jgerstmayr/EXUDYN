@@ -301,7 +301,7 @@ You can view and download this file on Github: `leggedRobot.py <https://github.c
        if 'renderState' in exu.sys:
            SC.SetRenderState(exu.sys[ 'renderState' ])
        mbs.WaitForUserToContinue()
-   exu.SolveDynamic(mbs, simulationSettings)
+   mbs.SolveDynamic(simulationSettings)
    
    
    if useGraphics:
@@ -310,8 +310,8 @@ You can view and download this file on Github: `leggedRobot.py <https://github.c
    
        ##++++++++++++++++++++++++++++++++++++++++++++++q+++++++
        #plot results
-       from exudyn.plot import PlotSensor
-       PlotSensor(mbs, sensorNumbers=[sLeg,sFemoral], components=[0,0])
+       
+       mbs.PlotSensor(sensorNumbers=[sLeg,sFemoral], components=[0,0])
        
        
        if False:

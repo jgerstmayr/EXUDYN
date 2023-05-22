@@ -12,7 +12,6 @@
 
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
-import exudyn.mainSystemExtensions #will be included by exudyn.utilities in future
 import numpy as np
 
 SC = exu.SystemContainer()
@@ -58,7 +57,7 @@ graphicsBody1 = GraphicsDataRigidLink(p0=[0,0,-0.5*L],p1=[0,0,0.5*L],
                                      thickness = 0.1, width = [0.12,0.12], color=color4lightgreen)
 
 b1=mbs.CreateRigidBody(inertia = InertiaCuboid(density=5000, sideLengths=[0.1,0.1,1]),
-                            referencePosition = np.array([L,0,0]) + np.array([0,0,0.5*L]), #center of mass, body1
+                            referencePosition = np.array([L,0,0.5*L]), #reference pos = center of mass, body1
                             gravity = g,
                             graphicsDataList = [graphicsBody1])
 
@@ -75,6 +74,8 @@ sens1=mbs.AddSensor(SensorBody(bodyNumber=b1, localPosition=[0,0,0.5*L],
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #assemble system before solving
 mbs.Assemble()
+
+mbs.ComputeSystemDegreeOfFreedom(verbose=True) #print out DOF and further information
 
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 
@@ -99,7 +100,7 @@ mbs.SolutionViewer()
 
 
 if True:
-    from exudyn.plot import PlotSensor
+    
     mbs.PlotSensor(sensorNumbers=[sens1],components=[1],closeAll=True)
 
 if False:

@@ -118,7 +118,7 @@ simulationSettings.timeIntegration.verboseMode = 1
 #mbs.WaitForUserToContinue()    #wait for pressing SPACE bar to continue
 
 #start solver:
-exu.SolveDynamic(mbs, simulationSettings)
+mbs.SolveDynamic(simulationSettings)
 
 #SC.WaitForRenderEngineStopFlag()#wait for pressing 'Q' to quit
 #exu.StopRenderer()               #safely close rendering window!
@@ -133,7 +133,7 @@ exudynTestGlobals.testResult = u[0]
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 if useGraphics:
-    from exudyn.plot import PlotSensor
     
-    PlotSensor(mbs, sCoords, components=[0], closeAll=True)
+    
+    mbs.PlotSensor(sCoords, components=[0], closeAll=True)
 

@@ -165,7 +165,7 @@ You can view and download this file on Github: `ANCFtests2.py <https://github.co
    
        
    
-       exu.SolveDynamic(mbs, simulationSettings)
+       mbs.SolveDynamic(simulationSettings)
    
        SC.WaitForRenderEngineStopFlag()
        exu.StopRenderer() #safely close rendering window!
@@ -200,7 +200,7 @@ You can view and download this file on Github: `ANCFtests2.py <https://github.co
                #    cableDict['physicsReferenceAxialStrain'] = 0.1*curvatureValue
                #    mbs.ModifyObject(nCable, cableDict)
            
-               exu.SolveStatic(mbs, simulationSettings)
+               mbs.SolveStatic(simulationSettings)
    
                sol = mbs.systemData.GetODE2Coordinates()
                mbs.systemData.SetODE2Coordinates(coordinates=sol, configurationType=exu.ConfigurationType.Initial) #set initial conditions for next step
@@ -216,7 +216,7 @@ You can view and download this file on Github: `ANCFtests2.py <https://github.co
            simulationSettings.staticSolver.newton.relativeTolerance = 1e-7
            simulationSettings.staticSolver.verboseMode = 1
            simulationSettings.displayStatistics = True
-           exu.SolveStatic(mbs, simulationSettings)
+           mbs.SolveStatic(simulationSettings)
    
    
        SC.WaitForRenderEngineStopFlag()

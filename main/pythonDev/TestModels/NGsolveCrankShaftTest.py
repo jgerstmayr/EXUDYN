@@ -349,7 +349,7 @@ if False:
     
         mbs.WaitForUserToContinue() #press space to continue
         
-        exu.SolveDynamic(mbs, simulationSettings)
+        mbs.SolveDynamic(simulationSettings)
         
         SC.WaitForRenderEngineStopFlag()
         exu.StopRenderer() #safely close rendering window!

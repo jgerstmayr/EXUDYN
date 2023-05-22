@@ -385,9 +385,9 @@ if True:
     if mode == 'nonlinearFEM':
         ngs.SetNumThreads(4)
         with ngs.TaskManager():
-            exu.SolveDynamic(mbs, simulationSettings=simulationSettings)
+            mbs.SolveDynamic(simulationSettings=simulationSettings)
     else:
-        exu.SolveDynamic(mbs, simulationSettings=simulationSettings)
+        mbs.SolveDynamic(simulationSettings=simulationSettings)
 
     # uTip = mbs.GetSensorValues(sensTipDispl)[1]
     # print("nModes=", nModes, ", tip displacement=", uTip)
@@ -399,20 +399,20 @@ if True:
 if False: #use this to reload the solution and use SolutionViewer
 #%%+++++++++++++++++
     #sol = LoadSolutionFile('coordinatesSolution.txt')
-    from exudyn.interactive import SolutionViewer
-    SolutionViewer(mbs) #can also be entered in IPython ...
+    
+    mbs.SolutionViewer() #can also be entered in IPython ...
 
 
 #%%+++++++++++++++++
 if True:
-    from exudyn.plot import PlotSensor
+    
     # files = sTip
     files = [#fileDir+'tipNode_linearFEM.txt', 
              fileDir+'tipNode_nonlinearFEM.txt',
              fileDir+'tipNode_ACF.txt',
              fileDir+'tipNode_ACFnonlin.txt',
              ]
-    PlotSensor(mbs, sensorNumbers=files, components=[1], closeAll=True, title='compare different formulations',
+    mbs.PlotSensor(sensorNumbers=files, components=[1], closeAll=True, title='compare different formulations',
                markerStyles=['x ', 'v ', 'o '], markerSizes=10, markerDensity=10,
                )
 

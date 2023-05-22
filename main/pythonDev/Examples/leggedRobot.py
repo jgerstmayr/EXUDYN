@@ -289,7 +289,7 @@ if useGraphics:
     if 'renderState' in exu.sys:
         SC.SetRenderState(exu.sys[ 'renderState' ])
     mbs.WaitForUserToContinue()
-exu.SolveDynamic(mbs, simulationSettings)
+mbs.SolveDynamic(simulationSettings)
 
 
 if useGraphics:
@@ -298,8 +298,8 @@ if useGraphics:
 
     ##++++++++++++++++++++++++++++++++++++++++++++++q+++++++
     #plot results
-    from exudyn.plot import PlotSensor
-    PlotSensor(mbs, sensorNumbers=[sLeg,sFemoral], components=[0,0])
+    
+    mbs.PlotSensor(sensorNumbers=[sLeg,sFemoral], components=[0,0])
     
     
     if False:

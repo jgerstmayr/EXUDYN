@@ -57,7 +57,7 @@ mbs.Assemble()
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 simulationSettings.solutionSettings.writeSolutionToFile = False
 
-exu.SolveDynamic(mbs, simulationSettings)
+mbs.SolveDynamic(simulationSettings)
 
 #evaluate final (=current) output values
 u = mbs.GetSensorValues(sUser)
@@ -67,5 +67,5 @@ exudynTestGlobals.testResult = u #should be 45 degree finally
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++
 if useGraphics:
-    from exudyn.plot import PlotSensor
-    PlotSensor(mbs, [sNode, sNode, sUser], [0, 1, 0])
+    
+    mbs.PlotSensor([sNode, sNode, sUser], [0, 1, 0])

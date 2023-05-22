@@ -560,8 +560,8 @@ def WriteFunctionDescription2LatexRST(functionDict, moduleNamePython, pythonFile
         #sPy += '):\n'+sPyReturn
     
         functionDict = copy.deepcopy(functionDict)
-        if 'example' in functionDict:
-            del functionDict['example']
+        # if 'example' in functionDict:
+        #     del functionDict['example']
         
         if 'input' in functionDict:
             s = functionDict['input']

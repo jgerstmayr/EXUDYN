@@ -1,7 +1,9 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  ANCF cable elements in contact with circles defined by GeneralContact
+# Details:  ANCF cable elements in contact with circles defined by GeneralContact;
+#           this is an advanced example for a belt drive according to literature; 
+#           note that the belt is very thin in order to avoid bending effects, to make this comparible to analytical results
 #
 # Author:   Johannes Gerstmayr
 # Date:     2022-01-31
@@ -319,18 +321,18 @@ if exudynTestGlobals.useGraphics:
     mbs.WaitForUserToContinue()
 
 if doDynamic :
-    exu.SolveDynamic(mbs, simulationSettings) #183 Newton iterations, 0.114 seconds
+    mbs.SolveDynamic(simulationSettings) #183 Newton iterations, 0.114 seconds
 else:
-    exu.SolveStatic(mbs, simulationSettings) #183 Newton iterations, 0.114 seconds
+    mbs.SolveStatic(simulationSettings) #183 Newton iterations, 0.114 seconds
 
 
 if exudynTestGlobals.useGraphics and True:
     SC.visualizationSettings.general.autoFitScene = False
     SC.visualizationSettings.general.graphicsUpdateInterval=0.02
-    from exudyn.interactive import SolutionViewer
+    
     sol = LoadSolutionFile('solution/coordinatesSolution.txt', safeMode=True)#, maxRows=100)
     print('start SolutionViewer')
-    SolutionViewer(mbs, sol)
+    mbs.SolutionViewer(sol)
 
 
 if exudynTestGlobals.useGraphics: 
@@ -338,9 +340,9 @@ if exudynTestGlobals.useGraphics:
     exu.StopRenderer() #safely close rendering window!
     
     if True:
-        from exudyn.plot import PlotSensor
-        PlotSensor(mbs, sensorNumbers=[sAngVel[0],sAngVel[1]], components=2, closeAll=True)
-        PlotSensor(mbs, sensorNumbers=sMeasureRoll, components=1)
+        
+        mbs.PlotSensor(sensorNumbers=[sAngVel[0],sAngVel[1]], components=2, closeAll=True)
+        mbs.PlotSensor(sensorNumbers=sMeasureRoll, components=1)
         
 
 #print representative result:

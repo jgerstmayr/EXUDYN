@@ -229,7 +229,7 @@ def ParameterFunction(parameterSet):
     if useGraphics: 
         exu.StartRenderer()
    
-    exu.SolveDynamic(mbs, simulationSettings)
+    mbs.SolveDynamic(simulationSettings)
         
     if useGraphics: 
         SC.WaitForRenderEngineStopFlag()
@@ -244,8 +244,8 @@ def ParameterFunction(parameterSet):
 
     if useGraphics:
         print("max. oszillation=", errorNorm)
-        from exudyn.plot import PlotSensor
-        PlotSensor(mbs, sensorNumbers=[sFloating,sFloating], components=[0,1])
+        
+        mbs.PlotSensor(sensorNumbers=[sFloating,sFloating], components=[0,1])
 
     del mbs
     del SC

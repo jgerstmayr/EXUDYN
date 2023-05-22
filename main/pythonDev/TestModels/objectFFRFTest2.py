@@ -198,7 +198,7 @@ if useGraphics:
 
     mbs.WaitForUserToContinue() #press space to continue
 
-exu.SolveDynamic(mbs, simulationSettings)
+mbs.SolveDynamic(simulationSettings)
     
 
 #data = np.loadtxt(fileDir+'nMidDisplacementFFRFtest.txt', comments='#', delimiter=',')
@@ -218,9 +218,9 @@ if useGraphics:
 ##++++++++++++++++++++++++++++++++++++++++++++++q+++++++
 #plot results
 if useGraphics:
-    from exudyn.plot import PlotSensor
     
-    PlotSensor(mbs, [fileDir+'nMidDisplacementCMS8.txt',sDisp], components=1, closeAll=True)
+    
+    mbs.PlotSensor([fileDir+'nMidDisplacementCMS8.txt',sDisp], components=1, closeAll=True)
 
     # import matplotlib.pyplot as plt
     # import matplotlib.ticker as ticker

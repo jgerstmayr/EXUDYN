@@ -223,7 +223,7 @@ if useGraphics:
 
     mbs.WaitForUserToContinue() #press space to continue
 
-exu.SolveDynamic(mbs, simulationSettings)
+mbs.SolveDynamic(simulationSettings)
     
 
 data=mbs.GetSensorStoredData(sCMSacc)
@@ -248,7 +248,7 @@ if useGraphics:
     import matplotlib.ticker as ticker
     
     from exudyn.signalProcessing import FilterSensorOutput, FilterSignal
-    # from exudyn.plot import PlotSensor
+    # 
 
     cList=['r-','g-','b-','k-','c-','r:','g:','b:','k:','c:']
  

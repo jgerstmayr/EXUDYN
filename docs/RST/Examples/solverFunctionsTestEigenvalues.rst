@@ -175,7 +175,7 @@ You can view and download this file on Github: `solverFunctionsTestEigenvalues.p
    print('omega analytical =',omega)
    
    
-   #exu.SolveStatic(mbs, simulationSettings)
+   #mbs.SolveStatic(simulationSettings)
    
    
    SC.WaitForRenderEngineStopFlag()

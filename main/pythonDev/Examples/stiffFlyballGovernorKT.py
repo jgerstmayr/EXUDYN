@@ -255,7 +255,7 @@ solverType = exu.DynamicSolverType.TrapezoidalIndex2 #same as generalized alpha
 #Python 3.7, fast, TrapezoidalIndex2, numDiff systemWide, maxModNewtonIts=2: 0.6701 seconds
 #Python 3.8 Linux, fast, TrapezoidalIndex2, numDiff systemWide, maxModNewtonIts=2: 0.5259 seconds
 
-exu.SolveDynamic(mbs, simulationSettings, 
+mbs.SolveDynamic(simulationSettings, 
                   solverType=solverType,
                  )
 
@@ -282,8 +282,8 @@ exu.Print('position of slider=', posSlider)
 
 
 if useGraphics:
-    from exudyn.plot import PlotSensor
-    PlotSensor(mbs, sPos, components=[2], closeAll=True)
+    
+    mbs.PlotSensor(sPos, components=[2], closeAll=True)
 
 
 

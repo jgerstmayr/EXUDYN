@@ -22,10 +22,7 @@ You can view and download this file on Github: `interactiveTutorial.py <https://
    #
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    
-   #set path to exudyn WorkingRelease
-   import sys
-   sys.path.append("../../bin/WorkingRelease")
-   
+   #%%+++++++++++++++++++++++++++++++++++++++
    #import according libraries
    import exudyn as exu
    from exudyn.itemInterface import *
@@ -37,12 +34,17 @@ You can view and download this file on Github: `interactiveTutorial.py <https://
    #show properties
    mbs
    
+   #%%+++++++++++++++++++++++++++++++++++++++
    #start interactive mode
    mbs.interactiveMode=True
    
    #start graphics visualization
    exu.StartRenderer()
    
+   #better visible nodes:
+   SC.visualizationSettings.nodes.drawNodesAsPoint=False
+   #make nodes bigger
+   SC.visualizationSettings.nodes.defaultSize=0.1
    #modify system online
    
    #add nodes
@@ -53,8 +55,6 @@ You can view and download this file on Github: `interactiveTutorial.py <https://
    mbs.AddObject(ObjectMassPoint(nodeNumber=0,physicsMass=1))
    mbs.AddObject(ObjectMassPoint(nodeNumber=1,physicsMass=1))
    
-   #make nodes bigger
-   SC.visualizationSettings.nodes.defaultSize=0.05
    
    #add marker
    m0=mbs.AddMarker(MarkerNodePosition(nodeNumber=0))
@@ -66,12 +66,14 @@ You can view and download this file on Github: `interactiveTutorial.py <https://
    mbs.Assemble()
    
    #simulate with default parameters
-   exu.SolveDynamic(mbs, exu.SimulationSettings())
+   mbs.SolveDynamic(exu.SimulationSettings())
    
    #stop rendering window
    exu.StopRenderer()
    
-   #mbs can be still modified and work can be continued!
+   #visualize results:
+   mbs.SolutionViewer()
    
+   #mbs can be still modified and work can be continued!
 
 

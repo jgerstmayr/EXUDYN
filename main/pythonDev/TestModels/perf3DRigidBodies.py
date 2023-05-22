@@ -74,12 +74,11 @@ for i in range(nBodies):
 
     ep0 = eulerParameters0 #no rotation
     graphicsBody = GraphicsDataOrthoCubePoint([0,0,0], [0.96*L,d,d], color4steelblue)
-    ep = RotationMatrix2EulerParameters(Alist[i])
-    ep = (1./np.linalg.norm(ep)) * ep
-    [nRB, oRB] = AddRigidBody(mbs, inertia, nodeType=exu.NodeType.RotationEulerParameters,
-                              position=p0,
-                              #rotationMatrix=Alist[i],
-                              rotationParameters=ep,
+    # ep = RotationMatrix2EulerParameters(Alist[i])
+    # ep = (1./np.linalg.norm(ep)) * ep
+    oRB = mbs.CreateRigidBody(inertia=inertia, 
+                              referencePosition=p0,
+                              referenceRotationMatrix=Alist[i],
                               gravity=g,
                               graphicsDataList=[graphicsBody])
 
@@ -90,8 +89,10 @@ for i in range(nBodies):
     #                                 configuration=exu.ConfigurationType.Reference)
     #axis = [0,0,1]
     axis = axisList[i]
-    AddRevoluteJoint(mbs, body0, body1, [0.5*L,0,0], Alast.T@axis, useGlobalFrame=False, 
-                          axisRadius=0.6*d, axisLength=1.2*d)
+    mbs.CreateRevoluteJoint(bodyNumbers=[body0, body1], position=[0.5*L,0,0], 
+                            axis=Alast.T@axis, useGlobalFrame=False, 
+                            axisRadius=0.6*d, axisLength=1.2*d)
+    # OLD:
     # AddRevoluteJoint(mbs, body0, body1, point, axis, useGlobalFrame=True, 
     #                   axisRadius=0.6*d, axisLength=1.2*d)
 
@@ -147,9 +148,9 @@ if useGraphics:
 else:
     simulationSettings.solutionSettings.writeSolutionToFile = False
 
-exu.SolveDynamic(mbs, simulationSettings)
+mbs.SolveDynamic(simulationSettings)
 
-
+nRB= mbs.GetObject(oRB)['nodeNumber']
 u0 = mbs.GetNodeOutput(nRB, exu.OutputVariableType.Displacement)
 rot0 = mbs.GetNodeOutput(nRB, exu.OutputVariableType.Rotation)
 exu.Print('u0=',u0,', rot0=', rot0)

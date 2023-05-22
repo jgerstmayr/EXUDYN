@@ -136,10 +136,10 @@ mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0
 #set up general contact geometry where sensors measure
 [meshPoints, meshTrigs] = GraphicsData2PointsAndTrigs(gGround)
 
-ngc = CreateDistanceSensorGeometry(mbs, meshPoints, meshTrigs, rigidBodyMarkerIndex=mGround, searchTreeCellSize=[8,8,1])
+ngc = mbs.CreateDistanceSensorGeometry(meshPoints, meshTrigs, rigidBodyMarkerIndex=mGround, searchTreeCellSize=[8,8,1])
 
 #single sensor:
-# sDistanceSphere = CreateDistanceSensor(mbs, ngc, positionOrMarker=markerCar2, dirSensor=dirSensor2,
+# sDistanceSphere = mbs.CreateDistanceSensor(ngc, positionOrMarker=markerCar2, dirSensor=dirSensor2,
 #                                     minDistance=0, maxDistance=maxDistance, measureVelocity=True,
 #                                     cylinderRadius=0, storeInternal=True, addGraphicsObject=True, 
 #                                     selectedTypeIndex=exu.ContactTypeIndex.IndexTrigsRigidBodyBased,
@@ -400,7 +400,7 @@ if useGraphics:
     exu.StartRenderer()
     mbs.WaitForUserToContinue()
 
-exu.SolveDynamic(mbs, simulationSettings)
+mbs.SolveDynamic(simulationSettings)
 
 p0=mbs.GetObjectOutputBody(bCar, exu.OutputVariableType.Position, localPosition=[0,0,0])
 exu.Print('solution of mecanumWheelRollingDiscTest=',p0[0]) #use x-coordinate
@@ -416,9 +416,9 @@ if useGraphics:
 ##++++++++++++++++++++++++++++++++++++++++++++++q+++++++
 #plot results
 if useGraphics and False:
-    from exudyn.plot import PlotSensor
     
-    PlotSensor(mbs, sTrail, componentsX=[0]*4, components=[1]*4, title='wheel trails', closeAll=True,
+    
+    mbs.PlotSensor(sTrail, componentsX=[0]*4, components=[1]*4, title='wheel trails', closeAll=True,
                markerStyles=['x ','o ','^ ','D '], markerSizes=12)
-    PlotSensor(mbs, sForce, components=[1]*4, title='wheel forces')
+    mbs.PlotSensor(sForce, components=[1]*4, title='wheel forces')
     

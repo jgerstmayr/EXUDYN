@@ -120,7 +120,7 @@ if useGraphics:
     exu.StartRenderer()
     #mbs.WaitForUserToContinue()
 
-exu.SolveDynamic(mbs, simulationSettings)
+mbs.SolveDynamic(simulationSettings)
 
 if useGraphics: 
     SC.WaitForRenderEngineStopFlag()

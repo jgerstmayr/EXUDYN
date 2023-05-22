@@ -19,15 +19,40 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.6.110.dev1, 
-+  last change =  2023-05-17, 
-+  Number of issues = 1575, 
-+  Number of resolved issues = 1390 (110 in current version), 
++  Exudyn version = 1.6.118.dev1, 
++  last change =  2023-05-21, 
++  Number of issues = 1582, 
++  Number of resolved issues = 1398 (118 in current version), 
 
 ***********
 Version 1.6
 ***********
 
+ * Version 1.6.118: resolved Issue 1577: examples (fix)
+    - description:  test if all Examples are still running
+    - date resolved: **2023-05-20 22:23**\ , date raised: 2023-05-20 
+ * Version 1.6.117: resolved Issue 1578: ObjectConnectorCoordinateSpringDamper (fix)
+    - description:  correct docu on object and user function description (still includes friction)
+    - date resolved: **2023-05-20 21:13**\ , date raised: 2023-05-20 
+ * Version 1.6.116: resolved Issue 1569: mainSystemExtensions (example)
+    - description:  add mini-examples for extensions
+    - **notes:** collected miniexamples in mainSystemExtensionsTests.py; 
+    - date resolved: **2023-05-20 21:05**\ , date raised: 2023-05-15 
+ * Version 1.6.115: resolved Issue 1571: mainSystemExtensions (change)
+    - description:  adapt Examples to Python extensions (SolveDynamic, CreateRigidBody, CreateGenericJoint, ...)
+    - date resolved: **2023-05-18 23:43**\ , date raised: 2023-05-15 
+ * Version 1.6.114: resolved Issue 1570: mainSystemExtensions (change)
+    - description:  adapt TestModels to Python extensions
+    - date resolved: **2023-05-18 23:43**\ , date raised: 2023-05-15 
+ * Version 1.6.113: :textred:`resolved BUG 1576` : multithreading 
+    - description:  running laserScannerTest.py after a multithreaded contact computation raises the EXCEPTION: TemporaryComputationDataArray::operator[]: index out of range
+    - date resolved: **2023-05-18 23:13**\ , date raised: 2023-05-18 
+ * Version 1.6.112: resolved Issue 1575: ConnectorDistance (change)
+    - description:  changed parameter distance to PReal, not allowing zero distance to be prescribed
+    - date resolved: **2023-05-18 13:03**\ , date raised: 2023-05-18 
+ * Version 1.6.111: resolved Issue 1573: mainSystemExtensions (docu)
+    - description:  Adapt tutorials to new functionality
+    - date resolved: **2023-05-18 12:19**\ , date raised: 2023-05-16 
  * Version 1.6.110: resolved Issue 1574: Python utilities (fix)
     - description:  classes not appearing in table of contents on RTD
     - date resolved: **2023-05-17 20:21**\ , date raised: 2023-05-16 
@@ -4510,21 +4535,17 @@ Version 0.1
 Open issues
 ***********
 
- * **open issue 1573:** mainSystemExtensions
-    - description:  Adapt tutorials to new functionality
-    - date raised: 2023-05-16 
+ * **open issue 1581:** mainSystemExtensions
+    - description:  add LinearSpringDamper and TorsionalSpringDamper
+    - date raised: 2023-05-21 
 
- * **open issue 1571:** mainSystemExtensions
-    - description:  adapt Examples to Python extensions (SolveDynamic, CreateRigidBody, CreateGenericJoint, ...)
-    - date raised: 2023-05-15 
+ * **open issue 1580:** mainSystemExtensions
+    - description:  add RigidBodySpringDamper
+    - date raised: 2023-05-21 
 
- * **open issue 1570:** mainSystemExtensions
-    - description:  adapt TestModels to Python extensions
-    - date raised: 2023-05-15 
-
- * **open issue 1569:** mainSystemExtensions
-    - description:  add mini-examples for extensions
-    - date raised: 2023-05-15 
+ * **open issue 1579:** mainSystemExtensions
+    - description:  Add distance constraint and CartesianSpringDamper
+    - date raised: 2023-05-21 
 
  * **open issue 1565:** utilities InitializeFromRestartFile
     - description:  finalize C++ functionality and Python function

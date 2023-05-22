@@ -262,7 +262,7 @@ if exudynTestGlobals.useGraphics:
 
     mbs.WaitForUserToContinue() #press space to continue
 
-exu.SolveDynamic(mbs, simulationSettings)
+mbs.SolveDynamic(simulationSettings)
     
 
 #data = np.loadtxt(fileDir+'nMidDisplacementCMS'+str(nModes)+'Test.txt', comments='#', delimiter=',')
@@ -282,9 +282,9 @@ if exudynTestGlobals.useGraphics:
 ##++++++++++++++++++++++++++++++++++++++++++++++q+++++++
 #plot results
 if exudynTestGlobals.useGraphics:
-    from exudyn.plot import PlotSensor
     
-    PlotSensor(mbs, [fileDir+'nMidDisplacementCMS8.txt',sDisp,fileDir+'nMidDisplacementFFRF.txt'],
+    
+    mbs.PlotSensor([fileDir+'nMidDisplacementCMS8.txt',sDisp,fileDir+'nMidDisplacementFFRF.txt'],
                components=1, closeAll=True)
 
 

@@ -126,7 +126,7 @@ SC.visualizationSettings.nodes.defaultSize = 0.01
 simulationSettings.solutionSettings.solutionInformation = "nonlinear beam oscillations"
 
 exu.StartRenderer()
-exu.SolveDynamic(mbs, simulationSettings)
+mbs.SolveDynamic(simulationSettings)
 SC.WaitForRenderEngineStopFlag()
 exu.StopRenderer() #safely close rendering window!
 

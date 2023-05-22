@@ -23,7 +23,6 @@ from exudyn.advancedUtilities import *
 from exudyn.rigidBodyUtilities import *
 from exudyn.graphicsDataUtilities import *
 from exudyn.itemInterface import *
-# import exudyn.mainSystemExtensions
 
 #for compatibility with older models:
 from exudyn.beams import GenerateStraightLineANCFCable2D, GenerateSlidingJoint, GenerateAleSlidingJoint

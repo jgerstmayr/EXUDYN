@@ -194,8 +194,8 @@ You can view and download this file on Github: `contactCoordinateTest.py <https:
        mbs.WaitForUserToContinue()    #wait for pressing SPACE bar to continue
    
    #start solver:
-   exu.SolveDynamic(mbs, solverType=exu.DynamicSolverType.TrapezoidalIndex2, simulationSettings=simulationSettings) #chose index2, can handle adaptive steps
-   #exu.SolveDynamic(mbs, solverType=exu.DynamicSolverType.RK67, simulationSettings=simulationSettings)
+   mbs.SolveDynamic(solverType=exu.DynamicSolverType.TrapezoidalIndex2, simulationSettings=simulationSettings) #chose index2, can handle adaptive steps
+   #mbs.SolveDynamic(solverType=exu.DynamicSolverType.RK67, simulationSettings=simulationSettings)
    
    if useGraphics:
        exu.StopRenderer()               #safely close rendering window!
@@ -209,8 +209,8 @@ You can view and download this file on Github: `contactCoordinateTest.py <https:
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++
    
    if useGraphics and True: #to run this, run model first with withUserFunction=True
-       from exudyn.plot import PlotSensor
-       PlotSensor(mbs, sensorNumbers=[sPos, 'solution/sensorPosUser.txt'], components=1, 
+       
+       mbs.PlotSensor(sensorNumbers=[sPos, 'solution/sensorPosUser.txt'], components=1, 
                   labels=['internal contact','user function'])
    
    

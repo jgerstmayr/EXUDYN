@@ -13,5 +13,5 @@ mbs.AddLoad(Force(markerNumber = mMP, loadVector=[0.001,0,0]))
 mbs.Assemble()                     #assemble system and solve
 simulationSettings = exu.SimulationSettings()
 simulationSettings.timeIntegration.verboseMode=1 #provide some output
-exu.SolveDynamic(mbs, simulationSettings)
+mbs.SolveDynamic(simulationSettings)
 

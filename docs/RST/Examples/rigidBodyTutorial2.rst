@@ -127,15 +127,15 @@ You can view and download this file on Github: `rigidBodyTutorial2.py <https://g
    
    mbs.WaitForUserToContinue() #stop before simulating
    
-   exu.SolveDynamic(mbs, simulationSettings = simulationSettings,
+   mbs.SolveDynamic(simulationSettings = simulationSettings,
                     solverType=exu.DynamicSolverType.TrapezoidalIndex2)
    
    SC.WaitForRenderEngineStopFlag() #stop before closing
    exu.StopRenderer() #safely close rendering window!
    
    #plot some sensor output
-   from exudyn.plot import PlotSensor
-   PlotSensor(mbs, [sens1],[1])
+   
+   mbs.PlotSensor([sens1],[1])
    
    
 

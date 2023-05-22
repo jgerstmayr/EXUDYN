@@ -100,7 +100,7 @@ def ParameterFunction(parameterSet):
     mbs.Assemble()
     
     #start solver:
-    exu.SolveDynamic(mbs, simulationSettings)
+    mbs.SolveDynamic(simulationSettings)
     
 
 

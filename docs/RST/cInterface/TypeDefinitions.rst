@@ -23,6 +23,9 @@ This section defines a couple of structures (C++: enum aka enumeration type), wh
                             outputVariableType=exu.OutputVariableType.Displacement))
    #
 
+.. _sec-outputvariabletype:
+
+
 OutputVariableType
 ==================
 
@@ -97,6 +100,9 @@ The OutputVariableType does not provide information about the size of the output
 
 
 
+.. _sec-configurationtype:
+
+
 ConfigurationType
 =================
 
@@ -123,6 +129,9 @@ This section shows the ConfigurationType structure, which is used for selecting 
 
 
 
+.. _sec-itemtype:
+
+
 ItemType
 ========
 
@@ -145,6 +154,9 @@ This section shows the ItemType structure, which is used for defining types of i
 * | **Sensor**:
   | item or index is of type Sensor
 
+
+
+.. _sec-nodetype:
 
 
 NodeType
@@ -197,6 +209,9 @@ This section shows the NodeType structure, which is used for defining node types
 
 
 
+.. _sec-jointtype:
+
+
 JointType
 =========
 
@@ -221,6 +236,9 @@ This section shows the JointType structure, which is used for defining joint typ
 * | **PrismaticZ**:
   | prismatic joint type with translation along local Z axis
 
+
+
+.. _sec-dynamicsolvertype:
 
 
 DynamicSolverType
@@ -255,6 +273,9 @@ This section shows the DynamicSolverType structure, which is used for selecting 
 
 
 
+.. _sec-crosssectiontype:
+
+
 CrossSectionType
 ================
 
@@ -269,6 +290,9 @@ This section shows the CrossSectionType structure, which is used for defining be
 * | **Circular**:
   | cross section is circle or elliptic
 
+
+
+.. _sec-keycode:
 
 
 KeyCode
@@ -321,6 +345,9 @@ This section shows the KeyCode structure, which is used for special key codes in
 
 
 
+.. _sec-linearsolvertype:
+
+
 LinearSolverType
 ================
 
@@ -339,6 +366,9 @@ This section shows the LinearSolverType structure, which is used for selecting l
 * | **EigenSparseSymmetric**:
   | use sparse matrices and according solvers; NOTE: this is the symmetric mode, which assumes symmetric system matrices; this is EXPERIMENTAL and should only be used of user knows that the system matrices are (nearly) symmetric; does not work with scaled GeneralizedAlpha matrices; does not work with constraints, as it must be symmetric positive definite
 
+
+
+.. _sec-contacttypeindex:
 
 
 ContactTypeIndex

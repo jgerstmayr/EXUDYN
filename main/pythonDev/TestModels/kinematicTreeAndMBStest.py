@@ -315,13 +315,13 @@ if case == '3Dmechanism' or performTest:
     
         mbs.WaitForUserToContinue() #press space to continue
 
-    # exu.SolveDynamic(mbs, simulationSettings, solverType = exu.DynamicSolverType.ExplicitMidpoint)
-    exu.SolveDynamic(mbs, simulationSettings)
+    # mbs.SolveDynamic(simulationSettings, solverType = exu.DynamicSolverType.ExplicitMidpoint)
+    mbs.SolveDynamic(simulationSettings)
         
     if useGraphics: #use this to reload the solution and use SolutionViewer
         #sol = LoadSolutionFile('coordinatesSolution.txt')
-        from exudyn.interactive import SolutionViewer
-        SolutionViewer(mbs) #can also be entered in IPython ...
+        
+        mbs.SolutionViewer() #can also be entered in IPython ...
     
     if useGraphics:
         SC.WaitForRenderEngineStopFlag()
@@ -330,11 +330,11 @@ if case == '3Dmechanism' or performTest:
     
     if len(sMBS) == len(sKT):
         if useGraphics:
-            from exudyn.plot import PlotSensor
-            PlotSensor(mbs, closeAll=True)
+            
+            mbs.PlotSensor(closeAll=True)
             
             for i in range(len(sMBS)):
-                PlotSensor(mbs, sensorNumbers=[sMBS[i]]*3+[sKT[i]]*3, components=[0,1,2]*2, title=sTitles[i])
+                mbs.PlotSensor(sensorNumbers=[sMBS[i]]*3+[sKT[i]]*3, components=[0,1,2]*2, title=sTitles[i])
         else:
             u = 0.
             for i in range(len(sMBS)):
@@ -464,13 +464,13 @@ if case == 'invertedPendulum' or performTest:
     
         mbs.WaitForUserToContinue() #press space to continue
 
-    # exu.SolveDynamic(mbs, simulationSettings, solverType = exu.DynamicSolverType.ExplicitMidpoint)
-    exu.SolveDynamic(mbs, simulationSettings)
+    # mbs.SolveDynamic(simulationSettings, solverType = exu.DynamicSolverType.ExplicitMidpoint)
+    mbs.SolveDynamic(simulationSettings)
         
     if useGraphics: #use this to reload the solution and use SolutionViewer
         #sol = LoadSolutionFile('coordinatesSolution.txt')
-        from exudyn.interactive import SolutionViewer
-        SolutionViewer(mbs) #can also be entered in IPython ...
+        
+        mbs.SolutionViewer() #can also be entered in IPython ...
     
     if useGraphics:
         SC.WaitForRenderEngineStopFlag()
@@ -622,13 +622,13 @@ if case == 'treeStructure' or performTest:
     
         mbs.WaitForUserToContinue() #press space to continue
 
-    # exu.SolveDynamic(mbs, simulationSettings, solverType = exu.DynamicSolverType.ExplicitMidpoint)
-    exu.SolveDynamic(mbs, simulationSettings)
+    # mbs.SolveDynamic(simulationSettings, solverType = exu.DynamicSolverType.ExplicitMidpoint)
+    mbs.SolveDynamic(simulationSettings)
         
     if useGraphics: #use this to reload the solution and use SolutionViewer
         #sol = LoadSolutionFile('coordinatesSolution.txt')
-        from exudyn.interactive import SolutionViewer
-        SolutionViewer(mbs) #can also be entered in IPython ...
+        
+        mbs.SolutionViewer() #can also be entered in IPython ...
     
     if useGraphics:
         SC.WaitForRenderEngineStopFlag()

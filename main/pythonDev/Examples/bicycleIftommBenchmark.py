@@ -387,8 +387,8 @@ if useGraphics:
         SC.SetRenderState(exu.sys[ 'renderState' ])
     mbs.WaitForUserToContinue()
 
-exu.SolveDynamic(mbs, simulationSettings, solverType=exu.DynamicSolverType.TrapezoidalIndex2)
-#exu.SolveDynamic(mbs, simulationSettings, showHints=True)
+mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.TrapezoidalIndex2)
+#mbs.SolveDynamic(simulationSettings, showHints=True)
 
 
 #%%+++++++++++++++++++++++++++++
@@ -400,23 +400,23 @@ if useGraphics:
 if addSensors:
     #plot results
 
-    from exudyn.plot import PlotSensor
+    
 
     import matplotlib.pyplot as plt
     import matplotlib.ticker as ticker
     plt.close('all')
 
     
-    # PlotSensor(mbs, sensorNumbers=[sBpos,sBpos,sBpos], components=[0,1,2])
+    # mbs.PlotSensor(sensorNumbers=[sBpos,sBpos,sBpos], components=[0,1,2])
     #plt.figure('lateral position')
-    #PlotSensor(mbs, sensorNumbers=[sBpos], components=[1])
+    #mbs.PlotSensor(sensorNumbers=[sBpos], components=[1])
     
     plt.figure('forward velocity')
-    PlotSensor(mbs, sensorNumbers=[sForwardVel], components=[0])
-    # PlotSensor(mbs, sensorNumbers=[sBvelLocal,sBvelLocal,sBvelLocal], components=[0,1,2])
+    mbs.PlotSensor(sensorNumbers=[sForwardVel], components=[0])
+    # mbs.PlotSensor(sensorNumbers=[sBvelLocal,sBvelLocal,sBvelLocal], components=[0,1,2])
     
     # plt.figure('local ang velocities')
-    # PlotSensor(mbs, sensorNumbers=[sBAngVelLocal,sBAngVelLocal,sBAngVelLocal], components=[0,1,2])
+    # mbs.PlotSensor(sensorNumbers=[sBAngVelLocal,sBAngVelLocal,sBAngVelLocal], components=[0,1,2])
     # if False:
     #     import matplotlib.pyplot as plt
     #     import matplotlib.ticker as ticker
@@ -429,32 +429,32 @@ if addSensors:
     plt.plot(data2[:,0], data2[:,3+8], 'g:',label='') 
 
     plt.figure('steer vel')
-    PlotSensor(mbs, sensorNumbers=[sSteerVel], components=[2])
+    mbs.PlotSensor(sensorNumbers=[sSteerVel], components=[2])
     plt.plot(data2[:,0], -data2[:,8+8], 'g:',label='') 
 
     plt.figure('steer ang')
-    PlotSensor(mbs, sensorNumbers=[sSteerAngle], components=[2])
+    mbs.PlotSensor(sensorNumbers=[sSteerAngle], components=[2])
     plt.plot(data2[:,0], -data2[:,7+8], 'g:',label='') 
 
     plt.figure('roll')
-    PlotSensor(mbs, sensorNumbers=[sBrot], components=[0])
+    mbs.PlotSensor(sensorNumbers=[sBrot], components=[0])
     plt.plot(data2[:,0], data2[:,1+8], 'g:',label='') 
 
     plt.figure('roll ang vel')
-    PlotSensor(mbs, sensorNumbers=[sBAngVelLocal], components=[0])
+    mbs.PlotSensor(sensorNumbers=[sBAngVelLocal], components=[0])
     plt.plot(data2[:,0], data2[:,2+8], 'g:',label='') 
 
 
     plt.figure('potential energy')
-    PlotSensor(mbs, sensorNumbers=[sEnergy], components=[0])
+    mbs.PlotSensor(sensorNumbers=[sEnergy], components=[0])
     plt.plot(data2[:,0], data2[:,4+8], 'g:',label='') 
 
     plt.figure('kinetic energy')
-    PlotSensor(mbs, sensorNumbers=[sEnergy], components=[1])
+    mbs.PlotSensor(sensorNumbers=[sEnergy], components=[1])
     plt.plot(data2[:,0], data2[:,5+8], 'g:',label='') 
 
     plt.figure('total energy')
-    PlotSensor(mbs, sensorNumbers=[sEnergy], components=[2])
+    mbs.PlotSensor(sensorNumbers=[sEnergy], components=[2])
 
     dataE = np.loadtxt('solution/sensorKineticPotentialEnergy.txt', comments='#', delimiter=',')
     performance = 100*(max(dataE[:,3]) - min(dataE[:,3])) / dataE[0,3]

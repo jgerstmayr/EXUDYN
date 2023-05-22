@@ -233,7 +233,7 @@ for testCases in rangeTests:
     if useGraphics: 
         exu.StartRenderer()
    
-    exu.SolveDynamic(mbs, simulationSettings)
+    mbs.SolveDynamic(simulationSettings)
         
     if useGraphics: 
         #+++++++++++++++++++++++++++++++++++++

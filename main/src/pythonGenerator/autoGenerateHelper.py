@@ -1008,7 +1008,7 @@ class PyLatexRST:
             cClass = className
             
         self.sPy +=	'  py::enum_<' + cClass + '>(m, "' + className + '")\n'
-        self.DefLatexStartClass(className, description, subSection=subSection, labelName='')
+        self.DefLatexStartClass(className, description, subSection=subSection, labelName=labelName)
         
         self.sPyi += '\nclass '+className+'(Enum):\n'
 
@@ -1171,7 +1171,7 @@ class PyLatexRST:
                     self.sPy += ', py::arg("' + argList[i] + '")'
 
                 sLadd += sSep+argList[i]
-                sRadd += sSep+'\\ *'+argList[i]+'*\\ '
+                sRadd += sSep+'\\ *'+argList[i].replace('*','\\*')+'*\\ '
                 if (defaultArgs[i] != ''):
                     if argList[i] != '*args': #won't work in pybind interface (see comment in Pybind11 docs)
                         self.sPy += ' = ' + ReplaceDefaultArgsCpp(defaultArgs[i])

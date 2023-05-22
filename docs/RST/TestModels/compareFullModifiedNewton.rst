@@ -89,11 +89,11 @@ You can view and download this file on Github: `compareFullModifiedNewton.py <ht
    
    simulationSettings.timeIntegration.newton.useModifiedNewton = True
    simulationSettings.solutionSettings.coordinatesSolutionFileName = "solution/modifiedNewton.txt"
-   exu.SolveDynamic(mbs, simulationSettings)#, experimentalNewSolver=False)
+   mbs.SolveDynamic(simulationSettings)#, experimentalNewSolver=False)
    
    simulationSettings.timeIntegration.newton.useModifiedNewton = False
    simulationSettings.solutionSettings.coordinatesSolutionFileName = "solution/fullNewton.txt"
-   exu.SolveDynamic(mbs, simulationSettings)#, experimentalNewSolver=False)
+   mbs.SolveDynamic(simulationSettings)#, experimentalNewSolver=False)
    
    
    #%%*****************************************

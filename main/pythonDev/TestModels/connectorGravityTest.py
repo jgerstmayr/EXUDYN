@@ -1,7 +1,9 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  Test model for ObjectConnectorGravity, realizing gravitational forces between two masses (used for astrospace or astronomical investigations)
+# Details:  Test model for ObjectConnectorGravity, realizing gravitational forces between 
+#           two masses (used for astrospace or small-scale astronomical investigations, e.g., satellites);
+#           in this case we simulate a small planetary system, initializing planets with orbital velocity
 #
 # Author:   Johannes Gerstmayr
 # Date:     2022-01-30
@@ -94,9 +96,9 @@ if useGraphics:
     mbs.WaitForUserToContinue()    #wait for pressing SPACE bar to continue
 
 #start solver:
-# exu.SolveDynamic(mbs, simulationSettings, solverType = exu.DynamicSolverType.TrapezoidalIndex2)
+# mbs.SolveDynamic(simulationSettings, solverType = exu.DynamicSolverType.TrapezoidalIndex2)
 #gives 7 digits of accuracy for tEnd=1e6, h=1e3:
-exu.SolveDynamic(mbs, simulationSettings, solverType = exu.DynamicSolverType.RK67)
+mbs.SolveDynamic(simulationSettings, solverType = exu.DynamicSolverType.RK67)
 
 if useGraphics:
     SC.WaitForRenderEngineStopFlag()#wait for pressing 'Q' to quit

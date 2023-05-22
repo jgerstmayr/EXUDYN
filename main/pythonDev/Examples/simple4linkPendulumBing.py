@@ -71,5 +71,5 @@ simulationSettings.solutionSettings.solutionWritePeriod = 0.01
 
 exu.StartRenderer()
 mbs.WaitForUserToContinue()
-exu.SolveDynamic(mbs,simulationSettings)
+mbs.SolveDynamic(simulationSettings)
 exu.StopRenderer()

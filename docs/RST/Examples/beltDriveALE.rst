@@ -171,7 +171,7 @@ You can view and download this file on Github: `beltDriveALE.py <https://github.
                            physicsBendingStiffness = EI,
                            physicsAxialStiffness = EA,
                            physicsBendingDamping = dEI,
-                           physicsAxialDamping = dEA,
+                           #physicsAxialDamping = dEA, #not implemented for ANCFALE
                            physicsReferenceAxialStrain = preStretch,
                            physicsReferenceCurvature = 0.,
                            useReducedOrderIntegration = 2,
@@ -474,7 +474,7 @@ You can view and download this file on Github: `beltDriveALE.py <https://github.
                mbs.SetObjectParameter(obj, 'frictionStiffness', 1e-8) #do not set to zero, as it needs to do some initialization...
                
        # simulationSettings.solutionSettings.appendToFile=False
-       exu.SolveStatic(mbs, simulationSettings, updateInitialValues=True)
+       mbs.SolveStatic(simulationSettings, updateInitialValues=True)
        # simulationSettings.solutionSettings.appendToFile=True    
    
        #check total force on support, expect: supportLeftX \approx 2*preStretch*EA
@@ -501,15 +501,15 @@ You can view and download this file on Github: `beltDriveALE.py <https://github.
            mbs.SetObjectParameter(csd, 'activeConnector', False)
    
    if True:
-       exu.SolveDynamic(mbs, simulationSettings, solverType=exu.DynamicSolverType.TrapezoidalIndex2) #183 Newton iterations, 0.114 seconds
-   #exu.SolveDynamic(mbs, simulationSettings)
+       mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.TrapezoidalIndex2) #183 Newton iterations, 0.114 seconds
+   #mbs.SolveDynamic(simulationSettings)
    
    if useGraphics and True:
        SC.visualizationSettings.general.autoFitScene = False
        SC.visualizationSettings.general.graphicsUpdateInterval=0.02
-       from exudyn.interactive import SolutionViewer
+       
        sol = LoadSolutionFile('solution/testCoords.txt', safeMode=True)#, maxRows=100)
-       SolutionViewer(mbs, sol)
+       mbs.SolutionViewer(sol)
    
    
    if useGraphics: 
@@ -535,9 +535,9 @@ You can view and download this file on Github: `beltDriveALE.py <https://github.
                   
        import matplotlib.pyplot as plt
        import matplotlib.ticker as ticker
-       from exudyn.plot import PlotSensor, DataArrayFromSensorList
+       from exudyn.plot import DataArrayFromSensorList
    
-       PlotSensor(mbs, closeAll=True)
+       mbs.PlotSensor(closeAll=True)
        
        #compute axial offset, to normalize results:
        nodePos0 = mbs.GetSensorValues(sCable0Pos[0])
@@ -562,14 +562,14 @@ You can view and download this file on Github: `beltDriveALE.py <https://github.
        if correctXoffset:
            dataVel=ShiftXoff(dataVel,xOff, reevingDict['totalLength'])
        
-       # PlotSensor(mbs, sensorNumbers=[dataVel], components=0, labels=['axial velocity'], 
+       # mbs.PlotSensor(sensorNumbers=[dataVel], components=0, labels=['axial velocity'], 
        #            xLabel='axial position (m)', yLabel='velocity (m/s)')
    
        #axial force over beam length:
        dataForce = DataArrayFromSensorList(mbs, sensorNumbers=sAxialForce, positionList=positionList2Node)
        if correctXoffset:
            dataForce = ShiftXoff(dataForce,xOff, reevingDict['totalLength'])
-       # PlotSensor(mbs, sensorNumbers=[dataForce], components=0, labels=['axial force'], colorCodeOffset=2,
+       # mbs.PlotSensor(sensorNumbers=[dataForce], components=0, labels=['axial force'], colorCodeOffset=2,
        #            xLabel='axial position (m)', yLabel='axial force (N)')
    
    
@@ -598,7 +598,7 @@ You can view and download this file on Github: `beltDriveALE.py <https://github.
        #         dataExp[i+na,0] = x0+x
        #         dataExp[i+na,1] = val
    
-       #     PlotSensor(mbs, sensorNumbers=[dataExp], components=0, labels=['analytical Eytelwein'], colorCodeOffset=3, newFigure=False,
+       #     mbs.PlotSensor(sensorNumbers=[dataExp], components=0, labels=['analytical Eytelwein'], colorCodeOffset=3, newFigure=False,
        #                lineStyles=[''], markerStyles=['x '], markerDensity=2*na)
    
        #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -619,14 +619,14 @@ You can view and download this file on Github: `beltDriveALE.py <https://github.
        if correctXoffset:
            contactForcesTotal = ShiftXoff(contactForcesTotal,-xOff, reevingDict['totalLength'])
        #plot contact forces over beam length:
-       PlotSensor(mbs, sensorNumbers=[contactForcesTotal,contactForcesTotal], components=[0,1], labels=['tangential force','normal force'], 
+       mbs.PlotSensor(sensorNumbers=[contactForcesTotal,contactForcesTotal], components=[0,1], labels=['tangential force','normal force'], 
                   xLabel='axial position (m)', yLabel='contact forces (N)', newFigure=True)
-       # PlotSensor(mbs, sensorNumbers=[contactForces[1],contactForces[1]], components=[0,1], labels=['tangential force','normal force'], 
+       # mbs.PlotSensor(sensorNumbers=[contactForces[1],contactForces[1]], components=[0,1], labels=['tangential force','normal force'], 
        #            xLabel='axial position (m)', yLabel='contact forces (N)', newFigure=False)
-       PlotSensor(mbs, sensorNumbers=[solDir+'contactForcesh5e-05n2s2cs40ALE1.txt'], components=[0,1], 
+       mbs.PlotSensor(sensorNumbers=[solDir+'contactForcesh5e-05n2s2cs40ALE1.txt'], components=[0,1], 
                   labels=['tangential force ALE','normal force ALE'], 
                    xLabel='axial position (m)', yLabel='contact forces (N)', colorCodeOffset=2, newFigure=False)
-       PlotSensor(mbs, sensorNumbers=[solDir+'contactForcesh5e-05n2s2cs40ALE0.txt'], components=[0,1], 
+       mbs.PlotSensor(sensorNumbers=[solDir+'contactForcesh5e-05n2s2cs40ALE0.txt'], components=[0,1], 
                   labels=['tangential force Ref','normal force Ref'], 
                    xLabel='axial position (m)', yLabel='contact forces (N)', colorCodeOffset=4, newFigure=False)
    
@@ -645,11 +645,11 @@ You can view and download this file on Github: `beltDriveALE.py <https://github.
            contactDisp[1] = ShiftXoff(contactDisp[1],-xOff, reevingDict['totalLength'])
    
        if False:
-           PlotSensor(mbs, sensorNumbers=[contactDisp[0],contactDisp[0]], components=[0,1], labels=['slip','gap'], 
+           mbs.PlotSensor(sensorNumbers=[contactDisp[0],contactDisp[0]], components=[0,1], labels=['slip','gap'], 
                       xLabel='axial position (m)', yLabel='slip, gap (m)', newFigure=True)
-           PlotSensor(mbs, sensorNumbers=[contactDisp[1],contactDisp[1]], components=[0,1], labels=['slip','gap'], 
+           mbs.PlotSensor(sensorNumbers=[contactDisp[1],contactDisp[1]], components=[0,1], labels=['slip','gap'], 
                       xLabel='axial position (m)', yLabel='slip, gap (m)', newFigure=False)
-           PlotSensor(mbs, sensorNumbers=[solDir+'contactDisph5e-05n2s2cs40ALE1.txt'], components=[0,1], labels=['slipALE','gapALE'], 
+           mbs.PlotSensor(sensorNumbers=[solDir+'contactDisph5e-05n2s2cs40ALE1.txt'], components=[0,1], labels=['slipALE','gapALE'], 
                       xLabel='axial position (m)', yLabel='slip, gap (m)', colorCodeOffset=2, newFigure=False)
        
    
@@ -683,8 +683,8 @@ You can view and download this file on Github: `beltDriveALE.py <https://github.
        #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    
        if False:
-           # PlotSensor(mbs, sensorNumbers=[sWheelRot[0], sWheelRot[1]], components=[2,2])#,sWheelRot[1]
-           PlotSensor(mbs, sensorNumbers=[sWheelRot[0], sWheelRot[1], 
+           # mbs.PlotSensor(sensorNumbers=[sWheelRot[0], sWheelRot[1]], components=[2,2])#,sWheelRot[1]
+           mbs.PlotSensor(sensorNumbers=[sWheelRot[0], sWheelRot[1], 
                                           solDir+'wheel0angVelALE.txt',solDir+'wheel1angVelALE.txt'], components=[2,2,2,2],
                       colorCodeOffset=2)#,sWheelRot[1]
        #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

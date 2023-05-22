@@ -10,10 +10,7 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-#set path to exudyn WorkingRelease
-import sys
-sys.path.append("../../bin/WorkingRelease")
-
+#%%+++++++++++++++++++++++++++++++++++++++
 #import according libraries
 import exudyn as exu
 from exudyn.itemInterface import *
@@ -25,12 +22,17 @@ mbs = SC.AddSystem()
 #show properties
 mbs
 
+#%%+++++++++++++++++++++++++++++++++++++++
 #start interactive mode
 mbs.interactiveMode=True
 
 #start graphics visualization
 exu.StartRenderer()
 
+#better visible nodes:
+SC.visualizationSettings.nodes.drawNodesAsPoint=False
+#make nodes bigger
+SC.visualizationSettings.nodes.defaultSize=0.1
 #modify system online
 
 #add nodes
@@ -41,8 +43,6 @@ mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0]))
 mbs.AddObject(ObjectMassPoint(nodeNumber=0,physicsMass=1))
 mbs.AddObject(ObjectMassPoint(nodeNumber=1,physicsMass=1))
 
-#make nodes bigger
-SC.visualizationSettings.nodes.defaultSize=0.05
 
 #add marker
 m0=mbs.AddMarker(MarkerNodePosition(nodeNumber=0))
@@ -54,10 +54,12 @@ mbs.AddLoad(LoadForceVector(markerNumber=m0,loadVector=[0,-1,0]))
 mbs.Assemble()
 
 #simulate with default parameters
-exu.SolveDynamic(mbs, exu.SimulationSettings())
+mbs.SolveDynamic(exu.SimulationSettings())
 
 #stop rendering window
 exu.StopRenderer()
 
-#mbs can be still modified and work can be continued!
+#visualize results:
+mbs.SolutionViewer()
 
+#mbs can be still modified and work can be continued!

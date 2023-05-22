@@ -222,7 +222,7 @@ if useGraphics:
 vInit = mbs.systemData.GetODE2Coordinates_t(configuration = exu.ConfigurationType.Initial)
 
 #start static calculation
-exu.SolveStatic(mbs, simulationSettings) 
+mbs.SolveStatic(simulationSettings) 
 
 #++++++++++++++++++++++++++++++++++++++++
 #compute error for test suite:
@@ -278,7 +278,7 @@ if solveDynamic:
     simulationSettings.timeIntegration.verboseMode = 1
     simulationSettings.displayStatistics = True
     
-    exu.SolveDynamic(mbs, simulationSettings)
+    mbs.SolveDynamic(simulationSettings)
     
 if useGraphics: 
     #SC.WaitForRenderEngineStopFlag()

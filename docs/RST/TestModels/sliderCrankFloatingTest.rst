@@ -245,7 +245,7 @@ You can view and download this file on Github: `sliderCrankFloatingTest.py <http
        if useGraphics: 
            exu.StartRenderer()
       
-       exu.SolveDynamic(mbs, simulationSettings)
+       mbs.SolveDynamic(simulationSettings)
            
        if useGraphics: 
            #+++++++++++++++++++++++++++++++++++++

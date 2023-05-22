@@ -86,7 +86,7 @@ You can view and download this file on Github: `computeODE2EigenvaluesTest.py <h
    simulationSettings.staticSolver.verboseMode = 1
    
    nEig = 3
-   [values, vectors] = exu.ComputeODE2Eigenvalues(mbs, simulationSettings, 
+   [values, vectors] = mbs.ComputeODE2Eigenvalues(simulationSettings, 
                                                   numberOfEigenvalues = nEig+3)    #3 eigenvalues + 3 rigid body zero eigenvalues
    
    

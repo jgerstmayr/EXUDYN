@@ -139,7 +139,7 @@ You can view and download this file on Github: `SliderCrank.py <https://github.c
    
    #++++++++++++++++++++++++++++++++++++++++++
    #solve generalized alpha / index3:
-   exu.SolveDynamic(mbs, simulationSettings)
+   mbs.SolveDynamic(simulationSettings)
    
    SC.WaitForRenderEngineStopFlag()
    exu.StopRenderer() #safely close rendering window!
@@ -156,7 +156,7 @@ You can view and download this file on Github: `SliderCrank.py <https://github.c
    #simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
    #simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
    #
-   #exu.SolveDynamic(mbs, simulationSettings)
+   #mbs.SolveDynamic(simulationSettings)
    #
    #u = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Position) #tip node
    #errorSliderCrankIndex2 = u[0] - 1.3528786319585837 #x-position of slider

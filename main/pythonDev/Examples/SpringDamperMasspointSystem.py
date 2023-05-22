@@ -316,7 +316,7 @@ for i in range( len(stepSizeList) ):
     
     
     exu.StartRenderer()
-    exu.SolveDynamic(mbs, simulationSettings, solverType =  exudyn.DynamicSolverType.ODE23)
+    mbs.SolveDynamic(simulationSettings, solverType =  exudyn.DynamicSolverType.ODE23)
     SC.WaitForRenderEngineStopFlag()
     exu.StopRenderer() #safely close rendering window!
 

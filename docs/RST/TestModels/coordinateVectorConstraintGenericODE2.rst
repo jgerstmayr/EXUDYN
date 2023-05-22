@@ -171,7 +171,7 @@ You can view and download this file on Github: `coordinateVectorConstraintGeneri
        exu.StartRenderer()
        mbs.WaitForUserToContinue()
    
-   exu.SolveDynamic(mbs, simulationSettings)
+   mbs.SolveDynamic(simulationSettings)
    
    p0=mbs.GetNodeOutput(nR0, exu.OutputVariableType.Position)
    exu.Print("p0=", list(p0))
@@ -188,13 +188,13 @@ You can view and download this file on Github: `coordinateVectorConstraintGeneri
        SC.WaitForRenderEngineStopFlag()
        exu.StopRenderer() #safely close rendering window!
    
-       from exudyn.plot import PlotSensor, PlotSensorDefaults
+       from exudyn.plot import PlotSensorDefaults
        PlotSensorDefaults().fontSize = 12
        # PlotSensorDefaults().markerStyles=['x','o ','v ','^ ','s ']
-       # PlotSensor(mbs, [sPos0,sPos0,sPos1,sPos1], components=[0,1,0,1], closeAll=True)
+       # mbs.PlotSensor([sPos0,sPos0,sPos1,sPos1], components=[0,1,0,1], closeAll=True)
    
        #if reference solution computed:
-       PlotSensor(mbs, [sPos0,sPos0,sPos1,sPos1,fileNameDouble], components=[0,1,0,1,1], closeAll=True, 
+       mbs.PlotSensor([sPos0,sPos0,sPos1,sPos1,fileNameDouble], components=[0,1,0,1,1], closeAll=True, 
                   markerStyles=['','','','','x'], lineStyles=['-','-','-','-',''])
    
    

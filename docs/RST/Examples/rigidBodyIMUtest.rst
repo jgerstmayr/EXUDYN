@@ -25,7 +25,7 @@ You can view and download this file on Github: `rigidBodyIMUtest.py <https://git
    import exudyn as exu
    from exudyn.itemInterface import *
    from exudyn.utilities import *
-   #from exudyn.plot import PlotSensor
+   #
    from math import sin, cos, pi
    
    SC = exu.SystemContainer()
@@ -226,7 +226,7 @@ You can view and download this file on Github: `rigidBodyIMUtest.py <https://git
            [0,1,0]])}) #load last model view
    
    #mbs.WaitForUserToContinue()
-   exu.SolveDynamic(mbs, simulationSettings)
+   mbs.SolveDynamic(simulationSettings)
    
    #SC.WaitForRenderEngineStopFlag()
    exu.StopRenderer() #safely close rendering window!
@@ -234,9 +234,9 @@ You can view and download this file on Github: `rigidBodyIMUtest.py <https://git
    if False:
        import matplotlib.pyplot as plt
        plt.close("all")
-       PlotSensor(mbs, [sOmegaLocal]*3, components = [0,1,2])
+       mbs.PlotSensor([sOmegaLocal]*3, components = [0,1,2])
        plt.figure()
-       PlotSensor(mbs, [sRotation]*3, components = [0,1,2])
+       mbs.PlotSensor([sRotation]*3, components = [0,1,2])
    
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++
    
@@ -281,16 +281,16 @@ You can view and download this file on Github: `rigidBodyIMUtest.py <https://git
        plt.legend()
    
        plt.figure()
-       PlotSensor(mbs, [sRotation]*3, components = [0,1,2])
+       mbs.PlotSensor([sRotation]*3, components = [0,1,2])
        
        plt.figure()
-       PlotSensor(mbs, [sPos]*3, components = [0,1,2])
+       mbs.PlotSensor([sPos]*3, components = [0,1,2])
    
        plt.figure()
-       PlotSensor(mbs, [sOmega]*3, components = [0,1,2])
+       mbs.PlotSensor([sOmega]*3, components = [0,1,2])
    
        plt.figure()
-       PlotSensor(mbs, [sVel]*3, components = [0,1,2])
+       mbs.PlotSensor([sVel]*3, components = [0,1,2])
        
        ax.grid(True, 'major', 'both')
        ax.xaxis.set_major_locator(ticker.MaxNLocator(10)) 

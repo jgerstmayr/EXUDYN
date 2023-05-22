@@ -57,9 +57,9 @@ oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0], visualization=VOb
 # graphicsCube = GraphicsDataOrthoCubePoint(size= [L,b,b], color= color4dodgerblue, addEdges=True)
 # graphicsJoint = GraphicsDataCylinder(pAxis=[-0.5*L,0,-0.6*b], vAxis= [0,0,1.2*b], radius = 0.55*b, color=color4darkgrey, addEdges=True)
 
-AddRigidBody(mbs, inertia = InertiaSphere(1, 0.5), 
-             position = [1,1,0], 
-             angularVelocity=[1,0,0],
+mbs.CreateRigidBody(inertia = InertiaSphere(1, 0.5), 
+             referencePosition = [1,1,0], 
+             initialAngularVelocity =[1,0,0],
              graphicsDataList = [GraphicsDataSphere(radius=0.5, color=color4orange, nTiles=32,
                                                     addEdges=4, addFaces=True)])
 
@@ -80,7 +80,7 @@ SC.visualizationSettings.general.graphicsUpdateInterval = 0.02
 SC.visualizationSettings.window.renderWindowSize=[1920,1200]
 
 exu.StartRenderer()
-exu.SolveDynamic(mbs, simulationSettings)
+mbs.SolveDynamic(simulationSettings)
 
 SC.WaitForRenderEngineStopFlag()
 exu.StopRenderer() #safely close rendering window!

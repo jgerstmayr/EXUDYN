@@ -243,7 +243,7 @@ if useGraphics:
     mbs.WaitForUserToContinue()
     
 # hte the simulation with the set up simulationsettings is started 
-exu.SolveDynamic(mbs, simulationSettings, 
+mbs.SolveDynamic(simulationSettings, 
                  #solverType = exudyn.DynamicSolverType.TrapezoidalIndex2, # different solver types can be used depending on the problem
                  showHints=True)
 
@@ -255,8 +255,8 @@ if useGraphics: # when graphics are deactivated the renderer does not need to be
 #%%++++++++++++++++++++++++++++++++++++++++++++
 if True:
     # import the solution viewer which loads 
-    from exudyn.interactive import SolutionViewer
-    SolutionViewer(mbs)
+    
+    mbs.SolutionViewer()
 #%%++++++++++++++++++++++++++++++++++++++++++++
 
 
@@ -265,10 +265,10 @@ exu.Print("rotations at tEnd=", VSum(q), ',', q)
     
 #%%++++++++++++++++++++++++++++++++++++++++++++
 if True:
-    from exudyn.plot import PlotSensor
+    
     labels = []
     for i in range(6):
         labels += ['joint '+str(i)]
     # plot data from the sensor sJoints 6 times and take the values 0 to 5 in the steps
-    PlotSensor(mbs, sensorNumbers=[sJoints]*6, components=list(np.arange(6)), yLabel='joint coordinates', labels=labels) 
+    mbs.PlotSensor(sensorNumbers=[sJoints]*6, components=list(np.arange(6)), yLabel='joint coordinates', labels=labels) 
     

@@ -407,8 +407,8 @@ You can view and download this file on Github: `generalContactFrictionTests.py <
    simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
    simulationSettings.timeIntegration.endTime = tEnd
    simulationSettings.timeIntegration.explicitIntegration.computeEndOfStepAccelerations = False #increase performance, accelerations less accurate
-   exu.SolveDynamic(mbs, simulationSettings, solverType=exu.DynamicSolverType.ExplicitEuler)
-   # exu.SolveDynamic(mbs, simulationSettings, solverType=exu.DynamicSolverType.ODE23)
+   mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.ExplicitEuler)
+   # mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.ODE23)
    
    #compute error:
    uSum=0
@@ -431,17 +431,17 @@ You can view and download this file on Github: `generalContactFrictionTests.py <
        if True:
            SC.visualizationSettings.general.autoFitScene = False
            SC.visualizationSettings.general.graphicsUpdateInterval=0.02
-           from exudyn.interactive import SolutionViewer
+           
            sol = LoadSolutionFile('solution/coordinatesSolution.txt', safeMode=True)#, maxRows=100)
            print('start SolutionViewer')
-           SolutionViewer(mbs, sol)
+           mbs.SolutionViewer(sol)
    
        exu.StopRenderer() #safely close rendering window!
    
    if useGraphics:
-       from exudyn.plot import PlotSensor
        
-       PlotSensor(mbs, [], closeAll=True)
-       PlotSensor(mbs, [sNode3]*3, [0,1,2], figureName='node stair')
+       
+       mbs.PlotSensor([], closeAll=True)
+       mbs.PlotSensor([sNode3]*3, [0,1,2], figureName='node stair')
 
 

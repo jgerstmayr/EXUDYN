@@ -78,7 +78,7 @@ if useGraphics:
     exu.StartRenderer()
 
 
-exu.SolveDynamic(mbs, simulationSettings)
+mbs.SolveDynamic(simulationSettings)
 
 pos = mbs.GetNodeOutput(nRigid, variableType = exu.OutputVariableType.Position)
 result = abs(pos).sum()

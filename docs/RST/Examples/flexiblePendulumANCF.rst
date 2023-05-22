@@ -135,7 +135,7 @@ You can view and download this file on Github: `flexiblePendulumANCF.py <https:/
        exu.StartRenderer()
        mbs.WaitForUserToContinue()
    
-   success = exu.SolveDynamic(mbs, simulationSettings, 
+   success = mbs.SolveDynamic(simulationSettings, 
                               exudyn.DynamicSolverType.TrapezoidalIndex2)
    
    if useGraphics:
@@ -147,10 +147,10 @@ You can view and download this file on Github: `flexiblePendulumANCF.py <https:/
    #%%++++++++++++++++++
        if True:
            import matplotlib.pyplot as plt
-           from exudyn.plot import PlotSensor
+           
            from exudyn.signalProcessing import FilterSensorOutput
    
-           PlotSensor(mbs, sensorNumbers=[sPos,sPos], components=[0,1], 
+           mbs.PlotSensor(sensorNumbers=[sPos,sPos], components=[0,1], 
                       title='ang vel', closeAll=True,
                       markerStyles=['','x ','o '], lineStyles=['-','',''])
 

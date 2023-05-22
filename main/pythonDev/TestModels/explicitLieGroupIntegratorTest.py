@@ -198,7 +198,7 @@ for method in methods:
     
     # print(exu.InfoStat())
     solverType = method
-    exu.SolveDynamic(mbs, solverType=solverType, simulationSettings=simulationSettings)
+    mbs.SolveDynamic(solverType=solverType, simulationSettings=simulationSettings)
     omega=mbs.GetSensorValues(sAngVelLoc) 
     pos=mbs.GetSensorValues(sPos) 
     coords=mbs.GetSensorValues(sCoords) 
@@ -224,12 +224,12 @@ if useGraphics: #only start graphics once, but after background is set
     exu.StopRenderer() #safely close rendering window!
 
 if drawResults:
-    from exudyn.plot import PlotSensor
+    
 
-    PlotSensor(mbs, sensorNumbers=[sAngVelLoc], labels=['omega X'],subPlot=[1,3,1],
+    mbs.PlotSensor(sensorNumbers=[sAngVelLoc], labels=['omega X'],subPlot=[1,3,1],
                components=[0],yLabel='angular velocity (rad/s)', closeAll=True)
-    PlotSensor(mbs, sensorNumbers=[sAngVelLoc], labels=['omega Y'],subPlot=[1,3,2],newFigure=False,
+    mbs.PlotSensor(sensorNumbers=[sAngVelLoc], labels=['omega Y'],subPlot=[1,3,2],newFigure=False,
                components=[1],yLabel='angular velocity (rad/s)',colorCodeOffset=1)
-    PlotSensor(mbs, sensorNumbers=[sAngVelLoc], labels=['omega Z'],subPlot=[1,3,3],newFigure=False,
+    mbs.PlotSensor(sensorNumbers=[sAngVelLoc], labels=['omega Z'],subPlot=[1,3,3],newFigure=False,
                components=[2],yLabel='angular velocity (rad/s)',colorCodeOffset=1)
 

@@ -1,7 +1,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  Test model for CoordinateSpringDamperExt
+# Details:  Test model for CoordinateSpringDamperExt, which allows to model contact, friction and limit stops
 #
 # Author:   Johannes Gerstmayr
 # Date:     2022-01-22
@@ -266,7 +266,7 @@ if useGraphics:
     exu.StartRenderer()
     mbs.WaitForUserToContinue()
 
-exu.SolveDynamic(mbs, simulationSettings)
+mbs.SolveDynamic(simulationSettings)
 
 if useGraphics: 
     SC.WaitForRenderEngineStopFlag()
@@ -278,24 +278,24 @@ exu.Print('result of coordinateSpringDamperExt=',exudynTestGlobals.testResult) #
 
 
 if True:
-    from exudyn.plot import PlotSensor
-    PlotSensor(mbs, closeAll = True)
+    
+    mbs.PlotSensor(closeAll = True)
 
     if useLimitStops:
-        PlotSensor(mbs, sensorNumbers=[sensPos1])
-        PlotSensor(mbs, sensorNumbers=[sensVel1])
+        mbs.PlotSensor(sensorNumbers=[sensPos1])
+        mbs.PlotSensor(sensorNumbers=[sensVel1])
     if useFrictionReg:
-        PlotSensor(mbs, sensorNumbers=[sensPos0])
+        mbs.PlotSensor(sensorNumbers=[sensPos0])
         if useFrictionBristle:
-            PlotSensor(mbs, sensorNumbers=[sensPos0b], colorCodeOffset=1, newFigure=False, labels=['bristle'])
-        PlotSensor(mbs, sensorNumbers=[sensVel0])
+            mbs.PlotSensor(sensorNumbers=[sensPos0b], colorCodeOffset=1, newFigure=False, labels=['bristle'])
+        mbs.PlotSensor(sensorNumbers=[sensVel0])
         if useFrictionBristle:
-            PlotSensor(mbs, sensorNumbers=[sensVel0b], colorCodeOffset=1, newFigure=False, labels=['bristle'])
+            mbs.PlotSensor(sensorNumbers=[sensVel0b], colorCodeOffset=1, newFigure=False, labels=['bristle'])
 
     if useGears:
-        PlotSensor(mbs, sensorNumbers=[sensGearPos0, sensGearPos1])
-        PlotSensor(mbs, sensorNumbers=[sensGearVel0, sensGearVel1])
-        PlotSensor(mbs, sensorNumbers=[sensForce])
+        mbs.PlotSensor(sensorNumbers=[sensGearPos0, sensGearPos1])
+        mbs.PlotSensor(sensorNumbers=[sensGearVel0, sensGearVel1])
+        mbs.PlotSensor(sensorNumbers=[sensForce])
 
         
         

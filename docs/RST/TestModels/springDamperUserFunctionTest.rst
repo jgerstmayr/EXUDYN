@@ -130,7 +130,7 @@ You can view and download this file on Github: `springDamperUserFunctionTest.py 
    #mbs.WaitForUserToContinue()    #wait for pressing SPACE bar to continue
    
    #start solver:
-   exu.SolveDynamic(mbs, simulationSettings)
+   mbs.SolveDynamic(simulationSettings)
    
    #SC.WaitForRenderEngineStopFlag()#wait for pressing 'Q' to quit
    #exu.StopRenderer()               #safely close rendering window!
@@ -145,9 +145,9 @@ You can view and download this file on Github: `springDamperUserFunctionTest.py 
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++
    
    if useGraphics:
-       from exudyn.plot import PlotSensor
        
-       PlotSensor(mbs, sCoords, components=[0], closeAll=True)
+       
+       mbs.PlotSensor(sCoords, components=[0], closeAll=True)
    
 
 

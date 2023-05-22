@@ -17,26 +17,28 @@ from exudyn.utilities import ClearWorkspace
 ClearWorkspace()
 
 import exudyn as exu
-#from exudyn.itemInterface import *
 from exudyn.utilities import *
-
 
 import numpy as np
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #NUMBA PART; mainly, we need to register MainSystem mbs in numba to get user functions work
 #import numba jit for compilation of functions:
-from numba import jit
+# from numba import jit
+
+#create identity operator for replacement of jit:
+try: 
+    from numba import jit
+    print('running WITH JIT')
+except: #define replacement operator
+    print('running WITHOUT JIT')
+    def jit(ob):
+        return ob
+
 # from numba import jit, cfunc, types, njit
 # from numba.types import float64, void, int64 #for signatures of user functions!
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-#create identity operator for replacement of jit:
-# try: 
-#     from numba import jit
-# except: #define replacement operator
-#     def jit(ob):
-#         return ob
 
 # @jit
 # def myfunc():
@@ -66,24 +68,18 @@ exu.Print('resonance frequency = '+str(omega0))
 tEnd = 50     #end time of simulation
 steps = 1000000  #number of steps
 
+#first test without JIT:
 
-#use jit for every time-consuming parts
-#the more complex it gets, the speedup will be larger!
-#however, this part can only contain simple structures (no mbs, no exudyn functions [but you could @jit them!])
-# @jit  
 def sf(u,v,k,d):
     return 0.1*k*u+k*u**3 + 1e-3*k*u**5 + 1e-6*k*u**7+v*d
 
-# @jit
-def springForce(mbs2, t, itemIndex, u, v, k, d, offset, mu, muPropZone):
+def springForce(mbs2, t, itemIndex, u, v, k, d, offset):
     return sf(u,v,k,d)
     # x=test(mbs.systemData.GetTime()) #5 microseconds
     # q=mbs.systemData.GetODE2Coordinates() #5 microseconds
     # return 0.1*k*u+k*u**3+v*d
 
 #linear frequency sweep in time interval [0, t1] and frequency interval [f0,f1];
-#jit gives us speedup and works out of the box:
-#@jit
 def Sweep(t, t1, f0, f1):
     k = (f1-f0)/t1
     return np.sin(2*np.pi*(f0+k*0.5*t)*t) #take care of factor 0.5 in k*0.5*t, in order to obtain correct frequencies!!!
@@ -134,20 +130,19 @@ simulationSettings.timeIntegration.newton.useModifiedNewton=True
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1
 
 simulationSettings.displayStatistics = True
-#simulationSettings.displayComputationTime = True
+simulationSettings.displayComputationTime = True
 simulationSettings.timeIntegration.verboseMode = 1
 
 #start solver:
-exu.SolveDynamic(mbs, simulationSettings)
+mbs.SolveDynamic(simulationSettings)
 
 #evaluate final (=current) output values
 u = mbs.GetNodeOutput(n1, exu.OutputVariableType.Position)
 exu.Print('displacement=',u[0])
 
 
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-#USE NUMBA @jit to compile most parts of user functions
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
+#run again with JIT included:
 
 #use jit for every time-consuming parts
 #the more complex it gets, the speedup will be larger!
@@ -156,7 +151,7 @@ exu.Print('displacement=',u[0])
 def sf2(u,v,k,d):
     return 0.1*k*u+k*u**3 + 1e-3*k*u**5 + 1e-6*k*u**7+v*d
 
-def springForce2(mbs2, t, itemIndex, u, v, k, d, offset, mu, muPropZone):
+def springForce2(mbs2, t, itemIndex, u, v, k, d, offset):
     return sf2(u,v,k,d)
 
 # jit for both sub-functions of user functions:
@@ -175,7 +170,7 @@ def userLoad2(mbs, t, load):
 
 mbs.SetLoadParameter(loadC,'loadUserFunction', userLoad2)
 
-exu.SolveDynamic(mbs, simulationSettings)
+mbs.SolveDynamic(simulationSettings)
 
 #evaluate final (=current) output values
 u = mbs.GetNodeOutput(n1, exu.OutputVariableType.Position)

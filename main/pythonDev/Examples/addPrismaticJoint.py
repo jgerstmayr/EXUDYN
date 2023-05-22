@@ -1,7 +1,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  Test for AddPrismaticJoint utility function
+# Details:  Test for CreatePrismaticJoint utility function
 #
 # Author:   Johannes Gerstmayr 
 # Date:     2021-07-02
@@ -60,11 +60,12 @@ for i in range(4):
 
     ep0 = eulerParameters0 #no rotation
     graphicsBody = GraphicsDataOrthoCubePoint([0,0,0], [0.96*L,d,d], color4steelblue)
-    [nRB, oRB] = AddRigidBody(mbs, inertia, nodeType=exu.NodeType.RotationEulerParameters,
-                              position=p0,
-                              rotationMatrix=Alist[i],
+    oRB = mbs.CreateRigidBody(inertia=inertia, 
+                              referencePosition=p0,
+                              referenceRotationMatrix=Alist[i],
                               gravity=g,
                               graphicsDataList=[graphicsBody])
+    nRB= mbs.GetObject(oRB)['nodeNumber']
 
     body0 = bodyLast
     body1 = oRB
@@ -73,8 +74,8 @@ for i in range(4):
                                     configuration=exu.ConfigurationType.Reference)
     #axis = [0,0,1]
     axis = axisList[i]
-    AddPrismaticJoint(mbs, body0, body1, point, axis, useGlobalFrame=True, 
-                     axisRadius=0.6*d, axisLength=1.2*d)
+    mbs.CreatePrismaticJoint(bodyNumbers=[body0, body1], position=point, axis=axis, 
+                             useGlobalFrame=True, axisRadius=0.6*d, axisLength=1.2*d)
 
     bodyLast = oRB
     
@@ -128,12 +129,12 @@ if useGraphics:
 else:
     simulationSettings.solutionSettings.writeSolutionToFile = False
 
-#exu.SolveDynamic(mbs, simulationSettings, solverType=exu.DynamicSolverType.TrapezoidalIndex2)
-exu.SolveDynamic(mbs, simulationSettings, showHints=True)
+#mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.TrapezoidalIndex2)
+mbs.SolveDynamic(simulationSettings, showHints=True)
 
 if True: #use this to reload the solution and use SolutionViewer
-    from exudyn.interactive import SolutionViewer
-    SolutionViewer(mbs, runMode=2, runOnStart=True)
+    
+    mbs.SolutionViewer(runMode=2, runOnStart=True)
 
 
 u0 = mbs.GetNodeOutput(nRB, exu.OutputVariableType.Displacement)

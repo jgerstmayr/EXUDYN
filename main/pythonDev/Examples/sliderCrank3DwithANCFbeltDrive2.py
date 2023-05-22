@@ -911,7 +911,7 @@ SC.visualizationSettings.openGL.initialModelRotation = [[IMR[0,0],IMR[0,1],IMR[0
 #Rendering
 exu.StartRenderer()                 #start graphics visualization
 mbs.WaitForUserToContinue()         #wait for pressing SPACE bar to continue
-exu.SolveDynamic(mbs, sims)
+mbs.SolveDynamic(sims)
 SC.WaitForRenderEngineStopFlag()    #wait for pressing 'Q' to quit
 exu.StopRenderer()                  #safely close rendering window!
 

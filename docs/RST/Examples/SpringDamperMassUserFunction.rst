@@ -108,7 +108,7 @@ You can view and download this file on Github: `SpringDamperMassUserFunction.py 
    SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.Displacement
    SC.visualizationSettings.contour.outputVariableComponent = 0 #y-component
    
-   exu.SolveDynamic(mbs, simulationSettings, solverType =  exudyn.DynamicSolverType.ExplicitMidpoint)
+   mbs.SolveDynamic(simulationSettings, solverType =  exudyn.DynamicSolverType.ExplicitMidpoint)
    #u = mbs.GetNodeOutput(nBodies-2, exu.OutputVariableType.Position) #tip node
    #print('dynamic tip displacement (y)=', u[1]) #dense: -11.085967426937412, sparse:-11.085967426937431
    
@@ -117,7 +117,7 @@ You can view and download this file on Github: `SpringDamperMassUserFunction.py 
    simulationSettings.staticSolver.newton.absoluteTolerance = 1e-1
    simulationSettings.staticSolver.verboseMode = 1
    
-   exu.SolveStatic(mbs, simulationSettings)
+   mbs.SolveStatic(simulationSettings)
    
    u = mbs.GetNodeOutput(nBodies-2, exu.OutputVariableType.Position) #tip node
    print('static tip displacement (y)=', u[1])

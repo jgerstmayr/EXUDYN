@@ -25,7 +25,7 @@ You can view and download this file on Github: `myFirstExample.py <https://githu
    mbs.Assemble()                     #assemble system and solve
    simulationSettings = exu.SimulationSettings()
    simulationSettings.timeIntegration.verboseMode=1 #provide some output
-   exu.SolveDynamic(mbs, simulationSettings)
+   mbs.SolveDynamic(simulationSettings)
    
 
 

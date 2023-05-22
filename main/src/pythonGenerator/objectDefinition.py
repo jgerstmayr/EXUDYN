@@ -4876,8 +4876,6 @@ equations =
       \rowTable{\texttt{stiffness}}{Real}{copied from object}
       \rowTable{\texttt{damping}}{Real}{copied from object}
       \rowTable{\texttt{offset}}{Real}{copied from object}
-      %REMOVED:\rowTable{\texttt{dryFriction}}{Real}{copied from object}
-      %REMOVED:\rowTable{\texttt{dryFrictionProportionalZone}}{Real}{copied from object}
       \rowTable{\returnValue}{Real}{scalar value of computed force}
     \finishTable
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -4887,9 +4885,6 @@ equations =
         def UFforce(mbs, t, itemNumber, u, v, k, d, offset):
             return k*(u-offset) + d*v
     \end{lstlisting}
-    %old until 2023-01-21:
-    %def UFforce(mbs, t, itemNumber, u, v, k, d, offset, dryFriction, dryFrictionProportionalZone): 
-    %    return k*(u-offset) + d*v
     %%RSTCOMPATIBLE
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -5753,6 +5748,11 @@ equations =
     \be
       \left|\LU{0}{\Delta\pv}\right| - d_0 = 0
     \ee
+    Due to the fact that the force direction is given by
+    \be
+      \frac{1}{|\LU{0}{\Delta\pv}|}\LU{0}{\Delta\pv} \eqComma
+    \ee
+    the prescribed distance $d_0$ may not be zero. This would, otherwise, result in a change of the number of constraints.
     The index 2 (velocity level) algebraic equation reads
     \be
       \left(\frac{\LU{0}{\Delta\pv}}{\left|\LU{0}{\Delta\pv}\right|}\right)\tp \Delta\vv = 0
@@ -5790,7 +5790,7 @@ miniExample =
 #CObjectMarkerBodyPosition* automatically inserted!
 Vp,     M,      name,                           ,               ,       String,     "",                       ,       I,      "constraints's unique name"
 V,      CP,     markerNumbers,                  ,               ,       ArrayMarkerIndex,"ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex })", ,       I,      "$[m0,m1]\tp$list of markers used in connector"
-V,      CP,     distance,                       ,               ,       UReal,      0.,                          ,       I,      "$d_0$prescribed distance [SI:m] of the used markers"
+V,      CP,     distance,                       ,               ,       PReal,      0.,                          ,       I,      "$d_0$prescribed distance [SI:m] of the used markers; must by greater than zero"
 V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint"
 #
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 

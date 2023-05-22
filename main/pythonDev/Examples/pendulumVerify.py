@@ -22,7 +22,7 @@ mbs = SC.AddSystem()
 
 import numpy as np
 
-#import timeit
+import time
 
 import exudyn.basicUtilities as eb
 import exudyn.rigidBodyUtilities as rb
@@ -337,9 +337,9 @@ if True: #needs netgen/ngsolve to be installed to compute mesh, see e.g.: https:
 
     #SC.RedrawAndSaveImage()
     if False:
-        exu.SolveDynamic(mbs, simulationSettings=simulationSettings)
+        mbs.SolveDynamic(simulationSettings=simulationSettings)
     else:
-        exu.SolveStatic(mbs, simulationSettings=simulationSettings)
+        mbs.SolveStatic(simulationSettings=simulationSettings)
 
     # print("tip1=",mbs.GetSensorValues(sensTip))
         

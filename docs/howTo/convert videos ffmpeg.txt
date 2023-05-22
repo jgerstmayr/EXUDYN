@@ -46,6 +46,12 @@ ffmpeg -i test.mp4 -vf scale=-1:720 -crf 35 test2.mp4
 #crop:
 ffmpeg -i test.mp4 -filter:v "crop=1445:1080:0:0" test2.mp4
 
+#reverse video from images:
+ffmpeg.exe -r 25 -start_number 0 -i frame%%05d.png -c:v libx264 -crf 28 -vf "fps=25,format=yuv420p" -vf reverse animationHQ.mp4
+
+#FIX problems with video (e.g. when importing to powerpoint, e.g. with reverse video):
+ffmpeg -i input.mp4 -c:v libx264 -preset slow  -profile:v high -level:v 4.0 -pix_fmt yuv420p -crf 22 -codec:a aac  output.mp4
+
 #exract audio (for better quality use vlc):
 ffmpeg -i output.mkv -q:a 0 -map a output.mp3
 ffmpeg -i output.mkv -f mp3 -ab 192000 -vn sound1.mp3

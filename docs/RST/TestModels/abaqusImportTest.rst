@@ -180,7 +180,7 @@ You can view and download this file on Github: `abaqusImportTest.py <https://git
        
            mbs.WaitForUserToContinue() #press space to continue
        
-       exu.SolveDynamic(mbs, simulationSettings)
+       mbs.SolveDynamic(simulationSettings)
            
        # data = np.loadtxt(fileDir+'nMidDisplacementCMS'+str(nModes)+'Test.txt', comments='#', delimiter=',')
        data = mbs.GetSensorStoredData(sDisp)

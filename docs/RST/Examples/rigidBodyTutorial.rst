@@ -84,7 +84,7 @@ You can view and download this file on Github: `rigidBodyTutorial.py <https://gi
    mbs.WaitForUserToContinue() #wait until user presses space
    
    #start generalized alpha solver
-   exu.SolveDynamic(mbs, simulationSettings = simulationSettings)
+   mbs.SolveDynamic(simulationSettings = simulationSettings)
    
    SC.WaitForRenderEngineStopFlag()
    exu.StopRenderer() #safely close rendering window!

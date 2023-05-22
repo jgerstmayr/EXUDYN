@@ -54,10 +54,11 @@ p0 += (0.5*vLoc)
 
 ep0 = eulerParameters0 #no rotation
 graphicsBody = GraphicsDataOrthoCubePoint([0,0,0], [L,d,d], color4steelblue)
-[nRB, oRB] = AddRigidBody(mbs, inertia, nodeType=exu.NodeType.RotationEulerParameters,
-                          position=p0,
+oRB = mbs.CreateRigidBody(inertia=inertia, 
+                          referencePosition=p0,
                           gravity=g,
                           graphicsDataList=[graphicsBody])
+nRB= mbs.GetObject(oRB)['nodeNumber']
 
 mPos0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber = oRB, localPosition = [-0.5*L,0,0]))
 mPosLast = mbs.AddMarker(MarkerBodyRigid(bodyNumber = oRB, localPosition = [0.5*L,0,0]))
@@ -113,8 +114,8 @@ if useGraphics:
 else:
     simulationSettings.solutionSettings.writeSolutionToFile = False
 
-#exu.SolveDynamic(mbs, simulationSettings, solverType=exu.DynamicSolverType.TrapezoidalIndex2)
-exu.SolveDynamic(mbs, simulationSettings, showHints=True)
+#mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.TrapezoidalIndex2)
+mbs.SolveDynamic(simulationSettings, showHints=True)
 
 #%%+++++++++++++++++++++++++++++
 if useGraphics:
@@ -126,20 +127,20 @@ exudynTestGlobals.testError = 0
 exudynTestGlobals.testResult = 1
 
 import matplotlib.pyplot as plt
-from exudyn.plot import PlotSensor
+
 
 closeAll = not useGraphics
-PlotSensor(mbs, sensorNumbers=sLoad, components=[0,1,2], closeAll=closeAll)
-PlotSensor(mbs, sensorNumbers=sNode, components=[0,1,2,3,4,5,6], 
+mbs.PlotSensor(sensorNumbers=sLoad, components=[0,1,2], closeAll=closeAll)
+mbs.PlotSensor(sensorNumbers=sNode, components=[0,1,2,3,4,5,6], 
            yLabel='Coordinates with offset 1\nand scaled with $\\frac{1}{1000}$', 
            factors=1e-3, offsets=1,fontSize=12, closeAll=closeAll)
-PlotSensor(mbs, sensorNumbers=sNode2, components=[0,1,2], closeAll=closeAll)
-PlotSensor(mbs, sensorNumbers=sNode2, components=[0,1,2], closeAll=closeAll)
-PlotSensor(mbs, sensorNumbers=[sBody]*3+[sMarker]*3, components=[0,1,2,0,1,2], 
+mbs.PlotSensor(sensorNumbers=sNode2, components=[0,1,2], closeAll=closeAll)
+mbs.PlotSensor(sensorNumbers=sNode2, components=[0,1,2], closeAll=closeAll)
+mbs.PlotSensor(sensorNumbers=[sBody]*3+[sMarker]*3, components=[0,1,2,0,1,2], 
            colorCodeOffset=3, newFigure=closeAll, fontSize=10, 
            yLabel='Rotation $\\alpha, \\beta, \\gamma$ and\n Position $x,y,z$', closeAll=closeAll)
-PlotSensor(mbs, sensorNumbers=sObject, components=[0,1,2], title='Revolute joint forces', closeAll=closeAll)
-PlotSensor(mbs, sensorNumbers=[sNode]*3+ [filedir+'plotSensorNode.txt']*3, components=[0,1,2]*2, closeAll=closeAll)
+mbs.PlotSensor(sensorNumbers=sObject, components=[0,1,2], title='Revolute joint forces', closeAll=closeAll)
+mbs.PlotSensor(sensorNumbers=[sNode]*3+ [filedir+'plotSensorNode.txt']*3, components=[0,1,2]*2, closeAll=closeAll)
 
 if closeAll:
     plt.close('all')

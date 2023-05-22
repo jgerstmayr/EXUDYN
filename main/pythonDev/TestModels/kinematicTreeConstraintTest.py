@@ -175,8 +175,8 @@ if useGraphics:
 
     mbs.WaitForUserToContinue() #press space to continue
 
-# exu.SolveDynamic(mbs, simulationSettings, solverType = exu.DynamicSolverType.ExplicitMidpoint)
-exu.SolveDynamic(mbs, simulationSettings)
+# mbs.SolveDynamic(simulationSettings, solverType = exu.DynamicSolverType.ExplicitMidpoint)
+mbs.SolveDynamic(simulationSettings)
 
 if not useGraphics or True:
     #check results for test suite:
@@ -195,8 +195,8 @@ exudynTestGlobals.testResult = u #1.8135975385993548
     
 if False and useGraphics: #use this to reload the solution and use SolutionViewer
     #sol = LoadSolutionFile('coordinatesSolution.txt')
-    from exudyn.interactive import SolutionViewer
-    SolutionViewer(mbs) #can also be entered in IPython ...
+    
+    mbs.SolutionViewer() #can also be entered in IPython ...
 
 if useGraphics:
     SC.WaitForRenderEngineStopFlag()

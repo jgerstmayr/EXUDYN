@@ -74,7 +74,7 @@ You can view and download this file on Github: `cartesianSpringDamper.py <https:
    simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1 #SHOULD work with 0.9 as well
    
    #exu.StartRenderer()
-   exu.SolveDynamic(mbs, simulationSettings)
+   mbs.SolveDynamic(simulationSettings)
    #SC.WaitForRenderEngineStopFlag()
    #exu.StopRenderer() #safely close rendering window!
    

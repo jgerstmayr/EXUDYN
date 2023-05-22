@@ -127,7 +127,7 @@ mbs.WaitForUserToContinue()
 
 #++++++++++++++++++++++++++++++++++++++++++
 #solve generalized alpha / index3:
-exu.SolveDynamic(mbs, simulationSettings)
+mbs.SolveDynamic(simulationSettings)
 
 SC.WaitForRenderEngineStopFlag()
 exu.StopRenderer() #safely close rendering window!
@@ -144,7 +144,7 @@ dataIndex3 = np.loadtxt('coordinatesSolution.txt', comments='#', delimiter=',')
 #simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
 #simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
 #
-#exu.SolveDynamic(mbs, simulationSettings)
+#mbs.SolveDynamic(simulationSettings)
 #
 #u = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Position) #tip node
 #errorSliderCrankIndex2 = u[0] - 1.3528786319585837 #x-position of slider

@@ -15,6 +15,8 @@ You can view and download this file on Github: `multiprocessingTest.py <https://
    #
    # Details:  This example shows how to use parallel computation of EXUDYN models
    #           Using multiprocessing, several instances of EXUDYN are executed (graphics DISABLED!!!)
+   #           This represents a very simple possibility to run parallel simulations;
+   #           More advanced parameter variation is available in exudyn.processing.ParameterVariation(...)
    #
    # Author:   Johannes Gerstmayr 
    # Date:     2020-11-12
@@ -51,7 +53,7 @@ You can view and download this file on Github: `multiprocessingTest.py <https://
    
        #assemble and solve system for default parameters
        mbs.Assemble()
-       #exu.SolveDynamic(mbs, exu.SimulationSettings())
+       #mbs.SolveDynamic(exu.SimulationSettings())
    
        h=1e-6
        tEnd = 10
@@ -61,7 +63,7 @@ You can view and download this file on Github: `multiprocessingTest.py <https://
        simulationSettings.solutionSettings.coordinatesSolutionFileName = "coordinatesSolution"+str(int(x))+".txt"
        simulationSettings.solutionSettings.writeSolutionToFile = True #no concurrent writing to files ...!
        #exu.StartRenderer() #don't do this in parallelization: will crash
-       exu.SolveDynamic(mbs, simulationSettings)
+       mbs.SolveDynamic(simulationSettings)
        #exu.StopRenderer() #don't do this in parallelization: will crash
    
        #check result, get current mass position at local position [0,0,0]
@@ -71,7 +73,7 @@ You can view and download this file on Github: `multiprocessingTest.py <https://
        #final x-coordinate of position shall be 2
    
    if __name__ == '__main__':
-       vInput = np.linspace(1,10,20)
+       vInput = np.linspace(1,10,20) #start 20 tasks in parallel ...
        with Pool(len(vInput)) as p:
            print(p.map(TestExudyn, vInput))
            

@@ -434,7 +434,7 @@ You can view and download this file on Github: `openVRengine.py <https://github.
        # if 'renderState' in exu.sys:
        #     SC.SetRenderState(exu.sys[ 'renderState' ])
        
-       exu.SolveDynamic(mbs, simulationSettings)
+       mbs.SolveDynamic(simulationSettings)
        
        exu.StopRenderer() #safely close rendering window!
        

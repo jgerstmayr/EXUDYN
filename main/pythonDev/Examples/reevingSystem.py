@@ -255,17 +255,17 @@ if useGraphics:
 
 doDynamic = True
 if doDynamic :
-    exu.SolveDynamic(mbs, simulationSettings) #183 Newton iterations, 0.114 seconds
+    mbs.SolveDynamic(simulationSettings) #183 Newton iterations, 0.114 seconds
 else:
-    exu.SolveStatic(mbs, simulationSettings) #183 Newton iterations, 0.114 seconds
+    mbs.SolveStatic(simulationSettings) #183 Newton iterations, 0.114 seconds
 
 
 if useGraphics and True:
     SC.visualizationSettings.general.autoFitScene = False
     SC.visualizationSettings.general.graphicsUpdateInterval=0.02
-    from exudyn.interactive import SolutionViewer
+    
     sol = LoadSolutionFile('solution/coordinatesSolution.txt', safeMode=True)#, maxRows=100)
-    SolutionViewer(mbs, sol)
+    mbs.SolutionViewer(sol)
 
 
 if useGraphics: 
@@ -273,9 +273,9 @@ if useGraphics:
     exu.StopRenderer() #safely close rendering window!
     
     # if True:
-    #     from exudyn.plot import PlotSensor
-    #     PlotSensor(mbs, sensorNumbers=[sAngVel[0],sAngVel[1]], components=2, closeAll=True)
-    #     PlotSensor(mbs, sensorNumbers=sMeasureRoll, components=1)
+    #     
+    #     mbs.PlotSensor(sensorNumbers=[sAngVel[0],sAngVel[1]], components=2, closeAll=True)
+    #     mbs.PlotSensor(sensorNumbers=sMeasureRoll, components=1)
 
 
 

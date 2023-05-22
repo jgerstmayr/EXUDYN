@@ -99,7 +99,7 @@ simulationSettings.displayStatistics = True
 simulationSettings.timeIntegration.verboseMode = 1
 
 #start solver:
-exu.SolveDynamic(mbs, simulationSettings)
+mbs.SolveDynamic(simulationSettings)
 
 #evaluate final (=current) output values
 u = mbs.GetNodeOutput(n1, exu.OutputVariableType.Position)

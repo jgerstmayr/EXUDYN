@@ -174,7 +174,7 @@ if useGraphics:
 #static step
 simulationSettings.staticSolver.numberOfLoadSteps=10
 
-success = exu.SolveStatic(mbs, simulationSettings, updateInitialValues=True)
+success = mbs.SolveStatic(simulationSettings, updateInitialValues=True)
 
 
 #turn on moving beam:
@@ -187,7 +187,7 @@ mbs.SetObjectParameter(oCCvALE, 'offset', vALE0)
 #rope decelerates due to gravity and then runs backwards
 simulationSettings.timeIntegration.numberOfSteps = int(1/h)
 simulationSettings.timeIntegration.endTime = 1
-success = exu.SolveDynamic(mbs, simulationSettings, 
+success = mbs.SolveDynamic(simulationSettings, 
                             exudyn.DynamicSolverType.TrapezoidalIndex2,
                             updateInitialValues=True)
 mbs.systemData.SetODE2Coordinates_tt(coordinates = mbs.systemData.GetODE2Coordinates_tt(), 
@@ -207,7 +207,7 @@ simulationSettings.timeIntegration.startTime = 1
 simulationSettings.solutionSettings.appendToFile = True #continue solution
 simulationSettings.timeIntegration.endTime = tEnd
 
-success = exu.SolveDynamic(mbs, simulationSettings, 
+success = mbs.SolveDynamic(simulationSettings, 
                            exudyn.DynamicSolverType.TrapezoidalIndex2
                            )
 
@@ -217,9 +217,9 @@ if useGraphics:
 
     plt.close('all')
     if True:
-        from exudyn.plot import PlotSensor
+        
         plt.figure("ALE pos/vel")
-        PlotSensor(mbs, sensorNumbers=[mbs.variables['sALEpos'],mbs.variables['sALEvel']], components=[0,0])
+        mbs.PlotSensor(sensorNumbers=[mbs.variables['sALEpos'],mbs.variables['sALEvel']], components=[0,0])
     
     plt.figure("midpoint")
     data0 = np.loadtxt('solution/beamALEmidPoint.txt', comments='#', delimiter=',') 

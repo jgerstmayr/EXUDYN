@@ -143,9 +143,9 @@ def SolverErrorMessage(solver, mbs, isStatic=False,
 # mbs.AddObject(CartesianSpringDamper(markerNumbers=[m0,m1], stiffness=[100,100,100]))
 # mbs.AddLoad(LoadForceVector(markerNumber=m1, loadVector=[10,10,10]))
 # mbs.Assemble()
-# sims = exu.SimulationSettings()
-# sims.timeIntegration.endTime = 10
-# success = exu.SolveStatic(mbs, sims, storeSolver = True)
+# simulationSettings = exu.SimulationSettings()
+# simulationSettings.timeIntegration.endTime = 10
+# success = mbs.SolveStatic(simulationSettings, storeSolver = True)
 # print("success =", success)
 # print("iterations = ", mbs.sys['staticSolver'].it)
 # print("pos=", mbs.GetObjectOutputBody(body,localPosition=[0,0,0], 
@@ -206,10 +206,11 @@ def SolveStatic(mbs, simulationSettings = exudyn.SimulationSettings(),
 # m1 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=body))
 # mbs.AddObject(CartesianSpringDamper(markerNumbers=[m0,m1], stiffness=[100,100,100]))
 # mbs.AddLoad(LoadForceVector(markerNumber=m1, loadVector=[10,10,10]))
+# #
 # mbs.Assemble()
-# sims = exu.SimulationSettings()
-# sims.timeIntegration.endTime = 10
-# success = exu.SolveDynamic(mbs, sims, storeSolver = True)
+# simulationSettings = exu.SimulationSettings()
+# simulationSettings.timeIntegration.endTime = 10
+# success = mbs.SolveDynamic(simulationSettings, storeSolver = True)
 # print("success =", success)
 # print("iterations = ", mbs.sys['dynamicSolver'].it)
 # print("pos=", mbs.GetObjectOutputBody(body,localPosition=[0,0,0], 
@@ -299,7 +300,7 @@ def SolveDynamic(mbs,
 #**example:
 #  #assume MainSystem mbs, exu library and simulationSettings:
 #  try:
-#      exu.SolveDynamic(mbs, simulationSettings)
+#      mbs.SolveDynamic(simulationSettings)
 #  except:
 #      [success, msg] = exu.SolverSuccess(mbs.sys['dynamicSolver'])
 #      print('success=',success)
@@ -338,11 +339,28 @@ def RestoreSimulationSettings(simulationSettings, store):
 #**output: [ArrayLike, ArrayLike, ArrayLike]; [M, K, D]; list containing numpy mass matrix M, stiffness matrix K and damping matrix D
 #**belongsTo: MainSystem
 #**example:
-#  #take any example from the Examples or TestModels folder, e.g., 'cartesianSpringDamper.py' and run it
-#  #then execute the following commands in the console (or add it to the file):
-#  [M, K, D] = exu.ComputeLinearizedSystem(mbs)
-#  print("M=", M)
-#  print("K=", K)
+# import exudyn as exu
+# from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+# import numpy as np
+# SC = exu.SystemContainer()
+# mbs = SC.AddSystem()
+# #
+# b0 = mbs.CreateMassPoint(referenceCoordinates = [2,0,0],
+#                          initialVelocities = [2*0,5,0],
+#                          physicsMass = 1, gravity = [0,-9.81,0],
+#                          drawSize = 0.5, color=color4blue)
+# #
+# oGround = mbs.AddObject(ObjectGround())
+# #add vertical spring
+# oSD = mbs.CreateSpringDamper(bodyOrNodeList=[oGround, b0],
+#                              localPosition0=[2,1,0],
+#                              localPosition1=[0,0,0],
+#                              stiffness=1e4, damping=1e2,
+#                              drawSize=0.2)
+# #
+# mbs.Assemble()
+# [M,K,D] = mbs.ComputeLinearizedSystem()
+# exu.Print('M=\n',M,'\nK=\n',K,'\nD=\n',D) 
 def ComputeLinearizedSystem(mbs, 
                             simulationSettings = exudyn.SimulationSettings(),
                             useSparseSolver = False):
@@ -379,95 +397,6 @@ def ComputeLinearizedSystem(mbs,
 
     return [M, K, D]
 
-#**function: compute system DOF numerically, considering Gr{\"u}bler-Kutzbach formula as well as redundant constraints; uses numpy matrix rank or singular value decomposition of scipy (useSVD=True)
-#**input:
-#  mbs: MainSystem for which DOF shall be computed
-#  simulationSettings: used e.g. for settings regarding numerical differentiation; default settings may be used in most cases
-#  threshold: threshold factor for singular values which estimate the redundant constraints
-#  useSVD: use singular value decomposition directly, also showing SVD values if verbose=True
-#  verbose: if True, it will show the singular values and one may decide if the threshold shall be adapted
-#**output: List[int]; returns list of [dof, nRedundant, nODE2, nODE1, nAE, nPureAE], where: dof = the degree of freedom computed numerically, nRedundant=the number of redundant constraints, nODE2=number of ODE2 coordinates, nODE1=number of ODE1 coordinates, nAE=total number of constraints, nPureAE=number of constraints on algebraic variables (e.g., lambda=0) that are not coupled to ODE2 coordinates
-#**notes: this approach may not always work! Currently only works with dense matrices, thus it will be slow for larger systems
-#**belongsTo: MainSystem
-def ComputeSystemDegreeOfFreedom(mbs, 
-                simulationSettings = exudyn.SimulationSettings(),
-                threshold = 1e-12, verbose=False, useSVD=False):
-    #use static solver, as it does not include factors from time integration (and no velocity derivatives) in the jacobian
-    
-    store = DeactivateWritingOfSolvers(simulationSettings)
-
-    staticSolver = exudyn.MainSolverStatic()
-    #initialize solver with initial values
-    staticSolver.InitializeSolver(mbs, simulationSettings)
-
-    nODE2 = staticSolver.GetODE2size()
-    nODE1 = staticSolver.GetODE1size()
-    if nODE1 != 0:
-        print('WARNING: ComputeSystemDegreeOfFreedom(...) not suitable in case of ODE1 coordinates; ODE1 coordinates will not count as additional DOF!')
-    nODE12 = nODE2+nODE1
-    nAE = staticSolver.GetAEsize()
-
-    #reset jacobian    
-    staticSolver.ComputeJacobianODE2RHS(mbs,scalarFactor_ODE2=-1,
-                                        scalarFactor_ODE2_t=0, 
-                                        scalarFactor_ODE1=0)    #compute ODE2 part of jacobian ==> stored internally in solver
-    staticSolver.ComputeJacobianAE(mbs, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1., velocityLevel=False)
-    jacobian = staticSolver.GetSystemJacobian()#.round(20) #read out stored jacobian
-
-    Code2 = jacobian[0:nODE2, nODE12:]    #C_q: constraint jacobian
-    Cae = jacobian[nODE12:,nODE12:]       #C_lambda
-    Call =  jacobian[:, nODE12:]
-    
-    staticSolver.FinalizeSolver(mbs, simulationSettings) #close files, etc.
-    #restore old settings:
-    RestoreSimulationSettings(simulationSettings, store)
-    
-    if verbose == 2:
-        print('Code2=\n', Code2, sep='')
-        print('Cae  =\n', Cae, sep='')
-
-    if useSVD:
-        try:
-            from scipy.linalg import svdvals#, svd
-        except:
-            raise ValueError('ComputeSystemDegreeOfFreedom: missing scipy package; install with: pip install scipy')
-
-    
-    nRedundant = 0
-    nPureAE = 0
-    if nAE != 0:
-
-        if useSVD:
-            #s = svd(Call, compute_uv=False, full_matrices=False)#, lapack_driver='gesvd')
-            s = svdvals(Call)
-    
-            if verbose:
-                print('singular values ODE2+AE=',s)
-    
-            sAE = svdvals(Cae)
-            #sAE = svd(Cae, compute_uv=False, full_matrices=False)#, lapack_driver='gesvd')
-    
-            if verbose:
-                print('singular values AE=',sAE)
-            
-            nRedundant = (abs(s) <= threshold).sum() #counts True=1, False=0
-            #these are constraints on AE coordinates, which do not count as constraints!
-            nPureAE = (abs(sAE) > threshold).sum() #counts True=1, False=0
-        else:
-            nRedundant = nAE - np.linalg.matrix_rank(Call)
-            nPureAE = np.linalg.matrix_rank(Cae)
-
-    dof = nODE2-(nAE-nPureAE)+nRedundant
-    if verbose:
-        print('ODE2 coordinates          =',nODE2)
-        print('total constraints         =',nAE)
-        print('redundant constraints     =',nRedundant)
-        print('pure algebraic constraints=',nPureAE)
-        print('degree of freedom         =',dof)
-
-    return [dof, nRedundant, nODE2, nODE1, nAE, nPureAE]
-
-    
 #**function: compute eigenvalues for unconstrained ODE2 part of mbs, not considering the effects of algebraic constraints; the computation is done for the initial values of the mbs, independently of previous computations. If you would like to use the current state for the eigenvalue computation, you need to copy the current state to the initial state (using GetSystemState,SetSystemState, see \refSection{sec:mbs:systemData}); note that mass and stiffness matrix are computed in dense mode so far, while eigenvalues are computed according to useSparseSolver.
 #**input:    
 #   mbs: the MainSystem containing the assembled system
@@ -481,10 +410,30 @@ def ComputeSystemDegreeOfFreedom(mbs,
 #**belongsTo: MainSystem
 #**example:
 #  #take any example from the Examples or TestModels folder, e.g., 'cartesianSpringDamper.py' and run it
-#  #then execute the following commands in the console (or add it to the file):
-#  [values, vectors] = exu.ComputeODE2Eigenvalues(mbs)
-#  print("eigenvalues=", values)
-#  #==>values contains the eigenvalues of the ODE2 part of the system in the current configuration
+#  #specific example:
+# import exudyn as exu
+# from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+# import numpy as np
+# SC = exu.SystemContainer()
+# mbs = SC.AddSystem()
+# #
+# b0 = mbs.CreateMassPoint(referenceCoordinates = [2,0,0],
+#                          initialVelocities = [2*0,5,0],
+#                          physicsMass = 1, gravity = [0,-9.81,0],
+#                          drawSize = 0.5, color=color4blue)
+# #
+# oGround = mbs.AddObject(ObjectGround())
+# #add vertical spring
+# oSD = mbs.CreateSpringDamper(bodyOrNodeList=[oGround, b0],
+#                              localPosition0=[2,1,0],
+#                              localPosition1=[0,0,0],
+#                              stiffness=1e4, damping=1e2,
+#                              drawSize=0.2)
+# #
+# mbs.Assemble()
+# #
+# [eigenvalues, eigenvectors] = mbs.ComputeODE2Eigenvalues()
+#  #==>eigenvalues contain the eigenvalues of the ODE2 part of the system in the current configuration
 def ComputeODE2Eigenvalues(mbs, 
                            simulationSettings = exudyn.SimulationSettings(),
                            useSparseSolver = False, numberOfEigenvalues = 0, constrainedCoordinates=[],
@@ -572,6 +521,118 @@ def ComputeODE2Eigenvalues(mbs,
         return [eigenFrequencies, eigenVectors]
     else:
         return [eigenValues, eigenVectors]
+    
+
+#**function: compute system DOF numerically, considering Gr{\"u}bler-Kutzbach formula as well as redundant constraints; uses numpy matrix rank or singular value decomposition of scipy (useSVD=True)
+#**input:
+#  mbs: MainSystem for which DOF shall be computed
+#  simulationSettings: used e.g. for settings regarding numerical differentiation; default settings may be used in most cases
+#  threshold: threshold factor for singular values which estimate the redundant constraints
+#  useSVD: use singular value decomposition directly, also showing SVD values if verbose=True
+#  verbose: if True, it will show the singular values and one may decide if the threshold shall be adapted
+#**output: List[int]; returns list of [dof, nRedundant, nODE2, nODE1, nAE, nPureAE], where: dof = the degree of freedom computed numerically, nRedundant=the number of redundant constraints, nODE2=number of ODE2 coordinates, nODE1=number of ODE1 coordinates, nAE=total number of constraints, nPureAE=number of constraints on algebraic variables (e.g., lambda=0) that are not coupled to ODE2 coordinates
+#**notes: this approach may not always work! Currently only works with dense matrices, thus it will be slow for larger systems
+#**belongsTo: MainSystem
+#**example:
+# import exudyn as exu
+# from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+# import numpy as np
+# SC = exu.SystemContainer()
+# mbs = SC.AddSystem()
+# #
+# b0 = mbs.CreateRigidBody(inertia = InertiaCuboid(density=5000, 
+#                                                  sideLengths=[1,0.1,0.1]),
+#                          referencePosition = [6,0,0],
+#                          initialAngularVelocity = [0,8,0],
+#                          gravity = [0,-9.81,0],
+#                          graphicsDataList = [GraphicsDataOrthoCubePoint(size=[1,0.1,0.1], 
+#                                                                       color=color4orange)])
+# oGround = mbs.AddObject(ObjectGround())
+# mbs.CreateGenericJoint(bodyNumbers=[oGround, b0], position=[5.5,0,0],
+#                        constrainedAxes=[1,1,1, 1,0,0],
+#                        rotationMatrixAxes=RotationMatrixX(0.125*pi), #tilt axes
+#                        useGlobalFrame=True, axesRadius=0.02, axesLength=0.2)
+# #
+# mbs.Assemble()
+# res = mbs.ComputeSystemDegreeOfFreedom(verbose=1) #print out details
+def ComputeSystemDegreeOfFreedom(mbs, 
+                simulationSettings = exudyn.SimulationSettings(),
+                threshold = 1e-12, verbose=False, useSVD=False):
+    #use static solver, as it does not include factors from time integration (and no velocity derivatives) in the jacobian
+    
+    store = DeactivateWritingOfSolvers(simulationSettings)
+
+    staticSolver = exudyn.MainSolverStatic()
+    #initialize solver with initial values
+    staticSolver.InitializeSolver(mbs, simulationSettings)
+
+    nODE2 = staticSolver.GetODE2size()
+    nODE1 = staticSolver.GetODE1size()
+    if nODE1 != 0:
+        print('WARNING: ComputeSystemDegreeOfFreedom(...) not suitable in case of ODE1 coordinates; ODE1 coordinates will not count as additional DOF!')
+    nODE12 = nODE2+nODE1
+    nAE = staticSolver.GetAEsize()
+
+    #reset jacobian    
+    staticSolver.ComputeJacobianODE2RHS(mbs,scalarFactor_ODE2=-1,
+                                        scalarFactor_ODE2_t=0, 
+                                        scalarFactor_ODE1=0)    #compute ODE2 part of jacobian ==> stored internally in solver
+    staticSolver.ComputeJacobianAE(mbs, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1., velocityLevel=False)
+    jacobian = staticSolver.GetSystemJacobian()#.round(20) #read out stored jacobian
+
+    Code2 = jacobian[0:nODE2, nODE12:]    #C_q: constraint jacobian
+    Cae = jacobian[nODE12:,nODE12:]       #C_lambda
+    Call =  jacobian[:, nODE12:]
+    
+    staticSolver.FinalizeSolver(mbs, simulationSettings) #close files, etc.
+    #restore old settings:
+    RestoreSimulationSettings(simulationSettings, store)
+    
+    if verbose == 2:
+        print('Code2=\n', Code2, sep='')
+        print('Cae  =\n', Cae, sep='')
+
+    if useSVD:
+        try:
+            from scipy.linalg import svdvals#, svd
+        except:
+            raise ValueError('ComputeSystemDegreeOfFreedom: missing scipy package; install with: pip install scipy')
+
+    
+    nRedundant = 0
+    nPureAE = 0
+    if nAE != 0:
+
+        if useSVD:
+            #s = svd(Call, compute_uv=False, full_matrices=False)#, lapack_driver='gesvd')
+            s = svdvals(Call)
+    
+            if verbose:
+                print('singular values ODE2+AE=',s)
+    
+            sAE = svdvals(Cae)
+            #sAE = svd(Cae, compute_uv=False, full_matrices=False)#, lapack_driver='gesvd')
+    
+            if verbose:
+                print('singular values AE=',sAE)
+            
+            nRedundant = (abs(s) <= threshold).sum() #counts True=1, False=0
+            #these are constraints on AE coordinates, which do not count as constraints!
+            nPureAE = (abs(sAE) > threshold).sum() #counts True=1, False=0
+        else:
+            nRedundant = nAE - np.linalg.matrix_rank(Call)
+            nPureAE = np.linalg.matrix_rank(Cae)
+
+    dof = nODE2-(nAE-nPureAE)+nRedundant
+    if verbose:
+        print('ODE2 coordinates          =',nODE2)
+        print('total constraints         =',nAE)
+        print('redundant constraints     =',nRedundant)
+        print('pure algebraic constraints=',nPureAE)
+        print('degree of freedom         =',dof)
+
+    return [dof, nRedundant, nODE2, nODE1, nAE, nPureAE]
+
     
 #**function: helper function for solvers to check e.g. if high number of memory allocations happened during simulation
 #            This can happen, if large amount of sensors are attached and output is written in every time step

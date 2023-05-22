@@ -452,7 +452,7 @@ if 'lastRenderState' in vars():
 
 #    mbs.WaitForUserToContinue() #press space to continue
 
-exu.SolveDynamic(mbs, simulationSettings)
+mbs.SolveDynamic(simulationSettings)
 
 #if exudynTestGlobals.useGraphics:
 SC.WaitForRenderEngineStopFlag()

@@ -127,10 +127,10 @@ if useGraphics:
     mbs.WaitForUserToContinue() #stop before simulating
 
 if doImplicit:
-    exu.SolveDynamic(mbs, simulationSettings = simulationSettings,
+    mbs.SolveDynamic(simulationSettings = simulationSettings,
                      solverType=exu.DynamicSolverType.TrapezoidalIndex2)
 else:
-    exu.SolveDynamic(mbs, simulationSettings = simulationSettings,
+    mbs.SolveDynamic(simulationSettings = simulationSettings,
                      solverType=exu.DynamicSolverType.RK44)
     
 if useGraphics:
@@ -144,18 +144,18 @@ for i, n in enumerate(nodeList):
 
 if not useGraphics and True:
     sol = LoadSolutionFile('coordinatesSolution.txt')
-    from exudyn.interactive import SolutionViewer
-    SolutionViewer(mbs, sol)
+    
+    mbs.SolutionViewer(sol)
 
 if False:
-    from exudyn.plot import PlotSensor
+    
     
     for i, omega in enumerate(omegaList):
         if i==1:
             s='unstable'
         else:
             s='stable'
-        PlotSensor(mbs, [sAnglVelList[i]]*3,[0,1,2], 
+        mbs.PlotSensor([sAnglVelList[i]]*3,[0,1,2], 
                    yLabel='omega init = '+str(omega),colorCodeOffset=0*i*3,
                    #fileName='plots/gyroRotAxis'+str(i)+'-'+s+'-Eps'+str(eps*100)+'percent.png',
                    fontSize=12,

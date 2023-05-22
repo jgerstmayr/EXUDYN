@@ -10,15 +10,15 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+#%%++++++++++++++++++++++++++++++++++
 import exudyn as exu
-from exudyn.itemInterface import *
-
+from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
 import numpy as np #for postprocessing
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
-print('EXUDYN version='+exu.GetVersionString())
+print('EXUDYN version='+exu.GetVersionString(True))
 
 L=0.5
 mass = 1.6          #mass in kg
@@ -61,17 +61,20 @@ mbs.AddLoad(LoadCoordinate(markerNumber = nodeMarker,
 mbs.AddSensor(SensorObject(objectNumber=nC, fileName='solution/groundForce.txt', 
                            outputVariableType=exu.OutputVariableType.Force))
 
-print(mbs)
+print(mbs) #show system properties
 mbs.Assemble()
 
 tEnd = 1     #end time of simulation
 h = 0.001    #step size; leads to 1000 steps
 
 simulationSettings = exu.SimulationSettings()
-simulationSettings.solutionSettings.solutionWritePeriod = 5e-3  #output interval general
+simulationSettings.solutionSettings.solutionWritePeriod = 5e-3 #output interval general
 simulationSettings.solutionSettings.sensorsWritePeriod = 5e-3  #output interval of sensors
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h) #must be integer
 simulationSettings.timeIntegration.endTime = tEnd
+
+simulationSettings.timeIntegration.verboseMode = 1             #show some solver output
+simulationSettings.displayComputationTime = True               #show how fast
 
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1
 
@@ -79,20 +82,20 @@ simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1
 SC.visualizationSettings.nodes.drawNodesAsPoint=False
 SC.visualizationSettings.nodes.defaultSize=0.1
 
-exu.StartRenderer()              #start graphics visualization
-mbs.WaitForUserToContinue()    #wait for pressing SPACE bar to continue
+exu.StartRenderer()            #start graphics visualization
+#mbs.WaitForUserToContinue()    #wait for pressing SPACE bar or 'Q' to continue
 
 #start solver:
-exu.SolveDynamic(mbs, simulationSettings)
+mbs.SolveDynamic(simulationSettings)
 
-SC.WaitForRenderEngineStopFlag()#wait for pressing 'Q' to quit
+#SC.WaitForRenderEngineStopFlag() #wait for pressing 'Q' to quit
 exu.StopRenderer()               #safely close rendering window!
 
 #evaluate final (=current) output values
 u = mbs.GetNodeOutput(n1, exu.OutputVariableType.Position)
 print('displacement=',u)
 
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
 #compute exact solution:
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
@@ -110,11 +113,8 @@ for i in range(0,steps+1):
     refSol[i,0] = t
     refSol[i,1] = np.exp(-omega0*dRel*t)*(C1*np.cos(omega*t) + C2*np.sin(omega*t))+x0
 
-#print('refSol=',refSol[steps,1])
-
 data = np.loadtxt('coordinatesSolution.txt', comments='#', delimiter=',')
 plt.plot(data[:,0], data[:,1], 'b-', label='displacement (m); numerical solution') 
-#plt.plot(data[:,0], data[:,1+3], 'g-') #numerical solution:velocity
 plt.plot(refSol[:,0], refSol[:,1], 'r-', label='displacement (m); exact solution')
 
 #show force in constraint/support:

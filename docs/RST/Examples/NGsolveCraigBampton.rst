@@ -302,10 +302,10 @@ You can view and download this file on Github: `NGsolveCraigBampton.py <https://
                mbs.WaitForUserToContinue() #press space to continue
            
            if True:
-               exu.SolveDynamic(mbs, #solverType=exu.DynamicSolverType.TrapezoidalIndex2, 
+               mbs.SolveDynamic(#solverType=exu.DynamicSolverType.TrapezoidalIndex2, 
                                  simulationSettings=simulationSettings)
            else:
-               exu.SolveStatic(mbs, simulationSettings=simulationSettings)
+               mbs.SolveStatic(simulationSettings=simulationSettings)
                
            uTip = mbs.GetSensorValues(sensTipDispl)[1]
            print("nModes=", nModes, ", tip displacement=", uTip)

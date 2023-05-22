@@ -481,7 +481,7 @@ You can view and download this file on Github: `sliderCrank3DwithANCFbeltDrive.p
        SC.SetRenderState(lastRenderState) #load last model view
    mbs.WaitForUserToContinue()
    
-   exu.SolveDynamic(mbs, simulationSettings)
+   mbs.SolveDynamic(simulationSettings)
    
    
    SC.WaitForRenderEngineStopFlag()

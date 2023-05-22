@@ -253,7 +253,7 @@ if useGraphics:
 
     mbs.WaitForUserToContinue() #press space to continue
 
-exu.SolveDynamic(mbs, simulationSettings)
+mbs.SolveDynamic(simulationSettings)
     
 if useGraphics:
     SC.WaitForRenderEngineStopFlag()
@@ -273,7 +273,7 @@ exudynTestGlobals.testResult = result
 ##++++++++++++++++++++++++++++++++++++++++++++++q+++++++
 #plot results
 if useGraphics:
-    from exudyn.plot import PlotSensor
     
-    PlotSensor(mbs, sDisp, components=1, closeAll=True, labels=['uMid,linear'])
+    
+    mbs.PlotSensor(sDisp, components=1, closeAll=True, labels=['uMid,linear'])
 

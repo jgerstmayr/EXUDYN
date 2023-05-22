@@ -77,7 +77,7 @@ exu.StartRenderer()
 
 #mbs.WaitForUserToContinue()
 #exu.InfoStat()
-exu.SolveDynamic(mbs, simulationSettings, 
+mbs.SolveDynamic(simulationSettings, 
                  # solverType=exu.DynamicSolverType.TrapezoidalIndex2
                  )
 #exu.InfoStat()
@@ -89,8 +89,8 @@ nODE2 = len(mbs.systemData.GetODE2Coordinates())
 print("ODE2=",nODE2)
 
 #plot constraint error:
-from exudyn.plot import PlotSensor
-PlotSensor(mbs, sensorNumbers=sDist, offsets=[-L], closeAll=True)
+
+mbs.PlotSensor(sensorNumbers=sDist, offsets=[-L], closeAll=True)
 
 #old way, better use PlotSensor:
 import matplotlib.pyplot as plt

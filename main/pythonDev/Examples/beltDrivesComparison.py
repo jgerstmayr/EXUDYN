@@ -418,7 +418,7 @@ if staticEqulibrium: #precompute static equilibrium
         mbs.SetObjectParameter(obj, 'frictionCoefficient', 0.)
         mbs.SetObjectParameter(obj, 'frictionStiffness', 1) #do not set to zero, as it needs to do some initialization...
             
-    exu.SolveStatic(mbs, simulationSettings, updateInitialValues=True)
+    mbs.SolveStatic(simulationSettings, updateInitialValues=True)
 
     
     for obj in contactObjects:
@@ -432,7 +432,7 @@ if staticEqulibrium: #precompute static equilibrium
         mbs.SetObjectParameter(obj, 'activeConnector', False)
 
 
-exu.SolveDynamic(mbs, simulationSettings,
+mbs.SolveDynamic(simulationSettings,
                  # solverType=exu.DynamicSolverType.TrapezoidalIndex2
                  ) #183 Newton iterations, 0.114 seconds
 
@@ -441,9 +441,9 @@ exu.SolveDynamic(mbs, simulationSettings,
 if useGraphics and True:
     SC.visualizationSettings.general.autoFitScene = False
     SC.visualizationSettings.general.graphicsUpdateInterval=0.02
-    from exudyn.interactive import SolutionViewer
+    
     sol = LoadSolutionFile('solution/coordinatesSolution.txt', safeMode=True)#, maxRows=100)
-    SolutionViewer(mbs, sol)
+    mbs.SolutionViewer(sol)
 
 
 if useGraphics: 
@@ -451,9 +451,9 @@ if useGraphics:
     exu.StopRenderer() #safely close rendering window!
     
     # if True:
-    #     from exudyn.plot import PlotSensor
-    #     PlotSensor(mbs, sensorNumbers=[sAngVel[0],sAngVel[1]], components=2, closeAll=True)
-    #     PlotSensor(mbs, sensorNumbers=sMeasureRoll, components=1)
+    #     
+    #     mbs.PlotSensor(sensorNumbers=[sAngVel[0],sAngVel[1]], components=2, closeAll=True)
+    #     mbs.PlotSensor(sensorNumbers=sMeasureRoll, components=1)
 
 
 

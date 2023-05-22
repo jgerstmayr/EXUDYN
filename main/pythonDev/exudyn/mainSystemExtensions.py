@@ -98,6 +98,23 @@ def JointPreCheckCalc(where, mbs, name, bodyNumbers, position, show, useGlobalFr
 #  returnDict: if False, returns object index; if True, returns dict of all information on created object and node
 #**output: Union[dict, ObjectIndex]; returns mass point object index or dict with all data on request (if returnDict=True)
 #**belongsTo: MainSystem
+#**example:
+# import exudyn as exu
+# from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+# import numpy as np
+# SC = exu.SystemContainer()
+# mbs = SC.AddSystem()
+# 
+# b0=mbs.CreateMassPoint(referenceCoordinates = [0,0,0],
+#                        initialVelocities = [2,5,0],
+#                        physicsMass = 1, gravity = [0,-9.81,0],
+#                        drawSize = 0.5, color=color4blue)
+# 
+# mbs.Assemble()
+# simulationSettings = exu.SimulationSettings() #takes currently set values or default values
+# simulationSettings.timeIntegration.numberOfSteps = 1000
+# simulationSettings.timeIntegration.endTime = 2
+# mbs.SolveDynamic(simulationSettings = simulationSettings)
 def MainSystemCreateMassPoint(mbs,
                            name = '',   
                            referenceCoordinates = [0.,0.,0.],
@@ -205,6 +222,28 @@ def MainSystemCreateMassPoint(mbs,
 #  returnDict: if False, returns object index; if True, returns dict of all information on created object and node
 #**output: Union[dict, ObjectIndex]; returns rigid body object index (or dict with 'nodeNumber', 'objectNumber' and possibly 'loadNumber' and 'markerBodyMass' if returnDict=True)
 #**belongsTo: MainSystem
+#**example:
+# import exudyn as exu
+# from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+# import numpy as np
+# SC = exu.SystemContainer()
+# mbs = SC.AddSystem()
+# 
+# b0 = mbs.CreateRigidBody(inertia = InertiaCuboid(density=5000, 
+#                                                  sideLengths=[1,0.1,0.1]),
+#                          referencePosition = [1,0,0],
+#                          initialVelocity = [2,5,0],
+#                          initialAngularVelocity = [5,0.5,0.7],
+#                          gravity = [0,-9.81,0],
+#                          graphicsDataList = [GraphicsDataOrthoCubePoint(size=[1,0.1,0.1], 
+#                                                                       color=color4red)])
+# 
+# mbs.Assemble()
+# simulationSettings = exu.SimulationSettings() #takes currently set values or default values
+# simulationSettings.timeIntegration.numberOfSteps = 1000
+# simulationSettings.timeIntegration.endTime = 2
+# 
+# mbs.SolveDynamic(simulationSettings = simulationSettings)
 def MainSystemCreateRigidBody(mbs,
                            name = '',   
                            referencePosition = [0.,0.,0.],
@@ -384,23 +423,49 @@ def MainSystemCreateRigidBody(mbs,
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**function: helper function to create SpringDamper connector, using arguments from ObjectConnectorSpringDamper
+#**function: helper function to create SpringDamper connector, using arguments from ObjectConnectorSpringDamper; similar interface as CreateDistanceConstraint(...)
 #**input: 
 #  mbs: the MainSystem where items are created
 #  name: name string for connector; markers get Marker0:name and Marker1:name
 #  bodyOrNodeList: a list of object numbers (with specific localPosition0/1) or node numbers; may also be of mixed types
-#  localPosition0: local position on body0, if not a node number
-#  localPosition1: local position on body1, if not a node number
-#  referenceLength: if None, length is computed from reference position of bodies or nodes; if True, this reference length is used for spring
-#  stiffness: stiffness coefficient
-#  damping: damping coefficient
-#  force: additional force applied
-#  velocityOffset: if referenceLength is changed over time, the velocityOffset may be changed accordingly to emulate a reference motion
+#  localPosition0: local position (as 3D list or numpy array) on body0, if not a node number
+#  localPosition1: local position (as 3D list or numpy array) on body1, if not a node number
+#  referenceLength: if None, length is computed from reference position of bodies or nodes; if not None, this scalar reference length is used for spring
+#  stiffness: scalar stiffness coefficient
+#  damping: scalar damping coefficient
+#  force: scalar additional force applied
+#  velocityOffset: scalar offset: if referenceLength is changed over time, the velocityOffset may be changed accordingly to emulate a reference motion
 #  show: if True, connector visualization is drawn
 #  drawSize: general drawing size of connector
 #  color: color of connector
 #**output: ObjectIndex; returns index of newly created object
 #**belongsTo: MainSystem
+#**example:
+# import exudyn as exu
+# from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+# import numpy as np
+# SC = exu.SystemContainer()
+# mbs = SC.AddSystem()
+# 
+# b0 = mbs.CreateMassPoint(referenceCoordinates = [2,0,0],
+#                          initialVelocities = [2,5,0],
+#                          physicsMass = 1, gravity = [0,-9.81,0],
+#                          drawSize = 0.5, color=color4blue)
+# 
+# oGround = mbs.AddObject(ObjectGround())
+# #add vertical spring
+# oSD = mbs.CreateSpringDamper(bodyOrNodeList=[oGround, b0],
+#                              localPosition0=[2,1,0],
+#                              localPosition1=[0,0,0],
+#                              stiffness=1e4, damping=1e2,
+#                              drawSize=0.2)
+# 
+# mbs.Assemble()
+# simulationSettings = exu.SimulationSettings() #takes currently set values or default values
+# simulationSettings.timeIntegration.numberOfSteps = 1000
+# simulationSettings.timeIntegration.endTime = 2
+# SC.visualizationSettings.nodes.drawNodesAsPoint=False
+# mbs.SolveDynamic(simulationSettings = simulationSettings)
 def MainSystemCreateSpringDamper(mbs,
                                  name='',
                                  bodyOrNodeList=[None, None], 
@@ -495,6 +560,116 @@ def MainSystemCreateSpringDamper(mbs,
     return oConnector
 
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#**function: helper function to create CartesianSpringDamper connector, using arguments from ObjectConnectorCartesianSpringDamper
+#**input: 
+#  mbs: the MainSystem where items are created
+#  name: name string for connector; markers get Marker0:name and Marker1:name
+#  bodyOrNodeList: a list of object numbers (with specific localPosition0/1) or node numbers; may also be of mixed types
+#  localPosition0: local position (as 3D list or numpy array) on body0, if not a node number
+#  localPosition1: local position (as 3D list or numpy array) on body1, if not a node number
+#  stiffness: stiffness coefficients (as 3D list or numpy array)
+#  damping: damping coefficients (as 3D list or numpy array)
+#  offset: offset vector (as 3D list or numpy array)
+#  show: if True, connector visualization is drawn
+#  drawSize: general drawing size of connector
+#  color: color of connector
+#**output: ObjectIndex; returns index of newly created object
+#**belongsTo: MainSystem
+#**example:
+# import exudyn as exu
+# from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+# import numpy as np
+# SC = exu.SystemContainer()
+# mbs = SC.AddSystem()
+# 
+# b0 = mbs.CreateMassPoint(referenceCoordinates = [7,0,0],
+#                           physicsMass = 1, gravity = [0,-9.81,0],
+#                           drawSize = 0.5, color=color4blue)
+# 
+# oGround = mbs.AddObject(ObjectGround())
+# 
+# oSD = mbs.CreateCartesianSpringDamper(bodyOrNodeList=[oGround, b0],
+#                               localPosition0=[7.5,1,0],
+#                               localPosition1=[0,0,0],
+#                               stiffness=[200,2000,0], damping=[2,20,0],
+#                               drawSize=0.2)
+# 
+# mbs.Assemble()
+# simulationSettings = exu.SimulationSettings() #takes currently set values or default values
+# simulationSettings.timeIntegration.numberOfSteps = 1000
+# simulationSettings.timeIntegration.endTime = 2
+# SC.visualizationSettings.nodes.drawNodesAsPoint=False
+# 
+# mbs.SolveDynamic(simulationSettings = simulationSettings)
+def MainSystemCreateCartesianSpringDamper(mbs,
+                                 name='',
+                                 bodyOrNodeList=[None, None], 
+                                 localPosition0 = [0.,0.,0.],
+                                 localPosition1 = [0.,0.,0.], 
+                                 stiffness = [0.,0.,0.], damping = [0.,0.,0.], 
+                                 offset = [0.,0.,0.],
+                                 show=True, drawSize=-1, color=color4default):
+    #perform some checks:
+    if not exudyn.__useExudynFast:
+        if not isinstance(name, str):
+            RaiseTypeError(where='MainSystem.CreateCartesianSpringDamper(...)', argumentName='name', received = name, expectedType = ExpectedType.String)
+    
+        if not isinstance(bodyOrNodeList, list) or len(bodyOrNodeList) != 2:
+            RaiseTypeError(where='MainSystem.CreateCartesianSpringDamper(...)', argumentName='bodyOrNodeList', received = bodyOrNodeList, expectedType = 'list of 2 body or node numbers')
+    
+        if not (isinstance(bodyOrNodeList[0], exudyn.ObjectIndex) or (isinstance(bodyOrNodeList[0], exudyn.NodeIndex) and localPosition0==[0.,0.,0.])):
+            RaiseTypeError(where='MainSystem.CreateCartesianSpringDamper(...)', argumentName='bodyOrNodeList[0]', received = bodyOrNodeList[0], 
+                           expectedType = 'expected either ObjectIndex or NodeIndex and localPosition0=[0.,0.,0.]')
+            
+        if not (isinstance(bodyOrNodeList[1], exudyn.ObjectIndex) or (isinstance(bodyOrNodeList[1], exudyn.NodeIndex) and localPosition1==[0.,0.,0.])):
+            RaiseTypeError(where='MainSystem.CreateCartesianSpringDamper(...)', argumentName='bodyOrNodeList[1]', received = bodyOrNodeList[1], 
+                           expectedType = 'expected either ObjectIndex or NodeIndex and localPosition1=[0.,0.,0.]')
+            
+        if not IsVector(localPosition0, 3):
+            RaiseTypeError(where='MainSystem.CreateCartesianSpringDamper(...)', argumentName='localPosition0', received = localPosition0, expectedType = ExpectedType.Vector, dim=3)
+        if not IsVector(localPosition1, 3):
+            RaiseTypeError(where='MainSystem.CreateCartesianSpringDamper(...)', argumentName='localPosition1', received = localPosition1, expectedType = ExpectedType.Vector, dim=3)
+    
+        if not IsVector(stiffness, 3):
+            RaiseTypeError(where='MainSystem.CreateCartesianSpringDamper(...)', argumentName='stiffness', received = stiffness, expectedType = ExpectedType.Vector, dim=3)
+        if not IsVector(damping, 3):
+            RaiseTypeError(where='MainSystem.CreateCartesianSpringDamper(...)', argumentName='damping', received = damping, expectedType = ExpectedType.Vector, dim=3)
+        if not IsVector(offset, 3):
+            RaiseTypeError(where='MainSystem.CreateCartesianSpringDamper(...)', argumentName='offset', received = offset, expectedType = ExpectedType.Vector, dim=3)
+
+        if not IsValidBool(show):
+            RaiseTypeError(where='MainSystem.CreateCartesianSpringDamper(...)', argumentName='show', received = show, expectedType = ExpectedType.Bool)
+        if not IsValidRealInt(drawSize):
+            RaiseTypeError(where='MainSystem.CreateCartesianSpringDamper(...)', argumentName='drawSize', received = drawSize, expectedType = ExpectedType.Real)
+        if not IsVector(color, 4):
+            RaiseTypeError(where='MainSystem.CreateCartesianSpringDamper(...)', argumentName='color', received = color, expectedType = ExpectedType.Vector, dim=4)
+
+    
+    mName0 = ''
+    mName1 = ''
+    if name != '':
+        mName0 = 'Marker0:'+name
+        mName1 = 'Marker1:'+name
+        
+    if isinstance(bodyOrNodeList[0], exudyn.ObjectIndex):
+        mBody0 = mbs.AddMarker(eii.MarkerBodyPosition(name=mName0,bodyNumber=bodyOrNodeList[0], localPosition=localPosition0))
+    else:
+        mBody0 = mbs.AddMarker(eii.MarkerNodePosition(name=mName0,nodeNumber=bodyOrNodeList[0]))
+
+    if isinstance(bodyOrNodeList[1], exudyn.ObjectIndex):
+        mBody1 = mbs.AddMarker(eii.MarkerBodyPosition(name=mName1,bodyNumber=bodyOrNodeList[1], localPosition=localPosition1))
+    else:
+        mBody1 = mbs.AddMarker(eii.MarkerNodePosition(name=mName1,nodeNumber=bodyOrNodeList[1]))
+            
+    oConnector = mbs.AddObject(eii.ObjectConnectorCartesianSpringDamper(name=name,markerNumbers = [mBody0,mBody1],
+                                                                        stiffness = stiffness, damping = damping, offset = offset,
+                                                                        visualization=eii.VCartesianSpringDamper(show=show, 
+                                                                                      drawSize=drawSize, color=color)
+                                                                      ))
+
+    return oConnector
+
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: Create revolute joint between two bodies; definition of joint position and axis in global coordinates (alternatively in body0 local coordinates) for reference configuration of bodies; all markers, markerRotation and other quantities are automatically computed
@@ -511,6 +686,29 @@ def MainSystemCreateSpringDamper(mbs,
 #  color: color of connector
 #**output: [ObjectIndex, MarkerIndex, MarkerIndex]; returns list [oJoint, mBody0, mBody1], containing the joint object number, and the two rigid body markers on body0/1 for the joint
 #**belongsTo: MainSystem
+#**example:
+# import exudyn as exu
+# from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+# import numpy as np
+# SC = exu.SystemContainer()
+# mbs = SC.AddSystem()
+# 
+# b0 = mbs.CreateRigidBody(inertia = InertiaCuboid(density=5000, 
+#                                                  sideLengths=[1,0.1,0.1]),
+#                          referencePosition = [3,0,0],
+#                          gravity = [0,-9.81,0],
+#                          graphicsDataList = [GraphicsDataOrthoCubePoint(size=[1,0.1,0.1], 
+#                                                                       color=color4steelblue)])
+# oGround = mbs.AddObject(ObjectGround())
+# mbs.CreateRevoluteJoint(bodyNumbers=[oGround, b0], position=[2.5,0,0], axis=[0,0,1],
+#                         useGlobalFrame=True, axisRadius=0.02, axisLength=0.14)
+# 
+# mbs.Assemble()
+# simulationSettings = exu.SimulationSettings() #takes currently set values or default values
+# simulationSettings.timeIntegration.numberOfSteps = 1000
+# simulationSettings.timeIntegration.endTime = 2
+# 
+# mbs.SolveDynamic(simulationSettings = simulationSettings)
 def MainSystemCreateRevoluteJoint(mbs, name='', bodyNumbers=[None, None], 
                                   position=[], axis=[], useGlobalFrame=True, 
                                   show=True, axisRadius=0.1, axisLength=0.4, color=color4default):
@@ -584,6 +782,31 @@ def MainSystemCreateRevoluteJoint(mbs, name='', bodyNumbers=[None, None],
 #  color: color of connector
 #**output: [ObjectIndex, MarkerIndex, MarkerIndex]; returns list [oJoint, mBody0, mBody1], containing the joint object number, and the two rigid body markers on body0/1 for the joint
 #**belongsTo: MainSystem
+#**example:
+# import exudyn as exu
+# from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+# import numpy as np
+# SC = exu.SystemContainer()
+# mbs = SC.AddSystem()
+# 
+# b0 = mbs.CreateRigidBody(inertia = InertiaCuboid(density=5000, 
+#                                                  sideLengths=[1,0.1,0.1]),
+#                          referencePosition = [4,0,0],
+#                          initialVelocity = [0,4,0],
+#                          gravity = [0,-9.81,0],
+#                          graphicsDataList = [GraphicsDataOrthoCubePoint(size=[1,0.1,0.1], 
+#                                                                       color=color4steelblue)])
+# 
+# oGround = mbs.AddObject(ObjectGround())
+# mbs.CreatePrismaticJoint(bodyNumbers=[oGround, b0], position=[3.5,0,0], axis=[0,1,0], 
+#                          useGlobalFrame=True, axisRadius=0.02, axisLength=1)
+# 
+# mbs.Assemble()
+# simulationSettings = exu.SimulationSettings() #takes currently set values or default values
+# simulationSettings.timeIntegration.numberOfSteps = 1000
+# simulationSettings.timeIntegration.endTime = 2
+# 
+# mbs.SolveDynamic(simulationSettings = simulationSettings)
 def MainSystemCreatePrismaticJoint(mbs, name='', bodyNumbers=[None, None], 
                                   position=[], axis=[], useGlobalFrame=True, 
                                   show=True, axisRadius=0.1, axisLength=0.4, color=color4default):
@@ -650,6 +873,30 @@ def MainSystemCreatePrismaticJoint(mbs, name='', bodyNumbers=[None, None],
 #  color: color of connector
 #**output: [ObjectIndex, MarkerIndex, MarkerIndex]; returns list [oJoint, mBody0, mBody1], containing the joint object number, and the two rigid body markers on body0/1 for the joint
 #**belongsTo: MainSystem
+#**example:
+# import exudyn as exu
+# from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+# import numpy as np
+# SC = exu.SystemContainer()
+# mbs = SC.AddSystem()
+# 
+# b0 = mbs.CreateRigidBody(inertia = InertiaCuboid(density=5000, 
+#                                                  sideLengths=[1,0.1,0.1]),
+#                          referencePosition = [5,0,0],
+#                          initialAngularVelocity = [5,0,0],
+#                          gravity = [0,-9.81,0],
+#                          graphicsDataList = [GraphicsDataOrthoCubePoint(size=[1,0.1,0.1], 
+#                                                                       color=color4orange)])
+# oGround = mbs.AddObject(ObjectGround())
+# mbs.CreateSphericalJoint(bodyNumbers=[oGround, b0], position=[5.5,0,0], 
+#                          useGlobalFrame=True, jointRadius=0.06)
+# 
+# mbs.Assemble()
+# simulationSettings = exu.SimulationSettings() #takes currently set values or default values
+# simulationSettings.timeIntegration.numberOfSteps = 1000
+# simulationSettings.timeIntegration.endTime = 2
+# 
+# mbs.SolveDynamic(simulationSettings = simulationSettings)
 def MainSystemCreateSphericalJoint(mbs, name='', bodyNumbers=[None, None], 
                                   position=[], constrainedAxes=[1,1,1], useGlobalFrame=True, 
                                   show=True, jointRadius=0.1, color=color4default):
@@ -707,6 +954,32 @@ def MainSystemCreateSphericalJoint(mbs, name='', bodyNumbers=[None, None],
 #  color: color of connector
 #**output: [ObjectIndex, MarkerIndex, MarkerIndex]; returns list [oJoint, mBody0, mBody1], containing the joint object number, and the two rigid body markers on body0/1 for the joint
 #**belongsTo: MainSystem
+#**example:
+# import exudyn as exu
+# from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+# import numpy as np
+# SC = exu.SystemContainer()
+# mbs = SC.AddSystem()
+# 
+# b0 = mbs.CreateRigidBody(inertia = InertiaCuboid(density=5000, 
+#                                                  sideLengths=[1,0.1,0.1]),
+#                          referencePosition = [6,0,0],
+#                          initialAngularVelocity = [0,8,0],
+#                          gravity = [0,-9.81,0],
+#                          graphicsDataList = [GraphicsDataOrthoCubePoint(size=[1,0.1,0.1], 
+#                                                                       color=color4orange)])
+# oGround = mbs.AddObject(ObjectGround())
+# mbs.CreateGenericJoint(bodyNumbers=[oGround, b0], position=[5.5,0,0],
+#                        constrainedAxes=[1,1,1, 1,0,0],
+#                        rotationMatrixAxes=RotationMatrixX(0.125*pi), #tilt axes
+#                        useGlobalFrame=True, axesRadius=0.02, axesLength=0.2)
+# 
+# mbs.Assemble()
+# simulationSettings = exu.SimulationSettings() #takes currently set values or default values
+# simulationSettings.timeIntegration.numberOfSteps = 1000
+# simulationSettings.timeIntegration.endTime = 2
+# 
+# mbs.SolveDynamic(simulationSettings = simulationSettings)
 def MainSystemCreateGenericJoint(mbs, name='', bodyNumbers=[None, None], 
                                  position=[], rotationMatrixAxes=np.eye(3), 
                                  constrainedAxes=[1,1,1, 1,1,1], useGlobalFrame=True,
@@ -760,6 +1033,131 @@ def MainSystemCreateGenericJoint(mbs, name='', bodyNumbers=[None, None],
 
     return [oJoint, mBody0, mBody1]
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#**function: Create distance joint between two bodies; definition of joint positions in local coordinates of bodies or nodes; if distance=None, it is computed automatically from reference length; all markers are automatically computed
+#**input:
+#  mbs: the MainSystem where joint and markers shall be created
+#  name: name string for joint; markers get Marker0:name and Marker1:name
+#  bodyOrNodeList: a list of object numbers (with specific localPosition0/1) or node numbers; may also be of mixed types
+#  localPosition0: local position (as 3D list or numpy array) on body0, if not a node number
+#  localPosition1: local position (as 3D list or numpy array) on body1, if not a node number
+#  distance: if None, distance is computed from reference position of bodies or nodes; if not None, this distance (which must be always larger than zero) is prescribed between the two positions
+#  show: if True, connector visualization is drawn
+#  drawSize: general drawing size of node
+#  color: color of connector
+#**output: [ObjectIndex, MarkerIndex, MarkerIndex]; returns list [oJoint, mBody0, mBody1], containing the joint object number, and the two rigid body markers on body0/1 for the joint
+#**belongsTo: MainSystem
+#**example:
+# import exudyn as exu
+# from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+# import numpy as np
+# SC = exu.SystemContainer()
+# mbs = SC.AddSystem()
+# 
+# b0 = mbs.CreateRigidBody(inertia = InertiaCuboid(density=5000, 
+#                                                   sideLengths=[1,0.1,0.1]),
+#                           referencePosition = [6,0,0],
+#                           gravity = [0,-9.81,0],
+#                           graphicsDataList = [GraphicsDataOrthoCubePoint(size=[1,0.1,0.1], 
+#                                                                       color=color4orange)])
+# m1 = mbs.CreateMassPoint(referenceCoordinates=[5.5,-1,0],
+#                          physicsMass=1, drawSize = 0.2)
+# n1 = mbs.GetObject(m1)['nodeNumber']
+#     
+# oGround = mbs.AddObject(ObjectGround())
+# mbs.CreateDistanceConstraint(bodyOrNodeList=[oGround, b0], 
+#                              localPosition0 = [6.5,1,0],
+#                              localPosition1 = [0.5,0,0],
+#                              distance=None, #automatically computed
+#                              drawSize=0.06)
+# 
+# mbs.CreateDistanceConstraint(bodyOrNodeList=[b0, n1], 
+#                              localPosition0 = [-0.5,0,0],
+#                              localPosition1 = [0.,0.,0.], #must be [0,0,0] for Node
+#                              distance=None, #automatically computed
+#                              drawSize=0.06)
+# 
+# mbs.Assemble()
+# simulationSettings = exu.SimulationSettings() #takes currently set values or default values
+# simulationSettings.timeIntegration.numberOfSteps = 1000
+# simulationSettings.timeIntegration.endTime = 2
+# 
+# mbs.SolveDynamic(simulationSettings = simulationSettings)
+def MainSystemCreateDistanceConstraint(mbs, name='', 
+                                       bodyOrNodeList=[None, None], 
+                                       localPosition0 = [0.,0.,0.],
+                                       localPosition1 = [0.,0.,0.], 
+                                       distance=None, 
+                                       show=True, drawSize=-1., color=color4default):
+        
+    if not exudyn.__useExudynFast:
+        if not isinstance(name, str):
+            RaiseTypeError(where='MainSystem.CreateSpringDamper(...)', argumentName='name', received = name, expectedType = ExpectedType.String)
+        if not isinstance(bodyOrNodeList, list) or len(bodyOrNodeList) != 2:
+            RaiseTypeError(where='MainSystem.CreateDistanceConstraint(...)', argumentName='bodyOrNodeList', received = bodyOrNodeList, expectedType = 'list of 2 body or node numbers')
+    
+        if not (isinstance(bodyOrNodeList[0], exudyn.ObjectIndex) or (isinstance(bodyOrNodeList[0], exudyn.NodeIndex) and localPosition0==[0.,0.,0.])):
+            RaiseTypeError(where='MainSystem.CreateDistanceConstraint(...)', argumentName='bodyOrNodeList[0]', received = bodyOrNodeList[0], 
+                           expectedType = 'expected either ObjectIndex or NodeIndex and localPosition0=[0.,0.,0.]')
+            
+        if not (isinstance(bodyOrNodeList[1], exudyn.ObjectIndex) or (isinstance(bodyOrNodeList[1], exudyn.NodeIndex) and localPosition1==[0.,0.,0.])):
+            RaiseTypeError(where='MainSystem.CreateDistanceConstraint(...)', argumentName='bodyOrNodeList[1]', received = bodyOrNodeList[1], 
+                           expectedType = 'expected either ObjectIndex or NodeIndex and localPosition1=[0.,0.,0.]')
+            
+        if not IsVector(localPosition0, 3):
+            RaiseTypeError(where='MainSystem.CreateDistanceConstraint(...)', argumentName='localPosition0', received = localPosition0, expectedType = ExpectedType.Vector, dim=3)
+        if not IsVector(localPosition1, 3):
+            RaiseTypeError(where='MainSystem.CreateDistanceConstraint(...)', argumentName='localPosition1', received = localPosition1, expectedType = ExpectedType.Vector, dim=3)
+    
+        if distance != None and not IsValidPRealInt(distance):
+            RaiseTypeError(where='MainSystem.CreateDistanceConstraint(...)', argumentName='distance', received = distance, expectedType = ExpectedType.PReal)
+
+        if not IsValidBool(show):
+            RaiseTypeError(where='MainSystem.CreateSpringDamper(...)', argumentName='show', received = show, expectedType = ExpectedType.Bool)
+        if not IsValidRealInt(drawSize):
+            RaiseTypeError(where='MainSystem.CreateDistanceConstraint(...)', argumentName='drawSize', received = drawSize, expectedType = ExpectedType.Real)
+        if not IsVector(color, 4):
+            RaiseTypeError(where='MainSystem.CreateDistanceConstraint(...)', argumentName='color', received = color, expectedType = ExpectedType.Vector, dim=4)
+
+
+    mName0 = ''
+    mName1 = ''
+    if name != '':
+        mName0 = 'Marker0:'+name
+        mName1 = 'Marker1:'+name
+        
+    if isinstance(bodyOrNodeList[0], exudyn.ObjectIndex):
+        mBody0 = mbs.AddMarker(eii.MarkerBodyPosition(name=mName0,bodyNumber=bodyOrNodeList[0], localPosition=localPosition0))
+    else:
+        mBody0 = mbs.AddMarker(eii.MarkerNodePosition(name=mName0,nodeNumber=bodyOrNodeList[0]))
+
+    if isinstance(bodyOrNodeList[1], exudyn.ObjectIndex):
+        mBody1 = mbs.AddMarker(eii.MarkerBodyPosition(name=mName1,bodyNumber=bodyOrNodeList[1], localPosition=localPosition1))
+    else:
+        mBody1 = mbs.AddMarker(eii.MarkerNodePosition(name=mName1,nodeNumber=bodyOrNodeList[1]))
+        
+    if distance == None: #automatically compute distance
+        
+        if isinstance(bodyOrNodeList[0], exudyn.ObjectIndex):
+            p0 = mbs.GetObjectOutputBody(bodyOrNodeList[0],exudyn.OutputVariableType.Position,
+                                         localPosition=localPosition0, configuration=exudyn.ConfigurationType.Reference)
+        else:
+            p0 = mbs.GetNodeOutput(bodyOrNodeList[0],exudyn.OutputVariableType.Position, configuration=exudyn.ConfigurationType.Reference)
+            
+        if isinstance(bodyOrNodeList[1], exudyn.ObjectIndex):
+            p1 = mbs.GetObjectOutputBody(bodyOrNodeList[1],exudyn.OutputVariableType.Position,
+                                         localPosition=localPosition1, configuration=exudyn.ConfigurationType.Reference)
+        else:
+            p1 = mbs.GetNodeOutput(bodyOrNodeList[1],exudyn.OutputVariableType.Position, configuration=exudyn.ConfigurationType.Reference)
+        
+        distance = np.linalg.norm(np.array(p1)-p0)
+        
+    oJoint = mbs.AddObject(eii.ObjectConnectorDistance(name=name,markerNumbers=[mBody0,mBody1], distance=distance,
+             visualization=eii.VObjectConnectorDistance(show=show, drawSize=drawSize, color=color) ))
+
+    return [oJoint, mBody0, mBody1]
+
+
 
 
 
@@ -772,7 +1170,6 @@ def MainSystemCreateGenericJoint(mbs, name='', bodyNumbers=[None, None],
 # exudyn.MainSystem.CreateGenericJoint = MainSystemCreateGenericJoint
 
 #missing:
-#CartesianSpringDamper
 #RigidBodySpringDamper
 #LinearSpringDamper
 #TorsionalSpringDamper
@@ -816,6 +1213,10 @@ exu.MainSystem.CreateSpringDamper=MainSystemCreateSpringDamper
 
 
 #link MainSystem function to Python function:
+exu.MainSystem.CreateCartesianSpringDamper=MainSystemCreateCartesianSpringDamper
+
+
+#link MainSystem function to Python function:
 exu.MainSystem.CreateRevoluteJoint=MainSystemCreateRevoluteJoint
 
 
@@ -829,6 +1230,10 @@ exu.MainSystem.CreateSphericalJoint=MainSystemCreateSphericalJoint
 
 #link MainSystem function to Python function:
 exu.MainSystem.CreateGenericJoint=MainSystemCreateGenericJoint
+
+
+#link MainSystem function to Python function:
+exu.MainSystem.CreateDistanceConstraint=MainSystemCreateDistanceConstraint
 
 
 #link MainSystem function to Python function:
@@ -848,11 +1253,11 @@ exu.MainSystem.ComputeLinearizedSystem=exu.solver.ComputeLinearizedSystem
 
 
 #link MainSystem function to Python function:
-exu.MainSystem.ComputeSystemDegreeOfFreedom=exu.solver.ComputeSystemDegreeOfFreedom
+exu.MainSystem.ComputeODE2Eigenvalues=exu.solver.ComputeODE2Eigenvalues
 
 
 #link MainSystem function to Python function:
-exu.MainSystem.ComputeODE2Eigenvalues=exu.solver.ComputeODE2Eigenvalues
+exu.MainSystem.ComputeSystemDegreeOfFreedom=exu.solver.ComputeSystemDegreeOfFreedom
 
 
 #link MainSystem function to Python function:

@@ -446,7 +446,7 @@ if lifeVisualization:
     if 'renderState' in exu.sys: SC.SetRenderState(exu.sys['renderState']) #load last model view
     mbs.WaitForUserToContinue() #press space to continue
         
-exu.SolveDynamic(mbs, #solverType=exu.DynamicSolverType.TrapezoidalIndex2, 
+mbs.SolveDynamic(#solverType=exu.DynamicSolverType.TrapezoidalIndex2, 
                   simulationSettings=simulationSettings)
             
 if addSensors:
@@ -466,8 +466,8 @@ if lifeVisualization:
 if False: #use this to reload the solution and use SolutionViewer
     SC.visualizationSettings.general.autoFitScene=False #if reloaded view settings
 
-    from exudyn.interactive import SolutionViewer
-    SolutionViewer(mbs) #can also be entered in IPython ...
+    
+    mbs.SolutionViewer() #can also be entered in IPython ...
 
 
 # # Plot sensor
@@ -476,8 +476,8 @@ if False: #use this to reload the solution and use SolutionViewer
 
 
 if addSensors:
-    from exudyn.plot import PlotSensor
-    PlotSensor(mbs, sensorNumbers=[sMidDispl,sMidDispl,sMidDispl], components=[0,1,2])
+    
+    mbs.PlotSensor(sensorNumbers=[sMidDispl,sMidDispl,sMidDispl], components=[0,1,2])
 
 
 # In[ ]:

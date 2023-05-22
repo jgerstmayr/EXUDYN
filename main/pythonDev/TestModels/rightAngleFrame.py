@@ -314,9 +314,9 @@ if True:
 
 
     # else:
-    exu.SolveStatic(mbs, simulationSettings)
-    #exu.SolveDynamic(mbs, simulationSettings)
-    #exu.SolveDynamic(mbs, simulationSettings, solverType = exu.DynamicSolverType.RK44)
+    mbs.SolveStatic(simulationSettings)
+    #mbs.SolveDynamic(simulationSettings)
+    #mbs.SolveDynamic(simulationSettings, solverType = exu.DynamicSolverType.RK44)
 
     #%%+++++++++++++++++++++++++++++++++++    
     if useGraphics:
@@ -340,7 +340,7 @@ exudynTestGlobals.testResult = testErrorSum
 
 #%%+++++++++++++++++
 if True:
-    from exudyn.plot import PlotSensor
+    
     PlotSensor(None, closeAll=True)
 
     dataDisp = mbs.GetSensorStoredData(sDisp)
@@ -353,13 +353,13 @@ if True:
     data2[:,0] = dataDisp[:,1] #displacement in X-direction
     data2[:,1] = dataLoad[:,1] #force in X-direction
     
-    PlotSensor(mbs,sensorNumbers=[data],components=[0], componentsX=[-1], 
+    mbs.PlotSensor(sensorNumbers=[data],components=[0], componentsX=[-1], 
                 xLabel='displacement in Z direction',yLabel='Load (in X direction)')
     refSol = np.array([[0,1.088],[0.035,1.088]])
-    PlotSensor(mbs,sensorNumbers=[refSol],components=[0],  
+    mbs.PlotSensor(sensorNumbers=[refSol],components=[0],  
                 xLabel='displacement in Z direction',yLabel='Load (in X direction)', newFigure=False,
                 colorCodeOffset=1)
-    # PlotSensor(mbs,sensorNumbers=[data2],components=[0], componentsX=[-1], 
+    # mbs.PlotSensor(sensorNumbers=[data2],components=[0], componentsX=[-1], 
     #             xLabel='displacement in X direction',yLabel='Load (in X direction)')
 
 

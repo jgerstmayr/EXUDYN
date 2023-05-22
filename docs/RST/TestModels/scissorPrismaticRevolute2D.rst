@@ -222,7 +222,7 @@ You can view and download this file on Github: `scissorPrismaticRevolute2D.py <h
    #    mbs.WaitForUserToContinue()
        
        #alternative solver command
-       #exu.SolveDynamic(mbs, simulationSettings)
+       #mbs.SolveDynamic(simulationSettings)
    
    
    

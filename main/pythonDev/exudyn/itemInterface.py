@@ -1918,7 +1918,7 @@ class ObjectConnectorDistance:
     def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], distance = 0., activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = markerNumbers
-        self.distance = CheckForValidUReal(distance,"distance","ObjectConnectorDistance")
+        self.distance = CheckForValidPReal(distance,"distance","ObjectConnectorDistance")
         self.activeConnector = activeConnector
         self.visualization = visualization
 

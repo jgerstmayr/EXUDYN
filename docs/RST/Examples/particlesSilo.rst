@@ -268,12 +268,12 @@ You can view and download this file on Github: `particlesSilo.py <https://github
        #initial gContact statistics
        #simulationSettings.timeIntegration.numberOfSteps = 1
        #simulationSettings.timeIntegration.endTime = h
-       #exu.SolveDynamic(mbs, simulationSettings, solverType=exu.DynamicSolverType.ExplicitEuler)
+       #mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.ExplicitEuler)
        #print(gContact)
    
        simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
        simulationSettings.timeIntegration.endTime = tEnd
-       exu.SolveDynamic(mbs, simulationSettings, solverType=exu.DynamicSolverType.ExplicitEuler)
+       mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.ExplicitEuler)
        #print(gContact)
        #p = mbs.GetNodeOutput(n, variableType=exu.OutputVariableType.Position)
        #print("pEnd =", p[0], p[1])
@@ -286,12 +286,12 @@ You can view and download this file on Github: `particlesSilo.py <https://github
    if not simulate or True:
        SC.visualizationSettings.general.autoFitScene = False
        SC.visualizationSettings.general.graphicsUpdateInterval=0.5
-       from exudyn.interactive import SolutionViewer
+       
        print('load solution file')
        #sol = LoadSolutionFile('solution/test2.txt', safeMode=False)
        sol = LoadSolutionFile('solution/test.txt', safeMode=True)#, maxRows=100)
        print('start SolutionViewer')
-       SolutionViewer(mbs, sol)
+       mbs.SolutionViewer(sol)
    
 
 

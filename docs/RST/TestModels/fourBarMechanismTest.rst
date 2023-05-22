@@ -132,7 +132,7 @@ You can view and download this file on Github: `fourBarMechanismTest.py <https:/
        exu.StartRenderer()
        #mbs.WaitForUserToContinue()
    
-   exu.SolveDynamic(mbs, simulationSettings)
+   mbs.SolveDynamic(simulationSettings)
    
    if useGraphics: 
        SC.WaitForRenderEngineStopFlag()

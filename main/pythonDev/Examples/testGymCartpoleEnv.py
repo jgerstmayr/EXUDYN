@@ -5,6 +5,7 @@
 #
 # Author:   Johannes Gerstmayr, Grzegorz Orzechowski
 # Date:     2022-05-17
+# Update:   2023-05-20: derive from gym.Env to ensure compatibility with newer stable-baselines3
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
@@ -20,12 +21,12 @@ from typing import Optional, Union
 import numpy as np
 
 import gym
-from gym import logger, spaces
+from gym import logger, spaces, Env
 from gym.error import DependencyNotInstalled
 
 
-class CartPoleEnv():#(gym.Env[np.ndarray, Union[int, np.ndarray]]):
-
+class CartPoleEnv(Env):
+    
     #metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 50}
     metadata = {"render_modes": ["human"], "render_fps": 50}
 

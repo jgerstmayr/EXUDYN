@@ -144,17 +144,22 @@ emph={AddNode, AddObject, AddMarker, AddLoad, AddSensor, SystemContainer,
 AddSystem, Assemble, SimulationSettings,
 StartRenderer, StopRenderer, GetNodeOutput,
 DynamicSolverType, SolveDynamic, SolveStatic, 
-TimeIntegrationSolve,__init__, NumberOfSystems, Reset,
+ComputeLinearizedSystem,ComputeSystem,ComputeODE2Eigenvalues,
+__init__, NumberOfSystems, Reset,
 %
 InertiaCuboid, Translated, GraphicsDataRigidLink, GraphicsDataBasis,
 AddRigidBody, AddRevoluteJoint, Info, DrawSystemGraph, SetRenderState,
 WaitForRenderEngineStopFlag, WaitForUserToContinue, LoadSolutionFile,
-SolutionViewer, PlotSensor
+SolutionViewer, PlotSensor,
+%
+CreateMassPoint, CreateRigidBody, CreateSpringDamper, CreateRevoluteJoint,
+CreatePrismaticJoint, CreateSphericalJoint, CreateGenericJoint,
+CreateDistanceSensorGeometry, CreateDistanceSensor
 },          % Custom highlighting
 emphstyle=\ttfamily\small\bfseries\color{deepred},    % Custom highlighting style
 stringstyle=\color{deepgreen},
 commentstyle=\color{commentgreen},
-frame=none,                         % horizontal line top and bottom
+frame=none,                        % horizontal line top and bottom
 %frame=tb,                         % horizontal line top and bottom
 %numbers=left,										 %show line numbers
 breaklines=true,									 %automatically breaks lines

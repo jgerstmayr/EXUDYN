@@ -121,10 +121,10 @@ simulationSettings.solutionSettings.solutionInformation = "Finite segment method
 exu.StartRenderer()
 
 if mode == "Trap":
-    exu.SolveDynamic(mbs, simulationSettings, 
+    mbs.SolveDynamic(simulationSettings, 
                      solverType=exu.DynamicSolverType.TrapezoidalIndex2)
 else:
-    exu.SolveDynamic(mbs, simulationSettings)
+    mbs.SolveDynamic(simulationSettings)
     
 
 SC.WaitForRenderEngineStopFlag()
@@ -133,6 +133,6 @@ exu.StopRenderer() #safely close rendering window!
 
 
 if True and useANCF:
-    from exudyn.plot import PlotSensor
-    PlotSensor(mbs, sensorNumbers=[sTipCable, sTipSegment], components=[1,1]) #plot y components
+    
+    mbs.PlotSensor(sensorNumbers=[sTipCable, sTipSegment], components=[1,1]) #plot y components
 

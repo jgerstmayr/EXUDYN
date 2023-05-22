@@ -107,7 +107,7 @@ if useGraphics:
 
 #mbs.WaitForUserToContinue()
 #exu.InfoStat()
-exu.SolveDynamic(mbs, simulationSettings, 
+mbs.SolveDynamic(simulationSettings, 
                  # solverType=exu.DynamicSolverType.TrapezoidalIndex2
                  )
 #exu.InfoStat()
@@ -119,8 +119,8 @@ if useGraphics:
 
 #plot constraint error:
 if addSensors:
-    from exudyn.plot import PlotSensor
-    PlotSensor(mbs, sensorNumbers=sDist, offsets=[-L], closeAll=True)
-    PlotSensor(mbs, sensorNumbers=sPos, components=[0,1], newFigure=True)
     
-    PlotSensor(mbs, sensorNumbers=sEnergy, yLabel='total energy', newFigure=True)
+    mbs.PlotSensor(sensorNumbers=sDist, offsets=[-L], closeAll=True)
+    mbs.PlotSensor(sensorNumbers=sPos, components=[0,1], newFigure=True)
+    
+    mbs.PlotSensor(sensorNumbers=sEnergy, yLabel='total energy', newFigure=True)

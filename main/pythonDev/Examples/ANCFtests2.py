@@ -153,7 +153,7 @@ if solveDynamic:
 
     
 
-    exu.SolveDynamic(mbs, simulationSettings)
+    mbs.SolveDynamic(simulationSettings)
 
     SC.WaitForRenderEngineStopFlag()
     exu.StopRenderer() #safely close rendering window!
@@ -188,7 +188,7 @@ else:
             #    cableDict['physicsReferenceAxialStrain'] = 0.1*curvatureValue
             #    mbs.ModifyObject(nCable, cableDict)
         
-            exu.SolveStatic(mbs, simulationSettings)
+            mbs.SolveStatic(simulationSettings)
 
             sol = mbs.systemData.GetODE2Coordinates()
             mbs.systemData.SetODE2Coordinates(coordinates=sol, configurationType=exu.ConfigurationType.Initial) #set initial conditions for next step
@@ -204,7 +204,7 @@ else:
         simulationSettings.staticSolver.newton.relativeTolerance = 1e-7
         simulationSettings.staticSolver.verboseMode = 1
         simulationSettings.displayStatistics = True
-        exu.SolveStatic(mbs, simulationSettings)
+        mbs.SolveStatic(simulationSettings)
 
 
     SC.WaitForRenderEngineStopFlag()

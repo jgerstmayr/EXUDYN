@@ -30,7 +30,7 @@ except:
 
 ie = 4
 if True:
-#for ie in range(7):
+#for ie in range(7): #alternatively iterate over element numbers ...
     nElements = 2**ie
     
     SC = exu.SystemContainer()
@@ -46,6 +46,7 @@ if True:
     v = w-u #height of I inner
     h = w #height Y
     
+    #create beam section data and geometry
     sectionData = exu.BeamSection()
     
     L = 2
@@ -97,12 +98,14 @@ if True:
     nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0])) #ground node for coordinate constraint
     mnGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
      
-    
+    #ANCF nodal slopes
     eY=[0,1,0]
     eZ=[0,0,1]
+    
     lElem = L/nElements
     if compute3D:
         initialRotations = eY+eZ
+        # compute nodes and beam elements in loop
         n0 = mbs.AddNode(NodePoint3DSlope23(referenceCoordinates=[0,0,0]+initialRotations))
         nInit = n0
         for k in range(nElements):
@@ -118,6 +121,7 @@ if True:
     
     if compute2D:
         lElem = L/nElements
+        # compute nodes and beam elements in loop
         n2d0 = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0,0,0]))
         nInit = n2d0
         for k in range(nElements):
@@ -153,7 +157,7 @@ if True:
     SC.visualizationSettings.general.worldBasisSize = 0.1
     SC.visualizationSettings.openGL.multiSampling = 4
         
-    # [M, K, D] = exu.solver.ComputeLinearizedSystem(mbs, simulationSettings, useSparseSolver=True)
+    # [M, K, D] = mbs.ComputeLinearizedSystem(simulationSettings, useSparseSolver=True)
     # print('M=',M.round(1))
     
     
@@ -168,7 +172,7 @@ if True:
     # constrainedCoordinates=[]
     
     exu.SetWriteToConsole(False)
-    compeig=exu.ComputeODE2Eigenvalues(mbs, simulationSettings, useSparseSolver=True, 
+    compeig=mbs.ComputeODE2Eigenvalues(simulationSettings, useSparseSolver=True, 
                                 numberOfEigenvalues= nRigidModes+nModes, 
                                 constrainedCoordinates=constrainedCoordinates,
                                 convert2Frequencies= False)
@@ -218,7 +222,7 @@ if True: #show modes:
 if False: #solve dynamic (but without forces, nothing happens ...)
     exu.StartRenderer()
     
-    exu.SolveDynamic(mbs, simulationSettings)
+    mbs.SolveDynamic(simulationSettings)
     
     SC.WaitForRenderEngineStopFlag()
     exu.StopRenderer() #safely close rendering window!

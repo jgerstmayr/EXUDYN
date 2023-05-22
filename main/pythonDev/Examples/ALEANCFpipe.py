@@ -178,7 +178,7 @@ if solveDynamic:
     exu.StartRenderer()
     #mbs.WaitForUserToContinue()
 
-    exu.SolveDynamic(mbs, simulationSettings, 
+    mbs.SolveDynamic(simulationSettings, 
                      solverType=exu.DynamicSolverType.TrapezoidalIndex2)
 
     SC.WaitForRenderEngineStopFlag()
@@ -203,7 +203,7 @@ else:
 
     exu.StartRenderer()
 
-    exu.SolveStatic(mbs, simulationSettings)
+    mbs.SolveStatic(simulationSettings)
 
     sol = mbs.systemData.GetODE2Coordinates()
     n = len(sol)

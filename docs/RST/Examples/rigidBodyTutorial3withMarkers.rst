@@ -25,7 +25,6 @@ You can view and download this file on Github: `rigidBodyTutorial3withMarkers.py
    
    import exudyn as exu
    from exudyn.utilities import * #includes graphicsDataUtilities and rigidBodyUtilities
-   import exudyn.mainSystemExtensions #will be included by exudyn.utilities in future
    import numpy as np
    
    SC = exu.SystemContainer()

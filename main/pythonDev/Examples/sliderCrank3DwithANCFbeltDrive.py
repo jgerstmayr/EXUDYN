@@ -469,7 +469,7 @@ if 'lastRenderState' in vars():
     SC.SetRenderState(lastRenderState) #load last model view
 mbs.WaitForUserToContinue()
 
-exu.SolveDynamic(mbs, simulationSettings)
+mbs.SolveDynamic(simulationSettings)
 
 
 SC.WaitForRenderEngineStopFlag()

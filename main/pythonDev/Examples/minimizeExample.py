@@ -100,7 +100,7 @@ def ParameterFunction(parameterSet):
     
     simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1 #no damping
     
-    exu.SolveDynamic(mbs, simulationSettings)
+    mbs.SolveDynamic(simulationSettings)
     
     #+++++++++++++++++++++++++++++++++++++++++++++++++++++
     #evaluate difference between reference and optimized solution

@@ -249,7 +249,7 @@ simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5 #0.6 wo
 
 simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations=True
 
-exu.SolveDynamic(mbs, simulationSettings)
+mbs.SolveDynamic(simulationSettings)
 
 if useGraphics:
     SC.visualizationSettings.general.autoFitScene=False
@@ -257,8 +257,8 @@ if useGraphics:
     if 'renderState' in exu.sys:
         SC.SetRenderState(exu.sys['renderState'])
 
-    from exudyn.interactive import SolutionViewer
-    SolutionViewer(mbs)
+    
+    mbs.SolutionViewer()
     exu.StopRenderer()
 
 lastRenderState = SC.GetRenderState() #store model view
@@ -286,11 +286,11 @@ exudynTestGlobals.testResult = VSum(measuredTorques)
 #exu.Print('error=', exudynTestGlobals.testError)
 
 if useGraphics:
-    from exudyn.plot import PlotSensor
     
-    PlotSensor(mbs, sJointTorque, components=2, closeAll=True, yLabel='joint torques (Nm)', title='joint torques')
+    
+    mbs.PlotSensor(sJointTorque, components=2, closeAll=True, yLabel='joint torques (Nm)', title='joint torques')
 
-    PlotSensor(mbs, sJointRot, components=2, yLabel='joint angles (rad)', title='joint angles')
+    mbs.PlotSensor(sJointRot, components=2, yLabel='joint angles (rad)', title='joint angles')
 
     #V1.2.40, P39: with D[-1]=0.05: since 2022-04-22:
     # sensor torque 0 = [  0.           0.         -12.68901871]

@@ -68,5 +68,5 @@ simulationSettings.timeIntegration.verboseMode = 1
 #simulate:
 exu.StartRenderer()
 mbs.WaitForUserToContinue()
-exu.SolveDynamic(mbs,simulationSettings)
+mbs.SolveDynamic(simulationSettings)
 exu.StopRenderer()

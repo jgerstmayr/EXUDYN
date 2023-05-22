@@ -370,11 +370,11 @@ if True: #now import mesh as mechanical model to EXUDYN
 
         #SC.RedrawAndSaveImage()
         if True:
-            # exu.SolveDynamic(mbs, solverType=exu.DynamicSolverType.TrapezoidalIndex2, 
+            # mbs.SolveDynamic(solverType=exu.DynamicSolverType.TrapezoidalIndex2, 
             #                   simulationSettings=simulationSettings)
-            exu.SolveDynamic(mbs, simulationSettings=simulationSettings)
+            mbs.SolveDynamic(simulationSettings=simulationSettings)
         else:
-            exu.SolveStatic(mbs, simulationSettings=simulationSettings)
+            mbs.SolveStatic(simulationSettings=simulationSettings)
 
             
         if useGraphics:
@@ -385,8 +385,8 @@ if True: #now import mesh as mechanical model to EXUDYN
             uTip = mbs.GetSensorValues(sensBushing)
             print("nModes="+strMode, nModes, ", bushing position=", uTip)
             if False:
-                from exudyn.plot import PlotSensor
-                PlotSensor(mbs, sensorNumbers=[sensBushingVel], components=[1])
+                
+                mbs.PlotSensor(sensorNumbers=[sensBushingVel], components=[1])
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 if True:

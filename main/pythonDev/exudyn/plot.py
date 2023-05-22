@@ -8,7 +8,7 @@
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
-# Notes:	For a list of plot colors useful for matplotlib, see also utilities.PlotLineCode(...)
+# Notes:	For a list of plot colors useful for matplotlib, see also advancedUtilities.PlotLineCode(...)
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
@@ -206,25 +206,25 @@ def PlotSensorDefaults():
 #                            outputVariableType=exu.OutputVariableType.Position))
 #s1=mbs.AddSensor(SensorNode(nodeNumber=1, fileName='s1.txt',
 #                            outputVariableType=exu.OutputVariableType.Position))
-#PlotSensor(mbs, s0, 0) #plot x-coordinate
+#mbs.PlotSensor(s0, 0) #plot x-coordinate
 ##plot x for s0 and z for s1:
-#PlotSensor(mbs, sensorNumbers=[s0,s1], components=[0,2], yLabel='this is the position in meter')
-#PlotSensor(mbs, sensorNumbers=s0, components=plot.componentNorm) #norm of position
-#PlotSensor(mbs, sensorNumbers=s0, components=[0,1,2], factors=1000., title='Answers to the big questions')
-#PlotSensor(mbs, sensorNumbers=s0, components=[0,1,2,3], 
+#mbs.PlotSensor(sensorNumbers=[s0,s1], components=[0,2], yLabel='this is the position in meter')
+#mbs.PlotSensor(sensorNumbers=s0, components=plot.componentNorm) #norm of position
+#mbs.PlotSensor(sensorNumbers=s0, components=[0,1,2], factors=1000., title='Answers to the big questions')
+#mbs.PlotSensor(sensorNumbers=s0, components=[0,1,2,3], 
 #           yLabel='Coordantes with offset 1\nand scaled with $\\frac{1}{1000}$', 
 #           factors=1e-3, offsets=1,fontSize=12, closeAll=True)
 #
 ##assume to have body sensor sBody, marker sensor sMarker:
-#PlotSensor(mbs, sensorNumbers=[sBody]*3+[sMarker]*3, components=[0,1,2,0,1,2], 
+#mbs.PlotSensor(sensorNumbers=[sBody]*3+[sMarker]*3, components=[0,1,2,0,1,2], 
 #           colorCodeOffset=3, newFigure=False, fontSize=10, 
 #           yLabel='Rotation $\\alpha, \\beta, \\gamma$ and\n Position $x,y,z$',
 #           title='compare marker and body sensor')
 ##assume having file plotSensorNode.txt:
-#PlotSensor(mbs, sensorNumbers=[s0]*3+ [filedir+'plotSensorNode.txt']*3, 
+#mbs.PlotSensor(sensorNumbers=[s0]*3+ [filedir+'plotSensorNode.txt']*3, 
 #           components=[0,1,2]*2)
 ##plot y over x:
-#PlotSensor(mbs, sensorNumbers=s0, componentsX=[0], components=[1], xLabel='x-Position', yLabel='y-Position')
+#mbs.PlotSensor(sensorNumbers=s0, componentsX=[0], components=[1], xLabel='x-Position', yLabel='y-Position')
 ##for further examples, see also Examples/plotSensorExamples.py
 def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel='time (s)', yLabel=None, labels=[], 
                colorCodeOffset=0, newFigure=True, closeAll=False, 

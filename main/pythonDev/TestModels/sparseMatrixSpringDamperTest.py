@@ -95,7 +95,7 @@ simulationSettings.staticSolver.verboseMode = 2
 
 #dense solver:
 simulationSettings.linearSolverType = exu.LinearSolverType.EXUdense
-exu.SolveStatic(mbs, simulationSettings)
+mbs.SolveStatic(simulationSettings)
 
 u = mbs.GetNodeOutput(nBodies-2, exu.OutputVariableType.Position) #tip node
 exu.Print('static tip displacement (y)=', u[1])
@@ -104,7 +104,7 @@ exudynTestGlobals.testResult = u[1]
 
 #sparse solver:
 simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
-exu.SolveStatic(mbs, simulationSettings)
+mbs.SolveStatic(simulationSettings)
 
 u = mbs.GetNodeOutput(nBodies-2, exu.OutputVariableType.Position) #tip node
 exu.Print('static tip displacement (y)=', u[1])

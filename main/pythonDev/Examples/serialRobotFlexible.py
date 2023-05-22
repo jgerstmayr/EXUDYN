@@ -516,15 +516,15 @@ if useGraphics:
         SC.SetRenderState(exu.sys['renderState'])
     mbs.WaitForUserToContinue()
     
-exu.SolveDynamic(mbs, simulationSettings, showHints=True)
+mbs.SolveDynamic(simulationSettings, showHints=True)
 
 
 if useGraphics:
     SC.visualizationSettings.general.autoFitScene = False
     exu.StopRenderer()
 
-from exudyn.interactive import SolutionViewer
-SolutionViewer(mbs)
+
+mbs.SolutionViewer()
 
 lastRenderState = SC.GetRenderState() #store model view
 
@@ -541,15 +541,15 @@ exu.Print('torques at tEnd=', VSum(measuredTorques))
 
 #%%+++++++++++++++++++++
 if True:
-    from exudyn.plot import PlotSensor
     
+    import exudyn.plot
     exudyn.plot.PlotSensorDefaults().fontSize = 12
     
     title = baseType + ' base'
-    PlotSensor(mbs, sensorNumbers=jointTorque0List, components=0, title='joint torques, '+title, closeAll=True,
+    mbs.PlotSensor(sensorNumbers=jointTorque0List, components=0, title='joint torques, '+title, closeAll=True,
                fileName='solution/robotJointTorques'+baseType+'.pdf'
                )
-    PlotSensor(mbs, sensorNumbers=jointRotList, components=0, title='joint angles, '+title,
+    mbs.PlotSensor(sensorNumbers=jointRotList, components=0, title='joint angles, '+title,
                fileName='solution/robotJointAngles'+baseType+'.pdf'
                )
     
@@ -558,11 +558,11 @@ if True:
     rPos = 'rigid base, Pos '
     rVel = 'rigid base, Vel '
     if baseType=='Flexible':
-        PlotSensor(mbs, sensorNumbers=[sHandPos]*3+['solution/handPosRigid.txt']*3, components=[0,1,2]*2,
+        mbs.PlotSensor(sensorNumbers=[sHandPos]*3+['solution/handPosRigid.txt']*3, components=[0,1,2]*2,
                    labels=[fPos+'X', fPos+'Y', fPos+'Z', rPos+'X', rPos+'Y', rPos+'Z'],
                    fileName='solution/robotPosition'+baseType+'.pdf'
                    )
-        PlotSensor(mbs, sensorNumbers=[sHandVel]*3+['solution/handVelRigid.txt']*3, components=[0,1,2]*2,
+        mbs.PlotSensor(sensorNumbers=[sHandVel]*3+['solution/handVelRigid.txt']*3, components=[0,1,2]*2,
                    labels=[fVel+'X', fVel+'Y', fVel+'Z', rVel+'X', rVel+'Y', rVel+'Z'],
                    fileName='solution/robotVelocity'+baseType+'.pdf'
                    )
