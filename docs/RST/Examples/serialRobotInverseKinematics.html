@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>serialRobotInverseKinematics.py &mdash; Exudyn1.6.119.dev1 1.6.119.dev1 documentation</title>
+  <title>serialRobotInverseKinematics.py &mdash; Exudyn1.6.164.dev1 1.6.164.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -39,7 +39,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.119.dev1
+            Exudyn1.6.164.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -118,6 +118,7 @@
 <li class="toctree-l2"><a class="reference internal" href="massSpringFrictionInteractive.html">massSpringFrictionInteractive.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="minimizeExample.html">minimizeExample.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mouseInteractionExample.html">mouseInteractionExample.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mpi4pyExample.html">mpi4pyExample.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="multiMbsTest.html">multiMbsTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="multiprocessingTest.html">multiprocessingTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="myFirstExample.html">myFirstExample.py</a></li>
@@ -127,6 +128,7 @@
 <li class="toctree-l2"><a class="reference internal" href="NGsolveLinearFEM.html">NGsolveLinearFEM.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolvePistonEngine.html">NGsolvePistonEngine.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolvePostProcessingStresses.html">NGsolvePostProcessingStresses.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nMassOscillatorEigenmodes.html">nMassOscillatorEigenmodes.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="nMassOscillatorInteractive.html">nMassOscillatorInteractive.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ObjectFFRFconvergenceTestBeam.html">ObjectFFRFconvergenceTestBeam.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ObjectFFRFconvergenceTestHinge.html">ObjectFFRFconvergenceTestHinge.py</a></li>
@@ -164,6 +166,7 @@
 <li class="toctree-l2"><a class="reference internal" href="serialRobotKinematicTree.html">serialRobotKinematicTree.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="serialRobotKinematicTreeDigging.html">serialRobotKinematicTreeDigging.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="serialRobotTSD.html">serialRobotTSD.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shapeOptimization.html">shapeOptimization.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="simple4linkPendulumBing.html">simple4linkPendulumBing.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="simulateInteractively.html">simulateInteractively.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="SliderCrank.html">SliderCrank.py</a></li>
@@ -204,7 +207,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.119.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.164.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -245,7 +248,7 @@
 <span class="linenos"> 17</span><span class="kn">from</span> <span class="nn">exudyn.rigidBodyUtilities</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="linenos"> 18</span><span class="kn">from</span> <span class="nn">exudyn.graphicsDataUtilities</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="linenos"> 19</span><span class="kn">from</span> <span class="nn">exudyn.robotics</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="linenos"> 20</span><span class="kn">from</span> <span class="nn">exudyn.robotics.motion</span> <span class="kn">import</span> <span class="nf">Trajectory</span><span class="p">,</span> <span class="nf">ProfileConstantAcceleration</span><span class="p">,</span> <span class="nf">ProfilePTP</span>
+<span class="linenos"> 20</span><span class="kn">from</span> <span class="nn">exudyn.robotics.motion</span> <span class="kn">import</span> <span class="nc">Trajectory</span><span class="p">,</span> <span class="nc">ProfileConstantAcceleration</span><span class="p">,</span> <span class="nc">ProfilePTP</span>
 <span class="linenos"> 21</span><span class="kn">from</span> <span class="nn">exudyn.robotics.models</span> <span class="kn">import</span> <span class="nf">ManipulatorPuma560</span><span class="p">,</span> <span class="nf">ManipulatorPANDA</span><span class="p">,</span> <span class="nf">ManipulatorUR5</span><span class="p">,</span> <span class="nf">LinkDict2Robot</span>
 <span class="linenos"> 22</span><span class="kn">from</span> <span class="nn">exudyn.lieGroupBasics</span> <span class="kn">import</span> <span class="nf">LogSE3</span><span class="p">,</span> <span class="nf">ExpSE3</span>
 <span class="linenos"> 23</span>
@@ -297,14 +300,14 @@
 <span class="linenos"> 69</span><span class="c1"># robotDef = ManipulatorPANDA()</span>
 <span class="linenos"> 70</span><span class="n">HTtool</span> <span class="o">=</span> <span class="nf">HTtranslate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.08</span><span class="p">])</span>
 <span class="linenos"> 71</span>
-<span class="linenos"> 72</span><span class="n">robot</span> <span class="o">=</span> <span class="nf">Robot</span><span class="p">(</span><span class="n">gravity</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">9.81</span><span class="p">],</span>
-<span class="linenos"> 73</span>              <span class="n">base</span> <span class="o">=</span> <span class="nf">RobotBase</span><span class="p">(</span><span class="n">HT</span><span class="o">=</span><span class="nf">HTtranslate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]),</span> <span class="n">visualization</span><span class="o">=</span><span class="nf">VRobotBase</span><span class="p">(</span><span class="n">graphicsData</span><span class="o">=</span><span class="n">graphicsBaseList</span><span class="p">)),</span>
-<span class="linenos"> 74</span>              <span class="n">tool</span> <span class="o">=</span> <span class="nf">RobotTool</span><span class="p">(</span><span class="n">HT</span><span class="o">=</span><span class="n">HTtool</span><span class="p">,</span> <span class="n">visualization</span><span class="o">=</span><span class="nf">VRobotTool</span><span class="p">(</span><span class="n">graphicsData</span><span class="o">=</span><span class="n">graphicsToolList</span><span class="p">)),</span>
+<span class="linenos"> 72</span><span class="n">robot</span> <span class="o">=</span> <span class="nc">Robot</span><span class="p">(</span><span class="n">gravity</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">9.81</span><span class="p">],</span>
+<span class="linenos"> 73</span>              <span class="n">base</span> <span class="o">=</span> <span class="nc">RobotBase</span><span class="p">(</span><span class="n">HT</span><span class="o">=</span><span class="nf">HTtranslate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]),</span> <span class="n">visualization</span><span class="o">=</span><span class="nc">VRobotBase</span><span class="p">(</span><span class="n">graphicsData</span><span class="o">=</span><span class="n">graphicsBaseList</span><span class="p">)),</span>
+<span class="linenos"> 74</span>              <span class="n">tool</span> <span class="o">=</span> <span class="nc">RobotTool</span><span class="p">(</span><span class="n">HT</span><span class="o">=</span><span class="n">HTtool</span><span class="p">,</span> <span class="n">visualization</span><span class="o">=</span><span class="nc">VRobotTool</span><span class="p">(</span><span class="n">graphicsData</span><span class="o">=</span><span class="n">graphicsToolList</span><span class="p">)),</span>
 <span class="linenos"> 75</span>              <span class="n">referenceConfiguration</span> <span class="o">=</span> <span class="p">[])</span> <span class="c1">#referenceConfiguration created with 0s automatically</span>
 <span class="linenos"> 76</span>
 <span class="linenos"> 77</span><span class="n">robot</span><span class="o">=</span><span class="nf">LinkDict2Robot</span><span class="p">(</span><span class="n">robotDef</span><span class="p">,</span> <span class="n">robot</span><span class="p">)</span>
 <span class="linenos"> 78</span>
-<span class="linenos"> 79</span><span class="n">ik</span> <span class="o">=</span> <span class="n">InverseKinematicsNumerical</span><span class="p">(</span><span class="n">robot</span><span class="o">=</span><span class="n">robot</span><span class="p">,</span> <span class="n">useRenderer</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="linenos"> 79</span><span class="n">ik</span> <span class="o">=</span> <span class="nc">InverseKinematicsNumerical</span><span class="p">(</span><span class="n">robot</span><span class="o">=</span><span class="n">robot</span><span class="p">,</span> <span class="n">useRenderer</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 <span class="linenos"> 80</span>                                <span class="c1">#flagDebug=True,</span>
 <span class="linenos"> 81</span>                                <span class="c1">#jointStiffness=1e4</span>
 <span class="linenos"> 82</span>                                <span class="p">)</span> <span class="c1">#, useAlternativeConstraints=True)</span>
@@ -358,11 +361,11 @@
 <span class="linenos">130</span>
 <span class="linenos">131</span><span class="c1">#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
 <span class="linenos">132</span><span class="c1">#trajectory generated with optimal acceleration profiles, for joint-interpolation:</span>
-<span class="linenos">133</span><span class="n">trajectory</span> <span class="o">=</span> <span class="nf">Trajectory</span><span class="p">(</span><span class="n">initialCoordinates</span><span class="o">=</span><span class="n">q0</span><span class="p">,</span> <span class="n">initialTime</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="linenos">134</span><span class="n">trajectory</span><span class="o">.</span><span class="nf">Add</span><span class="p">(</span><span class="nf">ProfileConstantAcceleration</span><span class="p">(</span><span class="n">q1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
-<span class="linenos">135</span><span class="n">trajectory</span><span class="o">.</span><span class="nf">Add</span><span class="p">(</span><span class="nf">ProfileConstantAcceleration</span><span class="p">(</span><span class="n">q1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
-<span class="linenos">136</span><span class="n">trajectory</span><span class="o">.</span><span class="nf">Add</span><span class="p">(</span><span class="nf">ProfileConstantAcceleration</span><span class="p">(</span><span class="n">q2</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
-<span class="linenos">137</span><span class="n">trajectory</span><span class="o">.</span><span class="nf">Add</span><span class="p">(</span><span class="nf">ProfileConstantAcceleration</span><span class="p">(</span><span class="n">q2</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+<span class="linenos">133</span><span class="n">trajectory</span> <span class="o">=</span> <span class="nc">Trajectory</span><span class="p">(</span><span class="n">initialCoordinates</span><span class="o">=</span><span class="n">q0</span><span class="p">,</span> <span class="n">initialTime</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="linenos">134</span><span class="n">trajectory</span><span class="o">.</span><span class="nf">Add</span><span class="p">(</span><span class="nc">ProfileConstantAcceleration</span><span class="p">(</span><span class="n">q1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+<span class="linenos">135</span><span class="n">trajectory</span><span class="o">.</span><span class="nf">Add</span><span class="p">(</span><span class="nc">ProfileConstantAcceleration</span><span class="p">(</span><span class="n">q1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+<span class="linenos">136</span><span class="n">trajectory</span><span class="o">.</span><span class="nf">Add</span><span class="p">(</span><span class="nc">ProfileConstantAcceleration</span><span class="p">(</span><span class="n">q2</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+<span class="linenos">137</span><span class="n">trajectory</span><span class="o">.</span><span class="nf">Add</span><span class="p">(</span><span class="nc">ProfileConstantAcceleration</span><span class="p">(</span><span class="n">q2</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
 <span class="linenos">138</span><span class="c1">#traj.Add(ProfilePTP([1,1],syncAccTimes=False, maxVelocities=[1,1], maxAccelerations=[5,5]))</span>
 <span class="linenos">139</span><span class="c1">#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
 <span class="linenos">140</span>

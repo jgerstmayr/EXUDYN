@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Exudyn Basics &mdash; Exudyn1.6.119.dev1 1.6.119.dev1 documentation</title>
+  <title>Exudyn Basics &mdash; Exudyn1.6.164.dev1 1.6.164.dev1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
@@ -41,7 +41,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.6.119.dev1
+            Exudyn1.6.164.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -109,7 +109,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.6.119.dev1</a>
+          <a href="../../index.html">Exudyn1.6.164.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -200,7 +200,12 @@ position, forces or joint data. For viewing sensor results, use the <code class=
 <section id="renderer-and-3d-graphics">
 <span id="sec-overview-basics-renderer"></span><h2>Renderer and 3D graphics<a class="headerlink" href="#renderer-and-3d-graphics" title="Permalink to this heading"></a></h2>
 <p>A 3D renderer is attached to the simulation. Visualization is started with  <code class="docutils literal notranslate"><span class="pre">exu.StartRenderer()</span></code>, see the examples and tutorials.
-The renderer uses an OpenGL window of a library called GLFW, which is platform-independent.
+For closing, press key ‘Q’ or Escape or close the window.
+<strong>Note</strong>:</p>
+<ul class="simple">
+<li><p>After <code class="docutils literal notranslate"><span class="pre">visualizationSettings.window.reallyQuitTimeLimit</span></code> seconds a ‘do you really want to quit’ dialog opens for safety on pressing ‘Q’; if no tkinter is available, you just have to press ‘Q’ twice. For closing the window, you need to click a second time on the close button of the window after <code class="docutils literal notranslate"><span class="pre">reallyQuitTimeLimit</span></code> seconds (usually 900 seconds).</p></li>
+</ul>
+<p>The renderer uses an OpenGL window of a library called GLFW, which is platform-independent.
 The renderer is set up in a minimalistic way, just to ensure that you can check that the modeling is correct.
 There is no way to contruct models inside the renderer.
 Note: Try to avoid huge number of triangles in STL files or by creating large number of complex objects, such as spheres or cylinders.</p>
@@ -287,19 +292,38 @@ It is also possible to execute single Python commands during simulation by press
 Note that the dialog may appear behind the visualization window!
 This dialog may be very helpful in long running computations or in case that you may evaluate variables for debugging.
 The Python commands are evaluated in the global python scope, meaning that <code class="docutils literal notranslate"><span class="pre">mbs</span></code> or other variables of your scripts are available.
-User errors are caught by exceptions, but in severe cases this may lead to crash.</p>
+User errors are caught by exceptions, but in severe cases this may lead to crash.
+To print values, always use <code class="docutils literal notranslate"><span class="pre">print(...)</span></code> to see the string representation of an object.</p>
 <p>Useful examples (single lines) may be:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">x</span><span class="o">=</span><span class="mi">5</span> <span class="c1">#or change any other variable used in Python user functions</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">mbs</span><span class="p">)</span> <span class="c1">#print current mbs overview</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">mbs</span><span class="o">.</span><span class="nf">GetSensorValues</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
 <span class="c1">#adjust simulation end time, in long-run simulations:</span>
 <span class="n">mbs</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span><span class="s1">&#39;dynamicSolver&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">it</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="c1">#adjust output behavior</span>
 <span class="n">mbs</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span><span class="s1">&#39;dynamicSolver&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">verboseMode</span> <span class="o">=</span> <span class="mi">0</span>
 </pre></div>
 </div>
+<p>You can also do quite fancy things during simulation, e.g., to deactivate joints (of course this may result in strange behavior):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<p>n=mbs.systemData.NumberOfObjects()
+for i in range(n):</p>
+<blockquote>
+<div><p>d = mbs.GetObject(i)
+#if ‘Joint’ in d[‘objectType’]:
+if ‘activeConnector’ in d:</p>
+<blockquote>
+<div><p>mbs.SetObjectParameter(i, ‘activeConnector’, False)</p>
+</div></blockquote>
+</div></blockquote>
 <p>Note that you could also change <code class="docutils literal notranslate"><span class="pre">visualizationSettings</span></code> in this way, but the Visualization settings dialog is much more convenient.
-Right now, it is not possible to change <code class="docutils literal notranslate"><span class="pre">simulationSettings</span></code> which have been passed to the solver.
-It is, e.g., not possible to change the Newton tolerances on the fly.</p>
+Changing <code class="docutils literal notranslate"><span class="pre">simulationSettings</span></code> is dangerous and must be treated with care.
+Some parameters, such as <code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.endTime</span></code> are copied into the internal solver’s textmbs.sys[‘dynamicSolver’].it structure.
+Thus, changing <code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.endTime</span></code> has no effect.
+As a rule of thumb, all variables that are not stored inside the solvers structures may be adjusted by the <code class="docutils literal notranslate"><span class="pre">simulationSettings</span></code> passed to the solver (which are then not copied internally); see the C++ code for details. However, behavior may change in future and unexpected behavior or and changing <code class="docutils literal notranslate"><span class="pre">simulationSettings</span></code> will likely cause crashes if you do not know exactly the behavior, e.g., changing output format from text to binary … !
+Specifically, <code class="docutils literal notranslate"><span class="pre">newton</span></code> and <code class="docutils literal notranslate"><span class="pre">discontinuous</span></code> settings cannot be changed on the fly as they are copied internally.</p>
 </section>
 <section id="graphics-pipeline">
 <span id="sec-overview-basics-graphicspipeline"></span><h2>Graphics pipeline<a class="headerlink" href="#graphics-pipeline" title="Permalink to this heading"></a></h2>
@@ -482,11 +506,29 @@ However, the output of the performance tests is not stored on github.</p>
 <p>Nonlinear formulations (such as most multibody systems, especially nonlinear finite elements) cause problems and there is no general nonlinear solver which may reliably and accurately solve such problems.
 Tuning solver parameters is at hand of the user.
 In general, the Newton solver tries to reduce the error by the factor given in <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.relativeTolerance</span></code> (for static solver), which is not possible for very small (or zero) initial residuals. The absolute tolerance is helping out as a lower bound for the error, given in <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.absoluteTolerance</span></code> (for static solver), which is by default rather low (1e-10) – in order to achieve accurate results for small systems or small motion (in mm or <span class="math notranslate nohighlight">\(\mu\)</span>m regime). Increasing this value helps to solve such problems. Nevertheless, you should usually set tolerances as low as possible because otherwise, your solution may become inaccurate.</p>
-<p>The following hints shall be followed (also some solver hints).</p>
+<p>The following hints / rules for described problems shall be followed.</p>
 <ul>
-<li><p><strong>static solver</strong>: load steps are reduced even if the solution seems to be smooth and less steps are expected; larger number of steps may happen for finer discretization; you may adjust (increase) <code class="docutils literal notranslate"><span class="pre">.newton.relativeTolerance</span></code> / <code class="docutils literal notranslate"><span class="pre">.newton.absoluteTolerance</span></code> in static solver or in time integration to resolve such problems, but check if solution achieves according accuracy</p></li>
-<li><p><strong>static solver</strong>: load steps are reduced significantly for highly nonlinear problems; solver repeatedly writes that steps are reduced <span class="math notranslate nohighlight">\(\ra\)</span> try to use <code class="docutils literal notranslate"><span class="pre">loadStepGeometric</span></code> and use a large <code class="docutils literal notranslate"><span class="pre">loadStepGeometricRange</span></code>: this allows to start with very small loads in which the system is nearly linear (e.g. for thin strings or belts under gravity).</p></li>
-<li><p><strong>static solver</strong>: in case that your system is (nearly) kinematic, a static solution can be achieved using <code class="docutils literal notranslate"><span class="pre">stabilizerODE2term</span></code>, which adds mass-proportional stiffness terms during load steps <span class="math notranslate nohighlight">\(&lt; 1\)</span>.</p></li>
+<li><p><strong>static solver</strong>: <strong>load steps get very small</strong> even if the solution seems to be smooth (or linear) and less steps are expected:</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line">→  this may happen for <strong>system without loads</strong>; larger number of steps may happen for finer discretization; you may adjust (increase) <code class="docutils literal notranslate"><span class="pre">.newton.relativeTolerance</span></code> / <code class="docutils literal notranslate"><span class="pre">.newton.absoluteTolerance</span></code> in static solver or in time integration to resolve such problems, but check if solution achieves according accuracy</div>
+</div>
+</div></blockquote>
+</li>
+<li><p><strong>static solver</strong>:  load steps are reduced significantly for <strong>highly nonlinear problems</strong>:</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line">→  solver repeatedly writes that steps are reduced <span class="math notranslate nohighlight">\(\ra\)</span> try to use <code class="docutils literal notranslate"><span class="pre">loadStepGeometric</span></code> and use a large <code class="docutils literal notranslate"><span class="pre">loadStepGeometricRange</span></code>: this allows to start with very small loads in which the system is nearly linear (e.g. for thin strings or belts under gravity).</div>
+</div>
+</div></blockquote>
+</li>
+<li><p><strong>static solver</strong>: system is (nearly) <strong>kinematic</strong>:</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line">→  a static solution can be achieved using <code class="docutils literal notranslate"><span class="pre">stabilizerODE2term</span></code>, which adds mass-proportional stiffness terms during load steps <span class="math notranslate nohighlight">\(&lt; 1\)</span>; see also hints for singular Jacobians below</div>
+</div>
+</div></blockquote>
+</li>
 <li><p>very small loads or even <strong>zero loads</strong> do not converge: <code class="docutils literal notranslate"><span class="pre">SolveDynamic</span></code> or <code class="docutils literal notranslate"><span class="pre">SolveStatic</span></code> <strong>terminated due to errors</strong></p>
 <blockquote>
 <div><div class="line-block">
@@ -496,7 +538,21 @@ In general, the Newton solver tries to reduce the error by the factor given in <
 </div>
 </div></blockquote>
 </li>
-<li><p>for <strong>discontinuous problems</strong>: try to adjust solver parameters; especially the <code class="docutils literal notranslate"><span class="pre">discontinuous.iterationTolerance</span></code> and <code class="docutils literal notranslate"><span class="pre">discontinuous.maxIterations</span></code>; try to make smaller load or time steps in order to resolve switching points of contact or friction; generalized alpha solvers may cause troubles when reducing step sizes <span class="math notranslate nohighlight">\(\ra\)</span> use TrapezoidalIndex2 solver</p></li>
+<li><p>for <strong>discontinuous problems</strong>:</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line">→  try to adjust solver parameters; especially the <code class="docutils literal notranslate"><span class="pre">discontinuous.iterationTolerance</span></code> and <code class="docutils literal notranslate"><span class="pre">discontinuous.maxIterations</span></code>; try to make smaller load or time steps in order to resolve switching points of contact or friction; generalized alpha solvers may cause troubles when reducing step sizes <span class="math notranslate nohighlight">\(\ra\)</span> use TrapezoidalIndex2 solver</div>
+<div class="line">→  in case of <strong>user functions</strong>, make sure that there is no switching inside the user function (if or <code class="docutils literal notranslate"><span class="pre">sign</span></code> function); switching must be done in the PostNewtonStep, otherwise convergence severely suffers</div>
+</div>
+</div></blockquote>
+</li>
+<li><p><strong>singular Jacobians</strong> or <strong>redundant constraints</strong>:</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line">→  in case of systems that lead to a singular Jacobian due to redundant constraints or kinematic DOF in static solutions, you may switch to Eigen’s FullPivotLU solver using <code class="docutils literal notranslate"><span class="pre">simulationSettings.linearSolverType</span> <span class="pre">=</span> <span class="pre">exu.LinearSolverType.EigenDense</span></code> and <code class="docutils literal notranslate"><span class="pre">simulationSettings.linearSolverSettings.ignoreSingularJacobian=True</span></code>; however, check you results as they may be erroneous, because the solver tries to find an optimal solution / compromise which may not be what you intend to get!</div>
+</div>
+</div></blockquote>
+</li>
 <li><p>if you see further problems, please post them (including relevant example) at the Exudyn github page!</p></li>
 </ul>
 </section>
@@ -516,6 +572,12 @@ In general, to see where CPU time is lost, use the option turn on <code class="d
 <p>However, there are many <strong>ways to speed up Exudyn in general</strong>:</p>
 <ul class="simple">
 <li><p>for models with more than 50 coordinates, switching to sparse solvers might greatly improve speed: <code class="docutils literal notranslate"><span class="pre">simulationSettings.linearSolverType</span> <span class="pre">=</span> <span class="pre">exu.LinearSolverType.EigenSparse</span></code></p></li>
+<li><p>when preferring dense direct solvers, switching to Eigen’s PartialPivLU solver might greatly improve speed: <code class="docutils literal notranslate"><span class="pre">simulationSettings.linearSolverType</span> <span class="pre">=</span> <span class="pre">exu.LinearSolverType.EigenDense</span></code>;</p></li>
+</ul>
+<blockquote>
+<div><p>however, the flag <code class="docutils literal notranslate"><span class="pre">simulationSettings.linearSolverSettings.ignoreSingularJacobian=True</span></code> will switch to the much slower (but more robust) Eigen’s FullPivLU</p>
+</div></blockquote>
+<ul class="simple">
 <li><p>try to avoid Python functions or try to speed up Python functions</p></li>
 <li><p>instead of user functions in objects or loads (computed in every iteration), some problems would also work if these parameters are only updated in <code class="docutils literal notranslate"><span class="pre">mbs.SetPreStepUserFunction(...)</span></code></p></li>
 <li><p>Python user functions can be speed up using the Python numba package, using <code class="docutils literal notranslate"><span class="pre">&#64;jit</span></code> in front of functions (for more options, see <a class="reference external" href="https://numba.pydata.org/numba-doc/dev/user/index.html">https://numba.pydata.org/numba-doc/dev/user/index.html</a>); Example given in <code class="docutils literal notranslate"><span class="pre">Examples/springDamperUserFunctionNumbaJIT.py</span></code> showing speedups of factor 4; more complicated Python functions may see speedups of 10 - 50</p></li>

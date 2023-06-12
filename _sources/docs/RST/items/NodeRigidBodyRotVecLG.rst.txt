@@ -74,7 +74,8 @@ DESCRIPTION of NodeRigidBodyRotVecLG
 
 
 \ **Detailed information:** 
-For a detailed description on the rigid body dynamics formulation using this node, see Holzinger and Gerstmayr .
+For a detailed description on the rigid body dynamics formulation using this node, 
+see Holzinger and Gerstmayr .
 
 The node has 3 displacement coordinates \ :math:`[q_0,\,q_1,\,q_2]\tp`\  and three rotation coordinates, which is the rotation vector 
 
@@ -84,7 +85,12 @@ The node has 3 displacement coordinates \ :math:`[q_0,\,q_1,\,q_2]\tp`\  and thr
 
 
 with the rotation angle \ :math:`\varphi`\  and the rotation axis \ :math:`{\mathbf{n}}`\ .
-All coordinates \ :math:`{\mathbf{c}}\cConfig`\  lead to second order differential equations, however the rotation vector cannot be used as a conventional parameterization. It must be computed within a nonlinear update, using appropriate Lie group methods.
+All coordinates \ :math:`{\mathbf{c}}\cConfig`\  lead to second order differential equations, 
+However the rotation vector cannot be used as a conventional parameterization. 
+It must be computed within a nonlinear update, using appropriate Lie group methods.
+The first 3 equations are residuals of translational forces in global coordinates,
+while the last 3 equations are residual of local (body-fixed) torques, 
+compare the equations of motion of the rigid body.
 
 The rotation matrix \ :math:`\LU{0b}{\Rot(\tnu)}\cConfig`\  transforms a local (body-fixed) 3D position 
 \ :math:`\pLocB = \LU{b}{[b_0,\,b_1,\,b_2]}\tp`\  to global 3D positions,
@@ -99,6 +105,12 @@ Note that \ :math:`\Rot(\tnu)`\  is defined in function \ `` RotationVector2Rota
 A Lie group integrator must be used with this node, which is why the is used, the 
 rotation parameter velocities are identical to the local angular velocity \ :math:`\LU{b}{\tomega}`\  and thus the 
 matrix \ :math:`\LU{b}{{\mathbf{G}}}`\  becomes the identity matrix.
+
+\ **Note**\ , that the node automatically switches to Lie group integration of its
+rotational coordinates, both in explicit integration as well as for implicit time integration.
+This node avoids typical singularities of rotations and is therefore perfectly suited
+for arbitrary motion. Furthermore, nonlinearities are reduced, which may improve
+implicit time integration performance.
 
 For creating a \ ``NodeRigidBodyRotVecLG``\  together with a rigid body, there is a \ ``rigidBodyUtilities``\  function \ ``AddRigidBody``\ , 
 see Section :ref:`sec-rigidbodyutilities-addrigidbody`\ , which simplifies the setup of a rigid body significantely!

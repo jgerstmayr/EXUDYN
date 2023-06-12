@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ObjectFFRFconvergenceTestHinge.py &mdash; Exudyn1.6.119.dev1 1.6.119.dev1 documentation</title>
+  <title>ObjectFFRFconvergenceTestHinge.py &mdash; Exudyn1.6.164.dev1 1.6.164.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -39,7 +39,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.119.dev1
+            Exudyn1.6.164.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -118,6 +118,7 @@
 <li class="toctree-l2"><a class="reference internal" href="massSpringFrictionInteractive.html">massSpringFrictionInteractive.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="minimizeExample.html">minimizeExample.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mouseInteractionExample.html">mouseInteractionExample.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mpi4pyExample.html">mpi4pyExample.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="multiMbsTest.html">multiMbsTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="multiprocessingTest.html">multiprocessingTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="myFirstExample.html">myFirstExample.py</a></li>
@@ -127,6 +128,7 @@
 <li class="toctree-l2"><a class="reference internal" href="NGsolveLinearFEM.html">NGsolveLinearFEM.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolvePistonEngine.html">NGsolvePistonEngine.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolvePostProcessingStresses.html">NGsolvePostProcessingStresses.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nMassOscillatorEigenmodes.html">nMassOscillatorEigenmodes.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="nMassOscillatorInteractive.html">nMassOscillatorInteractive.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ObjectFFRFconvergenceTestBeam.html">ObjectFFRFconvergenceTestBeam.py</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">ObjectFFRFconvergenceTestHinge.py</a></li>
@@ -164,6 +166,7 @@
 <li class="toctree-l2"><a class="reference internal" href="serialRobotKinematicTree.html">serialRobotKinematicTree.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="serialRobotKinematicTreeDigging.html">serialRobotKinematicTreeDigging.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="serialRobotTSD.html">serialRobotTSD.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shapeOptimization.html">shapeOptimization.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="simple4linkPendulumBing.html">simple4linkPendulumBing.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="simulateInteractively.html">simulateInteractively.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="SliderCrank.html">SliderCrank.py</a></li>
@@ -204,7 +207,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.119.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.164.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -264,7 +267,7 @@
 <span class="linenos"> 36</span>
 <span class="linenos"> 37</span><span class="c1">#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
 <span class="linenos"> 38</span><span class="c1">#netgen/meshing part:</span>
-<span class="linenos"> 39</span><span class="n">fem</span> <span class="o">=</span> <span class="nf">FEMinterface</span><span class="p">()</span>
+<span class="linenos"> 39</span><span class="n">fem</span> <span class="o">=</span> <span class="nc">FEMinterface</span><span class="p">()</span>
 <span class="linenos"> 40</span>
 <span class="linenos"> 41</span><span class="c1">#geometrical parameters:</span>
 <span class="linenos"> 42</span><span class="n">L</span> <span class="o">=</span> <span class="mf">0.4</span>  <span class="c1">#Length of plate (X)</span>
@@ -381,7 +384,7 @@
 <span class="linenos">153</span>        <span class="n">fem</span><span class="o">.</span><span class="nf">ComputeHurtyCraigBamptonModes</span><span class="p">(</span><span class="n">boundaryNodesList</span><span class="o">=</span><span class="n">boundaryList</span><span class="p">,</span>
 <span class="linenos">154</span>                                      <span class="n">nEigenModes</span><span class="o">=</span><span class="n">nModes</span><span class="p">,</span>
 <span class="linenos">155</span>                                      <span class="n">useSparseSolver</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<span class="linenos">156</span>                                      <span class="n">computationMode</span> <span class="o">=</span> <span class="n">HCBstaticModeSelection</span><span class="o">.</span><span class="n">RBE2</span><span class="p">)</span>
+<span class="linenos">156</span>                                      <span class="n">computationMode</span> <span class="o">=</span> <span class="nc">HCBstaticModeSelection</span><span class="o">.</span><span class="n">RBE2</span><span class="p">)</span>
 <span class="linenos">157</span>
 <span class="linenos">158</span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;eigen freq.=&quot;</span><span class="p">,</span> <span class="n">fem</span><span class="o">.</span><span class="nf">GetEigenFrequenciesHz</span><span class="p">())</span>
 <span class="linenos">159</span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;HCB modes needed </span><span class="si">%.3f</span><span class="s2"> seconds&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">))</span>
@@ -395,7 +398,7 @@
 <span class="linenos">167</span>        <span class="n">fem</span><span class="o">.</span><span class="nf">ComputeHurtyCraigBamptonModes</span><span class="p">(</span><span class="n">boundaryNodesList</span><span class="o">=</span><span class="n">boundaryList</span><span class="p">,</span>
 <span class="linenos">168</span>                                      <span class="n">nEigenModes</span><span class="o">=</span><span class="n">nModes</span><span class="p">,</span>
 <span class="linenos">169</span>                                      <span class="n">useSparseSolver</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<span class="linenos">170</span>                                      <span class="n">computationMode</span> <span class="o">=</span> <span class="n">HCBstaticModeSelection</span><span class="o">.</span><span class="n">RBE2</span><span class="p">)</span>
+<span class="linenos">170</span>                                      <span class="n">computationMode</span> <span class="o">=</span> <span class="nc">HCBstaticModeSelection</span><span class="o">.</span><span class="n">RBE2</span><span class="p">)</span>
 <span class="linenos">171</span>
 <span class="linenos">172</span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;eigen freq.=&quot;</span><span class="p">,</span> <span class="n">fem</span><span class="o">.</span><span class="nf">GetEigenFrequenciesHz</span><span class="p">())</span>
 <span class="linenos">173</span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;HCB modes needed </span><span class="si">%.3f</span><span class="s2"> seconds&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">))</span>
@@ -405,7 +408,7 @@
 <span class="linenos">177</span>    <span class="c1">#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
 <span class="linenos">178</span>    <span class="c1">#compute stress modes for postprocessing (inaccurate for coarse meshes, just for visualization):</span>
 <span class="linenos">179</span>    <span class="k">if</span> <span class="kc">False</span><span class="p">:</span>
-<span class="linenos">180</span>        <span class="n">mat</span> <span class="o">=</span> <span class="n">KirchhoffMaterial</span><span class="p">(</span><span class="n">Emodulus</span><span class="p">,</span> <span class="n">nu</span><span class="p">,</span> <span class="n">rho</span><span class="p">)</span>
+<span class="linenos">180</span>        <span class="n">mat</span> <span class="o">=</span> <span class="nc">KirchhoffMaterial</span><span class="p">(</span><span class="n">Emodulus</span><span class="p">,</span> <span class="n">nu</span><span class="p">,</span> <span class="n">rho</span><span class="p">)</span>
 <span class="linenos">181</span>        <span class="n">varType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">StressLocal</span>
 <span class="linenos">182</span>        <span class="c1">#varType = exu.OutputVariableType.StrainLocal</span>
 <span class="linenos">183</span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ComputePostProcessingModes ... (may take a while)&quot;</span><span class="p">)</span>
@@ -422,7 +425,7 @@
 <span class="linenos">194</span>
 <span class="linenos">195</span>    <span class="c1">#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
 <span class="linenos">196</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;create CMS element ...&quot;</span><span class="p">)</span>
-<span class="linenos">197</span>    <span class="n">cms</span> <span class="o">=</span> <span class="nf">ObjectFFRFreducedOrderInterface</span><span class="p">(</span><span class="n">fem</span><span class="p">)</span>
+<span class="linenos">197</span>    <span class="n">cms</span> <span class="o">=</span> <span class="nc">ObjectFFRFreducedOrderInterface</span><span class="p">(</span><span class="n">fem</span><span class="p">)</span>
 <span class="linenos">198</span>
 <span class="linenos">199</span>    <span class="n">objFFRF</span> <span class="o">=</span> <span class="n">cms</span><span class="o">.</span><span class="nf">AddObjectFFRFreducedOrder</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">positionRef</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
 <span class="linenos">200</span>                                                  <span class="n">initialVelocity</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
@@ -476,7 +479,7 @@
 <span class="linenos">248</span>
 <span class="linenos">249</span>
 <span class="linenos">250</span>    <span class="k">if</span> <span class="kc">False</span><span class="p">:</span>
-<span class="linenos">251</span>        <span class="n">cms</span> <span class="o">=</span> <span class="nf">ObjectFFRFreducedOrderInterface</span><span class="p">(</span><span class="n">fem</span><span class="p">)</span>
+<span class="linenos">251</span>        <span class="n">cms</span> <span class="o">=</span> <span class="nc">ObjectFFRFreducedOrderInterface</span><span class="p">(</span><span class="n">fem</span><span class="p">)</span>
 <span class="linenos">252</span>
 <span class="linenos">253</span>        <span class="n">objFFRF</span> <span class="o">=</span> <span class="n">cms</span><span class="o">.</span><span class="nf">AddObjectFFRFreducedOrder</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">positionRef</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
 <span class="linenos">254</span>                                                      <span class="n">initialVelocity</span><span class="o">=</span><span class="p">[</span><span class="mi">990</span><span class="p">,</span><span class="mi">990</span><span class="p">,</span><span class="mi">990</span><span class="p">],</span>

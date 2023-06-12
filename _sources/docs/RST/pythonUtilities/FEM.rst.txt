@@ -112,7 +112,7 @@ Function: CSRtoScipySparseCSR
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `ACFtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py>`_\  (TM)
+    \ `shapeOptimization.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/shapeOptimization.py>`_\  (Ex), \ `ACFtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py>`_\  (TM)
 
 
 
@@ -1238,7 +1238,7 @@ Class function: ComputeEigenModesWithBoundaryNodes
 
 Class function: ComputeHurtyCraigBamptonModes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ComputeHurtyCraigBamptonModes <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2998>`__\ (\ ``self``\ , \ ``boundaryNodesList``\ , \ ``nEigenModes``\ , \ ``useSparseSolver = True``\ , \ ``computationMode = HCBstaticModeSelection.RBE2``\ , \ ``boundaryNodesWeights = []``\ , \ ``excludeRigidBodyMotion = True``\ , \ ``RBE3secondMomentOfAreaWeighting = True``\ , \ ``verboseMode = False``\ )
+`ComputeHurtyCraigBamptonModes <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2999>`__\ (\ ``self``\ , \ ``boundaryNodesList``\ , \ ``nEigenModes``\ , \ ``useSparseSolver = True``\ , \ ``computationMode = HCBstaticModeSelection.RBE2``\ , \ ``boundaryNodesWeights = []``\ , \ ``excludeRigidBodyMotion = True``\ , \ ``RBE3secondMomentOfAreaWeighting = True``\ , \ ``verboseMode = False``\ , \ ``timerTreshold = 20000``\ )
 
 - | \ *classFunction*\ :
   | compute static  and eigen modes based on Hurty-Craig-Bampton, for details see theory part Section :ref:`sec-theory-cms`\ . Note that this function may need significant time, depending on your hardware, but 50.000 nodes will require approx. 1-2 minutes and more nodes typically raise time more than linearly.
@@ -1251,6 +1251,7 @@ Class function: ComputeHurtyCraigBamptonModes
   | \ ``excludeRigidBodyMotion``\ : if True (recommended), the first set of boundary modes is eliminated, which defines the reference conditions for the FFRF object
   | \ ``RBE3secondMomentOfAreaWeighting``\ : if True, the weighting of RBE3 boundaries is done according to second moment of area; if False, the more conventional (but less appropriate) quadratic distance to reference point weighting is used
   | \ ``verboseMode``\ : if True, some additional output is printed
+  | \ ``timerTreshold``\ : for more DOF than this number, CPU times are printed even with verboseMode=False
 - | \ *output*\ :
   | stores computed modes in self.modeBasis and abs(eigenvalues) in self.eigenValues
 - | \ *notes*\ :
@@ -1262,7 +1263,7 @@ Class function: ComputeHurtyCraigBamptonModes
 
 Class function: GetEigenFrequenciesHz
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`GetEigenFrequenciesHz <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3406>`__\ (\ ``self``\ )
+`GetEigenFrequenciesHz <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3407>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | return list of eigenvalues in Hz of previously computed eigenmodes
@@ -1273,7 +1274,7 @@ Class function: GetEigenFrequenciesHz
 
 Class function: ComputePostProcessingModes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ComputePostProcessingModes <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3466>`__\ (\ ``self``\ , \ ``material = 0``\ , \ ``outputVariableType = 'OutputVariableType.StressLocal'``\ , \ ``numberOfThreads = 1``\ )
+`ComputePostProcessingModes <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3467>`__\ (\ ``self``\ , \ ``material = 0``\ , \ ``outputVariableType = 'OutputVariableType.StressLocal'``\ , \ ``numberOfThreads = 1``\ )
 
 - | \ *classFunction*\ :
   | compute special stress or strain modes in order to enable visualization of stresses and strains in ObjectFFRFreducedOrder;
@@ -1292,7 +1293,7 @@ Class function: ComputePostProcessingModes
 
 Class function: ComputeCampbellDiagram
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ComputeCampbellDiagram <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3584>`__\ (\ ``self``\ , \ ``terminalFrequency``\ , \ ``nEigenfrequencies = 10``\ , \ ``frequencySteps = 25``\ , \ ``rotationAxis = 2``\ , \ ``plotDiagram = False``\ , \ ``verbose = False``\ , \ ``useCorotationalFrame = False``\ , \ ``useSparseSolver = False``\ )
+`ComputeCampbellDiagram <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3585>`__\ (\ ``self``\ , \ ``terminalFrequency``\ , \ ``nEigenfrequencies = 10``\ , \ ``frequencySteps = 25``\ , \ ``rotationAxis = 2``\ , \ ``plotDiagram = False``\ , \ ``verbose = False``\ , \ ``useCorotationalFrame = False``\ , \ ``useSparseSolver = False``\ )
 
 - | \ *classFunction*\ :
   | compute Campbell diagram for given mechanical system
@@ -1319,7 +1320,7 @@ Class function: ComputeCampbellDiagram
 
 Class function: CheckConsistency
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CheckConsistency <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3769>`__\ (\ ``self``\ )
+`CheckConsistency <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3770>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | perform some consistency checks
@@ -1330,7 +1331,7 @@ Class function: CheckConsistency
 
 Class function: ReadMassMatrixFromAnsys
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ReadMassMatrixFromAnsys <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3793>`__\ (\ ``self``\ , \ ``fileName``\ , \ ``dofMappingVectorFile``\ , \ ``sparse = True``\ , \ ``verbose = False``\ )
+`ReadMassMatrixFromAnsys <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3794>`__\ (\ ``self``\ , \ ``fileName``\ , \ ``dofMappingVectorFile``\ , \ ``sparse = True``\ , \ ``verbose = False``\ )
 
 - | \ *classFunction*\ :
   | read mass matrix from CSV format (exported from Ansys)
@@ -1341,7 +1342,7 @@ Class function: ReadMassMatrixFromAnsys
 
 Class function: ReadStiffnessMatrixFromAnsys
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ReadStiffnessMatrixFromAnsys <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3807>`__\ (\ ``self``\ , \ ``fileName``\ , \ ``dofMappingVectorFile``\ , \ ``sparse = True``\ , \ ``verbose = False``\ )
+`ReadStiffnessMatrixFromAnsys <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3808>`__\ (\ ``self``\ , \ ``fileName``\ , \ ``dofMappingVectorFile``\ , \ ``sparse = True``\ , \ ``verbose = False``\ )
 
 - | \ *classFunction*\ :
   | read stiffness matrix from CSV format (exported from Ansys)
@@ -1352,7 +1353,7 @@ Class function: ReadStiffnessMatrixFromAnsys
 
 Class function: ReadNodalCoordinatesFromAnsys
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ReadNodalCoordinatesFromAnsys <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3821>`__\ (\ ``self``\ , \ ``fileName``\ , \ ``verbose = False``\ )
+`ReadNodalCoordinatesFromAnsys <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3822>`__\ (\ ``self``\ , \ ``fileName``\ , \ ``verbose = False``\ )
 
 - | \ *classFunction*\ :
   | read nodal coordinates (exported from Ansys as .txt-File)
@@ -1363,7 +1364,7 @@ Class function: ReadNodalCoordinatesFromAnsys
 
 Class function: ReadElementsFromAnsys
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ReadElementsFromAnsys <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3826>`__\ (\ ``self``\ , \ ``fileName``\ , \ ``verbose = False``\ )
+`ReadElementsFromAnsys <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3827>`__\ (\ ``self``\ , \ ``fileName``\ , \ ``verbose = False``\ )
 
 - | \ *classFunction*\ :
   | read elements (exported from Ansys as .txt-File)

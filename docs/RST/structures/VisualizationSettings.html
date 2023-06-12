@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Visualization settings &mdash; Exudyn1.6.119.dev1 1.6.119.dev1 documentation</title>
+  <title>Visualization settings &mdash; Exudyn1.6.164.dev1 1.6.164.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -41,7 +41,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.119.dev1
+            Exudyn1.6.164.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -113,7 +113,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.119.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.164.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -198,6 +198,12 @@
 <div class="line"><strong>graphicsUpdateInterval</strong> [type = float, default = 0.1]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.general.graphicsUpdateInterval</span></code></div>
 <div class="line">interval of graphics update during simulation in seconds; 0.1 = 10 frames per second; low numbers might slow down computation speed</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>linuxDisplayScaleFactor</strong> [type = PFloat, default = 1.]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.general.linuxDisplayScaleFactor</span></code></div>
+<div class="line">Scaling factor for linux, which cannot determined from system by now; adjust this value to scale dialog fonts and renderer fonts</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -899,6 +905,12 @@
 <div class="line"><strong>maximize</strong> [type = bool, default = False]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.window.maximize</span></code></div>
 <div class="line">True: OpenGL render window will be maximized at startup</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>reallyQuitTimeLimit</strong> [type = UReal, default = 900]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.window.reallyQuitTimeLimit</span></code></div>
+<div class="line">number of seconds after which user is asked a security question before stopping simulation and closing renderer; set to 0 in order to always get asked; set to 1e10 to (nearly) never get asked</div>
 </div>
 </li>
 <li><div class="line-block">

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>driveTrainTest.py &mdash; Exudyn1.6.119.dev1 1.6.119.dev1 documentation</title>
+  <title>driveTrainTest.py &mdash; Exudyn1.6.164.dev1 1.6.164.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -39,7 +39,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.119.dev1
+            Exudyn1.6.164.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -79,9 +79,11 @@
 <li class="toctree-l2"><a class="reference internal" href="ANCFgeneralContactCircle.html">ANCFgeneralContactCircle.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ANCFmovingRigidBodyTest.html">ANCFmovingRigidBodyTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ANCFslidingAndALEjointTest.html">ANCFslidingAndALEjointTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bricardMechanism.html">bricardMechanism.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="carRollingDiscTest.html">carRollingDiscTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="compareAbaqusAnsysRotorEigenfrequencies.html">compareAbaqusAnsysRotorEigenfrequencies.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="compareFullModifiedNewton.html">compareFullModifiedNewton.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="computeODE2AEeigenvaluesTest.html">computeODE2AEeigenvaluesTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="computeODE2EigenvaluesTest.html">computeODE2EigenvaluesTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="connectorGravityTest.html">connectorGravityTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="connectorRigidBodySpringDamperTest.html">connectorRigidBodySpringDamperTest.py</a></li>
@@ -149,7 +151,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.119.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.164.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -233,7 +235,7 @@
 <span class="linenos"> 60</span>
 <span class="linenos"> 61</span><span class="c1">#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
 <span class="linenos"> 62</span><span class="c1">#add crank:</span>
-<span class="linenos"> 63</span><span class="n">inertiaCrank</span> <span class="o">=</span> <span class="n">InertiaCuboid</span><span class="p">(</span><span class="n">density</span><span class="o">=</span><span class="n">rho</span><span class="p">,</span> <span class="n">sideLengths</span><span class="o">=</span><span class="p">[</span><span class="n">L0</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">a</span><span class="p">])</span>
+<span class="linenos"> 63</span><span class="n">inertiaCrank</span> <span class="o">=</span> <span class="nc">InertiaCuboid</span><span class="p">(</span><span class="n">density</span><span class="o">=</span><span class="n">rho</span><span class="p">,</span> <span class="n">sideLengths</span><span class="o">=</span><span class="p">[</span><span class="n">L0</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">a</span><span class="p">])</span>
 <span class="linenos"> 64</span>
 <span class="linenos"> 65</span>
 <span class="linenos"> 66</span><span class="n">omega0</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="o">*</span><span class="n">pi</span><span class="o">*</span><span class="mi">100</span><span class="o">*</span><span class="mi">0</span><span class="p">]</span>    <span class="c1">#initial angular velocity of bodies</span>
@@ -292,7 +294,7 @@
 <span class="linenos">119</span><span class="c1">#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
 <span class="linenos">120</span><span class="c1">#add connecting rods and pistons:</span>
 <span class="linenos">121</span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
-<span class="linenos">122</span>    <span class="n">inertiaConrod</span> <span class="o">=</span> <span class="n">InertiaCuboid</span><span class="p">(</span><span class="n">density</span><span class="o">=</span><span class="n">rho</span><span class="p">,</span> <span class="n">sideLengths</span><span class="o">=</span><span class="p">[</span><span class="n">L1</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">a</span><span class="p">])</span>
+<span class="linenos">122</span>    <span class="n">inertiaConrod</span> <span class="o">=</span> <span class="nc">InertiaCuboid</span><span class="p">(</span><span class="n">density</span><span class="o">=</span><span class="n">rho</span><span class="p">,</span> <span class="n">sideLengths</span><span class="o">=</span><span class="p">[</span><span class="n">L1</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">a</span><span class="p">])</span>
 <span class="linenos">123</span>    <span class="n">phi</span> <span class="o">=</span> <span class="n">i</span><span class="o">/</span><span class="mi">4</span><span class="o">*</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">pi</span><span class="p">)</span> <span class="c1">#rotation of subsystem</span>
 <span class="linenos">124</span>    <span class="n">A</span> <span class="o">=</span> <span class="nf">RotationMatrixZ</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span> <span class="c1">#transformation of subsystem</span>
 <span class="linenos">125</span>
@@ -374,8 +376,8 @@
 <span class="linenos">201</span>
 <span class="linenos">202</span><span class="c1">#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
 <span class="linenos">203</span><span class="c1">#drive train</span>
-<span class="linenos">204</span><span class="n">inertiaDiscBig</span> <span class="o">=</span> <span class="n">InertiaCylinder</span><span class="p">(</span><span class="n">density</span><span class="o">=</span><span class="n">rho</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="n">outerRadius</span><span class="o">=</span><span class="n">discBig</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="linenos">205</span><span class="n">inertiaDiscSmall</span> <span class="o">=</span> <span class="n">InertiaCylinder</span><span class="p">(</span><span class="n">density</span><span class="o">=</span><span class="n">rho</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="n">outerRadius</span><span class="o">=</span><span class="n">discSmall</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="linenos">204</span><span class="n">inertiaDiscBig</span> <span class="o">=</span> <span class="nc">InertiaCylinder</span><span class="p">(</span><span class="n">density</span><span class="o">=</span><span class="n">rho</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="n">outerRadius</span><span class="o">=</span><span class="n">discBig</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="linenos">205</span><span class="n">inertiaDiscSmall</span> <span class="o">=</span> <span class="nc">InertiaCylinder</span><span class="p">(</span><span class="n">density</span><span class="o">=</span><span class="n">rho</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="n">outerRadius</span><span class="o">=</span><span class="n">discSmall</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="linenos">206</span><span class="c1">#print(&quot;Jzz=&quot;, inertiaDiscBig.GetInertia6D()[2], 0.5*rho*pi*discBig**4*(2*a))</span>
 <span class="linenos">207</span>
 <span class="linenos">208</span><span class="n">gGraphicsDiscBig0a</span> <span class="o">=</span> <span class="nf">GraphicsDataCylinder</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="n">a</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="o">*</span><span class="n">a</span><span class="p">],</span> <span class="n">discBig</span><span class="p">,</span> <span class="n">color4lightred</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span>

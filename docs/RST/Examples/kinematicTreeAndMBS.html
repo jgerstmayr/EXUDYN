@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>kinematicTreeAndMBS.py &mdash; Exudyn1.6.119.dev1 1.6.119.dev1 documentation</title>
+  <title>kinematicTreeAndMBS.py &mdash; Exudyn1.6.164.dev1 1.6.164.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -39,7 +39,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.119.dev1
+            Exudyn1.6.164.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -118,6 +118,7 @@
 <li class="toctree-l2"><a class="reference internal" href="massSpringFrictionInteractive.html">massSpringFrictionInteractive.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="minimizeExample.html">minimizeExample.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mouseInteractionExample.html">mouseInteractionExample.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mpi4pyExample.html">mpi4pyExample.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="multiMbsTest.html">multiMbsTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="multiprocessingTest.html">multiprocessingTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="myFirstExample.html">myFirstExample.py</a></li>
@@ -127,6 +128,7 @@
 <li class="toctree-l2"><a class="reference internal" href="NGsolveLinearFEM.html">NGsolveLinearFEM.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolvePistonEngine.html">NGsolvePistonEngine.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolvePostProcessingStresses.html">NGsolvePostProcessingStresses.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nMassOscillatorEigenmodes.html">nMassOscillatorEigenmodes.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="nMassOscillatorInteractive.html">nMassOscillatorInteractive.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ObjectFFRFconvergenceTestBeam.html">ObjectFFRFconvergenceTestBeam.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ObjectFFRFconvergenceTestHinge.html">ObjectFFRFconvergenceTestHinge.py</a></li>
@@ -164,6 +166,7 @@
 <li class="toctree-l2"><a class="reference internal" href="serialRobotKinematicTree.html">serialRobotKinematicTree.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="serialRobotKinematicTreeDigging.html">serialRobotKinematicTreeDigging.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="serialRobotTSD.html">serialRobotTSD.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shapeOptimization.html">shapeOptimization.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="simple4linkPendulumBing.html">simple4linkPendulumBing.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="simulateInteractively.html">simulateInteractively.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="SliderCrank.html">SliderCrank.py</a></li>
@@ -204,7 +207,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.119.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.164.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -262,7 +265,7 @@
 <span class="linenos"> 34</span>
 <span class="linenos"> 35</span><span class="n">L</span> <span class="o">=</span> <span class="mi">2</span> <span class="c1">#length of links</span>
 <span class="linenos"> 36</span><span class="n">w</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="c1">#width of links</span>
-<span class="linenos"> 37</span><span class="n">J</span> <span class="o">=</span> <span class="n">InertiaCuboid</span><span class="p">(</span><span class="n">density</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">sideLengths</span><span class="o">=</span><span class="p">[</span><span class="n">L</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="n">w</span><span class="p">])</span> <span class="c1">#w.r.t. reference center of mass</span>
+<span class="linenos"> 37</span><span class="n">J</span> <span class="o">=</span> <span class="nc">InertiaCuboid</span><span class="p">(</span><span class="n">density</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">sideLengths</span><span class="o">=</span><span class="p">[</span><span class="n">L</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="n">w</span><span class="p">])</span> <span class="c1">#w.r.t. reference center of mass</span>
 <span class="linenos"> 38</span><span class="c1">#J.com = np.array([0.5*L,0,0])</span>
 <span class="linenos"> 39</span><span class="n">J</span> <span class="o">=</span> <span class="n">J</span><span class="o">.</span><span class="nf">Translated</span><span class="p">([</span><span class="mf">0.5</span><span class="o">*</span><span class="n">L</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
 <span class="linenos"> 40</span>
@@ -309,13 +312,13 @@
 <span class="linenos"> 81</span><span class="n">graphicsBaseList</span> <span class="o">+=</span><span class="p">[</span><span class="nf">GraphicsDataCylinder</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="mf">0.0025</span><span class="p">,</span> <span class="n">color4red</span><span class="p">)]</span>
 <span class="linenos"> 82</span><span class="n">graphicsBaseList</span> <span class="o">+=</span><span class="p">[</span><span class="nf">GraphicsDataCylinder</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="mf">0.0025</span><span class="p">,</span> <span class="n">color4green</span><span class="p">)]</span>
 <span class="linenos"> 83</span><span class="n">graphicsBaseList</span> <span class="o">+=</span><span class="p">[</span><span class="nf">GraphicsDataCylinder</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">],</span> <span class="mf">0.0025</span><span class="p">,</span> <span class="n">color4blue</span><span class="p">)]</span>
-<span class="linenos"> 84</span><span class="n">newRobot</span> <span class="o">=</span> <span class="nf">Robot</span><span class="p">(</span><span class="n">gravity</span><span class="o">=</span><span class="n">gravity3D</span><span class="p">,</span>
-<span class="linenos"> 85</span>              <span class="n">base</span> <span class="o">=</span> <span class="nf">RobotBase</span><span class="p">(</span><span class="n">visualization</span><span class="o">=</span><span class="nf">VRobotBase</span><span class="p">(</span><span class="n">graphicsData</span><span class="o">=</span><span class="n">graphicsBaseList</span><span class="p">)),</span>
-<span class="linenos"> 86</span>              <span class="n">tool</span> <span class="o">=</span> <span class="nf">RobotTool</span><span class="p">(</span><span class="n">HT</span><span class="o">=</span><span class="nf">HTtranslate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]),</span> <span class="n">visualization</span><span class="o">=</span><span class="nf">VRobotTool</span><span class="p">(</span><span class="n">graphicsData</span><span class="o">=</span><span class="p">[])),</span>
+<span class="linenos"> 84</span><span class="n">newRobot</span> <span class="o">=</span> <span class="nc">Robot</span><span class="p">(</span><span class="n">gravity</span><span class="o">=</span><span class="n">gravity3D</span><span class="p">,</span>
+<span class="linenos"> 85</span>              <span class="n">base</span> <span class="o">=</span> <span class="nc">RobotBase</span><span class="p">(</span><span class="n">visualization</span><span class="o">=</span><span class="nc">VRobotBase</span><span class="p">(</span><span class="n">graphicsData</span><span class="o">=</span><span class="n">graphicsBaseList</span><span class="p">)),</span>
+<span class="linenos"> 86</span>              <span class="n">tool</span> <span class="o">=</span> <span class="nc">RobotTool</span><span class="p">(</span><span class="n">HT</span><span class="o">=</span><span class="nf">HTtranslate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]),</span> <span class="n">visualization</span><span class="o">=</span><span class="nc">VRobotTool</span><span class="p">(</span><span class="n">graphicsData</span><span class="o">=</span><span class="p">[])),</span>
 <span class="linenos"> 87</span>             <span class="n">referenceConfiguration</span> <span class="o">=</span> <span class="p">[])</span> <span class="c1">#referenceConfiguration created with 0s automatically</span>
 <span class="linenos"> 88</span>
 <span class="linenos"> 89</span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-<span class="linenos"> 90</span>    <span class="n">newRobot</span><span class="o">.</span><span class="nf">AddLink</span><span class="p">(</span><span class="nf">RobotLink</span><span class="p">(</span><span class="n">mass</span><span class="o">=</span><span class="n">listMass</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+<span class="linenos"> 90</span>    <span class="n">newRobot</span><span class="o">.</span><span class="nf">AddLink</span><span class="p">(</span><span class="nc">RobotLink</span><span class="p">(</span><span class="n">mass</span><span class="o">=</span><span class="n">listMass</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
 <span class="linenos"> 91</span>                               <span class="nf">COM</span><span class="o">=</span><span class="n">listCOM</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
 <span class="linenos"> 92</span>                               <span class="n">inertia</span><span class="o">=</span><span class="n">listInertiaCOM</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
 <span class="linenos"> 93</span>                               <span class="n">preHT</span> <span class="o">=</span> <span class="nf">HomogeneousTransformation</span><span class="p">(</span><span class="n">Amat</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">vVec</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span>
@@ -350,7 +353,7 @@
 <span class="linenos">122</span>    <span class="n">inertias</span> <span class="o">+=</span> <span class="p">[</span><span class="nf">Inertia2T66</span><span class="p">(</span><span class="n">J</span><span class="p">)]</span>
 <span class="linenos">123</span>
 <span class="linenos">124</span><span class="k">if</span> <span class="kc">True</span><span class="p">:</span> <span class="c1">#manual mode</span>
-<span class="linenos">125</span>    <span class="n">KT</span><span class="o">=</span><span class="nf">KinematicTree66</span><span class="p">(</span><span class="n">listOfJointTypes</span><span class="o">=</span><span class="n">jointTypes</span><span class="p">,</span> <span class="n">listOfTransformations</span><span class="o">=</span><span class="n">transformations</span><span class="p">,</span>
+<span class="linenos">125</span>    <span class="n">KT</span><span class="o">=</span><span class="nc">KinematicTree66</span><span class="p">(</span><span class="n">listOfJointTypes</span><span class="o">=</span><span class="n">jointTypes</span><span class="p">,</span> <span class="n">listOfTransformations</span><span class="o">=</span><span class="n">transformations</span><span class="p">,</span>
 <span class="linenos">126</span>                       <span class="n">listOfInertias</span><span class="o">=</span><span class="n">inertias</span><span class="p">,</span> <span class="n">gravity</span><span class="o">=</span><span class="n">gravity3D</span><span class="p">)</span>
 <span class="linenos">127</span><span class="k">else</span><span class="p">:</span>
 <span class="linenos">128</span>    <span class="n">KT</span> <span class="o">=</span> <span class="n">newRobot</span><span class="o">.</span><span class="nf">GetKinematicTree66</span><span class="p">()</span>
@@ -430,7 +433,7 @@
 <span class="linenos">202</span>
 <span class="linenos">203</span>
 <span class="linenos">204</span><span class="k">if</span> <span class="n">useKT2</span><span class="p">:</span>
-<span class="linenos">205</span>    <span class="n">KT2</span><span class="o">=</span><span class="nf">KinematicTree33</span><span class="p">(</span><span class="n">listOfJointTypes</span><span class="o">=</span><span class="n">jointTypes</span><span class="p">,</span>
+<span class="linenos">205</span>    <span class="n">KT2</span><span class="o">=</span><span class="nc">KinematicTree33</span><span class="p">(</span><span class="n">listOfJointTypes</span><span class="o">=</span><span class="n">jointTypes</span><span class="p">,</span>
 <span class="linenos">206</span>                      <span class="n">listOfRotations</span><span class="o">=</span><span class="n">Amat</span><span class="p">,</span>
 <span class="linenos">207</span>                      <span class="n">listOfOffsets</span><span class="o">=</span><span class="n">vVec</span><span class="p">,</span>
 <span class="linenos">208</span>                      <span class="n">listOfInertia3D</span><span class="o">=</span><span class="n">listInertia</span><span class="p">,</span>

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Module: interactive &mdash; Exudyn1.6.119.dev1 1.6.119.dev1 documentation</title>
+  <title>Module: interactive &mdash; Exudyn1.6.164.dev1 1.6.164.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -41,7 +41,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.119.dev1
+            Exudyn1.6.164.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -125,7 +125,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.119.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.164.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -153,18 +153,18 @@
 </ul>
 <section id="function-animatemodes">
 <span id="sec-interactive-animatemodes"></span><h2>Function: AnimateModes<a class="headerlink" href="#function-animatemodes" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py#L581">AnimateModes</a>(<code class="docutils literal notranslate"><span class="pre">systemContainer</span></code>, <code class="docutils literal notranslate"><span class="pre">mainSystem</span></code>, <code class="docutils literal notranslate"><span class="pre">nodeNumber</span></code>, <code class="docutils literal notranslate"><span class="pre">period</span> <span class="pre">=</span> <span class="pre">0.04</span></code>, <code class="docutils literal notranslate"><span class="pre">stepsPerPeriod</span> <span class="pre">=</span> <span class="pre">30</span></code>, <code class="docutils literal notranslate"><span class="pre">showTime</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">renderWindowText</span> <span class="pre">=</span> <span class="pre">''</span></code>, <code class="docutils literal notranslate"><span class="pre">runOnStart</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">runMode</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">scaleAmplitude</span> <span class="pre">=</span> <span class="pre">1</span></code>, <code class="docutils literal notranslate"><span class="pre">title</span> <span class="pre">=</span> <span class="pre">''</span></code>, <code class="docutils literal notranslate"><span class="pre">fontSize</span> <span class="pre">=</span> <span class="pre">12</span></code>, <code class="docutils literal notranslate"><span class="pre">checkRenderEngineStopFlag</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py#L591">AnimateModes</a>(<code class="docutils literal notranslate"><span class="pre">systemContainer</span></code>, <code class="docutils literal notranslate"><span class="pre">mainSystem</span></code>, <code class="docutils literal notranslate"><span class="pre">nodeNumber</span></code>, <code class="docutils literal notranslate"><span class="pre">period</span> <span class="pre">=</span> <span class="pre">0.04</span></code>, <code class="docutils literal notranslate"><span class="pre">stepsPerPeriod</span> <span class="pre">=</span> <span class="pre">30</span></code>, <code class="docutils literal notranslate"><span class="pre">showTime</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">renderWindowText</span> <span class="pre">=</span> <span class="pre">''</span></code>, <code class="docutils literal notranslate"><span class="pre">runOnStart</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">runMode</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">scaleAmplitude</span> <span class="pre">=</span> <span class="pre">1</span></code>, <code class="docutils literal notranslate"><span class="pre">title</span> <span class="pre">=</span> <span class="pre">''</span></code>, <code class="docutils literal notranslate"><span class="pre">fontSize</span> <span class="pre">=</span> <span class="pre">12</span></code>, <code class="docutils literal notranslate"><span class="pre">checkRenderEngineStopFlag</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">systemEigenVectors</span> <span class="pre">=</span> <span class="pre">None</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">animate modes of ObjectFFRFreducedOrder and other objects (changes periodically one nodal coordinate); for creating snapshots, press ‘Static’ and ‘Record animation’ and press ‘Run’ to save one figure in the image subfolder; for creating animations for one mode, use the same procedure but use ‘One Cycle’. Modes may be inverted by pressing according ‘+’ and ‘-’ buttons next to Amplitude.</div>
+<div class="line">animate modes of ObjectFFRFreducedOrder, of nodal coordinates (changes periodically one nodal coordinate) or of a list of system modes provided as list of lists; for creating snapshots, press ‘Static’ and ‘Record animation’ and press ‘Run’ to save one figure in the image subfolder; for creating animations for one mode, use the same procedure but use ‘One Cycle’. Modes may be inverted by pressing according ‘+’ and ‘-’ buttons next to Amplitude.</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><em>input</em>:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">systemContainer</span></code>: system container (usually SC) of your model, containing visualization settings</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">mainSystem</span></code>: system (usually mbs) containing your model</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">nodeNumber</span></code>: node number of which the coordinates shall be animated. In case of ObjectFFRFreducedOrder, this is the generic node, e.g., ‘nGenericODE2’ in the dictionary returned by the function AddObjectFFRFreducedOrderWithUserFunctions(…)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">nodeNumber</span></code>: node number of which the coordinates shall be animated. In case of ObjectFFRFreducedOrder, this is the generic node, e.g., ‘nGenericODE2’ in the dictionary returned by the function AddObjectFFRFreducedOrderWithUserFunctions(…); if nodeNumber=None, then the systemEigenVectors list is used</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">period</span></code>: delay for animation of every frame; the default of 0.04 results in approximately 25 frames per second</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">stepsPerPeriod</span></code>: number of steps into which the animation of one cycle of the mode is split into</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">showTime</span></code>: show a virtual time running from 0 to 2*pi during one mode cycle</div>
@@ -175,6 +175,7 @@
 <div class="line"><code class="docutils literal notranslate"><span class="pre">fontSize</span></code>: define font size for labels in InteractiveDialog</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">title</span></code>: if empty, it uses default; otherwise define specific title</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">checkRenderEngineStopFlag</span></code>: if True, stopping renderer (pressing Q or Escape) also causes stopping the interactive dialog</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">systemEigenVectors</span></code>: may be a list of lists of system eigenvectors for ODE2 (and possibly ODE1) coordinates or a eigenvector matrix containing mode vectors in columns; if nodeNumber=None, these eigenvectors are then used to be animated</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -197,7 +198,7 @@
 <hr class="docutils" />
 <section id="function-solutionviewer">
 <h2>Function: SolutionViewer<a class="headerlink" href="#function-solutionviewer" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py#L754">SolutionViewer</a>(<code class="docutils literal notranslate"><span class="pre">mainSystem</span></code>, <code class="docutils literal notranslate"><span class="pre">solution</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">rowIncrement</span> <span class="pre">=</span> <span class="pre">1</span></code>, <code class="docutils literal notranslate"><span class="pre">timeout</span> <span class="pre">=</span> <span class="pre">0.04</span></code>, <code class="docutils literal notranslate"><span class="pre">runOnStart</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">runMode</span> <span class="pre">=</span> <span class="pre">2</span></code>, <code class="docutils literal notranslate"><span class="pre">fontSize</span> <span class="pre">=</span> <span class="pre">12</span></code>, <code class="docutils literal notranslate"><span class="pre">title</span> <span class="pre">=</span> <span class="pre">''</span></code>, <code class="docutils literal notranslate"><span class="pre">checkRenderEngineStopFlag</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py#L786">SolutionViewer</a>(<code class="docutils literal notranslate"><span class="pre">mainSystem</span></code>, <code class="docutils literal notranslate"><span class="pre">solution</span> <span class="pre">=</span> <span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">rowIncrement</span> <span class="pre">=</span> <span class="pre">1</span></code>, <code class="docutils literal notranslate"><span class="pre">timeout</span> <span class="pre">=</span> <span class="pre">0.04</span></code>, <code class="docutils literal notranslate"><span class="pre">runOnStart</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">runMode</span> <span class="pre">=</span> <span class="pre">2</span></code>, <code class="docutils literal notranslate"><span class="pre">fontSize</span> <span class="pre">=</span> <span class="pre">12</span></code>, <code class="docutils literal notranslate"><span class="pre">title</span> <span class="pre">=</span> <span class="pre">''</span></code>, <code class="docutils literal notranslate"><span class="pre">checkRenderEngineStopFlag</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><strong>NOTE</strong>: this function is directly available in MainSystem (mbs); it should be directly called as mbs.SolutionViewer(…). For description of the interface, see the MainSystem Python extensions,  <a class="reference internal" href="../cInterface/MainSystem.html#sec-mainsystemextensions-solutionviewer"><span class="std std-ref">Function: SolutionViewer</span></a></div>
@@ -238,12 +239,12 @@ for examples, see <code class="docutils literal notranslate"><span class="pre">s
 <span class="c1">#suboptions of &#39;radio&#39;:</span>
 <span class="c1">#               &#39;textValueList&#39;: [(&#39;text1&#39;,0),(&#39;text2&#39;,1)] a list of texts with according values</span>
 <span class="c1">#               &#39;value&#39;: default value (choice) of radio buttons</span>
-<span class="c1">#               &#39;variable&#39;: according variable in mbs.variables, which is set to current radio button value</span>
+<span class="c1">#               &#39;variable&#39;: according variable in mbs.variables (or mbs.sys), which is set to current radio button value</span>
 <span class="c1">#suboptions of &#39;slider&#39;:</span>
 <span class="c1">#               &#39;range&#39;: (min, max) a tuple containing minimum and maximum value of slider</span>
 <span class="c1">#               &#39;value&#39;: default value of slider</span>
 <span class="c1">#               &#39;steps&#39;: number of steps in slider</span>
-<span class="c1">#               &#39;variable&#39;: according variable in mbs.variables, which is set to current slider value</span>
+<span class="c1">#               &#39;variable&#39;: according variable in mbs.variables (or mbs.sys), which is set to current slider value</span>
 <span class="c1">#example:</span>
 <span class="n">dialogItems</span> <span class="o">=</span> <span class="p">[{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span><span class="s1">&#39;label&#39;</span><span class="p">,</span> <span class="s1">&#39;text&#39;</span><span class="p">:</span><span class="s1">&#39;Nonlinear oscillation simulator&#39;</span><span class="p">,</span> <span class="s1">&#39;grid&#39;</span><span class="p">:(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="s1">&#39;options&#39;</span><span class="p">:[</span><span class="s1">&#39;L&#39;</span><span class="p">]},</span>
                <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span><span class="s1">&#39;button&#39;</span><span class="p">,</span> <span class="s1">&#39;text&#39;</span><span class="p">:</span><span class="s1">&#39;test button&#39;</span><span class="p">,</span><span class="s1">&#39;callFunction&#39;</span><span class="p">:</span><span class="n">ButtonCall</span><span class="p">,</span> <span class="s1">&#39;grid&#39;</span><span class="p">:(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">)},</span>
@@ -271,7 +272,7 @@ for examples, see <code class="docutils literal notranslate"><span class="pre">s
 </section>
 <section id="class-function-init">
 <span id="sec-interactive-interactivedialog-init"></span><h2>Class function: __init__<a class="headerlink" href="#class-function-init" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py#L96">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationFunction</span></code>, <code class="docutils literal notranslate"><span class="pre">dialogItems</span></code>, <code class="docutils literal notranslate"><span class="pre">plots</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">period</span> <span class="pre">=</span> <span class="pre">0.04</span></code>, <code class="docutils literal notranslate"><span class="pre">realtimeFactor</span> <span class="pre">=</span> <span class="pre">1</span></code>, <code class="docutils literal notranslate"><span class="pre">userStartSimulation</span> <span class="pre">=</span> <span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">title</span> <span class="pre">=</span> <span class="pre">''</span></code>, <code class="docutils literal notranslate"><span class="pre">showTime</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">fontSize</span> <span class="pre">=</span> <span class="pre">12</span></code>, <code class="docutils literal notranslate"><span class="pre">doTimeIntegration</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">runOnStart</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">addLabelStringVariables</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">addSliderVariables</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">checkRenderEngineStopFlag</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">userOnChange</span> <span class="pre">=</span> <span class="pre">None</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py#L97">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationFunction</span></code>, <code class="docutils literal notranslate"><span class="pre">dialogItems</span></code>, <code class="docutils literal notranslate"><span class="pre">plots</span> <span class="pre">=</span> <span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">period</span> <span class="pre">=</span> <span class="pre">0.04</span></code>, <code class="docutils literal notranslate"><span class="pre">realtimeFactor</span> <span class="pre">=</span> <span class="pre">1</span></code>, <code class="docutils literal notranslate"><span class="pre">userStartSimulation</span> <span class="pre">=</span> <span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">title</span> <span class="pre">=</span> <span class="pre">''</span></code>, <code class="docutils literal notranslate"><span class="pre">showTime</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">fontSize</span> <span class="pre">=</span> <span class="pre">12</span></code>, <code class="docutils literal notranslate"><span class="pre">doTimeIntegration</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">runOnStart</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">addLabelStringVariables</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">addSliderVariables</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">checkRenderEngineStopFlag</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">userOnChange</span> <span class="pre">=</span> <span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">useSysVariables</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -284,7 +285,7 @@ for examples, see <code class="docutils literal notranslate"><span class="pre">s
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings</span></code>: exudyn.SimulationSettings() according to user settings</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationFunction</span></code>: a user function(mbs, self) which is called before a simulation for the short period is started (e.g, assign special values, etc.); the arguments are the MainSystem mbs and the InteractiveDialog (self)</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">dialogItems</span></code>: a list of dictionaries, which describe the contents of the interactive items, where every dict has the structure ‘type’:[label, entry, button, slider, check] … according to tkinter widgets, ‘callFunction’: a function to be called, if item is changed/button pressed, ‘grid’: (row,col) of item to be placed, ‘rowSpan’: number of rows to be used, ‘columnSpan’: number of columns to be used; for special item options see notes</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">plots</span></code>: list of dictionaries to specify a sensor to be plotted live, see example</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">plots</span></code>: list of dictionaries to specify a sensor to be plotted live, see example; otherwise use default None</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">period</span></code>: a simulation time span in seconds which is simulated with the simulationFunction in every iteration</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">realtimeFactor</span></code>: if 1, the simulation is nearly performed in realtime (except for computation time); if &gt; 1, it runs faster than realtime, if &lt; 1, than it is slower</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">userStartSimulation</span></code>: a function F(flag) which is called every time after Run/Stop is pressed. The argument flag = False if button “Run” has been pressed, flag = True, if “Stop” has been pressed</div>
@@ -297,6 +298,7 @@ for examples, see <code class="docutils literal notranslate"><span class="pre">s
 <div class="line"><code class="docutils literal notranslate"><span class="pre">addSliderVariables</span></code>: True: adds a list sliderVariables containing the (modifiable) list of variables for slider (=tkinter scale) widgets; this is not necessarily needed for changing slider values, as they can also be modified with dialog.widgets[..].set(…) method</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">checkRenderEngineStopFlag</span></code>: if True, stopping renderer (pressing Q or Escape) also causes stopping the interactive dialog</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">userOnChange</span></code>: a user function(mbs, self) which is called after period, if widget values are different from values stored in mbs.variables; this usually occurs if buttons are pressed or sliders are moved; the arguments are the MainSystem mbs and the InteractiveDialog (self)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">useSysVariables</span></code>: for internal visualization functions: in this case, variables are written to mbs.sys instead of mbs.variables</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -309,7 +311,7 @@ for examples, see <code class="docutils literal notranslate"><span class="pre">s
 </section>
 <section id="class-function-onquit">
 <span id="sec-interactive-interactivedialog-onquit"></span><h2>Class function: OnQuit<a class="headerlink" href="#class-function-onquit" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py#L345">OnQuit</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">event</span> <span class="pre">=</span> <span class="pre">None</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py#L350">OnQuit</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">event</span> <span class="pre">=</span> <span class="pre">None</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -321,7 +323,7 @@ for examples, see <code class="docutils literal notranslate"><span class="pre">s
 </section>
 <section id="class-function-startsimulation">
 <span id="sec-interactive-interactivedialog-startsimulation"></span><h2>Class function: StartSimulation<a class="headerlink" href="#class-function-startsimulation" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py#L354">StartSimulation</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">event</span> <span class="pre">=</span> <span class="pre">None</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py#L359">StartSimulation</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">event</span> <span class="pre">=</span> <span class="pre">None</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -333,11 +335,11 @@ for examples, see <code class="docutils literal notranslate"><span class="pre">s
 </section>
 <section id="class-function-processwidgetstates">
 <span id="sec-interactive-interactivedialog-processwidgetstates"></span><h2>Class function: ProcessWidgetStates<a class="headerlink" href="#class-function-processwidgetstates" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py#L367">ProcessWidgetStates</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py#L372">ProcessWidgetStates</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
-<div class="line">assign current values of radio buttons and sliders to mbs.variables</div>
+<div class="line">assign current values of radio buttons and sliders to mbs.variables or mbs.sys</div>
 </div>
 </li>
 </ul>
@@ -345,7 +347,7 @@ for examples, see <code class="docutils literal notranslate"><span class="pre">s
 </section>
 <section id="class-function-continuousrunfunction">
 <span id="sec-interactive-interactivedialog-continuousrunfunction"></span><h2>Class function: ContinuousRunFunction<a class="headerlink" href="#class-function-continuousrunfunction" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py#L378">ContinuousRunFunction</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">event</span> <span class="pre">=</span> <span class="pre">None</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py#L387">ContinuousRunFunction</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">event</span> <span class="pre">=</span> <span class="pre">None</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -357,7 +359,7 @@ for examples, see <code class="docutils literal notranslate"><span class="pre">s
 </section>
 <section id="class-function-initializeplots">
 <span id="sec-interactive-interactivedialog-initializeplots"></span><h2>Class function: InitializePlots<a class="headerlink" href="#class-function-initializeplots" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py#L396">InitializePlots</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py#L405">InitializePlots</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -369,7 +371,7 @@ for examples, see <code class="docutils literal notranslate"><span class="pre">s
 </section>
 <section id="class-function-updateplots">
 <span id="sec-interactive-interactivedialog-updateplots"></span><h2>Class function: UpdatePlots<a class="headerlink" href="#class-function-updateplots" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py#L443">UpdatePlots</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py#L452">UpdatePlots</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -381,7 +383,7 @@ for examples, see <code class="docutils literal notranslate"><span class="pre">s
 </section>
 <section id="class-function-initializesolver">
 <span id="sec-interactive-interactivedialog-initializesolver"></span><h2>Class function: InitializeSolver<a class="headerlink" href="#class-function-initializesolver" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py#L499">InitializeSolver</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py#L508">InitializeSolver</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -393,7 +395,7 @@ for examples, see <code class="docutils literal notranslate"><span class="pre">s
 </section>
 <section id="class-function-finalizesolver">
 <span id="sec-interactive-interactivedialog-finalizesolver"></span><h2>Class function: FinalizeSolver<a class="headerlink" href="#class-function-finalizesolver" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py#L505">FinalizeSolver</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py#L514">FinalizeSolver</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -405,7 +407,7 @@ for examples, see <code class="docutils literal notranslate"><span class="pre">s
 </section>
 <section id="class-function-runsimulationperiod">
 <span id="sec-interactive-interactivedialog-runsimulationperiod"></span><h2>Class function: RunSimulationPeriod<a class="headerlink" href="#class-function-runsimulationperiod" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py#L511">RunSimulationPeriod</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py#L520">RunSimulationPeriod</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>

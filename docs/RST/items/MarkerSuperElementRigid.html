@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MarkerSuperElementRigid &mdash; Exudyn1.6.119.dev1 1.6.119.dev1 documentation</title>
+  <title>MarkerSuperElementRigid &mdash; Exudyn1.6.164.dev1 1.6.164.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -41,7 +41,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.119.dev1
+            Exudyn1.6.164.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -113,7 +113,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.119.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.164.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -296,7 +296,7 @@
 </td>
 <td><div class="line-block">
 <div class="line">midpoint reference position of marker; averaged local reference positions of all mesh nodes <span class="math notranslate nohighlight">\(k_i\)</span>,
-using weighting for averaging; may not coincide with center point of your idealized joint surface (e.g., midpoint of cylinder), see <a class="reference internal" href="#fig-markersuperelementrigid-sketch"><span class="std std-numref">Fig. 15</span></a></div>
+using weighting for averaging; may not coincide with center point of your idealized joint surface (e.g., midpoint of cylinder), see <a class="reference internal" href="#fig-markersuperelementrigid-sketch"><span class="std std-numref">Fig. 17</span></a></div>
 </div>
 </td>
 </tr>
@@ -451,11 +451,11 @@ using weighting for averaging; may not coincide with center point of your ideali
 <p>The marker allows to realize a multi-point constraint (assuming that the marker is used in a joint constraint),
 connecting to averaged nodal displacements and rotations (also known as RBE3 in NASTRAN), see e.g..
 However, using Craig-Bampton RBE2 modes, will create RBE2 multi-point constraints for <code class="docutils literal notranslate"><span class="pre">ObjectFFRFreducedOrder</span></code> objects.</p>
-<p>For more information on the various quantities and their coordinate systems, see table above and <a class="reference internal" href="#fig-markersuperelementrigid-sketch"><span class="std std-numref">Fig. 15</span></a>.</p>
+<p>For more information on the various quantities and their coordinate systems, see table above and <a class="reference internal" href="#fig-markersuperelementrigid-sketch"><span class="std std-numref">Fig. 17</span></a>.</p>
 <figure class="align-default" id="id2">
 <span id="fig-markersuperelementrigid-sketch"></span><a class="reference internal image-reference" href="../../../_images/MarkerSuperElementRigid.png"><img alt="../../../_images/MarkerSuperElementRigid.png" src="../../../_images/MarkerSuperElementRigid.png" style="width: 400px;" /></a>
 <figcaption>
-<p><span class="caption-number">Fig. 15 </span><span class="caption-text">Sketch of marker nodes, exemplary node <span class="math notranslate nohighlight">\(i\)</span>, reference coordinates and marker coordinate system; note the difference of the center of the marker ‘surface’ (rectangle) marked with the red cross, and the averaged of the averaged local reference position.</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 17 </span><span class="caption-text">Sketch of marker nodes, exemplary node <span class="math notranslate nohighlight">\(i\)</span>, reference coordinates and marker coordinate system; note the difference of the center of the marker ‘surface’ (rectangle) marked with the red cross, and the averaged of the averaged local reference position.</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 </section>
@@ -496,7 +496,7 @@ object velocity coordinates <span class="math notranslate nohighlight">\(\dot {\
 \[\LU{0}{{\mathbf{J}}_{m,rot}} = \frac{\partial \LU{0}{\tomega}_{m}}{\partial \dot {\mathbf{q}}_{n_b}} = \frac{\partial \LU{0r}{\Rot}(\LU{r}{\tomega_{r}} + \LU{r}{\tomega}_{m})}{\partial \dot {\mathbf{q}}_{n_b}} = \LU{0r}{\Rot} \left(\frac{\partial \LU{r}{\tomega}_{r}}{\partial \dot {\mathbf{q}}_{n_b}} + \frac{\sum_i w_i \LU{r}{\tilde {\mathbf{p}}_{ref}^{(i)}} \LU{r}{{\mathbf{J}}_{pos}^{(i)}}}{\sum_i w_i |\LU{r}{{\mathbf{p}}_{ref}^{(i)}}|^2} \right)\]</div>
 <p>In case of <code class="docutils literal notranslate"><span class="pre">ObjectFFRFreducedOrder</span></code>, this jacobian is computed as</p>
 <div class="math notranslate nohighlight" id="equation-eq-markersuperelementrigid-jacrotstandard">
-<span class="eqno">(54)<a class="headerlink" href="#equation-eq-markersuperelementrigid-jacrotstandard" title="Permalink to this equation"></a></span>\[\LU{0}{{\mathbf{J}}_{m,rot}^{FFRFreduced}} = \left[\Null,\; \LU{0r}{\Rot} \LU{r}{{\mathbf{G}}_{local}},\; \LU{0r}{\Rot} \frac{\sum_i w_i \LU{r}{\tilde {\mathbf{p}}_{ref}^{(i)}} \LU{r}{{\mathbf{J}}_{pos,f}^{(i)}}}{\sum_i w_i |\LU{r}{{\mathbf{p}}_{ref}^{(i)}}|^2} \right]\]</div>
+<span class="eqno">(55)<a class="headerlink" href="#equation-eq-markersuperelementrigid-jacrotstandard" title="Permalink to this equation"></a></span>\[\LU{0}{{\mathbf{J}}_{m,rot}^{FFRFreduced}} = \left[\Null,\; \LU{0r}{\Rot} \LU{r}{{\mathbf{G}}_{local}},\; \LU{0r}{\Rot} \frac{\sum_i w_i \LU{r}{\tilde {\mathbf{p}}_{ref}^{(i)}} \LU{r}{{\mathbf{J}}_{pos,f}^{(i)}}}{\sum_i w_i |\LU{r}{{\mathbf{p}}_{ref}^{(i)}}|^2} \right]\]</div>
 <p>in which you should know that</p>
 <ul class="simple">
 <li><p>we used <span class="math notranslate nohighlight">\(\frac{\partial \LU{r}{\tomega_{r}} }{\partial \dot \ttheta_r} = \LU{r}{{\mathbf{G}}_{local}}\)</span>,</p></li>
@@ -518,14 +518,14 @@ at the marker nodes.</p>
 <p>In the alternative approach, the weighting matrix <span class="math notranslate nohighlight">\({\mathbf{W}}\)</span>has the interpretation of an inertia tensor built from nodes using weights equal to node masses.
 In such an interpretation, the ‘local angular momentum’ w.r.t.the marker (averaged) position can be computed as</p>
 <div class="math notranslate nohighlight" id="equation-eq-markersuperelementrigid-omegaandwm">
-<span class="eqno">(55)<a class="headerlink" href="#equation-eq-markersuperelementrigid-omegaandwm" title="Permalink to this equation"></a></span>\[{\mathbf{W}} \LU{r}{\tomega}_{m} = \sum_i w_i \LU{r}{\tilde {\mathbf{p}}_{ref}^{(i)}} \left(\LU{r}{{\mathbf{v}}^{(i)}} - \LU{r}{{\mathbf{v}}^\mathrm{avg}}\right)= -\sum_i  \left( w_i \LU{r}{\tilde {\mathbf{p}}_{ref}^{(i)}} \LU{r}{\tilde {\mathbf{p}}_{ref}^{(i)}} \right) \LU{r}{\tomega}_{m}\]</div>
+<span class="eqno">(56)<a class="headerlink" href="#equation-eq-markersuperelementrigid-omegaandwm" title="Permalink to this equation"></a></span>\[{\mathbf{W}} \LU{r}{\tomega}_{m} = \sum_i w_i \LU{r}{\tilde {\mathbf{p}}_{ref}^{(i)}} \left(\LU{r}{{\mathbf{v}}^{(i)}} - \LU{r}{{\mathbf{v}}^\mathrm{avg}}\right)= -\sum_i  \left( w_i \LU{r}{\tilde {\mathbf{p}}_{ref}^{(i)}} \LU{r}{\tilde {\mathbf{p}}_{ref}^{(i)}} \right) \LU{r}{\tomega}_{m}\]</div>
 <p>which implicitly defines the weighting matrix <span class="math notranslate nohighlight">\({\mathbf{W}}\)</span>, which must be invertable (but it is only a <span class="math notranslate nohighlight">\(3 \times 3\)</span> matrix!),</p>
 <div class="math notranslate nohighlight">
 \[{\mathbf{W}} = -\sum_i  w_i \LU{r}{\tilde {\mathbf{p}}_{ref}^{(i)}} \LU{r}{\tilde {\mathbf{p}}_{ref}^{(i)}}\]</div>
 <p>Furthermore, we need to introduce the averaged velocity of the marker averaged reference position, using <span class="math notranslate nohighlight">\(\LU{r}{\dot {\mathbf{u}}^{(i)}} = \LU{r}{{\mathbf{v}}^{(i)}}\)</span>, which is defined as</p>
 <div class="math notranslate nohighlight">
 \[\LU{r}{{\mathbf{v}}^\mathrm{avg}} = \sum_i  w_i \LU{r}{{\mathbf{v}}^{(i)}} ,\]</div>
-<p>similar to the averaged local reference position <span class="math notranslate nohighlight">\(\LU{r}{{\mathbf{x}}^\mathrm{avg}\cRef}\)</span> given in the table above, see also <a class="reference internal" href="#fig-markersuperelementrigid-sketch"><span class="std std-numref">Fig. 15</span></a>.</p>
+<p>similar to the averaged local reference position <span class="math notranslate nohighlight">\(\LU{r}{{\mathbf{x}}^\mathrm{avg}\cRef}\)</span> given in the table above, see also <a class="reference internal" href="#fig-markersuperelementrigid-sketch"><span class="std std-numref">Fig. 17</span></a>.</p>
 <p>In the alternative approach, thus the marker local rotations read</p>
 <div class="math notranslate nohighlight">
 \[\LU{r}{\ttheta}_{m,alt} = {\mathbf{W}}^{-1} \sum_i w_i \LU{r}{\tilde {\mathbf{p}}_{ref}^{(i)}} \left( \LU{r}{{\mathbf{u}}^{(i)}} - \LU{r}{{\mathbf{x}}^\mathrm{avg}\cRef} \right) ,\]</div>
@@ -541,7 +541,7 @@ This could even lead to spurious rotations or angular velocities in pure transla
 <p>In case of <code class="docutils literal notranslate"><span class="pre">ObjectFFRFreducedOrder</span></code>, this jacobian is computed as</p>
 <div class="math notranslate nohighlight">
 \[\LU{0}{{\mathbf{J}}_{m,rot,alt}^{FFRFreduced}} = \left[\Null,\; \LU{0r}{\Rot} \LU{r}{{\mathbf{G}}_{local}},\; \LU{0r}{\Rot} {\mathbf{W}}^{-1} \sum_i w_i \LU{r}{\tilde {\mathbf{p}}_{ref}^{(i)}} \LU{r}{{\mathbf{J}}_{pos,f}^{(i)}} \right]\]</div>
-<p>see also the descriptions given after Eq. <a class="reference internal" href="#equation-eq-markersuperelementrigid-jacrotstandard">(54)</a> in the ‘standard’ approach.</p>
+<p>see also the descriptions given after Eq. <a class="reference internal" href="#equation-eq-markersuperelementrigid-jacrotstandard">(55)</a> in the ‘standard’ approach.</p>
 <p><strong>EXAMPLE for marker on body 4, mesh nodes 10,11,12,13</strong>:</p>
 <p><code class="docutils literal notranslate"><span class="pre">MarkerSuperElementRigid(bodyNumber</span> <span class="pre">=</span> <span class="pre">4,</span> <span class="pre">meshNodeNumber</span> <span class="pre">=</span> <span class="pre">[10,</span> <span class="pre">11,</span> <span class="pre">12,</span> <span class="pre">13],</span> <span class="pre">weightingFactors</span> <span class="pre">=</span> <span class="pre">[0.25,</span> <span class="pre">0.25,</span> <span class="pre">0.25,</span> <span class="pre">0.25],</span> <span class="pre">referencePosition=[0,0,0])</span></code></p>
 <p>For detailed examples, see <code class="docutils literal notranslate"><span class="pre">TestModels</span></code>.</p>

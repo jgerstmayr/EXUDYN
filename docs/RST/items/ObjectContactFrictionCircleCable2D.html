@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ObjectContactFrictionCircleCable2D &mdash; Exudyn1.6.119.dev1 1.6.119.dev1 documentation</title>
+  <title>ObjectContactFrictionCircleCable2D &mdash; Exudyn1.6.164.dev1 1.6.164.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -41,7 +41,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.119.dev1
+            Exudyn1.6.164.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -113,7 +113,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.119.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.164.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -367,7 +367,7 @@
 <figure class="align-default" id="id2">
 <span id="fig-objectcontactfrictioncirclecable2d-sketch"></span><a class="reference internal image-reference" href="../../../_images/ContactFrictionCircleCable2D.png"><img alt="../../../_images/ContactFrictionCircleCable2D.png" src="../../../_images/ContactFrictionCircleCable2D.png" style="width: 600px;" /></a>
 <figcaption>
-<p><span class="caption-number">Fig. 12 </span><span class="caption-text">Sketch of cable, contact segments and circle; showing case without contact, <span class="math notranslate nohighlight">\(|\mathbf{d}_{g1}| &gt; r\)</span>, while contact occurs with <span class="math notranslate nohighlight">\(|\mathbf{d}_{g1}| \le r\)</span>; the shortest distance vector <span class="math notranslate nohighlight">\(\mathbf{d}_{g1}\)</span> is related to segment <span class="math notranslate nohighlight">\(s_1\)</span> (which is perpendicular to the the segment line) and <span class="math notranslate nohighlight">\(\mathbf{d}_{g2}\)</span> is the shortest distance to the end point of segment <span class="math notranslate nohighlight">\(s_2\)</span>, not being perpendicular</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 14 </span><span class="caption-text">Sketch of cable, contact segments and circle; showing case without contact, <span class="math notranslate nohighlight">\(|\mathbf{d}_{g1}| &gt; r\)</span>, while contact occurs with <span class="math notranslate nohighlight">\(|\mathbf{d}_{g1}| \le r\)</span>; the shortest distance vector <span class="math notranslate nohighlight">\(\mathbf{d}_{g1}\)</span> is related to segment <span class="math notranslate nohighlight">\(s_1\)</span> (which is perpendicular to the the segment line) and <span class="math notranslate nohighlight">\(\mathbf{d}_{g2}\)</span> is the shortest distance to the end point of segment <span class="math notranslate nohighlight">\(s_2\)</span>, not being perpendicular</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 </section>
@@ -390,7 +390,7 @@ we find the relative position <span class="math notranslate nohighlight">\(\rho\
 segment, which runs from 0 to 1 if lying on the segment, as</p>
 <div class="math notranslate nohighlight">
 \[\rho = \frac{n}{d}\]</div>
-<p>We distinguish 3 cases (see also <a class="reference internal" href="#fig-objectcontactfrictioncirclecable2d-sketch"><span class="std std-numref">Fig. 12</span></a> for cases 1 and 2):</p>
+<p>We distinguish 3 cases (see also <a class="reference internal" href="#fig-objectcontactfrictioncirclecable2d-sketch"><span class="std std-numref">Fig. 14</span></a> for cases 1 and 2):</p>
 <ul class="simple">
 <li><dl class="simple">
 <dt>If <span class="math notranslate nohighlight">\(\rho \le 0\)</span>, the shortest distance would be the distance to point <span class="math notranslate nohighlight">\({\mathbf{p}}_p={\mathbf{p}}_i\)</span>,</dt><dd><p>reading</p>
@@ -421,13 +421,13 @@ segment, which runs from 0 to 1 if lying on the segment, as</p>
  and the distance\end{aligned}\end{align} \]</div>
 <div class="math notranslate nohighlight">
 \[d_g = |{\mathbf{d}}_g| = \sqrt{{\mathbf{v}}_p\tp {\mathbf{v}}_p - (n^2)/d}\]</div>
-<p>Here, the shortest distance vector for every segment results from the projected point <span class="math notranslate nohighlight">\({\mathbf{p}}_p\)</span>of the above mentioned cases, see also <a class="reference internal" href="#fig-objectcontactfrictioncirclecable2d-sketch"><span class="std std-numref">Fig. 12</span></a>,
+<p>Here, the shortest distance vector for every segment results from the projected point <span class="math notranslate nohighlight">\({\mathbf{p}}_p\)</span>of the above mentioned cases, see also <a class="reference internal" href="#fig-objectcontactfrictioncirclecable2d-sketch"><span class="std std-numref">Fig. 14</span></a>,
 with the relation</p>
 <div class="math notranslate nohighlight">
 \[{\mathbf{d}}_g = {\mathbf{d}}_{g,s_i}= {\mathbf{p}}_{m0} - {\mathbf{p}}_p .\]</div>
 <p>The contact gap for a specific point for segment <span class="math notranslate nohighlight">\(s_i\)</span> is in general defined as</p>
 <div class="math notranslate nohighlight" id="equation-objectcontactfrictioncirclecable2d-gap">
-<span class="eqno">(47)<a class="headerlink" href="#equation-objectcontactfrictioncirclecable2d-gap" title="Permalink to this equation"></a></span>\[g = g_{s_i} = d_g - r .\]</div>
+<span class="eqno">(48)<a class="headerlink" href="#equation-objectcontactfrictioncirclecable2d-gap" title="Permalink to this equation"></a></span>\[g = g_{s_i} = d_g - r .\]</div>
 <p>using <span class="math notranslate nohighlight">\(d_g = |{\mathbf{d}}_g|\)</span>.</p>
 </section>
 <section id="contact-frame-and-relative-motion">
@@ -446,7 +446,7 @@ this choice is more consistent with the computations at position level.</p>
 \[v_n = \left( \dot {\mathbf{p}}_p - \dot {\mathbf{p}}_{m0} \right) {\mathbf{n}}\]</div>
 <p>In a similar, the tangential velocity reads</p>
 <div class="math notranslate nohighlight" id="equation-objectcontactfrictioncirclecable2d-vtangent">
-<span class="eqno">(48)<a class="headerlink" href="#equation-objectcontactfrictioncirclecable2d-vtangent" title="Permalink to this equation"></a></span>\[v_t = \left( \dot {\mathbf{p}}_p - \dot {\mathbf{p}}_{m0} \right) {\mathbf{t}}\]</div>
+<span class="eqno">(49)<a class="headerlink" href="#equation-objectcontactfrictioncirclecable2d-vtangent" title="Permalink to this equation"></a></span>\[v_t = \left( \dot {\mathbf{p}}_p - \dot {\mathbf{p}}_{m0} \right) {\mathbf{t}}\]</div>
 <p>In case of <code class="docutils literal notranslate"><span class="pre">frictionStiffness</span> <span class="pre">!=</span> <span class="pre">0</span></code>, we continuously track the sticking position at which the cable element (or segment) and the circle
 previously sticked together, similar as proposed by Lugr'is et al.~.
 The difference here to the latter reference, is that we explicitly exclude switching from Newton’s method and that Lugr'is et al.~used
@@ -456,20 +456,20 @@ which compares the traditional LuGre friction model  with the position based mod
 <figure class="align-default" id="id3">
 <span id="fig-objectcontactfrictioncirclecable2d-stickingpos"></span><a class="reference internal image-reference" href="../../../_images/ContactFrictionCircleCable2DstickingPos.png"><img alt="../../../_images/ContactFrictionCircleCable2DstickingPos.png" src="../../../_images/ContactFrictionCircleCable2DstickingPos.png" style="width: 600px;" /></a>
 <figcaption>
-<p><span class="caption-number">Fig. 13 </span><span class="caption-text">Calculation of last sticking position; blue parts mark the sticking position calculated as <span class="math notranslate nohighlight">\(x^*_{curStick}\)</span>.</span><a class="headerlink" href="#id3" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 15 </span><span class="caption-text">Calculation of last sticking position; blue parts mark the sticking position calculated as <span class="math notranslate nohighlight">\(x^*_{curStick}\)</span>.</span><a class="headerlink" href="#id3" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 <p>Because there is the chance to wind/unwind relative to the (last) sticking position without slipping,
 the following strategy is used.
 In case of sliding (which could be the last time sliding before sticking),
-we compute the <strong>current sticking position</strong>, see <a class="reference internal" href="#fig-objectcontactfrictioncirclecable2d-stickingpos"><span class="std std-numref">Fig. 13</span></a>, as the sum of the relative position at the segment <span class="math notranslate nohighlight">\(s\)</span></p>
+we compute the <strong>current sticking position</strong>, see <a class="reference internal" href="#fig-objectcontactfrictioncirclecable2d-stickingpos"><span class="std std-numref">Fig. 15</span></a>, as the sum of the relative position at the segment <span class="math notranslate nohighlight">\(s\)</span></p>
 <div class="math notranslate nohighlight">
 \[x_{s,curStick} = \rho \cdot L_{seg}\]</div>
 <p>in which <span class="math notranslate nohighlight">\(\rho \in [0,1]\)</span> denotes the relative position of contact at the segment with reference length <span class="math notranslate nohighlight">\(L_{seg}=\frac{L}{n_{cs}}\)</span>.
 The relative position at the circle <span class="math notranslate nohighlight">\(c\)</span> is</p>
 <div class="math notranslate nohighlight">
 \[x_{c,curStick} = \alpha \cdot r\]</div>
-<p>We immediately see, that under pure rolling(neglecting the effects of small penetration, usually much smaller than shown for visibility in <a class="reference internal" href="#fig-objectcontactfrictioncirclecable2d-stickingpos"><span class="std std-numref">Fig. 13</span></a>.),</p>
+<p>We immediately see, that under pure rolling(neglecting the effects of small penetration, usually much smaller than shown for visibility in <a class="reference internal" href="#fig-objectcontactfrictioncirclecable2d-stickingpos"><span class="std std-numref">Fig. 15</span></a>.),</p>
 <div class="math notranslate nohighlight">
 \[x_{s,curStick} + x_{c,curStick}  = \mathrm{const}.\]</div>
 <p>Note that the <code class="docutils literal notranslate"><span class="pre">verticalOffset</span></code> from the cable center line, as defined in the related <code class="docutils literal notranslate"><span class="pre">MarkerBodyCable2DShape</span></code>,
@@ -477,10 +477,10 @@ influences the behavior significantly, which is why we recommend to use <code cl
 appropriate assumption.
 Thus, the current sticking position <span class="math notranslate nohighlight">\(x_{curStick}\)</span> is computed per segment as</p>
 <div class="math notranslate nohighlight" id="equation-objectcontactfrictioncirclecable2d-lastcurstick">
-<span class="eqno">(49)<a class="headerlink" href="#equation-objectcontactfrictioncirclecable2d-lastcurstick" title="Permalink to this equation"></a></span>\[x^*_{curStick} = x_{s,curStick} + x_{c,curStick}, \quad\]</div>
+<span class="eqno">(50)<a class="headerlink" href="#equation-objectcontactfrictioncirclecable2d-lastcurstick" title="Permalink to this equation"></a></span>\[x^*_{curStick} = x_{s,curStick} + x_{c,curStick}, \quad\]</div>
 <p>Due to the possibility of switching of <span class="math notranslate nohighlight">\(\alpha+\phi\)</span> between <span class="math notranslate nohighlight">\(-\pi\)</span> and <span class="math notranslate nohighlight">\(\pi\)</span>, the result is normalized to</p>
 <div class="math notranslate nohighlight" id="equation-objectcontactfrictioncirclecable2d-curstick">
-<span class="eqno">(50)<a class="headerlink" href="#equation-objectcontactfrictioncirclecable2d-curstick" title="Permalink to this equation"></a></span>\[x_{curStick} = x^*_{curStick} - \mathrm{floor}\left(\frac{x^*_{curStick} }{2 \pi \cdot r} + \frac{1}{2}\right) \cdot 2 \pi \cdot r, \quad\]</div>
+<span class="eqno">(51)<a class="headerlink" href="#equation-objectcontactfrictioncirclecable2d-curstick" title="Permalink to this equation"></a></span>\[x_{curStick} = x^*_{curStick} - \mathrm{floor}\left(\frac{x^*_{curStick} }{2 \pi \cdot r} + \frac{1}{2}\right) \cdot 2 \pi \cdot r, \quad\]</div>
 <p>which gives <span class="math notranslate nohighlight">\(\bar x_{curStick} \in [-\pi \cdot r,\pi \cdot r]\)</span>, which is stored in the 3rd data variable (per segment).
 The function floor() is a standardized version of rounding, available in C and Python programming languages.
 In the <code class="docutils literal notranslate"><span class="pre">PostNewtonStep</span></code>, the last sticking position is computed, <span class="math notranslate nohighlight">\(x_{lastStick} = x_{curStick}\)</span>, and it is also available in the <code class="docutils literal notranslate"><span class="pre">startOfStep</span></code> state.</p>
@@ -489,7 +489,7 @@ In the <code class="docutils literal notranslate"><span class="pre">PostNewtonSt
 <h2>Contact forces: definition<a class="headerlink" href="#contact-forces-definition" title="Permalink to this heading"></a></h2>
 <p>The contact force <span class="math notranslate nohighlight">\(f_n\)</span> is zero for <span class="math notranslate nohighlight">\(g &gt; 0\)</span> and otherwise computed from</p>
 <div class="math notranslate nohighlight" id="equation-objectcontactfrictioncirclecable2d-contactforce">
-<span class="eqno">(51)<a class="headerlink" href="#equation-objectcontactfrictioncirclecable2d-contactforce" title="Permalink to this equation"></a></span>\[f_n = k_c \cdot g + d_c \cdot v_n\]</div>
+<span class="eqno">(52)<a class="headerlink" href="#equation-objectcontactfrictioncirclecable2d-contactforce" title="Permalink to this equation"></a></span>\[f_n = k_c \cdot g + d_c \cdot v_n\]</div>
 <p>NOTE that currently, there is only a linear spring-damper model available, assuming that the impact dynamics
 is not dominating (such as in belt drives or reeving systems).</p>
 <p>Friction forces are primarily based on relative (tangential) velocity at each segment.
@@ -510,7 +510,7 @@ This is necessary in order to avoid discontinuities in the equations, while othe
 <div class="math notranslate nohighlight">
 \[[x_{gap},\, x_{isSlipStick},\, x_{lastStick}]\]</div>
 <p>Here, <span class="math notranslate nohighlight">\(x_{gap}\)</span> contains the gap of the segment (<span class="math notranslate nohighlight">\(\le 0\)</span> means contact), <span class="math notranslate nohighlight">\(x_{lastStick}\)</span> is described in
-Eq. <a class="reference internal" href="#equation-objectcontactfrictioncirclecable2d-curstick">(50)</a>, and
+Eq. <a class="reference internal" href="#equation-objectcontactfrictioncirclecable2d-curstick">(51)</a>, and
 <span class="math notranslate nohighlight">\(x_{isSlipStick}\)</span> defines the stick or slip case,</p>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(x_{isSlipStick} = -2\)</span>: undefined, used for initialization</p></li>
@@ -520,13 +520,13 @@ Eq. <a class="reference internal" href="#equation-objectcontactfrictioncirclecab
 <p>The basic algorithm in the <code class="docutils literal notranslate"><span class="pre">PostNewtonStep</span></code>, with all operations given for any segment <span class="math notranslate nohighlight">\(s_i\)</span>, can be summarized as follows:</p>
 <ul class="simple">
 <li><dl class="simple">
-<dt>[I.] Evaluate gap per segment <span class="math notranslate nohighlight">\(g\)</span> using Eq. <a class="reference internal" href="#equation-objectcontactfrictioncirclecable2d-gap">(47)</a> and store in data variable:</dt><dd><p><span class="math notranslate nohighlight">\(x_{gap} = g\)</span></p>
+<dt>[I.] Evaluate gap per segment <span class="math notranslate nohighlight">\(g\)</span> using Eq. <a class="reference internal" href="#equation-objectcontactfrictioncirclecable2d-gap">(48)</a> and store in data variable:</dt><dd><p><span class="math notranslate nohighlight">\(x_{gap} = g\)</span></p>
 </dd>
 </dl>
 </li>
 <li><p>[II.] If <span class="math notranslate nohighlight">\(x_{gap} &lt; 0\)</span> and (<span class="math notranslate nohighlight">\(\mu_v \neq 0\)</span> or  <span class="math notranslate nohighlight">\(\mu_k \neq 0\)</span>):</p></li>
-<li><p>Compute contact force <span class="math notranslate nohighlight">\(f_n\)</span> according to Eq. <a class="reference internal" href="#equation-objectcontactfrictioncirclecable2d-contactforce">(51)</a></p></li>
-<li><p>Compute current sticking position <span class="math notranslate nohighlight">\(x_{curStick}\)</span> according to Eq. <a class="reference internal" href="#equation-objectcontactfrictioncirclecable2d-lastcurstick">(49)</a>(terms are only evaluated if <span class="math notranslate nohighlight">\(\mu_k \neq 0\)</span>)</p></li>
+<li><p>Compute contact force <span class="math notranslate nohighlight">\(f_n\)</span> according to Eq. <a class="reference internal" href="#equation-objectcontactfrictioncirclecable2d-contactforce">(52)</a></p></li>
+<li><p>Compute current sticking position <span class="math notranslate nohighlight">\(x_{curStick}\)</span> according to Eq. <a class="reference internal" href="#equation-objectcontactfrictioncirclecable2d-lastcurstick">(50)</a>(terms are only evaluated if <span class="math notranslate nohighlight">\(\mu_k \neq 0\)</span>)</p></li>
 <li><dl class="simple">
 <dt>Retrieve <code class="docutils literal notranslate"><span class="pre">startOfStep</span></code> sticking position(Importantly, the <code class="docutils literal notranslate"><span class="pre">PostNewtonStep</span></code> always refers to the <code class="docutils literal notranslate"><span class="pre">startOfStep</span></code> state in the sticking position, because in the discontinuous iterations, the algorithm could switch to slipping in between and override the last sticking position in the current step) in <span class="math notranslate nohighlight">\(x^{startOfStep}_{lastStick}\)</span> and compute and normalize</dt><dd><p>difference in sticking position(in case that <span class="math notranslate nohighlight">\(x_{isSlipStick} = -2\)</span>, meaning that there is no stored sticking position, we set <span class="math notranslate nohighlight">\(\Delta x_{stick} = 0\)</span>):</p>
 </dd>
@@ -589,15 +589,15 @@ For efficiency, the LHS computation is only performed, if the <code class="docut
 <p>The operations are similar to the <code class="docutils literal notranslate"><span class="pre">PostNewtonStep</span></code>, but without switching. The following operations are performed for each segment <span class="math notranslate nohighlight">\(s_i\)</span>, if
 <span class="math notranslate nohighlight">\(x_{gap, s_i} &lt;= 0\)</span>:</p>
 <ul class="simple">
-<li><p>[I.] Compute contact force <span class="math notranslate nohighlight">\(f_n\)</span>, Eq. <a class="reference internal" href="#equation-objectcontactfrictioncirclecable2d-contactforce">(51)</a>.</p></li>
+<li><p>[I.] Compute contact force <span class="math notranslate nohighlight">\(f_n\)</span>, Eq. <a class="reference internal" href="#equation-objectcontactfrictioncirclecable2d-contactforce">(52)</a>.</p></li>
 <li><p>[II.] In case of sticking (<span class="math notranslate nohighlight">\(|x_{isSlipStick}|\neq 1\)</span>):</p></li>
-<li><p>[II.1] the current sticking position <span class="math notranslate nohighlight">\(x_{curStick}\)</span> is computed from Eq. <a class="reference internal" href="#equation-objectcontactfrictioncirclecable2d-lastcurstick">(49)</a>, and the difference of current and last sticking position reads(see the difference to the <code class="docutils literal notranslate"><span class="pre">PostNewtonStep</span></code>: we use <span class="math notranslate nohighlight">\(x_{lastStick}\)</span> here, not the <code class="docutils literal notranslate"><span class="pre">startOfStep</span></code> variant.):</p></li>
+<li><p>[II.1] the current sticking position <span class="math notranslate nohighlight">\(x_{curStick}\)</span> is computed from Eq. <a class="reference internal" href="#equation-objectcontactfrictioncirclecable2d-lastcurstick">(50)</a>, and the difference of current and last sticking position reads(see the difference to the <code class="docutils literal notranslate"><span class="pre">PostNewtonStep</span></code>: we use <span class="math notranslate nohighlight">\(x_{lastStick}\)</span> here, not the <code class="docutils literal notranslate"><span class="pre">startOfStep</span></code> variant.):</p></li>
 </ul>
 <div class="math notranslate nohighlight">
 \[\Delta x^*_{stick} = x_{curStick} - x_{lastStick}, \quad \Delta x_{stick} = x^*_{stick} - \mathrm{floor}\left(\frac{\Delta x^*_{stick} }{2 \pi \cdot r} + \frac{1}{2}\right) \cdot 2 \pi \cdot r\]</div>
 <ul class="simple">
 <li><p>[II.2] if the friction stiffness is <span class="math notranslate nohighlight">\(\mu_k==0\)</span> or if <span class="math notranslate nohighlight">\(x_{isSlipStick} == -2\)</span>, we set <span class="math notranslate nohighlight">\(\Delta x_{stick}=0\)</span></p></li>
-<li><p>[II.3] using the tangential velocity from Eq. <a class="reference internal" href="#equation-objectcontactfrictioncirclecable2d-vtangent">(48)</a>, the tangent force follows as (even if it is larger than the sticking limit)</p></li>
+<li><p>[II.3] using the tangential velocity from Eq. <a class="reference internal" href="#equation-objectcontactfrictioncirclecable2d-vtangent">(49)</a>, the tangent force follows as (even if it is larger than the sticking limit)</p></li>
 </ul>
 <div class="math notranslate nohighlight">
 \[f_t = \mu_v \cdot v_t + \mu_k \Delta x_{stick}\]</div>
@@ -615,18 +615,18 @@ the <code class="docutils literal notranslate"><span class="pre">PostNewtonStep<
 contact forces <span class="math notranslate nohighlight">\({\mathbf{f}}_i\)</span> with <span class="math notranslate nohighlight">\(i \in [0,n_{cs}]\)</span> – these are <span class="math notranslate nohighlight">\((n_{cs}+1)\)</span> forces – are applied at the points <span class="math notranslate nohighlight">\(p_i\)</span>, and they are computed for every contact segments (i.e., two segments may contribute to contact forces of one point).
 For every contact computation, first all contact forces at segment points are set to zero.
 We distinguish two cases SN and PWN. If <code class="docutils literal notranslate"><span class="pre">useSegmentNormals==True</span></code>, we use the SN case, while otherwise the PWN case is used,
-compare <a class="reference internal" href="#fig-objectcontactfrictioncirclecable2d-normals"><span class="std std-numref">Fig. 14</span></a>.</p>
+compare <a class="reference internal" href="#fig-objectcontactfrictioncirclecable2d-normals"><span class="std std-numref">Fig. 16</span></a>.</p>
 <figure class="align-default" id="id4">
 <span id="fig-objectcontactfrictioncirclecable2d-normals"></span><a class="reference internal image-reference" href="../../../_images/ContactFrictionCircleCable2Dnormals.png"><img alt="../../../_images/ContactFrictionCircleCable2Dnormals.png" src="../../../_images/ContactFrictionCircleCable2Dnormals.png" style="width: 700px;" /></a>
 <figcaption>
-<p><span class="caption-number">Fig. 14 </span><span class="caption-text">Choice of normals and tangent vectors for calculation of normal contact forces and tangential (friction) forces; note that the <code class="docutils literal notranslate"><span class="pre">useSegmentNormals=False</span></code> is not appropriate for this setup and would produce highly erroneous forces.</span><a class="headerlink" href="#id4" title="Permalink to this image"></a></p>
+<p><span class="caption-number">Fig. 16 </span><span class="caption-text">Choice of normals and tangent vectors for calculation of normal contact forces and tangential (friction) forces; note that the <code class="docutils literal notranslate"><span class="pre">useSegmentNormals=False</span></code> is not appropriate for this setup and would produce highly erroneous forces.</span><a class="headerlink" href="#id4" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 <p>Segment normals (=SN) lead to always good approximations for normal directions, irrespectively of short or extremely long segments as compared to the circle. However, in case of segments that are short as compared to the circle radius, normals computed from the center of the circle to the segment points (=PWN) are more consistent and produce tangents only in circumferential direction, which may improve behavior in some applications. The equations for the two cases read:</p>
 <blockquote>
 <div><p><strong>CASE SN</strong>: use <strong>S</strong>egment <strong>N</strong>ormals</p>
 </div></blockquote>
-<p>If there is contact in a segment <span class="math notranslate nohighlight">\(s_i\)</span>, i.e., gap state <span class="math notranslate nohighlight">\(x_{gap} \le 0\)</span>, see <a class="reference internal" href="#fig-objectcontactfrictioncirclecable2d-sketch"><span class="std std-numref">Fig. 12</span></a>(right), contact forces <span class="math notranslate nohighlight">\({\mathbf{f}}_{s_i}\)</span> are computed per segment,</p>
+<p>If there is contact in a segment <span class="math notranslate nohighlight">\(s_i\)</span>, i.e., gap state <span class="math notranslate nohighlight">\(x_{gap} \le 0\)</span>, see <a class="reference internal" href="#fig-objectcontactfrictioncirclecable2d-sketch"><span class="std std-numref">Fig. 14</span></a>(right), contact forces <span class="math notranslate nohighlight">\({\mathbf{f}}_{s_i}\)</span> are computed per segment,</p>
 <div class="math notranslate nohighlight">
 \[{\mathbf{f}}_{s_i} = f_n \cdot {\mathbf{n}}_{s_i} + f_t {\mathbf{t}}_{s_i}\]</div>
 <p>and added to every force at segment points according to</p>
@@ -638,7 +638,7 @@ compare <a class="reference internal" href="#fig-objectcontactfrictioncirclecabl
 </dd>
 </dl>
 <p>If there is contact in a segment <span class="math notranslate nohighlight">\(s_i\)</span>, i.e., gap <span class="math notranslate nohighlight">\(x_{gap} \le 0\)</span>,
-see <a class="reference internal" href="#fig-objectcontactfrictioncirclecable2d-sketch"><span class="std std-numref">Fig. 12</span></a>(right),
+see <a class="reference internal" href="#fig-objectcontactfrictioncirclecable2d-sketch"><span class="std std-numref">Fig. 14</span></a>(right),
 intermediate contact forces <span class="math notranslate nohighlight">\({\mathbf{f}}^{l,r}_{i}\)</span> are computed per segment point,</p>
 <div class="math notranslate nohighlight">
 \[ \begin{align}\begin{aligned} {\mathbf{f}}^l = f_n \cdot {\mathbf{n}}_{l,s_i} + f_t {\mathbf{t}}_{l,s_i}, \quad {\mathbf{f}}^r = f_n \cdot {\mathbf{n}}_{r,s_i} + f_t {\mathbf{t}}_{r,s_i}\\

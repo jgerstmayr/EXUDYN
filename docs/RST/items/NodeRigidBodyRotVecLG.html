@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NodeRigidBodyRotVecLG &mdash; Exudyn1.6.119.dev1 1.6.119.dev1 documentation</title>
+  <title>NodeRigidBodyRotVecLG &mdash; Exudyn1.6.164.dev1 1.6.164.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -41,7 +41,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.119.dev1
+            Exudyn1.6.164.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -113,7 +113,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.119.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.164.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -255,12 +255,18 @@
 </li>
 </ul>
 <p><strong>Detailed information:</strong>
-For a detailed description on the rigid body dynamics formulation using this node, see Holzinger and Gerstmayr .</p>
+For a detailed description on the rigid body dynamics formulation using this node,
+see Holzinger and Gerstmayr .</p>
 <p>The node has 3 displacement coordinates <span class="math notranslate nohighlight">\([q_0,\,q_1,\,q_2]\tp\)</span> and three rotation coordinates, which is the rotation vector</p>
 <div class="math notranslate nohighlight">
 \[\tnu = \varphi {\mathbf{n}} = \tnu\cConfig + \tnu\cRef,\]</div>
 <p>with the rotation angle <span class="math notranslate nohighlight">\(\varphi\)</span> and the rotation axis <span class="math notranslate nohighlight">\({\mathbf{n}}\)</span>.
-All coordinates <span class="math notranslate nohighlight">\({\mathbf{c}}\cConfig\)</span> lead to second order differential equations, however the rotation vector cannot be used as a conventional parameterization. It must be computed within a nonlinear update, using appropriate Lie group methods.</p>
+All coordinates <span class="math notranslate nohighlight">\({\mathbf{c}}\cConfig\)</span> lead to second order differential equations,
+However the rotation vector cannot be used as a conventional parameterization.
+It must be computed within a nonlinear update, using appropriate Lie group methods.
+The first 3 equations are residuals of translational forces in global coordinates,
+while the last 3 equations are residual of local (body-fixed) torques,
+compare the equations of motion of the rigid body.</p>
 <p>The rotation matrix <span class="math notranslate nohighlight">\(\LU{0b}{\Rot(\tnu)}\cConfig\)</span> transforms a local (body-fixed) 3D position
 <span class="math notranslate nohighlight">\(\pLocB = \LU{b}{[b_0,\,b_1,\,b_2]}\tp\)</span> to global 3D positions,</p>
 <div class="math notranslate nohighlight">
@@ -269,6 +275,11 @@ All coordinates <span class="math notranslate nohighlight">\({\mathbf{c}}\cConfi
 <p>A Lie group integrator must be used with this node, which is why the is used, the
 rotation parameter velocities are identical to the local angular velocity <span class="math notranslate nohighlight">\(\LU{b}{\tomega}\)</span> and thus the
 matrix <span class="math notranslate nohighlight">\(\LU{b}{{\mathbf{G}}}\)</span> becomes the identity matrix.</p>
+<p><strong>Note</strong>, that the node automatically switches to Lie group integration of its
+rotational coordinates, both in explicit integration as well as for implicit time integration.
+This node avoids typical singularities of rotations and is therefore perfectly suited
+for arbitrary motion. Furthermore, nonlinearities are reduced, which may improve
+implicit time integration performance.</p>
 <p>For creating a <code class="docutils literal notranslate"><span class="pre">NodeRigidBodyRotVecLG</span></code> together with a rigid body, there is a <code class="docutils literal notranslate"><span class="pre">rigidBodyUtilities</span></code> function <code class="docutils literal notranslate"><span class="pre">AddRigidBody</span></code>,
 see Section <a class="reference internal" href="../pythonUtilities/rigidBodyUtilities.html#sec-rigidbodyutilities-addrigidbody"><span class="std std-ref">Function: AddRigidBody</span></a>, which simplifies the setup of a rigid body significantely!</p>
 <p>Relevant Examples and TestModels with weblink:</p>

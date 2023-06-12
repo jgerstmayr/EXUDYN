@@ -94,6 +94,64 @@ DESCRIPTION of ObjectKinematicTree
 
 
 
+.. _sec-kinematictree-additionaloutput:
+
+
+SensorKinematicTree output variables
+------------------------------------
+
+The following output variables are available with \ ``SensorKinematicTree``\  for a specific link.
+Within the link \ :math:`n_i`\ , a local position \ :math:`\LU{n_i}{{\mathbf{p}}_{n_i}}`\  is required. All output variables are available for different
+configurations. Furthermore, \ :math:`\LU{0,n_i}{{\mathbf{T}}}`\  is the homogeneous transformation from link \ :math:`n_i`\  coordinates to global coordinates.
+
+.. list-table:: \ 
+   :widths: auto
+   :header-rows: 1
+
+   * - | Kinematic tree output variables
+     - | symbol
+     - | description
+   * - | Position
+     - | \ :math:`\LU{0}{{\mathbf{p}}_{n_i}} = \LU{0,n_i}{{\mathbf{T}}} \LU{n_i}{{\mathbf{p}}_{n_i}}`\ 
+     - | global position of local position at link \ :math:`n_i`\ 
+   * - | Displacement
+     - | \ :math:`\LU{0}{{\mathbf{u}}_{n_i}} = \LU{0,n_i}{{\mathbf{T}}} \LU{n_i}{{\mathbf{p}}_{n_i}} - \LU{0}{{\mathbf{p}}_{n_i,\cRef}}`\ 
+     - | global displacement of local position at link \ :math:`n_i`\ 
+   * - | Rotation
+     - | \ :math:`\tphi_{n_i}`\ 
+     - | Tait-Bryan angles of link \ :math:`n_i`\ 
+   * - | RotationMatrix
+     - | \ :math:`\LU{0,n_i}{\Rot_{n_i}}`\ 
+     - | rotation matrix of link \ :math:`n_i`\ 
+   * - | VelocityLocal
+     - | \ :math:`\LU{n_i}{{\mathbf{v}}_{n_i}}`\ 
+     - | local velocity of local position at link \ :math:`n_i`\ 
+   * - | Velocity
+     - | \ :math:`\LU{0}{{\mathbf{v}}_{n_i}} = \LU{0,n_i}{\dot{\mathbf{T}}} \LU{n_i}{{\mathbf{p}}_{n_i}}`\ 
+     - | global velocity of local position at link \ :math:`n_i`\ 
+   * - | VelocityLocal
+     - | \ :math:`\LU{n_i}{{\mathbf{v}}_{n_i}}`\ 
+     - | local velocity of local position at link \ :math:`n_i`\ 
+   * - | Acceleration
+     - | \ :math:`\LU{0}{{\mathbf{a}}_{n_i}} = \LU{0,n_i}{\dot{\mathbf{T}}} \LU{n_i}{{\mathbf{p}}_{n_i}}`\ 
+     - | global acceleration of local position at link \ :math:`n_i`\ 
+   * - | AccelerationLocal
+     - | \ :math:`\LU{n_i}{{\mathbf{a}}_{n_i}}`\ 
+     - | local acceleration of local position at link \ :math:`n_i`\ 
+   * - | AngularVelocity
+     - | \ :math:`\LU{0}{\tomega_{n_i}}`\ 
+     - | global angular velocity of local position at link \ :math:`n_i`\ 
+   * - | AngularVelocityLocal
+     - | \ :math:`\LU{n_i}{\tomega_{n_i}}`\ 
+     - | local angular velocity of local position at link \ :math:`n_i`\ 
+   * - | AngularAcceleration
+     - | \ :math:`\LU{0}{\talpha_{n_i}}`\ 
+     - | global angular acceleration of local position at link \ :math:`n_i`\ 
+   * - | AngularAccelerationLocal
+     - | \ :math:`\LU{n_i}{\talpha_{n_i}}`\ 
+     - | local angular acceleration of local position at link \ :math:`n_i`\ 
+
+
 General notes
 -------------
 
@@ -109,8 +167,8 @@ The question, which formulation to chose cannot be answered uniquely. However, \
 do not include constraints, so they can be solved with explicit solvers. Furthermore, the joint values (angels)
 can be addressed directly -- controllers or sensors are generally simpler.
 
-Equations of motion
--------------------
+General
+-------
 
 The equations follow the description given in Chapters 2 and 3 in the handbook of robotics, 2016 edition .
 
@@ -127,7 +185,102 @@ Equations of motion
 
 The \ ``KinematicTree``\  has one node of type \ ``NodeGenericODE2``\  with \ :math:`n`\  coordinates.
 The equations of motion are built by special multibody algorithms, following Featherstone . 
-For a short introduction into this topic, see Chapter 3 of citeSiciliano2016. 
+For a short introduction into this topic, see Chapter 3 of . 
+
+The kinematic tree defines a set of rigid bodies connected by joints, having no loops.
+In this way, every body \ :math:`i`\ , also denoted as link, has either a previous body \ :math:`p(i) \neq \mathrm{-1}`\  or not.
+The previous body for body \ :math:`i`\  is \ :math:`p(i)`\ . The coordinates of joint \ :math:`i`\  are defined as \ :math:`q_i`\ .
+
+The following joint transformations are considered (as homogeneous transformations):
+
++  \ :math:`{\mathbf{X}}_J(i)`\  \ :math:`\ldots`\  joint transformation due to rotation or translation
++  \ :math:`{\mathbf{X}}_L(i)`\  \ :math:`\ldots`\  link transformation (e.g. given by kinematics of mechanism)
++  \ :math:`\LU{i,\mathrm{-1}}{{\mathbf{X}}}`\  \ :math:`\ldots`\  transformation from global (-1) to local joint \ :math:`i`\  coordinates
++  \ :math:`\LU{i,p(i)}{{\mathbf{X}}}`\  \ :math:`\ldots`\  transformation from previous joint to joint \ :math:`i`\  coordinates
+
+Furthermore, we use
+
+   \ :math:`\tPhi_i`\  \ :math:`\ldots`\  motion subspace for joint \ :math:`i`\ 
+
+which denotes the transformation from joint coordinate (scalar) to rotations and translations.
+We can compute the local joint angular velocity \ :math:`\tomega_i`\  and translational velocity \ :math:`{\mathbf{w}}_i`\ , as a 6D vector \ :math:`{\mathbf{v}}^J_i`\ , from
+
+.. math::
+
+   {\mathbf{v}}^J_i = \vp{\tomega_i}{{\mathbf{w}}_i} = \tPhi_i \, q_i
+
+
+The joint coordinates, which can be rotational or translational, are stored in the vector
+
+.. math::
+
+   {\mathbf{q}} = [q_0, \, \ldots,\, q_{N_B-1}]\tp ,
+
+
+and the vector of joint velocity coordinates reads
+
+.. math::
+
+   \dot {\mathbf{q}} = [\dot q_0, \, \ldots,\, \dot q_{N_B-1}]\tp .
+
+
+Knowing the motion subspace \ :math:`\tPhi_i`\  for joint \ :math:`i`\ , the velocity of joint \ :math:`i`\  reads
+
+.. math::
+
+   {\mathbf{v}}_i = {\mathbf{v}}_{p(i)} + \tPhi_i \, \dot q_i ,
+
+
+and accelerations follow as
+
+.. math::
+
+   {\mathbf{a}}_i = {\mathbf{a}}_{p(i)} + \tPhi_i \, \ddot q_i + \dot \tPhi_i \, \dot q_i.
+
+
+Note that the previous formulas can be interpreted coordinate free, but they are usually implemented in joint coordinates.
+
+The local forces due to applied forces and inertia forces are computed, for now independently, for every link,
+
+.. math::
+
+   {\mathbf{f}}_i = {\mathbf{I}}_i {\mathbf{a}}_i + {\mathbf{v}}_i \times {\mathbf{I}}_i {\mathbf{v}}_i - \LU{i,\mathrm{-1}}{{\mathbf{X}}\tp} \!\cdot\! \LU{\mathrm{-1}}{{\mathbf{f}}}^a
+
+
+The total forces can be computed from inverse dynamics. 
+At every free end of the tree, the forces are added up for the previous link, which needs to be done recursively starting at the leaves of the tree,
+
+.. math::
+
+   {\mathbf{f}}_{p(i)} \mathrel{+}=  \LU{i,p(i)}{{\mathbf{X}}\tp} \!\cdot {\mathbf{f}}_i
+
+
+The mass matrix is then built by recursively computing the intertia of the links and adding the joint contributions by
+projecting the local inertia into the joint motion space, see the composite-rigid-body algorithm.
+
+Note that \ :math:`\cdot`\  for multiplication of matrices and vectors is added for clarity, especially in case of left and right indices.
+The whole algorithm for forward and inverse dynamics is given in the following figures.
+
+ 
+
+
+.. figure:: ../../theDoc/figures/kinematicTreeRNEA.png
+   :width: 750
+
+   Recursive Newton-Euler algorithm
+
+  
+.. figure:: ../../theDoc/figures/kinematicTreeCRBmass.png
+   :width: 750
+   
+   Composite-rigid-body algorithm
+
+
+
+
+Implementation and user functions
+---------------------------------
+
 Currently, there is only the so-called Composite-Rigid-Body (CRB) algorithm implemented.
 This algorithm does not show the highest performance, but creates the mass matrix \ :math:`{\mathbf{M}}_{CRB}`\  and forces \ :math:`{\mathbf{f}}_{CRB}`\ 
 in a conventional form. The equations read

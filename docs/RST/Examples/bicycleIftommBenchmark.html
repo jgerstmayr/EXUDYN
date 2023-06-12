@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>bicycleIftommBenchmark.py &mdash; Exudyn1.6.119.dev1 1.6.119.dev1 documentation</title>
+  <title>bicycleIftommBenchmark.py &mdash; Exudyn1.6.164.dev1 1.6.164.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -39,7 +39,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.119.dev1
+            Exudyn1.6.164.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -118,6 +118,7 @@
 <li class="toctree-l2"><a class="reference internal" href="massSpringFrictionInteractive.html">massSpringFrictionInteractive.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="minimizeExample.html">minimizeExample.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mouseInteractionExample.html">mouseInteractionExample.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mpi4pyExample.html">mpi4pyExample.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="multiMbsTest.html">multiMbsTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="multiprocessingTest.html">multiprocessingTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="myFirstExample.html">myFirstExample.py</a></li>
@@ -127,6 +128,7 @@
 <li class="toctree-l2"><a class="reference internal" href="NGsolveLinearFEM.html">NGsolveLinearFEM.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolvePistonEngine.html">NGsolvePistonEngine.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolvePostProcessingStresses.html">NGsolvePostProcessingStresses.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nMassOscillatorEigenmodes.html">nMassOscillatorEigenmodes.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="nMassOscillatorInteractive.html">nMassOscillatorInteractive.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ObjectFFRFconvergenceTestBeam.html">ObjectFFRFconvergenceTestBeam.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ObjectFFRFconvergenceTestHinge.html">ObjectFFRFconvergenceTestHinge.py</a></li>
@@ -164,6 +166,7 @@
 <li class="toctree-l2"><a class="reference internal" href="serialRobotKinematicTree.html">serialRobotKinematicTree.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="serialRobotKinematicTreeDigging.html">serialRobotKinematicTreeDigging.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="serialRobotTSD.html">serialRobotTSD.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shapeOptimization.html">shapeOptimization.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="simple4linkPendulumBing.html">simple4linkPendulumBing.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="simulateInteractively.html">simulateInteractively.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="SliderCrank.html">SliderCrank.py</a></li>
@@ -204,7 +207,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.119.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.164.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -282,14 +285,14 @@
 <span class="linenos"> 54</span><span class="n">mR</span> <span class="o">=</span> <span class="mi">2</span>              <span class="c1">#rear wheel mass</span>
 <span class="linenos"> 55</span><span class="n">IRxx</span> <span class="o">=</span> <span class="mf">0.0603</span>       <span class="c1">#rear wheel inertia xx = zz ; but in EXUDYN, x=rotation axis!</span>
 <span class="linenos"> 56</span><span class="n">IRyy</span> <span class="o">=</span> <span class="mf">0.12</span>         <span class="c1">#rear wheel inertia yy (around wheel axis)</span>
-<span class="linenos"> 57</span><span class="n">inertiaR</span> <span class="o">=</span> <span class="nf">RigidBodyInertia</span><span class="p">(</span><span class="n">mass</span><span class="o">=</span><span class="n">mR</span><span class="p">,</span> <span class="n">inertiaTensor</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">IRyy</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="n">IRxx</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">IRxx</span><span class="p">]]))</span>
+<span class="linenos"> 57</span><span class="n">inertiaR</span> <span class="o">=</span> <span class="nc">RigidBodyInertia</span><span class="p">(</span><span class="n">mass</span><span class="o">=</span><span class="n">mR</span><span class="p">,</span> <span class="n">inertiaTensor</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">IRyy</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="n">IRxx</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">IRxx</span><span class="p">]]))</span>
 <span class="linenos"> 58</span>
 <span class="linenos"> 59</span><span class="c1">#front wheel F:</span>
 <span class="linenos"> 60</span><span class="n">rF</span> <span class="o">=</span> <span class="mf">0.35</span>           <span class="c1">#rear wheel radius</span>
 <span class="linenos"> 61</span><span class="n">mF</span> <span class="o">=</span> <span class="mi">3</span>              <span class="c1">#rear wheel mass</span>
 <span class="linenos"> 62</span><span class="n">IFxx</span> <span class="o">=</span> <span class="mf">0.1405</span>       <span class="c1">#rear wheel inertia xx = zz ; but in EXUDYN, x=rotation axis!</span>
 <span class="linenos"> 63</span><span class="n">IFyy</span> <span class="o">=</span> <span class="mf">0.28</span>         <span class="c1">#rear wheel inertia yy (around wheel axis)</span>
-<span class="linenos"> 64</span><span class="n">inertiaF</span> <span class="o">=</span> <span class="nf">RigidBodyInertia</span><span class="p">(</span><span class="n">mass</span><span class="o">=</span><span class="n">mF</span><span class="p">,</span> <span class="n">inertiaTensor</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">IFyy</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="n">IFxx</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">IFxx</span><span class="p">]]))</span>
+<span class="linenos"> 64</span><span class="n">inertiaF</span> <span class="o">=</span> <span class="nc">RigidBodyInertia</span><span class="p">(</span><span class="n">mass</span><span class="o">=</span><span class="n">mF</span><span class="p">,</span> <span class="n">inertiaTensor</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">IFyy</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="n">IFxx</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">IFxx</span><span class="p">]]))</span>
 <span class="linenos"> 65</span>
 <span class="linenos"> 66</span><span class="c1">#rear body B:</span>
 <span class="linenos"> 67</span><span class="n">xB</span> <span class="o">=</span> <span class="mf">0.3</span>            <span class="c1">#COM x</span>
@@ -297,7 +300,7 @@
 <span class="linenos"> 69</span><span class="n">bCOM</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">xB</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">zB</span><span class="p">])</span>
 <span class="linenos"> 70</span><span class="n">mB</span> <span class="o">=</span> <span class="mi">85</span>             <span class="c1">#rear body (and driver) mass</span>
 <span class="linenos"> 71</span><span class="n">zz</span><span class="o">=-</span><span class="mi">1</span>
-<span class="linenos"> 72</span><span class="n">inertiaB</span> <span class="o">=</span> <span class="nf">RigidBodyInertia</span><span class="p">(</span><span class="n">mass</span><span class="o">=</span><span class="n">mB</span><span class="p">,</span>
+<span class="linenos"> 72</span><span class="n">inertiaB</span> <span class="o">=</span> <span class="nc">RigidBodyInertia</span><span class="p">(</span><span class="n">mass</span><span class="o">=</span><span class="n">mB</span><span class="p">,</span>
 <span class="linenos"> 73</span>                            <span class="n">inertiaTensor</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">9.2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">2.4</span><span class="o">*</span><span class="n">zz</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mf">2.4</span><span class="o">*</span><span class="n">zz</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">2.8</span><span class="p">]]),</span>
 <span class="linenos"> 74</span>                            <span class="c1"># inertiaTensor=np.diag([1,1,1]),</span>
 <span class="linenos"> 75</span>                            <span class="n">com</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span> <span class="c1">#reference position = COM for this body</span>
@@ -308,7 +311,7 @@
 <span class="linenos"> 80</span><span class="n">zH</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.7</span><span class="o">*</span><span class="n">sZ</span>        <span class="c1">#COM z</span>
 <span class="linenos"> 81</span><span class="n">hCOM</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">xH</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">zH</span><span class="p">])</span>
 <span class="linenos"> 82</span><span class="n">mH</span> <span class="o">=</span> <span class="mi">4</span>              <span class="c1">#handle bar mass</span>
-<span class="linenos"> 83</span><span class="n">inertiaH</span> <span class="o">=</span> <span class="nf">RigidBodyInertia</span><span class="p">(</span><span class="n">mass</span><span class="o">=</span><span class="n">mH</span><span class="p">,</span>
+<span class="linenos"> 83</span><span class="n">inertiaH</span> <span class="o">=</span> <span class="nc">RigidBodyInertia</span><span class="p">(</span><span class="n">mass</span><span class="o">=</span><span class="n">mH</span><span class="p">,</span>
 <span class="linenos"> 84</span>                            <span class="n">inertiaTensor</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">0.05892</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.00756</span><span class="o">*</span><span class="n">zz</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.06</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="o">-</span><span class="mf">0.00756</span><span class="o">*</span><span class="n">zz</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.00708</span><span class="p">]]),</span>
 <span class="linenos"> 85</span>                            <span class="c1"># inertiaTensor=np.diag([1,1,1]),</span>
 <span class="linenos"> 86</span>                            <span class="n">com</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span> <span class="c1">#reference position = COM for this body</span>

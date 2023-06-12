@@ -78,7 +78,13 @@ DESCRIPTION of NodeRigidBodyEP
 
 
 \ **Detailed information:** 
-All coordinates \ :math:`{\mathbf{c}}\cConfig`\  lead to second order differential equations, but there is one additional constraint equation for the quaternions.
+All coordinates \ :math:`{\mathbf{c}}\cConfig`\  lead to second order differential equations.
+The first 3 equations are residuals of translational forces in global coordinates,
+while the last 4 equations are residual of local torques left-multiplied with \ :math:`\LU{b}{{\mathbf{G}}\tp}`\  or
+global torques left-multiplied with \ :math:`\LU{0}{{\mathbf{G}}\tp}`\ , see Eq. :eq:`eq-noderigidbodyep-gm`\ , compare the equations of motion of
+the rigid body.
+
+There is one additional (algebraic) constraint equation for the quaternions.
 The additional constraint equation, which needs to be provided by the object, reads
 
 .. math::
@@ -111,6 +117,7 @@ The rotation matrix is defined as function of the rotation parameters \ :math:`\
 The derivatives of the angular velocity vectors w.r.t.\ the rotation velocity coordinates \ :math:`\dot \ttheta=[\dot \theta_0,\,\dot \theta_1,\,\dot \theta_2,\,\dot \theta_3]\tp`\  lead to the \ :math:`{\mathbf{G}}`\  matrices, as used in the equations of motion for rigid bodies,
 
 .. math::
+   :label: eq-noderigidbodyep-gm
 
    \LU{0}{\tomega} &=& \LU{0}{{\mathbf{G}}} \dot \ttheta, \\
    \LU{b}{\tomega} &=& \LU{b}{{\mathbf{G}}} \dot \ttheta.

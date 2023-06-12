@@ -446,15 +446,12 @@ Settings for linear solver, both dense and sparse (Eigen).
 
 LinearSolverSettings has the following items:
 
-* | **ignoreRedundantConstraints** [type = bool, default = False]:
-  | \ ``simulationSettings.linearSolverSettings.ignoreRedundantConstraints``\ 
-  | [ONLY implemented for dense matrices] False: standard way, fails if redundant equations or singular matrices occur; True: if redundant constraints appear, the solver tries to resolve them by setting according Lagrange multipliers to zero; in case of redundant constraints, this may help, but it may lead to erroneous behaviour
 * | **ignoreSingularJacobian** [type = bool, default = False]:
   | \ ``simulationSettings.linearSolverSettings.ignoreSingularJacobian``\ 
-  | [ONLY implemented for dense matrices] False: standard way, fails if jacobian is singular; True: if singularities appear in jacobian (e.g. no equation attributed to a node, redundant equations, zero mass matrix, zero eigenvalue for static problem, etc.), the jacobian inverse is resolved such that according solution variables are set to zero; this may help, but it MAY LEAD TO ERRONEOUS BEHAVIOUR; for static problems, this may suppress static motion or resolve problems in case of instabilities, but should in general be considered with care!
-* | **pivotTreshold** [type = PReal, default = 0]:
-  | \ ``simulationSettings.linearSolverSettings.pivotTreshold``\ 
-  | treshold for dense linear solver, can be used to detect close to singular solutions, setting this to, e.g., 1e-12; solver then reports on equations that are causing close to singularity
+  | [ONLY implemented for dense, Eigen matrix mode] False: standard way, fails if jacobian is singular; True: use Eigen's FullPivLU (thus only works with LinearSolverType.EigenDense) which handles over- and underdetermined systems; can often resolve redundant constraints, but MAY ALSO LEAD TO ERRONEOUS RESULTS!
+* | **pivotThreshold** [type = PReal, default = 0]:
+  | \ ``simulationSettings.linearSolverSettings.pivotThreshold``\ 
+  | [ONLY available for EXUdense and EigenDense (FullPivot) solver] threshold for dense linear solver, can be used to detect close to singular solutions, setting this to, e.g., 1e-12; solver then reports on equations that are causing close to singularity
 * | **reuseAnalyzedPattern** [type = bool, default = False]:
   | \ ``simulationSettings.linearSolverSettings.reuseAnalyzedPattern``\ 
   | [ONLY available for sparse matrices] True: the Eigen SparseLU solver offers the possibility to reuse an analyzed pattern of a previous factorization; this may reduce total factorization time by a factor of 2 or 3, depending on the matrix type; however, if the matrix patterns heavily change between computations, this may even slow down performance; this flag is set for SparseMatrices in InitializeSolverData(...) and should be handled with care!

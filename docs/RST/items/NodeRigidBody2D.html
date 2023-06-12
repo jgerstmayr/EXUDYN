@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NodeRigidBody2D &mdash; Exudyn1.6.119.dev1 1.6.119.dev1 documentation</title>
+  <title>NodeRigidBody2D &mdash; Exudyn1.6.164.dev1 1.6.164.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -41,7 +41,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.119.dev1
+            Exudyn1.6.164.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -113,7 +113,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.119.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.164.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -265,7 +265,10 @@
 </ul>
 <p><strong>Detailed information:</strong>
 The node provides 2 displacement coordinates (displacement of <a class="reference internal" href="../Abbreviations.html#com"><span class="std std-ref">COM</span></a>, (<span class="math notranslate nohighlight">\(q_0,q_1\)</span>) ) and 1 rotation parameter (<span class="math notranslate nohighlight">\(\theta_0\)</span>). According equations need to be provided by an according object (e.g., RigidBody2D).
-Using the rotation parameter <span class="math notranslate nohighlight">\(\theta_{0\mathrm{config}} = \psi_{0ref} + \psi_{0\mathrm{config}}\)</span>, the rotation matrix is defined as</p>
+The node leads to 3 ODE2 equations of motions, where the first 2 equations are
+residuals of global translational forces, and the third equation is the residual of the
+torque around the Z-axis (due to planar motion, local=global).</p>
+<p>Using the rotation parameter <span class="math notranslate nohighlight">\(\theta_{0\mathrm{config}} = \psi_{0ref} + \psi_{0\mathrm{config}}\)</span>, the rotation matrix is defined as</p>
 <div class="math notranslate nohighlight">
 \[\LU{0b}{\Rot}\cConfig = \mr{\cos(\theta_0)}{-\sin(\theta_0)}{0}{\sin(\theta_0)}{\cos(\theta_0)}{0}{0}{0}{1}\cConfig\]</div>
 <p><strong>Example</strong> for NodeRigidBody2D: see ObjectRigidBody2D</p>

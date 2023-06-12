@@ -145,7 +145,7 @@ which transforms the action of global forces \ :math:`\LU{0}{{\mathbf{f}}}`\  of
 
 .. math::
 
-   {\mathbf{Q}} = \LU{0}{{\mathbf{J}}_{pos}}\tp \LU{0}{{\mathbf{f}}}_a
+   {\mathbf{Q}} = \LU{0}{{\mathbf{J}}_{pos}\tp} \LU{0}{{\mathbf{f}}}_a
 
 
 The \ **rotation jacobian**\ , which is computed from angular velocity, reads
@@ -159,7 +159,7 @@ and transforms the action of global torques \ :math:`\LU{0}{\ttau}`\  of orienta
 
 .. math::
 
-   {\mathbf{Q}} = \LU{0}{{\mathbf{J}}_{rot}}\tp \LU{0}{\ttau}_a
+   {\mathbf{Q}} = \LU{0}{{\mathbf{J}}_{rot}\tp} \, \LU{0}{\ttau}_a
 
 
 

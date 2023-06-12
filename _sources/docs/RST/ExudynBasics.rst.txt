@@ -108,6 +108,11 @@ Renderer and 3D graphics
 ------------------------
 
 A 3D renderer is attached to the simulation. Visualization is started with  \ ``exu.StartRenderer()``\ , see the examples and tutorials.
+For closing, press key 'Q' or Escape or close the window.
+\ **Note**\ :
+
++  After \ ``visualizationSettings.window.reallyQuitTimeLimit``\  seconds a 'do you really want to quit' dialog opens for safety on pressing 'Q'; if no tkinter is available, you just have to press 'Q' twice. For closing the window, you need to click a second time on the close button of the window after \ ``reallyQuitTimeLimit``\  seconds (usually 900 seconds).
+
 The renderer uses an OpenGL window of a library called GLFW, which is platform-independent. 
 The renderer is set up in a minimalistic way, just to ensure that you can check that the modeling is correct. 
 There is no way to contruct models inside the renderer. 
@@ -221,6 +226,7 @@ Note that the dialog may appear behind the visualization window!
 This dialog may be very helpful in long running computations or in case that you may evaluate variables for debugging.
 The Python commands are evaluated in the global python scope, meaning that \ ``mbs``\  or other variables of your scripts are available.
 User errors are caught by exceptions, but in severe cases this may lead to crash.
+To print values, always use \ ``print(...)``\  to see the string representation of an object.
 
 Useful examples (single lines) may be: 
 
@@ -231,13 +237,31 @@ Useful examples (single lines) may be:
   print(mbs.GetSensorValues(0))
   #adjust simulation end time, in long-run simulations:
   mbs.sys['dynamicSolver'].it.endTime = 1 
+  #adjust output behavior
   mbs.sys['dynamicSolver'].output.verboseMode = 0
 
 
 
+You can also do quite fancy things during simulation, e.g., to deactivate joints (of course this may result in strange behavior):
+
+.. code-block:: python
+
+n=mbs.systemData.NumberOfObjects()
+for i in range(n):
+    d = mbs.GetObject(i)
+    #if 'Joint' in d['objectType']:
+    if 'activeConnector' in d:
+        mbs.SetObjectParameter(i, 'activeConnector', False)
+
+
+
+
 Note that you could also change \ ``visualizationSettings``\  in this way, but the Visualization settings dialog is much more convenient.
-Right now, it is not possible to change \ ``simulationSettings``\  which have been passed to the solver.
-It is, e.g., not possible to change the Newton tolerances on the fly.
+Changing \ ``simulationSettings``\  is dangerous and must be treated with care.
+Some parameters, such as \ ``simulationSettings.timeIntegration.endTime``\  are copied into the internal solver's \textmbs.sys['dynamicSolver'].it structure.
+Thus, changing \ ``simulationSettings.timeIntegration.endTime``\  has no effect. 
+As a rule of thumb, all variables that are not stored inside the solvers structures may be adjusted by the \ ``simulationSettings``\  passed to the solver (which are then not copied internally); see the C++ code for details. However, behavior may change in future and unexpected behavior or and changing \ ``simulationSettings``\  will likely cause crashes if you do not know exactly the behavior, e.g., changing output format from text to binary ... !
+Specifically, \ ``newton``\  and \ ``discontinuous``\  settings cannot be changed on the fly as they are copied internally.
 
 
 .. _sec-overview-basics-graphicspipeline:
@@ -489,18 +513,35 @@ Nonlinear formulations (such as most multibody systems, especially nonlinear fin
 Tuning solver parameters is at hand of the user. 
 In general, the Newton solver tries to reduce the error by the factor given in \ ``simulationSettings.staticSolver.newton.relativeTolerance``\  (for static solver), which is not possible for very small (or zero) initial residuals. The absolute tolerance is helping out as a lower bound for the error, given in \ ``simulationSettings.staticSolver.newton.absoluteTolerance``\  (for static solver), which is by default rather low (1e-10) -- in order to achieve accurate results for small systems or small motion (in mm or \ :math:`\mu`\ m regime). Increasing this value helps to solve such problems. Nevertheless, you should usually set tolerances as low as possible because otherwise, your solution may become inaccurate.
 
-The following hints shall be followed (also some solver hints).
+The following hints / rules for described problems shall be followed.
 
-+  \ **static solver**\ : load steps are reduced even if the solution seems to be smooth and less steps are expected; larger number of steps may happen for finer discretization; you may adjust (increase) \ ``.newton.relativeTolerance``\  / \ ``.newton.absoluteTolerance``\  in static solver or in time integration to resolve such problems, but check if solution achieves according accuracy
-+  \ **static solver**\ : load steps are reduced significantly for highly nonlinear problems; solver repeatedly writes that steps are reduced \ :math:`\ra`\  try to use \ ``loadStepGeometric``\  and use a large \ ``loadStepGeometricRange``\ : this allows to start with very small loads in which the system is nearly linear (e.g. for thin strings or belts under gravity).
-+  \ **static solver**\ : in case that your system is (nearly) kinematic, a static solution can be achieved using \ ``stabilizerODE2term``\ , which adds mass-proportional stiffness terms during load steps \ :math:`< 1`\ .
++  \ **static solver**\ : \ **load steps get very small**\  even if the solution seems to be smooth (or linear) and less steps are expected:
+  
+    |  →  this may happen for \ **system without loads**\ ; larger number of steps may happen for finer discretization; you may adjust (increase) \ ``.newton.relativeTolerance``\  / \ ``.newton.absoluteTolerance``\  in static solver or in time integration to resolve such problems, but check if solution achieves according accuracy
+  
++  \ **static solver**\ :  load steps are reduced significantly for \ **highly nonlinear problems**\ : 
+  
+    |  →  solver repeatedly writes that steps are reduced \ :math:`\ra`\  try to use \ ``loadStepGeometric``\  and use a large \ ``loadStepGeometricRange``\ : this allows to start with very small loads in which the system is nearly linear (e.g. for thin strings or belts under gravity).
+  
++  \ **static solver**\ : system is (nearly) \ **kinematic**\ :
+  
+    |  →  a static solution can be achieved using \ ``stabilizerODE2term``\ , which adds mass-proportional stiffness terms during load steps \ :math:`< 1`\ ; see also hints for singular Jacobians below
+  
 +  very small loads or even \ **zero loads**\  do not converge: \ ``SolveDynamic``\  or \ ``SolveStatic``\  \ **terminated due to errors**\ 
   
     |  →  the reason is the nonlinearity of formulations (nonlinear kinematics, nonlinear beam, etc.) and round off errors, which restrict Newton to achieve desired tolerances
     |  →  adjust (increase) \ ``.newton.relativeTolerance``\  / \ ``.newton.absoluteTolerance``\  in static solver or in time integration
     |  →  in many cases, especially for static problems, the \ ``.newton.newtonResidualMode = 1``\  evaluates the increments; the nonlinear problems is assumed to be converged, if increments are within given absolute/relative tolerances; this also works usually better for kinematic solutions
   
-+  for \ **discontinuous problems**\ : try to adjust solver parameters; especially the \ ``discontinuous.iterationTolerance``\  and \ ``discontinuous.maxIterations``\ ; try to make smaller load or time steps in order to resolve switching points of contact or friction; generalized alpha solvers may cause troubles when reducing step sizes \ :math:`\ra`\  use TrapezoidalIndex2 solver
++  for \ **discontinuous problems**\ : 
+  
+    |  →  try to adjust solver parameters; especially the \ ``discontinuous.iterationTolerance``\  and \ ``discontinuous.maxIterations``\ ; try to make smaller load or time steps in order to resolve switching points of contact or friction; generalized alpha solvers may cause troubles when reducing step sizes \ :math:`\ra`\  use TrapezoidalIndex2 solver
+    |  →  in case of \ **user functions**\ , make sure that there is no switching inside the user function (if or \ ``sign``\  function); switching must be done in the PostNewtonStep, otherwise convergence severely suffers
+  
++  \ **singular Jacobians**\  or \ **redundant constraints**\ :
+  
+    |  →  in case of systems that lead to a singular Jacobian due to redundant constraints or kinematic DOF in static solutions, you may switch to Eigen's FullPivotLU solver using \ ``simulationSettings.linearSolverType = exu.LinearSolverType.EigenDense``\  and \ ``simulationSettings.linearSolverSettings.ignoreSingularJacobian=True``\ ; however, check you results as they may be erroneous, because the solver tries to find an optimal solution / compromise which may not be what you intend to get!
+  
 +  if you see further problems, please post them (including relevant example) at the Exudyn github page!
 
 
@@ -531,6 +572,8 @@ The faster versions are available for all release versions, but only for some \ 
 However, there are many \ **ways to speed up Exudyn in general**\ :
 
 +  for models with more than 50 coordinates, switching to sparse solvers might greatly improve speed: \ ``simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse``\ 
++  when preferring dense direct solvers, switching to Eigen's PartialPivLU solver might greatly improve speed: \ ``simulationSettings.linearSolverType = exu.LinearSolverType.EigenDense``\ ; 
+  however, the flag \ ``simulationSettings.linearSolverSettings.ignoreSingularJacobian=True``\  will switch to the much slower (but more robust) Eigen's FullPivLU
 +  try to avoid Python functions or try to speed up Python functions
 +  instead of user functions in objects or loads (computed in every iteration), some problems would also work if these parameters are only updated in \ ``mbs.SetPreStepUserFunction(...)``\ 
 +  Python user functions can be speed up using the Python numba package, using \ ``@jit``\  in front of functions (for more options, see `https://numba.pydata.org/numba-doc/dev/user/index.html <https://numba.pydata.org/numba-doc/dev/user/index.html>`_); Example given in \ ``Examples/springDamperUserFunctionNumbaJIT.py``\  showing speedups of factor 4; more complicated Python functions may see speedups of 10 - 50

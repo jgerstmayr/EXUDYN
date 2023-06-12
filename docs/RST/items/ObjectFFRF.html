@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ObjectFFRF &mdash; Exudyn1.6.119.dev1 1.6.119.dev1 documentation</title>
+  <title>ObjectFFRF &mdash; Exudyn1.6.164.dev1 1.6.164.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -41,7 +41,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.119.dev1
+            Exudyn1.6.164.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -102,7 +102,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.119.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.164.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -576,8 +576,8 @@ case is implemented.).</p>
 The kinematics of the <a class="reference internal" href="../Abbreviations.html#ffrf"><span class="std std-ref">FFRF</span></a> is based on a splitting of
 translational (<span class="math notranslate nohighlight">\({\mathbf{c}}_t \in \Rcal^{n\indf}\)</span>), rotational (<span class="math notranslate nohighlight">\({\mathbf{c}}\indr \in \Rcal^{n\indf}\)</span>) and flexible (<span class="math notranslate nohighlight">\({\mathbf{c}}\indf \in \Rcal^{n\indf}\)</span>) nodal displacements,</p>
 <div class="math notranslate nohighlight" id="equation-eq-objectffrf-coordinatessplitting">
-<span class="eqno">(26)<a class="headerlink" href="#equation-eq-objectffrf-coordinatessplitting" title="Permalink to this equation"></a></span>\[\LU{0}{{\mathbf{c}}} = \LU{0}{{\mathbf{c}}\indt} + \LU{0}{{\mathbf{c}}\indr} + \LU{0}{{\mathbf{c}}\indf} .\]</div>
-<p>which are written in global coordinates in Eq. <a class="reference internal" href="#equation-eq-objectffrf-coordinatessplitting">(26)</a> but will be transformed to other coordinates later on.</p>
+<span class="eqno">(27)<a class="headerlink" href="#equation-eq-objectffrf-coordinatessplitting" title="Permalink to this equation"></a></span>\[\LU{0}{{\mathbf{c}}} = \LU{0}{{\mathbf{c}}\indt} + \LU{0}{{\mathbf{c}}\indr} + \LU{0}{{\mathbf{c}}\indf} .\]</div>
+<p>which are written in global coordinates in Eq. <a class="reference internal" href="#equation-eq-objectffrf-coordinatessplitting">(27)</a> but will be transformed to other coordinates later on.</p>
 <p>In the present formulation of <code class="docutils literal notranslate"><span class="pre">ObjectFFRF</span></code>, we use the following set of object coordinates (unknowns)</p>
 <div class="math notranslate nohighlight">
 \[{\mathbf{q}} = \left[\LU{0}{{\mathbf{q}}\indt\tp} \;\; \ttheta\tp \;\; \LU{b}{{\mathbf{q}}\indf\tp} \right]\tp \in \Rcal^{n_c}\]</div>
@@ -585,7 +585,7 @@ translational (<span class="math notranslate nohighlight">\({\mathbf{c}}_t \in \
 Note that parts of the coordinates <span class="math notranslate nohighlight">\({\mathbf{q}}\)</span> can be already interpreted in specific coordinate systems, which is therefore added.</p>
 <p>With the relations</p>
 <div class="math notranslate nohighlight" id="equation-eq-objectffrf-phit">
-<span class="eqno">(27)<a class="headerlink" href="#equation-eq-objectffrf-phit" title="Permalink to this equation"></a></span>\[\begin{split}\tPhi\indt &amp;=&amp; \left[\mathbf{I}_{3 \times 3} ,\; \ldots ,\; \mathbf{I}_{3 \times 3} \right]\tp \in \Rcal^{n\indf \times 3} ,\\
+<span class="eqno">(28)<a class="headerlink" href="#equation-eq-objectffrf-phit" title="Permalink to this equation"></a></span>\[\begin{split}\tPhi\indt &amp;=&amp; \left[\mathbf{I}_{3 \times 3} ,\; \ldots ,\; \mathbf{I}_{3 \times 3} \right]\tp \in \Rcal^{n\indf \times 3} ,\\
 \LU{0}{{\mathbf{c}}\indt} &amp;=&amp; \tPhi\indt \LU{0}{{\mathbf{q}}\indt} ,\\
 \LU{0}{{\mathbf{c}}\indr} &amp;=&amp; \left(\LU{0b}{{\mathbf{A}}_{bd}} - {\mathbf{I}}_{bd}\right) \LU{b}{{\mathbf{x}}\cRef} ,\\
 \LU{0}{{\mathbf{c}}\indf} &amp;=&amp; \LU{0b}{{\mathbf{A}}_{bd}} \LU{b}{{\mathbf{q}}\indf} , \mathrm{and}\\
@@ -604,7 +604,7 @@ Note that parts of the coordinates <span class="math notranslate nohighlight">\(
 \[\LU{b}{{\mathbf{p}}} = \LU{b}{{\mathbf{x}}\cRef} + \LU{b}{{\mathbf{q}}\indf}, \quad \LU{b}{{\mathbf{p}}^{(i)}} = \LU{b}{{\mathbf{x}}^{(i)}\cRef} + \LU{b}{{\mathbf{q}}_{\mathrm{f},i}^{(i)}}\]</div>
 <p>and the special tilde matrix for vectors <span class="math notranslate nohighlight">\({\mathbf{p}} \in \Rcal^{3 {n_\mathrm{nf}}}\)</span>,</p>
 <div class="math notranslate nohighlight" id="equation-eq-objectffrf-specialtilde">
-<span class="eqno">(28)<a class="headerlink" href="#equation-eq-objectffrf-specialtilde" title="Permalink to this equation"></a></span>\[\LU{b}{\tilde {\mathbf{p}}} = \vr{\LU{b}{\tilde{\mathbf{p}}^{(i)}}}{\vdots}{\LU{b}{\tilde{\mathbf{p}}^{(i)}}} \in \Rcal^{3{n_\mathrm{nf}} \times 3} .\]</div>
+<span class="eqno">(29)<a class="headerlink" href="#equation-eq-objectffrf-specialtilde" title="Permalink to this equation"></a></span>\[\LU{b}{\tilde {\mathbf{p}}} = \vr{\LU{b}{\tilde{\mathbf{p}}^{(i)}}}{\vdots}{\LU{b}{\tilde{\mathbf{p}}^{(i)}}} \in \Rcal^{3{n_\mathrm{nf}} \times 3} .\]</div>
 <p>with the tilde operator for a <span class="math notranslate nohighlight">\({\mathbf{p}}^{(i)} \in \Rcal^{3}\)</span> defined in the common notations section.</p>
 </section>
 <section id="equations-of-motion">
@@ -622,13 +622,13 @@ V(\LU{0}{{\mathbf{q}}\indf}) &amp;=&amp; \frac{1}{2}\LU{b}{{\mathbf{q}}\indf\tp}
 matrices defined in the body frame.</p>
 <p>Elementary differentiation rules of the Lagrange equations lead to</p>
 <div class="math notranslate nohighlight" id="equation-eq-objectffrf-leq">
-<span class="eqno">(29)<a class="headerlink" href="#equation-eq-objectffrf-leq" title="Permalink to this equation"></a></span>\[{\mathbf{L}}\tp {\mathbf{M}} {\mathbf{L}} \ddot {\mathbf{q}} + {\mathbf{L}}\tp {\mathbf{M}} \dot {\mathbf{L}} \dot {\mathbf{q}} + \hat {\mathbf{K}} {\mathbf{q}} + \frac{\partial {\mathbf{g}}}{\partial {\mathbf{q}}\tp} \tlambda = {\mathbf{L}}\tp {\mathbf{f}}\]</div>
-<p>with <span class="math notranslate nohighlight">\({\mathbf{M}} = \LU{b}{{\mathbf{M}}}\)</span> and <span class="math notranslate nohighlight">\(\hat {\mathbf{K}}\)</span> becoming obvious in Eq. <a class="reference internal" href="#equation-eq-objectffrf-eom">(30)</a>.
-Note that Eq. <a class="reference internal" href="#equation-eq-objectffrf-leq">(29)</a> is given in global coordinates for the translational part, in terms of rotation parameters
+<span class="eqno">(30)<a class="headerlink" href="#equation-eq-objectffrf-leq" title="Permalink to this equation"></a></span>\[{\mathbf{L}}\tp {\mathbf{M}} {\mathbf{L}} \ddot {\mathbf{q}} + {\mathbf{L}}\tp {\mathbf{M}} \dot {\mathbf{L}} \dot {\mathbf{q}} + \hat {\mathbf{K}} {\mathbf{q}} + \frac{\partial {\mathbf{g}}}{\partial {\mathbf{q}}\tp} \tlambda = {\mathbf{L}}\tp {\mathbf{f}}\]</div>
+<p>with <span class="math notranslate nohighlight">\({\mathbf{M}} = \LU{b}{{\mathbf{M}}}\)</span> and <span class="math notranslate nohighlight">\(\hat {\mathbf{K}}\)</span> becoming obvious in Eq. <a class="reference internal" href="#equation-eq-objectffrf-eom">(31)</a>.
+Note that Eq. <a class="reference internal" href="#equation-eq-objectffrf-leq">(30)</a> is given in global coordinates for the translational part, in terms of rotation parameters
 for the rotation part and in body-fixed coordinates for the flexible part of the equations.</p>
 <p>In case that <code class="docutils literal notranslate"><span class="pre">computeFFRFterms</span> <span class="pre">=</span> <span class="pre">True</span></code>, the equations  <span class="xref std std-ref">eq-objectffrf-leq</span> can be transformed into the equations of motion,</p>
 <div class="math notranslate nohighlight" id="equation-eq-objectffrf-eom">
-<span class="eqno">(30)<a class="headerlink" href="#equation-eq-objectffrf-eom" title="Permalink to this equation"></a></span>\[\left({\mathbf{M}}_{user}(mbs, t, i_N, {\mathbf{q}},\dot {\mathbf{q}}) + \mr{{\mathbf{M}}\indtt}{{\mathbf{M}}\indtr}{{\mathbf{M}}\indtf} {}{{\mathbf{M}}\indrr}{{\mathbf{M}}\indrf} {\mathrm{sym.}}{}{\LU{b}{{\mathbf{M}}}} \right) \ddot {\mathbf{q}} + \mr{0}{0}{0} {0}{0}{0} {0}{0}{\LU{b}{{\mathbf{D}}}} \dot {\mathbf{q}} + \mr{0}{0}{0} {0}{0}{0} {0}{0}{\LU{b}{{\mathbf{K}}}} {\mathbf{q}} = {\mathbf{f}}_{v}({\mathbf{q}},\dot {\mathbf{q}}) + \vp{{\mathbf{f}}\indr}{\LURU{0b}{{\mathbf{A}}}{bd}{\mathrm{T}} {\mathbf{f}}\indf} + {\mathbf{f}}_{user}(mbs, t, i_N, {\mathbf{q}}, \dot {\mathbf{q}})\]</div>
+<span class="eqno">(31)<a class="headerlink" href="#equation-eq-objectffrf-eom" title="Permalink to this equation"></a></span>\[\left({\mathbf{M}}_{user}(mbs, t, i_N, {\mathbf{q}},\dot {\mathbf{q}}) + \mr{{\mathbf{M}}\indtt}{{\mathbf{M}}\indtr}{{\mathbf{M}}\indtf} {}{{\mathbf{M}}\indrr}{{\mathbf{M}}\indrf} {\mathrm{sym.}}{}{\LU{b}{{\mathbf{M}}}} \right) \ddot {\mathbf{q}} + \mr{0}{0}{0} {0}{0}{0} {0}{0}{\LU{b}{{\mathbf{D}}}} \dot {\mathbf{q}} + \mr{0}{0}{0} {0}{0}{0} {0}{0}{\LU{b}{{\mathbf{K}}}} {\mathbf{q}} = {\mathbf{f}}_{v}({\mathbf{q}},\dot {\mathbf{q}}) + \vp{{\mathbf{f}}\indr}{\LURU{0b}{{\mathbf{A}}}{bd}{\mathrm{T}} {\mathbf{f}}\indf} + {\mathbf{f}}_{user}(mbs, t, i_N, {\mathbf{q}}, \dot {\mathbf{q}})\]</div>
 <p>in which <code class="docutils literal notranslate"><span class="pre">iN</span></code> represents the itemNumber (=objectNumber of ObjectFFRF in mbs) in the user function.
 The mass terms are given as</p>
 <div class="math notranslate nohighlight">
@@ -638,7 +638,7 @@ The mass terms are given as</p>
 {\mathbf{M}}\indrr &amp;=&amp; \LU{b}{{\mathbf{G}}}\tp \LU{b}{\tilde {\mathbf{p}}\tp} \LU{b}{{\mathbf{M}}} \LU{b}{\tilde {\mathbf{p}}} \LU{b}{{\mathbf{G}}} ,\\
 {\mathbf{M}}\indrf &amp;=&amp; - \LU{b}{{\mathbf{G}}}\tp \LU{b}{\tilde {\mathbf{p}}\tp} \LU{b}{{\mathbf{M}}} .\end{split}\]</div>
 <p>In case that <code class="docutils literal notranslate"><span class="pre">computeFFRFterms</span> <span class="pre">=</span> <span class="pre">False</span></code>, the mass terms <span class="math notranslate nohighlight">\({\mathbf{M}}\indtt, {\mathbf{M}}\indtr, {\mathbf{M}}\indtf, {\mathbf{M}}\indrr,
-{\mathbf{M}}\indrf, \LU{b}{{\mathbf{M}}}\)</span> in Eq. <a class="reference internal" href="#equation-eq-objectffrf-eom">(30)</a> are set to zero (and not computed) and
+{\mathbf{M}}\indrf, \LU{b}{{\mathbf{M}}}\)</span> in Eq. <a class="reference internal" href="#equation-eq-objectffrf-eom">(31)</a> are set to zero (and not computed) and
 the quadratic velocity vector <span class="math notranslate nohighlight">\({\mathbf{f}}_{v} = \Null\)</span>.
 Note that the user functions <span class="math notranslate nohighlight">\({\mathbf{f}}_{user}(mbs, t, i_N, {\mathbf{q}},\dot {\mathbf{q}})\)</span> and <span class="math notranslate nohighlight">\({\mathbf{M}}_{user}(mbs, t, i_N, {\mathbf{q}},\dot {\mathbf{q}})\)</span> may be empty (=0).
 The detailed equations of motion for this element can be found in .</p>

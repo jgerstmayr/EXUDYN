@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ObjectConnectorCartesianSpringDamper &mdash; Exudyn1.6.119.dev1 1.6.119.dev1 documentation</title>
+  <title>ObjectConnectorCartesianSpringDamper &mdash; Exudyn1.6.164.dev1 1.6.164.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -41,7 +41,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.119.dev1
+            Exudyn1.6.164.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -113,7 +113,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.119.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.164.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -323,7 +323,7 @@
 <p>Connector forces are based on relative displacements and relative veolocities in global coordinates.
 Relative displacement between marker m0 to marker m1 positions is given by</p>
 <div class="math notranslate nohighlight" id="equation-eq-objectcartesianspringdamper-deltapos">
-<span class="eqno">(40)<a class="headerlink" href="#equation-eq-objectcartesianspringdamper-deltapos" title="Permalink to this equation"></a></span>\[\Delta\! \LU{0}{{\mathbf{p}}}= \LU{0}{{\mathbf{p}}}_{m1} - \LU{0}{{\mathbf{p}}}_{m0} ,\]</div>
+<span class="eqno">(41)<a class="headerlink" href="#equation-eq-objectcartesianspringdamper-deltapos" title="Permalink to this equation"></a></span>\[\Delta\! \LU{0}{{\mathbf{p}}}= \LU{0}{{\mathbf{p}}}_{m1} - \LU{0}{{\mathbf{p}}}_{m0} ,\]</div>
 <p>and relative velocity reads</p>
 <div class="math notranslate nohighlight">
 \[\Delta\! \LU{0}{{\mathbf{v}}}= \LU{0}{{\mathbf{v}}}_{m1} - \LU{0}{{\mathbf{v}}}_{m0} .\]</div>
@@ -343,7 +343,7 @@ The generalized forces added to the <a class="reference internal" href="../Abbre
 <div class="math notranslate nohighlight">
 \[{\mathbf{f}}_{LHS,m1} =  \LU{0}{{\mathbf{J}}_{pos,m1}\tp} \LU{0}{{\mathbf{f}}_{SD}} .\]</div>
 <p>The <a class="reference internal" href="../Abbreviations.html#lhs"><span class="std std-ref">LHS</span></a> equation parts are added accordingly using the <a class="reference internal" href="../Abbreviations.html#ltg"><span class="std std-ref">LTG</span></a> mapping.
-Note that the different signs result from the signs in Eq. <a class="reference internal" href="#equation-eq-objectcartesianspringdamper-deltapos">(40)</a>.</p>
+Note that the different signs result from the signs in Eq. <a class="reference internal" href="#equation-eq-objectcartesianspringdamper-deltapos">(41)</a>.</p>
 <p>The connector also provides an analytic jacobian, which is used if <code class="docutils literal notranslate"><span class="pre">newton.numericalDifferentiation.forODE2</span> <span class="pre">=</span> <span class="pre">False</span></code>and if there is no springForceUserFunction (otherwise numerical differentiation is used).</p>
 <p>The anayltic jacobian for the coupled equation parts <span class="math notranslate nohighlight">\({\mathbf{f}}_{LHS,m0}\)</span> and <span class="math notranslate nohighlight">\({\mathbf{f}}_{LHS,m1}\)</span> is based on the local jacobians</p>
 <div class="math notranslate nohighlight">
@@ -360,8 +360,8 @@ which allows a computation of the computation for both the position as well as t
 <p>The second term <span class="math notranslate nohighlight">\({\mathbf{J}}_{CSD'}\)</span> is only non-zero if <span class="math notranslate nohighlight">\(\frac{\partial \LU{0}{{\mathbf{J}}_{pos,i}\tp}}{\partial {\mathbf{q}}_{i}}\)</span> is non-zero, using <span class="math notranslate nohighlight">\(i \in \{m0, \, m1\}\)</span>.
 As the latter terms would require to compute a 3-dimensional array, the second jacobian term is computed as</p>
 <div class="math notranslate nohighlight" id="equation-eq-objectcartesianspringdamper-jacderiv">
-<span class="eqno">(41)<a class="headerlink" href="#equation-eq-objectcartesianspringdamper-jacderiv" title="Permalink to this equation"></a></span>\[{\mathbf{J}}_{CSD'} = \mp{-f_{ODE2}\frac{\partial \left(\LU{0}{{\mathbf{J}}_{pos,m0}\tp} {\mathbf{f}}' \right)}{\partial {\mathbf{q}}_{m0}}}{\Null}{\Null} { f_{ODE2}\frac{\partial \left(\LU{0}{{\mathbf{J}}_{pos,m1}\tp} {\mathbf{f}}' \right)}{\partial {\mathbf{q}}_{m1}}}\]</div>
-<p>in which we set <span class="math notranslate nohighlight">\({\mathbf{f}}' = \LU{0}{{\mathbf{f}}_{SD}}\)</span>, but the derivatives in Eq. <a class="reference internal" href="#equation-eq-objectcartesianspringdamper-jacderiv">(41)</a> are evaluated by setting <span class="math notranslate nohighlight">\({\mathbf{f}}' = const\)</span>.</p>
+<span class="eqno">(42)<a class="headerlink" href="#equation-eq-objectcartesianspringdamper-jacderiv" title="Permalink to this equation"></a></span>\[{\mathbf{J}}_{CSD'} = \mp{-f_{ODE2}\frac{\partial \left(\LU{0}{{\mathbf{J}}_{pos,m0}\tp} {\mathbf{f}}' \right)}{\partial {\mathbf{q}}_{m0}}}{\Null}{\Null} { f_{ODE2}\frac{\partial \left(\LU{0}{{\mathbf{J}}_{pos,m1}\tp} {\mathbf{f}}' \right)}{\partial {\mathbf{q}}_{m1}}}\]</div>
+<p>in which we set <span class="math notranslate nohighlight">\({\mathbf{f}}' = \LU{0}{{\mathbf{f}}_{SD}}\)</span>, but the derivatives in Eq. <a class="reference internal" href="#equation-eq-objectcartesianspringdamper-jacderiv">(42)</a> are evaluated by setting <span class="math notranslate nohighlight">\({\mathbf{f}}' = const\)</span>.</p>
 <hr class="docutils" />
 <p><strong>Userfunction</strong>: <code class="docutils literal notranslate"><span class="pre">springForceUserFunction(mbs,</span> <span class="pre">t,</span> <span class="pre">itemNumber,</span> <span class="pre">displacement,</span> <span class="pre">velocity,</span> <span class="pre">stiffness,</span> <span class="pre">damping,</span> <span class="pre">offset)</span></code></p>
 <p>A user function, which computes the 3D spring force vector depending on time, object variables (deltaL, deltaL_t) and object parameters

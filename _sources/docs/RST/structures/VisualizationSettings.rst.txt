@@ -47,6 +47,9 @@ VSettingsGeneral has the following items:
 * | **graphicsUpdateInterval** [type = float, default = 0.1]:
   | \ ``SC.visualizationSettings.general.graphicsUpdateInterval``\ 
   | interval of graphics update during simulation in seconds; 0.1 = 10 frames per second; low numbers might slow down computation speed
+* | **linuxDisplayScaleFactor** [type = PFloat, default = 1.]:
+  | \ ``SC.visualizationSettings.general.linuxDisplayScaleFactor``\ 
+  | Scaling factor for linux, which cannot determined from system by now; adjust this value to scale dialog fonts and renderer fonts
 * | **minSceneSize** [type = float, default = 0.1]:
   | \ ``SC.visualizationSettings.general.minSceneSize``\ 
   | minimum scene size for initial scene size and for autoFitScene, to avoid division by zero; SET GREATER THAN ZERO
@@ -491,6 +494,9 @@ VSettingsWindow has the following items:
 * | **maximize** [type = bool, default = False]:
   | \ ``SC.visualizationSettings.window.maximize``\ 
   | True: OpenGL render window will be maximized at startup
+* | **reallyQuitTimeLimit** [type = UReal, default = 900]:
+  | \ ``SC.visualizationSettings.window.reallyQuitTimeLimit``\ 
+  | number of seconds after which user is asked a security question before stopping simulation and closing renderer; set to 0 in order to always get asked; set to 1e10 to (nearly) never get asked
 * | **renderWindowSize** [type = Index2, default = [1024,768], size = 2]:
   | \ ``SC.visualizationSettings.window.renderWindowSize``\ 
   | initial size of OpenGL render window in pixel

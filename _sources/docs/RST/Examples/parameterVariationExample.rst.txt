@@ -152,7 +152,7 @@ You can view and download this file on Github: `parameterVariationExample.py <ht
        return errorNorm
    
    
-   
+   #for mpi parallelization see below
    #now perform parameter variation
    if __name__ == '__main__': #include this to enable parallel processing
        import time
@@ -224,5 +224,11 @@ You can view and download this file on Github: `parameterVariationExample.py <ht
        plt.tight_layout()
       
        plt.show()
+   
+   
+   
+   #for mpi parallelization use the following example:
+   
+   
 
 

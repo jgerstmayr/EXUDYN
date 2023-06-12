@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>serialRobotFlexible.py &mdash; Exudyn1.6.119.dev1 1.6.119.dev1 documentation</title>
+  <title>serialRobotFlexible.py &mdash; Exudyn1.6.164.dev1 1.6.164.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -39,7 +39,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.119.dev1
+            Exudyn1.6.164.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -118,6 +118,7 @@
 <li class="toctree-l2"><a class="reference internal" href="massSpringFrictionInteractive.html">massSpringFrictionInteractive.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="minimizeExample.html">minimizeExample.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mouseInteractionExample.html">mouseInteractionExample.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mpi4pyExample.html">mpi4pyExample.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="multiMbsTest.html">multiMbsTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="multiprocessingTest.html">multiprocessingTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="myFirstExample.html">myFirstExample.py</a></li>
@@ -127,6 +128,7 @@
 <li class="toctree-l2"><a class="reference internal" href="NGsolveLinearFEM.html">NGsolveLinearFEM.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolvePistonEngine.html">NGsolvePistonEngine.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolvePostProcessingStresses.html">NGsolvePostProcessingStresses.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nMassOscillatorEigenmodes.html">nMassOscillatorEigenmodes.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="nMassOscillatorInteractive.html">nMassOscillatorInteractive.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ObjectFFRFconvergenceTestBeam.html">ObjectFFRFconvergenceTestBeam.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ObjectFFRFconvergenceTestHinge.html">ObjectFFRFconvergenceTestHinge.py</a></li>
@@ -164,6 +166,7 @@
 <li class="toctree-l2"><a class="reference internal" href="serialRobotKinematicTree.html">serialRobotKinematicTree.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="serialRobotKinematicTreeDigging.html">serialRobotKinematicTreeDigging.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="serialRobotTSD.html">serialRobotTSD.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shapeOptimization.html">shapeOptimization.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="simple4linkPendulumBing.html">simple4linkPendulumBing.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="simulateInteractively.html">simulateInteractively.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="SliderCrank.html">SliderCrank.py</a></li>
@@ -204,7 +207,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.119.dev1</a>
+          <a href="../../../index.html">Exudyn1.6.164.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -246,7 +249,7 @@
 <span class="linenos"> 18</span><span class="kn">from</span> <span class="nn">exudyn.rigidBodyUtilities</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="linenos"> 19</span><span class="kn">from</span> <span class="nn">exudyn.graphicsDataUtilities</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="linenos"> 20</span><span class="kn">from</span> <span class="nn">exudyn.robotics</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="linenos"> 21</span><span class="kn">from</span> <span class="nn">exudyn.robotics.motion</span> <span class="kn">import</span> <span class="nf">Trajectory</span><span class="p">,</span> <span class="nf">ProfileConstantAcceleration</span><span class="p">,</span> <span class="nf">ProfilePTP</span>
+<span class="linenos"> 21</span><span class="kn">from</span> <span class="nn">exudyn.robotics.motion</span> <span class="kn">import</span> <span class="nc">Trajectory</span><span class="p">,</span> <span class="nc">ProfileConstantAcceleration</span><span class="p">,</span> <span class="nc">ProfilePTP</span>
 <span class="linenos"> 22</span><span class="kn">from</span> <span class="nn">exudyn.FEM</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="linenos"> 23</span>
 <span class="linenos"> 24</span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -313,7 +316,7 @@
 <span class="linenos"> 85</span><span class="c1">#requires netgen / ngsolve</span>
 <span class="linenos"> 86</span><span class="c1">#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
 <span class="linenos"> 87</span><span class="k">if</span> <span class="kc">True</span> <span class="ow">and</span> <span class="n">useFlexBody</span><span class="p">:</span> <span class="c1">#needs netgen/ngsolve to be installed to compute mesh, see e.g.: https://github.com/NGSolve/ngsolve/releases</span>
-<span class="linenos"> 88</span>    <span class="n">femList</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="nf">FEMinterface</span><span class="p">()</span>
+<span class="linenos"> 88</span>    <span class="n">femList</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="nc">FEMinterface</span><span class="p">()</span>
 <span class="linenos"> 89</span>    <span class="kn">import</span> <span class="nn">sys</span>
 <span class="linenos"> 90</span>    <span class="c1">#adjust path to your ngsolve installation (if not added to global path)</span>
 <span class="linenos"> 91</span>    <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;C:/ProgramData/ngsolve/lib/site-packages&#39;</span><span class="p">)</span>
@@ -383,14 +386,14 @@
 <span class="linenos">155</span>    <span class="n">fem</span><span class="o">.</span><span class="nf">ComputeHurtyCraigBamptonModes</span><span class="p">(</span><span class="n">boundaryNodesList</span><span class="o">=</span><span class="n">boundaryList</span><span class="p">,</span>
 <span class="linenos">156</span>                                      <span class="n">nEigenModes</span><span class="o">=</span><span class="n">nModes</span><span class="p">,</span>
 <span class="linenos">157</span>                                      <span class="n">useSparseSolver</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<span class="linenos">158</span>                                      <span class="n">computationMode</span> <span class="o">=</span> <span class="n">HCBstaticModeSelection</span><span class="o">.</span><span class="n">RBE2</span><span class="p">)</span>
+<span class="linenos">158</span>                                      <span class="n">computationMode</span> <span class="o">=</span> <span class="nc">HCBstaticModeSelection</span><span class="o">.</span><span class="n">RBE2</span><span class="p">)</span>
 <span class="linenos">159</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;compute modes needed </span><span class="si">%.3f</span><span class="s2"> seconds&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">))</span>
 <span class="linenos">160</span>
 <span class="linenos">161</span>
 <span class="linenos">162</span>    <span class="c1">#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
 <span class="linenos">163</span>    <span class="c1">#compute stress modes for postprocessing (inaccurate for coarse meshes, just for visualization):</span>
 <span class="linenos">164</span>    <span class="k">if</span> <span class="n">fes</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
-<span class="linenos">165</span>        <span class="n">mat</span> <span class="o">=</span> <span class="n">KirchhoffMaterial</span><span class="p">(</span><span class="n">Emodulus</span><span class="p">,</span> <span class="n">nu</span><span class="p">,</span> <span class="n">rho</span><span class="p">)</span>
+<span class="linenos">165</span>        <span class="n">mat</span> <span class="o">=</span> <span class="nc">KirchhoffMaterial</span><span class="p">(</span><span class="n">Emodulus</span><span class="p">,</span> <span class="n">nu</span><span class="p">,</span> <span class="n">rho</span><span class="p">)</span>
 <span class="linenos">166</span>        <span class="n">varType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">StressLocal</span>
 <span class="linenos">167</span>        <span class="c1">#varType = exu.OutputVariableType.StrainLocal</span>
 <span class="linenos">168</span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ComputePostProcessingModes ... (may take a while)&quot;</span><span class="p">)</span>
@@ -412,7 +415,7 @@
 <span class="linenos">184</span>
 <span class="linenos">185</span>    <span class="c1">#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
 <span class="linenos">186</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;create CMS element ...&quot;</span><span class="p">)</span>
-<span class="linenos">187</span>    <span class="n">cms</span> <span class="o">=</span> <span class="nf">ObjectFFRFreducedOrderInterface</span><span class="p">(</span><span class="n">fem</span><span class="p">)</span>
+<span class="linenos">187</span>    <span class="n">cms</span> <span class="o">=</span> <span class="nc">ObjectFFRFreducedOrderInterface</span><span class="p">(</span><span class="n">fem</span><span class="p">)</span>
 <span class="linenos">188</span>
 <span class="linenos">189</span>    <span class="n">objFFRF</span> <span class="o">=</span> <span class="n">cms</span><span class="o">.</span><span class="nf">AddObjectFFRFreducedOrder</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">positionRef</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
 <span class="linenos">190</span>                                            <span class="n">initialVelocity</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
@@ -492,9 +495,9 @@
 <span class="linenos">264</span>
 <span class="linenos">265</span>
 <span class="linenos">266</span><span class="c1">#changed to new robot structure July 2021:</span>
-<span class="linenos">267</span><span class="n">newRobot</span> <span class="o">=</span> <span class="nf">Robot</span><span class="p">(</span><span class="n">gravity</span><span class="o">=</span><span class="n">gravity</span><span class="p">,</span>
-<span class="linenos">268</span>              <span class="n">base</span> <span class="o">=</span> <span class="nf">RobotBase</span><span class="p">(</span><span class="n">visualization</span><span class="o">=</span><span class="nf">VRobotBase</span><span class="p">(</span><span class="n">graphicsData</span><span class="o">=</span><span class="n">graphicsBaseList</span><span class="p">)),</span>
-<span class="linenos">269</span>              <span class="n">tool</span> <span class="o">=</span> <span class="nf">RobotTool</span><span class="p">(</span><span class="n">HT</span><span class="o">=</span><span class="nf">HTtranslate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.1</span><span class="p">]),</span> <span class="n">visualization</span><span class="o">=</span><span class="nf">VRobotTool</span><span class="p">(</span><span class="n">graphicsData</span><span class="o">=</span><span class="n">graphicsToolList</span><span class="p">)),</span>
+<span class="linenos">267</span><span class="n">newRobot</span> <span class="o">=</span> <span class="nc">Robot</span><span class="p">(</span><span class="n">gravity</span><span class="o">=</span><span class="n">gravity</span><span class="p">,</span>
+<span class="linenos">268</span>              <span class="n">base</span> <span class="o">=</span> <span class="nc">RobotBase</span><span class="p">(</span><span class="n">visualization</span><span class="o">=</span><span class="nc">VRobotBase</span><span class="p">(</span><span class="n">graphicsData</span><span class="o">=</span><span class="n">graphicsBaseList</span><span class="p">)),</span>
+<span class="linenos">269</span>              <span class="n">tool</span> <span class="o">=</span> <span class="nc">RobotTool</span><span class="p">(</span><span class="n">HT</span><span class="o">=</span><span class="nf">HTtranslate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.1</span><span class="p">]),</span> <span class="n">visualization</span><span class="o">=</span><span class="nc">VRobotTool</span><span class="p">(</span><span class="n">graphicsData</span><span class="o">=</span><span class="n">graphicsToolList</span><span class="p">)),</span>
 <span class="linenos">270</span>              <span class="n">referenceConfiguration</span> <span class="o">=</span> <span class="p">[])</span> <span class="c1">#referenceConfiguration created with 0s automatically</span>
 <span class="linenos">271</span>
 <span class="linenos">272</span><span class="c1">#modKKDH according to Khalil and Kleinfinger, 1986</span>
@@ -540,7 +543,7 @@
 <span class="linenos">312</span><span class="n">Dcontrol</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">400</span><span class="p">,</span>   <span class="mi">400</span><span class="p">,</span>   <span class="mi">100</span><span class="p">,</span>   <span class="mi">1</span><span class="p">,</span>   <span class="mi">1</span><span class="p">,</span>   <span class="mf">0.1</span><span class="p">])</span>
 <span class="linenos">313</span>
 <span class="linenos">314</span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">link</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">linkList</span><span class="p">):</span>
-<span class="linenos">315</span>    <span class="n">newRobot</span><span class="o">.</span><span class="nf">AddLink</span><span class="p">(</span><span class="nf">RobotLink</span><span class="p">(</span><span class="n">mass</span><span class="o">=</span><span class="n">link</span><span class="p">[</span><span class="s1">&#39;mass&#39;</span><span class="p">],</span>
+<span class="linenos">315</span>    <span class="n">newRobot</span><span class="o">.</span><span class="nf">AddLink</span><span class="p">(</span><span class="nc">RobotLink</span><span class="p">(</span><span class="n">mass</span><span class="o">=</span><span class="n">link</span><span class="p">[</span><span class="s1">&#39;mass&#39;</span><span class="p">],</span>
 <span class="linenos">316</span>                               <span class="nf">COM</span><span class="o">=</span><span class="n">link</span><span class="p">[</span><span class="s1">&#39;COM&#39;</span><span class="p">],</span>
 <span class="linenos">317</span>                               <span class="n">inertia</span><span class="o">=</span><span class="n">link</span><span class="p">[</span><span class="s1">&#39;inertia&#39;</span><span class="p">],</span>
 <span class="linenos">318</span>                               <span class="n">localHT</span><span class="o">=</span><span class="nf">StdDH2HT</span><span class="p">(</span><span class="n">link</span><span class="p">[</span><span class="s1">&#39;stdDH&#39;</span><span class="p">]),</span>
@@ -551,7 +554,7 @@
 <span class="linenos">323</span><span class="k">for</span> <span class="n">cnt</span><span class="p">,</span> <span class="n">link</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">newRobot</span><span class="o">.</span><span class="n">links</span><span class="p">):</span>
 <span class="linenos">324</span>    <span class="n">color</span> <span class="o">=</span> <span class="n">color4list</span><span class="p">[</span><span class="n">cnt</span><span class="p">]</span>
 <span class="linenos">325</span>    <span class="n">color</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.75</span> <span class="c1">#make transparent</span>
-<span class="linenos">326</span>    <span class="n">link</span><span class="o">.</span><span class="n">visualization</span> <span class="o">=</span> <span class="nf">VRobotLink</span><span class="p">(</span><span class="n">jointRadius</span><span class="o">=</span><span class="mf">0.055</span><span class="p">,</span> <span class="n">jointWidth</span><span class="o">=</span><span class="mf">0.055</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="n">showMBSjoint</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="linenos">326</span>    <span class="n">link</span><span class="o">.</span><span class="n">visualization</span> <span class="o">=</span> <span class="nc">VRobotLink</span><span class="p">(</span><span class="n">jointRadius</span><span class="o">=</span><span class="mf">0.055</span><span class="p">,</span> <span class="n">jointWidth</span><span class="o">=</span><span class="mf">0.055</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="n">showMBSjoint</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 <span class="linenos">327</span>                                    <span class="n">linkWidth</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">linkColor</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">showCOM</span><span class="o">=</span> <span class="n">showCOM</span> <span class="p">)</span>
 <span class="linenos">328</span>
 <span class="linenos">329</span><span class="c1">#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
@@ -569,11 +572,11 @@
 <span class="linenos">341</span><span class="n">q3</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.5</span><span class="o">*</span><span class="n">pi</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">0.25</span><span class="o">*</span><span class="n">pi</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="c1">#zero angle configuration</span>
 <span class="linenos">342</span>
 <span class="linenos">343</span><span class="c1">#trajectory generated with optimal acceleration profiles:</span>
-<span class="linenos">344</span><span class="n">trajectory</span> <span class="o">=</span> <span class="nf">Trajectory</span><span class="p">(</span><span class="n">initialCoordinates</span><span class="o">=</span><span class="n">q0</span><span class="p">,</span> <span class="n">initialTime</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="linenos">345</span><span class="n">trajectory</span><span class="o">.</span><span class="nf">Add</span><span class="p">(</span><span class="nf">ProfileConstantAcceleration</span><span class="p">(</span><span class="n">q3</span><span class="p">,</span><span class="mf">0.25</span><span class="p">))</span>
-<span class="linenos">346</span><span class="n">trajectory</span><span class="o">.</span><span class="nf">Add</span><span class="p">(</span><span class="nf">ProfileConstantAcceleration</span><span class="p">(</span><span class="n">q1</span><span class="p">,</span><span class="mf">0.25</span><span class="p">))</span>
-<span class="linenos">347</span><span class="n">trajectory</span><span class="o">.</span><span class="nf">Add</span><span class="p">(</span><span class="nf">ProfileConstantAcceleration</span><span class="p">(</span><span class="n">q2</span><span class="p">,</span><span class="mf">0.25</span><span class="p">))</span>
-<span class="linenos">348</span><span class="n">trajectory</span><span class="o">.</span><span class="nf">Add</span><span class="p">(</span><span class="nf">ProfileConstantAcceleration</span><span class="p">(</span><span class="n">q0</span><span class="p">,</span><span class="mf">0.25</span><span class="p">))</span>
+<span class="linenos">344</span><span class="n">trajectory</span> <span class="o">=</span> <span class="nc">Trajectory</span><span class="p">(</span><span class="n">initialCoordinates</span><span class="o">=</span><span class="n">q0</span><span class="p">,</span> <span class="n">initialTime</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="linenos">345</span><span class="n">trajectory</span><span class="o">.</span><span class="nf">Add</span><span class="p">(</span><span class="nc">ProfileConstantAcceleration</span><span class="p">(</span><span class="n">q3</span><span class="p">,</span><span class="mf">0.25</span><span class="p">))</span>
+<span class="linenos">346</span><span class="n">trajectory</span><span class="o">.</span><span class="nf">Add</span><span class="p">(</span><span class="nc">ProfileConstantAcceleration</span><span class="p">(</span><span class="n">q1</span><span class="p">,</span><span class="mf">0.25</span><span class="p">))</span>
+<span class="linenos">347</span><span class="n">trajectory</span><span class="o">.</span><span class="nf">Add</span><span class="p">(</span><span class="nc">ProfileConstantAcceleration</span><span class="p">(</span><span class="n">q2</span><span class="p">,</span><span class="mf">0.25</span><span class="p">))</span>
+<span class="linenos">348</span><span class="n">trajectory</span><span class="o">.</span><span class="nf">Add</span><span class="p">(</span><span class="nc">ProfileConstantAcceleration</span><span class="p">(</span><span class="n">q0</span><span class="p">,</span><span class="mf">0.25</span><span class="p">))</span>
 <span class="linenos">349</span><span class="c1">#traj.Add(ProfilePTP([1,1],syncAccTimes=False, maxVelocities=[1,1], maxAccelerations=[5,5]))</span>
 <span class="linenos">350</span>
 <span class="linenos">351</span><span class="c1"># x = traj.EvaluateCoordinate(t,0)</span>
