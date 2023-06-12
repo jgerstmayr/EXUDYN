@@ -262,8 +262,10 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                 # plr.sLatex += '    ' + Str2Latex(parameter['parameterDescription'], replaceCurlyBracket=False) + '\\\\ \\hline\n' #Str2Latex not used, must be latex compatible!!!
 
                 plr.SystemStructuresWriteDefRow(functionName, functionType, Str2Latex(parameter['size']), argStr, 
-                                            Str2Latex(parameter['parameterDescription'], replaceCurlyBracket=False),
-                                            isFunction=True)
+                                            Str2Latex(parameter['parameterDescription'], replaceCurlyBracket=False), isFunction=True)
+
+                stubStr += spaces4+'@overload\n'
+                stubStr += spaces4+'def '+functionName+'('+argStr.replace('\\_','_')+')'+' -> '+TypeConversion(parameter['type'], typeConversionStub)+': ...\n'
                 
         plr.sLatex += '	  \\end{longtable}\n'
         plr.sLatex += '	\\end{center}\n'
@@ -806,7 +808,9 @@ try: #still close file if crashes
                       'SymmetricMatrix':'ArrayLike', 
                       'NumpyMatrix':'ArrayLike', 'NumpyVector':'ArrayLike', 'StdArray33F':'ArrayLike',
                       'String':'str', 'FileName':'str', 'Index2':'Tuple[int,int]', 
-                      'KeyPressUserFunction': 'Any'} #conversion for stub files
+                      'KeyPressUserFunction': 'Any',
+                      'std::string':'str', 'void':'None', 
+                      } #conversion for stub files
 
     parseInfo = {'class':'',            # C++ class name
                  'writeFile':'',        #filename (e.g. SensorData.h)

@@ -670,6 +670,131 @@ def MainSystemCreateCartesianSpringDamper(mbs,
 
     return oConnector
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#**function: helper function to create RigidBodySpringDamper connector, using arguments from ObjectConnectorRigidBodySpringDamper
+#**input: 
+#  mbs: the MainSystem where items are created
+#  name: name string for connector; markers get Marker0:name and Marker1:name
+#  bodyOrNodeList: a list of object numbers (with specific localPosition0/1) or node numbers; may also be of mixed types
+#  localPosition0: local position (as 3D list or numpy array) on body0, if not a node number
+#  localPosition1: local position (as 3D list or numpy array) on body1, if not a node number
+#  stiffness: stiffness coefficients (as 6D matrix or numpy array)
+#  damping: damping coefficients (as 6D matrix or numpy array)
+#  offset: offset vector (as 6D list or numpy array)
+#  rotationMatrixJoint: additional rotation matrix; in case  useGlobalFrame=False, it transforms body0/node0 local frame to joint frame; if useGlobalFrame=True, it transforms global frame to joint frame
+#  useGlobalFrame: if False, the rotationMatrixJoint is defined in the local coordinate system of body0
+#  show: if True, connector visualization is drawn
+#  drawSize: general drawing size of connector
+#  color: color of connector
+#**output: ObjectIndex; returns index of newly created object
+#**belongsTo: MainSystem
+#**example:
+# #TODO
+def MainSystemCreateRigidBodySpringDamper(mbs,
+                                 name='',
+                                 bodyOrNodeList=[None, None], 
+                                 localPosition0 = [0.,0.,0.],
+                                 localPosition1 = [0.,0.,0.], 
+                                 stiffness = np.zeros((6,6)), 
+                                 damping = np.zeros((6,6)), 
+                                 offset = [0.,0.,0.,0.,0.,0.],
+                                 rotationMatrixJoint=np.eye(3),
+                                 useGlobalFrame=True,
+                                 show=True, drawSize=-1, color=color4default):
+    #perform some checks:
+    if not exudyn.__useExudynFast:
+    
+        where='MainSystem.CreateRigidBodySpringDamper(...)'
+        if not isinstance(bodyOrNodeList, list) or len(bodyOrNodeList) != 2:
+            RaiseTypeError(where=where, argumentName='bodyOrNodeList', received = bodyOrNodeList, expectedType = 'list of 2 body or node numbers')
+    
+        if not (isinstance(bodyOrNodeList[0], exudyn.ObjectIndex) or (isinstance(bodyOrNodeList[0], exudyn.NodeIndex) and localPosition0==[0.,0.,0.])):
+            RaiseTypeError(where=where, argumentName='bodyOrNodeList[0]', received = bodyOrNodeList[0], 
+                           expectedType = 'expected either ObjectIndex or NodeIndex and localPosition0=[0.,0.,0.]')
+            
+        if not (isinstance(bodyOrNodeList[1], exudyn.ObjectIndex) or (isinstance(bodyOrNodeList[1], exudyn.NodeIndex) and localPosition1==[0.,0.,0.])):
+            RaiseTypeError(where=where, argumentName='bodyOrNodeList[1]', received = bodyOrNodeList[1], 
+                           expectedType = 'expected either ObjectIndex or NodeIndex and localPosition1=[0.,0.,0.]')
+            
+        if not IsVector(localPosition0, 3):
+            RaiseTypeError(where=where, argumentName='localPosition0', received = localPosition0, expectedType = ExpectedType.Vector, dim=3)
+        if not IsVector(localPosition1, 3):
+            RaiseTypeError(where=where, argumentName='localPosition1', received = localPosition1, expectedType = ExpectedType.Vector, dim=3)
+    
+        if not IsSquareMatrix(stiffness, 6):
+            RaiseTypeError(where=where, argumentName='stiffness', received = stiffness, expectedType = ExpectedType.Matrix, dim=6)
+        if not IsSquareMatrix(damping, 6):
+            RaiseTypeError(where=where, argumentName='damping', received = damping, expectedType = ExpectedType.Matrix, dim=6)
+        if not IsVector(offset, 6):
+            RaiseTypeError(where=where, argumentName='offset', received = offset, expectedType = ExpectedType.Vector, dim=3)
+
+
+        if not isinstance(name, str):
+            RaiseTypeError(where=where, argumentName='name', received = name, expectedType = ExpectedType.String)
+
+        if not IsValidBool(useGlobalFrame):
+            RaiseTypeError(where=where, argumentName='useGlobalFrame', received = useGlobalFrame, expectedType = ExpectedType.Bool)
+
+        if not IsValidRealInt(drawSize):
+            RaiseTypeError(where=where, argumentName='drawSize', received = drawSize, expectedType = ExpectedType.Real)
+
+        if not IsValidBool(show):
+            RaiseTypeError(where=where, argumentName='show', received = show, expectedType = ExpectedType.Bool)
+
+        if not IsVector(color, 4):
+            RaiseTypeError(where=where, argumentName='color', received = color, expectedType = ExpectedType.Vector, dim=4)
+
+
+    mName0 = ''
+    mName1 = ''
+    if name != '':
+        mName0 = 'Marker0:'+name
+        mName1 = 'Marker1:'+name
+    
+    if isinstance(bodyOrNodeList[0], exudyn.ObjectIndex):
+        mBody0 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName0,bodyNumber=bodyOrNodeList[0], localPosition=localPosition0))
+        A0 = mbs.GetObjectOutputBody(objectNumber=bodyOrNodeList[0],variableType=exudyn.OutputVariableType.RotationMatrix,
+                                     localPosition=localPosition0,
+                                     configuration=exudyn.ConfigurationType.Reference).reshape((3,3))
+    else:
+        mBody0 = mbs.AddMarker(eii.MarkerNodePosition(name=mName0,nodeNumber=bodyOrNodeList[0]))
+        A0 = mbs.GetNodeOutput(nodeNumber=bodyOrNodeList[0], variableType=exudyn.OutputVariableType.RotationMatrix,
+                               configuration=exudyn.ConfigurationType.Reference).reshape((3,3))
+
+    if isinstance(bodyOrNodeList[1], exudyn.ObjectIndex):
+        mBody1 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName1,bodyNumber=bodyOrNodeList[1], localPosition=localPosition1))
+        A1 = mbs.GetObjectOutputBody(objectNumber=bodyOrNodeList[1],variableType=exudyn.OutputVariableType.RotationMatrix,
+                                     localPosition=localPosition1,
+                                     configuration=exudyn.ConfigurationType.Reference).reshape((3,3))
+    else:
+        mBody1 = mbs.AddMarker(eii.MarkerNodePosition(name=mName1,nodeNumber=bodyOrNodeList[1]))
+        A1 = mbs.GetNodeOutput(nodeNumber=bodyOrNodeList[1], variableType=exudyn.OutputVariableType.RotationMatrix,
+                               configuration=exudyn.ConfigurationType.Reference).reshape((3,3))
+
+    print('A0=',A0)
+    print('A1=',A1)
+    if useGlobalFrame:
+        #compute joint marker orientations, rotationMatrixAxes represents global frame:
+        MR0 = A0.T @ rotationMatrixJoint
+        MR1 = A1.T @ rotationMatrixJoint
+    else: #transform into global coordinates, then everything works same
+        #compute joint marker orientations, rotationMatrixAxes represents local frame:
+        MR0 = rotationMatrixJoint
+        MR1 = A1.T @ A0 @ rotationMatrixJoint
+
+            
+    oConnector = mbs.AddObject(eii.ObjectConnectorRigidBodySpringDamper(name=name,markerNumbers = [mBody0,mBody1],
+                                                                        stiffness = stiffness, damping = damping, 
+                                                                        offset = offset,
+                                                                        rotationMarker0=MR0, 
+                                                                        rotationMarker1=MR1,
+                                                                        visualization=eii.VRigidBodySpringDamper(show=show, 
+                                                                                      drawSize=drawSize, color=color)
+                                                                      ))
+
+    return oConnector
+
+
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: Create revolute joint between two bodies; definition of joint position and axis in global coordinates (alternatively in body0 local coordinates) for reference configuration of bodies; all markers, markerRotation and other quantities are automatically computed
@@ -727,7 +852,7 @@ def MainSystemCreateRevoluteJoint(mbs, name='', bodyNumbers=[None, None],
     [p0, A0, p1, A1] = JointPreCheckCalc('MainSystem.CreateRevoluteJoint', mbs, name, bodyNumbers, position, show, useGlobalFrame)
         
     if useGlobalFrame:
-        pJoint = position
+        pJoint = copy.copy(position)
         vAxis = copy.copy(axis)
     else: #transform into global coordinates, then everything works same
         pJoint = A0 @ position + p0
@@ -826,7 +951,7 @@ def MainSystemCreatePrismaticJoint(mbs, name='', bodyNumbers=[None, None],
 
 
     if useGlobalFrame:
-        pJoint = position
+        pJoint = copy.copy(position)
         vAxis = copy.copy(axis)
     else: #transform into global coordinates, then everything works same
         pJoint = A0 @ position + p0
@@ -912,7 +1037,7 @@ def MainSystemCreateSphericalJoint(mbs, name='', bodyNumbers=[None, None],
     [p0, A0, p1, A1] = JointPreCheckCalc('MainSystem.CreateSphericalJoint', mbs, name, bodyNumbers, position, show, useGlobalFrame)
 
     if useGlobalFrame:
-        pJoint = position
+        pJoint = copy.copy(position)
     else: #transform into global coordinates, then everything works same
         pJoint = A0 @ position + p0
 
@@ -1000,14 +1125,14 @@ def MainSystemCreateGenericJoint(mbs, name='', bodyNumbers=[None, None],
 
 
     if useGlobalFrame:
-        pJoint = position
+        pJoint = copy.copy(position)
         #compute joint marker orientations, rotationMatrixAxes represents global frame:
         MR0 = A0.T @ rotationMatrixAxes
         MR1 = A1.T @ rotationMatrixAxes
     else: #transform into global coordinates, then everything works same
         pJoint = A0 @ position + p0
         #compute joint marker orientations, rotationMatrixAxes represents local frame:
-        MR0 = rotationMatrixAxes
+        MR0 = copy.copy(rotationMatrixAxes)
         MR1 = A1.T @ A0 @ rotationMatrixAxes
 
     

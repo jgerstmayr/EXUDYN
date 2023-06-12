@@ -216,7 +216,7 @@ enum class OutputVariableType {
 	Velocity = 1 << 4,				//!< velocity vector, e.g. of node or body center of mass
 	VelocityLocal = 1 << 5,			//!< local velocity vector (used e.g. in joints)
 	Acceleration = 1 << 6,			//!< acceleration vector, e.g. of node or body center of mass
-	AccelerationLocal = 1 << 7,			//!< acceleration vector, e.g. of node or body center of mass
+	AccelerationLocal = 1 << 7,		//!< acceleration vector, e.g. of node or body center of mass
 	RotationMatrix = 1 << 8,		//!< rotation matrix, e.g. rigid body
 	AngularVelocity = 1 << 9,		//!< angular velocity vector, e.g. rigid body; scalar quantity in 2D-elements
 	AngularVelocityLocal = 1 << 10,	//!< angular velocity vector in local (body-fixed) coordinates
@@ -248,7 +248,7 @@ enum class OutputVariableType {
 //
 	ConstraintEquation = 1 << 30,	//!< evaluates constraint equation (=current deviation or drift of constraint equation)
 
-	//Curvature = 1 << 21,			//!< global curvature (components) in beam or shell
+	//Curvature = 1 << xx,			//!< global curvature (components) in beam or shell
 	//keep this list synchronized with function GetOutputVariableTypeString(...) !!!
 
     //SecondPiolaKirchoffStress = (1 << 7), GreenStrain = (1 << 8),
@@ -635,10 +635,12 @@ typedef std::vector<Joint::Type> JointTypeList;
 
 //! enum to determine how to set up the system matrix 
 enum class LinearSolverType {
-	_None = 0,			//marks that no type is used
-	EXUdense = 1,		//use internal dense matrix (e.g. matrix inverse for factorization)
-	EigenSparse = 2,	//use Eigen::SparseMatrix
-	EigenSparseSymmetric = 3	//use Eigen::SparseMatrix, symmetric mode (faster)
+	_None = 0,			        //marks that no type is used
+	EXUdense = 1 << 0,		    //use internal dense matrix (e.g. matrix inverse for factorization)
+	EigenSparse = 1 << 1,	    //use Eigen::SparseMatrix
+	EigenSparseSymmetric = 1 << 2,	//use Eigen::SparseMatrix, symmetric mode (faster)
+    EigenDense = 1 << 3,		//use Eigen's LU factorization with partial pivoting or full pivot (if ignoreSingularJacobian=True)
+    Dense = (1 << 0) + (1 << 3),	//any dense solver; not mapped to Python
 };
 
 //! ostream operator for printing of enum class
@@ -649,7 +651,9 @@ inline std::ostream& operator<<(std::ostream& os, LinearSolverType value)
 	case LinearSolverType::_None:			return os << "_None"; break;
 	case LinearSolverType::EXUdense:			return os << "EXUdense"; break;
 	case LinearSolverType::EigenSparse:		return os << "EigenSparse"; break;
-	case LinearSolverType::EigenSparseSymmetric:		return os << "EigenSparseSymmetric"; break;
+    case LinearSolverType::EigenSparseSymmetric:		return os << "EigenSparseSymmetric"; break;
+	case LinearSolverType::EigenDense:		return os << "EigenDense"; break;
+	case LinearSolverType::Dense:		return os << "Dense"; break;
 	default: 		return os << "LinearSolverType::invalid";
 	}
 }

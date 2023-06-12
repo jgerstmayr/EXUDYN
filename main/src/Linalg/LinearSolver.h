@@ -29,8 +29,9 @@
 
 
 #ifdef USE_EIGEN
-	#define USE_EIGEN_SPARSE_SOLVER
-	#include "../Eigen/Sparse"
+    #define USE_EIGEN_SPARSE_SOLVER
+    #define USE_EIGEN_DENSE_SOLVER
+    #include "../Eigen/Sparse"
 	#include "../Eigen/Dense"
 	//#include "Eigen/SuperLUSupport"
 	#include "../Eigen/SparseLU"
@@ -107,6 +108,7 @@ class GeneralMatrix
 {
 private:
 	bool matrixIsFactorized; //!< flag, which is only true, if the matrix has been previously factorized without any changes
+    Real pivotThreshold;
 
 public:
 	virtual ~GeneralMatrix() {} //added for correct deletion of derived classes
@@ -114,6 +116,9 @@ public:
 	virtual LinearSolverType GetSystemMatrixType() const = 0;
 	virtual bool IsMatrixIsFactorized() const { return matrixIsFactorized; };
 	virtual void SetMatrixIsFactorized(bool flag) { matrixIsFactorized = flag; };
+
+    virtual const Real& PivotThreshold() const { return pivotThreshold; };
+    virtual Real& PivotThreshold() { return pivotThreshold; };
 
 	//! functions only used for Sparse mode; no problem, if called for dense matrix
 	virtual void AssumeSymmetric(bool flag = true) {};
@@ -183,9 +188,9 @@ public:
 	virtual void FinalizeMatrix() = 0;
 
 	//! factorize matrix (invert, SparseLU, etc.)
-	//! bool ignoreRedundantEquations, Index redundantEquationsStart, Real pivotTreshold
+	//! bool ignoreRedundantEquations, Index redundantEquationsStart, Real pivotThreshold
 	//! return -1 if success, causing index otherwise
-	virtual Index FactorizeNew(bool ignoreRedundantEquation = false, Index redundantEquationsStart = 0) = 0;
+    virtual Index FactorizeNew() = 0; // bool ignoreRedundantEquation = false, Index redundantEquationsStart = 0) = 0;
 
 	//! after factorization of matrix (=A), solve provides a solution vector (=x) for A*x = rhs ==> soluation = A^{-1}*rhs
 	virtual void Solve(const Vector& rhs, Vector& solution) = 0;
@@ -219,12 +224,20 @@ public:
 class GeneralMatrixEXUdense : public GeneralMatrix
 {
 private:
-	ResizableMatrix matrix; //!< internal dense matrix storage:
+    Index useEigenSolverType;                               //!< use Eigen solver
+    ResizableMatrix matrix;                                 //!< internal dense matrix storage:
+#ifdef USE_EIGEN_DENSE_SOLVER
+    Eigen::FullPivLU<Eigen::MatrixXd> eigenLUfullPivot;     //!< Full Pivot LU factorization using Eigen
+    Eigen::PartialPivLU<Eigen::MatrixXd> eigenLU;           //!< LU factorization using Eigen
+    static Index constexpr eigenSolverTypeLU = 1;
+    static Index constexpr eigenSolverTypeFullPivotLU = 2;
+    bool eigenUsesFullPivot;                                //!< set by last call of LU factorization to remember type of solver
+#endif
 public:
-	GeneralMatrixEXUdense() { SetMatrixIsFactorized(false); }
+    GeneralMatrixEXUdense() { SetMatrixIsFactorized(false); UseEigenSolverType() = 0; PivotThreshold() = 0.; }
 
 	//! information on storage type
-	virtual LinearSolverType GetSystemMatrixType() const { return LinearSolverType::EXUdense; };
+	virtual LinearSolverType GetSystemMatrixType() const { return (useEigenSolverType == 0) ? LinearSolverType::EXUdense : LinearSolverType::EigenDense; };
 
 	//! get (read) matrix as dense exudyn Matrix; this function should be used rarly, as it disables the compatibility to other matrix formats
 	const ResizableMatrix& GetMatrixEXUdense() const { return matrix; }
@@ -232,6 +245,10 @@ public:
 	//! this function should be used rarly, as it disables the compatibility to other matrix formats
 	//! however, we never know what else is done with the matrix afterwards ...
 	ResizableMatrix& GetMatrixEXUdense() { SetMatrixIsFactorized(false); return matrix; }
+
+    //! access function to special solver setting
+    const Index& UseEigenSolverType() const { return useEigenSolverType; }
+    Index& UseEigenSolverType() { return useEigenSolverType; }
 
 	//helper functions for matrix:
 	virtual void SetNumberOfRowsAndColumns(Index numberOfRowsInit, Index numberOfColumnsInit)
@@ -363,7 +380,7 @@ public:
 
 	//! factorize matrix (invert, SparseLU, etc.);
 	//! return -1 if success, causing index otherwise
-	virtual Index FactorizeNew(bool ignoreRedundantEquation = false, Index redundantEquationsStart = 0);
+    virtual Index FactorizeNew(); //removed 2023-06-11: switched to Eigen:FullPivLU; bool ignoreRedundantEquation = false, Index redundantEquationsStart = 0);
 
 	//! multiply matrix with vector: solution = A*x
 	virtual void MultMatrixVector(const Vector& x, Vector& solution)
@@ -387,11 +404,7 @@ public:
 	}
 
 	//!after factorization of matrix (=A), solve provides a solution vector (=x) for A*x = rhs ==> soluation = A^{-1}*rhs
-	virtual void Solve(const Vector& rhs, Vector& solution)
-	{
-		if (!IsMatrixIsFactorized()) { SysError("GeneralMatrixEXUdense::Solve(...): matrix is not factorized!"); }
-		EXUmath::MultMatrixVector(matrix, rhs, solution);
-	}
+    virtual void Solve(const Vector& rhs, Vector& solution);
 
 	//! return a dense matrix from any other matrix: requires a copy - SLOW!
 	virtual ResizableMatrix GetEXUdenseMatrix() const
@@ -439,8 +452,10 @@ private:
 public:
 	GeneralMatrixEigenSparse() 
 	{ 
-		isSymmetric = false;
-		SetMatrixIsFactorized(false); 
+        SetMatrixIsFactorized(false);
+        PivotThreshold() = 0.;
+
+        isSymmetric = false;
 		SetMatrixBuiltFromTriplets(false);
 		numberOfRows = 0;
 		numberOfColumns = 0;
@@ -551,7 +566,7 @@ public:
 
 	//! factorize matrix (invert, SparseLU, etc.);
 	//! return -1 if success, causing index otherwise
-	virtual Index FactorizeNew(bool ignoreRedundantEquation = false, Index redundantEquationsStart = 0);
+    virtual Index FactorizeNew(); // bool ignoreRedundantEquation = false, Index redundantEquationsStart = 0);
 
 	//! multiply matrix with vector: solution = A*x
 	//! this leads to memory allocation in case that the matrix is built from triplets

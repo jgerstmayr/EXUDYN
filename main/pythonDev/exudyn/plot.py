@@ -15,6 +15,7 @@
 import numpy as np #for loading
 import exudyn #for sensor index
 from exudyn.advancedUtilities import PlotLineCode
+import copy
 
 #++++++++++++++++++++++++++++++++
 #this structure helps to define default values, that are then always used!
@@ -254,6 +255,7 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel='time (s)', yLabel=No
     if fontSize == 16:
         fontSize = __plotSensorDefaults.fontSize
 
+    #the following code is not totally safe regarding mutable args, but works with this kind of default args
     if colors == []:
         colors = __plotSensorDefaults.colors
     if lineStyles == []:
@@ -277,7 +279,7 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel='time (s)', yLabel=No
 
             
     if isinstance(sensorNumbers,list):
-        sensorList = sensorNumbers
+        sensorList = list(sensorNumbers)
     else:
         sensorList = [sensorNumbers]
 
@@ -297,13 +299,14 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel='time (s)', yLabel=No
 
     nSensors = len(sensorList)
 
-    if componentsX != []:
+    componentsXnew = copy.copy(componentsX)
+    if componentsXnew != []:
         if not isinstance(components,list):
-            componentsX = [componentsX]*nSensors
-        elif len(componentsX) != nSensors:
-            raise ValueError('PlotSensor: size of componentsX and size of sensors or components must be agree; componentsX='+str(componentsX))
+            componentsXnew = [componentsXnew]*nSensors
+        elif len(componentsXnew) != nSensors:
+            raise ValueError('PlotSensor: size of componentsX and size of sensors or components must be agree; componentsX='+str(componentsXnew))
     else:
-        componentsX = [-1]*nSensors
+        componentsXnew = [-1]*nSensors
 
     
     if closeAll:
@@ -494,7 +497,7 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel='time (s)', yLabel=No
             componentY = componentList[i] + 1
         else:
             componentY = componentNorm
-        componentX = componentsX[i] + 1
+        componentX = componentsXnew[i] + 1
         
         #now load sensor file:
         if ('storeInternal' in sensorDicts[i] and

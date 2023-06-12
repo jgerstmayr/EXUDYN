@@ -208,7 +208,7 @@ def WriteMiniExample(className, miniExample):
     #s+= "sys.path.append('../../bin/WorkingRelease')\n"
     s+= "sys.path.append('../TestModels')\n\n"
     s+= 'import exudyn as exu\n'
-    s+= 'from exudyn.itemInterface import *\n'
+    #s+= 'from exudyn.itemInterface import *\n' #not needed any more
     s+= 'from exudyn.utilities import *\n\n'
     s+= 'from modelUnitTests import ExudynTestStructure, exudynTestGlobals\n'
     s+= 'import numpy as np\n'

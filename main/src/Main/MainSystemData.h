@@ -513,7 +513,7 @@ public: //
             PyError("AddODE2LoadDependencies: inconsistent size of systemData.loadsODE2dependencies; call Assemble() first");
         }
         Index nODE2 = cSystemData->GetNumberOfCoordinatesODE2();
-        for (Index k = 0; k < globalODE2coordinates.size(); k++)
+        for (Index k = 0; k < (Index)globalODE2coordinates.size(); k++)
         {
             Index c = globalODE2coordinates[k];
             if (!EXUstd::IndexIsInRange(c, 0, nODE2))

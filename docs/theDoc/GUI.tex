@@ -60,9 +60,9 @@ The following table includes the keyboard shortcuts available in the window.
 \rowTableThree{\mybold{CTRL S}}{show/hide sensors numbers}{pressing this key switches the visibility of sensors numbers}
 \rowTableThree{\mybold{T}}{faces / edges mode}{switch between faces transparent/ faces transparent + edges / only face edges / full faces with edges / only faces visible}
 \rowTableThree{\mybold{O}}{change center}{change center of rotation to current center of the window (affects only current plane coordinates; rotate model to ajust other coordinates)}
-\rowTableThree{\mybold{Q}}{stop solver}{current solver is stopped (proceeds to next simulation or end of file)}
+\rowTableThree{\mybold{Q}}{stop solver}{current solver is stopped (proceeds to next simulation or end of file); after \texttt{visualizationSettings.window.reallyQuitTimeLimit} seconds a dialog opens for safety}
 \rowTableThree{\mybold{SPACE}}{pause/continue simulation}{pause simulation, e.g. for model inspection; if simulation is paused, it can be continued by pressing space; use SHIFT+SPACE to continuously activate 'continue simulation'}
-\rowTableThree{\mybold{ESCAPE}}{close renderer}{stops the simulation (and further simulations) and closes the render window (same as close window)}
+\rowTableThree{\mybold{ESCAPE}}{close renderer}{stops the simulation (and further simulations) and closes the render window (same as close window); after \texttt{visualizationSettings.window.reallyQuitTimeLimit} seconds a dialog opens for safety}
 \rowTableThree{\mybold{X}}{execute command}{open dialog to enter a python command (in global python scope), see \refSection{sec:overview:basics:commandAndHelp}; dialog may appear behind the visualization window!}
 \rowTableThree{\mybold{V}}{visualization settings}{open dialog to modify visualization settings, see \refSection{sec:overview:basics:visualizationsettings}; dialog may appear behind the visualization window!}
 \rowTableThree{\mybold{F2}}{ignore keys}{ switch key input on / off; can be used in combination with keyPressUserFunction to make simulators}

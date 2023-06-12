@@ -9,15 +9,342 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi \small
-  \item Exudyn version = 1.6.119.dev1, 
-  \item last change =  2023-05-22, 
-  \item Number of issues = 1583, 
-  \item Number of resolved issues = 1399 (119 in current version), 
+  \item Exudyn version = 1.6.164.dev1, 
+  \item last change =  2023-06-12, 
+  \item Number of issues = 1620, 
+  \item Number of resolved issues = 1444 (164 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.6.164}:  resolved Issue 1267: {\bf matrix inverse}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add pivot threshold to options, may improve redundant constraints problems}
+    \item {\bf notes: only available for EigenDense with ignoreSingularJacobian and EXUdense linear solvers}
+    \item   date resolved: {\bf 2023-06-12 13:24},
+date raised: 2022-09-21 
+  \ei
+  \item[] {\bf Version 1.6.163}:  resolved Issue 1616: {\bf eigen LU}
+(check)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: check fastest solver for regular and overdetermined systems}
+    \item {\bf notes: Eigen::PartialPivLU 2.5 times faster for 65 DOF test in factorization, factor 3 faster for backsubst}
+    \item   date resolved: {\bf 2023-06-12 13:22},
+date raised: 2023-06-11 
+  \ei
+  \item[] {\bf Version 1.6.162}:  resolved Issue 1607: {\bf Bricard mechanism}
+(testing)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add example and test ComputeSystemDegreesOfFreedom}
+    \item   date resolved: {\bf 2023-06-12 11:02},
+date raised: 2023-06-09 
+  \ei
+  \item[] {\bf Version 1.6.161}:  resolved Issue 1617: {\bf solver error message}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: revise hint for ignoreSingularJacobian}
+    \item   date resolved: {\bf 2023-06-12 01:39},
+date raised: 2023-06-11 
+  \ei
+  \item[] {\bf Version 1.6.160}:  resolved Issue 1615: {\bf pivotThreshold}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add already existing parameter [which is currently not used in solver!] to solver interface add FactorizeNew arg}
+    \item   date resolved: {\bf 2023-06-12 01:39},
+date raised: 2023-06-11 
+  \ei
+  \item[] {\bf Version 1.6.159}:  resolved Issue 1266: {\bf matrix inverse}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add full pivoting mode for matrix inverse, to resolve redundant constraints; consider Eigen FullPivotLU for dense matrices - see classEigen\_1\_1FullPivLU.html}
+    \item {\bf notes: also added new LinearSolverType.EigenDense which allows to chose FullPivLU by settings ignoreSingularJacobian=True}
+    \item   date resolved: {\bf 2023-06-12 00:17},
+date raised: 2022-09-21 
+  \ei
+  \item[] {\bf Version 1.6.158}:  resolved Issue 1619: {\bf LinearSolverType}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: switch to bit-wise numbering of solver types, in order to alleviate checks}
+    \item   date resolved: {\bf 2023-06-11 23:52},
+date raised: 2023-06-11 
+  \ei
+  \item[] {\bf Version 1.6.157}:  resolved Issue 1618: {\bf ignoreRedundantConstraints}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: remove option ignoreRedundantConstraints as it cannot be applied with Eigen::FullPivLU; use ignoreSingularJacobian instead}
+    \item   date resolved: {\bf 2023-06-11 23:46},
+date raised: 2023-06-11 
+  \ei
+  \item[] {\bf Version 1.6.156}:  resolved Issue 1613: {\bf Experimental}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add experimental class, which can be accessed in Python by exudyn.Experimental(); inside C++, just needs to be imported; allows simple testing without interference with main features}
+    \item   date resolved: {\bf 2023-06-11 19:56},
+date raised: 2023-06-11 
+  \ei
+  \item[] {\bf Version 1.6.155}:  resolved Issue 1536: {\bf mutable arguments}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: check and fix Python functions with mutable arguments such as [] or {}, with potential risk of changing internally in function, leading to unexpected behavior in second call}
+    \item {\bf notes: checked all default list and dict args}
+    \item   date resolved: {\bf 2023-06-11 00:24},
+date raised: 2023-04-27 
+  \ei
+  \item[] {\bf Version 1.6.154}:  resolved Issue 1612: {\bf mutable arguments}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: check and fix problems in beams.py, FEM.py and graphicsDataUtilities.py}
+    \item {\bf notes: see also issue 1536}
+    \item   date resolved: {\bf 2023-06-10 21:34},
+date raised: 2023-06-10 
+  \ei
+  \item[] {\bf Version 1.6.153}:  resolved Issue 1609: {\bf AnimateModes}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: extend for using a set of system eigenmodes}
+    \item   date resolved: {\bf 2023-06-10 20:25},
+date raised: 2023-06-10 
+  \ei
+  \item[] {\bf Version 1.6.152}:  resolved Issue 1580: {\bf mainSystemExtensions}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add RigidBodySpringDamper}
+    \item   date resolved: {\bf 2023-06-10 20:25},
+date raised: 2023-05-21 
+  \ei
+  \item[] {\bf Version 1.6.151}:  resolved Issue 1606: {\bf ComputeODE2Eigenvalues}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add eigenvector computation to constrained case}
+    \item {\bf notes: needs further testing!}
+    \item   date resolved: {\bf 2023-06-10 19:11},
+date raised: 2023-06-08 
+  \ei
+  \item[] {\bf Version 1.6.150}:  resolved Issue 1611: {\bf SolutionViewer}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: change internal variables from mbs.variables to mbs.sys}
+    \item   date resolved: {\bf 2023-06-10 17:48},
+date raised: 2023-06-10 
+  \ei
+  \item[] {\bf Version 1.6.149}:  resolved Issue 1610: {\bf AnimateModes}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: change internal variables from mbs.variables to mbs.sys}
+    \item   date resolved: {\bf 2023-06-10 17:47},
+date raised: 2023-06-10 
+  \ei
+  \item[] {\bf Version 1.6.148}: {\bf \color{warningRed}  resolved BUG 1608}: {\bf visualization zoom all}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: when calling ComputeSystemDegreeOfFreedom, ComputeODE2Eigenvalues and similar functions, and StartRenderer is called right afterwards, zoom all does not work}
+    \item {\bf notes: shall be resolved just by calling StartRenderer before first call to any solver functionality}
+    \item   date resolved: {\bf 2023-06-10 11:44},
+date raised: 2023-06-10 
+  \ei
+  \item[] {\bf Version 1.6.147}:  resolved Issue 1435: {\bf solver}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add deriviative of loads to regular jacobian computation with flag (default=False); use numerical diff sim. to JacobianODE2}
+    \item {\bf notes: already done earlier in \#1546}
+    \item   date resolved: {\bf 2023-06-08 23:35},
+date raised: 2023-02-16 
+  \ei
+  \item[] {\bf Version 1.6.146}:  resolved Issue 1597: {\bf Command execute}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: switch to grid method for placing widgets, tkinter does not allow pack and grid in different windows}
+    \item   date resolved: {\bf 2023-06-08 21:56},
+date raised: 2023-06-05 
+  \ei
+  \item[] {\bf Version 1.6.145}: {\bf \color{warningRed}  resolved BUG 1593}: {\bf TemporaryComputationDataArray bug}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: ERROR: "TemporaryComputationDataArray::operator[]: index out of range" is raised if single-threaded computation is run after multi-threaded simulation; requires restart of Python instance}
+    \item   date resolved: {\bf 2023-06-08 18:50},
+date raised: 2023-06-03 
+  \ei
+  \item[] {\bf Version 1.6.144}:  resolved Issue 1599: {\bf ComputeODE2Eigenvalues}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: compute eigenmodes in case of algebraic equations}
+    \item   date resolved: {\bf 2023-06-08 18:46},
+date raised: 2023-06-08 
+  \ei
+  \item[] {\bf Version 1.6.143}:  resolved Issue 1603: {\bf AddSensor}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add check if no outputVariable is provided-> immediately raise error}
+    \item {\bf notes: was already in system checks, which however were not called, see issue 1604}
+    \item   date resolved: {\bf 2023-06-08 18:45},
+date raised: 2023-06-08 
+  \ei
+  \item[] {\bf Version 1.6.142}:  resolved Issue 1598: {\bf eigenvalues constrained system}
+(example)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add example for eigenvalue computation of constrained system}
+    \item {\bf notes: added computeODE2AEeigenvaluesTest.py}
+    \item   date resolved: {\bf 2023-06-08 18:45},
+date raised: 2023-06-08 
+  \ei
+  \item[] {\bf Version 1.6.141}:  resolved Issue 1605: {\bf ComputeSystemDegreeOfFreedom}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: change output to a dictionary in order to have readable results}
+    \item   date resolved: {\bf 2023-06-08 18:35},
+date raised: 2023-06-08 
+  \ei
+  \item[] {\bf Version 1.6.140}:  resolved Issue 1604: {\bf Sensors}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: PreAssembleConsistencies not called in Assemble; thus, no checks are performed on sensor inputs}
+    \item   date resolved: {\bf 2023-06-08 18:24},
+date raised: 2023-06-08 
+  \ei
+  \item[] {\bf Version 1.6.139}: {\bf \color{warningRed}  resolved BUG 1602}: {\bf MainSystem CreateRigidBody}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: referenceRotationMatrix multiplied in wrong way with initialRotationMatrix}
+    \item {\bf notes: also rotation parameters in initialVelocities were wrong for initialRotationMatrix!=np.eye(3); fixed, but more testing needed}
+    \item   date resolved: {\bf 2023-06-08 17:42},
+date raised: 2023-06-08 
+  \ei
+  \item[] {\bf Version 1.6.138}:  resolved Issue 1600: {\bf stub files}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: extend .pyi files for system structures functions, e.g., ComputeJacobianODE2RHS}
+    \item   date resolved: {\bf 2023-06-08 17:17},
+date raised: 2023-06-08 
+  \ei
+  \item[] {\bf Version 1.6.137}:  resolved Issue 1601: {\bf stub files}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: merge .pyi files to have classes such as MainSystem only appearing once}
+    \item   date resolved: {\bf 2023-06-08 16:37},
+date raised: 2023-06-08 
+  \ei
+  \item[] {\bf Version 1.6.136}:  resolved Issue 0746: {\bf ComputeODEEigenvalues}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add possibility to eliminate coordinate constraints, possibly to use SVD/ null space matrix for projection}
+    \item {\bf notes: algebraic constraints now considered automatically; algebraic constraints now considered automatically}
+    \item   date resolved: {\bf 2023-06-07 23:52},
+date raised: 2021-09-03 (resolved by: M. Pieber, JG)
+  \ei
+  \item[] {\bf Version 1.6.135}:  resolved Issue 0743: {\bf ComputeODE2Eigenvalues}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add vector of constrained coordinates which are eliminated; also add functionality for complex eigenvalues}
+    \item {\bf notes: already done earlier}
+    \item   date resolved: {\bf 2023-06-07 23:09},
+date raised: 2021-08-20 
+  \ei
+  \item[] {\bf Version 1.6.134}:  resolved Issue 1595: {\bf Command dialog}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: extend to multi-line commands; execute code using CTRL-Return}
+    \item {\bf notes: Behavior is now DIFFERENT, as variables are not printed automatically; write e.g. print(mbs) to see mbs representation; see section Execute Command and Help}
+    \item   date resolved: {\bf 2023-06-04 19:40},
+date raised: 2023-06-03 
+  \ei
+  \item[] {\bf Version 1.6.133}:  resolved Issue 1596: {\bf linuxDisplayScaleFactor}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add scaling for fonts on linux, specifically for high resolution screens}
+    \item   date resolved: {\bf 2023-06-04 00:13},
+date raised: 2023-06-04 
+  \ei
+  \item[] {\bf Version 1.6.132}:  resolved Issue 1588: {\bf ParameterVariation, useMPI}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: only accept useMPI if set True}
+    \item   date resolved: {\bf 2023-06-03 19:26},
+date raised: 2023-05-31 
+  \ei
+  \item[] {\bf Version 1.6.131}:  resolved Issue 1579: {\bf mainSystemExtensions}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: Add distance constraint and CartesianSpringDamper}
+    \item   date resolved: {\bf 2023-06-03 19:26},
+date raised: 2023-05-21 
+  \ei
+  \item[] {\bf Version 1.6.130}:  resolved Issue 1594: {\bf window closing, key Q}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: slightly adapt behavior; fix some smaller issues with expected window behavior}
+    \item   date resolved: {\bf 2023-06-03 17:01},
+date raised: 2023-06-03 
+  \ei
+  \item[] {\bf Version 1.6.129}:  resolved Issue 1356: {\bf CHECK}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: Add security question on quit/escape if computation Renderer runs longer than 15 minutes}
+    \item {\bf notes: added message in render window to click twice on exit window icon (X) after 15 seconds; key Q and escape get tkinter message box}
+    \item   date resolved: {\bf 2023-06-03 16:00},
+date raised: 2023-01-01 
+  \ei
+  \item[] {\bf Version 1.6.128}:  resolved Issue 1592: {\bf SolverBase it.endTime}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: in dynamic solver it.endTime is overwritten with simulationSettings.timeIntegration.endTime; this is against the description and does not allow to change it.endTime in command window; remove overwritting to be consistent with description of Execute Command and Help section in EXUDYN Basics}
+    \item   date resolved: {\bf 2023-06-03 14:25},
+date raised: 2023-06-03 
+  \ei
+  \item[] {\bf Version 1.6.127}:  resolved Issue 1591: {\bf SphericalJoint}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: causes memory allocation; check LinkedDataVector cast}
+    \item   date resolved: {\bf 2023-06-01 11:12},
+date raised: 2023-06-01 
+  \ei
+  \item[] {\bf Version 1.6.126}:  resolved Issue 1590: {\bf serialRobotKinematicTree.py}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: fixed static torque compensation for kinematic tree and fixed sensor outputs}
+    \item   date resolved: {\bf 2023-05-31 13:07},
+date raised: 2023-05-31 
+  \ei
+  \item[] {\bf Version 1.6.125}:  resolved Issue 1589: {\bf ObjectKinematicTree}
+(docu)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add description of SensorKinematicTree output variables per link}
+    \item   date resolved: {\bf 2023-05-31 12:42},
+date raised: 2023-05-31 
+  \ei
+  \item[] {\bf Version 1.6.124}:  resolved Issue 1587: {\bf solution file footer}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add comma after cpuTime=...}
+    \item   date resolved: {\bf 2023-05-30 23:52},
+date raised: 2023-05-30 
+  \ei
+  \item[] {\bf Version 1.6.123}:  resolved Issue 1586: {\bf SetPreStepUserFunction, SetPostNewtonUserFunction}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add exception handling in set function}
+    \item   date resolved: {\bf 2023-05-26 19:52},
+date raised: 2023-05-26 
+  \ei
+  \item[] {\bf Version 1.6.122}:  resolved Issue 1585: {\bf class name highlighting RTD}
+(docu)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: fixed exporting class names from pythonUtilities}
+    \item   date resolved: {\bf 2023-05-25 15:19},
+date raised: 2023-05-25 
+  \ei
+  \item[] {\bf Version 1.6.121}:  resolved Issue 1584: {\bf MiniExamples}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: remove import of itemInterface}
+    \item   date resolved: {\bf 2023-05-25 14:32},
+date raised: 2023-05-25 
+  \ei
+  \item[] {\bf Version 1.6.120}: {\bf \color{warningRed}  resolved BUG 1583}: {\bf GeneticOptimization}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: results are erroneous in case of crossoverProbability > 0}
+    \item {\bf notes: fixed writing of output files which had mixed order due to parameter cross-over}
+    \item   date resolved: {\bf 2023-05-23 18:31},
+date raised: 2023-05-23 
+  \ei
   \item[] {\bf Version 1.6.119}:  resolved Issue 1582: {\bf mainSystemExtensions}
 (fix)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

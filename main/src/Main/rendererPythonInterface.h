@@ -32,7 +32,8 @@ namespace ProcessID
 		ShowVisualizationSettingsDialog = 1,
 		ShowHelpDialog = 2,
 		ShowPythonCommandDialog = 3,
-		ShowRightMouseSelectionDialog = 4
+		ShowRightMouseSelectionDialog = 4,
+        AskYesNo = 5
 	};
 	//! transform type into string (e.g. for error messages); this is slow and cannot be used during computation!
 	inline STDstring GetTypeString(Type var)
@@ -43,8 +44,9 @@ namespace ProcessID
 		case ShowVisualizationSettingsDialog: return "ShowVisualizationSettingsDialog"; break;
 		case ShowHelpDialog: return "ShowHelpDialog"; break;
 		case ShowPythonCommandDialog: return "ShowPythonCommandDialog"; break;
-		case ShowRightMouseSelectionDialog: return "ShowRightMouseSelectionDialog"; break;
-		default: return "ProcessID::unknown";
+        case ShowRightMouseSelectionDialog: return "ShowRightMouseSelectionDialog"; break;
+        case AskYesNo: return "AskYesNo"; break;
+        default: return "ProcessID::unknown";
 		}
 	}
 }
@@ -67,6 +69,10 @@ void PySetRendererMultiThreadedDialogs(bool flag);
 
 //! get state of multithreaded dialog (interaction with renderer during settings dialogs)
 bool PyGetRendererMultiThreadedDialogs();
+
+//! get/set result of PyProcess action
+Index PyProcessGetResult();
+void PyProcessSetResult(Index value);
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //FILL QUQUES
@@ -102,6 +108,7 @@ void PyProcessShowVisualizationSettingsDialog();
 void PyProcessShowHelpDialog();
 void PyProcessShowPythonCommandDialog();
 void PyProcessShowRightMouseSelectionDialog(Index itemID);
+void PyProcessAskQuit();
 
 //! execute str as Python commands; lock Renderer during this time to prevent from further commands, Python conflicts and crashing!
 //! this function MAY BE ONLY CALLED FROM PYTHON THREAD, NOT from GLFW!!:

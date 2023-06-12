@@ -298,9 +298,9 @@ writePybindIncludes = True
 typicalPaths = simulationSettings
 classDescription = "Settings for linear solver, both dense and sparse (Eigen)."
 #V|F, pythonName,          cplusplusName,  size,   type,                    defaultValue,args,cFlags,   parameterDescription
-V,  pivotTreshold,                  ,               , PReal,                0,    ,P    , "treshold for dense linear solver, can be used to detect close to singular solutions, setting this to, e.g., 1e-12; solver then reports on equations that are causing close to singularity"
-V,  ignoreRedundantConstraints,     ,               , bool,                 false,,P    , "[ONLY implemented for dense matrices] False: standard way, fails if redundant equations or singular matrices occur; True: if redundant constraints appear, the solver tries to resolve them by setting according Lagrange multipliers to zero; in case of redundant constraints, this may help, but it may lead to erroneous behaviour"
-V,  ignoreSingularJacobian,         ,               , bool,                 false,,P    , "[ONLY implemented for dense matrices] False: standard way, fails if jacobian is singular; True: if singularities appear in jacobian (e.g. no equation attributed to a node, redundant equations, zero mass matrix, zero eigenvalue for static problem, etc.), the jacobian inverse is resolved such that according solution variables are set to zero; this may help, but it MAY LEAD TO ERRONEOUS BEHAVIOUR; for static problems, this may suppress static motion or resolve problems in case of instabilities, but should in general be considered with care!"
+V,  pivotThreshold,                 ,               , UReal,                0,    ,P    , "[ONLY available for EXUdense and EigenDense (FullPivot) solver] threshold for dense linear solver, can be used to detect close to singular solutions, setting this to, e.g., 1e-12; solver then reports on equations that are causing close to singularity"
+#V,  ignoreRedundantConstraints,     ,               , bool,                 false,,P    , "[ONLY implemented for dense matrices] False: standard way, fails if redundant equations or singular matrices occur; True: if redundant constraints appear, the solver tries to resolve them by setting according Lagrange multipliers to zero; in case of redundant constraints, this may help, but it may lead to erroneous behaviour"
+V,  ignoreSingularJacobian,         ,               , bool,                 false,,P    , "[ONLY implemented for dense, Eigen matrix mode] False: standard way, fails if jacobian is singular; True: use Eigen's FullPivLU (thus only works with LinearSolverType.EigenDense) which handles over- and underdetermined systems; can often resolve redundant constraints, but MAY ALSO LEAD TO ERRONEOUS RESULTS!"
 V,  reuseAnalyzedPattern,           ,               , bool,                 false,,P    , "[ONLY available for sparse matrices] True: the Eigen SparseLU solver offers the possibility to reuse an analyzed pattern of a previous factorization; this may reduce total factorization time by a factor of 2 or 3, depending on the matrix type; however, if the matrix patterns heavily change between computations, this may even slow down performance; this flag is set for SparseMatrices in InitializeSolverData(...) and should be handled with care!"
 V,  showCausingItems,               ,               , bool,                 true,, P    , "False: no output, if solver fails; True: if redundant equations appear, they are resolved such that according solution variables are set to zero; in case of redundant constraints, this may help, but it may lead to erroneous behaviour; for static problems, this may suppress static motion or resolve problems in case of instabilities, but should in general be considered with care!"
 #
@@ -380,6 +380,7 @@ V,      textOffsetFactor,               ,                  ,     UFloat,       0
 V,      textAlwaysInFront,              ,                  ,     bool,         true,                   , P,      "if true, text for item numbers and other item-related text is drawn in front; this may be unwanted in case that you only with to see numbers of objects in front; currently does not work with perspective"
 V,      rendererPrecision,              ,                  ,     PInt,         "4",                    , P,      "precision of general floating point numbers shown in render window: total number of digits used  (max. 16)"
 V,      useWindowsDisplayScaleFactor,   ,                  ,     bool,         true,                   , P,      "the Windows display scaling (monitor scaling; content scaling) factor is used for increased visibility of texts on high resolution displays; based on GLFW glfwGetWindowContentScale; deactivated on linux compilation as it leads to crashes (adjust textSize manually!)"
+V,      linuxDisplayScaleFactor,        ,                  ,     PFloat,       1.,                     , P,      "Scaling factor for linux, which cannot determined from system by now; adjust this value to scale dialog fonts and renderer fonts"
 V,      useBitmapText,                  ,                  ,     bool,         true,                   , P,      "if true, texts are displayed using pre-defined bitmaps for the text; may increase the complexity of your scene, e.g., if many (>10000) node numbers shown"
 V,      minSceneSize,                   ,                  ,     float,        "0.1f",                 , P,      "minimum scene size for initial scene size and for autoFitScene, to avoid division by zero; SET GREATER THAN ZERO"
 V,      backgroundColor,                ,                  4,    Float4,       "Float4({1.0f,1.0f,1.0f,1.0f})", , P, "red, green, blue and alpha values for background color of render window (white=[1,1,1,1]; black = [0,0,0,1])"
@@ -604,6 +605,7 @@ V,      startupTimeout,                 ,                  ,     PInt,         "
 V,      alwaysOnTop,                    ,                  ,     bool,         false,                  , P,      "True: OpenGL render window will be always on top of all other windows"
 V,      maximize,                       ,                  ,     bool,         false,                  , P,      "True: OpenGL render window will be maximized at startup"
 V,      limitWindowToScreenSize,        ,                  ,     bool,         true,                   , P,      "True: render window size is limited to screen size; False: larger window sizes (e.g. for rendering) allowed according to renderWindowSize"
+V,      reallyQuitTimeLimit,            ,                  ,     UReal,        "900",                  , P,      "number of seconds after which user is asked a security question before stopping simulation and closing renderer; set to 0 in order to always get asked; set to 1e10 to (nearly) never get asked"
 #special settings:
 V,      keyPressUserFunction,           ,                  ,     KeyPressUserFunction,  0,             , P,      "add a Python function f(key, action, mods) here, which is called every time a key is pressed; function shall return true, if key has been processed; Example: \tabnewline def f(key, action, mods):\tabnewline \phantom{XXX} print('key=',key);\tabnewline use chr(key) to convert key codes [32 ...96] to ascii; special key codes (>256) are provided in the exudyn.KeyCode enumeration type; key action needs to be checked (0=released, 1=pressed, 2=repeated); mods provide information (binary) for SHIFT (1), CTRL (2), ALT (4), Super keys (8), CAPSLOCK (16)"
 V,      showMouseCoordinates,           ,                  ,     bool,         "false",                , P,      "True: show OpenGL coordinates and distance to last left mouse button pressed position; switched on/off with key 'F3'"
@@ -846,7 +848,7 @@ writeFile=CSolverStructures.h
 class = SolverLocalData
 appendToFile=True
 writePybindIncludes = True
-addConstructor = "    SetLinearSolverType(LinearSolverType::EXUdense, false); //for safety, data is linked initially\n"
+addConstructor = "    SetLinearSolverType(LinearSolverType::EXUdense); //for safety, data is linked initially\n"
 classDescription = "Solver local data structure for solution vectors, system matrices and temporary vectors and data structures."
 #V|F,   pythonName,                   cplusplusName,      size, type,          defaultValue,            args,           cFlags, parameterDescription
 V,      nODE2,                      ,                  ,     Index,        0,                      ,   P,    "number of second order ordinary diff. eq. coordinates"
@@ -888,7 +890,7 @@ Vp,     jacobianAEsparse,           ,                  ,     GeneralMatrixEigenS
 #
 #now done with addConstructor flag; F,      SolverLocalData,            ,                ,     ,             "SetLinearSolverType(LinearSolverType::EXUdense);", ,   P,  "for safety, data is linked immediately to dense matrices"
 F,      CleanUpMemory,              ,                ,     void,         ,                       ,    DP,  "if desired, temporary data is cleaned up to safe memory"
-F,      SetLinearSolverType,        ,                ,     void,         ,                       "LinearSolverType linearSolverType, bool reuseAnalyzedPattern",   DP,  "set linear solver type and matrix version: links system matrices to according dense/sparse versions"
+F,      SetLinearSolverType,        ,                ,     void,         ,                       "LinearSolverType linearSolverType, bool reuseAnalyzedPattern=false, bool ignoreSingularJacobian=false, Real pivotThreshold=0.",   DP,  "set linear solver type and matrix version: links system matrices to according dense/sparse versions and with option for singular jacobian (redundant constraints)"
 F,      GetLinearSolverType,        ,                ,     LinearSolverType, "return linearSolverType;", ,   CPV,  "return current linear solver type (dense/sparse)"
 #
 writeFile=CSolverStructures.h
@@ -985,7 +987,7 @@ V,      lastNewtonStepsCount,       ,                  ,     Index,        0,   
 V,      lastNewtonJacobiCount,      ,                  ,     Index,        0,                      ,   P,    "jacobian update count when written to console (or file) last time"
 V,      lastDiscontinuousIterationsCount, ,            ,     Index,        0,                      ,   P,    "discontinuous iterations count when written to console (or file) last time"
 #for parallel
-V,      numberOfThreadsUsed,        ,                  ,     Index,        0,                      ,   P,    "number of threads that have been used in simulation"
+V,      numberOfThreadsUsed,        ,                  ,     Index,        1,                      ,   P,    "number of threads that have been used in simulation"
 V,      multiThreadingMode,         ,                  ,     Index,        0,                      ,   P,    "multithreading mode that has been used: 0=None (serial), 1=NGsolve taskmanager, 2=MicroThreading (Exudyn)"
 #
 F,      InitializeData,             ,                ,     void,         "*this = SolverOutputData();",,P, "initialize SolverOutputData by assigning default values"

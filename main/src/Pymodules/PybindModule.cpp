@@ -91,7 +91,6 @@ using namespace pybind11::literals; //brings in the '_a' literals; e.g. for shor
 
 #include "Pymodules/PybindTests.h"
 
-
 #ifdef __EXUDYN_RUNTIME_CHECKS__
 extern Index array_new_counts;		//global counter of item allocations; is increased every time a new is called
 extern Index array_delete_counts;	//global counter of item deallocations; is increased every time a delete is called
@@ -141,6 +140,14 @@ extern Index linkedDataVectorCast_counts; //global counter for unwanted type con
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //some low level functions linked to exudyn
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+#include "Main/Experimental.h"
+Experimental experimental; //!this class can be accessed from outside, but also from every other file where this is imported
+//! access to global structure experimental
+Experimental& PyGetExperimental()
+{
+    return experimental;
+}
 
 //! this function returns the Python version for which Exudyn is compiled (even micro version, which may be different from Python interpreter!)
 //! returns e.g. "3.9.0"
@@ -326,8 +333,15 @@ void PySetLinalgOutputFormatPython(bool flagPythonFormat)
 // write access to system variables dictionary inside exudyn module
 void PyWriteToSysDictionary(const STDstring& key, py::object item)
 {
-	py::module exudynModule = py::module::import("exudyn");
-	exudynModule.attr("sys")[key.c_str()] = item;
+    py::module exudynModule = py::module::import("exudyn");
+    exudynModule.attr("sys")[key.c_str()] = item;
+}
+
+// write access to system variables dictionary inside exudyn module
+Real PyReadRealFromSysDictionary(const STDstring& key)
+{
+    py::module exudynModule = py::module::import("exudyn");
+    return py::cast<Real>(exudynModule.attr("sys")[key.c_str()]);
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -453,6 +467,15 @@ MySignal registerSignal;
 //
 //#endif
 
+//extern void SetCppDirect(std::function<Real()>& value);
+//extern void SetCppDirect2(void* value);
+//extern Real RunCppDirect(int count);
+//extern std::function<Real()> GetCppDirect();
+//
+//extern void SetCppDirect2(void* value);
+//extern Real RunCppDirect2(int count);
+
+
 #ifdef __FAST_EXUDYN_LINALG
 PYBIND11_MODULE(exudynCPPfast, m) {
 	m.doc() = "EXUDYN binding Python<->C++\n This is the 'fast' version without range/memory/whatsoever checks and uses /fp:fast compiler options!\n -> usage:\nSC=exu.SystemContainer()\nmbs=SC.AddSystem()\n see theDoc.pdf for tutorials, interface description and further information"; // module docstring
@@ -484,16 +507,31 @@ PYBIND11_MODULE(exudynCPP, m) {
 	//m.def("GetVector", &GetVector, "GetVector");
 	//m.def("GetMatrix", &GetMatrix, "GetMatrix");
 	//m.def("SeeMatrix", &SeeMatrix, "SeeMatrix");
+    //m.def("SetCppDirect", &SetCppDirect, "internal test, do not use");
+    //m.def("SetCppDirect2", &SetCppDirect2, "internal test, do not use");
+    //m.def("RunCppDirect", &RunCppDirect, "internal test, do not use");
+    //m.def("GetCppDirect", &GetCppDirect, "internal test, do not use");
+
 #ifndef EXUDYN_RELEASE
-	m.def("Test", &PyTest, "internal test, do not use");
+	//m.def("Test", &PyTest, "internal test, do not use");
 	//m.def("GetTestSD", &GetTestSD, "test user function");
 #endif
-	//m.def("SetTestFunction2", &PySetTestFunction2, "Set the test function");
-	//m.def("EvaluateTestFunction", &PyEvaluateTestFunction, "Evaluate test function");
 
-	//DELETE: m.def("GetInternalSelectionDict", &PyGetInternalSelectionDict, "internal function, do not use");
 
-	//m.def("test2", &PyGetInternalSysDictionary, "access to internal dictionary; do not use nor modify");
+    py::class_<Experimental>(m, "_Experimental", "Experimental features, not intended for regular users") //use _Experimental to distinguish from Experimental() function
+        .def(py::init<>())
+        //+++++++++++++++++++++++++++++++++++++++++++
+        //.def_readwrite("useEigenFullPivotLUsolver", &Experimental::useEigenFullPivotLUsolver)//, "switch to special solver")
+        .def_readwrite("eigenFullPivotLUsolverDebugLevel", &Experimental::eigenFullPivotLUsolverDebugLevel)//, "debug level for solver")
+
+        //representation:
+        .def("__repr__", [](const Experimental &item) {
+        return STDstring(EXUstd::ToString(item));
+        }, "return the string representation of Experimental class")
+        ;
+    //! experimental class, which can be used anywhere to test new features
+    m.def("Experimental", &PyGetExperimental, "Experimental features, not intended for regular users", py::return_value_policy::reference);
+
 
 	//moved here in order to be able to store current renderState in exudynSystemVariables
 	//m.def("StopOpenGLRenderer", &GetVector, "GetVector");

@@ -105,8 +105,10 @@ private:
 	static bool rendererActive;			//!< signal that shows that renderer is active
 	static bool stopRenderer;			//!< signal that shows that renderer should quit
 	static bool useMultiThreadedRendering;		//!< according to visualizationSettings.general; always false for MACOS (__EXUDYN__APPLE__)
-	static Real lastGraphicsUpdate;		//!< time of last graphics update
-	static Real lastEventUpdate;		//!< time of last event polling
+    static Real lastGraphicsUpdate;		//!< time of last graphics update
+    static Real lastTryCloseWindow;		//!< time of last trial to close window (for security closing)
+    static Real lastEventUpdate;		//!< time of last event polling
+    static Real rendererStartTime;      //!< time then renderer was started; used to check if quit requires security question
 	static bool callBackSignal;			//!< for single threaded applications, react if callback is sent=> update graphics immediately
 
 	static GLFWwindow* window;
@@ -341,7 +343,7 @@ private: //to be called internally only!
 	//! compute unified content scaling based on values provided by GLFW
 	static void SetContentScaling(float xScale, float yScale);
 	static float GetFontScaling() { if (state != nullptr) { return state->displayScaling; } else { return 1; } }
-	static void SetFontScaling(float scaling) { if (state != nullptr) { state->displayScaling = scaling; }  }
+    static void SetFontScaling(float scaling);
 
 	//! return true, if joystick available and updated values are available; if joystickNumber==invalidIndex, chose a joystick; 
 	//! if joystickNumber!=invalidIndex, it uses the fixed joystick until end of Renderer

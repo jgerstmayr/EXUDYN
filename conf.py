@@ -39,8 +39,8 @@ from pygments.token import Text, Comment, Operator, Keyword, Name, String, \
     Number, Punctuation, Generic, Other, Error
 
 #PythonLexer.EXTRA_CLASSNAMES = set(('AddSystem', 'AddObject', 'AddNode', 'AddMarker', 'AddLoad', 'AddSensor'))
-PythonLexer.EXTRA_CLASSNAMES = set(listClassNames+listItemNames)
-PythonLexer.EXTRA_FUNCTIONNAMES = set(listFunctionNames+listPyFunctionNames+listPyClassNames)
+PythonLexer.EXTRA_CLASSNAMES = set(listClassNames+listItemNames+listPyClassNames)
+PythonLexer.EXTRA_FUNCTIONNAMES = set(listFunctionNames+listPyFunctionNames)
 
 def ProcessTokens(self,text):
         for index, token, value in RegexLexer.get_tokens_unprocessed(self, text):

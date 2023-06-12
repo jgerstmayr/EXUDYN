@@ -17,9 +17,11 @@ This section includes all TestModels for Exudyn.They can also be found and downl
    TestModels/ANCFgeneralContactCircle
    TestModels/ANCFmovingRigidBodyTest
    TestModels/ANCFslidingAndALEjointTest
+   TestModels/bricardMechanism
    TestModels/carRollingDiscTest
    TestModels/compareAbaqusAnsysRotorEigenfrequencies
    TestModels/compareFullModifiedNewton
+   TestModels/computeODE2AEeigenvaluesTest
    TestModels/computeODE2EigenvaluesTest
    TestModels/connectorGravityTest
    TestModels/connectorRigidBodySpringDamperTest

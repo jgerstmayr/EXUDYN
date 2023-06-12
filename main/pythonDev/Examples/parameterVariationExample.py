@@ -140,7 +140,7 @@ def ParameterFunction(parameterSet):
     return errorNorm
 
 
-
+#for mpi parallelization see below
 #now perform parameter variation
 if __name__ == '__main__': #include this to enable parallel processing
     import time
@@ -212,3 +212,9 @@ if __name__ == '__main__': #include this to enable parallel processing
     plt.tight_layout()
    
     plt.show()
+
+
+
+#for mpi parallelization use the following example:
+
+

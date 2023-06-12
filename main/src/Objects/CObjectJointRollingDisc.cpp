@@ -54,7 +54,7 @@ void CObjectJointRollingDisc::ComputeAlgebraicEquations(Vector& algebraicEquatio
 			"CObjectJointRollingDisc::ComputeAlgebraicEquations: marker do not provide velocityLevel information");
 
 		algebraicEquations.SetNumberOfItems(nConstraints);
-		LinkedDataVector lambda = markerData.GetLagrangeMultipliers();
+		const LinkedDataVector& lambda = markerData.GetLagrangeMultipliers();
 
 		//disc
 		const Vector3D& p1 = markerData.GetMarkerData(1).position;
@@ -209,7 +209,7 @@ JacobianType::Type CObjectJointRollingDisc::GetAvailableJacobians() const
 //! provide according output variable in "value"
 void CObjectJointRollingDisc::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
 {
-	LinkedDataVector lambda = markerData.GetLagrangeMultipliers();
+	const LinkedDataVector& lambda = markerData.GetLagrangeMultipliers();
 
 	const Vector3D& p1 = markerData.GetMarkerData(1).position;
 	const Matrix3D& A1 = markerData.GetMarkerData(1).orientation;

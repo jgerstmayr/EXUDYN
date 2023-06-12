@@ -418,6 +418,11 @@ position, forces or joint data. For viewing sensor results, use the \texttt{Plot
 
 \mysubsubsectionlabel{Renderer and 3D graphics}{sec:overview:basics:renderer}
 A 3D renderer is attached to the simulation. Visualization is started with  \texttt{exu.StartRenderer()}, see the examples and tutorials.
+For closing, press key 'Q' or Escape or close the window.
+\mybold{Note}:
+\bi
+  \item After \texttt{visualizationSettings.window.reallyQuitTimeLimit} seconds a 'do you really want to quit' dialog opens for safety on pressing 'Q'; if no tkinter is available, you just have to press 'Q' twice. For closing the window, you need to click a second time on the close button of the window after \texttt{reallyQuitTimeLimit} seconds (usually 900 seconds).
+\ei
 The renderer uses an OpenGL window of a library called GLFW, which is platform-independent. 
 The renderer is set up in a minimalistic way, just to ensure that you can check that the modeling is correct. 
 There is no way to contruct models inside the renderer. 
@@ -525,6 +530,7 @@ Note that the dialog may appear behind the visualization window!
 This dialog may be very helpful in long running computations or in case that you may evaluate variables for debugging.
 The Python commands are evaluated in the global python scope, meaning that \texttt{mbs} or other variables of your scripts are available.
 User errors are caught by exceptions, but in severe cases this may lead to crash.
+To print values, always use \texttt{print(...)} to see the string representation of an object.
 
 \noindent Useful examples (single lines) may be: 
 \pythonstyle\begin{lstlisting}
@@ -533,12 +539,28 @@ User errors are caught by exceptions, but in severe cases this may lead to crash
   print(mbs.GetSensorValues(0))
   #adjust simulation end time, in long-run simulations:
   mbs.sys['dynamicSolver'].it.endTime = 1 
+  #adjust output behavior
   mbs.sys['dynamicSolver'].output.verboseMode = 0
 \end{lstlisting}
 
+\noindent You can also do quite fancy things during simulation, e.g., to deactivate joints (of course this may result in strange behavior):
+\pythonstyle\begin{lstlisting}
+n=mbs.systemData.NumberOfObjects()
+for i in range(n):
+    d = mbs.GetObject(i)
+    #if 'Joint' in d['objectType']:
+    if 'activeConnector' in d:
+        mbs.SetObjectParameter(i, 'activeConnector', False)
+\end{lstlisting}
+
+
 Note that you could also change \texttt{visualizationSettings} in this way, but the Visualization settings dialog is much more convenient.
-Right now, it is not possible to change \texttt{simulationSettings} which have been passed to the solver.
-It is, e.g., not possible to change the Newton tolerances on the fly.
+Changing \texttt{simulationSettings} is dangerous and must be treated with care.
+Some parameters, such as \texttt{simulationSettings.timeIntegration.endTime} are copied into the internal solver's \text{mbs.sys['dynamicSolver'].it} structure.
+%
+Thus, changing \texttt{simulationSettings.timeIntegration.endTime} has no effect. 
+As a rule of thumb, all variables that are not stored inside the solvers structures may be adjusted by the \texttt{simulationSettings} passed to the solver (which are then not copied internally); see the C++ code for details. However, behavior may change in future and unexpected behavior or and changing \texttt{simulationSettings} will likely cause crashes if you do not know exactly the behavior, e.g., changing output format from text to binary ... !
+Specifically, \texttt{newton} and \texttt{discontinuous} settings cannot be changed on the fly as they are copied internally.
 
 \mysubsubsectionlabel{Graphics pipeline}{sec:overview:basics:graphicspipeline}
 %deprecated, since there are user functions!: The user cannot interact with the visualization part for now.
@@ -753,18 +775,35 @@ Nonlinear formulations (such as most multibody systems, especially nonlinear fin
 Tuning solver parameters is at hand of the user. 
 In general, the Newton solver tries to reduce the error by the factor given in \texttt{simulationSettings.staticSolver.newton.relativeTolerance} (for static solver), which is not possible for very small (or zero) initial residuals. The absolute tolerance is helping out as a lower bound for the error, given in \texttt{simulationSettings.staticSolver.newton.absoluteTolerance} (for static solver), which is by default rather low (1e-10) -- in order to achieve accurate results for small systems or small motion (in mm or $\mu$m regime). Increasing this value helps to solve such problems. Nevertheless, you should usually set tolerances as low as possible because otherwise, your solution may become inaccurate.
 
-\noindent The following hints shall be followed (also some solver hints).
+\noindent The following hints / rules for described problems shall be followed.
 \bi
-  \item \mybold{static solver}: load steps are reduced even if the solution seems to be smooth and less steps are expected; larger number of steps may happen for finer discretization; you may adjust (increase) \texttt{.newton.relativeTolerance} / \texttt{.newton.absoluteTolerance} in static solver or in time integration to resolve such problems, but check if solution achieves according accuracy
-  \item \mybold{static solver}: load steps are reduced significantly for highly nonlinear problems; solver repeatedly writes that steps are reduced $\ra$ try to use \texttt{loadStepGeometric} and use a large \texttt{loadStepGeometricRange}: this allows to start with very small loads in which the system is nearly linear (e.g. for thin strings or belts under gravity).
-  \item \mybold{static solver}: in case that your system is (nearly) kinematic, a static solution can be achieved using \texttt{stabilizerODE2term}, which adds mass-proportional stiffness terms during load steps $< 1$.
+  \item \mybold{static solver}: \mybold{load steps get very small} even if the solution seems to be smooth (or linear) and less steps are expected:
+  \bi
+  \item[$\ra$] this may happen for \mybold{system without loads}; larger number of steps may happen for finer discretization; you may adjust (increase) \texttt{.newton.relativeTolerance} / \texttt{.newton.absoluteTolerance} in static solver or in time integration to resolve such problems, but check if solution achieves according accuracy
+  \ei
+  \item \mybold{static solver}:  load steps are reduced significantly for \mybold{highly nonlinear problems}: 
+  \bi
+  \item[$\ra$] solver repeatedly writes that steps are reduced $\ra$ try to use \texttt{loadStepGeometric} and use a large \texttt{loadStepGeometricRange}: this allows to start with very small loads in which the system is nearly linear (e.g. for thin strings or belts under gravity).
+  \ei
+  \item \mybold{static solver}: system is (nearly) \mybold{kinematic}:
+  \bi
+  \item[$\ra$] a static solution can be achieved using \texttt{stabilizerODE2term}, which adds mass-proportional stiffness terms during load steps $< 1$; see also hints for singular Jacobians below
+  \ei
   \item very small loads or even \mybold{zero loads} do not converge: \texttt{SolveDynamic} or \texttt{SolveStatic} \mybold{terminated due to errors}
   \bi
   \item[$\ra$] the reason is the nonlinearity of formulations (nonlinear kinematics, nonlinear beam, etc.) and round off errors, which restrict Newton to achieve desired tolerances
   \item[$\ra$] adjust (increase) \texttt{.newton.relativeTolerance} / \texttt{.newton.absoluteTolerance} in static solver or in time integration
   \item[$\ra$] in many cases, especially for static problems, the \texttt{.newton.newtonResidualMode = 1} evaluates the increments; the nonlinear problems is assumed to be converged, if increments are within given absolute/relative tolerances; this also works usually better for kinematic solutions
   \ei
-  \item for \mybold{discontinuous problems}: try to adjust solver parameters; especially the \texttt{discontinuous.iterationTolerance} and \texttt{discontinuous.maxIterations}; try to make smaller load or time steps in order to resolve switching points of contact or friction; generalized alpha solvers may cause troubles when reducing step sizes $\ra$ use TrapezoidalIndex2 solver
+  \item for \mybold{discontinuous problems}: 
+  \bi
+  \item[$\ra$] try to adjust solver parameters; especially the \texttt{discontinuous.iterationTolerance} and \texttt{discontinuous.maxIterations}; try to make smaller load or time steps in order to resolve switching points of contact or friction; generalized alpha solvers may cause troubles when reducing step sizes $\ra$ use TrapezoidalIndex2 solver
+  \item[$\ra$] in case of \mybold{user functions}, make sure that there is no switching inside the user function (if or \texttt{sign} function); switching must be done in the PostNewtonStep, otherwise convergence severely suffers
+  \ei
+  \item \mybold{singular Jacobians} or \mybold{redundant constraints}:
+  \bi
+  \item[$\ra$] in case of systems that lead to a singular Jacobian due to redundant constraints or kinematic DOF in static solutions, you may switch to Eigen's FullPivotLU solver using \texttt{simulationSettings.linearSolverType = exu.LinearSolverType.EigenDense} and \texttt{simulationSettings.linearSolverSettings.ignoreSingularJacobian=True}; however, check you results as they may be erroneous, because the solver tries to find an optimal solution / compromise which may not be what you intend to get!
+  \ei
   \item if you see further problems, please post them (including relevant example) at the \codeName\ github page!
 \ei
 
@@ -788,6 +827,8 @@ The faster versions are available for all release versions, but only for some \t
 \noindent However, there are many \mybold{ways to speed up \codeName\ in general}:
 \bi
   \item for models with more than 50 coordinates, switching to sparse solvers might greatly improve speed: \texttt{simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse}
+  \item when preferring dense direct solvers, switching to Eigen's PartialPivLU solver might greatly improve speed: \texttt{simulationSettings.linearSolverType = exu.LinearSolverType.EigenDense}; 
+  however, the flag \texttt{simulationSettings.linearSolverSettings.ignoreSingularJacobian=True} will switch to the much slower (but more robust) Eigen's FullPivLU
   \item try to avoid Python functions or try to speed up Python functions
   \item instead of user functions in objects or loads (computed in every iteration), some problems would also work if these parameters are only updated in \texttt{mbs.SetPreStepUserFunction(...)}
   \item Python user functions can be speed up using the Python numba package, using \texttt{@jit} in front of functions (for more options, see \exuUrl{https://numba.pydata.org/numba-doc/dev/user/index.html}{https://numba.pydata.org/numba-doc/dev/user/index.html}); Example given in \texttt{Examples/springDamperUserFunctionNumbaJIT.py} showing speedups of factor 4; more complicated Python functions may see speedups of 10 - 50

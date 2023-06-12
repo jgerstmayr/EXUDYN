@@ -22,9 +22,11 @@ def TestExamplesReferenceSolution():
         'ANCFgeneralContactCircle.py':-0.5816542531620952,          #new 2022-07-11 (CState Parallel); #before some update to contact module(iterations decreased!):-0.5816521429557808, #2022-02-01
         'ANCFmovingRigidBodyTest.py':-0.12893096934983617,          #new 2022-12-25; old solution differs for 1e-10 since several updates -0.12893096921737698,
         'ANCFslidingAndALEjointTest.py':-4.426408394755261,         #before 2023-05-01 (loads jacobian): -4.426408390697862,         #before 2022-12-25(resolved BUG 1274): -4.426403044189653; with old ObjectContactFrictionCircleCable2D until: 2022-03-09: -4.42640304418963,
+        'bricardMechanism.py': 4.172189649307425,
         'carRollingDiscTest.py':-0.23940048717113782,
         'compareAbaqusAnsysRotorEigenfrequencies.py':0.0004185480476228555,
         'compareFullModifiedNewton.py':0.00020079676000188396,
+        'computeODE2AEeigenvaluesTest.py': 0.38811732950413347,
         'computeODE2EigenvaluesTest.py':-2.749026293713541e-11,
         'connectorGravityTest.py': 1014867.2330320379,
         'connectorRigidBodySpringDamperTest.py':0.1827622474318292, #new 2022-07-11 (CState Parallel); 
@@ -51,7 +53,7 @@ def TestExamplesReferenceSolution():
         'kinematicTreeAndMBStest.py':2.6388120463802767e-05,        #original but too sensitive to disturbances: 263.88120463802767,
         'kinematicTreeConstraintTest.py':1.8135975384620484 ,
         'kinematicTreeTest.py': -1.309383960216414,
-        'mainSystemExtensionsTests.py': 51.699269012604674,         #new 2023-05-19
+        'mainSystemExtensionsTests.py': 57.96750245606998,          #updated 2023-06-09; old: new 2023-05-19
         'manualExplicitIntegrator.py':2.059698629692295,
         'mecanumWheelRollingDiscTest.py':0.2714267238324343,
         'objectFFRFreducedOrderAccelerations.py':0.1000057024588858,#before 2022-07-22 (because often small fails); 0.5000285122944431,#before 2022-02-20 (accuracy of internal sensors is higher): 0.5000285122930983,

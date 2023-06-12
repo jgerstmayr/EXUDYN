@@ -155,7 +155,13 @@ pythonShortName = RigidEP
 outputVariables = "{'Position':'$\LU{0}{\pv}\cConfig = \LU{0}{[p_0,\,p_1,\,p_2]}\cConfig\tp= \LU{0}{\uv}\cConfig + \LU{0}{\pv}\cRef$global 3D position vector of node; $\uv\cRef=0$', 'Displacement':'$\LU{0}{\uv}\cConfig = [q_0,\,q_1,\,q_2]\cConfig\tp$global 3D displacement vector of node','Velocity':'$\LU{0}{\vv}\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2]\cConfig\tp$global 3D velocity vector of node', 'Acceleration':'$\LU{0}{\av}\cConfig = [\ddot q_0,\,\ddot q_1,\,\ddot q_2]\cConfig\tp$global 3D acceleration vector of node', 'Coordinates':'$\cv\cConfig = [q_0,\,q_1,\,q_2, \,\psi_0,\,\psi_1,\,\psi_2,\,\psi_3]\tp\cConfig$ coordinate vector of node, having 3 displacement coordinates and 4 Euler parameters', 'Coordinates_t':'$\dot\cv\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2, \,\dot \psi_0,\,\dot \psi_1,\,\dot \psi_2,\,\dot \psi_3]\tp\cConfig$ velocity coordinates vector of node', 'Coordinates_tt':'$\ddot\cv\cConfig = [\ddot q_0,\,\ddot q_1,\,\ddot q_2, \,\ddot \psi_0,\,\ddot \psi_1,\,\ddot \psi_2,\,\ddot \psi_3]\tp\cConfig$ acceleration coordinates vector of node', 'RotationMatrix':'$[A_{00},\,A_{01},\,A_{02},\,A_{10},\,\ldots,\,A_{21},\,A_{22}]\cConfig\tp$vector with 9 components of the rotation matrix $\LU{0b}{\Rot}\cConfig$ in row-major format, in any configuration; the rotation matrix transforms local ($b$) to global (0) coordinates', 'Rotation':'$[\varphi_0,\,\varphi_1,\,\varphi_2]\tp\cConfig$vector with 3 components of the Euler/Tait-Bryan angles in xyz-sequence ($\LU{0b}{\Rot}\cConfig=:\Rot_0(\varphi_0) \cdot \Rot_1(\varphi_1) \cdot \Rot_2(\varphi_2)$), recomputed from rotation matrix', 'AngularVelocity':'$\LU{0}{\tomega}\cConfig = \LU{0}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$global 3D angular velocity vector of node', 'AngularVelocityLocal':'$\LU{b}{\tomega}\cConfig = \LU{b}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$local (body-fixed)  3D angular velocity vector of node', 'AngularAcceleration':'$\LU{0}{\talpha}\cConfig = \LU{0}{[\alpha_0,\,\alpha_1,\,\alpha_2]}\cConfig\tp$global 3D angular acceleration vector of node'}"
 equations =
     \paragraph{Detailed information:}
-    All coordinates $\cv\cConfig$ lead to second order differential equations, but there is one additional constraint equation for the quaternions.
+    All coordinates $\cv\cConfig$ lead to second order differential equations.
+    The first 3 equations are residuals of translational forces in global coordinates,
+    while the last 4 equations are residual of local torques left-multiplied with $\LU{b}{\Gm\tp}$ or
+    global torques left-multiplied with $\LU{0}{\Gm\tp}$, see \eq{eq_nodeRigidBodyEP_Gm}, compare the equations of motion of
+    the rigid body.
+    
+    There is one additional (algebraic) constraint equation for the quaternions.
     The additional constraint equation, which needs to be provided by the object, reads
     \be
       1 - \sum_{i=0}^{3} \theta_i^2 = 0.
@@ -176,7 +182,7 @@ equations =
                          {-2\theta_2\theta_0+2\theta_3\theta_1}{2\theta_3\theta_2+2\theta_1\theta_0}{-2\theta_2^2-2\theta_1^2+1}
     \ee
     The derivatives of the angular velocity vectors w.r.t.\ the rotation velocity coordinates $\dot \ttheta=[\dot \theta_0,\,\dot \theta_1,\,\dot \theta_2,\,\dot \theta_3]\tp$ lead to the $\Gm$ matrices, as used in the equations of motion for rigid bodies,
-    \bea
+    \bea \label{eq_nodeRigidBodyEP_Gm}
       \LU{0}{\tomega} &=& \LU{0}{\Gm} \dot \ttheta, \\
       \LU{b}{\tomega} &=& \LU{b}{\Gm} \dot \ttheta.
     \eea
@@ -351,14 +357,20 @@ outputVariables = "{'Position':'$\LU{0}{\pv}\cConfig = \LU{0}{[p_0,\,p_1,\,p_2]}
 classType = Node
 equations =
     \paragraph{Detailed information:}
-    For a detailed description on the rigid body dynamics formulation using this node, see Holzinger and Gerstmayr \cite{HolzingerGerstmayr2020}.
+    For a detailed description on the rigid body dynamics formulation using this node, 
+    see Holzinger and Gerstmayr \cite{HolzingerGerstmayr2020}.
 
     The node has 3 displacement coordinates $[q_0,\,q_1,\,q_2]\tp$ and three rotation coordinates, which is the rotation vector 
     \be
       \tnu = \varphi \nv = \tnu\cConfig + \tnu\cRef,
     \ee
     with the rotation angle $\varphi$ and the rotation axis $\nv$.
-    All coordinates $\cv\cConfig$ lead to second order differential equations, however the rotation vector cannot be used as a conventional parameterization. It must be computed within a nonlinear update, using appropriate Lie group methods.
+    All coordinates $\cv\cConfig$ lead to second order differential equations, 
+    However the rotation vector cannot be used as a conventional parameterization. 
+    It must be computed within a nonlinear update, using appropriate Lie group methods.
+    The first 3 equations are residuals of translational forces in global coordinates,
+    while the last 3 equations are residual of local (body-fixed) torques, 
+    compare the equations of motion of the rigid body.
 
     The rotation matrix $\LU{0b}{\Rot(\tnu)}\cConfig$ transforms a local (body-fixed) 3D position 
     $\pLocB = \LU{b}{[b_0,\,b_1,\,b_2]}\tp$ to global 3D positions,
@@ -370,11 +382,12 @@ equations =
     A Lie group integrator must be used with this node, which is why the is used, the 
     rotation parameter velocities are identical to the local angular velocity $\LU{b}{\tomega}$ and thus the 
     matrix $ \LU{b}{\Gm}$ becomes the identity matrix.
-    %The derivatives of the angular velocity vectors w.r.t.\ the rotation velocity coordinates $\dot \ttheta=[\dot \theta_0,\,\dot \theta_1,\,\dot \theta_2]\tp$ lead to the $\Gm$ matrices, as used in the equations of motion for rigid bodies,
-    %\bea
-    %  \LU{0}{\tomega} &=& \LU{0}{\Gm} \dot \ttheta, \\
-    %  \LU{b}{\tomega} &=& \LU{b}{\Gm} \dot \ttheta.
-    %\eea
+    
+    \mybold{Note}, that the node automatically switches to Lie group integration of its
+    rotational coordinates, both in explicit integration as well as for implicit time integration.
+    This node avoids typical singularities of rotations and is therefore perfectly suited
+    for arbitrary motion. Furthermore, nonlinearities are reduced, which may improve
+    implicit time integration performance.
     
     For creating a \texttt{NodeRigidBodyRotVecLG} together with a rigid body, there is a \texttt{rigidBodyUtilities} function \texttt{AddRigidBody}, 
     see \refSection{sec:rigidBodyUtilities:AddRigidBody}, which simplifies the setup of a rigid body significantely!
@@ -554,6 +567,10 @@ classType = Node
 equations =
     \paragraph{Detailed information:}
     The node provides 2 displacement coordinates (displacement of \hac{COM}, ($q_0,q_1$) ) and 1 rotation parameter ($\theta_0$). According equations need to be provided by an according object (e.g., RigidBody2D).
+    The node leads to 3 ODE2 equations of motions, where the first 2 equations are
+    residuals of global translational forces, and the third equation is the residual of the
+    torque around the Z-axis (due to planar motion, local=global).
+
     Using the rotation parameter $\theta_{0\mathrm{config}} = \psi_{0ref} + \psi_{0\mathrm{config}}$, the rotation matrix is defined as
     \be
       \LU{0b}{\Rot}\cConfig = \mr{\cos(\theta_0)}{-\sin(\theta_0)}{0}{\sin(\theta_0)}{\cos(\theta_0)}{0}{0}{0}{1}\cConfig
@@ -941,7 +958,10 @@ objectType = Body
 equations =
     \mysubsubsubsection{Equations}
     ObjectGround has no equations, as it only provides a static object, at which joints and connectors can be attached. 
-    The object cannot move and forces or torques do not have an effect. 
+    The object does not move (in general) and forces or torques do not have an effect.
+    However, the reference position and rotation may be changed over time. This may prescribe
+    motion, however, with the measured velocity still being zero at each time instant. Therefore,
+    such manipulation of reference position or rotation shall be treated with care.
     
     In combination with markers, the \texttt{localPosition} $\pLocB$ is transformed by the \texttt{ObjectGround} to
     a global point $\LU{0}{\pv}$ using the reference point $\pRefG$,
@@ -1327,7 +1347,7 @@ cParentClass = CObjectBody
 mainParentClass = MainObjectBody
 visuParentClass = VisualizationObject
 pythonShortName = Rotor1D
-outputVariables = "{'Position':'$\LU{0}{\pv}\cConfig= pRefG$global position vector; for interpretation see intermediate variables', 'Displacement':'$\LU{0}{\uv}\cConfig$global displacement vector; for interpretation see intermediate variables', 'Velocity':'$\LU{0}{\vv}\cConfig $global velocity vector; for interpretation see intermediate variables', 'RotationMatrix':'$\LU{0b}{\Rot}$vector with 9 components of the rotation matrix (row-major format)', 'Rotation':'$\theta$scalar rotation angle obtained from underlying node', 'AngularVelocity':'$\LU{0}{\tomega}\cConfig$angular velocity of body', 'AngularVelocityLocal':'$\LU{b}{\tomega}\cConfig$local (body-fixed) 3D velocity vector of node'}"
+outputVariables = "{'Position':'$\LU{0}{\pv}\cConfig= \pRefG$global position vector; for interpretation see intermediate variables', 'Displacement':'$\LU{0}{\uv}\cConfig$global displacement vector; for interpretation see intermediate variables', 'Velocity':'$\LU{0}{\vv}\cConfig $global velocity vector; for interpretation see intermediate variables', 'RotationMatrix':'$\LU{0b}{\Rot}$vector with 9 components of the rotation matrix (row-major format)', 'Rotation':'$\theta$scalar rotation angle obtained from underlying node', 'AngularVelocity':'$\LU{0}{\tomega}\cConfig$angular velocity of body', 'AngularVelocityLocal':'$\LU{b}{\tomega}\cConfig$local (body-fixed) 3D velocity vector of node'}"
 classType = Object
 objectType = Body
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1681,7 +1701,7 @@ equations =
     \ee
     which transforms the action of global forces $\LU{0}{\fv}$ of position-based markers on the coordinates $\cv$,
     \be
-      \Qm = \LU{0}{\Jm_{pos}}\tp \LU{0}{\fv}_a
+      \Qm = \LU{0}{\Jm_{pos}\tp} \LU{0}{\fv}_a
     \ee
     The {\bf rotation jacobian}, which is computed from angular velocity, reads
     \be
@@ -1689,7 +1709,7 @@ equations =
     \ee
     and transforms the action of global torques $\LU{0}{\ttau}$ of orientation-based markers on the coordinates $\cv$,
     \be
-      \Qm = \LU{0}{\Jm_{rot}}\tp \LU{0}{\ttau}_a
+      \Qm = \LU{0}{\Jm_{rot}\tp} \, \LU{0}{\ttau}_a
     \ee
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \userFunction{graphicsDataUserFunction(mbs, itemNumber)}
@@ -2203,6 +2223,32 @@ classType = Object
 objectType = SuperElement
 equations =
     %
+    \mysubsubsubsectionlabel{SensorKinematicTree output variables}{sec:kinematictree:additionaloutput}
+    %
+    The following output variables are available with \texttt{SensorKinematicTree} for a specific link.
+    Within the link $n_i$, a local position $\LU{n_i}{\pv_{n_i}}$ is required. All output variables are available for different
+    configurations. Furthermore, $\LU{0,n_i}{\Tm}$ is the homogeneous transformation from link $n_i$ coordinates to global coordinates.
+    \startTable{Kinematic tree output variables}{symbol}{description}
+      \rowTable{Position}{$\LU{0}{\pv_{n_i}} = \LU{0,n_i}{\Tm} \LU{n_i}{\pv_{n_i}}$}{global position of local position at link $n_i$}
+      \rowTable{Displacement}{$\LU{0}{\uv_{n_i}} = \LU{0,n_i}{\Tm} \LU{n_i}{\pv_{n_i}} - \LU{0}{\pv_{n_i,\cRef}}$}{global displacement of local position at link $n_i$}
+      %
+      \rowTable{Rotation}{$\tphi_{n_i}$}{Tait-Bryan angles of link $n_i$}
+      \rowTable{RotationMatrix}{$\LU{0,n_i}{\Rot_{n_i}}$}{rotation matrix of link $n_i$}
+      \rowTable{VelocityLocal}{$\LU{n_i}{\vv_{n_i}}$}{local velocity of local position at link $n_i$}
+      %
+      \rowTable{Velocity}{$\LU{0}{\vv_{n_i}} = \LU{0,n_i}{\dot\Tm} \LU{n_i}{\pv_{n_i}}$}{global velocity of local position at link $n_i$}
+      \rowTable{VelocityLocal}{$\LU{n_i}{\vv_{n_i}}$}{local velocity of local position at link $n_i$}
+      %
+      \rowTable{Acceleration}{$\LU{0}{\av_{n_i}} = \LU{0,n_i}{\dot\Tm} \LU{n_i}{\pv_{n_i}}$}{global acceleration of local position at link $n_i$}
+      \rowTable{AccelerationLocal}{$\LU{n_i}{\av_{n_i}}$}{local acceleration of local position at link $n_i$}
+      %
+      \rowTable{AngularVelocity}{$\LU{0}{\tomega_{n_i}}$}{global angular velocity of local position at link $n_i$}
+      \rowTable{AngularVelocityLocal}{$\LU{n_i}{\tomega_{n_i}}$}{local angular velocity of local position at link $n_i$}
+      %
+      \rowTable{AngularAcceleration}{$\LU{0}{\talpha_{n_i}}$}{global angular acceleration of local position at link $n_i$}
+      \rowTable{AngularAccelerationLocal}{$\LU{n_i}{\talpha_{n_i}}$}{local angular acceleration of local position at link $n_i$}
+    \finishTable
+    %
     \mysubsubsubsection{General notes}
     The \texttt{KinematicTree} object is used to represent the equations of motion of a (open) tree-structured multibody system
     using a minimal set of coordinates. Even though that \codeName\ is based on redundant coordinates,
@@ -2216,7 +2262,7 @@ equations =
     do not include constraints, so they can be solved with explicit solvers. Furthermore, the joint values (angels)
     can be addressed directly -- controllers or sensors are generally simpler.
     %
-    \mysubsubsubsection{Equations of motion}
+    \mysubsubsubsection{General}
     The equations follow the description given in Chapters 2 and 3 in the handbook of robotics, 2016 edition \cite{Siciliano2016}.
 
     Functions like \texttt{GetObjectOutputSuperElement(...)}, see \refSection{sec:mainsystem:object}, 
@@ -2231,7 +2277,145 @@ equations =
     The \texttt{KinematicTree} has one node of type \texttt{NodeGenericODE2} with $n$ coordinates.
     %
     The equations of motion are built by special multibody algorithms, following Featherstone \cite{Featherstone2008}. 
-    For a short introduction into this topic, see Chapter 3 of cite{Siciliano2016}. 
+    For a short introduction into this topic, see Chapter 3 of \cite{Siciliano2016}. 
+    
+    The kinematic tree defines a set of rigid bodies connected by joints, having no loops.
+    In this way, every body $i$, also denoted as link, has either a previous body $p(i) \neq \mathrm{-1}$ or not.
+    The previous body for body $i$ is $p(i)$. The coordinates of joint $i$ are defined as $q_i$.
+
+    The following joint transformations are considered (as homogeneous transformations):
+    \bi
+      \item $\Xm_J(i)$ $\ldots$ joint transformation due to rotation or translation
+      \item $\Xm_L(i)$ $\ldots$ link transformation (e.g. given by kinematics of mechanism)
+      \item $\LU{i,\mathrm{-1}}{\Xm}$ $\ldots$ transformation from global (-1) to local joint $i$ coordinates
+      \item $\LU{i,p(i)}{\Xm}$ $\ldots$ transformation from previous joint to joint $i$ coordinates
+    \ei
+    Furthermore, we use
+    \bi
+      \item[] $\tPhi_i$ $\ldots$ motion subspace for joint $i$
+    \ei
+    which denotes the transformation from joint coordinate (scalar) to rotations and translations.
+    We can compute the local joint angular velocity $\tomega_i$ and translational velocity $\wv_i$, as a 6D vector $\vv^J_i$, from
+    \be
+      \vv^J_i = \vp{\tomega_i}{\wv_i} = \tPhi_i \, q_i
+    \ee
+    %
+    The joint coordinates, which can be rotational or translational, are stored in the vector
+    \be
+      \qv = [q_0, \, \ldots,\, q_{N_B-1}]\tp \eqComma
+    \ee
+    and the vector of joint velocity coordinates reads
+    \be
+      \dot \qv = [\dot q_0, \, \ldots,\, \dot q_{N_B-1}]\tp \eqDot
+    \ee
+    Knowing the motion subspace $\tPhi_i$ for joint $i$, the velocity of joint $i$ reads
+    \be
+      \vv_i = \vv_{p(i)} + \tPhi_i \, \dot q_i \eqComma
+    \ee
+    and accelerations follow as
+    \be
+      \av_i = \av_{p(i)} + \tPhi_i \, \ddot q_i + \dot \tPhi_i \, \dot q_i\eqDot
+    \ee
+    Note that the previous formulas can be interpreted coordinate free, but they are usually implemented in joint coordinates.
+
+    The local forces due to applied forces and inertia forces are computed, for now independently, for every link,
+    \be
+      \fv_i = \Im_i \av_i + \vv_i \times \Im_i \vv_i - \LU{i,\mathrm{-1}}{\Xm\tp} \!\cdot\! \LU{\mathrm{-1}}{\fv}^a
+    \ee
+    The total forces can be computed from inverse dynamics. 
+    At every free end of the tree, the forces are added up for the previous link, which needs to be done recursively starting at the leaves of the tree,
+    \be
+      \fv_{p(i)} \mathrel{+}=  \LU{i,p(i)}{\Xm\tp} \!\cdot \fv_i
+    \ee
+    The mass matrix is then built by recursively computing the intertia of the links and adding the joint contributions by
+    projecting the local inertia into the joint motion space, see the composite-rigid-body algorithm.
+    
+    Note that $\cdot$ for multiplication of matrices and vectors is added for clarity, especially in case of left and right indices.
+    The whole algorithm for forward and inverse dynamics is given in the following figures.
+    
+    \ignoreRST{
+    \begin{algorithm}
+    \caption{Recursive Newton-Euler algorithm (acc.\ to Featherstone). The symbol '\#' represents comments.}
+    \begin{algorithmic}[1]
+    \REQUIRE RNEA($\qv$, $\dot \qv$, $\mathrm{MotionSubspace}(i)$, $\Xm_{L}$, $\LU{\mathrm{-1}}{\fv}^a_i$, assume $\dot\tPhi_i=0$)
+    \STATE $\vv_{\mathrm{-1}} = \Null$
+    \STATE $\av_{\mathrm{-1}} = -\gv$ \codeComment{\# gravity vector}
+    %
+    \STATE \codeComment{\# loop over $N_B$ bodies:}
+    \FOR{$i=0$ \TO $N_B-1$} 
+        \STATE \codeComment{\# compute forward transformations:}
+        \STATE $\Xm_J(i) = \Xm_{JT}(i, q_i)$
+        \STATE $\LU{i,p(i)}{\Xm} = \Xm_J(i) \, \Xm_{L}(i)$
+        \STATE $\tPhi_i = \mathrm{MotionSubspace}(i)$
+        \IF{$p(i) \neq \mathrm{-1}$}
+            \STATE $\LU{i,\mathrm{-1}}{\Xm} = \LU{i,p(i)}{\Xm} \cdot \LU{p(i),\mathrm{-1}}{\Xm}$
+        \ENDIF
+        \STATE \codeComment{\# compute forward kinematics:}
+        \STATE $\vv_i = \vv_{p(i)} + \tPhi_i \, \dot q_i \eqComma$
+        \STATE $\av_i = \av_{p(i)} + \vv_i \times \tPhi_i \, \dot q_i$ \codeComment{\#$\tPhi_i \, \ddot q_i$ put on RHS}
+        \STATE $\fv_i = \Im_i \av_i + \vv_i \times \Im_i \vv_i - \LU{i,\mathrm{-1}}{\Xm\tp} \!\cdot\! \LU{\mathrm{-1}}{\fv}^a_i$
+    \ENDFOR
+    \STATE \codeComment{\#compute inverse dynamics}
+    \FOR{$i=N_B-1$ \TO $0$} 
+        \STATE $\tau_i = \tPhi_i\tp \cdot \fv_i$ \codeComment{\# joint $i$ force (torque)}
+        \IF{$p(i) \neq \mathrm{-1}$}
+            \STATE $\fv_{p(i)} \mathrel{+}= \LU{i,p(i)}{\Xm\tp} \fv_i$
+        \ENDIF   
+    \ENDFOR
+    \RETURN $\tau$
+    \ENSURE 
+    \end{algorithmic}
+    \end{algorithm}
+
+    \begin{algorithm}
+    \caption{Composite-rigid-body algorithm (acc.\ to Featherstone). The symbol '\#' represents comments.}
+    \begin{algorithmic}[1]
+    \REQUIRE MassMatrix($\tPhi_i$, $\LU{i,p(i)}{\Xm}$, $\Im_i$)
+    \STATE \codeComment{\# mass matrix:}
+    \STATE $\Mm_0 = \Null$
+    %
+    \FOR{$i=0$ \TO $N_B-1$} 
+        \STATE \codeComment{\# initialise 6D inertia tensors:}
+        \STATE $\Im_i^C = \Im_i$ 
+    \ENDFOR
+    \STATE \codeComment{\#recursively update inertias}
+    \FOR{$i=N_B-1$ \TO $0$} 
+        \STATE \codeComment{\# project inertia into motion subspace:}
+        \STATE $\Fm = \Im_i^C \, \tPhi_i$ 
+        \STATE $\Mm_{ii} = \tPhi_i\tp \, \Fm$ 
+         \IF{$p(i) \neq \mathrm{-1}$}
+            \STATE $\Im_{p(i)}^C \mathrel{+}= \LU{i,p(i)}{\Xm\tp} \cdot \Im_i^C \cdot \LU{i,p(i)}{\Xm}$
+        \ENDIF
+        \STATE $j = i$
+        \STATE \codeComment{\# compute mass matrix terms:}
+        \WHILE{$p(j) \neq \mathrm{-1}$} 
+            \STATE $\Fm = \LU{j,p(j)}{\Xm\tp} \cdot \Fm$
+            \STATE $j = p(j)$
+            \STATE $\Mm_{ij} = \Fm\tp \, \tPhi_i $
+            \STATE $\Mm_{ji} = \Mm_{ij}$
+        \ENDWHILE
+    \ENDFOR
+    \RETURN $\Mm$
+    \ENSURE 
+    \end{algorithmic}
+    \end{algorithm}
+    } %ignoreRST
+    \onlyRST{
+
+    .. figure:: docs/theDoc/figures/kinematicTreeRNEA.png
+       :width: 750
+
+       Recursive Newton-Euler algorithm
+
+      
+    .. figure:: docs/theDoc/figures/kinematicTreeCRBmass.png
+       :width: 750
+       
+       Composite-rigid-body algorithm
+
+    }
+
+    \mysubsubsubsection{Implementation and user functions}
     Currently, there is only the so-called Composite-Rigid-Body (CRB) algorithm implemented.
     This algorithm does not show the highest performance, but creates the mass matrix $\Mm_{CRB}$ and forces $\fv_{CRB}$
     in a conventional form. The equations read

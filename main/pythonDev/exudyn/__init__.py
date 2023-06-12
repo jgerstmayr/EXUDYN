@@ -74,7 +74,7 @@ try:
             try:
                 from .exudynCPP import *
             except:
-                raise ImportError('Warning: Import of exudyn C++ module (with AVX2) failed; check your installation or try to import without VX by settings sys.exudynCPUhasAVX2=False')
+                raise ImportError('Warning: Import of exudyn C++ module (with AVX2) failed; check your installation or try to import without AVX by settings sys.exudynCPUhasAVX2=False')
         else:
             try:
                 from .exudynCPPnoAVX import *

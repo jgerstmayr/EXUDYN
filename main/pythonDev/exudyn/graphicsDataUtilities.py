@@ -77,7 +77,7 @@ switchTriangleOrder = False #this is the old ordering of triangles in some Spher
 #**input: 3D vector as list or as np.array
 #**output: interchanged 2nd and 3rd component of list
 def SwitchTripletOrder(vector):
-    v=copy.deepcopy(vector) #copy, such that vector is not changed
+    v=list(vector) #copy, such that vector is not changed
     a = v[2]
     v[2] = v[1]
     v[1] = a
@@ -134,9 +134,9 @@ def GraphicsDataFromPointsAndTrigs(points, triangles, color=[0.,0.,0.,1.]):
     triangleList = list(np.array(triangles).flatten())
     nPoints = int(len(pointList)/3)
     if len(color) == 4*nPoints:
-        colorList = color
+        colorList = list(color) #without list() potential problem with mutable default value
     elif len(color) == 4:
-        colorList = color*nPoints
+        colorList = list(color)*nPoints
     else:
         print('number of points=', nPoints)
         print('number of trigs=', len(triangleList)/3)
@@ -367,8 +367,7 @@ def GraphicsDataLine(pList, color=[0.,0.,0.,1.]):
     data = [0]*(len(pList)*3)
     for i, p in enumerate(pList):
         data[i*3:i*3+3] = list(p)
-    dataRect = {'type':'Line', 'color': color, 
-                'data':data}
+    dataRect = {'type':'Line', 'color': list(color), 'data':data}
 
     return dataRect
 
@@ -381,7 +380,7 @@ def GraphicsDataLine(pList, color=[0.,0.,0.,1.]):
 #**notes: the tiling (number of segments to draw circle) can be adjusted by visualizationSettings.general.circleTiling
 #**output: graphicsData dictionary, to be used in visualization of EXUDYN objects
 def GraphicsDataCircle(point=[0,0,0], radius=1, color=[0.,0.,0.,1.]): 
-    return {'type':'Circle', 'color': color, 'radius': radius, 'position':list(point)}
+    return {'type':'Circle', 'color': list(color), 'radius': radius, 'position':list(point)}
 
 #************************************************
 #**function: generate graphics data for a text drawn at a 3D position
@@ -392,7 +391,7 @@ def GraphicsDataCircle(point=[0,0,0], radius=1, color=[0.,0.,0.,1.]):
 #**nodes: text size can be adjusted with visualizationSettings.general.textSize, which affects the text size (=font size) globally
 #**output: graphicsData dictionary, to be used in visualization of EXUDYN objects
 def GraphicsDataText(point=[0,0,0], text='', color=[0.,0.,0.,1.]): 
-    return {'type':'Text', 'color': color, 'text':text, 'position':list(point)}
+    return {'type':'Text', 'color': list(color), 'text':text, 'position':list(point)}
 
 #************************************************
 #**function: generate graphics data for 2D rectangle
@@ -401,7 +400,7 @@ def GraphicsDataText(point=[0,0,0], text='', color=[0.,0.,0.,1.]):
 def GraphicsDataRectangle(xMin, yMin, xMax, yMax, color=[0.,0.,0.,1.]): 
 
     rect = [xMin, yMin,xMax,yMax]
-    dataRect = {'type':'Line', 'color': color, 'data':[rect[0],rect[1],0, rect[2],rect[1],0, rect[2],rect[3],0, rect[0],rect[3],0, rect[0],rect[1],0]}
+    dataRect = {'type':'Line', 'color': list(color), 'data':[rect[0],rect[1],0, rect[2],rect[1],0, rect[2],rect[3],0, rect[0],rect[3],0, rect[0],rect[1],0]}
 
     return dataRect
 
@@ -411,7 +410,7 @@ def GraphicsDataRectangle(xMin, yMin, xMax, yMax, color=[0.,0.,0.,1.]):
 #**output: graphicsData dictionary, to be used in visualization of EXUDYN objects
 def GraphicsDataOrthoCubeLines(xMin, yMin, zMin, xMax, yMax, zMax, color=[0.,0.,0.,1.]): 
 
-    dataRect = {'type':'Line', 'color': color, 'data':[xMin,yMin,zMin, xMin,yMax,zMin, xMin,yMin,zMin, xMax,yMin,zMin, xMax,yMax,zMin, xMax,yMin,zMin, 
+    dataRect = {'type':'Line', 'color': list(color), 'data':[xMin,yMin,zMin, xMin,yMax,zMin, xMin,yMin,zMin, xMax,yMin,zMin, xMax,yMax,zMin, xMax,yMin,zMin, 
                                                        xMax,yMin,zMax, xMax,yMax,zMax, xMax,yMin,zMax, xMin,yMin,zMax, xMin,yMax,zMax, xMin,yMin,zMax, 
                                                        xMin,yMin,zMin, xMin,yMax,zMin, xMax,yMax,zMin, xMax,yMax,zMax, xMin,yMax,zMax, xMin,yMax,zMin]}
 
@@ -430,7 +429,7 @@ def GraphicsDataOrthoCube(xMin, yMin, zMin, xMax, yMax, zMax, color=[0.,0.,0.,1.
     
     pList = [[xMin,yMin,zMin], [xMax,yMin,zMin], [xMax,yMax,zMin], [xMin,yMax,zMin],
              [xMin,yMin,zMax], [xMax,yMin,zMax], [xMax,yMax,zMax], [xMin,yMax,zMax]]
-    return GraphicsDataCube(pList, color, addNormals=addNormals, addEdges=addEdges, edgeColor=edgeColor, addFaces=addFaces)
+    return GraphicsDataCube(pList, list(color), addNormals=addNormals, addEdges=addEdges, edgeColor=edgeColor, addFaces=addFaces)
 
 #**function: generate graphics data forfor orthogonal 3D cube with center point and size
 #**input: 
@@ -454,7 +453,7 @@ def GraphicsDataOrthoCubePoint(centerPoint=[0,0,0], size=[0.1,0.1,0.1], color=[0
     gCube = GraphicsDataOrthoCube(xMin, yMin, zMin, xMax, yMax, zMax, color, 
                                   addNormals=addNormals, addEdges=addEdges, edgeColor=edgeColor, addFaces=addFaces)
     if addEdges:
-        gCube['edgeColor'] = edgeColor
+        gCube['edgeColor'] = list(edgeColor)
         gCube['edges'] = [0,1, 1,2, 2,3, 3,0,  0,4, 1,5, 2,6, 3,7,  4,5, 5,6, 6,7, 7,4]
         #print('new2')
     return gCube
@@ -541,7 +540,7 @@ def GraphicsDataCube(pList, color=[0.,0.,0.,1.], faces=[1,1,1,1,1,1], addNormals
                  0,4, 1,5, 2,6, 3,7 ]
         
         data['edges'] = edges
-        data['edgeColor'] = edgeColor
+        data['edgeColor'] = list(edgeColor)
         
     return data
 
@@ -559,7 +558,7 @@ def GraphicsDataSphere(point=[0,0,0], radius=0.1, color=[0.,0.,0.,1.], nTiles = 
                        addEdges = False, edgeColor=color4black, addFaces=True):
     if nTiles < 3: print("WARNING: GraphicsDataSphere: nTiles < 3: set nTiles=3")
     
-    p = copy.deepcopy(point)
+    p = np.array(point)
     r = radius
     #orthonormal basis:
     e0=np.array([1,0,0])
@@ -584,7 +583,7 @@ def GraphicsDataSphere(point=[0,0,0], radius=0.1, color=[0.,0.,0.,1.], nTiles = 
             vv = x*e0 + y*e1 + z*e2
             points += list(p + vv)
             
-            n = ebu.Normalize(list(vv)) #2022-06-27: corrected to (vv) to point outwards
+            n = ebu.Normalize(vv) #2022-06-27: corrected to (vv) to point outwards
             #print(n)
             normals += n
             
@@ -616,7 +615,7 @@ def GraphicsDataSphere(point=[0,0,0], radius=0.1, color=[0.,0.,0.,1.], nTiles = 
         addEdges = 3
 
     if addEdges > 0:
-        data['edgeColor'] = edgeColor
+        data['edgeColor'] = list(edgeColor)
 
         edges = []
         hEdges = [] #edges at half of iphi
@@ -690,9 +689,9 @@ def GraphicsDataCylinder(pAxis=[0,0,0], vAxis=[0,0,1], radius=0.1, color=[0.,0.,
     if nTiles < 3: print("WARNING: GraphicsDataCylinder: nTiles < 3: set nTiles=3")
     
     #create points at left and right face
-    points0=list(copy.deepcopy(pAxis)) #[pAxis[0],pAxis[1],pAxis[2]] #avoid change of pAxis
+    points0=list(pAxis) #[pAxis[0],pAxis[1],pAxis[2]] #avoid change of pAxis
     pAxis1=[pAxis[0]+vAxis[0],pAxis[1]+vAxis[1],pAxis[2]+vAxis[2]]
-    points1=list(copy.deepcopy(pAxis1)) #[pAxis[0]+vAxis[0],pAxis[1]+vAxis[1],pAxis[2]+vAxis[2]] #copy in order to avoid change of pAxis1 for use lateron
+    points1=list(pAxis1) #[pAxis[0]+vAxis[0],pAxis[1]+vAxis[1],pAxis[2]+vAxis[2]] #copy in order to avoid change of pAxis1 for use lateron
     
     p0 = np.array(pAxis)
     p1 = np.array(pAxis) + np.array(vAxis)
@@ -749,7 +748,7 @@ def GraphicsDataCylinder(pAxis=[0,0,0], vAxis=[0,0,1], radius=0.1, color=[0.,0.,
         normals0 += ebu.Normalize([nf*vAxis[0],nf*vAxis[1],nf*vAxis[2]])
 
     n = nTiles+1 #number of points of one ring+midpoint
-    color2 = color #alternating color
+    color2 = list(color) #alternating color
     if 'alternatingColor' in kwargs:
         color2 = kwargs['alternatingColor']
 
@@ -839,7 +838,7 @@ def GraphicsDataCylinder(pAxis=[0,0,0], vAxis=[0,0,1], radius=0.1, color=[0.,0.,
             'points':points0, 'triangles':triangles}
 
     if addEdges:
-        data['edgeColor'] = edgeColor
+        data['edgeColor'] = list(edgeColor)
         
         faceEdges = 0
         if type(addEdges) != bool:
@@ -885,8 +884,8 @@ def GraphicsDataRigidLink(p0,p1,axis0=[0,0,0], axis1=[0,0,0], radius=[0.1,0.1],
                           thickness=0.05, width=[0.05,0.05], color=[0.,0.,0.,1.], nTiles = 16):
     linkAxis = ebu.VSub(p1,p0)
     #linkAxis0 = ebu.Normalize(linkAxis)
-    a0=copy.deepcopy(axis0)
-    a1=copy.deepcopy(axis1)
+    a0=list(axis0)
+    a1=list(axis1)
     
     data0 = GraphicsDataCylinder(p0, linkAxis, 0.5*thickness, color, nTiles)
     data1 = {}
@@ -1049,7 +1048,7 @@ def GraphicsDataFromSTLfile(fileName, color=[0.,0.,0.,1.], verbose=False, densit
         data.points *= scale
     
     p = copy.copy(pOff)
-    A = copy.copy(Aoff)
+    A = copy.deepcopy(Aoff) #deepcopy for list of lists
     
     if p != [] or A != []:
         from exudyn.rigidBodyUtilities import HomogeneousTransformation
@@ -1113,24 +1112,26 @@ def AddEdgesAndSmoothenNormals(graphicsData, edgeColor = color4black, edgeAngle 
                            triangleColor = []):
     from math import acos # ,sin, cos
 
-    oldColors = graphicsData['colors'] #2022-12-06: accepts now all colors; graphicsData['colors'][0:4]    
+    oldColors = copy.copy(graphicsData['colors']) #2022-12-06: accepts now all colors; graphicsData['colors'][0:4]    
     [points, trigs]=GraphicsData2PointsAndTrigs(graphicsData)
     # [points, trigs]=RefineMesh(points, trigs)
 
     nPoints = len(points)
     nColors = int(len(oldColors)/4)
 
+    triangleColorNew = list(triangleColor)
+
     if nColors != nPoints:
         print('WARNING: AddEdgesAndSmoothenNormals: found inconsistent colors; they must match the point list in graphics data')
-        if triangleColor == []:
-            triangleColor = graphicsData['colors'][0:4]
+        if triangleColorNew == []:
+            triangleColorNew = graphicsData['colors'][0:4]
 
-    if len(triangleColor) != 4 and len(triangleColor) != 0:
-        triangleColor = [1,0,0,1]
+    if len(triangleColorNew) != 4 and len(triangleColorNew) != 0:
+        triangleColorNew = [1,0,0,1]
         print('WARNING: AddEdgesAndSmoothenNormals: colors invalid; using default')
 
-    if len(triangleColor) == 4:
-        oldColors = list(triangleColor)*nPoints
+    if len(triangleColorNew) == 4:
+        oldColors = list(triangleColorNew)*nPoints
 
     colors = [np.zeros(4)]*nPoints
     for i in range(nPoints):
@@ -1253,15 +1254,15 @@ def AddEdgesAndSmoothenNormals(graphicsData, edgeColor = color4black, edgeAngle 
     else:
         finalTrigs = newTrigs
     
-    graphicsData = GraphicsDataFromPointsAndTrigs(newPoints, finalTrigs, list(np.array(newColors).flatten()))
+    graphicsData2 = GraphicsDataFromPointsAndTrigs(newPoints, finalTrigs, list(np.array(newColors).flatten()))
     if addEdges:
-        graphicsData['edges'] = edges
-        graphicsData['edgeColor'] = list(edgeColor)
+        graphicsData2['edges'] = edges
+        graphicsData2['edgeColor'] = list(edgeColor)
 
     if smoothNormals:
-        graphicsData['normals'] = list(np.array(pointNormals).flatten())
+        graphicsData2['normals'] = list(np.array(pointNormals).flatten())
     
-    return graphicsData
+    return graphicsData2
 
 #**function: export given graphics data (only type TriangleList allowed!) to STL ascii file using fileName
 #**input:
@@ -1351,7 +1352,7 @@ def GraphicsDataSolidOfRevolution(pAxis, vAxis, contour, color=[0.,0.,0.,1.], nT
     #local coordinate system:
     [v,n1,n2] = ComputeOrthonormalBasisVectors(vAxis)
 
-    color2 = color
+    color2 = list(color)
     if 'alternatingColor' in kwargs:
         color2 = kwargs['alternatingColor']
 
@@ -1438,7 +1439,7 @@ def GraphicsDataSolidOfRevolution(pAxis, vAxis, contour, color=[0.,0.,0.,1.], nT
 
 
     if addEdges > 0:
-        data['edgeColor'] = edgeColor
+        data['edgeColor'] = list(edgeColor)
         edges = []
 
         cntEdges = 0        
@@ -1483,7 +1484,7 @@ def GraphicsDataArrow(pAxis, vAxis, radius, color=[0.,0.,0.,1.], headFactor = 2,
     rHead = radius * headFactor
     xHead = L - headStretch*rHead
     contour=[[0,0],[0,radius],[xHead,radius],[xHead,rHead],[L,0]]
-    return GraphicsDataSolidOfRevolution(pAxis=pAxis, vAxis=vAxis, contour=contour, color=color,nTiles=nTiles)
+    return GraphicsDataSolidOfRevolution(pAxis=pAxis, vAxis=vAxis, contour=contour, color=color, nTiles=nTiles)
 
 #**function: generate graphics data for three arrows representing an orthogonal basis with point of origin, shaft radius, optional size factors for head and colors; nTiles gives the number of tiles (minimum=3)
 #**input:
@@ -1553,7 +1554,7 @@ def GraphicsDataFrame(HT=np.eye(4), length = 1, colors=[color4red, color4green, 
 #                      visualization=VObjectGround(graphicsData=[plane])))
 def GraphicsDataQuad(pList, color=[0.,0.,0.,1.], **kwargs): 
 
-    color2 = color
+    color2 = list(color)
     nTiles = 1
     if 'alternatingColor' in kwargs:
         color2 = kwargs['alternatingColor']
@@ -1596,7 +1597,7 @@ def GraphicsDataQuad(pList, color=[0.,0.,0.,1.], **kwargs):
             if j%2 == 1:
                 a=-1*a
             if a==1:
-                c = color #if no checkerboard pattern, just this color
+                c = list(color) #if no checkerboard pattern, just this color
             else:
                 c = color2
             colors=colors+c+c+c+c #4 colors for one sub-quad
@@ -1638,7 +1639,7 @@ def GraphicsDataCheckerBoard(point=[0,0,0], normal=[0,0,1], size = 1,
               list(p0+0.5*size*n1+0.5*size2*n2),
               list(p0-0.5*size*n1+0.5*size2*n2)]
 
-    return GraphicsDataQuad(points, color=color, alternatingColor=alternatingColor, 
+    return GraphicsDataQuad(points, color=list(color), alternatingColor=alternatingColor, 
                             nTiles=nTiles, nTilesY=nTiles2)
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1822,7 +1823,6 @@ def CirclePointsAndSegments(center=[0,0], radius=0.1, invert = False, pointIndex
 #**output: graphicsData dictionary, to be used in visualization of EXUDYN objects
 def GraphicsDataSolidExtrusion(vertices, segments, height, rot = np.diag([1,1,1]), pOff = [0,0,0], color = [0,0,0,1],
                                smoothNormals = False, addEdges = False, edgeColor=color4black, addFaces=True):
-    from copy import copy
     n = len(vertices)
     n2 = n*2 #total number of vertices
     ns = len(segments)
@@ -1902,11 +1902,11 @@ def GraphicsDataSolidExtrusion(vertices, segments, height, rot = np.diag([1,1,1]
         # trigList[i] = list(trigs[i])
         t = list(trigs[i])
         t.reverse()
-        trigList[i] = copy(t)
+        trigList[i] = copy.copy(t)
     for i in range(nt):
         t = list(trigs[i]+n)
         # t.reverse()
-        trigList[i+nt] = copy(t)
+        trigList[i+nt] = copy.copy(t)
         
     #print("ns=",ns)
     #print("nt=",nt)

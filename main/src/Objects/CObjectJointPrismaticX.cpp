@@ -27,7 +27,6 @@ void CObjectJointPrismaticX::ComputeAlgebraicEquations(Vector& algebraicEquation
 	{
 
 		algebraicEquations.SetNumberOfItems(nConstraints);
-		//const LinkedDataVector& lambda = markerData.GetLagrangeMultipliers();
 
 		const Matrix3D& A0 = markerData.GetMarkerData(0).orientation;
 		const Matrix3D& A0off = parameters.rotationMarker0;
@@ -215,8 +214,6 @@ JacobianType::Type CObjectJointPrismaticX::GetAvailableJacobians() const
 //! provide according output variable in "value"
 void CObjectJointPrismaticX::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
 {
-	//const LinkedDataVector& lambda = markerData.GetLagrangeMultipliers();
-
 	const Matrix3D& A0 = markerData.GetMarkerData(0).orientation;
 	const Matrix3D& A0off = parameters.rotationMarker0;
 	Matrix3D A0all = (A0*A0off);

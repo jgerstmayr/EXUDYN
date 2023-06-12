@@ -34,7 +34,6 @@ void CObjectJointRevoluteZ::ComputeAlgebraicEquations(Vector& algebraicEquations
 		constexpr Index freeAxis = 2;	 //z
 
 		algebraicEquations.SetNumberOfItems(nConstraints);
-		//const LinkedDataVector& lambda = markerData.GetLagrangeMultipliers();
 
 		const MarkerData& markerData0 = markerData.GetMarkerData(0);
 		const MarkerData& markerData1 = markerData.GetMarkerData(1);
@@ -120,7 +119,6 @@ void CObjectJointRevoluteZ::ComputeAlgebraicEquations(Vector& algebraicEquations
 	{
 
 		algebraicEquations.SetNumberOfItems(nConstraints);
-		//const LinkedDataVector& lambda = markerData.GetLagrangeMultipliers();
 
 		const Matrix3D& A0 = markerData.GetMarkerData(0).orientation;
 		const Matrix3D& A0off = parameters.rotationMarker0;

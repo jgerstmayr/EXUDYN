@@ -14,6 +14,7 @@
 
 import numpy as np
 from exudyn.advancedUtilities import IsListOrArray
+import copy
 
 #**function: filter output of sensors (using numpy savgol filter) as well as numerical differentiation to compute derivative of signal
 #**input:
@@ -165,24 +166,25 @@ def ComputeFFT(time, data):
 #**output: interpolated value
 def GetInterpolatedSignalValue(time, dataArray, timeArray=[], dataArrayIndex = -1, timeArrayIndex = -1, rangeWarning=True, tolerance=1e-6):
 
-    if IsListOrArray(timeArray) and len(timeArray) == 0:
-        timeArray=dataArray
+    timeArrayNew = timeArray #as this should be fast, we avoid copy here; should be safe, as timeArrayNew is not modified
+    if IsListOrArray(timeArrayNew) and len(timeArrayNew) == 0:
+        timeArrayNew=dataArray
     if dataArray.ndim != 1 and dataArrayIndex == -1:
         raise ValueError('GetInterpolatedSignalValue: in case of 2D dataArray, dataArrayIndex must be provided!')
-    if timeArray.ndim != 1 and timeArrayIndex == -1:
+    if timeArrayNew.ndim != 1 and timeArrayIndex == -1:
         raise ValueError('GetInterpolatedSignalValue: in case of 2D timeArray, timeArrayIndex must be provided!')
 
     t0 = -1 #time of first value
     tEnd = -1 #time of last value
-    if len(dataArray) > 1 and len(timeArray) > 1:
+    if len(dataArray) > 1 and len(timeArrayNew) > 1:
         if timeArrayIndex == -1: #1D array
-            t0 = timeArray[0]
-            tEnd = timeArray[-1]
-            dt = timeArray[1] - t0 #sampling rate
+            t0 = timeArrayNew[0]
+            tEnd = timeArrayNew[-1]
+            dt = timeArrayNew[1] - t0 #sampling rate
         else: #2D array
-            t0 = timeArray[0,timeArrayIndex]
-            tEnd = timeArray[-1,timeArrayIndex]
-            dt = timeArray[1,timeArrayIndex] - t0
+            t0 = timeArrayNew[0,timeArrayIndex]
+            tEnd = timeArrayNew[-1,timeArrayIndex]
+            dt = timeArrayNew[1,timeArrayIndex] - t0
             
         if dt == 0.:
             raise ValueError('GetInterpolatedSignalValue: sample rate is zero!')

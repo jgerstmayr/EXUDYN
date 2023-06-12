@@ -606,7 +606,7 @@ bool CSolverExplicitTimeInt::ComputeODE2Acceleration(CSystem& computationalSyste
 		STARTTIMER(timer.factorization); //for mass matrix
 		data.systemMassMatrix->FinalizeMatrix();
 
-		Index factorizeOutput = data.systemMassMatrix->FactorizeNew(simulationSettings.linearSolverSettings.ignoreSingularJacobian);
+        Index factorizeOutput = data.systemMassMatrix->FactorizeNew();// simulationSettings.linearSolverSettings.ignoreSingularJacobian);
 		if (factorizeOutput != -1)
 		{
 			conv.linearSolverFailed = true;

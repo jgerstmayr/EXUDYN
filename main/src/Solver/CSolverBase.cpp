@@ -276,8 +276,9 @@ bool CSolverBase::InitializeSolverPreChecks(CSystem& computationalSystem, const 
 		return false;
 	}
 
+	//pout << "SPC linearSolverType=" << simulationSettings.linearSolverType << "\n";
 
-	if (simulationSettings.linearSolverType == LinearSolverType::EXUdense)
+	if (EXUstd::IsOfType(LinearSolverType::Dense, simulationSettings.linearSolverType))
 	{
 		Index n = computationalSystem.GetSystemData().GetNumberOfComputationCoordinates();
 		if (n > 1000) 
@@ -293,7 +294,7 @@ bool CSolverBase::InitializeSolverPreChecks(CSystem& computationalSystem, const 
 	else
 	{
 		PyError("Solver:InitializeSolverPreChecks: Unsupported simulationSettings.linearSolverType", file.solverFile);
-		data.SetLinearSolverType(LinearSolverType::_None, false);
+		data.SetLinearSolverType(LinearSolverType::_None);
 		return false;
 	}
 
@@ -313,9 +314,12 @@ void CSolverBase::InitializeSolverData(CSystem& computationalSystem, const Simul
 
 	if ((simulationSettings.linearSolverType == LinearSolverType::EXUdense) ||
 		(simulationSettings.linearSolverType == LinearSolverType::EigenSparse) ||
-		(simulationSettings.linearSolverType == LinearSolverType::EigenSparseSymmetric))
+        (simulationSettings.linearSolverType == LinearSolverType::EigenSparseSymmetric) ||
+        (simulationSettings.linearSolverType == LinearSolverType::EigenDense)
+        )
 	{
-		data.SetLinearSolverType(simulationSettings.linearSolverType, simulationSettings.linearSolverSettings.reuseAnalyzedPattern);
+		data.SetLinearSolverType(simulationSettings.linearSolverType, simulationSettings.linearSolverSettings.reuseAnalyzedPattern, 
+            simulationSettings.linearSolverSettings.ignoreSingularJacobian);
 	}
 	//else if (simulationSettings.linearSolverType == LinearSolverType::EigenSparse)
 	//{
@@ -327,7 +331,7 @@ void CSolverBase::InitializeSolverData(CSystem& computationalSystem, const Simul
 	//}
 	else
 	{
-		PyError("Solver:InitializeSolverData: Unsupported simulationSettings.linearSolverType", file.solverFile);
+		PyError("Solver:InitializeSolverData: Unsupported solver type in simulationSettings.linearSolverType", file.solverFile);
 	}
 
 	//++++++++++++++++++++++++++++++
@@ -438,7 +442,6 @@ void CSolverBase::InitializeSolverData(CSystem& computationalSystem, const Simul
 	{
 		//this is needed to set back number of threads to 0, which otherwise causes that CSystem functions are still using parallel mode if there was a parallel run before
 		exuThreading::TaskManager::SetNumThreads(1); //necessary in order that computation functions have reserved correct size of arrays
-
 	}
 	//pout << "numThreads after init=" << exuThreading::TaskManager::GetNumThreads() << "\n";
 
@@ -650,7 +653,7 @@ void CSolverBase::FinalizeSolver(CSystem& computationalSystem, const SimulationS
 		footer += "#simulation finished=" + EXUstd::GetDateTimeString() + "\n";
 		footer += "#Solver Info:";
 		footer += " cpuTime=" + EXUstd::ToString(timer.total);
-		footer += " stepReductionFailed(or step failed)=" + EXUstd::ToString(conv.stepReductionFailed);
+		footer += ",stepReductionFailed(or step failed)=" + EXUstd::ToString(conv.stepReductionFailed);
 		footer += ",discontinuousIterationSuccessful=" + EXUstd::ToString(conv.discontinuousIterationSuccessful);
 		footer += ",newtonSolutionDiverged=" + EXUstd::ToString(conv.newtonSolutionDiverged);
 		footer += ",massMatrixNotInvertible=" + EXUstd::ToString(conv.massMatrixNotInvertible);
@@ -907,10 +910,10 @@ void CSolverBase::InitializeStep(CSystem& computationalSystem, const SimulationS
 
 		Verbose(2, str);
 	}
-	if (!IsStaticSolver())
-	{
-		it.endTime = simulationSettings.timeIntegration.endTime; //update time, which may be updated for long integration time
-	}
+	//if (!IsStaticSolver())
+	//{
+	//	it.endTime = simulationSettings.timeIntegration.endTime; //update time, which may be updated for long integration time
+	//}
 
 	STARTTIMER(timer.python);
 	if (computationalSystem.GetPythonUserFunctions().preStepFunction)
@@ -1225,16 +1228,16 @@ bool CSolverBase::Newton(CSystem& computationalSystem, const SimulationSettings&
 	conv.newtonConverged = false;			//convergence of Newton reached by tolerance criteria
 	conv.newtonSolutionDiverged = false;	//shows that solution diverged (e.g. in first step)
 
-	bool ignoreRedundantEquations = false;
-	Index redundantEqStart = 0;
-	if (simulationSettings.linearSolverSettings.ignoreSingularJacobian || simulationSettings.linearSolverSettings.ignoreRedundantConstraints)
-	{
-		ignoreRedundantEquations = true;
-		if (simulationSettings.linearSolverSettings.ignoreRedundantConstraints && !simulationSettings.linearSolverSettings.ignoreSingularJacobian)
-		{
-			redundantEqStart = data.startAE;
-		}
-	}
+	//bool ignoreRedundantEquations = false;
+	//Index redundantEqStart = 0;
+	//if (simulationSettings.linearSolverSettings.ignoreSingularJacobian || simulationSettings.linearSolverSettings.ignoreRedundantConstraints)
+	//{
+	//	ignoreRedundantEquations = true;
+	//	if (simulationSettings.linearSolverSettings.ignoreRedundantConstraints && !simulationSettings.linearSolverSettings.ignoreSingularJacobian)
+	//	{
+	//		redundantEqStart = data.startAE;
+	//	}
+	//}
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//NEWTON method for one time step
@@ -1310,7 +1313,7 @@ bool CSolverBase::Newton(CSystem& computationalSystem, const SimulationSettings&
 			//STOPGLOBALTIMER(TSfinalizeMatrix);
 			//STARTGLOBALTIMER(TSfactorize);
 
-			Index factorizeOutput = data.systemJacobian->FactorizeNew(ignoreRedundantEquations, redundantEqStart);
+            Index factorizeOutput = data.systemJacobian->FactorizeNew();// ignoreRedundantEquations, redundantEqStart);
 			if (factorizeOutput != -1)
 			{
 				std::string s = "CSolverBase::Newton: System Jacobian seems to be singular / not invertible!\n";
@@ -1552,7 +1555,9 @@ bool CSolverBase::Newton(CSystem& computationalSystem, const SimulationSettings&
 
 Real CSolverBase::PostNewton(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
 {
-	Real discontinuousError = 0;	
+    if (IsVerbose(2)) {Verbose(2, STDstring("  PostNewton step: run with ")+EXUstd::ToString(exuThreading::TaskManager::GetNumThreads())+" threads\n");}
+
+    Real discontinuousError = 0;	
 	it.recommendedStepSize = -1;
 	if (computationalSystem.GetPythonUserFunctions().postNewtonFunction)
 	{

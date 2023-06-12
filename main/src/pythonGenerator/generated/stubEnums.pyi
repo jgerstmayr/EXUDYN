@@ -119,6 +119,7 @@ class LinearSolverType(Enum):
     EXUdense = int
     EigenSparse = int
     EigenSparseSymmetric = int
+    EigenDense = int
 
 class ContactTypeIndex(Enum):
     IndexSpheresMarkerBased = int

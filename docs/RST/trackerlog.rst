@@ -19,15 +19,167 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.6.119.dev1, 
-+  last change =  2023-05-22, 
-+  Number of issues = 1583, 
-+  Number of resolved issues = 1399 (119 in current version), 
++  Exudyn version = 1.6.164.dev1, 
++  last change =  2023-06-12, 
++  Number of issues = 1620, 
++  Number of resolved issues = 1444 (164 in current version), 
 
 ***********
 Version 1.6
 ***********
 
+ * Version 1.6.164: resolved Issue 1267: matrix inverse (extension)
+    - description:  add pivot threshold to options, may improve redundant constraints problems
+    - **notes:** only available for EigenDense with ignoreSingularJacobian and EXUdense linear solvers
+    - date resolved: **2023-06-12 13:24**\ , date raised: 2022-09-21 
+ * Version 1.6.163: resolved Issue 1616: eigen LU (check)
+    - description:  check fastest solver for regular and overdetermined systems
+    - **notes:** Eigen::PartialPivLU 2.5 times faster for 65 DOF test in factorization, factor 3 faster for backsubst
+    - date resolved: **2023-06-12 13:22**\ , date raised: 2023-06-11 
+ * Version 1.6.162: resolved Issue 1607: Bricard mechanism (testing)
+    - description:  add example and test ComputeSystemDegreesOfFreedom
+    - date resolved: **2023-06-12 11:02**\ , date raised: 2023-06-09 
+ * Version 1.6.161: resolved Issue 1617: solver error message (fix)
+    - description:  revise hint for ignoreSingularJacobian
+    - date resolved: **2023-06-12 01:39**\ , date raised: 2023-06-11 
+ * Version 1.6.160: resolved Issue 1615: pivotThreshold (fix)
+    - description:  add already existing parameter [which is currently not used in solver!] to solver interface add FactorizeNew arg
+    - date resolved: **2023-06-12 01:39**\ , date raised: 2023-06-11 
+ * Version 1.6.159: resolved Issue 1266: matrix inverse (extension)
+    - description:  add full pivoting mode for matrix inverse, to resolve redundant constraints; consider Eigen FullPivotLU for dense matrices - see classEigen_1_1FullPivLU.html
+    - **notes:** also added new LinearSolverType.EigenDense which allows to chose FullPivLU by settings ignoreSingularJacobian=True
+    - date resolved: **2023-06-12 00:17**\ , date raised: 2022-09-21 
+ * Version 1.6.158: resolved Issue 1619: LinearSolverType (change)
+    - description:  switch to bit-wise numbering of solver types, in order to alleviate checks
+    - date resolved: **2023-06-11 23:52**\ , date raised: 2023-06-11 
+ * Version 1.6.157: resolved Issue 1618: ignoreRedundantConstraints (change)
+    - description:  remove option ignoreRedundantConstraints as it cannot be applied with Eigen::FullPivLU; use ignoreSingularJacobian instead
+    - date resolved: **2023-06-11 23:46**\ , date raised: 2023-06-11 
+ * Version 1.6.156: resolved Issue 1613: Experimental (extension)
+    - description:  add experimental class, which can be accessed in Python by exudyn.Experimental(); inside C++, just needs to be imported; allows simple testing without interference with main features
+    - date resolved: **2023-06-11 19:56**\ , date raised: 2023-06-11 
+ * Version 1.6.155: resolved Issue 1536: mutable arguments (fix)
+    - description:  check and fix Python functions with mutable arguments such as [] or , with potential risk of changing internally in function, leading to unexpected behavior in second call
+    - **notes:** checked all default list and dict args
+    - date resolved: **2023-06-11 00:24**\ , date raised: 2023-04-27 
+ * Version 1.6.154: resolved Issue 1612: mutable arguments (fix)
+    - description:  check and fix problems in beams.py, FEM.py and graphicsDataUtilities.py
+    - **notes:** see also issue 1536
+    - date resolved: **2023-06-10 21:34**\ , date raised: 2023-06-10 
+ * Version 1.6.153: resolved Issue 1609: AnimateModes (extension)
+    - description:  extend for using a set of system eigenmodes
+    - date resolved: **2023-06-10 20:25**\ , date raised: 2023-06-10 
+ * Version 1.6.152: resolved Issue 1580: mainSystemExtensions (extension)
+    - description:  add RigidBodySpringDamper
+    - date resolved: **2023-06-10 20:25**\ , date raised: 2023-05-21 
+ * Version 1.6.151: resolved Issue 1606: ComputeODE2Eigenvalues (extension)
+    - description:  add eigenvector computation to constrained case
+    - **notes:** needs further testing!
+    - date resolved: **2023-06-10 19:11**\ , date raised: 2023-06-08 
+ * Version 1.6.150: resolved Issue 1611: SolutionViewer (change)
+    - description:  change internal variables from mbs.variables to mbs.sys
+    - date resolved: **2023-06-10 17:48**\ , date raised: 2023-06-10 
+ * Version 1.6.149: resolved Issue 1610: AnimateModes (change)
+    - description:  change internal variables from mbs.variables to mbs.sys
+    - date resolved: **2023-06-10 17:47**\ , date raised: 2023-06-10 
+ * Version 1.6.148: :textred:`resolved BUG 1608` : visualization zoom all 
+    - description:  when calling ComputeSystemDegreeOfFreedom, ComputeODE2Eigenvalues and similar functions, and StartRenderer is called right afterwards, zoom all does not work
+    - **notes:** shall be resolved just by calling StartRenderer before first call to any solver functionality
+    - date resolved: **2023-06-10 11:44**\ , date raised: 2023-06-10 
+ * Version 1.6.147: resolved Issue 1435: solver (extension)
+    - description:  add deriviative of loads to regular jacobian computation with flag (default=False); use numerical diff sim. to JacobianODE2
+    - **notes:** already done earlier in #1546
+    - date resolved: **2023-06-08 23:35**\ , date raised: 2023-02-16 
+ * Version 1.6.146: resolved Issue 1597: Command execute (fix)
+    - description:  switch to grid method for placing widgets, tkinter does not allow pack and grid in different windows
+    - date resolved: **2023-06-08 21:56**\ , date raised: 2023-06-05 
+ * Version 1.6.145: :textred:`resolved BUG 1593` : TemporaryComputationDataArray bug 
+    - description:  ERROR: "TemporaryComputationDataArray::operator[]: index out of range" is raised if single-threaded computation is run after multi-threaded simulation; requires restart of Python instance
+    - date resolved: **2023-06-08 18:50**\ , date raised: 2023-06-03 
+ * Version 1.6.144: resolved Issue 1599: ComputeODE2Eigenvalues (extension)
+    - description:  compute eigenmodes in case of algebraic equations
+    - date resolved: **2023-06-08 18:46**\ , date raised: 2023-06-08 
+ * Version 1.6.143: resolved Issue 1603: AddSensor (extension)
+    - description:  add check if no outputVariable is provided-> immediately raise error
+    - **notes:** was already in system checks, which however were not called, see issue 1604
+    - date resolved: **2023-06-08 18:45**\ , date raised: 2023-06-08 
+ * Version 1.6.142: resolved Issue 1598: eigenvalues constrained system (example)
+    - description:  add example for eigenvalue computation of constrained system
+    - **notes:** added computeODE2AEeigenvaluesTest.py
+    - date resolved: **2023-06-08 18:45**\ , date raised: 2023-06-08 
+ * Version 1.6.141: resolved Issue 1605: ComputeSystemDegreeOfFreedom (change)
+    - description:  change output to a dictionary in order to have readable results
+    - date resolved: **2023-06-08 18:35**\ , date raised: 2023-06-08 
+ * Version 1.6.140: resolved Issue 1604: Sensors (fix)
+    - description:  PreAssembleConsistencies not called in Assemble; thus, no checks are performed on sensor inputs
+    - date resolved: **2023-06-08 18:24**\ , date raised: 2023-06-08 
+ * Version 1.6.139: :textred:`resolved BUG 1602` : MainSystem CreateRigidBody 
+    - description:  referenceRotationMatrix multiplied in wrong way with initialRotationMatrix
+    - **notes:** also rotation parameters in initialVelocities were wrong for initialRotationMatrix!=np.eye(3); fixed, but more testing needed
+    - date resolved: **2023-06-08 17:42**\ , date raised: 2023-06-08 
+ * Version 1.6.138: resolved Issue 1600: stub files (extension)
+    - description:  extend .pyi files for system structures functions, e.g., ComputeJacobianODE2RHS
+    - date resolved: **2023-06-08 17:17**\ , date raised: 2023-06-08 
+ * Version 1.6.137: resolved Issue 1601: stub files (change)
+    - description:  merge .pyi files to have classes such as MainSystem only appearing once
+    - date resolved: **2023-06-08 16:37**\ , date raised: 2023-06-08 
+ * Version 1.6.136: resolved Issue 0746: ComputeODEEigenvalues (extension)
+    - description:  add possibility to eliminate coordinate constraints, possibly to use SVD/ null space matrix for projection
+    - **notes:** algebraic constraints now considered automatically; algebraic constraints now considered automatically
+    - date resolved: **2023-06-07 23:52**\ , date raised: 2021-09-03 
+    - resolved by: M. Pieber, JG
+ * Version 1.6.135: resolved Issue 0743: ComputeODE2Eigenvalues (extension)
+    - description:  add vector of constrained coordinates which are eliminated; also add functionality for complex eigenvalues
+    - **notes:** already done earlier
+    - date resolved: **2023-06-07 23:09**\ , date raised: 2021-08-20 
+ * Version 1.6.134: resolved Issue 1595: Command dialog (extension)
+    - description:  extend to multi-line commands; execute code using CTRL-Return
+    - **notes:** Behavior is now DIFFERENT, as variables are not printed automatically; write e.g. print(mbs) to see mbs representation; see section Execute Command and Help
+    - date resolved: **2023-06-04 19:40**\ , date raised: 2023-06-03 
+ * Version 1.6.133: resolved Issue 1596: linuxDisplayScaleFactor (extension)
+    - description:  add scaling for fonts on linux, specifically for high resolution screens
+    - date resolved: **2023-06-04 00:13**\ , date raised: 2023-06-04 
+ * Version 1.6.132: resolved Issue 1588: ParameterVariation, useMPI (fix)
+    - description:  only accept useMPI if set True
+    - date resolved: **2023-06-03 19:26**\ , date raised: 2023-05-31 
+ * Version 1.6.131: resolved Issue 1579: mainSystemExtensions (extension)
+    - description:  Add distance constraint and CartesianSpringDamper
+    - date resolved: **2023-06-03 19:26**\ , date raised: 2023-05-21 
+ * Version 1.6.130: resolved Issue 1594: window closing, key Q (change)
+    - description:  slightly adapt behavior; fix some smaller issues with expected window behavior
+    - date resolved: **2023-06-03 17:01**\ , date raised: 2023-06-03 
+ * Version 1.6.129: resolved Issue 1356: CHECK (extension)
+    - description:  Add security question on quit/escape if computation Renderer runs longer than 15 minutes
+    - **notes:** added message in render window to click twice on exit window icon (X) after 15 seconds; key Q and escape get tkinter message box
+    - date resolved: **2023-06-03 16:00**\ , date raised: 2023-01-01 
+ * Version 1.6.128: resolved Issue 1592: SolverBase it.endTime (fix)
+    - description:  in dynamic solver it.endTime is overwritten with simulationSettings.timeIntegration.endTime; this is against the description and does not allow to change it.endTime in command window; remove overwritting to be consistent with description of Execute Command and Help section in EXUDYN Basics
+    - date resolved: **2023-06-03 14:25**\ , date raised: 2023-06-03 
+ * Version 1.6.127: resolved Issue 1591: SphericalJoint (fix)
+    - description:  causes memory allocation; check LinkedDataVector cast
+    - date resolved: **2023-06-01 11:12**\ , date raised: 2023-06-01 
+ * Version 1.6.126: resolved Issue 1590: serialRobotKinematicTree.py (fix)
+    - description:  fixed static torque compensation for kinematic tree and fixed sensor outputs
+    - date resolved: **2023-05-31 13:07**\ , date raised: 2023-05-31 
+ * Version 1.6.125: resolved Issue 1589: ObjectKinematicTree (docu)
+    - description:  add description of SensorKinematicTree output variables per link
+    - date resolved: **2023-05-31 12:42**\ , date raised: 2023-05-31 
+ * Version 1.6.124: resolved Issue 1587: solution file footer (change)
+    - description:  add comma after cpuTime=...
+    - date resolved: **2023-05-30 23:52**\ , date raised: 2023-05-30 
+ * Version 1.6.123: resolved Issue 1586: SetPreStepUserFunction, SetPostNewtonUserFunction (extension)
+    - description:  add exception handling in set function
+    - date resolved: **2023-05-26 19:52**\ , date raised: 2023-05-26 
+ * Version 1.6.122: resolved Issue 1585: class name highlighting RTD (docu)
+    - description:  fixed exporting class names from pythonUtilities
+    - date resolved: **2023-05-25 15:19**\ , date raised: 2023-05-25 
+ * Version 1.6.121: resolved Issue 1584: MiniExamples (change)
+    - description:  remove import of itemInterface
+    - date resolved: **2023-05-25 14:32**\ , date raised: 2023-05-25 
+ * Version 1.6.120: :textred:`resolved BUG 1583` : GeneticOptimization 
+    - description:  results are erroneous in case of crossoverProbability > 0
+    - **notes:** fixed writing of output files which had mixed order due to parameter cross-over
+    - date resolved: **2023-05-23 18:31**\ , date raised: 2023-05-23 
  * Version 1.6.119: resolved Issue 1582: mainSystemExtensions (fix)
     - description:  remove import of tkinter and matplotlib to resolve errors when loading exudyn and these libs are not installed
     - date resolved: **2023-05-22 10:54**\ , date raised: 2023-05-22 
@@ -4538,16 +4690,12 @@ Version 0.1
 Open issues
 ***********
 
+ * **open issue 1614:** static members      
+    - description:  LinearSolver GeneralMatrixEXUdense::FactorizeNew has static ResizableMatrix m, which should be turned into class members; add reset method to free memory at solver finalization
+    - date raised: 2023-06-11 
+
  * **open issue 1581:** mainSystemExtensions
     - description:  add LinearSpringDamper and TorsionalSpringDamper
-    - date raised: 2023-05-21 
-
- * **open issue 1580:** mainSystemExtensions
-    - description:  add RigidBodySpringDamper
-    - date raised: 2023-05-21 
-
- * **open issue 1579:** mainSystemExtensions
-    - description:  Add distance constraint and CartesianSpringDamper
     - date raised: 2023-05-21 
 
  * **open issue 1565:** utilities InitializeFromRestartFile
@@ -4569,10 +4717,6 @@ Open issues
  * **open issue 1540:** mutable args itemInterface
     - description:  copy lists in itemInterfacein order to avoid change of default args by user n=NodePoint();n.referenceCoordinates[0]=42;n1=NodePoint()
     - date raised: 2023-04-28 
-
- * **open issue 1536:** mutable arguments   
-    - description:  check and fix Python functions with mutable arguments such as [] or , with potential risk of changing internally in function, leading to unexpected behavior in second call
-    - date raised: 2023-04-27 
 
  * **open issue 1529:** solver              
     - description:  solver functions GetSystemJacobian() and GetSystemMassMatrix() need to be extended with arg sparseTriplets=False; if True, it will return CSR sparse triplets, useful for large matrices, e.g. in eigenvalue computation in linearized system
@@ -4642,10 +4786,6 @@ Open issues
     - description:  add number of threads to solution files and more details on computer; check parameter variation and other files (e.g. numberOfThreads and final computation time)
     - date raised: 2023-02-25 
 
- * :textred:`open issue 1435:` solver              
-    - description:  add deriviative of loads to regular jacobian computation with flag (default=False); use numerical diff sim. to JacobianODE2
-    - date raised: 2023-02-16 
-
  * :textred:`open issue 1434:` solver              
     - description:  add CqT\*lambda terms to systemwide jacobian computation with flag
     - date raised: 2023-02-16 
@@ -4670,10 +4810,6 @@ Open issues
     - description:  add test model
     - date raised: 2023-01-12 
 
- * **open issue 1356:** CHECK               
-    - description:  Add security question on quit/escape if computation Renderer runs longer than 15 minutes
-    - date raised: 2023-01-01 
-
  * :textorange:`open issue 1341:` MacOS multithreading
     - description:  resolve compilation problems with NGsolve taskmanager on Apple MacOS
     - date raised: 2022-12-26 
@@ -4693,14 +4829,6 @@ Open issues
  * **open issue 1273:** GeometricallyExactBeam
     - description:  check quadratic velocity terms
     - date raised: 2022-09-24 
-
- * **open issue 1267:** matrix inverse      
-    - description:  add pivot threshold to options, may improve redundant constraints problems
-    - date raised: 2022-09-21 
-
- * **open issue 1266:** matrix inverse      
-    - description:  add full pivoting mode for matrix inverse, to resolve redundant constraints; consider Eigen FullPivotLU for dense matrices - see classEigen_1_1FullPivLU.html
-    - date raised: 2022-09-21 
 
  * **open issue 1247:** UserFunctions       
     - description:  check whether optimization of user functions with numba/JIT removes C->Python->C roundtrip overhead using pybind11 f.target approach from tests/test_callbacks.cpp; this would enable to retrieve the original c-function pointer
@@ -5001,14 +5129,6 @@ Open issues
  * **open issue 0753:** autodiff for Connectors
     - description:  add autodiff for connectors using spezial sizes like 6 for 2 position nodes, 14 for 2 rigid bodies and 40 for most objects (ObjectFFRFreducedOrder) + 100? as extreme case, falling back to numerical diff for any larger case
     - date raised: 2021-09-21 
-
- * **open issue 0746:** ComputeODEEigenvalues
-    - description:  add possibility to eliminate coordinate constraints, possibly to use SVD/ null space matrix for projection
-    - date raised: 2021-09-03 
-
- * **open issue 0743:** ComputeODE2Eigenvalues
-    - description:  add vector of constrained coordinates which are eliminated; also add functionality for complex eigenvalues
-    - date raised: 2021-08-20 
 
  * **open issue 0737:** ContactCoordinate   
     - description:  check if is very close to switching, perform switching for end of step and set error very small; if immediate swichting after beginning of step, do not set stepRecommendation to avoid step reduction; repeat step; time integration: if recommended step is set, reduction is performed in first iteration, otherwise iterate

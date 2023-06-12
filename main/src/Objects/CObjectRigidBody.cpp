@@ -506,8 +506,7 @@ void CObjectRigidBody::GetOutputVariableBody(OutputVariableType variableType, co
 	}
 }
 
-//! @todo: add ConfigurationType to CObjectMassPoint::GetPosition; 
-//  return the (global) position of "localPosition" according to configuration type
+//!  return the (global) position of "localPosition" according to configuration type
 Vector3D CObjectRigidBody::GetPosition(const Vector3D& localPosition, ConfigurationType configuration) const
 {
 	return ((CNodeRigidBody*)GetCNode(0))->GetPosition(configuration) + ((CNodeRigidBody*)GetCNode(0))->GetRotationMatrix(configuration) * localPosition;

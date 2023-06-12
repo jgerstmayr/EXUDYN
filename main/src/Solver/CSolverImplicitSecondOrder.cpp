@@ -160,7 +160,7 @@ void CSolverImplicitSecondOrderTimeInt::InitializeSolverInitialConditions(CSyste
 
 		if (computationalSystem.GetSystemData().GetCData().currentState.ODE2Coords_t.GetL2Norm() > 1e-10)
 		{
-			if (simulationSettings.linearSolverType != LinearSolverType::EXUdense)
+			if (!EXUstd::IsOfType(LinearSolverType::Dense, simulationSettings.linearSolverType))
 			{
 				PyWarning("Generalized alpha: initial accelerations due to initial velocities can only be computed in dense matrix mode!");
 			}
@@ -186,18 +186,18 @@ void CSolverImplicitSecondOrderTimeInt::InitializeSolverInitialConditions(CSyste
 
 		data.systemJacobian->FinalizeMatrix();
 
-		bool ignoreRedundantEquations = false;
-		Index redundantEqStart = 0;
-		if (simulationSettings.linearSolverSettings.ignoreSingularJacobian || simulationSettings.linearSolverSettings.ignoreRedundantConstraints)
-		{
-			ignoreRedundantEquations = true;
-			if (simulationSettings.linearSolverSettings.ignoreRedundantConstraints && !simulationSettings.linearSolverSettings.ignoreSingularJacobian)
-			{
-				redundantEqStart = data.startAE;
-			}
-		}
+		//bool ignoreRedundantEquations = false;
+		//Index redundantEqStart = 0;
+		//if (simulationSettings.linearSolverSettings.ignoreSingularJacobian || simulationSettings.linearSolverSettings.ignoreRedundantConstraints)
+		//{
+		//	ignoreRedundantEquations = true;
+		//	if (simulationSettings.linearSolverSettings.ignoreRedundantConstraints && !simulationSettings.linearSolverSettings.ignoreSingularJacobian)
+		//	{
+		//		redundantEqStart = data.startAE;
+		//	}
+		//}
 
-		Index factorizeOutput = data.systemJacobian->FactorizeNew(ignoreRedundantEquations, redundantEqStart);
+        Index factorizeOutput = data.systemJacobian->FactorizeNew();// ignoreRedundantEquations, redundantEqStart);
 
 		if (factorizeOutput != -1)
 		{
@@ -379,7 +379,7 @@ void CSolverImplicitSecondOrderTimeInt::PostInitializeSolverSpecific(CSystem& co
 		} 
 		else //Lie group active!
 		{
-			if (simulationSettings.linearSolverType == LinearSolverType::EigenSparse &&
+			if (!EXUstd::IsOfType(LinearSolverType::Dense, simulationSettings.linearSolverType) &&
 				simulationSettings.timeIntegration.generalizedAlpha.lieGroupAddTangentOperator)
 			{
 				PyError("SolveDynamic:GeneralizedAlpha: generalizedAlpha.lieGroupAddTangentOperator may not be set True in case of EigenSparse solver", file.solverFile);

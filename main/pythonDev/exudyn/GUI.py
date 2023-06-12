@@ -116,7 +116,7 @@ def GetExudynDisplayScaling():
 #return either exudyn or tkinter scaling, unified approach
 def GetGUIContentScaling(root):
     try:
-        if useRenderWindowDisplayScaling:
+        if useRenderWindowDisplayScaling: #would also work under linux
             #print('exudyn scaling      =',GetExudynDisplayScaling())
             #print('tkinter scaling(OLD)=',root.tk.call('tk', 'scaling'))
             s = 1.4*GetExudynDisplayScaling() #gives similar size as other programs; factor 1.4 is empirical
@@ -687,7 +687,7 @@ def EditDictionaryWithTypeInfo(settingsStructure, exu=None, dictionaryName='edit
 
     #no effect:
     # defaultFont = tkFont.Font(root=root, family = "TkDefaultFont")
-    # defaultFont.configure(size=fontSize)
+    # defaultFont.configure(size=treeviewDefaultFontSize*fontFactor)
         
     style = ttk.Style(tkWindow)
     style.configure('Treeview', rowheight=textHeight) 
@@ -945,11 +945,10 @@ def EditDictionary(dictionaryData, dictionaryIsEditable=True, dialogName=''):
     
 
     textHeight = TkTextHeight(systemScaling)
-    #fontSize = TkFontSize(systemScaling)
 
     #no effect:
     # defaultFont = tkFont.Font(root=root, family = "TkDefaultFont")
-    # defaultFont.configure(size=fontSize)
+    # defaultFont.configure(size=treeviewDefaultFontSize*fontFactor)
 
     tkWindow.title(dialogName)
     tkWindow.focus_force() #window has focus

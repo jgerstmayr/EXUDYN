@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-05-15 (last modfied)
+* @date         AUTO: 2023-06-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -36,6 +36,7 @@ public: // AUTO:
   bool drawCoordinateSystem;                      //!< AUTO: false = no coordinate system shown
   bool drawWorldBasis;                            //!< AUTO: true = draw world basis coordinate system at (0,0,0)
   float graphicsUpdateInterval;                   //!< AUTO: interval of graphics update during simulation in seconds; 0.1 = 10 frames per second; low numbers might slow down computation speed
+  float linuxDisplayScaleFactor;                  //!< AUTO: Scaling factor for linux, which cannot determined from system by now; adjust this value to scale dialog fonts and renderer fonts
   float minSceneSize;                             //!< AUTO: minimum scene size for initial scene size and for autoFitScene, to avoid division by zero; SET GREATER THAN ZERO
   float pointSize;                                //!< AUTO: global point size (absolute)
   Index rendererPrecision;                        //!< AUTO: precision of general floating point numbers shown in render window: total number of digits used  (max. 16)
@@ -73,6 +74,7 @@ public: // AUTO:
     drawCoordinateSystem = true;
     drawWorldBasis = false;
     graphicsUpdateInterval = 0.1f;
+    linuxDisplayScaleFactor = 1.;
     minSceneSize = 0.1f;
     pointSize = 0.01f;
     rendererPrecision = 4;
@@ -121,6 +123,11 @@ public: // AUTO:
   //! AUTO: Read (Copy) access to: global number of segments for cylinders; if smaller than 2, 2 segments are used (flat)
   Index PyGetCylinderTiling() const { return Index(cylinderTiling); }
 
+  //! AUTO: Set function (needed in pybind) for: Scaling factor for linux, which cannot determined from system by now; adjust this value to scale dialog fonts and renderer fonts
+  void PySetLinuxDisplayScaleFactor(const float& linuxDisplayScaleFactorInit) { linuxDisplayScaleFactor = EXUstd::GetSafelyPFloat(linuxDisplayScaleFactorInit,"linuxDisplayScaleFactor"); }
+  //! AUTO: Read (Copy) access to: Scaling factor for linux, which cannot determined from system by now; adjust this value to scale dialog fonts and renderer fonts
+  float PyGetLinuxDisplayScaleFactor() const { return float(linuxDisplayScaleFactor); }
+
   //! AUTO: Set function (needed in pybind) for: precision of general floating point numbers shown in render window: total number of digits used  (max. 16)
   void PySetRendererPrecision(const Index& rendererPrecisionInit) { rendererPrecision = EXUstd::GetSafelyPInt(rendererPrecisionInit,"rendererPrecision"); }
   //! AUTO: Read (Copy) access to: precision of general floating point numbers shown in render window: total number of digits used  (max. 16)
@@ -160,6 +167,7 @@ public: // AUTO:
     os << "  drawCoordinateSystem = " << drawCoordinateSystem << "\n";
     os << "  drawWorldBasis = " << drawWorldBasis << "\n";
     os << "  graphicsUpdateInterval = " << graphicsUpdateInterval << "\n";
+    os << "  linuxDisplayScaleFactor = " << linuxDisplayScaleFactor << "\n";
     os << "  minSceneSize = " << minSceneSize << "\n";
     os << "  pointSize = " << pointSize << "\n";
     os << "  rendererPrecision = " << rendererPrecision << "\n";
@@ -199,7 +207,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-05-15 (last modfied)
+* @date         AUTO: 2023-06-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -291,7 +299,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-05-15 (last modfied)
+* @date         AUTO: 2023-06-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -382,7 +390,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-05-15 (last modfied)
+* @date         AUTO: 2023-06-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -476,7 +484,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-05-15 (last modfied)
+* @date         AUTO: 2023-06-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -537,7 +545,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-05-15 (last modfied)
+* @date         AUTO: 2023-06-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -615,7 +623,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-05-15 (last modfied)
+* @date         AUTO: 2023-06-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -704,7 +712,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-05-15 (last modfied)
+* @date         AUTO: 2023-06-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -773,7 +781,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-05-15 (last modfied)
+* @date         AUTO: 2023-06-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -851,7 +859,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-05-15 (last modfied)
+* @date         AUTO: 2023-06-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -920,7 +928,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-05-15 (last modfied)
+* @date         AUTO: 2023-06-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1006,7 +1014,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-05-15 (last modfied)
+* @date         AUTO: 2023-06-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1029,6 +1037,7 @@ public: // AUTO:
   std::function<bool(int, int, int)> keyPressUserFunction;//!< AUTO: add a Python function f(key, action, mods) here, which is called every time a key is pressed; function shall return true, if key has been processed; Example: \tabnewline def f(key, action, mods):\tabnewline \phantom{XXX} print('key=',key);\tabnewline use chr(key) to convert key codes [32 ...96] to ascii; special key codes (>256) are provided in the exudyn.KeyCode enumeration type; key action needs to be checked (0=released, 1=pressed, 2=repeated); mods provide information (binary) for SHIFT (1), CTRL (2), ALT (4), Super keys (8), CAPSLOCK (16)
   bool limitWindowToScreenSize;                   //!< AUTO: True: render window size is limited to screen size; False: larger window sizes (e.g. for rendering) allowed according to renderWindowSize
   bool maximize;                                  //!< AUTO: True: OpenGL render window will be maximized at startup
+  Real reallyQuitTimeLimit;                       //!< AUTO: number of seconds after which user is asked a security question before stopping simulation and closing renderer; set to 0 in order to always get asked; set to 1e10 to (nearly) never get asked
   Index2 renderWindowSize;                        //!< AUTO: initial size of OpenGL render window in pixel
   bool showMouseCoordinates;                      //!< AUTO: True: show OpenGL coordinates and distance to last left mouse button pressed position; switched on/off with key 'F3'
   bool showWindow;                                //!< AUTO: True: OpenGL render window is shown on startup; False: window will be iconified at startup (e.g. if you are starting multiple computations automatically)
@@ -1044,6 +1053,7 @@ public: // AUTO:
     keyPressUserFunction = 0;
     limitWindowToScreenSize = true;
     maximize = false;
+    reallyQuitTimeLimit = 900;
     renderWindowSize = Index2({1024,768});
     showMouseCoordinates = false;
     showWindow = true;
@@ -1051,6 +1061,11 @@ public: // AUTO:
   };
 
   // AUTO: access functions
+  //! AUTO: Set function (needed in pybind) for: number of seconds after which user is asked a security question before stopping simulation and closing renderer; set to 0 in order to always get asked; set to 1e10 to (nearly) never get asked
+  void PySetReallyQuitTimeLimit(const Real& reallyQuitTimeLimitInit) { reallyQuitTimeLimit = EXUstd::GetSafelyUReal(reallyQuitTimeLimitInit,"reallyQuitTimeLimit"); }
+  //! AUTO: Read (Copy) access to: number of seconds after which user is asked a security question before stopping simulation and closing renderer; set to 0 in order to always get asked; set to 1e10 to (nearly) never get asked
+  Real PyGetReallyQuitTimeLimit() const { return Real(reallyQuitTimeLimit); }
+
   //! AUTO: Set function (needed in pybind) for: initial size of OpenGL render window in pixel
   void PySetRenderWindowSize(const std::array<Index,2>& renderWindowSizeInit) { renderWindowSize = renderWindowSizeInit; }
   //! AUTO: Read (Copy) access to: initial size of OpenGL render window in pixel
@@ -1074,6 +1089,7 @@ public: // AUTO:
     os << "  ignoreKeys = " << ignoreKeys << "\n";
     os << "  limitWindowToScreenSize = " << limitWindowToScreenSize << "\n";
     os << "  maximize = " << maximize << "\n";
+    os << "  reallyQuitTimeLimit = " << reallyQuitTimeLimit << "\n";
     os << "  renderWindowSize = " << renderWindowSize << "\n";
     os << "  showMouseCoordinates = " << showMouseCoordinates << "\n";
     os << "  showWindow = " << showWindow << "\n";
@@ -1096,7 +1112,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-05-15 (last modfied)
+* @date         AUTO: 2023-06-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1170,7 +1186,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-05-15 (last modfied)
+* @date         AUTO: 2023-06-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1442,7 +1458,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-05-15 (last modfied)
+* @date         AUTO: 2023-06-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1544,7 +1560,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-05-15 (last modfied)
+* @date         AUTO: 2023-06-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1605,7 +1621,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-05-15 (last modfied)
+* @date         AUTO: 2023-06-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1747,7 +1763,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-05-15 (last modfied)
+* @date         AUTO: 2023-06-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

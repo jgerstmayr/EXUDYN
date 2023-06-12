@@ -12,6 +12,49 @@ from autoGenerateHelper import Str2Latex, GenerateLatexStrKeywordExamples, Extra
           RemoveIndentation, RSTheaderString, RSTlabelString, RSTinlineMath, RSTmath, RSTurl, RSTmarkup, RSTcodeBlock, \
           LatexString2RST, Latex2RSTlabel
 
+maxWarningsMutableArgs = 200 #warnings in case of list or dict default args (mutable args)
+#list of functions for which mutable args have been checked:
+mutableArgsFunctionsChecked = [
+    'GenerateStraightLineANCFCable2D','PointsAndSlopes2ANCFCable2D','GenerateCircularArcANCFCable2D', #beams
+    #FEM:
+    'CreateReevingCurve', 'AddObjectFFRF','CMSObjectComputeNorm', 'AddObjectFFRFreducedOrderWithUserFunctions',
+    'AddObjectFFRFreducedOrder', 'AddElasticSupportAtNode', 'CreateLinearFEMObjectGenericODE2', 
+    'CreateNonlinearFEMObjectGenericODE2NGsolve', 'ComputeHurtyCraigBamptonModes',  
+    #graphicsDataUtilities:
+    'GraphicsDataFromPointsAndTrigs', 
+    'GraphicsDataLine', 'GraphicsDataCircle', 'GraphicsDataText', 'GraphicsDataRectangle', #4 x problems fixed using list()
+    'GraphicsDataOrthoCubeLines', 'GraphicsDataOrthoCube', 'GraphicsDataOrthoCubePoint', 'GraphicsDataCube', #4 x problems fixed using list()
+    'GraphicsDataSphere', 'GraphicsDataCylinder', 'GraphicsDataRigidLink', 'GraphicsDataFromSTLfileTxt', #4 x problems fixed using list()
+    'GraphicsDataCheckerBoard', 'GraphicsDataArrow', 'GraphicsDataBasis', 'GraphicsDataFrame', #ok
+    'GraphicsDataFromSTLfile', 'CirclePointsAndSegments', 'GraphicsDataSolidExtrusion', 'AddEdgesAndSmoothenNormals', #4 x problems fixed using list()
+    'GraphicsDataSolidOfRevolution', 'GraphicsDataQuad', #2 x problems fixed using list()
+    #interactive:
+    'SolutionViewer',#'__init__',
+    #kinematicTree:
+    'ForwardDynamicsCRB', 'ComputeMassMatrixAndForceTerms', 'AddExternalForces',
+    #mainSystemExtensions:
+    'MainSystemCreateMassPoint','MainSystemCreateRigidBody','MainSystemCreateSpringDamper','MainSystemCreateCartesianSpringDamper',
+    'MainSystemCreateRigidBodySpringDamper', 'MainSystemCreateRevoluteJoint', 'MainSystemCreatePrismaticJoint',
+    'MainSystemCreateSphericalJoint', 'MainSystemCreateGenericJoint', 'MainSystemCreateDistanceConstraint',
+    #plot:
+    'PlotSensor', 'DataArrayFromSensorList',
+    #processing:
+    'ProcessParameterList', 'ParameterVariation', 'GeneticOptimization', 'Minimize', 
+    #rigidBodyUtilities:
+    'GetRigidBodyNode', 'AddRigidBody', #fixed problem with copy
+    #robotics:
+    'CreateRedundantCoordinateMBS', 'Jacobian',  'AddLidar', 'CalculateAllMeasures',
+    #signal:
+    'GetInterpolatedSignalValue', #checked timeArray
+    #solver:
+    'ComputeODE2Eigenvalues',
+    #utilities:
+    'ShowOnlyObjects', 'CreateDistanceSensorGeometry',
+    #for several classes!:
+    '__init__',
+                               ]
+#RaiseIssue('default args','changed several default args to None in order to remove potential problems with mutable args: interactive.InteractiveDialog(), interactive.SolutionViewer(), ...','CHANGE')
+
 localListFunctionNames = [] #string list for highlighting
 localListClassNames = [] #string list for highlighting
 
@@ -187,10 +230,13 @@ def GetFunctionArguments(functionLine, infoText):
         defaultArg = ''
         if len(val1) == 2:
             defaultArg = val1[1].strip()
-            if defaultArg.strip() == '[]' and countMutableArgs < 5:
+            if (defaultArg.strip() != '' 
+                and (defaultArg.strip() == '[]' or defaultArg.strip()[0]+defaultArg.strip()[-1] == '[]')
+                and countMutableArgs < maxWarningsMutableArgs 
+                and (functionName not in mutableArgsFunctionsChecked) ):
                 countMutableArgs += 1
-                print('potential risk with mutable function argument [] found in function:',functionName,'('+infoText+')')
-                if countMutableArgs == 5:
+                print('potential risk ['+str(countMutableArgs)+'] with mutable function argument [] found in function:',functionName,'('+infoText+')')
+                if countMutableArgs == maxWarningsMutableArgs:
                     print('  ... further WARNINGS suppressed')
         defaultArgumentsList+=[defaultArg]
         
@@ -766,6 +812,7 @@ for fileName in filesParsed:
     #there is no MainSystem extensions part here!
     for classDict in classList:
         SpecialAppend(localListClassNames, classDict['className'])
+        # print(classDict['className'])
         
         sLatex += '\\my'+strSub+'subsubsection{CLASS '+classDict['className']+' (in module '+moduleNameLatex+')}\n'
         #sLatex += '\\bi'
@@ -885,6 +932,7 @@ sConfHelper += ']\n\n'
 
 sConfHelper += 'listPyClassNames=['
 for s in localListClassNames:
+    s = s.split('(')[0] #KirchhoffMaterial(MaterialBaseClass), InverseKinematicsNumerical()
     sConfHelper += "'" + s + "'" + ', '
 sConfHelper += ']\n\n'
 

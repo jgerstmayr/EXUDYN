@@ -14,14 +14,14 @@ Utilities for interactive simulation and results monitoring; NOTE: does not work
 
 Function: AnimateModes
 ^^^^^^^^^^^^^^^^^^^^^^
-`AnimateModes <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L581>`__\ (\ ``systemContainer``\ , \ ``mainSystem``\ , \ ``nodeNumber``\ , \ ``period = 0.04``\ , \ ``stepsPerPeriod = 30``\ , \ ``showTime = True``\ , \ ``renderWindowText = ''``\ , \ ``runOnStart = False``\ , \ ``runMode = 0``\ , \ ``scaleAmplitude = 1``\ , \ ``title = ''``\ , \ ``fontSize = 12``\ , \ ``checkRenderEngineStopFlag = True``\ )
+`AnimateModes <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L591>`__\ (\ ``systemContainer``\ , \ ``mainSystem``\ , \ ``nodeNumber``\ , \ ``period = 0.04``\ , \ ``stepsPerPeriod = 30``\ , \ ``showTime = True``\ , \ ``renderWindowText = ''``\ , \ ``runOnStart = False``\ , \ ``runMode = 0``\ , \ ``scaleAmplitude = 1``\ , \ ``title = ''``\ , \ ``fontSize = 12``\ , \ ``checkRenderEngineStopFlag = True``\ , \ ``systemEigenVectors = None``\ )
 
 - | \ *function description*\ :
-  | animate modes of ObjectFFRFreducedOrder and other objects (changes periodically one nodal coordinate); for creating snapshots, press 'Static' and 'Record animation' and press 'Run' to save one figure in the image subfolder; for creating animations for one mode, use the same procedure but use 'One Cycle'. Modes may be inverted by pressing according '+' and '-' buttons next to Amplitude.
+  | animate modes of ObjectFFRFreducedOrder, of nodal coordinates (changes periodically one nodal coordinate) or of a list of system modes provided as list of lists; for creating snapshots, press 'Static' and 'Record animation' and press 'Run' to save one figure in the image subfolder; for creating animations for one mode, use the same procedure but use 'One Cycle'. Modes may be inverted by pressing according '+' and '-' buttons next to Amplitude.
 - | \ *input*\ :
   | \ ``systemContainer``\ : system container (usually SC) of your model, containing visualization settings
   | \ ``mainSystem``\ : system (usually mbs) containing your model
-  | \ ``nodeNumber``\ : node number of which the coordinates shall be animated. In case of ObjectFFRFreducedOrder, this is the generic node, e.g., 'nGenericODE2' in the dictionary returned by the function AddObjectFFRFreducedOrderWithUserFunctions(...)
+  | \ ``nodeNumber``\ : node number of which the coordinates shall be animated. In case of ObjectFFRFreducedOrder, this is the generic node, e.g., 'nGenericODE2' in the dictionary returned by the function AddObjectFFRFreducedOrderWithUserFunctions(...); if nodeNumber=None, then the systemEigenVectors list is used
   | \ ``period``\ : delay for animation of every frame; the default of 0.04 results in approximately 25 frames per second
   | \ ``stepsPerPeriod``\ : number of steps into which the animation of one cycle of the mode is split into
   | \ ``showTime``\ : show a virtual time running from 0 to 2\*pi during one mode cycle
@@ -32,6 +32,7 @@ Function: AnimateModes
   | \ ``fontSize``\ : define font size for labels in InteractiveDialog
   | \ ``title``\ : if empty, it uses default; otherwise define specific title
   | \ ``checkRenderEngineStopFlag``\ : if True, stopping renderer (pressing Q or Escape) also causes stopping the interactive dialog
+  | \ ``systemEigenVectors``\ : may be a list of lists of system eigenvectors for ODE2 (and possibly ODE1) coordinates or a eigenvector matrix containing mode vectors in columns; if nodeNumber=None, these eigenvectors are then used to be animated
 - | \ *output*\ :
   | opens interactive dialog with further settings
 - | \ *notes*\ :
@@ -48,7 +49,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: SolutionViewer
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`SolutionViewer <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L754>`__\ (\ ``mainSystem``\ , \ ``solution = []``\ , \ ``rowIncrement = 1``\ , \ ``timeout = 0.04``\ , \ ``runOnStart = True``\ , \ ``runMode = 2``\ , \ ``fontSize = 12``\ , \ ``title = ''``\ , \ ``checkRenderEngineStopFlag = True``\ )
+`SolutionViewer <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L786>`__\ (\ ``mainSystem``\ , \ ``solution = None``\ , \ ``rowIncrement = 1``\ , \ ``timeout = 0.04``\ , \ ``runOnStart = True``\ , \ ``runMode = 2``\ , \ ``fontSize = 12``\ , \ ``title = ''``\ , \ ``checkRenderEngineStopFlag = True``\ )
 
 
 - | **NOTE**\ : this function is directly available in MainSystem (mbs); it should be directly called as mbs.SolutionViewer(...). For description of the interface, see the MainSystem Python extensions,  :ref:`sec-mainsystemextensions-solutionviewer`\ 
@@ -88,12 +89,12 @@ CLASS InteractiveDialog (in module interactive)
   #suboptions of 'radio':
   #               'textValueList': [('text1',0),('text2',1)] a list of texts with according values
   #               'value': default value (choice) of radio buttons
-  #               'variable': according variable in mbs.variables, which is set to current radio button value
+  #               'variable': according variable in mbs.variables (or mbs.sys), which is set to current radio button value
   #suboptions of 'slider':
   #               'range': (min, max) a tuple containing minimum and maximum value of slider
   #               'value': default value of slider
   #               'steps': number of steps in slider
-  #               'variable': according variable in mbs.variables, which is set to current slider value
+  #               'variable': according variable in mbs.variables (or mbs.sys), which is set to current slider value
   #example:
   dialogItems = [{'type':'label', 'text':'Nonlinear oscillation simulator', 'grid':(0,0,2), 'options':['L']},
                  {'type':'button', 'text':'test button','callFunction':ButtonCall, 'grid':(1,0,2)},
@@ -123,7 +124,7 @@ CLASS InteractiveDialog (in module interactive)
 
 Class function: \_\_init\_\_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L96>`__\ (\ ``self``\ , \ ``mbs``\ , \ ``simulationSettings``\ , \ ``simulationFunction``\ , \ ``dialogItems``\ , \ ``plots = []``\ , \ ``period = 0.04``\ , \ ``realtimeFactor = 1``\ , \ ``userStartSimulation = None``\ , \ ``title = ''``\ , \ ``showTime = False``\ , \ ``fontSize = 12``\ , \ ``doTimeIntegration = True``\ , \ ``runOnStart = False``\ , \ ``addLabelStringVariables = False``\ , \ ``addSliderVariables = False``\ , \ ``checkRenderEngineStopFlag = True``\ , \ ``userOnChange = None``\ )
+`\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L97>`__\ (\ ``self``\ , \ ``mbs``\ , \ ``simulationSettings``\ , \ ``simulationFunction``\ , \ ``dialogItems``\ , \ ``plots = None``\ , \ ``period = 0.04``\ , \ ``realtimeFactor = 1``\ , \ ``userStartSimulation = None``\ , \ ``title = ''``\ , \ ``showTime = False``\ , \ ``fontSize = 12``\ , \ ``doTimeIntegration = True``\ , \ ``runOnStart = False``\ , \ ``addLabelStringVariables = False``\ , \ ``addSliderVariables = False``\ , \ ``checkRenderEngineStopFlag = True``\ , \ ``userOnChange = None``\ , \ ``useSysVariables = False``\ )
 
 - | \ *classFunction*\ :
   | initialize an InteractiveDialog
@@ -132,7 +133,7 @@ Class function: \_\_init\_\_
   | \ ``simulationSettings``\ : exudyn.SimulationSettings() according to user settings
   | \ ``simulationFunction``\ : a user function(mbs, self) which is called before a simulation for the short period is started (e.g, assign special values, etc.); the arguments are the MainSystem mbs and the InteractiveDialog (self)
   | \ ``dialogItems``\ : a list of dictionaries, which describe the contents of the interactive items, where every dict has the structure 'type':[label, entry, button, slider, check] ... according to tkinter widgets, 'callFunction': a function to be called, if item is changed/button pressed, 'grid': (row,col) of item to be placed, 'rowSpan': number of rows to be used, 'columnSpan': number of columns to be used; for special item options see notes
-  | \ ``plots``\ : list of dictionaries to specify a sensor to be plotted live, see example
+  | \ ``plots``\ : list of dictionaries to specify a sensor to be plotted live, see example; otherwise use default None
   | \ ``period``\ : a simulation time span in seconds which is simulated with the simulationFunction in every iteration
   | \ ``realtimeFactor``\ : if 1, the simulation is nearly performed in realtime (except for computation time); if > 1, it runs faster than realtime, if < 1, than it is slower
   | \ ``userStartSimulation``\ : a function F(flag) which is called every time after Run/Stop is pressed. The argument flag = False if button "Run" has been pressed, flag = True, if "Stop" has been pressed
@@ -145,6 +146,7 @@ Class function: \_\_init\_\_
   | \ ``addSliderVariables``\ : True: adds a list sliderVariables containing the (modifiable) list of variables for slider (=tkinter scale) widgets; this is not necessarily needed for changing slider values, as they can also be modified with dialog.widgets[..].set(...) method
   | \ ``checkRenderEngineStopFlag``\ : if True, stopping renderer (pressing Q or Escape) also causes stopping the interactive dialog
   | \ ``userOnChange``\ : a user function(mbs, self) which is called after period, if widget values are different from values stored in mbs.variables; this usually occurs if buttons are pressed or sliders are moved; the arguments are the MainSystem mbs and the InteractiveDialog (self)
+  | \ ``useSysVariables``\ : for internal visualization functions: in this case, variables are written to mbs.sys instead of mbs.variables
 - | \ *notes*\ :
   | detailed description of dialogItems and plots list/dictionary is given in commented the example below
 
@@ -154,7 +156,7 @@ Class function: \_\_init\_\_
 
 Class function: OnQuit
 ^^^^^^^^^^^^^^^^^^^^^^
-`OnQuit <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L345>`__\ (\ ``self``\ , \ ``event = None``\ )
+`OnQuit <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L350>`__\ (\ ``self``\ , \ ``event = None``\ )
 
 - | \ *classFunction*\ :
   | function called when pressing escape or closing dialog
@@ -165,7 +167,7 @@ Class function: OnQuit
 
 Class function: StartSimulation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`StartSimulation <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L354>`__\ (\ ``self``\ , \ ``event = None``\ )
+`StartSimulation <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L359>`__\ (\ ``self``\ , \ ``event = None``\ )
 
 - | \ *classFunction*\ :
   | function called on button 'Run'
@@ -176,10 +178,10 @@ Class function: StartSimulation
 
 Class function: ProcessWidgetStates
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ProcessWidgetStates <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L367>`__\ (\ ``self``\ )
+`ProcessWidgetStates <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L372>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
-  | assign current values of radio buttons and sliders to mbs.variables
+  | assign current values of radio buttons and sliders to mbs.variables or mbs.sys
 
 ----
 
@@ -187,7 +189,7 @@ Class function: ProcessWidgetStates
 
 Class function: ContinuousRunFunction
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ContinuousRunFunction <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L378>`__\ (\ ``self``\ , \ ``event = None``\ )
+`ContinuousRunFunction <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L387>`__\ (\ ``self``\ , \ ``event = None``\ )
 
 - | \ *classFunction*\ :
   | function which is repeatedly called when button 'Run' is pressed
@@ -198,7 +200,7 @@ Class function: ContinuousRunFunction
 
 Class function: InitializePlots
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`InitializePlots <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L396>`__\ (\ ``self``\ )
+`InitializePlots <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L405>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | initialize figure and subplots for plots structure
@@ -209,7 +211,7 @@ Class function: InitializePlots
 
 Class function: UpdatePlots
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`UpdatePlots <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L443>`__\ (\ ``self``\ )
+`UpdatePlots <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L452>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | update all subplots with current sensor values
@@ -220,7 +222,7 @@ Class function: UpdatePlots
 
 Class function: InitializeSolver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`InitializeSolver <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L499>`__\ (\ ``self``\ )
+`InitializeSolver <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L508>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | function to initialize solver for repeated calls
@@ -231,7 +233,7 @@ Class function: InitializeSolver
 
 Class function: FinalizeSolver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`FinalizeSolver <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L505>`__\ (\ ``self``\ )
+`FinalizeSolver <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L514>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | stop solver (finalize correctly)
@@ -242,7 +244,7 @@ Class function: FinalizeSolver
 
 Class function: RunSimulationPeriod
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`RunSimulationPeriod <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L511>`__\ (\ ``self``\ )
+`RunSimulationPeriod <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L520>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | function which performs short simulation for given period

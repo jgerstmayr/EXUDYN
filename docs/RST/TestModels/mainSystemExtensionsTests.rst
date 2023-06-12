@@ -187,7 +187,7 @@ You can view and download this file on Github: `mainSystemExtensionsTests.py <ht
    mbs.SolveDynamic(simulationSettings = simulationSettings)
    
    testError = np.linalg.norm(mbs.systemData.GetODE2Coordinates())
-   exu.Print('solution of mainSystemExtensions test RJ',testError)
+   exu.Print('solution of mainSystemExtensions test RJ=',testError)
    testErrorTotal += testError
    
    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -248,7 +248,8 @@ You can view and download this file on Github: `mainSystemExtensionsTests.py <ht
    
    mbs.SolveDynamic(simulationSettings = simulationSettings)
    
-   testError += np.linalg.norm(mbs.systemData.GetODE2Coordinates())
+   testError = np.linalg.norm(mbs.systemData.GetODE2Coordinates())
+   testErrorTotal += testError
    exu.Print('solution of mainSystemExtensions test SJ=',testError)
    
    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -280,7 +281,8 @@ You can view and download this file on Github: `mainSystemExtensionsTests.py <ht
    mbs.SolveDynamic(simulationSettings = simulationSettings)
    # mbs.SolutionViewer()
    
-   testError += np.linalg.norm(mbs.systemData.GetODE2Coordinates())
+   testError = np.linalg.norm(mbs.systemData.GetODE2Coordinates())
+   testErrorTotal += testError
    exu.Print('solution of mainSystemExtensions test GJ=',testError)
    
    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -339,12 +341,25 @@ You can view and download this file on Github: `mainSystemExtensionsTests.py <ht
    
    mbs.Assemble()
    res = mbs.ComputeSystemDegreeOfFreedom(verbose=0)
-   mbs.DrawSystemGraph(useItemTypes=True)
-   if not useGraphics:
-       import matplotlib.pyplot as plt
-       plt.close('all')
    
-   testError = np.sum(res[0:3])
+   
+   testDrawSystemGraph = False
+   try:
+       #all imports are part of anaconda (e.g. anaconda 5.2.0, python 3.6.5)
+       import numpy as np
+       import networkx as nx #for generating graphs and graph arrangement
+       import matplotlib.pyplot as plt #for drawing
+       testDrawSystemGraph = True
+   except:
+       exu.Print("numpy, networkx and matplotlib required for DrawSystemGraph(...); skipping test")
+   
+   if testDrawSystemGraph:
+       mbs.DrawSystemGraph(useItemTypes=True)
+       if not useGraphics:
+           import matplotlib.pyplot as plt
+           plt.close('all')
+   
+   testError = np.sum(list(res.values())[0:3])
    exu.Print('solution of mainSystemExtensions test DOF=',testError)
    testErrorTotal += testError
    
@@ -390,14 +405,15 @@ You can view and download this file on Github: `mainSystemExtensionsTests.py <ht
    SC.visualizationSettings.nodes.drawNodesAsPoint=False
    #mbs.SolutionViewer()
    
-   testError += np.linalg.norm(mbs.systemData.GetODE2Coordinates())
+   testError = np.linalg.norm(mbs.systemData.GetODE2Coordinates())
+   testErrorTotal += testError
    exu.Print('solution of mainSystemExtensions test DC=',testError)
    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++
    
    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++
    
    exu.Print('solution of mainSystemExtensions TOTAL=',testErrorTotal)
-   exudynTestGlobals.testError = testErrorTotal - (51.699269012604674)   #2023-05-19: 51.699269012604674 
+   exudynTestGlobals.testError = testErrorTotal - (57.96750245606998)   #2023-05-19: 51.699269012604674 
    exudynTestGlobals.testResult = testErrorTotal
 
 

@@ -104,6 +104,8 @@ You can view and download this file on Github: `generalContactSpheresTest.py <ht
    
    gDataSphere = []
    
+   timeCreateStart= -time.time()
+   
    color4node = color4blue
    maxY = 0
    for i in range(n):
@@ -152,6 +154,9 @@ You can view and download this file on Github: `generalContactSpheresTest.py <ht
    oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0],
                                       visualization=VObjectGround(graphicsData=gDataList)))
    
+   exu.Print('generalContactSpheresTest: create bodies:',timeCreateStart+time.time(),'seconds')
+   timeCreateStart= -time.time()
+   
    if True:
        gContact = mbs.AddGeneralContact()
        gContact.verboseMode = 1
@@ -175,6 +180,8 @@ You can view and download this file on Github: `generalContactSpheresTest.py <ht
        gContact.SetSearchTreeBox(pMin=np.array([-1.2*H,-H,-1.2*H]), pMax=np.array([1.2*H,maxY,1.2*H]))
    
        exu.Print('treesize=',ssx*ssx*ssy)
+   
+   exu.Print('generalContactSpheresTest: gContact:',timeCreateStart+time.time(),'seconds')
    
    mbs.Assemble()
    exu.Print("finish gContact")

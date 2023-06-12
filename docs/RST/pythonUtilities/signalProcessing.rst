@@ -15,7 +15,7 @@ and for filtering result data.
 
 Function: FilterSensorOutput
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`FilterSensorOutput <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py\#L26>`__\ (\ ``signal``\ , \ ``filterWindow = 5``\ , \ ``polyOrder = 3``\ , \ ``derivative = 0``\ , \ ``centralDifferentiate = True``\ )
+`FilterSensorOutput <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py\#L27>`__\ (\ ``signal``\ , \ ``filterWindow = 5``\ , \ ``polyOrder = 3``\ , \ ``derivative = 0``\ , \ ``centralDifferentiate = True``\ )
 
 - | \ *function description*\ :
   | filter output of sensors (using numpy savgol filter) as well as numerical differentiation to compute derivative of signal
@@ -41,7 +41,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: FilterSignal
 ^^^^^^^^^^^^^^^^^^^^^^
-`FilterSignal <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py\#L82>`__\ (\ ``signal``\ , \ ``samplingRate = -1``\ , \ ``filterWindow = 5``\ , \ ``polyOrder = 3``\ , \ ``derivative = 0``\ , \ ``centralDifferentiate = True``\ )
+`FilterSignal <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py\#L83>`__\ (\ ``signal``\ , \ ``samplingRate = -1``\ , \ ``filterWindow = 5``\ , \ ``polyOrder = 3``\ , \ ``derivative = 0``\ , \ ``centralDifferentiate = True``\ )
 
 - | \ *function description*\ :
   | filter 1D signal (using numpy savgol filter) as well as numerical differentiation to compute derivative of signal
@@ -68,7 +68,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: ComputeFFT
 ^^^^^^^^^^^^^^^^^^^^
-`ComputeFFT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py\#L127>`__\ (\ ``time``\ , \ ``data``\ )
+`ComputeFFT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py\#L128>`__\ (\ ``time``\ , \ ``data``\ )
 
 - | \ *function description*\ :
   | computes fast-fourier-transform (FFT) resulting in frequency, magnitude and phase of signal data using numpy.fft of numpy
@@ -93,7 +93,7 @@ Function: ComputeFFT
 
 Function: GetInterpolatedSignalValue
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`GetInterpolatedSignalValue <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py\#L166>`__\ (\ ``time``\ , \ ``dataArray``\ , \ ``timeArray = []``\ , \ ``dataArrayIndex = -1``\ , \ ``timeArrayIndex = -1``\ , \ ``rangeWarning = True``\ , \ ``tolerance = 1e-6``\ )
+`GetInterpolatedSignalValue <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py\#L167>`__\ (\ ``time``\ , \ ``dataArray``\ , \ ``timeArray = []``\ , \ ``dataArrayIndex = -1``\ , \ ``timeArrayIndex = -1``\ , \ ``rangeWarning = True``\ , \ ``tolerance = 1e-6``\ )
 
 - | \ *function description*\ :
   | Interpolate signal having time values with constant sampling rate in timeArray and according data in dataArray

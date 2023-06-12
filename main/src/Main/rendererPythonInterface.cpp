@@ -31,11 +31,16 @@
 #include <pybind11/functional.h> //for functions
 #include <atomic> //for output buffer semaphore
 #include "Graphics/GlfwClient.h"
+namespace py = pybind11;
 
 
 #ifdef USE_GLFW_GRAPHICS
 GlfwRenderer& GetGlfwRenderer() { return glfwRenderer; }
+extern Real PyReadRealFromSysDictionary(const STDstring& key);
+extern void PyWriteToSysDictionary(const STDstring& key, py::object item);
 #endif // USE_GLFW_GRAPHICS
+
+
 
 namespace py = pybind11;
 
@@ -48,6 +53,11 @@ ResizableArray<SlimArray<int, queuedPythonProcessIDlistLength>>  queuedPythonPro
 bool rendererCallbackLock = false;								//!< callbacks deactivated as long as Python dialogs open (avoid crashes)
 bool rendererPythonCommandLock = false;							//!< callbacks deactivated as long as Python dialogs open (avoid crashes)
 bool rendererMultiThreadedDialogs = true;						//!< renderer stays interactive during rendering (immediate apply of changes, e.g., visualizationSettings)
+Index processResult = 0;                                        //!< result of PyProcess (if available)
+
+Index PyProcessGetResult() { return processResult; }
+void PyProcessSetResult(Index value) { processResult = value; }
+
 
 std::atomic_flag queuedPythonExecutableCodeAtomicFlag = ATOMIC_FLAG_INIT;			//!< flag for executable python code (String)
 STDstring queuedPythonExecutableCodeStr;						//!< this string contains (accumulated) python code which shall be executed
@@ -149,20 +159,28 @@ void PyProcessPythonProcessQueue()
 				PyProcessShowPythonCommandDialog();  break;
 			case ProcessID::ShowRightMouseSelectionDialog:
 				PyProcessShowRightMouseSelectionDialog(processInfo);  break;
-			default:
+            case ProcessID::AskYesNo:
+                PyProcessAskQuit(); break;
+            default:
 				break;
 			}
 		}
 		//mostly catches python errors:
-		catch (const pybind11::error_already_set& ex)
+		catch (pybind11::error_already_set& ex)
 		{
+            PyProcessSetResult(-2); //error
 			PyWarning("Error when executing process " + ProcessID::GetTypeString(processID) + +"':\n" + STDstring(ex.what()) + "\n; maybe a module is missing!");
 			deactivateGlobalPyRuntimeErrorFlag = false;
-			throw; //avoid multiple exceptions trown again 
+            // Discard the Python error using Python APIs, using the C++ magic
+            // variable __func__. Python already knows the type and value and of the
+            // exception object.
+            ex.discard_as_unraisable(__func__); //see if this works and avoids further exceptions
+			//throw; //avoid multiple exceptions trown again 
 		}
 		catch (const EXUexception& ex)
 		{
-			//EXUstd::ReleaseSemaphore(graphicsUpdateAtomicFlag); //clear 
+            PyProcessSetResult(-2); //error
+            //EXUstd::ReleaseSemaphore(graphicsUpdateAtomicFlag); //clear 
 			PyWarning("Error when executing process " + ProcessID::GetTypeString(processID) +
 				":\n" + STDstring(ex.what()) + "\n; maybe a module is missing!!");
 			deactivateGlobalPyRuntimeErrorFlag = false;
@@ -171,7 +189,8 @@ void PyProcessPythonProcessQueue()
 		}
 		catch (...) //any other exception
 		{
-			//EXUstd::ReleaseSemaphore(graphicsUpdateAtomicFlag); //clear 
+            PyProcessSetResult(-2); //error
+            //EXUstd::ReleaseSemaphore(graphicsUpdateAtomicFlag); //clear 
 			PyWarning("Error when executing process " + ProcessID::GetTypeString(processID) + "\nmaybe a module is missing and check your Python code!!");
 		}
 		//EXUstd::ReleaseSemaphore(graphicsUpdateAtomicFlag); 
@@ -370,14 +389,17 @@ tkWindow.lift() #window has focus
 tkWindow.bind("<Escape>", lambda x: tkWindow.destroy())
 tkWindow.focus_force() #window has focus
 scrollW = tk.Scrollbar(tkWindow)
-textW = tk.Text(tkWindow, height = 30, width = 90,)
+#resize grid columns/rows if window is resized:
+tkWindow.grid_columnconfigure(0, weight=1)
+tkWindow.grid_rowconfigure(0, weight=1)
+
+textW = tk.Text(tkWindow, height = 30, width = 90, background='gray98')
 textW.focus_set()
-scrollW.pack(side = tk.RIGHT, fill = tk.Y)
-textW.pack(side = tk.LEFT, fill = tk.Y)
+textW.grid(row=0, column=0, padx=10, pady=10, sticky=tk.NSEW)
+scrollW.grid(row=0, column=1, pady=10, sticky=tk.NSEW)
 scrollW.config(command = textW.yview)
 textW.config(yscrollcommand = scrollW.set)
-msg = """
-Mouse action:
+msg = """Mouse action:
 left mouse button     ... hold and drag: move model
 left mouse button     ... click: select item (deactivated if mouse coordinates shown)
 right mouse button    ... hold and drag: rotate model
@@ -394,12 +416,14 @@ SHIFT+CTRL+1          ... set view to 1/2-plane (viewed from behind)
 CTRL+2                ... set view to 1/3-plane
 SHIFT+CTRL+2          ... set view to 1/3-plane (viewed from behind)
 CTRL+3,4,5,6          ... other views (with optional SHIFT key)
-CURSOR UP, DOWN, etc. ... move scene (use CTRL for small movements, SHIFT for rotations (ALT for z-axis))
+CURSOR UP, DOWN, etc. ... move scene (use CTRL for small movements, 
+                          SHIFT for rotations (ALT for z-axis))
 KEYPAD 2/8,4/6,1/9    ... rotate scene about 1,2 or 3-axis (use CTRL for small rotations)
 F2                    ... ignore all keyboard input, except for KeyPress user function, 
                           F2 and escape keys
 F3                    ... show mouse coordinates
-Q      ... stop current solver and proceed to next simulation (or end of file)
+Q      ... stop current solver and proceed to next simulation (or end of file); 
+           after window.reallyQuitTimeLimit (default:900) seconds a safety dialog opens
 A      ... zoom all
 C      ... show/hide connectors
 CTRL+C ... show/hide connector numbers
@@ -413,12 +437,15 @@ N      ... show/hide nodes
 CTRL+N ... show/hide node numbers
 S      ... show/hide sensors
 CTRL+S ... show/hide sensor numbers
-O      ... change center of rotation to current center of the window (affects only current plane coordinates; rotate model to ajust other coordinates)
-T      ... switch between faces transparent/ faces transparent + edges / only face edges / full faces with edges / only faces
-X      ... execute command; dialog may appear behind the visualization window! may crash!
+O      ... change center of rotation to current center of the window (affects only 
+           current plane coordinates; rotate model to ajust other coordinates)
+T      ... switch between faces transparent/ faces transparent + edges / 
+           only face edges / full faces with edges / only faces
+X      ... execute command; dialog may appear in background! may crash simulation!
 V      ... visualization settings; dialog may appear behind the visualization window!
-ESCAPE ... close render window and stop all simulations (same as close window button)
-SPACE ... continue simulation
+ESCAPE ... close render window and stop all simulations (same as close window button); 
+           after window.reallyQuitTimeLimit seconds a dialog opens for safety
+SPACE  ... continue simulation
 """
 textW.insert(tk.END, msg)
 textW.configure(state='disabled') #unable to edit
@@ -441,13 +468,14 @@ void PyProcessShowPythonCommandDialog()
     std::string str = R"(
 import exudyn
 import tkinter as tk
-from tkinter.scrolledtext import ScrolledText
+import traceback #for exception printing
+from tkinter import ttk
+from tkinter import scrolledtext
 from exudyn.GUI import GetTkRootAndNewWindow
 
 [root, tkWindow, tkRuns] = GetTkRootAndNewWindow()
 commandString = ''
-commandSet = False
-tkWindow.focus_force() #window has focus
+tkWindow.title("Exudyn command window")
 )";
     if (GetGlfwRenderer().GetVisualizationSettings()->dialogs.alwaysTopmost)
     {
@@ -458,24 +486,110 @@ tkWindow.focus_force() #window has focus
         str += "tkWindow.attributes('-alpha'," + EXUstd::ToString(alphaTransparency) + ") #transparency\n";
     }
     str += R"(
-tkWindow.bind("<Escape>", lambda x: tkWindow.destroy())
+#resize grid columns/rows if window is resized:
+tkWindow.grid_columnconfigure(0, weight=1)
+tkWindow.grid_rowconfigure(1, weight=1)
+#tkWindow.grid_rowconfigure(3, weight=1)
 
-def OnSingleCommandReturn(event): #set command string, but do not execute
-    commandString = singleCommandEntry.get()
-    print(commandString) #printout the command
-    #exec(singleCommandEntry.get(), globals()) #OLD version, does not print return value!
+description ='Enter Python command which operates in global scope of you Python model;\n'
+description+='Evaluate or CHANGE your current model (parameters) during simulation;\n'
+description+='Press CRTL+RETURN to execute, escape to close:'
+
+label = tk.Label(tkWindow, text=description, justify=tk.LEFT, 
+                 relief=tk.SUNKEN, background='gray94')
+label.grid(row=0, column=0, padx=15, pady=(15,0), sticky='W')
+
+text_area = scrolledtext.ScrolledText(root, wrap=tk.WORD,
+                                      width=60, height=8,
+                                      #font=("Times New Roman", 15)
+                                      )
+#configure tab size:
+font = tk.font.Font(font=text_area['font'])
+tab_size = font.measure(' '*4) #in pixels
+text_area.config(tabs=tab_size)
+
+#++++++++++++++++++++++++++++++++
+#read command string and execute
+globs=None
+def OnRunCode(event): 
+    global text_area
+    global globs
+
+    commandString = text_area.get('1.0', tk.END)
+    print('command window execute:\n',commandString.strip(),sep='') #printout the command
+    print('output:')
+
+    if commandString.strip() == '': #empty command causes exception
+        return
+    commandString = commandString.replace('\t',' '*4) #tabs may cause problems
+
     try:
-        exec(f"""locals()['tempEXUDYNexecute'] = {commandString}""", globals(), locals())
-        if locals()['tempEXUDYNexecute']!=None:
-            print(locals()['tempEXUDYNexecute'])
-        tkWindow.destroy()
+        exec(commandString, globals(), locals())
+        #old version: for single line, it prints out the result
+        # exec(f"""locals()['tempEXUDYNexecute'] = {commandString}""", globals(), locals())
+        # if locals()['tempEXUDYNexecute']!=None:
+        #     print(locals()['tempEXUDYNexecute'])
+    # except:
     except:
-        print("Execution of command failed. check your code!")
+        print("Execution of command failed; error:")
+        #traceback.print_exc()
+        globs = traceback.format_exc()
+        lines = globs.split('\n')
+        for s in lines:
+            s = s.replace('  File "<string>", ','')
+            if (('File "' not in s) and 
+                ('exec(commandString, globals(), locals())' not in s) ):
+                print(s)
+    if event!=None:
+        return "break" #prevent from passing Return key to text ...
 
-tk.Label(tkWindow, text="Single command (press return to execute):", justify=tk.LEFT).grid(row=0, column=0)
-singleCommandEntry = tk.Entry(tkWindow, width=70);
-singleCommandEntry.grid(row=1, column=0)
-singleCommandEntry.bind('<Return>',OnSingleCommandReturn)
+#run code
+def OnClose(event):
+    global tkWindow
+    tkWindow.destroy() 
+
+#++++++++++++++++++++++++++++++++
+text_area.grid(row=1, column=0, pady=15,padx=10,sticky=tk.NSEW)
+text_area.bind('<Control-Return>',OnRunCode)
+text_area.bind('<Escape>',OnClose)
+tkWindow.bind('<Escape>',OnClose)
+
+#++++++++++++++++++++++++++++++++
+frame = tk.Frame(tkWindow)
+runButton = tk.Button(frame, text = "    Run code    ", command = lambda: OnRunCode(None))
+closeButton = tk.Button(frame, text = "    Close    ", command = lambda: OnClose(None))
+
+frame.grid(row=2, column=0, padx=15, pady=(0,15), sticky='', columnspan=3)
+runButton.grid(row=0, column=0, padx=80, sticky='')
+closeButton.grid(row=0, column=1, padx=80, sticky='')
+
+#show some examples:
+examples = 'helpful examples:\n'
+examples+= 'show overall info of mbs:\n'
+examples+= 'print(mbs)\n'
+examples+= '#change current dynamic solver end time:\n'
+examples+= "mbs.sys['dynamicSolver'].it.endTime=10 \n"
+examples+= '#change verbose mode of dynamic solver:\n'
+examples+= "mbs.sys['dynamicSolver'].output.verboseMode=1\n"
+examples+= '#stop file writing:\n'
+examples+= "mbs.sys['dynamicSolver'].output.writeToSolutionFile=False\n"
+examples+= '#print values of sensor 0:\n'
+examples+= "print(mbs.GetSensorValues(0))\n"
+examples+= '#pause after each step:\n'
+examples+= "simulationSettings.pauseAfterEachStep=True\n"
+examples+= '\n#==>BUT changing simulationSettings is dangerous!'
+
+textExample = scrolledtext.ScrolledText(root, wrap=tk.WORD,
+                                      width=60, height=examples.count('\n')+1,
+                                      background='gray94',
+                                      )
+textExample.grid(row=3, column=0, padx=15, pady=(0,15), sticky=tk.NSEW)
+textExample.insert(tk.END, examples)
+textExample.configure(state='disabled') #unable to edit
+
+# placing cursor in text area
+text_area.focus_set()
+tkWindow.focus_force() #window has focus
 
 if tkRuns:
     root.wait_window(tkWindow)
@@ -486,6 +600,63 @@ else:
 #endif // USE_GLFW_GRAPHICS
 }
 
+//OLD, single line:
+//void PyProcessShowPythonCommandDialog()
+//{
+//#ifdef USE_GLFW_GRAPHICS
+//
+//    //open window to execute a python command ... 
+//    float alphaTransparency = GetGlfwRenderer().GetVisualizationSettings()->dialogs.alphaTransparency;
+//    std::string str = R"(
+//import exudyn
+//import tkinter as tk
+//from exudyn.GUI import GetTkRootAndNewWindow
+//
+//[root, tkWindow, tkRuns] = GetTkRootAndNewWindow()
+//commandString = ''
+//commandSet = False
+//tkWindow.focus_force() #window has focus
+//tkWindow.title("Exudyn command window")
+//)";
+//    if (GetGlfwRenderer().GetVisualizationSettings()->dialogs.alwaysTopmost)
+//    {
+//        str += "tkWindow.attributes('-topmost', True) #puts window topmost (permanent)\n";
+//    }
+//    if (alphaTransparency < 1.f)
+//    {
+//        str += "tkWindow.attributes('-alpha'," + EXUstd::ToString(alphaTransparency) + ") #transparency\n";
+//    }
+//    str += R"(
+//tkWindow.bind("<Escape>", lambda x: tkWindow.destroy())
+//
+//def OnSingleCommandReturn(event): #set command string, but do not execute
+//    commandString = singleCommandEntry.get()
+//    print(commandString) #printout the command
+//    #exec(singleCommandEntry.get(), globals()) #OLD version, does not print return value!
+//    try:
+//        exec(f"""locals()['tempEXUDYNexecute'] = {commandString}""", globals(), locals())
+//        if locals()['tempEXUDYNexecute']!=None:
+//            print(locals()['tempEXUDYNexecute'])
+//        tkWindow.destroy()
+//    except:
+//        print("Execution of command failed. check your code!")
+//
+//label = tk.Label(tkWindow, text="Enter Python command which operates in global scope of you Python model]\nEvaluate you current model or change parameters\npress return to execute:", justify=tk.LEFT) #.grid(row=0, column=0)
+//label.pack(pady=10,padx=(10,40))
+//singleCommandEntry = tk.Entry(tkWindow, width=70);
+//#singleCommandEntry.grid(row=1, column=0)
+//singleCommandEntry.bind('<Return>',OnSingleCommandReturn)
+//singleCommandEntry.pack(pady=15,padx=20)
+//
+//if tkRuns:
+//    root.wait_window(tkWindow)
+//else:
+//    tk.mainloop()
+//)";
+//    PyProcessExecuteStringAsPython(str, !PyGetRendererMultiThreadedDialogs(), true);
+//#endif // USE_GLFW_GRAPHICS
+//}
+//
 void PyProcessShowRightMouseSelectionDialog(Index itemID)
 {
 #ifdef USE_GLFW_GRAPHICS //only works with renderer active
@@ -501,10 +672,79 @@ void PyProcessShowRightMouseSelectionDialog(Index itemID)
     str += "    exudyn.GUI.EditDictionary(d,False,dialogName=strName)\n";
     str += "except:\n";
     str += "    print('showing of dictionary failed')\n";
-    PyProcessExecuteStringAsPython(str);
+    PyProcessExecuteStringAsPython(str, !PyGetRendererMultiThreadedDialogs(), true);
 #endif // USE_GLFW_GRAPHICS
 
 }
+
+void PyProcessAskQuit()
+{
+#ifdef USE_GLFW_GRAPHICS
+    PyProcessSetResult(1);
+
+    try
+    {
+        //open window to execute a python command ... 
+        float alphaTransparency = GetGlfwRenderer().GetVisualizationSettings()->dialogs.alphaTransparency;
+        PyWriteToSysDictionary("quitResponse", py::cast((int)1) );
+
+        std::string str = R"(
+try:
+    import exudyn
+    import tkinter as tk
+    from exudyn.GUI import GetTkRootAndNewWindow
+
+    response = False #if user just shuts window
+
+    [root, tkWindow, tkRuns] = GetTkRootAndNewWindow()
+    tkWindow.attributes('-topmost', True) #puts window topmost(permanent)\n";
+    tkWindow.bind("<Escape>", lambda x : tkWindow.destroy())
+    tkWindow.title("WARNING - long running simulation!")
+
+    def QuitResponse(clickResponse) :
+        global tkWindow
+        global response
+        response = clickResponse
+        tkWindow.destroy()
+
+    label = tk.Label(tkWindow, text = "Do you really want to stop simulation and close renderer?", justify = tk.LEFT)
+    yes_button = tk.Button(tkWindow, text = "        Yes        ", command = lambda: QuitResponse(True))
+    no_button = tk.Button(tkWindow, text = "        No        ", command = lambda: QuitResponse(False))
+
+    label.grid(row=0, column=0, pady=(20,0),padx=50,columnspan=5)
+    yes_button.grid(row=1, column=1, pady=20)
+    no_button.grid(row=1, column=3, pady=20)
+
+    tkWindow.focus_force() #window has focus
+
+    if tkRuns:
+        root.wait_window(tkWindow)
+    else:
+        tk.mainloop()
+
+    #response ready
+    exudyn.sys['quitResponse'] = response+2 #2=do not quit, 3=quit
+except:
+    pass #if fails, user shall not be notified
+)";
+        PyProcessExecuteStringAsPython(str, !PyGetRendererMultiThreadedDialogs(), true);
+        PyProcessSetResult((Index)PyReadRealFromSysDictionary("quitResponse"));
+    }
+    catch (pybind11::error_already_set& ex)
+    {
+        ex.discard_as_unraisable(__func__); //see if this works and avoids further exceptions
+        PyProcessSetResult(-2); //error
+        pout << "to quit in long running simulations without tkinter, press Q twice!";
+    }
+    catch (...) //any other exception
+    {
+        PyProcessSetResult(-2); //error
+    }
+
+    if (PyProcessGetResult() == 1) { PyProcessSetResult(-2); } //this indicates that an exception occurred (tkinter not available, ...)
+#endif // USE_GLFW_GRAPHICS
+}
+
 
 
 void PyProcessExecuteStringAsPython(const STDstring& str, bool lockRendererCallbacks, bool lockPythonCommands)

@@ -61,7 +61,8 @@ def SolverErrorMessage(solver, mbs, isStatic=False,
         s += '  * check the causing nodes, objects, connectors, etc.\n'
         s += '  * check your nodes, objects, connectors, and markers\n'
         s += '  * change solver and solver settings (e.g. change index 3/index 2 solver)\n'
-        s += '  * try linearSolverSettings.ignoreSingularJacobian\n'
+        s += '  * try linearSolverSettings.ignoreSingularJacobian and EigenDense solver type in case of redundant constraints\n'
+        s += '  * for small systems (<1000 coordinates), try mbs. ComputeSystemDegreeOfFreedom() to check system\n'
         s += '  * step-by-step remove constraints, until you find the causing item\n'
         s += '  * step-by-step remove objects and nodes, until you find the causing item\n'
         s += '  * check joint axes (using visualization), which may be incompatible\n'
@@ -397,17 +398,20 @@ def ComputeLinearizedSystem(mbs,
 
     return [M, K, D]
 
-#**function: compute eigenvalues for unconstrained ODE2 part of mbs, not considering the effects of algebraic constraints; the computation is done for the initial values of the mbs, independently of previous computations. If you would like to use the current state for the eigenvalue computation, you need to copy the current state to the initial state (using GetSystemState,SetSystemState, see \refSection{sec:mbs:systemData}); note that mass and stiffness matrix are computed in dense mode so far, while eigenvalues are computed according to useSparseSolver.
+#**function: compute eigenvalues for unconstrained ODE2 part of mbs; the computation may include constraints in case that ignoreAlgebraicEquations=False; for algebraic constraints, however, a dense singular value decomposition of the constraint jacobian is used for the nullspace projection; the computation is done for the initial values of the mbs, independently of previous computations. If you would like to use the current state for the eigenvalue computation, you need to copy the current state to the initial state (using GetSystemState, SetSystemState, see \refSection{sec:mbs:systemData}); note that mass and stiffness matrices are computed in dense mode so far, while eigenvalues are computed according to useSparseSolver.
 #**input:    
 #   mbs: the MainSystem containing the assembled system
 #   simulationSettings: specific simulation settings used for computation of jacobian (e.g., sparse mode in static solver enables sparse computation)
 #   useSparseSolver: if False (only for small systems), all eigenvalues are computed in dense mode (slow for large systems!); if True, only the numberOfEigenvalues are computed (numberOfEigenvalues must be set!); Currently, the matrices are exported only in DENSE MODE from mbs! NOTE that the sparsesolver accuracy is much less than the dense solver
-#   numberOfEigenvalues: number of eigenvalues and eivenvectors to be computed; if numberOfEigenvalues==0, all eigenvalues will be computed (may be impossible for larger problems!)
-#   constrainedCoordinates: if this list is non-empty, the integer indices represent constrained coordinates of the system, which are fixed during eigenvalue/vector computation; according rows/columns of mass and stiffness matrices are erased
+#   numberOfEigenvalues: number of eigenvalues and eivenvectors to be computed; if numberOfEigenvalues==0, all eigenvalues will be computed (may be impossible for larger or sparse problems!)
+#   constrainedCoordinates: if this list is non-empty (and there are no algebraic equations of ignoreAlgebraicEquations=True), the integer indices represent constrained coordinates of the system, which are fixed during eigenvalue/vector computation; according rows/columns of mass and stiffness matrices are erased; in this case, algebraic equations of the system are ignored
 #   convert2Frequencies: if True, the eigen values are converted into frequencies (Hz) and the output is [eigenFrequencies, eigenVectors]
-#   useAbsoluteValues: if True, abs(eigenvalues) is used, which avoids problems for small (close to zero) eigen values; needed, when converting to frequencies
+#   useAbsoluteValues: if True, abs(eigenvalues) is used, which avoids problems for small (close to zero) eigenvalues; needed, when converting to frequencies
+#   ignoreAlgebraicEquations: if True, algebraic equations (and constraint jacobian) are not considered for eigenvalue computation; otherwise, the solver tries to automatically project the system into the nullspace kernel of the constraint jacobian using a SVD; this gives eigenvalues of the constrained system; eigenvectors are not computed
+#   singularValuesTolerance: tolerance used to distinguish between zero and nonzero singular values for algebraic constraints projection
 #**output: [ArrayLike, ArrayLike]; [eigenValues, eigenVectors]; eigenValues being a numpy array of eigen values ($\omega_i^2$, being the squared eigen frequencies in ($\omega_i$ in rad/s)!), eigenVectors a numpy array containing the eigenvectors in every column
 #**belongsTo: MainSystem
+#**author: Johannes Gerstmayr, Michael Pieber
 #**example:
 #  #take any example from the Examples or TestModels folder, e.g., 'cartesianSpringDamper.py' and run it
 #  #specific example:
@@ -437,9 +441,17 @@ def ComputeLinearizedSystem(mbs,
 def ComputeODE2Eigenvalues(mbs, 
                            simulationSettings = exudyn.SimulationSettings(),
                            useSparseSolver = False, numberOfEigenvalues = 0, constrainedCoordinates=[],
-                           convert2Frequencies = False, useAbsoluteValues = True):
+                           convert2Frequencies = False, useAbsoluteValues = True, 
+                           ignoreAlgebraicEquations=False, singularValuesTolerance=1e-12):
 
     store = DeactivateWritingOfSolvers(simulationSettings)
+
+    try:
+        from scipy.linalg import eigh, svd  #eigh for symmetric matrices, positive definite; eig for standard eigen value problems
+        from scipy.sparse.linalg import eigsh #eigh for symmetric matrices, positive definite
+        from scipy.sparse import csr_matrix
+    except:
+        raise ValueError('ComputeODE2Eigenvalues: missing scipy package; install with: pip install scipy')
 
     #use static solver, as it does not include factors from time integration (and no velocity derivatives) in the jacobian
     staticSolver = exudyn.MainSolverStatic()
@@ -447,74 +459,124 @@ def ComputeODE2Eigenvalues(mbs,
     #initialize solver with initial values
     staticSolver.InitializeSolver(mbs, simulationSettings)
 
-    staticSolver.ComputeMassMatrix(mbs)
-    M = staticSolver.GetSystemMassMatrix()
+    nODE2 = staticSolver.GetODE2size()
+    nODE1 = staticSolver.GetODE1size()
+    nAE = staticSolver.GetAEsize()
+    if nODE1 != 0:
+        print('ComputeODE2Eigenvalues: not implemented for ODE1 coordinates; results may be wrong and solver may fail')
 
+    staticSolver.ComputeMassMatrix(mbs)
+    Mode2 = staticSolver.GetSystemMassMatrix()
+
+    #compute ODE2 part of jacobian ==> stored internally in solver
     staticSolver.ComputeJacobianODE2RHS(mbs,scalarFactor_ODE2=-1,
                                         scalarFactor_ODE2_t=0, 
-                                        scalarFactor_ODE1=0)    #compute ODE2 part of jacobian ==> stored internally in solver
-    #staticSolver.ComputeJacobianAE(mbs)         #compute algebraic part of jacobian (not needed here...)
-    jacobian = staticSolver.GetSystemJacobian() #read out stored jacobian
-
-    nODE2 = staticSolver.GetODE2size()
+                                        scalarFactor_ODE1=0)    #could be 1 to include ODE1 part
+    if nAE != 0:
+        #compute AE part of jacobian if needed for constraint projection
+        staticSolver.ComputeJacobianAE(mbs, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., 
+                                       scalarFactor_ODE1=0., #could be 1 to include ODE1 part
+                                       velocityLevel=False)          
+    
+    jacobian = staticSolver.GetSystemJacobian() #read out stored jacobian; includes ODE2, ODE1 and nAE part
+    
     staticSolver.FinalizeSolver(mbs, simulationSettings) #close files, etc.
     RestoreSimulationSettings(simulationSettings, store)
 
     #obtain ODE2 part from jacobian == stiffness matrix
-    K = jacobian[0:nODE2,0:nODE2]
+    Kode2 = jacobian[0:nODE2,0:nODE2]
 
     remappingIndices = np.arange(nODE2) #maps new coordinates to original (full) ones
     if constrainedCoordinates != []:
-        M = np.delete(np.delete(M, constrainedCoordinates, 0), constrainedCoordinates, 1)
-        K = np.delete(np.delete(K, constrainedCoordinates, 0), constrainedCoordinates, 1)
+        Mode2 = np.delete(np.delete(Mode2, constrainedCoordinates, 0), constrainedCoordinates, 1)
+        Kode2 = np.delete(np.delete(Kode2, constrainedCoordinates, 0), constrainedCoordinates, 1)
         remappingIndices = np.delete(remappingIndices, constrainedCoordinates)
 
-    try:
-        from scipy.linalg import eigh  #eigh for symmetric matrices, positive definite; eig for standard eigen value problems
-        from scipy.sparse.linalg import eigsh #eigh for symmetric matrices, positive definite
-        from scipy.sparse import csr_matrix
-    except:
-        raise ValueError('ComputeODE2Eigenvalues: missing scipy package; install with: pip install scipy')
+    if nAE != 0 and not ignoreAlgebraicEquations and constrainedCoordinates != []:
+        raise ValueError('ComputeODE2Eigenvalues: in case of algebraic equations, either ignoreAlgebraicEquations=True or constrainedCoordinates=[]')
 
+    if constrainedCoordinates != [] or nAE == 0:
+        if not useSparseSolver:
+            [eigenValuesUnsorted, eigenVectors] = eigh(Kode2, Mode2) #this gives omega^2 ... squared eigen frequencies (rad/s)
+            if useAbsoluteValues:
+                sortIndices = np.argsort(abs(eigenValuesUnsorted)) #get resorting index
+                eigenValues = np.sort(a=abs(eigenValuesUnsorted)) #eigh returns unsorted eigenvalues...
+            else:
+                sortIndices = np.argsort(eigenValuesUnsorted) #get resorting index
+                eigenValues = np.sort(a=eigenValuesUnsorted) #eigh returns unsorted eigenvalues...
+            if numberOfEigenvalues > 0:
+                eigenValues = eigenValues[0:numberOfEigenvalues]
+                sortIndices = sortIndices[0:numberOfEigenvalues]
+            eigenVectors = eigenVectors[:,sortIndices] #eigenvectors are given in columns!
+        else:
+            if numberOfEigenvalues == 0: #compute all eigenvalues
+                numberOfEigenvalues = nODE2
+    
+            Kcsr = csr_matrix(Kode2)
+            Mcsr = csr_matrix(Mode2)
+    
+            #use "LM" (largest magnitude), but shift-inverted mode with sigma=0, to find the zero-eigenvalues:
+            #see https://docs.scipy.org/doc/scipy/reference/tutorial/arpack.html
+            [eigenValues, eigenVectors] = eigsh(A=Kcsr, k=numberOfEigenvalues, M=Mcsr, 
+                                       which='LM', sigma=0, mode='normal') 
+    
+            #sort eigenvalues
+            if useAbsoluteValues:
+                sortIndices = np.argsort(abs(eigenValues)) #get resorting index
+                eigenValues = np.sort(a=abs(eigenValues))
+            else:
+                sortIndices = np.argsort(eigenValues) #get resorting index
+                eigenValues = np.sort(a=eigenValues)
+            eigenVectors = eigenVectors[:,sortIndices] #eigenvectors are given in columns!
 
-    if not useSparseSolver:
-        [eigenValuesUnsorted, eigenVectors] = eigh(K, M) #this gives omega^2 ... squared eigen frequencies (rad/s)
+        eigenVectorsNew = np.zeros((nODE2,numberOfEigenvalues))
+        if constrainedCoordinates != []:
+            # print('remap=', remappingIndices)
+            for i in range(numberOfEigenvalues):
+                eigenVectorsNew[remappingIndices,i] = eigenVectors[:,i]
+            eigenVectors = eigenVectorsNew
+    else:
+        if useSparseSolver:
+            raise ValueError('ComputeODE2Eigenvalues: in case of algebraic equations and ignoreAlgebraicEquations=False, useSparseSolver must be False')
+        #use SVD to project equations into nullspace
+        #constraint jacobian:
+        C = jacobian[0:nODE2,nODE2+nODE1:]
+        
+        #compute SVD; D includes singular values
+        [U,D,V] = svd(C)
+        
+        nnz = (abs(D) > singularValuesTolerance).sum() #size of constraints, often number of cols of C
+        
+        nullspace = U[:,nnz:].T #U[nnz:]
+        Knullspace = nullspace@Kode2@nullspace.T
+        Mnullspace = nullspace@Mode2@nullspace.T
+
+        # print('nODE2=',nODE2)
+        # print('nAE=',nAE)
+        # print('nnz=',nnz)
+        # print('C=',C.shape)
+        # print('U=',U.shape)
+        # print('sing.val.=',D.round(5))
+        # print('Knullspace=',Knullspace.round(5))
+        # print('Mnullspace=',Mnullspace.round(5))
+        # print('nullspace=',nullspace.round(3))
+
+        [eigenValuesUnsorted, eigenVectorsReduced] = eigh(Knullspace,Mnullspace)
         if useAbsoluteValues:
             sortIndices = np.argsort(abs(eigenValuesUnsorted)) #get resorting index
             eigenValues = np.sort(a=abs(eigenValuesUnsorted)) #eigh returns unsorted eigenvalues...
         else:
             sortIndices = np.argsort(eigenValuesUnsorted) #get resorting index
             eigenValues = np.sort(a=eigenValuesUnsorted) #eigh returns unsorted eigenvalues...
+
         if numberOfEigenvalues > 0:
             eigenValues = eigenValues[0:numberOfEigenvalues]
-            eigenVectors = eigenVectors[:,sortIndices[0:numberOfEigenvalues]] #eigenvectors are given in columns!
-    else:
-        if numberOfEigenvalues == 0: #compute all eigenvalues
-            numberOfEigenvalues = nODE2
+            sortIndices = sortIndices[0:numberOfEigenvalues]
+        eigenVectorsReduced = eigenVectorsReduced[:,sortIndices] #eigenvectors are given in columns!
 
-        Kcsr = csr_matrix(K)
-        Mcsr = csr_matrix(M)
+        eigenVectors = nullspace.T @ eigenVectorsReduced
 
-        #use "LM" (largest magnitude), but shift-inverted mode with sigma=0, to find the zero-eigenvalues:
-        #see https://docs.scipy.org/doc/scipy/reference/tutorial/arpack.html
-        [eigenValues, eigenVectors] = eigsh(A=Kcsr, k=numberOfEigenvalues, M=Mcsr, 
-                                   which='LM', sigma=0, mode='normal') 
 
-        #sort eigenvalues
-        if useAbsoluteValues:
-            sortIndices = np.argsort(abs(eigenValues)) #get resorting index
-            eigenValues = np.sort(a=abs(eigenValues))
-        else:
-            sortIndices = np.argsort(eigenValues) #get resorting index
-            eigenValues = np.sort(a=eigenValues)
-        eigenVectors = eigenVectors[:,sortIndices] #eigenvectors are given in columns!
-
-    eigenVectorsNew = np.zeros((nODE2,numberOfEigenvalues))
-    if constrainedCoordinates != []:
-        # print('remap=', remappingIndices)
-        for i in range(numberOfEigenvalues):
-            eigenVectorsNew[remappingIndices,i] = eigenVectors[:,i]
-        eigenVectors = eigenVectorsNew
 
     if convert2Frequencies:
         eigenFrequencies = np.sqrt(eigenValues)/(2*np.pi)
@@ -530,8 +592,8 @@ def ComputeODE2Eigenvalues(mbs,
 #  threshold: threshold factor for singular values which estimate the redundant constraints
 #  useSVD: use singular value decomposition directly, also showing SVD values if verbose=True
 #  verbose: if True, it will show the singular values and one may decide if the threshold shall be adapted
-#**output: List[int]; returns list of [dof, nRedundant, nODE2, nODE1, nAE, nPureAE], where: dof = the degree of freedom computed numerically, nRedundant=the number of redundant constraints, nODE2=number of ODE2 coordinates, nODE1=number of ODE1 coordinates, nAE=total number of constraints, nPureAE=number of constraints on algebraic variables (e.g., lambda=0) that are not coupled to ODE2 coordinates
-#**notes: this approach may not always work! Currently only works with dense matrices, thus it will be slow for larger systems
+#**output: dict; returns dictionary with key words 'degreeOfFreedom', 'redundantConstraints', 'nODE2', 'nODE1', 'nAE', 'nPureAE', where: degreeOfFreedom = the system degree of freedom computed numerically, redundantConstraints=the number of redundant constraints, nODE2=number of ODE2 coordinates, nODE1=number of ODE1 coordinates, nAE=total number of constraints, nPureAE=number of constraints on algebraic variables (e.g., lambda=0) that are not coupled to ODE2 coordinates
+#**notes: this approach could possibly fail with special constraints! Currently only works with dense matrices, thus it will be slow for larger systems
 #**belongsTo: MainSystem
 #**example:
 # import exudyn as exu
@@ -554,7 +616,7 @@ def ComputeODE2Eigenvalues(mbs,
 #                        useGlobalFrame=True, axesRadius=0.02, axesLength=0.2)
 # #
 # mbs.Assemble()
-# res = mbs.ComputeSystemDegreeOfFreedom(verbose=1) #print out details
+# dof = mbs.ComputeSystemDegreeOfFreedom(verbose=1)['degreeOfFreedom'] #print out details
 def ComputeSystemDegreeOfFreedom(mbs, 
                 simulationSettings = exudyn.SimulationSettings(),
                 threshold = 1e-12, verbose=False, useSVD=False):
@@ -614,7 +676,7 @@ def ComputeSystemDegreeOfFreedom(mbs,
             #sAE = svd(Cae, compute_uv=False, full_matrices=False)#, lapack_driver='gesvd')
     
             if verbose:
-                print('singular values AE=',sAE)
+                print('singular values pure AE=',sAE)
             
             nRedundant = (abs(s) <= threshold).sum() #counts True=1, False=0
             #these are constraints on AE coordinates, which do not count as constraints!
@@ -631,7 +693,12 @@ def ComputeSystemDegreeOfFreedom(mbs,
         print('pure algebraic constraints=',nPureAE)
         print('degree of freedom         =',dof)
 
-    return [dof, nRedundant, nODE2, nODE1, nAE, nPureAE]
+    #return [dof, nRedundant, nODE2, nODE1, nAE, nPureAE] #old mode
+    return {'degreeOfFreedom':dof, 
+            'redundantConstraints':nRedundant, 
+            'nODE2':nODE2, 'nODE1':nODE1, 
+            'nAE':nAE, 'nPureAE':nPureAE}
+
 
     
 #**function: helper function for solvers to check e.g. if high number of memory allocations happened during simulation
@@ -647,17 +714,73 @@ def CheckSolverInfoStatistics(solverName, infoStat, numberOfEvaluations):
 
     #print("newcnt=", newCnt)
 
+#%%+++++++++++++++++++
 if __name__ == '__main__':
     import exudyn.demos as demos
-    [mbs, SC] = demos.Demo1(False)
-    [dof, nRedundant, nODE2, nODE1, nAE, nPureAE] = exudyn.ComputeSystemDegreeOfFreedom(mbs, verbose=True)
-    print('Demo1 dof=',dof) #2 DOF (2D mass point freely moving)
+    if True:
+        [mbs, SC] = demos.Demo1(False)
+        res = exudyn.ComputeSystemDegreeOfFreedom(mbs, verbose=True)
+        print('Demo1 dof=',res['degreeOfFreedom'],'\n') #2 DOF (2D mass point freely moving)
 
     #takes some seconds to compute:
-    [mbs, SC] = demos.Demo2(False)
-    [dof, nRedundant, nODE2, nODE1, nAE, nPureAE] = exudyn.ComputeSystemDegreeOfFreedom(mbs)
-    print('Demo2 dof=',dof) #12*3=36 (12 bodies with 12 spherical joints)
+    if True:
+        [mbs, SC] = demos.Demo2(False)
+        res = exudyn.ComputeSystemDegreeOfFreedom(mbs)
+        print('Demo2=',res,'\n') #12*3=36 (12 bodies with 12 spherical joints)
+    
+        res = exudyn.ComputeSystemDegreeOfFreedom(mbs, verbose=True, useSVD=True)
+        print('Demo2 using SVD=',res) #12*3=36 (12 bodies with 12 spherical joints)
 
-    [dof, nRedundant, nODE2, nODE1, nAE, nPureAE] = exudyn.ComputeSystemDegreeOfFreedom(mbs, verbose=True, useSVD=True)
-    print('Demo2 dof SVD=',dof) #12*3=36 (12 bodies with 12 spherical joints)
+
+    #3D rigid-body with revolute joint and spring, same as in TestModels/ComputeODE2AEeigenvaluesTest.py
+    #compared to analytical solution
+    if True:
+        from exudyn.utilities import *
+        import numpy as np
+
+        SC = exudyn.SystemContainer()
+        mbs = SC.AddSystem()
+
+        beamL=0.1 #in m
+        beamW=0.01
+        beamH=0.001
+        rho=5000 #kg/m**3
+        springL=0.02 #in m
+        springK=1e1 #in N/m
+    
+        oGround = mbs.AddObject(ObjectGround())
+    
+        inertiaCuboid=InertiaCuboid(density=rho,
+                                sideLengths=[beamL,beamH,beamW])
+    
+        bBeam = mbs.CreateRigidBody(inertia = inertiaCuboid,
+                                referencePosition = [beamL*0.5,0,0],
+                                gravity = [0,-9.81*0,0],
+                                graphicsDataList = [GraphicsDataOrthoCubePoint(size=[beamL,beamH,beamW],
+                                color=color4orange)])
+        mBeamRight = mbs.AddMarker(MarkerBodyRigid(bodyNumber=bBeam, localPosition=[beamL*0.5,0,0]))
+
+        mbs.CreateGenericJoint(bodyNumbers= [oGround,bBeam], position= [0.,0.,0.], 
+                                      rotationMatrixAxes= np.eye(3), constrainedAxes= [1,1,1,1,1,0], 
+                                      axesRadius=0.001, axesLength= 0.01, color= color4default)
+    
+        markerToConnect = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[beamL,-springL,0])) 
+    
+        mbs.AddObject(CartesianSpringDamper(markerNumbers=[markerToConnect,mBeamRight],
+                                            stiffness=[0,springK,0],
+                                            damping=[0,0,0],
+                                            offset=[0,springL,0],
+                                            visualization=VObjectConnectorCartesianSpringDamper(show=True,drawSize=0.01)
+                                            ))    
+        mbs.Assemble()
+        [ew, ev] = mbs.ComputeODE2Eigenvalues()
+
+        evNumerical = np.sqrt(ew[0]) / (2*np.pi)
+        
+        thetaZZ=inertiaCuboid.Translated([-beamL/2,0,0]).Inertia()[2,2]
+        evAnalytical = np.sqrt( springK*beamL**2/thetaZZ ) / (2*np.pi)
+
+        print('numerical eigenvalues in Hz:',evNumerical)
+        print('analytical eigenvalues in Hz:',evAnalytical)
+        print('error eigenvalues:', (evAnalytical-evNumerical)/evAnalytical)
 

@@ -38,10 +38,10 @@ You can view and download this file on Github: `serialRobotKinematicTree.py <htt
    SC = exu.SystemContainer()
    mbs = SC.AddSystem()
    
-   sensorWriteToFile = True
+   sensorWriteToFile = False
    
    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-   compensateStaticTorques = False #static torque compensation converges slowly!
+   compensateStaticTorques = True #static torque compensation converges slowly!
    useKinematicTree = True
    #kinematic tree and redundant mbs agrees for stdDH version up to 1e-10, with compensateStaticTorques = False
    # KT:      rotations at tEnd= 1.8464514676503092 , [0.4921990591981066, 0.2718999073958087, 0.818158053005264, -0.0030588904101585936, 0.26831938569719394, -0.0010660472359057434] 
@@ -197,7 +197,7 @@ You can view and download this file on Github: `serialRobotKinematicTree.py <htt
            for joint in jointList:
                q += [mbs.GetObjectOutput(joint, exu.OutputVariableType.Rotation)[2]] #z-rotation
        else:
-           q = mbs.GetObjectOutputBody(oKT, exu.OutputVariableType.Coordinates, localPosition=[0,0,0])
+           q = mbs.GetObjectOutput(oKT, exu.OutputVariableType.Coordinates)
    
        HT=robot.JointHT(q)
        return robot.StaticTorques(HT)
@@ -273,44 +273,59 @@ You can view and download this file on Github: `serialRobotKinematicTree.py <htt
            #in case of kinematic tree, very simple operations!
            mbs.SetObjectParameter(oKT, 'jointPositionOffsetVector', u)
            mbs.SetObjectParameter(oKT, 'jointVelocityOffsetVector', v)
-           mbs.SetObjectParameter(oKT, 'jointForceVector', staticTorques)
+           mbs.SetObjectParameter(oKT, 'jointForceVector', -staticTorques) #negative sign needed here!
        
        return True
    
    mbs.SetPreStepUserFunction(PreStepUF)
    
+   sListJointAngles = []
+   sListTorques = []
+   nJoints = len(jointList)
    if not useKinematicTree:
        torsionalSDlist = robotDict['springDamperList']
+       sJointRotComponents = [0]*nJoints #only one component
+       sTorqueComponents = [0]*nJoints   #only one component
        
        #add sensors:
-       sJointRotList = []
        cnt = 0
        for i in range(len(jointList)):
            jointLink = jointList[i]
            tsd = torsionalSDlist[i]
            #using TSD:
-           sJointRot = mbs.AddSensor(SensorObject(objectNumber=tsd, 
+           sJointRot = mbs.AddSensor(SensorObject(objectNumber=tsd, storeInternal=True, 
                                       fileName="solution/joint" + str(i) + "Rot.txt",
                                       outputVariableType=exu.OutputVariableType.Rotation,
                                       writeToFile = sensorWriteToFile))
-           sJointRotList += [sJointRot]
-           sJointAngVel = mbs.AddSensor(SensorObject(objectNumber=jointLink, 
-                                      fileName="solution/joint" + str(i) + "AngVel.txt",
-                                      outputVariableType=exu.OutputVariableType.AngularVelocityLocal,
-                                      writeToFile = sensorWriteToFile))
+           sListJointAngles += [sJointRot]
+           sJointAngVel = mbs.AddSensor(SensorObject(objectNumber=jointLink, storeInternal=True, 
+                                                     fileName="solution/joint" + str(i) + "AngVel.txt",
+                                                     outputVariableType=exu.OutputVariableType.AngularVelocityLocal,
+                                                     writeToFile = sensorWriteToFile))
    
        cnt = 0
-       sTorques = []
        for iSD in robotDict['springDamperList']:
            # sTorque = mbs.AddSensor(SensorLoad(loadNumber=load0, fileName="solution/jointTorque" + str(cnt) + ".txt", 
            #                                    writeToFile = sensorWriteToFile))
-           sTorque = mbs.AddSensor(SensorObject(objectNumber=iSD, fileName="solution/jointTorque" + str(cnt) + ".txt", 
+           sTorque = mbs.AddSensor(SensorObject(objectNumber=iSD, storeInternal=True, 
+                                                fileName="solution/jointTorque" + str(cnt) + ".txt", 
                                                 outputVariableType=exu.OutputVariableType.TorqueLocal,
                                                 writeToFile = sensorWriteToFile))
-           sTorques += [sTorque]
+           sListTorques += [sTorque]
            
            cnt+=1
+   else:
+       sJointRotComponents = list(np.arange(0,nJoints))
+       sTorqueComponents = list(np.arange(0,nJoints))
    
+       sJointRot = mbs.AddSensor(SensorObject(objectNumber=oKT, storeInternal=True, 
+                                             outputVariableType=exu.OutputVariableType.Coordinates))
+       sListJointAngles = [sJointRot]*6
+   
+       #exu.OutputVariableType.Force is not the joint torque!
+       # sTorques = mbs.AddSensor(SensorObject(objectNumber=oKT, storeInternal=True, 
+       #                                       outputVariableType=exu.OutputVariableType.Force))
+       # sListTorques = [sTorques]*6
    
    
    mbs.Assemble()
@@ -365,6 +380,7 @@ You can view and download this file on Github: `serialRobotKinematicTree.py <htt
        mbs.WaitForUserToContinue()
        
    mbs.SolveDynamic(simulationSettings, showHints=True)
+   #explicit integration also possible for KinematicTree:
    # mbs.SolveDynamic(simulationSettings, 
    #                  solverType=exu.DynamicSolverType.RK33,
    #                  showHints=True)
@@ -374,25 +390,27 @@ You can view and download this file on Github: `serialRobotKinematicTree.py <htt
        SC.visualizationSettings.general.autoFitScene = False
        exu.StopRenderer()
    
-   
-   mbs.SolutionViewer()
+   if False:
+       mbs.SolutionViewer()
    
    
    if not useKinematicTree:
        #compute final torques:
        measuredTorques=[]
-       for sensorNumber in sTorques:
+       for sensorNumber in sListTorques:
            measuredTorques += [abs(mbs.GetSensorValues(sensorNumber)) ]
        exu.Print("torques at tEnd=", VSum(measuredTorques))
    
        measuredRot = []
-       for sensorNumber in sJointRotList :
+       for sensorNumber in sListJointAngles :
            measuredRot += [(mbs.GetSensorValues(sensorNumber)) ]
        exu.Print("rotations at tEnd=", VSum(measuredRot), ',', measuredRot)
    
    else:
        q = mbs.GetObjectOutput(oKT, exu.OutputVariableType.Coordinates)
        exu.Print("rotations at tEnd=", VSum(q), ',', q)
+       f = mbs.GetObjectOutput(oKT, exu.OutputVariableType.Force)
+       exu.Print("torques at tEnd=", VSum(f), ',', f)
        
    
    
@@ -401,49 +419,14 @@ You can view and download this file on Github: `serialRobotKinematicTree.py <htt
    # exudynTestGlobals.testResult = 1e-2*VSum(measuredTorques)   
    
    
-   if False:
-       import matplotlib.pyplot as plt
-       import matplotlib.ticker as ticker
-       plt.rcParams.update({'font.size': 14})
-       plt.close("all")
-   
-       doJointTorques = False
-       if doJointTorques:
-           for i in range(6):
-               data = np.loadtxt("solution/jointTorque" + str(i) + ".txt", comments='#', delimiter=',')
-               plt.plot(data[:,0], data[:,3], PlotLineCode(i), label="joint torque"+str(i)) #z-rotation
-       
-           plt.xlabel("time (s)")
-           plt.ylabel("joint torque (Nm)")
-           ax=plt.gca() # get current axes
-           ax.grid(True, 'major', 'both')
-           ax.xaxis.set_major_locator(ticker.MaxNLocator(10)) 
-           ax.yaxis.set_major_locator(ticker.MaxNLocator(10)) 
-           plt.tight_layout()
-           ax.legend(loc='center right')
-           plt.show() 
-           # plt.savefig("solution/robotJointTorques.pdf")
-   
-       doJointAngles = True
-       if doJointAngles:
-           plt.close("all")
-           
-           for i in range(6):
-               data = np.loadtxt("solution/joint" + str(i) + "Rot.txt", comments='#', delimiter=',')
-               # data = np.loadtxt("solution/joint" + str(i) + "AngVel.txt", comments='#', delimiter=',')
-               plt.plot(data[:,0], data[:,1], PlotLineCode(i), label="joint"+str(i)) #z-rotation
-               
-           plt.xlabel("time (s)")
-           plt.ylabel("joint angle (rad)")
-           ax=plt.gca() 
-           ax.grid(True, 'major', 'both')
-           ax.xaxis.set_major_locator(ticker.MaxNLocator(10)) 
-           ax.yaxis.set_major_locator(ticker.MaxNLocator(10)) 
-           plt.tight_layout()
-           ax.legend()
-           plt.rcParams.update({'font.size': 16})
-           plt.show() 
-           # plt.savefig("solution/robotJointAngles.pdf")
+   #%%++++++++++++++++++++++++++++
+   if True:
+       mbs.PlotSensor(sensorNumbers=sListJointAngles, components=sJointRotComponents, 
+                      title='joint angles', closeAll=True)
+       if useKinematicTree: #otherwise not available
+           mbs.PlotSensor(sensorNumbers=sListTorques, components=sTorqueComponents, 
+                          title='joint torques')
+       #sListJointAngles
    
 
 

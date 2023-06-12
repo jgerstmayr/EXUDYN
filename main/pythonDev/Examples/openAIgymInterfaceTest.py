@@ -16,6 +16,10 @@ from exudyn.utilities import *
 from exudyn.artificialIntelligence import *
 import math
 
+# import sys
+# sys.exit()
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++
 
 #**class: interface class to set up Exudyn model which can be used as model in open AI gym;
 #         see specific class functions which contain 'OVERRIDE' to integrate your model;
@@ -26,7 +30,6 @@ class InvertedDoublePendulumEnv(OpenAIGymInterfaceEnv):
     #                 you may also change SC.visualizationSettings() individually; kwargs may be used for special setup
     def CreateMBS(self, SC, mbs, simulationSettings, **kwargs):
 
-        #%%++++++++++++++++++++++++++++++++++++++++++++++
         #this model uses kwargs: thresholdFactor
         thresholdFactor = kwargs['thresholdFactor']
         gravity = 9.81
@@ -236,25 +239,25 @@ if __name__ == '__main__': #this is only executed when file is direct called in 
     #main learning task; 1e7 steps take 2-3 hours
     ts = -time.time()
     model = A2C('MlpPolicy', env, verbose=1)
-    model.learn(total_timesteps=1e7) #1e7 works but 2e7 is more robust!
+    model.learn(total_timesteps=1e3) #1e7 works but 2e7 is more robust!
     print('*** learning time total =',ts+time.time(),'***')
 
     #save learned model
-    model.save("openAIgymDoublePendulum1e7")
+    model.save("openAIgymDoublePendulum1e5")
     del model
 
     #%%++++++++++++++++++++++++++++++++++++++++++++++++++
     #only load and test
-    model = A2C.load("openAIgymDoublePendulum1e7")
+    model = A2C.load("openAIgymDoublePendulum1e5")
     env = InvertedDoublePendulumEnv(thresholdFactor=15) #larger threshold for testing
     solutionFile='solution/learningCoordinates.txt'
     env.TestModel(numberOfSteps=2500, model=model, solutionFileName=solutionFile, 
-                  stopIfDone=False, useRenderer=False, sleepTime=0) #just compute solution file
+                  stopIfDone=False, useRenderer=True, sleepTime=0) #just compute solution file
 
     #++++++++++++++++++++++++++++++++++++++++++++++
     #visualize (and make animations) in exudyn:
-    
+    from exudyn.interactive import SolutionViewer
     env.SC.visualizationSettings.general.autoFitScene = False
     solution = LoadSolutionFile(solutionFile)
-    SolutionViewer(env.mbs, solution) #loads solution file via name stored in mbs
+    env.mbs.SolutionViewer(solution) #loads solution file via name stored in mbs
 

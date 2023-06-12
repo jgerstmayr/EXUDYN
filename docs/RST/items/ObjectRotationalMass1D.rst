@@ -49,7 +49,7 @@ DESCRIPTION of ObjectRotationalMass1D
 
 \ **The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**\ :
 
-* | ``Position``\ : \ :math:`\LU{0}{{\mathbf{p}}}\cConfig= pRefG`\ 
+* | ``Position``\ : \ :math:`\LU{0}{{\mathbf{p}}}\cConfig= \pRefG`\ 
   | global position vector; for interpretation see intermediate variables
 * | ``Displacement``\ : \ :math:`\LU{0}{{\mathbf{u}}}\cConfig`\ 
   | global displacement vector; for interpretation see intermediate variables

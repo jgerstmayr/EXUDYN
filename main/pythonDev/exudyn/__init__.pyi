@@ -1,16 +1,4 @@
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# This is the EXUDYN stub file initialization
-#
-# Author:   Johannes Gerstmayr
-# Date:     2023-05-09
-#
-# Notes:    Under development; see https://peps.python.org/pep-0484/#stub-files
-#
-# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
-#
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-#from typing import Dict, List, Optional
 
 from typing import (
     Annotated, 
@@ -46,95 +34,66 @@ from enum import Enum
 import numpy as np
 
 
-#DType = TypeVar("DType", bound=np.generic)
-# NPreal3D = Annotated[NDArray[float], Literal[3]]
-# NPint3D = Annotated[NDArray[int], Literal[3]]
 
-#type variables for size in numpy arrays
 T1 = TypeVar("T1", bound=int)
 T2 = TypeVar("T2", bound=int)
 
-# Dimension types represented as typles
 Shape = Tuple
 Shape1D = Shape[T1]
 Shape2D = Shape[T1, T2]
-# Shape3D = Shape[T1, T2, T3]
-# ShapeND = Shape[T1, ...]
-# ShapeNDType = TypeVar("ShapeNDType", bound=ShapeND)
 
-#LENGTH = Literal[2]
-#NDArray[Shape2D[3,3], np.float64]
 
 
 import exudyn
-from exudyn import (ObjectIndex, NodeIndex, MarkerIndex, LoadIndex, SensorIndex,
-                    # MainSystem, SystemContainer,
-                    # Vector2DList, Vector3DList, Vector6DList,
-                    # MatrixContainer, 
-                    # VisualizationSettings, #could be erased in future
-                    )
+from exudyn import (ObjectIndex, NodeIndex, MarkerIndex, LoadIndex, SensorIndex)
+
 from exudyn.graphicsDataUtilities import color4red, color4default
 
 
-# class MainSystem:
-#     @overload
-#     def CreateMassPoint(self,#node quantities
-#                                 referenceCoordinates = [0.,0.,0.],
-#                                 initialCoordinates = [0.,0.,0.],
-#                                 initialVelocities = [0.,0.,0.],
-#                                 #object quantities:
-#                                 physicsMass=0,
-#                                 gravity = [0.,0.,0.],
-#                                 graphicsDataList = [],
-#                                 #graphics, mixed
-#                                 drawSize = -1,
-#                                 color =  [-1.,-1.,-1.,-1.],
-#                                 show = True, #if graphicsDataList is empty, node is shown, otherwise body is shown
-#                                 name = '',   #both for node and object
-#                                 create2D = False, #NodePoint2D, MassPoint2D
-#                                 returnDict = False, #if True, returns dictionary of all data
-#                                 ) -> Union[ObjectIndex, dict]: ...
-    
-#     @overload
-#     def CreateSpringDamper(self,
-#                                   bodyOrNode0:int, bodyOrNode1:int,
-#                                   localPosition0: list = [0.,0.,0.],
-#                                   localPosition1: list = [0.,0.,0.],
-#                                   #
-#                                   referenceLength = None, 
-#                                   stiffness: float = 0., damping: float = 0., force: float = 0.,
-#                                   velocityOffset: float = 0., 
-#                                   show=True, drawSize: float=-1, color=[-1.,-1.,-1.,-1.],
-#                                   ) -> ObjectIndex: ...
 
-#     @overload
-#     def CreateRevoluteJoint(mbs, bodyNumber0:ObjectIndex, bodyNumber1:ObjectIndex, 
-#                                   position:[float,float,float], 
-#                                   axis:[float,float,float], useGlobalFrame=True, 
-#                                   show=True, axisRadius=0.1, axisLength=0.4,
-#                                   color=[-1.,-1.,-1.,-1.]) -> [ObjectIndex, MarkerIndex, MarkerIndex]: ...
 
-#     @overload
-#     def CreatePrismaticJoint(mbs, bodyNumber0:ObjectIndex, bodyNumber1:ObjectIndex, 
-#                                   position:[float,float,float], 
-#                                   axis:[float,float,float], useGlobalFrame=True, 
-#                                   show=True, axisRadius=0.1, axisLength=0.4,
-#                                   color=[-1.,-1.,-1.,-1.]) -> [ObjectIndex, MarkerIndex, MarkerIndex]: ...
 
-#     @overload
-#     def CreateGenericJoint(mbs, bodyNumber0:ObjectIndex, bodyNumber1:ObjectIndex, 
-#                                   position:[float,float,float], rotation0=np.eye(3),
-#                                   constrainedAxes=[1,1,1, 1,1,1], useGlobalFrame=True, 
-#                                   show=True, axesRadius=0.1, axesLength=0.4,
-#                                   color=[-1.,-1.,-1.,-1.]) -> [ObjectIndex, MarkerIndex, MarkerIndex]: ...
-    
-    # @overload
-    # def AddMassPoint(self, referenceCoordinates: list = [0.,0.,0.],
-    #                            initialCoordinates: list = [0.,0.,0.],
-    #                            initialVelocities: list = [0.,0.,0.],
-    #                            physicsMass: float=0,
-    #                            gravity: list = [0.,0.,0.],
-    #                            graphicsDataList: list = []) -> exudyn.ObjectIndex: ...
+@overload
+def GetVersionString(addDetails=False) -> str: ...
+@overload
+def Help() -> None: ...
+@overload
+def RequireVersion(requiredVersionString: str) -> None: ...
+@overload
+def StartRenderer(verbose=0) -> bool: ...
+@overload
+def IsRendererActive() -> bool: ...
+@overload
+def DoRendererIdleTasks(waitSeconds=0) -> None: ...
+@overload
+def SolveStatic(mbs: MainSystem, simulationSettings: SimulationSettings, updateInitialValues=False, storeSolver=True) -> bool: ...
+@overload
+def SolveDynamic(mbs: MainSystem, simulationSettings: SimulationSettings, solverType: DynamicSolverType, updateInitialValues=False, storeSolver=True) -> bool: ...
+@overload
+def ComputeODE2Eigenvalues(mbs: MainSystem, simulationSettings: SimulationSettings, useSparseSolver=False, numberOfEigenvalues=-1, setInitialValues=True, convert2Frequencies=False) -> bool: ...
+@overload
+def SetOutputPrecision(numberOfDigits: int) -> None: ...
+@overload
+def SetLinalgOutputFormatPython(flagPythonFormat: bool) -> None: ...
+@overload
+def SetWriteToConsole(flag: bool) -> None: ...
+@overload
+def SetWriteToFile(filename: str, flagWriteToFile=True, flagAppend=False) -> None: ...
+@overload
+def SetPrintDelayMilliSeconds(delayMilliSeconds: int) -> None: ...
+@overload
+def Print(*args: Any) -> None: ...
+@overload
+def SuppressWarnings(flag: bool) -> None: ...
+@overload
+def InfoStat(writeOutput=True) -> List[int]: ...
+@overload
+def Go() -> None: ...
+@overload
+def InvalidIndex() -> int: ...
+variables:dict
+sys:dict
+
 
 class OutputVariableType(Enum):
     _None = int
@@ -168,6 +127,7 @@ class OutputVariableType(Enum):
     CurvatureLocal = int
     ConstraintEquation = int
 
+
 class ConfigurationType(Enum):
     _None = int
     Initial = int
@@ -177,6 +137,7 @@ class ConfigurationType(Enum):
     Visualization = int
     EndOfEnumList = int
 
+
 class ItemType(Enum):
     _None = int
     Node = int
@@ -184,6 +145,7 @@ class ItemType(Enum):
     Marker = int
     Load = int
     Sensor = int
+
 
 class NodeType(Enum):
     _None = int
@@ -206,6 +168,7 @@ class NodeType(Enum):
     Point3DSlope1 = int
     Point3DSlope23 = int
 
+
 class JointType(Enum):
     _None = int
     RevoluteX = int
@@ -214,6 +177,7 @@ class JointType(Enum):
     PrismaticX = int
     PrismaticY = int
     PrismaticZ = int
+
 
 class DynamicSolverType(Enum):
     GeneralizedAlpha = int
@@ -227,9 +191,11 @@ class DynamicSolverType(Enum):
     DOPRI5 = int
     DVERK6 = int
 
+
 class CrossSectionType(Enum):
     Polygon = int
     Circular = int
+
 
 class KeyCode(Enum):
     SPACE = int
@@ -251,11 +217,14 @@ class KeyCode(Enum):
     F9 = int
     F10 = int
 
+
 class LinearSolverType(Enum):
     _None = int
     EXUdense = int
     EigenSparse = int
     EigenSparseSymmetric = int
+    EigenDense = int
+
 
 class ContactTypeIndex(Enum):
     IndexSpheresMarkerBased = int
@@ -263,7 +232,7 @@ class ContactTypeIndex(Enum):
     IndexTrigsRigidBodyBased = int
     IndexEndOfEnumList = int
 
-#stub information for class MatrixContainer functions
+
 class MatrixContainer:
     @overload
     def SetWithDenseMatrix(self, pyArray: ArrayLike, useDenseMatrix=False) -> None: ...
@@ -276,60 +245,56 @@ class MatrixContainer:
     @overload
     def UseDenseMatrix(self) -> bool: ...
 
-#stub information for class Vector3DList functions
+
 class Vector3DList:
     @overload
     def Append(self, pyArray: [float,float,float]) -> None: ...
     @overload
     def GetPythonObject(self) -> List[[float,float,float]]: ...
 
-#stub information for class Vector2DList functions
+
 class Vector2DList:
     @overload
     def Append(self, pyArray: [float,float]) -> None: ...
     @overload
     def GetPythonObject(self) -> List[[float,float]]: ...
 
-#stub information for class Vector6DList functions
+
 class Vector6DList:
     @overload
     def Append(self, pyArray: [float,float,float,float,float,float]) -> None: ...
     @overload
     def GetPythonObject(self) -> List[[float,float,float,float,float,float]]: ...
 
-#stub information for class Matrix3DList functions
+
 class Matrix3DList:
     @overload
     def Append(self, pyArray: NDArray[Shape2D[3,3], float]) -> None: ...
     @overload
     def GetPythonObject(self) -> List[NDArray[Shape2D[3,3], float]]: ...
 
-#stub information for class Matrix6DList functions
+
 class Matrix6DList:
     @overload
     def Append(self, pyArray: NDArray[Shape2D[6,6], float]) -> None: ...
     @overload
     def GetPythonObject(self) -> List[NDArray[Shape2D[6,6], float]]: ...
 
-#This is the stub file for system structures, such as SimulationSettings and VisualizationSettings
-#This file will greatly improve autocompletion
 
-
-#information for BeamSection
 class BeamSection:
     dampingMatrix: ArrayLike
     inertia: ArrayLike
     massPerLength: float
     stiffnessMatrix: ArrayLike
 
-#information for BeamSectionGeometry
+
 class BeamSectionGeometry:
     crossSectionRadiusY: float
     crossSectionRadiusZ: float
     crossSectionType: CrossSectionType
     polygonalPoints: Vector2DList
 
-#information for SolutionSettings
+
 class SolutionSettings:
     appendToFile: bool
     binarySolutionFile: bool
@@ -359,7 +324,7 @@ class SolutionSettings:
     writeRestartFile: bool
     writeSolutionToFile: bool
 
-#information for NumericalDifferentiationSettings
+
 class NumericalDifferentiationSettings:
     addReferenceCoordinatesToEpsilon: bool
     doSystemWideDifferentiation: bool
@@ -370,13 +335,13 @@ class NumericalDifferentiationSettings:
     minimumCoordinateSize: float
     relativeEpsilon: float
 
-#information for DiscontinuousSettings
+
 class DiscontinuousSettings:
     ignoreMaxIterations: bool
     iterationTolerance: float
     maxIterations: int
 
-#information for NewtonSettings
+
 class NewtonSettings:
     numericalDifferentiation: NumericalDifferentiationSettings
     absoluteTolerance: float
@@ -393,7 +358,7 @@ class NewtonSettings:
     useNewtonSolver: bool
     weightTolerancePerCoordinate: bool
 
-#information for GeneralizedAlphaSettings
+
 class GeneralizedAlphaSettings:
     computeInitialAccelerations: bool
     lieGroupAddTangentOperator: bool
@@ -404,7 +369,7 @@ class GeneralizedAlphaSettings:
     useIndex2Constraints: bool
     useNewmark: bool
 
-#information for ExplicitIntegrationSettings
+
 class ExplicitIntegrationSettings:
     computeEndOfStepAccelerations: bool
     computeMassMatrixInversePerBody: bool
@@ -412,7 +377,7 @@ class ExplicitIntegrationSettings:
     eliminateConstraints: bool
     useLieGroupIntegration: bool
 
-#information for TimeIntegrationSettings
+
 class TimeIntegrationSettings:
     discontinuous: DiscontinuousSettings
     explicitIntegration: ExplicitIntegrationSettings
@@ -442,7 +407,7 @@ class TimeIntegrationSettings:
     verboseMode: int
     verboseModeFile: int
 
-#information for StaticSolverSettings
+
 class StaticSolverSettings:
     discontinuous: DiscontinuousSettings
     newton: NewtonSettings
@@ -464,15 +429,14 @@ class StaticSolverSettings:
     verboseMode: int
     verboseModeFile: int
 
-#information for LinearSolverSettings
+
 class LinearSolverSettings:
-    ignoreRedundantConstraints: bool
     ignoreSingularJacobian: bool
-    pivotTreshold: float
+    pivotThreshold: float
     reuseAnalyzedPattern: bool
     showCausingItems: bool
 
-#information for Parallel
+
 class Parallel:
     multithreadedLLimitJacobians: int
     multithreadedLLimitLoads: int
@@ -482,7 +446,7 @@ class Parallel:
     taskSplitMinItems: int
     taskSplitTasksPerThread: int
 
-#information for SimulationSettings
+
 class SimulationSettings:
     linearSolverSettings: LinearSolverSettings
     parallel: Parallel
@@ -497,7 +461,7 @@ class SimulationSettings:
     outputPrecision: int
     pauseAfterEachStep: bool
 
-#information for VSettingsGeneral
+
 class VSettingsGeneral:
     autoFitScene: bool
     axesTiling: int
@@ -509,6 +473,7 @@ class VSettingsGeneral:
     drawCoordinateSystem: bool
     drawWorldBasis: bool
     graphicsUpdateInterval: float
+    linuxDisplayScaleFactor: float
     minSceneSize: float
     pointSize: float
     rendererPrecision: int
@@ -531,7 +496,7 @@ class VSettingsGeneral:
     useWindowsDisplayScaleFactor: bool
     worldBasisSize: float
 
-#information for VSettingsContour
+
 class VSettingsContour:
     automaticRange: bool
     colorBarPrecision: int
@@ -545,7 +510,7 @@ class VSettingsContour:
     rigidBodiesColored: bool
     showColorBar: bool
 
-#information for VSettingsNodes
+
 class VSettingsNodes:
     basisSize: float
     defaultColor: Tuple[float,float,float,float]
@@ -557,7 +522,7 @@ class VSettingsNodes:
     showNumbers: bool
     tiling: int
 
-#information for VSettingsBeams
+
 class VSettingsBeams:
     axialTiling: int
     crossSectionFilled: bool
@@ -570,14 +535,14 @@ class VSettingsBeams:
     drawVerticalValues: bool
     reducedAxialInterploation: bool
 
-#information for VSettingsKinematicTree
+
 class VSettingsKinematicTree:
     frameSize: float
     showCOMframes: bool
     showFramesNumbers: bool
     showJointFrames: bool
 
-#information for VSettingsBodies
+
 class VSettingsBodies:
     beams: VSettingsBeams
     kinematicTree: VSettingsKinematicTree
@@ -587,7 +552,7 @@ class VSettingsBodies:
     show: bool
     showNumbers: bool
 
-#information for VSettingsConnectors
+
 class VSettingsConnectors:
     contactPointsDefaultSize: float
     defaultColor: Tuple[float,float,float,float]
@@ -600,7 +565,7 @@ class VSettingsConnectors:
     showNumbers: bool
     springNumberOfWindings: int
 
-#information for VSettingsMarkers
+
 class VSettingsMarkers:
     defaultColor: Tuple[float,float,float,float]
     defaultSize: float
@@ -608,7 +573,7 @@ class VSettingsMarkers:
     show: bool
     showNumbers: bool
 
-#information for VSettingsLoads
+
 class VSettingsLoads:
     defaultColor: Tuple[float,float,float,float]
     defaultRadius: float
@@ -619,7 +584,7 @@ class VSettingsLoads:
     show: bool
     showNumbers: bool
 
-#information for VSettingsSensors
+
 class VSettingsSensors:
     defaultColor: Tuple[float,float,float,float]
     defaultSize: float
@@ -627,7 +592,7 @@ class VSettingsSensors:
     show: bool
     showNumbers: bool
 
-#information for VSettingsContact
+
 class VSettingsContact:
     colorBoundingBoxes: Tuple[float,float,float,float]
     colorSearchTree: Tuple[float,float,float,float]
@@ -639,19 +604,22 @@ class VSettingsContact:
     showSearchTree: bool
     showSearchTreeCells: bool
 
-#information for VSettingsWindow
+
 class VSettingsWindow:
     alwaysOnTop: bool
     ignoreKeys: bool
     keyPressUserFunction: Any
     limitWindowToScreenSize: bool
     maximize: bool
+    reallyQuitTimeLimit: float
     renderWindowSize: Tuple[int,int]
+    @overload
+    def ResetKeyPressUserFunction() -> None: ...
     showMouseCoordinates: bool
     showWindow: bool
     startupTimeout: int
 
-#information for VSettingsDialogs
+
 class VSettingsDialogs:
     alphaTransparency: float
     alwaysTopmost: bool
@@ -659,7 +627,7 @@ class VSettingsDialogs:
     multiThreadedDialogs: bool
     openTreeView: bool
 
-#information for VSettingsOpenGL
+
 class VSettingsOpenGL:
     drawFaceNormals: bool
     drawNormalsLength: float
@@ -709,7 +677,7 @@ class VSettingsOpenGL:
     textLineSmooth: bool
     textLineWidth: float
 
-#information for VSettingsExportImages
+
 class VSettingsExportImages:
     heightAlignment: int
     saveImageAsTextCircles: bool
@@ -723,14 +691,14 @@ class VSettingsExportImages:
     saveImageTimeOut: int
     widthAlignment: int
 
-#information for VSettingsOpenVR
+
 class VSettingsOpenVR:
     actionManifestFileName: str
     enable: bool
     logLevel: int
     showCompanionWindow: bool
 
-#information for VSettingsInteractive
+
 class VSettingsInteractive:
     openVR: VSettingsOpenVR
     highlightColor: Tuple[float,float,float,float]
@@ -756,7 +724,7 @@ class VSettingsInteractive:
     useJoystickInput: bool
     zoomStepFactor: float
 
-#information for VisualizationSettings
+
 class VisualizationSettings:
     bodies: VSettingsBodies
     connectors: VSettingsConnectors
@@ -773,7 +741,7 @@ class VisualizationSettings:
     sensors: VSettingsSensors
     window: VSettingsWindow
 
-#information for CSolverTimer
+
 class CSolverTimer:
     AERHS: float
     errorEstimator: float
@@ -791,13 +759,23 @@ class CSolverTimer:
     postNewton: float
     python: float
     reactionForces: float
+    @overload
+    def Reset(useSolverTimer) -> None: ...
+    @overload
+    def StartTimer(value) -> None: ...
+    @overload
+    def StopTimer(value) -> None: ...
+    @overload
+    def Sum() -> float: ...
+    @overload
+    def ToString() -> str: ...
     total: float
     totalJacobian: float
     useTimer: bool
     visualization: float
     writeSolution: float
 
-#information for SolverIterationData
+
 class SolverIterationData:
     adaptiveStep: bool
     automaticStepSize: bool
@@ -820,13 +798,17 @@ class SolverIterationData:
     rejectedAutomaticStepSizeSteps: int
     rejectedModifiedNewtonSteps: int
     startTime: float
+    @overload
+    def ToString() -> str: ...
 
-#information for SolverConvergenceData
+
 class SolverConvergenceData:
     contractivity: float
     discontinuousIterationError: float
     discontinuousIterationSuccessful: bool
     errorCoordinateFactor: float
+    @overload
+    def InitializeData() -> None: ...
     jacobianUpdateRequested: bool
     lastResidual: float
     linearSolverCausingRow: int
@@ -838,12 +820,14 @@ class SolverConvergenceData:
     stepReductionFailed: bool
     stopNewton: bool
 
-#information for SolverOutputData
+
 class SolverOutputData:
     cpuLastTimePrinted: float
     cpuStartTime: float
     finishedSuccessfully: bool
     initializationSuccessful: bool
+    @overload
+    def InitializeData() -> None: ...
     lastDiscontinuousIterationsCount: int
     lastImageRecorded: float
     lastNewtonJacobiCount: int
@@ -859,16 +843,112 @@ class SolverOutputData:
     writeToSolutionFile: bool
     writeToSolverFile: bool
 
-#information for MainSolverStatic
+
 class MainSolverStatic:
     conv: SolverConvergenceData
     it: SolverIterationData
     newton: NewtonSettings
     output: SolverOutputData
     timer: CSolverTimer
+    @overload
+    def CheckInitialized(mainSystem) -> bool: ...
+    @overload
+    def ComputeAlgebraicEquations(mainSystem, velocityLevel=False) -> None: ...
+    @overload
+    def ComputeJacobianAE(mainSystem, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1., velocityLevel=False) -> None: ...
+    @overload
+    def ComputeJacobianODE1RHS(mainSystem, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1.) -> None: ...
+    @overload
+    def ComputeJacobianODE2RHS(mainSystem, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1., computeLoadsJacobian=0) -> None: ...
+    @overload
+    def ComputeLoadFactor(simulationSettings) -> float: ...
+    @overload
+    def ComputeMassMatrix(mainSystem, scalarFactor=1.) -> None: ...
+    @overload
+    def ComputeNewtonJacobian(mainSystem, simulationSettings) -> None: ...
+    @overload
+    def ComputeNewtonResidual(mainSystem, simulationSettings) -> float: ...
+    @overload
+    def ComputeNewtonUpdate(mainSystem, simulationSettings, initial=True) -> None: ...
+    @overload
+    def ComputeODE2RHS(mainSystem) -> None: ...
+    @overload
+    def DiscontinuousIteration(mainSystem, simulationSettings) -> bool: ...
+    @overload
+    def FinalizeSolver(mainSystem, simulationSettings) -> None: ...
+    @overload
+    def FinishStep(mainSystem, simulationSettings) -> None: ...
+    @overload
+    def GetAEsize() -> int: ...
+    @overload
+    def GetDataSize() -> int: ...
+    @overload
+    def GetErrorString() -> str: ...
+    @overload
+    def GetNewtonSolution() -> ArrayLike: ...
+    @overload
+    def GetODE1size() -> int: ...
+    @overload
+    def GetODE2size() -> int: ...
+    @overload
+    def GetSimulationEndTime(simulationSettings) -> float: ...
+    @overload
+    def GetSolverName() -> str: ...
+    @overload
+    def GetSystemJacobian() -> ArrayLike: ...
+    @overload
+    def GetSystemMassMatrix() -> ArrayLike: ...
+    @overload
+    def GetSystemResidual() -> ArrayLike: ...
+    @overload
+    def HasAutomaticStepSizeControl(mainSystem, simulationSettings) -> bool: ...
+    @overload
+    def IncreaseStepSize(mainSystem, simulationSettings) -> None: ...
+    @overload
+    def InitializeSolver(mainSystem, simulationSettings) -> bool: ...
+    @overload
+    def InitializeSolverData(mainSystem, simulationSettings) -> None: ...
+    @overload
+    def InitializeSolverInitialConditions(mainSystem, simulationSettings) -> None: ...
+    @overload
+    def InitializeSolverOutput(mainSystem, simulationSettings) -> None: ...
+    @overload
+    def InitializeSolverPreChecks(mainSystem, simulationSettings) -> bool: ...
+    @overload
+    def InitializeStep(mainSystem, simulationSettings) -> None: ...
+    @overload
+    def IsStaticSolver() -> bool: ...
+    @overload
+    def IsVerboseCheck(level) -> bool: ...
     loadStepGeometricFactor: float
+    @overload
+    def Newton(mainSystem, simulationSettings) -> bool: ...
+    @overload
+    def PostInitializeSolverSpecific(mainSystem, simulationSettings) -> None: ...
+    @overload
+    def PreInitializeSolverSpecific(mainSystem, simulationSettings) -> None: ...
+    @overload
+    def ReduceStepSize(mainSystem, simulationSettings, severity) -> bool: ...
+    @overload
+    def SetSystemJacobian(systemJacobian) -> None: ...
+    @overload
+    def SetSystemMassMatrix(systemMassMatrix) -> None: ...
+    @overload
+    def SetSystemResidual(systemResidual) -> None: ...
+    @overload
+    def SolveSteps(mainSystem, simulationSettings) -> bool: ...
+    @overload
+    def SolveSystem(mainSystem, simulationSettings) -> bool: ...
+    @overload
+    def UpdateCurrentTime(mainSystem, simulationSettings) -> None: ...
+    @overload
+    def VerboseWrite(level, str) -> None: ...
+    @overload
+    def WriteCoordinatesToFile(mainSystem, simulationSettings) -> None: ...
+    @overload
+    def WriteSolutionFileHeader(mainSystem, simulationSettings) -> None: ...
 
-#information for MainSolverImplicitSecondOrder
+
 class MainSolverImplicitSecondOrder:
     conv: SolverConvergenceData
     it: SolverIterationData
@@ -877,24 +957,232 @@ class MainSolverImplicitSecondOrder:
     timer: CSolverTimer
     alphaF: float
     alphaM: float
+    @overload
+    def CheckInitialized(mainSystem) -> bool: ...
+    @overload
+    def ComputeAlgebraicEquations(mainSystem, velocityLevel=False) -> None: ...
+    @overload
+    def ComputeJacobianAE(mainSystem, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1., velocityLevel=False) -> None: ...
+    @overload
+    def ComputeJacobianODE1RHS(mainSystem, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1.) -> None: ...
+    @overload
+    def ComputeJacobianODE2RHS(mainSystem, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1., computeLoadsJacobian=0) -> None: ...
+    @overload
+    def ComputeLoadFactor(simulationSettings) -> float: ...
+    @overload
+    def ComputeMassMatrix(mainSystem, scalarFactor=1.) -> None: ...
+    @overload
+    def ComputeNewtonJacobian(mainSystem, simulationSettings) -> None: ...
+    @overload
+    def ComputeNewtonResidual(mainSystem, simulationSettings) -> float: ...
+    @overload
+    def ComputeNewtonUpdate(mainSystem, simulationSettings, initial=True) -> None: ...
+    @overload
+    def ComputeODE1RHS(mainSystem) -> None: ...
+    @overload
+    def ComputeODE2RHS(mainSystem) -> None: ...
+    @overload
+    def DiscontinuousIteration(mainSystem, simulationSettings) -> bool: ...
     factJacAlgorithmic: float
+    @overload
+    def FinalizeSolver(mainSystem, simulationSettings) -> None: ...
+    @overload
+    def FinishStep(mainSystem, simulationSettings) -> None: ...
+    @overload
+    def GetAAlgorithmic() -> ArrayLike: ...
+    @overload
+    def GetAEsize() -> int: ...
+    @overload
+    def GetDataSize() -> int: ...
+    @overload
+    def GetErrorString() -> str: ...
+    @overload
+    def GetNewtonSolution() -> ArrayLike: ...
+    @overload
+    def GetODE1size() -> int: ...
+    @overload
+    def GetODE2size() -> int: ...
+    @overload
+    def GetSimulationEndTime(simulationSettings) -> float: ...
+    @overload
+    def GetSolverName() -> str: ...
+    @overload
+    def GetStartOfStepStateAAlgorithmic() -> ArrayLike: ...
+    @overload
+    def GetSystemJacobian() -> ArrayLike: ...
+    @overload
+    def GetSystemMassMatrix() -> ArrayLike: ...
+    @overload
+    def GetSystemResidual() -> ArrayLike: ...
+    @overload
+    def HasAutomaticStepSizeControl(mainSystem, simulationSettings) -> bool: ...
+    @overload
+    def IncreaseStepSize(mainSystem, simulationSettings) -> None: ...
+    @overload
+    def InitializeSolver(mainSystem, simulationSettings) -> bool: ...
+    @overload
+    def InitializeSolverData(mainSystem, simulationSettings) -> None: ...
+    @overload
+    def InitializeSolverInitialConditions(mainSystem, simulationSettings) -> None: ...
+    @overload
+    def InitializeSolverOutput(mainSystem, simulationSettings) -> None: ...
+    @overload
+    def InitializeSolverPreChecks(mainSystem, simulationSettings) -> bool: ...
+    @overload
+    def InitializeStep(mainSystem, simulationSettings) -> None: ...
+    @overload
+    def IsStaticSolver() -> bool: ...
+    @overload
+    def IsVerboseCheck(level) -> bool: ...
     newmarkBeta: float
     newmarkGamma: float
+    @overload
+    def Newton(mainSystem, simulationSettings) -> bool: ...
+    @overload
+    def PostInitializeSolverSpecific(mainSystem, simulationSettings) -> None: ...
+    @overload
+    def PostNewton(mainSystem, simulationSettings) -> float: ...
+    @overload
+    def PreInitializeSolverSpecific(mainSystem, simulationSettings) -> None: ...
+    @overload
+    def ReduceStepSize(mainSystem, simulationSettings, severity) -> bool: ...
+    @overload
+    def SetSystemJacobian(systemJacobian) -> None: ...
+    @overload
+    def SetSystemMassMatrix(systemMassMatrix) -> None: ...
+    @overload
+    def SetSystemResidual(systemResidual) -> None: ...
+    @overload
+    def SetUserFunctionComputeNewtonJacobian(mainSystem, userFunction) -> None: ...
+    @overload
+    def SetUserFunctionComputeNewtonResidual(mainSystem, userFunction) -> None: ...
+    @overload
+    def SetUserFunctionComputeNewtonUpdate(mainSystem, userFunction) -> None: ...
+    @overload
+    def SetUserFunctionDiscontinuousIteration(mainSystem, userFunction) -> None: ...
+    @overload
+    def SetUserFunctionFinishStep(mainSystem, userFunction) -> None: ...
+    @overload
+    def SetUserFunctionInitializeStep(mainSystem, userFunction) -> None: ...
+    @overload
+    def SetUserFunctionNewton(mainSystem, userFunction) -> None: ...
+    @overload
+    def SetUserFunctionPostNewton(mainSystem, userFunction) -> None: ...
+    @overload
+    def SetUserFunctionUpdateCurrentTime(mainSystem, userFunction) -> None: ...
+    @overload
+    def SolveSteps(mainSystem, simulationSettings) -> bool: ...
+    @overload
+    def SolveSystem(mainSystem, simulationSettings) -> bool: ...
     spectralRadius: float
+    @overload
+    def UpdateCurrentTime(mainSystem, simulationSettings) -> None: ...
+    @overload
+    def VerboseWrite(level, str) -> None: ...
+    @overload
+    def WriteCoordinatesToFile(mainSystem, simulationSettings) -> None: ...
+    @overload
+    def WriteSolutionFileHeader(mainSystem, simulationSettings) -> None: ...
 
-#information for MainSolverExplicit
+
 class MainSolverExplicit:
     conv: SolverConvergenceData
     it: SolverIterationData
     output: SolverOutputData
     timer: CSolverTimer
+    @overload
+    def ComputeLoadFactor(simulationSettings) -> float: ...
+    @overload
+    def ComputeMassMatrix(mainSystem, scalarFactor=1.) -> None: ...
+    @overload
+    def ComputeNewtonJacobian(mainSystem, simulationSettings) -> None: ...
+    @overload
+    def ComputeNewtonResidual(mainSystem, simulationSettings) -> float: ...
+    @overload
+    def ComputeNewtonUpdate(mainSystem, simulationSettings, initial=True) -> None: ...
+    @overload
+    def ComputeODE1RHS(mainSystem) -> None: ...
+    @overload
+    def ComputeODE2RHS(mainSystem) -> None: ...
+    @overload
+    def DiscontinuousIteration(mainSystem, simulationSettings) -> bool: ...
+    @overload
+    def FinalizeSolver(mainSystem, simulationSettings) -> None: ...
+    @overload
+    def FinishStep(mainSystem, simulationSettings) -> None: ...
+    @overload
+    def GetAEsize() -> int: ...
+    @overload
+    def GetDataSize() -> int: ...
+    @overload
+    def GetErrorString() -> str: ...
+    @overload
+    def GetMethodOrder() -> int: ...
+    @overload
+    def GetNumberOfStages() -> int: ...
+    @overload
+    def GetODE1size() -> int: ...
+    @overload
+    def GetODE2size() -> int: ...
+    @overload
+    def GetSimulationEndTime(simulationSettings) -> float: ...
+    @overload
+    def GetSolverName() -> str: ...
+    @overload
+    def GetSystemMassMatrix() -> ArrayLike: ...
+    @overload
+    def GetSystemResidual() -> ArrayLike: ...
+    @overload
+    def HasAutomaticStepSizeControl(mainSystem, simulationSettings) -> bool: ...
+    @overload
+    def IncreaseStepSize(mainSystem, simulationSettings) -> None: ...
+    @overload
+    def InitializeSolver(mainSystem, simulationSettings) -> bool: ...
+    @overload
+    def InitializeSolverData(mainSystem, simulationSettings) -> None: ...
+    @overload
+    def InitializeSolverInitialConditions(mainSystem, simulationSettings) -> None: ...
+    @overload
+    def InitializeSolverOutput(mainSystem, simulationSettings) -> None: ...
+    @overload
+    def InitializeSolverPreChecks(mainSystem, simulationSettings) -> bool: ...
+    @overload
+    def InitializeStep(mainSystem, simulationSettings) -> None: ...
+    @overload
+    def IsStaticSolver() -> bool: ...
+    @overload
+    def IsVerboseCheck(level) -> bool: ...
+    @overload
+    def Newton(mainSystem, simulationSettings) -> bool: ...
+    @overload
+    def PostInitializeSolverSpecific(mainSystem, simulationSettings) -> None: ...
+    @overload
+    def PreInitializeSolverSpecific(mainSystem, simulationSettings) -> None: ...
+    @overload
+    def ReduceStepSize(mainSystem, simulationSettings, severity) -> bool: ...
+    @overload
+    def SetSystemMassMatrix(systemMassMatrix) -> None: ...
+    @overload
+    def SetSystemResidual(systemResidual) -> None: ...
+    @overload
+    def SolveSteps(mainSystem, simulationSettings) -> bool: ...
+    @overload
+    def SolveSystem(mainSystem, simulationSettings) -> bool: ...
+    @overload
+    def UpdateCurrentTime(mainSystem, simulationSettings) -> None: ...
+    @overload
+    def VerboseWrite(level, str) -> None: ...
+    @overload
+    def WriteCoordinatesToFile(mainSystem, simulationSettings) -> None: ...
+    @overload
+    def WriteSolutionFileHeader(mainSystem, simulationSettings) -> None: ...
 
-#stub information for class VisuGeneralContact functions
+
 class VisuGeneralContact:
     @overload
     def Reset(self) -> None: ...
 
-#stub information for class GeneralContact functions
+
 class GeneralContact:
     @overload
     def GetPythonObject(self) -> dict: ...
@@ -939,7 +1227,7 @@ class GeneralContact:
     @overload
     def GetActiveContacts(self, typeIndex: ContactTypeIndex, itemIndex: int) -> List[int]: ...
 
-#stub information for class SystemData functions
+
 class SystemData:
     @overload
     def NumberOfLoads(self) -> int: ...
@@ -1020,7 +1308,7 @@ class SystemData:
     @overload
     def GetNodeLTGData(self, nodeNumber: int) -> List[int]: ...
 
-#stub information for class MainSystem functions
+
 class MainSystem:
     @overload
     def Assemble(self) -> None: ...
@@ -1157,81 +1445,8 @@ class MainSystem:
     @overload
     def SetSensorParameter(self, sensorNumber: SensorIndex, parameterName: str, value: Any) -> None: ...
 
-#stub information for class SystemContainer functions
-class SystemContainer:
     @overload
-    def Reset(self) -> None: ...
-    @overload
-    def AddSystem(self) -> MainSystem: ...
-    @overload
-    def NumberOfSystems(self) -> int: ...
-    @overload
-    def GetSystem(self, systemNumber: int) -> MainSystem: ...
-    visualizationSettings:VisualizationSettings
-    @overload
-    def GetRenderState(self) -> dict: ...
-    @overload
-    def SetRenderState(self, renderState: dict) -> None: ...
-    @overload
-    def RedrawAndSaveImage(self) -> None: ...
-    @overload
-    def WaitForRenderEngineStopFlag(self) -> bool: ...
-    @overload
-    def RenderEngineZoomAll(self) -> None: ...
-    @overload
-    def AttachToRenderEngine(self) -> bool: ...
-    @overload
-    def DetachFromRenderEngine(self) -> bool: ...
-    @overload
-    def SendRedrawSignal(self) -> None: ...
-    @overload
-    def GetCurrentMouseCoordinates(self, useOpenGLcoordinates=False) -> [float,float]: ...
-
-#stub information for exudyn module functions
-@overload
-def GetVersionString(addDetails=False) -> str: ...
-@overload
-def Help() -> None: ...
-@overload
-def RequireVersion(requiredVersionString: str) -> None: ...
-@overload
-def StartRenderer(verbose=0) -> bool: ...
-@overload
-def IsRendererActive() -> bool: ...
-@overload
-def DoRendererIdleTasks(waitSeconds=0) -> None: ...
-@overload
-def SolveStatic(mbs: MainSystem, simulationSettings: SimulationSettings, updateInitialValues=False, storeSolver=True) -> bool: ...
-@overload
-def SolveDynamic(mbs: MainSystem, simulationSettings: SimulationSettings, solverType: DynamicSolverType, updateInitialValues=False, storeSolver=True) -> bool: ...
-@overload
-def ComputeODE2Eigenvalues(mbs: MainSystem, simulationSettings: SimulationSettings, useSparseSolver=False, numberOfEigenvalues=-1, setInitialValues=True, convert2Frequencies=False) -> bool: ...
-@overload
-def SetOutputPrecision(numberOfDigits: int) -> None: ...
-@overload
-def SetLinalgOutputFormatPython(flagPythonFormat: bool) -> None: ...
-@overload
-def SetWriteToConsole(flag: bool) -> None: ...
-@overload
-def SetWriteToFile(filename: str, flagWriteToFile=True, flagAppend=False) -> None: ...
-@overload
-def SetPrintDelayMilliSeconds(delayMilliSeconds: int) -> None: ...
-@overload
-def Print(*args: Any) -> None: ...
-@overload
-def SuppressWarnings(flag: bool) -> None: ...
-@overload
-def InfoStat(writeOutput=True) -> List[int]: ...
-@overload
-def Go() -> None: ...
-@overload
-def InvalidIndex() -> int: ...
-variables:dict
-sys:dict
-
-class MainSystem:
-    @overload
-    def SolutionViewer(self, solution=[], rowIncrement=1, timeout=0.04, runOnStart=True, runMode=2, fontSize=12, title='', checkRenderEngineStopFlag=True) -> None: ...
+    def SolutionViewer(self, solution=None, rowIncrement=1, timeout=0.04, runOnStart=True, runMode=2, fontSize=12, title='', checkRenderEngineStopFlag=True) -> None: ...
 
     @overload
     def CreateMassPoint(self, name='', referenceCoordinates=[0.,0.,0.], initialCoordinates=[0.,0.,0.], initialVelocities=[0.,0.,0.], physicsMass=0, gravity=[0.,0.,0.], graphicsDataList=[], drawSize=-1, color=[-1.,-1.,-1.,-1.], show=True, create2D=False, returnDict=False) -> Union[dict, ObjectIndex]: ...
@@ -1244,6 +1459,9 @@ class MainSystem:
 
     @overload
     def CreateCartesianSpringDamper(self, name='', bodyOrNodeList=[None, None], localPosition0=[0.,0.,0.], localPosition1=[0.,0.,0.], stiffness=[0.,0.,0.], damping=[0.,0.,0.], offset=[0.,0.,0.], show=True, drawSize=-1, color=color4default) -> ObjectIndex: ...
+
+    @overload
+    def CreateRigidBodySpringDamper(self, name='', bodyOrNodeList=[None, None], localPosition0=[0.,0.,0.], localPosition1=[0.,0.,0.], stiffness=np.zeros((6,6)), damping=np.zeros((6,6)), offset=[0.,0.,0.,0.,0.,0.], rotationMatrixJoint=np.eye(3), useGlobalFrame=True, show=True, drawSize=-1, color=color4default) -> ObjectIndex: ...
 
     @overload
     def CreateRevoluteJoint(self, name='', bodyNumbers=[None, None], position=[], axis=[], useGlobalFrame=True, show=True, axisRadius=0.1, axisLength=0.4, color=color4default) -> [ObjectIndex, MarkerIndex, MarkerIndex]: ...
@@ -1273,10 +1491,10 @@ class MainSystem:
     def ComputeLinearizedSystem(self, simulationSettings=exudyn.SimulationSettings(), useSparseSolver=False) -> [ArrayLike, ArrayLike, ArrayLike]: ...
 
     @overload
-    def ComputeODE2Eigenvalues(self, simulationSettings=exudyn.SimulationSettings(), useSparseSolver=False, numberOfEigenvalues=0, constrainedCoordinates=[], convert2Frequencies=False, useAbsoluteValues=True) -> [ArrayLike, ArrayLike]: ...
+    def ComputeODE2Eigenvalues(self, simulationSettings=exudyn.SimulationSettings(), useSparseSolver=False, numberOfEigenvalues=0, constrainedCoordinates=[], convert2Frequencies=False, useAbsoluteValues=True, ignoreAlgebraicEquations=False, singularValuesTolerance=1e-12) -> [ArrayLike, ArrayLike]: ...
 
     @overload
-    def ComputeSystemDegreeOfFreedom(self, simulationSettings=exudyn.SimulationSettings(), threshold=1e-12, verbose=False, useSVD=False) -> List[int]: ...
+    def ComputeSystemDegreeOfFreedom(self, simulationSettings=exudyn.SimulationSettings(), threshold=1e-12, verbose=False, useSVD=False) -> dict: ...
 
     @overload
     def CreateDistanceSensorGeometry(self, meshPoints, meshTrigs, rigidBodyMarkerIndex, searchTreeCellSize=[8,8,8]) -> int: ...
@@ -1286,4 +1504,34 @@ class MainSystem:
 
     @overload
     def DrawSystemGraph(self, showLoads=True, showSensors=True, useItemNames=False, useItemTypes=False, addItemTypeNames=True, multiLine=True, fontSizeFactor=1., layoutDistanceFactor=3., layoutIterations=100, showLegend=True) -> [Any, Any, Any]: ...
+
+
+class SystemContainer:
+    @overload
+    def Reset(self) -> None: ...
+    @overload
+    def AddSystem(self) -> MainSystem: ...
+    @overload
+    def NumberOfSystems(self) -> int: ...
+    @overload
+    def GetSystem(self, systemNumber: int) -> MainSystem: ...
+    visualizationSettings:VisualizationSettings
+    @overload
+    def GetRenderState(self) -> dict: ...
+    @overload
+    def SetRenderState(self, renderState: dict) -> None: ...
+    @overload
+    def RedrawAndSaveImage(self) -> None: ...
+    @overload
+    def WaitForRenderEngineStopFlag(self) -> bool: ...
+    @overload
+    def RenderEngineZoomAll(self) -> None: ...
+    @overload
+    def AttachToRenderEngine(self) -> bool: ...
+    @overload
+    def DetachFromRenderEngine(self) -> bool: ...
+    @overload
+    def SendRedrawSignal(self) -> None: ...
+    @overload
+    def GetCurrentMouseCoordinates(self, useOpenGLcoordinates=False) -> [float,float]: ...
 

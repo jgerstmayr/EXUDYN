@@ -650,9 +650,9 @@ OutputVariableType CObjectKinematicTree::GetOutputVariableTypesSuperElement(Inde
 		(Index)OutputVariableType::RotationMatrix +
 		(Index)OutputVariableType::AngularVelocity +
 		(Index)OutputVariableType::AngularVelocityLocal +
-		(Index)OutputVariableType::Acceleration +
-		(Index)OutputVariableType::AccelerationLocal
-		);
+        (Index)OutputVariableType::AngularAcceleration +
+        (Index)OutputVariableType::AngularAccelerationLocal
+        );
 
 	return ovt;
 

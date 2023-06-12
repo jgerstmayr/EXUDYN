@@ -180,7 +180,7 @@ class RobotLink:
 class VRobotTool:
     #**classFunction: initialize robot tool with parameters; currently only graphicsData, which is a list of GraphicsData same as in mbs Objects
     def __init__(self, graphicsData=[]):
-        self.graphicsData = graphicsData
+        self.graphicsData = copy(graphicsData)
 
 #**class: define tool of robot: containing graphics and HT (may add features in future)
 class RobotTool:
@@ -203,7 +203,7 @@ class RobotTool:
 class VRobotBase:
     #**classFunction: initialize robot base with parameters; currently only graphicsData, which is a list of GraphicsData same as in mbs Objects
     def __init__(self, graphicsData=[]):
-        self.graphicsData = graphicsData
+        self.graphicsData = copy(graphicsData)
 
     
 #**class: define base of robot: containing graphics and HT (may add features in future)
@@ -415,7 +415,7 @@ class Robot:
         #A = erb.HT2rotationMatrix(self.GetBaseHT())
         #vPrevious = erb.HT2translation(self.GetBaseHT())
         
-        vn = toolPosition
+        vn = list(toolPosition)
         if len(vn) == 0:
             vn = erb.HT2translation(HT[linkIndex] @ self.links[linkIndex].localHT) #last link coordinates
 
@@ -650,7 +650,7 @@ class Robot:
     #**input: 
     #   mbs: the multibody system, which will be extended
     #   baseMarker: a rigid body marker, at which the robot will be placed (usually ground); note that the local coordinate system of the base must be in accordance with the DH-parameters, i.e., the z-axis must be the first rotation axis. For correction of the base coordinate system, use rotationMarkerBase
-    #   jointSpringDamperUserFunctionList: a list of user functions for actuation of joints with more efficient spring-damper based connector (spring-damper directly emulates PD-controller); uses torsional spring damper for revolute joints and linear spring damper for prismatic joints; can be empty list (no spring dampers); if entry of list is 0, no user function is created, just pure spring damper; parameters are taken from RobotLink PDcontrol structure, which MUST be defined using SetPDcontrol(...) in RobotLink
+    #   jointSpringDamperUserFunctionList: NOT IMPLEMENTED yet: jointSpringDamperUserFunctionLista list of user functions for actuation of joints with more efficient spring-damper based connector (spring-damper directly emulates PD-controller); uses torsional spring damper for revolute joints and linear spring damper for prismatic joints; can be empty list (no spring dampers); if entry of list is 0, no user function is created, just pure spring damper; parameters are taken from RobotLink PDcontrol structure, which MUST be defined using SetPDcontrol(...) in RobotLink
     #   jointLoadUserFunctionList: DEPRECATED: a list of user functions for actuation of joints according to a LoadTorqueVector userFunction, see serialRobotTest.py as an example; can be empty list
     #   createJointTorqueLoads: DEPRECATED: if True, independently of jointLoadUserFunctionList, joint loads are created; the load numbers are stored in lists jointTorque0List/ jointTorque1List; the loads contain zero torques and need to be updated in every computation step, e.g., using a preStepUserFunction; unitTorque0List/ unitTorque1List contain the unit torque vector for the according body(link) which needs to be applied on both bodies attached to the joint
     #   rotationMarkerBase: add a numpy 3x3 matrix for rotation of the base, in order that the robot can be attached to any rotated base marker; the rotationMarkerBase is according to the definition in GenericJoint; note, that for moving base, the static compensation does not work (base rotation must be updated)
@@ -1149,7 +1149,7 @@ class InverseKinematicsNumerical():
         self.simulationSettings = exudyn.SimulationSettings()
         self.simulationSettings.solutionSettings.writeSolutionToFile = False
         self.simulationSettings.solutionSettings.binarySolutionFile = False
-        self.simulationSettings.linearSolverSettings.ignoreRedundantConstraints = True
+        self.simulationSettings.linearSolverSettings.ignoreSingularJacobian = True
         self.simulationSettings.displayComputationTime = False
         self.simulationSettings.displayStatistics = False
         

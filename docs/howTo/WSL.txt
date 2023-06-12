@@ -7,12 +7,49 @@
 #update: 31.12.2022
 #+++++++++++++++++++++++++++++++++++++++++++
 
-#graphics with updated wsl:
-#DOES NOT WORK!
+#location of WSL:
+C:\Users\<username>\AppData\Local\Packages\CanonicalGroupLimited.Ubuntu20.04onWindows_79rhkp1fndgsc
+
+
+
+#graphics with updated wslg:
+#kind of works; should work better with Windows11
 #install GPU drivers:
 #  https://learn.microsoft.com/en-us/windows/wsl/tutorials/gui-apps
 #wsl --update
 #==>directly should allows graphics on windows
+
+#graphics (OpenGL, regular windows)
+#modify your ~/.bashrc:
+export DISPLAY=:0 # in WSL 1
+export LIBGL_ALWAYS_INDIRECT=0 #software emulated graphics
+#LIBGL_ALWAYS_INDIRECT=1 does not seem to work (but would be faster ...!)
+
+#FONT SIZE:
+modify .wslgconfig:
+#WSLg configuration:
+#Various debugging options for WSLg can be configured by editing the file c:\ProgramData\Microsoft\WSL\.wslgconfig (for inbox WSL),
+#  or c:\Users\[your user name]\.wslgconfig
+#https://github.com/microsoft/wslg/wiki/WSLg-Configuration-Options-for-Debugging
+
+.wslgconfig should contain (factor 150 is 1.5); this scales everything (also opengl window):
+[system-distro-env]
+WESTON_RDP_HI_DPI_SCALING=true
+WESTON_RDP_FRACTIONAL_HI_DPI_SCALING=false
+WESTON_RDP_DEBUG_DESKTOP_SCALING_FACTOR=150
+
+
+works?: https://github.com/microsoft/WSL/discussions/9446
+#check:
+C:\ProgramData\Microsoft\WSL\.wslgconfig
+[system-distro-env]
+WESTON_RDP_DEBUG_DESKTOP_SCALING_FACTOR=200
+https://github.com/microsoft/wslg/issues/590
+#mostly doe not work
+export GDK_SCALE=2
+export GDK_DPI_SCALE=0.75
+
+
 
 #installation of WSL2: follow:
 https://docs.microsoft.com/en-us/windows/wsl/install-win10#install-windows-subsystem-for-linux
@@ -33,6 +70,17 @@ https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi
 
 #for wsl2 need to go to Windows->Apps and Features->Programs and features->turn on/off features
 #->Activate Hyper-V (includes sub-checks)
+
+
+
+
+
+
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++
+#everything below here is definitely for older WSL:
+#++++++++++++++++++++++++++++++++++++++++++++++++++
+
 
 #set WSL2 as default
 wsl --set-default-version 2
@@ -59,6 +107,11 @@ https://docs.microsoft.com/en-us/windows/wsl/install-manual
 #install Ubuntu18
 enter user name
 enter password
+
+
+#+++++++++++++
+#find something in all directories:
+find / -iname 'libmpi.so.*'
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -95,10 +148,22 @@ conda install -c conda-forge matplotlib -y
 https://docs.microsoft.com/en-us/windows/terminal/get-started
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#install mpi:
+#install mpi / mpi4py:
 sudo apt-get update
 sudo apt install openmpi-bin libopenmpi-dev
+#seems only to work without conda environments on base Python 3.9? (definitely does not work in venvP39)
+python -m pip install mpi4py => does not work in venvP39
+
+#works in base Python 3.9 (and possibly in venvP38):
 conda install mpi4py
+#test:
+mpiexec -n 5 python -c "print('hello world')"
+mpiexec -n 5 python -m mpi4py.bench helloworld
+#in Examples folder (using 1.6.119):
+mpiexec -np 14 python3 -m mpi4py.futures mpi4pyExample.py
+#in Experimental folder (using 1.6.119):
+mpiexec -np 28 python3 -m mpi4py.futures mpi4pyTest.py
+
 #pip install does not (always?) work on WSL
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

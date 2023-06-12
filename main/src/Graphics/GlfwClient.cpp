@@ -97,7 +97,9 @@ bool GlfwRenderer::rendererActive = false;
 bool GlfwRenderer::stopRenderer = false;
 bool GlfwRenderer::useMultiThreadedRendering = false;
 Real GlfwRenderer::lastGraphicsUpdate = 0.;
-Real GlfwRenderer::lastEventUpdate = 0.;		
+Real GlfwRenderer::lastEventUpdate = 0.;	
+Real GlfwRenderer::rendererStartTime = 0.;
+Real GlfwRenderer::lastTryCloseWindow = 0.;
 bool GlfwRenderer::callBackSignal = false;
 
 Index GlfwRenderer::rendererError = 0;
@@ -190,13 +192,38 @@ void GlfwRenderer::ShowMessage(const STDstring& str, Real timeout)
 
 void GlfwRenderer::window_close_callback(GLFWwindow* window)
 {
-	if (PyGetRendererCallbackLock()) { return; }
+	if (PyGetRendererCallbackLock()) { 
+        glfwSetWindowShouldClose(window, GL_FALSE);
+        return;
+    }
 
-	basicVisualizationSystemContainer->StopSimulation();		//stop solver if running
-	basicVisualizationSystemContainer->ForceQuitSimulation();	//if solver is not running, also tell that it shall be shut down if started
+    bool reallyQuit = true;
+    //PrintDelayed("window_close_callback");
+    //PrintDelayed("tstart=" + EXUstd::ToString(rendererStartTime) +
+    //    ", tcurrent=" + EXUstd::ToString(EXUstd::GetTimeInSeconds()));
+    //PrintDelayed("quittime=" + EXUstd::ToString(visSettings->window.reallyQuitTimeLimit) +
+    //    ", lastTryCloseWindow=" + EXUstd::ToString(lastTryCloseWindow));
 
-	glfwSetWindowShouldClose(window, GL_FALSE);
-	stopRenderer = true;
+    const Real timeoutCloseWindow = 8;
+    if ((EXUstd::GetTimeInSeconds() - rendererStartTime > visSettings->window.reallyQuitTimeLimit) &&
+        (EXUstd::GetTimeInSeconds() - lastTryCloseWindow > 2)) //hardcoded, 2 seconds
+    {
+        reallyQuit = false;
+        ShowMessage("To really close window, click twice on icon", timeoutCloseWindow);
+        if (verboseRenderer) { PrintDelayed("Long running simulation: requires second click to close window!"); }
+        glfwSetWindowShouldClose(window, GL_FALSE);
+    }
+
+    lastTryCloseWindow = EXUstd::GetTimeInSeconds();
+    if (reallyQuit)
+    {
+        ShowMessage("closing renderer ..."); //in regular cases this is not visible
+        basicVisualizationSystemContainer->StopSimulation();		//stop solver if running
+        basicVisualizationSystemContainer->ForceQuitSimulation();	//if solver is not running, also tell that it shall be shut down if started
+
+        glfwSetWindowShouldClose(window, GL_FALSE);
+        stopRenderer = true;
+    }
 }
 
 void GlfwRenderer::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -209,19 +236,81 @@ void GlfwRenderer::key_callback(GLFWwindow* window, int key, int scancode, int a
 
 	const Real timeoutShowItem = 2; //seconds
 
-	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+	if ((key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) ||
+        (key == GLFW_KEY_Q && action == GLFW_PRESS && mods == 0))
 	{
-		basicVisualizationSystemContainer->StopSimulation();		//stop solver if running
-		basicVisualizationSystemContainer->ForceQuitSimulation();	//if solver is not running, also tell that it shall be shut down if started
-		
-		//this leads to problems when closing:
-		//std::this_thread::sleep_for(std::chrono::milliseconds(200)); //give thread time to finish the stop simulation command
-		//EXUstd::ReleaseSemaphore(graphicsUpdateAtomicFlag);
+        bool reallyQuit = true;
+        if (EXUstd::GetTimeInSeconds() - rendererStartTime > visSettings->window.reallyQuitTimeLimit)
+        {
+            if (verboseRenderer) { PrintDelayed("Long running simulation: requires additional action to quit!"); }
+            //result=-2: exception occured
+            //result=-1: undefined quit response
+            //result= 0: default result value: unused HERE
+            //result= 1: tkinter dialog opened
+            //result= 2: do not quit
+            //result= 3: quit
 
-		stopRenderer = true;
-		//glfwSetWindowShouldClose(window, GL_TRUE);
+            PyProcessSetResult(-1); //initialize as undefined
+            PyQueuePythonProcess(ProcessID::AskYesNo,0);
 
-		return; //don't process keys or call user function
+            if (!useMultiThreadedRendering) //if not multithreaded, we have to call the queue
+            {
+                PyProcessExecuteQueue(); //if still some elements open in queue; MAY ONLY BE DONE IN SINGLE-THREADED MODE
+                PyProcessExecuteQueue(); //if still some elements open in queue; MAY ONLY BE DONE IN SINGLE-THREADED MODE
+            }
+            //PrintDelayed("wait for askyesno process to be released");
+
+            //now wait if there is a response (at least tkinter dialog has opened ...)
+            if (useMultiThreadedRendering) //if not multithreaded, queue already processed and result is there
+            {
+                Index timeOut = 100;
+                Index i = 0;
+                while ((i++ < timeOut) && (PyProcessGetResult() == -1))
+                {
+                    std::this_thread::sleep_for(std::chrono::milliseconds(20));
+                }
+                if (verboseRenderer) { PrintDelayed("QUIT renderer: waited for " + EXUstd::ToString( i * 20) + " milliseconds \n"); }
+                //PrintDelayed("wait for askyesno process to be finished");
+
+                while (PyProcessGetResult() == 1) //this signals that tkinter dialog opened; now wait what happens; result gets -2 in case of exception
+                {
+                    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+                }
+                if (verboseRenderer) { PrintDelayed("  Quit function=" + EXUstd::ToString(PyProcessGetResult())); }
+            }
+            //PrintDelayed("evaluate:");
+            if (PyProcessGetResult() <= -1) //no tkinter dialog opened or crashed
+            {
+                //PrintDelayed("no tkinter; result=" + EXUstd::ToString(PyProcessGetResult()) );
+                const Real timeOutMessage = 8;
+                if (EXUstd::GetTimeInSeconds() - lastTryCloseWindow > 1)
+                {
+                    ShowMessage("To really close window, press Q or Escape second time!", timeOutMessage);
+                    lastTryCloseWindow = EXUstd::GetTimeInSeconds();
+                    PyProcessSetResult(2); //do not quit
+                }
+                else
+                {
+                    PyProcessSetResult(3); //second trial ... now quit
+                }
+            }
+            if (verboseRenderer) { PrintDelayed("Quit action code=" + EXUstd::ToString(PyProcessGetResult())); }
+            reallyQuit = (PyProcessGetResult() == 3);
+            PyProcessSetResult(0); //default
+        }
+        if (reallyQuit)
+        {
+            basicVisualizationSystemContainer->StopSimulation();		//stop solver if running
+            if (key == GLFW_KEY_ESCAPE) //escape does more than Q
+            {
+                basicVisualizationSystemContainer->ForceQuitSimulation();	//if solver is not running, also tell that it shall be shut down if started
+
+                stopRenderer = true;
+                //glfwSetWindowShouldClose(window, GL_TRUE);
+
+                return; //don't process keys or call user function
+            }
+        }
 	}
 
 	//switch ignore keys functionality
@@ -234,7 +323,7 @@ void GlfwRenderer::key_callback(GLFWwindow* window, int key, int scancode, int a
 	}
 
 	//do this first, as key may still have time to complete action
-	if (visSettings->window.ignoreKeys || !(key == GLFW_KEY_Q && action == GLFW_PRESS && mods == 0))
+	if (visSettings->window.ignoreKeys) //2023-06-03: makes no sense: || !(key == GLFW_KEY_Q && action == GLFW_PRESS && mods == 0))
 	{
 		//keyPressUserFunction uses the pybind interface and thus causes crashes when set or copied (Python thread!):
 		PyQueueKeyPressed(key, action, mods); // visSettings->window.keyPressUserFunction); //call python user function
@@ -245,10 +334,10 @@ void GlfwRenderer::key_callback(GLFWwindow* window, int key, int scancode, int a
 	if (!visSettings->window.ignoreKeys)
 	{
 		//keycode to quit simulation:
-		if (key == GLFW_KEY_Q && action == GLFW_PRESS && mods == 0)
-		{
-			basicVisualizationSystemContainer->StopSimulation();
-		}
+		//if (key == GLFW_KEY_Q && action == GLFW_PRESS && mods == 0)
+		//{
+		//	basicVisualizationSystemContainer->StopSimulation();
+		//}
 
 		//keycode to continue paused simulation or to pause:
 		if ((key == GLFW_KEY_SPACE && action == GLFW_PRESS && mods == 0) ||
@@ -1262,6 +1351,8 @@ bool GlfwRenderer::SetupRenderer(Index verbose)
 
 	lastGraphicsUpdate = EXUstd::GetTimeInSeconds() - 1000.; //do some update at beginning
 	lastEventUpdate = lastGraphicsUpdate;
+    rendererStartTime = EXUstd::GetTimeInSeconds();
+    lastTryCloseWindow = rendererStartTime - 1000; //
 
 	//glfwCreateThread(); //does not work properly ...
 	//auto th = new std::thread(GlfwRenderer::StartThread);
@@ -1445,6 +1536,18 @@ void GlfwRenderer::SetContentScaling(float xScale, float yScale)
 	{
 		ShowMessage("Font size adjusted to monitor scaling", 3.);
 	}
+}
+
+void GlfwRenderer::SetFontScaling(float scaling)
+{
+    if (state != nullptr)
+    {
+#if defined(__EXUDYN__LINUX__)
+        state->displayScaling = scaling * visSettings->general.linuxDisplayScaleFactor;
+#else
+        state->displayScaling = scaling;
+#endif
+    }
 }
 
 void GlfwRenderer::InitCreateWindow()

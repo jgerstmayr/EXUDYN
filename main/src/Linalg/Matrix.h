@@ -749,10 +749,10 @@ public:
 	// ignoreRedundantEquations: if redundant row i encountered (that factorizes down to zeros), set this row in the inverse to 0, 
 	//        which sets the according row i in A^-1 to zero: x = A^-1 * f ==> x[i] = 0 for arbitrary f
 	// redundantEquationsStart: this is the first index from which redundant equations may be ignored
-	// pivotTreshold: treshold used to produce error/ignore equation because of singularity / redundancy
+	// pivotThreshold: treshold used to produce error/ignore equation because of singularity / redundancy
 	// return -1 if successful inverse computed, other wise return errorIndex: contains (first) problematic row that caused error
 	Index InvertSpecial(MatrixBase<T>& m, ArrayIndex& rowSwaps, bool ignoreRedundantEquations = true,
-		Index redundantEquationsStart = 0, Real pivotTreshold = 0);
+		Index redundantEquationsStart = 0, Real pivotThreshold = 0);
 
 	//! Compute matrix inverse, assuming maximum size of Matrix, therefore leading to no memory allocation
 	// return -1 if successful inverse computed, other wise return errorIndex: contains (first) problematic row that caused error
@@ -1380,8 +1380,9 @@ namespace EXUmath {
 
 
 //for some reason, other than invert, this method must be placed in .h file:
+
 //! Compute matrix inverse, ignore redundant equations; NEARLY IDENTICAL to Invert()
-// temp: tempory matrix for computation of inverse, to make algorithm threadsafe; 
+// m: tempory matrix for computation of inverse, to make algorithm threadsafe; 
 // rowSwaps: temporary vector of row indices which are swaped
 // ignoreRedundantEquations: if redundant row i encountered (that factorizes down to zeros), set this row in the inverse to 0, 
 //        which sets the according row i in A^-1 to zero: x = A^-1 * f ==> x[i] = 0 for arbitrary f
@@ -1389,7 +1390,7 @@ namespace EXUmath {
 // return -1 if successful inverse computed, else return errorIndex: contains (first) problematic row that caused error
 template<typename T>
 Index MatrixBase<T>::InvertSpecial(MatrixBase<T>& m, ArrayIndex& rowSwaps, bool ignoreRedundantEquations,
-	Index redundantEquationsStart, Real pivotTreshold)
+	Index redundantEquationsStart, Real pivotThreshold)
 {
 	//Index errorIndex = -1;
 	rowSwaps.SetNumberOfItems(numberOfColumns);
@@ -1428,7 +1429,7 @@ Index MatrixBase<T>::InvertSpecial(MatrixBase<T>& m, ArrayIndex& rowSwaps, bool 
 		SwapRows(pivotpos, j);
 		EXUstd::Swap(rowSwaps[pivotpos], rowSwaps[j]); //track row indices for errorIndex
 
-		if (fabs(pivot) <= pivotTreshold)
+		if (fabs(pivot) <= pivotThreshold)
 		{
 			Index errorIndex = rowSwaps[j]; //also tracked in case ignoreRedundantEquations
 

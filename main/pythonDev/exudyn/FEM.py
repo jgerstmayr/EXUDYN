@@ -2993,6 +2993,7 @@ class FEMinterface:
     #  excludeRigidBodyMotion: if True (recommended), the first set of boundary modes is eliminated, which defines the reference conditions for the FFRF object
     #  RBE3secondMomentOfAreaWeighting: if True, the weighting of RBE3 boundaries is done according to second moment of area; if False, the more conventional (but less appropriate) quadratic distance to reference point weighting is used
     #  verboseMode: if True, some additional output is printed
+    #  timerTreshold: for more DOF than this number, CPU times are printed even with verboseMode=False
     #**notes: for NGsolve / Netgen meshes, see the according ComputeHurtyCraigBamptonModesNGsolve function, which is usually much faster - currently only implemented for RBE2 case
     #**output: stores computed modes in self.modeBasis and abs(eigenvalues) in self.eigenValues
     def ComputeHurtyCraigBamptonModes(self,
@@ -3003,7 +3004,8 @@ class FEMinterface:
                                   boundaryNodesWeights = [],
                                   excludeRigidBodyMotion = True,
                                   RBE3secondMomentOfAreaWeighting = True,
-                                  verboseMode = False):
+                                  verboseMode = False,
+                                  timerTreshold = 20000):
 
         #only makes sense for RBE3 modes:  positionOnlyModes: provide empty list [] to compute rigid body interfaces for all boundary node lists, or a boolean list [False, False, True, ...] to indicate which modes only have 3 position but no rotation modes; only valid for computationMode = RBE2 
         #unsorted, dense eigen vectors
@@ -3028,7 +3030,6 @@ class FEMinterface:
             M = self.GetMassMatrix(sparse=False)
     
         n = M.shape[0] #size of mass and stiffness matrix; assume square matrix!
-        timerTreshold = 20000 #for more DOF than this number, show CPU times
         verboseTimer = n>timerTreshold or verboseMode
     
     
@@ -3044,7 +3045,7 @@ class FEMinterface:
                 for i in range(len(boundaryNodesList)):
                     if len(boundaryNodesWeights[i]) != len(boundaryNodesList[i]):
                         raise ValueError('ComputeHurtyCraigBamptonModes: boundaryNodesWeights and boundaryNodesList must have same dimension for every sublist')
-            BNWlist = boundaryNodesWeights 
+            BNWlist = list(boundaryNodesWeights)
         else: #create boundaryNodesWeights
             BNWlist = []
             for i in range(len(boundaryNodesList)):

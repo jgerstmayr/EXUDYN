@@ -843,7 +843,8 @@
 %
 \noindent For examples on CSRtoScipySparseCSR see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 \bi
- \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py}{\texttt{ACFtest.py}} (TM)
+ \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/shapeOptimization.py}{\texttt{shapeOptimization.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py}{\texttt{ACFtest.py}} (TM)
 \ei
 
 %
@@ -1948,8 +1949,8 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2998}{ComputeHurtyCraigBamptonModes}{}}}\label{sec:FEM:FEMinterface:ComputeHurtyCraigBamptonModes}
-({\it self}, {\it boundaryNodesList}, {\it nEigenModes}, {\it useSparseSolver}= True, {\it computationMode}= HCBstaticModeSelection.RBE2, {\it boundaryNodesWeights}= [], {\it excludeRigidBodyMotion}= True, {\it RBE3secondMomentOfAreaWeighting}= True, {\it verboseMode}= False)
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2999}{ComputeHurtyCraigBamptonModes}{}}}\label{sec:FEM:FEMinterface:ComputeHurtyCraigBamptonModes}
+({\it self}, {\it boundaryNodesList}, {\it nEigenModes}, {\it useSparseSolver}= True, {\it computationMode}= HCBstaticModeSelection.RBE2, {\it boundaryNodesWeights}= [], {\it excludeRigidBodyMotion}= True, {\it RBE3secondMomentOfAreaWeighting}= True, {\it verboseMode}= False, {\it timerTreshold}= 20000)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
@@ -1965,6 +1966,7 @@ this class holds all data for ObjectFFRF user functions
 \item[]{\it excludeRigidBodyMotion}: if True (recommended), the first set of boundary modes is eliminated, which defines the reference conditions for the FFRF object
 \item[]{\it RBE3secondMomentOfAreaWeighting}: if True, the weighting of RBE3 boundaries is done according to second moment of area; if False, the more conventional (but less appropriate) quadratic distance to reference point weighting is used
 \item[]{\it verboseMode}: if True, some additional output is printed
+\item[]{\it timerTreshold}: for more DOF than this number, CPU times are printed even with verboseMode=False
 \end{itemize}
 \item[--]\textcolor{steelblue}{\bf output}: stores computed modes in self.modeBasis and abs(eigenvalues) in self.eigenValues
 \item[--]\textcolor{steelblue}{\bf notes}: for NGsolve / Netgen meshes, see the according ComputeHurtyCraigBamptonModesNGsolve function, which is usually much faster - currently only implemented for RBE2 case
@@ -1972,7 +1974,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3406}{GetEigenFrequenciesHz}{}}}\label{sec:FEM:FEMinterface:GetEigenFrequenciesHz}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3407}{GetEigenFrequenciesHz}{}}}\label{sec:FEM:FEMinterface:GetEigenFrequenciesHz}
 ({\it self})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1982,7 +1984,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3466}{ComputePostProcessingModes}{}}}\label{sec:FEM:FEMinterface:ComputePostProcessingModes}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3467}{ComputePostProcessingModes}{}}}\label{sec:FEM:FEMinterface:ComputePostProcessingModes}
 ({\it self}, {\it material}= 0, {\it outputVariableType}= 'OutputVariableType.StressLocal', {\it numberOfThreads}= 1)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2001,7 +2003,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3584}{ComputeCampbellDiagram}{}}}\label{sec:FEM:FEMinterface:ComputeCampbellDiagram}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3585}{ComputeCampbellDiagram}{}}}\label{sec:FEM:FEMinterface:ComputeCampbellDiagram}
 ({\it self}, {\it terminalFrequency}, {\it nEigenfrequencies}= 10, {\it frequencySteps}= 25, {\it rotationAxis}= 2, {\it plotDiagram}= False, {\it verbose}= False, {\it useCorotationalFrame}= False, {\it useSparseSolver}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2037,7 +2039,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3769}{CheckConsistency}{}}}\label{sec:FEM:FEMinterface:CheckConsistency}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3770}{CheckConsistency}{}}}\label{sec:FEM:FEMinterface:CheckConsistency}
 ({\it self})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2047,7 +2049,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3793}{ReadMassMatrixFromAnsys}{}}}\label{sec:FEM:FEMinterface:ReadMassMatrixFromAnsys}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3794}{ReadMassMatrixFromAnsys}{}}}\label{sec:FEM:FEMinterface:ReadMassMatrixFromAnsys}
 ({\it self}, {\it fileName}, {\it dofMappingVectorFile}, {\it sparse}= True, {\it verbose}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2057,7 +2059,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3807}{ReadStiffnessMatrixFromAnsys}{}}}\label{sec:FEM:FEMinterface:ReadStiffnessMatrixFromAnsys}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3808}{ReadStiffnessMatrixFromAnsys}{}}}\label{sec:FEM:FEMinterface:ReadStiffnessMatrixFromAnsys}
 ({\it self}, {\it fileName}, {\it dofMappingVectorFile}, {\it sparse}= True, {\it verbose}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2067,7 +2069,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3821}{ReadNodalCoordinatesFromAnsys}{}}}\label{sec:FEM:FEMinterface:ReadNodalCoordinatesFromAnsys}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3822}{ReadNodalCoordinatesFromAnsys}{}}}\label{sec:FEM:FEMinterface:ReadNodalCoordinatesFromAnsys}
 ({\it self}, {\it fileName}, {\it verbose}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2077,7 +2079,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3826}{ReadElementsFromAnsys}{}}}\label{sec:FEM:FEMinterface:ReadElementsFromAnsys}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3827}{ReadElementsFromAnsys}{}}}\label{sec:FEM:FEMinterface:ReadElementsFromAnsys}
 ({\it self}, {\it fileName}, {\it verbose}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2383,7 +2385,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L383}{GraphicsDataCircle}{}}}\label{sec:graphicsDataUtilities:GraphicsDataCircle}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L382}{GraphicsDataCircle}{}}}\label{sec:graphicsDataUtilities:GraphicsDataCircle}
 ({\it point}= [0,0,0], {\it radius}= 1, {\it color}= [0.,0.,0.,1.])
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2413,7 +2415,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L394}{GraphicsDataText}{}}}\label{sec:graphicsDataUtilities:GraphicsDataText}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L393}{GraphicsDataText}{}}}\label{sec:graphicsDataUtilities:GraphicsDataText}
 ({\it point}= [0,0,0], {\it text}= '', {\it color}= [0.,0.,0.,1.])
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2442,7 +2444,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L401}{GraphicsDataRectangle}{}}}\label{sec:graphicsDataUtilities:GraphicsDataRectangle}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L400}{GraphicsDataRectangle}{}}}\label{sec:graphicsDataUtilities:GraphicsDataRectangle}
 ({\it xMin}, {\it yMin}, {\it xMax}, {\it yMax}, {\it color}= [0.,0.,0.,1.])
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2475,7 +2477,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L412}{GraphicsDataOrthoCubeLines}{}}}\label{sec:graphicsDataUtilities:GraphicsDataOrthoCubeLines}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L411}{GraphicsDataOrthoCubeLines}{}}}\label{sec:graphicsDataUtilities:GraphicsDataOrthoCubeLines}
 ({\it xMin}, {\it yMin}, {\it zMin}, {\it xMax}, {\it yMax}, {\it zMax}, {\it color}= [0.,0.,0.,1.])
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2501,7 +2503,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L429}{GraphicsDataOrthoCube}{}}}\label{sec:graphicsDataUtilities:GraphicsDataOrthoCube}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L428}{GraphicsDataOrthoCube}{}}}\label{sec:graphicsDataUtilities:GraphicsDataOrthoCube}
 ({\it xMin}, {\it yMin}, {\it zMin}, {\it xMax}, {\it yMax}, {\it zMax}, {\it color}= [0.,0.,0.,1.], {\it addNormals}= False, {\it addEdges}= False, {\it edgeColor}= color4black, {\it addFaces}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2543,7 +2545,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L445}{GraphicsDataOrthoCubePoint}{}}}\label{sec:graphicsDataUtilities:GraphicsDataOrthoCubePoint}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L444}{GraphicsDataOrthoCubePoint}{}}}\label{sec:graphicsDataUtilities:GraphicsDataOrthoCubePoint}
 ({\it centerPoint}= [0,0,0], {\it size}= [0.1,0.1,0.1], {\it color}= [0.,0.,0.,1.], {\it addNormals}= False, {\it addEdges}= False, {\it edgeColor}= color4black, {\it addFaces}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2576,9 +2578,9 @@ this class holds all data for ObjectFFRF user functions
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/craneReevingSystem.py}{\texttt{craneReevingSystem.py}} (Ex), 
  ...
 , 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/carRollingDiscTest.py}{\texttt{carRollingDiscTest.py}} (TM), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/connectorRigidBodySpringDamperTest.py}{\texttt{connectorRigidBodySpringDamperTest.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/contactCoordinateTest.py}{\texttt{contactCoordinateTest.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/bricardMechanism.py}{\texttt{bricardMechanism.py}} (TM), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/carRollingDiscTest.py}{\texttt{carRollingDiscTest.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/computeODE2AEeigenvaluesTest.py}{\texttt{computeODE2AEeigenvaluesTest.py}} (TM), 
  ...
 
 \ei
@@ -2586,7 +2588,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L472}{GraphicsDataCube}{}}}\label{sec:graphicsDataUtilities:GraphicsDataCube}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L471}{GraphicsDataCube}{}}}\label{sec:graphicsDataUtilities:GraphicsDataCube}
 ({\it pList}, {\it color}= [0.,0.,0.,1.], {\it faces}= [1,1,1,1,1,1], {\it addNormals}= False, {\it addEdges}= False, {\it edgeColor}= color4black, {\it addFaces}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2611,7 +2613,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L558}{GraphicsDataSphere}{}}}\label{sec:graphicsDataUtilities:GraphicsDataSphere}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L557}{GraphicsDataSphere}{}}}\label{sec:graphicsDataUtilities:GraphicsDataSphere}
 ({\it point}= [0,0,0], {\it radius}= 0.1, {\it color}= [0.,0.,0.,1.], {\it nTiles}= 8, {\it addEdges}= False, {\it edgeColor}= color4black, {\it addFaces}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2641,7 +2643,7 @@ this class holds all data for ObjectFFRF user functions
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/graphicsDataExample.py}{\texttt{graphicsDataExample.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py}{\texttt{humanRobotInteraction.py}} (Ex), 
 \\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/lugreFrictionTest.py}{\texttt{lugreFrictionTest.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/nMassOscillatorInteractive.py}{\texttt{nMassOscillatorInteractive.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/nMassOscillatorEigenmodes.py}{\texttt{nMassOscillatorEigenmodes.py}} (Ex), 
  ...
 , 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/connectorGravityTest.py}{\texttt{connectorGravityTest.py}} (TM), 
@@ -2654,7 +2656,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L685}{GraphicsDataCylinder}{}}}\label{sec:graphicsDataUtilities:GraphicsDataCylinder}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L684}{GraphicsDataCylinder}{}}}\label{sec:graphicsDataUtilities:GraphicsDataCylinder}
 ({\it pAxis}= [0,0,0], {\it vAxis}= [0,0,1], {\it radius}= 0.1, {\it color}= [0.,0.,0.,1.], {\it nTiles}= 16, {\it angleRange}= [0,2*pi], {\it lastFace}= True, {\it cutPlain}= True, {\it addEdges}= False, {\it edgeColor}= color4black, {\it addFaces}= True, {\it **kwargs})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2702,7 +2704,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L884}{GraphicsDataRigidLink}{}}}\label{sec:graphicsDataUtilities:GraphicsDataRigidLink}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L883}{GraphicsDataRigidLink}{}}}\label{sec:graphicsDataUtilities:GraphicsDataRigidLink}
 ({\it p0}, {\it p1}, {\it axis0}= [0,0,0], {\it axis1}= [0,0,0], {\it radius}= [0.1,0.1], {\it thickness}= 0.05, {\it width}= [0.05,0.05], {\it color}= [0.,0.,0.,1.], {\it nTiles}= 16)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2747,7 +2749,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L941}{GraphicsDataFromSTLfileTxt}{}}}\label{sec:graphicsDataUtilities:GraphicsDataFromSTLfileTxt}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L940}{GraphicsDataFromSTLfileTxt}{}}}\label{sec:graphicsDataUtilities:GraphicsDataFromSTLfileTxt}
 ({\it fileName}, {\it color}= [0.,0.,0.,1.], {\it verbose}= False, {\it invertNormals}= True, {\it invertTriangles}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2777,7 +2779,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L1038}{GraphicsDataFromSTLfile}{}}}\label{sec:graphicsDataUtilities:GraphicsDataFromSTLfile}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L1037}{GraphicsDataFromSTLfile}{}}}\label{sec:graphicsDataUtilities:GraphicsDataFromSTLfile}
 ({\it fileName}, {\it color}= [0.,0.,0.,1.], {\it verbose}= False, {\it density}= 0., {\it scale}= 1., {\it Aoff}= [], {\it pOff}= [], {\it invertNormals}= True, {\it invertTriangles}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2812,7 +2814,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L1111}{AddEdgesAndSmoothenNormals}{}}}\label{sec:graphicsDataUtilities:AddEdgesAndSmoothenNormals}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L1110}{AddEdgesAndSmoothenNormals}{}}}\label{sec:graphicsDataUtilities:AddEdgesAndSmoothenNormals}
 ({\it graphicsData}, {\it edgeColor}= color4black, {\it edgeAngle}= 0.25*pi, {\it pointTolerance}= 5, {\it addEdges}= True, {\it smoothNormals}= True, {\it roundDigits}= 5, {\it triangleColor}= [])
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2846,7 +2848,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L1273}{ExportGraphicsData2STL}{}}}\label{sec:graphicsDataUtilities:ExportGraphicsData2STL}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L1274}{ExportGraphicsData2STL}{}}}\label{sec:graphicsDataUtilities:ExportGraphicsData2STL}
 ({\it graphicsData}, {\it fileName}, {\it solidName}= 'ExudynSolid', {\it invertNormals}= True, {\it invertTriangles}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2874,7 +2876,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L1342}{GraphicsDataSolidOfRevolution}{}}}\label{sec:graphicsDataUtilities:GraphicsDataSolidOfRevolution}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L1343}{GraphicsDataSolidOfRevolution}{}}}\label{sec:graphicsDataUtilities:GraphicsDataSolidOfRevolution}
 ({\it pAxis}, {\it vAxis}, {\it contour}, {\it color}= [0.,0.,0.,1.], {\it nTiles}= 16, {\it smoothContour}= False, {\it addEdges}= False, {\it edgeColor}= color4black, {\it addFaces}= True, {\it **kwargs})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2930,7 +2932,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L1481}{GraphicsDataArrow}{}}}\label{sec:graphicsDataUtilities:GraphicsDataArrow}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L1482}{GraphicsDataArrow}{}}}\label{sec:graphicsDataUtilities:GraphicsDataArrow}
 ({\it pAxis}, {\it vAxis}, {\it radius}, {\it color}= [0.,0.,0.,1.], {\it headFactor}= 2, {\it headStretch}= 4, {\it nTiles}= 12)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2973,7 +2975,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L1499}{GraphicsDataBasis}{}}}\label{sec:graphicsDataUtilities:GraphicsDataBasis}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L1500}{GraphicsDataBasis}{}}}\label{sec:graphicsDataUtilities:GraphicsDataBasis}
 ({\it origin}= [0,0,0], {\it rotationMatrix}= np.eye(3), {\it length}= 1, {\it colors}= [color4red, color4green, color4blue], {\it headFactor}= 2, {\it headStretch}= 4, {\it nTiles}= 12, {\it **kwargs})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -3007,9 +3009,9 @@ this class holds all data for ObjectFFRF user functions
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial3.py}{\texttt{rigidBodyTutorial3.py}} (Ex), 
  ...
 , 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/distanceSensor.py}{\texttt{distanceSensor.py}} (TM), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupIntegratorTest.py}{\texttt{explicitLieGroupIntegratorTest.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/reevingSystemSpringsTest.py}{\texttt{reevingSystemSpringsTest.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/bricardMechanism.py}{\texttt{bricardMechanism.py}} (TM), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/distanceSensor.py}{\texttt{distanceSensor.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupIntegratorTest.py}{\texttt{explicitLieGroupIntegratorTest.py}} (TM), 
  ...
 
 \ei
@@ -3017,7 +3019,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L1522}{GraphicsDataFrame}{}}}\label{sec:graphicsDataUtilities:GraphicsDataFrame}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L1523}{GraphicsDataFrame}{}}}\label{sec:graphicsDataUtilities:GraphicsDataFrame}
 ({\it HT}= np.eye(4), {\it length}= 1, {\it colors}= [color4red, color4green, color4blue], {\it headFactor}= 2, {\it headStretch}= 4, {\it nTiles}= 12, {\it **kwargs})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -3049,7 +3051,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L1554}{GraphicsDataQuad}{}}}\label{sec:graphicsDataUtilities:GraphicsDataQuad}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L1555}{GraphicsDataQuad}{}}}\label{sec:graphicsDataUtilities:GraphicsDataQuad}
 ({\it pList}, {\it color}= [0.,0.,0.,1.], {\it **kwargs})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -3086,15 +3088,18 @@ this class holds all data for ObjectFFRF user functions
 \noindent For examples on GraphicsDataQuad see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 \bi
  \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/massSpringFrictionInteractive.py}{\texttt{massSpringFrictionInteractive.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/nMassOscillatorEigenmodes.py}{\texttt{nMassOscillatorEigenmodes.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/nMassOscillatorInteractive.py}{\texttt{nMassOscillatorInteractive.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/simulateInteractively.py}{\texttt{simulateInteractively.py}} (Ex), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/TCPIPexudynMatlab.py}{\texttt{TCPIPexudynMatlab.py}} (Ex)
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/simulateInteractively.py}{\texttt{simulateInteractively.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/TCPIPexudynMatlab.py}{\texttt{TCPIPexudynMatlab.py}} (Ex), 
+ ...
+
 \ei
 
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L1625}{GraphicsDataCheckerBoard}{}}}\label{sec:graphicsDataUtilities:GraphicsDataCheckerBoard}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L1626}{GraphicsDataCheckerBoard}{}}}\label{sec:graphicsDataUtilities:GraphicsDataCheckerBoard}
 ({\it point}= [0,0,0], {\it normal}= [0,0,1], {\it size}= 1, {\it color}= color4lightgrey, {\it alternatingColor}= color4lightgrey2, {\it nTiles}= 10, {\it **kwargs})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -3139,8 +3144,8 @@ this class holds all data for ObjectFFRF user functions
  ...
 , 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFoutputTest.py}{\texttt{ANCFoutputTest.py}} (TM), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/connectorGravityTest.py}{\texttt{connectorGravityTest.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/coordinateVectorConstraint.py}{\texttt{coordinateVectorConstraint.py}} (TM), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/bricardMechanism.py}{\texttt{bricardMechanism.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/connectorGravityTest.py}{\texttt{connectorGravityTest.py}} (TM), 
  ...
 
 \ei
@@ -3148,7 +3153,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L1669}{ComputeTriangularMesh}{}}}\label{sec:graphicsDataUtilities:ComputeTriangularMesh}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L1670}{ComputeTriangularMesh}{}}}\label{sec:graphicsDataUtilities:ComputeTriangularMesh}
 ({\it vertices}, {\it segments})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -3191,7 +3196,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L1761}{SegmentsFromPoints}{}}}\label{sec:graphicsDataUtilities:SegmentsFromPoints}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L1762}{SegmentsFromPoints}{}}}\label{sec:graphicsDataUtilities:SegmentsFromPoints}
 ({\it points}, {\it pointIndexOffset}= 0, {\it invert}= False, {\it closeCurve}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -3211,7 +3216,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L1788}{CirclePointsAndSegments}{}}}\label{sec:graphicsDataUtilities:CirclePointsAndSegments}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L1789}{CirclePointsAndSegments}{}}}\label{sec:graphicsDataUtilities:CirclePointsAndSegments}
 ({\it center}= [0,0], {\it radius}= 0.1, {\it invert}= False, {\it pointIndexOffset}= 0, {\it nTiles}= 16)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -3236,7 +3241,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L1823}{GraphicsDataSolidExtrusion}{}}}\label{sec:graphicsDataUtilities:GraphicsDataSolidExtrusion}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L1824}{GraphicsDataSolidExtrusion}{}}}\label{sec:graphicsDataUtilities:GraphicsDataSolidExtrusion}
 ({\it vertices}, {\it segments}, {\it height}, {\it rot}= np.diag([1,1,1]), {\it pOff}= [0,0,0], {\it color}= [0,0,0,1], {\it smoothNormals}= False, {\it addEdges}= False, {\it edgeColor}= color4black, {\it addFaces}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -3334,20 +3339,20 @@ this class holds all data for ObjectFFRF user functions
 \item[]Date:      2021-01-17 (created)
 \ei
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L581}{AnimateModes}{}}}\label{sec:interactive:AnimateModes}
-({\it systemContainer}, {\it mainSystem}, {\it nodeNumber}, {\it period}= 0.04, {\it stepsPerPeriod}= 30, {\it showTime}= True, {\it renderWindowText}= '', {\it runOnStart}= False, {\it runMode}= 0, {\it scaleAmplitude}= 1, {\it title}= '', {\it fontSize}= 12, {\it checkRenderEngineStopFlag}= True)
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L591}{AnimateModes}{}}}\label{sec:interactive:AnimateModes}
+({\it systemContainer}, {\it mainSystem}, {\it nodeNumber}, {\it period}= 0.04, {\it stepsPerPeriod}= 30, {\it showTime}= True, {\it renderWindowText}= '', {\it runOnStart}= False, {\it runMode}= 0, {\it scaleAmplitude}= 1, {\it title}= '', {\it fontSize}= 12, {\it checkRenderEngineStopFlag}= True, {\it systemEigenVectors}= None)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
 \item[--]
-{\bf function description}: animate modes of ObjectFFRFreducedOrder and other objects (changes periodically one nodal coordinate); for creating snapshots, press 'Static' and 'Record animation' and press 'Run' to save one figure in the image subfolder; for creating animations for one mode, use the same procedure but use 'One Cycle'. Modes may be inverted by pressing according '+' and '-' buttons next to Amplitude.
+{\bf function description}: animate modes of ObjectFFRFreducedOrder, of nodal coordinates (changes periodically one nodal coordinate) or of a list of system modes provided as list of lists; for creating snapshots, press 'Static' and 'Record animation' and press 'Run' to save one figure in the image subfolder; for creating animations for one mode, use the same procedure but use 'One Cycle'. Modes may be inverted by pressing according '+' and '-' buttons next to Amplitude.
 \item[--]
 {\bf input}: \vspace{-6pt}
 \begin{itemize}[leftmargin=1.2cm]
 \setlength{\itemindent}{-0.7cm}
 \item[]{\it systemContainer}: system container (usually SC) of your model, containing visualization settings
 \item[]{\it mainSystem}: system (usually mbs) containing your model
-\item[]{\it nodeNumber}: node number of which the coordinates shall be animated. In case of ObjectFFRFreducedOrder, this is the generic node, e.g., 'nGenericODE2' in the dictionary returned by the function AddObjectFFRFreducedOrderWithUserFunctions(...)
+\item[]{\it nodeNumber}: node number of which the coordinates shall be animated. In case of ObjectFFRFreducedOrder, this is the generic node, e.g., 'nGenericODE2' in the dictionary returned by the function AddObjectFFRFreducedOrderWithUserFunctions(...); if nodeNumber=None, then the systemEigenVectors list is used
 \item[]{\it period}: delay for animation of every frame; the default of 0.04 results in approximately 25 frames per second
 \item[]{\it stepsPerPeriod}: number of steps into which the animation of one cycle of the mode is split into
 \item[]{\it showTime}: show a virtual time running from 0 to 2*pi during one mode cycle
@@ -3358,6 +3363,7 @@ this class holds all data for ObjectFFRF user functions
 \item[]{\it fontSize}: define font size for labels in InteractiveDialog
 \item[]{\it title}: if empty, it uses default; otherwise define specific title
 \item[]{\it checkRenderEngineStopFlag}: if True, stopping renderer (pressing Q or Escape) also causes stopping the interactive dialog
+\item[]{\it systemEigenVectors}: may be a list of lists of system eigenvectors for ODE2 (and possibly ODE1) coordinates or a eigenvector matrix containing mode vectors in columns; if nodeNumber=None, these eigenvectors are then used to be animated
 \end{itemize}
 \item[--]
 {\bf output}: opens interactive dialog with further settings
@@ -3386,7 +3392,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L754}{SolutionViewer}{}}}({\it mainSystem}, {\it solution}= [], {\it rowIncrement}= 1, {\it timeout}= 0.04, {\it runOnStart}= True, {\it runMode}= 2, {\it fontSize}= 12, {\it title}= '', {\it checkRenderEngineStopFlag}= True)
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L786}{SolutionViewer}{}}}({\it mainSystem}, {\it solution}= None, {\it rowIncrement}= 1, {\it timeout}= 0.04, {\it runOnStart}= True, {\it runMode}= 2, {\it fontSize}= 12, {\it title}= '', {\it checkRenderEngineStopFlag}= True)
 \end{flushleft}
 \bi
   \item \mybold{NOTE}: this function is directly available in MainSystem (mbs); it should be directly called as mbs.SolutionViewer(...). For description of the interface, see the MainSystem Python extensions, \refSection{sec:mainsystemextensions:SolutionViewer}.
@@ -3420,12 +3426,12 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
   #suboptions of 'radio':
   #               'textValueList': [('text1',0),('text2',1)] a list of texts with according values
   #               'value': default value (choice) of radio buttons
-  #               'variable': according variable in mbs.variables, which is set to current radio button value
+  #               'variable': according variable in mbs.variables (or mbs.sys), which is set to current radio button value
   #suboptions of 'slider':
   #               'range': (min, max) a tuple containing minimum and maximum value of slider
   #               'value': default value of slider
   #               'steps': number of steps in slider
-  #               'variable': according variable in mbs.variables, which is set to current slider value
+  #               'variable': according variable in mbs.variables (or mbs.sys), which is set to current slider value
   #example:
   dialogItems = [{'type':'label', 'text':'Nonlinear oscillation simulator', 'grid':(0,0,2), 'options':['L']},
                  {'type':'button', 'text':'test button','callFunction':ButtonCall, 'grid':(1,0,2)},
@@ -3451,8 +3457,8 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 \end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspace{24pt}\end{itemize}
 %
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L96}{\_\_init\_\_}{}}}\label{sec:interactive:InteractiveDialog:__init__}
-({\it self}, {\it mbs}, {\it simulationSettings}, {\it simulationFunction}, {\it dialogItems}, {\it plots}= [], {\it period}= 0.04, {\it realtimeFactor}= 1, {\it userStartSimulation}= None, {\it title}= '', {\it showTime}= False, {\it fontSize}= 12, {\it doTimeIntegration}= True, {\it runOnStart}= False, {\it addLabelStringVariables}= False, {\it addSliderVariables}= False, {\it checkRenderEngineStopFlag}= True, {\it userOnChange}= None)
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L97}{\_\_init\_\_}{}}}\label{sec:interactive:InteractiveDialog:__init__}
+({\it self}, {\it mbs}, {\it simulationSettings}, {\it simulationFunction}, {\it dialogItems}, {\it plots}= None, {\it period}= 0.04, {\it realtimeFactor}= 1, {\it userStartSimulation}= None, {\it title}= '', {\it showTime}= False, {\it fontSize}= 12, {\it doTimeIntegration}= True, {\it runOnStart}= False, {\it addLabelStringVariables}= False, {\it addSliderVariables}= False, {\it checkRenderEngineStopFlag}= True, {\it userOnChange}= None, {\it useSysVariables}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
@@ -3464,7 +3470,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 \item[]{\it simulationSettings}: exudyn.SimulationSettings() according to user settings
 \item[]{\it simulationFunction}: a user function(mbs, self) which is called before a simulation for the short period is started (e.g, assign special values, etc.); the arguments are the MainSystem mbs and the InteractiveDialog (self)
 \item[]{\it dialogItems}: a list of dictionaries, which describe the contents of the interactive items, where every dict has the structure {'type':[label, entry, button, slider, check] ... according to tkinter widgets, 'callFunction': a function to be called, if item is changed/button pressed, 'grid': (row,col) of item to be placed, 'rowSpan': number of rows to be used, 'columnSpan': number of columns to be used; for special item options see notes}
-\item[]{\it plots}: list of dictionaries to specify a sensor to be plotted live, see example
+\item[]{\it plots}: list of dictionaries to specify a sensor to be plotted live, see example; otherwise use default None
 \item[]{\it period}: a simulation time span in seconds which is simulated with the simulationFunction in every iteration
 \item[]{\it realtimeFactor}: if 1, the simulation is nearly performed in realtime (except for computation time); if > 1, it runs faster than realtime, if < 1, than it is slower
 \item[]{\it userStartSimulation}: a function F(flag) which is called every time after Run/Stop is pressed. The argument flag = False if button "Run" has been pressed, flag = True, if "Stop" has been pressed
@@ -3477,13 +3483,14 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 \item[]{\it addSliderVariables}: True: adds a list sliderVariables containing the (modifiable) list of variables for slider (=tkinter scale) widgets; this is not necessarily needed for changing slider values, as they can also be modified with dialog.widgets[..].set(...) method
 \item[]{\it checkRenderEngineStopFlag}: if True, stopping renderer (pressing Q or Escape) also causes stopping the interactive dialog
 \item[]{\it userOnChange}: a user function(mbs, self) which is called after period, if widget values are different from values stored in mbs.variables; this usually occurs if buttons are pressed or sliders are moved; the arguments are the MainSystem mbs and the InteractiveDialog (self)
+\item[]{\it useSysVariables}: for internal visualization functions: in this case, variables are written to mbs.sys instead of mbs.variables
 \end{itemize}
 \item[--]\textcolor{steelblue}{\bf notes}: detailed description of dialogItems and plots list/dictionary is given in commented the example below
 \vspace{12pt}\end{itemize}
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L345}{OnQuit}{}}}\label{sec:interactive:InteractiveDialog:OnQuit}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L350}{OnQuit}{}}}\label{sec:interactive:InteractiveDialog:OnQuit}
 ({\it self}, {\it event}= None)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -3493,7 +3500,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L354}{StartSimulation}{}}}\label{sec:interactive:InteractiveDialog:StartSimulation}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L359}{StartSimulation}{}}}\label{sec:interactive:InteractiveDialog:StartSimulation}
 ({\it self}, {\it event}= None)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -3503,17 +3510,17 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L367}{ProcessWidgetStates}{}}}\label{sec:interactive:InteractiveDialog:ProcessWidgetStates}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L372}{ProcessWidgetStates}{}}}\label{sec:interactive:InteractiveDialog:ProcessWidgetStates}
 ({\it self})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
-\item[--]\textcolor{steelblue}{\bf classFunction}: assign current values of radio buttons and sliders to mbs.variables
+\item[--]\textcolor{steelblue}{\bf classFunction}: assign current values of radio buttons and sliders to mbs.variables or mbs.sys
 \vspace{12pt}\end{itemize}
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L378}{ContinuousRunFunction}{}}}\label{sec:interactive:InteractiveDialog:ContinuousRunFunction}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L387}{ContinuousRunFunction}{}}}\label{sec:interactive:InteractiveDialog:ContinuousRunFunction}
 ({\it self}, {\it event}= None)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -3523,7 +3530,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L396}{InitializePlots}{}}}\label{sec:interactive:InteractiveDialog:InitializePlots}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L405}{InitializePlots}{}}}\label{sec:interactive:InteractiveDialog:InitializePlots}
 ({\it self})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -3533,7 +3540,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L443}{UpdatePlots}{}}}\label{sec:interactive:InteractiveDialog:UpdatePlots}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L452}{UpdatePlots}{}}}\label{sec:interactive:InteractiveDialog:UpdatePlots}
 ({\it self})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -3543,7 +3550,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L499}{InitializeSolver}{}}}\label{sec:interactive:InteractiveDialog:InitializeSolver}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L508}{InitializeSolver}{}}}\label{sec:interactive:InteractiveDialog:InitializeSolver}
 ({\it self})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -3553,7 +3560,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L505}{FinalizeSolver}{}}}\label{sec:interactive:InteractiveDialog:FinalizeSolver}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L514}{FinalizeSolver}{}}}\label{sec:interactive:InteractiveDialog:FinalizeSolver}
 ({\it self})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -3563,7 +3570,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L511}{RunSimulationPeriod}{}}}\label{sec:interactive:InteractiveDialog:RunSimulationPeriod}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L520}{RunSimulationPeriod}{}}}\label{sec:interactive:InteractiveDialog:RunSimulationPeriod}
 ({\it self})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4630,7 +4637,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 \item[]Notes: 	For a list of plot colors useful for matplotlib, see also advancedUtilities.PlotLineCode(...)
 \ei
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L54}{ParseOutputFileHeader}{}}}\label{sec:plot:ParseOutputFileHeader}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L55}{ParseOutputFileHeader}{}}}\label{sec:plot:ParseOutputFileHeader}
 ({\it lines})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4643,7 +4650,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L152}{PlotSensorDefaults}{}}}\label{sec:plot:PlotSensorDefaults}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L153}{PlotSensorDefaults}{}}}\label{sec:plot:PlotSensorDefaults}
 ()
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4671,7 +4678,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L226}{PlotSensor}{}}}({\it mbs}, {\it sensorNumbers}= [], {\it components}= 0, {\it xLabel}= 'time (s)', {\it yLabel}= None, {\it labels}= [], {\it colorCodeOffset}= 0, {\it newFigure}= True, {\it closeAll}= False, {\it componentsX}= [], {\it title}= '', {\it figureName}= '', {\it fontSize}= 16, {\it colors}= [], {\it lineStyles}= [], {\it lineWidths}= [], {\it markerStyles}= [], {\it markerSizes}= [], {\it markerDensity}= 0.08, {\it rangeX}= [], {\it rangeY}= [], {\it majorTicksX}= 10, {\it majorTicksY}= 10, {\it offsets}= [], {\it factors}= [], {\it subPlot}= [], {\it sizeInches}= [6.4,4.8], {\it fileName}= '', {\it useXYZcomponents}= True, {\it **kwargs})
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L227}{PlotSensor}{}}}({\it mbs}, {\it sensorNumbers}= [], {\it components}= 0, {\it xLabel}= 'time (s)', {\it yLabel}= None, {\it labels}= [], {\it colorCodeOffset}= 0, {\it newFigure}= True, {\it closeAll}= False, {\it componentsX}= [], {\it title}= '', {\it figureName}= '', {\it fontSize}= 16, {\it colors}= [], {\it lineStyles}= [], {\it lineWidths}= [], {\it markerStyles}= [], {\it markerSizes}= [], {\it markerDensity}= 0.08, {\it rangeX}= [], {\it rangeY}= [], {\it majorTicksX}= 10, {\it majorTicksY}= 10, {\it offsets}= [], {\it factors}= [], {\it subPlot}= [], {\it sizeInches}= [6.4,4.8], {\it fileName}= '', {\it useXYZcomponents}= True, {\it **kwargs})
 \end{flushleft}
 \bi
   \item \mybold{NOTE}: this function is directly available in MainSystem (mbs); it should be directly called as mbs.PlotSensor(...). For description of the interface, see the MainSystem Python extensions, \refSection{sec:mainsystemextensions:PlotSensor}.
@@ -4679,7 +4686,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 \ei
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L674}{PlotFFT}{}}}\label{sec:plot:PlotFFT}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L677}{PlotFFT}{}}}\label{sec:plot:PlotFFT}
 ({\it frequency}, {\it data}, {\it xLabel}= 'frequency', {\it yLabel}= 'magnitude', {\it label}= '', {\it freqStart}= 0, {\it freqEnd}= -1, {\it logScaleX}= True, {\it logScaleY}= True, {\it majorGrid}= True, {\it minorGrid}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4708,7 +4715,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L724}{FileStripSpaces}{}}}\label{sec:plot:FileStripSpaces}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L727}{FileStripSpaces}{}}}\label{sec:plot:FileStripSpaces}
 ({\it filename}, {\it outputFilename}, {\it fileCommentChar}= '', {\it removeDoubleChars}= '')
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4730,7 +4737,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L751}{DataArrayFromSensorList}{}}}\label{sec:plot:DataArrayFromSensorList}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L754}{DataArrayFromSensorList}{}}}\label{sec:plot:DataArrayFromSensorList}
 ({\it mbs}, {\it sensorNumbers}, {\it positionList}= [], {\it time}= '')
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4760,7 +4767,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L778}{LoadImage}{}}}\label{sec:plot:LoadImage}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L781}{LoadImage}{}}}\label{sec:plot:LoadImage}
 ({\it fileName}, {\it trianglesAsLines}= True, {\it verbose}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4783,7 +4790,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L851}{PlotImage}{}}}\label{sec:plot:PlotImage}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L854}{PlotImage}{}}}\label{sec:plot:PlotImage}
 ({\it imageData}, {\it HT}= np.eye(4), {\it axesEqual}= True, {\it plot3D}= False, {\it lineWidths}= 1, {\it lineStyles}= '-', {\it triangleEdgeColors}= 'black', {\it triangleEdgeWidths}= 0.5, {\it removeAxes}= True, {\it orthogonalProjection}= True, {\it title}= '', {\it figureName}= '', {\it fileName}= '', {\it fontSize}= 16, {\it closeAll}= False, {\it azim}= 0., {\it elev}= 0.)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4850,7 +4857,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L143}{ProcessParameterList}{}}}\label{sec:processing:ProcessParameterList}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L144}{ProcessParameterList}{}}}\label{sec:processing:ProcessParameterList}
 ({\it parameterFunction}, {\it parameterList}, {\it useMultiProcessing}, {\it clusterHostNames}= [], {\it **kwargs})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4868,6 +4875,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 \item[]{\it resultsFile}: if provided, output is immediately written to resultsFile during processing
 \item[]{\it clusterHostNames}: list of hostnames, e.g. clusterHostNames=['123.124.125.126','123.124.125.127'] providing a list of strings with IP addresses or host names, see dispy documentation. If list is non-empty and useMultiProcessing==True and dispy is installed, cluster computation is used; NOTE that cluster computation speedup factors shown are not fully true, as they include a significant overhead; thus, only for computations which take longer than 1-5 seconds and for sufficient network bandwith, the speedup is roughly true
 \item[]{\it useDispyWebMonitor}: if given in **kwargs, a web browser is startet in case of cluster computation to manage the cluster during computation
+\item[]{\it useMPI}: if given in **kwargs and set True, and if Python package mpi4py is installed, mpi parallelization is used; for hints see parameterVariationExample.py
 \end{itemize}
 \item[--]
 {\bf output}: returns values containing the results according to parameterList
@@ -4891,7 +4899,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L371}{ParameterVariation}{}}}\label{sec:processing:ParameterVariation}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L374}{ParameterVariation}{}}}\label{sec:processing:ParameterVariation}
 ({\it parameterFunction}, {\it parameters}, {\it useLogSpace}= False, {\it debugMode}= False, {\it addComputationIndex}= False, {\it useMultiProcessing}= False, {\it showProgress}= True, {\it parameterFunctionData}= {}, {\it clusterHostNames}= [], {\it numberOfThreads}= None, {\it resultsFile}= '', {\it **kwargs})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4919,6 +4927,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 \item[]{\it parameterFunctionData}: dictionary containing additional data passed to the parameterFunction inside the parameters with dict key 'functionData'; use this e.g. for passing solver parameters or other settings
 \item[]{\it clusterHostNames}: list of hostnames, e.g. clusterHostNames=['123.124.125.126','123.124.125.127'] providing a list of strings with IP addresses or host names, see dispy documentation. If list is non-empty and useMultiProcessing==True and dispy is installed, cluster computation is used; NOTE that cluster computation speedup factors shown are not fully true, as they include a significant overhead; thus, only for computations which take longer than 1-5 seconds and for sufficient network bandwith, the speedup is roughly true
 \item[]{\it useDispyWebMonitor}: if given in **kwargs, a web browser is started in case of cluster computation to manage the cluster during computation
+\item[]{\it useMPI}: if given in **kwargs and set True, and if Python package mpi4py is installed, mpi parallelization is used; for hints see parameterVariationExample.py
 \end{itemize}
 \item[--]
 {\bf output}: \vspace{-6pt}
@@ -4939,15 +4948,16 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 \noindent For examples on ParameterVariation see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 \bi
  \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/dispyParameterVariationExample.py}{\texttt{dispyParameterVariationExample.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/mpi4pyExample.py}{\texttt{mpi4pyExample.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/multiprocessingTest.py}{\texttt{multiprocessingTest.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/parameterVariationExample.py}{\texttt{parameterVariationExample.py}} (Ex), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geneticOptimizationTest.py}{\texttt{geneticOptimizationTest.py}} (TM)
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/parameterVariationExample.py}{\texttt{parameterVariationExample.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geneticOptimizationTest.py}{\texttt{geneticOptimizationTest.py}} (TM)
 \ei
 
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L521}{GeneticOptimization}{}}}\label{sec:processing:GeneticOptimization}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L524}{GeneticOptimization}{}}}\label{sec:processing:GeneticOptimization}
 ({\it objectiveFunction}, {\it parameters}, {\it populationSize}= 100, {\it numberOfGenerations}= 10, {\it elitistRatio}= 0.1, {\it crossoverProbability}= 0.25, {\it crossoverAmount}= 0.5, {\it rangeReductionFactor}= 0.7, {\it distanceFactor}= 0.1, {\it childDistribution}= "uniform", {\it distanceFactorGenerations}= -1, {\it debugMode}= False, {\it addComputationIndex}= False, {\it useMultiProcessing}= False, {\it showProgress}= True, {\it clusterHostNames}= [], {\it **kwargs})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4998,13 +5008,14 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 \noindent For examples on GeneticOptimization see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 \bi
  \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/geneticOptimizationSliderCrank.py}{\texttt{geneticOptimizationSliderCrank.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/shapeOptimization.py}{\texttt{shapeOptimization.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geneticOptimizationTest.py}{\texttt{geneticOptimizationTest.py}} (TM)
 \ei
 
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L880}{Minimize}{}}}\label{sec:processing:Minimize}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L888}{Minimize}{}}}\label{sec:processing:Minimize}
 ({\it objectiveFunction}, {\it parameters}, {\it initialGuess}= [], {\it method}= 'Nelder-Mead', {\it tol}= 1e-4, {\it options}= {}, {\it enforceBounds}= True, {\it debugMode}= False, {\it showProgress}= True, {\it addComputationIndex}= False, {\it storeFunctionValues}= True, {\it **kwargs})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -5045,13 +5056,14 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent For examples on Minimize see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 \bi
- \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/minimizeExample.py}{\texttt{minimizeExample.py}} (Ex)
+ \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/minimizeExample.py}{\texttt{minimizeExample.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/shapeOptimization.py}{\texttt{shapeOptimization.py}} (Ex)
 \ei
 
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L1080}{ComputeSensitivities}{}}}\label{sec:processing:ComputeSensitivities}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L1087}{ComputeSensitivities}{}}}\label{sec:processing:ComputeSensitivities}
 ({\it parameterFunction}, {\it parameters}, {\it scaledByReference}= False, {\it debugMode}= False, {\it addComputationIndex}= False, {\it useMultiProcessing}= False, {\it showProgress}= True, {\it parameterFunctionData}= dict(), {\it **kwargs})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -5096,7 +5108,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L1190}{PlotOptimizationResults2D}{}}}\label{sec:processing:PlotOptimizationResults2D}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L1197}{PlotOptimizationResults2D}{}}}\label{sec:processing:PlotOptimizationResults2D}
 ({\it parameterList}, {\it valueList}, {\it xLogScale}= False, {\it yLogScale}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -5121,13 +5133,14 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 \bi
  \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/geneticOptimizationSliderCrank.py}{\texttt{geneticOptimizationSliderCrank.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/minimizeExample.py}{\texttt{minimizeExample.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geneticOptimizationTest.py}{\texttt{geneticOptimizationTest.py}} (TM)
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/shapeOptimization.py}{\texttt{shapeOptimization.py}} (Ex), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geneticOptimizationTest.py}{\texttt{geneticOptimizationTest.py}} (TM)
 \ei
 
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L1246}{PlotSensitivityResults}{}}}\label{sec:processing:PlotSensitivityResults}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L1253}{PlotSensitivityResults}{}}}\label{sec:processing:PlotSensitivityResults}
 ({\it valRef}, {\it valuesSorted}, {\it sensitivity}, {\it fVar}= None, {\it strYAxis}= None)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -5741,9 +5754,9 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py}{\texttt{NGsolvePistonEngine.py}} (Ex), 
  ...
 , 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/bricardMechanism.py}{\texttt{bricardMechanism.py}} (TM), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/computeODE2AEeigenvaluesTest.py}{\texttt{computeODE2AEeigenvaluesTest.py}} (TM), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ConvexContactTest.py}{\texttt{ConvexContactTest.py}} (TM), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/revoluteJointPrismaticJointTest.py}{\texttt{revoluteJointPrismaticJointTest.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rollingCoinPenaltyTest.py}{\texttt{rollingCoinPenaltyTest.py}} (TM), 
  ...
 
 \ei
@@ -5774,9 +5787,9 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/mouseInteractionExample.py}{\texttt{mouseInteractionExample.py}} (Ex), 
  ...
 , 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/carRollingDiscTest.py}{\texttt{carRollingDiscTest.py}} (TM), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/driveTrainTest.py}{\texttt{driveTrainTest.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/generalContactFrictionTests.py}{\texttt{generalContactFrictionTests.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/bricardMechanism.py}{\texttt{bricardMechanism.py}} (TM), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/carRollingDiscTest.py}{\texttt{carRollingDiscTest.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/computeODE2AEeigenvaluesTest.py}{\texttt{computeODE2AEeigenvaluesTest.py}} (TM), 
  ...
 
 \ei
@@ -6283,7 +6296,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1136}{AddRigidBody}{}}}\label{sec:rigidBodyUtilities:AddRigidBody}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1137}{AddRigidBody}{}}}\label{sec:rigidBodyUtilities:AddRigidBody}
 ({\it mainSys}, {\it inertia}, {\it nodeType}= exu.NodeType.RotationEulerParameters, {\it position}= [0,0,0], {\it velocity}= [0,0,0], {\it rotationMatrix}= [], {\it rotationParameters}= [], {\it angularVelocity}= [0,0,0], {\it gravity}= [0,0,0], {\it graphicsDataList}= [])
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -6328,7 +6341,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1206}{AddRevoluteJoint}{}}}\label{sec:rigidBodyUtilities:AddRevoluteJoint}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1209}{AddRevoluteJoint}{}}}\label{sec:rigidBodyUtilities:AddRevoluteJoint}
 ({\it mbs}, {\it body0}, {\it body1}, {\it point}, {\it axis}, {\it useGlobalFrame}= True, {\it showJoint}= True, {\it axisRadius}= 0.1, {\it axisLength}= 0.4)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -6361,7 +6374,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1287}{AddPrismaticJoint}{}}}\label{sec:rigidBodyUtilities:AddPrismaticJoint}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1290}{AddPrismaticJoint}{}}}\label{sec:rigidBodyUtilities:AddPrismaticJoint}
 ({\it mbs}, {\it body0}, {\it body1}, {\it point}, {\it axis}, {\it useGlobalFrame}= True, {\it showJoint}= True, {\it axisRadius}= 0.1, {\it axisLength}= 0.4)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -6598,9 +6611,9 @@ The inertia tensor and center of mass must correspond when initializing the body
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py}{\texttt{kinematicTreeAndMBS.py}} (Ex), 
  ...
 , 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/carRollingDiscTest.py}{\texttt{carRollingDiscTest.py}} (TM), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/driveTrainTest.py}{\texttt{driveTrainTest.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/generalContactFrictionTests.py}{\texttt{generalContactFrictionTests.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/bricardMechanism.py}{\texttt{bricardMechanism.py}} (TM), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/carRollingDiscTest.py}{\texttt{carRollingDiscTest.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/computeODE2AEeigenvaluesTest.py}{\texttt{computeODE2AEeigenvaluesTest.py}} (TM), 
  ...
 
 \ei
@@ -7235,7 +7248,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 \setlength{\itemindent}{-0.7cm}
 \item[]{\it mbs}: the multibody system, which will be extended
 \item[]{\it baseMarker}: a rigid body marker, at which the robot will be placed (usually ground); note that the local coordinate system of the base must be in accordance with the DH-parameters, i.e., the z-axis must be the first rotation axis. For correction of the base coordinate system, use rotationMarkerBase
-\item[]{\it jointSpringDamperUserFunctionList}: a list of user functions for actuation of joints with more efficient spring-damper based connector (spring-damper directly emulates PD-controller); uses torsional spring damper for revolute joints and linear spring damper for prismatic joints; can be empty list (no spring dampers); if entry of list is 0, no user function is created, just pure spring damper; parameters are taken from RobotLink PDcontrol structure, which MUST be defined using SetPDcontrol(...) in RobotLink
+\item[]{\it jointSpringDamperUserFunctionList}: NOT IMPLEMENTED yet: jointSpringDamperUserFunctionLista list of user functions for actuation of joints with more efficient spring-damper based connector (spring-damper directly emulates PD-controller); uses torsional spring damper for revolute joints and linear spring damper for prismatic joints; can be empty list (no spring dampers); if entry of list is 0, no user function is created, just pure spring damper; parameters are taken from RobotLink PDcontrol structure, which MUST be defined using SetPDcontrol(...) in RobotLink
 \item[]{\it jointLoadUserFunctionList}: DEPRECATED: a list of user functions for actuation of joints according to a LoadTorqueVector userFunction, see serialRobotTest.py as an example; can be empty list
 \item[]{\it createJointTorqueLoads}: DEPRECATED: if True, independently of jointLoadUserFunctionList, joint loads are created; the load numbers are stored in lists jointTorque0List/ jointTorque1List; the loads contain zero torques and need to be updated in every computation step, e.g., using a preStepUserFunction; unitTorque0List/ unitTorque1List contain the unit torque vector for the according body(link) which needs to be applied on both bodies attached to the joint
 \item[]{\it rotationMarkerBase}: add a numpy 3x3 matrix for rotation of the base, in order that the robot can be attached to any rotated base marker; the rotationMarkerBase is according to the definition in GenericJoint; note, that for moving base, the static compensation does not work (base rotation must be updated)
@@ -8216,14 +8229,14 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent For examples on MassMatrix see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 \bi
- \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/solverFunctionsTestEigenvalues.py}{\texttt{solverFunctionsTestEigenvalues.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py}{\texttt{ACFtest.py}} (TM), 
+ \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/nMassOscillatorEigenmodes.py}{\texttt{nMassOscillatorEigenmodes.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/shapeOptimization.py}{\texttt{shapeOptimization.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/solverFunctionsTestEigenvalues.py}{\texttt{solverFunctionsTestEigenvalues.py}} (Ex), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py}{\texttt{ACFtest.py}} (TM), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/manualExplicitIntegrator.py}{\texttt{manualExplicitIntegrator.py}} (TM), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderAccelerations.py}{\texttt{objectFFRFreducedOrderAccelerations.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderShowModes.py}{\texttt{objectFFRFreducedOrderShowModes.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderAccelerations.py}{\texttt{objectFFRFreducedOrderAccelerations.py}} (TM), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderShowModes.py}{\texttt{objectFFRFreducedOrderShowModes.py}} (TM), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderStressModesTest.py}{\texttt{objectFFRFreducedOrderStressModesTest.py}} (TM), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderTest.py}{\texttt{objectFFRFreducedOrderTest.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest.py}{\texttt{objectFFRFTest.py}} (TM), 
  ...
 
 \ei
@@ -8266,7 +8279,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L292}{calculateAllMeasures}{}}}\label{sec:special:calculateAllMeasures}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L292}{CalculateAllMeasures}{}}}\label{sec:special:CalculateAllMeasures}
 ({\it robot}, {\it robotDic}, {\it q}, {\it mode}, {\it flag}= [0,0,0,0])
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -8356,7 +8369,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 \item[]Notes:     This module is still under construction and should be used with care!
 \ei
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py\#L26}{FilterSensorOutput}{}}}\label{sec:signalProcessing:FilterSensorOutput}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py\#L27}{FilterSensorOutput}{}}}\label{sec:signalProcessing:FilterSensorOutput}
 ({\it signal}, {\it filterWindow}= 5, {\it polyOrder}= 3, {\it derivative}= 0, {\it centralDifferentiate}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -8387,7 +8400,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py\#L82}{FilterSignal}{}}}\label{sec:signalProcessing:FilterSignal}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py\#L83}{FilterSignal}{}}}\label{sec:signalProcessing:FilterSignal}
 ({\it signal}, {\it samplingRate}= -1, {\it filterWindow}= 5, {\it polyOrder}= 3, {\it derivative}= 0, {\it centralDifferentiate}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -8418,7 +8431,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py\#L127}{ComputeFFT}{}}}\label{sec:signalProcessing:ComputeFFT}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py\#L128}{ComputeFFT}{}}}\label{sec:signalProcessing:ComputeFFT}
 ({\it time}, {\it data})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -8448,7 +8461,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py\#L166}{GetInterpolatedSignalValue}{}}}\label{sec:signalProcessing:GetInterpolatedSignalValue}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py\#L167}{GetInterpolatedSignalValue}{}}}\label{sec:signalProcessing:GetInterpolatedSignalValue}
 ({\it time}, {\it dataArray}, {\it timeArray}= [], {\it dataArrayIndex}= -1, {\it timeArrayIndex}= -1, {\it rangeWarning}= True, {\it tolerance}= 1e-6)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -8495,7 +8508,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L153}{SolveStatic}{}}}({\it mbs}, {\it simulationSettings}= exudyn.SimulationSettings(), {\it updateInitialValues}= False, {\it storeSolver}= True, {\it showHints}= False, {\it showCausingItems}= True)
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L154}{SolveStatic}{}}}({\it mbs}, {\it simulationSettings}= exudyn.SimulationSettings(), {\it updateInitialValues}= False, {\it storeSolver}= True, {\it showHints}= False, {\it showCausingItems}= True)
 \end{flushleft}
 \bi
   \item \mybold{NOTE}: this function is directly available in MainSystem (mbs); it should be directly called as mbs.SolveStatic(...). For description of the interface, see the MainSystem Python extensions, \refSection{sec:mainsystemextensions:SolveStatic}.
@@ -8503,7 +8516,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 \ei
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L218}{SolveDynamic}{}}}({\it mbs}, {\it simulationSettings}= exudyn.SimulationSettings(), {\it solverType}= exudyn.DynamicSolverType.GeneralizedAlpha, {\it updateInitialValues}= False, {\it storeSolver}= True, {\it showHints}= False, {\it showCausingItems}= True)
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L219}{SolveDynamic}{}}}({\it mbs}, {\it simulationSettings}= exudyn.SimulationSettings(), {\it solverType}= exudyn.DynamicSolverType.GeneralizedAlpha, {\it updateInitialValues}= False, {\it storeSolver}= True, {\it showHints}= False, {\it showCausingItems}= True)
 \end{flushleft}
 \bi
   \item \mybold{NOTE}: this function is directly available in MainSystem (mbs); it should be directly called as mbs.SolveDynamic(...). For description of the interface, see the MainSystem Python extensions, \refSection{sec:mainsystemextensions:SolveDynamic}.
@@ -8511,7 +8524,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 \ei
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L313}{SolverSuccess}{}}}\label{sec:solver:SolverSuccess}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L314}{SolverSuccess}{}}}\label{sec:solver:SolverSuccess}
 ({\it solverStructure})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -8539,7 +8552,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L364}{ComputeLinearizedSystem}{}}}({\it mbs}, {\it simulationSettings}= exudyn.SimulationSettings(), {\it useSparseSolver}= False)
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L365}{ComputeLinearizedSystem}{}}}({\it mbs}, {\it simulationSettings}= exudyn.SimulationSettings(), {\it useSparseSolver}= False)
 \end{flushleft}
 \bi
   \item \mybold{NOTE}: this function is directly available in MainSystem (mbs); it should be directly called as mbs.ComputeLinearizedSystem(...). For description of the interface, see the MainSystem Python extensions, \refSection{sec:mainsystemextensions:ComputeLinearizedSystem}.
@@ -8547,7 +8560,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 \ei
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L437}{ComputeODE2Eigenvalues}{}}}({\it mbs}, {\it simulationSettings}= exudyn.SimulationSettings(), {\it useSparseSolver}= False, {\it numberOfEigenvalues}= 0, {\it constrainedCoordinates}= [], {\it convert2Frequencies}= False, {\it useAbsoluteValues}= True)
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L441}{ComputeODE2Eigenvalues}{}}}({\it mbs}, {\it simulationSettings}= exudyn.SimulationSettings(), {\it useSparseSolver}= False, {\it numberOfEigenvalues}= 0, {\it constrainedCoordinates}= [], {\it convert2Frequencies}= False, {\it useAbsoluteValues}= True, {\it ignoreAlgebraicEquations}= False, {\it singularValuesTolerance}= 1e-12)
 \end{flushleft}
 \bi
   \item \mybold{NOTE}: this function is directly available in MainSystem (mbs); it should be directly called as mbs.ComputeODE2Eigenvalues(...). For description of the interface, see the MainSystem Python extensions, \refSection{sec:mainsystemextensions:ComputeODE2Eigenvalues}.
@@ -8555,7 +8568,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 \ei
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L558}{ComputeSystemDegreeOfFreedom}{}}}({\it mbs}, {\it simulationSettings}= exudyn.SimulationSettings(), {\it threshold}= 1e-12, {\it verbose}= False, {\it useSVD}= False)
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L620}{ComputeSystemDegreeOfFreedom}{}}}({\it mbs}, {\it simulationSettings}= exudyn.SimulationSettings(), {\it threshold}= 1e-12, {\it verbose}= False, {\it useSVD}= False)
 \end{flushleft}
 \bi
   \item \mybold{NOTE}: this function is directly available in MainSystem (mbs); it should be directly called as mbs.ComputeSystemDegreeOfFreedom(...). For description of the interface, see the MainSystem Python extensions, \refSection{sec:mainsystemextensions:ComputeSystemDegreeOfFreedom}.
@@ -8563,7 +8576,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 \ei
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L640}{CheckSolverInfoStatistics}{}}}\label{sec:solver:CheckSolverInfoStatistics}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L707}{CheckSolverInfoStatistics}{}}}\label{sec:solver:CheckSolverInfoStatistics}
 ({\it solverName}, {\it infoStat}, {\it numberOfEvaluations})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}

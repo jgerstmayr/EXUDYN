@@ -210,7 +210,7 @@ SolverOutputData has the following items:
   | step index when last time written to console (or file)
 * | **multiThreadingMode** [type = Index, default = 0]:
   | multithreading mode that has been used: 0=None (serial), 1=NGsolve taskmanager, 2=MicroThreading (Exudyn)
-* | **numberOfThreadsUsed** [type = Index, default = 0]:
+* | **numberOfThreadsUsed** [type = Index, default = 1]:
   | number of threads that have been used in simulation
 * | **stepInformation** [type = Index, default = 0]:
   | this is a copy of the solvers stepInformation used for console output

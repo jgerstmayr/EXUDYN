@@ -311,9 +311,8 @@ Settings for linear solver, both dense and sparse (Eigen).
   \begin{longtable}{| p{4.2cm} | p{2.5cm} | p{0.3cm} | p{3.0cm} | p{6cm} |}
     \hline
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
-    ignoreRedundantConstraints &     bool &      &     False &     [ONLY implemented for dense matrices] False: standard way, fails if redundant equations or singular matrices occur; True: if redundant constraints appear, the solver tries to resolve them by setting according Lagrange multipliers to zero; in case of redundant constraints, this may help, but it may lead to erroneous behaviour\\ \hline
-    ignoreSingularJacobian &     bool &      &     False &     [ONLY implemented for dense matrices] False: standard way, fails if jacobian is singular; True: if singularities appear in jacobian (e.g. no equation attributed to a node, redundant equations, zero mass matrix, zero eigenvalue for static problem, etc.), the jacobian inverse is resolved such that according solution variables are set to zero; this may help, but it MAY LEAD TO ERRONEOUS BEHAVIOUR; for static problems, this may suppress static motion or resolve problems in case of instabilities, but should in general be considered with care!\\ \hline
-    pivotTreshold &     PReal &      &     0 &     treshold for dense linear solver, can be used to detect close to singular solutions, setting this to, e.g., 1e-12; solver then reports on equations that are causing close to singularity\\ \hline
+    ignoreSingularJacobian &     bool &      &     False &     [ONLY implemented for dense, Eigen matrix mode] False: standard way, fails if jacobian is singular; True: use Eigen's FullPivLU (thus only works with LinearSolverType.EigenDense) which handles over- and underdetermined systems; can often resolve redundant constraints, but MAY ALSO LEAD TO ERRONEOUS RESULTS!\\ \hline
+    pivotThreshold &     PReal &      &     0 &     [ONLY available for EXUdense and EigenDense (FullPivot) solver] threshold for dense linear solver, can be used to detect close to singular solutions, setting this to, e.g., 1e-12; solver then reports on equations that are causing close to singularity\\ \hline
     reuseAnalyzedPattern &     bool &      &     False &     [ONLY available for sparse matrices] True: the Eigen SparseLU solver offers the possibility to reuse an analyzed pattern of a previous factorization; this may reduce total factorization time by a factor of 2 or 3, depending on the matrix type; however, if the matrix patterns heavily change between computations, this may even slow down performance; this flag is set for SparseMatrices in InitializeSolverData(...) and should be handled with care!\\ \hline
     showCausingItems &     bool &      &     True &     False: no output, if solver fails; True: if redundant equations appear, they are resolved such that according solution variables are set to zero; in case of redundant constraints, this may help, but it may lead to erroneous behaviour; for static problems, this may suppress static motion or resolve problems in case of instabilities, but should in general be considered with care!\\ \hline
 	  \end{longtable}
@@ -400,6 +399,7 @@ General settings for visualization.
     drawCoordinateSystem &     bool &      &     True &     false = no coordinate system shown\\ \hline
     drawWorldBasis &     bool &      &     False &     true = draw world basis coordinate system at (0,0,0)\\ \hline
     graphicsUpdateInterval &     float &      &     0.1 &     interval of graphics update during simulation in seconds; 0.1 = 10 frames per second; low numbers might slow down computation speed\\ \hline
+    linuxDisplayScaleFactor &     PFloat &      &     1. &     Scaling factor for linux, which cannot determined from system by now; adjust this value to scale dialog fonts and renderer fonts\\ \hline
     minSceneSize &     float &      &     0.1 &     minimum scene size for initial scene size and for autoFitScene, to avoid division by zero; SET GREATER THAN ZERO\\ \hline
     pointSize &     float &      &     0.01 &     global point size (absolute)\\ \hline
     rendererPrecision &     PInt &      &     4 &     precision of general floating point numbers shown in render window: total number of digits used  (max. 16)\\ \hline
@@ -691,6 +691,7 @@ OpenGL Window and interaction settings for visualization; handle changes with ca
     keyPressUserFunction &     KeyPressUserFunction &      &     0 &     add a Python function f(key, action, mods) here, which is called every time a key is pressed; function shall return true, if key has been processed; Example: \tabnewline def f(key, action, mods):\tabnewline \phantom{XXX} print('key=',key);\tabnewline use chr(key) to convert key codes [32 ...96] to ascii; special key codes (>256) are provided in the exudyn.KeyCode enumeration type; key action needs to be checked (0=released, 1=pressed, 2=repeated); mods provide information (binary) for SHIFT (1), CTRL (2), ALT (4), Super keys (8), CAPSLOCK (16)\\ \hline
     limitWindowToScreenSize &     bool &      &     True &     True: render window size is limited to screen size; False: larger window sizes (e.g. for rendering) allowed according to renderWindowSize\\ \hline
     maximize &     bool &      &     False &     True: OpenGL render window will be maximized at startup\\ \hline
+    reallyQuitTimeLimit &     UReal &      &     900 &     number of seconds after which user is asked a security question before stopping simulation and closing renderer; set to 0 in order to always get asked; set to 1e10 to (nearly) never get asked\\ \hline
     renderWindowSize &     Index2 &     2 &     [1024,768] &     initial size of OpenGL render window in pixel\\ \hline
     ResetKeyPressUserFunction() &     void &      &      &     set keyPressUserFunction to zero (no function); because this cannot be assign to the variable itself\\ \hline
     showMouseCoordinates &     bool &      &     False &     True: show OpenGL coordinates and distance to last left mouse button pressed position; switched on/off with key 'F3'\\ \hline
@@ -1052,7 +1053,7 @@ Solver internal structure for output modes, output timers and counters.
     lastSolutionWritten &     Real &      &     0. &     simulation time when last solution has been written\\ \hline
     lastVerboseStepIndex &     Index &      &     0 &     step index when last time written to console (or file)\\ \hline
     multiThreadingMode &     Index &      &     0 &     multithreading mode that has been used: 0=None (serial), 1=NGsolve taskmanager, 2=MicroThreading (Exudyn)\\ \hline
-    numberOfThreadsUsed &     Index &      &     0 &     number of threads that have been used in simulation\\ \hline
+    numberOfThreadsUsed &     Index &      &     1 &     number of threads that have been used in simulation\\ \hline
     stepInformation &     Index &      &     0 &     this is a copy of the solvers stepInformation used for console output\\ \hline
     verboseMode &     Index &      &     0 &     this is a copy of the solvers verboseMode used for console output\\ \hline
     verboseModeFile &     Index &      &     0 &     this is a copy of the solvers verboseModeFile used for file\\ \hline

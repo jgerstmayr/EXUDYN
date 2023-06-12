@@ -117,14 +117,28 @@ void SolverLocalData::CleanUpMemory()
 }
 
 //! function links system matrices to according dense/sparse versions
-void SolverLocalData::SetLinearSolverType(LinearSolverType linearSolverType, bool reuseAnalyzedPattern)
+void SolverLocalData::SetLinearSolverType(LinearSolverType linearSolverType, bool reuseAnalyzedPattern, 
+    bool ignoreSingularJacobian, Real pivotThreshold)
 {
-	if (linearSolverType == LinearSolverType::EXUdense)
+	systemJacobian = &systemJacobianDense;
+	systemMassMatrix = &systemMassMatrixDense;
+	jacobianAE = &jacobianAEdense;
+	//pout << "linearSolverType=" << linearSolverType << "\n";
+	if (EXUstd::IsOfType(LinearSolverType::Dense, linearSolverType))
 	{
 		systemJacobian = &systemJacobianDense;
 		systemMassMatrix = &systemMassMatrixDense;
 		jacobianAE = &jacobianAEdense;
-	}
+#ifdef USE_EIGEN_DENSE_SOLVER
+
+        Index flagEigen = (Index)(linearSolverType == LinearSolverType::EigenDense);
+        flagEigen += flagEigen * (Index)ignoreSingularJacobian; //flag becomes 0 or 2
+
+        systemJacobianDense.UseEigenSolverType() = flagEigen;
+        systemMassMatrixDense.UseEigenSolverType() = flagEigen;
+        jacobianAEdense.UseEigenSolverType() = flagEigen;
+#endif
+    }
 	else if (linearSolverType == LinearSolverType::EigenSparse)
 	{
 		systemJacobian = &systemJacobianSparse;
@@ -141,12 +155,20 @@ void SolverLocalData::SetLinearSolverType(LinearSolverType linearSolverType, boo
 		systemMassMatrix->AssumeSymmetric();
 		jacobianAE->AssumeSymmetric();
 	}
-	if (!(linearSolverType == LinearSolverType::EXUdense))
+	else
+	{
+		CHECKandTHROWstring("SolverLocalData::SetLinearSolverType: invalid linearSolverType");
+	}
+    if (!EXUstd::IsOfType(LinearSolverType::Dense, linearSolverType))
 	{
 		systemJacobian->SetReuseAnalyzedPattern(reuseAnalyzedPattern);
 		systemMassMatrix->SetReuseAnalyzedPattern(reuseAnalyzedPattern);
 		jacobianAE->SetReuseAnalyzedPattern(reuseAnalyzedPattern);
 	}
+    systemJacobian->PivotThreshold() = pivotThreshold;
+    systemMassMatrix->PivotThreshold() = pivotThreshold;
+    jacobianAE->PivotThreshold() = pivotThreshold;
+
 }
 
 

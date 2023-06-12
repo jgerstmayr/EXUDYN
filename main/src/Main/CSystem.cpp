@@ -527,16 +527,27 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 		itemIndex++;
 	}
 
-	itemIndex = 0;
-	for (MainLoad* item : mainSystem.GetMainSystemData().GetMainLoads())
-	{
-		if (!item->CheckPreAssembleConsistency(mainSystem, errorString))
-		{
-			PyError(STDstring("Load ") + EXUstd::ToString(itemIndex) + STDstring(" contains inconsistent data:\n") + errorString);
-			systemIsInteger = false;
-		}
-		itemIndex++;
-	}
+    itemIndex = 0;
+    for (MainLoad* item : mainSystem.GetMainSystemData().GetMainLoads())
+    {
+        if (!item->CheckPreAssembleConsistency(mainSystem, errorString))
+        {
+            PyError(STDstring("Load ") + EXUstd::ToString(itemIndex) + STDstring(" contains inconsistent data:\n") + errorString);
+            systemIsInteger = false;
+        }
+        itemIndex++;
+    }
+
+    itemIndex = 0;
+    for (MainSensor* item : mainSystem.GetMainSystemData().GetMainSensors())
+    {
+        if (!item->CheckPreAssembleConsistency(mainSystem, errorString))
+        {
+            PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + STDstring(" contains inconsistent data:\n") + errorString);
+            systemIsInteger = false;
+        }
+        itemIndex++;
+    }
 
 
 	return systemIsInteger;
@@ -1195,7 +1206,8 @@ void CSystem::ComputeMassMatrix(TemporaryComputationDataArray& tempArray, Genera
 {
 	//size needs to be set accordingly in the caller function; components are addd to massMatrix!
 	//only call bodies with ODE2
-	if (massMatrix.GetSystemMatrixType() == LinearSolverType::EXUdense)
+    if (EXUstd::IsOfType(LinearSolverType::Dense, massMatrix.GetSystemMatrixType()))
+    //if (massMatrix.GetSystemMatrixType() == LinearSolverType::EXUdense)
 	{
 		TemporaryComputationData& temp = tempArray[0]; //always exists
 		temp.massMatrix.ClearAllMatrices(); //this resets both matrices (no new)
@@ -1435,6 +1447,7 @@ void CSystem::ComputeSystemODE2RHS(TemporaryComputationDataArray& tempArray, Vec
 		//std::mutex mtx;           // mutex for critical section
 		outputBuffer.SetSuspendWriting(true); //may not write to python during parallel computation
 
+        tempArray.SetNumberOfItems(nThreads); //only affected, if nThreads changed
 		for (Index i = 0; i < nThreads; i++)
 		{
 			tempArray[i].sparseVector.SetAllZero();
@@ -1633,6 +1646,7 @@ void CSystem::ComputeODE2LoadsRHS(TemporaryComputationDataArray& tempArray, Vect
 
 	if (nThreads > 1 && nItems >= solverData.multithreadedLLimitLoads)
 	{
+        tempArray.SetNumberOfItems(nThreads); //only affected, if nThreads changed
 		for (Index i = 0; i < nThreads; i++)
 		{
 			tempArray[i].sparseVector.SetAllZero();
@@ -2153,6 +2167,7 @@ void CSystem::ComputeAlgebraicEquations(TemporaryComputationDataArray& tempArray
 	{
 		//std::mutex mtx;           // mutex for critical section
 		outputBuffer.SetSuspendWriting(true); //may not write to python during parallel computation
+        tempArray.SetNumberOfItems(nThreads); //only affected, if nThreads changed
 
 		for (Index i = 0; i < nThreads; i++)
 		{
@@ -2290,11 +2305,16 @@ Real CSystem::PostNewtonStep(TemporaryComputationDataArray& tempArray, Real& rec
 		bool doMultiThreading = false;
 		exuThreading::TotalCosts costs = 0; //costs < 1000 does no multithreading, ParallelFor turns into regular for loop [with small overhead]
 
-		if (nThreads > 1 && (nItems >= solverData.multithreadedLLimitResiduals))
+		if (nThreads > 1)
 		{
-			outputBuffer.SetSuspendWriting(true); //may not write to python during parallel computation
-			doMultiThreading = true;
-			costs = 1000;
+            tempArray.SetNumberOfItems(nThreads); //only affected, if nThreads changed
+			
+            if (nItems >= solverData.multithreadedLLimitResiduals)
+            {
+                outputBuffer.SetSuspendWriting(true); //may not write to python during parallel computation
+                doMultiThreading = true;
+                costs = 1000;
+            }
 		}
 		for (Index k=0; k<nThreads; k++)
 		{
@@ -2849,7 +2869,7 @@ void CSystem::NumericalJacobianAE(TemporaryComputationDataArray& tempArray, cons
 	//++++++++++++++++++++++++++++++++++++++++++++++++
 	//compute total jacobian ==> very time consuming ==> change this to local jacobian (use flag in numDiffParameters?)
 
-	if (jacobianGM.GetSystemMatrixType() != LinearSolverType::EXUdense) { CHECKandTHROWstring("CSystem::NumericalJacobianAE: only works for LinearSolverType.EXUdense; illegal LinearSolverType!"); }
+	if (!EXUstd::IsOfType(LinearSolverType::Dense, jacobianGM.GetSystemMatrixType())) { CHECKandTHROWstring("CSystem::NumericalJacobianAE: only works for LinearSolverType.EXUdense; illegal LinearSolverType!"); }
 	ResizableMatrix& jacobian = ((GeneralMatrixEXUdense&)jacobianGM).GetMatrixEXUdense();
 
 	f0.SetNumberOfItems(nAE);
@@ -3250,6 +3270,7 @@ void CSystem::ComputeODE2ProjectedReactionForces(TemporaryComputationDataArray& 
 	{
 		//std::mutex mtx;           // mutex for critical section
 		outputBuffer.SetSuspendWriting(true); //may not write to python during parallel computation
+        tempArray.SetNumberOfItems(nThreads); //only affected, if nThreads changed
 
 		for (Index i = 0; i < nThreads; i++)
 		{
@@ -3458,8 +3479,10 @@ void CSystem::ComputeConstraintJacobianDerivative(TemporaryComputationData& temp
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++
 
-	if (jacobianCqV.GetSystemMatrixType() != LinearSolverType::EXUdense) { CHECKandTHROWstring("CSystem::ComputeConstraintJacobianDerivative: illegal LinearSolverType, only possible for dense matrix!"); }
-	ResizableMatrix& jacobian = ((GeneralMatrixEXUdense&)jacobianCqV).GetMatrixEXUdense();
+    if (!EXUstd::IsOfType(LinearSolverType::Dense, jacobianCqV.GetSystemMatrixType()))
+    { CHECKandTHROWstring("CSystem::ComputeConstraintJacobianDerivative: illegal LinearSolverType, only possible for dense matrix!"); }
+	
+    ResizableMatrix& jacobian = ((GeneralMatrixEXUdense&)jacobianCqV).GetMatrixEXUdense();
 	
 	f0.SetNumberOfItems(nAE);
 	f1.SetNumberOfItems(nAE);

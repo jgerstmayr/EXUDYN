@@ -63,7 +63,10 @@ Equations
 ---------
 
 ObjectGround has no equations, as it only provides a static object, at which joints and connectors can be attached. 
-The object cannot move and forces or torques do not have an effect. 
+The object does not move (in general) and forces or torques do not have an effect.
+However, the reference position and rotation may be changed over time. This may prescribe
+motion, however, with the measured velocity still being zero at each time instant. Therefore,
+such manipulation of reference position or rotation shall be treated with care.
 
 In combination with markers, the \ ``localPosition``\  \ :math:`\pLocB`\  is transformed by the \ ``ObjectGround``\  to
 a global point \ :math:`\LU{0}{{\mathbf{p}}}`\  using the reference point \ :math:`\pRefG`\ ,

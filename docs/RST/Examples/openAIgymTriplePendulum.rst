@@ -336,7 +336,7 @@ You can view and download this file on Github: `openAIgymTriplePendulum.py <http
    
            #++++++++++++++++++++++++++++++++++++++++++++++
            #visualize (and make animations) in exudyn:
-           
+           from exudyn.interactive import SolutionViewer
            env.SC.visualizationSettings.general.autoFitScene = False
            solution = LoadSolutionFile(solutionFile)
            SolutionViewer(env.mbs, solution) #loads solution file via name stored in mbs

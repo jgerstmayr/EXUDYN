@@ -289,7 +289,7 @@ def DynamicManipulability(robot, HT, MassMatrix, Tmax, mode, singularWeight=1000
 #**author: Martin Sereinig
 #**notes:  
 #**status: this function is {\bf currently under development} and under testing!
-def calculateAllMeasures(robot,robotDic,q,mode, flag = [0,0,0,0] ):
+def CalculateAllMeasures(robot,robotDic,q,mode, flag = [0,0,0,0] ):
     
     JointStiffnesM=robotDic['jointStiffnessMatrix']
     TmaxDiag=robotDic['joinTorqueMaxMatrix']
@@ -305,22 +305,34 @@ def calculateAllMeasures(robot,robotDic,q,mode, flag = [0,0,0,0] ):
     ma=[]
     maM=[]
     
-    if flag == [1,0,0,0]:
+    if len(flag) != 4:
+        raise ValueError('CalculateAllMeasures: flag needs to be list with 4 int, being either 0 or 1')
+    if flag[0]:
         mv = VelocityManipulability(robot, HT0newJoint, mode)       
-    elif flag ==  [1,1,0,0]:
-        mv = VelocityManipulability(robot, HT0newJoint, mode)     
-        mf = ForceManipulability(robot, HT0newJoint, mode,singularWeight=100)        
-    elif flag ==  [1,1,1,0]:
-        mv = VelocityManipulability(robot, HT0newJoint, mode)     
-        mf = ForceManipulability(robot, HT0newJoint, mode,singularWeight=100)     
+    if flag[1]:
+        mf = ForceManipulability(robot, HT0newJoint, mode, singularWeight=100)        
+    if flag[2]:
         mst,mstM = StiffnessManipulability(robot, JointStiffnesM, HT0newJoint, mode, singularWeight=1000)            
-    elif flag ==  [1,1,1,1]:
-        mv = VelocityManipulability(robot, HT0newJoint, mode)     
-        mf = ForceManipulability(robot, HT0newJoint, mode,singularWeight=100)     
-        mst,mstM = StiffnessManipulability(robot, JointStiffnesM, HT0newJoint, mode, singularWeight=1000)      
+    if flag[3]:
         ma,maM = DynamicManipulability(robot, HT0newJoint, MMatrixHT0, TmaxDiag, mode, singularWeight=1000)        
-    else:
-        print('flag not defined')
+
+    #too complicated:
+    # if flag == [1,0,0,0]:
+    #     mv = VelocityManipulability(robot, HT0newJoint, mode)       
+    # elif flag ==  [1,1,0,0]:
+    #     mv = VelocityManipulability(robot, HT0newJoint, mode)     
+    #     mf = ForceManipulability(robot, HT0newJoint, mode,singularWeight=100)        
+    # elif flag ==  [1,1,1,0]:
+    #     mv = VelocityManipulability(robot, HT0newJoint, mode)     
+    #     mf = ForceManipulability(robot, HT0newJoint, mode,singularWeight=100)     
+    #     mst,mstM = StiffnessManipulability(robot, JointStiffnesM, HT0newJoint, mode, singularWeight=1000)            
+    # elif flag ==  [1,1,1,1]:
+    #     mv = VelocityManipulability(robot, HT0newJoint, mode)     
+    #     mf = ForceManipulability(robot, HT0newJoint, mode,singularWeight=100)     
+    #     mst,mstM = StiffnessManipulability(robot, JointStiffnesM, HT0newJoint, mode, singularWeight=1000)      
+    #     ma,maM = DynamicManipulability(robot, HT0newJoint, MMatrixHT0, TmaxDiag, mode, singularWeight=1000)        
+    # else:
+    #     print('flag not defined')
  
 
     return [mv,mf,mst,mstM,ma,maM]

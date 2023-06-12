@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-05-15 (last modfied)
+* @date         AUTO: 2023-06-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -139,7 +139,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-05-15 (last modfied)
+* @date         AUTO: 2023-06-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -202,7 +202,7 @@ public: // AUTO:
     startAE = 0;
     systemJacobian = nullptr;
     systemMassMatrix = nullptr;
-    SetLinearSolverType(LinearSolverType::EXUdense, false); //for safety, data is linked initially
+    SetLinearSolverType(LinearSolverType::EXUdense); //for safety, data is linked initially
   };
 
   // AUTO: access functions
@@ -213,8 +213,8 @@ public: // AUTO:
     return linearSolverType;
   }
 
-  //! AUTO: set linear solver type and matrix version: links system matrices to according dense/sparse versions
-  void SetLinearSolverType(LinearSolverType linearSolverType, bool reuseAnalyzedPattern);
+  //! AUTO: set linear solver type and matrix version: links system matrices to according dense/sparse versions and with option for singular jacobian (redundant constraints)
+  void SetLinearSolverType(LinearSolverType linearSolverType, bool reuseAnalyzedPattern=false, bool ignoreSingularJacobian=false, Real pivotThreshold=0.);
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
   {
@@ -263,7 +263,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-05-15 (last modfied)
+* @date         AUTO: 2023-06-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -377,7 +377,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-05-15 (last modfied)
+* @date         AUTO: 2023-06-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -473,7 +473,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-05-15 (last modfied)
+* @date         AUTO: 2023-06-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -529,7 +529,7 @@ public: // AUTO:
     lastSolutionWritten = 0.;
     lastVerboseStepIndex = 0;
     multiThreadingMode = 0;
-    numberOfThreadsUsed = 0;
+    numberOfThreadsUsed = 1;
     stepInformation = 0;
     verboseMode = 0;
     verboseModeFile = 0;
@@ -585,7 +585,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-05-15 (last modfied)
+* @date         AUTO: 2023-06-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

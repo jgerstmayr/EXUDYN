@@ -29,6 +29,7 @@
 #include "Pymodules/PybindUtilities.h"
 
 #include "Pymodules/PyGeneralContact.h"
+#include "Utilities/ExceptionsTemplates.h" //for exceptions in solver steps
 
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -80,15 +81,21 @@ void MainSystem::InteractiveModeActions()
 //! set user function to be called by solvers at beginning of step (static or dynamic step)
 void MainSystem::PySetPreStepUserFunction(const py::object& value)
 {
-	cSystem->GetPythonUserFunctions().preStepFunction = py::cast<std::function <bool(const MainSystem& mainSystem, Real t)>>(value);
-	cSystem->GetPythonUserFunctions().mainSystem = this;
+    GenericExceptionHandling([&]
+    {
+        cSystem->GetPythonUserFunctions().preStepFunction = py::cast<std::function <bool(const MainSystem& mainSystem, Real t)>>(value);
+	    cSystem->GetPythonUserFunctions().mainSystem = this;
+    }, "MainSystem::SetPreStepUserFunction (check function arguments!)");
 }
 
 //! set user function to be called immediately after Newton (after an update of the solution has been computed, but before discontinuous iteration)
 void MainSystem::PySetPostNewtonUserFunction(const py::object& value)
 {
-	cSystem->GetPythonUserFunctions().postNewtonFunction = py::cast<std::function <StdVector2D(const MainSystem& mainSystem, Real t)>>(value);
-	cSystem->GetPythonUserFunctions().mainSystem = this;
+    GenericExceptionHandling([&]
+    {
+        cSystem->GetPythonUserFunctions().postNewtonFunction = py::cast<std::function <StdVector2D(const MainSystem& mainSystem, Real t)>>(value);
+	    cSystem->GetPythonUserFunctions().mainSystem = this;
+    }, "MainSystem::SetPostNewtonUserFunction (check function arguments!)");
 }
 
 //create a new general contact and add to system

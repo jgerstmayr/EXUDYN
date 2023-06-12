@@ -6,7 +6,6 @@ import sys
 sys.path.append('../TestModels')
 
 import exudyn as exu
-from exudyn.itemInterface import *
 from exudyn.utilities import *
 
 from modelUnitTests import ExudynTestStructure, exudynTestGlobals

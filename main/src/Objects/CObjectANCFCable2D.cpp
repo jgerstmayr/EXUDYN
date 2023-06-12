@@ -440,6 +440,7 @@ void CObjectANCFCable2DBase::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs,
 			}
 			else
 			{
+				//add formulas!
 				TReal vALE = qANCF_t[ancfSize - 1];
 				SlimVectorBase<TReal, dim> vx = vALE * rxx + rx_t;
 
@@ -452,7 +453,7 @@ void CObjectANCFCable2DBase::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs,
 
 				TReal rxvx = 2.*(rx*vx);  //this substitutes rxNorm2_t
 
-				curvature_t = (rxCrossVxx * rxNorm2 - rxCrossRxx * rxvx) / EXUstd::Square(rxNorm2);
+				curvature_t = (rxCrossVxx * rxNorm2 - rxCrossRxx * rxvx) / EXUstd::Square(rxNorm2); // /vxNorm2 ?
 			}
 		}
 

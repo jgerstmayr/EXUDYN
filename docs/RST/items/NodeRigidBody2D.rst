@@ -77,6 +77,10 @@ DESCRIPTION of NodeRigidBody2D
 
 \ **Detailed information:** 
 The node provides 2 displacement coordinates (displacement of \ :ref:`COM <COM>`\ , (\ :math:`q_0,q_1`\ ) ) and 1 rotation parameter (\ :math:`\theta_0`\ ). According equations need to be provided by an according object (e.g., RigidBody2D).
+The node leads to 3 ODE2 equations of motions, where the first 2 equations are
+residuals of global translational forces, and the third equation is the residual of the
+torque around the Z-axis (due to planar motion, local=global).
+
 Using the rotation parameter \ :math:`\theta_{0\mathrm{config}} = \psi_{0ref} + \psi_{0\mathrm{config}}`\ , the rotation matrix is defined as
 
 .. math::

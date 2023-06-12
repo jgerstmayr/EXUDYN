@@ -57,6 +57,7 @@ This section includes all Examples for Exudyn.They can also be found and downloa
    Examples/massSpringFrictionInteractive
    Examples/minimizeExample
    Examples/mouseInteractionExample
+   Examples/mpi4pyExample
    Examples/multiMbsTest
    Examples/multiprocessingTest
    Examples/myFirstExample
@@ -66,6 +67,7 @@ This section includes all Examples for Exudyn.They can also be found and downloa
    Examples/NGsolveLinearFEM
    Examples/NGsolvePistonEngine
    Examples/NGsolvePostProcessingStresses
+   Examples/nMassOscillatorEigenmodes
    Examples/nMassOscillatorInteractive
    Examples/ObjectFFRFconvergenceTestBeam
    Examples/ObjectFFRFconvergenceTestHinge
@@ -103,6 +105,7 @@ This section includes all Examples for Exudyn.They can also be found and downloa
    Examples/serialRobotKinematicTree
    Examples/serialRobotKinematicTreeDigging
    Examples/serialRobotTSD
+   Examples/shapeOptimization
    Examples/simple4linkPendulumBing
    Examples/simulateInteractively
    Examples/SliderCrank

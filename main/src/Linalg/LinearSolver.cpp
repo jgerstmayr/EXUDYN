@@ -18,43 +18,105 @@
 #include "Linalg/MatrixContainer.h"	
 #include "Utilities/Parallel.h" //for local CPU time measurement
 
-//#ifdef useMatrixContainerTriplets
-//	#define APPEND_TO_TRIPLETS AppendPure
-//#else
-//	#define APPEND_TO_TRIPLETS push_back
-//#endif
+#include "Main/Experimental.h"
+extern Experimental experimental; //!this class can be accessed from outside, but also from every other file where this is imported
 
-
-//! factorize matrix (invert, SparseLU, etc.); -1=success
-Index GeneralMatrixEXUdense::FactorizeNew(bool ignoreRedundantEquation, Index redundantEquationsStart)
+//! factorize matrix (invert, SparseLU, etc.); -1=success; >=0: causing row
+Index GeneralMatrixEXUdense::FactorizeNew() //bool ignoreRedundantEquation, Index redundantEquationsStart)
 {
-	static ResizableMatrix m;
-	static ArrayIndex rows;
-	Real pivotTreshold = 0;
-	Index  rv = matrix.InvertSpecial(m, rows, ignoreRedundantEquation, redundantEquationsStart, pivotTreshold);
-	if (rv == -1) 
-	{ 
-		SetMatrixIsFactorized(true); 
-	}
-	else 
-	{ 
-		SetMatrixIsFactorized(false); 
-	}
-	return rv;
-	//bool rv = !matrix.Invert();
-	//if (!rv)
-	//{
-	//	SetMatrixIsFactorized(true);
-	//	return -1;
-	//}
-	//else
-	//{
-	//	SetMatrixIsFactorized(false);
-	//	return 0;
-	//}
+    Index  rv;
+
+    if (useEigenSolverType == 0)
+    {
+        static ResizableMatrix m; //temporary matrix!
+        static ArrayIndex rows;
+        //rv = matrix.InvertSpecial(m, rows, ignoreRedundantEquation, redundantEquationsStart, pivotThreshold);
+        rv = matrix.InvertSpecial(m, rows, false, 0, PivotThreshold());
+    }
+    else
+    {
+#ifdef USE_EIGEN_DENSE_SOLVER
+        rv = -1; //always gives factorization, both in over- as well as underdetermined case
+
+        //pout << "factorize Eigen\n";
+        Eigen::Map<Eigen::Matrix<Real, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> > mEigen(matrix.GetDataPointer(), 
+            matrix.NumberOfRows(), matrix.NumberOfColumns());
+        //lu = m.fullPivLu();
+        //eigenLU = Eigen::FullPivLU<Eigen::MatrixXd>(mEigen);
+
+        if (useEigenSolverType == eigenSolverTypeFullPivotLU)
+        {
+			if (PivotThreshold() == 0)
+			{
+				eigenLUfullPivot.setThreshold(Eigen::Default);
+			}
+			else
+			{
+				eigenLUfullPivot.setThreshold(PivotThreshold());
+			}
+            eigenLUfullPivot.compute(mEigen);   //full pivoting LU-factorization (very stable and resolves singular Jacobian)
+            //in this case, we could report errors, but we do not want to
+            //if (!eigenLUfullPivot.isInvertible())
+            //{
+            //    rv = matrix.NumberOfRows(); //this means that the solver failed, but no causing row known
+            //}
+            if (experimental.eigenFullPivotLUsolverDebugLevel >= 1)
+            {
+                pout << "eigenFullPivotLU dim=(" << matrix.NumberOfRows() << "," << matrix.NumberOfColumns() << ")\n";
+                pout << "eigenFullPivotLU rank=" << eigenLUfullPivot.rank() << "\n";
+                pout << "eigenFullPivotLU isInvertible=" << eigenLUfullPivot.isInvertible() << "\n";
+                pout << "eigenFullPivotLU nonzeroPivots=" << eigenLUfullPivot.nonzeroPivots() << "\n";
+            }
+        }
+        else
+        {
+            //NOTE: according to Eigen's homepage, there is no possibility to check for invertability!
+            eigenLU.compute(mEigen);            //regular LU-factorization (fast)
+        }
+
+
+#else
+        CHECKandTHROWstring("GeneralMatrixEXUdense::Factorize: code not compiled with Eigen; use other solver");
+#endif
+    }
+    if (rv == -1)
+    {
+        SetMatrixIsFactorized(true);
+    }
+    else
+    {
+        SetMatrixIsFactorized(false);
+}
+    return rv;
 }
 
+//!after factorization of matrix (=A), solve provides a solution vector (=x) for A*x = rhs ==> soluation = A^{-1}*rhs
+void GeneralMatrixEXUdense::Solve(const Vector& rhs, Vector& solution)
+{
+    if (!IsMatrixIsFactorized()) { SysError("GeneralMatrixEXUdense::Solve(...): matrix is not factorized!"); }
 
+    if (!useEigenSolverType)
+    {
+        EXUmath::MultMatrixVector(matrix, rhs, solution);
+    }
+    else
+    {
+#ifdef USE_EIGEN_DENSE_SOLVER
+        Eigen::Map<Eigen::VectorXd> rhsEigen(rhs.GetDataPointer(), rhs.NumberOfItems());
+        Eigen::Map<Eigen::VectorXd> solutionEigen(solution.GetDataPointer(), solution.NumberOfItems());
+
+        if (useEigenSolverType == eigenSolverTypeFullPivotLU)
+        {
+            solutionEigen = eigenLUfullPivot.solve(rhsEigen);
+        }
+        else
+        {
+            solutionEigen = eigenLU.solve(rhsEigen);
+        }
+
+#endif
+    }
+}
 
 #ifdef USE_EIGEN_SPARSE_SOLVER
 
@@ -419,7 +481,7 @@ void GeneralMatrixEigenSparse::FinalizeMatrix()
 #define LinearSolverSuspendWorkersTimeUS 20 //could not find good value; large values raise effort of other functions (mostly subsequent computation of mass matrix)
 
 //! factorize matrix (invert, SparseLU, etc.); -1=success
-Index GeneralMatrixEigenSparse::FactorizeNew(bool ignoreRedundantEquation, Index redundantEquationsStart)
+Index GeneralMatrixEigenSparse::FactorizeNew() //bool ignoreRedundantEquation, Index redundantEquationsStart)
 {
 	CHECKandTHROW(IsMatrixBuiltFromTriplets(), "GeneralMatrixEigenSparse::Factorize(): matrix must be built before factorization!");
 	Index nThreads = exuThreading::TaskManager::GetNumThreads();

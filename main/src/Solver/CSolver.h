@@ -55,9 +55,7 @@ namespace EXUstd
 		//Eigen::initParallel(); //use this in case, that omp is used in other parts of the code
 
 		int nthreads = (int)simulationSettings.parallel.numberOfThreads; //activated /Zc:twoPhase- in compiler options to suppress warning
-		if (nthreads < 1 || nthreads > 100) { PyError("simulationSettings.numberOfThreads is out of range(1..100)!"); return; }
-
-
+		if (nthreads < 1 || nthreads > 1024) { PyError("simulationSettings.numberOfThreads is out of range(1..1024)!"); return; }
 	}
 }
 

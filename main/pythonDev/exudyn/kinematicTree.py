@@ -171,7 +171,7 @@ class KinematicTree33:
         self.listOfInertia3D = listOfInertia3D
         self.listOfCOM = listOfCOM
         self.listOfMass = listOfMass
-        self.listOfParents = listOfParents
+        self.listOfParents = list(listOfParents)
         self.gravity = np.array(gravity)
 
         if len(self.listOfParents) == 0: #for kinematic chain, all joints are in a row

@@ -1048,17 +1048,18 @@ def GetRigidBodyNode(nodeType,
                  rotationParameters = [],
                  angularVelocity=[0,0,0]):
 
-    if len(rotationMatrix) != 0 and len(rotationParameters) != 0:
-        raise ValueError('GetRigidBodyNode: either rotationMatrix or rotationParameters must empty!')
-    if len(rotationMatrix) == 0 and len(rotationParameters) == 0:
-        rotationMatrix=np.eye(3)
+    rotationMatrixNew = copy.copy(rotationMatrix)
+    if len(rotationMatrixNew) != 0 and len(rotationParameters) != 0:
+        raise ValueError('GetRigidBodyNode: either rotationMatrixNew or rotationParameters must empty!')
+    if len(rotationMatrixNew) == 0 and len(rotationParameters) == 0:
+        rotationMatrixNew=np.eye(3)
 
     strNodeType = str(nodeType) #works both for nodeType and for strings (if exudyn not available)
 
     nodeItem = []
     if strNodeType == 'NodeType.RotationEulerParameters':
         if len(rotationParameters) == 0:
-            ep0 = RotationMatrix2EulerParameters(rotationMatrix)
+            ep0 = RotationMatrix2EulerParameters(rotationMatrixNew)
         else:
             ep0 = rotationParameters
            
@@ -1067,7 +1068,7 @@ def GetRigidBodyNode(nodeType,
                                    initialVelocities=list(velocity)+list(ep_t0))       
     elif strNodeType == 'NodeType.RotationRxyz':
         if len(rotationParameters) == 0:
-            rot0 = RotationMatrix2RotXYZ(rotationMatrix)
+            rot0 = RotationMatrix2RotXYZ(rotationMatrixNew)
         else:
             rot0 = rotationParameters
 
@@ -1077,11 +1078,11 @@ def GetRigidBodyNode(nodeType,
     elif strNodeType == 'NodeType.RotationRotationVector':
         if len(rotationParameters) == 0:
             #raise ValueError('NodeType.RotationRotationVector not implemented!')
-            rot0 = RotationMatrix2RotationVector(rotationMatrix)
+            rot0 = RotationMatrix2RotationVector(rotationMatrixNew)
         else:
             rot0 = rotationParameters
         
-        rotMatrix = RotationVector2RotationMatrix(rot0) #rotationMatrix needed!
+        rotMatrix = RotationVector2RotationMatrix(rot0) #rotationMatrixNew needed!
         angularVelocityLocal = np.dot(rotMatrix.transpose(),angularVelocity)
             
         nodeItem = eii.NodeRigidBodyRotVecLG(referenceCoordinates=list(position) + list(rot0), 
@@ -1090,11 +1091,11 @@ def GetRigidBodyNode(nodeType,
     elif strNodeType == 'NodeType.LieGroupWithDirectUpdate':
         if len(rotationParameters) == 0:
             #raise ValueError('NodeType.RotationRotationVector not implemented!')
-            rot0 = RotationMatrix2RotationVector(rotationMatrix)
+            rot0 = RotationMatrix2RotationVector(rotationMatrixNew)
         else:
             rot0 = rotationParameters
         
-        rotMatrix = RotationVector2RotationMatrix(rot0) #rotationMatrix needed!
+        rotMatrix = RotationVector2RotationMatrix(rot0) #rotationMatrixNew needed!
         angularVelocityLocal = np.dot(rotMatrix.transpose(),angularVelocity)
             
         nodeItem = eii.NodeRigidBodyRotVecLG(referenceCoordinates=list(position) + list(rot0), 
@@ -1103,11 +1104,11 @@ def GetRigidBodyNode(nodeType,
     # elif strNodeType == 'NodeType.LieGroupWithDataCoordinates':
     #     if len(rotationParameters) == 0:
     #         #raise ValueError('NodeType.RotationRotationVector not implemented!')
-    #         rot0 = RotationMatrix2RotationVector(rotationMatrix)
+    #         rot0 = RotationMatrix2RotationVector(rotationMatrixNew)
     #     else:
     #         rot0 = rotationParameters
         
-    #     rotMatrix = RotationVector2RotationMatrix(rot0) #rotationMatrix needed!
+    #     rotMatrix = RotationVector2RotationMatrix(rot0) #rotationMatrixNew needed!
     #     angularVelocityLocal = np.dot(rotMatrix.transpose(),angularVelocity)
             
     #     nodeItem = eii.NodeRigidBodyRotVecDataLG(referenceCoordinates=list(position) + list(rot0),
@@ -1142,6 +1143,8 @@ def AddRigidBody(mainSys, inertia,
                  gravity=[0,0,0],
                  graphicsDataList=[]):
 
+    rotationMatrixNew = copy.copy(rotationMatrix)
+
     if not isinstance(inertia, RigidBodyInertia): #do not use 'exu.rigidBodyUtilities.' in front, even not outside of module!
         RaiseTypeError(where='AddRigidBody', argumentName='inertia', received = inertia, expectedType = ExpectedType.RigidBodyInertia, dim=None)
     #MISSING: check for nodeType
@@ -1158,28 +1161,28 @@ def AddRigidBody(mainSys, inertia,
         raise ValueError('AddRigidBody: graphicsDataList must be a (possibly empty) list of dictionaries of graphics data!')
 
 
-    if not IsSquareMatrix(rotationMatrix):
+    if not IsSquareMatrix(rotationMatrixNew):
         raise ValueError('AddRigidBody: rotationMatrix must be a (possibly empty) list or numpy array!')
     if not IsVector(rotationParameters):
         raise ValueError('AddRigidBody: rotationParameters must be a (possibly empty) list or numpy array!')
     
-    if len(rotationMatrix) != 0 and len(rotationParameters) != 0:
+    if len(rotationMatrixNew) != 0 and len(rotationParameters) != 0:
         raise ValueError('AddRigidBody: either rotationMatrix or rotationParameters must be empty list or numpy array!')
-    if len(rotationMatrix) == 0 and len(rotationParameters) == 0:
-        rotationMatrix=np.eye(3)
+    if len(rotationMatrixNew) == 0 and len(rotationParameters) == 0:
+        rotationMatrixNew=np.eye(3)
     else:
-        if len(rotationMatrix) == 0:
+        if len(rotationMatrixNew) == 0:
             expectedSize = 3
             if str(nodeType) == 'NodeType.RotationEulerParameters': 
                 expectedSize = 4
             if not IsVector(rotationParameters, expectedSize):
                 RaiseTypeError(where='AddRigidBody', argumentName='rotationParameters', received = rotationParameters, expectedType = ExpectedType.Vector, dim=expectedSize)
         else:
-            if not IsSquareMatrix(rotationMatrix, 3):
-                RaiseTypeError(where='AddRigidBody', argumentName='rotationMatrix', received = rotationMatrix, expectedType = ExpectedType.Matrix, dim=3)
+            if not IsSquareMatrix(rotationMatrixNew, 3):
+                RaiseTypeError(where='AddRigidBody', argumentName='rotationMatrix', received = rotationMatrixNew, expectedType = ExpectedType.Matrix, dim=3)
             
             
-    nodeItem = GetRigidBodyNode(nodeType, position, velocity, rotationMatrix, rotationParameters, angularVelocity)
+    nodeItem = GetRigidBodyNode(nodeType, position, velocity, rotationMatrixNew, rotationParameters, angularVelocity)
     nodeNumber = mainSys.AddNode(nodeItem)
     
     bodyNumber = mainSys.AddObject(eii.ObjectRigidBody(physicsMass=inertia.mass, physicsInertia=inertia.GetInertia6D(), 

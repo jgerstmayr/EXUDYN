@@ -44,7 +44,7 @@
 #include <pybind11/embed.h>       //scoped interpreter
 ////does not work globally: #include <pybind11/iostream.h> //used to redirect cout:  py::scoped_ostream_redirect output;
 //#include <pybind11/cast.h> //for arguments
-//#include <pybind11/functional.h> //for function handling ... otherwise gives a python error (no compilation error in C++ !)
+#include <pybind11/functional.h> //for function handling ... otherwise gives a python error (no compilation error in C++ !)
 namespace py = pybind11;
 //using namespace pybind11::literals; //brings in the '_a' literals; e.g. for short arguments definition
 
@@ -215,6 +215,99 @@ public:
 	}
 
 };
+
+//Real testCppDirect()
+//{
+//    return 42.;
+//}
+//
+//extern "C" double __declspec(dllexport) __stdcall function1()
+//{
+//    return 3.;
+//}
+//
+//extern "C" double __declspec(dllexport) __stdcall function2(double p)
+//{
+//    return 13.*p;
+//}
+//
+//extern "C" int __declspec(dllexport) __stdcall function2(int p)
+//{
+//    return 7*p;
+//}
+//
+////direct call to C++ function fCppDirect(x)
+//std::function<Real()> fCppDirect = &testCppDirect;
+////std::function<Real(Real)> fCppDirect = &testCppDirect;
+//
+//void SetCppDirect(std::function<Real()>& value)
+//{
+//    fCppDirect = value;
+//}
+//
+//void SetCppDirect2(void* value)
+//{
+//    fCppDirect = reinterpret_cast<std::function<Real()>&>(value);
+//    //(double (*)(/*int*/))dlsym(value, “afunction”);
+//}
+//
+//std::function<Real()> GetCppDirect()
+//{
+//    return testCppDirect;
+//}
+
+//Real(*fCppDirect2)();
+//
+//void SetCppDirect2(void* value)
+//{
+//    fCppDirect2 = (Real(*)() )value;
+//}
+
+//void SetCppDirect(std::function<Real(Real)>& value)
+//{
+//    fCppDirect = value;
+//}
+//
+//Real RunCppDirect(int count)
+//{
+//    Real y = 0.;
+//    for (Index i = 0; i < count; i++)
+//    {
+//        y += fCppDirect();
+//        //y += fCppDirect((Real)i);
+//    }
+//    return y;
+//}
+
+//Real RunCppDirect2(int count)
+//{
+//    Real y = 0.;
+//    for (Index i = 0; i < count; i++)
+//    {
+//        y += fCppDirect2();
+//        //y += fCppDirect((Real)i);
+//    }
+//    return y;
+//}
+
+//tests for MainLoadCoordinate.h, but did not succeed:
+        //else if (parameterName.compare("loadUserFunction") == 0) {
+        //if (true || py::isinstance<py::function>(value))
+        //{
+        //    //void* func = py::cast<void *>(value); /* AUTO:  read out dictionary and cast to C++ type*/
+        //    ////cLoadCoordinate->GetParameters().loadUserFunction = reinterpret_cast<std::function<Real(const MainSystem&, Real, Real)>&>(func);
+        //    //std::function<Real(Real, Real, Real)> loadUserFunction2 = reinterpret_cast<std::function<Real(Real, Real, Real)>&>(func);
+
+        //    std::function<Real(Real, Real, Real)> loadUserFunction2 = py::cast<std::function<Real(Real, Real, Real)>>(value);
+        //    //std::function<Real(Real, Real, Real)> loadUserFunction2 = reinterpret_cast<std::function<Real(Real, Real, Real)>&>(py::cast<std::uintptr_t&>(value));
+        //    //std::function<Real(Real, Real, Real)> loadUserFunction2 = reinterpret_cast<std::function<Real(Real, Real, Real)>&>(py::cast<void*&>(value));
+        //    //std::uintptr_t fnPtr = py::cast<std::uintptr_t>(value);
+        //    auto fnPtr = (Real(*)(Real, Real, Real))(loadUserFunction2);
+        //    std::function<Real(Real, Real, Real)> loadUserFunction2 = reinterpret_cast<std::function<Real(Real, Real, Real)>&>(fnPtr);
+
+        //    //cLoadCoordinate->GetParameters().loadUserFunction = py::cast<std::function<Real(const MainSystem&, Real, Real)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/
+        //}
+
 
 void PyTest()
 {

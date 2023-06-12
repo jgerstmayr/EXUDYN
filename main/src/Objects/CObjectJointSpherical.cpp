@@ -22,7 +22,7 @@ void CObjectJointSpherical::ComputeAlgebraicEquations(Vector& algebraicEquations
 	{
 
 		algebraicEquations.SetNumberOfItems(nConstraints);
-		LinkedDataVector lambda = markerData.GetLagrangeMultipliers();
+		const LinkedDataVector& lambda = markerData.GetLagrangeMultipliers();
 
 		Vector3D cEqu; //constraint equations: relative position or velocities
 

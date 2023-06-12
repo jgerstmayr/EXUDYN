@@ -110,7 +110,7 @@ def Demo2(showAll = True):
     
     simulationSettings = exu.SimulationSettings() #takes currently set values or default values
     
-    fact = 20000 #10000
+    fact = 2000*(1+9*showAll) #10000
     simulationSettings.timeIntegration.numberOfSteps = 1*fact
     simulationSettings.timeIntegration.endTime = 0.001*fact*0.5*4
     simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/fact*20

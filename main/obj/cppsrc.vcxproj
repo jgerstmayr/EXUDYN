@@ -746,6 +746,7 @@
     <ClInclude Include="..\src\Main\CSystem.h" />
     <ClInclude Include="..\src\Main\CSystemData.h" />
     <ClInclude Include="..\src\Main\CSystemState.h" />
+    <ClInclude Include="..\src\Main\Experimental.h" />
     <ClInclude Include="..\src\Main\MainObjectFactory.h" />
     <ClInclude Include="..\src\Main\MainSystem.h" />
     <ClInclude Include="..\src\Main\MainSystemBase.h" />

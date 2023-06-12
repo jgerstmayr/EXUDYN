@@ -124,6 +124,7 @@ def WriteToFile(resultsFile, parameters, currentGeneration, values, globalCnt, w
 #    resultsFile: if provided, output is immediately written to resultsFile during processing
 #    clusterHostNames: list of hostnames, e.g. clusterHostNames=['123.124.125.126','123.124.125.127'] providing a list of strings with IP addresses or host names, see dispy documentation. If list is non-empty and useMultiProcessing==True and dispy is installed, cluster computation is used; NOTE that cluster computation speedup factors shown are not fully true, as they include a significant overhead; thus, only for computations which take longer than 1-5 seconds and for sufficient network bandwith, the speedup is roughly true
 #    useDispyWebMonitor: if given in **kwargs, a web browser is startet in case of cluster computation to manage the cluster during computation
+#    useMPI: if given in **kwargs and set True, and if Python package mpi4py is installed, mpi parallelization is used; for hints see parameterVariationExample.py
 #**output: returns values containing the results according to parameterList
 #**notes: options are passed from Parametervariation
 #**example:
@@ -167,11 +168,12 @@ def ProcessParameterList(parameterFunction, parameterList, useMultiProcessing, c
     useMPI = False
     if 'useMPI' in kwargs and useMultiProcessing:
         useMPI = kwargs['useMPI']
-        try:
-            from mpi4py.futures import MPIPoolExecutor
-        except:
-            print('WARNING: ProcessParameterList: mpi4py is not installed or mpi4py.futures not available (try: conda install mpi4py); switching to multiprocessing mode instead')
-            useMPI = False
+        if useMPI:
+            try:
+                from mpi4py.futures import MPIPoolExecutor
+            except:
+                print('WARNING: ProcessParameterList: mpi4py is not installed or mpi4py.futures not available (try: conda install mpi4py); switching to multiprocessing mode instead')
+                useMPI = False
 
     useTQDM = False
     if showProgress and useMultiProcessing and not useCluster:
@@ -360,6 +362,7 @@ def ProcessParameterList(parameterFunction, parameterList, useMultiProcessing, c
 #    parameterFunctionData: dictionary containing additional data passed to the parameterFunction inside the parameters with dict key 'functionData'; use this e.g. for passing solver parameters or other settings
 #    clusterHostNames: list of hostnames, e.g. clusterHostNames=['123.124.125.126','123.124.125.127'] providing a list of strings with IP addresses or host names, see dispy documentation. If list is non-empty and useMultiProcessing==True and dispy is installed, cluster computation is used; NOTE that cluster computation speedup factors shown are not fully true, as they include a significant overhead; thus, only for computations which take longer than 1-5 seconds and for sufficient network bandwith, the speedup is roughly true
 #    useDispyWebMonitor: if given in **kwargs, a web browser is started in case of cluster computation to manage the cluster during computation
+#    useMPI: if given in **kwargs and set True, and if Python package mpi4py is installed, mpi parallelization is used; for hints see parameterVariationExample.py
 #**output:
 #    returns [parameterList, values], containing, e.g., parameterList=\{'mass':[1,1,1,2,2,2,3,3,3], 'stiffness':[4,5,6, 4,5,6, 4,5,6]\} and the result values of the parameter variation accoring to the parameterList, 
 #           values=[7,8,9 ,3,4,5, 6,7,8] (depends on solution of problem ..., can also contain tuples, etc.)
@@ -796,6 +799,7 @@ def GeneticOptimization(objectiveFunction, parameters,
                                 if r < crossoverAmount: #usually 50% gene cross over
                                     indList[0][key] = p1[key] #uniform gene crossing
                                     indList[1][key] = p0[key]
+                            # print('indList=',indList)
 
                     #one or two individuals
                     for pi in range(len(parents)):
@@ -812,19 +816,23 @@ def GeneticOptimization(objectiveFunction, parameters,
     
                             #print("new range=",pBegin,pEnd)
                             #value = np.random.uniform(pBegin, pEnd)
-                            value = RandomNumber(childDistribution, 
+                            newValue = RandomNumber(childDistribution, 
                                                  pBegin, pEnd, 
                                                  value[0], value[1])
-                            indList[pi][key] = value
+                            indList[pi][key] = newValue
     
-                        if addComputationIndex:
-                            indList[pi]['computationIndex'] = cnt #unique index for one set of computations
-                        cnt += 1
-                        
                         if p < populationSize:
-                            currentGeneration += [indList[pi]]
+                            newGen = {}
+                            for (key,value) in parameters.items(): #sort according to parameters, for output file!
+                                newGen[key] = indList[pi][key]
+                            if addComputationIndex:
+                                newGen['computationIndex'] = cnt #unique index for one set of computations
+                            currentGeneration += [newGen]
+                            #currentGeneration += [indList[pi]] #gives wrong sorting in dict ..., destroys output file order
                             p += 1
-            #print("pop", popCnt, ": currentGeneration=\n",currentGeneration)
+
+                        cnt += 1 #computation count ... for every parameter variation within one generation
+            # print("pop", popCnt, ": currentGeneration=\n",currentGeneration)
         else:
             #select final best individual
             optimumParameter = currentGeneration[int(sortedValues[0][1])]
@@ -884,6 +892,7 @@ def Minimize(objectiveFunction, parameters, initialGuess=[], method='Nelder-Mead
     
     # get parameter names
     parKeyLst = list(parameters.keys())
+    initialGuessCopy = list(initialGuess)
     
     # number of parameters
     nParameters = len(parKeyLst)
@@ -915,12 +924,10 @@ def Minimize(objectiveFunction, parameters, initialGuess=[], method='Nelder-Mead
     
     # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     # process initial guess
-    if initialGuess: # initial guess has been provided by the user
-        initialGuess = initialGuess
-    else: # no initial guess has been provided by the user --> compute initial guess (mean value) from boundaries given by range in parameterDict
-        initialGuess = [None]*nParameters
+    if initialGuessCopy != []: # initial guess has been provided by the user
+        initialGuessCopy = [None]*nParameters
         for i in range(nParameters):
-            initialGuess[i] = np.mean(bounds[i])
+            initialGuessCopy[i] = np.mean(bounds[i])
 
 
     # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1022,7 +1029,7 @@ def Minimize(objectiveFunction, parameters, initialGuess=[], method='Nelder-Mead
     
     # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     # perform optimizaion
-    optimizeResult = optimize.minimize(ParameterFunctionMinimize, initialGuess, 
+    optimizeResult = optimize.minimize(ParameterFunctionMinimize, initialGuessCopy, 
                                         method=method, 
                                         bounds=scipyMinimizeBounds, 
                                         callback=StoreParameterFunctionValues, 
