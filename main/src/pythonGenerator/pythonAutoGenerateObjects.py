@@ -74,27 +74,80 @@ pyFunctionTypeConversion = {'PyFunctionGraphicsData': 'std::function<py::object(
 #StdVector3D=std::array<Real,3> does not accept numpy::array                            'PyFunctionVector3DScalarVector3D': 'std::function<StdVector3D(Real,StdVector3D)>', #LoadForceVector, LoadTorqueVector, LoadMassProportional
                             }
 
-#this function finds out, if a parameter is set with a special Set...Safely function in C++
-def IsASetSafelyParameter(parameterType):
-    if ((parameterType == 'String') or
-        (parameterType == 'ItemName') or 
-        (parameterType == 'Vector2D') or 
-        (parameterType == 'Vector3DList') or
-        (parameterType == 'Matrix3DList') or
-        # (parameterType == 'PyVector3DList') or
-        # (parameterType == 'PyMatrix3DList') or
+#this for mutable args
+def IsASafelyVector(parameterType):
+    if ((parameterType == 'Vector2D') or 
         (parameterType == 'Vector3D') or
         (parameterType == 'Vector4D') or 
         (parameterType == 'Vector6D') or
         (parameterType == 'Vector7D') or
         (parameterType == 'Vector9D') or
-        (parameterType == 'Matrix3D') or
+        (parameterType == 'NumpyVector')
+        ):
+        return True
+    else:
+        return False
+
+def IsAVector(parameterType):
+    if ((parameterType == 'Vector') 
+        or (parameterType == 'Float4')
+        or IsASafelyVector(parameterType)
+        ):
+        return True
+    else:
+        return False
+
+#this for mutable args
+def IsASimpleMatrix(parameterType):
+    if ((parameterType == 'Matrix3D') or
         (parameterType == 'Matrix6D') or
         (parameterType == 'NumpyMatrix') or 
-        (parameterType == 'NumpyMatrixI') or #for index arrays, mesh, ...
-        (parameterType == 'PyMatrixContainer') or
-        (parameterType == 'NumpyVector')
-        #or (parameterType in pyFunctionTypeConversion)
+        (parameterType == 'NumpyMatrixI')
+        ):
+        return True
+    else:
+        return False
+
+def IsAMatrixVectorSpecial(parameterType):
+    if ((parameterType == 'Vector3DList') or
+        (parameterType == 'Matrix3DList') or
+        (parameterType == 'PyMatrixContainer')
+        ):
+        return True
+    else:
+        return False
+
+def IsAArrayIndex(parameterType):
+    if ((parameterType == 'ArrayNodeIndex') or
+        (parameterType == 'NodeIndex2') or
+        (parameterType == 'NodeIndex3') or
+        (parameterType == 'ArrayObjectIndex') or #unused
+        (parameterType == 'ArrayMarkerIndex') or
+        (parameterType == 'ArrayLoadIndex') or   #unused
+        (parameterType == 'ArraySensorIndex')
+        ):
+        return True
+    else:
+        return False
+
+#this function finds out, if a parameter is set with a special Set...Safely function in C++
+def IsASetSafelyParameter(parameterType):
+    if (IsASafelyVector(parameterType) or 
+        IsASimpleMatrix(parameterType) or 
+        IsAMatrixVectorSpecial(parameterType) or 
+        (parameterType == 'String') or
+        (parameterType == 'ItemName')
+        # (parameterType == 'Vector2D') or 
+        # (parameterType == 'Vector3D') or
+        # (parameterType == 'Vector4D') or 
+        # (parameterType == 'Vector6D') or
+        # (parameterType == 'Vector7D') or
+        # (parameterType == 'Vector9D') or
+        # (parameterType == 'NumpyVector') or
+        # (parameterType == 'Matrix3D') or
+        # (parameterType == 'Matrix6D') or
+        # (parameterType == 'NumpyMatrix') or 
+        # (parameterType == 'NumpyMatrixI') or #for index arrays, mesh, ...
         ):
         return True
     else:
@@ -370,7 +423,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
     sList = [sParamComp, sParamMain, sComp, sMain, sVisu]
     nClasses = 5 #number of different classes
     indexComp = 2 #index in sList
-    indexMain = 3 #index in slist
+    # indexMain = 3 #index in slist
 
     #************************************
     #class definition:
@@ -703,6 +756,27 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                 if IsTypeWithRangeCheck(parameter['type']):
                     parameterWithCheck = 'CheckForValid' + parameter['type'] + '(' + parameter['pythonName'] + ','
                     parameterWithCheck += '"' + parameter['pythonName'] +'","' + parseInfo['class'] + '")'
+                if (IsAVector(parameter['type'])
+                    or IsASimpleMatrix(parameter['type'])
+                    #or IsAMatrixVectorSpecial(parameter['type']) #defaults to None!
+                    ):
+                    parameterWithCheck = 'np.array('+parameterWithCheck+')'
+                elif (IsAArrayIndex(parameter['type'])
+                      or parameter['type'] == 'BodyGraphicsData' #in this case, flat copy is ok
+                      or parameter['type'] == 'BodyGraphicsDataList' #in this case, flat copy is ok
+                      or parameter['type'] == 'JointTypeList'
+                      or parameter['type'] == 'ArrayIndex'
+                      ):
+                    parameterWithCheck = 'copy.copy('+parameterWithCheck+')' #flat copy is sufficient
+                elif defaultValueStr.strip().startswith('['):
+                    print('WARNING: unresolved default [...] with',parameter['pythonName'])
+                elif defaultValueStr.strip().startswith('{'): #for now, only visualization
+                    print('WARNING: unresolved default {...} with',parameter['pythonName'])
+
+                #this does not work, because MatrixContainer or similar does not provide copy method
+                # elif defaultValueStr.strip() == '[]': #for some special matrices, etc.
+                #     parameterWithCheck = 'copy.copy('+parameterWithCheck+')'
+                    
                 #future: also add size check ...
                 
                 tempPythonClassInit = sIndent+sIndent+'self.' + parameter['pythonName'] + ' = ' + parameterWithCheck + '\n'
@@ -730,7 +804,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
         sPythonClass += ', visualization = ' + vDefaultDict + '):\n' #add visualization structure (must always be there...)
         #sPythonClass += ', visualization = {}):\n' #add visualization structure (must always be there...)
         #OLD MODE: sPythonClass += ', visualization = V' + parseInfo['class'] + '()):\n' #add visualization structure (must always be there...)
-        sPythonClass += sPythonClassInit + sIndent+sIndent+'self.visualization = visualization\n\n'
+        sPythonClass += sPythonClassInit + sIndent+sIndent+'self.visualization = CopyDictLevel1(visualization)\n\n'
         sPythonClass += sIndent+'def __iter__(self):\n'
         sPythonClass += sPythonIter + '\n'
         sPythonClass += sIndent+'def __repr__(self):\n'
@@ -1695,7 +1769,22 @@ For description of types (e.g., the meaning of \texttt{Vector3D} or \texttt{Nump
     #s += 'from exudyn import OutputVariableType\n\n' #do not import exudyn, causes problems e.g. with exudynFast, ...
     s += '#item interface diagonal matrix creator\n'
     s += '\n'
-    s += 'import exudyn #for exudyn.InvalidIndex() and other exudyn native structures needed in RigidBodySpringDamper\n\n'
+    s += 'import exudyn #for exudyn.InvalidIndex() and other exudyn native structures needed in RigidBodySpringDamper\n'
+    s += 'import numpy as np\n'
+    s += 'import copy \n\n'
+
+    s += '#helper function for level-1 copy of dicts (for visualization default args!)\n'
+    s += '#visualization dictionaries (which may be huge, are only flat copied, which is sufficient)\n'
+    s += 'def CopyDictLevel1(originalDict):\n'
+    s += space4+'if isinstance(originalDict,dict): #copy only required if default dict is used\n'
+    s += space4+'    copyDict = {}\n'
+    s += space4+'    for key, value in originalDict.items():\n'
+    s += space4+'        copyDict[key] = copy.copy(value)\n'
+    s += space4+'    return copyDict\n'
+    s += space4+'else:\n'
+    s += space4+'    return originalDict #fast track for everything else\n'
+    s += space4+'\n'
+
     s += '#helper function diagonal matrices, not needing numpy\n'
     s += 'def IIDiagMatrix(rowsColumns, value):\n'
     s += space4+'m = []\n'

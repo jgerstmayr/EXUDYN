@@ -189,8 +189,11 @@ namespace EPyUtils {
 	//! Expect Index or ArrayNodeIndex; otherwise throws error
 	inline ArrayIndex GetArrayNodeIndexSafely(const py::object& pyObject)
 	{
-
-		if (py::isinstance<py::list>(pyObject) || py::isinstance<py::array>(pyObject))
+        if (pyObject.is_none())
+        {
+            return ArrayIndex(); //empty list
+        }
+		else if (py::isinstance<py::list>(pyObject) || py::isinstance<py::array>(pyObject))
 		{
 			py::list pylist = py::cast<py::list>(pyObject); //also works for numpy arrays (but gives different type!)
 			ArrayIndex indexList; //initialize empty list
@@ -246,7 +249,11 @@ namespace EPyUtils {
 	//! Expect Index or ArrayMarkerIndex; otherwise throws error
 	inline ArrayIndex GetArrayMarkerIndexSafely(const py::object& pyObject)
 	{
-		if (py::isinstance<py::list>(pyObject) || py::isinstance<py::array>(pyObject))
+        if (pyObject.is_none())
+        {
+            return ArrayIndex(); //empty list
+        }
+        else if (py::isinstance<py::list>(pyObject) || py::isinstance<py::array>(pyObject))
 		{
 			py::list pylist = py::cast<py::list>(pyObject); //hopefully also works for numpy arrays .. TEST!
 			ArrayIndex indexList; //initialize empty list
@@ -277,7 +284,11 @@ namespace EPyUtils {
 	//! Expect Index or ArraySensorIndex; otherwise throws error
 	inline ArrayIndex GetArraySensorIndexSafely(const py::object& pyObject)
 	{
-		if (py::isinstance<py::list>(pyObject) || py::isinstance<py::array>(pyObject))
+        if (pyObject.is_none())
+        {
+            return ArrayIndex(); //empty list
+        }
+        else if (py::isinstance<py::list>(pyObject) || py::isinstance<py::array>(pyObject))
 		{
 			py::list pylist = py::cast<py::list>(pyObject); //hopefully also works for numpy arrays .. TEST!
 			ArrayIndex indexList; //initialize empty list

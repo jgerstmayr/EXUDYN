@@ -82,7 +82,7 @@ class = SolutionSettings
 #appendToFile=True #not done in first class
 writePybindIncludes = True
 typicalPaths = simulationSettings
-latexText = "\n%++++++++++++++++++++++++++++++++++++++\n\mysubsection{Simulation settings}\nThis section includes hierarchical structures for simulation settings, e.g., time integration, static solver, Newton iteration and solution file export.\n"
+latexText = "\n%++++++++++++++++++++++++++++++++++++++\n\mysubsectionlabel{Simulation settings}{sec:SimulationSettingsMain}\nThis section includes hierarchical structures for simulation settings, e.g., time integration, static solver, Newton iteration and solution file export.\n"
 classDescription = "General settings for exporting the solution (results) of a simulation."
 #V|F, pythonName,          cplusplusName,   size, type,                     defaultValue,args,  cFlags, parameterDescription
 #
@@ -366,7 +366,7 @@ writeFile=SimulationSettings.h
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = VSettingsGeneral
 appendToFile=False
-latexText = "\n%++++++++++++++++++++++++++++++++++++++\n\mysubsection{Visualization settings}\nThis section includes hierarchical structures for visualization settings, e.g., drawing of nodes, bodies, connectors, loads and markers and furthermore openGL, window and save image options. For further information, see \refSection{sec:overview:basics:visualizationsettings}.\n"
+latexText = "\n%++++++++++++++++++++++++++++++++++++++\n\mysubsectionlabel{Visualization settings}{sec:VisualizationSettingsMain}\nThis section includes hierarchical structures for visualization settings, e.g., drawing of nodes, bodies, connectors, loads and markers and furthermore openGL, window and save image options. For further information, see \refSection{sec:overview:basics:visualizationsettings}.\n"
 writePybindIncludes = True
 typicalPaths = SC.visualizationSettings
 classDescription = "General settings for visualization."
@@ -395,7 +395,7 @@ V,      showComputationInfo,            ,                  ,     bool,         t
 V,      showSolutionInformation,        ,                  ,     bool,         true,                   , P,      "true = show solution information (from simulationSettings.solution)"
 V,      showSolverInformation,          ,                  ,     bool,         true,                   , P,      "true = solver name and further information shown in render window"
 V,      showSolverTime,                 ,                  ,     bool,         true,                   , P,      "true = solver current time shown in render window"
-V,      renderWindowString,                ,                ,     String,       "",                     , P,      "string shown in render window (use this, e.g., for debugging, etc.; written below EXUDYN, similar to solutionInformation in SimulationSettings.solutionSettings)"
+V,      renderWindowString,             ,                  ,     String,       "",                     , P,      "string shown in render window (use this, e.g., for debugging, etc.; written below EXUDYN, similar to solutionInformation in SimulationSettings.solutionSettings)"
 V,      pointSize,                      ,                  ,     float,        "0.01f",                , P,      "global point size (absolute)"
 V,      circleTiling,                   ,                  ,     PInt,         "16",                   , P,      "global number of segments for circles; if smaller than 2, 2 segments are used (flat)"
 V,      cylinderTiling,                 ,                  ,     PInt,         "16",                   , P,      "global number of segments for cylinders; if smaller than 2, 2 segments are used (flat)"
@@ -556,6 +556,40 @@ V,      defaultColor,               ,                  4,    Float4,       "Floa
 writeFile=VisualizationSettings.h
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+class = VSettingsSensorTraces
+appendToFile=True
+writePybindIncludes = True
+typicalPaths = SC.visualizationSettings
+classDescription = "Visualization settings for traces of sensors. Note that a large number of time points (influenced by simulationSettings.solutionSettings.sensorsWritePeriod) may lead to slow graphics."
+#V|F,   pythonName,                   cplusplusName,      size, type,          defaultValue,args,           cFlags, parameterDescription
+V,      listOfPositionSensors,      ,                  -1,   ArrayIndex,   "ArrayIndex()",             , P,    "list of position sensors which can be shown as trace inside render window if sensors have storeInternal=True; if this list is empty and showPositionTrace=True, then all available sensors are shown"
+V,      listOfVectorSensors,        ,                  -1,   ArrayIndex,   "ArrayIndex()",             , P,    "list of sensors with 3D vector quantities; this non-empty list needs to coincide in length with the listOfPositionSensors to be shown if showVectors=True; the vector quantity is drawn relative to the related position"
+V,      listOfTriadSensors,         ,                  -1,   ArrayIndex,   "ArrayIndex()",             , P,    "list of sensors of with OutputVariableType RotationMatrix; this non-empty list needs to coincide in length with the listOfPositionSensors to be shown if showTriads=True; the triad is drawn at the related position"
+V,      showPositionTrace,          ,                  ,     bool,         false,                      , P,    "show position trace of all position sensors if listOfPositionSensors=[] or of specified sensors; sensors need to activate storeInternal=True"
+V,      showVectors,                ,                  ,     bool,         false,                      , P,    "if True, show vector quantities according to description in showPositionTrace"
+V,      showTriads,                 ,                  ,     bool,         false,                      , P,    "if True, show basis vectors from rotation matrices provided by sensors"
+V,      sensorsMbsNumber,           ,                  ,     Index,        "0",                        , P,    "number of main system which is used to for sensor lists; if only 1 mbs is in the SystemContainer, use 0; if there are several mbs, it needs to specify the number"
+V,      showPast,                   ,                  ,     bool,         true,                       , P,    "show trace previous to current visualization state"
+V,      showCurrent,                ,                  ,     bool,         true,                       , P,    "show current trace position (and especially vector quantity) related to current visualization state; this only works in solution viewer if sensor values are stored at time grid points of the solution file (up to a precision of 1e-10) and may therefore be temporarily unavailable"
+V,      showFuture,                 ,                  ,     bool,         false,                      , P,    "show trace future to current visualization state if already computed (e.g. in SolutionViewer)"
+V,      positionsShowEvery,         ,                  ,     PInt,         1,                          , P,    "integer value i; out of available sensor data, show every i-th position"
+V,      vectorsShowEvery,           ,                  ,     PInt,         1,                          , P,    "integer value i; out of available sensor data, show every i-th vector"
+V,      triadsShowEvery,            ,                  ,     PInt,         1,                          , P,    "integer value i; out of available sensor data, show every i-th triad"
+V,      vectorScaling,              ,                  ,     float,        "0.01f",                    , P,    "scaling of vector quantities; if, e.g., loads, this factor has to be adjusted significantly"
+V,      triadSize,                  ,                  ,     float,        "0.1f ",                    , P,    "length of triad axes if shown"
+V,      lineWidth,                  ,                  ,     UFloat,       "2.f",                      , P,    "line width for traces"
+V,      traceColors,                ,                  -1,   ArrayFloat,   "ArrayFloat({0.2f,0.2f,0.2f,1.f, 0.8f,0.2f,0.2f,1.f, 0.2f,0.8f,0.2f,1.f, 0.2f,0.2f,0.8f,1.f, 0.2f,0.8f,0.8f,1.f, 0.8f,0.2f,0.8f,1.f, 0.8f,0.4f,0.1f,1.f})",             , P,    "RGBA float values for traces in one array; using 6x4 values gives different colors for 6 traces; in case of triads, the 0/1/2-axes are drawn in red, green, and blue"
+#
+
+writeFile=VisualizationSettings.h
+
+# settings and list of sensors provided in visualizationSettings.sensors.traces with 
+# list of sensors, showPositionTrace, listOfPositionSensors=[] 
+# (empty means all position sensors, listOfVectorSensors=[] which can provide according vector quantities for positions; 
+# showVectors, vectorScaling=0.001, showPast=True, showFuture=False, showCurrent=True, lineWidth=2
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = VSettingsSensors
 appendToFile=True
 writePybindIncludes = True
@@ -566,7 +600,8 @@ V,      show,                       ,                  ,     bool,         true,
 V,      showNumbers,                ,                  ,     bool,         false,                      , P,    "flag to decide, whether the sensor numbers are shown"
 V,      drawSimplified,             ,                  ,     bool,         true,                       , P,    "draw sensors with simplified symbols"
 V,      defaultSize,                ,                  ,     float,        "-1.f",                     , P,    "global sensor size; if -1.f, sensor size is relative to maxSceneSize"
-V,      defaultColor,               ,                  4,    Float4,       "Float4({0.6f,0.6f,0.1f,1.f})",, P,    "default cRGB color for sensors; 4th value is alpha-transparency"
+V,      defaultColor,               ,                  4,    Float4,       "Float4({0.6f,0.6f,0.1f,1.f})",, P, "default cRGB color for sensors; 4th value is alpha-transparency"
+V,      traces,                     ,                  ,     VSettingsSensorTraces,  ,                 , PS,   "settings for showing (position) sensor traces and vector plots in the render window"
 #
 writeFile=VisualizationSettings.h
 

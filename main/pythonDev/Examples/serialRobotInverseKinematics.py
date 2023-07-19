@@ -23,6 +23,7 @@ from exudyn.lieGroupBasics import LogSE3, ExpSE3
 
 import numpy as np
 
+exu.RequireVersion('1.6.31')
 # exuVersion = np.array(exu.__version__.split('.')[:3], dtype=int)
 exuVersion = exu.__version__.split('.')[:3]
 exuVersion = exuVersion[0] + exuVersion[1] + exuVersion[2]
@@ -34,7 +35,7 @@ if int(exuVersion) < 1631:
 #%% ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #motion planning:
 jointSpaceInterpolation = False #false interpolates TCP position in work space/Cartesian coordinates
-motionCase = 1 # case 1 and 2 move in different planes
+motionCase = 2 # case 1 and 2 move in different planes
 
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -154,6 +155,14 @@ oKT = robotDict['objectKinematicTree']
 sJoints = mbs.AddSensor(SensorNode(nodeNumber=robotDict['nodeGeneric'], storeInternal=True, 
                          outputVariableType=exu.OutputVariableType.Coordinates))
 
+sPosTCP = mbs.AddSensor(SensorKinematicTree(objectNumber=oKT, linkNumber=5, localPosition=HT2translation(HTtool), 
+                                            storeInternal=True, 
+                                            outputVariableType=exu.OutputVariableType.Position))
+
+sRotTCP = mbs.AddSensor(SensorKinematicTree(objectNumber=oKT, linkNumber=5, localPosition=HT2translation(HTtool), 
+                                            storeInternal=True, 
+                                            outputVariableType=exu.OutputVariableType.RotationMatrix))
+
 #user function which is called only once per step, speeds up simulation drastically
 def PreStepUF(mbs, t):
     if not jointSpaceInterpolation:
@@ -202,6 +211,15 @@ SC.visualizationSettings.window.renderWindowSize=[1920,1200]
 SC.visualizationSettings.general.graphicsUpdateInterval = 0.01
 SC.visualizationSettings.openGL.shadow=0.3
 SC.visualizationSettings.openGL.perspective=0.5
+
+#traces:
+SC.visualizationSettings.sensors.traces.listOfPositionSensors = [sPosTCP]
+SC.visualizationSettings.sensors.traces.listOfTriadSensors =[sRotTCP]
+SC.visualizationSettings.sensors.traces.showPositionTrace=True
+SC.visualizationSettings.sensors.traces.showTriads=True
+SC.visualizationSettings.sensors.traces.showVectors=False
+SC.visualizationSettings.sensors.traces.showFuture=False
+SC.visualizationSettings.sensors.traces.triadsShowEvery=5
 
 #%% 
 tEnd = 5 # endtime of the simulation

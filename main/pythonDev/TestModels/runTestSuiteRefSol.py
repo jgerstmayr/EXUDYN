@@ -65,7 +65,7 @@ def TestExamplesReferenceSolution():
         'pendulumFriction.py':0.39999998776982304,
         'plotSensorTest.py':1,
         'postNewtonStepContactTest.py':0.057286638346409235,
-        'reevingSystemSpringsTest.py':2.213190117855691,
+        'reevingSystemSpringsTest.py':2.2155575717433007,           #new 2023-07-17 (old solution contained compression forces: 2.213190117855691),
         'revoluteJointprismaticJointTest.py':1.2538806799249342,    #new 2022-07-11 (CState Parallel); #changed to some analytic Connector jacobians (CartSpringDamper), implicit solver (modified Newton restart, etc.); before 2022-01-18: 1.2538806799243265,
         'rigidBodyAsUserFunctionTest.py':8.950865271552148,
         'rigidBodyCOMtest.py':3.409431467726291,

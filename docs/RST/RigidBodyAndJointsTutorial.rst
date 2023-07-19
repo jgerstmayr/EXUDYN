@@ -274,8 +274,7 @@ which results in the following output (shortened):
 
 
 Sometimes it is hard to understand the degree of freedom for the constrained system. Furthermore, we may have added -- by error --
-redundant constraints, which are not solvable or at least cause solver problems. Both can be checked with the command
-\ ````\ :
+redundant constraints, which are not solvable or at least cause solver problems. Both can be checked with the command:
 
 .. code-block:: python
 
@@ -349,7 +348,7 @@ while solution can be viewed using the \ ``SolutionViewer()``\ .
 With \ ``solutionWritePeriod``\  you can adjust the frequency which is used to store the solution of the whole model, 
 which may lead to very large files and may slow down simulation, but is used in the \ ``SolutionViewer()``\  to reload the solution after simulation.
 
-In order to improve visualization, there are hundreds of options, see Visualization settings in Section :ref:`sec-vsettingsgeneral`\ , some of them used here:
+In order to improve visualization, there are hundreds of options, see Visualization settings in Section :ref:`sec-visualizationsettingsmain`\ , some of them used here:
 
 .. code-block:: python
 

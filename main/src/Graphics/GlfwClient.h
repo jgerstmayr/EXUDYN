@@ -121,6 +121,7 @@ private:
 	static std::atomic_flag renderFunctionRunning;  //!< semaphore to check if Render(...)  function is currently running (prevent from calling twice)
 	static std::atomic_flag showMessageSemaphore;   //!< semaphore to prevent calling ShowMessage twice
 
+
 	//+++++++++++++++++++++++++++++++++++++++++
 	static BitmapFont bitmapFont;				//!< bitmap font for regular texts and for textured fonts, initialized upon start of renderer
 	static float fontScale;						//!< monitor scaling factor from windows, to scale fonts
@@ -151,7 +152,13 @@ private:
 	static ResizableArray<GraphicsData*>* graphicsDataList;					//!< link to graphics data; only works for one MainSystem, but could also be realized for several systems
 	static VisualizationSettings* visSettings;  //!< link to visualization settings
 	static VisualizationSystemContainerBase* basicVisualizationSystemContainer;
-	//+++++++++++++++++++++++++++++++++++++++++
+    //+++++++++++++++++++++++++++++++++++++++++
+    //for sensor traces:
+    static Vector3DList sensorTracePositions;
+    static Vector3DList sensorTraceVectors; //synchronized with triads
+    static Matrix3DList sensorTraceTriads;  //synchronized with vectors
+    static Vector sensorTraceValues; //temporary storage for current sensor data
+    //+++++++++++++++++++++++++++++++++++++++++
 
 public:
 	GlfwRenderer();
@@ -291,7 +298,7 @@ public:
 	static void ShowMessage(const STDstring& str, Real timeout = 0);
 
 	//! run renderer idle for certain amount of time; use this for single-threaded, interactive animations; waitSeconds==-1 waits forever
-	static void DoRendererIdleTasks(Real waitSeconds);
+	static void DoRendererIdleTasks(Real waitSeconds, bool graphicsUpdateAndRender=false);
 
 	//! check if separate thread used:
 	static bool UseMultiThreadedRendering() { return useMultiThreadedRendering; }
@@ -372,7 +379,8 @@ private: //to be called internally only!
 	static void RunLoop();
 
 	//! tasks which are regularly called by RunLoop(), used if no separate thread used in GLFW; use wait in seconds to do this 
-	static void DoRendererTasks();
+	//! for single-threaded renderer, an immediate rendering can be requested
+	static void DoRendererTasks(bool graphicsUpdateAndRender = false);
 
 	//! tasks which are done if renderer is shut down
 	static void FinishRunLoop();
@@ -397,6 +405,9 @@ private: //to be called internally only!
 	
     //! Render particulary the graphics data of multibody system; selectionMode==true adds names
     static void RenderGraphicsData(bool selectionMode = false);
+
+       //! render sensor traces if activated and available
+    static void RenderSensorTraces();
 
     //! Render particulary the text of multibody system; selectionMode==true adds names
     static void RenderGraphicsDataText(GraphicsData* data, Index lastItemID, bool highlight, Index highlightID, Float4 highlightColor2, Float4 otherColor2, bool selectionMode=false);

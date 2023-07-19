@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-12-01  20:06:47 (last modified)
+* @date         2023-07-12  16:00:01 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -38,7 +38,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        MainObjectConnectorReevingSystemSprings
-* @brief        A rD reeving system defined by a list of torque-free and friction-free sheaves or points that are connected with one rope (modelled as massless spring). The force is assumed to be constant all over the rope. The sheaves or connection points are defined by \f$nr\f$ rigid body markers \f$[m_0, \, m_1, \, \ldots, \, m_{nr-1}]\f$. At both ends of the rope there may be a prescribed motion coupled to a coordinate marker each, given by \f$m_{c0}\f$ and \f$m_{c1}\f$ .
+* @brief        A rD reeving system defined by a list of torque-free and friction-free sheaves or points that are connected with one rope (modelled as massless spring). NOTE that the spring can undergo tension AND compression (in order to avoid compression, use a PreStepUserFunction to turn off stiffness and damping in this case!). The force is assumed to be constant all over the rope. The sheaves or connection points are defined by \f$nr\f$ rigid body markers \f$[m_0, \, m_1, \, \ldots, \, m_{nr-1}]\f$. At both ends of the rope there may be a prescribed motion coupled to a coordinate marker each, given by \f$m_{c0}\f$ and \f$m_{c1}\f$ .
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -115,6 +115,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "dampingPerLength")) { cObjectConnectorReevingSystemSprings->GetParameters().dampingPerLength = py::cast<Real>(d["dampingPerLength"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "dampingTorsional")) { cObjectConnectorReevingSystemSprings->GetParameters().dampingTorsional = py::cast<Real>(d["dampingTorsional"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "dampingShear")) { cObjectConnectorReevingSystemSprings->GetParameters().dampingShear = py::cast<Real>(d["dampingShear"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "regularizationForce")) { cObjectConnectorReevingSystemSprings->GetParameters().regularizationForce = py::cast<Real>(d["regularizationForce"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "referenceLength")) { cObjectConnectorReevingSystemSprings->GetParameters().referenceLength = py::cast<Real>(d["referenceLength"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::SetVector3DListSafely(d, "sheavesAxes", cObjectConnectorReevingSystemSprings->GetParameters().sheavesAxes); /*! AUTO:  safely cast to C++ type*/
         cObjectConnectorReevingSystemSprings->GetParameters().sheavesRadii = py::cast<std::vector<Real>>(d["sheavesRadii"]); /* AUTO:  read out dictionary and cast to C++ type*/
@@ -138,6 +139,7 @@ public: // AUTO:
         d["dampingPerLength"] = (Real)cObjectConnectorReevingSystemSprings->GetParameters().dampingPerLength; //! AUTO: cast variables into python (not needed for standard types) 
         d["dampingTorsional"] = (Real)cObjectConnectorReevingSystemSprings->GetParameters().dampingTorsional; //! AUTO: cast variables into python (not needed for standard types) 
         d["dampingShear"] = (Real)cObjectConnectorReevingSystemSprings->GetParameters().dampingShear; //! AUTO: cast variables into python (not needed for standard types) 
+        d["regularizationForce"] = (Real)cObjectConnectorReevingSystemSprings->GetParameters().regularizationForce; //! AUTO: cast variables into python (not needed for standard types) 
         d["referenceLength"] = (Real)cObjectConnectorReevingSystemSprings->GetParameters().referenceLength; //! AUTO: cast variables into python (not needed for standard types) 
         d["sheavesAxes"] = (PyVector3DList)cObjectConnectorReevingSystemSprings->GetParameters().sheavesAxes; //! AUTO: cast variables into python (not needed for standard types) 
         d["sheavesRadii"] = EPyUtils::Vector2NumPy(cObjectConnectorReevingSystemSprings->GetParameters().sheavesRadii); //! AUTO: cast variables into python (not needed for standard types) 
@@ -160,6 +162,7 @@ public: // AUTO:
         else if (parameterName.compare("dampingPerLength") == 0) { return py::cast((Real)cObjectConnectorReevingSystemSprings->GetParameters().dampingPerLength);} //! AUTO: get parameter
         else if (parameterName.compare("dampingTorsional") == 0) { return py::cast((Real)cObjectConnectorReevingSystemSprings->GetParameters().dampingTorsional);} //! AUTO: get parameter
         else if (parameterName.compare("dampingShear") == 0) { return py::cast((Real)cObjectConnectorReevingSystemSprings->GetParameters().dampingShear);} //! AUTO: get parameter
+        else if (parameterName.compare("regularizationForce") == 0) { return py::cast((Real)cObjectConnectorReevingSystemSprings->GetParameters().regularizationForce);} //! AUTO: get parameter
         else if (parameterName.compare("referenceLength") == 0) { return py::cast((Real)cObjectConnectorReevingSystemSprings->GetParameters().referenceLength);} //! AUTO: get parameter
         else if (parameterName.compare("sheavesAxes") == 0) { return py::cast((PyVector3DList)cObjectConnectorReevingSystemSprings->GetParameters().sheavesAxes);} //! AUTO: get parameter
         else if (parameterName.compare("sheavesRadii") == 0) { return EPyUtils::Vector2NumPy(cObjectConnectorReevingSystemSprings->GetParameters().sheavesRadii);} //! AUTO: get parameter
@@ -183,6 +186,7 @@ public: // AUTO:
         else if (parameterName.compare("dampingPerLength") == 0) { cObjectConnectorReevingSystemSprings->GetParameters().dampingPerLength = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("dampingTorsional") == 0) { cObjectConnectorReevingSystemSprings->GetParameters().dampingTorsional = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("dampingShear") == 0) { cObjectConnectorReevingSystemSprings->GetParameters().dampingShear = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("regularizationForce") == 0) { cObjectConnectorReevingSystemSprings->GetParameters().regularizationForce = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("referenceLength") == 0) { cObjectConnectorReevingSystemSprings->GetParameters().referenceLength = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("sheavesAxes") == 0) { EPyUtils::SetVector3DListSafely(value, cObjectConnectorReevingSystemSprings->GetParameters().sheavesAxes); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("sheavesRadii") == 0) { cObjectConnectorReevingSystemSprings->GetParameters().sheavesRadii = py::cast<std::vector<Real>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

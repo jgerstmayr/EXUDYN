@@ -685,7 +685,7 @@ void PyProcessAskQuit()
     try
     {
         //open window to execute a python command ... 
-        float alphaTransparency = GetGlfwRenderer().GetVisualizationSettings()->dialogs.alphaTransparency;
+        //float alphaTransparency = GetGlfwRenderer().GetVisualizationSettings()->dialogs.alphaTransparency;
         PyWriteToSysDictionary("quitResponse", py::cast((int)1) );
 
         std::string str = R"(

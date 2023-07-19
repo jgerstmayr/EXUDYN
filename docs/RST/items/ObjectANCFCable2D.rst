@@ -443,7 +443,7 @@ MINI EXAMPLE for ObjectANCFCable2D
    
    #assemble and solve system for default parameters
    mbs.Assemble()
-   exu.SolveStatic(mbs)
+   mbs.SolveStatic()
    
    #check result
    exudynTestGlobals.testResult = mbs.GetNodeOutput(lastNode, exu.OutputVariableType.Displacement)[0]

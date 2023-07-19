@@ -775,7 +775,7 @@ PYBIND11_MODULE(exudynCPP, m) {
 			return STDstring(EXUstd::ToString(item.GetIndex()));
 		}, "return the string representation of the index, which can be, e.g., printed")
 		;
-
+        
 	////++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//NOT needed, should always convert to std::vector<NodeIndex>
 	//py::class_<ArrayNodeIndex>(m, "ArrayNodeIndex", "ArrayNodeIndex: array of indices which may only be used for nodes")

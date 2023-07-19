@@ -200,9 +200,9 @@ def ParameterFunction(parameterSet):
                 # sys.exit()
         
             #do not show values larger than -120 to have nicer plots ...
-            return min(-100,-fMin) #maximize eigenfrequency => minimize ...
+            return 140 + min(-100,-fMin) #maximize eigenfrequency => minimize ...
     except:
-        return -99
+        return 140-99
 
 
 
@@ -225,26 +225,38 @@ if __name__ == '__main__': #include this to enable parallel processing
     x2Range = (6*rMax, 7*rMax)
     
     
-    # [pOpt, vOpt, pList, values] = Minimize(
-    [pOpt, vOpt, pList, values] = GeneticOptimization(
-                                          objectiveFunction = ParameterFunction, 
-                                          parameters = {'r0':rRange, 'r1':rRange, 'r2':rRange, 
-                                                        'x0':x0Range, 'x1':x1Range, 'x2':x2Range, }, #parameters provide search range
-                                          numberOfGenerations = 10,
-                                          populationSize = 100,
-                                          elitistRatio = 0.1,
-                                          # crossoverProbability = 0, #makes no sense!
-                                          rangeReductionFactor = 0.7,
-                                          randomizerInitialization=0, #for reproducible results
-                                          #distanceFactor = 0.1, 
-                                          distanceFactor = 0., 
-                                          debugMode=False,
-                                          useMultiProcessing=True, #may be problematic for test
-                                          numberOfThreads = 20,
-                                          addComputationIndex=True,
-                                          showProgress=True, 
-                                          resultsFile = 'solution/shapeOptimization.txt',
-                                          )
+    if False:
+        #this option does not work here, as it would require the ParameterFunction to restrict the ranges to feasible values
+        [pOpt, vOpt, pList, values] = Minimize(
+                                              objectiveFunction = ParameterFunction, 
+                                              parameters = {'r0':rRange, 'r1':rRange, 'r2':rRange, 
+                                                            'x0':x0Range, 'x1':x1Range, 'x2':x2Range, }, #parameters provide search range
+                                             showProgress=True,
+                                             enforceBounds=True,
+                                             addComputationIndex = True,
+                                             options={'maxiter':100},
+                                             resultsFile='solution/shapeOptimization.txt'
+                                             )
+    else:
+        [pOpt, vOpt, pList, values] = GeneticOptimization(
+                                              objectiveFunction = ParameterFunction, 
+                                              parameters = {'r0':rRange, 'r1':rRange, 'r2':rRange, 
+                                                            'x0':x0Range, 'x1':x1Range, 'x2':x2Range, }, #parameters provide search range
+                                              numberOfGenerations = 10,
+                                              populationSize = 100,
+                                              elitistRatio = 0.1,
+                                              # crossoverProbability = 0, #makes no sense!
+                                              rangeReductionFactor = 0.7,
+                                              randomizerInitialization=0, #for reproducible results
+                                              #distanceFactor = 0.1, 
+                                              distanceFactor = 0., 
+                                              debugMode=False,
+                                              useMultiProcessing=True, #may be problematic for test
+                                              numberOfThreads = 20,
+                                              addComputationIndex=True,
+                                              showProgress=True, 
+                                              resultsFile = 'solution/shapeOptimization.txt',
+                                              )
 
     exu.Print("--- %s seconds ---" % (time.time() - start_time))
 

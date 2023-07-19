@@ -16,6 +16,7 @@ import numpy as np #for loading
 import exudyn #for sensor index
 from exudyn.advancedUtilities import PlotLineCode
 import copy
+import os
 
 #++++++++++++++++++++++++++++++++
 #this structure helps to define default values, that are then always used!
@@ -193,6 +194,8 @@ def PlotSensorDefaults():
 #  [*kwargs]:
 #        minorTicksXon: if True, turn minor ticks for x-axis on
 #        minorTicksYon: if True, turn minor ticks for y-axis on
+#        logScaleX: use log scale for x-axis
+#        logScaleY: use log scale for y-axis
 #        fileCommentChar: if exists, defines the comment character in files (\#, %, ...)
 #        fileDelimiterChar: if exists, defines the character indicating the columns for data (',', ' ', ';', ...)
 #**output: [Any, Any, Any, Any]; plots the sensor data; returns [plt, fig, ax, line] in which plt is matplotlib.pyplot, fig is the figure (or None), ax is the axis (or None) and line is the return value of plt.plot (or None) which could be changed hereafter
@@ -242,7 +245,7 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel='time (s)', yLabel=No
 
     
     for key in kwargs:
-        if (key!='minorTicksXon' and key!='minorTicksYon' and key!='sizeInches' 
+        if (key!='minorTicksXon' and key!='minorTicksYon'
             and key!='fileCommentChar' and key!='fileDelimiterChar'
             and key!='logScaleX'  and key!='logScaleY'):
             raise ValueError('PlotSensor: invalid argument: '+key)
@@ -656,6 +659,11 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel='time (s)', yLabel=No
             plt.show() 
         
         if fileName != '':
+            try:
+                os.makedirs(os.path.dirname(fileName), exist_ok=True)
+            except:
+                pass #makedirs may fail on some systems, but we keep going
+
             plt.savefig(fileName)
     
     return [plt, fig, ax, line]
@@ -708,8 +716,8 @@ def PlotFFT(frequency, data,
         plt.xscale('log')
     if logScaleY:
         plt.yscale('log')
-    ax.grid(b=True, which='major', color='k', linestyle='-')
-    ax.grid(b=True, which='minor', color='k', linestyle=':')
+    ax.grid(visible=True, which='major', color='k', linestyle='-')
+    ax.grid(visible=True, which='minor', color='k', linestyle=':')
     ax.minorticks_on()
 
     plt.tight_layout()
@@ -990,6 +998,10 @@ def PlotImage(imageData, HT = np.eye(4), axesEqual=True, plot3D=False, lineWidth
         plt.show() 
     
     if fileName != '':
+        try:
+            os.makedirs(os.path.dirname(fileName), exist_ok=True)
+        except:
+            pass #makedirs may fail on some systems, but we keep going
         plt.savefig(fileName)
 
 

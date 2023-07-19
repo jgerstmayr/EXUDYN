@@ -365,7 +365,7 @@ Using \texttt{mbs.Reset()} will clear the system and allows to set up a new syst
 %
 
 \mysubsubsectionlabel{Simulation settings}{sec:overview:basics:simulationsettings}
-The simulation settings consists of a couple of substructures, e.g., for \texttt{solutionSettings}, \texttt{staticSolver}, \texttt{timeIntegration} as well as a couple of general options -- for details see \refSection{sec:SolutionSettings} and \refSection{sec:SimulationSettings}.
+The simulation settings consists of a couple of substructures, e.g., for \texttt{solutionSettings}, \texttt{staticSolver}, \texttt{timeIntegration} as well as a couple of general options -- for details see \refSection{sec:SolutionSettings} and \refSection{sec:SimulationSettingsMain}.
 
 Simulation settings are needed for every solver. They contain solver-specific parameters (e.g., the way how load steps are applied), information on how solution files are written, and very specific control parameters, e.g., for the Newton solver. 
 
@@ -415,19 +415,25 @@ The solvers provide a number of options in \texttt{solutionSettings} to generate
 Furthermore, you can use sensors to record particular information, e.g., the displacement of a body's local
 position, forces or joint data. For viewing sensor results, use the \texttt{PlotSensor} function of the 
 \texttt{exudyn.plot} tool, see the rigid body and joints tutorial.
+Finally, the render window allows to show traces (trajectories) of position sensors, sensor vector quantities (e.g., velocity vectors),
+or triads given by rotation matrices. For further information, see the \texttt{sensors.traces} structure of \texttt{VisualizationSettings}, \refSection{sec:VSettingsSensorTraces}.
 
 \mysubsubsectionlabel{Renderer and 3D graphics}{sec:overview:basics:renderer}
 A 3D renderer is attached to the simulation. Visualization is started with  \texttt{exu.StartRenderer()}, see the examples and tutorials.
-For closing, press key 'Q' or Escape or close the window.
-\mybold{Note}:
-\bi
-  \item After \texttt{visualizationSettings.window.reallyQuitTimeLimit} seconds a 'do you really want to quit' dialog opens for safety on pressing 'Q'; if no tkinter is available, you just have to press 'Q' twice. For closing the window, you need to click a second time on the close button of the window after \texttt{reallyQuitTimeLimit} seconds (usually 900 seconds).
-\ei
+In order to show your model in the render window, you have to provide 3D graphics data to the bodies. Flexible bodies (e.g., FFRF-like) can visualize their meshes. Further items (nodes, markers, ...) can be visualized with default settings, however, often you have to turn on drawing or enlarge default sizes to make items visible. Item number can also be shown.
+Finally, since version 1.6.188, sensor traces (trajectories) can be shown in the render window, see the \texttt{VisualizationSettings} in  \refSection{sec:VisualizationSettingsMain}.
+
 The renderer uses an OpenGL window of a library called GLFW, which is platform-independent. 
 The renderer is set up in a minimalistic way, just to ensure that you can check that the modeling is correct. 
-There is no way to contruct models inside the renderer. 
-Note: Try to avoid huge number of triangles in STL files or by creating large number of complex objects, such as spheres or cylinders.
 
+\noindent \mybold{Note}:
+\bi
+  \item For closing the render window, press key 'Q' or Escape or just close the window.
+  \item There is no way to contruct models inside the renderer (no 'GUI').
+  \item Try to avoid huge number of triangles in STL files or by creating large number of complex objects, such as spheres or cylinders.
+  \item After \texttt{visualizationSettings.window.reallyQuitTimeLimit} seconds a 'do you really want to quit' dialog opens for safety on pressing 'Q'; if no tkinter is available, you just have to press 'Q' twice. For closing the window, you need to click a second time on the close button of the window after \texttt{reallyQuitTimeLimit} seconds (usually 900 seconds).
+\ei
+ 
 \noindent There are some main features in the renderer, using keyboard and mouse, for details see \refSection{sec:graphicsVisualization}:
 \bi
   \item press key H to show help in renderer
@@ -443,21 +449,27 @@ Note: Try to avoid huge number of triangles in STL files or by creating large nu
   \item for further keys, see \refSection{sec:GUI:sec:keyboardInput} or press H in renderer
 \ei
 %
-Depending on your model (size, place, ...), you may need to adjust the following visualization and \texttt{openGL} parameters in \texttt{visualizationSettings}:
+Depending on your model (size, place, ...), you may need to adjust the following visualization and \texttt{openGL} parameters in \texttt{visualizationSettings}, see \refSection{sec:VisualizationSettingsMain}:
 \bi
   \item change window size
   \item light and light position 
   \item shadow (turned off by using 0; turned on by using, e.g., a value of 0.3) and shadow polygon offset; shadow slows down graphics performance by a factor of 2-3, depending on your graphics card
   \item visibility of nodes, markers, etc. in according bodies, nodes, markers, ..., \texttt{visualizationSettings}
   \item move camera with a selected marker: adjust \texttt{trackMarker} in \texttt{visualizationSettings.interactive}
-  \item ... (see e.g. \refSection{sec:VSettingsGeneral})
+\ei
+\mybold{NOTE}: changing \texttt{visualizationSettings} is not thread-safe, as it allows direct access to the C++ variables. 
+In most cases, this is not problematic, e.g., turning on/off some view parameters my just lead to some short-time artifacts if
+they are changed during redraw. However, more advanced quantities (e.g., \texttt{trackMarker } or changing strings) may lead to problems, 
+which is why it is strongly recommended to:
+\bi
+  \item set all \texttt{visualizationSettings} \mybold{before start of renderer}
 \ei
 
 \mysubsubsectionlabel{Visualization settings dialog}{sec:overview:basics:visualizationsettings}
 %
 Visualization settings are used for user interaction with the model. E.g., the nodes, markers, loads, etc., can be visualized for every model. There are default values, e.g., for the size of nodes, which may be inappropriate for your model. Therefore, you can adjust those parameters. In some cases, huge models require simpler graphics representation, in order not to slow down performance -- e.g., the number of faces to represent a cylinder should be small if there are 10000s of cylinders drawn. Even computation performance can be slowed down, if visualization takes lots of CPU power. However, visualization is performed in a separate thread, which usually does not influence the computation exhaustively.
 
-Details on visualization settings and its substructures are provided in \refSection{sec:VSettingsGeneral} -- \refSection{sec:VisualizationSettings}. These settings may also be edited by pressing 'V' in the active render window (does not work, if there is no active render loop using, e.g., \texttt{SC.WaitForRenderEngineStopFlag()} or 
+Details on visualization settings and its substructures are provided in \refSection{sec:VisualizationSettingsMain}. These settings may also be edited by pressing 'V' in the active render window (does not work, if there is no active render loop using, e.g., \texttt{SC.WaitForRenderEngineStopFlag()} or 
 \texttt{mbs.WaitForUserToContinue()} ).
 The visualization settings dialog is shown exemplarily in \fig{fig_visualizationSettings}.
 Note that this dialog is automatically created and uses Python's \texttt{tkinter}, which is lightweight, but not very well suited if display scalings are large (e.g., on high resolution laptop screens). If working with Spyder, it is recommended to restart Spyder, if display scaling is changed, in order to adjust scaling not only for Spyder but also for \codeName\ .
@@ -525,7 +537,7 @@ The visualization settings structure can be accessed in the system container \te
 \mysubsubsectionlabel{Execute Command and Help}{sec:overview:basics:commandAndHelp}
 %
 In addition to the Visualization settings dialog, a simple help window opens upon pressing key 'H'. 
-It is also possible to execute single Python commands during simulation by pressing 'X', which opens a simple dialog, saying 'Single command (press return to execute'. 
+It is also possible to execute single Python commands during simulation by pressing 'X', which opens a dialog, saying 'Exudyn Command Window'. 
 Note that the dialog may appear behind the visualization window!
 This dialog may be very helpful in long running computations or in case that you may evaluate variables for debugging.
 The Python commands are evaluated in the global python scope, meaning that \texttt{mbs} or other variables of your scripts are available.
@@ -545,20 +557,20 @@ To print values, always use \texttt{print(...)} to see the string representation
 
 \noindent You can also do quite fancy things during simulation, e.g., to deactivate joints (of course this may result in strange behavior):
 \pythonstyle\begin{lstlisting}
-n=mbs.systemData.NumberOfObjects()
-for i in range(n):
-    d = mbs.GetObject(i)
-    #if 'Joint' in d['objectType']:
-    if 'activeConnector' in d:
-        mbs.SetObjectParameter(i, 'activeConnector', False)
+  n=mbs.systemData.NumberOfObjects()
+  for i in range(n):
+      d = mbs.GetObject(i)
+      #if 'Joint' in d['objectType']:
+      if 'activeConnector' in d:
+          mbs.SetObjectParameter(i, 'activeConnector', False)
 \end{lstlisting}
 
 
 Note that you could also change \texttt{visualizationSettings} in this way, but the Visualization settings dialog is much more convenient.
 Changing \texttt{simulationSettings} is dangerous and must be treated with care.
 Some parameters, such as \texttt{simulationSettings.timeIntegration.endTime} are copied into the internal solver's \text{mbs.sys['dynamicSolver'].it} structure.
-%
-Thus, changing \texttt{simulationSettings.timeIntegration.endTime} has no effect. 
+
+Thus, changing \texttt{simulationSettings.timeIntegration.endTime} has no effect during simulation. 
 As a rule of thumb, all variables that are not stored inside the solvers structures may be adjusted by the \texttt{simulationSettings} passed to the solver (which are then not copied internally); see the C++ code for details. However, behavior may change in future and unexpected behavior or and changing \texttt{simulationSettings} will likely cause crashes if you do not know exactly the behavior, e.g., changing output format from text to binary ... !
 Specifically, \texttt{newton} and \texttt{discontinuous} settings cannot be changed on the fly as they are copied internally.
 
@@ -827,8 +839,7 @@ The faster versions are available for all release versions, but only for some \t
 \noindent However, there are many \mybold{ways to speed up \codeName\ in general}:
 \bi
   \item for models with more than 50 coordinates, switching to sparse solvers might greatly improve speed: \texttt{simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse}
-  \item when preferring dense direct solvers, switching to Eigen's PartialPivLU solver might greatly improve speed: \texttt{simulationSettings.linearSolverType = exu.LinearSolverType.EigenDense}; 
-  however, the flag \texttt{simulationSettings.linearSolverSettings.ignoreSingularJacobian=True} will switch to the much slower (but more robust) Eigen's FullPivLU
+  \item when preferring dense direct solvers, switching to Eigen's PartialPivLU solver might greatly improve speed: \texttt{simulationSettings.linearSolverType = exu.LinearSolverType.EigenDense}; however, the flag \texttt{simulationSettings.linearSolverSettings.ignoreSingularJacobian=True} will switch to the much slower (but more robust) Eigen's FullPivLU
   \item try to avoid Python functions or try to speed up Python functions
   \item instead of user functions in objects or loads (computed in every iteration), some problems would also work if these parameters are only updated in \texttt{mbs.SetPreStepUserFunction(...)}
   \item Python user functions can be speed up using the Python numba package, using \texttt{@jit} in front of functions (for more options, see \exuUrl{https://numba.pydata.org/numba-doc/dev/user/index.html}{https://numba.pydata.org/numba-doc/dev/user/index.html}); Example given in \texttt{Examples/springDamperUserFunctionNumbaJIT.py} showing speedups of factor 4; more complicated Python functions may see speedups of 10 - 50

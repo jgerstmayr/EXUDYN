@@ -289,11 +289,13 @@ void CObjectBeamGeometricallyExact::ComputeJacobianODE2_ODE2(EXUmath::MatrixCont
 	//jacobianODE2.GetInternalDenseMatrix().SetScalarMatrix(dimJacobian, 0.);
 
 	const Index nDim3D = 3;
-	Index nNode0 = GetCNode(0)->GetNumberOfODE2Coordinates();
-	Index nNode1 = GetCNode(1)->GetNumberOfODE2Coordinates();
-	CHECKandTHROW( (nNode0 + nNode1 == dimJacobian) && 
+
+    Index nNode0 = GetCNode(0)->GetNumberOfODE2Coordinates();
+
+    //put this check into checkPreAssembleConsistencies.cpp
+	CHECKandTHROW( (nNode0 + GetCNode(1)->GetNumberOfODE2Coordinates() == dimJacobian) &&
 		(nNode0 <= (CNodeRigidBody::maxRotationCoordinates + nDim3D) ) &&
-		(nNode1 <= (CNodeRigidBody::maxRotationCoordinates + nDim3D) ),
+		(GetCNode(1)->GetNumberOfODE2Coordinates() <= (CNodeRigidBody::maxRotationCoordinates + nDim3D) ),
 		"CObjectBeamGeometricallyExact::ComputeJacobianODE2_ODE2: nodal coordinates mismatch; the nodes cannot be used with this beam element");
 
 	//const Index nDisplacementCoordinates = 3;

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-12-01  20:24:37 (last modified)
+* @date         2023-07-12  16:03:38 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -35,6 +35,7 @@ public: // AUTO:
     Real dampingPerLength;                        //!< AUTO: axial damping per length [SI:N/(m/s)/m] of rope; the effective damping coefficient of the reeving system is computed as \f$DA/L\f$ in which \f$L\f$ is the current length of the rope
     Real dampingTorsional;                        //!< AUTO: torsional damping [SI:Nms] between sheaves; this effect can damp rotations around the rope axis, pairwise between sheaves; this parameter is experimental
     Real dampingShear;                            //!< AUTO: damping of shear motion [SI:Ns] between sheaves; this effect can damp motion perpendicular to the rope between each pair of sheaves; this parameter is experimental
+    Real regularizationForce;                     //!< AUTO: small regularization force [SI:N] in order to avoid large compressive forces; this regularization force can either be \f$<0\f$ (using a linear tension/compression spring model) or \f$>0\f$, which restricts forces in the rope to be always \f$\ge -F_{reg}\f$. Note that smaller forces lead to problems in implicit integrators and smaller time steps. For explicit integrators, this force can be chosen close to zero.
     Real referenceLength;                         //!< AUTO: reference length for computation of roped force
     Vector3DList sheavesAxes;                     //!< AUTO: list of local vectors axes of sheaves; vectors refer to rigid body markers given in list of markerNumbers; first and last axes are ignored, as they represent the attachment of the rope ends
     Vector sheavesRadii;                          //!< AUTO: radius for each sheave, related to list of markerNumbers and list of sheaveAxes; first and last radii must always be zero.
@@ -49,6 +50,7 @@ public: // AUTO:
         dampingPerLength = 0.;
         dampingTorsional = 0.;
         dampingShear = 0.;
+        regularizationForce = 0.1;
         referenceLength = 0.;
         sheavesAxes = Vector3DList();
         sheavesRadii = Vector();
@@ -59,7 +61,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CObjectConnectorReevingSystemSprings
-* @brief        A rD reeving system defined by a list of torque-free and friction-free sheaves or points that are connected with one rope (modelled as massless spring). The force is assumed to be constant all over the rope. The sheaves or connection points are defined by \f$nr\f$ rigid body markers \f$[m_0, \, m_1, \, \ldots, \, m_{nr-1}]\f$. At both ends of the rope there may be a prescribed motion coupled to a coordinate marker each, given by \f$m_{c0}\f$ and \f$m_{c1}\f$ .
+* @brief        A rD reeving system defined by a list of torque-free and friction-free sheaves or points that are connected with one rope (modelled as massless spring). NOTE that the spring can undergo tension AND compression (in order to avoid compression, use a PreStepUserFunction to turn off stiffness and damping in this case!). The force is assumed to be constant all over the rope. The sheaves or connection points are defined by \f$nr\f$ rigid body markers \f$[m_0, \, m_1, \, \ldots, \, m_{nr-1}]\f$. At both ends of the rope there may be a prescribed motion coupled to a coordinate marker each, given by \f$m_{c0}\f$ and \f$m_{c1}\f$ .
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)

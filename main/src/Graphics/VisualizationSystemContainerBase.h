@@ -41,7 +41,12 @@ public:
 	virtual void SetComputeMaxSceneRequest(bool flag) = 0;
 	virtual bool GetComputeMaxSceneRequest() = 0;
 
+    //get marker position and orientation
 	virtual void GetMarkerPositionOrientation(Index markerNumber, Index mbsNumber, Vector3D& position, Matrix3D& orientation, bool& hasPosition, bool& hasOrientation) = 0;
+    //get sensor data list (if available); return true if further sensors available
+    virtual bool GetSensorsPositionsVectorsLists(Index mbsNumber, Index positionSensorIndex, Index vectorSensorIndex, Index triadSensorIndex,
+        Vector3DList& sensorTracePositions, Vector3DList& sensorTraceVectors, Matrix3DList& sensorTraceTriads, Vector sensorTraceValues, 
+        const VSettingsSensorTraces& traces) = 0;
 
 	virtual std::string GetComputationMessage(bool solverInformation = true,
 		bool solutionInformation = true, bool solverTime = true) = 0; //! any multi-line text message from computation to be shown in renderer (e.g. time, solver, ...)

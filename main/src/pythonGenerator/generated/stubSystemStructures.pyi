@@ -307,8 +307,29 @@ class VSettingsLoads:
     show: bool
     showNumbers: bool
 
+#information for VSettingsSensorTraces
+class VSettingsSensorTraces:
+    lineWidth: float
+    listOfPositionSensors: ArrayIndex
+    listOfTriadSensors: ArrayIndex
+    listOfVectorSensors: ArrayIndex
+    positionsShowEvery: int
+    sensorsMbsNumber: int
+    showCurrent: bool
+    showFuture: bool
+    showPast: bool
+    showPositionTrace: bool
+    showTriads: bool
+    showVectors: bool
+    traceColors: ArrayFloat
+    triadSize: float
+    triadsShowEvery: int
+    vectorScaling: float
+    vectorsShowEvery: int
+
 #information for VSettingsSensors
 class VSettingsSensors:
+    traces: VSettingsSensorTraces
     defaultColor: Tuple[float,float,float,float]
     defaultSize: float
     drawSimplified: bool

@@ -39,7 +39,7 @@ try: #puts example in safe environment
 
     #assemble and solve system for default parameters
     mbs.Assemble()
-    exu.SolveDynamic(mbs)
+    mbs.SolveDynamic()
 
     #check result at default integration time
     exudynTestGlobals.testResult = mbs.GetNodeOutput(nMass, 

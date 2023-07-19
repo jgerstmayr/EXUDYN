@@ -856,32 +856,21 @@ def SolutionViewer(mainSystem, solution=None, rowIncrement = 1, timeout=0.04, ru
 
         # mbs.systemData.SetTime(t, exudyn.ConfigurationType.Visualization)
         SetSolutionState(mainSystem, mbs.sys['solutionViewerSolution'], i, exudyn.ConfigurationType.Visualization)
-        #exudyn.DoRendererIdleTasks(timeout)
-        # SC.visualizationSettings.contour.reduceRange = False
         
         mbs.SendRedrawSignal()
-        exudyn.DoRendererIdleTasks() #as there is no simulation, we must do this for graphicsDataUserFunctions
-        # if mbs.sys['modeShapeSaveImages'] == 0:
-        #     SC.RedrawAndSaveImage() #create images for animation
-        # else:
-        #     SC.visualizationSettings.exportImages.saveImageFileCounter = 0 #for next mode ...
+        exudyn.DoRendererIdleTasks() #as there is no simulation, we must do this for singlethreaded renderer to draw graphicsDataUserFunctions
 
         dialog.period = mbs.sys['solutionViewerPeriod']
 
         if mbs.sys['solutionViewerRunModus'] < 2:
             mbs.sys['solutionViewerStep'] += mbs.sys['solutionViewerRowIncrement']
-            # print("step=", mbs.sys['solutionViewerStep'])
     
             #first variable is scale, which contains step
             dialog.variableList[0][0].set(mbs.sys['solutionViewerStep'])
-            # for var in dialog.variableList:
-            #     #self.mbs.sys[var[1]] = var[0].get()
-            #     print(var[1],'=', var[0].get())
 
         if mbs.sys['solutionViewerSaveImages'] == 0:
+            #in single-threaded renderer, this causes 2x redraw, so we could save the above exudyn.DoRendererIdleTasks() then ...!
             SC.RedrawAndSaveImage() #create images for animation
-        # else: #do not reset image counter to allow creating of multi-view images, slow motion, etc.
-        #     SC.visualizationSettings.exportImages.saveImageFileCounter = 0 #
 
         if mbs.sys['solutionViewerStep']>mbs.sys['solutionViewerNSteps']-1.:
             #or (mbs.sys['solutionViewerRunModus'] and mbs.sys['solutionViewerStep']==mbs.sys['solutionViewerNSteps']-1.):

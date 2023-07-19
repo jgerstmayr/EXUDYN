@@ -207,7 +207,7 @@ MINI EXAMPLE for ObjectConnectorGravity
    mbs.Assemble()
    sims = exu.SimulationSettings()
    sims.timeIntegration.endTime = tEnd
-   exu.SolveDynamic(mbs, sims, solverType=exu.DynamicSolverType.RK67)
+   mbs.SolveDynamic(sims, solverType=exu.DynamicSolverType.RK67)
    
    #check result at default integration time
    #expect y=x after one period of orbiting (got: 100000.00000000479)

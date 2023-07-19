@@ -1701,19 +1701,25 @@ void CSystem::ComputeODE2SingleLoad(Index loadIndex, TemporaryComputationData& t
 {
 	Vector3D loadVector3D(0); //initialization in order to avoid gcc warnings
 	Vector1D loadVector1D(0); //scalar loads...//initialization in order to avoid gcc warnings
+#ifndef __FAST_EXUDYN_LINALG
 	bool loadVector1Ddefined = false; //add checks such that wrong formats would fail
 	bool loadVector3Ddefined = false; //add checks such that wrong formats would fail
+#endif
 
 	CLoad* cLoad = cSystemData.GetCLoads()[(Index)loadIndex];
 	if (cLoad->IsVector())
 	{
 		loadVector3D = cLoad->GetLoadVector(cSystemData.GetMainSystemBacklink(), currentTime);
+#ifndef __FAST_EXUDYN_LINALG
 		loadVector3Ddefined = true;
+#endif
 	}
 	else
 	{
 		loadVector1D = Vector1D(cLoad->GetLoadValue(cSystemData.GetMainSystemBacklink(), currentTime));
+#ifndef __FAST_EXUDYN_LINALG
 		loadVector1Ddefined = true;
+#endif
 	}
 
 	Index markerNumber = cLoad->GetMarkerNumber();
@@ -1887,7 +1893,7 @@ void CSystem::ComputeODE2SingleLoadLTG(Index loadIndex, ArrayIndex& ltgODE2equat
     CLoad* cLoad = cSystemData.GetCLoads()[(Index)loadIndex];
     Index markerNumber = cLoad->GetMarkerNumber();
     CMarker* marker = cSystemData.GetCMarkers()[markerNumber];
-    LoadType loadType = cLoad->GetType();
+    //LoadType loadType = cLoad->GetType();
 
     //loads only applied to Marker::Body or Marker::Node
     if (marker->GetType() & Marker::Body) //code for body markers
@@ -1985,9 +1991,9 @@ void CSystem::JacobianODE2Loads(TemporaryComputationDataArray& tempArray, const 
 
     //Index nODE2 = cSystemData.GetNumberOfCoordinatesODE2();
     //Index nODE1 = cSystemData.GetNumberOfCoordinatesODE1();
-    Vector& xODE1 = cSystemData.GetCData().currentState.ODE1Coords;			//current coordinates ==> this is what is differentiated for
+    //Vector& xODE1 = cSystemData.GetCData().currentState.ODE1Coords;			//current coordinates ==> this is what is differentiated for
     Vector& xODE2 = cSystemData.GetCData().currentState.ODE2Coords;			//current coordinates ==> this is what is differentiated for
-    Vector& xRefODE1 = cSystemData.GetCData().referenceState.ODE1Coords;	//reference coordinates; might be important for numerical differentiation
+    //Vector& xRefODE1 = cSystemData.GetCData().referenceState.ODE1Coords;	//reference coordinates; might be important for numerical differentiation
     Vector& xRefODE2 = cSystemData.GetCData().referenceState.ODE2Coords;	//reference coordinates; might be important for numerical differentiation
     Vector& xODE2_t = cSystemData.GetCData().currentState.ODE2Coords_t;		//for diff w.r.t. velocities
 
@@ -2001,7 +2007,7 @@ void CSystem::JacobianODE2Loads(TemporaryComputationDataArray& tempArray, const 
         ComputeODE2SingleLoadLTG(j, ltgODE2eq, ltgODE2coords, ltgODE1coords);
         Index nLocalODE2eq = ltgODE2eq.NumberOfItems();
         Index nLocalODE2coords = ltgODE2coords.NumberOfItems();
-        Index nLocalODE1coords = ltgODE1coords.NumberOfItems();
+        //Index nLocalODE1coords = ltgODE1coords.NumberOfItems();
 
         if (nLocalODE2eq != 0)
         {
@@ -2055,6 +2061,7 @@ void CSystem::ComputeODE1Loads(TemporaryComputationData& temp, Vector& systemODE
 	Vector1D loadVector1D(0); //scalar loads...//initialization in order to avoid gcc warnings
 	bool loadVector1Ddefined = false; //add checks such that wrong formats would fail
 	//bool loadVector3Ddefined = false; //add checks such that wrong formats would fail
+    __UNUSED(loadVector1Ddefined); //avoid unused variable warnings
 
 	Real currentTime = cSystemData.GetCData().currentState.time;
 	for (Index j = 0; j < nLoads; j++)
@@ -3250,13 +3257,13 @@ TimerStructureRegistrator TSRreactionForces2("TSreactionForces2", TSreactionForc
 //! ode2ReactionForces += C_{q2}^T * \lambda
 void CSystem::ComputeODE2ProjectedReactionForces(TemporaryComputationDataArray& tempArray, const Vector& reactionForces, Vector& ode2ReactionForces)
 {
-	Index nAE = cSystemData.GetNumberOfCoordinatesAE();
-	Index nODE2 = cSystemData.GetNumberOfCoordinatesODE2();
+	//Index nAE = cSystemData.GetNumberOfCoordinatesAE();
+	//Index nODE2 = cSystemData.GetNumberOfCoordinatesODE2();
 	//Index nODE1 = cSystemData.GetNumberOfCoordinatesODE1();
 	TemporaryComputationData& temp = tempArray[0];
 
-	CHECKandTHROW(reactionForces.NumberOfItems() == nAE, "CSystem::ComputeODE2ProjectedReactionForces: reactionForces size mismatch!");
-	CHECKandTHROW(ode2ReactionForces.NumberOfItems() == nODE2, "CSystem::ComputeODE2ProjectedReactionForces: ode2ReactionForces size mismatch!");
+	CHECKandTHROW(reactionForces.NumberOfItems() == cSystemData.GetNumberOfCoordinatesAE(), "CSystem::ComputeODE2ProjectedReactionForces: reactionForces size mismatch!");
+	CHECKandTHROW(ode2ReactionForces.NumberOfItems() == cSystemData.GetNumberOfCoordinatesODE2(), "CSystem::ComputeODE2ProjectedReactionForces: ode2ReactionForces size mismatch!");
 
 	int nItemsObjectsNoUF = cSystemData.listObjectProjectedReactionForcesODE2NoUF.NumberOfItems();
 	int nItemsNodesObjectsNoUF = nItemsObjectsNoUF + cSystemData.nodesODE2WithAE.NumberOfItems();
@@ -3517,10 +3524,10 @@ void CSystem::ComputeConstraintJacobianDerivative(TemporaryComputationData& temp
 void CSystem::ComputeConstraintJacobianTimesVector(TemporaryComputationData& temp, const Vector& v, Vector& result)
 {
 	Index nAE = cSystemData.GetNumberOfCoordinatesAE();
-	Index nODE2 = cSystemData.GetNumberOfCoordinatesODE2();
+	//Index nODE2 = cSystemData.GetNumberOfCoordinatesODE2();
 	//Index nODE1 = cSystemData.GetNumberOfCoordinatesODE1();
 
-	CHECKandTHROW(v.NumberOfItems() == nODE2, "CSystem::ComputeConstraintJacobianTimesVector: v size mismatch!");
+	CHECKandTHROW(v.NumberOfItems() == cSystemData.GetNumberOfCoordinatesODE2(), "CSystem::ComputeConstraintJacobianTimesVector: v size mismatch!");
 	result.SetNumberOfItems(nAE);
 	result.SetAll(0.);
 

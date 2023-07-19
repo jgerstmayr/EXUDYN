@@ -578,12 +578,10 @@ void CObjectFFRFreducedOrder::GetAccessFunctionBody(AccessFunctionType accessTyp
 		if (parameters.mPhitTPsi.NumberOfRows() != 0) //otherwise it uses the user function ...
 		{
 			Index nODE2Rigid = GetCNode(rigidBodyNodeNumber)->GetNumberOfODE2Coordinates(); //number of rigid body coordinates
-			Index nODE2FF = GetCNode(genericNodeNumber)->GetNumberOfODE2Coordinates();
-
-			//pout << "nODE2FF             =" << nODE2FF << "\n";
 
 			CHECKandTHROW((parameters.mPhitTPsi.NumberOfRows() == CNodeRigidBody::nDim3D) &&
-				(parameters.mPhitTPsi.NumberOfColumns() == nODE2FF), "CObjectFFRFreducedOrder::GetAccessFunctionBody:DisplacementMassIntegral_q: inconsistent dimensions of matrix mPhitTPsi");
+				(parameters.mPhitTPsi.NumberOfColumns() == GetCNode(genericNodeNumber)->GetNumberOfODE2Coordinates()), 
+                "CObjectFFRFreducedOrder::GetAccessFunctionBody:DisplacementMassIntegral_q: inconsistent dimensions of matrix mPhitTPsi");
 
 			//EXUmath::MultMatrixTransposedMatrixTemplate<Matrix, Matrix3D, ResizableMatrix>(parameters.mPhitTPsi, A.GetTransposed(), tempMatrix);
 			EXUmath::MultMatrixMatrixTemplate<Matrix3D, Matrix, ResizableMatrix>(A, parameters.mPhitTPsi, tempMatrix);

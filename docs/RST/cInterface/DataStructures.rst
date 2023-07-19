@@ -95,6 +95,10 @@ Usage:
   | set list item 'index' with data, write: data[index] = ...
 * | **... = data[index]**\ : 
   | get copy of list item with 'index' as vector
+* | **\_\_copy\_\_**\ (): 
+  | copy method to be used for copy.copy(...); in fact does already deep copy
+* | **\_\_deepcopy\_\_**\ (): 
+  | deepcopy method to be used for copy.copy(...)
 * | **\_\_repr\_\_()**\ : 
   | return the string representation of the Vector3DList data, e.g.: print(data)
 
@@ -129,6 +133,10 @@ Usage:
   | set list item 'index' with data, write: data[index] = ...
 * | **... = data[index]**\ : 
   | get copy of list item with 'index' as vector
+* | **\_\_copy\_\_**\ (): 
+  | copy method to be used for copy.copy(...); in fact does already deep copy
+* | **\_\_deepcopy\_\_**\ (): 
+  | deepcopy method to be used for copy.copy(...)
 * | **\_\_repr\_\_()**\ : 
   | return the string representation of the Vector2DList data, e.g.: print(data)
 
@@ -159,6 +167,10 @@ Usage:
   | set list item 'index' with data, write: data[index] = ...
 * | **... = data[index]**\ : 
   | get copy of list item with 'index' as vector
+* | **\_\_copy\_\_**\ (): 
+  | copy method to be used for copy.copy(...); in fact does already deep copy
+* | **\_\_deepcopy\_\_**\ (): 
+  | deepcopy method to be used for copy.copy(...)
 * | **\_\_repr\_\_()**\ : 
   | return the string representation of the Vector6DList data, e.g.: print(data)
 

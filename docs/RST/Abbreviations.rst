@@ -114,7 +114,7 @@ see also :ref:`Section Notation <sec-generalnotation>`\ .
 
 .. _T66:
 
-\ **T66**\ : Pl"ucker transformation
+\ **T66**\ : Plücker transformation
 
 .. _trig:
 

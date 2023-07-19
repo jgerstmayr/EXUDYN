@@ -89,7 +89,8 @@ for i, pos in enumerate(posList):
     if i != 0:
         Lref += NormL2(np.array(pos)-pLast)
     if i > 0 and i < len(posList)-1:
-        Lref += r*pi
+        #note that in this test example, Lref is slightly too long, leading to negative spring forces (compression) if not treated nonlinearly with default settings in ReevingSystemSprings
+        Lref += r*pi #0.8*r*pi would always lead to tension
 
     #mR = mbs.AddMarker(MarkerBodyRigid(bodyNumber=bR, localPosition=[0,-r,0]))
     #mbs.AddLoad(Force(markerNumber=mR, loadVector=[0,-inertiaRoll.mass*9.81,0]))
@@ -122,9 +123,11 @@ if len(posList) > 3:
 stiffness = 1e5 #stiffness per length
 damping = 0.5*stiffness #dampiung per length
 oRS=mbs.AddObject(ReevingSystemSprings(markerNumbers=markerList, hasCoordinateMarkers=False, 
-                                   stiffnessPerLength=stiffness, dampingPerLength=damping, referenceLength = Lref,
+                                   stiffnessPerLength=stiffness, dampingPerLength=damping, 
+                                   referenceLength = Lref,
                                    dampingTorsional = 0.01*damping, dampingShear = 0.1*damping,
                                    sheavesAxes=sheavesAxes, sheavesRadii=sheavesRadii,
+                                   #regularizationForce = -1, #purely linear system
                                    visualization=VReevingSystemSprings(ropeRadius=0.05, color=color4dodgerblue)))
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++
@@ -138,6 +141,8 @@ if True:
                                           outputVariableType=exu.OutputVariableType.Distance))
     sLength_t= mbs.AddSensor(SensorObject(objectNumber=oRS, storeInternal=True,
                                           outputVariableType=exu.OutputVariableType.VelocityLocal))
+    sForce= mbs.AddSensor(SensorObject(objectNumber=oRS, storeInternal=True,
+                                          outputVariableType=exu.OutputVariableType.ForceLocal))
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++
 #simulate:
@@ -190,6 +195,7 @@ if True:
     mbs.PlotSensor(sOmega1, components=[0,1,2], labels=['omega X','omega Y','omega Z'])
     mbs.PlotSensor(sLength, components=[0], labels=['length'])
     mbs.PlotSensor(sLength_t, components=[0], labels=['vel'])
+    mbs.PlotSensor(sForce, components=[0], labels=['force'])
 
 
 

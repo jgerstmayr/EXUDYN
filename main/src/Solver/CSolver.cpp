@@ -120,55 +120,56 @@ void SolverLocalData::CleanUpMemory()
 void SolverLocalData::SetLinearSolverType(LinearSolverType linearSolverType, bool reuseAnalyzedPattern, 
     bool ignoreSingularJacobian, Real pivotThreshold)
 {
-	systemJacobian = &systemJacobianDense;
-	systemMassMatrix = &systemMassMatrixDense;
-	jacobianAE = &jacobianAEdense;
+	//std::cout << "SetLinearSolverType" << std::flush;
 	//pout << "linearSolverType=" << linearSolverType << "\n";
 	if (EXUstd::IsOfType(LinearSolverType::Dense, linearSolverType))
 	{
+		//std::cout << "SetLinearSolverType1a" << std::flush;
 		systemJacobian = &systemJacobianDense;
 		systemMassMatrix = &systemMassMatrixDense;
 		jacobianAE = &jacobianAEdense;
 #ifdef USE_EIGEN_DENSE_SOLVER
 
         Index flagEigen = (Index)(linearSolverType == LinearSolverType::EigenDense);
-        flagEigen += flagEigen * (Index)ignoreSingularJacobian; //flag becomes 0 or 2
+        flagEigen += flagEigen * (Index)ignoreSingularJacobian; //flag only added in EigenDense case
 
         systemJacobianDense.UseEigenSolverType() = flagEigen;
         systemMassMatrixDense.UseEigenSolverType() = flagEigen;
         jacobianAEdense.UseEigenSolverType() = flagEigen;
 #endif
     }
-	else if (linearSolverType == LinearSolverType::EigenSparse)
-	{
-		systemJacobian = &systemJacobianSparse;
-		systemMassMatrix = &systemMassMatrixSparse;
-		jacobianAE = &jacobianAEsparse;
-	}
-	else if (linearSolverType == LinearSolverType::EigenSparseSymmetric)
-	{
-		systemJacobian = &systemJacobianSparse;
-		systemMassMatrix = &systemMassMatrixSparse;
-		jacobianAE = &jacobianAEsparse;
-
-		systemJacobian->AssumeSymmetric();
-		systemMassMatrix->AssumeSymmetric();
-		jacobianAE->AssumeSymmetric();
-	}
 	else
 	{
-		CHECKandTHROWstring("SolverLocalData::SetLinearSolverType: invalid linearSolverType");
+		//std::cout << "SetLinearSolverType1b" << std::flush;
+		systemJacobian = &systemJacobianSparse;
+		systemMassMatrix = &systemMassMatrixSparse;
+		jacobianAE = &jacobianAEsparse;
 	}
-    if (!EXUstd::IsOfType(LinearSolverType::Dense, linearSolverType))
+	
+	//std::cout << "SetLinearSolverType2" << std::flush;
+	if (linearSolverType == LinearSolverType::EigenSparseSymmetric)
 	{
-		systemJacobian->SetReuseAnalyzedPattern(reuseAnalyzedPattern);
-		systemMassMatrix->SetReuseAnalyzedPattern(reuseAnalyzedPattern);
-		jacobianAE->SetReuseAnalyzedPattern(reuseAnalyzedPattern);
+		systemJacobianSparse.AssumeSymmetric();
+		systemMassMatrixSparse.AssumeSymmetric();
+		jacobianAEsparse.AssumeSymmetric();
 	}
-    systemJacobian->PivotThreshold() = pivotThreshold;
+	//{
+	//	CHECKandTHROWstring("SolverLocalData::SetLinearSolverType: invalid linearSolverType");
+	//}
+
+	if (!EXUstd::IsOfType(LinearSolverType::Dense, linearSolverType))
+	{
+		//std::cout << "SetLinearSolverType3" << std::flush;
+		systemJacobianSparse.SetReuseAnalyzedPattern(reuseAnalyzedPattern);
+		systemMassMatrixSparse.SetReuseAnalyzedPattern(reuseAnalyzedPattern);
+		jacobianAEsparse.SetReuseAnalyzedPattern(reuseAnalyzedPattern);
+	}
+	//std::cout << "SetLinearSolverType4" << std::flush;
+	systemJacobian->PivotThreshold() = pivotThreshold;
     systemMassMatrix->PivotThreshold() = pivotThreshold;
     jacobianAE->PivotThreshold() = pivotThreshold;
 
+	//std::cout << "SetLinearSolverType5" << std::flush;
 }
 
 

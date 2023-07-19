@@ -36,7 +36,7 @@ try: #puts example in safe environment
     
     #assemble and solve system for default parameters
     mbs.Assemble()
-    exu.SolveDynamic(mbs, exu.SimulationSettings())
+    mbs.SolveDynamic(exu.SimulationSettings())
     
     #check result at default integration time
     exudynTestGlobals.testResult = mbs.GetNodeOutput(nBody, exu.OutputVariableType.Displacement)[1] 

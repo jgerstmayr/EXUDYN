@@ -18,7 +18,7 @@ sortStructures = True
 typeCasts = {'Bool':'bool', 'Int':'Index', 'Real':'Real', 'UInt':'Index', 'PInt':'Index', 
              'UReal':'Real',  'PReal':'Real', 'UFloat':'float',  'PFloat':'float', 
              'Vector':'std::vector<Real>', 'Vector3D':'std::vector<Real>', #'Matrix':'Matrix', 'SymmetricMatrix':'Matrix', 
-             'ArrayIndex':'std::vector<Index>', 'String':'std::string', 'FileName':'std::string',
+             'ArrayIndex':'std::vector<Index>', 'ArrayFloat':'std::vector<float>', 'String':'std::string', 'FileName':'std::string',
              'Float2': 'std::array<float,2>', 'Float3': 'std::array<float,3>', 'Float4': 'std::array<float,4>',  #e.g. for OpenGL vectors
              'Float9': 'std::array<float,9>', 'Float16': 'std::array<float,16>', #e.g. for OpenGL rotation matrix and homogenous transformation
              'UInt2': 'std::array<Index,2>', 'UInt3': 'std::array<Index,3>', 'UInt4': 'std::array<Index,4>', 
@@ -30,8 +30,11 @@ typeCasts = {'Bool':'bool', 'Int':'Index', 'Real':'Real', 'UInt':'Index', 'PInt'
              } #convert parameter types to C++/DYNALFEX types
 
 #conversion rules for dictionary 'type'; this type conversion adds rules for the user's values in the dictionary
-convertToDict = {'ResizableVector':'Vector', 'StdArray33F':'MatrixFloat', 'NumpyVector':'Vector', 'NumpyMatrix':'Matrix', 
-                'Index2':'IndexArray', 'Index4':'IndexArray', 'Float4':'VectorFloat', 'Float3':'VectorFloat' #,'String':'std::string'
+convertToDict = {'ResizableVector':'Vector', 'StdArray33F':'MatrixFloat', 
+                 'NumpyVector':'Vector', 'NumpyMatrix':'Matrix', 
+                'Index2':'IndexArray', 'Index4':'IndexArray', 
+                'ArrayIndex':'IndexArray', 'ArrayFloat':'VectorFloat',
+                'Float4':'VectorFloat', 'Float3':'VectorFloat' #,'String':'std::string'
                 } 
 
 #convert special size parameters:

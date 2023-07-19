@@ -141,7 +141,8 @@ def RequireVersion(requiredVersionString):
                 isOk = False
     if not isOk:
         #print("EXUDYN version "+requiredVersionString+" required, but only " + GetVersionString() + " available")
-        raise RuntimeError("EXUDYN version "+requiredVersionString+" required, but only " + GetVersionString() + " available")
+        raise RuntimeError("EXUDYN version "+requiredVersionString+" required, but only " + GetVersionString() +
+                           " available!\nYou can install the latest development version with:\npip install -U exudyn --pre\n\n")
     
 
 #do not import itemInterface here, as it would go into exu. scope

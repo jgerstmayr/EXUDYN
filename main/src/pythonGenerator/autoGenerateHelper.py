@@ -72,6 +72,7 @@ def Str2Latex(s, isDefaultValue=False, replaceCurlyBracket=True): #replace _ and
             (s.find('Vector') != -1) or (s.find('Matrix') != -1) or 
             (s.find('Transformations66List') != -1) or (s.find('Matrix3DList') != -1) or (s.find('JointTypeList') != -1)
             ):
+            s = s.replace('ArrayFloat','') #correct python notation
             s = s.replace('ArrayIndex','') #correct python notation
             s = s.replace('JointTypeList','') #KinematicTree
             s = s.replace('Vector3DList','') #KinematicTree
@@ -138,7 +139,11 @@ def DefaultValue2Python(s):
     s = s.replace('EXUmath::zeroMatrix3D','IIDiagMatrix(rowsColumns=3,value=0)')  #replace with itemInterface diagonal matrix
     s = s.replace('Matrix()','[]')  #replace empty matrix with emtpy list
     s = s.replace('MatrixI()','[]') #replace empty matrix with emtpy list
-    s = s.replace('PyMatrixContainer()','[]')  #initialization in iteminterface with empty array
+    s = s.replace('PyMatrixContainer()','None')  #initialization in iteminterface with empty array
+    s = s.replace('Vector2DList()','None')  #initialization in iteminterface with empty array
+    s = s.replace('Vector3DList()','None')  #initialization in iteminterface with empty array
+    s = s.replace('Vector6DList()','None')  #initialization in iteminterface with empty array
+    s = s.replace('Matrix3DList()','None')  #initialization in iteminterface with empty array
     s = s.replace('BeamSectionGeometry()','exudyn.BeamSectionGeometry()')  #initialization in iteminterface with empty array
     s = s.replace('BeamSection()','exudyn.BeamSection()')  #initialization in iteminterface with empty array
 
@@ -161,11 +166,16 @@ def DefaultValue2Python(s):
           ):
         s = s.replace('ArrayIndex','') #correct python notation
         s = s.replace('JointTypeList','') #KinematicTree
-        s = s.replace('Vector6DList','') #KinematicTree
-        s = s.replace('Vector3DList','') #KinematicTree
-        s = s.replace('Matrix3DList','') #KinematicTree
-        s = s.replace('Vector2DList','') #BeamSectionGeometry
-        s = s.replace('PyVector2DList','') #BeamSectionGeometry
+        # s = s.replace('Vector2DList','') #BeamSectionGeometry
+        # s = s.replace('Vector3DList','') #KinematicTree
+        # s = s.replace('Vector6DList','') #KinematicTree
+        # s = s.replace('Matrix3DList','') #KinematicTree
+
+        #s = s.replace('PyVector2DList','') #BeamSectionGeometry
+        if s.find('PyVector2DList') != -1:
+            print(s)
+            raise ValueError('autoGenerateHelper(): unexpected PyVector2DList found')
+
         s = s.replace('Vector9D','') #correct python notation
         s = s.replace('Vector7D','') #correct python notation; rigid body coordinates
         s = s.replace('Vector6D','') #correct python notation; inertia parameters

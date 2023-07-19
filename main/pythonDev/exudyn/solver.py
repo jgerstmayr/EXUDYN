@@ -346,8 +346,8 @@ def RestoreSimulationSettings(simulationSettings, store):
 # SC = exu.SystemContainer()
 # mbs = SC.AddSystem()
 # #
-# b0 = mbs.CreateMassPoint(referenceCoordinates = [2,0,0],
-#                          initialVelocities = [2*0,5,0],
+# b0 = mbs.CreateMassPoint(referencePosition = [2,0,0],
+#                          initialVelocity = [2*0,5,0],
 #                          physicsMass = 1, gravity = [0,-9.81,0],
 #                          drawSize = 0.5, color=color4blue)
 # #
@@ -421,8 +421,8 @@ def ComputeLinearizedSystem(mbs,
 # SC = exu.SystemContainer()
 # mbs = SC.AddSystem()
 # #
-# b0 = mbs.CreateMassPoint(referenceCoordinates = [2,0,0],
-#                          initialVelocities = [2*0,5,0],
+# b0 = mbs.CreateMassPoint(referencePosition = [2,0,0],
+#                          initialVelocity = [2*0,5,0],
 #                          physicsMass = 1, gravity = [0,-9.81,0],
 #                          drawSize = 0.5, color=color4blue)
 # #

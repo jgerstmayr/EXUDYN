@@ -34,10 +34,10 @@ x0=f/spring         #static displacement
 print('resonance frequency = '+str(np.sqrt(spring/mass)))
 print('static displacement = '+str(x0))
 
-oMass = mbs.CreateMassPoint(referenceCoordinates=[L,0,0], 
-                         initialCoordinates = [u0,0,0], 
-                         initialVelocities= [v0,0,0],
-                         physicsMass=mass) #force created via gravity
+oMass = mbs.CreateMassPoint(referencePosition=[L,0,0], 
+                            initialDisplacement = [u0,0,0], 
+                            initialVelocity= [v0,0,0],
+                            physicsMass=mass) #force created via gravity
 
 oGround = mbs.AddObject(ObjectGround())
 

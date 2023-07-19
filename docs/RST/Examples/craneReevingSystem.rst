@@ -303,7 +303,11 @@ You can view and download this file on Github: `craneReevingSystem.py <https://g
                                                visualization=VReevingSystemSprings(ropeRadius=rRope, color=color4dodgerblue)))
    
    
-   
+   #show trace of hook
+   sPosTCP = mbs.AddSensor(SensorNode(nodeNumber=nHook, storeInternal=True,
+                                      outputVariableType=exu.OutputVariableType.Position))
+   sRotTCP = mbs.AddSensor(SensorNode(nodeNumber=nHook, storeInternal=True,
+                                      outputVariableType=exu.OutputVariableType.RotationMatrix))
    
    #%% +++++++++++++++++++++++++++++++
    # #add sensors 
@@ -351,7 +355,7 @@ You can view and download this file on Github: `craneReevingSystem.py <https://g
    simulationSettings.solutionSettings.writeSolutionToFile= True #set False for CPU performance measurement
    simulationSettings.solutionSettings.solutionWritePeriod= 0.2
    simulationSettings.solutionSettings.coordinatesSolutionFileName = solutionFile
-   simulationSettings.solutionSettings.sensorsWritePeriod = 0.01
+   simulationSettings.solutionSettings.sensorsWritePeriod = 0.02
    # simulationSettings.timeIntegration.simulateInRealtime=True
    # simulationSettings.timeIntegration.realtimeFactor=5
    SC.visualizationSettings.general.graphicsUpdateInterval = 0.01
@@ -361,6 +365,18 @@ You can view and download this file on Github: `craneReevingSystem.py <https://g
    simulationSettings.timeIntegration.verboseMode = 1
    
    simulationSettings.timeIntegration.newton.useModifiedNewton = True
+   
+   if True:
+       #traces:
+       SC.visualizationSettings.sensors.traces.listOfPositionSensors = [sPosTCP]
+       SC.visualizationSettings.sensors.traces.listOfTriadSensors =[sRotTCP]
+       SC.visualizationSettings.sensors.traces.showPositionTrace=True
+       SC.visualizationSettings.sensors.traces.showTriads=True
+       SC.visualizationSettings.sensors.traces.triadSize=2
+       SC.visualizationSettings.sensors.traces.showVectors=False
+       SC.visualizationSettings.sensors.traces.showFuture=False
+       SC.visualizationSettings.sensors.traces.triadsShowEvery=5
+   
    
    SC.visualizationSettings.nodes.show = True
    SC.visualizationSettings.nodes.drawNodesAsPoint  = False

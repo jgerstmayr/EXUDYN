@@ -20,8 +20,11 @@ from exudyn.rigidBodyUtilities import GetRigidBodyNode, AngularVelocity2EulerPar
              StrNodeType2NodeType
 
 from exudyn.graphicsDataUtilities import ComputeTriangleArea
+
 import numpy as np #LoadSolutionFile
 from enum import Enum #for class HCBstaticModeSelection
+import os
+
 
 #convert zero-based sparse matrix data to dense numpy matrix
 #DEPRECTAED!!!!!!!!!!!!!!!!
@@ -1106,6 +1109,12 @@ class ObjectFFRFreducedOrderInterface:
         fileExtension = ''
         if len(fileName) < 4 or fileName[-4:]!='.npy':
             fileExtension = '.npy'
+
+        try:
+            os.makedirs(os.path.dirname(fileName+fileExtension), exist_ok=True)
+        except:
+            pass #makedirs may fail on some systems, but we keep going
+
         with open(fileName+fileExtension, 'wb') as f:
             np.save(f, np.array([int(fileVersion)])) #array allows to add more data in future
 
@@ -1581,6 +1590,12 @@ class FEMinterface:
         fileExtension = ''
         if len(fileName) < 4 or fileName[-4:]!='.npy':
             fileExtension = '.npy'
+                    
+        try:
+            os.makedirs(os.path.dirname(fileName+fileExtension), exist_ok=True)
+        except:
+            pass #makedirs may fail on some systems, but we keep going
+
         with open(fileName+fileExtension, 'wb') as f:
             if fileVersion>0:
                 dataVersion = np.array([int(fileVersion)])

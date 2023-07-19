@@ -39,7 +39,7 @@ try: #puts example in safe environment
 
     #assemble and solve system for default parameters
     mbs.Assemble()
-    exu.SolveStatic(mbs)
+    mbs.SolveStatic()
 
     #check result
     exudynTestGlobals.testResult = mbs.GetNodeOutput(lastNode, exu.OutputVariableType.Displacement)[0]

@@ -27,7 +27,7 @@ try: #puts example in safe environment
 
     #assemble and solve system for default parameters
     mbs.Assemble()
-    exu.SolveDynamic(mbs)
+    mbs.SolveDynamic()
 
     #check result
     exudynTestGlobals.testResult = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[2]

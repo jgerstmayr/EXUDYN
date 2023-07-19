@@ -45,7 +45,7 @@ try: #puts example in safe environment
     
     simulationSettings = exu.SimulationSettings() #takes currently set values or default values
     simulationSettings.timeIntegration.numberOfSteps = 1000 #gives very accurate results
-    exu.SolveDynamic(mbs, simulationSettings , solverType=exu.DynamicSolverType.RK67) #highly accurate!
+    mbs.SolveDynamic(simulationSettings , solverType=exu.DynamicSolverType.RK67) #highly accurate!
 
     #check final value of angle:
     q0 = mbs.GetNodeOutput(nGeneric, exu.OutputVariableType.Coordinates)

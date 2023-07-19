@@ -612,7 +612,7 @@ abbrvDict={
     'Rot':'rotation',
     'Rxyz':'rotation parameterization: consecutive rotations around x, y and z-axis (Tait-Bryan)',
     'STL':'STereoLithography',
-    'T66':'Pl\"ucker transformation',
+    'T66':'Pl\\"ucker transformation',
     'trig':'triangle (in graphics)',
 }
 
@@ -639,7 +639,8 @@ file=open(sourceDir+'abbreviations.tex','w')
 file.write(abbrvTex)
 file.close()
 
-file=open(destDir+rstFolder+'Abbreviations.rst','w')  
+#rst files should be utf8 for special characters
+file=io.open(destDir+rstFolder+'Abbreviations.rst','w',encoding='utf8')  
 file.write(abbrvRST)
 file.close()
 

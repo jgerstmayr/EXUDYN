@@ -48,7 +48,7 @@ Data structure for definition of 2D and 3D beam (cross) section geometrical prop
 
 
 %++++++++++++++++++++++++++++++++++++++
-\mysubsection{Simulation settings}
+\mysubsectionlabel{Simulation settings}{sec:SimulationSettingsMain}
 This section includes hierarchical structures for simulation settings, e.g., time integration, static solver, Newton iteration and solution file export.
 
 %+++++++++++++++++++++++++++++++++++
@@ -312,7 +312,7 @@ Settings for linear solver, both dense and sparse (Eigen).
     \hline
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
     ignoreSingularJacobian &     bool &      &     False &     [ONLY implemented for dense, Eigen matrix mode] False: standard way, fails if jacobian is singular; True: use Eigen's FullPivLU (thus only works with LinearSolverType.EigenDense) which handles over- and underdetermined systems; can often resolve redundant constraints, but MAY ALSO LEAD TO ERRONEOUS RESULTS!\\ \hline
-    pivotThreshold &     PReal &      &     0 &     [ONLY available for EXUdense and EigenDense (FullPivot) solver] threshold for dense linear solver, can be used to detect close to singular solutions, setting this to, e.g., 1e-12; solver then reports on equations that are causing close to singularity\\ \hline
+    pivotThreshold &     UReal &      &     0 &     [ONLY available for EXUdense and EigenDense (FullPivot) solver] threshold for dense linear solver, can be used to detect close to singular solutions, setting this to, e.g., 1e-12; solver then reports on equations that are causing close to singularity\\ \hline
     reuseAnalyzedPattern &     bool &      &     False &     [ONLY available for sparse matrices] True: the Eigen SparseLU solver offers the possibility to reuse an analyzed pattern of a previous factorization; this may reduce total factorization time by a factor of 2 or 3, depending on the matrix type; however, if the matrix patterns heavily change between computations, this may even slow down performance; this flag is set for SparseMatrices in InitializeSolverData(...) and should be handled with care!\\ \hline
     showCausingItems &     bool &      &     True &     False: no output, if solver fails; True: if redundant equations appear, they are resolved such that according solution variables are set to zero; in case of redundant constraints, this may help, but it may lead to erroneous behaviour; for static problems, this may suppress static motion or resolve problems in case of instabilities, but should in general be considered with care!\\ \hline
 	  \end{longtable}
@@ -373,7 +373,7 @@ General Settings for simulation; according settings for solution and solvers are
 
 
 %++++++++++++++++++++++++++++++++++++++
-\mysubsection{Visualization settings}
+\mysubsectionlabel{Visualization settings}{sec:VisualizationSettingsMain}
 This section includes hierarchical structures for visualization settings, e.g., drawing of nodes, bodies, connectors, loads and markers and furthermore openGL, window and save image options. For further information, see \refSection{sec:overview:basics:visualizationsettings}.
 
 %+++++++++++++++++++++++++++++++++++
@@ -627,6 +627,40 @@ Visualization settings for loads.
 
 %+++++++++++++++++++++++++++++++++++
 
+\mysubsubsubsection{VSettingsSensorTraces}
+\label{sec:VSettingsSensorTraces}
+Visualization settings for traces of sensors. Note that a large number of time points (influenced by simulationSettings.solutionSettings.sensorsWritePeriod) may lead to slow graphics.
+
+\noindent VSettingsSensorTraces has the following items:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.2cm} | p{2.5cm} | p{0.3cm} | p{3.0cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
+    lineWidth &     UFloat &      &     2. &     line width for traces\\ \hline
+    listOfPositionSensors &     ArrayIndex &     -1 &     [] &     list of position sensors which can be shown as trace inside render window if sensors have storeInternal=True; if this list is empty and showPositionTrace=True, then all available sensors are shown\\ \hline
+    listOfTriadSensors &     ArrayIndex &     -1 &     [] &     list of sensors of with OutputVariableType RotationMatrix; this non-empty list needs to coincide in length with the listOfPositionSensors to be shown if showTriads=True; the triad is drawn at the related position\\ \hline
+    listOfVectorSensors &     ArrayIndex &     -1 &     [] &     list of sensors with 3D vector quantities; this non-empty list needs to coincide in length with the listOfPositionSensors to be shown if showVectors=True; the vector quantity is drawn relative to the related position\\ \hline
+    positionsShowEvery &     PInt &      &     1 &     integer value i; out of available sensor data, show every i-th position\\ \hline
+    sensorsMbsNumber &     Index &      &     0 &     number of main system which is used to for sensor lists; if only 1 mbs is in the SystemContainer, use 0; if there are several mbs, it needs to specify the number\\ \hline
+    showCurrent &     bool &      &     True &     show current trace position (and especially vector quantity) related to current visualization state; this only works in solution viewer if sensor values are stored at time grid points of the solution file (up to a precision of 1e-10) and may therefore be temporarily unavailable\\ \hline
+    showFuture &     bool &      &     False &     show trace future to current visualization state if already computed (e.g. in SolutionViewer)\\ \hline
+    showPast &     bool &      &     True &     show trace previous to current visualization state\\ \hline
+    showPositionTrace &     bool &      &     False &     show position trace of all position sensors if listOfPositionSensors=[] or of specified sensors; sensors need to activate storeInternal=True\\ \hline
+    showTriads &     bool &      &     False &     if True, show basis vectors from rotation matrices provided by sensors\\ \hline
+    showVectors &     bool &      &     False &     if True, show vector quantities according to description in showPositionTrace\\ \hline
+    traceColors &     ArrayFloat &     -1 &     [0.2,0.2,0.2,1., 0.8,0.2,0.2,1., 0.2,0.8,0.2,1., 0.2,0.2,0.8,1., 0.2,0.8,0.8,1., 0.8,0.2,0.8,1., 0.8,0.4,0.1,1.] &     \tabnewline RGBA float values for traces in one array; using 6x4 values gives different colors for 6 traces; in case of triads, the 0/1/2-axes are drawn in red, green, and blue\\ \hline
+    triadSize &     float &      &     0.1  &     length of triad axes if shown\\ \hline
+    triadsShowEvery &     PInt &      &     1 &     integer value i; out of available sensor data, show every i-th triad\\ \hline
+    vectorScaling &     float &      &     0.01 &     scaling of vector quantities; if, e.g., loads, this factor has to be adjusted significantly\\ \hline
+    vectorsShowEvery &     PInt &      &     1 &     integer value i; out of available sensor data, show every i-th vector\\ \hline
+	  \end{longtable}
+	\end{center}
+
+
+%+++++++++++++++++++++++++++++++++++
+
 \mysubsubsubsection{VSettingsSensors}
 \label{sec:VSettingsSensors}
 Visualization settings for sensors.
@@ -638,6 +672,7 @@ Visualization settings for sensors.
   \begin{longtable}{| p{4.2cm} | p{2.5cm} | p{0.3cm} | p{3.0cm} | p{6cm} |}
     \hline
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
+    traces &     VSettingsSensorTraces &      &      &     settings for showing (position) sensor traces and vector plots in the render window\\ \hline
     defaultColor &     Float4 &     4 &     [0.6,0.6,0.1,1.] &     \tabnewline default cRGB color for sensors; 4th value is alpha-transparency\\ \hline
     defaultSize &     float &      &     -1. &     global sensor size; if -1.f, sensor size is relative to maxSceneSize\\ \hline
     drawSimplified &     bool &      &     True &     draw sensors with simplified symbols\\ \hline

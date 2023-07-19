@@ -1045,7 +1045,10 @@ plr.DefLatexDataAccess('systemData','Access to SystemData structure; enables acc
 
 plr.DefLatexFinishTable()#only finalize latex table
 
-plr.DefLatexStartClass('MainSystem Python extensions','This section represents [experimental] extensions to MainSystem, which are direct calls to Python functions, such as PlotSensor or SolveDynamic; these extensions allow a more intuitive interaction with the MainSystem class, see the following example. For activation, import \\texttt{exudyn.mainSystemExtensions} or \\texttt{exudyn.utilities}', subSection=True,labelName='sec:mainsystem:pythonExtensions')
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#create extensions
+plr.DefLatexStartClass('MainSystem extensions (create)',"This section represents extensions to MainSystem, which are direct calls to Python functions; the 'create' extensions to simplify the creation of multibody systems, such as CreateMassPoint(...); these extensions allow a more intuitive interaction with the MainSystem class, see the following example. For activation, import \\texttt{exudyn.mainSystemExtensions} or \\texttt{exudyn.utilities}", subSection=True,labelName='sec:mainsystem:pythonExtensionsCreate')
 
 plr.AddDocuCodeBlock(code="""
 import exudyn as exu           
@@ -1056,16 +1059,33 @@ mbs = SC.AddSystem()
 #
 #create rigid body
 b1=mbs.CreateRigidBody(inertia = InertiaCuboid(density=5000, sideLengths=[0.1,0.1,1]),
-                            referencePosition = [1,0,0], 
-                            gravity = [0,0,-9.81])
+                       referencePosition = [1,0,0], 
+                       gravity = [0,0,-9.81])
+""")
+
+plr.sLatex += '\\input{MainSystemCreateExt.tex}\n\n'
+
+with open('generated/MainSystemCreateExt.rst', 'r') as f:
+    plr.sRST += f.read()
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#function extensions
+plr.DefLatexStartClass('MainSystem extensions (general)','This section represents general extensions to MainSystem, which are direct calls to Python functions, such as PlotSensor or SolveDynamic; these extensions allow a more intuitive interaction with the MainSystem class, see the following example. For activation, import \\texttt{exudyn.mainSystemExtensions} or \\texttt{exudyn.utilities}', subSection=True,labelName='sec:mainsystem:pythonExtensions')
+
+plr.AddDocuCodeBlock(code="""
+#this example sketches the usage 
+#for complete examples see Examples/ or TestModels/ folders
+#create some multibody system (mbs) first:
+# ... 
 #
-mbs.Assemble()
+#compute system degree of freedom: 
+mbs.ComputeSystemDegreeOfFreedom(verbose=True)
+#
 #call solver function directly from mbs:
-mbs.ComputeSystemDegreeOfFreedom()
-simulationSettings = exu.SimulationSettings()
-mbs.SolveDynamic(simulationSettings)
+mbs.SolveDynamic(exu.SimulationSettings())
 #
-#plot sensor sBody0 directly from mbs:
+#plot sensor directly from mbs:
 mbs.PlotSensor(...)
 """)
 
@@ -1073,6 +1093,7 @@ plr.sLatex += '\\input{MainSystemExt.tex}\n\n'
 
 with open('generated/MainSystemExt.rst', 'r') as f:
     plr.sRST += f.read()
+
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -2389,6 +2410,24 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='__getitem__',
                        description="get copy of list item with 'index' as vector",
                        isLambdaFunction = True,
                        )
+#copy and deepcopy according to Pybind11, see https://pybind11.readthedocs.io/en/latest/advanced/classes.html#pickling-support
+# .def("__copy__",  [](const Copyable &self) {
+#     return Copyable(self);
+# })
+# .def("__deepcopy__", [](const Copyable &self, py::dict) {
+#     return Copyable(self);
+# }, "memo"_a);
+plr.DefPyFunctionAccess(cClass=classStr, pyName='__copy__', 
+                       cName='[](const PyVector3DList &item) {\n            return PyVector3DList(item); }', 
+                       description="copy method to be used for copy.copy(...); in fact does already deep copy",
+                       isLambdaFunction = True,
+                       )
+
+plr.DefPyFunctionAccess(cClass=classStr, pyName='__deepcopy__', 
+                       cName='[](const PyVector3DList &item, py::dict) {\n            return PyVector3DList(item); }, "memo"_a', 
+                       description="deepcopy method to be used for copy.copy(...)",
+                       isLambdaFunction = True,
+                       )
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='__repr__', 
                        cName='[](const PyVector3DList &item) {\n            return EXUstd::ToString(item.GetPythonObject()); }', 
@@ -2447,6 +2486,18 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='__getitem__',
                        isLambdaFunction = True,
                        )
 
+plr.DefPyFunctionAccess(cClass=classStr, pyName='__copy__', 
+                       cName='[](const PyVector2DList &item) {\n            return PyVector2DList(item); }', 
+                       description="copy method to be used for copy.copy(...); in fact does already deep copy",
+                       isLambdaFunction = True,
+                       )
+
+plr.DefPyFunctionAccess(cClass=classStr, pyName='__deepcopy__', 
+                       cName='[](const PyVector2DList &item, py::dict) {\n            return PyVector2DList(item); }, "memo"_a', 
+                       description="deepcopy method to be used for copy.copy(...)",
+                       isLambdaFunction = True,
+                       )
+
 plr.DefPyFunctionAccess(cClass=classStr, pyName='__repr__', 
                        cName='[](const PyVector2DList &item) {\n            return EXUstd::ToString(item.GetPythonObject()); }', 
                        description="return the string representation of the Vector2DList data, e.g.: print(data)",
@@ -2498,6 +2549,18 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='__setitem__',
 plr.DefPyFunctionAccess(cClass=classStr, pyName='__getitem__', 
                        cName='[](const PyVector6DList &item, Index index) {\n            return py::array_t<Real>(item[index].NumberOfItems(), item[index].GetDataPointer()); }', 
                        description="get copy of list item with 'index' as vector",
+                       isLambdaFunction = True,
+                       )
+
+plr.DefPyFunctionAccess(cClass=classStr, pyName='__copy__', 
+                       cName='[](const PyVector6DList &item) {\n            return PyVector6DList(item); }', 
+                       description="copy method to be used for copy.copy(...); in fact does already deep copy",
+                       isLambdaFunction = True,
+                       )
+
+plr.DefPyFunctionAccess(cClass=classStr, pyName='__deepcopy__', 
+                       cName='[](const PyVector6DList &item, py::dict) {\n            return PyVector6DList(item); }, "memo"_a', 
+                       description="deepcopy method to be used for copy.copy(...)",
                        isLambdaFunction = True,
                        )
 

@@ -2692,6 +2692,7 @@ ArrayIndex* GeneralContact::GetActiveContacts(Contact::TypeIndex selectedTypeInd
     Index nItemsAvailable = globalContactIndexOffsets[selectedTypeIndex+1] - globalContactIndexOffsets[selectedTypeIndex];
 
     CHECKandTHROW(itemIndex < nItemsAvailable, "GetContactInteractions: itemIndex is out of available range");
+    __UNUSED(nItemsAvailable); //avoid unused variable warnings
     
     Index globalIndex = itemIndex + globalContactIndexOffsets[selectedTypeIndex]; 
 

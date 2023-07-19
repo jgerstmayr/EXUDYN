@@ -85,9 +85,9 @@ def JointPreCheckCalc(where, mbs, name, bodyNumbers, position, show, useGlobalFr
 #**input: 
 #  mbs: the MainSystem where items are created
 #  name: name string for object, node is 'Node:'+name
-#  referenceCoordinates: reference coordinates for point node (always a 3D vector, no matter if 2D or 3D mass)
-#  initialCoordinates: initial displacements for point node (always a 3D vector, no matter if 2D or 3D mass)
-#  initialVelocities: initial velocities for point node (always a 3D vector, no matter if 2D or 3D mass)
+#  referencePosition: reference coordinates for point node (always a 3D vector, no matter if 2D or 3D mass)
+#  initialDisplacement: initial displacements for point node (always a 3D vector, no matter if 2D or 3D mass)
+#  initialVelocity: initial velocities for point node (always a 3D vector, no matter if 2D or 3D mass)
 #  physicsMass: mass of mass point
 #  gravity: gravity vevtor applied (always a 3D vector, no matter if 2D or 3D mass)
 #  graphicsDataList: list of GraphicsData for optional mass visualization
@@ -105,8 +105,8 @@ def JointPreCheckCalc(where, mbs, name, bodyNumbers, position, show, useGlobalFr
 # SC = exu.SystemContainer()
 # mbs = SC.AddSystem()
 # 
-# b0=mbs.CreateMassPoint(referenceCoordinates = [0,0,0],
-#                        initialVelocities = [2,5,0],
+# b0=mbs.CreateMassPoint(referencePosition = [0,0,0],
+#                        initialVelocity = [2,5,0],
 #                        physicsMass = 1, gravity = [0,-9.81,0],
 #                        drawSize = 0.5, color=color4blue)
 # 
@@ -117,9 +117,9 @@ def JointPreCheckCalc(where, mbs, name, bodyNumbers, position, show, useGlobalFr
 # mbs.SolveDynamic(simulationSettings = simulationSettings)
 def MainSystemCreateMassPoint(mbs,
                            name = '',   
-                           referenceCoordinates = [0.,0.,0.],
-                           initialCoordinates = [0.,0.,0.],
-                           initialVelocities = [0.,0.,0.],
+                           referencePosition = [0.,0.,0.],
+                           initialDisplacement = [0.,0.,0.],
+                           initialVelocity = [0.,0.,0.],
                            physicsMass=0,
                            gravity = [0.,0.,0.],
                            graphicsDataList = [],
@@ -133,12 +133,12 @@ def MainSystemCreateMassPoint(mbs,
     if not exudyn.__useExudynFast:
         if not isinstance(name, str):
             RaiseTypeError(where='MainSystem.CreateMassPoint(...)', argumentName='name', received = name, expectedType = ExpectedType.String)
-        if not IsVector(referenceCoordinates, 3):
-            RaiseTypeError(where='MainSystem.CreateMassPoint(...)', argumentName='referenceCoordinates', received = referenceCoordinates, expectedType = ExpectedType.Vector, dim=3)
-        if not IsVector(initialCoordinates, 3):
-            RaiseTypeError(where='MainSystem.CreateMassPoint(...)', argumentName='initialCoordinates', received = initialCoordinates, expectedType = ExpectedType.Vector, dim=3)
-        if not IsVector(initialVelocities, 3):
-            RaiseTypeError(where='MainSystem.CreateMassPoint(...)', argumentName='initialVelocities', received = initialVelocities, expectedType = ExpectedType.Vector, dim=3)
+        if not IsVector(referencePosition, 3):
+            RaiseTypeError(where='MainSystem.CreateMassPoint(...)', argumentName='referencePosition', received = referencePosition, expectedType = ExpectedType.Vector, dim=3)
+        if not IsVector(initialDisplacement, 3):
+            RaiseTypeError(where='MainSystem.CreateMassPoint(...)', argumentName='initialDisplacement', received = initialDisplacement, expectedType = ExpectedType.Vector, dim=3)
+        if not IsVector(initialVelocity, 3):
+            RaiseTypeError(where='MainSystem.CreateMassPoint(...)', argumentName='initialVelocity', received = initialVelocity, expectedType = ExpectedType.Vector, dim=3)
         if not IsVector(gravity, 3):
             RaiseTypeError(where='MainSystem.CreateMassPoint(...)', argumentName='gravity', received = gravity, expectedType = ExpectedType.Vector, dim=3)
     
@@ -162,9 +162,9 @@ def MainSystemCreateMassPoint(mbs,
 
     if not create2D:
         nodeNumber = mbs.AddNode(eii.NodePoint(name = nodeName,
-                         referenceCoordinates = referenceCoordinates,
-                         initialCoordinates=initialCoordinates,
-                         initialVelocities=initialVelocities,
+                         referenceCoordinates = referencePosition,
+                         initialCoordinates=initialDisplacement,
+                         initialVelocities=initialVelocity,
                          visualization = eii.VNodePoint(show = show and (graphicsDataList == []), drawSize = drawSize, color = color),
                          ))
         bodyNumber = mbs.AddObject(eii.MassPoint(name = name, 
@@ -174,9 +174,9 @@ def MainSystemCreateMassPoint(mbs,
                                                                            graphicsData = graphicsDataList) ))
     else:
         nodeNumber = mbs.AddNode(eii.NodePoint2D(name = nodeName,
-                         referenceCoordinates = referenceCoordinates[0:2],
-                         initialCoordinates=initialCoordinates[0:2],
-                         initialVelocities=initialVelocities[0:2],
+                         referenceCoordinates = referencePosition[0:2],
+                         initialCoordinates=initialDisplacement[0:2],
+                         initialVelocities=initialVelocity[0:2],
                          visualization = eii.VNodePoint2D(show = show and (graphicsDataList == []), drawSize = drawSize, color = color),
                          ))
         bodyNumber = mbs.AddObject(eii.MassPoint2D(name = name, 
@@ -447,8 +447,8 @@ def MainSystemCreateRigidBody(mbs,
 # SC = exu.SystemContainer()
 # mbs = SC.AddSystem()
 # 
-# b0 = mbs.CreateMassPoint(referenceCoordinates = [2,0,0],
-#                          initialVelocities = [2,5,0],
+# b0 = mbs.CreateMassPoint(referencePosition = [2,0,0],
+#                          initialVelocity = [2,5,0],
 #                          physicsMass = 1, gravity = [0,-9.81,0],
 #                          drawSize = 0.5, color=color4blue)
 # 
@@ -583,7 +583,7 @@ def MainSystemCreateSpringDamper(mbs,
 # SC = exu.SystemContainer()
 # mbs = SC.AddSystem()
 # 
-# b0 = mbs.CreateMassPoint(referenceCoordinates = [7,0,0],
+# b0 = mbs.CreateMassPoint(referencePosition = [7,0,0],
 #                           physicsMass = 1, gravity = [0,-9.81,0],
 #                           drawSize = 0.5, color=color4blue)
 # 
@@ -1185,7 +1185,7 @@ def MainSystemCreateGenericJoint(mbs, name='', bodyNumbers=[None, None],
 #                           gravity = [0,-9.81,0],
 #                           graphicsDataList = [GraphicsDataOrthoCubePoint(size=[1,0.1,0.1], 
 #                                                                       color=color4orange)])
-# m1 = mbs.CreateMassPoint(referenceCoordinates=[5.5,-1,0],
+# m1 = mbs.CreateMassPoint(referencePosition=[5.5,-1,0],
 #                          physicsMass=1, drawSize = 0.2)
 # n1 = mbs.GetObject(m1)['nodeNumber']
 #     

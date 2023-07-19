@@ -23,14 +23,18 @@ class PyVectorList : public VectorList<dataSize>
 public:
 	//! create empty (dense) container
 	//?remove default constructor to enable conversion from py::object in constructor?
-	PyVectorList() : VectorList <dataSize>() {}
+	PyVectorList() : VectorList<dataSize>() {}
 
-	PyVectorList(const VectorList <dataSize>& other) : VectorList<dataSize>(other) {}
+	PyVectorList(const VectorList<dataSize>& other) : VectorList<dataSize>(other) {}
 
 	//! initialize array with list of py::array or with emtpy list (default value)
 	PyVectorList(const py::object& listOfArrays)
 	{
-		if (py::isinstance<py::list>(listOfArrays))
+        if (listOfArrays.is_none())
+        {
+            *this = VectorList<dataSize>();
+        }
+        else if (py::isinstance<py::list>(listOfArrays))
 		{
 			py::list pyList = py::cast<py::list>(listOfArrays);
 			this->SetMaxNumberOfItems((Index)pyList.size());
@@ -40,11 +44,10 @@ public:
 			{
 				this->PyAppend((const py::object&)item);
 			}
-			return;
 		}
 		else
 		{
-			PyError(STDstring("Vector" + EXUstd::ToString(dataSize) + "DList: Expected list of " + EXUstd::ToString(dataSize) + "D numpy arrays, but received '" +
+			PyError(STDstring("Vector" + EXUstd::ToString(dataSize) + "DList: Expected empty list, None, or list of " + EXUstd::ToString(dataSize) + "D numpy arrays, but received '" +
 				EXUstd::ToString(listOfArrays) + "'"));
 		}
 	}
@@ -159,7 +162,11 @@ public:
 	//! initialize array with list of py::array or with emtpy list (default value)
 	PyMatrixList(const py::object& listOfArrays)
 	{
-		if (py::isinstance<py::list>(listOfArrays))
+        if (listOfArrays.is_none())
+        {
+            *this = MatrixList<numberOfRowsColumns>();
+        }
+        else if (py::isinstance<py::list>(listOfArrays))
 		{
 			py::list pyList = py::cast<py::list>(listOfArrays);
 			this->SetMaxNumberOfItems((Index)pyList.size());
@@ -169,11 +176,10 @@ public:
 			{
 				this->PyAppend((const py::object&)item);
 			}
-			return;
 		}
 		else
 		{
-			PyError(STDstring("Matrix" + EXUstd::ToString(numberOfRowsColumns) + "DList: Expected list of " + EXUstd::ToString(numberOfRowsColumns) + "D numpy matrices, but received '" +
+			PyError(STDstring("Matrix" + EXUstd::ToString(numberOfRowsColumns) + "DList: Expected empty list, None, or list of " + EXUstd::ToString(numberOfRowsColumns) + "D numpy matrices, but received '" +
 				EXUstd::ToString(listOfArrays) + "'"));
 		}
 	}
@@ -266,7 +272,12 @@ namespace EPyUtils
 
 		GenericExceptionHandling([&]
 		{
-			if (py::isinstance<py::list>(value))
+            if (value.is_none())
+            {
+                destination.Flush();
+                rv = true;
+            }
+            else if (py::isinstance<py::list>(value))
 			{
 				py::list pylist = py::cast<py::list>(value); //also works for numpy arrays (but gives different type!)
 
@@ -274,7 +285,7 @@ namespace EPyUtils
 				if (pylist.size() != 0)
 				{
 					rv = false;
-					PyError(STDstring("Set " + listType + ": Either empty list [] or " + listType + " allowed, but received: ") +
+					PyError(STDstring("Set " + listType + ": Either empty list [], None, or " + listType + " allowed, but received: ") +
 						STDstring(py::str(value))); //here we do not use py::cast<std::string>(value), because value may be Vector3DList directly, which cannot be casted to Python!
 				}
 				rv = true;
@@ -293,7 +304,7 @@ namespace EPyUtils
 			else
 			{
 				rv = false;
-				PyError(STDstring("Set " + listType + ": Either empty list [] or " + listType + " allowed, but received: ") +
+				PyError(STDstring("Set " + listType + ": Either empty list [], None, or " + listType + " allowed, but received: ") +
 					STDstring(py::str(value))); //here we do not use py::cast<std::string>(value), because value may be Vector3DList directly, which cannot be casted to Python!
 			}
 		}, "Set [Vector/Matrix][3/6]DList");

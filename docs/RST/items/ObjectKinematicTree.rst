@@ -207,7 +207,7 @@ We can compute the local joint angular velocity \ :math:`\tomega_i`\  and transl
 
 .. math::
 
-   {\mathbf{v}}^J_i = \vp{\tomega_i}{{\mathbf{w}}_i} = \tPhi_i \, q_i
+   {\mathbf{v}}^J_i = \vp{\tomega_i}{{\mathbf{w}}_i} = \tPhi_i \, \dot q_i
 
 
 The joint coordinates, which can be rotational or translational, are stored in the vector
@@ -396,7 +396,7 @@ MINI EXAMPLE for ObjectKinematicTree
    
    simulationSettings = exu.SimulationSettings() #takes currently set values or default values
    simulationSettings.timeIntegration.numberOfSteps = 1000 #gives very accurate results
-   exu.SolveDynamic(mbs, simulationSettings , solverType=exu.DynamicSolverType.RK67) #highly accurate!
+   mbs.SolveDynamic(simulationSettings , solverType=exu.DynamicSolverType.RK67) #highly accurate!
    
    #check final value of angle:
    q0 = mbs.GetNodeOutput(nGeneric, exu.OutputVariableType.Coordinates)

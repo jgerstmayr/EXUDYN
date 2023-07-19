@@ -211,7 +211,7 @@ MINI EXAMPLE for ObjectJointRevoluteZ
    
    #assemble and solve system for default parameters
    mbs.Assemble()
-   exu.SolveDynamic(mbs, exu.SimulationSettings())
+   mbs.SolveDynamic(exu.SimulationSettings())
    
    #check result at default integration time
    exudynTestGlobals.testResult = mbs.GetNodeOutput(nBody, exu.OutputVariableType.Rotation)[2]

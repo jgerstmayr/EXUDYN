@@ -27,7 +27,12 @@ PyMatrixContainer::PyMatrixContainer(const py::object& matrix)
 {
 	//pout << "PyMatrixContainer::PyMatrixContainer:\n";
 	//py::print(matrix);
-	if (py::isinstance<PyMatrixContainer>(matrix))
+    if (matrix.is_none())
+    {
+        useDenseMatrix = true;
+        denseMatrix = ResizableMatrix();
+    }
+	else if (py::isinstance<PyMatrixContainer>(matrix))
 	{
 		//pout << "works2: PyMatrixContainer::PyMatrixContainer:\n";
 		*this = py::cast<PyMatrixContainer>(matrix);
@@ -92,7 +97,7 @@ PyMatrixContainer::PyMatrixContainer(const py::object& matrix)
 	}
 	else
 	{
-		CHECKandTHROWstring("MatrixContainer: can only initialize with empty list [], list of lists or with 2D numpy array");
+		CHECKandTHROWstring("MatrixContainer: can only initialize with None, empty list [], list of lists or with 2D numpy array");
 	}
 	//pout << "PyMatrixContainer::PyMatrixContainer:READY\n";
 

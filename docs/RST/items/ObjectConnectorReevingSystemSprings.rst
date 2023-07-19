@@ -5,7 +5,7 @@
 ObjectConnectorReevingSystemSprings
 ===================================
 
-A rD reeving system defined by a list of torque-free and friction-free sheaves or points that are connected with one rope (modelled as massless spring). The force is assumed to be constant all over the rope. The sheaves or connection points are defined by \ :math:`nr`\  rigid body markers \ :math:`[m_0, \, m_1, \, \ldots, \, m_{nr-1}]`\ . At both ends of the rope there may be a prescribed motion coupled to a coordinate marker each, given by \ :math:`m_{c0}`\  and \ :math:`m_{c1}`\  .
+A rD reeving system defined by a list of torque-free and friction-free sheaves or points that are connected with one rope (modelled as massless spring). NOTE that the spring can undergo tension AND compression (in order to avoid compression, use a PreStepUserFunction to turn off stiffness and damping in this case!). The force is assumed to be constant all over the rope. The sheaves or connection points are defined by \ :math:`nr`\  rigid body markers \ :math:`[m_0, \, m_1, \, \ldots, \, m_{nr-1}]`\ . At both ends of the rope there may be a prescribed motion coupled to a coordinate marker each, given by \ :math:`m_{c0}`\  and \ :math:`m_{c1}`\  .
 
 \ **Additional information for ObjectConnectorReevingSystemSprings**\ :
 
@@ -33,6 +33,8 @@ The item \ **ObjectConnectorReevingSystemSprings**\  with type = 'ConnectorReevi
   | torsional damping [SI:Nms] between sheaves; this effect can damp rotations around the rope axis, pairwise between sheaves; this parameter is experimental
 * | **dampingShear** [\ :math:`DS`\ , type = UReal, default = 0.]:
   | damping of shear motion [SI:Ns] between sheaves; this effect can damp motion perpendicular to the rope between each pair of sheaves; this parameter is experimental
+* | **regularizationForce** [\ :math:`F_{reg}`\ , type = Real, default = 0.1]:
+  | small regularization force [SI:N] in order to avoid large compressive forces; this regularization force can either be \ :math:`<0`\  (using a linear tension/compression spring model) or \ :math:`>0`\ , which restricts forces in the rope to be always \ :math:`\ge -F_{reg}`\ . Note that smaller forces lead to problems in implicit integrators and smaller time steps. For explicit integrators, this force can be chosen close to zero.
 * | **referenceLength** [\ :math:`L_{ref}`\ , type = Real, default = 0.]:
   | reference length for computation of roped force
 * | **sheavesAxes** [\ :math:`{\mathbf{l}}_a = [\LU{m0}{{\mathbf{a}}_0},\, \LU{m1}{{\mathbf{a}}_1},\, \ldots ] in [\Rcal^{3}, ...]`\ , type = Vector3DList, default = []]:
@@ -197,12 +199,24 @@ In case that \ ``hasCoordinateMarkers=True``\ , the total reference length and i
 
 
 while we set \ :math:`L_0 = L_{ref}`\  and \ :math:`\dot L_0=0`\  otherwise.
-The force in the reeving system (assumed to be constant all over the rope) reads
+The linear force in the reeving system (assumed to be constant all over the rope) is computed as
 
 .. math::
 
-   F = (L-L_{0}) \frac{EA}{L_0} + (\dot L - \dot L_0)\frac{DA}{L_0}
+   F_{lin} = (L-L_{0}) \frac{EA}{L_0} + (\dot L - \dot L_0)\frac{DA}{L_0}
 
+
+The rope force is computed from
+
+.. math::
+
+   F =   \begin{cases} F_{lin} \quad \mathrm{if} \quad F_{lin} > 0 \\ F_{reg} \cdot \mathrm{tanh}(F_{lin}/F_{reg})\quad \mathrm{else} \end{cases}
+
+
+Which allows small compressive forces \ :math:`F_{reg}`\ .
+In case that \ :math:`F_{reg} < 0`\ , compressive forces are not regularized (linear spring).
+The case \ :math:`F_{reg} = 0`\  will be used in future only in combination with a data node, 
+which allows switching similar as in friction and contact elements.
 
 Note that in case of \ :math:`L_0=0`\ , the term \ :math:`\frac{1}{L_0}`\  is replaced by \ :math:`1000`\ .
 However, this case must be avoided by the user by choosing appropriate parameters for the system.

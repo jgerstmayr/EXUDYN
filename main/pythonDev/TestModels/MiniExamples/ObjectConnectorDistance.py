@@ -35,7 +35,7 @@ try: #puts example in safe environment
     
     sims=exu.SimulationSettings()
     sims.timeIntegration.generalizedAlpha.spectralRadius=0.7
-    exu.SolveDynamic(mbs, sims)
+    mbs.SolveDynamic(sims)
 
     #check result at default integration time
     exudynTestGlobals.testResult = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Position)[0]

@@ -92,7 +92,7 @@ to explicitly load the version without AVX2.
   43  
 
 
-+  Typical Python \ **import error**\  message on Linux / UBUNTU if Python modules are missing:
++  Typical Python \ **import error**\  message on Linux / Ubuntu if Python modules are missing:
 
 
 .. code-block:: 

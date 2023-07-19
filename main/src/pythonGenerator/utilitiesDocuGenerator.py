@@ -651,6 +651,10 @@ rstExtensions = {} #for C++ extension functions
 pyiExtensions = {} #for stub files of C++ extension functions
 pyExtensions = ''  #for extension of C++ class, added lateron to mainSystemExtensions; ONLY one string
 
+#special strings, to put MainSystemExtensions (CreateMassPoint, ...) on top of RST and Latex description!
+latexExtensionsMainSystem = ''
+rstExtensionsMainSystem = ''
+
 with open('mainSystemExtensionsHeader.py','r') as f:
     pyExtensions = f.read()
 
@@ -762,23 +766,31 @@ for fileName in filesParsed:
             
             #exu.MainSystem.PlotSensor = exu.plot.PlotSensor
             moduleAdd = ('exu.'+moduleNamePython+'.')*(moduleNamePython!='mainSystemExtensions')
-            
+
             sPy = '\n#link '+belongsTo+' function to Python function:\n'
             sPy += 'exu.'+belongsTo+'.'+funcDict['functionName']+ '=' +  moduleAdd+functionName + '\n\n'
-            
-            latexExtensions[belongsTo] += sFuncLatex+'\n'
-            rstExtensions[belongsTo] += '\n'+sFuncRST
+
+            latexTemp = ''
+            rstTemp = ''
+            latexTemp += sFuncLatex+'\n'
+            rstTemp += '\n'+sFuncRST
             pyiExtensions[belongsTo] += sPyi
             pyExtensions += sPy
-
+                
             if addExampleReferences:
-                latexExtensions[belongsTo] += sExamples
-                rstExtensions[belongsTo] += '\n'+sExamplesRST
+                latexTemp += sExamples
+                rstTemp += '\n'+sExamplesRST
 
             #for original function description:
-
             funcDict['function'] = functionDescription
             funcDict['functionName'] = functionName
+
+            if moduleNamePython != 'mainSystemExtensions':
+                latexExtensions[belongsTo] += latexTemp
+                rstExtensions[belongsTo] += rstTemp
+            else:
+                latexExtensionsMainSystem += latexTemp
+                rstExtensionsMainSystem += rstTemp
 
         #add remaining part to original latex and RST
         if moduleNamePython != 'mainSystemExtensions': #no description for this!
@@ -961,6 +973,18 @@ for key in latexExtensions:
     file.write(pyiExtensions[key])
     file.close()
 
+#%%++++++++++++++++++++++
+if True:
+    file=io.open('generated/MainSystemCreateExt.rst','w',encoding='utf8')  #clear file by one write access
+    file.write(rstExtensionsMainSystem)
+    file.close()
+
+    file=io.open(theDocDir+'/MainSystemCreateExt.tex','w',encoding='utf8')  #clear file by one write access
+    file.write(latexExtensionsMainSystem)
+    file.close()
+
+
+#%%++++++++++++++++++++++
 
 file=io.open(fileDir+'mainSystemExtensions.py','w',encoding='utf8')  #clear file by one write access
 file.write(pyExtensions)

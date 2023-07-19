@@ -1,6 +1,9 @@
 
 
 
+.. _sec-visualizationsettingsmain:
+
+
 **********************
 Visualization settings
 **********************
@@ -404,6 +407,69 @@ VSettingsLoads has the following items:
 
 
 
+.. _sec-vsettingssensortraces:
+
+VSettingsSensorTraces
+---------------------
+
+Visualization settings for traces of sensors. Note that a large number of time points (influenced by simulationSettings.solutionSettings.sensorsWritePeriod) may lead to slow graphics.
+
+VSettingsSensorTraces has the following items:
+
+* | **lineWidth** [type = UFloat, default = 2.]:
+  | \ ``SC.visualizationSettings.sensorTraces.lineWidth``\ 
+  | line width for traces
+* | **listOfPositionSensors** [type = ArrayIndex, default = [], size = -1]:
+  | \ ``SC.visualizationSettings.sensorTraces.listOfPositionSensors``\ 
+  | list of position sensors which can be shown as trace inside render window if sensors have storeInternal=True; if this list is empty and showPositionTrace=True, then all available sensors are shown
+* | **listOfTriadSensors** [type = ArrayIndex, default = [], size = -1]:
+  | \ ``SC.visualizationSettings.sensorTraces.listOfTriadSensors``\ 
+  | list of sensors of with OutputVariableType RotationMatrix; this non-empty list needs to coincide in length with the listOfPositionSensors to be shown if showTriads=True; the triad is drawn at the related position
+* | **listOfVectorSensors** [type = ArrayIndex, default = [], size = -1]:
+  | \ ``SC.visualizationSettings.sensorTraces.listOfVectorSensors``\ 
+  | list of sensors with 3D vector quantities; this non-empty list needs to coincide in length with the listOfPositionSensors to be shown if showVectors=True; the vector quantity is drawn relative to the related position
+* | **positionsShowEvery** [type = PInt, default = 1]:
+  | \ ``SC.visualizationSettings.sensorTraces.positionsShowEvery``\ 
+  | integer value i; out of available sensor data, show every i-th position
+* | **sensorsMbsNumber** [type = Index, default = 0]:
+  | \ ``SC.visualizationSettings.sensorTraces.sensorsMbsNumber``\ 
+  | number of main system which is used to for sensor lists; if only 1 mbs is in the SystemContainer, use 0; if there are several mbs, it needs to specify the number
+* | **showCurrent** [type = bool, default = True]:
+  | \ ``SC.visualizationSettings.sensorTraces.showCurrent``\ 
+  | show current trace position (and especially vector quantity) related to current visualization state; this only works in solution viewer if sensor values are stored at time grid points of the solution file (up to a precision of 1e-10) and may therefore be temporarily unavailable
+* | **showFuture** [type = bool, default = False]:
+  | \ ``SC.visualizationSettings.sensorTraces.showFuture``\ 
+  | show trace future to current visualization state if already computed (e.g. in SolutionViewer)
+* | **showPast** [type = bool, default = True]:
+  | \ ``SC.visualizationSettings.sensorTraces.showPast``\ 
+  | show trace previous to current visualization state
+* | **showPositionTrace** [type = bool, default = False]:
+  | \ ``SC.visualizationSettings.sensorTraces.showPositionTrace``\ 
+  | show position trace of all position sensors if listOfPositionSensors=[] or of specified sensors; sensors need to activate storeInternal=True
+* | **showTriads** [type = bool, default = False]:
+  | \ ``SC.visualizationSettings.sensorTraces.showTriads``\ 
+  | if True, show basis vectors from rotation matrices provided by sensors
+* | **showVectors** [type = bool, default = False]:
+  | \ ``SC.visualizationSettings.sensorTraces.showVectors``\ 
+  | if True, show vector quantities according to description in showPositionTrace
+* | **traceColors** [type = ArrayFloat, default = [0.2,0.2,0.2,1., 0.8,0.2,0.2,1., 0.2,0.8,0.2,1., 0.2,0.2,0.8,1., 0.2,0.8,0.8,1., 0.8,0.2,0.8,1., 0.8,0.4,0.1,1.], size = -1]:
+  | \ ``SC.visualizationSettings.sensorTraces.traceColors``\ 
+  | RGBA float values for traces in one array; using 6x4 values gives different colors for 6 traces; in case of triads, the 0/1/2-axes are drawn in red, green, and blue
+* | **triadSize** [type = float, default = 0.1 ]:
+  | \ ``SC.visualizationSettings.sensorTraces.triadSize``\ 
+  | length of triad axes if shown
+* | **triadsShowEvery** [type = PInt, default = 1]:
+  | \ ``SC.visualizationSettings.sensorTraces.triadsShowEvery``\ 
+  | integer value i; out of available sensor data, show every i-th triad
+* | **vectorScaling** [type = float, default = 0.01]:
+  | \ ``SC.visualizationSettings.sensorTraces.vectorScaling``\ 
+  | scaling of vector quantities; if, e.g., loads, this factor has to be adjusted significantly
+* | **vectorsShowEvery** [type = PInt, default = 1]:
+  | \ ``SC.visualizationSettings.sensorTraces.vectorsShowEvery``\ 
+  | integer value i; out of available sensor data, show every i-th vector
+
+
+
 .. _sec-vsettingssensors:
 
 VSettingsSensors
@@ -413,6 +479,9 @@ Visualization settings for sensors.
 
 VSettingsSensors has the following items:
 
+* | **traces** [type = VSettingsSensorTraces]:
+  | \ ``SC.visualizationSettings.sensors.traces``\ 
+  | settings for showing (position) sensor traces and vector plots in the render window
 * | **defaultColor** [type = Float4, default = [0.6,0.6,0.1,1.], size = 4]:
   | \ ``SC.visualizationSettings.sensors.defaultColor``\ 
   | default cRGB color for sensors; 4th value is alpha-transparency

@@ -43,7 +43,7 @@ Function: TkRootExists
 
 Function: EditDictionaryWithTypeInfo
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`EditDictionaryWithTypeInfo <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/GUI.py\#L640>`__\ (\ ``settingsStructure``\ , \ ``exu = None``\ , \ ``dictionaryName = 'edit'``\ )
+`EditDictionaryWithTypeInfo <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/GUI.py\#L642>`__\ (\ ``settingsStructure``\ , \ ``exu = None``\ , \ ``dictionaryName = 'edit'``\ )
 
 - | \ *function description*\ :
   | edit dictionaryData and return modified (new) dictionary

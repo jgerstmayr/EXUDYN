@@ -233,7 +233,18 @@
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L90}{DiagonalMatrix}{}}}\label{sec:basicUtilities:DiagonalMatrix}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L84}{SmartRound2String}{}}}\label{sec:basicUtilities:SmartRound2String}
+({\it x}, {\it prec}= 3)
+\end{flushleft}
+\setlength{\itemindent}{0.7cm}
+\begin{itemize}[leftmargin=0.7cm]
+\item[--]
+{\bf function description}: round to max number of digits; may give more digits if this is shorter; using in general the format() with '.g' option, but keeping decimal point and using exponent where necessary
+\vspace{12pt}\end{itemize}
+%
+\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
+\begin{flushleft}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L99}{DiagonalMatrix}{}}}\label{sec:basicUtilities:DiagonalMatrix}
 ({\it rowsColumns}, {\it value}= 1)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -253,7 +264,7 @@
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L104}{NormL2}{}}}\label{sec:basicUtilities:NormL2}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L113}{NormL2}{}}}\label{sec:basicUtilities:NormL2}
 ({\it vector})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -284,7 +295,7 @@
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L113}{VSum}{}}}\label{sec:basicUtilities:VSum}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L122}{VSum}{}}}\label{sec:basicUtilities:VSum}
 ({\it vector})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -314,7 +325,7 @@
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L122}{VAdd}{}}}\label{sec:basicUtilities:VAdd}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L131}{VAdd}{}}}\label{sec:basicUtilities:VAdd}
 ({\it v0}, {\it v1})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -345,7 +356,7 @@
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L133}{VSub}{}}}\label{sec:basicUtilities:VSub}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L142}{VSub}{}}}\label{sec:basicUtilities:VSub}
 ({\it v0}, {\it v1})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -371,7 +382,7 @@
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L144}{VMult}{}}}\label{sec:basicUtilities:VMult}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L153}{VMult}{}}}\label{sec:basicUtilities:VMult}
 ({\it v0}, {\it v1})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -386,7 +397,7 @@
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L154}{ScalarMult}{}}}\label{sec:basicUtilities:ScalarMult}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L163}{ScalarMult}{}}}\label{sec:basicUtilities:ScalarMult}
 ({\it scalar}, {\it v})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -410,7 +421,7 @@
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L163}{Normalize}{}}}\label{sec:basicUtilities:Normalize}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L172}{Normalize}{}}}\label{sec:basicUtilities:Normalize}
 ({\it v})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -435,7 +446,7 @@
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L179}{Vec2Tilde}{}}}\label{sec:basicUtilities:Vec2Tilde}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L188}{Vec2Tilde}{}}}\label{sec:basicUtilities:Vec2Tilde}
 ({\it v})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -462,7 +473,7 @@
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L186}{Tilde2Vec}{}}}\label{sec:basicUtilities:Tilde2Vec}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L195}{Tilde2Vec}{}}}\label{sec:basicUtilities:Tilde2Vec}
 ({\it m})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -477,7 +488,7 @@
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L213}{GaussIntegrate}{}}}\label{sec:basicUtilities:GaussIntegrate}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L222}{GaussIntegrate}{}}}\label{sec:basicUtilities:GaussIntegrate}
 ({\it functionOfX}, {\it integrationOrder}, {\it a}, {\it b})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -499,7 +510,7 @@
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L249}{LobattoIntegrate}{}}}\label{sec:basicUtilities:LobattoIntegrate}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L258}{LobattoIntegrate}{}}}\label{sec:basicUtilities:LobattoIntegrate}
 ({\it functionOfX}, {\it integrationOrder}, {\it a}, {\it b})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -756,7 +767,7 @@
 \item[]Notes:  	internal CSR matrix storage format contains 3 float numbers per row: [row, column, value], can be converted to scipy csr sparse matrices with function CSRtoScipySparseCSR(...)
 \ei
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L40}{CompressedRowSparseToDenseMatrix}{}}}\label{sec:FEM:CompressedRowSparseToDenseMatrix}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L43}{CompressedRowSparseToDenseMatrix}{}}}\label{sec:FEM:CompressedRowSparseToDenseMatrix}
 ({\it sparseData})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -771,7 +782,7 @@
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L49}{MapSparseMatrixIndices}{}}}\label{sec:FEM:MapSparseMatrixIndices}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L52}{MapSparseMatrixIndices}{}}}\label{sec:FEM:MapSparseMatrixIndices}
 ({\it matrix}, {\it sorting})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -782,7 +793,7 @@
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L57}{VectorDiadicUnitMatrix3D}{}}}\label{sec:FEM:VectorDiadicUnitMatrix3D}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L60}{VectorDiadicUnitMatrix3D}{}}}\label{sec:FEM:VectorDiadicUnitMatrix3D}
 ({\it v})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -793,7 +804,7 @@
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L64}{CyclicCompareReversed}{}}}\label{sec:FEM:CyclicCompareReversed}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L67}{CyclicCompareReversed}{}}}\label{sec:FEM:CyclicCompareReversed}
 ({\it list1}, {\it list2})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -804,7 +815,7 @@
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L73}{AddEntryToCompressedRowSparseArray}{}}}\label{sec:FEM:AddEntryToCompressedRowSparseArray}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L76}{AddEntryToCompressedRowSparseArray}{}}}\label{sec:FEM:AddEntryToCompressedRowSparseArray}
 ({\it sparseData}, {\it row}, {\it column}, {\it value})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -820,7 +831,7 @@
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L91}{CSRtoRowsAndColumns}{}}}\label{sec:FEM:CSRtoRowsAndColumns}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L94}{CSRtoRowsAndColumns}{}}}\label{sec:FEM:CSRtoRowsAndColumns}
 ({\it sparseMatrixCSR})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -831,7 +842,7 @@
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L97}{CSRtoScipySparseCSR}{}}}\label{sec:FEM:CSRtoScipySparseCSR}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L100}{CSRtoScipySparseCSR}{}}}\label{sec:FEM:CSRtoScipySparseCSR}
 ({\it sparseMatrixCSR})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -850,7 +861,7 @@
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L105}{ScipySparseCSRtoCSR}{}}}\label{sec:FEM:ScipySparseCSRtoCSR}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L108}{ScipySparseCSRtoCSR}{}}}\label{sec:FEM:ScipySparseCSRtoCSR}
 ({\it scipyCSR})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -861,7 +872,7 @@
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L113}{ResortIndicesOfCSRmatrix}{}}}\label{sec:FEM:ResortIndicesOfCSRmatrix}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L116}{ResortIndicesOfCSRmatrix}{}}}\label{sec:FEM:ResortIndicesOfCSRmatrix}
 ({\it mXXYYZZ}, {\it numberOfRows})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -877,7 +888,7 @@
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L131}{ResortIndicesOfNGvector}{}}}\label{sec:FEM:ResortIndicesOfNGvector}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L134}{ResortIndicesOfNGvector}{}}}\label{sec:FEM:ResortIndicesOfNGvector}
 ({\it vXXYYZZ})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -888,7 +899,7 @@
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L151}{ResortIndicesExudyn2NGvector}{}}}\label{sec:FEM:ResortIndicesExudyn2NGvector}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L154}{ResortIndicesExudyn2NGvector}{}}}\label{sec:FEM:ResortIndicesExudyn2NGvector}
 ({\it vXYZXYZ})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -899,7 +910,7 @@
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L288}{ConvertHexToTrigs}{}}}\label{sec:FEM:ConvertHexToTrigs}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L291}{ConvertHexToTrigs}{}}}\label{sec:FEM:ConvertHexToTrigs}
 ({\it nodeNumbers})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -919,7 +930,7 @@
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L299}{ConvertTetToTrigs}{}}}\label{sec:FEM:ConvertTetToTrigs}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L302}{ConvertTetToTrigs}{}}}\label{sec:FEM:ConvertTetToTrigs}
 ({\it nodeNumbers})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -932,7 +943,7 @@
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L311}{ConvertDenseToCompressedRowMatrix}{}}}\label{sec:FEM:ConvertDenseToCompressedRowMatrix}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L314}{ConvertDenseToCompressedRowMatrix}{}}}\label{sec:FEM:ConvertDenseToCompressedRowMatrix}
 ({\it denseMatrix})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -943,7 +954,7 @@
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L359}{ReadMatrixFromAnsysMMF}{}}}\label{sec:FEM:ReadMatrixFromAnsysMMF}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L362}{ReadMatrixFromAnsysMMF}{}}}\label{sec:FEM:ReadMatrixFromAnsysMMF}
 ({\it fileName}, {\it verbose}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -991,7 +1002,7 @@
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L400}{ReadMatrixDOFmappingVectorFromAnsysTxt}{}}}\label{sec:FEM:ReadMatrixDOFmappingVectorFromAnsysTxt}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L403}{ReadMatrixDOFmappingVectorFromAnsysTxt}{}}}\label{sec:FEM:ReadMatrixDOFmappingVectorFromAnsysTxt}
 ({\it fileName})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1008,7 +1019,7 @@
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L456}{ReadNodalCoordinatesFromAnsysTxt}{}}}\label{sec:FEM:ReadNodalCoordinatesFromAnsysTxt}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L459}{ReadNodalCoordinatesFromAnsysTxt}{}}}\label{sec:FEM:ReadNodalCoordinatesFromAnsysTxt}
 ({\it fileName}, {\it verbose}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1039,7 +1050,7 @@
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L535}{ReadElementsFromAnsysTxt}{}}}\label{sec:FEM:ReadElementsFromAnsysTxt}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L538}{ReadElementsFromAnsysTxt}{}}}\label{sec:FEM:ReadElementsFromAnsysTxt}
 ({\it fileName}, {\it verbose}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1070,7 +1081,7 @@
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L958}{CMSObjectComputeNorm}{}}}\label{sec:FEM:CMSObjectComputeNorm}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L961}{CMSObjectComputeNorm}{}}}\label{sec:FEM:CMSObjectComputeNorm}
 ({\it mbs}, {\it objectNumber}, {\it outputVariableType}, {\it norm}= 'max', {\it nodeNumberList}= [])
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1111,7 +1122,7 @@
 \vspace{24pt}\end{itemize}
 %
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L642}{Strain2Stress}{}}}\label{sec:FEM:KirchhoffMaterial(MaterialBaseClass):Strain2Stress}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L645}{Strain2Stress}{}}}\label{sec:FEM:KirchhoffMaterial(MaterialBaseClass):Strain2Stress}
 ({\it self}, {\it strain})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1121,7 +1132,7 @@
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L653}{StrainVector2StressVector}{}}}\label{sec:FEM:KirchhoffMaterial(MaterialBaseClass):StrainVector2StressVector}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L656}{StrainVector2StressVector}{}}}\label{sec:FEM:KirchhoffMaterial(MaterialBaseClass):StrainVector2StressVector}
 ({\it self}, {\it strainVector})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1131,7 +1142,7 @@
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L657}{StrainVector2StressVector2D}{}}}\label{sec:FEM:KirchhoffMaterial(MaterialBaseClass):StrainVector2StressVector2D}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L660}{StrainVector2StressVector2D}{}}}\label{sec:FEM:KirchhoffMaterial(MaterialBaseClass):StrainVector2StressVector2D}
 ({\it self}, {\it strainVector2D})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1141,7 +1152,7 @@
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L666}{LameParameters}{}}}\label{sec:FEM:KirchhoffMaterial(MaterialBaseClass):LameParameters}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L669}{LameParameters}{}}}\label{sec:FEM:KirchhoffMaterial(MaterialBaseClass):LameParameters}
 ({\it self})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1175,7 +1186,7 @@ class used internally in FEMinterface to compute ObjectFFRF object
 this class holds all data for ObjectFFRF user functions
 \vspace{3pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L749}{\_\_init\_\_}{}}}\label{sec:FEM:ObjectFFRFinterface:__init__}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L752}{\_\_init\_\_}{}}}\label{sec:FEM:ObjectFFRFinterface:__init__}
 ({\it self}, {\it femInterface})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1191,7 +1202,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L794}{AddObjectFFRF}{}}}\label{sec:FEM:ObjectFFRFinterface:AddObjectFFRF}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L797}{AddObjectFFRF}{}}}\label{sec:FEM:ObjectFFRFinterface:AddObjectFFRF}
 ({\it self}, {\it exu}, {\it mbs}, {\it positionRef}= [0,0,0], {\it eulerParametersRef}= [1,0,0,0], {\it initialVelocity}= [0,0,0], {\it initialAngularVelocity}= [0,0,0], {\it gravity}= [0,0,0], {\it constrainRigidBodyMotion}= True, {\it massProportionalDamping}= 0, {\it stiffnessProportionalDamping}= 0, {\it color}= [0.1,0.9,0.1,1.])
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1215,7 +1226,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L873}{UFforce}{}}}\label{sec:FEM:ObjectFFRFinterface:UFforce}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L876}{UFforce}{}}}\label{sec:FEM:ObjectFFRFinterface:UFforce}
 ({\it self}, {\it exu}, {\it mbs}, {\it t}, {\it q}, {\it q\_t})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1225,7 +1236,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L919}{UFmassGenericODE2}{}}}\label{sec:FEM:ObjectFFRFinterface:UFmassGenericODE2}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L922}{UFmassGenericODE2}{}}}\label{sec:FEM:ObjectFFRFinterface:UFmassGenericODE2}
 ({\it self}, {\it exu}, {\it mbs}, {\it t}, {\it q}, {\it q\_t})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1246,7 +1257,7 @@ this class holds all data for ObjectFFRF user functions
   this class holds all data for ObjectFFRFreducedOrder user functions
 \vspace{3pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1030}{\_\_init\_\_}{}}}\label{sec:FEM:ObjectFFRFreducedOrderInterface:__init__}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1033}{\_\_init\_\_}{}}}\label{sec:FEM:ObjectFFRFreducedOrderInterface:__init__}
 ({\it self}, {\it femInterface}= None, {\it rigidBodyNodeType}= 'NodeType.RotationEulerParameters', {\it roundMassMatrix}= 1e-13, {\it roundStiffnessMatrix}= 1e-13)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1269,7 +1280,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1105}{SaveToFile}{}}}\label{sec:FEM:ObjectFFRFreducedOrderInterface:SaveToFile}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1108}{SaveToFile}{}}}\label{sec:FEM:ObjectFFRFreducedOrderInterface:SaveToFile}
 ({\it self}, {\it fileName}, {\it fileVersion}= 1)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1286,7 +1297,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1147}{LoadFromFile}{}}}\label{sec:FEM:ObjectFFRFreducedOrderInterface:LoadFromFile}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1156}{LoadFromFile}{}}}\label{sec:FEM:ObjectFFRFreducedOrderInterface:LoadFromFile}
 ({\it self}, {\it fileName})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1303,7 +1314,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1217}{AddObjectFFRFreducedOrderWithUserFunctions}{}}}\label{sec:FEM:ObjectFFRFreducedOrderInterface:AddObjectFFRFreducedOrderWithUserFunctions}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1226}{AddObjectFFRFreducedOrderWithUserFunctions}{}}}\label{sec:FEM:ObjectFFRFreducedOrderInterface:AddObjectFFRFreducedOrderWithUserFunctions}
 ({\it self}, {\it exu}, {\it mbs}, {\it positionRef}= [0,0,0], {\it initialVelocity}= [0,0,0], {\it rotationMatrixRef}= [], {\it initialAngularVelocity}= [0,0,0], {\it gravity}= [0,0,0], {\it UFforce}= 0, {\it UFmassMatrix}= 0, {\it massProportionalDamping}= 0, {\it stiffnessProportionalDamping}= 0, {\it color}= [0.1,0.9,0.1,1.], {\it eulerParametersRef}= [])
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1337,7 +1348,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1370}{UFmassFFRFreducedOrder}{}}}\label{sec:FEM:ObjectFFRFreducedOrderInterface:UFmassFFRFreducedOrder}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1379}{UFmassFFRFreducedOrder}{}}}\label{sec:FEM:ObjectFFRFreducedOrderInterface:UFmassFFRFreducedOrder}
 ({\it self}, {\it exu}, {\it mbs}, {\it t}, {\it qReduced}, {\it qReduced\_t})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1347,7 +1358,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1421}{UFforceFFRFreducedOrder}{}}}\label{sec:FEM:ObjectFFRFreducedOrderInterface:UFforceFFRFreducedOrder}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1430}{UFforceFFRFreducedOrder}{}}}\label{sec:FEM:ObjectFFRFreducedOrderInterface:UFforceFFRFreducedOrder}
 ({\it self}, {\it exu}, {\it mbs}, {\it t}, {\it qReduced}, {\it qReduced\_t})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1357,7 +1368,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1504}{AddObjectFFRFreducedOrder}{}}}\label{sec:FEM:ObjectFFRFreducedOrderInterface:AddObjectFFRFreducedOrder}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1513}{AddObjectFFRFreducedOrder}{}}}\label{sec:FEM:ObjectFFRFreducedOrderInterface:AddObjectFFRFreducedOrder}
 ({\it self}, {\it mbs}, {\it positionRef}= [0,0,0], {\it initialVelocity}= [0,0,0], {\it rotationMatrixRef}= [], {\it initialAngularVelocity}= [0,0,0], {\it massProportionalDamping}= 0, {\it stiffnessProportionalDamping}= 0, {\it gravity}= [0,0,0], {\it color}= [0.1,0.9,0.1,1.])
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1412,7 +1423,7 @@ this class holds all data for ObjectFFRF user functions
          export to EXUDYN objects
 \vspace{3pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1555}{\_\_init\_\_}{}}}\label{sec:FEM:FEMinterface:__init__}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1564}{\_\_init\_\_}{}}}\label{sec:FEM:FEMinterface:__init__}
 ({\it self})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1435,7 +1446,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1580}{SaveToFile}{}}}\label{sec:FEM:FEMinterface:SaveToFile}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1589}{SaveToFile}{}}}\label{sec:FEM:FEMinterface:SaveToFile}
 ({\it self}, {\it fileName}, {\it fileVersion}= 13)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1452,7 +1463,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1610}{LoadFromFile}{}}}\label{sec:FEM:FEMinterface:LoadFromFile}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1625}{LoadFromFile}{}}}\label{sec:FEM:FEMinterface:LoadFromFile}
 ({\it self}, {\it fileName}, {\it forceVersion}= None)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1474,7 +1485,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1662}{ImportFromAbaqusInputFile}{}}}\label{sec:FEM:FEMinterface:ImportFromAbaqusInputFile}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1677}{ImportFromAbaqusInputFile}{}}}\label{sec:FEM:FEMinterface:ImportFromAbaqusInputFile}
 ({\it self}, {\it fileName}, {\it typeName}= 'Part', {\it name}= 'Part-1', {\it verbose}= False, {\it createSurfaceTrigs}= True, {\it surfaceTrigsAll}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1503,7 +1514,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1831}{ReadMassMatrixFromAbaqus}{}}}\label{sec:FEM:FEMinterface:ReadMassMatrixFromAbaqus}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1846}{ReadMassMatrixFromAbaqus}{}}}\label{sec:FEM:FEMinterface:ReadMassMatrixFromAbaqus}
 ({\it self}, {\it fileName}, {\it type}= 'SparseRowColumnValue')
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1521,7 +1532,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1837}{ReadStiffnessMatrixFromAbaqus}{}}}\label{sec:FEM:FEMinterface:ReadStiffnessMatrixFromAbaqus}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1852}{ReadStiffnessMatrixFromAbaqus}{}}}\label{sec:FEM:FEMinterface:ReadStiffnessMatrixFromAbaqus}
 ({\it self}, {\it fileName}, {\it type}= 'SparseRowColumnValue')
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1531,7 +1542,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1862}{ImportMeshFromNGsolve}{}}}\label{sec:FEM:FEMinterface:ImportMeshFromNGsolve}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1877}{ImportMeshFromNGsolve}{}}}\label{sec:FEM:FEMinterface:ImportMeshFromNGsolve}
 ({\it self}, {\it mesh}, {\it density}, {\it youngsModulus}, {\it poissonsRatio}, {\it verbose}= False, {\it computeEigenmodes}= False, {\it meshOrder}= 1, {\it **kwargs})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1554,7 +1565,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2047}{ComputeEigenmodesNGsolve}{}}}\label{sec:FEM:FEMinterface:ComputeEigenmodesNGsolve}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2062}{ComputeEigenmodesNGsolve}{}}}\label{sec:FEM:FEMinterface:ComputeEigenmodesNGsolve}
 ({\it self}, {\it bfM}, {\it bfK}, {\it nModes}, {\it maxEigensolveIterations}= 40, {\it excludeRigidBodyModes}= 0, {\it verbose}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1574,7 +1585,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2089}{ComputeHurtyCraigBamptonModesNGsolve}{}}}\label{sec:FEM:FEMinterface:ComputeHurtyCraigBamptonModesNGsolve}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2104}{ComputeHurtyCraigBamptonModesNGsolve}{}}}\label{sec:FEM:FEMinterface:ComputeHurtyCraigBamptonModesNGsolve}
 ({\it self}, {\it bfM}, {\it bfK}, {\it boundaryNodesList}, {\it nEigenModes}, {\it maxEigensolveIterations}= 40, {\it verbose}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1596,7 +1607,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2230}{ComputePostProcessingModesNGsolve}{}}}\label{sec:FEM:FEMinterface:ComputePostProcessingModesNGsolve}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2245}{ComputePostProcessingModesNGsolve}{}}}\label{sec:FEM:FEMinterface:ComputePostProcessingModesNGsolve}
 ({\it self}, {\it fes}, {\it material}= 0, {\it outputVariableType}= 'OutputVariableType.StressLocal', {\it verbose}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1616,7 +1627,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2305}{GetMassMatrix}{}}}\label{sec:FEM:FEMinterface:GetMassMatrix}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2320}{GetMassMatrix}{}}}\label{sec:FEM:FEMinterface:GetMassMatrix}
 ({\it self}, {\it sparse}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1626,7 +1637,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2312}{GetStiffnessMatrix}{}}}\label{sec:FEM:FEMinterface:GetStiffnessMatrix}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2327}{GetStiffnessMatrix}{}}}\label{sec:FEM:FEMinterface:GetStiffnessMatrix}
 ({\it self}, {\it sparse}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1636,7 +1647,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2319}{NumberOfNodes}{}}}\label{sec:FEM:FEMinterface:NumberOfNodes}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2334}{NumberOfNodes}{}}}\label{sec:FEM:FEMinterface:NumberOfNodes}
 ({\it self})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1646,7 +1657,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2331}{GetNodePositionsAsArray}{}}}\label{sec:FEM:FEMinterface:GetNodePositionsAsArray}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2346}{GetNodePositionsAsArray}{}}}\label{sec:FEM:FEMinterface:GetNodePositionsAsArray}
 ({\it self})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1661,7 +1672,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2339}{GetNodePositionsMean}{}}}\label{sec:FEM:FEMinterface:GetNodePositionsMean}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2354}{GetNodePositionsMean}{}}}\label{sec:FEM:FEMinterface:GetNodePositionsMean}
 ({\it self}, {\it nodeNumberList})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1671,7 +1682,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2346}{NumberOfCoordinates}{}}}\label{sec:FEM:FEMinterface:NumberOfCoordinates}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2361}{NumberOfCoordinates}{}}}\label{sec:FEM:FEMinterface:NumberOfCoordinates}
 ({\it self})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1681,7 +1692,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2354}{GetNodeAtPoint}{}}}\label{sec:FEM:FEMinterface:GetNodeAtPoint}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2369}{GetNodeAtPoint}{}}}\label{sec:FEM:FEMinterface:GetNodeAtPoint}
 ({\it self}, {\it point}, {\it tolerance}= 1e-5, {\it raiseException}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1696,7 +1707,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2370}{GetNodesInPlane}{}}}\label{sec:FEM:FEMinterface:GetNodesInPlane}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2385}{GetNodesInPlane}{}}}\label{sec:FEM:FEMinterface:GetNodesInPlane}
 ({\it self}, {\it point}, {\it normal}, {\it tolerance}= 1e-5)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1711,7 +1722,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2386}{GetNodesInCube}{}}}\label{sec:FEM:FEMinterface:GetNodesInCube}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2401}{GetNodesInCube}{}}}\label{sec:FEM:FEMinterface:GetNodesInCube}
 ({\it self}, {\it pMin}, {\it pMax})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1724,7 +1735,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2401}{GetNodesOnLine}{}}}\label{sec:FEM:FEMinterface:GetNodesOnLine}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2416}{GetNodesOnLine}{}}}\label{sec:FEM:FEMinterface:GetNodesOnLine}
 ({\it self}, {\it p1}, {\it p2}, {\it tolerance}= 1e-5)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1734,7 +1745,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2407}{GetNodesOnCylinder}{}}}\label{sec:FEM:FEMinterface:GetNodesOnCylinder}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2422}{GetNodesOnCylinder}{}}}\label{sec:FEM:FEMinterface:GetNodesOnCylinder}
 ({\it self}, {\it p1}, {\it p2}, {\it radius}, {\it tolerance}= 1e-5)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1750,7 +1761,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2435}{GetNodesOnCircle}{}}}\label{sec:FEM:FEMinterface:GetNodesOnCircle}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2450}{GetNodesOnCircle}{}}}\label{sec:FEM:FEMinterface:GetNodesOnCircle}
 ({\it self}, {\it point}, {\it normal}, {\it r}, {\it tolerance}= 1e-5)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1766,7 +1777,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2455}{GetNodeWeightsFromSurfaceAreas}{}}}\label{sec:FEM:FEMinterface:GetNodeWeightsFromSurfaceAreas}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2470}{GetNodeWeightsFromSurfaceAreas}{}}}\label{sec:FEM:FEMinterface:GetNodeWeightsFromSurfaceAreas}
 ({\it self}, {\it nodeList}, {\it normalizeWeights}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1788,7 +1799,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2507}{GetSurfaceTriangles}{}}}\label{sec:FEM:FEMinterface:GetSurfaceTriangles}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2522}{GetSurfaceTriangles}{}}}\label{sec:FEM:FEMinterface:GetSurfaceTriangles}
 ({\it self})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1798,7 +1809,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2517}{VolumeToSurfaceElements}{}}}\label{sec:FEM:FEMinterface:VolumeToSurfaceElements}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2532}{VolumeToSurfaceElements}{}}}\label{sec:FEM:FEMinterface:VolumeToSurfaceElements}
 ({\it self}, {\it verbose}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1814,7 +1825,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2646}{GetGyroscopicMatrix}{}}}\label{sec:FEM:FEMinterface:GetGyroscopicMatrix}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2661}{GetGyroscopicMatrix}{}}}\label{sec:FEM:FEMinterface:GetGyroscopicMatrix}
 ({\it self}, {\it rotationAxis}= 2, {\it sparse}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1824,7 +1835,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2675}{ScaleMassMatrix}{}}}\label{sec:FEM:FEMinterface:ScaleMassMatrix}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2690}{ScaleMassMatrix}{}}}\label{sec:FEM:FEMinterface:ScaleMassMatrix}
 ({\it self}, {\it factor})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1834,7 +1845,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2679}{ScaleStiffnessMatrix}{}}}\label{sec:FEM:FEMinterface:ScaleStiffnessMatrix}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2694}{ScaleStiffnessMatrix}{}}}\label{sec:FEM:FEMinterface:ScaleStiffnessMatrix}
 ({\it self}, {\it factor})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1844,7 +1855,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2685}{AddElasticSupportAtNode}{}}}\label{sec:FEM:FEMinterface:AddElasticSupportAtNode}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2700}{AddElasticSupportAtNode}{}}}\label{sec:FEM:FEMinterface:AddElasticSupportAtNode}
 ({\it self}, {\it nodeNumber}, {\it springStiffness}= [1e8,1e8,1e8])
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1859,7 +1870,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2701}{AddNodeMass}{}}}\label{sec:FEM:FEMinterface:AddNodeMass}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2716}{AddNodeMass}{}}}\label{sec:FEM:FEMinterface:AddNodeMass}
 ({\it self}, {\it nodeNumber}, {\it addedMass})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1869,7 +1880,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2721}{CreateLinearFEMObjectGenericODE2}{}}}\label{sec:FEM:FEMinterface:CreateLinearFEMObjectGenericODE2}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2736}{CreateLinearFEMObjectGenericODE2}{}}}\label{sec:FEM:FEMinterface:CreateLinearFEMObjectGenericODE2}
 ({\it self}, {\it mbs}, {\it color}= [0.9,0.4,0.4,1.])
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1881,7 +1892,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2764}{CreateNonlinearFEMObjectGenericODE2NGsolve}{}}}\label{sec:FEM:FEMinterface:CreateNonlinearFEMObjectGenericODE2NGsolve}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2779}{CreateNonlinearFEMObjectGenericODE2NGsolve}{}}}\label{sec:FEM:FEMinterface:CreateNonlinearFEMObjectGenericODE2NGsolve}
 ({\it self}, {\it mbs}, {\it mesh}, {\it density}, {\it youngsModulus}, {\it poissonsRatio}, {\it meshOrder}= 1, {\it color}= [0.9,0.4,0.4,1.])
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1912,7 +1923,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2870}{ComputeEigenmodes}{}}}\label{sec:FEM:FEMinterface:ComputeEigenmodes}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2885}{ComputeEigenmodes}{}}}\label{sec:FEM:FEMinterface:ComputeEigenmodes}
 ({\it self}, {\it nModes}, {\it excludeRigidBodyModes}= 0, {\it useSparseSolver}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1931,7 +1942,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2914}{ComputeEigenModesWithBoundaryNodes}{}}}\label{sec:FEM:FEMinterface:ComputeEigenModesWithBoundaryNodes}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2929}{ComputeEigenModesWithBoundaryNodes}{}}}\label{sec:FEM:FEMinterface:ComputeEigenModesWithBoundaryNodes}
 ({\it self}, {\it boundaryNodes}, {\it nEigenModes}, {\it useSparseSolver}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1949,7 +1960,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2999}{ComputeHurtyCraigBamptonModes}{}}}\label{sec:FEM:FEMinterface:ComputeHurtyCraigBamptonModes}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3014}{ComputeHurtyCraigBamptonModes}{}}}\label{sec:FEM:FEMinterface:ComputeHurtyCraigBamptonModes}
 ({\it self}, {\it boundaryNodesList}, {\it nEigenModes}, {\it useSparseSolver}= True, {\it computationMode}= HCBstaticModeSelection.RBE2, {\it boundaryNodesWeights}= [], {\it excludeRigidBodyMotion}= True, {\it RBE3secondMomentOfAreaWeighting}= True, {\it verboseMode}= False, {\it timerTreshold}= 20000)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1974,7 +1985,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3407}{GetEigenFrequenciesHz}{}}}\label{sec:FEM:FEMinterface:GetEigenFrequenciesHz}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3422}{GetEigenFrequenciesHz}{}}}\label{sec:FEM:FEMinterface:GetEigenFrequenciesHz}
 ({\it self})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1984,7 +1995,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3467}{ComputePostProcessingModes}{}}}\label{sec:FEM:FEMinterface:ComputePostProcessingModes}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3482}{ComputePostProcessingModes}{}}}\label{sec:FEM:FEMinterface:ComputePostProcessingModes}
 ({\it self}, {\it material}= 0, {\it outputVariableType}= 'OutputVariableType.StressLocal', {\it numberOfThreads}= 1)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2003,7 +2014,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3585}{ComputeCampbellDiagram}{}}}\label{sec:FEM:FEMinterface:ComputeCampbellDiagram}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3600}{ComputeCampbellDiagram}{}}}\label{sec:FEM:FEMinterface:ComputeCampbellDiagram}
 ({\it self}, {\it terminalFrequency}, {\it nEigenfrequencies}= 10, {\it frequencySteps}= 25, {\it rotationAxis}= 2, {\it plotDiagram}= False, {\it verbose}= False, {\it useCorotationalFrame}= False, {\it useSparseSolver}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2039,7 +2050,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3770}{CheckConsistency}{}}}\label{sec:FEM:FEMinterface:CheckConsistency}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3785}{CheckConsistency}{}}}\label{sec:FEM:FEMinterface:CheckConsistency}
 ({\it self})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2049,7 +2060,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3794}{ReadMassMatrixFromAnsys}{}}}\label{sec:FEM:FEMinterface:ReadMassMatrixFromAnsys}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3809}{ReadMassMatrixFromAnsys}{}}}\label{sec:FEM:FEMinterface:ReadMassMatrixFromAnsys}
 ({\it self}, {\it fileName}, {\it dofMappingVectorFile}, {\it sparse}= True, {\it verbose}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2059,7 +2070,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3808}{ReadStiffnessMatrixFromAnsys}{}}}\label{sec:FEM:FEMinterface:ReadStiffnessMatrixFromAnsys}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3823}{ReadStiffnessMatrixFromAnsys}{}}}\label{sec:FEM:FEMinterface:ReadStiffnessMatrixFromAnsys}
 ({\it self}, {\it fileName}, {\it dofMappingVectorFile}, {\it sparse}= True, {\it verbose}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2069,7 +2080,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3822}{ReadNodalCoordinatesFromAnsys}{}}}\label{sec:FEM:FEMinterface:ReadNodalCoordinatesFromAnsys}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3837}{ReadNodalCoordinatesFromAnsys}{}}}\label{sec:FEM:FEMinterface:ReadNodalCoordinatesFromAnsys}
 ({\it self}, {\it fileName}, {\it verbose}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2079,7 +2090,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3827}{ReadElementsFromAnsys}{}}}\label{sec:FEM:FEMinterface:ReadElementsFromAnsys}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3842}{ReadElementsFromAnsys}{}}}\label{sec:FEM:FEMinterface:ReadElementsFromAnsys}
 ({\it self}, {\it fileName}, {\it verbose}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2495,8 +2506,9 @@ this class holds all data for ObjectFFRF user functions
 \bi
  \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCraigBampton.py}{\texttt{NGsolveCraigBampton.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigid3Dexample.py}{\texttt{rigid3Dexample.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/genericJointUserFunctionTest.py}{\texttt{genericJointUserFunctionTest.py}} (TM), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rigidBodyCOMtest.py}{\texttt{rigidBodyCOMtest.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rr.py}{\texttt{rr.py}} (Ex), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/genericJointUserFunctionTest.py}{\texttt{genericJointUserFunctionTest.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rigidBodyCOMtest.py}{\texttt{rigidBodyCOMtest.py}} (TM), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sphericalJointTest.py}{\texttt{sphericalJointTest.py}} (TM)
 \ei
 
@@ -2575,7 +2587,7 @@ this class holds all data for ObjectFFRF user functions
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py}{\texttt{addRevoluteJoint.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDrivesComparison.py}{\texttt{beltDrivesComparison.py}} (Ex), 
 \\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py}{\texttt{bicycleIftommBenchmark.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/craneReevingSystem.py}{\texttt{craneReevingSystem.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chatGPTupdate.py}{\texttt{chatGPTupdate.py}} (Ex), 
  ...
 , 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/bricardMechanism.py}{\texttt{bricardMechanism.py}} (TM), 
@@ -2640,10 +2652,10 @@ this class holds all data for ObjectFFRF user functions
 \noindent For examples on GraphicsDataSphere see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 \bi
  \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py}{\texttt{bicycleIftommBenchmark.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chatGPTupdate.py}{\texttt{chatGPTupdate.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/graphicsDataExample.py}{\texttt{graphicsDataExample.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py}{\texttt{humanRobotInteraction.py}} (Ex), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/lugreFrictionTest.py}{\texttt{lugreFrictionTest.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/nMassOscillatorEigenmodes.py}{\texttt{nMassOscillatorEigenmodes.py}} (Ex), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py}{\texttt{humanRobotInteraction.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/lugreFrictionTest.py}{\texttt{lugreFrictionTest.py}} (Ex), 
  ...
 , 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/connectorGravityTest.py}{\texttt{connectorGravityTest.py}} (TM), 
@@ -2808,6 +2820,7 @@ this class holds all data for ObjectFFRF user functions
 \noindent For examples on GraphicsDataFromSTLfile see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 \bi
  \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py}{\texttt{humanRobotInteraction.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ROSExampleTurtle.py}{\texttt{ROSExampleTurtle.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stlFileImport.py}{\texttt{stlFileImport.py}} (Ex)
 \ei
 
@@ -3137,10 +3150,10 @@ this class holds all data for ObjectFFRF user functions
 \noindent For examples on GraphicsDataCheckerBoard see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 \bi
  \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py}{\texttt{bicycleIftommBenchmark.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chatGPTupdate.py}{\texttt{chatGPTupdate.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/craneReevingSystem.py}{\texttt{craneReevingSystem.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/finiteSegmentMethod.py}{\texttt{finiteSegmentMethod.py}} (Ex), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/flexiblePendulumANCF.py}{\texttt{flexiblePendulumANCF.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/graphicsDataExample.py}{\texttt{graphicsDataExample.py}} (Ex), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/finiteSegmentMethod.py}{\texttt{finiteSegmentMethod.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/flexiblePendulumANCF.py}{\texttt{flexiblePendulumANCF.py}} (Ex), 
  ...
 , 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFoutputTest.py}{\texttt{ANCFoutputTest.py}} (TM), 
@@ -3311,7 +3324,7 @@ this class holds all data for ObjectFFRF user functions
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/GUI.py\#L640}{EditDictionaryWithTypeInfo}{}}}\label{sec:GUI:EditDictionaryWithTypeInfo}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/GUI.py\#L642}{EditDictionaryWithTypeInfo}{}}}\label{sec:GUI:EditDictionaryWithTypeInfo}
 ({\it settingsStructure}, {\it exu}= None, {\it dictionaryName}= 'edit')
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4637,7 +4650,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 \item[]Notes: 	For a list of plot colors useful for matplotlib, see also advancedUtilities.PlotLineCode(...)
 \ei
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L55}{ParseOutputFileHeader}{}}}\label{sec:plot:ParseOutputFileHeader}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L56}{ParseOutputFileHeader}{}}}\label{sec:plot:ParseOutputFileHeader}
 ({\it lines})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4650,7 +4663,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L153}{PlotSensorDefaults}{}}}\label{sec:plot:PlotSensorDefaults}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L154}{PlotSensorDefaults}{}}}\label{sec:plot:PlotSensorDefaults}
 ()
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4678,7 +4691,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L227}{PlotSensor}{}}}({\it mbs}, {\it sensorNumbers}= [], {\it components}= 0, {\it xLabel}= 'time (s)', {\it yLabel}= None, {\it labels}= [], {\it colorCodeOffset}= 0, {\it newFigure}= True, {\it closeAll}= False, {\it componentsX}= [], {\it title}= '', {\it figureName}= '', {\it fontSize}= 16, {\it colors}= [], {\it lineStyles}= [], {\it lineWidths}= [], {\it markerStyles}= [], {\it markerSizes}= [], {\it markerDensity}= 0.08, {\it rangeX}= [], {\it rangeY}= [], {\it majorTicksX}= 10, {\it majorTicksY}= 10, {\it offsets}= [], {\it factors}= [], {\it subPlot}= [], {\it sizeInches}= [6.4,4.8], {\it fileName}= '', {\it useXYZcomponents}= True, {\it **kwargs})
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L230}{PlotSensor}{}}}({\it mbs}, {\it sensorNumbers}= [], {\it components}= 0, {\it xLabel}= 'time (s)', {\it yLabel}= None, {\it labels}= [], {\it colorCodeOffset}= 0, {\it newFigure}= True, {\it closeAll}= False, {\it componentsX}= [], {\it title}= '', {\it figureName}= '', {\it fontSize}= 16, {\it colors}= [], {\it lineStyles}= [], {\it lineWidths}= [], {\it markerStyles}= [], {\it markerSizes}= [], {\it markerDensity}= 0.08, {\it rangeX}= [], {\it rangeY}= [], {\it majorTicksX}= 10, {\it majorTicksY}= 10, {\it offsets}= [], {\it factors}= [], {\it subPlot}= [], {\it sizeInches}= [6.4,4.8], {\it fileName}= '', {\it useXYZcomponents}= True, {\it **kwargs})
 \end{flushleft}
 \bi
   \item \mybold{NOTE}: this function is directly available in MainSystem (mbs); it should be directly called as mbs.PlotSensor(...). For description of the interface, see the MainSystem Python extensions, \refSection{sec:mainsystemextensions:PlotSensor}.
@@ -4686,7 +4699,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 \ei
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L677}{PlotFFT}{}}}\label{sec:plot:PlotFFT}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L685}{PlotFFT}{}}}\label{sec:plot:PlotFFT}
 ({\it frequency}, {\it data}, {\it xLabel}= 'frequency', {\it yLabel}= 'magnitude', {\it label}= '', {\it freqStart}= 0, {\it freqEnd}= -1, {\it logScaleX}= True, {\it logScaleY}= True, {\it majorGrid}= True, {\it minorGrid}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4713,9 +4726,16 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 {\bf output}: creates plot and returns plot (plt) handle
 \vspace{12pt}\end{itemize}
 %
+%
+\noindent For examples on PlotFFT see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
+\bi
+ \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/nMassOscillatorEigenmodes.py}{\texttt{nMassOscillatorEigenmodes.py}} (Ex)
+\ei
+
+%
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L727}{FileStripSpaces}{}}}\label{sec:plot:FileStripSpaces}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L735}{FileStripSpaces}{}}}\label{sec:plot:FileStripSpaces}
 ({\it filename}, {\it outputFilename}, {\it fileCommentChar}= '', {\it removeDoubleChars}= '')
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4737,7 +4757,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L754}{DataArrayFromSensorList}{}}}\label{sec:plot:DataArrayFromSensorList}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L762}{DataArrayFromSensorList}{}}}\label{sec:plot:DataArrayFromSensorList}
 ({\it mbs}, {\it sensorNumbers}, {\it positionList}= [], {\it time}= '')
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4767,7 +4787,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L781}{LoadImage}{}}}\label{sec:plot:LoadImage}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L789}{LoadImage}{}}}\label{sec:plot:LoadImage}
 ({\it fileName}, {\it trianglesAsLines}= True, {\it verbose}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4790,7 +4810,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L854}{PlotImage}{}}}\label{sec:plot:PlotImage}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L862}{PlotImage}{}}}\label{sec:plot:PlotImage}
 ({\it imageData}, {\it HT}= np.eye(4), {\it axesEqual}= True, {\it plot3D}= False, {\it lineWidths}= 1, {\it lineStyles}= '-', {\it triangleEdgeColors}= 'black', {\it triangleEdgeWidths}= 0.5, {\it removeAxes}= True, {\it orthogonalProjection}= True, {\it title}= '', {\it figureName}= '', {\it fileName}= '', {\it fontSize}= 16, {\it closeAll}= False, {\it azim}= 0., {\it elev}= 0.)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4839,7 +4859,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 \item[]Notes:     Parallel processing, which requires multiprocessing library, can lead to considerable speedup (measured speedup factor > 50 on 80 core machine). The progess bar during multiprocessing requires the library tqdm.
 \ei
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L26}{GetVersionPlatformString}{}}}\label{sec:processing:GetVersionPlatformString}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L27}{GetVersionPlatformString}{}}}\label{sec:processing:GetVersionPlatformString}
 ()
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4857,7 +4877,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L144}{ProcessParameterList}{}}}\label{sec:processing:ProcessParameterList}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L162}{ProcessParameterList}{}}}\label{sec:processing:ProcessParameterList}
 ({\it parameterFunction}, {\it parameterList}, {\it useMultiProcessing}, {\it clusterHostNames}= [], {\it **kwargs})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4899,7 +4919,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L374}{ParameterVariation}{}}}\label{sec:processing:ParameterVariation}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L392}{ParameterVariation}{}}}\label{sec:processing:ParameterVariation}
 ({\it parameterFunction}, {\it parameters}, {\it useLogSpace}= False, {\it debugMode}= False, {\it addComputationIndex}= False, {\it useMultiProcessing}= False, {\it showProgress}= True, {\it parameterFunctionData}= {}, {\it clusterHostNames}= [], {\it numberOfThreads}= None, {\it resultsFile}= '', {\it **kwargs})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4957,8 +4977,8 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L524}{GeneticOptimization}{}}}\label{sec:processing:GeneticOptimization}
-({\it objectiveFunction}, {\it parameters}, {\it populationSize}= 100, {\it numberOfGenerations}= 10, {\it elitistRatio}= 0.1, {\it crossoverProbability}= 0.25, {\it crossoverAmount}= 0.5, {\it rangeReductionFactor}= 0.7, {\it distanceFactor}= 0.1, {\it childDistribution}= "uniform", {\it distanceFactorGenerations}= -1, {\it debugMode}= False, {\it addComputationIndex}= False, {\it useMultiProcessing}= False, {\it showProgress}= True, {\it clusterHostNames}= [], {\it **kwargs})
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L543}{GeneticOptimization}{}}}\label{sec:processing:GeneticOptimization}
+({\it objectiveFunction}, {\it parameters}, {\it populationSize}= 100, {\it numberOfGenerations}= 10, {\it elitistRatio}= 0.1, {\it crossoverProbability}= 0.25, {\it crossoverAmount}= 0.5, {\it rangeReductionFactor}= 0.7, {\it distanceFactor}= 0.1, {\it childDistribution}= "uniform", {\it distanceFactorGenerations}= -1, {\it debugMode}= False, {\it addComputationIndex}= False, {\it useMultiProcessing}= False, {\it showProgress}= True, {\it clusterHostNames}= [], {\it parameterFunctionData}= {}, {\it **kwargs})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
@@ -4980,6 +5000,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 \item[]{\it distanceFactor}: children only survive at a certain relative distance of the current range; must be small enough (< 0.5) to allow individuals to survive; ignored if distanceFactor=0; as a rule of thumb, the distanceFactor should be zero in case that there is only one significant minimum, but if there are many local minima, the distanceFactor should be used to search at several different local minima
 \item[]{\it childDistribution}: string with name of distribution for producing childs: "normal" (Gaussian, with sigma defining range), "uniform" (exactly in range of childs)
 \item[]{\it distanceFactorGenerations}: number of generations (populations) at which the distance factor is active; the distance factor is used to find several local minima; finally, convergence is speed up without the distance factor
+\item[]{\it parameterFunctionData}: dictionary containing additional data passed to the objectiveFunction inside the parameters with dict key 'functionData'; use this e.g. for passing solver parameters or other settings
 \item[]{\it randomizerInitialization}: initialize randomizer at beginning of optimization in order to get reproducible results, provide any integer in the range between 0 and 2**32 - 1 (default: no initialization)
 \item[]{\it debugMode}: if True, additional print out is done
 \item[]{\it addComputationIndex}: if True, key 'computationIndex' is added to every parameterDict in the call to parameterFunction(), which allows to generate independent output files for every parameter, etc.
@@ -5015,13 +5036,13 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L888}{Minimize}{}}}\label{sec:processing:Minimize}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L904}{Minimize}{}}}\label{sec:processing:Minimize}
 ({\it objectiveFunction}, {\it parameters}, {\it initialGuess}= [], {\it method}= 'Nelder-Mead', {\it tol}= 1e-4, {\it options}= {}, {\it enforceBounds}= True, {\it debugMode}= False, {\it showProgress}= True, {\it addComputationIndex}= False, {\it storeFunctionValues}= True, {\it **kwargs})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
 \item[--]
-{\bf function description}: Compute minimum of given objectiveFunction. This function is based on scipy.optimize.minimize() and it provides the same interface as GeneticOptimization().
+{\bf function description}: Compute minimum of given objectiveFunction. This function is based on scipy.optimize.minimize() and it provides the same interface as GeneticOptimization(). Note that in special cases, you should copy this function and adapt to your needs.
 \item[--]
 {\bf input}: \vspace{-6pt}
 \begin{itemize}[leftmargin=1.2cm]
@@ -5031,19 +5052,15 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 \item[]{\it storeFunctionValues}: if True, objectiveFunction values are computed (additional costs!) and stored in every iteration into valueList
 \item[]{\it initialGuess}: initial guess. Array of real elements of size (n,), where 'n' is the number of independent variables. If not provided by the user, initialGuess is computed from bounds provided in parameterDict.
 \item[]{\it method}: solver that should be used, e.g. 'Nelder-Mead', 'Powell', 'CG' etc. A list of available solvers can be found in the documentation of scipy.optimize.minimize().
-\item[]{\it tol}: tolerance for termination. When tol is specified, the selected minimization algorithm sets some relevant solver-specific tolerance(s) equal to tol. For detailed control, use solver-specific options using the 'options' variable.
+\item[]{\it tol}: tolerance for termination. When tol is specified, the selected minimization algorithm sets some relevant solver-specific tolerance(s) equal to tol (but this is usually not the tolerance for loss or parameters1). For detailed control, use solver-specific options using the 'options' variable.
 \item[]{\it options}: dictionary of solver options. Can be used to set absolute and relative error tolerances. Detailed information can be found in the documentation of scipy.optimize.minimize().
 \item[]{\it enforceBounds}: if True, ensures that only parameters within the bounds specified in ParameterDict are used for minimization; this may help to avoid, e.g., negative values, but may lead to non-convergence
 \item[]{\it verbose}: prints solver information into console, e.g. number of iterations 'nit', number of funcion evaluations 'nfev', status etc.
-\item[]{\it showProgress}: if True, shows for every iteration objective function value, number of current iteration, time needed for current iteration, maximum number of iterations until solver option 'maxiter' is reached.
+\item[]{\it showProgress}: if True, shows for every iteration objective function value, current iteration number, time needed for current iteration, maximum number of iterations and loss (current value of objective function)
 \item[]{\it addComputationIndex}: if True, key 'computationIndex' is added for consistency reasons with GeneticOptimizaiton to every parameterDict in the call to parameterFunction(); however, the value is always 0, because no multi threading is used in Minimize(...)
 \item[]{\it resultsFile}: if provided, the results are stored columnwise into the given file and written after every generation; use resultsMonitor.py to track results in realtime
 \item[]{\it useScipyBounds}: if True, use scipy.optimize.minimize() option 'bounds' to apply bounds on variable specified in ParameterDict. Note, this option is only used by some specific methods of scipy.optimize.minimize()! method='Nelder-Mead' ignores this option for example! if False, option 'enforceBounds' will be set to False!
 \item[]{\it args}: extra arguments passed to the objective function and its derivatives (fun, jac and hess functions).
-\item[]{\it jac}: method for computing the gradient vector.
-\item[]{\it hess}: method for computing the Hessian matrix.
-\item[]{\it hessp}: hessian of objective function times an arbitrary vector p.
-\item[]{\it constraints}: constraints definition (only for COBYLA, SLSQP and trust-constr).
 \end{itemize}
 \item[--]
 {\bf output}: returns [optimumParameter, optimumValue, parameterList, valueList], containing the optimum parameter set 'optimumParameter', optimum value 'optimumValue', the whole list of parameters parameterList with according objective values 'valueList'
@@ -5063,7 +5080,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L1087}{ComputeSensitivities}{}}}\label{sec:processing:ComputeSensitivities}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L1106}{ComputeSensitivities}{}}}\label{sec:processing:ComputeSensitivities}
 ({\it parameterFunction}, {\it parameters}, {\it scaledByReference}= False, {\it debugMode}= False, {\it addComputationIndex}= False, {\it useMultiProcessing}= False, {\it showProgress}= True, {\it parameterFunctionData}= dict(), {\it **kwargs})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -5108,7 +5125,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L1197}{PlotOptimizationResults2D}{}}}\label{sec:processing:PlotOptimizationResults2D}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L1216}{PlotOptimizationResults2D}{}}}\label{sec:processing:PlotOptimizationResults2D}
 ({\it parameterList}, {\it valueList}, {\it xLogScale}= False, {\it yLogScale}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -5140,7 +5157,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L1253}{PlotSensitivityResults}{}}}\label{sec:processing:PlotSensitivityResults}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L1272}{PlotSensitivityResults}{}}}\label{sec:processing:PlotSensitivityResults}
 ({\it valRef}, {\it valuesSorted}, {\it sensitivity}, {\it fVar}= None, {\it strYAxis}= None)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -5425,9 +5442,10 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent For examples on RotationVector2RotationMatrix see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 \bi
- \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stiffFlyballGovernor2.py}{\texttt{stiffFlyballGovernor2.py}} (Ex), 
+ \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chatGPTupdate.py}{\texttt{chatGPTupdate.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stiffFlyballGovernor2.py}{\texttt{stiffFlyballGovernor2.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupMBSTest.py}{\texttt{explicitLieGroupMBSTest.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/stiffFlyballGovernor.py}{\texttt{stiffFlyballGovernor.py}} (TM)
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/stiffFlyballGovernor.py}{\texttt{stiffFlyballGovernor.py}} (TM)
 \ei
 
 %
@@ -6606,9 +6624,9 @@ The inertia tensor and center of mass must correspond when initializing the body
 \bi
  \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addPrismaticJoint.py}{\texttt{addPrismaticJoint.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py}{\texttt{addRevoluteJoint.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/craneReevingSystem.py}{\texttt{craneReevingSystem.py}} (Ex), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/fourBarMechanism3D.py}{\texttt{fourBarMechanism3D.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py}{\texttt{kinematicTreeAndMBS.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chatGPTupdate.py}{\texttt{chatGPTupdate.py}} (Ex), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/craneReevingSystem.py}{\texttt{craneReevingSystem.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/fourBarMechanism3D.py}{\texttt{fourBarMechanism3D.py}} (Ex), 
  ...
 , 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/bricardMechanism.py}{\texttt{bricardMechanism.py}} (TM), 
@@ -6677,9 +6695,12 @@ The inertia tensor and center of mass must correspond when initializing the body
  \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/graphicsDataExample.py}{\texttt{graphicsDataExample.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particleClusters.py}{\texttt{particleClusters.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particlesSilo.py}{\texttt{particlesSilo.py}} (Ex), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/tippeTop.py}{\texttt{tippeTop.py}} (Ex), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ROSExampleMassPoint.py}{\texttt{ROSExampleMassPoint.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/tippeTop.py}{\texttt{tippeTop.py}} (Ex), 
+ ...
+, 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/distanceSensor.py}{\texttt{distanceSensor.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/generalContactFrictionTests.py}{\texttt{generalContactFrictionTests.py}} (TM)
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/generalContactFrictionTests.py}{\texttt{generalContactFrictionTests.py}} (TM)
 \ei
 
 %
@@ -8229,14 +8250,14 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent For examples on MassMatrix see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 \bi
- \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/nMassOscillatorEigenmodes.py}{\texttt{nMassOscillatorEigenmodes.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/shapeOptimization.py}{\texttt{shapeOptimization.py}} (Ex), 
+ \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/shapeOptimization.py}{\texttt{shapeOptimization.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/solverFunctionsTestEigenvalues.py}{\texttt{solverFunctionsTestEigenvalues.py}} (Ex), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py}{\texttt{ACFtest.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/manualExplicitIntegrator.py}{\texttt{manualExplicitIntegrator.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py}{\texttt{ACFtest.py}} (TM), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/manualExplicitIntegrator.py}{\texttt{manualExplicitIntegrator.py}} (TM), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderAccelerations.py}{\texttt{objectFFRFreducedOrderAccelerations.py}} (TM), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderShowModes.py}{\texttt{objectFFRFreducedOrderShowModes.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderStressModesTest.py}{\texttt{objectFFRFreducedOrderStressModesTest.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderShowModes.py}{\texttt{objectFFRFreducedOrderShowModes.py}} (TM), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderStressModesTest.py}{\texttt{objectFFRFreducedOrderStressModesTest.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderTest.py}{\texttt{objectFFRFreducedOrderTest.py}} (TM), 
  ...
 
 \ei
@@ -8458,6 +8479,13 @@ The inertia tensor and center of mass must correspond when initializing the body
 \item[--]
 {\bf date}: 02.04.2020
 \vspace{12pt}\end{itemize}
+%
+%
+\noindent For examples on ComputeFFT see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
+\bi
+ \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/nMassOscillatorEigenmodes.py}{\texttt{nMassOscillatorEigenmodes.py}} (Ex)
+\ei
+
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}

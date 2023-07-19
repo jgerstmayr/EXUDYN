@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-06-12 (last modfied)
+* @date         AUTO: 2023-07-17 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -207,7 +207,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-06-12 (last modfied)
+* @date         AUTO: 2023-07-17 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -299,7 +299,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-06-12 (last modfied)
+* @date         AUTO: 2023-07-17 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -390,7 +390,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-06-12 (last modfied)
+* @date         AUTO: 2023-07-17 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -484,7 +484,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-06-12 (last modfied)
+* @date         AUTO: 2023-07-17 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -545,7 +545,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-06-12 (last modfied)
+* @date         AUTO: 2023-07-17 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -623,7 +623,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-06-12 (last modfied)
+* @date         AUTO: 2023-07-17 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -712,7 +712,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-06-12 (last modfied)
+* @date         AUTO: 2023-07-17 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -781,7 +781,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-06-12 (last modfied)
+* @date         AUTO: 2023-07-17 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -854,12 +854,152 @@ public: // AUTO:
 
 
 /** ***********************************************************************************************
+* @class        VSettingsSensorTraces
+* @brief        Visualization settings for traces of sensors. Note that a large number of time points (influenced by simulationSettings.solutionSettings.sensorsWritePeriod) may lead to slow graphics.
+*
+* @author       AUTO: Gerstmayr Johannes
+* @date         AUTO: 2019-07-01 (generated)
+* @date         AUTO: 2023-07-17 (last modfied)
+*
+* @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
+* @note         Bug reports, support and further information:
+                - email: johannes.gerstmayr@uibk.ac.at
+                - weblink: missing
+                
+************************************************************************************************ **/
+#include <ostream>
+
+#include "Utilities/ReleaseAssert.h"
+#include "Utilities/BasicDefinitions.h"
+#include "Main/OutputVariable.h"
+#include "Linalg/BasicLinalg.h"
+
+class VSettingsSensorTraces // AUTO: 
+{
+public: // AUTO: 
+  float lineWidth;                                //!< AUTO: line width for traces
+  ArrayIndex listOfPositionSensors;               //!< AUTO: list of position sensors which can be shown as trace inside render window if sensors have storeInternal=True; if this list is empty and showPositionTrace=True, then all available sensors are shown
+  ArrayIndex listOfTriadSensors;                  //!< AUTO: list of sensors of with OutputVariableType RotationMatrix; this non-empty list needs to coincide in length with the listOfPositionSensors to be shown if showTriads=True; the triad is drawn at the related position
+  ArrayIndex listOfVectorSensors;                 //!< AUTO: list of sensors with 3D vector quantities; this non-empty list needs to coincide in length with the listOfPositionSensors to be shown if showVectors=True; the vector quantity is drawn relative to the related position
+  Index positionsShowEvery;                       //!< AUTO: integer value i; out of available sensor data, show every i-th position
+  Index sensorsMbsNumber;                         //!< AUTO: number of main system which is used to for sensor lists; if only 1 mbs is in the SystemContainer, use 0; if there are several mbs, it needs to specify the number
+  bool showCurrent;                               //!< AUTO: show current trace position (and especially vector quantity) related to current visualization state; this only works in solution viewer if sensor values are stored at time grid points of the solution file (up to a precision of 1e-10) and may therefore be temporarily unavailable
+  bool showFuture;                                //!< AUTO: show trace future to current visualization state if already computed (e.g. in SolutionViewer)
+  bool showPast;                                  //!< AUTO: show trace previous to current visualization state
+  bool showPositionTrace;                         //!< AUTO: show position trace of all position sensors if listOfPositionSensors=[] or of specified sensors; sensors need to activate storeInternal=True
+  bool showTriads;                                //!< AUTO: if True, show basis vectors from rotation matrices provided by sensors
+  bool showVectors;                               //!< AUTO: if True, show vector quantities according to description in showPositionTrace
+  ArrayFloat traceColors;                         //!< AUTO: RGBA float values for traces in one array; using 6x4 values gives different colors for 6 traces; in case of triads, the 0/1/2-axes are drawn in red, green, and blue
+  float triadSize;                                //!< AUTO: length of triad axes if shown
+  Index triadsShowEvery;                          //!< AUTO: integer value i; out of available sensor data, show every i-th triad
+  float vectorScaling;                            //!< AUTO: scaling of vector quantities; if, e.g., loads, this factor has to be adjusted significantly
+  Index vectorsShowEvery;                         //!< AUTO: integer value i; out of available sensor data, show every i-th vector
+
+
+public: // AUTO: 
+  //! AUTO: default constructor with parameter initialization
+  VSettingsSensorTraces()
+  {
+    lineWidth = 2.f;
+    listOfPositionSensors = ArrayIndex();
+    listOfTriadSensors = ArrayIndex();
+    listOfVectorSensors = ArrayIndex();
+    positionsShowEvery = 1;
+    sensorsMbsNumber = 0;
+    showCurrent = true;
+    showFuture = false;
+    showPast = true;
+    showPositionTrace = false;
+    showTriads = false;
+    showVectors = false;
+    traceColors = ArrayFloat({0.2f,0.2f,0.2f,1.f, 0.8f,0.2f,0.2f,1.f, 0.2f,0.8f,0.2f,1.f, 0.2f,0.2f,0.8f,1.f, 0.2f,0.8f,0.8f,1.f, 0.8f,0.2f,0.8f,1.f, 0.8f,0.4f,0.1f,1.f});
+    triadSize = 0.1f ;
+    triadsShowEvery = 1;
+    vectorScaling = 0.01f;
+    vectorsShowEvery = 1;
+  };
+
+  // AUTO: access functions
+  //! AUTO: Set function (needed in pybind) for: line width for traces
+  void PySetLineWidth(const float& lineWidthInit) { lineWidth = EXUstd::GetSafelyUFloat(lineWidthInit,"lineWidth"); }
+  //! AUTO: Read (Copy) access to: line width for traces
+  float PyGetLineWidth() const { return float(lineWidth); }
+
+  //! AUTO: Set function (needed in pybind) for: list of position sensors which can be shown as trace inside render window if sensors have storeInternal=True; if this list is empty and showPositionTrace=True, then all available sensors are shown
+  void PySetListOfPositionSensors(const std::vector<Index>& listOfPositionSensorsInit) { listOfPositionSensors = listOfPositionSensorsInit; }
+  //! AUTO: Read (Copy) access to: list of position sensors which can be shown as trace inside render window if sensors have storeInternal=True; if this list is empty and showPositionTrace=True, then all available sensors are shown
+  std::vector<Index> PyGetListOfPositionSensors() const { return std::vector<Index>(listOfPositionSensors); }
+
+  //! AUTO: Set function (needed in pybind) for: list of sensors of with OutputVariableType RotationMatrix; this non-empty list needs to coincide in length with the listOfPositionSensors to be shown if showTriads=True; the triad is drawn at the related position
+  void PySetListOfTriadSensors(const std::vector<Index>& listOfTriadSensorsInit) { listOfTriadSensors = listOfTriadSensorsInit; }
+  //! AUTO: Read (Copy) access to: list of sensors of with OutputVariableType RotationMatrix; this non-empty list needs to coincide in length with the listOfPositionSensors to be shown if showTriads=True; the triad is drawn at the related position
+  std::vector<Index> PyGetListOfTriadSensors() const { return std::vector<Index>(listOfTriadSensors); }
+
+  //! AUTO: Set function (needed in pybind) for: list of sensors with 3D vector quantities; this non-empty list needs to coincide in length with the listOfPositionSensors to be shown if showVectors=True; the vector quantity is drawn relative to the related position
+  void PySetListOfVectorSensors(const std::vector<Index>& listOfVectorSensorsInit) { listOfVectorSensors = listOfVectorSensorsInit; }
+  //! AUTO: Read (Copy) access to: list of sensors with 3D vector quantities; this non-empty list needs to coincide in length with the listOfPositionSensors to be shown if showVectors=True; the vector quantity is drawn relative to the related position
+  std::vector<Index> PyGetListOfVectorSensors() const { return std::vector<Index>(listOfVectorSensors); }
+
+  //! AUTO: Set function (needed in pybind) for: integer value i; out of available sensor data, show every i-th position
+  void PySetPositionsShowEvery(const Index& positionsShowEveryInit) { positionsShowEvery = EXUstd::GetSafelyPInt(positionsShowEveryInit,"positionsShowEvery"); }
+  //! AUTO: Read (Copy) access to: integer value i; out of available sensor data, show every i-th position
+  Index PyGetPositionsShowEvery() const { return Index(positionsShowEvery); }
+
+  //! AUTO: Set function (needed in pybind) for: RGBA float values for traces in one array; using 6x4 values gives different colors for 6 traces; in case of triads, the 0/1/2-axes are drawn in red, green, and blue
+  void PySetTraceColors(const std::vector<float>& traceColorsInit) { traceColors = traceColorsInit; }
+  //! AUTO: Read (Copy) access to: RGBA float values for traces in one array; using 6x4 values gives different colors for 6 traces; in case of triads, the 0/1/2-axes are drawn in red, green, and blue
+  std::vector<float> PyGetTraceColors() const { return std::vector<float>(traceColors); }
+
+  //! AUTO: Set function (needed in pybind) for: integer value i; out of available sensor data, show every i-th triad
+  void PySetTriadsShowEvery(const Index& triadsShowEveryInit) { triadsShowEvery = EXUstd::GetSafelyPInt(triadsShowEveryInit,"triadsShowEvery"); }
+  //! AUTO: Read (Copy) access to: integer value i; out of available sensor data, show every i-th triad
+  Index PyGetTriadsShowEvery() const { return Index(triadsShowEvery); }
+
+  //! AUTO: Set function (needed in pybind) for: integer value i; out of available sensor data, show every i-th vector
+  void PySetVectorsShowEvery(const Index& vectorsShowEveryInit) { vectorsShowEvery = EXUstd::GetSafelyPInt(vectorsShowEveryInit,"vectorsShowEvery"); }
+  //! AUTO: Read (Copy) access to: integer value i; out of available sensor data, show every i-th vector
+  Index PyGetVectorsShowEvery() const { return Index(vectorsShowEvery); }
+
+  //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
+  virtual void Print(std::ostream& os) const
+  {
+    os << "VSettingsSensorTraces" << ":\n";
+    os << "  lineWidth = " << lineWidth << "\n";
+    os << "  listOfPositionSensors = " << listOfPositionSensors << "\n";
+    os << "  listOfTriadSensors = " << listOfTriadSensors << "\n";
+    os << "  listOfVectorSensors = " << listOfVectorSensors << "\n";
+    os << "  positionsShowEvery = " << positionsShowEvery << "\n";
+    os << "  sensorsMbsNumber = " << sensorsMbsNumber << "\n";
+    os << "  showCurrent = " << showCurrent << "\n";
+    os << "  showFuture = " << showFuture << "\n";
+    os << "  showPast = " << showPast << "\n";
+    os << "  showPositionTrace = " << showPositionTrace << "\n";
+    os << "  showTriads = " << showTriads << "\n";
+    os << "  showVectors = " << showVectors << "\n";
+    os << "  traceColors = " << traceColors << "\n";
+    os << "  triadSize = " << triadSize << "\n";
+    os << "  triadsShowEvery = " << triadsShowEvery << "\n";
+    os << "  vectorScaling = " << vectorScaling << "\n";
+    os << "  vectorsShowEvery = " << vectorsShowEvery << "\n";
+    os << "\n";
+  }
+
+  friend std::ostream& operator<<(std::ostream& os, const VSettingsSensorTraces& object)
+  {
+    object.Print(os);
+    return os;
+  }
+
+};
+
+
+/** ***********************************************************************************************
 * @class        VSettingsSensors
 * @brief        Visualization settings for sensors.
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-06-12 (last modfied)
+* @date         AUTO: 2023-07-17 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -877,6 +1017,7 @@ public: // AUTO:
 class VSettingsSensors // AUTO: 
 {
 public: // AUTO: 
+  VSettingsSensorTraces traces;                   //!< AUTO: settings for showing (position) sensor traces and vector plots in the render window
   Float4 defaultColor;                            //!< AUTO: default cRGB color for sensors; 4th value is alpha-transparency
   float defaultSize;                              //!< AUTO: global sensor size; if -1.f, sensor size is relative to maxSceneSize
   bool drawSimplified;                            //!< AUTO: draw sensors with simplified symbols
@@ -905,6 +1046,7 @@ public: // AUTO:
   virtual void Print(std::ostream& os) const
   {
     os << "VSettingsSensors" << ":\n";
+    os << "  traces = " << traces << "\n";
     os << "  defaultColor = " << defaultColor << "\n";
     os << "  defaultSize = " << defaultSize << "\n";
     os << "  drawSimplified = " << drawSimplified << "\n";
@@ -928,7 +1070,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-06-12 (last modfied)
+* @date         AUTO: 2023-07-17 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1014,7 +1156,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-06-12 (last modfied)
+* @date         AUTO: 2023-07-17 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1112,7 +1254,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-06-12 (last modfied)
+* @date         AUTO: 2023-07-17 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1186,7 +1328,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-06-12 (last modfied)
+* @date         AUTO: 2023-07-17 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1458,7 +1600,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-06-12 (last modfied)
+* @date         AUTO: 2023-07-17 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1560,7 +1702,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-06-12 (last modfied)
+* @date         AUTO: 2023-07-17 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1621,7 +1763,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-06-12 (last modfied)
+* @date         AUTO: 2023-07-17 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1763,7 +1905,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-06-12 (last modfied)
+* @date         AUTO: 2023-07-17 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

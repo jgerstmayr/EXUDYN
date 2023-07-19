@@ -107,11 +107,32 @@ void VisualizationSystemContainer::RedrawAndSaveImage()
 	Index timerMilliseconds = settings.exportImages.saveImageTimeOut / timeOut;
 	if (timerMilliseconds == 0) { timerMilliseconds = 1; } //min wait time per iteration
 
+#ifdef USE_GLFW_GRAPHICS
+	if (!glfwRenderer.UseMultiThreadedRendering()) //otherwise, user functions are anyway processed
+	{
+		//in this case, we need to update graphics, otherwise it is not saved
+
+		glfwRenderer.DoRendererIdleTasks(0., true); //request immediate redraw
+		//now image should be saved ...
+	}
+#endif
+
 	//now wait until the saveImage flag has been deleted by the current redraw operation
 	Index i = 0;
 	while (i++ < timeOut && (saveImageOpenGL || saveImage)) //wait timeOut*timerMilliseconds seconds for last operation to finish
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(timerMilliseconds));
+#ifdef USE_GLFW_GRAPHICS
+		if (glfwRenderer.UseMultiThreadedRendering()) //otherwise, user functions are anyway processed
+		{
+			//Needed ?: PyProcessExecuteQueue(); //use time to execute incoming python tasks
+			//process user functions
+			for (auto item : visualizationSystems)
+			{
+				item->postProcessData->ProcessUserFunctionDrawing(); //check if user functions to be drawn and do user function evaluations
+			}
+		}
+#endif
 	}
 	if (saveImageOpenGL || saveImage)
 	{
@@ -285,6 +306,7 @@ std::string VisualizationSystemContainer::GetComputationMessage(bool solverInfor
 	return std::string();
 }
 
+//get marker position and orientation
 void VisualizationSystemContainer::GetMarkerPositionOrientation(Index markerNumber, Index mbsNumber, Vector3D& position, Matrix3D& orientation, bool& hasPosition, bool& hasOrientation)
 {
 	position = Vector3D(0);
@@ -312,6 +334,115 @@ void VisualizationSystemContainer::GetMarkerPositionOrientation(Index markerNumb
 	//no error, as this is inside graphics ...
 }
 
+
+//get sensor data list (if available)
+bool VisualizationSystemContainer::GetSensorsPositionsVectorsLists(Index mbsNumber, Index positionSensorIndex, Index vectorSensorIndex, Index triadSensorIndex,
+    Vector3DList& sensorTracePositions, Vector3DList& sensorTraceVectors, Matrix3DList& sensorTraceTriads, Vector sensorTraceValues, 
+    const VSettingsSensorTraces& traces)
+{
+    sensorTracePositions.SetNumberOfItems(0);
+    sensorTraceVectors.SetNumberOfItems(0);
+    sensorTraceTriads.SetNumberOfItems(0);
+
+    //bool showVectors, bool showTriads, bool showPast, bool showFuture, bool showCurrent
+
+    if (mbsNumber >= 0 && mbsNumber < NumberOFMainSystemsBacklink())
+    {
+        CSystem* cSystem = GetMainSystemBacklink(mbsNumber)->GetCSystem();
+        Real time = cSystem->GetSystemData().GetCData().GetVisualization().GetTime();
+        if (positionSensorIndex >= 0 && positionSensorIndex < cSystem->GetSystemData().GetCSensors().NumberOfItems())
+        {
+            const CSensor& sensor = *cSystem->GetSystemData().GetCSensors()[positionSensorIndex];
+            if (EXUstd::IsOfType(sensor.GetOutputVariableType(), OutputVariableType::Position))
+            {
+                const ResizableMatrix& data = sensor.GetInternalStorage();
+                if (data.NumberOfRows() > 0 and data.NumberOfColumns() == 4) //must be position compatible data
+                {
+                    for (Index i = 0; i < data.NumberOfRows(); i++)
+                    {
+                        if ((traces.showPast && data(i, 0) <= time) ||
+                            (traces.showFuture && data(i, 0) > time) ||
+                            (traces.showCurrent && fabs(data(i, 0) - time) < 1e-10)) //needed for current vectors
+                        {
+                            Vector3D v({ data(i,1), data(i,2), data(i,3) }); //time not used
+                            sensorTracePositions.Append(v);
+                        }
+                    }
+                }
+
+                if (traces.showVectors && vectorSensorIndex >= 0 && vectorSensorIndex < cSystem->GetSystemData().GetCSensors().NumberOfItems())
+                {
+                    const CSensor& vectorSensor = *cSystem->GetSystemData().GetCSensors()[vectorSensorIndex];
+                    const ResizableMatrix& data = vectorSensor.GetInternalStorage();
+                    if (data.NumberOfRows() > 0 && data.NumberOfColumns() == 4) //must be Vector3D data
+                    {
+                        for (Index i = 0; i < data.NumberOfRows(); i++)
+                        {
+                            if ((traces.showPast && data(i, 0) <= time) ||
+                                (traces.showFuture && data(i, 0) > time) ||
+                                (traces.showCurrent && fabs(data(i, 0) - time) < 1e-10) )
+                            {
+                                Vector3D v({ data(i,1), data(i,2), data(i,3) }); //time not used
+                                sensorTraceVectors.Append(v);
+                            }
+                        }
+                        //this won't work, as in solution viewer current values are not "current"!
+                        //if (showCurrent)
+                        //{
+                        //    vectorSensor.GetSensorValues(cSystem->GetSystemData(), sensorTraceValues, ConfigurationType::Visualization);
+                        //    if (sensorTraceValues.NumberOfItems() == 3)
+                        //    {
+                        //        Vector3D v({ sensorTraceValues[0],
+                        //            sensorTraceValues[1],
+                        //            sensorTraceValues[2] }); //time not used
+                        //        sensorTraceVectors.Append(v);
+                        //    }
+                        //}
+                    }
+                }
+                if (traces.showTriads && triadSensorIndex >= 0 && triadSensorIndex < cSystem->GetSystemData().GetCSensors().NumberOfItems())
+                {
+                    //std::cout << "A," << GetOutputVariableTypeString(triadSensor.GetOutputVariableType()) << ";\n";
+                    const CSensor& triadSensor = *cSystem->GetSystemData().GetCSensors()[triadSensorIndex];
+                    const ResizableMatrix& data = triadSensor.GetInternalStorage();
+                    if (data.NumberOfRows() > 0 && data.NumberOfColumns() == 10 &&
+                        EXUstd::IsOfType(triadSensor.GetOutputVariableType(), OutputVariableType::RotationMatrix)) //must be Matrix3D data
+                    {
+                        for (Index i = 0; i < data.NumberOfRows(); i++)
+                        {
+                            if ((traces.showPast && data(i, 0) <= time) ||
+                                (traces.showFuture && data(i, 0) > time) ||
+                                (traces.showCurrent && fabs(data(i, 0) - time) < 1e-10) )
+                            {
+                                Matrix3D m(3, 3, { data(i,1), data(i,2), data(i,3),
+                                data(i,4), data(i,5), data(i,6),
+                                data(i,7), data(i,8), data(i,9) }); //time not used
+                                sensorTraceTriads.Append(m);
+                                //std::cout << "out";
+                            }
+                        }
+                        //if (showCurrent)
+                        //{
+                        //    triadSensor.GetSensorValues(cSystem->GetSystemData(), sensorTraceValues, ConfigurationType::Visualization);
+                        //    if (sensorTraceValues.NumberOfItems() == 10)
+                        //    {
+                        //        Matrix3D m(3, 3, { sensorTraceValues[1], sensorTraceValues[2], sensorTraceValues[3],
+                        //            sensorTraceValues[4], sensorTraceValues[5], sensorTraceValues[6],
+                        //            sensorTraceValues[7], sensorTraceValues[8], sensorTraceValues[9] }); //time not used
+                        //        sensorTraceTriads.Append(m);
+                        //    }
+                        //}
+                    }
+                }
+            }
+        }
+        if (positionSensorIndex < cSystem->GetSystemData().GetCSensors().NumberOfItems()-1)
+        {
+            return true;
+        }
+    }
+    return false;
+}
 
 //! REMOVE: get backlink of ith main system (0 if not existing), temporary for selection
 MainSystem* VisualizationSystemContainer::GetMainSystemBacklink(Index iSystem)

@@ -133,6 +133,11 @@ ResizableArray<GraphicsData*>* GlfwRenderer::graphicsDataList = nullptr;
 VisualizationSettings* GlfwRenderer::visSettings = nullptr;
 VisualizationSystemContainerBase* GlfwRenderer::basicVisualizationSystemContainer = nullptr;
 //++++++++++++++++++++++++++++++++++++++++++
+Vector3DList GlfwRenderer::sensorTracePositions;
+Vector3DList GlfwRenderer::sensorTraceVectors; //synchronized with triads
+Matrix3DList GlfwRenderer::sensorTraceTriads;  //synchronized with vectors
+Vector GlfwRenderer::sensorTraceValues; //temporary storage for current sensor data
+//++++++++++++++++++++++++++++++++++++++++++
 
 
 GlfwRenderer::GlfwRenderer()
@@ -1209,6 +1214,8 @@ void GlfwRenderer::SetViewOnMouseCursor(GLdouble x, GLdouble y, GLdouble delX, G
 //! function to evaluate selection of items, show message, return dictionary string
 bool GlfwRenderer::MouseSelect(GLFWwindow* window, Index mouseX, Index mouseY, Index& itemID)
 {
+	//if (verboseRenderer) { std::cout << "Mouse select" << std::flush; }
+	
 	MouseSelectOpenGL(window,
 		(Index)stateMachine.selectionMouseCoordinates[0],
 		(Index)stateMachine.selectionMouseCoordinates[1],
@@ -1216,6 +1223,8 @@ bool GlfwRenderer::MouseSelect(GLFWwindow* window, Index mouseX, Index mouseY, I
 
 	const Real timeOutHighlightItem = 0.5; //just short to exactly see object
 	ItemID2IndexType(itemID, stateMachine.highlightIndex, stateMachine.highlightType, stateMachine.highlightMbsNumber);
+
+	//if (verboseRenderer) { std::cout << "  select=" << EXUstd::ToString(itemID) << std::flush; }
 
 	//PrintDelayed("itemID=" + EXUstd::ToString(itemID));
 
@@ -1250,6 +1259,7 @@ void GlfwRenderer::MouseSelectOpenGL(GLFWwindow* window, Index mouseX, Index mou
 	//put into separate function, for Render(...)
 	int width, height;
 
+	//if (verboseRenderer) { std::cout << "  MouseSelectOpenGL" << std::flush; }
 	glfwGetFramebufferSize(window, &width, &height);
 
 	//rendererOut << "current window: width=" << width << ", height=" << height << "\n";
@@ -1261,9 +1271,12 @@ void GlfwRenderer::MouseSelectOpenGL(GLFWwindow* window, Index mouseX, Index mou
 
 	//++++++++++++++++++++++++++++++++++++++++
 
+	//if (verboseRenderer) { std::cout << "  glSelectBuffer" << std::flush; }
 	const Index selectBufferSize = 10000; //size for number of objects picked at same time
 	GLuint selectBuffer[selectBufferSize];
 	glSelectBuffer(selectBufferSize, selectBuffer);
+
+	//if (verboseRenderer) { std::cout << "  glRenderMode" << std::flush; }
 	glRenderMode(GL_SELECT);
 
 	GLint viewport[4];
@@ -1278,6 +1291,7 @@ void GlfwRenderer::MouseSelectOpenGL(GLFWwindow* window, Index mouseX, Index mou
 	glClearStencil(0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
+	//if (verboseRenderer) { std::cout << "  glMatrixMode" << std::flush; }
 	//++++++++++++++++++++++++++++++++++++++++
 	//from Render(...) 
 	glMatrixMode(GL_PROJECTION);
@@ -1302,26 +1316,32 @@ void GlfwRenderer::MouseSelectOpenGL(GLFWwindow* window, Index mouseX, Index mou
 	//++++++++++++++++++++++++++++++++++++++++
 
 	//add one name in hierarchie and then draw scene with names
+	//if (verboseRenderer) { std::cout << "  glInitNames" << std::flush; }
 	glInitNames();
+	//if (verboseRenderer) { std::cout << "  glPushName" << std::flush; }
 	glPushName(1);
 
 	const bool selectionMode = true;
+	//if (verboseRenderer) { std::cout << "  RenderGraphicsData" << std::flush; }
 	RenderGraphicsData(selectionMode); //render scene with names
 	//glCallList (filledlist);
 
 	glPopName();
 	//++++++++++++++++++++++++++++++++++++++++
+	//if (verboseRenderer) { std::cout << "  glPopMatrix" << std::flush; }
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
 
 	glMatrixMode(GL_MODELVIEW);
 	glPopMatrix();
 
+	//if (verboseRenderer) { std::cout << "  glRenderMode" << std::flush; }
 	Index numberOfItemsFound = glRenderMode(GL_RENDER);
 
 	//++++++++++++++++++++++++++++++++++++++++
 	//evaluate items:
 	//rendererOut << "number of found items = " << numberOfItemsFound << "\n";
+	//if (verboseRenderer) { std::cout << "  evaluate" << std::flush; }
 
 	Index  itemIDnearest = 0;
 	GLuint minimalDepth = 0; //clip other items that are closer
@@ -1762,7 +1782,7 @@ void GlfwRenderer::RunLoop()
 	FinishRunLoop();
 }
 
-void GlfwRenderer::DoRendererTasks()
+void GlfwRenderer::DoRendererTasks(bool graphicsUpdateAndRender)
 {
 	Real updateInterval = (Real)(visSettings->general.graphicsUpdateInterval);
 	Real time = EXUstd::GetTimeInSeconds();
@@ -1779,7 +1799,10 @@ void GlfwRenderer::DoRendererTasks()
 	}
 
 
-	if (useMultiThreadedRendering || (time >= lastGraphicsUpdate + updateInterval) || GetCallBackSignal())
+	if (useMultiThreadedRendering || 
+		(time >= lastGraphicsUpdate + updateInterval) || 
+		GetCallBackSignal() ||
+		graphicsUpdateAndRender)
 	{
 		basicVisualizationSystemContainer->UpdateGraphicsData();
 		bool maxSceneComputed = false;
@@ -1852,7 +1875,7 @@ void GlfwRenderer::FinishRunLoop()
 }
 
 //! run renderer idle for certain amount of time; use this for single-threaded, interactive animations; waitSeconds==-1 waits forever
-void GlfwRenderer::DoRendererIdleTasks(Real waitSeconds)
+void GlfwRenderer::DoRendererIdleTasks(Real waitSeconds, bool graphicsUpdateAndRender)
 {
 	Real time = EXUstd::GetTimeInSeconds();
 	bool continueTask = true;
@@ -1866,7 +1889,7 @@ void GlfwRenderer::DoRendererIdleTasks(Real waitSeconds)
 		{
 			if (!useMultiThreadedRendering)
 			{
-				DoRendererTasks();
+				DoRendererTasks(graphicsUpdateAndRender);
 			}
 			else
 			{
@@ -2378,7 +2401,8 @@ void GlfwRenderer::Render3Dobjects(int screenWidth, int screenHeight, float& scr
 
 	SetModelRotationTranslation();
 
-	RenderGraphicsData();
+    RenderSensorTraces();
+    RenderGraphicsData();
 
 
 
@@ -2735,6 +2759,148 @@ void GlfwRenderer::RenderGraphicsDataText(GraphicsData* data, Index lastItemID, 
 
 }
 
+//Index cnt0 = 0;
+
+//draw sensor traces
+//NOTE: this function could be moved to VisualizationSystem to create this data only once (but what happens for animations?)?
+void GlfwRenderer::RenderSensorTraces()
+{
+    if (visSettings->sensors.traces.showPositionTrace || 
+        visSettings->sensors.traces.showVectors || 
+        visSettings->sensors.traces.showTriads)
+    {
+        float factOffset = 1.f*state->maxSceneSize;
+        if (state->zoom != 0.f) { factOffset *= 1.f / state->zoom; }
+
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        glPolygonOffset(visSettings->openGL.polygonOffset*factOffset, visSettings->openGL.polygonOffset*factOffset); //
+        glEnable(GL_POLYGON_OFFSET_FILL);
+        glDisable(GL_POLYGON_OFFSET_LINE);
+
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        if (visSettings->openGL.lineSmooth) { glEnable(GL_LINE_SMOOTH); }
+
+        const ArrayIndex& positionSensors = visSettings->sensors.traces.listOfPositionSensors;
+        const ArrayIndex& vectorSensors = visSettings->sensors.traces.listOfVectorSensors;
+        const ArrayIndex& triadSensors = visSettings->sensors.traces.listOfTriadSensors;
+
+        glLineWidth(visSettings->sensors.traces.lineWidth);
+
+        Index positionsShowEvery = EXUstd::Maximum(1,visSettings->sensors.traces.positionsShowEvery); //max in order to avoid crash in case of 0 or negative numbers
+        Index vectorsShowEvery = EXUstd::Maximum(1, visSettings->sensors.traces.vectorsShowEvery);
+        Index triadsShowEvery = EXUstd::Maximum(1, visSettings->sensors.traces.triadsShowEvery);
+
+        const ArrayFloat& edgeColors = visSettings->sensors.traces.traceColors;
+
+        bool showVectors = visSettings->sensors.traces.showVectors && (positionSensors.NumberOfItems() == vectorSensors.NumberOfItems());
+        bool showTriads = visSettings->sensors.traces.showTriads && (positionSensors.NumberOfItems() == triadSensors.NumberOfItems());
+        
+        Real vectorScaling = (Real)visSettings->sensors.traces.vectorScaling;
+        float triadSize = visSettings->sensors.traces.triadSize;
+        // if no sensors, do other approach: 
+        //while list with stop criteria
+        //GetSensorsPositionsVectorsLists returns true if further sensors available
+        //std::cout << "ST" << showTriads << ", PL" << positionSensors.NumberOfItems()
+        //    << ", TL" << triadSensors.NumberOfItems() << "\n";
+
+
+        Index i = 0;
+        bool returnValue = true;
+        while ((positionSensors.NumberOfItems() > 0 && i < positionSensors.NumberOfItems()) || (positionSensors.NumberOfItems() == 0 && returnValue) )
+        {
+            Float4 edgeColor({ 0.,0.,0.,1. }); //Default
+            if (edgeColors.NumberOfItems() >= (i + 1) * 4)
+            {
+                for (Index j = 0; j < 4; j++)
+                {
+                    edgeColor[j] = edgeColors[i * 4 + j];
+                }
+            }
+
+            Index positionSensorIndex = i;
+            Index vectorSensorIndex = -1;
+            Index triadSensorIndex = -1;
+            if (i < positionSensors.NumberOfItems()) { positionSensorIndex = positionSensors[i]; }
+            if (i < vectorSensors.NumberOfItems() && showVectors) { vectorSensorIndex = vectorSensors[i]; }
+            if (i < triadSensors.NumberOfItems() && showTriads) { triadSensorIndex = triadSensors[i]; }
+
+            //get sensor data
+            returnValue = basicVisualizationSystemContainer->GetSensorsPositionsVectorsLists(visSettings->sensors.traces.sensorsMbsNumber, positionSensorIndex,
+                vectorSensorIndex, triadSensorIndex, sensorTracePositions, sensorTraceVectors, sensorTraceTriads, sensorTraceValues,
+                visSettings->sensors.traces);
+
+            if (visSettings->sensors.traces.showPositionTrace)// && sensorTracePositions.NumberOfItems() > 1)
+            {
+                glBegin(GL_LINE_STRIP); //list of single points to define lines
+                glColor4f(edgeColor[0], edgeColor[1], edgeColor[2], edgeColor[3]);
+
+                for (Index j = 0; j < sensorTracePositions.NumberOfItems(); j++)
+                {
+                    if (j % positionsShowEvery == 0 || j == sensorTracePositions.NumberOfItems() - 1)
+                    {
+                        const Vector3D& p = sensorTracePositions[j];
+                        glVertex3f((float)p[0], (float)p[1], (float)p[2]);
+                    }
+                }
+                glEnd(); //GL_LINE_STRIP
+            }
+
+            if ((visSettings->sensors.traces.showVectors && sensorTraceVectors.NumberOfItems() != 0) ||
+                (visSettings->sensors.traces.showTriads && sensorTraceTriads.NumberOfItems() != 0) )
+            {
+                glBegin(GL_LINES);
+                //if (visSettings->openGL.enableLighting) { glEnable(GL_LIGHTING); } //only enabled when drawing triangle faces
+                //glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+                for (Index j = 0; j < sensorTracePositions.NumberOfItems(); j++)
+                {
+                    if (j < sensorTraceVectors.NumberOfItems())
+                    {
+                        if (j % vectorsShowEvery == 0 || j == sensorTraceVectors.NumberOfItems() - 1)
+                        {
+                            const Vector3D& p = sensorTracePositions[j];
+                            const Vector3D& v = sensorTraceVectors[j];
+                            glColor4f(edgeColor[0], edgeColor[1], edgeColor[2], edgeColor[3]);
+                            glVertex3f((float)p[0], (float)p[1], (float)p[2]);
+                            glVertex3f((float)(p[0] + vectorScaling * v[0]),
+                                (float)(p[1] + vectorScaling * v[1]),
+                                (float)(p[2] + vectorScaling * v[2]));
+                        }
+                    }
+                    if (j < sensorTraceTriads.NumberOfItems())
+                    {
+                        if (j % triadsShowEvery == 0 || j == sensorTraceTriads.NumberOfItems() - 1)
+                        {
+                            float f = triadSize;
+                            Float3 p({ (float)sensorTracePositions[j][0],
+                                        (float)sensorTracePositions[j][1],
+                                        (float)sensorTracePositions[j][2] });
+                            const Matrix3D& m = sensorTraceTriads[j];
+                            //glColor4f(edgeColor[0], edgeColor[1], edgeColor[2], edgeColor[3]); //set back to trace color!
+                            glColor4f(1.f, 0, 0, edgeColor[3]);
+                            glVertex3f(p[0], p[1], p[2]);
+                            glVertex3f(p[0] + f * (float)m(0, 0), p[1] + f * (float)m(1, 0), p[2] + f * (float)m(2, 0));
+
+                            glColor4f(0, 1.f, 0, edgeColor[3]);
+                            glVertex3f(p[0], p[1], p[2]);
+                            glVertex3f(p[0] + f * (float)m(0, 1), p[1] + f * (float)m(1, 1), p[2] + f * (float)m(2, 1));
+
+                            glColor4f(0, 0, 1.f, edgeColor[3]);
+                            glVertex3f(p[0], p[1], p[2]);
+                            glVertex3f(p[0] + f * (float)m(0, 2), p[1] + f * (float)m(1, 2), p[2] + f * (float)m(2, 2));
+                        }
+                    }
+                }
+                glEnd(); //GL_LINES
+
+                //if (visSettings->openGL.enableLighting) { glDisable(GL_LIGHTING); } //only enabled when drawing triangle faces
+            }
+
+            i++;
+        }
+        if (visSettings->openGL.lineSmooth) { glDisable(GL_LINE_SMOOTH); }
+
+    }
+}
 
 void GlfwRenderer::RenderGraphicsData(bool selectionMode)
 {

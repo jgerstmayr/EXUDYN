@@ -172,7 +172,7 @@ MINI EXAMPLE for ObjectGenericODE1
    
    sims=exu.SimulationSettings()
    solverType = exu.DynamicSolverType.RK44
-   exu.SolveDynamic(mbs, solverType=solverType, simulationSettings=sims)
+   mbs.SolveDynamic(solverType=solverType, simulationSettings=sims)
    
    #check result at default integration time
    exudynTestGlobals.testResult = mbs.GetNodeOutput(nODE1, exu.OutputVariableType.Coordinates)[0]

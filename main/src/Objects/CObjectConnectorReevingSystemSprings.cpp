@@ -23,7 +23,13 @@ Real CObjectConnectorReevingSystemSprings::ComputeForce(Real L, Real L0, Real L_
 	{
 		Real invL0 = 1e3; //use minimum reference length (1mm), leads to very high stiffness ... should never happen
 		if (L0 != 0.) { invL0 = 1. / L0; }
-		return ((L - L0)*EA + (L_t - L0_t) * DA) * invL0;
+		Real F = ((L - L0)*EA + (L_t - L0_t) * DA) * invL0;
+
+        if (parameters.regularizationForce > 0 && F < 0)
+        {
+            F = parameters.regularizationForce * tanh(F / parameters.regularizationForce);
+        }
+        return F;
 	}
 	else { return 0.; }
 }

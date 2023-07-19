@@ -217,11 +217,11 @@ def GetInterpolatedSignalValue(time, dataArray, timeArray=[], dataArrayIndex = -
         tB = tA+dt 
         #check if time index is correct:
         if timeArrayIndex == -1: #1D array
-            if abs(tA-timeArray[index]) > tolerance or abs(tB-timeArray[index+1]) > tolerance :
+            if abs(tA-timeArrayNew[index]) > tolerance or abs(tB-timeArrayNew[index+1]) > tolerance :
                 print('Warning: GetInterpolatedSignalValue: timeArray does not seem to have constant sampling rate; use larger tolerance or numpy.interp(...) instead')
         else: #2D array
-            if (abs(tA-timeArray[index,timeArrayIndex]) > tolerance or 
-                abs(tB-timeArray[index+1,timeArrayIndex]) > tolerance):
+            if (abs(tA-timeArrayNew[index,timeArrayIndex]) > tolerance or 
+                abs(tB-timeArrayNew[index+1,timeArrayIndex]) > tolerance):
                 print('Warning: GetInterpolatedSignalValue: timeArray does not seem to have constant sampling rate; use larger tolerance or numpy.interp(...) instead')
             
 

@@ -341,12 +341,12 @@ AngularAcceleration & $\LU{0}{\talpha}\cConfig = \LU{0}{[\alpha_0,\,\alpha_1,\,\
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidRotor3DFWBW.py}{\texttt{rigidRotor3DFWBW.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidRotor3Dnutation.py}{\texttt{rigidRotor3Dnutation.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidRotor3Drunup.py}{\texttt{rigidRotor3Drunup.py}} (Examples/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rr.py}{\texttt{rr.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py}{\texttt{bicycleIftommBenchmark.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/craneReevingSystem.py}{\texttt{craneReevingSystem.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/fourBarMechanism3D.py}{\texttt{fourBarMechanism3D.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/gyroStability.py}{\texttt{gyroStability.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py}{\texttt{humanRobotInteraction.py}} (Examples/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/leggedRobot.py}{\texttt{leggedRobot.py}} (Examples/)
 \item  ...
 
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupIntegratorPythonTest.py}{\texttt{explicitLieGroupIntegratorPythonTest.py}} (TestModels/)
@@ -1540,7 +1540,7 @@ RotationMatrix & $\LU{0b}{\Rot}$ & rotation matrix in vector form (stored in row
         sims=exu.SimulationSettings()
         sims.timeIntegration.numberOfSteps = 10000000 #many steps to see graphics
         exu.StartRenderer() #perform zoom all (press 'a' several times) after startup to see the sphere
-        exu.SolveDynamic(mbs, sims)
+        mbs.SolveDynamic(sims)
         exu.StopRenderer()
     \end{lstlisting}
     %%RSTCOMPATIBLE
@@ -1673,7 +1673,7 @@ Acceleration & $\LU{0}{\av}\cConfig = \LU{0}{\ddot\uv}\cConfig = [\ddot q_0,\;\d
 
     #assemble and solve system for default parameters
     mbs.Assemble()
-    exu.SolveDynamic(mbs)
+    mbs.SolveDynamic()
 
     #check result
     exudynTestGlobals.testResult = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[0]
@@ -1812,7 +1812,7 @@ Acceleration & $\LU{0}{\av}\cConfig = \LU{0}{\ddot\uv}\cConfig = [\ddot q_0,\;\d
 
     #assemble and solve system for default parameters
     mbs.Assemble()
-    exu.SolveDynamic(mbs)
+    mbs.SolveDynamic()
 
     #check result
     exudynTestGlobals.testResult = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[0]
@@ -1960,7 +1960,7 @@ AngularVelocityLocal & $\LU{b}{\tomega}\cConfig$ & local (body-fixed) 3D velocit
 
     #assemble and solve system for default parameters
     mbs.Assemble()
-    exu.SolveDynamic(mbs)
+    mbs.SolveDynamic()
 
     #check result, get current mass position at local position [0,0,0]
     exudynTestGlobals.testResult = mbs.GetObjectOutputBody(mass, exu.OutputVariableType.Position, [0,0,0])[0]
@@ -2101,7 +2101,7 @@ AngularVelocityLocal & $\LU{b}{\tomega}\cConfig$ & local (body-fixed) 3D velocit
 
     #assemble and solve system for default parameters
     mbs.Assemble()
-    exu.SolveDynamic(mbs)
+    mbs.SolveDynamic()
 
     #check result, get current rotor z-rotation at local position [0,0,0]
     exudynTestGlobals.testResult = mbs.GetObjectOutputBody(rotor, exu.OutputVariableType.Rotation, [0,0,0])
@@ -2350,6 +2350,7 @@ AngularAccelerationLocal & $\LU{b}{\talpha}\cConfig = \LU{b0}{\Rot} \LU{0}{\talp
 \bi
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigid3Dexample.py}{\texttt{rigid3Dexample.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyIMUtest.py}{\texttt{rigidBodyIMUtest.py}} (Examples/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rr.py}{\texttt{rr.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py}{\texttt{bicycleIftommBenchmark.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/craneReevingSystem.py}{\texttt{craneReevingSystem.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/fourBarMechanism3D.py}{\texttt{fourBarMechanism3D.py}} (Examples/)
@@ -2359,7 +2360,6 @@ AngularAccelerationLocal & $\LU{b}{\talpha}\cConfig = \LU{b0}{\Rot} \LU{0}{\talp
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/mouseInteractionExample.py}{\texttt{mouseInteractionExample.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/multiMbsTest.py}{\texttt{multiMbsTest.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/openVRengine.py}{\texttt{openVRengine.py}} (Examples/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particleClusters.py}{\texttt{particleClusters.py}} (Examples/)
 \item  ...
 
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupIntegratorPythonTest.py}{\texttt{explicitLieGroupIntegratorPythonTest.py}} (TestModels/)
@@ -2514,7 +2514,7 @@ AngularAccelerationLocal & $\LU{b}{\talpha}\cConfig = \LU{b0}{\Rot} \LU{0}{\talp
 
     #assemble and solve system for default parameters
     mbs.Assemble()
-    exu.SolveDynamic(mbs)
+    mbs.SolveDynamic()
 
     #check result
     exudynTestGlobals.testResult = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[0]
@@ -2810,7 +2810,7 @@ Force &  & generalized forces for all coordinates (residual of all forces except
     #assemble and solve system for default parameters
     mbs.Assemble()
     
-    exu.SolveDynamic(mbs, solverType = exudyn.DynamicSolverType.TrapezoidalIndex2)
+    mbs.SolveDynamic(solverType = exudyn.DynamicSolverType.TrapezoidalIndex2)
 
     #check result at default integration time
     exudynTestGlobals.testResult = mbs.GetNodeOutput(nMass1, exu.OutputVariableType.Position)[0]
@@ -3009,7 +3009,7 @@ Force &  & generalized forces for all coordinates (residual of all forces except
     which denotes the transformation from joint coordinate (scalar) to rotations and translations.
     We can compute the local joint angular velocity $\tomega_i$ and translational velocity $\wv_i$, as a 6D vector $\vv^J_i$, from
     \be
-      \vv^J_i = \vp{\tomega_i}{\wv_i} = \tPhi_i \, q_i
+      \vv^J_i = \vp{\tomega_i}{\wv_i} = \tPhi_i \, \dot q_i
     \ee
     %
     The joint coordinates, which can be rotational or translational, are stored in the vector
@@ -3210,7 +3210,7 @@ Force &  & generalized forces for all coordinates (residual of all forces except
     
     simulationSettings = exu.SimulationSettings() #takes currently set values or default values
     simulationSettings.timeIntegration.numberOfSteps = 1000 #gives very accurate results
-    exu.SolveDynamic(mbs, simulationSettings , solverType=exu.DynamicSolverType.RK67) #highly accurate!
+    mbs.SolveDynamic(simulationSettings , solverType=exu.DynamicSolverType.RK67) #highly accurate!
 
     #check final value of angle:
     q0 = mbs.GetNodeOutput(nGeneric, exu.OutputVariableType.Coordinates)
@@ -4286,7 +4286,7 @@ AngularAcceleration & $\talpha = [0,\, ,0,\, \dot\omega_2]$ & angular accelerati
 
     #assemble and solve system for default parameters
     mbs.Assemble()
-    exu.SolveStatic(mbs)
+    mbs.SolveStatic()
 
     #check result
     exudynTestGlobals.testResult = mbs.GetNodeOutput(lastNode, exu.OutputVariableType.Displacement)[0]
@@ -5111,7 +5111,7 @@ TorqueLocal & $\LU{J0}{\mv}$ & joint torques in local $J0$ coordinates; torque a
 
     #assemble and solve system for default parameters
     mbs.Assemble()
-    exu.SolveDynamic(mbs, exu.SimulationSettings())
+    mbs.SolveDynamic(exu.SimulationSettings())
     
     #check result at default integration time
     exudynTestGlobals.testResult = mbs.GetNodeOutput(nBody, exu.OutputVariableType.Rotation)[2]
@@ -6385,7 +6385,7 @@ ForceLocal & $f_{SD}$ & scalar spring-damper force\\ \hline
 
     #assemble and solve system for default parameters
     mbs.Assemble()
-    exu.SolveDynamic(mbs)
+    mbs.SolveDynamic()
 
     #check result at default integration time
     exudynTestGlobals.testResult = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[0]
@@ -6619,7 +6619,7 @@ Force & $\fv_{SD}$ & joint force in global coordinates, see equations\\ \hline
 
     #assemble and solve system for default parameters
     mbs.Assemble()
-    exu.SolveDynamic(mbs)
+    mbs.SolveDynamic()
 
     #check result at default integration time
     exudynTestGlobals.testResult = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Displacement)[1]
@@ -6631,6 +6631,7 @@ Force & $\fv_{SD}$ & joint force in global coordinates, see equations\\ \hline
 \bi
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/mouseInteractionExample.py}{\texttt{mouseInteractionExample.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigid3Dexample.py}{\texttt{rigid3Dexample.py}} (Examples/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rr.py}{\texttt{rr.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/sliderCrank3DwithANCFbeltDrive2.py}{\texttt{sliderCrank3DwithANCFbeltDrive2.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle.py}{\texttt{ANCFcontactCircle.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle2.py}{\texttt{ANCFcontactCircle2.py}} (Examples/)
@@ -6640,7 +6641,6 @@ Force & $\fv_{SD}$ & joint force in global coordinates, see equations\\ \hline
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/lavalRotor2Dtest.py}{\texttt{lavalRotor2Dtest.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py}{\texttt{NGsolvePistonEngine.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePostProcessingStresses.py}{\texttt{NGsolvePostProcessingStresses.py}} (Examples/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/objectFFRFreducedOrderNetgen.py}{\texttt{objectFFRFreducedOrderNetgen.py}} (Examples/)
 \item  ...
 
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/scissorPrismaticRevolute2D.py}{\texttt{scissorPrismaticRevolute2D.py}} (TestModels/)
@@ -6864,7 +6864,7 @@ TorqueLocal & $\LU{J0}{\mv}$ & joint torque in in local joint0 coordinates\\ \hl
     
     #assemble and solve system for default parameters
     mbs.Assemble()
-    exu.SolveDynamic(mbs, exu.SimulationSettings())
+    mbs.SolveDynamic(exu.SimulationSettings())
     
     #check result at default integration time
     exudynTestGlobals.testResult = mbs.GetNodeOutput(nBody, exu.OutputVariableType.Displacement)[1] 
@@ -6874,6 +6874,7 @@ TorqueLocal & $\LU{J0}{\mv}$ & joint torque in in local joint0 coordinates\\ \hl
 %
 \noindent For examples on ObjectConnectorRigidBodySpringDamper see Relevant Examples and TestModels with weblink:
 \bi
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ROSExampleMassPoint.py}{\texttt{ROSExampleMassPoint.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stiffFlyballGovernor2.py}{\texttt{stiffFlyballGovernor2.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/connectorRigidBodySpringDamperTest.py}{\texttt{connectorRigidBodySpringDamperTest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rotatingTableTest.py}{\texttt{rotatingTableTest.py}} (TestModels/)
@@ -7055,7 +7056,7 @@ ForceLocal & $f$ & (scalar) spring-damper force\\ \hline
 
     #assemble and solve system for default parameters
     mbs.Assemble()
-    exu.SolveDynamic(mbs, exu.SimulationSettings())
+    mbs.SolveDynamic(exu.SimulationSettings())
     
     #check result at default integration time
     exudynTestGlobals.testResult = mbs.GetNodeOutput(nBody, exu.OutputVariableType.Displacement)[0]
@@ -7234,7 +7235,7 @@ TorqueLocal & $\tau_{SD}$ & scalar spring-damper torque around the local joint0 
 
     #assemble and solve system for default parameters
     mbs.Assemble()
-    exu.SolveDynamic(mbs, exu.SimulationSettings())
+    mbs.SolveDynamic(exu.SimulationSettings())
     
     #check result at default integration time
     exudynTestGlobals.testResult = mbs.GetNodeOutput(nBody, exu.OutputVariableType.Rotation)[2]
@@ -7244,6 +7245,7 @@ TorqueLocal & $\tau_{SD}$ & scalar spring-damper torque around the local joint0 
 %
 \noindent For examples on ObjectConnectorTorsionalSpringDamper see Relevant Examples and TestModels with weblink:
 \bi
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ROSExampleTurtle.py}{\texttt{ROSExampleTurtle.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotInteractiveLimits.py}{\texttt{serialRobotInteractiveLimits.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTree.py}{\texttt{serialRobotKinematicTree.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTSD.py}{\texttt{serialRobotTSD.py}} (Examples/)
@@ -7417,7 +7419,7 @@ Force & $f_{SD}$ & scalar force in connector\\ \hline
 
     #assemble and solve system for default parameters
     mbs.Assemble()
-    exu.SolveDynamic(mbs)
+    mbs.SolveDynamic()
 
     #check result at default integration time
     exudynTestGlobals.testResult = mbs.GetNodeOutput(nMass, 
@@ -7879,7 +7881,7 @@ Force & $\fv$ & gravity force vector, pointing from marker $m0$ to marker $m1$\\
     mbs.Assemble()
     sims = exu.SimulationSettings()
     sims.timeIntegration.endTime = tEnd
-    exu.SolveDynamic(mbs, sims, solverType=exu.DynamicSolverType.RK67)
+    mbs.SolveDynamic(sims, solverType=exu.DynamicSolverType.RK67)
 
     #check result at default integration time
     #expect y=x after one period of orbiting (got: 100000.00000000479)
@@ -8128,7 +8130,7 @@ Force &  & force in actuator resulting as the difference of both pressures times
 
 \mysubsubsection{ObjectConnectorReevingSystemSprings}
 \label{sec:item:ObjectConnectorReevingSystemSprings}
-A rD reeving system defined by a list of torque-free and friction-free sheaves or points that are connected with one rope (modelled as massless spring). The force is assumed to be constant all over the rope. The sheaves or connection points are defined by $nr$ rigid body markers $[m_0, \, m_1, \, \ldots, \, m_{nr-1}]$. At both ends of the rope there may be a prescribed motion coupled to a coordinate marker each, given by $m_{c0}$ and $m_{c1}$ .
+A rD reeving system defined by a list of torque-free and friction-free sheaves or points that are connected with one rope (modelled as massless spring). NOTE that the spring can undergo tension AND compression (in order to avoid compression, use a PreStepUserFunction to turn off stiffness and damping in this case!). The force is assumed to be constant all over the rope. The sheaves or connection points are defined by $nr$ rigid body markers $[m_0, \, m_1, \, \ldots, \, m_{nr-1}]$. At both ends of the rope there may be a prescribed motion coupled to a coordinate marker each, given by $m_{c0}$ and $m_{c1}$ .
 \vspace{12pt}\\
 
 \noindent \mybold{Additional information for ObjectConnectorReevingSystemSprings}:
@@ -8155,6 +8157,7 @@ The item \mybold{ObjectConnectorReevingSystemSprings} with type = 'ConnectorReev
     dampingPerLength &     UReal &      &     0. &     axial damping per length [SI:N/(m/s)/m] of rope; the effective damping coefficient of the reeving system is computed as $DA/L$ in which $L$ is the current length of the rope\\ \hline
     dampingTorsional &     UReal &      &     0. &     torsional damping [SI:Nms] between sheaves; this effect can damp rotations around the rope axis, pairwise between sheaves; this parameter is experimental\\ \hline
     dampingShear &     UReal &      &     0. &     damping of shear motion [SI:Ns] between sheaves; this effect can damp motion perpendicular to the rope between each pair of sheaves; this parameter is experimental\\ \hline
+    regularizationForce &     Real &      &     0.1 &     small regularization force [SI:N] in order to avoid large compressive forces; this regularization force can either be $<0$ (using a linear tension/compression spring model) or $>0$, which restricts forces in the rope to be always $\ge -F_{reg}$. Note that smaller forces lead to problems in implicit integrators and smaller time steps. For explicit integrators, this force can be chosen close to zero.\\ \hline
     referenceLength &     Real &      &     0. &     reference length for computation of roped force\\ \hline
     sheavesAxes &     Vector3DList &      &     [] &     list of local vectors axes of sheaves; vectors refer to rigid body markers given in list of markerNumbers; first and last axes are ignored, as they represent the attachment of the rope ends\\ \hline
     sheavesRadii &     Vector &      &     [] &     radius for each sheave, related to list of markerNumbers and list of sheaveAxes; first and last radii must always be zero.\\ \hline
@@ -8186,6 +8189,7 @@ The item \mybold{ObjectConnectorReevingSystemSprings} with type = 'ConnectorReev
 \rowTable{dampingPerLength}{$DA$}{}
 \rowTable{dampingTorsional}{$DT$}{}
 \rowTable{dampingShear}{$DS$}{}
+\rowTable{regularizationForce}{$F_{reg}$}{}
 \rowTable{referenceLength}{$L_{ref}$}{}
 \rowTable{sheavesAxes}{$\lv_a = [\LU{m0}{\av_0},\, \LU{m1}{\av_1},\, \ldots ] in [\Rcal^{3}, ...]$}{}
 \rowTable{sheavesRadii}{$\lv_r = [r_0,\, r_1,\, \ldots]\tp \in \Rcal^{n}$}{}
@@ -8312,10 +8316,21 @@ ForceLocal & $F$ & scalar force in reeving system (constant over length of rope)
       \dot L_0 = f_0 \cdot \dot q_{m_{c0}} + f_1 \cdot \dot q_{m_{c1}}, \quad
     \ee
     while we set $L_0 = L_{ref}$ and $\dot L_0=0$ otherwise.
-    The force in the reeving system (assumed to be constant all over the rope) reads
+    The linear force in the reeving system (assumed to be constant all over the rope) is computed as
     \be
-      F = (L-L_{0}) \frac{EA}{L_0} + (\dot L - \dot L_0)\frac{DA}{L_0}
+      F_{lin} = (L-L_{0}) \frac{EA}{L_0} + (\dot L - \dot L_0)\frac{DA}{L_0}
     \ee
+    The rope force is computed from
+    \be
+      F =   \begin{cases} F_{lin} \quad \mathrm{if} \quad F_{lin} > 0 \\
+                          F_{reg} \cdot \mathrm{tanh}(F_{lin}/F_{reg})\quad \mathrm{else} 
+            \end{cases}
+    \ee
+    Which allows small compressive forces $F_{reg}$.
+    In case that $F_{reg} < 0$, compressive forces are not regularized (linear spring).
+    The case $F_{reg} = 0$ will be used in future only in combination with a data node, 
+    which allows switching similar as in friction and contact elements.
+    
     Note that in case of $L_0=0$, the term $\frac{1}{L_0}$ is replaced by $1000$.
     However, this case must be avoided by the user by choosing appropriate parameters for the system.
 
@@ -9516,7 +9531,7 @@ Force & $\lambda_0$ & joint force (=scalar Lagrange multiplier)\\ \hline
     
     sims=exu.SimulationSettings()
     sims.timeIntegration.generalizedAlpha.spectralRadius=0.7
-    exu.SolveDynamic(mbs, sims)
+    mbs.SolveDynamic(sims)
 
     #check result at default integration time
     exudynTestGlobals.testResult = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Position)[0]
@@ -9735,7 +9750,7 @@ Force & $\lambda_0$ & scalar constraint force (Lagrange multiplier)\\ \hline
 
     #assemble and solve system for default parameters
     mbs.Assemble()
-    exu.SolveDynamic(mbs)
+    mbs.SolveDynamic()
 
     #check result at default integration time
     exudynTestGlobals.testResult  = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Displacement)[0]
@@ -10152,7 +10167,7 @@ Coordinates\_t &  & all \hac{ODE1} velocity coordinates\\ \hline
     
     sims=exu.SimulationSettings()
     solverType = exu.DynamicSolverType.RK44
-    exu.SolveDynamic(mbs, solverType=solverType, simulationSettings=sims)
+    mbs.SolveDynamic(solverType=solverType, simulationSettings=sims)
 
     #check result at default integration time
     exudynTestGlobals.testResult = mbs.GetNodeOutput(nODE1, exu.OutputVariableType.Coordinates)[0]
@@ -10378,7 +10393,7 @@ The item \mybold{MarkerBodyRigid} with type = 'BodyRigid' has the following para
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveReevingSystem.py}{\texttt{beltDriveReevingSystem.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDrivesComparison.py}{\texttt{beltDrivesComparison.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py}{\texttt{bicycleIftommBenchmark.py}} (Examples/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/CMSexampleCourse.py}{\texttt{CMSexampleCourse.py}} (Examples/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chatGPTupdate.py}{\texttt{chatGPTupdate.py}} (Examples/)
 \item  ...
 
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/abaqusImportTest.py}{\texttt{abaqusImportTest.py}} (TestModels/)
@@ -10856,7 +10871,7 @@ The item \mybold{MarkerSuperElementPosition} with type = 'SuperElementPosition' 
     #assemble and solve system for default parameters
     mbs.Assemble()
     
-    exu.SolveDynamic(mbs, solverType = exudyn.DynamicSolverType.TrapezoidalIndex2)
+    mbs.SolveDynamic(solverType = exudyn.DynamicSolverType.TrapezoidalIndex2)
 
     #check result at default integration time
     exudynTestGlobals.testResult = mbs.GetNodeOutput(nMass1, exu.OutputVariableType.Position)[0]
@@ -11508,6 +11523,7 @@ The item \mybold{LoadForceVector} with type = 'ForceVector' has the following pa
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py}{\texttt{addRevoluteJoint.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/interactiveTutorial.py}{\texttt{interactiveTutorial.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/pendulumVerify.py}{\texttt{pendulumVerify.py}} (Examples/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ROSExampleMassPoint.py}{\texttt{ROSExampleMassPoint.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/solutionViewerTest.py}{\texttt{solutionViewerTest.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/SpringDamperMassUserFunction.py}{\texttt{SpringDamperMassUserFunction.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/springDamperTutorialNew.py}{\texttt{springDamperTutorialNew.py}} (Examples/)
@@ -11515,7 +11531,6 @@ The item \mybold{LoadForceVector} with type = 'ForceVector' has the following pa
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcantileverTestDyn.py}{\texttt{ANCFcantileverTestDyn.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle.py}{\texttt{ANCFcontactCircle.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle2.py}{\texttt{ANCFcontactCircle2.py}} (Examples/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFmovingRigidbody.py}{\texttt{ANCFmovingRigidbody.py}} (Examples/)
 \item  ...
 
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/perf3DRigidBodies.py}{\texttt{perf3DRigidBodies.py}} (TestModels/)
@@ -11707,7 +11722,7 @@ The item \mybold{LoadMassProportional} with type = 'MassProportional' has the fo
 
     #assemble and solve system for default parameters
     mbs.Assemble()
-    exu.SolveDynamic(mbs)
+    mbs.SolveDynamic()
 
     #check result
     exudynTestGlobals.testResult = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[2]
@@ -12181,6 +12196,7 @@ The item \mybold{SensorKinematicTree} with type = 'KinematicTree' has the follow
 %
 \noindent For examples on SensorKinematicTree see Relevant Examples and TestModels with weblink:
 \bi
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotInverseKinematics.py}{\texttt{serialRobotInverseKinematics.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTreeDigging.py}{\texttt{serialRobotKinematicTreeDigging.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stiffFlyballGovernorKT.py}{\texttt{stiffFlyballGovernorKT.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py}{\texttt{kinematicTreeAndMBStest.py}} (TestModels/)
@@ -12399,7 +12415,7 @@ The item \mybold{SensorUserFunction} with type = 'UserFunction' has the followin
 
         #assemble and solve system for default parameters
         mbs.Assemble()
-        exu.SolveDynamic(mbs)
+        mbs.SolveDynamic()
 
         if False:
             from exudyn.plot import PlotSensor

@@ -773,6 +773,12 @@ bool MainObjectConnectorReevingSystemSprings::CheckPreAssembleConsistency(const 
 		}
 	}
 
+    if (cObject->GetParameters().regularizationForce == 0.)
+    {
+        errorString = "CObjectConnectorReevingSystemSprings: regularizationForce may not be zero";
+        return false;
+    }
+
 
 	Index npr = cObject->GetParameters().sheavesRadii.NumberOfItems();
 	if (nRigidBodyMarkers != npr)

@@ -17,6 +17,7 @@ import numpy as np
 import sys
 import time
 from copy import deepcopy #, copy 
+import os
 from exudyn.advancedUtilities import IsInteger
 
 #%%+++++++++++++++++++++++++++++++++++++++++++
@@ -62,6 +63,17 @@ def SingleIndex2SubIndices(i, subIndexRanges):
     return iRanges
     
 
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
+#*function: internal function; add computation Index and parameterFunctionData to dictionry entry
+# 
+def AddComputationIndexAndFunctionData(ind, cnt, addComputationIndex, parameterFunctionData): 
+    if addComputationIndex:
+        ind['computationIndex'] = cnt
+    if bool(parameterFunctionData): # if dict is not empty
+        ind['functionData'] = parameterFunctionData
+    return
+
+
 #%%+++++++++++++++++++++++++++++++++++++++++++
 #function: internal output function for ParameterVariation and GeneticOptimization
 # write header or values to output file and increase counter
@@ -69,6 +81,12 @@ def WriteToFile(resultsFile, parameters, currentGeneration, values, globalCnt, w
     if resultsFile != '':
         #print('write to file')
         if writeHeader:
+            try:
+                #check only added in case of writeHeader to reduce overheads; may fail, if no header is written (but why...?)
+                os.makedirs(os.path.dirname(resultsFile), exist_ok=True)
+            except:
+                pass #makedirs may fail on some systems, but we keep going
+
             file = open(resultsFile, 'w')
             file.write('#EXUDYN '+fileType+' results file:'+resultsFile+'\n')
             file.write('#results stored columnwise for every parameter and individual\n')
@@ -505,6 +523,7 @@ def ParameterVariation(parameterFunction, parameters,
 #    distanceFactor: children only survive at a certain relative distance of the current range; must be small enough (< 0.5) to allow individuals to survive; ignored if distanceFactor=0; as a rule of thumb, the distanceFactor should be zero in case that there is only one significant minimum, but if there are many local minima, the distanceFactor should be used to search at several different local minima
 #    childDistribution: string with name of distribution for producing childs: "normal" (Gaussian, with sigma defining range), "uniform" (exactly in range of childs)
 #    distanceFactorGenerations: number of generations (populations) at which the distance factor is active; the distance factor is used to find several local minima; finally, convergence is speed up without the distance factor
+#    parameterFunctionData: dictionary containing additional data passed to the objectiveFunction inside the parameters with dict key 'functionData'; use this e.g. for passing solver parameters or other settings
 #    randomizerInitialization: initialize randomizer at beginning of optimization in order to get reproducible results, provide any integer in the range between 0 and 2**32 - 1 (default: no initialization)
 #
 #    debugMode: if True, additional print out is done
@@ -536,6 +555,7 @@ def GeneticOptimization(objectiveFunction, parameters,
                         useMultiProcessing=False, 
                         showProgress = True,
                         clusterHostNames = [],
+                        parameterFunctionData = {}, 
                         **kwargs):
 
     def RandomNumber(distribution, rangeBegin, rangeEnd, vMin, vMax):
@@ -637,9 +657,7 @@ def GeneticOptimization(objectiveFunction, parameters,
             pEnd = value[1]
             value = np.random.uniform(pBegin, pEnd)
             ind[key] = value
-        if addComputationIndex:
-            ind['computationIndex'] = i #unique index for one set of computations
-
+        AddComputationIndexAndFunctionData(ind, i, addComputationIndex, parameterFunctionData)
         currentGeneration += [ind]
     #+++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -673,10 +691,12 @@ def GeneticOptimization(objectiveFunction, parameters,
                                      writeHeader = (popCnt == 0),
                                      multiProcessingMode=multiProcessingMode)
 
-        #remove computationIndex from new generation
+        #remove computationIndex and parameterfunctiondata from new generation
         for item in currentGeneration:
             if 'computationIndex' in item:
                 del item['computationIndex']
+            if 'functionData' in item: 
+                del item['functionData']
 
         #store all values
         parametersAll += currentGeneration.copy()
@@ -753,7 +773,7 @@ def GeneticOptimization(objectiveFunction, parameters,
                         for k in range(nGen):
                             d = 0
                             for (key,value) in ind.items():
-                                if key != 'computationIndex':
+                                if key != 'computationIndex' and key in parameters.keys(): # only manipulate values from given parameters
                                     d += (ind[key] - currentGeneration[k][key])**2/(rangesDict[key])**2
                             d = np.sqrt(d/dim) #number of parameters shall not influence distanceFactor
                             #print("d=",d,":",ind,"-",currentGeneration[k])
@@ -830,7 +850,7 @@ def GeneticOptimization(objectiveFunction, parameters,
                             currentGeneration += [newGen]
                             #currentGeneration += [indList[pi]] #gives wrong sorting in dict ..., destroys output file order
                             p += 1
-
+                        indList[-1]['functionData'] = parameterFunctionData # add function data
                         cnt += 1 #computation count ... for every parameter variation within one generation
             # print("pop", popCnt, ": currentGeneration=\n",currentGeneration)
         else:
@@ -848,7 +868,7 @@ def GeneticOptimization(objectiveFunction, parameters,
     n = len(parametersAll)
     if n != 0:
         for key in parametersAll[0]:
-            if key != 'computationIndex':
+            if key != 'computationIndex' and key in parameters.keys(): # do not output function data
                 parameterData = np.zeros(n)
                 #extract parameter list from list of dictionaries:
                 for i in range(n):
@@ -862,26 +882,22 @@ def GeneticOptimization(objectiveFunction, parameters,
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**function: Compute minimum of given objectiveFunction. This function is based on scipy.optimize.minimize() and it provides the same interface as GeneticOptimization().  
+#**function: Compute minimum of given objectiveFunction. This function is based on scipy.optimize.minimize() and it provides the same interface as GeneticOptimization(). Note that in special cases, you should copy this function and adapt to your needs.
 #**input:
 #    objectiveFunction: function, which takes the form parameterFunction(parameterDict) and which returns a value or list (or numpy array) which reflects the size of the objective to be minimized
 #    parameters: given as a dictionary, consist of name and tuple containing the search range for this parameter (begin, end), e.g. 'mass':(10,50)
 #    storeFunctionValues: if True, objectiveFunction values are computed (additional costs!) and stored in every iteration into valueList
 #    initialGuess: initial guess. Array of real elements of size (n,), where 'n' is the number of independent variables. If not provided by the user, initialGuess is computed from bounds provided in parameterDict.
 #    method: solver that should be used, e.g. 'Nelder-Mead', 'Powell', 'CG' etc. A list of available solvers can be found in the documentation of scipy.optimize.minimize().
-#    tol: tolerance for termination. When tol is specified, the selected minimization algorithm sets some relevant solver-specific tolerance(s) equal to tol. For detailed control, use solver-specific options using the 'options' variable.
+#    tol: tolerance for termination. When tol is specified, the selected minimization algorithm sets some relevant solver-specific tolerance(s) equal to tol (but this is usually not the tolerance for loss or parameters1). For detailed control, use solver-specific options using the 'options' variable.
 #    options: dictionary of solver options. Can be used to set absolute and relative error tolerances. Detailed information can be found in the documentation of scipy.optimize.minimize().
 #    enforceBounds: if True, ensures that only parameters within the bounds specified in ParameterDict are used for minimization; this may help to avoid, e.g., negative values, but may lead to non-convergence 
 #    verbose: prints solver information into console, e.g. number of iterations 'nit', number of funcion evaluations 'nfev', status etc.
-#    showProgress: if True, shows for every iteration objective function value, number of current iteration, time needed for current iteration, maximum number of iterations until solver option 'maxiter' is reached.
+#    showProgress: if True, shows for every iteration objective function value, current iteration number, time needed for current iteration, maximum number of iterations and loss (current value of objective function)
 #    addComputationIndex: if True, key 'computationIndex' is added for consistency reasons with GeneticOptimizaiton to every parameterDict in the call to parameterFunction(); however, the value is always 0, because no multi threading is used in Minimize(...)
 #    resultsFile: if provided, the results are stored columnwise into the given file and written after every generation; use resultsMonitor.py to track results in realtime
 #    useScipyBounds: if True, use scipy.optimize.minimize() option 'bounds' to apply bounds on variable specified in ParameterDict. Note, this option is only used by some specific methods of scipy.optimize.minimize()! method='Nelder-Mead' ignores this option for example! if False, option 'enforceBounds' will be set to False!
 #    args: extra arguments passed to the objective function and its derivatives (fun, jac and hess functions). 
-#    jac: method for computing the gradient vector. 
-#    hess: method for computing the Hessian matrix. 
-#    hessp: hessian of objective function times an arbitrary vector p.
-#    constraints: constraints definition (only for COBYLA, SLSQP and trust-constr). 
 #**author: Stefan Holzinger, Johannes Gerstmayr
 #**output: returns [optimumParameter, optimumValue, parameterList, valueList], containing the optimum parameter set 'optimumParameter', optimum value 'optimumValue', the whole list of parameters parameterList with according objective values 'valueList'
 #**notes: This function is still under development and shows an experimental state! There are currently unused arguments of scipy.optimize.minimize(): Detailed information can be found in the documentation of scipy.optimize.minimize().
@@ -889,6 +905,7 @@ def Minimize(objectiveFunction, parameters, initialGuess=[], method='Nelder-Mead
              enforceBounds=True, debugMode=False, showProgress=True, addComputationIndex=False,
              storeFunctionValues=True, **kwargs):
     from scipy import optimize #for minimize
+    # from functools import partial #add extra args to function
     
     # get parameter names
     parKeyLst = list(parameters.keys())
@@ -924,7 +941,7 @@ def Minimize(objectiveFunction, parameters, initialGuess=[], method='Nelder-Mead
     
     # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     # process initial guess
-    if initialGuessCopy != []: # initial guess has been provided by the user
+    if initialGuessCopy == []: # initial guess has been provided by the user
         initialGuessCopy = [None]*nParameters
         for i in range(nParameters):
             initialGuessCopy[i] = np.mean(bounds[i])
@@ -968,10 +985,12 @@ def Minimize(objectiveFunction, parameters, initialGuess=[], method='Nelder-Mead
         return resultsFileCntTemp
 
     startTime = time.time()  #for calculating time to go
+    timePrintLast = [startTime-10]
 
     # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     # callback: needed to get parameters after each iteration for file writing and post processing
-    def StoreParameterFunctionValues(parametersAtIteration, *args):
+    def StoreParameterFunctionValues(parametersAtIteration, convergence=0, lastTime=False):
+        #global timePrintLast
         # print(parametersAtIteration2)
         for i in range(nParameters):
             parameterValueLst[i].append(parametersAtIteration[i])
@@ -987,24 +1006,25 @@ def Minimize(objectiveFunction, parameters, initialGuess=[], method='Nelder-Mead
             if resultsFile != '':
                 resultsFileCnt[0] = WriteToFileMinimize(resultsFile, parameters, pDict, valuesAtIteration, resultsFileCnt[0])
         
-        
         # increase iteration counter 
         itCtr[0] += 1 
         
         # time needed for iteration     
         iterationsToGo = (maxiter-itCtr[0]) 
         timeToGo = 0
-        timeSpent = time.time() - startTime
+        currentTime = time.time()
+        timeSpent = currentTime - startTime
         if itCtr[0] != 0:
             timeToGo = timeSpent/itCtr[0] * iterationsToGo
 
         # print progess to console 
         if showProgress: 
-            print('***** ')
-            print('iteration ' + str(itCtr[0]) + ' / max. ' + str(iterationsToGo))
-            print('  time = ', timeSpent, 's')
-            print('  time to go (max) = ', timeToGo, 's')
-            print('  objective function value: ', valuesAtIteration)
+            if currentTime - timePrintLast[0] > 1 or lastTime:
+                timePrintLast[0] = currentTime
+                print('iteration ' + str(itCtr[0]) + ' / ' + str(maxiter), end='')
+                print(', time = '+str(round(timeSpent,2)), 's / ',end='')
+                print(str(round(timeToGo,2)) + 's',end='')
+                print(', loss:', ("{:.0"+str(3)+"g}").format(valuesAtIteration))
             
 
 
@@ -1029,19 +1049,18 @@ def Minimize(objectiveFunction, parameters, initialGuess=[], method='Nelder-Mead
     
     # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     # perform optimizaion
-    optimizeResult = optimize.minimize(ParameterFunctionMinimize, initialGuessCopy, 
+    optimizeResult = optimize.minimize(ParameterFunctionMinimize, 
+                                       initialGuessCopy, 
                                         method=method, 
                                         bounds=scipyMinimizeBounds, 
+                                        # callback=partial(StoreParameterFunctionValues, convergence=0, callbackArgs=callbackArgs), 
                                         callback=StoreParameterFunctionValues, 
                                         tol=tol,
                                         options=options,
-                                        #jac=jac,
-                                        #hess=hess,
-                                        #constraints=constraints,
                                         )
     
     # if showProgress: # print progress data for final iteration to console
-    StoreParameterFunctionValues(optimizeResult['x'])
+    StoreParameterFunctionValues(optimizeResult['x'], lastTime=True)
     
     if debugMode: # show solver informations (e.g. number of function evaluations etc.)
         print('---------------------------------------\n')

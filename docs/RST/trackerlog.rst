@@ -19,15 +19,102 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.6.164.dev1, 
-+  last change =  2023-06-12, 
-+  Number of issues = 1620, 
-+  Number of resolved issues = 1444 (164 in current version), 
++  Exudyn version = 1.7.0, 
++  last change =  2023-07-19, 
++  Number of issues = 1650, 
++  Number of resolved issues = 1470 (0 in current version), 
+
+***********
+Version 1.7
+***********
+
+ * Version 1.7.0: resolved Issue 1649: release (release)
+    - description:  switch to new release 1.7
+    - date resolved: **2023-07-19 16:07**\ , date raised: 2023-07-19 
 
 ***********
 Version 1.6
 ***********
 
+ * Version 1.6.189: resolved Issue 1648: ReevingSystemSprings (fix)
+    - description:  adjust test example for treating compression forces
+    - date resolved: **2023-07-17 12:10**\ , date raised: 2023-07-17 
+ * Version 1.6.188: resolved Issue 1647: sensorTraces (extension)
+    - description:  add vectors and triads to position traces; show current vector or triad and add some further options for visualization, see visualizationSettings sensors.traces
+    - **notes:** added triads and vectors, showing traces of motion at sensor points
+    - date resolved: **2023-07-14 18:34**\ , date raised: 2023-07-14 
+ * Version 1.6.187: resolved Issue 1640: visualization (extension)
+    - description:  show trace of sensor positions (incl. frames) in render window; settings and list of sensors provided in visualizationSettings.sensors.traces with list of sensors, positionTrace, listOfPositionSensors=[] (empty means all position sensors, listOfVectorSensors=[] which can provide according vector quantities for positions; showVectors, vectorScaling=0.001, showPast=True, showFuture=False, showCurrent=True, lineWidth=2
+    - date resolved: **2023-07-14 11:20**\ , date raised: 2023-07-11 
+ * Version 1.6.186: resolved Issue 1646: ArrayFloat (extension)
+    - description:  C++ add type
+    - date resolved: **2023-07-13 16:27**\ , date raised: 2023-07-13 
+ * Version 1.6.185: resolved Issue 1645: ReevingSystemSprings (extension)
+    - description:  add way to remove compression forces in rope
+    - **notes:** added parameter regularizationForce with tanh regularization for avoidance of compressive spring force
+    - date resolved: **2023-07-12 16:05**\ , date raised: 2023-07-12 
+ * Version 1.6.184: resolved Issue 1644: Minimize (extension)
+    - description:  processing.Minimize: improve printout of current error of objective function=loss; only print every 1 second
+    - date resolved: **2023-07-12 09:29**\ , date raised: 2023-07-12 
+ * Version 1.6.183: :textred:`resolved BUG 1643` : Minimize 
+    - description:  processing.Minimize function has an internal bug, such that it does not work with initialGuess=[]
+    - date resolved: **2023-07-12 09:29**\ , date raised: 2023-07-12 
+ * Version 1.6.182: :textred:`resolved BUG 1642` : SolutionViewer 
+    - description:  record image not working with visualizationSettings useMultiThreadedRendering=True
+    - date resolved: **2023-07-11 17:58**\ , date raised: 2023-07-11 
+ * Version 1.6.181: resolved Issue 1641: SolutionViewer (fix)
+    - description:  github issue#51: graphicsDataUserFunction in SolutionViewer not called; add call to graphicsData user functions in redraw image loop
+    - date resolved: **2023-07-11 17:16**\ , date raised: 2023-07-11 
+ * Version 1.6.180: resolved Issue 1638: GeneticOptimization (extension)
+    - description:  add argument parameterFunctionData to GeneticOptimization; same as in ParameterVariation, paramterFunctionData allows to pass additional data to the objective function
+    - date resolved: **2023-07-09 09:15**\ , date raised: 2023-07-09 
+ * Version 1.6.179: resolved Issue 1637: add ChatGPT update information (extension)
+    - description:  create Python model Examples/chatGPTupdate.py which includes information that is used by ChatGPT4 to improve abilities to create simple models fully automatic
+    - date resolved: **2023-06-30 15:01**\ , date raised: 2023-06-30 
+ * Version 1.6.178: resolved Issue 1636: CreateMassPoint (change)
+    - description:  change args referenceCoordinates to referencePosition, initialCoordinates to initialDisplacement, and initialVelocities to initialVelocity to be consistent with CreateRigidBody (but different from MassPoint itself)
+    - date resolved: **2023-06-30 14:09**\ , date raised: 2023-06-30 
+ * Version 1.6.177: resolved Issue 1635: SmartRound2String (extension)
+    - description:  add function to basic utilities to enable simple printing of numbers with few digits, including comma dot and not eliminating small numbers, e.g., 1e-5 stays 1e-5
+    - date resolved: **2023-06-30 09:22**\ , date raised: 2023-06-30 
+ * Version 1.6.176: resolved Issue 1634: create directories (extension)
+    - description:  add automatic creation of directories to FEM SaveToFile, plotting and ParameterVariation
+    - date resolved: **2023-06-29 10:29**\ , date raised: 2023-06-29 
+ * Version 1.6.175: :textred:`resolved BUG 1633` : GetInterpolatedSignalValue 
+    - description:  timeArray needs to be replaced with timeArrayNew in case of 2D input array
+    - date resolved: **2023-06-28 21:15**\ , date raised: 2023-06-28 
+ * Version 1.6.174: resolved Issue 1632: PlotFFT (fix)
+    - description:  matplotlib >= 1.7 complains about ax.grid(b=...) as parameter b has been replaced by visible
+    - date resolved: **2023-06-27 14:15**\ , date raised: 2023-06-27 
+ * Version 1.6.173: resolved Issue 1626: mutable args itemInterface (fix)
+    - description:  also copy dictionaries, mainly for visualization (flat level, but this should be sufficient)
+    - date resolved: **2023-06-21 10:40**\ , date raised: 2023-06-21 
+ * Version 1.6.172: resolved Issue 1627: mutable default args (change)
+    - description:  complete changes and adaptations for default args in Python functions and item interface; note individual adaptations for lists, vectors, matrices and special lists of lists or matrix containers; for itemInterface, anyway all data is copied into C++; for more information see issues 1536, 1540, 1612, 1624, 1625, 1626
+    - date resolved: **2023-06-21 10:15**\ , date raised: 2023-06-21 
+ * Version 1.6.171: resolved Issue 1625: change to default arg None (change)
+    - description:  change default args for Vector2DList, Vector3DList, Vector6DList, Matrix3DList, to None; ArrayNodeIndex, ArrayMarkerIndex, ArraySensorIndex obtain copy method and are copied now; avoid problem of mutable default args
+    - date resolved: **2023-06-21 00:26**\ , date raised: 2023-06-20 
+ * Version 1.6.170: resolved Issue 1624: MatrixContainer (change)
+    - description:  change default values for matrix container to None; avoid problem of mutable default args
+    - date resolved: **2023-06-20 23:39**\ , date raised: 2023-06-20 
+ * Version 1.6.169: resolved Issue 1540: mutable args itemInterface (check)
+    - description:  copy lists in itemInterface in order to avoid change of default args by user n=NodePoint();n.referenceCoordinates[0]=42;n1=NodePoint()
+    - **notes:** simple vectors, matrices and lists are copied with np.array(...) while complex matrix and list of array types are now initialized with None
+    - date resolved: **2023-06-20 22:13**\ , date raised: 2023-04-28 
+ * Version 1.6.168: resolved Issue 1620: docu MainSystemExtensions (docu)
+    - description:  reorder MainSystemExtensions with separate section for Create functions and one section for remaining functions
+    - date resolved: **2023-06-19 22:14**\ , date raised: 2023-06-13 
+ * Version 1.6.167: :textred:`resolved BUG 1622` : mouse click 
+    - description:  fix crash on linux if left / right mouse click on render window (related to OpenGL select window)
+    - **notes:** occurs on WSL with WSLg; using 'export LIBGL_ALWAYS_SOFTWARE=1' will resolve the problem; put this line into your .bashrc
+    - date resolved: **2023-06-19 22:11**\ , date raised: 2023-06-19 
+ * Version 1.6.166: :textred:`resolved BUG 1621` : LinearSolverType 
+    - description:  fix crash on linux in function SetLinearSolverType
+    - date resolved: **2023-06-19 20:27**\ , date raised: 2023-06-19 
+ * Version 1.6.165: resolved Issue 1623: MouseSelectOpenGL (extension)
+    - description:  add optional debbuging output
+    - date resolved: **2023-06-19 19:56**\ , date raised: 2023-06-19 
  * Version 1.6.164: resolved Issue 1267: matrix inverse (extension)
     - description:  add pivot threshold to options, may improve redundant constraints problems
     - **notes:** only available for EigenDense with ignoreSingularJacobian and EXUdense linear solvers
@@ -4690,6 +4777,22 @@ Version 0.1
 Open issues
 ***********
 
+ * **open issue 1631:** velocityOffset      
+    - description:  add to CartesianSpringDamper, RigidBodySpringDamper
+    - date raised: 2023-06-26 
+
+ * **open issue 1630:** exudyn module       
+    - description:  consider settings instead of putting all variables globally into module
+    - date raised: 2023-06-23 
+
+ * **open issue 1629:** GetSystemState      
+    - description:  extend behavior for returning a dictionary with all data incl. accelerations and possibly alg. accelerations for generalized-alpha solver; check also option to link coords, as in issue 1504
+    - date raised: 2023-06-23 
+
+ * **open issue 1628:** pickle MainSystem   
+    - description:  consider a pickle method for certain objects; add consistent info in description; MainSystem, SimulationSettings, VisualizationSettings
+    - date raised: 2023-06-23 
+
  * **open issue 1614:** static members      
     - description:  LinearSolver GeneralMatrixEXUdense::FactorizeNew has static ResizableMatrix m, which should be turned into class members; add reset method to free memory at solver finalization
     - date raised: 2023-06-11 
@@ -4713,10 +4816,6 @@ Open issues
  * **open issue 1548:** ODE1 loads          
     - description:  fully add Jacobian functionality for ODE1 loads and add test for ODE1 loads or recycle one
     - date raised: 2023-05-01 
-
- * **open issue 1540:** mutable args itemInterface
-    - description:  copy lists in itemInterfacein order to avoid change of default args by user n=NodePoint();n.referenceCoordinates[0]=42;n1=NodePoint()
-    - date raised: 2023-04-28 
 
  * **open issue 1529:** solver              
     - description:  solver functions GetSystemJacobian() and GetSystemMassMatrix() need to be extended with arg sparseTriplets=False; if True, it will return CSR sparse triplets, useful for large matrices, e.g. in eigenvalue computation in linearized system
@@ -5163,7 +5262,7 @@ Open issues
     - date raised: 2021-06-28 
 
  * **open issue 0657:** Delete item         
-    - description:  add functionality to delete items, adding specific features to re-index nodes in objects/markers, etc. if a node, object or marker is deleted
+    - description:  add functionality to delete items, adding specific features to re-index nodes in objects/markers, etc. if a node, object or marker is deleted; add MaxItemNumber() function to systemData which returns unique name for items even after deletion
     - date raised: 2021-05-01 
 
  * **open issue 0648:** solver tutorial     
@@ -5377,6 +5476,10 @@ Open issues
 **********
 Known bugs
 **********
+
+ * :textred:`open BUG 1639:` SolveDynamic FFRF   
+    - description:  repeated call to mbs.SolveDynamic gives divergence; attributed to FFRFreducedOrder model; workaround uses repeated build of model before calling solver again; may be related to FFRF or MarkerSuperElement-internal variables
+    - date raised: 2023-07-10 
 
  * :textred:`open BUG 1085:` GeneralContact      
     - description:  generalContactFrictionTests.py gives considerably different results after t=0.05 seconds between Windows and linux compiled version; may be caused by some initialization problems (bugs...); needs further tests

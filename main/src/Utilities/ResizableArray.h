@@ -41,6 +41,7 @@
 #include <cstring>
 
 typedef ResizableArray<Real> ArrayReal;
+typedef ResizableArray<float> ArrayFloat;
 typedef ResizableArray<Index> ArrayIndex;
 typedef std::vector<Index> StdArrayIndex; //needed for user functions
 

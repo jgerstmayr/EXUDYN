@@ -16,7 +16,7 @@ It includes parameter variation and (genetic) optimization functionality.
 
 Function: GetVersionPlatformString
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`GetVersionPlatformString <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L26>`__\ ()
+`GetVersionPlatformString <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L27>`__\ ()
 
 - | \ *function description*\ :
   | internal function to return Exudyn version string, which allows to identify how results have been obtained
@@ -33,7 +33,7 @@ Function: GetVersionPlatformString
 
 Function: ProcessParameterList
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ProcessParameterList <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L144>`__\ (\ ``parameterFunction``\ , \ ``parameterList``\ , \ ``useMultiProcessing``\ , \ ``clusterHostNames = []``\ , \ ``**kwargs``\ )
+`ProcessParameterList <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L162>`__\ (\ ``parameterFunction``\ , \ ``parameterList``\ , \ ``useMultiProcessing``\ , \ ``clusterHostNames = []``\ , \ ``**kwargs``\ )
 
 - | \ *function description*\ :
   | processes parameterFunction for given parameters in parameterList, see ParameterVariation
@@ -77,7 +77,7 @@ Function: ProcessParameterList
 
 Function: ParameterVariation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ParameterVariation <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L374>`__\ (\ ``parameterFunction``\ , \ ``parameters``\ , \ ``useLogSpace = False``\ , \ ``debugMode = False``\ , \ ``addComputationIndex = False``\ , \ ``useMultiProcessing = False``\ , \ ``showProgress = True``\ , \ ``parameterFunctionData = {}``\ , \ ``clusterHostNames = []``\ , \ ``numberOfThreads = None``\ , \ ``resultsFile = ''``\ , \ ``**kwargs``\ )
+`ParameterVariation <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L392>`__\ (\ ``parameterFunction``\ , \ ``parameters``\ , \ ``useLogSpace = False``\ , \ ``debugMode = False``\ , \ ``addComputationIndex = False``\ , \ ``useMultiProcessing = False``\ , \ ``showProgress = True``\ , \ ``parameterFunctionData = {}``\ , \ ``clusterHostNames = []``\ , \ ``numberOfThreads = None``\ , \ ``resultsFile = ''``\ , \ ``**kwargs``\ )
 
 - | \ *function description*\ :
   | calls successively the function parameterFunction(parameterDict) with variation of parameters in given range; parameterDict is a dictionary, containing the current values of parameters,
@@ -122,7 +122,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: GeneticOptimization
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`GeneticOptimization <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L524>`__\ (\ ``objectiveFunction``\ , \ ``parameters``\ , \ ``populationSize = 100``\ , \ ``numberOfGenerations = 10``\ , \ ``elitistRatio = 0.1``\ , \ ``crossoverProbability = 0.25``\ , \ ``crossoverAmount = 0.5``\ , \ ``rangeReductionFactor = 0.7``\ , \ ``distanceFactor = 0.1``\ , \ ``childDistribution = "uniform"``\ , \ ``distanceFactorGenerations = -1``\ , \ ``debugMode = False``\ , \ ``addComputationIndex = False``\ , \ ``useMultiProcessing = False``\ , \ ``showProgress = True``\ , \ ``clusterHostNames = []``\ , \ ``**kwargs``\ )
+`GeneticOptimization <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L543>`__\ (\ ``objectiveFunction``\ , \ ``parameters``\ , \ ``populationSize = 100``\ , \ ``numberOfGenerations = 10``\ , \ ``elitistRatio = 0.1``\ , \ ``crossoverProbability = 0.25``\ , \ ``crossoverAmount = 0.5``\ , \ ``rangeReductionFactor = 0.7``\ , \ ``distanceFactor = 0.1``\ , \ ``childDistribution = "uniform"``\ , \ ``distanceFactorGenerations = -1``\ , \ ``debugMode = False``\ , \ ``addComputationIndex = False``\ , \ ``useMultiProcessing = False``\ , \ ``showProgress = True``\ , \ ``clusterHostNames = []``\ , \ ``parameterFunctionData = {}``\ , \ ``**kwargs``\ )
 
 - | \ *function description*\ :
   | compute minimum of given objectiveFunction
@@ -139,6 +139,7 @@ Function: GeneticOptimization
   | \ ``distanceFactor``\ : children only survive at a certain relative distance of the current range; must be small enough (< 0.5) to allow individuals to survive; ignored if distanceFactor=0; as a rule of thumb, the distanceFactor should be zero in case that there is only one significant minimum, but if there are many local minima, the distanceFactor should be used to search at several different local minima
   | \ ``childDistribution``\ : string with name of distribution for producing childs: "normal" (Gaussian, with sigma defining range), "uniform" (exactly in range of childs)
   | \ ``distanceFactorGenerations``\ : number of generations (populations) at which the distance factor is active; the distance factor is used to find several local minima; finally, convergence is speed up without the distance factor
+  | \ ``parameterFunctionData``\ : dictionary containing additional data passed to the objectiveFunction inside the parameters with dict key 'functionData'; use this e.g. for passing solver parameters or other settings
   | \ ``randomizerInitialization``\ : initialize randomizer at beginning of optimization in order to get reproducible results, provide any integer in the range between 0 and 2\*\*32 - 1 (default: no initialization)
   | \ ``debugMode``\ : if True, additional print out is done
   | \ ``addComputationIndex``\ : if True, key 'computationIndex' is added to every parameterDict in the call to parameterFunction(), which allows to generate independent output files for every parameter, etc.
@@ -173,29 +174,25 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: Minimize
 ^^^^^^^^^^^^^^^^^^
-`Minimize <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L888>`__\ (\ ``objectiveFunction``\ , \ ``parameters``\ , \ ``initialGuess = []``\ , \ ``method = 'Nelder-Mead'``\ , \ ``tol = 1e-4``\ , \ ``options = {}``\ , \ ``enforceBounds = True``\ , \ ``debugMode = False``\ , \ ``showProgress = True``\ , \ ``addComputationIndex = False``\ , \ ``storeFunctionValues = True``\ , \ ``**kwargs``\ )
+`Minimize <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L904>`__\ (\ ``objectiveFunction``\ , \ ``parameters``\ , \ ``initialGuess = []``\ , \ ``method = 'Nelder-Mead'``\ , \ ``tol = 1e-4``\ , \ ``options = {}``\ , \ ``enforceBounds = True``\ , \ ``debugMode = False``\ , \ ``showProgress = True``\ , \ ``addComputationIndex = False``\ , \ ``storeFunctionValues = True``\ , \ ``**kwargs``\ )
 
 - | \ *function description*\ :
-  | Compute minimum of given objectiveFunction. This function is based on scipy.optimize.minimize() and it provides the same interface as GeneticOptimization().
+  | Compute minimum of given objectiveFunction. This function is based on scipy.optimize.minimize() and it provides the same interface as GeneticOptimization(). Note that in special cases, you should copy this function and adapt to your needs.
 - | \ *input*\ :
   | \ ``objectiveFunction``\ : function, which takes the form parameterFunction(parameterDict) and which returns a value or list (or numpy array) which reflects the size of the objective to be minimized
   | \ ``parameters``\ : given as a dictionary, consist of name and tuple containing the search range for this parameter (begin, end), e.g. 'mass':(10,50)
   | \ ``storeFunctionValues``\ : if True, objectiveFunction values are computed (additional costs!) and stored in every iteration into valueList
   | \ ``initialGuess``\ : initial guess. Array of real elements of size (n,), where 'n' is the number of independent variables. If not provided by the user, initialGuess is computed from bounds provided in parameterDict.
   | \ ``method``\ : solver that should be used, e.g. 'Nelder-Mead', 'Powell', 'CG' etc. A list of available solvers can be found in the documentation of scipy.optimize.minimize().
-  | \ ``tol``\ : tolerance for termination. When tol is specified, the selected minimization algorithm sets some relevant solver-specific tolerance(s) equal to tol. For detailed control, use solver-specific options using the 'options' variable.
+  | \ ``tol``\ : tolerance for termination. When tol is specified, the selected minimization algorithm sets some relevant solver-specific tolerance(s) equal to tol (but this is usually not the tolerance for loss or parameters1). For detailed control, use solver-specific options using the 'options' variable.
   | \ ``options``\ : dictionary of solver options. Can be used to set absolute and relative error tolerances. Detailed information can be found in the documentation of scipy.optimize.minimize().
   | \ ``enforceBounds``\ : if True, ensures that only parameters within the bounds specified in ParameterDict are used for minimization; this may help to avoid, e.g., negative values, but may lead to non-convergence
   | \ ``verbose``\ : prints solver information into console, e.g. number of iterations 'nit', number of funcion evaluations 'nfev', status etc.
-  | \ ``showProgress``\ : if True, shows for every iteration objective function value, number of current iteration, time needed for current iteration, maximum number of iterations until solver option 'maxiter' is reached.
+  | \ ``showProgress``\ : if True, shows for every iteration objective function value, current iteration number, time needed for current iteration, maximum number of iterations and loss (current value of objective function)
   | \ ``addComputationIndex``\ : if True, key 'computationIndex' is added for consistency reasons with GeneticOptimizaiton to every parameterDict in the call to parameterFunction(); however, the value is always 0, because no multi threading is used in Minimize(...)
   | \ ``resultsFile``\ : if provided, the results are stored columnwise into the given file and written after every generation; use resultsMonitor.py to track results in realtime
   | \ ``useScipyBounds``\ : if True, use scipy.optimize.minimize() option 'bounds' to apply bounds on variable specified in ParameterDict. Note, this option is only used by some specific methods of scipy.optimize.minimize()! method='Nelder-Mead' ignores this option for example! if False, option 'enforceBounds' will be set to False!
   | \ ``args``\ : extra arguments passed to the objective function and its derivatives (fun, jac and hess functions).
-  | \ ``jac``\ : method for computing the gradient vector.
-  | \ ``hess``\ : method for computing the Hessian matrix.
-  | \ ``hessp``\ : hessian of objective function times an arbitrary vector p.
-  | \ ``constraints``\ : constraints definition (only for COBYLA, SLSQP and trust-constr).
 - | \ *output*\ :
   | returns [optimumParameter, optimumValue, parameterList, valueList], containing the optimum parameter set 'optimumParameter', optimum value 'optimumValue', the whole list of parameters parameterList with according objective values 'valueList'
 - | \ *author*\ :
@@ -216,7 +213,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: ComputeSensitivities
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ComputeSensitivities <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L1087>`__\ (\ ``parameterFunction``\ , \ ``parameters``\ , \ ``scaledByReference = False``\ , \ ``debugMode = False``\ , \ ``addComputationIndex = False``\ , \ ``useMultiProcessing = False``\ , \ ``showProgress = True``\ , \ ``parameterFunctionData = dict()``\ , \ ``**kwargs``\ )
+`ComputeSensitivities <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L1106>`__\ (\ ``parameterFunction``\ , \ ``parameters``\ , \ ``scaledByReference = False``\ , \ ``debugMode = False``\ , \ ``addComputationIndex = False``\ , \ ``useMultiProcessing = False``\ , \ ``showProgress = True``\ , \ ``parameterFunctionData = dict()``\ , \ ``**kwargs``\ )
 
 - | \ *function description*\ :
   | Perform a sensitivity analysis by successively calling the function parameterFunction(parameterList[i]) with a one at a time variation of parameters in the defined increments.
@@ -256,7 +253,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: PlotOptimizationResults2D
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`PlotOptimizationResults2D <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L1197>`__\ (\ ``parameterList``\ , \ ``valueList``\ , \ ``xLogScale = False``\ , \ ``yLogScale = False``\ )
+`PlotOptimizationResults2D <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L1216>`__\ (\ ``parameterList``\ , \ ``valueList``\ , \ ``xLogScale = False``\ , \ ``yLogScale = False``\ )
 
 - | \ *function description*\ :
   | visualize results of optimization for every parameter (2D plots)
@@ -281,7 +278,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: PlotSensitivityResults
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`PlotSensitivityResults <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L1253>`__\ (\ ``valRef``\ , \ ``valuesSorted``\ , \ ``sensitivity``\ , \ ``fVar = None``\ , \ ``strYAxis = None``\ )
+`PlotSensitivityResults <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L1272>`__\ (\ ``valRef``\ , \ ``valuesSorted``\ , \ ``sensitivity``\ , \ ``fVar = None``\ , \ ``strYAxis = None``\ )
 
 - | \ *function description*\ :
   | visualize results of Sensitivityanalyis for every parameter (2D plots)

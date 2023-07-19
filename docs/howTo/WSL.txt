@@ -133,17 +133,12 @@ wsl --shutdown
 => now conda works!
 
 conda create -n venvP36 python=3.6 scipy matplotlib -y
-conda create -n venvP37 python=3.7 scipy matplotlib tqdm -y
-conda create -n venvP38 python=3.8 scipy matplotlib tqdm -y
-conda create -n venvP39 python=3.9 scipy matplotlib tqdm -y
-conda create -n venvP310 python=3.10 scipy matplotlib tqdm -y
-#not yet available: conda create -n venvP311 python=3.11 scipy matplotlib tqdm -y
-python 3.11 workaround (graphics does not work with wsl - even if it works with venvP39 !):
-conda create -n venvP311
-conda install -c conda-forge python=3.11 -y
-conda install tqdm -y
-conda install -c conda-forge numpy -y
-conda install -c conda-forge matplotlib -y
+conda create -n venvP37 python=3.7 scipy matplotlib psutil tqdm -y
+conda create -n venvP38 python=3.8 scipy matplotlib psutil tqdm -y
+conda create -n venvP39 python=3.9 scipy matplotlib psutil tqdm -y
+conda create -n venvP310 python=3.10 scipy matplotlib psutil tqdm -y
+conda create -n venvP311 python=3.11 scipy matplotlib psutil tqdm -y
+
 #install windows terminal
 https://docs.microsoft.com/en-us/windows/terminal/get-started
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

@@ -217,7 +217,9 @@ def ConvertString2Value(value, vType, vSize, dictionaryTypesT):
             if str(iValue) == value:
                 return [iValue, errorMsg]
 
-    if len(vSize) == 2 or (len(vSize)==1 and vSize[0] > 1): #must be matrix
+    if (len(vSize) == 2 or                      #must be matrix
+        (len(vSize)==1 and vSize[0] > 1) or     #must be vector with fixed size
+        (len(vSize)==1 and vSize[0] == -1) ):   #array / vector with undefined size
         return [ast.literal_eval(value), errorMsg]
 
     #print("Error in ConvertString2Value: unknown type",vType, "value=", value)

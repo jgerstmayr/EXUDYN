@@ -240,6 +240,9 @@ public:
 	virtual bool GetComputeMaxSceneRequest() override { return computeMaxSceneRequest; }
 
 	virtual void GetMarkerPositionOrientation(Index markerNumber, Index mbsNumber, Vector3D& position, Matrix3D& orientation, bool& hasPosition, bool& hasOrientation) override;
+    virtual bool GetSensorsPositionsVectorsLists(Index mbsNumber, Index positionSensorIndex, Index vectorSensorIndex, Index triadSensorIndex,
+        Vector3DList& sensorTracePositions, Vector3DList& sensorTraceVectors, Matrix3DList& sensorTraceTriads, Vector sensorTraceValues, 
+        const VSettingsSensorTraces& traces) override;
 
 	//! any multi-line text message from computation to be shown in renderer (e.g. time, solver, ...)
 	virtual std::string GetComputationMessage(bool solverInformation = true, 

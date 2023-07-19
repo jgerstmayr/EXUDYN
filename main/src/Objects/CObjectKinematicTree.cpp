@@ -46,6 +46,7 @@ void CObjectKinematicTree::ComputeMassMatrix(EXUmath::MatrixContainer& massMatri
 	{
 		Index rv = massMatrixC.GetInternalDenseMatrix().InvertSpecial(tempMatrix, tempArrayIndex, false);
 		CHECKandTHROW(rv == -1, "CObjectKinematicTree::ComputeMassMatrix: inverse failed; check if mass parameters are non-zero or set computeMassMatrixInversePerBody=False");
+        __UNUSED(rv); //avoid unused variable warnings
 	}
 }
 

@@ -476,8 +476,7 @@ which results in the following output (shortened):
 \end{lstlisting}
 
 \noindent Sometimes it is hard to understand the degree of freedom for the constrained system. Furthermore, we may have added -- by error --
-redundant constraints, which are not solvable or at least cause solver problems. Both can be checked with the command
-\texttt{}:
+redundant constraints, which are not solvable or at least cause solver problems. Both can be checked with the command:
 \pythonstyle\begin{lstlisting}
   mbs.ComputeSystemDegreeOfFreedom(verbose=True) #print out DOF and further information
 \end{lstlisting}
@@ -542,7 +541,7 @@ while solution can be viewed using the \texttt{SolutionViewer()}.
 With \texttt{solutionWritePeriod} you can adjust the frequency which is used to store the solution of the whole model, 
 which may lead to very large files and may slow down simulation, but is used in the \texttt{SolutionViewer()} to reload the solution after simulation.
 
-\noindent In order to improve visualization, there are hundreds of options, see Visualization settings in \refSection{sec:VSettingsGeneral}, some of them used here:
+\noindent In order to improve visualization, there are hundreds of options, see Visualization settings in \refSection{sec:VisualizationSettingsMain}, some of them used here:
 \pythonstyle\begin{lstlisting}
   SC.visualizationSettings.window.renderWindowSize = [1600,1200]
   SC.visualizationSettings.openGL.multiSampling = 4  #improved OpenGL rendering

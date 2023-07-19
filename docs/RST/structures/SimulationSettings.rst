@@ -1,6 +1,9 @@
 
 
 
+.. _sec-simulationsettingsmain:
+
+
 *******************
 Simulation settings
 *******************
@@ -449,7 +452,7 @@ LinearSolverSettings has the following items:
 * | **ignoreSingularJacobian** [type = bool, default = False]:
   | \ ``simulationSettings.linearSolverSettings.ignoreSingularJacobian``\ 
   | [ONLY implemented for dense, Eigen matrix mode] False: standard way, fails if jacobian is singular; True: use Eigen's FullPivLU (thus only works with LinearSolverType.EigenDense) which handles over- and underdetermined systems; can often resolve redundant constraints, but MAY ALSO LEAD TO ERRONEOUS RESULTS!
-* | **pivotThreshold** [type = PReal, default = 0]:
+* | **pivotThreshold** [type = UReal, default = 0]:
   | \ ``simulationSettings.linearSolverSettings.pivotThreshold``\ 
   | [ONLY available for EXUdense and EigenDense (FullPivot) solver] threshold for dense linear solver, can be used to detect close to singular solutions, setting this to, e.g., 1e-12; solver then reports on equations that are causing close to singularity
 * | **reuseAnalyzedPattern** [type = bool, default = False]:

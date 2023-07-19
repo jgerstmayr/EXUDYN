@@ -279,7 +279,7 @@ MINI EXAMPLE for ObjectConnectorCoordinate
    
    #assemble and solve system for default parameters
    mbs.Assemble()
-   exu.SolveDynamic(mbs)
+   mbs.SolveDynamic()
    
    #check result at default integration time
    exudynTestGlobals.testResult  = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Displacement)[0]

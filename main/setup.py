@@ -15,8 +15,8 @@ exec(open(file).read(), globals())
 
 try:
     #create single __init__.pyi file from subfiles
-    oldDir = os.getcwd()
-    os.chdir(oldDir+'\src\pythonGenerator')
+    oldDir = os.getcwd().replace('\\','/')
+    os.chdir(oldDir+'/src/pythonGenerator')
     fileCS='createStubFiles.py'
     exec(open(fileCS).read(), globals()) #must be executed in pythonGenerator dir
     os.chdir(oldDir)
@@ -24,8 +24,8 @@ except:
     print('WARNING: stub files could not be merged!')
     #raise ValueError('')
 
-#os.environ["CC"] = "gcc-8" #use gcc-8.4 on linux; does not work on windows
-#os.environ["CXX"] = "gcc-8"
+#os.environ["CC"] = "gcc-9" #for linux to choose compiler
+#os.environ["CXX"] = "gcc-9"
 
 startTime = time.time()
 #print('setup.py: START time:', startTime)
@@ -550,7 +550,7 @@ class BuildExt(build_ext):
         l_opts['unix'] += darwin_opts
     else:
         l_opts['unix'] += [
-            '-lgomp', #for openmp ==> needed for omp_get_num_threads()
+            #'-lgomp', #for openmp; not needed any more, as omp_get_num_threads() has been replaced
             '-lstdc++fs', #for autocreate directories, using std::filesystem from c++17 std
             ]        
         #warnings not available in clang:
@@ -795,6 +795,7 @@ setup(
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
         "Intended Audience :: Science/Research",
         "License :: OSI Approved :: BSD License",
         #"Operating System :: Microsoft :: Windows :: Windows 10",

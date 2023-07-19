@@ -80,6 +80,15 @@ def ClearWorkspace():
         import matplotlib.pyplot as plt
         plt.close('all')
 
+#**function: round to max number of digits; may give more digits if this is shorter; using in general the format() with '.g' option, but keeping decimal point and using exponent where necessary
+def SmartRound2String(x, prec=3):
+    s = ("{:.0"+str(prec)+"g}").format(x)
+    if abs(x) > 1 and x != int(x) and '.' not in s and 'e' not in s:
+        s = s+'.'
+    if x == int(x) and len(s) > len(str(x)):
+        s = str(x)
+    return s
+        
 
 
 #**function: create a diagonal or identity matrix; used for interface.py, avoiding the need for numpy

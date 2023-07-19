@@ -1009,7 +1009,7 @@ equations =
         sims=exu.SimulationSettings()
         sims.timeIntegration.numberOfSteps = 10000000 #many steps to see graphics
         exu.StartRenderer() #perform zoom all (press 'a' several times) after startup to see the sphere
-        exu.SolveDynamic(mbs, sims)
+        mbs.SolveDynamic(sims)
         exu.StopRenderer()
     \end{lstlisting}
     %%RSTCOMPATIBLE
@@ -1104,7 +1104,7 @@ miniExample =
 
     #assemble and solve system for default parameters
     mbs.Assemble()
-    exu.SolveDynamic(mbs)
+    mbs.SolveDynamic()
 
     #check result
     exudynTestGlobals.testResult = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[0]
@@ -1198,7 +1198,7 @@ miniExample =
 
     #assemble and solve system for default parameters
     mbs.Assemble()
-    exu.SolveDynamic(mbs)
+    mbs.SolveDynamic()
 
     #check result
     exudynTestGlobals.testResult = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[0]
@@ -1294,7 +1294,7 @@ miniExample =
 
     #assemble and solve system for default parameters
     mbs.Assemble()
-    exu.SolveDynamic(mbs)
+    mbs.SolveDynamic()
 
     #check result, get current mass position at local position [0,0,0]
     exudynTestGlobals.testResult = mbs.GetObjectOutputBody(mass, exu.OutputVariableType.Position, [0,0,0])[0]
@@ -1397,7 +1397,7 @@ miniExample =
 
     #assemble and solve system for default parameters
     mbs.Assemble()
-    exu.SolveDynamic(mbs)
+    mbs.SolveDynamic()
 
     #check result, get current rotor z-rotation at local position [0,0,0]
     exudynTestGlobals.testResult = mbs.GetObjectOutputBody(rotor, exu.OutputVariableType.Rotation, [0,0,0])
@@ -1737,7 +1737,7 @@ miniExample =
 
     #assemble and solve system for default parameters
     mbs.Assemble()
-    exu.SolveDynamic(mbs)
+    mbs.SolveDynamic()
 
     #check result
     exudynTestGlobals.testResult = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[0]
@@ -1969,7 +1969,7 @@ miniExample =
     #assemble and solve system for default parameters
     mbs.Assemble()
     
-    exu.SolveDynamic(mbs, solverType = exudyn.DynamicSolverType.TrapezoidalIndex2)
+    mbs.SolveDynamic(solverType = exudyn.DynamicSolverType.TrapezoidalIndex2)
 
     #check result at default integration time
     exudynTestGlobals.testResult = mbs.GetNodeOutput(nMass1, exu.OutputVariableType.Position)[0]
@@ -2147,7 +2147,7 @@ miniExample =
     
     sims=exu.SimulationSettings()
     solverType = exu.DynamicSolverType.RK44
-    exu.SolveDynamic(mbs, solverType=solverType, simulationSettings=sims)
+    mbs.SolveDynamic(solverType=solverType, simulationSettings=sims)
 
     #check result at default integration time
     exudynTestGlobals.testResult = mbs.GetNodeOutput(nODE1, exu.OutputVariableType.Coordinates)[0]
@@ -2297,7 +2297,7 @@ equations =
     which denotes the transformation from joint coordinate (scalar) to rotations and translations.
     We can compute the local joint angular velocity $\tomega_i$ and translational velocity $\wv_i$, as a 6D vector $\vv^J_i$, from
     \be
-      \vv^J_i = \vp{\tomega_i}{\wv_i} = \tPhi_i \, q_i
+      \vv^J_i = \vp{\tomega_i}{\wv_i} = \tPhi_i \, \dot q_i
     \ee
     %
     The joint coordinates, which can be rotational or translational, are stored in the vector
@@ -2496,7 +2496,7 @@ miniExample =
     
     simulationSettings = exu.SimulationSettings() #takes currently set values or default values
     simulationSettings.timeIntegration.numberOfSteps = 1000 #gives very accurate results
-    exu.SolveDynamic(mbs, simulationSettings , solverType=exu.DynamicSolverType.RK67) #highly accurate!
+    mbs.SolveDynamic(simulationSettings , solverType=exu.DynamicSolverType.RK67) #highly accurate!
 
     #check final value of angle:
     q0 = mbs.GetNodeOutput(nGeneric, exu.OutputVariableType.Coordinates)
@@ -3624,7 +3624,7 @@ miniExample =
 
     #assemble and solve system for default parameters
     mbs.Assemble()
-    exu.SolveStatic(mbs)
+    mbs.SolveStatic()
 
     #check result
     exudynTestGlobals.testResult = mbs.GetNodeOutput(lastNode, exu.OutputVariableType.Displacement)[0]
@@ -4237,7 +4237,7 @@ miniExample =
 
     #assemble and solve system for default parameters
     mbs.Assemble()
-    exu.SolveDynamic(mbs)
+    mbs.SolveDynamic()
 
     #check result at default integration time
     exudynTestGlobals.testResult = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[0]
@@ -4428,7 +4428,7 @@ miniExample =
 
     #assemble and solve system for default parameters
     mbs.Assemble()
-    exu.SolveDynamic(mbs)
+    mbs.SolveDynamic()
 
     #check result at default integration time
     exudynTestGlobals.testResult = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Displacement)[1]
@@ -4615,7 +4615,7 @@ miniExample =
     
     #assemble and solve system for default parameters
     mbs.Assemble()
-    exu.SolveDynamic(mbs, exu.SimulationSettings())
+    mbs.SolveDynamic(exu.SimulationSettings())
     
     #check result at default integration time
     exudynTestGlobals.testResult = mbs.GetNodeOutput(nBody, exu.OutputVariableType.Displacement)[1] 
@@ -4774,7 +4774,7 @@ miniExample =
 
     #assemble and solve system for default parameters
     mbs.Assemble()
-    exu.SolveDynamic(mbs, exu.SimulationSettings())
+    mbs.SolveDynamic(exu.SimulationSettings())
     
     #check result at default integration time
     exudynTestGlobals.testResult = mbs.GetNodeOutput(nBody, exu.OutputVariableType.Displacement)[0]
@@ -4931,7 +4931,7 @@ miniExample =
 
     #assemble and solve system for default parameters
     mbs.Assemble()
-    exu.SolveDynamic(mbs, exu.SimulationSettings())
+    mbs.SolveDynamic(exu.SimulationSettings())
     
     #check result at default integration time
     exudynTestGlobals.testResult = mbs.GetNodeOutput(nBody, exu.OutputVariableType.Rotation)[2]
@@ -5092,7 +5092,7 @@ miniExample =
 
     #assemble and solve system for default parameters
     mbs.Assemble()
-    exu.SolveDynamic(mbs)
+    mbs.SolveDynamic()
 
     #check result at default integration time
     exudynTestGlobals.testResult = mbs.GetNodeOutput(nMass, 
@@ -5471,7 +5471,7 @@ miniExample =
     mbs.Assemble()
     sims = exu.SimulationSettings()
     sims.timeIntegration.endTime = tEnd
-    exu.SolveDynamic(mbs, sims, solverType=exu.DynamicSolverType.RK67)
+    mbs.SolveDynamic(sims, solverType=exu.DynamicSolverType.RK67)
 
     #check result at default integration time
     #expect y=x after one period of orbiting (got: 100000.00000000479)
@@ -5713,7 +5713,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = ObjectConnectorReevingSystemSprings
-classDescription = "A rD reeving system defined by a list of torque-free and friction-free sheaves or points that are connected with one rope (modelled as massless spring). The force is assumed to be constant all over the rope. The sheaves or connection points are defined by $nr$ rigid body markers $[m_0, \, m_1, \, \ldots, \, m_{nr-1}]$. At both ends of the rope there may be a prescribed motion coupled to a coordinate marker each, given by $m_{c0}$ and $m_{c1}$ ."
+classDescription = "A rD reeving system defined by a list of torque-free and friction-free sheaves or points that are connected with one rope (modelled as massless spring). NOTE that the spring can undergo tension AND compression (in order to avoid compression, use a PreStepUserFunction to turn off stiffness and damping in this case!). The force is assumed to be constant all over the rope. The sheaves or connection points are defined by $nr$ rigid body markers $[m_0, \, m_1, \, \ldots, \, m_{nr-1}]$. At both ends of the rope there may be a prescribed motion coupled to a coordinate marker each, given by $m_{c0}$ and $m_{c1}$ ."
 cParentClass = CObjectConnector
 mainParentClass = MainObjectConnector
 visuParentClass = VisualizationObject
@@ -5832,10 +5832,21 @@ equations =
       \dot L_0 = f_0 \cdot \dot q_{m_{c0}} + f_1 \cdot \dot q_{m_{c1}}, \quad
     \ee
     while we set $L_0 = L_{ref}$ and $\dot L_0=0$ otherwise.
-    The force in the reeving system (assumed to be constant all over the rope) reads
+    The linear force in the reeving system (assumed to be constant all over the rope) is computed as
     \be
-      F = (L-L_{0}) \frac{EA}{L_0} + (\dot L - \dot L_0)\frac{DA}{L_0}
+      F_{lin} = (L-L_{0}) \frac{EA}{L_0} + (\dot L - \dot L_0)\frac{DA}{L_0}
     \ee
+    The rope force is computed from
+    \be
+      F =   \begin{cases} F_{lin} \quad \mathrm{if} \quad F_{lin} > 0 \\
+                          F_{reg} \cdot \mathrm{tanh}(F_{lin}/F_{reg})\quad \mathrm{else} 
+            \end{cases}
+    \ee
+    Which allows small compressive forces $F_{reg}$.
+    In case that $F_{reg} < 0$, compressive forces are not regularized (linear spring).
+    The case $F_{reg} = 0$ will be used in future only in combination with a data node, 
+    which allows switching similar as in friction and contact elements.
+    
     Note that in case of $L_0=0$, the term $\frac{1}{L_0}$ is replaced by $1000$.
     However, this case must be avoided by the user by choosing appropriate parameters for the system.
 
@@ -5856,6 +5867,7 @@ V,      CP,     stiffnessPerLength,             ,               ,       UReal,  
 V,      CP,     dampingPerLength,               ,               ,       UReal,      "0.",                     ,       IO,     "$DA$axial damping per length [SI:N/(m/s)/m] of rope; the effective damping coefficient of the reeving system is computed as $DA/L$ in which $L$ is the current length of the rope"
 V,      CP,     dampingTorsional,               ,               ,       UReal,      "0.",                     ,       IO,     "$DT$torsional damping [SI:Nms] between sheaves; this effect can damp rotations around the rope axis, pairwise between sheaves; this parameter is experimental"
 V,      CP,     dampingShear,                   ,               ,       UReal,      "0.",                     ,       IO,     "$DS$damping of shear motion [SI:Ns] between sheaves; this effect can damp motion perpendicular to the rope between each pair of sheaves; this parameter is experimental"
+V,      CP,     regularizationForce,            ,               ,       Real,       "0.1",                    ,       IO,     "$F_{reg}$small regularization force [SI:N] in order to avoid large compressive forces; this regularization force can either be $<0$ (using a linear tension/compression spring model) or $>0$, which restricts forces in the rope to be always $\ge -F_{reg}$. Note that smaller forces lead to problems in implicit integrators and smaller time steps. For explicit integrators, this force can be chosen close to zero."
 V,      CP,     referenceLength,                ,               ,       Real,       "0.",                     ,       IO,     "$L_{ref}$reference length for computation of roped force"
 V,      CP,     sheavesAxes,                    ,               ,       Vector3DList,"Vector3DList()",        ,       I,      "$\lv_a = [\LU{m0}{\av_0},\, \LU{m1}{\av_1},\, \ldots ] in [\Rcal^{3}, ...]$list of local vectors axes of sheaves; vectors refer to rigid body markers given in list of markerNumbers; first and last axes are ignored, as they represent the attachment of the rope ends"
 V,      CP,     sheavesRadii,                   ,               ,       Vector,      "Vector()",              ,       I,      "$\lv_r = [r_0,\, r_1,\, \ldots]\tp \in \Rcal^{n}$radius for each sheave, related to list of markerNumbers and list of sheaveAxes; first and last radii must always be zero."
@@ -5964,7 +5976,7 @@ miniExample =
     
     sims=exu.SimulationSettings()
     sims.timeIntegration.generalizedAlpha.spectralRadius=0.7
-    exu.SolveDynamic(mbs, sims)
+    mbs.SolveDynamic(sims)
 
     #check result at default integration time
     exudynTestGlobals.testResult = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Position)[0]
@@ -6136,7 +6148,7 @@ miniExample =
 
     #assemble and solve system for default parameters
     mbs.Assemble()
-    exu.SolveDynamic(mbs)
+    mbs.SolveDynamic()
 
     #check result at default integration time
     exudynTestGlobals.testResult  = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Displacement)[0]
@@ -7622,7 +7634,7 @@ miniExample =
 
     #assemble and solve system for default parameters
     mbs.Assemble()
-    exu.SolveDynamic(mbs, exu.SimulationSettings())
+    mbs.SolveDynamic(exu.SimulationSettings())
     
     #check result at default integration time
     exudynTestGlobals.testResult = mbs.GetNodeOutput(nBody, exu.OutputVariableType.Rotation)[2]
@@ -8794,7 +8806,7 @@ miniExample =
     #assemble and solve system for default parameters
     mbs.Assemble()
     
-    exu.SolveDynamic(mbs, solverType = exudyn.DynamicSolverType.TrapezoidalIndex2)
+    mbs.SolveDynamic(solverType = exudyn.DynamicSolverType.TrapezoidalIndex2)
 
     #check result at default integration time
     exudynTestGlobals.testResult = mbs.GetNodeOutput(nMass1, exu.OutputVariableType.Position)[0]
@@ -9460,7 +9472,7 @@ miniExample =
 
     #assemble and solve system for default parameters
     mbs.Assemble()
-    exu.SolveDynamic(mbs)
+    mbs.SolveDynamic()
 
     #check result
     exudynTestGlobals.testResult = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[2]
@@ -9847,7 +9859,7 @@ equations =
 
         #assemble and solve system for default parameters
         mbs.Assemble()
-        exu.SolveDynamic(mbs)
+        mbs.SolveDynamic()
 
         if False:
             from exudyn.plot import PlotSensor

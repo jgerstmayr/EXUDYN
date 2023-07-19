@@ -114,7 +114,7 @@ The user function arguments are as follows:
 
     #assemble and solve system for default parameters
     mbs.Assemble()
-    exu.SolveDynamic(mbs)
+    mbs.SolveDynamic()
 
     if False:
         from exudyn.plot import PlotSensor

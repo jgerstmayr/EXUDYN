@@ -585,7 +585,28 @@ class VSettingsLoads:
     showNumbers: bool
 
 
+class VSettingsSensorTraces:
+    lineWidth: float
+    listOfPositionSensors: ArrayIndex
+    listOfTriadSensors: ArrayIndex
+    listOfVectorSensors: ArrayIndex
+    positionsShowEvery: int
+    sensorsMbsNumber: int
+    showCurrent: bool
+    showFuture: bool
+    showPast: bool
+    showPositionTrace: bool
+    showTriads: bool
+    showVectors: bool
+    traceColors: ArrayFloat
+    triadSize: float
+    triadsShowEvery: int
+    vectorScaling: float
+    vectorsShowEvery: int
+
+
 class VSettingsSensors:
+    traces: VSettingsSensorTraces
     defaultColor: Tuple[float,float,float,float]
     defaultSize: float
     drawSimplified: bool
@@ -1449,7 +1470,7 @@ class MainSystem:
     def SolutionViewer(self, solution=None, rowIncrement=1, timeout=0.04, runOnStart=True, runMode=2, fontSize=12, title='', checkRenderEngineStopFlag=True) -> None: ...
 
     @overload
-    def CreateMassPoint(self, name='', referenceCoordinates=[0.,0.,0.], initialCoordinates=[0.,0.,0.], initialVelocities=[0.,0.,0.], physicsMass=0, gravity=[0.,0.,0.], graphicsDataList=[], drawSize=-1, color=[-1.,-1.,-1.,-1.], show=True, create2D=False, returnDict=False) -> Union[dict, ObjectIndex]: ...
+    def CreateMassPoint(self, name='', referencePosition=[0.,0.,0.], initialDisplacement=[0.,0.,0.], initialVelocity=[0.,0.,0.], physicsMass=0, gravity=[0.,0.,0.], graphicsDataList=[], drawSize=-1, color=[-1.,-1.,-1.,-1.], show=True, create2D=False, returnDict=False) -> Union[dict, ObjectIndex]: ...
 
     @overload
     def CreateRigidBody(self, name='', referencePosition=[0.,0.,0.], referenceRotationMatrix=np.eye(3), initialVelocity=[0.,0.,0.], initialAngularVelocity=[0.,0.,0.], initialDisplacement=None, initialRotationMatrix=None, inertia=None, gravity=[0.,0.,0.], nodeType=exudyn.NodeType.RotationEulerParameters, graphicsDataList=[], drawSize=-1, color=[-1.,-1.,-1.,-1.], show=True, create2D=False, returnDict=False) -> Union[dict, ObjectIndex]: ...

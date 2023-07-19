@@ -105,17 +105,18 @@ For details on the interaction of nodes, objects, markers and loads see \refSect
 
 There are several journal papers of the developers which were using \codeName\ (list may be incomplete):
 \bi
-  \item A. Zw{\"o}lfer, J. Gerstmayr. A concise nodal-based derivation of the floating frame of reference formulation for displacement-based solid finite elements, Journal of Multibody System Dynamics, Vol. 49(3), pp. 291 -- 313, 2020. \ignoreRST{\cite{ZwoelferGerstmayr2020}}
-  \item S. Holzinger, J. Sch{\"o}berl, J. Gerstmayr. The equations of motion for a rigid body using non-redundant unified local velocity coordinates. Multibody System Dynamics, Vol. 48, pp. 283 -- 309, 2020. \ignoreRST{\cite{HolzingerSchoeberl2020}}
-  \item S. Holzinger, J. Gerstmayr. Time integration of rigid bodies modelled with three rotation parameters, Multibody System Dynamics, Vol. 53(5), 2021. \ignoreRST{\cite{Holzinger2021}}
-  \item A. Zw{\"o}lfer, J. Gerstmayr. The nodal-based floating frame of reference formulation with modal reduction. Acta Mechanica, Vol. 232, pp.  835--851 (2021). \ignoreRST{\cite{ZwoelferGerstmayr2021}}
-  \item M. Pieber, K. Ntarladima, R. Winkler, J. Gerstmayr. A Hybrid ALE Formulation for the Investigation of the Stability of Pipes Conveying Fluid and Axially Moving Beams, ASME Journal of Computational and Nonlinear Dynamics, 2022. \ignoreRST{\cite{PieberNtarladima2022}}
-  \item S. Holzinger, M. Schieferle, C. Gutmann, M. Hofer, J. Gerstmayr. Modeling and Parameter Identification for a Flexible Rotor with Impacts. Journal of Computational and Nonlinear Dynamics, 2022. \ignoreRST{\cite{HolzingerSchieferle2022}}
-  \item	R. Neurauter, J. Gerstmayr. A novel motion reconstruction method for inertial sensors with constraints, Multibody System Dynamics, 2022. \cite{NeurauterGerstmayr2023}
   \item J. Gerstmayr. Exudyn -- A C++ based Python package for flexible multibody systems. Preprint, Research Square, 2023. \ignoreRST{\cite{
   Exudyn2023}} \url{https://doi.org/10.21203/rs.3.rs-2693700/v1}
+  \item P. Manzl, O. Rogov, J. Gerstmayr, A. Mikkola, G. Orzechowski. Reliability Evaluation of Reinforcement Learning Methods for Mechanical Systems with Increasing Complexity.  Preprint, Research Square, 2023. \ignoreRST{\cite{ManzlRL2023}} \url{https://doi.org/10.21203/rs.3.rs-3066420/v1}
   \item S. Holzinger, M. Arnold, J. Gerstmayr. Evaluation and Implementation of Lie Group Integration Methods for Rigid Multibody Systems. Preprint, Research Square, 2023. \ignoreRST{\cite{HolzingerArnoldGerst2023}} \url{https://doi.org/10.21203/rs.3.rs-2715112/v1} 
   \item M. Sereinig, P. Manzl, and J. Gerstmayr. Task Dependent Comfort Zone, a Base Placement Strategy for Autonomous Mobile Manipulators using Manipulability Measures, Robotics and Autonomous Systems, submitted. \cite{Sereinig2023comfortZone}
+  \item R. Neurauter, J. Gerstmayr. A novel motion reconstruction method for inertial sensors with constraints, Multibody System Dynamics, 2022. \cite{NeurauterGerstmayr2023}
+  \item M. Pieber, K. Ntarladima, R. Winkler, J. Gerstmayr. A Hybrid ALE Formulation for the Investigation of the Stability of Pipes Conveying Fluid and Axially Moving Beams, ASME Journal of Computational and Nonlinear Dynamics, 2022. \ignoreRST{\cite{PieberNtarladima2022}}
+  \item S. Holzinger, M. Schieferle, C. Gutmann, M. Hofer, J. Gerstmayr. Modeling and Parameter Identification for a Flexible Rotor with Impacts. Journal of Computational and Nonlinear Dynamics, 2022. \ignoreRST{\cite{HolzingerSchieferle2022}}
+  \item S. Holzinger, J. Gerstmayr. Time integration of rigid bodies modelled with three rotation parameters, Multibody System Dynamics, Vol. 53(5), 2021. \ignoreRST{\cite{Holzinger2021}}
+  \item A. Zw{\"o}lfer, J. Gerstmayr. The nodal-based floating frame of reference formulation with modal reduction. Acta Mechanica, Vol. 232, pp.  835--851 (2021). \ignoreRST{\cite{ZwoelferGerstmayr2021}}
+  \item A. Zw{\"o}lfer, J. Gerstmayr. A concise nodal-based derivation of the floating frame of reference formulation for displacement-based solid finite elements, Journal of Multibody System Dynamics, Vol. 49(3), pp. 291 -- 313, 2020. \ignoreRST{\cite{ZwoelferGerstmayr2020}}
+  \item S. Holzinger, J. Sch{\"o}berl, J. Gerstmayr. The equations of motion for a rigid body using non-redundant unified local velocity coordinates. Multibody System Dynamics, Vol. 48, pp. 283 -- 309, 2020. \ignoreRST{\cite{HolzingerSchoeberl2020}}
 \ei
 
 \mysubsubsection{Developers of \codeName\ and thanks}
@@ -159,7 +160,7 @@ The following people have contributed to Python and C++ library implementations,
 So far (2021-07), we tested
 \bi
   \item \mybold{Anaconda 2021-11, 64bit, Python 3.9}\footnote{older Anaconda3 versions can be downloaded via the repository archive \texttt{https://repo.anaconda.com/archive/}}
-  \item Currently, we work with Python 3.6 - Python 3.10 \mybold{conda environments} on Windows, Linux and MacOS (3.8-3.10).
+  \item Currently, we work with Python 3.6 - Python 3.11 \mybold{conda environments} on Windows, Linux and MacOS (3.8-3.10).
   \item \mybold{Spyder 5.1.5} (with Python 3.9.7, 64bit) and \mybold{Spyder 4.1.3} (with Python 3.7.7, 64bit), which is included in the Anaconda installation\footnote{Note that it is important that Spyder, Python and \codeName\  are \mybold{either} 32bit \mybold{or} 64bit and are compiled up to the same minor version, i.e., 3.7.x. There will be a strange .DLL error, if you mix up 32/64bit. It is possible to install both, Anaconda 32bit and Anaconda 64bit -- then you should follow the recommendations of paths as suggested by Anaconda installer.}; Spyder works with all virtual environments
 \ei
 Many alternative options exist:
@@ -187,7 +188,7 @@ If you do not install Anaconda (e.g., under Linux), make sure that you have the 
 You can install most of these packages using \texttt{pip install numpy} (Windows) or \texttt{pip3 install numpy} (Linux).
 NOTE: as there is only \texttt{numpy} needed (but not for all sub-packages) and \texttt{numpy} supports many variants, we do not add a particular requirement for installation of depending packages. It is not necessary to install \texttt{scipy} as long as you are not using features of \texttt{scipy}. Same reason for \texttt{tkinter} and \texttt{matplotlib}.
 
-For interaction (right-mouse-click, some key-board commands) you need the Python module \texttt{tkinter}. This is included in regular Anaconda distributions (recommended, see below), but on UBUNTU you need to type alike (do not forget the '3', otherwise it installs for Python2 ...):
+For interaction (right-mouse-click, some key-board commands) you need the Python module \texttt{tkinter}. This is included in regular Anaconda distributions (recommended, see below), but on Ubuntu you need to type alike (do not forget the '3', otherwise it installs for Python2 ...):
 \bi
   \item[] \texttt{sudo apt-get install python3-tk}
 \ei
@@ -199,52 +200,67 @@ Pre-built versions of \codeName\ are hosted on \texttt{pypi.org}, see the projec
 \bi
  \item \exuUrl{https://pypi.org/project/exudyn}{https://pypi.org/project/exudyn}
 \ei
-As with most other packages, in the regular case (if your binary has been pre-built) you just need to do\footnote{If the index of pypi is not updated, it may help to use \texttt{pip install -i https://pypi.org/project/ exudyn} }
+As with most other packages, in the regular case (if your binary has been pre-built) you just need to do
 \bi
   \item[] \texttt{pip install exudyn}
 \ei
-On Linux (currently only pre-built for UBUNTU, but should work on many other linux platforms), {\bf update pip to at least 20.3} and use 
+On Ubuntu/Linux, make sure that pip is installed and up-to-date ({\bf update pip to at least 20.3}; otherwise the manylinux wheels will not be accepted!):
+\bi 
+  \item[] \texttt{sudo apt install python3-pip}
+  \item[] \texttt{python3 -m pip install --upgrade}
+\ei
+Depending on installation the command may read \texttt{pip3} or \texttt{pip}: 
 \bi
   \item[] \texttt{pip3 install exudyn}
 \ei
-For pre-releases (use with care!), add '$--$pre' flag:
+For pre-releases (use with care!), add \texttt{-{}-pre} flag:
 \bi
-  \item[] \texttt{pip install exudyn $--$pre}
+  \item[] \texttt{pip install exudyn -{}-pre -U}
 \ei
-In some cases (e.g. for AppleM1), your pre-built binary will not work due to some incompatibilities. Then you need to build from source as described in the 'Build and install' sections, \refSection{sec:install:installinstructions:buildwindows}.
-%
-%%+++++++++++++++++++++++++++++++++++++
-%\mysubsubsection{DEPRECATED: Install with Windows MSI installer}
-%A simple way to install \codeName\ on Windows 10 (and maybe also Windows 7) is to use \texttt{.msi} installers in the \texttt{main/dist} directory\footnote{It works better \mybold{if you installed only one Python version} and if you installed Anaconda with the option \mybold{'Register Anaconda as my default Python 3.x'} or similar; in other cases you may to specify some installation directories, etc.}:
-%\bi
-%\item NOTE (2022-03-18): \texttt{.msi} installers are now only available for selected Python versions; however, wheels can be downloaded directly from \exuUrl{https://pypi.org/project/exudyn}{https://pypi.org/project/exudyn}, see below
-%\item For the 64bits Python 3.7 version, double click on (version may differ):\ignoreRST{\\} \texttt{exudyn-1.0.248.win-amd64-py3.7.msi}
-%\item Follow the instructions of the installer
-%\item If Python / Anaconda is not found by the installer, provide the 'Python directory' as the installation directory of Anaconda3, which usually is installed in:\\
-%\texttt{C:$\backslash$ProgramData$\backslash$Anaconda3}
-%\ei
+The \texttt{-U} (identical to \texttt{--upgrade}) flag ensures that the current installed version is also updated in case of a change of the micro version (e.g., from version 1.6.119 to version 1.6.164), otherwise, it will only update if you switch to a newer minor version.
+
+In some cases (e.g. for AppleM1 or special Linux versions), your pre-built binary will not work due to some incompatibilities. Then you need to build from source as described in the 'Build and install' sections, \refSection{sec:install:installinstructions:buildwindows}.
+
+\mysubsubsubsection{Troubleshooting pip install}
+Pip install may fail, if your linux version does not support the current manylinux version.
+This is known for CentOS or simlilar systems which usually support manylinux2014. In this case, you have to build \codeName\ from source, see \refSection{sec:install:installinstructions:buildubuntu}.
+
+Sometimes, you install exudyn, but when running python, the \texttt{import exudyn} fails.
+In case of several environments, check where your installation goes. To guarantee that the pip install goes to the python call, use:
+\bi 
+  \item[] \texttt{python -m pip install exudyn} 
+\ei
+which ensures that the used python is calling its associated pip module.
+
+If the PyPi index is not updated, it may help to use 
+\bi 
+  \item[] \texttt{pip install -i https://pypi.org/project/ exudyn}
+\ei
 
 %+++++++++++++++++++++++++++++++++++++
-\mysubsubsectionlabel{Install from specific Wheel (UBUNTU and Windows)}{sec:install:installinstructions:wheel}
+\mysubsubsectionlabel{Install from specific Wheel (Ubuntu and Windows)}{sec:install:installinstructions:wheel}
 A way to install the Python package \codeName\ is to use the so-called 'wheels' (file ending \texttt{.whl}).
+NOTE that this approach usually is not required; just use the pip installer of the previous section!
+
+\noindent \mybold{Ubuntu}:\vspace{6pt}\\
 Wheels can be downloaded directly from \exuUrl{https://pypi.org/project/exudyn/\#files}{https://pypi.org/project/exudyn/\#files}, for many Python versions and architectures.
 \vspace{6pt}\\
-For UBUNTU18.04 (which by default uses Python 3.6) this may read (version number 1.0.20 may be different):
+For Ubuntu 18.04 (which by default uses Python 3.6) this may read (version number 1.0.20 may be different):
 \bi
   \item \texttt{Python 3.6, 64bit}: pip3 install dist$\backslash$exudyn-1.0.20-cp36-cp36-linux\_x86\_64.whl
 \ei
-For UBUNTU20.04 (which by default uses Python 3.8) this may read (version number 1.0.20 may be different):
+For Ubuntu 20.04 (which by default uses Python 3.8) this may read (version number 1.0.20 may be different):
 \bi
   \item \texttt{Python 3.8, 64bit}: pip3 install dist$\backslash$exudyn-1.0.20-cp38-cp38-linux\_x86\_64.whl
 \ei
 NOTE that your installation may have environments with different Python versions, so install that \codeName\ version appropriately!
-If the wheel installation does not work on UBUNTU, it is highly recommended to build \codeName\ for your specific system as given in \refSection{sec:install:installinstructions:buildubuntu}.
+If the wheel installation does not work on Ubuntu, it is highly recommended to build \codeName\ for your specific system as given in \refSection{sec:install:installinstructions:buildubuntu}.
 
 \noindent \mybold{Windows}:\vspace{6pt}\\
 First, open an Anaconda prompt:
 \bi
   \item EITHER calling: START->Anaconda->... OR go to anaconda/Scripts folder and call activate.bat
-  \item You can check your Python version then, by running \texttt{python}\footnote{\texttt{python3} under UBUNTU 18.04}, the output reads like:
+  \item You can check your Python version then, by running \texttt{python}\footnote{\texttt{python3} under Ubuntu 18.04}, the output reads like:
   \bi
     \item[] \texttt{Python 3.6.5 $|$Anaconda, Inc.$|$ (default, Mar 29 2018, 13:32:41) $[$MSC v.1900 64 bit (AMD64)$]$ on win32}
     \item[] ...
@@ -369,9 +385,9 @@ in order to interact with the render window, as there is only a single-threaded 
 
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-\mysubsubsectionlabel{Build and install \codeName\ under UBUNTU?}{sec:install:installinstructions:buildubuntu}
+\mysubsubsectionlabel{Build and install \codeName\ under Ubuntu?}{sec:install:installinstructions:buildubuntu}
 %
-Having a new UBUNTU 18.04 standard installation (e.g. using a VM virtual box environment), the following steps need to be done (Python \mybold{3.6} is already installed on UBUNTU18.04, otherwise use \texttt{sudo apt install python3})\footnote{see also the youtube video: \exuUrl{https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg\_jtl6fx}{https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg\_jtl6fx}}:
+Having a new Ubuntu 18.04 standard installation (e.g. using a VM virtual box environment), the following steps need to be done (Python \mybold{3.6} is already installed on Ubuntu 18.04, otherwise use \texttt{sudo apt install python3})\footnote{see also the youtube video: \exuUrl{https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg\_jtl6fx}{https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg\_jtl6fx}}:
 
 \noindent First update ...
 \plainlststyle
@@ -380,7 +396,7 @@ Having a new UBUNTU 18.04 standard installation (e.g. using a VM virtual box env
 \end{lstlisting}
 
 \noindent 
-Install necessary Python libraries and pip3; \texttt{matplotlib} and\texttt{scipy} are not required for installation but used in \codeName\ examples:
+Install necessary Python libraries and pip3; \texttt{matplotlib} and \texttt{scipy} are not required for installation but used in \codeName\ examples:
 \begin{lstlisting}
   sudo dpkg --configure -a
   sudo apt install python3-pip
@@ -394,12 +410,22 @@ Install necessary Python libraries and pip3; \texttt{matplotlib} and\texttt{scip
   pip3 install pybind11
 \end{lstlisting}
 
+\noindent To have dialogs enabled, you need to install \texttt{Tk}/\texttt{tkinter} (may be already installed in your case). 
+\texttt{Tk} is installed on Ubuntu via apt-get and should then be available in Python:
+\begin{lstlisting}
+  sudo apt-get install python3-tk
+\end{lstlisting}
+
 \noindent 
-If graphics is used (\texttt{\#define USE\_GLFW\_GRAPHICS} in \texttt{BasicDefinitions.h}), you must install the according GLFW and OpenGL libs:
+If graphics is used (\texttt{\#define USE\_GLFW\_GRAPHICS} in \texttt{BasicDefinitions.h}), you must install the according GLFW libs:
+\begin{lstlisting}
+  sudo apt-get install libglfw3 libglfw3-dev
+\end{lstlisting}
+
+In some cases, it may be required to install OpenGL and some of the following libraries:
 \begin{lstlisting}
   sudo apt-get install freeglut3 freeglut3-dev
   sudo apt-get install mesa-common-dev
-  sudo apt-get install libglfw3 libglfw3-dev
   sudo apt-get install libx11-dev xorg-dev libglew1.5 libglew1.5-dev libglu1-mesa libglu1-mesa-dev libgl1-mesa-glx libgl1-mesa-dev
 \end{lstlisting}
 
@@ -415,7 +441,7 @@ Congratulation! \mybold{Now, run a test example} (will also open an OpenGL windo
   \item[] \texttt{python3 pythonDev/Examples/rigid3Dexample.py}
 \ei
 
-\noindent You can also create a UBUNTU wheel which can be easily installed on the same machine (x64), same operating system (UBUNTU18.04) and with same Python version (e.g., 3.6):
+\noindent You can also create a Ubuntu wheel which can be easily installed on the same machine (x64), same operating system (Ubuntu 18.04) and with same Python version (e.g., 3.6):
 \bi
   \item[] \texttt{sudo pip3 install wheel}
   \item[] \texttt{sudo python3 setup.py bdist\_wheel --parallel}
@@ -423,12 +449,13 @@ Congratulation! \mybold{Now, run a test example} (will also open an OpenGL windo
 
 \noindent \mybold{Exudyn under Ubuntu / WSL}:
 \bi
-  \item Note that \codeName\ also nicely works under WSL (Windows subsystem for linux; tested for Ubuntu18.04) and an according xserver (VcXsrv).
-  \item Just set the display variable in your .bashrc file accordingly and you can enjoy the OpenGL windows and settings.
+  \item Note that \codeName\ also nicely works under WSL (Windows subsystem for linux; tested for Ubuntu 18.04) and an according xserver (VcXsrv).
+  \item In case of old WSL2, just set the display variable in your .bashrc file accordingly and you can enjoy the OpenGL windows and settings.
   \item It shall be noted that WSL + xserver works better than on MacOS, even for tkinter, multitasking, etc.! So, if you have troubles with your Mac, use a virtual machine with ubuntu and a xserver, that may do better
+  \item In case of WSLg (since 2021), only the software-OpenGL works; therefore, you have to set (possibly in .bashrc file): \texttt{export LIBGL\_ALWAYS\_SOFTWARE=0}
 \ei
 
-\noindent \mybold{Exudyn under Raspberry Pi 4b}:
+\noindent \mybold{Exudyn under RaspberryPi 4b}:
 \bi
   \item Exudyn also compiles under RaspberryPi 4b, Ubuntu Mate 20.04, Python 3.8; current version should compile out of the box using \texttt{python3 setup.py install} command.
   \item Performance is quite ok and it is even capable to use all cores (but you should add a fan!)
@@ -438,7 +465,7 @@ Congratulation! \mybold{Now, run a test example} (will also open an OpenGL windo
 \noindent \mybold{KNOWN issues for linux builds}:
 \bi
   \item Using \mybold{WSL2} (Windows subsystem for linux), there occur some conflicts during build because of incompatible windows and linux file systems and builds will not be copied to the dist folder; workaround: go to explorer, right click on 'build' directory and set all rights for authenticated user to 'full access'
-  \item \mybold{compiler (gcc,g++) conflicts}: It seems that \codeName works well on UBUNTU18.04 with the original \texttt{Python 3.6.9} and \texttt{gcc-7.5.0} version as well as with UBUNTU20.04 with \texttt{Python 3.8.5} and \texttt{gcc-9.3.0}. Upgrading \texttt{gcc} on a linux system with Python 3.6 to, e.g., \texttt{gcc-8.2} showed us a linker error when loading the \codeName\ module in Python -- there are some common restriction using \texttt{gcc} versions different from those with which the Python version has been built. Starting \texttt{python} or \texttt{python3} on your linux machine shows you the \texttt{gcc} version it had been build with. Check your current \texttt{gcc} version with: \texttt{gcc --version}
+  \item \mybold{compiler (gcc,g++) conflicts}: It seems that \codeName works well on Ubuntu 18.04 with the original \texttt{Python 3.6.9} and \texttt{gcc-7.5.0} version as well as with Ubuntu 20.04 with \texttt{Python 3.8.5} and \texttt{gcc-9.3.0}. Upgrading \texttt{gcc} on a Linux system with Python 3.6 to, e.g., \texttt{gcc-8.2} showed us a linker error when loading the \codeName\ module in Python -- there are some common restriction using \texttt{gcc} versions different from those with which the Python version has been built. Starting \texttt{python} or \texttt{python3} on your linux machine shows you the \texttt{gcc} version it had been build with. Check your current \texttt{gcc} version with: \texttt{gcc --version}
 \ei
 
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -448,7 +475,7 @@ To uninstall exudyn under Windows, run (may require admin rights):
 \bi
   \item[] \texttt{pip uninstall exudyn}
 \ei
-\noindent To uninstall under UBUNTU, run:
+\noindent To uninstall under Ubuntu, run:
 \bi
   \item[] \texttt{sudo pip3 uninstall exudyn}
 \ei
@@ -475,7 +502,7 @@ In order to make full usage of the C++ code and extending it, you can use:
     \item link it to your own code
     \item NOTE: on Linux systems, you mostly need to replace '$/$' with '$\backslash$'
   \ei
-  \item Linux, etc.: not fully supported yet; however, all external libraries are Linux-compatible and thus should run with minimum adaptation efforts.
+  \item Linux, etc.: Use the build methods described above; Visual Studio Code may allow native Python and C++ debugging; switching to other build mechanisms (CMakeLists or scikit-build-core).
 \ei
 %
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -657,7 +684,7 @@ to explicitly load the version without AVX2.
 \end{lstlisting}
 %
 %
-\item Typical Python \mybold{import error} message on Linux / UBUNTU if Python modules are missing:
+\item Typical Python \mybold{import error} message on Linux / Ubuntu if Python modules are missing:
 \plainlststyle
 \begin{lstlisting}
   Python WARNING [file '/home/johannes/.local/lib/python3.6/site-packages/exudyn/solver.py', line 236]: 

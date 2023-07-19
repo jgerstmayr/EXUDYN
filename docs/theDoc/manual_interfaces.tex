@@ -359,9 +359,9 @@ mbs = SC.AddSystem()
 \end{center}
 
 %++++++++++++++++++++
-\mysubsubsection{MainSystem Python extensions}
-\label{sec:mainsystem:pythonExtensions}
-This section represents [experimental] extensions to MainSystem, which are direct calls to Python functions, such as PlotSensor or SolveDynamic; these extensions allow a more intuitive interaction with the MainSystem class, see the following example. For activation, import \texttt{exudyn.mainSystemExtensions} or \texttt{exudyn.utilities}
+\mysubsubsection{MainSystem extensions (create)}
+\label{sec:mainsystem:pythonExtensionsCreate}
+This section represents extensions to MainSystem, which are direct calls to Python functions; the 'create' extensions to simplify the creation of multibody systems, such as CreateMassPoint(...); these extensions allow a more intuitive interaction with the MainSystem class, see the following example. For activation, import \texttt{exudyn.mainSystemExtensions} or \texttt{exudyn.utilities}
 
 \pythonstyle
 \begin{lstlisting}[language=Python, firstnumber=1]
@@ -374,16 +374,33 @@ mbs = SC.AddSystem()
 #
 #create rigid body
 b1=mbs.CreateRigidBody(inertia = InertiaCuboid(density=5000, sideLengths=[0.1,0.1,1]),
-                            referencePosition = [1,0,0], 
-                            gravity = [0,0,-9.81])
+                       referencePosition = [1,0,0], 
+                       gravity = [0,0,-9.81])
+\end{lstlisting}
+
+\input{MainSystemCreateExt.tex}
+
+
+%++++++++++++++++++++
+\mysubsubsection{MainSystem extensions (general)}
+\label{sec:mainsystem:pythonExtensions}
+This section represents general extensions to MainSystem, which are direct calls to Python functions, such as PlotSensor or SolveDynamic; these extensions allow a more intuitive interaction with the MainSystem class, see the following example. For activation, import \texttt{exudyn.mainSystemExtensions} or \texttt{exudyn.utilities}
+
+\pythonstyle
+\begin{lstlisting}[language=Python, firstnumber=1]
+
+#this example sketches the usage 
+#for complete examples see Examples/ or TestModels/ folders
+#create some multibody system (mbs) first:
+# ... 
 #
-mbs.Assemble()
+#compute system degree of freedom: 
+mbs.ComputeSystemDegreeOfFreedom(verbose=True)
+#
 #call solver function directly from mbs:
-mbs.ComputeSystemDegreeOfFreedom()
-simulationSettings = exu.SimulationSettings()
-mbs.SolveDynamic(simulationSettings)
+mbs.SolveDynamic(exu.SimulationSettings())
 #
-#plot sensor sBody0 directly from mbs:
+#plot sensor directly from mbs:
 mbs.PlotSensor(...)
 \end{lstlisting}
 
@@ -1039,6 +1056,8 @@ The Vector3DList is used to represent lists of 3D vectors. This is used to trans
   len(data) & return length of the Vector3DList, using len(data) where data is the Vector3DList\\ \hline 
   data[index]= ... & set list item 'index' with data, write: data[index] = ...\\ \hline 
   ... = data[index] & get copy of list item with 'index' as vector\\ \hline 
+  \_\_copy\_\_() & copy method to be used for copy.copy(...); in fact does already deep copy\\ \hline 
+  \_\_deepcopy\_\_() & deepcopy method to be used for copy.copy(...)\\ \hline 
   \_\_repr\_\_() & return the string representation of the Vector3DList data, e.g.: print(data)\\ \hline 
 \end{longtable}
 \end{center}
@@ -1065,6 +1084,8 @@ The Vector2DList is used to represent lists of 2D vectors. This is used to trans
   len(data) & return length of the Vector2DList, using len(data) where data is the Vector2DList\\ \hline 
   data[index]= ... & set list item 'index' with data, write: data[index] = ...\\ \hline 
   ... = data[index] & get copy of list item with 'index' as vector\\ \hline 
+  \_\_copy\_\_() & copy method to be used for copy.copy(...); in fact does already deep copy\\ \hline 
+  \_\_deepcopy\_\_() & deepcopy method to be used for copy.copy(...)\\ \hline 
   \_\_repr\_\_() & return the string representation of the Vector2DList data, e.g.: print(data)\\ \hline 
 \end{longtable}
 \end{center}
@@ -1088,6 +1109,8 @@ The Vector6DList is used to represent lists of 6D vectors. This is used to trans
   len(data) & return length of the Vector6DList, using len(data) where data is the Vector6DList\\ \hline 
   data[index]= ... & set list item 'index' with data, write: data[index] = ...\\ \hline 
   ... = data[index] & get copy of list item with 'index' as vector\\ \hline 
+  \_\_copy\_\_() & copy method to be used for copy.copy(...); in fact does already deep copy\\ \hline 
+  \_\_deepcopy\_\_() & deepcopy method to be used for copy.copy(...)\\ \hline 
   \_\_repr\_\_() & return the string representation of the Vector6DList data, e.g.: print(data)\\ \hline 
 \end{longtable}
 \end{center}
