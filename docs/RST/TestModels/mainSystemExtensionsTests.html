@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>mainSystemExtensionsTests.py &mdash; Exudyn1.6.164.dev1 1.6.164.dev1 documentation</title>
+  <title>mainSystemExtensionsTests.py &mdash; Exudyn1.7.0 1.7.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -39,7 +39,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.164.dev1
+            Exudyn1.7.0
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -151,7 +151,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.164.dev1</a>
+          <a href="../../../index.html">Exudyn1.7.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -213,8 +213,8 @@
 <span class="linenos"> 38</span><span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
 <span class="linenos"> 39</span><span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
 <span class="linenos"> 40</span>
-<span class="linenos"> 41</span><span class="n">b0</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">CreateMassPoint</span><span class="p">(</span><span class="n">referenceCoordinates</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-<span class="linenos"> 42</span>                       <span class="n">initialVelocities</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos"> 41</span><span class="n">b0</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">CreateMassPoint</span><span class="p">(</span><span class="n">referencePosition</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos"> 42</span>                       <span class="n">initialVelocity</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
 <span class="linenos"> 43</span>                       <span class="n">physicsMass</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">gravity</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">9.81</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
 <span class="linenos"> 44</span>                       <span class="n">drawSize</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color4blue</span><span class="p">)</span>
 <span class="linenos"> 45</span>
@@ -265,8 +265,8 @@
 <span class="linenos"> 90</span><span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
 <span class="linenos"> 91</span><span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
 <span class="linenos"> 92</span>
-<span class="linenos"> 93</span><span class="n">b0</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateMassPoint</span><span class="p">(</span><span class="n">referenceCoordinates</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-<span class="linenos"> 94</span>                         <span class="n">initialVelocities</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos"> 93</span><span class="n">b0</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateMassPoint</span><span class="p">(</span><span class="n">referencePosition</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos"> 94</span>                         <span class="n">initialVelocity</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
 <span class="linenos"> 95</span>                         <span class="n">physicsMass</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">gravity</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">9.81</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
 <span class="linenos"> 96</span>                         <span class="n">drawSize</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color4blue</span><span class="p">)</span>
 <span class="linenos"> 97</span>
@@ -299,7 +299,7 @@
 <span class="linenos">124</span><span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
 <span class="linenos">125</span><span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
 <span class="linenos">126</span>
-<span class="linenos">127</span><span class="n">b0</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateMassPoint</span><span class="p">(</span><span class="n">referenceCoordinates</span> <span class="o">=</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos">127</span><span class="n">b0</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateMassPoint</span><span class="p">(</span><span class="n">referencePosition</span> <span class="o">=</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
 <span class="linenos">128</span>                          <span class="n">physicsMass</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">gravity</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">9.81</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
 <span class="linenos">129</span>                          <span class="n">drawSize</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color4blue</span><span class="p">)</span>
 <span class="linenos">130</span>
@@ -456,8 +456,8 @@
 <span class="linenos">281</span><span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
 <span class="linenos">282</span><span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
 <span class="linenos">283</span>
-<span class="linenos">284</span><span class="n">b0</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateMassPoint</span><span class="p">(</span><span class="n">referenceCoordinates</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-<span class="linenos">285</span>                         <span class="n">initialVelocities</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos">284</span><span class="n">b0</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateMassPoint</span><span class="p">(</span><span class="n">referencePosition</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos">285</span>                         <span class="n">initialVelocity</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
 <span class="linenos">286</span>                         <span class="n">physicsMass</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">gravity</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">9.81</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
 <span class="linenos">287</span>                         <span class="n">drawSize</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color4blue</span><span class="p">)</span>
 <span class="linenos">288</span>
@@ -541,7 +541,7 @@
 <span class="linenos">366</span>                          <span class="n">gravity</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">9.81</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
 <span class="linenos">367</span>                          <span class="n">graphicsDataList</span> <span class="o">=</span> <span class="p">[</span><span class="nf">GraphicsDataOrthoCubePoint</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.1</span><span class="p">],</span>
 <span class="linenos">368</span>                                                                      <span class="n">color</span><span class="o">=</span><span class="n">color4orange</span><span class="p">)])</span>
-<span class="linenos">369</span><span class="n">m1</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateMassPoint</span><span class="p">(</span><span class="n">referenceCoordinates</span><span class="o">=</span><span class="p">[</span><span class="mf">5.5</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos">369</span><span class="n">m1</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateMassPoint</span><span class="p">(</span><span class="n">referencePosition</span><span class="o">=</span><span class="p">[</span><span class="mf">5.5</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
 <span class="linenos">370</span>                         <span class="n">physicsMass</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">drawSize</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">)</span>
 <span class="linenos">371</span><span class="n">n1</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetObject</span><span class="p">(</span><span class="n">m1</span><span class="p">)[</span><span class="s1">&#39;nodeNumber&#39;</span><span class="p">]</span>
 <span class="linenos">372</span>

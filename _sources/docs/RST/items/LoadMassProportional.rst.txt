@@ -95,7 +95,7 @@ MINI EXAMPLE for LoadMassProportional
    
    #assemble and solve system for default parameters
    mbs.Assemble()
-   exu.SolveDynamic(mbs)
+   mbs.SolveDynamic()
    
    #check result
    exudynTestGlobals.testResult = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[2]

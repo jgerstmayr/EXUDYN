@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>craneReevingSystem.py &mdash; Exudyn1.6.164.dev1 1.6.164.dev1 documentation</title>
+  <title>craneReevingSystem.py &mdash; Exudyn1.7.0 1.7.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -39,7 +39,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.164.dev1
+            Exudyn1.7.0
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -91,6 +91,7 @@
 <li class="toctree-l2"><a class="reference internal" href="beltDrivesComparison.html">beltDrivesComparison.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="bicycleIftommBenchmark.html">bicycleIftommBenchmark.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cartesianSpringDamper.html">cartesianSpringDamper.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chatGPTupdate.html">chatGPTupdate.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="CMSexampleCourse.html">CMSexampleCourse.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ComputeSensitivitiesExample.html">ComputeSensitivitiesExample.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="coordinateSpringDamper.html">coordinateSpringDamper.py</a></li>
@@ -160,6 +161,8 @@
 <li class="toctree-l2"><a class="reference internal" href="rigidRotor3DFWBW.html">rigidRotor3DFWBW.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rigidRotor3Dnutation.html">rigidRotor3Dnutation.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rigidRotor3Drunup.html">rigidRotor3Drunup.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ROSExampleMassPoint.html">ROSExampleMassPoint.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ROSExampleTurtle.html">ROSExampleTurtle.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="serialRobotFlexible.html">serialRobotFlexible.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="serialRobotInteractiveLimits.html">serialRobotInteractiveLimits.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="serialRobotInverseKinematics.html">serialRobotInverseKinematics.py</a></li>
@@ -207,7 +210,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.164.dev1</a>
+          <a href="../../../index.html">Exudyn1.7.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -522,116 +525,132 @@
 <span class="linenos">291</span>                                            <span class="n">visualization</span><span class="o">=</span><span class="nc">VReevingSystemSprings</span><span class="p">(</span><span class="n">ropeRadius</span><span class="o">=</span><span class="n">rRope</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color4dodgerblue</span><span class="p">)))</span>
 <span class="linenos">292</span>
 <span class="linenos">293</span>
-<span class="linenos">294</span>
-<span class="linenos">295</span>
-<span class="linenos">296</span><span class="c1">#%% +++++++++++++++++++++++++++++++</span>
-<span class="linenos">297</span><span class="c1"># #add sensors</span>
-<span class="linenos">298</span><span class="c1"># if True:</span>
-<span class="linenos">299</span><span class="c1">#     sPos1 = mbs.AddSensor(SensorNode(nodeNumber=nodeList[1], storeInternal=True,</span>
-<span class="linenos">300</span><span class="c1">#                                           outputVariableType=exu.OutputVariableType.Position))</span>
-<span class="linenos">301</span><span class="c1">#     sOmega1 = mbs.AddSensor(SensorNode(nodeNumber=nodeList[1], storeInternal=True,</span>
-<span class="linenos">302</span><span class="c1">#                                           outputVariableType=exu.OutputVariableType.AngularVelocity))</span>
-<span class="linenos">303</span><span class="c1">#     sLength= mbs.AddSensor(SensorObject(objectNumber=oRS, storeInternal=True,</span>
-<span class="linenos">304</span><span class="c1">#                                           outputVariableType=exu.OutputVariableType.Distance))</span>
-<span class="linenos">305</span><span class="c1">#     sLength_t= mbs.AddSensor(SensorObject(objectNumber=oRS, storeInternal=True,</span>
-<span class="linenos">306</span><span class="c1">#                                           outputVariableType=exu.OutputVariableType.VelocityLocal))</span>
-<span class="linenos">307</span>
-<span class="linenos">308</span>
-<span class="linenos">309</span><span class="k">def</span> <span class="nf">PreStepUserFunction</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
-<span class="linenos">310</span>    <span class="k">if</span> <span class="n">t</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">:</span>
-<span class="linenos">311</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">SetObjectParameter</span><span class="p">(</span><span class="n">ccCarr</span><span class="p">,</span> <span class="s1">&#39;offset&#39;</span><span class="p">,</span> <span class="n">SmoothStep</span><span class="p">(</span><span class="n">t</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.45</span><span class="o">*</span><span class="n">L</span><span class="p">))</span>
-<span class="linenos">312</span>    <span class="k">elif</span> <span class="n">t</span> <span class="o">&lt;=</span> <span class="mi">20</span><span class="p">:</span>
-<span class="linenos">313</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">SetObjectParameter</span><span class="p">(</span><span class="n">ccHook</span><span class="p">,</span> <span class="s1">&#39;offset&#39;</span><span class="p">,</span> <span class="n">SmoothStep</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">8</span><span class="o">*</span><span class="mf">0.40</span><span class="o">*</span><span class="n">H</span><span class="p">))</span>
-<span class="linenos">314</span>    <span class="k">elif</span> <span class="n">t</span> <span class="o">&lt;=</span> <span class="mi">30</span><span class="p">:</span>
-<span class="linenos">315</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">SetObjectParameter</span><span class="p">(</span><span class="n">ccCarr</span><span class="p">,</span> <span class="s1">&#39;offset&#39;</span><span class="p">,</span> <span class="n">SmoothStep</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mf">0.45</span><span class="o">*</span><span class="n">L</span><span class="p">,</span><span class="o">-</span><span class="mf">0.4</span><span class="o">*</span><span class="n">L</span><span class="p">))</span>
-<span class="linenos">316</span>    <span class="k">elif</span> <span class="n">t</span> <span class="o">&lt;=</span> <span class="mi">40</span><span class="p">:</span>
-<span class="linenos">317</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">SetObjectParameter</span><span class="p">(</span><span class="n">ccHook</span><span class="p">,</span> <span class="s1">&#39;offset&#39;</span><span class="p">,</span> <span class="n">SmoothStep</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="o">-</span><span class="mi">8</span><span class="o">*</span><span class="mf">0.40</span><span class="o">*</span><span class="n">H</span><span class="p">,</span><span class="mi">8</span><span class="o">*</span><span class="mf">0.45</span><span class="o">*</span><span class="n">H</span><span class="p">))</span>
-<span class="linenos">318</span>    <span class="k">else</span><span class="p">:</span>
-<span class="linenos">319</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">SetObjectParameter</span><span class="p">(</span><span class="n">ccCarr</span><span class="p">,</span> <span class="s1">&#39;offset&#39;</span><span class="p">,</span> <span class="n">SmoothStep</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">57</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.4</span><span class="o">*</span><span class="n">L</span><span class="p">,</span> <span class="mf">0.45</span><span class="o">*</span><span class="n">L</span><span class="p">))</span>
-<span class="linenos">320</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">SetObjectParameter</span><span class="p">(</span><span class="n">ccHook</span><span class="p">,</span> <span class="s1">&#39;offset&#39;</span><span class="p">,</span> <span class="n">SmoothStep</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">8</span><span class="o">*</span><span class="mf">0.45</span><span class="o">*</span><span class="n">H</span><span class="p">,</span> <span class="mi">6</span><span class="o">*</span><span class="mf">0.45</span><span class="o">*</span><span class="n">H</span><span class="p">))</span>
-<span class="linenos">321</span>
-<span class="linenos">322</span>    <span class="k">return</span> <span class="kc">True</span>
-<span class="linenos">323</span>
-<span class="linenos">324</span><span class="n">mbs</span><span class="o">.</span><span class="nf">SetPreStepUserFunction</span><span class="p">(</span><span class="n">PreStepUserFunction</span><span class="p">)</span>
+<span class="linenos">294</span><span class="c1">#show trace of hook</span>
+<span class="linenos">295</span><span class="n">sPosTCP</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorNode</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">nHook</span><span class="p">,</span> <span class="n">storeInternal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">296</span>                                   <span class="n">outputVariableType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Position</span><span class="p">))</span>
+<span class="linenos">297</span><span class="n">sRotTCP</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorNode</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">nHook</span><span class="p">,</span> <span class="n">storeInternal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">298</span>                                   <span class="n">outputVariableType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">RotationMatrix</span><span class="p">))</span>
+<span class="linenos">299</span>
+<span class="linenos">300</span><span class="c1">#%% +++++++++++++++++++++++++++++++</span>
+<span class="linenos">301</span><span class="c1"># #add sensors</span>
+<span class="linenos">302</span><span class="c1"># if True:</span>
+<span class="linenos">303</span><span class="c1">#     sPos1 = mbs.AddSensor(SensorNode(nodeNumber=nodeList[1], storeInternal=True,</span>
+<span class="linenos">304</span><span class="c1">#                                           outputVariableType=exu.OutputVariableType.Position))</span>
+<span class="linenos">305</span><span class="c1">#     sOmega1 = mbs.AddSensor(SensorNode(nodeNumber=nodeList[1], storeInternal=True,</span>
+<span class="linenos">306</span><span class="c1">#                                           outputVariableType=exu.OutputVariableType.AngularVelocity))</span>
+<span class="linenos">307</span><span class="c1">#     sLength= mbs.AddSensor(SensorObject(objectNumber=oRS, storeInternal=True,</span>
+<span class="linenos">308</span><span class="c1">#                                           outputVariableType=exu.OutputVariableType.Distance))</span>
+<span class="linenos">309</span><span class="c1">#     sLength_t= mbs.AddSensor(SensorObject(objectNumber=oRS, storeInternal=True,</span>
+<span class="linenos">310</span><span class="c1">#                                           outputVariableType=exu.OutputVariableType.VelocityLocal))</span>
+<span class="linenos">311</span>
+<span class="linenos">312</span>
+<span class="linenos">313</span><span class="k">def</span> <span class="nf">PreStepUserFunction</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+<span class="linenos">314</span>    <span class="k">if</span> <span class="n">t</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">:</span>
+<span class="linenos">315</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">SetObjectParameter</span><span class="p">(</span><span class="n">ccCarr</span><span class="p">,</span> <span class="s1">&#39;offset&#39;</span><span class="p">,</span> <span class="n">SmoothStep</span><span class="p">(</span><span class="n">t</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.45</span><span class="o">*</span><span class="n">L</span><span class="p">))</span>
+<span class="linenos">316</span>    <span class="k">elif</span> <span class="n">t</span> <span class="o">&lt;=</span> <span class="mi">20</span><span class="p">:</span>
+<span class="linenos">317</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">SetObjectParameter</span><span class="p">(</span><span class="n">ccHook</span><span class="p">,</span> <span class="s1">&#39;offset&#39;</span><span class="p">,</span> <span class="n">SmoothStep</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">8</span><span class="o">*</span><span class="mf">0.40</span><span class="o">*</span><span class="n">H</span><span class="p">))</span>
+<span class="linenos">318</span>    <span class="k">elif</span> <span class="n">t</span> <span class="o">&lt;=</span> <span class="mi">30</span><span class="p">:</span>
+<span class="linenos">319</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">SetObjectParameter</span><span class="p">(</span><span class="n">ccCarr</span><span class="p">,</span> <span class="s1">&#39;offset&#39;</span><span class="p">,</span> <span class="n">SmoothStep</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mf">0.45</span><span class="o">*</span><span class="n">L</span><span class="p">,</span><span class="o">-</span><span class="mf">0.4</span><span class="o">*</span><span class="n">L</span><span class="p">))</span>
+<span class="linenos">320</span>    <span class="k">elif</span> <span class="n">t</span> <span class="o">&lt;=</span> <span class="mi">40</span><span class="p">:</span>
+<span class="linenos">321</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">SetObjectParameter</span><span class="p">(</span><span class="n">ccHook</span><span class="p">,</span> <span class="s1">&#39;offset&#39;</span><span class="p">,</span> <span class="n">SmoothStep</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="o">-</span><span class="mi">8</span><span class="o">*</span><span class="mf">0.40</span><span class="o">*</span><span class="n">H</span><span class="p">,</span><span class="mi">8</span><span class="o">*</span><span class="mf">0.45</span><span class="o">*</span><span class="n">H</span><span class="p">))</span>
+<span class="linenos">322</span>    <span class="k">else</span><span class="p">:</span>
+<span class="linenos">323</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">SetObjectParameter</span><span class="p">(</span><span class="n">ccCarr</span><span class="p">,</span> <span class="s1">&#39;offset&#39;</span><span class="p">,</span> <span class="n">SmoothStep</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">57</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.4</span><span class="o">*</span><span class="n">L</span><span class="p">,</span> <span class="mf">0.45</span><span class="o">*</span><span class="n">L</span><span class="p">))</span>
+<span class="linenos">324</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">SetObjectParameter</span><span class="p">(</span><span class="n">ccHook</span><span class="p">,</span> <span class="s1">&#39;offset&#39;</span><span class="p">,</span> <span class="n">SmoothStep</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">8</span><span class="o">*</span><span class="mf">0.45</span><span class="o">*</span><span class="n">H</span><span class="p">,</span> <span class="mi">6</span><span class="o">*</span><span class="mf">0.45</span><span class="o">*</span><span class="n">H</span><span class="p">))</span>
 <span class="linenos">325</span>
-<span class="linenos">326</span><span class="c1">#%%++++++++++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos">327</span><span class="c1">#simulate:</span>
-<span class="linenos">328</span><span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
+<span class="linenos">326</span>    <span class="k">return</span> <span class="kc">True</span>
+<span class="linenos">327</span>
+<span class="linenos">328</span><span class="n">mbs</span><span class="o">.</span><span class="nf">SetPreStepUserFunction</span><span class="p">(</span><span class="n">PreStepUserFunction</span><span class="p">)</span>
 <span class="linenos">329</span>
-<span class="linenos">330</span><span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">()</span> <span class="c1">#takes currently set values or default values</span>
-<span class="linenos">331</span>
-<span class="linenos">332</span><span class="n">tEnd</span> <span class="o">=</span> <span class="mi">80</span>
-<span class="linenos">333</span><span class="n">h</span><span class="o">=</span><span class="mf">0.001</span>
-<span class="linenos">334</span>
-<span class="linenos">335</span><span class="n">solutionFile</span> <span class="o">=</span> <span class="s1">&#39;solution/coordsCrane.txt&#39;</span>
-<span class="linenos">336</span>
-<span class="linenos">337</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tEnd</span><span class="o">/</span><span class="n">h</span><span class="p">)</span>
-<span class="linenos">338</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="n">tEnd</span>
-<span class="linenos">339</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">writeSolutionToFile</span><span class="o">=</span> <span class="kc">True</span> <span class="c1">#set False for CPU performance measurement</span>
-<span class="linenos">340</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">solutionWritePeriod</span><span class="o">=</span> <span class="mf">0.2</span>
-<span class="linenos">341</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">coordinatesSolutionFileName</span> <span class="o">=</span> <span class="n">solutionFile</span>
-<span class="linenos">342</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">sensorsWritePeriod</span> <span class="o">=</span> <span class="mf">0.01</span>
-<span class="linenos">343</span><span class="c1"># simulationSettings.timeIntegration.simulateInRealtime=True</span>
-<span class="linenos">344</span><span class="c1"># simulationSettings.timeIntegration.realtimeFactor=5</span>
-<span class="linenos">345</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">graphicsUpdateInterval</span> <span class="o">=</span> <span class="mf">0.01</span>
-<span class="linenos">346</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">parallel</span><span class="o">.</span><span class="n">numberOfThreads</span><span class="o">=</span><span class="mi">4</span>
-<span class="linenos">347</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">displayComputationTime</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="linenos">348</span>
-<span class="linenos">349</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">verboseMode</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="linenos">350</span>
-<span class="linenos">351</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">useModifiedNewton</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">330</span><span class="c1">#%%++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">331</span><span class="c1">#simulate:</span>
+<span class="linenos">332</span><span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
+<span class="linenos">333</span>
+<span class="linenos">334</span><span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">()</span> <span class="c1">#takes currently set values or default values</span>
+<span class="linenos">335</span>
+<span class="linenos">336</span><span class="n">tEnd</span> <span class="o">=</span> <span class="mi">80</span>
+<span class="linenos">337</span><span class="n">h</span><span class="o">=</span><span class="mf">0.001</span>
+<span class="linenos">338</span>
+<span class="linenos">339</span><span class="n">solutionFile</span> <span class="o">=</span> <span class="s1">&#39;solution/coordsCrane.txt&#39;</span>
+<span class="linenos">340</span>
+<span class="linenos">341</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tEnd</span><span class="o">/</span><span class="n">h</span><span class="p">)</span>
+<span class="linenos">342</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="n">tEnd</span>
+<span class="linenos">343</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">writeSolutionToFile</span><span class="o">=</span> <span class="kc">True</span> <span class="c1">#set False for CPU performance measurement</span>
+<span class="linenos">344</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">solutionWritePeriod</span><span class="o">=</span> <span class="mf">0.2</span>
+<span class="linenos">345</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">coordinatesSolutionFileName</span> <span class="o">=</span> <span class="n">solutionFile</span>
+<span class="linenos">346</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">sensorsWritePeriod</span> <span class="o">=</span> <span class="mf">0.02</span>
+<span class="linenos">347</span><span class="c1"># simulationSettings.timeIntegration.simulateInRealtime=True</span>
+<span class="linenos">348</span><span class="c1"># simulationSettings.timeIntegration.realtimeFactor=5</span>
+<span class="linenos">349</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">graphicsUpdateInterval</span> <span class="o">=</span> <span class="mf">0.01</span>
+<span class="linenos">350</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">parallel</span><span class="o">.</span><span class="n">numberOfThreads</span><span class="o">=</span><span class="mi">4</span>
+<span class="linenos">351</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">displayComputationTime</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="linenos">352</span>
-<span class="linenos">353</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">show</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="linenos">354</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">drawNodesAsPoint</span>  <span class="o">=</span> <span class="kc">False</span>
-<span class="linenos">355</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">showBasis</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="linenos">356</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">basisSize</span> <span class="o">=</span> <span class="mf">0.2</span>
-<span class="linenos">357</span>
-<span class="linenos">358</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">multiSampling</span> <span class="o">=</span> <span class="mi">4</span>
-<span class="linenos">359</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">shadow</span> <span class="o">=</span> <span class="mf">0.3</span><span class="o">*</span><span class="mi">0</span>
-<span class="linenos">360</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">light0position</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span><span class="mi">200</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
-<span class="linenos">361</span>
-<span class="linenos">362</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">renderWindowSize</span><span class="o">=</span><span class="p">[</span><span class="mi">1920</span><span class="p">,</span><span class="mi">1200</span><span class="p">]</span>
-<span class="linenos">363</span><span class="c1">#SC.visualizationSettings.general.autoFitScene = False #use loaded render state</span>
-<span class="linenos">364</span><span class="n">useGraphics</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="linenos">365</span><span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
-<span class="linenos">366</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StartRenderer</span><span class="p">()</span>
-<span class="linenos">367</span>    <span class="k">if</span> <span class="s1">&#39;renderState&#39;</span> <span class="ow">in</span> <span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">:</span>
-<span class="linenos">368</span>        <span class="n">SC</span><span class="o">.</span><span class="nf">SetRenderState</span><span class="p">(</span><span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span> <span class="s1">&#39;renderState&#39;</span> <span class="p">])</span>
-<span class="linenos">369</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">WaitForUserToContinue</span><span class="p">()</span>
-<span class="linenos">370</span>
-<span class="linenos">371</span>
-<span class="linenos">372</span><span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="p">,</span>
-<span class="linenos">373</span>                 <span class="c1">#solverType=exu.DynamicSolverType.TrapezoidalIndex2 #in this case, drift shows up significantly!</span>
-<span class="linenos">374</span>                 <span class="p">)</span>
-<span class="linenos">375</span>
-<span class="linenos">376</span><span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
-<span class="linenos">377</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">WaitForRenderEngineStopFlag</span><span class="p">()</span>
-<span class="linenos">378</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StopRenderer</span><span class="p">()</span> <span class="c1">#safely close rendering window!</span>
-<span class="linenos">379</span>
-<span class="linenos">380</span>
-<span class="linenos">381</span><span class="k">if</span> <span class="kc">True</span><span class="p">:</span>
-<span class="linenos">382</span>    <span class="c1">#%%++++++++++++</span>
-<span class="linenos">383</span>
-<span class="linenos">384</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">autoFitScene</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="linenos">385</span>    <span class="c1"># solution = LoadSolutionFile(solutionFile)</span>
-<span class="linenos">386</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">SolutionViewer</span><span class="p">()</span> <span class="c1">#loads solution file via name stored in mbs</span>
+<span class="linenos">353</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">verboseMode</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="linenos">354</span>
+<span class="linenos">355</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">useModifiedNewton</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">356</span>
+<span class="linenos">357</span><span class="k">if</span> <span class="kc">True</span><span class="p">:</span>
+<span class="linenos">358</span>    <span class="c1">#traces:</span>
+<span class="linenos">359</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">traces</span><span class="o">.</span><span class="n">listOfPositionSensors</span> <span class="o">=</span> <span class="p">[</span><span class="n">sPosTCP</span><span class="p">]</span>
+<span class="linenos">360</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">traces</span><span class="o">.</span><span class="n">listOfTriadSensors</span> <span class="o">=</span><span class="p">[</span><span class="n">sRotTCP</span><span class="p">]</span>
+<span class="linenos">361</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">traces</span><span class="o">.</span><span class="n">showPositionTrace</span><span class="o">=</span><span class="kc">True</span>
+<span class="linenos">362</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">traces</span><span class="o">.</span><span class="n">showTriads</span><span class="o">=</span><span class="kc">True</span>
+<span class="linenos">363</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">traces</span><span class="o">.</span><span class="n">triadSize</span><span class="o">=</span><span class="mi">2</span>
+<span class="linenos">364</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">traces</span><span class="o">.</span><span class="n">showVectors</span><span class="o">=</span><span class="kc">False</span>
+<span class="linenos">365</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">traces</span><span class="o">.</span><span class="n">showFuture</span><span class="o">=</span><span class="kc">False</span>
+<span class="linenos">366</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">traces</span><span class="o">.</span><span class="n">triadsShowEvery</span><span class="o">=</span><span class="mi">5</span>
+<span class="linenos">367</span>
+<span class="linenos">368</span>
+<span class="linenos">369</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">show</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">370</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">drawNodesAsPoint</span>  <span class="o">=</span> <span class="kc">False</span>
+<span class="linenos">371</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">showBasis</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">372</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">basisSize</span> <span class="o">=</span> <span class="mf">0.2</span>
+<span class="linenos">373</span>
+<span class="linenos">374</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">multiSampling</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="linenos">375</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">shadow</span> <span class="o">=</span> <span class="mf">0.3</span><span class="o">*</span><span class="mi">0</span>
+<span class="linenos">376</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">light0position</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span><span class="mi">200</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos">377</span>
+<span class="linenos">378</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">renderWindowSize</span><span class="o">=</span><span class="p">[</span><span class="mi">1920</span><span class="p">,</span><span class="mi">1200</span><span class="p">]</span>
+<span class="linenos">379</span><span class="c1">#SC.visualizationSettings.general.autoFitScene = False #use loaded render state</span>
+<span class="linenos">380</span><span class="n">useGraphics</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">381</span><span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
+<span class="linenos">382</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StartRenderer</span><span class="p">()</span>
+<span class="linenos">383</span>    <span class="k">if</span> <span class="s1">&#39;renderState&#39;</span> <span class="ow">in</span> <span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">:</span>
+<span class="linenos">384</span>        <span class="n">SC</span><span class="o">.</span><span class="nf">SetRenderState</span><span class="p">(</span><span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span> <span class="s1">&#39;renderState&#39;</span> <span class="p">])</span>
+<span class="linenos">385</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">WaitForUserToContinue</span><span class="p">()</span>
+<span class="linenos">386</span>
 <span class="linenos">387</span>
-<span class="linenos">388</span><span class="c1">#%%++++++++++++</span>
-<span class="linenos">389</span><span class="k">if</span> <span class="kc">False</span><span class="p">:</span>
-<span class="linenos">390</span>
+<span class="linenos">388</span><span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="p">,</span>
+<span class="linenos">389</span>                 <span class="c1">#solverType=exu.DynamicSolverType.TrapezoidalIndex2 #in this case, drift shows up significantly!</span>
+<span class="linenos">390</span>                 <span class="p">)</span>
 <span class="linenos">391</span>
-<span class="linenos">392</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sPos1</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;pos X&#39;</span><span class="p">,</span><span class="s1">&#39;pos Y&#39;</span><span class="p">,</span><span class="s1">&#39;pos Z&#39;</span><span class="p">],</span> <span class="n">closeAll</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="linenos">393</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sOmega1</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;omega X&#39;</span><span class="p">,</span><span class="s1">&#39;omega Y&#39;</span><span class="p">,</span><span class="s1">&#39;omega Z&#39;</span><span class="p">])</span>
-<span class="linenos">394</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sLength</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;length&#39;</span><span class="p">])</span>
-<span class="linenos">395</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sLength_t</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;vel&#39;</span><span class="p">])</span>
+<span class="linenos">392</span><span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
+<span class="linenos">393</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">WaitForRenderEngineStopFlag</span><span class="p">()</span>
+<span class="linenos">394</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StopRenderer</span><span class="p">()</span> <span class="c1">#safely close rendering window!</span>
+<span class="linenos">395</span>
 <span class="linenos">396</span>
-<span class="linenos">397</span>
-<span class="linenos">398</span><span class="c1">#compute error for test suite:</span>
-<span class="linenos">399</span><span class="n">sol2</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetODE2Coordinates</span><span class="p">();</span>
-<span class="linenos">400</span><span class="n">u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">sol2</span><span class="p">);</span>
-<span class="linenos">401</span><span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s1">&#39;solution of craneReevingSystem=&#39;</span><span class="p">,</span><span class="n">u</span><span class="p">)</span>
-<span class="linenos">402</span>
-<span class="linenos">403</span><span class="n">exudynTestGlobals</span><span class="o">.</span><span class="n">testResult</span> <span class="o">=</span> <span class="n">u</span>
+<span class="linenos">397</span><span class="k">if</span> <span class="kc">True</span><span class="p">:</span>
+<span class="linenos">398</span>    <span class="c1">#%%++++++++++++</span>
+<span class="linenos">399</span>
+<span class="linenos">400</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">autoFitScene</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="linenos">401</span>    <span class="c1"># solution = LoadSolutionFile(solutionFile)</span>
+<span class="linenos">402</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">SolutionViewer</span><span class="p">()</span> <span class="c1">#loads solution file via name stored in mbs</span>
+<span class="linenos">403</span>
+<span class="linenos">404</span><span class="c1">#%%++++++++++++</span>
+<span class="linenos">405</span><span class="k">if</span> <span class="kc">False</span><span class="p">:</span>
+<span class="linenos">406</span>
+<span class="linenos">407</span>
+<span class="linenos">408</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sPos1</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;pos X&#39;</span><span class="p">,</span><span class="s1">&#39;pos Y&#39;</span><span class="p">,</span><span class="s1">&#39;pos Z&#39;</span><span class="p">],</span> <span class="n">closeAll</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">409</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sOmega1</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;omega X&#39;</span><span class="p">,</span><span class="s1">&#39;omega Y&#39;</span><span class="p">,</span><span class="s1">&#39;omega Z&#39;</span><span class="p">])</span>
+<span class="linenos">410</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sLength</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;length&#39;</span><span class="p">])</span>
+<span class="linenos">411</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sLength_t</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;vel&#39;</span><span class="p">])</span>
+<span class="linenos">412</span>
+<span class="linenos">413</span>
+<span class="linenos">414</span><span class="c1">#compute error for test suite:</span>
+<span class="linenos">415</span><span class="n">sol2</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetODE2Coordinates</span><span class="p">();</span>
+<span class="linenos">416</span><span class="n">u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">sol2</span><span class="p">);</span>
+<span class="linenos">417</span><span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s1">&#39;solution of craneReevingSystem=&#39;</span><span class="p">,</span><span class="n">u</span><span class="p">)</span>
+<span class="linenos">418</span>
+<span class="linenos">419</span><span class="n">exudynTestGlobals</span><span class="o">.</span><span class="n">testResult</span> <span class="o">=</span> <span class="n">u</span>
 </pre></div>
 </div>
 </section>

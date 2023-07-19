@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Simulation settings &mdash; Exudyn1.6.164.dev1 1.6.164.dev1 documentation</title>
+  <title>Simulation settings &mdash; Exudyn1.7.0 1.7.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -41,7 +41,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.164.dev1
+            Exudyn1.7.0
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -106,7 +106,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.164.dev1</a>
+          <a href="../../../index.html">Exudyn1.7.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -126,7 +126,7 @@
            <div itemprop="articleBody">
              
   <section id="simulation-settings">
-<h1>Simulation settings<a class="headerlink" href="#simulation-settings" title="Permalink to this heading"></a></h1>
+<span id="sec-simulationsettingsmain"></span><h1>Simulation settings<a class="headerlink" href="#simulation-settings" title="Permalink to this heading"></a></h1>
 <p>This section includes hierarchical structures for simulation settings, e.g., time integration, static solver, Newton iteration and solution file export.</p>
 <section id="solutionsettings">
 <span id="sec-solutionsettings"></span><h2>SolutionSettings<a class="headerlink" href="#solutionsettings" title="Permalink to this heading"></a></h2>
@@ -862,7 +862,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>pivotThreshold</strong> [type = PReal, default = 0]:</div>
+<div class="line"><strong>pivotThreshold</strong> [type = UReal, default = 0]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.linearSolverSettings.pivotThreshold</span></code></div>
 <div class="line">[ONLY available for EXUdense and EigenDense (FullPivot) solver] threshold for dense linear solver, can be used to detect close to singular solutions, setting this to, e.g., 1e-12; solver then reports on equations that are causing close to singularity</div>
 </div>

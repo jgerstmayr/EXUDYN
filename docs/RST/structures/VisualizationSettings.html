@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Visualization settings &mdash; Exudyn1.6.164.dev1 1.6.164.dev1 documentation</title>
+  <title>Visualization settings &mdash; Exudyn1.7.0 1.7.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -41,7 +41,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.164.dev1
+            Exudyn1.7.0
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -79,6 +79,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#vsettingsconnectors">VSettingsConnectors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#vsettingsmarkers">VSettingsMarkers</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#vsettingsloads">VSettingsLoads</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vsettingssensortraces">VSettingsSensorTraces</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#vsettingssensors">VSettingsSensors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#vsettingscontact">VSettingsContact</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#vsettingswindow">VSettingsWindow</a></li>
@@ -113,7 +114,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.164.dev1</a>
+          <a href="../../../index.html">Exudyn1.7.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -133,7 +134,7 @@
            <div itemprop="articleBody">
              
   <section id="visualization-settings">
-<h1>Visualization settings<a class="headerlink" href="#visualization-settings" title="Permalink to this heading"></a></h1>
+<span id="sec-visualizationsettingsmain"></span><h1>Visualization settings<a class="headerlink" href="#visualization-settings" title="Permalink to this heading"></a></h1>
 <p>This section includes hierarchical structures for visualization settings, e.g., drawing of nodes, bodies, connectors, loads and markers and furthermore openGL, window and save image options. For further information, see Section <a class="reference internal" href="../ExudynBasics.html#sec-overview-basics-visualizationsettings"><span class="std std-ref">Visualization settings dialog</span></a>.</p>
 <section id="vsettingsgeneral">
 <span id="sec-vsettingsgeneral"></span><h2>VSettingsGeneral<a class="headerlink" href="#vsettingsgeneral" title="Permalink to this heading"></a></h2>
@@ -774,11 +775,126 @@
 </li>
 </ul>
 </section>
+<section id="vsettingssensortraces">
+<span id="sec-vsettingssensortraces"></span><h2>VSettingsSensorTraces<a class="headerlink" href="#vsettingssensortraces" title="Permalink to this heading"></a></h2>
+<p>Visualization settings for traces of sensors. Note that a large number of time points (influenced by simulationSettings.solutionSettings.sensorsWritePeriod) may lead to slow graphics.</p>
+<p>VSettingsSensorTraces has the following items:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>lineWidth</strong> [type = UFloat, default = 2.]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensorTraces.lineWidth</span></code></div>
+<div class="line">line width for traces</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>listOfPositionSensors</strong> [type = ArrayIndex, default = [], size = -1]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensorTraces.listOfPositionSensors</span></code></div>
+<div class="line">list of position sensors which can be shown as trace inside render window if sensors have storeInternal=True; if this list is empty and showPositionTrace=True, then all available sensors are shown</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>listOfTriadSensors</strong> [type = ArrayIndex, default = [], size = -1]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensorTraces.listOfTriadSensors</span></code></div>
+<div class="line">list of sensors of with OutputVariableType RotationMatrix; this non-empty list needs to coincide in length with the listOfPositionSensors to be shown if showTriads=True; the triad is drawn at the related position</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>listOfVectorSensors</strong> [type = ArrayIndex, default = [], size = -1]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensorTraces.listOfVectorSensors</span></code></div>
+<div class="line">list of sensors with 3D vector quantities; this non-empty list needs to coincide in length with the listOfPositionSensors to be shown if showVectors=True; the vector quantity is drawn relative to the related position</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>positionsShowEvery</strong> [type = PInt, default = 1]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensorTraces.positionsShowEvery</span></code></div>
+<div class="line">integer value i; out of available sensor data, show every i-th position</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>sensorsMbsNumber</strong> [type = Index, default = 0]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensorTraces.sensorsMbsNumber</span></code></div>
+<div class="line">number of main system which is used to for sensor lists; if only 1 mbs is in the SystemContainer, use 0; if there are several mbs, it needs to specify the number</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>showCurrent</strong> [type = bool, default = True]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensorTraces.showCurrent</span></code></div>
+<div class="line">show current trace position (and especially vector quantity) related to current visualization state; this only works in solution viewer if sensor values are stored at time grid points of the solution file (up to a precision of 1e-10) and may therefore be temporarily unavailable</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>showFuture</strong> [type = bool, default = False]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensorTraces.showFuture</span></code></div>
+<div class="line">show trace future to current visualization state if already computed (e.g. in SolutionViewer)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>showPast</strong> [type = bool, default = True]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensorTraces.showPast</span></code></div>
+<div class="line">show trace previous to current visualization state</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>showPositionTrace</strong> [type = bool, default = False]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensorTraces.showPositionTrace</span></code></div>
+<div class="line">show position trace of all position sensors if listOfPositionSensors=[] or of specified sensors; sensors need to activate storeInternal=True</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>showTriads</strong> [type = bool, default = False]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensorTraces.showTriads</span></code></div>
+<div class="line">if True, show basis vectors from rotation matrices provided by sensors</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>showVectors</strong> [type = bool, default = False]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensorTraces.showVectors</span></code></div>
+<div class="line">if True, show vector quantities according to description in showPositionTrace</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>traceColors</strong> [type = ArrayFloat, default = [0.2,0.2,0.2,1., 0.8,0.2,0.2,1., 0.2,0.8,0.2,1., 0.2,0.2,0.8,1., 0.2,0.8,0.8,1., 0.8,0.2,0.8,1., 0.8,0.4,0.1,1.], size = -1]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensorTraces.traceColors</span></code></div>
+<div class="line">RGBA float values for traces in one array; using 6x4 values gives different colors for 6 traces; in case of triads, the 0/1/2-axes are drawn in red, green, and blue</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>triadSize</strong> [type = float, default = 0.1 ]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensorTraces.triadSize</span></code></div>
+<div class="line">length of triad axes if shown</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>triadsShowEvery</strong> [type = PInt, default = 1]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensorTraces.triadsShowEvery</span></code></div>
+<div class="line">integer value i; out of available sensor data, show every i-th triad</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>vectorScaling</strong> [type = float, default = 0.01]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensorTraces.vectorScaling</span></code></div>
+<div class="line">scaling of vector quantities; if, e.g., loads, this factor has to be adjusted significantly</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>vectorsShowEvery</strong> [type = PInt, default = 1]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensorTraces.vectorsShowEvery</span></code></div>
+<div class="line">integer value i; out of available sensor data, show every i-th vector</div>
+</div>
+</li>
+</ul>
+</section>
 <section id="vsettingssensors">
 <span id="sec-vsettingssensors"></span><h2>VSettingsSensors<a class="headerlink" href="#vsettingssensors" title="Permalink to this heading"></a></h2>
 <p>Visualization settings for sensors.</p>
 <p>VSettingsSensors has the following items:</p>
 <ul>
+<li><div class="line-block">
+<div class="line"><strong>traces</strong> [type = VSettingsSensorTraces]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensors.traces</span></code></div>
+<div class="line">settings for showing (position) sensor traces and vector plots in the render window</div>
+</div>
+</li>
 <li><div class="line-block">
 <div class="line"><strong>defaultColor</strong> [type = Float4, default = [0.6,0.6,0.1,1.], size = 4]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensors.defaultColor</span></code></div>

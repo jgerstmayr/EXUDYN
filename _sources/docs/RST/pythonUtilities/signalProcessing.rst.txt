@@ -84,6 +84,10 @@ Function: ComputeFFT
 - | \ *date*\ :
   | 02.04.2020
 
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
+
+    \ `nMassOscillatorEigenmodes.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/nMassOscillatorEigenmodes.py>`_\  (Ex)
+
 
 
 ----

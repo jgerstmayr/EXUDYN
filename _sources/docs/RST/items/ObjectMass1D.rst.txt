@@ -152,7 +152,7 @@ MINI EXAMPLE for ObjectMass1D
    
    #assemble and solve system for default parameters
    mbs.Assemble()
-   exu.SolveDynamic(mbs)
+   mbs.SolveDynamic()
    
    #check result, get current mass position at local position [0,0,0]
    exudynTestGlobals.testResult = mbs.GetObjectOutputBody(mass, exu.OutputVariableType.Position, [0,0,0])[0]

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ObjectConnectorReevingSystemSprings &mdash; Exudyn1.6.164.dev1 1.6.164.dev1 documentation</title>
+  <title>ObjectConnectorReevingSystemSprings &mdash; Exudyn1.7.0 1.7.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -41,7 +41,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.164.dev1
+            Exudyn1.7.0
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -113,7 +113,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.164.dev1</a>
+          <a href="../../../index.html">Exudyn1.7.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -135,7 +135,7 @@
              
   <section id="objectconnectorreevingsystemsprings">
 <span id="sec-item-objectconnectorreevingsystemsprings"></span><h1>ObjectConnectorReevingSystemSprings<a class="headerlink" href="#objectconnectorreevingsystemsprings" title="Permalink to this heading"></a></h1>
-<p>A rD reeving system defined by a list of torque-free and friction-free sheaves or points that are connected with one rope (modelled as massless spring). The force is assumed to be constant all over the rope. The sheaves or connection points are defined by <span class="math notranslate nohighlight">\(nr\)</span> rigid body markers <span class="math notranslate nohighlight">\([m_0, \, m_1, \, \ldots, \, m_{nr-1}]\)</span>. At both ends of the rope there may be a prescribed motion coupled to a coordinate marker each, given by <span class="math notranslate nohighlight">\(m_{c0}\)</span> and <span class="math notranslate nohighlight">\(m_{c1}\)</span> .</p>
+<p>A rD reeving system defined by a list of torque-free and friction-free sheaves or points that are connected with one rope (modelled as massless spring). NOTE that the spring can undergo tension AND compression (in order to avoid compression, use a PreStepUserFunction to turn off stiffness and damping in this case!). The force is assumed to be constant all over the rope. The sheaves or connection points are defined by <span class="math notranslate nohighlight">\(nr\)</span> rigid body markers <span class="math notranslate nohighlight">\([m_0, \, m_1, \, \ldots, \, m_{nr-1}]\)</span>. At both ends of the rope there may be a prescribed motion coupled to a coordinate marker each, given by <span class="math notranslate nohighlight">\(m_{c0}\)</span> and <span class="math notranslate nohighlight">\(m_{c1}\)</span> .</p>
 <p><strong>Additional information for ObjectConnectorReevingSystemSprings</strong>:</p>
 <ul>
 <li><div class="line-block">
@@ -195,6 +195,11 @@
 <li><div class="line-block">
 <div class="line"><strong>dampingShear</strong> [<span class="math notranslate nohighlight">\(DS\)</span>, type = UReal, default = 0.]:</div>
 <div class="line">damping of shear motion [SI:Ns] between sheaves; this effect can damp motion perpendicular to the rope between each pair of sheaves; this parameter is experimental</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>regularizationForce</strong> [<span class="math notranslate nohighlight">\(F_{reg}\)</span>, type = Real, default = 0.1]:</div>
+<div class="line">small regularization force [SI:N] in order to avoid large compressive forces; this regularization force can either be <span class="math notranslate nohighlight">\(&lt;0\)</span> (using a linear tension/compression spring model) or <span class="math notranslate nohighlight">\(&gt;0\)</span>, which restricts forces in the rope to be always <span class="math notranslate nohighlight">\(\ge -F_{reg}\)</span>. Note that smaller forces lead to problems in implicit integrators and smaller time steps. For explicit integrators, this force can be chosen close to zero.</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -331,9 +336,16 @@ The quantity <span class="math notranslate nohighlight">\(C_{...}\)</span> can b
 <div class="math notranslate nohighlight">
 \[L_0 = L_{ref} + f_0 \cdot q_{m_{c0}} + f_1 \cdot q_{m_{c1}}, \quad \dot L_0 = f_0 \cdot \dot q_{m_{c0}} + f_1 \cdot \dot q_{m_{c1}}, \quad\]</div>
 <p>while we set <span class="math notranslate nohighlight">\(L_0 = L_{ref}\)</span> and <span class="math notranslate nohighlight">\(\dot L_0=0\)</span> otherwise.
-The force in the reeving system (assumed to be constant all over the rope) reads</p>
+The linear force in the reeving system (assumed to be constant all over the rope) is computed as</p>
 <div class="math notranslate nohighlight">
-\[F = (L-L_{0}) \frac{EA}{L_0} + (\dot L - \dot L_0)\frac{DA}{L_0}\]</div>
+\[F_{lin} = (L-L_{0}) \frac{EA}{L_0} + (\dot L - \dot L_0)\frac{DA}{L_0}\]</div>
+<p>The rope force is computed from</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}F =   \begin{cases} F_{lin} \quad \mathrm{if} \quad F_{lin} &gt; 0 \\ F_{reg} \cdot \mathrm{tanh}(F_{lin}/F_{reg})\quad \mathrm{else} \end{cases}\end{split}\]</div>
+<p>Which allows small compressive forces <span class="math notranslate nohighlight">\(F_{reg}\)</span>.
+In case that <span class="math notranslate nohighlight">\(F_{reg} &lt; 0\)</span>, compressive forces are not regularized (linear spring).
+The case <span class="math notranslate nohighlight">\(F_{reg} = 0\)</span> will be used in future only in combination with a data node,
+which allows switching similar as in friction and contact elements.</p>
 <p>Note that in case of <span class="math notranslate nohighlight">\(L_0=0\)</span>, the term <span class="math notranslate nohighlight">\(\frac{1}{L_0}\)</span> is replaced by <span class="math notranslate nohighlight">\(1000\)</span>.
 However, this case must be avoided by the user by choosing appropriate parameters for the system.</p>
 <p>Additional damping may be added via the parameters <span class="math notranslate nohighlight">\(DT\)</span> and <span class="math notranslate nohighlight">\(DS\)</span>, which have to be treated carefully. The shearing parameter may

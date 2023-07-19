@@ -173,14 +173,15 @@ You can view and download this file on Github: `minimizeExample.py <https://gith
            #val2 = ParameterFunction({, 'computationIndex':0, 'plot':''}) # compute reference solution
        
        if True:
+           #the following settings give approx. 6 digits accuraet results after 167 iterations
            start_time = time.time()
            [pOpt, vOpt, pList, values] = Minimize(objectiveFunction = ParameterFunction, 
                                                 parameters = {'mass':(1,10), 'spring':(100,10000), 'force':(1,250)}, #parameters provide search range
                                                 showProgress=True,
                                                 debugMode=False,
                                                 addComputationIndex = True,
-                                                #tol = 1e-12,
-                                                #options={'maxiter':109},
+                                                tol = 1e-1, #this is a internal parameter, not directly coupled loss
+                                                options={'maxiter':200},
                                                 resultsFile='solution/test.txt'
                                                 )
            print("--- %s seconds ---" % (time.time() - start_time))

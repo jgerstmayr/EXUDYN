@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nMassOscillatorEigenmodes.py &mdash; Exudyn1.6.164.dev1 1.6.164.dev1 documentation</title>
+  <title>nMassOscillatorEigenmodes.py &mdash; Exudyn1.7.0 1.7.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -39,7 +39,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.164.dev1
+            Exudyn1.7.0
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -91,6 +91,7 @@
 <li class="toctree-l2"><a class="reference internal" href="beltDrivesComparison.html">beltDrivesComparison.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="bicycleIftommBenchmark.html">bicycleIftommBenchmark.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cartesianSpringDamper.html">cartesianSpringDamper.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chatGPTupdate.html">chatGPTupdate.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="CMSexampleCourse.html">CMSexampleCourse.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ComputeSensitivitiesExample.html">ComputeSensitivitiesExample.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="coordinateSpringDamper.html">coordinateSpringDamper.py</a></li>
@@ -160,6 +161,8 @@
 <li class="toctree-l2"><a class="reference internal" href="rigidRotor3DFWBW.html">rigidRotor3DFWBW.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rigidRotor3Dnutation.html">rigidRotor3Dnutation.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rigidRotor3Drunup.html">rigidRotor3Drunup.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ROSExampleMassPoint.html">ROSExampleMassPoint.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ROSExampleTurtle.html">ROSExampleTurtle.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="serialRobotFlexible.html">serialRobotFlexible.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="serialRobotInteractiveLimits.html">serialRobotInteractiveLimits.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="serialRobotInverseKinematics.html">serialRobotInverseKinematics.py</a></li>
@@ -207,7 +210,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.164.dev1</a>
+          <a href="../../../index.html">Exudyn1.7.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -384,7 +387,7 @@
 <span class="linenos">153</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">generalizedAlpha</span><span class="o">.</span><span class="n">spectralRadius</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="linenos">154</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">writeSolutionToFile</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="linenos">155</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">solutionWritePeriod</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="c1">#data not used</span>
-<span class="linenos">156</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">sensorsWritePeriod</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="c1">#data not used</span>
+<span class="linenos">156</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">sensorsWritePeriod</span> <span class="o">=</span> <span class="mf">0.01</span> <span class="c1">#data not used</span>
 <span class="linenos">157</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">solutionInformation</span> <span class="o">=</span> <span class="s1">&#39;n-mass-oscillatior&#39;</span>
 <span class="linenos">158</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">verboseMode</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#turn off, because of lots of output</span>
 <span class="linenos">159</span>
@@ -394,185 +397,27 @@
 <span class="linenos">163</span><span class="c1">#simulationSettings.timeIntegration.simulateInRealtime = True</span>
 <span class="linenos">164</span>
 <span class="linenos">165</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">displayComputationTime</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="linenos">166</span><span class="c1">#simulationSettings.parallel.numberOfThreads = 2</span>
-<span class="linenos">167</span>
-<span class="linenos">168</span><span class="c1">#SC.visualizationSettings.general.autoFitScene = True #otherwise, renderState not accepted for zoom</span>
-<span class="linenos">169</span><span class="k">if</span> <span class="kc">False</span><span class="p">:</span>
-<span class="linenos">170</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StartRenderer</span><span class="p">()</span>
-<span class="linenos">171</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">WaitForUserToContinue</span><span class="p">()</span>
+<span class="linenos">166</span>
+<span class="linenos">167</span><span class="c1">#plot FFT</span>
+<span class="linenos">168</span><span class="k">if</span> <span class="kc">False</span><span class="p">:</span>
+<span class="linenos">169</span>    <span class="c1">#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">170</span>    <span class="c1">#exu.StartRenderer()</span>
+<span class="linenos">171</span>    <span class="c1">#mbs.WaitForUserToContinue()</span>
 <span class="linenos">172</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="o">=</span><span class="n">simulationSettings</span><span class="p">)</span>
-<span class="linenos">173</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StopRenderer</span><span class="p">()</span> <span class="c1">#safely close rendering window!</span>
+<span class="linenos">173</span>    <span class="c1">#exu.StopRenderer() #safely close rendering window!</span>
 <span class="linenos">174</span>
-<span class="linenos">175</span>
-<span class="linenos">176</span><span class="c1"># if True:</span>
-<span class="linenos">177</span><span class="c1">#     import exudyn</span>
-<span class="linenos">178</span><span class="c1">#     useSparseSolver = False</span>
-<span class="linenos">179</span><span class="c1">#     numberOfEigenvalues = 0</span>
-<span class="linenos">180</span><span class="c1">#     constrainedCoordinates=[]</span>
-<span class="linenos">181</span><span class="c1">#     convert2Frequencies = False</span>
-<span class="linenos">182</span><span class="c1">#     useAbsoluteValues = True</span>
-<span class="linenos">183</span><span class="c1">#     ignoreAlgebraicEquations=False</span>
-<span class="linenos">184</span><span class="c1">#     singularValuesTolerance=1e-12</span>
-<span class="linenos">185</span>
-<span class="linenos">186</span><span class="c1">#     try:</span>
-<span class="linenos">187</span><span class="c1">#         from scipy.linalg import eigh, svd  #eigh for symmetric matrices, positive definite; eig for standard eigen value problems</span>
-<span class="linenos">188</span><span class="c1">#         from scipy.sparse.linalg import eigsh #eigh for symmetric matrices, positive definite</span>
-<span class="linenos">189</span><span class="c1">#         from scipy.sparse import csr_matrix</span>
-<span class="linenos">190</span><span class="c1">#     except:</span>
-<span class="linenos">191</span><span class="c1">#         raise ValueError(&#39;ComputeODE2Eigenvalues: missing scipy package; install with: pip install scipy&#39;)</span>
-<span class="linenos">192</span>
-<span class="linenos">193</span><span class="c1">#     #use static solver, as it does not include factors from time integration (and no velocity derivatives) in the jacobian</span>
-<span class="linenos">194</span><span class="c1">#     staticSolver = exudyn.MainSolverStatic()</span>
-<span class="linenos">195</span>
-<span class="linenos">196</span><span class="c1">#     #initialize solver with initial values</span>
-<span class="linenos">197</span><span class="c1">#     staticSolver.InitializeSolver(mbs, simulationSettings)</span>
-<span class="linenos">198</span>
-<span class="linenos">199</span><span class="c1">#     nODE2 = staticSolver.GetODE2size()</span>
-<span class="linenos">200</span><span class="c1">#     nODE1 = staticSolver.GetODE1size()</span>
-<span class="linenos">201</span><span class="c1">#     nAE = staticSolver.GetAEsize()</span>
-<span class="linenos">202</span><span class="c1">#     if nODE1 != 0:</span>
-<span class="linenos">203</span><span class="c1">#         print(&#39;ComputeODE2Eigenvalues: not implemented for ODE1 coordinates; results may be wrong and solver may fail&#39;)</span>
-<span class="linenos">204</span>
-<span class="linenos">205</span><span class="c1">#     staticSolver.ComputeMassMatrix(mbs)</span>
-<span class="linenos">206</span><span class="c1">#     Mode2 = staticSolver.GetSystemMassMatrix()</span>
-<span class="linenos">207</span>
-<span class="linenos">208</span><span class="c1">#     #compute ODE2 part of jacobian ==&gt; stored internally in solver</span>
-<span class="linenos">209</span><span class="c1">#     staticSolver.ComputeJacobianODE2RHS(mbs,scalarFactor_ODE2=-1,</span>
-<span class="linenos">210</span><span class="c1">#                                         scalarFactor_ODE2_t=0,</span>
-<span class="linenos">211</span><span class="c1">#                                         scalarFactor_ODE1=0)    #could be 1 to include ODE1 part</span>
-<span class="linenos">212</span><span class="c1">#     if nAE != 0:</span>
-<span class="linenos">213</span><span class="c1">#         #compute AE part of jacobian if needed for constraint projection</span>
-<span class="linenos">214</span><span class="c1">#         staticSolver.ComputeJacobianAE(mbs, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0.,</span>
-<span class="linenos">215</span><span class="c1">#                                        scalarFactor_ODE1=0., #could be 1 to include ODE1 part</span>
-<span class="linenos">216</span><span class="c1">#                                        velocityLevel=False)</span>
-<span class="linenos">217</span>
-<span class="linenos">218</span><span class="c1">#     jacobian = staticSolver.GetSystemJacobian() #read out stored jacobian; includes ODE2, ODE1 and nAE part</span>
-<span class="linenos">219</span>
-<span class="linenos">220</span><span class="c1">#     staticSolver.FinalizeSolver(mbs, simulationSettings) #close files, etc.</span>
-<span class="linenos">221</span>
-<span class="linenos">222</span><span class="c1">#     #obtain ODE2 part from jacobian == stiffness matrix</span>
-<span class="linenos">223</span><span class="c1">#     Kode2 = jacobian[0:nODE2,0:nODE2]</span>
-<span class="linenos">224</span>
-<span class="linenos">225</span><span class="c1">#     remappingIndices = np.arange(nODE2) #maps new coordinates to original (full) ones</span>
-<span class="linenos">226</span><span class="c1">#     if constrainedCoordinates != []:</span>
-<span class="linenos">227</span><span class="c1">#         Mode2 = np.delete(np.delete(Mode2, constrainedCoordinates, 0), constrainedCoordinates, 1)</span>
-<span class="linenos">228</span><span class="c1">#         Kode2 = np.delete(np.delete(Kode2, constrainedCoordinates, 0), constrainedCoordinates, 1)</span>
-<span class="linenos">229</span><span class="c1">#         remappingIndices = np.delete(remappingIndices, constrainedCoordinates)</span>
-<span class="linenos">230</span>
-<span class="linenos">231</span><span class="c1">#     if nAE != 0 and not ignoreAlgebraicEquations and constrainedCoordinates != []:</span>
-<span class="linenos">232</span><span class="c1">#         raise ValueError(&#39;ComputeODE2Eigenvalues: in case of algebraic equations, either ignoreAlgebraicEquations=True or constrainedCoordinates=[]&#39;)</span>
-<span class="linenos">233</span>
-<span class="linenos">234</span><span class="c1">#     if constrainedCoordinates != [] or nAE == 0:</span>
-<span class="linenos">235</span><span class="c1">#         if not useSparseSolver:</span>
-<span class="linenos">236</span><span class="c1">#             [eigenValuesUnsorted, eigenVectors] = eigh(Kode2, Mode2) #this gives omega^2 ... squared eigen frequencies (rad/s)</span>
-<span class="linenos">237</span><span class="c1">#             if useAbsoluteValues:</span>
-<span class="linenos">238</span><span class="c1">#                 sortIndices = np.argsort(abs(eigenValuesUnsorted)) #get resorting index</span>
-<span class="linenos">239</span><span class="c1">#                 eigenValues = np.sort(a=abs(eigenValuesUnsorted)) #eigh returns unsorted eigenvalues...</span>
-<span class="linenos">240</span><span class="c1">#             else:</span>
-<span class="linenos">241</span><span class="c1">#                 sortIndices = np.argsort(eigenValuesUnsorted) #get resorting index</span>
-<span class="linenos">242</span><span class="c1">#                 eigenValues = np.sort(a=eigenValuesUnsorted) #eigh returns unsorted eigenvalues...</span>
-<span class="linenos">243</span><span class="c1">#             if numberOfEigenvalues &gt; 0:</span>
-<span class="linenos">244</span><span class="c1">#                 eigenValues = eigenValues[0:numberOfEigenvalues]</span>
-<span class="linenos">245</span><span class="c1">#                 eigenVectors = eigenVectors[:,sortIndices[0:numberOfEigenvalues]] #eigenvectors are given in columns!</span>
-<span class="linenos">246</span><span class="c1">#         else:</span>
-<span class="linenos">247</span><span class="c1">#             if numberOfEigenvalues == 0: #compute all eigenvalues</span>
-<span class="linenos">248</span><span class="c1">#                 numberOfEigenvalues = nODE2</span>
-<span class="linenos">249</span>
-<span class="linenos">250</span><span class="c1">#             Kcsr = csr_matrix(Kode2)</span>
-<span class="linenos">251</span><span class="c1">#             Mcsr = csr_matrix(Mode2)</span>
-<span class="linenos">252</span>
-<span class="linenos">253</span><span class="c1">#             #use &quot;LM&quot; (largest magnitude), but shift-inverted mode with sigma=0, to find the zero-eigenvalues:</span>
-<span class="linenos">254</span><span class="c1">#             #see https://docs.scipy.org/doc/scipy/reference/tutorial/arpack.html</span>
-<span class="linenos">255</span><span class="c1">#             [eigenValues, eigenVectors] = eigsh(A=Kcsr, k=numberOfEigenvalues, M=Mcsr,</span>
-<span class="linenos">256</span><span class="c1">#                                        which=&#39;LM&#39;, sigma=0, mode=&#39;normal&#39;)</span>
-<span class="linenos">257</span>
-<span class="linenos">258</span><span class="c1">#             #sort eigenvalues</span>
-<span class="linenos">259</span><span class="c1">#             if useAbsoluteValues:</span>
-<span class="linenos">260</span><span class="c1">#                 sortIndices = np.argsort(abs(eigenValues)) #get resorting index</span>
-<span class="linenos">261</span><span class="c1">#                 eigenValues = np.sort(a=abs(eigenValues))</span>
-<span class="linenos">262</span><span class="c1">#             else:</span>
-<span class="linenos">263</span><span class="c1">#                 sortIndices = np.argsort(eigenValues) #get resorting index</span>
-<span class="linenos">264</span><span class="c1">#                 eigenValues = np.sort(a=eigenValues)</span>
-<span class="linenos">265</span><span class="c1">#             eigenVectors = eigenVectors[:,sortIndices] #eigenvectors are given in columns!</span>
-<span class="linenos">266</span>
-<span class="linenos">267</span><span class="c1">#         eigenVectorsNew = np.zeros((nODE2,numberOfEigenvalues))</span>
-<span class="linenos">268</span><span class="c1">#         if constrainedCoordinates != []:</span>
-<span class="linenos">269</span><span class="c1">#             # print(&#39;remap=&#39;, remappingIndices)</span>
-<span class="linenos">270</span><span class="c1">#             for i in range(numberOfEigenvalues):</span>
-<span class="linenos">271</span><span class="c1">#                 eigenVectorsNew[remappingIndices,i] = eigenVectors[:,i]</span>
-<span class="linenos">272</span><span class="c1">#             eigenVectors = eigenVectorsNew</span>
-<span class="linenos">273</span><span class="c1">#     else:</span>
-<span class="linenos">274</span><span class="c1">#         #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos">275</span><span class="c1">#         #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos">276</span><span class="c1">#         #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos">277</span>
-<span class="linenos">278</span><span class="c1">#         if useSparseSolver:</span>
-<span class="linenos">279</span><span class="c1">#             raise ValueError(&#39;ComputeODE2Eigenvalues: in case of algebraic equations and ignoreAlgebraicEquations=False, useSparseSolver must be False&#39;)</span>
-<span class="linenos">280</span><span class="c1">#         #use SVD to project equations into nullspace</span>
-<span class="linenos">281</span><span class="c1">#         #constraint jacobian:</span>
-<span class="linenos">282</span><span class="c1">#         C = jacobian[0:nODE2,nODE2+nODE1:]</span>
-<span class="linenos">283</span>
-<span class="linenos">284</span><span class="c1">#         #compute SVD; D includes singular values</span>
-<span class="linenos">285</span><span class="c1">#         [U,D,V] = svd(C)</span>
-<span class="linenos">286</span>
-<span class="linenos">287</span><span class="c1">#         nnz = (abs(D) &gt; singularValuesTolerance).sum() #size of constraints, often number of cols of C</span>
-<span class="linenos">288</span>
-<span class="linenos">289</span><span class="c1">#         nullspace = U[:,nnz:].T #U[nnz:]</span>
-<span class="linenos">290</span><span class="c1">#         Knullspace = nullspace@Kode2@nullspace.T</span>
-<span class="linenos">291</span><span class="c1">#         Mnullspace = nullspace@Mode2@nullspace.T</span>
-<span class="linenos">292</span>
-<span class="linenos">293</span><span class="c1">#         # print(&#39;nODE2=&#39;,nODE2)</span>
-<span class="linenos">294</span><span class="c1">#         # print(&#39;nAE=&#39;,nAE)</span>
-<span class="linenos">295</span><span class="c1">#         # print(&#39;nnz=&#39;,nnz)</span>
-<span class="linenos">296</span><span class="c1">#         # print(&#39;C=&#39;,C.shape)</span>
-<span class="linenos">297</span><span class="c1">#         # print(&#39;U=&#39;,U.shape)</span>
-<span class="linenos">298</span><span class="c1">#         # print(&#39;sing.val.=&#39;,D.round(5))</span>
-<span class="linenos">299</span><span class="c1">#         # print(&#39;Knullspace=&#39;,Knullspace.round(5))</span>
-<span class="linenos">300</span><span class="c1">#         # print(&#39;Mnullspace=&#39;,Mnullspace.round(5))</span>
-<span class="linenos">301</span><span class="c1">#         # print(&#39;nullspace=&#39;,nullspace.round(3))</span>
-<span class="linenos">302</span>
-<span class="linenos">303</span><span class="c1">#         [eigenValuesUnsorted, eigenVectorsReduced] = eigh(Knullspace,Mnullspace)</span>
-<span class="linenos">304</span><span class="c1">#         if useAbsoluteValues:</span>
-<span class="linenos">305</span><span class="c1">#             sortIndices = np.argsort(abs(eigenValuesUnsorted)) #get resorting index</span>
-<span class="linenos">306</span><span class="c1">#             eigenValues = np.sort(a=abs(eigenValuesUnsorted)) #eigh returns unsorted eigenvalues...</span>
-<span class="linenos">307</span><span class="c1">#         else:</span>
-<span class="linenos">308</span><span class="c1">#             sortIndices = np.argsort(eigenValuesUnsorted) #get resorting index</span>
-<span class="linenos">309</span><span class="c1">#             eigenValues = np.sort(a=eigenValuesUnsorted) #eigh returns unsorted eigenvalues...</span>
-<span class="linenos">310</span>
-<span class="linenos">311</span><span class="c1">#         if numberOfEigenvalues &gt; 0:</span>
-<span class="linenos">312</span><span class="c1">#             eigenValues = eigenValues[0:numberOfEigenvalues]</span>
-<span class="linenos">313</span><span class="c1">#             sortIndices = sortIndices[0:numberOfEigenvalues]</span>
-<span class="linenos">314</span><span class="c1">#         eigenVectorsReduced = eigenVectorsReduced[:,sortIndices] #eigenvectors are given in columns!</span>
-<span class="linenos">315</span>
-<span class="linenos">316</span><span class="c1">#         eigenVectors = nullspace.T @ eigenVectorsReduced</span>
-<span class="linenos">317</span>
-<span class="linenos">318</span>
-<span class="linenos">319</span><span class="c1">#         #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos">320</span><span class="c1">#         #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos">321</span>
-<span class="linenos">322</span>
-<span class="linenos">323</span>
-<span class="linenos">324</span>
-<span class="linenos">325</span>
-<span class="linenos">326</span>
-<span class="linenos">327</span>
-<span class="linenos">328</span>
-<span class="linenos">329</span>
-<span class="linenos">330</span>
-<span class="linenos">331</span>
-<span class="linenos">332</span>
-<span class="linenos">333</span>
-<span class="linenos">334</span>
-<span class="linenos">335</span>
-<span class="linenos">336</span>
-<span class="linenos">337</span>
-<span class="linenos">338</span>
-<span class="linenos">339</span>
-<span class="linenos">340</span><span class="k">if</span> <span class="kc">True</span><span class="p">:</span>
-<span class="linenos">341</span>    <span class="kn">from</span> <span class="nn">exudyn.interactive</span> <span class="kn">import</span> <span class="nf">AnimateModes</span>
-<span class="linenos">342</span>    <span class="p">[</span><span class="n">values</span><span class="p">,</span> <span class="n">systemEigenVectors</span><span class="p">]</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">ComputeODE2Eigenvalues</span><span class="p">()</span>
-<span class="linenos">343</span>    <span class="nf">AnimateModes</span><span class="p">(</span><span class="n">SC</span><span class="p">,</span> <span class="n">mbs</span><span class="p">,</span> <span class="n">nodeNumber</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">systemEigenVectors</span><span class="o">=</span><span class="n">systemEigenVectors</span><span class="p">,</span>
-<span class="linenos">344</span>                 <span class="n">runOnStart</span><span class="o">=</span><span class="kc">True</span><span class="p">,)</span>
+<span class="linenos">175</span>    <span class="kn">from</span> <span class="nn">exudyn.signalProcessing</span> <span class="kn">import</span> <span class="nf">ComputeFFT</span>
+<span class="linenos">176</span>    <span class="kn">from</span> <span class="nn">exudyn.plot</span> <span class="kn">import</span> <span class="nf">PlotFFT</span>
+<span class="linenos">177</span>    <span class="n">data</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetSensorStoredData</span><span class="p">(</span><span class="n">sensPosN</span><span class="p">)</span>
+<span class="linenos">178</span>    <span class="p">[</span><span class="n">freq</span><span class="p">,</span> <span class="n">amp</span><span class="p">,</span> <span class="n">phase</span><span class="p">]</span> <span class="o">=</span> <span class="nf">ComputeFFT</span><span class="p">(</span><span class="n">data</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])</span>
+<span class="linenos">179</span>    <span class="nf">PlotFFT</span><span class="p">(</span><span class="n">freq</span><span class="p">,</span> <span class="n">amp</span><span class="p">)</span>
+<span class="linenos">180</span>
+<span class="linenos">181</span><span class="c1">#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">182</span><span class="k">if</span> <span class="kc">True</span><span class="p">:</span>
+<span class="linenos">183</span>    <span class="kn">from</span> <span class="nn">exudyn.interactive</span> <span class="kn">import</span> <span class="nf">AnimateModes</span>
+<span class="linenos">184</span>    <span class="p">[</span><span class="n">values</span><span class="p">,</span> <span class="n">systemEigenVectors</span><span class="p">]</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">ComputeODE2Eigenvalues</span><span class="p">()</span>
+<span class="linenos">185</span>    <span class="nf">AnimateModes</span><span class="p">(</span><span class="n">SC</span><span class="p">,</span> <span class="n">mbs</span><span class="p">,</span> <span class="n">nodeNumber</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">systemEigenVectors</span><span class="o">=</span><span class="n">systemEigenVectors</span><span class="p">,</span>
+<span class="linenos">186</span>                 <span class="n">runOnStart</span><span class="o">=</span><span class="kc">True</span><span class="p">,)</span>
 </pre></div>
 </div>
 </section>

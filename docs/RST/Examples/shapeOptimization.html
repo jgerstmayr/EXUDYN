@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>shapeOptimization.py &mdash; Exudyn1.6.164.dev1 1.6.164.dev1 documentation</title>
+  <title>shapeOptimization.py &mdash; Exudyn1.7.0 1.7.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -39,7 +39,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.164.dev1
+            Exudyn1.7.0
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -91,6 +91,7 @@
 <li class="toctree-l2"><a class="reference internal" href="beltDrivesComparison.html">beltDrivesComparison.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="bicycleIftommBenchmark.html">bicycleIftommBenchmark.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cartesianSpringDamper.html">cartesianSpringDamper.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chatGPTupdate.html">chatGPTupdate.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="CMSexampleCourse.html">CMSexampleCourse.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ComputeSensitivitiesExample.html">ComputeSensitivitiesExample.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="coordinateSpringDamper.html">coordinateSpringDamper.py</a></li>
@@ -160,6 +161,8 @@
 <li class="toctree-l2"><a class="reference internal" href="rigidRotor3DFWBW.html">rigidRotor3DFWBW.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rigidRotor3Dnutation.html">rigidRotor3Dnutation.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rigidRotor3Drunup.html">rigidRotor3Drunup.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ROSExampleMassPoint.html">ROSExampleMassPoint.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ROSExampleTurtle.html">ROSExampleTurtle.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="serialRobotFlexible.html">serialRobotFlexible.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="serialRobotInteractiveLimits.html">serialRobotInteractiveLimits.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="serialRobotInverseKinematics.html">serialRobotInverseKinematics.py</a></li>
@@ -207,7 +210,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.164.dev1</a>
+          <a href="../../../index.html">Exudyn1.7.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -431,9 +434,9 @@
 <span class="linenos">200</span>                <span class="c1"># sys.exit()</span>
 <span class="linenos">201</span>
 <span class="linenos">202</span>            <span class="c1">#do not show values larger than -120 to have nicer plots ...</span>
-<span class="linenos">203</span>            <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="o">-</span><span class="mi">100</span><span class="p">,</span><span class="o">-</span><span class="n">fMin</span><span class="p">)</span> <span class="c1">#maximize eigenfrequency =&gt; minimize ...</span>
+<span class="linenos">203</span>            <span class="k">return</span> <span class="mi">140</span> <span class="o">+</span> <span class="nb">min</span><span class="p">(</span><span class="o">-</span><span class="mi">100</span><span class="p">,</span><span class="o">-</span><span class="n">fMin</span><span class="p">)</span> <span class="c1">#maximize eigenfrequency =&gt; minimize ...</span>
 <span class="linenos">204</span>    <span class="k">except</span><span class="p">:</span>
-<span class="linenos">205</span>        <span class="k">return</span> <span class="o">-</span><span class="mi">99</span>
+<span class="linenos">205</span>        <span class="k">return</span> <span class="mi">140</span><span class="o">-</span><span class="mi">99</span>
 <span class="linenos">206</span>
 <span class="linenos">207</span>
 <span class="linenos">208</span>
@@ -456,49 +459,61 @@
 <span class="linenos">225</span>    <span class="n">x2Range</span> <span class="o">=</span> <span class="p">(</span><span class="mi">6</span><span class="o">*</span><span class="n">rMax</span><span class="p">,</span> <span class="mi">7</span><span class="o">*</span><span class="n">rMax</span><span class="p">)</span>
 <span class="linenos">226</span>
 <span class="linenos">227</span>
-<span class="linenos">228</span>    <span class="c1"># [pOpt, vOpt, pList, values] = Minimize(</span>
-<span class="linenos">229</span>    <span class="p">[</span><span class="n">pOpt</span><span class="p">,</span> <span class="n">vOpt</span><span class="p">,</span> <span class="n">pList</span><span class="p">,</span> <span class="n">values</span><span class="p">]</span> <span class="o">=</span> <span class="nf">GeneticOptimization</span><span class="p">(</span>
-<span class="linenos">230</span>                                          <span class="n">objectiveFunction</span> <span class="o">=</span> <span class="n">ParameterFunction</span><span class="p">,</span>
-<span class="linenos">231</span>                                          <span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;r0&#39;</span><span class="p">:</span><span class="n">rRange</span><span class="p">,</span> <span class="s1">&#39;r1&#39;</span><span class="p">:</span><span class="n">rRange</span><span class="p">,</span> <span class="s1">&#39;r2&#39;</span><span class="p">:</span><span class="n">rRange</span><span class="p">,</span>
-<span class="linenos">232</span>                                                        <span class="s1">&#39;x0&#39;</span><span class="p">:</span><span class="n">x0Range</span><span class="p">,</span> <span class="s1">&#39;x1&#39;</span><span class="p">:</span><span class="n">x1Range</span><span class="p">,</span> <span class="s1">&#39;x2&#39;</span><span class="p">:</span><span class="n">x2Range</span><span class="p">,</span> <span class="p">},</span> <span class="c1">#parameters provide search range</span>
-<span class="linenos">233</span>                                          <span class="n">numberOfGenerations</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
-<span class="linenos">234</span>                                          <span class="n">populationSize</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
-<span class="linenos">235</span>                                          <span class="n">elitistRatio</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
-<span class="linenos">236</span>                                          <span class="c1"># crossoverProbability = 0, #makes no sense!</span>
-<span class="linenos">237</span>                                          <span class="n">rangeReductionFactor</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">,</span>
-<span class="linenos">238</span>                                          <span class="n">randomizerInitialization</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="c1">#for reproducible results</span>
-<span class="linenos">239</span>                                          <span class="c1">#distanceFactor = 0.1,</span>
-<span class="linenos">240</span>                                          <span class="n">distanceFactor</span> <span class="o">=</span> <span class="mf">0.</span><span class="p">,</span>
-<span class="linenos">241</span>                                          <span class="n">debugMode</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-<span class="linenos">242</span>                                          <span class="n">useMultiProcessing</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="c1">#may be problematic for test</span>
-<span class="linenos">243</span>                                          <span class="n">numberOfThreads</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
-<span class="linenos">244</span>                                          <span class="n">addComputationIndex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<span class="linenos">245</span>                                          <span class="n">showProgress</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<span class="linenos">246</span>                                          <span class="n">resultsFile</span> <span class="o">=</span> <span class="s1">&#39;solution/shapeOptimization.txt&#39;</span><span class="p">,</span>
-<span class="linenos">247</span>                                          <span class="p">)</span>
-<span class="linenos">248</span>
-<span class="linenos">249</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s2">&quot;--- </span><span class="si">%s</span><span class="s2"> seconds ---&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">))</span>
-<span class="linenos">250</span>
-<span class="linenos">251</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s2">&quot;[pOpt, vOpt]=&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">pOpt</span><span class="p">,</span> <span class="n">vOpt</span><span class="p">])</span>
-<span class="linenos">252</span>    <span class="n">u</span> <span class="o">=</span> <span class="n">vOpt</span>
-<span class="linenos">253</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s2">&quot;optimized eigenfrequency=&quot;</span><span class="p">,</span><span class="o">-</span><span class="n">u</span><span class="p">)</span>
-<span class="linenos">254</span>
-<span class="linenos">255</span>    <span class="k">if</span> <span class="kc">True</span><span class="p">:</span>
-<span class="linenos">256</span>        <span class="c1"># from mpl_toolkits.mplot3d import Axes3D  # noqa: F401 unused import</span>
-<span class="linenos">257</span>        <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="linenos">258</span>
-<span class="linenos">259</span>        <span class="n">plt</span><span class="o">.</span><span class="nf">close</span><span class="p">(</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
-<span class="linenos">260</span>        <span class="p">[</span><span class="n">figList</span><span class="p">,</span> <span class="n">axList</span><span class="p">]</span> <span class="o">=</span> <span class="nf">PlotOptimizationResults2D</span><span class="p">(</span><span class="n">pList</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">yLogScale</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="linenos">261</span>
-<span class="linenos">262</span>    <span class="n">refval</span> <span class="o">=</span> <span class="n">ParameterFunction</span><span class="p">({</span><span class="o">**</span><span class="n">pOpt</span><span class="p">,</span><span class="s1">&#39;computationIndex&#39;</span><span class="p">:</span><span class="s1">&#39;Ref&#39;</span><span class="p">}</span> <span class="p">)</span> <span class="c1"># compute reference solution</span>
-<span class="linenos">263</span>
-<span class="linenos">264</span><span class="c1">#i9, 14 cores, numberOfThreads = 20: 575.85 seconds (ngen=10, pposize=100)</span>
-<span class="linenos">265</span><span class="c1">#with distanceFactor: 117.16 (ngen=12, popsize=200)</span>
-<span class="linenos">266</span><span class="c1">#without distanceFactor: 117.5287   (ngen=10, popsize=100)</span>
-<span class="linenos">267</span>
-<span class="linenos">268</span><span class="c1">#pOpt = {&#39;r0&#39;: 0.04012197560525166, &#39;r1&#39;: 0.08694009640170029, &#39;r2&#39;: 0.11845643292562649, &#39;x0&#39;: 0.2828892936420842, &#39;x1&#39;: 0.6170637302367472, &#39;x2&#39;: 0.8749125935436654}</span>
-<span class="linenos">269</span><span class="c1">#optimized eigenfrequency= 117.52874179749946</span>
-<span class="linenos">270</span><span class="c1">#p0 = {&#39;r0&#39;: 0.0625, &#39;r1&#39;: 0.0625, &#39;r2&#39;: 0.0625, &#39;x0&#39;: 0.25, &#39;x1&#39;: 0.59375, &#39;x2&#39;: 0.8125}</span>
+<span class="linenos">228</span>    <span class="k">if</span> <span class="kc">False</span><span class="p">:</span>
+<span class="linenos">229</span>        <span class="c1">#this option does not work here, as it would require the ParameterFunction to restrict the ranges to feasible values</span>
+<span class="linenos">230</span>        <span class="p">[</span><span class="n">pOpt</span><span class="p">,</span> <span class="n">vOpt</span><span class="p">,</span> <span class="n">pList</span><span class="p">,</span> <span class="n">values</span><span class="p">]</span> <span class="o">=</span> <span class="nf">Minimize</span><span class="p">(</span>
+<span class="linenos">231</span>                                              <span class="n">objectiveFunction</span> <span class="o">=</span> <span class="n">ParameterFunction</span><span class="p">,</span>
+<span class="linenos">232</span>                                              <span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;r0&#39;</span><span class="p">:</span><span class="n">rRange</span><span class="p">,</span> <span class="s1">&#39;r1&#39;</span><span class="p">:</span><span class="n">rRange</span><span class="p">,</span> <span class="s1">&#39;r2&#39;</span><span class="p">:</span><span class="n">rRange</span><span class="p">,</span>
+<span class="linenos">233</span>                                                            <span class="s1">&#39;x0&#39;</span><span class="p">:</span><span class="n">x0Range</span><span class="p">,</span> <span class="s1">&#39;x1&#39;</span><span class="p">:</span><span class="n">x1Range</span><span class="p">,</span> <span class="s1">&#39;x2&#39;</span><span class="p">:</span><span class="n">x2Range</span><span class="p">,</span> <span class="p">},</span> <span class="c1">#parameters provide search range</span>
+<span class="linenos">234</span>                                             <span class="n">showProgress</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">235</span>                                             <span class="n">enforceBounds</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">236</span>                                             <span class="n">addComputationIndex</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="linenos">237</span>                                             <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;maxiter&#39;</span><span class="p">:</span><span class="mi">100</span><span class="p">},</span>
+<span class="linenos">238</span>                                             <span class="n">resultsFile</span><span class="o">=</span><span class="s1">&#39;solution/shapeOptimization.txt&#39;</span>
+<span class="linenos">239</span>                                             <span class="p">)</span>
+<span class="linenos">240</span>    <span class="k">else</span><span class="p">:</span>
+<span class="linenos">241</span>        <span class="p">[</span><span class="n">pOpt</span><span class="p">,</span> <span class="n">vOpt</span><span class="p">,</span> <span class="n">pList</span><span class="p">,</span> <span class="n">values</span><span class="p">]</span> <span class="o">=</span> <span class="nf">GeneticOptimization</span><span class="p">(</span>
+<span class="linenos">242</span>                                              <span class="n">objectiveFunction</span> <span class="o">=</span> <span class="n">ParameterFunction</span><span class="p">,</span>
+<span class="linenos">243</span>                                              <span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;r0&#39;</span><span class="p">:</span><span class="n">rRange</span><span class="p">,</span> <span class="s1">&#39;r1&#39;</span><span class="p">:</span><span class="n">rRange</span><span class="p">,</span> <span class="s1">&#39;r2&#39;</span><span class="p">:</span><span class="n">rRange</span><span class="p">,</span>
+<span class="linenos">244</span>                                                            <span class="s1">&#39;x0&#39;</span><span class="p">:</span><span class="n">x0Range</span><span class="p">,</span> <span class="s1">&#39;x1&#39;</span><span class="p">:</span><span class="n">x1Range</span><span class="p">,</span> <span class="s1">&#39;x2&#39;</span><span class="p">:</span><span class="n">x2Range</span><span class="p">,</span> <span class="p">},</span> <span class="c1">#parameters provide search range</span>
+<span class="linenos">245</span>                                              <span class="n">numberOfGenerations</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+<span class="linenos">246</span>                                              <span class="n">populationSize</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+<span class="linenos">247</span>                                              <span class="n">elitistRatio</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
+<span class="linenos">248</span>                                              <span class="c1"># crossoverProbability = 0, #makes no sense!</span>
+<span class="linenos">249</span>                                              <span class="n">rangeReductionFactor</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">,</span>
+<span class="linenos">250</span>                                              <span class="n">randomizerInitialization</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="c1">#for reproducible results</span>
+<span class="linenos">251</span>                                              <span class="c1">#distanceFactor = 0.1,</span>
+<span class="linenos">252</span>                                              <span class="n">distanceFactor</span> <span class="o">=</span> <span class="mf">0.</span><span class="p">,</span>
+<span class="linenos">253</span>                                              <span class="n">debugMode</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="linenos">254</span>                                              <span class="n">useMultiProcessing</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="c1">#may be problematic for test</span>
+<span class="linenos">255</span>                                              <span class="n">numberOfThreads</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
+<span class="linenos">256</span>                                              <span class="n">addComputationIndex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">257</span>                                              <span class="n">showProgress</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">258</span>                                              <span class="n">resultsFile</span> <span class="o">=</span> <span class="s1">&#39;solution/shapeOptimization.txt&#39;</span><span class="p">,</span>
+<span class="linenos">259</span>                                              <span class="p">)</span>
+<span class="linenos">260</span>
+<span class="linenos">261</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s2">&quot;--- </span><span class="si">%s</span><span class="s2"> seconds ---&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">))</span>
+<span class="linenos">262</span>
+<span class="linenos">263</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s2">&quot;[pOpt, vOpt]=&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">pOpt</span><span class="p">,</span> <span class="n">vOpt</span><span class="p">])</span>
+<span class="linenos">264</span>    <span class="n">u</span> <span class="o">=</span> <span class="n">vOpt</span>
+<span class="linenos">265</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s2">&quot;optimized eigenfrequency=&quot;</span><span class="p">,</span><span class="o">-</span><span class="n">u</span><span class="p">)</span>
+<span class="linenos">266</span>
+<span class="linenos">267</span>    <span class="k">if</span> <span class="kc">True</span><span class="p">:</span>
+<span class="linenos">268</span>        <span class="c1"># from mpl_toolkits.mplot3d import Axes3D  # noqa: F401 unused import</span>
+<span class="linenos">269</span>        <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="linenos">270</span>
+<span class="linenos">271</span>        <span class="n">plt</span><span class="o">.</span><span class="nf">close</span><span class="p">(</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
+<span class="linenos">272</span>        <span class="p">[</span><span class="n">figList</span><span class="p">,</span> <span class="n">axList</span><span class="p">]</span> <span class="o">=</span> <span class="nf">PlotOptimizationResults2D</span><span class="p">(</span><span class="n">pList</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">yLogScale</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="linenos">273</span>
+<span class="linenos">274</span>    <span class="n">refval</span> <span class="o">=</span> <span class="n">ParameterFunction</span><span class="p">({</span><span class="o">**</span><span class="n">pOpt</span><span class="p">,</span><span class="s1">&#39;computationIndex&#39;</span><span class="p">:</span><span class="s1">&#39;Ref&#39;</span><span class="p">}</span> <span class="p">)</span> <span class="c1"># compute reference solution</span>
+<span class="linenos">275</span>
+<span class="linenos">276</span><span class="c1">#i9, 14 cores, numberOfThreads = 20: 575.85 seconds (ngen=10, pposize=100)</span>
+<span class="linenos">277</span><span class="c1">#with distanceFactor: 117.16 (ngen=12, popsize=200)</span>
+<span class="linenos">278</span><span class="c1">#without distanceFactor: 117.5287   (ngen=10, popsize=100)</span>
+<span class="linenos">279</span>
+<span class="linenos">280</span><span class="c1">#pOpt = {&#39;r0&#39;: 0.04012197560525166, &#39;r1&#39;: 0.08694009640170029, &#39;r2&#39;: 0.11845643292562649, &#39;x0&#39;: 0.2828892936420842, &#39;x1&#39;: 0.6170637302367472, &#39;x2&#39;: 0.8749125935436654}</span>
+<span class="linenos">281</span><span class="c1">#optimized eigenfrequency= 117.52874179749946</span>
+<span class="linenos">282</span><span class="c1">#p0 = {&#39;r0&#39;: 0.0625, &#39;r1&#39;: 0.0625, &#39;r2&#39;: 0.0625, &#39;x0&#39;: 0.25, &#39;x1&#39;: 0.59375, &#39;x2&#39;: 0.8125}</span>
 </pre></div>
 </div>
 </section>

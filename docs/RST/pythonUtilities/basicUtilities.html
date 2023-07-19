@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Module: basicUtilities &mdash; Exudyn1.6.164.dev1 1.6.164.dev1 documentation</title>
+  <title>Module: basicUtilities &mdash; Exudyn1.7.0 1.7.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -41,7 +41,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.6.164.dev1
+            Exudyn1.7.0
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -70,6 +70,7 @@
 <li class="toctree-l2"><a class="reference internal" href="artificialIntelligence.html">Module: artificialIntelligence</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Module: basicUtilities</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#function-clearworkspace">Function: ClearWorkspace</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-smartround2string">Function: SmartRound2String</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-diagonalmatrix">Function: DiagonalMatrix</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-norml2">Function: NormL2</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-vsum">Function: VSum</a></li>
@@ -125,7 +126,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.6.164.dev1</a>
+          <a href="../../../index.html">Exudyn1.7.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -200,9 +201,21 @@
 </div></blockquote>
 <hr class="docutils" />
 </section>
+<section id="function-smartround2string">
+<span id="sec-basicutilities-smartround2string"></span><h2>Function: SmartRound2String<a class="headerlink" href="#function-smartround2string" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L84">SmartRound2String</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">prec</span> <span class="pre">=</span> <span class="pre">3</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">round to max number of digits; may give more digits if this is shorter; using in general the format() with ‘.g’ option, but keeping decimal point and using exponent where necessary</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+</section>
 <section id="function-diagonalmatrix">
 <span id="sec-basicutilities-diagonalmatrix"></span><h2>Function: DiagonalMatrix<a class="headerlink" href="#function-diagonalmatrix" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L90">DiagonalMatrix</a>(<code class="docutils literal notranslate"><span class="pre">rowsColumns</span></code>, <code class="docutils literal notranslate"><span class="pre">value</span> <span class="pre">=</span> <span class="pre">1</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L99">DiagonalMatrix</a>(<code class="docutils literal notranslate"><span class="pre">rowsColumns</span></code>, <code class="docutils literal notranslate"><span class="pre">value</span> <span class="pre">=</span> <span class="pre">1</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -225,7 +238,7 @@
 </section>
 <section id="function-norml2">
 <span id="sec-basicutilities-norml2"></span><h2>Function: NormL2<a class="headerlink" href="#function-norml2" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L104">NormL2</a>(<code class="docutils literal notranslate"><span class="pre">vector</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L113">NormL2</a>(<code class="docutils literal notranslate"><span class="pre">vector</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -251,7 +264,7 @@
 </section>
 <section id="function-vsum">
 <span id="sec-basicutilities-vsum"></span><h2>Function: VSum<a class="headerlink" href="#function-vsum" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L113">VSum</a>(<code class="docutils literal notranslate"><span class="pre">vector</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L122">VSum</a>(<code class="docutils literal notranslate"><span class="pre">vector</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -277,7 +290,7 @@
 </section>
 <section id="function-vadd">
 <span id="sec-basicutilities-vadd"></span><h2>Function: VAdd<a class="headerlink" href="#function-vadd" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L122">VAdd</a>(<code class="docutils literal notranslate"><span class="pre">v0</span></code>, <code class="docutils literal notranslate"><span class="pre">v1</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L131">VAdd</a>(<code class="docutils literal notranslate"><span class="pre">v0</span></code>, <code class="docutils literal notranslate"><span class="pre">v1</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -303,7 +316,7 @@
 </section>
 <section id="function-vsub">
 <span id="sec-basicutilities-vsub"></span><h2>Function: VSub<a class="headerlink" href="#function-vsub" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L133">VSub</a>(<code class="docutils literal notranslate"><span class="pre">v0</span></code>, <code class="docutils literal notranslate"><span class="pre">v1</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L142">VSub</a>(<code class="docutils literal notranslate"><span class="pre">v0</span></code>, <code class="docutils literal notranslate"><span class="pre">v1</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -329,7 +342,7 @@
 </section>
 <section id="function-vmult">
 <span id="sec-basicutilities-vmult"></span><h2>Function: VMult<a class="headerlink" href="#function-vmult" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L144">VMult</a>(<code class="docutils literal notranslate"><span class="pre">v0</span></code>, <code class="docutils literal notranslate"><span class="pre">v1</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L153">VMult</a>(<code class="docutils literal notranslate"><span class="pre">v0</span></code>, <code class="docutils literal notranslate"><span class="pre">v1</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -351,7 +364,7 @@
 </section>
 <section id="function-scalarmult">
 <span id="sec-basicutilities-scalarmult"></span><h2>Function: ScalarMult<a class="headerlink" href="#function-scalarmult" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L154">ScalarMult</a>(<code class="docutils literal notranslate"><span class="pre">scalar</span></code>, <code class="docutils literal notranslate"><span class="pre">v</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L163">ScalarMult</a>(<code class="docutils literal notranslate"><span class="pre">scalar</span></code>, <code class="docutils literal notranslate"><span class="pre">v</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -377,7 +390,7 @@
 </section>
 <section id="function-normalize">
 <span id="sec-basicutilities-normalize"></span><h2>Function: Normalize<a class="headerlink" href="#function-normalize" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L163">Normalize</a>(<code class="docutils literal notranslate"><span class="pre">v</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L172">Normalize</a>(<code class="docutils literal notranslate"><span class="pre">v</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -403,7 +416,7 @@
 </section>
 <section id="function-vec2tilde">
 <span id="sec-basicutilities-vec2tilde"></span><h2>Function: Vec2Tilde<a class="headerlink" href="#function-vec2tilde" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L179">Vec2Tilde</a>(<code class="docutils literal notranslate"><span class="pre">v</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L188">Vec2Tilde</a>(<code class="docutils literal notranslate"><span class="pre">v</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -430,7 +443,7 @@
 </section>
 <section id="function-tilde2vec">
 <span id="sec-basicutilities-tilde2vec"></span><h2>Function: Tilde2Vec<a class="headerlink" href="#function-tilde2vec" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L186">Tilde2Vec</a>(<code class="docutils literal notranslate"><span class="pre">m</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L195">Tilde2Vec</a>(<code class="docutils literal notranslate"><span class="pre">m</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -452,7 +465,7 @@
 </section>
 <section id="function-gaussintegrate">
 <span id="sec-basicutilities-gaussintegrate"></span><h2>Function: GaussIntegrate<a class="headerlink" href="#function-gaussintegrate" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L213">GaussIntegrate</a>(<code class="docutils literal notranslate"><span class="pre">functionOfX</span></code>, <code class="docutils literal notranslate"><span class="pre">integrationOrder</span></code>, <code class="docutils literal notranslate"><span class="pre">a</span></code>, <code class="docutils literal notranslate"><span class="pre">b</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L222">GaussIntegrate</a>(<code class="docutils literal notranslate"><span class="pre">functionOfX</span></code>, <code class="docutils literal notranslate"><span class="pre">integrationOrder</span></code>, <code class="docutils literal notranslate"><span class="pre">a</span></code>, <code class="docutils literal notranslate"><span class="pre">b</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -477,7 +490,7 @@
 </section>
 <section id="function-lobattointegrate">
 <span id="sec-basicutilities-lobattointegrate"></span><h2>Function: LobattoIntegrate<a class="headerlink" href="#function-lobattointegrate" title="Permalink to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L249">LobattoIntegrate</a>(<code class="docutils literal notranslate"><span class="pre">functionOfX</span></code>, <code class="docutils literal notranslate"><span class="pre">integrationOrder</span></code>, <code class="docutils literal notranslate"><span class="pre">a</span></code>, <code class="docutils literal notranslate"><span class="pre">b</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L258">LobattoIntegrate</a>(<code class="docutils literal notranslate"><span class="pre">functionOfX</span></code>, <code class="docutils literal notranslate"><span class="pre">integrationOrder</span></code>, <code class="docutils literal notranslate"><span class="pre">a</span></code>, <code class="docutils literal notranslate"><span class="pre">b</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>

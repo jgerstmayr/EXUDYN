@@ -50,8 +50,8 @@ You can view and download this file on Github: `mainSystemExtensionsTests.py <ht
    SC = exu.SystemContainer()
    mbs = SC.AddSystem()
    
-   b0=mbs.CreateMassPoint(referenceCoordinates = [0,0,0],
-                          initialVelocities = [2,5,0],
+   b0=mbs.CreateMassPoint(referencePosition = [0,0,0],
+                          initialVelocity = [2,5,0],
                           physicsMass = 1, gravity = [0,-9.81,0],
                           drawSize = 0.5, color=color4blue)
    
@@ -102,8 +102,8 @@ You can view and download this file on Github: `mainSystemExtensionsTests.py <ht
    SC = exu.SystemContainer()
    mbs = SC.AddSystem()
    
-   b0 = mbs.CreateMassPoint(referenceCoordinates = [2,0,0],
-                            initialVelocities = [2,5,0],
+   b0 = mbs.CreateMassPoint(referencePosition = [2,0,0],
+                            initialVelocity = [2,5,0],
                             physicsMass = 1, gravity = [0,-9.81,0],
                             drawSize = 0.5, color=color4blue)
    
@@ -136,7 +136,7 @@ You can view and download this file on Github: `mainSystemExtensionsTests.py <ht
    SC = exu.SystemContainer()
    mbs = SC.AddSystem()
    
-   b0 = mbs.CreateMassPoint(referenceCoordinates = [7,0,0],
+   b0 = mbs.CreateMassPoint(referencePosition = [7,0,0],
                              physicsMass = 1, gravity = [0,-9.81,0],
                              drawSize = 0.5, color=color4blue)
    
@@ -293,8 +293,8 @@ You can view and download this file on Github: `mainSystemExtensionsTests.py <ht
    SC = exu.SystemContainer()
    mbs = SC.AddSystem()
    
-   b0 = mbs.CreateMassPoint(referenceCoordinates = [2,0,0],
-                            initialVelocities = [2*0,5,0],
+   b0 = mbs.CreateMassPoint(referencePosition = [2,0,0],
+                            initialVelocity = [2*0,5,0],
                             physicsMass = 1, gravity = [0,-9.81,0],
                             drawSize = 0.5, color=color4blue)
    
@@ -378,7 +378,7 @@ You can view and download this file on Github: `mainSystemExtensionsTests.py <ht
                              gravity = [0,-9.81,0],
                              graphicsDataList = [GraphicsDataOrthoCubePoint(size=[1,0.1,0.1], 
                                                                          color=color4orange)])
-   m1 = mbs.CreateMassPoint(referenceCoordinates=[5.5,-1,0],
+   m1 = mbs.CreateMassPoint(referencePosition=[5.5,-1,0],
                             physicsMass=1, drawSize = 0.2)
    n1 = mbs.GetObject(m1)['nodeNumber']
        

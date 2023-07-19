@@ -30,6 +30,7 @@ This section includes all Examples for Exudyn.They can also be found and downloa
    Examples/beltDrivesComparison
    Examples/bicycleIftommBenchmark
    Examples/cartesianSpringDamper
+   Examples/chatGPTupdate
    Examples/CMSexampleCourse
    Examples/ComputeSensitivitiesExample
    Examples/coordinateSpringDamper
@@ -99,6 +100,9 @@ This section includes all Examples for Exudyn.They can also be found and downloa
    Examples/rigidRotor3DFWBW
    Examples/rigidRotor3Dnutation
    Examples/rigidRotor3Drunup
+   Examples/ROSExampleMassPoint
+   Examples/ROSExampleTurtle
+   Examples/rr
    Examples/serialRobotFlexible
    Examples/serialRobotInteractiveLimits
    Examples/serialRobotInverseKinematics

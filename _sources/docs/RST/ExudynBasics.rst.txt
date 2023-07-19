@@ -39,7 +39,7 @@ Using \ ``mbs.Reset()``\  will clear the system and allows to set up a new syste
 Simulation settings
 -------------------
 
-The simulation settings consists of a couple of substructures, e.g., for \ ``solutionSettings``\ , \ ``staticSolver``\ , \ ``timeIntegration``\  as well as a couple of general options -- for details see Section :ref:`sec-solutionsettings`\  and Section :ref:`sec-simulationsettings`\ .
+The simulation settings consists of a couple of substructures, e.g., for \ ``solutionSettings``\ , \ ``staticSolver``\ , \ ``timeIntegration``\  as well as a couple of general options -- for details see Section :ref:`sec-solutionsettings`\  and Section :ref:`sec-simulationsettingsmain`\ .
 
 Simulation settings are needed for every solver. They contain solver-specific parameters (e.g., the way how load steps are applied), information on how solution files are written, and very specific control parameters, e.g., for the Newton solver. 
 
@@ -99,6 +99,8 @@ Typical output settings are:
 Furthermore, you can use sensors to record particular information, e.g., the displacement of a body's local
 position, forces or joint data. For viewing sensor results, use the \ ``PlotSensor``\  function of the 
 \ ``exudyn.plot``\  tool, see the rigid body and joints tutorial.
+Finally, the render window allows to show traces (trajectories) of position sensors, sensor vector quantities (e.g., velocity vectors),
+or triads given by rotation matrices. For further information, see the \ ``sensors.traces``\  structure of \ ``VisualizationSettings``\ , Section :ref:`sec-vsettingssensortraces`\ .
 
 
 .. _sec-overview-basics-renderer:
@@ -108,16 +110,20 @@ Renderer and 3D graphics
 ------------------------
 
 A 3D renderer is attached to the simulation. Visualization is started with  \ ``exu.StartRenderer()``\ , see the examples and tutorials.
-For closing, press key 'Q' or Escape or close the window.
-\ **Note**\ :
-
-+  After \ ``visualizationSettings.window.reallyQuitTimeLimit``\  seconds a 'do you really want to quit' dialog opens for safety on pressing 'Q'; if no tkinter is available, you just have to press 'Q' twice. For closing the window, you need to click a second time on the close button of the window after \ ``reallyQuitTimeLimit``\  seconds (usually 900 seconds).
+In order to show your model in the render window, you have to provide 3D graphics data to the bodies. Flexible bodies (e.g., FFRF-like) can visualize their meshes. Further items (nodes, markers, ...) can be visualized with default settings, however, often you have to turn on drawing or enlarge default sizes to make items visible. Item number can also be shown.
+Finally, since version 1.6.188, sensor traces (trajectories) can be shown in the render window, see the \ ``VisualizationSettings``\  in  Section :ref:`sec-visualizationsettingsmain`\ .
 
 The renderer uses an OpenGL window of a library called GLFW, which is platform-independent. 
 The renderer is set up in a minimalistic way, just to ensure that you can check that the modeling is correct. 
-There is no way to contruct models inside the renderer. 
-Note: Try to avoid huge number of triangles in STL files or by creating large number of complex objects, such as spheres or cylinders.
 
+\ **Note**\ :
+
++  For closing the render window, press key 'Q' or Escape or just close the window.
++  There is no way to contruct models inside the renderer (no 'GUI').
++  Try to avoid huge number of triangles in STL files or by creating large number of complex objects, such as spheres or cylinders.
++  After \ ``visualizationSettings.window.reallyQuitTimeLimit``\  seconds a 'do you really want to quit' dialog opens for safety on pressing 'Q'; if no tkinter is available, you just have to press 'Q' twice. For closing the window, you need to click a second time on the close button of the window after \ ``reallyQuitTimeLimit``\  seconds (usually 900 seconds).
+
+ 
 There are some main features in the renderer, using keyboard and mouse, for details see Section :ref:`sec-graphicsvisualization`\ :
 
 +  press key H to show help in renderer
@@ -132,14 +138,20 @@ There are some main features in the renderer, using keyboard and mouse, for deta
 +  show item dictionary: click on graphics element with right mouse button  
 +  for further keys, see Section :ref:`sec-gui-sec-keyboardinput`\  or press H in renderer
 
-Depending on your model (size, place, ...), you may need to adjust the following visualization and \ ``openGL``\  parameters in \ ``visualizationSettings``\ :
+Depending on your model (size, place, ...), you may need to adjust the following visualization and \ ``openGL``\  parameters in \ ``visualizationSettings``\ , see Section :ref:`sec-visualizationsettingsmain`\ :
 
 +  change window size
 +  light and light position 
 +  shadow (turned off by using 0; turned on by using, e.g., a value of 0.3) and shadow polygon offset; shadow slows down graphics performance by a factor of 2-3, depending on your graphics card
 +  visibility of nodes, markers, etc. in according bodies, nodes, markers, ..., \ ``visualizationSettings``\ 
 +  move camera with a selected marker: adjust \ ``trackMarker``\  in \ ``visualizationSettings.interactive``\ 
-+  ... (see e.g. Section :ref:`sec-vsettingsgeneral`\ )
+
+\ **NOTE**\ : changing \ ``visualizationSettings``\  is not thread-safe, as it allows direct access to the C++ variables. 
+In most cases, this is not problematic, e.g., turning on/off some view parameters my just lead to some short-time artifacts if
+they are changed during redraw. However, more advanced quantities (e.g., \ ``trackMarker ``\  or changing strings) may lead to problems, 
+which is why it is strongly recommended to:
+
++  set all \ ``visualizationSettings``\  \ **before start of renderer**\ 
 
 
 
@@ -151,7 +163,7 @@ Visualization settings dialog
 
 Visualization settings are used for user interaction with the model. E.g., the nodes, markers, loads, etc., can be visualized for every model. There are default values, e.g., for the size of nodes, which may be inappropriate for your model. Therefore, you can adjust those parameters. In some cases, huge models require simpler graphics representation, in order not to slow down performance -- e.g., the number of faces to represent a cylinder should be small if there are 10000s of cylinders drawn. Even computation performance can be slowed down, if visualization takes lots of CPU power. However, visualization is performed in a separate thread, which usually does not influence the computation exhaustively.
 
-Details on visualization settings and its substructures are provided in Section :ref:`sec-vsettingsgeneral`\  -- Section :ref:`sec-visualizationsettings`\ . These settings may also be edited by pressing 'V' in the active render window (does not work, if there is no active render loop using, e.g., \ ``SC.WaitForRenderEngineStopFlag()``\  or 
+Details on visualization settings and its substructures are provided in Section :ref:`sec-visualizationsettingsmain`\ . These settings may also be edited by pressing 'V' in the active render window (does not work, if there is no active render loop using, e.g., \ ``SC.WaitForRenderEngineStopFlag()``\  or 
 \ ``mbs.WaitForUserToContinue()``\  ).
 The visualization settings dialog is shown exemplarily in \ :numref:`fig-visualizationsettings`\ .
 Note that this dialog is automatically created and uses Python's \ ``tkinter``\ , which is lightweight, but not very well suited if display scalings are large (e.g., on high resolution laptop screens). If working with Spyder, it is recommended to restart Spyder, if display scaling is changed, in order to adjust scaling not only for Spyder but also for Exudyn .
@@ -221,7 +233,7 @@ Execute Command and Help
 ------------------------
 
 In addition to the Visualization settings dialog, a simple help window opens upon pressing key 'H'. 
-It is also possible to execute single Python commands during simulation by pressing 'X', which opens a simple dialog, saying 'Single command (press return to execute'. 
+It is also possible to execute single Python commands during simulation by pressing 'X', which opens a dialog, saying 'Exudyn Command Window'. 
 Note that the dialog may appear behind the visualization window!
 This dialog may be very helpful in long running computations or in case that you may evaluate variables for debugging.
 The Python commands are evaluated in the global python scope, meaning that \ ``mbs``\  or other variables of your scripts are available.
@@ -246,12 +258,12 @@ You can also do quite fancy things during simulation, e.g., to deactivate joints
 
 .. code-block:: python
 
-n=mbs.systemData.NumberOfObjects()
-for i in range(n):
-    d = mbs.GetObject(i)
-    #if 'Joint' in d['objectType']:
-    if 'activeConnector' in d:
-        mbs.SetObjectParameter(i, 'activeConnector', False)
+  n=mbs.systemData.NumberOfObjects()
+  for i in range(n):
+      d = mbs.GetObject(i)
+      #if 'Joint' in d['objectType']:
+      if 'activeConnector' in d:
+          mbs.SetObjectParameter(i, 'activeConnector', False)
 
 
 
@@ -259,7 +271,8 @@ for i in range(n):
 Note that you could also change \ ``visualizationSettings``\  in this way, but the Visualization settings dialog is much more convenient.
 Changing \ ``simulationSettings``\  is dangerous and must be treated with care.
 Some parameters, such as \ ``simulationSettings.timeIntegration.endTime``\  are copied into the internal solver's \textmbs.sys['dynamicSolver'].it structure.
-Thus, changing \ ``simulationSettings.timeIntegration.endTime``\  has no effect. 
+
+Thus, changing \ ``simulationSettings.timeIntegration.endTime``\  has no effect during simulation. 
 As a rule of thumb, all variables that are not stored inside the solvers structures may be adjusted by the \ ``simulationSettings``\  passed to the solver (which are then not copied internally); see the C++ code for details. However, behavior may change in future and unexpected behavior or and changing \ ``simulationSettings``\  will likely cause crashes if you do not know exactly the behavior, e.g., changing output format from text to binary ... !
 Specifically, \ ``newton``\  and \ ``discontinuous``\  settings cannot be changed on the fly as they are copied internally.
 
@@ -572,8 +585,7 @@ The faster versions are available for all release versions, but only for some \ 
 However, there are many \ **ways to speed up Exudyn in general**\ :
 
 +  for models with more than 50 coordinates, switching to sparse solvers might greatly improve speed: \ ``simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse``\ 
-+  when preferring dense direct solvers, switching to Eigen's PartialPivLU solver might greatly improve speed: \ ``simulationSettings.linearSolverType = exu.LinearSolverType.EigenDense``\ ; 
-  however, the flag \ ``simulationSettings.linearSolverSettings.ignoreSingularJacobian=True``\  will switch to the much slower (but more robust) Eigen's FullPivLU
++  when preferring dense direct solvers, switching to Eigen's PartialPivLU solver might greatly improve speed: \ ``simulationSettings.linearSolverType = exu.LinearSolverType.EigenDense``\ ; however, the flag \ ``simulationSettings.linearSolverSettings.ignoreSingularJacobian=True``\  will switch to the much slower (but more robust) Eigen's FullPivLU
 +  try to avoid Python functions or try to speed up Python functions
 +  instead of user functions in objects or loads (computed in every iteration), some problems would also work if these parameters are only updated in \ ``mbs.SetPreStepUserFunction(...)``\ 
 +  Python user functions can be speed up using the Python numba package, using \ ``@jit``\  in front of functions (for more options, see `https://numba.pydata.org/numba-doc/dev/user/index.html <https://numba.pydata.org/numba-doc/dev/user/index.html>`_); Example given in \ ``Examples/springDamperUserFunctionNumbaJIT.py``\  showing speedups of factor 4; more complicated Python functions may see speedups of 10 - 50

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Installation instructions &mdash; Exudyn1.6.164.dev1 1.6.164.dev1 documentation</title>
+  <title>Installation instructions &mdash; Exudyn1.7.0 1.7.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
@@ -41,7 +41,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.6.164.dev1
+            Exudyn1.7.0
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -60,10 +60,10 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Installation instructions</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#requirements-for-exudyn">Requirements for Exudyn ?</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#install-exudyn-with-pip-installer-pypi-org">Install Exudyn with PIP INSTALLER (pypi.org)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#install-from-specific-wheel-ubuntu-and-windows">Install from specific Wheel (UBUNTU and Windows)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#install-from-specific-wheel-ubuntu-and-windows">Install from specific Wheel (Ubuntu and Windows)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#build-and-install-exudyn-under-windows-10">Build and install Exudyn under Windows 10?</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#build-and-install-exudyn-under-mac-os-x">Build and install Exudyn under Mac OS X?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#build-and-install-exudyn-under-ubuntu">Build and install Exudyn under UBUNTU?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#build-and-install-exudyn-under-ubuntu">Build and install Exudyn under Ubuntu?</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#uninstall-exudyn">Uninstall Exudyn</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#how-to-install-exudyn-and-use-the-c-source-code-advanced">How to install Exudyn and use the C++ source code (advanced)?</a></li>
 </ul>
@@ -101,7 +101,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.6.164.dev1</a>
+          <a href="../../index.html">Exudyn1.7.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -128,7 +128,7 @@
 So far (2021-07), we tested</p>
 <ul class="simple">
 <li><p><strong>Anaconda 2021-11, 64bit, Python 3.9</strong>(older Anaconda3 versions can be downloaded via the repository archive <code class="docutils literal notranslate"><span class="pre">https://repo.anaconda.com/archive/</span></code>)</p></li>
-<li><p>Currently, we work with Python 3.6 - Python 3.10 <strong>conda environments</strong> on Windows, Linux and MacOS (3.8-3.10).</p></li>
+<li><p>Currently, we work with Python 3.6 - Python 3.11 <strong>conda environments</strong> on Windows, Linux and MacOS (3.8-3.10).</p></li>
 <li><p><strong>Spyder 5.1.5</strong> (with Python 3.9.7, 64bit) and <strong>Spyder 4.1.3</strong> (with Python 3.7.7, 64bit), which is included in the Anaconda installation(Note that it is important that Spyder, Python and Exudyn  are <strong>either</strong> 32bit <strong>or</strong> 64bit and are compiled up to the same minor version, i.e., 3.7.x. There will be a strange .DLL error, if you mix up 32/64bit. It is possible to install both, Anaconda 32bit and Anaconda 64bit – then you should follow the recommendations of paths as suggested by Anaconda installer.); Spyder works with all virtual environments</p></li>
 </ul>
 <p>Many alternative options exist:</p>
@@ -150,7 +150,7 @@ Once again, remember that Python versions and the version of the Exudyn module m
 </ul>
 <p>You can install most of these packages using <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">numpy</span></code> (Windows) or <code class="docutils literal notranslate"><span class="pre">pip3</span> <span class="pre">install</span> <span class="pre">numpy</span></code> (Linux).
 NOTE: as there is only <code class="docutils literal notranslate"><span class="pre">numpy</span></code> needed (but not for all sub-packages) and <code class="docutils literal notranslate"><span class="pre">numpy</span></code> supports many variants, we do not add a particular requirement for installation of depending packages. It is not necessary to install <code class="docutils literal notranslate"><span class="pre">scipy</span></code> as long as you are not using features of <code class="docutils literal notranslate"><span class="pre">scipy</span></code>. Same reason for <code class="docutils literal notranslate"><span class="pre">tkinter</span></code> and <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>.</p>
-<p>For interaction (right-mouse-click, some key-board commands) you need the Python module <code class="docutils literal notranslate"><span class="pre">tkinter</span></code>. This is included in regular Anaconda distributions (recommended, see below), but on UBUNTU you need to type alike (do not forget the ‘3’, otherwise it installs for Python2 …):</p>
+<p>For interaction (right-mouse-click, some key-board commands) you need the Python module <code class="docutils literal notranslate"><span class="pre">tkinter</span></code>. This is included in regular Anaconda distributions (recommended, see below), but on Ubuntu you need to type alike (do not forget the ‘3’, otherwise it installs for Python2 …):</p>
 <blockquote>
 <div><p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">python3-tk</span></code></p>
 </div></blockquote>
@@ -165,39 +165,61 @@ NOTE: as there is only <code class="docutils literal notranslate"><span class="p
 <li><p><a class="reference external" href="https://pypi.org/project/exudyn">https://pypi.org/project/exudyn</a></p></li>
 </ul>
 </div></blockquote>
-<p>As with most other packages, in the regular case (if your binary has been pre-built) you just need to do(If the index of pypi is not updated, it may help to use <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-i</span> <span class="pre">https://pypi.org/project/</span> <span class="pre">exudyn</span></code> )</p>
+<p>As with most other packages, in the regular case (if your binary has been pre-built) you just need to do</p>
 <blockquote>
 <div><p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">exudyn</span></code></p>
 </div></blockquote>
-<p>On Linux (currently only pre-built for UBUNTU, but should work on many other linux platforms), <strong>update pip to at least 20.3</strong> and use</p>
+<p>On Ubuntu/Linux, make sure that pip is installed and up-to-date (<strong>update pip to at least 20.3</strong>; otherwise the manylinux wheels will not be accepted!):</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt</span> <span class="pre">install</span> <span class="pre">python3-pip</span></code><code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">--upgrade</span></code></p>
+</div></blockquote>
+<p>Depending on installation the command may read <code class="docutils literal notranslate"><span class="pre">pip3</span></code> or <code class="docutils literal notranslate"><span class="pre">pip</span></code>:</p>
 <blockquote>
 <div><p><code class="docutils literal notranslate"><span class="pre">pip3</span> <span class="pre">install</span> <span class="pre">exudyn</span></code></p>
 </div></blockquote>
-<p>For pre-releases (use with care!), add ‘<span class="math notranslate nohighlight">\(--\)</span>pre’ flag:</p>
+<p>For pre-releases (use with care!), add <code class="docutils literal notranslate"><span class="pre">--pre</span></code> flag:</p>
 <blockquote>
-<div><p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">exudyn</span> <span class="pre">\</span> <span class="pre">:math:`--`\</span> <span class="pre">pre</span></code></p>
+<div><p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">exudyn</span> <span class="pre">--pre</span> <span class="pre">-U</span></code></p>
 </div></blockquote>
-<p>In some cases (e.g. for AppleM1), your pre-built binary will not work due to some incompatibilities. Then you need to build from source as described in the ‘Build and install’ sections, Section <a class="reference internal" href="#sec-install-installinstructions-buildwindows"><span class="std std-ref">Build and install Exudyn under Windows 10?</span></a>.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">-U</span></code> (identical to <code class="docutils literal notranslate"><span class="pre">--upgrade</span></code>) flag ensures that the current installed version is also updated in case of a change of the micro version (e.g., from version 1.6.119 to version 1.6.164), otherwise, it will only update if you switch to a newer minor version.</p>
+<p>In some cases (e.g. for AppleM1 or special Linux versions), your pre-built binary will not work due to some incompatibilities. Then you need to build from source as described in the ‘Build and install’ sections, Section <a class="reference internal" href="#sec-install-installinstructions-buildwindows"><span class="std std-ref">Build and install Exudyn under Windows 10?</span></a>.</p>
+<section id="troubleshooting-pip-install">
+<h3>Troubleshooting pip install<a class="headerlink" href="#troubleshooting-pip-install" title="Permalink to this heading"></a></h3>
+<p>Pip install may fail, if your linux version does not support the current manylinux version.
+This is known for CentOS or simlilar systems which usually support manylinux2014. In this case, you have to build Exudyn from source, see Section <a class="reference internal" href="#sec-install-installinstructions-buildubuntu"><span class="std std-ref">Build and install Exudyn under Ubuntu?</span></a>.</p>
+<p>Sometimes, you install exudyn, but when running python, the <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">exudyn</span></code> fails.
+In case of several environments, check where your installation goes. To guarantee that the pip install goes to the python call, use:</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">exudyn</span></code></p>
+</div></blockquote>
+<p>which ensures that the used python is calling its associated pip module.</p>
+<p>If the PyPi index is not updated, it may help to use</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-i</span> <span class="pre">https://pypi.org/project/</span> <span class="pre">exudyn</span></code></p>
+</div></blockquote>
+</section>
 </section>
 <section id="install-from-specific-wheel-ubuntu-and-windows">
-<span id="sec-install-installinstructions-wheel"></span><h2>Install from specific Wheel (UBUNTU and Windows)<a class="headerlink" href="#install-from-specific-wheel-ubuntu-and-windows" title="Permalink to this heading"></a></h2>
+<span id="sec-install-installinstructions-wheel"></span><h2>Install from specific Wheel (Ubuntu and Windows)<a class="headerlink" href="#install-from-specific-wheel-ubuntu-and-windows" title="Permalink to this heading"></a></h2>
 <p>A way to install the Python package Exudyn is to use the so-called ‘wheels’ (file ending <code class="docutils literal notranslate"><span class="pre">.whl</span></code>).
-Wheels can be downloaded directly from <a class="reference external" href="https://pypi.org/project/exudyn/#files">https://pypi.org/project/exudyn/#files</a>, for many Python versions and architectures.</p>
-<p>For UBUNTU18.04 (which by default uses Python 3.6) this may read (version number 1.0.20 may be different):</p>
+NOTE that this approach usually is not required; just use the pip installer of the previous section!</p>
+<p><strong>Ubuntu</strong>:</p>
+<p>Wheels can be downloaded directly from <a class="reference external" href="https://pypi.org/project/exudyn/#files">https://pypi.org/project/exudyn/#files</a>, for many Python versions and architectures.</p>
+<p>For Ubuntu 18.04 (which by default uses Python 3.6) this may read (version number 1.0.20 may be different):</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">Python</span> <span class="pre">3.6,</span> <span class="pre">64bit</span></code>: pip3 install dist<span class="math notranslate nohighlight">\(\backslash\)</span>exudyn-1.0.20-cp36-cp36-linux_x86_64.whl</p></li>
 </ul>
-<p>For UBUNTU20.04 (which by default uses Python 3.8) this may read (version number 1.0.20 may be different):</p>
+<p>For Ubuntu 20.04 (which by default uses Python 3.8) this may read (version number 1.0.20 may be different):</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">Python</span> <span class="pre">3.8,</span> <span class="pre">64bit</span></code>: pip3 install dist<span class="math notranslate nohighlight">\(\backslash\)</span>exudyn-1.0.20-cp38-cp38-linux_x86_64.whl</p></li>
 </ul>
 <p>NOTE that your installation may have environments with different Python versions, so install that Exudyn version appropriately!
-If the wheel installation does not work on UBUNTU, it is highly recommended to build Exudyn for your specific system as given in Section <a class="reference internal" href="#sec-install-installinstructions-buildubuntu"><span class="std std-ref">Build and install Exudyn under UBUNTU?</span></a>.</p>
+If the wheel installation does not work on Ubuntu, it is highly recommended to build Exudyn for your specific system as given in Section <a class="reference internal" href="#sec-install-installinstructions-buildubuntu"><span class="std std-ref">Build and install Exudyn under Ubuntu?</span></a>.</p>
 <p><strong>Windows</strong>:</p>
 <p>First, open an Anaconda prompt:</p>
 <ul>
 <li><p>EITHER calling: START-&gt;Anaconda-&gt;… OR go to anaconda/Scripts folder and call activate.bat</p></li>
-<li><p>You can check your Python version then, by running <code class="docutils literal notranslate"><span class="pre">python</span></code>(<code class="docutils literal notranslate"><span class="pre">python3</span></code> under UBUNTU 18.04), the output reads like:</p>
+<li><p>You can check your Python version then, by running <code class="docutils literal notranslate"><span class="pre">python</span></code>(<code class="docutils literal notranslate"><span class="pre">python3</span></code> under Ubuntu 18.04), the output reads like:</p>
 <p><code class="docutils literal notranslate"><span class="pre">Python</span> <span class="pre">3.6.5</span> <span class="pre">\</span> <span class="pre">:math:`|`\</span> <span class="pre">Anaconda,</span> <span class="pre">Inc.\</span> <span class="pre">:math:`|`\</span>&#160; <span class="pre">(default,</span> <span class="pre">Mar</span> <span class="pre">29</span> <span class="pre">2018,</span> <span class="pre">13:32:41)</span> <span class="pre">\</span> <span class="pre">:math:`[`\</span> <span class="pre">MSC</span> <span class="pre">v.1900</span> <span class="pre">64</span> <span class="pre">bit</span> <span class="pre">(AMD64)\</span> <span class="pre">:math:`]`\</span>&#160; <span class="pre">on</span> <span class="pre">win32</span></code>…</p>
 </li>
 <li><p>type <code class="docutils literal notranslate"><span class="pre">exit()</span></code> to close Python</p></li>
@@ -278,13 +300,13 @@ Requirements are an according Anaconda (or Miniconda) installation.</p>
 <p>in order to interact with the render window, as there is only a single-threaded version available for Mac OS.</p>
 </section>
 <section id="build-and-install-exudyn-under-ubuntu">
-<span id="sec-install-installinstructions-buildubuntu"></span><h2>Build and install Exudyn under UBUNTU?<a class="headerlink" href="#build-and-install-exudyn-under-ubuntu" title="Permalink to this heading"></a></h2>
-<p>Having a new UBUNTU 18.04 standard installation (e.g. using a VM virtual box environment), the following steps need to be done (Python <strong>3.6</strong> is already installed on UBUNTU18.04, otherwise use <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt</span> <span class="pre">install</span> <span class="pre">python3</span></code>)(see also the youtube video: <a class="reference external" href="https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg_jtl6fx">https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg_jtl6fx</a>):</p>
+<span id="sec-install-installinstructions-buildubuntu"></span><h2>Build and install Exudyn under Ubuntu?<a class="headerlink" href="#build-and-install-exudyn-under-ubuntu" title="Permalink to this heading"></a></h2>
+<p>Having a new Ubuntu 18.04 standard installation (e.g. using a VM virtual box environment), the following steps need to be done (Python <strong>3.6</strong> is already installed on Ubuntu 18.04, otherwise use <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt</span> <span class="pre">install</span> <span class="pre">python3</span></code>)(see also the youtube video: <a class="reference external" href="https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg_jtl6fx">https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg_jtl6fx</a>):</p>
 <p>First update …</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">update</span>
 </pre></div>
 </div>
-<p>Install necessary Python libraries and pip3; <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> and<code class="docutils literal notranslate"><span class="pre">scipy</span></code> are not required for installation but used in Exudyn examples:</p>
+<p>Install necessary Python libraries and pip3; <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> and <code class="docutils literal notranslate"><span class="pre">scipy</span></code> are not required for installation but used in Exudyn examples:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">dpkg</span> <span class="o">--</span><span class="n">configure</span> <span class="o">-</span><span class="n">a</span>
 <span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">python3</span><span class="o">-</span><span class="n">pip</span>
 <span class="n">pip3</span> <span class="n">install</span> <span class="n">numpy</span>
@@ -296,10 +318,18 @@ Requirements are an according Anaconda (or Miniconda) installation.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip3</span> <span class="n">install</span> <span class="n">pybind11</span>
 </pre></div>
 </div>
-<p>If graphics is used (<code class="docutils literal notranslate"><span class="pre">\#define</span> <span class="pre">USE_GLFW_GRAPHICS</span></code> in <code class="docutils literal notranslate"><span class="pre">BasicDefinitions.h</span></code>), you must install the according GLFW and OpenGL libs:</p>
+<p>To have dialogs enabled, you need to install <code class="docutils literal notranslate"><span class="pre">Tk</span></code>/<code class="docutils literal notranslate"><span class="pre">tkinter</span></code> (may be already installed in your case).
+<code class="docutils literal notranslate"><span class="pre">Tk</span></code> is installed on Ubuntu via apt-get and should then be available in Python:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">python3</span><span class="o">-</span><span class="n">tk</span>
+</pre></div>
+</div>
+<p>If graphics is used (<code class="docutils literal notranslate"><span class="pre">\#define</span> <span class="pre">USE_GLFW_GRAPHICS</span></code> in <code class="docutils literal notranslate"><span class="pre">BasicDefinitions.h</span></code>), you must install the according GLFW libs:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">libglfw3</span> <span class="n">libglfw3</span><span class="o">-</span><span class="n">dev</span>
+</pre></div>
+</div>
+<p>In some cases, it may be required to install OpenGL and some of the following libraries:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">freeglut3</span> <span class="n">freeglut3</span><span class="o">-</span><span class="n">dev</span>
 <span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">mesa</span><span class="o">-</span><span class="n">common</span><span class="o">-</span><span class="n">dev</span>
-<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">libglfw3</span> <span class="n">libglfw3</span><span class="o">-</span><span class="n">dev</span>
 <span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">libx11</span><span class="o">-</span><span class="n">dev</span> <span class="n">xorg</span><span class="o">-</span><span class="n">dev</span> <span class="n">libglew1</span><span class="mf">.5</span> <span class="n">libglew1</span><span class="mf">.5</span><span class="o">-</span><span class="n">dev</span> <span class="n">libglu1</span><span class="o">-</span><span class="n">mesa</span> <span class="n">libglu1</span><span class="o">-</span><span class="n">mesa</span><span class="o">-</span><span class="n">dev</span> <span class="n">libgl1</span><span class="o">-</span><span class="n">mesa</span><span class="o">-</span><span class="n">glx</span> <span class="n">libgl1</span><span class="o">-</span><span class="n">mesa</span><span class="o">-</span><span class="n">dev</span>
 </pre></div>
 </div>
@@ -311,17 +341,18 @@ Requirements are an according Anaconda (or Miniconda) installation.</p>
 <blockquote>
 <div><p><code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">pythonDev/Examples/rigid3Dexample.py</span></code></p>
 </div></blockquote>
-<p>You can also create a UBUNTU wheel which can be easily installed on the same machine (x64), same operating system (UBUNTU18.04) and with same Python version (e.g., 3.6):</p>
+<p>You can also create a Ubuntu wheel which can be easily installed on the same machine (x64), same operating system (Ubuntu 18.04) and with same Python version (e.g., 3.6):</p>
 <blockquote>
 <div><p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">pip3</span> <span class="pre">install</span> <span class="pre">wheel</span></code><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">python3</span> <span class="pre">setup.py</span> <span class="pre">bdist_wheel</span> <span class="pre">--parallel</span></code></p>
 </div></blockquote>
 <p><strong>Exudyn under Ubuntu / WSL</strong>:</p>
 <ul class="simple">
-<li><p>Note that Exudyn also nicely works under WSL (Windows subsystem for linux; tested for Ubuntu18.04) and an according xserver (VcXsrv).</p></li>
-<li><p>Just set the display variable in your .bashrc file accordingly and you can enjoy the OpenGL windows and settings.</p></li>
+<li><p>Note that Exudyn also nicely works under WSL (Windows subsystem for linux; tested for Ubuntu 18.04) and an according xserver (VcXsrv).</p></li>
+<li><p>In case of old WSL2, just set the display variable in your .bashrc file accordingly and you can enjoy the OpenGL windows and settings.</p></li>
 <li><p>It shall be noted that WSL + xserver works better than on MacOS, even for tkinter, multitasking, etc.! So, if you have troubles with your Mac, use a virtual machine with ubuntu and a xserver, that may do better</p></li>
+<li><p>In case of WSLg (since 2021), only the software-OpenGL works; therefore, you have to set (possibly in .bashrc file): <code class="docutils literal notranslate"><span class="pre">export</span> <span class="pre">LIBGL_ALWAYS_SOFTWARE=0</span></code></p></li>
 </ul>
-<p><strong>Exudyn under Raspberry Pi 4b</strong>:</p>
+<p><strong>Exudyn under RaspberryPi 4b</strong>:</p>
 <ul class="simple">
 <li><p>Exudyn also compiles under RaspberryPi 4b, Ubuntu Mate 20.04, Python 3.8; current version should compile out of the box using <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">setup.py</span> <span class="pre">install</span></code> command.</p></li>
 <li><p>Performance is quite ok and it is even capable to use all cores (but you should add a fan!)</p></li>
@@ -330,7 +361,7 @@ Requirements are an according Anaconda (or Miniconda) installation.</p>
 <p><strong>KNOWN issues for linux builds</strong>:</p>
 <ul class="simple">
 <li><p>Using <strong>WSL2</strong> (Windows subsystem for linux), there occur some conflicts during build because of incompatible windows and linux file systems and builds will not be copied to the dist folder; workaround: go to explorer, right click on ‘build’ directory and set all rights for authenticated user to ‘full access’</p></li>
-<li><p><strong>compiler (gcc,g++) conflicts</strong>: It seems that Exudyn works well on UBUNTU18.04 with the original <code class="docutils literal notranslate"><span class="pre">Python</span> <span class="pre">3.6.9</span></code> and <code class="docutils literal notranslate"><span class="pre">gcc-7.5.0</span></code> version as well as with UBUNTU20.04 with <code class="docutils literal notranslate"><span class="pre">Python</span> <span class="pre">3.8.5</span></code> and <code class="docutils literal notranslate"><span class="pre">gcc-9.3.0</span></code>. Upgrading <code class="docutils literal notranslate"><span class="pre">gcc</span></code> on a linux system with Python 3.6 to, e.g., <code class="docutils literal notranslate"><span class="pre">gcc-8.2</span></code> showed us a linker error when loading the Exudyn module in Python – there are some common restriction using <code class="docutils literal notranslate"><span class="pre">gcc</span></code> versions different from those with which the Python version has been built. Starting <code class="docutils literal notranslate"><span class="pre">python</span></code> or <code class="docutils literal notranslate"><span class="pre">python3</span></code> on your linux machine shows you the <code class="docutils literal notranslate"><span class="pre">gcc</span></code> version it had been build with. Check your current <code class="docutils literal notranslate"><span class="pre">gcc</span></code> version with: <code class="docutils literal notranslate"><span class="pre">gcc</span> <span class="pre">--version</span></code></p></li>
+<li><p><strong>compiler (gcc,g++) conflicts</strong>: It seems that Exudyn works well on Ubuntu 18.04 with the original <code class="docutils literal notranslate"><span class="pre">Python</span> <span class="pre">3.6.9</span></code> and <code class="docutils literal notranslate"><span class="pre">gcc-7.5.0</span></code> version as well as with Ubuntu 20.04 with <code class="docutils literal notranslate"><span class="pre">Python</span> <span class="pre">3.8.5</span></code> and <code class="docutils literal notranslate"><span class="pre">gcc-9.3.0</span></code>. Upgrading <code class="docutils literal notranslate"><span class="pre">gcc</span></code> on a Linux system with Python 3.6 to, e.g., <code class="docutils literal notranslate"><span class="pre">gcc-8.2</span></code> showed us a linker error when loading the Exudyn module in Python – there are some common restriction using <code class="docutils literal notranslate"><span class="pre">gcc</span></code> versions different from those with which the Python version has been built. Starting <code class="docutils literal notranslate"><span class="pre">python</span></code> or <code class="docutils literal notranslate"><span class="pre">python3</span></code> on your linux machine shows you the <code class="docutils literal notranslate"><span class="pre">gcc</span></code> version it had been build with. Check your current <code class="docutils literal notranslate"><span class="pre">gcc</span></code> version with: <code class="docutils literal notranslate"><span class="pre">gcc</span> <span class="pre">--version</span></code></p></li>
 </ul>
 </section>
 <section id="uninstall-exudyn">
@@ -339,7 +370,7 @@ Requirements are an according Anaconda (or Miniconda) installation.</p>
 <blockquote>
 <div><p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">uninstall</span> <span class="pre">exudyn</span></code></p>
 </div></blockquote>
-<p>To uninstall under UBUNTU, run:</p>
+<p>To uninstall under Ubuntu, run:</p>
 <blockquote>
 <div><p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">pip3</span> <span class="pre">uninstall</span> <span class="pre">exudyn</span></code></p>
 </div></blockquote>
@@ -360,7 +391,7 @@ There are several ways of using the code, but you <strong>cannot</strong> instal
 <li><p>extend the C++ source code</p></li>
 <li><p>link it to your own code</p></li>
 <li><p>NOTE: on Linux systems, you mostly need to replace ‘<span class="math notranslate nohighlight">\(/\)</span>‘ with ‘<span class="math notranslate nohighlight">\(\backslash\)</span>‘</p></li>
-<li><p>Linux, etc.: not fully supported yet; however, all external libraries are Linux-compatible and thus should run with minimum adaptation efforts.</p></li>
+<li><p>Linux, etc.: Use the build methods described above; Visual Studio Code may allow native Python and C++ debugging; switching to other build mechanisms (CMakeLists or scikit-build-core).</p></li>
 </ul>
 </section>
 </section>
