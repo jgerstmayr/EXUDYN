@@ -16,7 +16,7 @@ Exudyn only works with Python. Thus, you need an appropriate Python installation
 So far (2021-07), we tested
 
 +  \ **Anaconda 2021-11, 64bit, Python 3.9**\ \ (older Anaconda3 versions can be downloaded via the repository archive \ ``https://repo.anaconda.com/archive/``\ )
-+  Currently, we work with Python 3.6 - Python 3.11 \ **conda environments**\  on Windows, Linux and MacOS (3.8-3.10).
++  Currently, we work with Python 3.6 - Python 3.11 \ **conda environments**\  on Windows, Linux and MacOS (3.8-3.11).
 +  \ **Spyder 5.1.5**\  (with Python 3.9.7, 64bit) and \ **Spyder 4.1.3**\  (with Python 3.7.7, 64bit), which is included in the Anaconda installation\ (Note that it is important that Spyder, Python and Exudyn  are \ **either**\  32bit \ **or**\  64bit and are compiled up to the same minor version, i.e., 3.7.x. There will be a strange .DLL error, if you mix up 32/64bit. It is possible to install both, Anaconda 32bit and Anaconda 64bit -- then you should follow the recommendations of paths as suggested by Anaconda installer.); Spyder works with all virtual environments
 
 Many alternative options exist:
@@ -188,14 +188,14 @@ Requirements are an according Anaconda (or Miniconda) installation.
 \ **Tested configurations**\ :
 
 +  Mac OS 11.x 'Big Sur', Mac Mini (2021), Apple M1, 16GB Memory
-+  Miniconda with conda environments (x86 / i368 based with Rosetta 2) with Python 3.7 - 3.10
-+  Miniconda with conda environments (ARM) with Python 3.8 - 3.10
++  Miniconda with conda environments (x86 / i368 based with Rosetta 2) with Python 3.7 - 3.11
++  Miniconda with conda environments (ARM) with Python 3.8 - 3.11
    \ :math:`\ra`\  wheels are available on pypi since Exudyn 1.5.0 
 
 \ **NOTE**\ :
 
 +  Multi-threading is not fully supported, but may work in some applications
-+  On Apple M1 processors the newest Anaconda supports now all required features; environments with Python 3.8-3.10 have been successfully tested;
++  On Apple M1 processors the newest Anaconda supports now all required features; environments with Python 3.8-3.11 have been successfully tested;
 +  The Rosetta (x86 emulation) mode on Apple M1 also works now without much restrictions; these files should also work on older Macs
 +  \ ``tkinter``\  has been adapted (some workarounds needed on MacOS!), available since Exudyn 1.5.15.dev1
 +  Some optimization and processing functions do not run (especially multiprocessing and tqdm); 

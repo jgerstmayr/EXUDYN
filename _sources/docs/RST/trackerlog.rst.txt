@@ -20,8 +20,8 @@ BUG numbers refer to the according issue numbers.
 General information on current version:
  
 +  Exudyn version = 1.7.0, 
-+  last change =  2023-07-19, 
-+  Number of issues = 1650, 
++  last change =  2023-07-20, 
++  Number of issues = 1652, 
 +  Number of resolved issues = 1470 (0 in current version), 
 
 ***********
@@ -4776,6 +4776,14 @@ Version 0.1
 ***********
 Open issues
 ***********
+
+ * **open issue 1651:** Python 3.11         
+    - description:  added Python 3.11 workflows for Windows, Linux and MacOS builds (note: problems with Rosetta x86 on MacOS)
+    - date raised: 2023-07-20 
+
+ * **open issue 1650:** MacOS Rosetta       
+    - description:  importing numpy gives Intel MKL Warning: Support of Intel Streaming SIMD Extensions 4.2 ... has been deprecated. Intel oneAPI Math Kernel Library 2025.0 will require AVX instructions
+    - date raised: 2023-07-20 
 
  * **open issue 1631:** velocityOffset      
     - description:  add to CartesianSpringDamper, RigidBodySpringDamper
