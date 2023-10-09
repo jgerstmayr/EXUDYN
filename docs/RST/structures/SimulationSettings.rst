@@ -404,6 +404,9 @@ StaticSolverSettings has the following items:
 * | **computeLoadsJacobian** [type = bool, default = True]:
   | \ ``simulationSettings.staticSolverSettings.computeLoadsJacobian``\ 
   | True: compute (currently numerical) Jacobian for loads, causing additional computational costs; this is advantageous in cases where loads are related nonlinearly to coordinates; False: jacobian of loads not considered (may lead to slow convergence or Newton failure); note that computeLoadsJacobian has no effect in case of doSystemWideDifferentiation, as this anyway includes all load dependencies
+* | **constrainODE1coordinates** [type = bool, default = True]:
+  | \ ``simulationSettings.staticSolverSettings.constrainODE1coordinates``\ 
+  | True: ODE1coordinates are constrained to initial values; False: undefined behavior, currently not supported
 * | **loadStepDuration** [type = PReal, default = 1]:
   | \ ``simulationSettings.staticSolverSettings.loadStepDuration``\ 
   | quasi-time for all load steps (added to current time in load steps)

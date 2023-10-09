@@ -268,15 +268,16 @@ bool CSolverBase::InitializeSolverPreChecks(CSystem& computationalSystem, const 
 	if (data.startAE == data.nODE2 + data.nODE1 + data.nAE) { data.startAE = 0; } //data.startAE == data.nSys would lead to invalid pointer in LinkedDataVector; can only happen, if data.nAE==0
 
 	//check for static solver, dynamic solver checked in solver specific implementation!
-	if (IsStaticSolver() && data.nODE1 != 0) { SysError("StaticSolver cannot solve first order differential equations (ODE1) for now", file.solverFile); }
+	if (IsStaticSolver() && data.nODE1 != 0) 
+    { 
+        PyWarning("StaticSolver: system contains ODE1 equations, which is untested", file.solverFile);
+    }
 
 	if (data.nSys == 0)
 	{
 		PyError("Solver: cannot solve for system size = 0", file.solverFile);
 		return false;
 	}
-
-	//pout << "SPC linearSolverType=" << simulationSettings.linearSolverType << "\n";
 
 	if (EXUstd::IsOfType(LinearSolverType::Dense, simulationSettings.linearSolverType))
 	{

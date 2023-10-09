@@ -124,10 +124,6 @@ void CSolverStatic::PostInitializeSolverSpecific(CSystem& computationalSystem, c
 		Verbose(2, STDstring("*********************\nStatic solver (") + EXUstd::ToString(staticSettings.numberOfLoadSteps) + str + " load steps):\n*********************\n");
 	}
 
-	if (data.nODE1 != 0)
-	{
-		PyError("StaticSolver: system may not contain ODE1 equations of variables");
-	}
 }
 
 
@@ -137,20 +133,44 @@ Real CSolverStatic::ComputeNewtonResidual(CSystem& computationalSystem, const Si
 	const StaticSolverSettings& staticSettings = simulationSettings.staticSolver;
 
 	LinkedDataVector ode2Residual(data.systemResidual, 0, data.nODE2); //link ODE2 coordinates
-	LinkedDataVector aeResidual(data.systemResidual, data.startAE, data.nAE); //link ae coordinates
+    LinkedDataVector ode1Residual(data.systemResidual, data.nODE2, data.nODE1); //link ODE1 coordinates
+    LinkedDataVector aeResidual(data.systemResidual, data.startAE, data.nAE); //link ae coordinates
 	//LinkedDataVector newtonSolutionODE2(data.newtonSolution, 0, data.nODE2); //temporary subvector for ODE2 components
 	//LinkedDataVector newtonSolutionAE(data.newtonSolution, data.startAE, data.nAE); //temporary subvector for ODE2 components
 
 	//link current system vectors for ODE2
-	Vector& solutionODE2 = computationalSystem.GetSystemData().GetCData().currentState.ODE2Coords;
-	Vector& solutionAE = computationalSystem.GetSystemData().GetCData().currentState.AECoords;
+    Vector& solutionODE2 = computationalSystem.GetSystemData().GetCData().currentState.ODE2Coords;
+    Vector& solutionODE1 = computationalSystem.GetSystemData().GetCData().currentState.ODE1Coords;
+    Vector& solutionAE = computationalSystem.GetSystemData().GetCData().currentState.AECoords;
 
 	//now compute the new residual with updated system vectors:
-	STARTTIMER(timer.ODE2RHS);
-	computationalSystem.ComputeSystemODE2RHS(data.tempCompDataArray, ode2Residual); //tempODE2 contains RHS (linear case: tempODE2 = F_applied - K*u - D*v)
-	STOPTIMER(timer.ODE2RHS);
+    STARTTIMER(timer.ODE2RHS);
+    computationalSystem.ComputeSystemODE2RHS(data.tempCompDataArray, ode2Residual); //ode2Residual contains RHS (linear case: ode2Residual = F_applied - K*u - D*v)
+    STOPTIMER(timer.ODE2RHS);
 
-	STARTTIMER(timer.AERHS);
+    STARTTIMER(timer.ODE1RHS);
+    if (simulationSettings.staticSolver.constrainODE1coordinates)
+    {
+        Vector& initialODE1 = computationalSystem.GetSystemData().GetCData().initialState.ODE1Coords;
+        CHECKandTHROW(ode1Residual.NumberOfItems() == initialODE1.NumberOfItems(),
+            "CSolverStatic::ComputeNewtonResidual: size of ode1Residual and initialODE1 not equal");
+
+        //set jacobianODE1 to unit matrix, because this would not work otherwise!
+        //equation reads: ODE1RHS=y1-y1initial=0
+        for (Index i = 0; i < ode1Residual.NumberOfItems(); i++)
+        {
+            ode1Residual[i] = solutionODE1[i] - initialODE1[i];
+        }
+        computationalSystem.ComputeSystemODE1RHS(data.tempCompData, ode1Residual);
+    }
+    else
+    {
+        //unclear if this works:
+        computationalSystem.ComputeSystemODE1RHS(data.tempCompData, ode1Residual);
+    }
+    STOPTIMER(timer.ODE1RHS);
+
+    STARTTIMER(timer.AERHS);
 	computationalSystem.ComputeAlgebraicEquations(data.tempCompDataArray, aeResidual, false);
 	STOPTIMER(timer.AERHS);
 
@@ -196,13 +216,16 @@ Real CSolverStatic::ComputeNewtonResidual(CSystem& computationalSystem, const Si
 
 void CSolverStatic::ComputeNewtonUpdate(CSystem& computationalSystem, const SimulationSettings& simulationSettings, bool initial)
 {
-	Vector& solutionODE2 = computationalSystem.GetSystemData().GetCData().currentState.ODE2Coords;
-	Vector& solutionAE = computationalSystem.GetSystemData().GetCData().currentState.AECoords;
-	LinkedDataVector newtonSolutionODE2(data.newtonSolution, 0, data.nODE2); //temporary subvector for ODE2 components
-	LinkedDataVector newtonSolutionAE(data.newtonSolution, data.startAE, data.nAE); //temporary subvector for ODE2 components
+    Vector& solutionODE2 = computationalSystem.GetSystemData().GetCData().currentState.ODE2Coords;
+    Vector& solutionODE1 = computationalSystem.GetSystemData().GetCData().currentState.ODE1Coords;
+    Vector& solutionAE = computationalSystem.GetSystemData().GetCData().currentState.AECoords;
+    LinkedDataVector newtonSolutionODE2(data.newtonSolution, 0, data.nODE2); //temporary subvector for ODE2 components
+    LinkedDataVector newtonSolutionODE1(data.newtonSolution, data.nODE2, data.nODE1); //temporary subvector for ODE1 components
+    LinkedDataVector newtonSolutionAE(data.newtonSolution, data.startAE, data.nAE); //temporary subvector for ODE2 components
 
-	solutionODE2 -= newtonSolutionODE2;		//compute new displacements; newtonSolution contains the Newton correction
-	solutionAE -= newtonSolutionAE;			//compute new Lagrange multipliers; newtonSolution contains the Newton correction
+    solutionODE2 -= newtonSolutionODE2;		//compute new displacements; newtonSolution contains the Newton correction
+    solutionODE1 -= newtonSolutionODE1;		//compute new displacements; newtonSolution contains the Newton correction
+    solutionAE -= newtonSolutionAE;			//compute new Lagrange multipliers; newtonSolution contains the Newton correction
 }
 
 
@@ -219,6 +242,24 @@ void CSolverStatic::ComputeNewtonJacobian(CSystem& computationalSystem, const Si
 	computationalSystem.JacobianODE2RHS(data.tempCompDataArray, newton.numericalDifferentiation, *(data.systemJacobian), 
         1., 0., 1., simulationSettings.staticSolver.computeLoadsJacobian); //ODE2_t part not needed, but ODE1 included!
 	STOPTIMER(timer.jacobianODE2);
+
+    STARTTIMER(timer.jacobianODE1);
+    //Tangent stiffness: for ODE1 part, the jacobian is de facto computed for RHS while the ODE2 jacobian is put to LHS by multiplying with (-1)
+    //ODE1 K-Matrix; has no factor
+    if (simulationSettings.staticSolver.constrainODE1coordinates)
+    {
+        //set jacobianODE1 to unit matrix, because this would not work otherwise!
+        //equation reads: ODE1RHS=y1-y1initial=0
+        data.systemJacobian->AddDiagonalMatrix(1., data.nODE1, data.nODE2, data.nODE2);
+    }
+    else
+    {
+        //unclear if this works:
+        computationalSystem.NumericalJacobianODE1RHS(data.tempCompDataArray, newton.numericalDifferentiation,
+            *(data.systemJacobian), 1., 0., 1.);
+    }
+    //in time integration, but not needed for static computation: data.systemJacobian->AddDiagonalMatrix(-2. / it.currentStepSize, data.nODE1, data.nODE2, data.nODE2); //for qODE1_t part
+    STOPTIMER(timer.jacobianODE1);
 
 	STARTTIMER(timer.jacobianAE);
 	//add jacobian algebraic equations part to system jacobian:

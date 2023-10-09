@@ -11,24 +11,24 @@
 #           you find all ROS1 installation steps on: 
 #           http://wiki.ros.org/noetic/Installation/Ubuntu
 #           Step 1.4 we recommend to install: (sudo apt install ros-noetic-desktop)
-#           Check the installation of the turtlesim package (rosrun turtlesim turtlesim_node )
+#           Check the installation of the turtlesim package (rosrun turtlesim turtlesim\_node )
 #           if not installed: sudo apt install ros-noetic-turtlesim
 #           use a catkin workspace and build a ROS1 Package  
 #           Follow instructions on:
 #           http://wiki.ros.org/ROS/Tutorials (recommend go trough step 1 to 6)
 #           Minimal example to use:
 #           create catkin workspace: 
-#               mkdir -p ~/catkin_ws/src
-#               cd ~/catkin_ws
-#               catkin_make
+#               mkdir -p ~/catkin\_ws/src
+#               cd ~/catkin\_ws
+#               catkin\_make
 #               source devel/setup.bash
 #           build ROS package:
-#               cd ~/catkin_ws/src
-#               catkin_create_pkg my_pkg_name rospy roscpp std_msgs geometry_msgs sensor_msgs 
+#               cd ~/catkin\_ws/src
+#               catkin\_create\_pkg my\_pkg\_name rospy roscpp std\_msgs geometry\_msgs sensor\_msgs 
 #           build catkin workspace and sourcing setup file
-#               cd ~/catkin_ws
-#               cakin_make
-#               source ~/catkin_ws/devel/setup.bash
+#               cd ~/catkin\_ws
+#               cakin\_make
+#               source ~/catkin\_ws/devel/setup.bash
 #           for more functionality see also: ROSExampleMassPoint.py, ROSExampleBringup.launch, ROSExampleControlVelocity.py
 # Author:   Martin Sereinig, Peter Manzl 
 # Date:     2023-05-31 (created)
@@ -112,7 +112,7 @@ class ROSInterface:
     #       queSize: length of queue to hold messages, should be as small as sending frequency (= simulation sample time)
     #**author: Martin Sereinig
     #**notes: find msgs types here
-    #  http://docs.ros.org/en/melodic/api/std_msgs/html/index-msg.html
+    #  http://docs.ros.org/en/melodic/api/std\_msgs/html/index-msg.html
     #**examples: 
     #       publisher for poses, pubType = PoseStamped, 
     #       publisher for system data, pubType = Float64MultiArray,
@@ -132,7 +132,7 @@ class ROSInterface:
         setattr(self, subTopicName, data)
         return True
     
-    #**function: function to create a subscriber
+    #**classFunction: function to create a subscriber
     #**input:
     #       subTopicNameSpace: topic namespace: 'exudyn/'
     #       subTopicName: topic name to subscribe

@@ -148,7 +148,7 @@ Depending on your model (size, place, ...), you may need to adjust the following
 
 \ **NOTE**\ : changing \ ``visualizationSettings``\  is not thread-safe, as it allows direct access to the C++ variables. 
 In most cases, this is not problematic, e.g., turning on/off some view parameters my just lead to some short-time artifacts if
-they are changed during redraw. However, more advanced quantities (e.g., \ ``trackMarker ``\  or changing strings) may lead to problems, 
+they are changed during redraw. However, more advanced quantities (e.g., \ ``trackMarker``\  or changing strings) may lead to problems, 
 which is why it is strongly recommended to:
 
 +  set all \ ``visualizationSettings``\  \ **before start of renderer**\ 
@@ -407,7 +407,7 @@ Exudyn offers a convenient WYSIWYS -- 'What you See is What you Simulate' interf
 If you are running large models, it may be more convenient to watch results after simulation has been finished.
 For this, you can use
 
-+  \ ``interactive.SolutionViewer``\ , see  :ref:`Section <sec-interactive-solutionviewer>`\ 
++  \ ``interactive.SolutionViewer``\ , see  :ref:`Section <sec-mainsystemextensions-solutionviewer>`\  
 +  \ ``interactive.AnimateModes``\ , lets you view the animation of computed modes, see  :ref:`Section <sec-interactive-animatemodes>`\ 
 
 shown exemplary in \ :numref:`fig-solutionviewer`\ .

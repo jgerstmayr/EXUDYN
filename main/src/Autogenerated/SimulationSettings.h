@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-07-17 (last modfied)
+* @date         AUTO: 2023-09-07 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -162,7 +162,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-07-17 (last modfied)
+* @date         AUTO: 2023-09-07 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -245,7 +245,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-07-17 (last modfied)
+* @date         AUTO: 2023-09-07 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -313,7 +313,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-07-17 (last modfied)
+* @date         AUTO: 2023-09-07 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -443,7 +443,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-07-17 (last modfied)
+* @date         AUTO: 2023-09-07 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -531,7 +531,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-07-17 (last modfied)
+* @date         AUTO: 2023-09-07 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -595,7 +595,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-07-17 (last modfied)
+* @date         AUTO: 2023-09-07 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -816,7 +816,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-07-17 (last modfied)
+* @date         AUTO: 2023-09-07 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -842,6 +842,7 @@ public: // AUTO:
   Index adaptiveStepRecoveryIterations;           //!< AUTO: Number of max. (Newton iterations + discontinuous iterations) at which a step increase is considered; in order to immediately increase steps after reduction, chose a high value
   Index adaptiveStepRecoverySteps;                //!< AUTO: Number of steps needed after which steps will be increased after previous step reduction due to discontinuousIteration or Newton errors
   bool computeLoadsJacobian;                      //!< AUTO: True: compute (currently numerical) Jacobian for loads, causing additional computational costs; this is advantageous in cases where loads are related nonlinearly to coordinates; False: jacobian of loads not considered (may lead to slow convergence or Newton failure); note that computeLoadsJacobian has no effect in case of doSystemWideDifferentiation, as this anyway includes all load dependencies
+  bool constrainODE1coordinates;                  //!< AUTO: True: ODE1coordinates are constrained to initial values; False: undefined behavior, currently not supported
   Real loadStepDuration;                          //!< AUTO: quasi-time for all load steps (added to current time in load steps)
   bool loadStepGeometric;                         //!< AUTO: if loadStepGeometric=false, the load steps are incremental (arithmetic series, e.g. 0.1,0.2,0.3,...); if true, the load steps are increased in a geometric series, e.g. for \f$n=8\f$ numberOfLoadSteps and \f$d = 1000\f$ loadStepGeometricRange, it follows: \f$1000^{1/8}/1000=0.00237\f$, \f$1000^{2/8}/1000=0.00562\f$, \f$1000^{3/8}/1000=0.0133\f$, ..., \f$1000^{7/8}/1000=0.422\f$, \f$1000^{8/8}/1000=1\f$
   Real loadStepGeometricRange;                    //!< AUTO: if loadStepGeometric=true, the load steps are increased in a geometric series, see loadStepGeometric
@@ -865,6 +866,7 @@ public: // AUTO:
     adaptiveStepRecoveryIterations = 7;
     adaptiveStepRecoverySteps = 4;
     computeLoadsJacobian = true;
+    constrainODE1coordinates = true;
     loadStepDuration = 1;
     loadStepGeometric = false;
     loadStepGeometricRange = 1000;
@@ -956,6 +958,7 @@ public: // AUTO:
     os << "  adaptiveStepRecoveryIterations = " << adaptiveStepRecoveryIterations << "\n";
     os << "  adaptiveStepRecoverySteps = " << adaptiveStepRecoverySteps << "\n";
     os << "  computeLoadsJacobian = " << computeLoadsJacobian << "\n";
+    os << "  constrainODE1coordinates = " << constrainODE1coordinates << "\n";
     os << "  loadStepDuration = " << loadStepDuration << "\n";
     os << "  loadStepGeometric = " << loadStepGeometric << "\n";
     os << "  loadStepGeometricRange = " << loadStepGeometricRange << "\n";
@@ -985,7 +988,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-07-17 (last modfied)
+* @date         AUTO: 2023-09-07 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1051,7 +1054,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-07-17 (last modfied)
+* @date         AUTO: 2023-09-07 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1156,7 +1159,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-07-17 (last modfied)
+* @date         AUTO: 2023-09-07 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

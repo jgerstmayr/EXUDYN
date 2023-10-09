@@ -459,7 +459,7 @@ Depending on your model (size, place, ...), you may need to adjust the following
 \ei
 \mybold{NOTE}: changing \texttt{visualizationSettings} is not thread-safe, as it allows direct access to the C++ variables. 
 In most cases, this is not problematic, e.g., turning on/off some view parameters my just lead to some short-time artifacts if
-they are changed during redraw. However, more advanced quantities (e.g., \texttt{trackMarker } or changing strings) may lead to problems, 
+they are changed during redraw. However, more advanced quantities (e.g., \texttt{trackMarker} or changing strings) may lead to problems, 
 which is why it is strongly recommended to:
 \bi
   \item set all \texttt{visualizationSettings} \mybold{before start of renderer}
@@ -673,7 +673,7 @@ E.g., red color with no transparency is obtained by the color=[1,0,0,1]. Color p
 If you are running large models, it may be more convenient to watch results after simulation has been finished.
 For this, you can use
 \bi
-  \item \texttt{interactive.SolutionViewer}, see \refSectionA{sec:interactive:SolutionViewer}
+  \item \texttt{interactive.SolutionViewer}, see \refSectionA{sec:mainsystemextensions:SolutionViewer} %OLD:\refSectionA{sec:interactive:SolutionViewer}
   \item \texttt{interactive.AnimateModes}, lets you view the animation of computed modes, see \refSectionA{sec:interactive:AnimateModes}
 \ei
 shown exemplary in \fig{fig_solutionViewer}.

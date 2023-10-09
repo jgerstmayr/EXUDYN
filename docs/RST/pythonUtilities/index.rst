@@ -21,6 +21,7 @@ Python Utility Functions
    processing
    rigidBodyUtilities
    robotics
+   robotics.rosInterface
    robotics.future
    robotics.models
    robotics.mobile

@@ -19,15 +19,31 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.7.0, 
-+  last change =  2023-07-20, 
-+  Number of issues = 1652, 
-+  Number of resolved issues = 1470 (0 in current version), 
++  Exudyn version = 1.7.5.dev1, 
++  last change =  2023-10-09, 
++  Number of issues = 1658, 
++  Number of resolved issues = 1475 (5 in current version), 
 
 ***********
 Version 1.7
 ***********
 
+ * Version 1.7.5: resolved Issue 1657: Docu (fix)
+    - description:  latex errors in robotics mobile and ROS
+    - date resolved: **2023-10-09 20:27**\ , date raised: 2023-10-09 
+ * Version 1.7.4: resolved Issue 1656: ROS rosInterface (extension)
+    - description:  Created robotics.rosInterface and Python models in Examples: ROSMassPoint.py, ROSMobileManipulator.py, ROSTurtle.py with supplementary, see Examples/supplementary: ROSControlMobileManipulation.py, ROSControlTurtleVelocity.py, etc.
+    - date resolved: **2023-09-15 15:50**\ , date raised: 2023-09-15 
+    - resolved by: Martin Sereinig
+ * Version 1.7.3: resolved Issue 1655: SolveStatic (extension)
+    - description:  add option for static solver to handle ODE1 quantities; currently, the option is to set ODE1coordinates to initial values during static computation
+    - date resolved: **2023-09-07 21:13**\ , date raised: 2023-09-07 
+ * Version 1.7.2: resolved Issue 1654: Python3.6 support (change)
+    - description:  discontinuing testing and creation of pip installers for Python3.6 in Windows, Linux and MacOS as Python3.6 had end-of-life 2021-12-23; Python 3.7 also had end-of-life recently, so please expect discontinued support soon
+    - date resolved: **2023-09-03 16:03**\ , date raised: 2023-09-03 
+ * Version 1.7.1: resolved Issue 1652: rosInterface.py (fix)
+    - description:  add (missing) file to DOCU
+    - date resolved: **2023-08-08 17:53**\ , date raised: 2023-08-08 
  * Version 1.7.0: resolved Issue 1649: release (release)
     - description:  switch to new release 1.7
     - date resolved: **2023-07-19 16:07**\ , date raised: 2023-07-19 
@@ -4776,6 +4792,10 @@ Version 0.1
 ***********
 Open issues
 ***********
+
+ * **open issue 1653:** ANCFBeam            
+    - description:  reconsider name: ANCFBeamStructural, not to have too many cases; use this for 2/3 node, different number of slopes except for 1 slope, which is ANCFCable, the 3D version of ANCFCable2D
+    - date raised: 2023-08-16 
 
  * **open issue 1651:** Python 3.11         
     - description:  added Python 3.11 workflows for Windows, Linux and MacOS builds (note: problems with Rosetta x86 on MacOS)

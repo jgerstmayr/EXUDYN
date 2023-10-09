@@ -79,6 +79,7 @@ filesParsed=[
              'processing.py',
              'rigidBodyUtilities.py',
              'robotics/roboticsCore.py',
+             'robotics/rosInterface.py',
              'robotics/future.py',
              'robotics/models.py',
              'robotics/mobile.py',

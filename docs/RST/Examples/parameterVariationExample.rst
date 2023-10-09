@@ -170,6 +170,7 @@ You can view and download this file on Github: `parameterVariationExample.py <ht
                                             debugMode=False,
                                             addComputationIndex=True,
                                             useMultiProcessing=True,
+                                            #numberOfThreads=2,
                                             showProgress=True,
                                             )
    

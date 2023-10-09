@@ -7,12 +7,14 @@
 #+++++++++++++++++++++++++++++++++++++++++++
 #to run Exudyn sphinx build, we need to install:
 
-#installation
+#installation, needed for exudyn docs compilation (2023-09):
 pip install sphinx
+pip install readthedocs-sphinx-search
+pip install sphinx-copybutton
+pip install sphinx_rtd_theme
 
 #themes: readthedocs-sphinx-search only works on server (git pages), not locally on your pc opening file in browser
 pip install furo
-pip install sphinx_rtd_theme
 pip install sphinx-copybutton
 #pip install readthedocs-sphinx-search #now included as a standard; only works on readthedocs
 

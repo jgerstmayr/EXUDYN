@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2023-04-05  13:57:34 (last modified)
+* @date         2023-09-08  08:26:17 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -39,7 +39,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        MainObjectANCFBeam
-* @brief        OBJECT UNDER CONSTRUCTION: A 3D beam finite element based on the absolute nodal coordinate formulation, using two . The localPosition \f$x\f$ of the beam ranges from \f$-L/2\f$ (at node 0) to \f$L/2\f$ (at node 1). The axial coordinate is \f$x\f$ (first coordinate) and the cross section is spanned by local \f$y\f$/\f$z\f$ axes; assuming dimensions \f$w_y\f$ and \f$w_z\f$ in cross section, the local position range is \f$\in [[-L/2,L/2],\, [-wy/2,wy/2],\, [-wz/2,wz/2] ]\f$.
+* @brief        OBJECT UNDER CONSTRUCTION: A 3D beam finite element based on the absolute nodal coordinate formulation, using two nodes. The localPosition \f$x\f$ of the beam ranges from \f$-L/2\f$ (at node 0) to \f$L/2\f$ (at node 1). The axial coordinate is \f$x\f$ (first coordinate) and the cross section is spanned by local \f$y\f$/\f$z\f$ axes; assuming dimensions \f$w_y\f$ and \f$w_z\f$ in cross section, the local position range is \f$\in [[-L/2,L/2],\, [-wy/2,wy/2],\, [-wz/2,wz/2] ]\f$.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)

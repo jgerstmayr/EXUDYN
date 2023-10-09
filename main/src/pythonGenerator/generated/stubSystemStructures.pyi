@@ -140,6 +140,7 @@ class StaticSolverSettings:
     adaptiveStepRecoveryIterations: int
     adaptiveStepRecoverySteps: int
     computeLoadsJacobian: bool
+    constrainODE1coordinates: bool
     loadStepDuration: float
     loadStepGeometric: bool
     loadStepGeometricRange: float

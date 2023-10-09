@@ -99,8 +99,8 @@ elif not isWindows: #add linux, to distinguish linux tests from windows tests!
 
 subFolder = ''
 #only works on Windows: if platform.processor() == 'Intel64 Family 6 Model 142 Stepping 10, GenuineIntel':
-if multiprocessing.cpu_count() == 8:
-    subFolder = 'SurfaceBook2/' #this is for internal use only!
+if multiprocessing.cpu_count() == 20:
+    subFolder = 'i7-1370P/' #this is for internal use only!
     
 logFileName = '../PerformanceLogs/'+subFolder+'performanceLog_V'+exu.GetVersionString()+'_'+platformString+'.txt'
 exu.SetWriteToFile(filename=logFileName, flagWriteToFile=True, flagAppend=False) #write all testSuite logs to files

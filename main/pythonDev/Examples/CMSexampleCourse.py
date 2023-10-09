@@ -72,10 +72,6 @@ nu=0.3
 
 if doMeshing: #needs netgen/ngsolve to be installed to compute mesh, see e.g.: https://github.com/NGSolve/ngsolve/releases
 
-    import sys
-    #adjust path to your ngsolve installation (if not added to global path)
-    sys.path.append('C:/ProgramData/ngsolve/lib/site-packages')
-
     from netgen.occ import *
     #from ngsolve.webgui import Draw #in Jupyter
     from ngsolve import Mesh, Draw

@@ -158,6 +158,7 @@ if __name__ == '__main__': #include this to enable parallel processing
                                          debugMode=False,
                                          addComputationIndex=True,
                                          useMultiProcessing=True,
+                                         #numberOfThreads=2,
                                          showProgress=True,
                                          )
 
