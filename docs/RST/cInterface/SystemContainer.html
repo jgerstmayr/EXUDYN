@@ -14,13 +14,13 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
-        <script src="../../../_static/clipboard.min.js"></script>
-        <script src="../../../_static/copybutton.js"></script>
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=030dc6f6"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../../_static/copybutton.js?v=f281be69"></script>
         <script src="../../../_static/js/rtd_search_config.js"></script>
         <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -111,7 +111,7 @@
            <div itemprop="articleBody">
              
   <section id="systemcontainer">
-<h1>SystemContainer<a class="headerlink" href="#systemcontainer" title="Permalink to this heading"></a></h1>
+<h1>SystemContainer<a class="headerlink" href="#systemcontainer" title="Link to this heading"></a></h1>
 <p>The SystemContainer is the top level of structures in Exudyn. The container holds all (multibody) systems, solvers and all other data structures for computation. A SystemContainer is created by <code class="docutils literal notranslate"><span class="pre">SC</span> <span class="pre">=</span> <span class="pre">exu.SystemContainer()</span></code>, understanding <code class="docutils literal notranslate"><span class="pre">exu.SystemContainer</span></code> as a class like Python’s internal list class, creating a list instance with <code class="docutils literal notranslate"><span class="pre">x=list()</span></code>. Currently, only one container shall be used. In future, multiple containers might be usable at the same time. Regarding the <strong>(basic) module access</strong>, functions are related to the <code class="docutils literal notranslate"><span class="pre">exudyn</span> <span class="pre">=</span> <span class="pre">exu</span></code> module, see also the introduction of this chapter and this example:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
 <span class="linenos">2</span><span class="c1">#create system container and store by reference in SC:</span>

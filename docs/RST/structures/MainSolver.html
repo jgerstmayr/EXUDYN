@@ -14,13 +14,13 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
-        <script src="../../../_static/clipboard.min.js"></script>
-        <script src="../../../_static/copybutton.js"></script>
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=030dc6f6"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../../_static/copybutton.js?v=f281be69"></script>
         <script src="../../../_static/js/rtd_search_config.js"></script>
         <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -111,7 +111,7 @@
            <div itemprop="articleBody">
              
   <section id="mainsolverstatic">
-<span id="sec-mainsolverstatic"></span><h1>MainSolverStatic<a class="headerlink" href="#mainsolverstatic" title="Permalink to this heading"></a></h1>
+<span id="sec-mainsolverstatic"></span><h1>MainSolverStatic<a class="headerlink" href="#mainsolverstatic" title="Link to this heading"></a></h1>
 <p>PyBind interface (trampoline) class for static solver. With this interface, the static solver and its substructures can be accessed via Python. NOTE that except from SolveSystem(…), these functions are only intended for experienced users and they need to be handled with care, as unexpected crashes may happen if used inappropriate. Furthermore, the functions have a lot of overhead (performance much lower than internal solver) due to Python interfaces, and should thus be used for small systems. To access the solver in Python, write:</p>
 <blockquote>
 <div><p><code class="docutils literal notranslate"><span class="pre">solver</span> <span class="pre">=</span> <span class="pre">MainSolverStatic()</span></code></p>
@@ -392,7 +392,7 @@
 </ul>
 </section>
 <section id="mainsolverimplicitsecondorder">
-<span id="sec-mainsolverimplicitsecondorder"></span><h1>MainSolverImplicitSecondOrder<a class="headerlink" href="#mainsolverimplicitsecondorder" title="Permalink to this heading"></a></h1>
+<span id="sec-mainsolverimplicitsecondorder"></span><h1>MainSolverImplicitSecondOrder<a class="headerlink" href="#mainsolverimplicitsecondorder" title="Link to this heading"></a></h1>
 <p>PyBind interface (trampoline) class for dynamic implicit solver. Note that this solver includes the classical Newmark method (set useNewmark True; with option of index 2 reduction) as well as the generalized-alpha method. With the interface, the dynamic implicit solver and its substructures can be accessed via Python. NOTE that except from SolveSystem(…), these functions are only intended for experienced users and they need to be handled with care, as unexpected crashes may happen if used inappropriate. Furthermore, the functions have a lot of overhead (still fast, but performance much lower than internal solver) due to Python interfaces, and should thus be used for small systems. To access the solver in Python, write:</p>
 <blockquote>
 <div><p><code class="docutils literal notranslate"><span class="pre">solver</span> <span class="pre">=</span> <span class="pre">MainSolverImplicitSecondOrder()</span></code></p>
@@ -766,7 +766,7 @@
 </ul>
 </section>
 <section id="mainsolverexplicit">
-<span id="sec-mainsolverexplicit"></span><h1>MainSolverExplicit<a class="headerlink" href="#mainsolverexplicit" title="Permalink to this heading"></a></h1>
+<span id="sec-mainsolverexplicit"></span><h1>MainSolverExplicit<a class="headerlink" href="#mainsolverexplicit" title="Link to this heading"></a></h1>
 <p>PyBind interface (trampoline) class for dynamic explicit solver. Note that this solver includes the 1st order explicit Euler scheme and the 4th order Runge-Kutta scheme with 5th order error estimation (DOPRI5). With the interface, the solver and its substructures can be accessed via Python. NOTE that except from SolveSystem(…), these functions are only intended for experienced users and they need to be handled with care, as unexpected crashes may happen if used inappropriate. Furthermore, the functions have a lot of overhead (still fast, but performance much lower than internal solver) due to Python interfaces, and should thus be used for small systems. To access the solver in Python, write</p>
 <blockquote>
 <div><p><code class="docutils literal notranslate"><span class="pre">solver</span> <span class="pre">=</span> <span class="pre">MainSolverExplicit()</span></code></p>

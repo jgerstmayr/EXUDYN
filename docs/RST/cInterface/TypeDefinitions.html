@@ -14,13 +14,13 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
-        <script src="../../../_static/clipboard.min.js"></script>
-        <script src="../../../_static/copybutton.js"></script>
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=030dc6f6"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../../_static/copybutton.js?v=f281be69"></script>
         <script src="../../../_static/js/rtd_search_config.js"></script>
         <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -123,7 +123,7 @@
            <div itemprop="articleBody">
              
   <section id="type-definitions">
-<span id="sec-cinterface-typedef"></span><h1>Type definitions<a class="headerlink" href="#type-definitions" title="Permalink to this heading"></a></h1>
+<span id="sec-cinterface-typedef"></span><h1>Type definitions<a class="headerlink" href="#type-definitions" title="Link to this heading"></a></h1>
 <p>This section defines a couple of structures (C++: enum aka enumeration type), which are used to select, e.g., a configuration type or a variable type. In the background, these types are integer numbers, but for safety, the types should be used as type variables. See this examples:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1">#Conversion to integer is possible:</span>
 <span class="linenos"> 2</span><span class="n">x</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Displacement</span><span class="p">)</span>
@@ -138,7 +138,7 @@
 </pre></div>
 </div>
 <section id="outputvariabletype">
-<span id="sec-outputvariabletype"></span><h2>OutputVariableType<a class="headerlink" href="#outputvariabletype" title="Permalink to this heading"></a></h2>
+<span id="sec-outputvariabletype"></span><h2>OutputVariableType<a class="headerlink" href="#outputvariabletype" title="Link to this heading"></a></h2>
 <p>This section shows the OutputVariableType structure, which is used for selecting output values, e.g. for GetObjectOutput(…) or for selecting variables for contour plot.</p>
 <p>Available output variables and the interpreation of the output variable can be found at the object definitions.
 The OutputVariableType does not provide information about the size of the output variable, which can be either scalar or a list (vector). For vector output quantities, the contour plot option offers an additional parameter for selection of the component of the OutputVariableType. The components are usually out of 0,1,2, representing x,y,zcomponents (e.g., of displacements, velocities, …), or 0,1,2,3,4,5representing xx,yy,zz,yz,xz,xycomponents (e.g., of strain or stress). In order to compute a norm, chose component=-1, which will result in the quadratic norm for other vectors and to a norm specified for stresses (if no norm is defined for an outputVariable, it does not compute anything)</p>
@@ -297,7 +297,7 @@ The OutputVariableType does not provide information about the size of the output
 </ul>
 </section>
 <section id="configurationtype">
-<span id="sec-configurationtype"></span><h2>ConfigurationType<a class="headerlink" href="#configurationtype" title="Permalink to this heading"></a></h2>
+<span id="sec-configurationtype"></span><h2>ConfigurationType<a class="headerlink" href="#configurationtype" title="Link to this heading"></a></h2>
 <p>This section shows the ConfigurationType structure, which is used for selecting a configuration for reading or writing information to the module. Specifically, the ConfigurationType.Current configuration is usually used at the end of a solution process, to obtain result values, or the ConfigurationType.Initial is used to set initial values for a solution process.</p>
 <p>The class <strong>ConfigurationType</strong> has the following <strong>functions and structures</strong>:</p>
 <ul>
@@ -339,7 +339,7 @@ The OutputVariableType does not provide information about the size of the output
 </ul>
 </section>
 <section id="itemtype">
-<span id="sec-itemtype"></span><h2>ItemType<a class="headerlink" href="#itemtype" title="Permalink to this heading"></a></h2>
+<span id="sec-itemtype"></span><h2>ItemType<a class="headerlink" href="#itemtype" title="Link to this heading"></a></h2>
 <p>This section shows the ItemType structure, which is used for defining types of indices, e.g., in render window and will be also used in item dictionaries in future.</p>
 <p>The class <strong>ItemType</strong> has the following <strong>functions and structures</strong>:</p>
 <ul>
@@ -376,7 +376,7 @@ The OutputVariableType does not provide information about the size of the output
 </ul>
 </section>
 <section id="nodetype">
-<span id="sec-nodetype"></span><h2>NodeType<a class="headerlink" href="#nodetype" title="Permalink to this heading"></a></h2>
+<span id="sec-nodetype"></span><h2>NodeType<a class="headerlink" href="#nodetype" title="Link to this heading"></a></h2>
 <p>This section shows the NodeType structure, which is used for defining node types for 3D rigid bodies.</p>
 <p>The class <strong>NodeType</strong> has the following <strong>functions and structures</strong>:</p>
 <ul>
@@ -478,7 +478,7 @@ The OutputVariableType does not provide information about the size of the output
 </ul>
 </section>
 <section id="jointtype">
-<span id="sec-jointtype"></span><h2>JointType<a class="headerlink" href="#jointtype" title="Permalink to this heading"></a></h2>
+<span id="sec-jointtype"></span><h2>JointType<a class="headerlink" href="#jointtype" title="Link to this heading"></a></h2>
 <p>This section shows the JointType structure, which is used for defining joint types, used in KinematicTree.</p>
 <p>The class <strong>JointType</strong> has the following <strong>functions and structures</strong>:</p>
 <ul>
@@ -520,7 +520,7 @@ The OutputVariableType does not provide information about the size of the output
 </ul>
 </section>
 <section id="dynamicsolvertype">
-<span id="sec-dynamicsolvertype"></span><h2>DynamicSolverType<a class="headerlink" href="#dynamicsolvertype" title="Permalink to this heading"></a></h2>
+<span id="sec-dynamicsolvertype"></span><h2>DynamicSolverType<a class="headerlink" href="#dynamicsolvertype" title="Link to this heading"></a></h2>
 <p>This section shows the DynamicSolverType structure, which is used for selecting dynamic solvers for simulation.</p>
 <p>The class <strong>DynamicSolverType</strong> has the following <strong>functions and structures</strong>:</p>
 <ul>
@@ -577,7 +577,7 @@ The OutputVariableType does not provide information about the size of the output
 </ul>
 </section>
 <section id="crosssectiontype">
-<span id="sec-crosssectiontype"></span><h2>CrossSectionType<a class="headerlink" href="#crosssectiontype" title="Permalink to this heading"></a></h2>
+<span id="sec-crosssectiontype"></span><h2>CrossSectionType<a class="headerlink" href="#crosssectiontype" title="Link to this heading"></a></h2>
 <p>This section shows the CrossSectionType structure, which is used for defining beam cross section types.</p>
 <p>The class <strong>CrossSectionType</strong> has the following <strong>functions and structures</strong>:</p>
 <ul>
@@ -594,7 +594,7 @@ The OutputVariableType does not provide information about the size of the output
 </ul>
 </section>
 <section id="keycode">
-<span id="sec-keycode"></span><h2>KeyCode<a class="headerlink" href="#keycode" title="Permalink to this heading"></a></h2>
+<span id="sec-keycode"></span><h2>KeyCode<a class="headerlink" href="#keycode" title="Link to this heading"></a></h2>
 <p>This section shows the KeyCode structure, which is used for special key codes in keyPressUserFunction.</p>
 <p>The class <strong>KeyCode</strong> has the following <strong>functions and structures</strong>:</p>
 <ul>
@@ -689,7 +689,7 @@ The OutputVariableType does not provide information about the size of the output
 </ul>
 </section>
 <section id="linearsolvertype">
-<span id="sec-linearsolvertype"></span><h2>LinearSolverType<a class="headerlink" href="#linearsolvertype" title="Permalink to this heading"></a></h2>
+<span id="sec-linearsolvertype"></span><h2>LinearSolverType<a class="headerlink" href="#linearsolvertype" title="Link to this heading"></a></h2>
 <p>This section shows the LinearSolverType structure, which is used for selecting linear solver types, which are dense or sparse solvers.</p>
 <p>The class <strong>LinearSolverType</strong> has the following <strong>functions and structures</strong>:</p>
 <ul>
@@ -721,7 +721,7 @@ The OutputVariableType does not provide information about the size of the output
 </ul>
 </section>
 <section id="contacttypeindex">
-<span id="sec-contacttypeindex"></span><h2>ContactTypeIndex<a class="headerlink" href="#contacttypeindex" title="Permalink to this heading"></a></h2>
+<span id="sec-contacttypeindex"></span><h2>ContactTypeIndex<a class="headerlink" href="#contacttypeindex" title="Link to this heading"></a></h2>
 <p>This section shows the ContactTypeIndex structure, which is in GeneralContact to select specific contact items, such as spheres, ANCFCable or triangle items.</p>
 <p>The class <strong>ContactTypeIndex</strong> has the following <strong>functions and structures</strong>:</p>
 <ul>

@@ -14,13 +14,13 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
-        <script src="../../../_static/clipboard.min.js"></script>
-        <script src="../../../_static/copybutton.js"></script>
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=030dc6f6"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../../_static/copybutton.js?v=f281be69"></script>
         <script src="../../../_static/js/rtd_search_config.js"></script>
         <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -117,7 +117,7 @@
              
   <p>This chapter lists the basic interface functions which can be used to set up a Exudyn model in Python.</p>
 <section id="general-information-on-python-c-interface">
-<span id="sec-generalpythoninterface"></span><h1>General information on Python-C++ interface<a class="headerlink" href="#general-information-on-python-c-interface" title="Permalink to this heading"></a></h1>
+<span id="sec-generalpythoninterface"></span><h1>General information on Python-C++ interface<a class="headerlink" href="#general-information-on-python-c-interface" title="Link to this heading"></a></h1>
 <p>This chapter lists the basic interface functions which can be used to set up
 a Exudyn model in Python. Note that some functions or classes will be used in examples, which are explained in detail later on.
 In the following, some basic steps and concepts for usage are shown, references to all functions are placed hereafter:</p>
@@ -176,7 +176,7 @@ In the following, some basic steps and concepts for usage are shown, references 
 </div>
 <p>If you run a parameter variation (check <code class="docutils literal notranslate"><span class="pre">Examples/parameterVariationExample.py</span></code>), you may reset or delete the created <code class="docutils literal notranslate"><span class="pre">MainSystem</span></code> <code class="docutils literal notranslate"><span class="pre">mbs</span></code> and the <code class="docutils literal notranslate"><span class="pre">SystemContainer</span></code> <code class="docutils literal notranslate"><span class="pre">SC</span></code> before creating new instances in order to avoid memory growth.</p>
 <section id="item-index">
-<span id="sec-itemindex"></span><h2>Item index<a class="headerlink" href="#item-index" title="Permalink to this heading"></a></h2>
+<span id="sec-itemindex"></span><h2>Item index<a class="headerlink" href="#item-index" title="Link to this heading"></a></h2>
 <p>Many functions will work with node numbers (<code class="docutils literal notranslate"><span class="pre">NodeIndex</span></code>), object numbers (<code class="docutils literal notranslate"><span class="pre">ObjectIndex</span></code>),marker numbers (<code class="docutils literal notranslate"><span class="pre">MarkerIndex</span></code>) and others. These numbers are special Python objects, which have been introduced in order to avoid mixing up, e.g., node and object numbers.</p>
 <p>For example, the command <code class="docutils literal notranslate"><span class="pre">mbs.AddNode(...)</span></code> returns a <code class="docutils literal notranslate"><span class="pre">NodeIndex</span></code>. For these indices, the following rules apply:</p>
 <blockquote>
@@ -195,7 +195,7 @@ In the following, some basic steps and concepts for usage are shown, references 
 </div></blockquote>
 </section>
 <section id="copying-and-referencing-c-objects">
-<span id="sec-generalpythoninterface-copyref"></span><h2>Copying and referencing C++ objects<a class="headerlink" href="#copying-and-referencing-c-objects" title="Permalink to this heading"></a></h2>
+<span id="sec-generalpythoninterface-copyref"></span><h2>Copying and referencing C++ objects<a class="headerlink" href="#copying-and-referencing-c-objects" title="Link to this heading"></a></h2>
 <p>As a key concept to working with Exudyn , most data which is retrieved by C++ interface functions is copied.
 Experienced Python users may know that it is a key concept to Python to often use references instead of copying, which is
 sometimes error-prone but offers a computationally efficient behavior.
@@ -222,7 +222,7 @@ The following code snippets and comments should explain this behavior:</p>
 </div>
 </section>
 <section id="exceptions-and-error-messages">
-<span id="sec-cinterface-exceptions"></span><h2>Exceptions and Error Messages<a class="headerlink" href="#exceptions-and-error-messages" title="Permalink to this heading"></a></h2>
+<span id="sec-cinterface-exceptions"></span><h2>Exceptions and Error Messages<a class="headerlink" href="#exceptions-and-error-messages" title="Link to this heading"></a></h2>
 <p>There are several levels of type and argument checks, leading to different types of errors and exceptions. The according error messages are non-unique, because they may be raised in Python modules or in C++, and they may be raised on different levels of the code. Error messages depend on Python version and on your iPython console. Very often the exception may be called <code class="docutils literal notranslate"><span class="pre">ValueError</span></code>, but it mustnot mean that it is a wrong error, but it could also be, e.g., a wrong order of function calls.</p>
 <p>As an example, a type conversion error is raised when providing wrong argument types, e.g., try <code class="docutils literal notranslate"><span class="pre">exu.GetVersionString('abc')</span></code>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>

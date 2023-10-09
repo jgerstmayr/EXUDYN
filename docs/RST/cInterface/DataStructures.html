@@ -14,13 +14,13 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
-        <script src="../../../_static/clipboard.min.js"></script>
-        <script src="../../../_static/copybutton.js"></script>
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=030dc6f6"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../../_static/copybutton.js?v=f281be69"></script>
         <script src="../../../_static/js/rtd_search_config.js"></script>
         <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -119,13 +119,13 @@
            <div itemprop="articleBody">
              
   <section id="data-structures">
-<span id="sec-cinterface-datastructures"></span><h1>Data structures<a class="headerlink" href="#data-structures" title="Permalink to this heading"></a></h1>
+<span id="sec-cinterface-datastructures"></span><h1>Data structures<a class="headerlink" href="#data-structures" title="Link to this heading"></a></h1>
 <p>This section describes a set of special data structures which are used in the Python-C++ interface,
 such as a MatrixContainer for dense/sparse matrices or a list of 3D vectors.
 Note that there are many native data types, such as lists, dicts and numpy arrays (e.g. 3D vectors),
 which are not described here as they are native to Pybind11, but can be passed as arguments when appropriate.</p>
 <section id="matrixcontainer">
-<span id="sec-matrixcontainer"></span><h2>MatrixContainer<a class="headerlink" href="#matrixcontainer" title="Permalink to this heading"></a></h2>
+<span id="sec-matrixcontainer"></span><h2>MatrixContainer<a class="headerlink" href="#matrixcontainer" title="Link to this heading"></a></h2>
 <p>The MatrixContainer is a versatile representation for dense and sparse matrices.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1">#Create empty MatrixContainer:</span>
 <span class="linenos"> 2</span><span class="kn">from</span> <span class="nn">exudyn</span> <span class="kn">import</span> <span class="nc">MatrixContainer</span>
@@ -190,7 +190,7 @@ which are not described here as they are native to Pybind11, but can be passed a
 </ul>
 </section>
 <section id="vector3dlist">
-<h2>Vector3DList<a class="headerlink" href="#vector3dlist" title="Permalink to this heading"></a></h2>
+<h2>Vector3DList<a class="headerlink" href="#vector3dlist" title="Link to this heading"></a></h2>
 <p>The Vector3DList is used to represent lists of 3D vectors. This is used to transfer such lists from Python to C++.</p>
 <p>Usage:
 +  Create empty <code class="docutils literal notranslate"><span class="pre">Vector3DList</span></code> with <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Vector3DList()</span></code>+  Create <code class="docutils literal notranslate"><span class="pre">Vector3DList</span></code> with list of numpy arrays:
@@ -240,7 +240,7 @@ which are not described here as they are native to Pybind11, but can be passed a
 </ul>
 </section>
 <section id="vector2dlist">
-<h2>Vector2DList<a class="headerlink" href="#vector2dlist" title="Permalink to this heading"></a></h2>
+<h2>Vector2DList<a class="headerlink" href="#vector2dlist" title="Link to this heading"></a></h2>
 <p>The Vector2DList is used to represent lists of 2D vectors. This is used to transfer such lists from Python to C++.</p>
 <p>Usage:
 +  Create empty <code class="docutils literal notranslate"><span class="pre">Vector2DList</span></code> with <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Vector2DList()</span></code>+  Create <code class="docutils literal notranslate"><span class="pre">Vector2DList</span></code> with list of numpy arrays:
@@ -290,7 +290,7 @@ which are not described here as they are native to Pybind11, but can be passed a
 </ul>
 </section>
 <section id="vector6dlist">
-<h2>Vector6DList<a class="headerlink" href="#vector6dlist" title="Permalink to this heading"></a></h2>
+<h2>Vector6DList<a class="headerlink" href="#vector6dlist" title="Link to this heading"></a></h2>
 <p>The Vector6DList is used to represent lists of 6D vectors. This is used to transfer such lists from Python to C++.</p>
 <p>Usage:
 +  Create empty <code class="docutils literal notranslate"><span class="pre">Vector6DList</span></code> with <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Vector6DList()</span></code>+  Convert into list of numpy arrays: <code class="docutils literal notranslate"><span class="pre">x.GetPythonObject()</span></code>+  similar to Vector3DList !</p>
@@ -339,7 +339,7 @@ which are not described here as they are native to Pybind11, but can be passed a
 </ul>
 </section>
 <section id="matrix3dlist">
-<h2>Matrix3DList<a class="headerlink" href="#matrix3dlist" title="Permalink to this heading"></a></h2>
+<h2>Matrix3DList<a class="headerlink" href="#matrix3dlist" title="Link to this heading"></a></h2>
 <p>The Matrix3DList is used to represent lists of 3D Matrices. . This is used to transfer such lists from Python to C++.</p>
 <p>Usage:
 +  Create empty <code class="docutils literal notranslate"><span class="pre">Matrix3DList</span></code> with <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Matrix3DList()</span></code>+  Create <code class="docutils literal notranslate"><span class="pre">Matrix3DList</span></code> with list of numpy arrays:
@@ -379,7 +379,7 @@ which are not described here as they are native to Pybind11, but can be passed a
 </ul>
 </section>
 <section id="matrix6dlist">
-<h2>Matrix6DList<a class="headerlink" href="#matrix6dlist" title="Permalink to this heading"></a></h2>
+<h2>Matrix6DList<a class="headerlink" href="#matrix6dlist" title="Link to this heading"></a></h2>
 <p>The Matrix6DList is used to represent lists of 6D Matrices. . This is used to transfer such lists from Python to C++.</p>
 <p>Usage:
 +  Create empty <code class="docutils literal notranslate"><span class="pre">Matrix6DList</span></code> with <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Matrix6DList()</span></code>+  Create <code class="docutils literal notranslate"><span class="pre">Matrix6DList</span></code> with list of numpy arrays:
