@@ -31,6 +31,7 @@ This section includes all Examples for Exudyn.They can also be found and downloa
    Examples/bicycleIftommBenchmark
    Examples/cartesianSpringDamper
    Examples/chatGPTupdate
+   Examples/chatGPTupdate2
    Examples/CMSexampleCourse
    Examples/ComputeSensitivitiesExample
    Examples/coordinateSpringDamper
@@ -46,6 +47,7 @@ This section includes all Examples for Exudyn.They can also be found and downloa
    Examples/gyroStability
    Examples/humanRobotInteraction
    Examples/HydraulicActuator2Arms
+   Examples/HydraulicActuatorStaticInitialization
    Examples/HydraulicsUserFunction
    Examples/interactiveTutorial
    Examples/InverseKinematicsNumericalExample
@@ -68,6 +70,7 @@ This section includes all Examples for Exudyn.They can also be found and downloa
    Examples/NGsolveLinearFEM
    Examples/NGsolvePistonEngine
    Examples/NGsolvePostProcessingStresses
+   Examples/nMassOscillator
    Examples/nMassOscillatorEigenmodes
    Examples/nMassOscillatorInteractive
    Examples/ObjectFFRFconvergenceTestBeam
@@ -100,9 +103,9 @@ This section includes all Examples for Exudyn.They can also be found and downloa
    Examples/rigidRotor3DFWBW
    Examples/rigidRotor3Dnutation
    Examples/rigidRotor3Drunup
-   Examples/ROSExampleMassPoint
-   Examples/ROSExampleTurtle
-   Examples/rr
+   Examples/ROSMassPoint
+   Examples/ROSMobileManipulator
+   Examples/ROSTurtle
    Examples/serialRobotFlexible
    Examples/serialRobotInteractiveLimits
    Examples/serialRobotInverseKinematics

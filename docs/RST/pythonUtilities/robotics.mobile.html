@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Module: robotics.mobile &mdash; Exudyn1.7.0 1.7.0 documentation</title>
+  <title>Module: robotics.mobile &mdash; Exudyn1.7.5.dev1 1.7.5.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -16,13 +16,15 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=030dc6f6"></script>
+        <script src="../../../_static/documentation_options.js?v=e63eafc5"></script>
         <script src="../../../_static/doctools.js?v=888ff710"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
         <script src="../../../_static/copybutton.js?v=f281be69"></script>
         <script src="../../../_static/js/rtd_search_config.js"></script>
         <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+        <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "vrRow": ["{[#1,\\, #2,\\, #3]}", 3], "vsix": ["{\\left[\\!\\! \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} \\!\\!\\right]}", 6], "vsixb": ["{\\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "vsixs": ["{ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "omegaBDtilde": "{\\LU{b}{\\tilde \\tomega_\\mathrm{bd}}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}", "termA": ["{\\color{blue}{#1}}", 1], "termB": ["{\\color{red}{#1}}", 1], "termC": ["{\\color{green}{#1}}", 1], "avu": "{\\ddot \\mathbf{q}}", "GA": "{G\\alpha}", "aalg": "{\\mathbf{a}}", "vel": "{\\mathbf{v}}"}}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -39,7 +41,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.7.0
+            Exudyn1.7.5.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -80,9 +82,21 @@
 <li class="toctree-l2"><a class="reference internal" href="processing.html">Module: processing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html">Module: rigidBodyUtilities</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robotics.html">Module: robotics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.rosInterface.html">Module: robotics.rosInterface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robotics.future.html">Module: robotics.future</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robotics.models.html">Module: robotics.models</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Module: robotics.mobile</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Module: robotics.mobile</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#function-mobilerobot2mbs">Function: mobileRobot2MBS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-generatrix2polynomial">Function: Generatrix2Polynomial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-generatrixroll">Function: GeneratrixRoll</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-fundiffpoly">Function: FunDiffPoly</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-funddiffpoly">Function: FunDDiffPoly</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-mobilekinematics-in-module-robotics-mobile">CLASS MobileKinematics (in module robotics.mobile)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-init">Class function: __init__</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-getwheelvelocities">Class function: getWheelVelocities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-getcartesianvelocities">Class function: getCartesianVelocities</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="robotics.motion.html">Module: robotics.motion</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robotics.special.html">Module: robotics.special</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robotics.utilities.html">Module: robotics.utilities</a></li>
@@ -108,7 +122,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.7.0</a>
+          <a href="../../../index.html">Exudyn1.7.5.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -129,10 +143,278 @@
              
   <section id="module-robotics-mobile">
 <span id="sec-module-robotics-mobile"></span><h1>Module: robotics.mobile<a class="headerlink" href="#module-robotics-mobile" title="Link to this heading"></a></h1>
-<p>The utilities contains functionality for mobile robots</p>
+<p>The utilities contains functionality for mobile robots
+based on the EXUDYN example MecanumWheel RollingDiscPenality
+specific friction angle of rolling disc is used to model rolls of mecanum wheels</p>
 <ul class="simple">
-<li><p>Date:      2021-12-02</p></li>
+<li><p>Author:    Martin Sereinig, Peter Manzl and Johannes Gerstmayr</p></li>
+<li><p>Date:      2021-10-01  Updated:  2023-09-15</p></li>
+<li><p>Notes:  formulation is still under development</p></li>
 </ul>
+<section id="function-mobilerobot2mbs">
+<span id="sec-mobile-mobilerobot2mbs"></span><h2>Function: mobileRobot2MBS<a class="headerlink" href="#function-mobilerobot2mbs" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/mobile.py#L41">mobileRobot2MBS</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">mobileRobot</span></code>, <code class="docutils literal notranslate"><span class="pre">markerGround</span></code>, <code class="docutils literal notranslate"><span class="pre">flagGraphicsRollers</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">*args</span></code>, <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">add items to existing mbs to build up a mobile robot platform,</div>
+<div class="line">there are options that can be passed as args / kwargs, which can contains options as described below.</div>
+<div class="line">The robot platform is built out of rigid bodies where the wheels can be modeled as rolling discs</div>
+<div class="line">(mecanum wheel x/o configuration) or with a detailed mecanum wheel simulation approach</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: the multibody system which will be extended</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">markerGround</span></code>: a rigid body marker, at which the robot will be placed (usually ground)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">mobileRobot</span></code>: a dictionary including all information about the mobile robot platform</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">the function returns a dictionary containing nodes, body, object and marker numbers of individual mobile robot parts</div>
+<div class="line">nPlatformList, bPlatformList, oPlatformList, mPlatformList; nodes, bodies, objects and marker of the platform [nPlattform] [bPlattform] [oPlattform]  []</div>
+<div class="line">oAxisList, mAxlesList; objects and marker of the axles  [a1, a2, a3, a4]</div>
+<div class="line">nWheelsList, bWheelsList, oRollingDiscsList, mWheelsList; nodes, bodys, objects and markers of the four wheels [w1, w2, w3, w4]</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>notes</em>:</div>
+<div class="line">for coordinate system, see Python function definition</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ROSMobileManipulator.py">ROSMobileManipulator.py</a> (Ex)</p>
+</div></blockquote>
+<hr class="docutils" />
+</section>
+<section id="function-generatrix2polynomial">
+<span id="sec-mobile-generatrix2polynomial"></span><h2>Function: Generatrix2Polynomial<a class="headerlink" href="#function-generatrix2polynomial" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/mobile.py#L397">Generatrix2Polynomial</a>(<code class="docutils literal notranslate"><span class="pre">param</span></code>, <code class="docutils literal notranslate"><span class="pre">GeneratrixFunction</span></code>, <code class="docutils literal notranslate"><span class="pre">tol</span> <span class="pre">=</span> <span class="pre">1e-14</span></code>, <code class="docutils literal notranslate"><span class="pre">nFit</span> <span class="pre">=</span> <span class="pre">101</span></code>, <code class="docutils literal notranslate"><span class="pre">nTest</span> <span class="pre">=</span> <span class="pre">1001</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">create a polynomial describing a generatrix function</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line">param: list containing data (lRoll, aPoly, …)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>author</em>:</div>
+<div class="line">Peter Manzl</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">**note</span></code>: create and fit a polynomial of an order high enough to approximate the given GeneratrixFunction</div>
+<div class="line">with a given tolerance. The error is measured as the Chebyshev distance.</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+</section>
+<section id="function-generatrixroll">
+<span id="sec-mobile-generatrixroll"></span><h2>Function: GeneratrixRoll<a class="headerlink" href="#function-generatrixroll" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/mobile.py#L469">GeneratrixRoll</a>(<code class="docutils literal notranslate"><span class="pre">u</span></code>, <code class="docutils literal notranslate"><span class="pre">param</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">generatrix function for a roll of a Mecanum wheel</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">u</span></code>: parameter, max. +- pi/2</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">param['r']</span></code>: radius of the associated Mecanum wheel</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">param['delta']</span></code>: angle of the rolls rotation axis to the wheels rotation axis</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">param['dRoll']</span></code>: smallest distance of roll axis to the wheel axis</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">x and y values for the function in the local frame. The rotation around the</div>
+<div class="line">local x-yxis creates the surface of the roll.</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>author</em>:</div>
+<div class="line">Peter Manzl</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>notes</em>:</div>
+<div class="line">parametric equation, x,y are the generatrix of the roll in</div>
+<div class="line">its local frame with the axis of rotation x, see .</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+</section>
+<section id="function-fundiffpoly">
+<span id="sec-mobile-fundiffpoly"></span><h2>Function: FunDiffPoly<a class="headerlink" href="#function-fundiffpoly" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/mobile.py#L482">FunDiffPoly</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">a</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">calculates the derivative of the polynomial <span class="math notranslate nohighlight">\(a0*x^n + ...\)</span></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">x</span></code>: value at which the polynomial is evaluated</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">a</span></code>: coefficients</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">f:</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>author</em>:</div>
+<div class="line">Peter Manzl</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">**note</span></code>: helper function polynomial describing a generatrix function</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+</section>
+<section id="function-funddiffpoly">
+<span id="sec-mobile-funddiffpoly"></span><h2>Function: FunDDiffPoly<a class="headerlink" href="#function-funddiffpoly" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/mobile.py#L497">FunDDiffPoly</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">a</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">calculates the second derivative of a polynomial</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">x</span></code>: value at which the polynomial is evaluated</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">a</span></code>: coefficients</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">f:</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>author</em>:</div>
+<div class="line">Peter Manzl</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">**note</span></code>: helper function polynomial describing a generatrix function</div>
+</div>
+</li>
+</ul>
+</section>
+<section id="class-mobilekinematics-in-module-robotics-mobile">
+<span id="sec-module-robotics-mobile-class-mobilekinematics"></span><h2>CLASS MobileKinematics (in module robotics.mobile)<a class="headerlink" href="#class-mobilekinematics-in-module-robotics-mobile" title="Link to this heading"></a></h2>
+<p><strong>class description</strong>:</p>
+<blockquote>
+<div><p>calculate 4 wheel velocities for a mecanum wheel driven platform with given platform velocities</p>
+</div></blockquote>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>author</em>:</div>
+<div class="line">Peter Manzl, Johannes Gerstmayr</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>notes</em>:</div>
+<div class="line">still under development; wheel axis is mounted at y-axis; positive angVel rotates CCW in x/y plane viewed from top; for coordinate system, see Python class definition</div>
+</div>
+</li>
+</ul>
+</section>
+<section id="class-function-init">
+<span id="sec-mobile-mobilekinematics-init"></span><h2>Class function: __init__<a class="headerlink" href="#class-function-init" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/mobile.py#L315">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">R</span></code>, <code class="docutils literal notranslate"><span class="pre">lx</span></code>, <code class="docutils literal notranslate"><span class="pre">ly</span></code>, <code class="docutils literal notranslate"><span class="pre">flagAdjusted</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">lcx</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">lcy</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">wheeltype</span> <span class="pre">=</span> <span class="pre">0</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">initialize mobileKinematics class</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">R</span></code>: wheel radius</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">lx</span></code>: wheel track width</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">ly</span></code>: wheel base</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">wheeltype</span></code>: 1=x-config (bad), 0=o-config (good)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>author</em>:</div>
+<div class="line">Peter Manzl</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+</section>
+<section id="class-function-getwheelvelocities">
+<span id="sec-mobile-mobilekinematics-getwheelvelocities"></span><h2>Class function: getWheelVelocities<a class="headerlink" href="#class-function-getwheelvelocities" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/mobile.py#L351">getWheelVelocities</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">vDes</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">calculate wheel velocities from Cartesian velocities</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">vDes</span></code>: desired velocity [vx, vy, omega] in the robot’s local frame</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">vx</span></code>: platform  translational velocity in local x direction</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">vy</span></code>: platform translational velocity in local y direction</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">omega</span></code>: platform rotational velocity around local z axis</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">w: wheel velocities w=[w0,w1,w2,w3]</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>author</em>:</div>
+<div class="line">Peter Manzl</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+</section>
+<section id="class-function-getcartesianvelocities">
+<span id="sec-mobile-mobilekinematics-getcartesianvelocities"></span><h2>Class function: getCartesianVelocities<a class="headerlink" href="#class-function-getcartesianvelocities" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/mobile.py#L375">getCartesianVelocities</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">w</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">calculate Cartesian velocities from wheel velocities</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line">w: wheel velocities w=[w0,w1,w2,w3]</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">v</span></code>: Cartesian velocity [vx, vy, omega] in the robot’s local frame</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">vx</span></code>: platform  translational velocity in local x direction</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">vy</span></code>: platform translational velocity in local y direction</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">omega</span></code>: platform rotational velocity around local z axis</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>author</em>:</div>
+<div class="line">Peter Manzl</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ROSMobileManipulator.py">ROSMobileManipulator.py</a> (Ex)</p>
+</div></blockquote>
+</section>
 </section>
 
 

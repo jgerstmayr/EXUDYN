@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Exudyn Basics &mdash; Exudyn1.7.0 1.7.0 documentation</title>
+  <title>Exudyn Basics &mdash; Exudyn1.7.5.dev1 1.7.5.dev1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
@@ -16,7 +16,7 @@
   
         <script src="../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=030dc6f6"></script>
+        <script src="../../_static/documentation_options.js?v=e63eafc5"></script>
         <script src="../../_static/doctools.js?v=888ff710"></script>
         <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -41,7 +41,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.7.0
+            Exudyn1.7.5.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -109,7 +109,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.7.0</a>
+          <a href="../../index.html">Exudyn1.7.5.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -237,7 +237,7 @@ The renderer is set up in a minimalistic way, just to ensure that you can check 
 </ul>
 <p><strong>NOTE</strong>: changing <code class="docutils literal notranslate"><span class="pre">visualizationSettings</span></code> is not thread-safe, as it allows direct access to the C++ variables.
 In most cases, this is not problematic, e.g., turning on/off some view parameters my just lead to some short-time artifacts if
-they are changed during redraw. However, more advanced quantities (e.g., <a href="#id1"><span class="problematic" id="id2">``</span></a>trackMarker <a href="#id3"><span class="problematic" id="id4">``</span></a> or changing strings) may lead to problems,
+they are changed during redraw. However, more advanced quantities (e.g., <code class="docutils literal notranslate"><span class="pre">trackMarker</span></code> or changing strings) may lead to problems,
 which is why it is strongly recommended to:</p>
 <ul class="simple">
 <li><p>set all <code class="docutils literal notranslate"><span class="pre">visualizationSettings</span></code> <strong>before start of renderer</strong></p></li>
@@ -264,10 +264,10 @@ Note that this dialog is automatically created and uses Python’s <code class="
 <span class="n">exudyn</span><span class="o">.</span><span class="n">GUI</span><span class="o">.</span><span class="n">textHeightFactor</span> <span class="o">=</span> <span class="mf">1.45</span>        <span class="c1">#this factor is used to increase height of lines in tree view as compared to font size</span>
 </pre></div>
 </div>
-<figure class="align-default" id="id5">
+<figure class="align-default" id="id1">
 <span id="fig-visualizationsettings"></span><a class="reference internal image-reference" href="../../_images/visualizationSettings.png"><img alt="../../_images/visualizationSettings.png" src="../../_images/visualizationSettings.png" style="width: 700px;" /></a>
 <figcaption>
-<p><span class="caption-number">Fig. 5 </span><span class="caption-text">View of visualization settings</span><a class="headerlink" href="#id5" title="Link to this image"></a></p>
+<p><span class="caption-number">Fig. 5 </span><span class="caption-text">View of visualization settings</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
 </figcaption>
 </figure>
 <p>Note: Press ‘V’ in render window to open dialog.</p>
@@ -427,14 +427,14 @@ see also Section <a class="reference internal" href="RenderState.html#sec-render
 If you are running large models, it may be more convenient to watch results after simulation has been finished.
 For this, you can use</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">interactive.SolutionViewer</span></code>, see  <span class="xref std std-ref">Section</span></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">interactive.SolutionViewer</span></code>, see  <a class="reference internal" href="cInterface/MainSystem.html#sec-mainsystemextensions-solutionviewer"><span class="std std-ref">Section</span></a></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">interactive.AnimateModes</span></code>, lets you view the animation of computed modes, see  <a class="reference internal" href="pythonUtilities/interactive.html#sec-interactive-animatemodes"><span class="std std-ref">Section</span></a></p></li>
 </ul>
 <p>shown exemplary in <a class="reference internal" href="#fig-solutionviewer"><span class="std std-numref">Fig. 6</span></a>.</p>
-<figure class="align-default" id="id6">
+<figure class="align-default" id="id2">
 <span id="fig-solutionviewer"></span><a class="reference internal image-reference" href="../../_images/solutionViewer.png"><img alt="../../_images/solutionViewer.png" src="../../_images/solutionViewer.png" style="width: 800px;" /></a>
 <figcaption>
-<p><span class="caption-number">Fig. 6 </span><span class="caption-text">View of <code class="docutils literal notranslate"><span class="pre">SolutionViewer</span></code> (as of Exudyn 1.5.42.dev1)</span><a class="headerlink" href="#id6" title="Link to this image"></a></p>
+<p><span class="caption-number">Fig. 6 </span><span class="caption-text">View of <code class="docutils literal notranslate"><span class="pre">SolutionViewer</span></code> (as of Exudyn 1.5.42.dev1)</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
 </figcaption>
 </figure>
 <p>The <code class="docutils literal notranslate"><span class="pre">SolutionViewer</span></code> adds a <code class="docutils literal notranslate"><span class="pre">tkinter</span></code> interactive dialog, which lets you interact with the model, with the following features:</p>

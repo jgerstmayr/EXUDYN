@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ROSExampleMassPoint.py &mdash; Exudyn1.7.0 1.7.0 documentation</title>
+  <title>ROSMassPoint.py &mdash; Exudyn1.7.5.dev1 1.7.5.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
@@ -16,7 +16,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=030dc6f6"></script>
+        <script src="../../../_static/documentation_options.js?v=e63eafc5"></script>
         <script src="../../../_static/doctools.js?v=888ff710"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -26,7 +26,7 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="ROSExampleTurtle.py" href="ROSExampleTurtle.html" />
+    <link rel="next" title="ROSMobileManipulator.py" href="ROSMobileManipulator.html" />
     <link rel="prev" title="rigidRotor3Drunup.py" href="rigidRotor3Drunup.html" /> 
 </head>
 
@@ -39,7 +39,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.7.0
+            Exudyn1.7.5.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -107,6 +107,7 @@
 <li class="toctree-l2"><a class="reference internal" href="gyroStability.html">gyroStability.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="humanRobotInteraction.html">humanRobotInteraction.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="HydraulicActuator2Arms.html">HydraulicActuator2Arms.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HydraulicActuatorStaticInitialization.html">HydraulicActuatorStaticInitialization.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="HydraulicsUserFunction.html">HydraulicsUserFunction.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="interactiveTutorial.html">interactiveTutorial.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="InverseKinematicsNumericalExample.html">InverseKinematicsNumericalExample.py</a></li>
@@ -129,6 +130,7 @@
 <li class="toctree-l2"><a class="reference internal" href="NGsolveLinearFEM.html">NGsolveLinearFEM.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolvePistonEngine.html">NGsolvePistonEngine.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolvePostProcessingStresses.html">NGsolvePostProcessingStresses.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nMassOscillator.html">nMassOscillator.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="nMassOscillatorEigenmodes.html">nMassOscillatorEigenmodes.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="nMassOscillatorInteractive.html">nMassOscillatorInteractive.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ObjectFFRFconvergenceTestBeam.html">ObjectFFRFconvergenceTestBeam.py</a></li>
@@ -161,8 +163,9 @@
 <li class="toctree-l2"><a class="reference internal" href="rigidRotor3DFWBW.html">rigidRotor3DFWBW.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rigidRotor3Dnutation.html">rigidRotor3Dnutation.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rigidRotor3Drunup.html">rigidRotor3Drunup.py</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">ROSExampleMassPoint.py</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ROSExampleTurtle.html">ROSExampleTurtle.py</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">ROSMassPoint.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ROSMobileManipulator.html">ROSMobileManipulator.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ROSTurtle.html">ROSTurtle.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="serialRobotFlexible.html">serialRobotFlexible.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="serialRobotInteractiveLimits.html">serialRobotInteractiveLimits.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="serialRobotInverseKinematics.html">serialRobotInverseKinematics.py</a></li>
@@ -210,7 +213,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.7.0</a>
+          <a href="../../../index.html">Exudyn1.7.5.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -219,9 +222,9 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../ExamplesIndex.html">Examples</a></li>
-      <li class="breadcrumb-item active">ROSExampleMassPoint.py</li>
+      <li class="breadcrumb-item active">ROSMassPoint.py</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../../_sources/docs/RST/Examples/ROSExampleMassPoint.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/docs/RST/Examples/ROSMassPoint.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -229,9 +232,9 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="rosexamplemasspoint-py">
-<span id="examples-rosexamplemasspoint"></span><h1>ROSExampleMassPoint.py<a class="headerlink" href="#rosexamplemasspoint-py" title="Link to this heading"></a></h1>
-<p>You can view and download this file on Github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/ROSExampleMassPoint.py">ROSExampleMassPoint.py</a></p>
+  <section id="rosmasspoint-py">
+<span id="examples-rosmasspoint"></span><h1>ROSMassPoint.py<a class="headerlink" href="#rosmasspoint-py" title="Link to this heading"></a></h1>
+<p>You can view and download this file on Github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/ROSMassPoint.py">ROSMassPoint.py</a></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">  1</span><span class="c1">#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
 <span class="linenos">  2</span><span class="c1"># This is an EXUDYN python example how to use ROS and EXUDYN</span>
 <span class="linenos">  3</span><span class="c1">#</span>
@@ -265,7 +268,7 @@
 <span class="linenos"> 31</span><span class="kn">import</span> <span class="nn">rosInterface</span> <span class="k">as</span> <span class="nn">exuROS</span>
 <span class="linenos"> 32</span>
 <span class="linenos"> 33</span><span class="c1"># here build inherited class and using within a simple exudyn simulation of one mass spring-damper</span>
-<span class="linenos"> 34</span><span class="k">class</span> <span class="nc">MyExudynROSInterface</span><span class="p">(</span><span class="n">exuROS</span><span class="o">.</span><span class="n">ROSInterface</span><span class="p">):</span>
+<span class="linenos"> 34</span><span class="k">class</span> <span class="nc">MyExudynROSInterface</span><span class="p">(</span><span class="n">exuROS</span><span class="o">.</span><span class="nc">ROSInterface</span><span class="p">):</span>
 <span class="linenos"> 35</span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="linenos"> 36</span>        <span class="c1"># use initialisation of super class</span>
 <span class="linenos"> 37</span>        <span class="c1"># this initialize a rosnode with name</span>
@@ -288,25 +291,25 @@
 <span class="linenos"> 54</span>        <span class="n">twistSubsrciberBase</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 <span class="linenos"> 55</span>        <span class="n">twistSubsrciberTopic</span> <span class="o">=</span> <span class="s1">&#39;cmd_vel&#39;</span>     <span class="c1"># topic to subscribe</span>
 <span class="linenos"> 56</span>        <span class="bp">self</span><span class="o">.</span><span class="n">cmd_vel</span> <span class="o">=</span> <span class="n">Twist</span><span class="p">()</span>              <span class="c1"># data type of topic, must be named: self.twistSubscriberTopic</span>
-<span class="linenos"> 57</span>        <span class="bp">self</span><span class="o">.</span><span class="n">myTwistSubscriber</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">InitSubscriber</span><span class="p">(</span><span class="n">twistSubsrciberBase</span><span class="p">,</span><span class="n">twistSubsrciberTopic</span><span class="p">,</span><span class="n">Twist</span><span class="p">)</span>
+<span class="linenos"> 57</span>        <span class="bp">self</span><span class="o">.</span><span class="n">myTwistSubscriber</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="nf">InitSubscriber</span><span class="p">(</span><span class="n">twistSubsrciberBase</span><span class="p">,</span><span class="n">twistSubsrciberTopic</span><span class="p">,</span><span class="n">Twist</span><span class="p">)</span>
 <span class="linenos"> 58</span>
 <span class="linenos"> 59</span>        <span class="c1"># wrench subscriber: cmd_wrench</span>
 <span class="linenos"> 60</span>        <span class="n">twistSubsrciberBase</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 <span class="linenos"> 61</span>        <span class="n">twistSubsrciberTopic</span> <span class="o">=</span> <span class="s1">&#39;cmd_wrench&#39;</span>     <span class="c1"># topic to subscribe</span>
 <span class="linenos"> 62</span>        <span class="bp">self</span><span class="o">.</span><span class="n">cmd_wrench</span> <span class="o">=</span> <span class="n">WrenchStamped</span><span class="p">()</span>              <span class="c1"># data type of topic, must be named: self.twistSubscriberTopic</span>
-<span class="linenos"> 63</span>        <span class="bp">self</span><span class="o">.</span><span class="n">myWrenchSubscriber</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">InitSubscriber</span><span class="p">(</span><span class="n">twistSubsrciberBase</span><span class="p">,</span><span class="n">twistSubsrciberTopic</span><span class="p">,</span><span class="n">WrenchStamped</span><span class="p">)</span>
+<span class="linenos"> 63</span>        <span class="bp">self</span><span class="o">.</span><span class="n">myWrenchSubscriber</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="nf">InitSubscriber</span><span class="p">(</span><span class="n">twistSubsrciberBase</span><span class="p">,</span><span class="n">twistSubsrciberTopic</span><span class="p">,</span><span class="n">WrenchStamped</span><span class="p">)</span>
 <span class="linenos"> 64</span>
 <span class="linenos"> 65</span>        <span class="c1"># string subsriber: my_string</span>
 <span class="linenos"> 66</span>        <span class="n">stringSubsrciberBase</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 <span class="linenos"> 67</span>        <span class="n">stringSubsrciberTopic</span> <span class="o">=</span> <span class="s1">&#39;my_string&#39;</span>     <span class="c1"># topic to subscribe</span>
 <span class="linenos"> 68</span>        <span class="bp">self</span><span class="o">.</span><span class="n">my_string</span> <span class="o">=</span> <span class="n">String</span><span class="p">()</span>              <span class="c1"># data type of topic, must be named: self.twistSubscriberTopic</span>
-<span class="linenos"> 69</span>        <span class="bp">self</span><span class="o">.</span><span class="n">myStringSubscriber</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">InitSubscriber</span><span class="p">(</span><span class="n">stringSubsrciberBase</span><span class="p">,</span><span class="n">stringSubsrciberTopic</span><span class="p">,</span><span class="n">String</span><span class="p">)</span>
+<span class="linenos"> 69</span>        <span class="bp">self</span><span class="o">.</span><span class="n">myStringSubscriber</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="nf">InitSubscriber</span><span class="p">(</span><span class="n">stringSubsrciberBase</span><span class="p">,</span><span class="n">stringSubsrciberTopic</span><span class="p">,</span><span class="n">String</span><span class="p">)</span>
 <span class="linenos"> 70</span>
 <span class="linenos"> 71</span>         <span class="c1"># string subsriber: /exudyn/SimpleString</span>
 <span class="linenos"> 72</span>        <span class="n">stringSubsrciberBase2</span> <span class="o">=</span> <span class="s1">&#39;exudyn/&#39;</span> <span class="c1"># namespace of topic</span>
 <span class="linenos"> 73</span>        <span class="n">stringSubsrciberTopic2</span> <span class="o">=</span> <span class="s1">&#39;SimpleString&#39;</span>     <span class="c1"># topic to subscribe</span>
 <span class="linenos"> 74</span>        <span class="bp">self</span><span class="o">.</span><span class="n">SimpleString</span> <span class="o">=</span> <span class="n">String</span><span class="p">()</span>              <span class="c1"># data type of topic, must be named: self.twistSubscriberTopic</span>
-<span class="linenos"> 75</span>        <span class="bp">self</span><span class="o">.</span><span class="n">myStringSubscriber</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">InitSubscriber</span><span class="p">(</span><span class="n">stringSubsrciberBase2</span><span class="p">,</span><span class="n">stringSubsrciberTopic2</span><span class="p">,</span><span class="n">String</span><span class="p">)</span>
+<span class="linenos"> 75</span>        <span class="bp">self</span><span class="o">.</span><span class="n">myStringSubscriber</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="nf">InitSubscriber</span><span class="p">(</span><span class="n">stringSubsrciberBase2</span><span class="p">,</span><span class="n">stringSubsrciberTopic2</span><span class="p">,</span><span class="n">String</span><span class="p">)</span>
 <span class="linenos"> 76</span>
 <span class="linenos"> 77</span>
 <span class="linenos"> 78</span><span class="c1"># test main function</span>
@@ -384,11 +387,11 @@
 <span class="linenos">150</span>    <span class="c1"># exudyn PreStepUserFunction</span>
 <span class="linenos">151</span>    <span class="k">def</span> <span class="nf">PreStepUserFunction</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
 <span class="linenos">152</span>        <span class="c1"># send position data to ROS</span>
-<span class="linenos">153</span>        <span class="n">myROSInterface</span><span class="o">.</span><span class="n">PublishPoseUpdate</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span><span class="n">t</span><span class="p">)</span>
+<span class="linenos">153</span>        <span class="n">myROSInterface</span><span class="o">.</span><span class="nf">PublishPoseUpdate</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span><span class="n">t</span><span class="p">)</span>
 <span class="linenos">154</span>        <span class="c1"># send velocity data to ROS</span>
-<span class="linenos">155</span>        <span class="n">myROSInterface</span><span class="o">.</span><span class="n">PublishTwistUpdate</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span><span class="n">t</span><span class="p">)</span>
+<span class="linenos">155</span>        <span class="n">myROSInterface</span><span class="o">.</span><span class="nf">PublishTwistUpdate</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span><span class="n">t</span><span class="p">)</span>
 <span class="linenos">156</span>        <span class="c1"># send system state data to ROS</span>
-<span class="linenos">157</span>        <span class="n">myROSInterface</span><span class="o">.</span><span class="n">PublishSystemStateUpdate</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span><span class="n">t</span><span class="p">)</span>
+<span class="linenos">157</span>        <span class="n">myROSInterface</span><span class="o">.</span><span class="nf">PublishSystemStateUpdate</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span><span class="n">t</span><span class="p">)</span>
 <span class="linenos">158</span>
 <span class="linenos">159</span>        <span class="c1"># get string data from ROS /my_string topic, please use: rostopic pub -r 100 /my_string geometry_msgs/WrenchStamped &quot;...&quot;</span>
 <span class="linenos">160</span>        <span class="n">someMessage</span> <span class="o">=</span> <span class="n">myROSInterface</span><span class="o">.</span><span class="n">my_string</span><span class="o">.</span><span class="n">data</span>
@@ -452,7 +455,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="rigidRotor3Drunup.html" class="btn btn-neutral float-left" title="rigidRotor3Drunup.py" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="ROSExampleTurtle.html" class="btn btn-neutral float-right" title="ROSExampleTurtle.py" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ROSMobileManipulator.html" class="btn btn-neutral float-right" title="ROSMobileManipulator.py" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

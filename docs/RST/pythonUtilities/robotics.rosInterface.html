@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module: robotics.rosInterface &mdash; Exudyn1.7.5.dev1 1.7.5.dev1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=e63eafc5"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../../_static/copybutton.js?v=f281be69"></script>
+        <script src="../../../_static/js/rtd_search_config.js"></script>
+        <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Module: robotics.future" href="robotics.future.html" />
+    <link rel="prev" title="Module: robotics" href="robotics.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn1.7.5.dev1
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Exudyn.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NotationIndex.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TheoryAndFormulationsIndex.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../SolversIndex.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Python Utility Functions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="pythonUtilities.html">Python Utility Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="artificialIntelligence.html">Module: artificialIntelligence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basicUtilities.html">Module: basicUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="beams.html">Module: beams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html">Module: FEM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html">Module: graphicsDataUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GUI.html">Module: GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interactive.html">Module: interactive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinematicTree.html">Module: kinematicTree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html">Module: lieGroupBasics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mainSystemExtensions.html">Module: mainSystemExtensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="physics.html">Module: physics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html">Module: plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processing.html">Module: processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html">Module: rigidBodyUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.html">Module: robotics</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Module: robotics.rosInterface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#class-rosinterface-in-module-robotics-rosinterface">CLASS ROSInterface (in module robotics.rosInterface)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-initpublisher">Class function: InitPublisher</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-exucallbackgeneric">Class function: ExuCallbackGeneric</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-initsubscriber">Class function: InitSubscriber</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-checkrosversion">Class function: CheckROSversion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-publishposeupdate">Class function: PublishPoseUpdate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-publishtwistupdate">Class function: PublishTwistUpdate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-publishsystemstateupdate">Class function: PublishSystemStateUpdate</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.future.html">Module: robotics.future</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.models.html">Module: robotics.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.mobile.html">Module: robotics.mobile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.motion.html">Module: robotics.motion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.special.html">Module: robotics.special</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.utilities.html">Module: robotics.utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="signalProcessing.html">Module: signalProcessing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solver.html">Module: solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utilities.html">Module: utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structures/StructuresAndSettingsIndex.html">Structures and Settings</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Misc</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ExamplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TestModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn1.7.5.dev1</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Python Utility Functions</a></li>
+      <li class="breadcrumb-item active">Module: robotics.rosInterface</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/RST/pythonUtilities/robotics.rosInterface.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-robotics-rosinterface">
+<span id="sec-module-robotics-rosinterface"></span><h1>Module: robotics.rosInterface<a class="headerlink" href="#module-robotics-rosinterface" title="Link to this heading"></a></h1>
+<p>This interface collects interfaces and functionality for ROS comunication
+This library is under construction (2023-05);
+To make use of this libraries, you need to
+install ROS (ROS1 noetic) including rospy
+Please consider following workflow:
+make sure to have a working ROS1-NOETIC installation, ROS2 is not supported yet
+tested only with ROS1-NOETIC, ubuntu 20.04, and Python 3.8.10
+you find all ROS1 installation steps on:
+<a class="reference external" href="http://wiki.ros.org/noetic/Installation/Ubuntu">http://wiki.ros.org/noetic/Installation/Ubuntu</a>
+Step 1.4 we recommend to install: (sudo apt install ros-noetic-desktop)
+Check the installation of the turtlesim package (rosrun turtlesim turtlesim_node )
+if not installed: sudo apt install ros-noetic-turtlesim
+use a catkin workspace and build a ROS1 Package
+Follow instructions on:
+<a class="reference external" href="http://wiki.ros.org/ROS/Tutorials">http://wiki.ros.org/ROS/Tutorials</a> (recommend go trough step 1 to 6)
+Minimal example to use:
+create catkin workspace:
+mkdir -p ~/catkin_ws/src
+cd ~/catkin_ws
+catkin_make
+source devel/setup.bash
+build ROS package:
+cd ~/catkin_ws/src
+catkin_create_pkg my_pkg_name rospy roscpp std_msgs geometry_msgs sensor_msgs
+build catkin workspace and sourcing setup file
+cd ~/catkin_ws
+cakin_make
+source ~/catkin_ws/devel/setup.bash
+for more functionality see also: ROSExampleMassPoint.py, ROSExampleBringup.launch, ROSExampleControlVelocity.py</p>
+<ul class="simple">
+<li><p>Author:    Martin Sereinig, Peter Manzl</p></li>
+<li><p>Date:      2023-05-31 (created)</p></li>
+</ul>
+<section id="class-rosinterface-in-module-robotics-rosinterface">
+<span id="sec-module-robotics-rosinterface-class-rosinterface"></span><h2>CLASS ROSInterface (in module robotics.rosInterface)<a class="headerlink" href="#class-rosinterface-in-module-robotics-rosinterface" title="Link to this heading"></a></h2>
+<p><strong>class description</strong>:</p>
+<blockquote>
+<div><p>interface super class to establish a ROS Exudyn interface
+see specific class functions which can be used and extended
+by inheritance with class MyClass(ROSInterface)</p>
+</div></blockquote>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>author</em>:</div>
+<div class="line">Martin Sereinig, Peter Manzl</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>notes</em>:</div>
+<div class="line">some inspiration can be taken from</div>
+</div>
+</li>
+</ul>
+</section>
+<section id="class-function-initpublisher">
+<span id="sec-rosinterface-rosinterface-initpublisher"></span><h2>Class function: InitPublisher<a class="headerlink" href="#class-function-initpublisher" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/rosInterface.py#L121">InitPublisher</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">pubTopicName</span> <span class="pre">=</span> <span class="pre">''</span></code>, <code class="docutils literal notranslate"><span class="pre">pubType</span> <span class="pre">=</span> <span class="pre">Empty</span></code>, <code class="docutils literal notranslate"><span class="pre">queueSize</span> <span class="pre">=</span> <span class="pre">10</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">function to create a publisher</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">pubTopicName</span></code>: topic name to publish, actual topic will be /exudyn/pubTopicName</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">pubType</span></code>: data type used in topic</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">queSize</span></code>: length of queue to hold messages, should be as small as sending frequency (= simulation sample time)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>author</em>:</div>
+<div class="line">Martin Sereinig</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>notes</em>:</div>
+<div class="line">find msgs types here</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">http</span></code>://docs.ros.org/en/melodic/api/std_msgs/html/index-msg.html</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>example</em>:</div>
+</div>
+</li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">s</span><span class="p">:</span>
+       <span class="n">publisher</span> <span class="k">for</span> <span class="n">poses</span><span class="p">,</span> <span class="n">pubType</span> <span class="o">=</span> <span class="n">PoseStamped</span><span class="p">,</span>
+       <span class="n">publisher</span> <span class="k">for</span> <span class="n">system</span> <span class="n">data</span><span class="p">,</span> <span class="n">pubType</span> <span class="o">=</span> <span class="n">Float64MultiArray</span><span class="p">,</span>
+       <span class="n">publisher</span> <span class="k">for</span> <span class="n">filtered</span> <span class="n">force</span><span class="p">,</span> <span class="n">pubType</span> <span class="o">=</span> <span class="n">WrenchStamped</span><span class="p">,</span>
+       <span class="n">publisher</span> <span class="k">for</span> <span class="n">velocities</span><span class="p">,</span> <span class="n">pubType</span> <span class="o">=</span> <span class="n">Twist</span><span class="p">,</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+</section>
+<section id="class-function-exucallbackgeneric">
+<span id="sec-rosinterface-rosinterface-exucallbackgeneric"></span><h2>Class function: ExuCallbackGeneric<a class="headerlink" href="#class-function-exucallbackgeneric" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/rosInterface.py#L131">ExuCallbackGeneric</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">subTopicName</span></code>, <code class="docutils literal notranslate"><span class="pre">data</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">function to create a generic callback function for a subscriber</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">topic</span></code>: topic name generated by init Subscriber</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">data</span></code>: data structure for regarding individual topic</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>author</em>:</div>
+<div class="line">Peter Manzl</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+</section>
+<section id="class-function-initsubscriber">
+<span id="sec-rosinterface-rosinterface-initsubscriber"></span><h2>Class function: InitSubscriber<a class="headerlink" href="#class-function-initsubscriber" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/rosInterface.py#L143">InitSubscriber</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">subTopicNameSpace</span></code>, <code class="docutils literal notranslate"><span class="pre">subTopicName</span></code>, <code class="docutils literal notranslate"><span class="pre">subType</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">function to create a subscriber</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">subTopicNameSpace</span></code>: topic namespace: ‘exudyn/’</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">subTopicName</span></code>: topic name to subscribe</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">subType</span></code>: data type for topic to subscribe</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>author</em>:</div>
+<div class="line">Peter Manzl</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">**note</span></code>: callback function will be automatic generated for each subscriber, depending</div>
+<div class="line">on subTopicName. Data will be found under self.subTopicName</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+</section>
+<section id="class-function-checkrosversion">
+<span id="sec-rosinterface-rosinterface-checkrosversion"></span><h2>Class function: CheckROSversion<a class="headerlink" href="#class-function-checkrosversion" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/rosInterface.py#L151">CheckROSversion</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">check the current used ROS version</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>author</em>:</div>
+<div class="line">Martin Sereinig</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">**note</span></code>: just supports ROS1, ROS2 support will be given in future releases</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+</section>
+<section id="class-function-publishposeupdate">
+<span id="sec-rosinterface-rosinterface-publishposeupdate"></span><h2>Class function: PublishPoseUpdate<a class="headerlink" href="#class-function-publishposeupdate" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/rosInterface.py#L177">PublishPoseUpdate</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">tExu</span></code>, <code class="docutils literal notranslate"><span class="pre">getData</span> <span class="pre">=</span> <span class="pre">'node'</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">Example method to be called once per frame/control cycle in Exudyn PreStepUserFunction</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">**note</span></code>:        reads sensor values, creates message, publish and subscribe to ROS</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">mbs</span></code>:     mbs (exudyn.exudynCPP.MainSystem), multi-body simulation system from exudyn</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">tExu</span></code>:    tExu (float), elapsed time since simulation start</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">getData</span></code>: getData (string), get pose information from ‘node’ or from ‘sensor’</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>author</em>:</div>
+<div class="line">Martin Sereinig</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>notes</em>:</div>
+<div class="line">reads sensor values, creates message, publish and subscribe to ROS</div>
+<div class="line">publishing each and every step is too much, this would slow down the connection</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">thus</span></code>: publish every few seconds, only</div>
+<div class="line">furthermore, as vrInterface is only updating the graphics with f=60Hz, we don’t have to update</div>
+<div class="line">system state every 1ms, so with f=1000Hz. Instead f=60Hz equivalents to update every 1/60=17ms</div>
+<div class="line">timing variable to know when to send new command to robot or when to publish new mbs system state update</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+</section>
+<section id="class-function-publishtwistupdate">
+<span id="sec-rosinterface-rosinterface-publishtwistupdate"></span><h2>Class function: PublishTwistUpdate<a class="headerlink" href="#class-function-publishtwistupdate" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/rosInterface.py#L236">PublishTwistUpdate</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">tExu</span></code>, <code class="docutils literal notranslate"><span class="pre">getData</span> <span class="pre">=</span> <span class="pre">'node'</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">Example method to be called once per frame/control cycle in Exudyn PreStepUserFunction</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">**note</span></code>:        reads sensor values, creates message, publish and subscribe to ROS</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">mbs</span></code>:     mbs (exudyn.exudynCPP.MainSystem), multi-body simulation system from exudyn</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">tExu</span></code>:    tExu (float), elapsed time since simulation start</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">getData</span></code>: getData (string), get pose information from ‘node’ or from ‘sensor’</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>author</em>:</div>
+<div class="line">Martin Sereinig</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>notes</em>:</div>
+<div class="line">reads sensor values, creates message, publish and subscribe to ROS</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+</section>
+<section id="class-function-publishsystemstateupdate">
+<span id="sec-rosinterface-rosinterface-publishsystemstateupdate"></span><h2>Class function: PublishSystemStateUpdate<a class="headerlink" href="#class-function-publishsystemstateupdate" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/rosInterface.py#L279">PublishSystemStateUpdate</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">tExu</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">method to be send system state data once per frame/control cycle in Exudyn PreStepUserFunction</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">mbs</span></code>:     mbs (exudyn.exudynCPP.MainSystem), multi-body simulation system from exudyn</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">tExu</span></code>:       tExu (float),  simulation time</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">systemStateData</span></code>:   systemStateData (list), full Exudyn SystemState</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>author</em>:</div>
+<div class="line">Martin Sereinig</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">**note</span></code>:        collects important exudyn system data and send it to ros-topic</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ROSMassPoint.py">ROSMassPoint.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ROSMobileManipulator.py">ROSMobileManipulator.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ROSTurtle.py">ROSTurtle.py</a> (Ex)</p>
+</div></blockquote>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="robotics.html" class="btn btn-neutral float-left" title="Module: robotics" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="robotics.future.html" class="btn btn-neutral float-right" title="Module: robotics.future" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

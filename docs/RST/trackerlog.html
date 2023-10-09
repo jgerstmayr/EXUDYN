@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Issue tracker &mdash; Exudyn1.7.0 1.7.0 documentation</title>
+  <title>Issue tracker &mdash; Exudyn1.7.5.dev1 1.7.5.dev1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
@@ -16,7 +16,7 @@
   
         <script src="../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=030dc6f6"></script>
+        <script src="../../_static/documentation_options.js?v=e63eafc5"></script>
         <script src="../../_static/doctools.js?v=888ff710"></script>
         <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -40,7 +40,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.7.0
+            Exudyn1.7.5.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -95,7 +95,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.7.0</a>
+          <a href="../../index.html">Exudyn1.7.5.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -120,15 +120,56 @@ The extension <code class="docutils literal notranslate"><span class="pre">.dev1
 BUG numbers refer to the according issue numbers.</p>
 <p>General information on current version:</p>
 <ul class="simple">
-<li><p>Exudyn version = 1.7.0,</p></li>
-<li><p>last change =  2023-07-20,</p></li>
-<li><p>Number of issues = 1652,</p></li>
-<li><p>Number of resolved issues = 1470 (0 in current version),</p></li>
+<li><p>Exudyn version = 1.7.5.dev1,</p></li>
+<li><p>last change =  2023-10-09,</p></li>
+<li><p>Number of issues = 1658,</p></li>
+<li><p>Number of resolved issues = 1475 (5 in current version),</p></li>
 </ul>
 <section id="version-1-7">
 <h2>Version 1.7<a class="headerlink" href="#version-1-7" title="Link to this heading"></a></h2>
 <blockquote>
 <div><ul class="simple">
+<li><dl class="simple">
+<dt>Version 1.7.5: resolved Issue 1657: Docu (fix)</dt><dd><ul>
+<li><p>description:  latex errors in robotics mobile and ROS</p></li>
+<li><p>date resolved: <strong>2023-10-09 20:27</strong>, date raised: 2023-10-09</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.4: resolved Issue 1656: ROS rosInterface (extension)</dt><dd><ul>
+<li><p>description:  Created robotics.rosInterface and Python models in Examples: ROSMassPoint.py, ROSMobileManipulator.py, ROSTurtle.py with supplementary, see Examples/supplementary: ROSControlMobileManipulation.py, ROSControlTurtleVelocity.py, etc.</p></li>
+<li><p>date resolved: <strong>2023-09-15 15:50</strong>, date raised: 2023-09-15</p></li>
+<li><p>resolved by: Martin Sereinig</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.3: resolved Issue 1655: SolveStatic (extension)</dt><dd><ul>
+<li><p>description:  add option for static solver to handle ODE1 quantities; currently, the option is to set ODE1coordinates to initial values during static computation</p></li>
+<li><p>date resolved: <strong>2023-09-07 21:13</strong>, date raised: 2023-09-07</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.2: resolved Issue 1654: Python3.6 support (change)</dt><dd><ul>
+<li><p>description:  discontinuing testing and creation of pip installers for Python3.6 in Windows, Linux and MacOS as Python3.6 had end-of-life 2021-12-23; Python 3.7 also had end-of-life recently, so please expect discontinued support soon</p></li>
+<li><p>date resolved: <strong>2023-09-03 16:03</strong>, date raised: 2023-09-03</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.1: resolved Issue 1652: rosInterface.py (fix)</dt><dd><ul>
+<li><p>description:  add (missing) file to DOCU</p></li>
+<li><p>date resolved: <strong>2023-08-08 17:53</strong>, date raised: 2023-08-08</p></li>
+</ul>
+</dd>
+</dl>
+</li>
 <li><dl class="simple">
 <dt>Version 1.7.0: resolved Issue 1649: release (release)</dt><dd><ul>
 <li><p>description:  switch to new release 1.7</p></li>
@@ -12211,6 +12252,14 @@ BUG numbers refer to the according issue numbers.</p>
 <h2>Open issues<a class="headerlink" href="#open-issues" title="Link to this heading"></a></h2>
 <blockquote>
 <div><ul class="simple">
+<li><dl class="simple">
+<dt><strong>open issue 1653:</strong> ANCFBeam</dt><dd><ul>
+<li><p>description:  reconsider name: ANCFBeamStructural, not to have too many cases; use this for 2/3 node, different number of slopes except for 1 slope, which is ANCFCable, the 3D version of ANCFCable2D</p></li>
+<li><p>date raised: 2023-08-16</p></li>
+</ul>
+</dd>
+</dl>
+</li>
 <li><dl class="simple">
 <dt><strong>open issue 1651:</strong> Python 3.11</dt><dd><ul>
 <li><p>description:  added Python 3.11 workflows for Windows, Linux and MacOS builds (note: problems with Rosetta x86 on MacOS)</p></li>

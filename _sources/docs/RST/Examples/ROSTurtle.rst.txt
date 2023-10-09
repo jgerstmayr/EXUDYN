@@ -1,11 +1,11 @@
 
-.. _examples-rosexampleturtle:
+.. _examples-rosturtle:
 
-*******************
-ROSExampleTurtle.py
-*******************
+************
+ROSTurtle.py
+************
 
-You can view and download this file on Github: `ROSExampleTurtle.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/ROSExampleTurtle.py>`_
+You can view and download this file on Github: `ROSTurtle.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/ROSTurtle.py>`_
 
 .. code-block:: python
    :linenos:
@@ -17,7 +17,7 @@ You can view and download this file on Github: `ROSExampleTurtle.py <https://git
    # Details:  This example shows how to communicate between an exudyn simulation
    #            and ROS
    #           To make use of this example, you need to 
-   #           install ROS (ROS1 noetic) including rospy (see exudynROSInterface.py)
+   #           install ROS (ROS1 noetic) including rospy (see rosInterface.py)
    #           prerequisite to use: 
    #           use a bash terminal to start the roscore with: 
    #               roscore 
@@ -25,12 +25,12 @@ You can view and download this file on Github: `ROSExampleTurtle.py <https://git
    #           use a bash terminal to start the turtlesim node with:
    #               rosrun turtlesim turtlesim_node turtle1/cmd_vel:=exudyn/Twist
    #           start example with argument -pub, to use it with external publisher: 
-   #               python3 ROSexampleTurtle.py -pub
+   #               python3 ROSTurtle.py -pub
    #           start example with argument -noTrack, to not track the turtle:
-   #               python3 ROSexampleTurtle.py -noTrack
+   #               python3 ROSTurtle.py -noTrack
    #           for even more ROS functionality create a ROS package (e.q. myExudynInterface) in a catkin workspace, 
-   #           copy files ROSExampleTurtle.py, Turtle.stl and ROSExampleBringup.launch file in corresponding folders within the package
-   #           for more functionality see also: ROSExampleMassPoint.py, ROSExampleBringup.launch, ROSExampleControlVelocity.py
+   #           copy files  ROSTurtle.py, Turtle.stl and ROSBringupTurtle.launch file  (see folder Examples/supplementary) in corresponding folders within the package
+   #           for more functionality see also: ROSMassPoint.py, ROSBringupTurtle.launch, ROSControlTurtleVelocity.py
    # Author:   Martin Sereinig, Peter Manzl 
    # Date:     2023-05-31 (created)
    #
@@ -172,7 +172,7 @@ You can view and download this file on Github: `ROSExampleTurtle.py <https://git
                path2stl = ''
            print('stl file path: ', path2stl)
            turtleRot = RotationMatrixZ(-np.pi/2)
-           stlGrafics = GraphicsDataFromSTLfile(path2stl+'Turtle.stl',color=[1,0,0,1],scale=0.25,pOff=[0.35,0,0], Aoff=turtleRot)
+           stlGrafics = GraphicsDataFromSTLfile(path2stl+'ROSTurtle.stl',color=[1,0,0,1],scale=0.25,pOff=[0.35,0,0], Aoff=turtleRot)
            graphicsTurtleList += [stlGrafics]
        except:
            print('stl not found, maybe wrong directory, use box instead')

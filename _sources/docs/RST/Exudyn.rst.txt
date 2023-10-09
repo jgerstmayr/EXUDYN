@@ -37,7 +37,7 @@ Exudyn
 
 **A flexible multibody dynamics systems simulation code with Python and C++**
 
-Exudyn version = 1.7.0 (Hall)
+Exudyn version = 1.7.5.dev1 (Hall)
 
 +  **University of Innsbruck**, Department of Mechatronics, Innsbruck, Austria
 
@@ -69,7 +69,7 @@ If you like using Exudyn, please add a *star* on github and follow us on
    
 |pic1| |pic2| |pic3| |pic4| |pic5| |pic6|
 
-Johannes Gerstmayr. Exudyn -- A C++ based Python package for flexible multibody systems. Preprint, Research Square, 2023. `https://doi.org/10.21203/rs.3.rs-2693700/v1 <https://doi.org/10.21203/rs.3.rs-2693700/v1>`_
+Johannes Gerstmayr. Exudyn -- A C++ based Python package for flexible multibody systems. Multibody System Dynamics, 2023. `https://doi.org/10.1007/s11044-023-09937-1 <https://doi.org/10.1007/s11044-023-09937-1>`_
 
 Due to limitations for complex formulas and tables in .rst files, some details of the reference manual are only available in theDoc.pdf, see the `github page of Exudyn <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_! There may also be some conversion errors in the auto-generated html pages.
 

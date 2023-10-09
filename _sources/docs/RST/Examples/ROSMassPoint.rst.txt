@@ -1,11 +1,11 @@
 
-.. _examples-rosexamplemasspoint:
+.. _examples-rosmasspoint:
 
-**********************
-ROSExampleMassPoint.py
-**********************
+***************
+ROSMassPoint.py
+***************
 
-You can view and download this file on Github: `ROSExampleMassPoint.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/ROSExampleMassPoint.py>`_
+You can view and download this file on Github: `ROSMassPoint.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/ROSMassPoint.py>`_
 
 .. code-block:: python
    :linenos:
