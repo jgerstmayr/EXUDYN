@@ -1,0 +1,24 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# author: Johannes Gerstmayr; template used from readthedocs page
+# data: 2023-10-25
+# description: file used by readthedocs to compile github docu online
+# See https://docs.readthedocs.io/en/stable/config-file/v2.html for details
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+# Required
+version: 2
+
+# Set the OS, Python version and other tools you might need
+build:
+  os: ubuntu-22.04
+  tools:
+    python: "3.x"
+
+python:
+  install:
+    - requirements: docs/requirements.txt
+
+# Build documentation in the "docs/" directory with Sphinx
+sphinx:
+  configuration: docs/conf.py
+

@@ -33,7 +33,7 @@ jobs:
         cache: 'pip'
     - name: Install Dependencies
       run: |
-        pip install -r requirements.txt
+        pip install -r docs/requirements.txt
     - name: Sphinx Build
       run: |
         sphinx-build . docs/_build
