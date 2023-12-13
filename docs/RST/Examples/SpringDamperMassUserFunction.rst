@@ -19,6 +19,7 @@ You can view and download this file on Github: `SpringDamperMassUserFunction.py 
    #
    # Author:   Johannes Gerstmayr
    # Date:     2019-12-04
+   # Update:   2023-12-08 (symbolic user function)
    #
    # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
    #
@@ -33,6 +34,8 @@ You can view and download this file on Github: `SpringDamperMassUserFunction.py 
    SC = exu.SystemContainer()
    mbs = SC.AddSystem()
    
+   useSymbolicUserFunction = False
+   
    #defines relative displacement, relative velocity, stiffness k, damping d, and additional spring force f0
    def springForce(mbs, t, itemIndex, u, v, k, d, f0):
        return u*k+v*d
@@ -40,6 +43,8 @@ You can view and download this file on Github: `SpringDamperMassUserFunction.py 
    sqrt2 = 2**0.5
    nBodies = 24 #24; 240*4     #480 for Eigen factorization test
    nBodies2 = 3 #6; 30*4      #60  for Eigen factorization test
+   
+   coList = []
    
    for j in range(nBodies2): 
    #    body = mbs.AddObject({'objectType': 'Ground', 'referencePosition': [0,j,0]})
@@ -60,21 +65,31 @@ You can view and download this file on Github: `SpringDamperMassUserFunction.py 
    #add spring-dampers:
    for j in range(nBodies2-1): 
        for i in range(nBodies-1): 
-           mbs.AddObject(ObjectConnectorSpringDamper(markerNumbers=[j*nBodies + i,j*nBodies + i+1], stiffness=4000,
-                                                                 damping=10, force=0, referenceLength=1, springForceUserFunction = 0))
-           mbs.AddObject(ObjectConnectorSpringDamper(markerNumbers=[j*nBodies + i,(j+1)*nBodies + i], stiffness=4000,
-                                                                 damping=10, force=0, referenceLength=1, springForceUserFunction = 0))
-           mbs.AddObject(ObjectConnectorSpringDamper(markerNumbers=[j*nBodies + i,(j+1)*nBodies + i+1], stiffness=4000,
-                                                                 damping=10, force=0, referenceLength=sqrt2, springForceUserFunction = springForce)) #diagonal elements
+           coList += [mbs.AddObject(ObjectConnectorSpringDamper(markerNumbers=[j*nBodies + i,j*nBodies + i+1], stiffness=4000,
+                                                                 damping=10, force=0, referenceLength=1, springForceUserFunction = springForce))]
+           coList += [mbs.AddObject(ObjectConnectorSpringDamper(markerNumbers=[j*nBodies + i,(j+1)*nBodies + i], stiffness=4000,
+                                                                 damping=10, force=0, referenceLength=1, springForceUserFunction = springForce))]
+           coList += [mbs.AddObject(ObjectConnectorSpringDamper(markerNumbers=[j*nBodies + i,(j+1)*nBodies + i+1], stiffness=4000,
+                                                                 damping=10, force=0, referenceLength=sqrt2, springForceUserFunction = springForce))] #diagonal elements
    
    for i in range(nBodies-1): 
        j = nBodies2-1
-       mbs.AddObject(ObjectConnectorSpringDamper(markerNumbers=[j*nBodies + i,j*nBodies + i+1], stiffness=4000,
-                                                               damping=10, force=0, referenceLength=1, springForceUserFunction = springForce))
+       coList += [mbs.AddObject(ObjectConnectorSpringDamper(markerNumbers=[j*nBodies + i,j*nBodies + i+1], stiffness=4000,
+                                                               damping=10, force=0, referenceLength=1, springForceUserFunction = springForce))]
    for j in range(nBodies2-1): 
        i = nBodies-1
-       mbs.AddObject(ObjectConnectorSpringDamper(markerNumbers=[j*nBodies + i,(j+1)*nBodies + i], stiffness=4000,
-                                                               damping=10, force=0, referenceLength=1, springForceUserFunction = springForce))
+       coList += [mbs.AddObject(ObjectConnectorSpringDamper(markerNumbers=[j*nBodies + i,(j+1)*nBodies + i], stiffness=4000,
+                                                               damping=10, force=0, referenceLength=1, springForceUserFunction = springForce))]
+   
+   #now set symbolic user functions
+   if useSymbolicUserFunction:
+       #create symbolic version of Python user function (only works for limited kinds of functions)
+       #we have to keep this handle, do not overwrite:
+       symbolicFunc = CreateSymbolicUserFunction(mbs, springForce, coList[0], 'springForceUserFunction')
+       for co in coList:
+           #now inject symbolic user function into object, directly done inside C++ (no Pybind overhead):
+           symbolicFunc.TransferUserFunction2Item(mbs, co, 'springForceUserFunction')    
+   
    
    #optional:
    nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[-0.5,0,0])) #ground node for coordinate constraint

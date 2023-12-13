@@ -14,7 +14,7 @@
 
 import numpy as np #for loading
 import exudyn #for sensor index
-from exudyn.advancedUtilities import PlotLineCode
+from exudyn.advancedUtilities import PlotLineCode, IsListOrArray
 import copy
 import os
 
@@ -326,7 +326,7 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel='time (s)', yLabel=No
     plt.rcParams.update({'font.size': fontSize})
 
     factorOffsetUsed = False
-    if factors!=[]:
+    if IsListOrArray(factors, checkIfNoneEmpty=True):#factors!=[]:
         if type(factors) != list:
             factors = [factors]*nSensors
         if len(factors) != nSensors:
@@ -335,7 +335,7 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel='time (s)', yLabel=No
     else:
         factors = [1.]*nSensors
 
-    if offsets!=[]:
+    if IsListOrArray(offsets, checkIfNoneEmpty=True):#offsets!=[]:
         if type(offsets) != list:
             offsets = [offsets]*nSensors
         if len(offsets) != nSensors:
@@ -653,10 +653,15 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel='time (s)', yLabel=No
 
     #do this finally!!!
     if nSensors > 0:
-        plt.legend() #show labels as legend
-        plt.tight_layout()
+        handle = plt
+        if fig!=None:
+            handle = fig #better to use fig; plt.tight_layout() gives warning
+
+        
+        handle.legend() #show labels as legend
+        handle.tight_layout()
         if matplotlib.get_backend() != 'agg': #this is used to avoid showing the figures, if they are just saved
-            plt.show() 
+            handle.show() 
         
         if fileName != '':
             try:
@@ -664,7 +669,7 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel='time (s)', yLabel=No
             except:
                 pass #makedirs may fail on some systems, but we keep going
 
-            plt.savefig(fileName)
+            handle.savefig(fileName)
     
     return [plt, fig, ax, line]
     

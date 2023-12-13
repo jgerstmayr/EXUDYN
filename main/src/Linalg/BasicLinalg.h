@@ -256,8 +256,32 @@ namespace EXUmath {
 	//! In this version, Z is the leading vector, Y is used to define the plane and X is compute from cross product
 	//! column vectors in Matrix A are normalized
 	template <class TReal>
+	inline void OrthogonalBasisFromVectorsXY(SlimVectorBase<TReal, 3> vectorX,  //copy vectors because they are modified
+		SlimVectorBase<TReal, 3> vectorY, ConstSizeMatrixBase<TReal, 3 * 3>& A)
+	{
+		A.SetNumberOfRowsAndColumns(3, 3);
+		vectorX.Normalize();
+		TReal h = (vectorX * vectorY);
+		vectorY -= h * vectorX;
+		vectorY.Normalize();
+		SlimVectorBase<TReal, 3> vectorZ = vectorX.CrossProduct(vectorY);
+		A(0, 0) = vectorX[0];
+		A(1, 0) = vectorX[1];
+		A(2, 0) = vectorX[2];
+		A(0, 1) = vectorY[0];
+		A(1, 1) = vectorY[1];
+		A(2, 1) = vectorY[2];
+		A(0, 2) = vectorZ[0];
+		A(1, 2) = vectorZ[1];
+		A(2, 2) = vectorZ[2];
+	}
+
+	//! compute orthogonal, normalized basis from two given non-parallel and non-zero vectors (vector0, vector1);
+	//! In this version, Z is the leading vector, Y is used to define the plane and X is compute from cross product
+	//! column vectors in Matrix A are normalized
+	template <class TReal>
 	inline void OrthogonalBasisFromVectorsZY(SlimVectorBase<TReal, 3> vectorY,  //copy vectors because they are modified
-		SlimVectorBase<TReal, 3> vectorZ, ConstSizeMatrixBase<TReal, 3*3>& A)
+		SlimVectorBase<TReal, 3> vectorZ, ConstSizeMatrixBase<TReal, 3 * 3>& A)
 	{
 		A.SetNumberOfRowsAndColumns(3, 3);
 		//SlimVectorBase<TReal, 3> vectorZ({ A(0,2), A(1,2), A(2,2) });
@@ -587,8 +611,8 @@ namespace EXUmath {
 	template<class TVector1, class TVector2, class TVectorResult>
 	inline void MultVectorComponents(const TVector1& vector1, const TVector2& vector2, TVectorResult& result)
 	{
-		CHECKandTHROW((vector1.NumberOfItems() == vector2.NumberOfItems()) &&
-			(vector1.NumberOfItems() <= result.MaxNumberOfItems()),
+		CHECKandTHROW((vector1.NumberOfItems() == vector2.NumberOfItems()),
+			//(vector1.NumberOfItems() <= result.MaxNumberOfItems()), //not needed, as length of result anyway set
 			"EXUmath::MultVectorComponents(vector1,vector2,result): Size mismatch");
 
 		result.SetNumberOfItems(vector1.NumberOfItems());

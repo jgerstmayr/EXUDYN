@@ -202,8 +202,8 @@ namespace ngstd
     T_Range Split (size_t nr, int tot) const
     {
       T diff = next-first;
-      return T_Range (first + nr * diff / tot,
-                      first + (nr+1) * diff / tot);
+      return T_Range ((T)(first + nr * diff / tot),
+                      (T)(first + (nr+1) * diff / tot));
     }
     // INLINE operator IntRange () const { return IntRange(first,next); }
   };
@@ -770,7 +770,7 @@ namespace ngstd
     }
 
     /// steal array 
-    INLINE Array & operator= (Array && a2)
+    INLINE Array & operator= (Array && a2) noexcept
     {
       ngstd::Swap (size, a2.size);
       ngstd::Swap (data, a2.data);

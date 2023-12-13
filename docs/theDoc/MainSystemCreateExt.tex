@@ -1,5 +1,54 @@
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L118}{CreateMassPoint}{}}}\label{sec:mainsystemextensions:CreateMassPoint}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L133}{CreateGround}{}}}\label{sec:mainsystemextensions:CreateGround}
+({\it name}= '', {\it referencePosition}= [0.,0.,0.], {\it referenceRotationMatrix}= np.eye(3), {\it graphicsDataList}= [], {\it show}= True)
+\end{flushleft}
+\setlength{\itemindent}{0.7cm}
+\begin{itemize}[leftmargin=0.7cm]
+\item[--]
+{\bf function description}: \vspace{-6pt}
+\begin{itemize}[leftmargin=1.2cm]
+\setlength{\itemindent}{-0.7cm}
+\item[]helper function to create a ground object, using arguments of ObjectGround; this function is mainly added for consistency with other mainSystemExtensions
+\item[]- NOTE that this function is added to MainSystem via Python function MainSystemCreateGround.
+\end{itemize}
+\item[--]
+{\bf input}: \vspace{-6pt}
+\begin{itemize}[leftmargin=1.2cm]
+\setlength{\itemindent}{-0.7cm}
+\item[]{\it name}: name string for object
+\item[]{\it referencePosition}: reference coordinates for point node (always a 3D vector, no matter if 2D or 3D mass)
+\item[]{\it referenceRotationMatrix}: reference rotation matrix for rigid body node (always 3D matrix, no matter if 2D or 3D body)
+\item[]{\it graphicsDataList}: list of GraphicsData for optional ground visualization
+\item[]{\it color}: color of node
+\item[]{\it show}: True: show ground object;
+\end{itemize}
+\item[--]
+{\bf output}: ObjectIndex; returns ground object index
+\item[--]
+{\bf example}: \vspace{-12pt}\ei\begin{lstlisting}[language=Python, xleftmargin=36pt]
+  import exudyn as exu
+  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+  import numpy as np
+  SC = exu.SystemContainer()
+  mbs = SC.AddSystem()
+  ground=mbs.CreateGround(referencePosition = [2,0,0],
+                          graphicsDataList = [GraphicsDataCheckerBoard(point=[0,0,0], normal=[0,1,0],size=4)])
+\end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspace{12pt}\end{itemize}
+%
+
+%
+\noindent For examples on CreateGround see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
+\bi
+ \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/cartesianSpringDamper.py}{\texttt{cartesianSpringDamper.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/cartesianSpringDamperUserFunction.py}{\texttt{cartesianSpringDamperUserFunction.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial3.py}{\texttt{rigidBodyTutorial3.py}} (Ex), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rigidBodySpringDamperIntrinsic.py}{\texttt{rigidBodySpringDamperIntrinsic.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/symbolicUserFunctionTest.py}{\texttt{symbolicUserFunctionTest.py}} (TM)
+\ei
+
+%
+\begin{flushleft}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L200}{CreateMassPoint}{}}}\label{sec:mainsystemextensions:CreateMassPoint}
 ({\it name}= '', {\it referencePosition}= [0.,0.,0.], {\it initialDisplacement}= [0.,0.,0.], {\it initialVelocity}= [0.,0.,0.], {\it physicsMass}= 0, {\it gravity}= [0.,0.,0.], {\it graphicsDataList}= [], {\it drawSize}= -1, {\it color}= [-1.,-1.,-1.,-1.], {\it show}= True, {\it create2D}= False, {\it returnDict}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -25,7 +74,7 @@
 \item[]{\it drawSize}: general drawing size of node
 \item[]{\it color}: color of node
 \item[]{\it show}: True: if graphicsData list is empty, node is shown, otherwise body is shown; otherwise, nothing is shown
-\item[]{\it create2D}: if False, create NodePoint2D and MassPoint2D
+\item[]{\it create2D}: if True, create NodePoint2D and MassPoint2D
 \item[]{\it returnDict}: if False, returns object index; if True, returns dict of all information on created object and node
 \end{itemize}
 \item[--]
@@ -52,14 +101,20 @@
 %
 \noindent For examples on CreateMassPoint see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 \bi
- \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chatGPTupdate.py}{\texttt{chatGPTupdate.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/springDamperTutorialNew.py}{\texttt{springDamperTutorialNew.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mainSystemExtensionsTests.py}{\texttt{mainSystemExtensionsTests.py}} (TM)
+ \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/cartesianSpringDamper.py}{\texttt{cartesianSpringDamper.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/cartesianSpringDamperUserFunction.py}{\texttt{cartesianSpringDamperUserFunction.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chatGPTupdate.py}{\texttt{chatGPTupdate.py}} (Ex), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/springDamperTutorialNew.py}{\texttt{springDamperTutorialNew.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/symbolicUserFunctionMasses.py}{\texttt{symbolicUserFunctionMasses.py}} (Ex), 
+ ...
+, 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mainSystemExtensionsTests.py}{\texttt{mainSystemExtensionsTests.py}} (TM), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/symbolicUserFunctionTest.py}{\texttt{symbolicUserFunctionTest.py}} (TM)
 \ei
 
 %
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L247}{CreateRigidBody}{}}}\label{sec:mainsystemextensions:CreateRigidBody}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L330}{CreateRigidBody}{}}}\label{sec:mainsystemextensions:CreateRigidBody}
 ({\it name}= '', {\it referencePosition}= [0.,0.,0.], {\it referenceRotationMatrix}= np.eye(3), {\it initialVelocity}= [0.,0.,0.], {\it initialAngularVelocity}= [0.,0.,0.], {\it initialDisplacement}= None, {\it initialRotationMatrix}= None, {\it inertia}= None, {\it gravity}= [0.,0.,0.], {\it nodeType}= exudyn.NodeType.RotationEulerParameters, {\it graphicsDataList}= [], {\it drawSize}= -1, {\it color}= [-1.,-1.,-1.,-1.], {\it show}= True, {\it create2D}= False, {\it returnDict}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -88,7 +143,7 @@
 \item[]{\it drawSize}: general drawing size of node
 \item[]{\it color}: color of node
 \item[]{\it show}: True: if graphicsData list is empty, node is shown, otherwise body is shown; False: nothing is shown
-\item[]{\it create2D}: if False, create NodePoint2D and MassPoint2D
+\item[]{\it create2D}: if True, create NodeRigidBody2D and ObjectRigidBody2D
 \item[]{\it returnDict}: if False, returns object index; if True, returns dict of all information on created object and node
 \end{itemize}
 \item[--]
@@ -121,9 +176,9 @@
 \bi
  \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addPrismaticJoint.py}{\texttt{addPrismaticJoint.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py}{\texttt{addRevoluteJoint.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chatGPTupdate.py}{\texttt{chatGPTupdate.py}} (Ex), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chatGPTupdate2.py}{\texttt{chatGPTupdate2.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/graphicsDataExample.py}{\texttt{graphicsDataExample.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFrotatingCable2D.py}{\texttt{ANCFrotatingCable2D.py}} (Ex), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chatGPTupdate.py}{\texttt{chatGPTupdate.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chatGPTupdate2.py}{\texttt{chatGPTupdate2.py}} (Ex), 
  ...
 , 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/bricardMechanism.py}{\texttt{bricardMechanism.py}} (TM), 
@@ -135,8 +190,8 @@
 
 %
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L469}{CreateSpringDamper}{}}}\label{sec:mainsystemextensions:CreateSpringDamper}
-({\it name}= '', {\it bodyOrNodeList}= [None, None], {\it localPosition0}= [0.,0.,0.], {\it localPosition1}= [0.,0.,0.], {\it referenceLength}= None, {\it stiffness}= 0., {\it damping}= 0., {\it force}= 0., {\it velocityOffset}= 0., {\it show}= True, {\it drawSize}= -1, {\it color}= color4default)
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L554}{CreateSpringDamper}{}}}\label{sec:mainsystemextensions:CreateSpringDamper}
+({\it name}= '', {\it bodyList}= [None, None], {\it localPosition0}= [0.,0.,0.], {\it localPosition1}= [0.,0.,0.], {\it referenceLength}= None, {\it stiffness}= 0., {\it damping}= 0., {\it force}= 0., {\it velocityOffset}= 0., {\it bodyOrNodeList}= [None, None], {\it show}= True, {\it drawSize}= -1, {\it color}= color4default)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
@@ -152,7 +207,7 @@
 \begin{itemize}[leftmargin=1.2cm]
 \setlength{\itemindent}{-0.7cm}
 \item[]{\it name}: name string for connector; markers get Marker0:name and Marker1:name
-\item[]{\it bodyOrNodeList}: a list of object numbers (with specific localPosition0/1) or node numbers; may also be of mixed types
+\item[]{\it bodyList}: a list of two body numbers (ObjectIndex) to be connected
 \item[]{\it localPosition0}: local position (as 3D list or numpy array) on body0, if not a node number
 \item[]{\it localPosition1}: local position (as 3D list or numpy array) on body1, if not a node number
 \item[]{\it referenceLength}: if None, length is computed from reference position of bodies or nodes; if not None, this scalar reference length is used for spring
@@ -160,6 +215,7 @@
 \item[]{\it damping}: scalar damping coefficient
 \item[]{\it force}: scalar additional force applied
 \item[]{\it velocityOffset}: scalar offset: if referenceLength is changed over time, the velocityOffset may be changed accordingly to emulate a reference motion
+\item[]{\it bodyOrNodeList}: alternative to bodyList; a list of object numbers (with specific localPosition0/1) or node numbers; may also be of mixed types; to use this case, set bodyList = [None,None]
 \item[]{\it show}: if True, connector visualization is drawn
 \item[]{\it drawSize}: general drawing size of connector
 \item[]{\it color}: color of connector
@@ -179,7 +235,7 @@
                            drawSize = 0.5, color=color4blue)
   oGround = mbs.AddObject(ObjectGround())
   #add vertical spring
-  oSD = mbs.CreateSpringDamper(bodyOrNodeList=[oGround, b0],
+  oSD = mbs.CreateSpringDamper(bodyList=[oGround, b0],
                                localPosition0=[2,1,0],
                                localPosition1=[0,0,0],
                                stiffness=1e4, damping=1e2,
@@ -198,13 +254,15 @@
 \bi
  \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chatGPTupdate.py}{\texttt{chatGPTupdate.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/springDamperTutorialNew.py}{\texttt{springDamperTutorialNew.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mainSystemExtensionsTests.py}{\texttt{mainSystemExtensionsTests.py}} (TM)
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/symbolicUserFunctionMasses.py}{\texttt{symbolicUserFunctionMasses.py}} (Ex), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mainSystemExtensionsTests.py}{\texttt{mainSystemExtensionsTests.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/symbolicUserFunctionTest.py}{\texttt{symbolicUserFunctionTest.py}} (TM)
 \ei
 
 %
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L605}{CreateCartesianSpringDamper}{}}}\label{sec:mainsystemextensions:CreateCartesianSpringDamper}
-({\it name}= '', {\it bodyOrNodeList}= [None, None], {\it localPosition0}= [0.,0.,0.], {\it localPosition1}= [0.,0.,0.], {\it stiffness}= [0.,0.,0.], {\it damping}= [0.,0.,0.], {\it offset}= [0.,0.,0.], {\it show}= True, {\it drawSize}= -1, {\it color}= color4default)
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L684}{CreateCartesianSpringDamper}{}}}\label{sec:mainsystemextensions:CreateCartesianSpringDamper}
+({\it name}= '', {\it bodyList}= [None, None], {\it localPosition0}= [0.,0.,0.], {\it localPosition1}= [0.,0.,0.], {\it stiffness}= [0.,0.,0.], {\it damping}= [0.,0.,0.], {\it offset}= [0.,0.,0.], {\it bodyOrNodeList}= [None, None], {\it show}= True, {\it drawSize}= -1, {\it color}= color4default)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
@@ -220,12 +278,13 @@
 \begin{itemize}[leftmargin=1.2cm]
 \setlength{\itemindent}{-0.7cm}
 \item[]{\it name}: name string for connector; markers get Marker0:name and Marker1:name
-\item[]{\it bodyOrNodeList}: a list of object numbers (with specific localPosition0/1) or node numbers; may also be of mixed types
+\item[]{\it bodyList}: a list of two body numbers (ObjectIndex) to be connected
 \item[]{\it localPosition0}: local position (as 3D list or numpy array) on body0, if not a node number
 \item[]{\it localPosition1}: local position (as 3D list or numpy array) on body1, if not a node number
 \item[]{\it stiffness}: stiffness coefficients (as 3D list or numpy array)
 \item[]{\it damping}: damping coefficients (as 3D list or numpy array)
 \item[]{\it offset}: offset vector (as 3D list or numpy array)
+\item[]{\it bodyOrNodeList}: alternative to bodyList; a list of object numbers (with specific localPosition0/1) or node numbers; may also be of mixed types; to use this case, set bodyList = [None,None]
 \item[]{\it show}: if True, connector visualization is drawn
 \item[]{\it drawSize}: general drawing size of connector
 \item[]{\it color}: color of connector
@@ -243,7 +302,7 @@
                             physicsMass = 1, gravity = [0,-9.81,0],
                             drawSize = 0.5, color=color4blue)
   oGround = mbs.AddObject(ObjectGround())
-  oSD = mbs.CreateCartesianSpringDamper(bodyOrNodeList=[oGround, b0],
+  oSD = mbs.CreateCartesianSpringDamper(bodyList=[oGround, b0],
                                 localPosition0=[7.5,1,0],
                                 localPosition1=[0,0,0],
                                 stiffness=[200,2000,0], damping=[2,20,0],
@@ -260,15 +319,17 @@
 %
 \noindent For examples on CreateCartesianSpringDamper see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 \bi
- \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chatGPTupdate.py}{\texttt{chatGPTupdate.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/computeODE2AEeigenvaluesTest.py}{\texttt{computeODE2AEeigenvaluesTest.py}} (TM), 
+ \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/cartesianSpringDamper.py}{\texttt{cartesianSpringDamper.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/cartesianSpringDamperUserFunction.py}{\texttt{cartesianSpringDamperUserFunction.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chatGPTupdate.py}{\texttt{chatGPTupdate.py}} (Ex), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/computeODE2AEeigenvaluesTest.py}{\texttt{computeODE2AEeigenvaluesTest.py}} (TM), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mainSystemExtensionsTests.py}{\texttt{mainSystemExtensionsTests.py}} (TM)
 \ei
 
 %
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L693}{CreateRigidBodySpringDamper}{}}}\label{sec:mainsystemextensions:CreateRigidBodySpringDamper}
-({\it name}= '', {\it bodyOrNodeList}= [None, None], {\it localPosition0}= [0.,0.,0.], {\it localPosition1}= [0.,0.,0.], {\it stiffness}= np.zeros((6,6)), {\it damping}= np.zeros((6,6)), {\it offset}= [0.,0.,0.,0.,0.,0.], {\it rotationMatrixJoint}= np.eye(3), {\it useGlobalFrame}= True, {\it show}= True, {\it drawSize}= -1, {\it color}= color4default)
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L768}{CreateRigidBodySpringDamper}{}}}\label{sec:mainsystemextensions:CreateRigidBodySpringDamper}
+({\it name}= '', {\it bodyList}= [None, None], {\it localPosition0}= [0.,0.,0.], {\it localPosition1}= [0.,0.,0.], {\it stiffness}= np.zeros((6,6)), {\it damping}= np.zeros((6,6)), {\it offset}= [0.,0.,0.,0.,0.,0.], {\it rotationMatrixJoint}= np.eye(3), {\it useGlobalFrame}= True, {\it intrinsicFormulation}= True, {\it bodyOrNodeList}= [None, None], {\it show}= True, {\it drawSize}= -1, {\it color}= color4default)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
@@ -284,7 +345,7 @@
 \begin{itemize}[leftmargin=1.2cm]
 \setlength{\itemindent}{-0.7cm}
 \item[]{\it name}: name string for connector; markers get Marker0:name and Marker1:name
-\item[]{\it bodyOrNodeList}: a list of object numbers (with specific localPosition0/1) or node numbers; may also be of mixed types
+\item[]{\it bodyList}: a list of two body numbers (ObjectIndex) to be connected
 \item[]{\it localPosition0}: local position (as 3D list or numpy array) on body0, if not a node number
 \item[]{\it localPosition1}: local position (as 3D list or numpy array) on body1, if not a node number
 \item[]{\it stiffness}: stiffness coefficients (as 6D matrix or numpy array)
@@ -292,6 +353,8 @@
 \item[]{\it offset}: offset vector (as 6D list or numpy array)
 \item[]{\it rotationMatrixJoint}: additional rotation matrix; in case  useGlobalFrame=False, it transforms body0/node0 local frame to joint frame; if useGlobalFrame=True, it transforms global frame to joint frame
 \item[]{\it useGlobalFrame}: if False, the rotationMatrixJoint is defined in the local coordinate system of body0
+\item[]{\it intrinsicFormulation}: if True, uses intrinsic formulation of Maserati and Morandini, which uses matrix logarithm and is independent of order of markers (preferred formulation); otherwise, Tait-Bryan angles are used for computation of torque, see documentation
+\item[]{\it bodyOrNodeList}: alternative to bodyList; a list of object numbers (with specific localPosition0/1) or node numbers; may also be of mixed types; to use this case, set bodyList = [None,None]
 \item[]{\it show}: if True, connector visualization is drawn
 \item[]{\it drawSize}: general drawing size of connector
 \item[]{\it color}: color of connector
@@ -307,12 +370,13 @@
 %
 \noindent For examples on CreateRigidBodySpringDamper see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 \bi
- \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/bricardMechanism.py}{\texttt{bricardMechanism.py}} (TM)
+ \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/bricardMechanism.py}{\texttt{bricardMechanism.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rigidBodySpringDamperIntrinsic.py}{\texttt{rigidBodySpringDamperIntrinsic.py}} (TM)
 \ei
 
 %
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L837}{CreateRevoluteJoint}{}}}\label{sec:mainsystemextensions:CreateRevoluteJoint}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L909}{CreateRevoluteJoint}{}}}\label{sec:mainsystemextensions:CreateRevoluteJoint}
 ({\it name}= '', {\it bodyNumbers}= [None, None], {\it position}= [], {\it axis}= [], {\it useGlobalFrame}= True, {\it show}= True, {\it axisRadius}= 0.1, {\it axisLength}= 0.4, {\it color}= color4default)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -383,7 +447,7 @@
 
 %
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L935}{CreatePrismaticJoint}{}}}\label{sec:mainsystemextensions:CreatePrismaticJoint}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L1011}{CreatePrismaticJoint}{}}}\label{sec:mainsystemextensions:CreatePrismaticJoint}
 ({\it name}= '', {\it bodyNumbers}= [None, None], {\it position}= [], {\it axis}= [], {\it useGlobalFrame}= True, {\it show}= True, {\it axisRadius}= 0.1, {\it axisLength}= 0.4, {\it color}= color4default)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -447,7 +511,7 @@
 
 %
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L1025}{CreateSphericalJoint}{}}}\label{sec:mainsystemextensions:CreateSphericalJoint}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L1105}{CreateSphericalJoint}{}}}\label{sec:mainsystemextensions:CreateSphericalJoint}
 ({\it name}= '', {\it bodyNumbers}= [None, None], {\it position}= [], {\it constrainedAxes}= [1,1,1], {\it useGlobalFrame}= True, {\it show}= True, {\it jointRadius}= 0.1, {\it color}= color4default)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -508,7 +572,7 @@
 
 %
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L1108}{CreateGenericJoint}{}}}\label{sec:mainsystemextensions:CreateGenericJoint}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L1192}{CreateGenericJoint}{}}}\label{sec:mainsystemextensions:CreateGenericJoint}
 ({\it name}= '', {\it bodyNumbers}= [None, None], {\it position}= [], {\it rotationMatrixAxes}= np.eye(3), {\it constrainedAxes}= [1,1,1, 1,1,1], {\it useGlobalFrame}= True, {\it show}= True, {\it axesRadius}= 0.1, {\it axesLength}= 0.4, {\it color}= color4default)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -568,17 +632,18 @@
 %
 \noindent For examples on CreateGenericJoint see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 \bi
- \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/bricardMechanism.py}{\texttt{bricardMechanism.py}} (TM), 
+ \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/universalJoint.py}{\texttt{universalJoint.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/bricardMechanism.py}{\texttt{bricardMechanism.py}} (TM), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/computeODE2AEeigenvaluesTest.py}{\texttt{computeODE2AEeigenvaluesTest.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/driveTrainTest.py}{\texttt{driveTrainTest.py}} (TM), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mainSystemExtensionsTests.py}{\texttt{mainSystemExtensionsTests.py}} (TM), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/driveTrainTest.py}{\texttt{driveTrainTest.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mainSystemExtensionsTests.py}{\texttt{mainSystemExtensionsTests.py}} (TM), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rigidBodyCOMtest.py}{\texttt{rigidBodyCOMtest.py}} (TM)
 \ei
 
 %
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L1211}{CreateDistanceConstraint}{}}}\label{sec:mainsystemextensions:CreateDistanceConstraint}
-({\it name}= '', {\it bodyOrNodeList}= [None, None], {\it localPosition0}= [0.,0.,0.], {\it localPosition1}= [0.,0.,0.], {\it distance}= None, {\it show}= True, {\it drawSize}= -1., {\it color}= color4default)
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L1300}{CreateDistanceConstraint}{}}}\label{sec:mainsystemextensions:CreateDistanceConstraint}
+({\it name}= '', {\it bodyList}= [None, None], {\it localPosition0}= [0.,0.,0.], {\it localPosition1}= [0.,0.,0.], {\it distance}= None, {\it bodyOrNodeList}= [None, None], {\it show}= True, {\it drawSize}= -1., {\it color}= color4default)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
@@ -594,10 +659,11 @@
 \begin{itemize}[leftmargin=1.2cm]
 \setlength{\itemindent}{-0.7cm}
 \item[]{\it name}: name string for joint; markers get Marker0:name and Marker1:name
-\item[]{\it bodyOrNodeList}: a list of object numbers (with specific localPosition0/1) or node numbers; may also be of mixed types
+\item[]{\it bodyList}: a list of two body numbers (ObjectIndex) to be constrained
 \item[]{\it localPosition0}: local position (as 3D list or numpy array) on body0, if not a node number
 \item[]{\it localPosition1}: local position (as 3D list or numpy array) on body1, if not a node number
-\item[]{\it distance}: if None, distance is computed from reference position of bodies or nodes; if not None, this distance (which must be always larger than zero) is prescribed between the two positions
+\item[]{\it distance}: if None, distance is computed from reference position of bodies or nodes; if not None, this distance is prescribed between the two positions; if distance = 0, it will create a SphericalJoint as this case is not possible with a DistanceConstraint
+\item[]{\it bodyOrNodeList}: alternative to bodyList; a list of object numbers (with specific localPosition0/1) or node numbers; may also be of mixed types; to use this case, set bodyList = [None,None]
 \item[]{\it show}: if True, connector visualization is drawn
 \item[]{\it drawSize}: general drawing size of node
 \item[]{\it color}: color of connector
@@ -621,7 +687,7 @@
                            physicsMass=1, drawSize = 0.2)
   n1 = mbs.GetObject(m1)['nodeNumber']
   oGround = mbs.AddObject(ObjectGround())
-  mbs.CreateDistanceConstraint(bodyOrNodeList=[oGround, b0],
+  mbs.CreateDistanceConstraint(bodyList=[oGround, b0],
                                localPosition0 = [6.5,1,0],
                                localPosition1 = [0.5,0,0],
                                distance=None, #automatically computed
@@ -644,6 +710,121 @@
 \bi
  \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chatGPTupdate.py}{\texttt{chatGPTupdate.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chatGPTupdate2.py}{\texttt{chatGPTupdate2.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mainSystemExtensionsTests.py}{\texttt{mainSystemExtensionsTests.py}} (TM)
+\ei
+
+%
+\begin{flushleft}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L1420}{CreateForce}{}}}\label{sec:mainsystemextensions:CreateForce}
+({\it name}= '', {\it bodyNumber}= None, {\it loadVector}= [0.,0.,0.], {\it localPosition}= [0.,0.,0.], {\it bodyFixed}= False, {\it loadVectorUserFunction}= 0, {\it show}= True)
+\end{flushleft}
+\setlength{\itemindent}{0.7cm}
+\begin{itemize}[leftmargin=0.7cm]
+\item[--]
+{\bf function description}: \vspace{-6pt}
+\begin{itemize}[leftmargin=1.2cm]
+\setlength{\itemindent}{-0.7cm}
+\item[]helper function to create force applied to given body
+\item[]- NOTE that this function is added to MainSystem via Python function MainSystemCreateForce.
+\end{itemize}
+\item[--]
+{\bf input}: \vspace{-6pt}
+\begin{itemize}[leftmargin=1.2cm]
+\setlength{\itemindent}{-0.7cm}
+\item[]{\it name}: name string for object
+\item[]{\it bodyNumber}: body number (ObjectIndex) at which the force is applied to
+\item[]{\it loadVector}: force vector (as 3D list or numpy array)
+\item[]{\it localPosition}: local position (as 3D list or numpy array) where force is applied
+\item[]{\it bodyFixed}: if True, the force is corotated with the body; else, the force is global
+\item[]{\it loadVectorUserFunction}: A Python function f(mbs, t, load)->loadVector which defines the time-dependent load and replaces loadVector in every time step; the arg load is the static loadVector
+\item[]{\it show}: if True, load is drawn
+\end{itemize}
+\item[--]
+{\bf output}: LoadIndex; returns load index
+\item[--]
+{\bf example}: \vspace{-12pt}\ei\begin{lstlisting}[language=Python, xleftmargin=36pt]
+  import exudyn as exu
+  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+  import numpy as np
+  SC = exu.SystemContainer()
+  mbs = SC.AddSystem()
+  b0=mbs.CreateMassPoint(referencePosition = [0,0,0],
+                         initialVelocity = [2,5,0],
+                         physicsMass = 1, gravity = [0,-9.81,0],
+                         drawSize = 0.5, color=color4blue)
+  f0=mbs.CreateForce(bodyNumber=b0, loadVector=[100,0,0],
+                     localPosition=[0,0,0])
+  mbs.Assemble()
+  simulationSettings = exu.SimulationSettings() #takes currently set values or default values
+  simulationSettings.timeIntegration.numberOfSteps = 1000
+  simulationSettings.timeIntegration.endTime = 2
+  mbs.SolveDynamic(simulationSettings = simulationSettings)
+\end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspace{12pt}\end{itemize}
+%
+
+%
+\noindent For examples on CreateForce see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
+\bi
+ \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/cartesianSpringDamper.py}{\texttt{cartesianSpringDamper.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/cartesianSpringDamperUserFunction.py}{\texttt{cartesianSpringDamperUserFunction.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial3.py}{\texttt{rigidBodyTutorial3.py}} (Ex), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mainSystemExtensionsTests.py}{\texttt{mainSystemExtensionsTests.py}} (TM)
+\ei
+
+%
+\begin{flushleft}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L1496}{CreateTorque}{}}}\label{sec:mainsystemextensions:CreateTorque}
+({\it name}= '', {\it bodyNumber}= None, {\it loadVector}= [0.,0.,0.], {\it localPosition}= [0.,0.,0.], {\it bodyFixed}= False, {\it loadVectorUserFunction}= 0, {\it show}= True)
+\end{flushleft}
+\setlength{\itemindent}{0.7cm}
+\begin{itemize}[leftmargin=0.7cm]
+\item[--]
+{\bf function description}: \vspace{-6pt}
+\begin{itemize}[leftmargin=1.2cm]
+\setlength{\itemindent}{-0.7cm}
+\item[]helper function to create torque applied to given body
+\item[]- NOTE that this function is added to MainSystem via Python function MainSystemCreateTorque.
+\end{itemize}
+\item[--]
+{\bf input}: \vspace{-6pt}
+\begin{itemize}[leftmargin=1.2cm]
+\setlength{\itemindent}{-0.7cm}
+\item[]{\it name}: name string for object
+\item[]{\it bodyNumber}: body number (ObjectIndex) at which the torque is applied to
+\item[]{\it loadVector}: torque vector (as 3D list or numpy array)
+\item[]{\it localPosition}: local position (as 3D list or numpy array) where torque is applied
+\item[]{\it bodyFixed}: if True, the torque is corotated with the body; else, the torque is global
+\item[]{\it loadVectorUserFunction}: A Python function f(mbs, t, load)->loadVector which defines the time-dependent load and replaces loadVector in every time step; the arg load is the static loadVector
+\item[]{\it show}: if True, load is drawn
+\end{itemize}
+\item[--]
+{\bf output}: LoadIndex; returns load index
+\item[--]
+{\bf example}: \vspace{-12pt}\ei\begin{lstlisting}[language=Python, xleftmargin=36pt]
+  import exudyn as exu
+  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+  import numpy as np
+  SC = exu.SystemContainer()
+  mbs = SC.AddSystem()
+  b0 = mbs.CreateRigidBody(inertia = InertiaCuboid(density=5000,
+                                                   sideLengths=[1,0.1,0.1]),
+                           referencePosition = [1,3,0],
+                           gravity = [0,-9.81,0],
+                           graphicsDataList = [GraphicsDataOrthoCubePoint(size=[1,0.1,0.1],
+                                                                        color=color4red)])
+  f0=mbs.CreateTorque(bodyNumber=b0, loadVector=[0,100,0])
+  mbs.Assemble()
+  simulationSettings = exu.SimulationSettings() #takes currently set values or default values
+  simulationSettings.timeIntegration.numberOfSteps = 1000
+  simulationSettings.timeIntegration.endTime = 2
+  mbs.SolveDynamic(simulationSettings = simulationSettings)
+\end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspace{12pt}\end{itemize}
+%
+
+%
+\noindent For examples on CreateTorque see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
+\bi
+ \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial3.py}{\texttt{rigidBodyTutorial3.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mainSystemExtensionsTests.py}{\texttt{mainSystemExtensionsTests.py}} (TM)
 \ei
 

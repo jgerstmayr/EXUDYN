@@ -88,7 +88,7 @@ namespace ngstd
     */
     INLINE LocalHeap (const LocalHeap & lh2) = delete;
 
-    INLINE LocalHeap (LocalHeap && lh2)
+    INLINE LocalHeap (LocalHeap && lh2) noexcept
       : data(lh2.data), p(lh2.p), totsize(lh2.totsize), owner(lh2.owner),
         name(lh2.name)
     {
@@ -102,7 +102,7 @@ namespace ngstd
     }
 
 
-    INLINE LocalHeap & operator= (LocalHeap && lh2)
+    INLINE LocalHeap & operator= (LocalHeap && lh2) noexcept
     {
       if (owner)
         delete [] data;

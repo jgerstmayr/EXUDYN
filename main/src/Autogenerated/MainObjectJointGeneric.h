@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2023-02-24  13:47:07 (last modified)
+* @date         2023-12-07  19:56:08 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -113,10 +113,10 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "activeConnector")) { cObjectJointGeneric->GetParameters().activeConnector = py::cast<bool>(d["activeConnector"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::SetSlimVectorTemplateSafely<Real, 6>(d, "offsetUserFunctionParameters", cObjectJointGeneric->GetParameters().offsetUserFunctionParameters); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "offsetUserFunction")) { if (EPyUtils::CheckForValidFunction(d["offsetUserFunction"])) 
-            { cObjectJointGeneric->GetParameters().offsetUserFunction = py::cast<std::function<StdVector(const MainSystem&,Real,Index,StdVector6D)>>((py::function)d["offsetUserFunction"]); /* AUTO:  read out dictionary and cast to C++ type*/}
+            { cObjectJointGeneric->GetParameters().offsetUserFunction = py::cast<std::function<StdVector6D(const MainSystem&,Real,Index,StdVector6D)>>((py::function)d["offsetUserFunction"]); /* AUTO:  read out dictionary and cast to C++ type*/}
             else {cObjectJointGeneric->GetParameters().offsetUserFunction = 0;  /*AUTO: otherwise assign with zero!*/ }} 
         if (EPyUtils::DictItemExists(d, "offsetUserFunction_t")) { if (EPyUtils::CheckForValidFunction(d["offsetUserFunction_t"])) 
-            { cObjectJointGeneric->GetParameters().offsetUserFunction_t = py::cast<std::function<StdVector(const MainSystem&,Real,Index,StdVector6D)>>((py::function)d["offsetUserFunction_t"]); /* AUTO:  read out dictionary and cast to C++ type*/}
+            { cObjectJointGeneric->GetParameters().offsetUserFunction_t = py::cast<std::function<StdVector6D(const MainSystem&,Real,Index,StdVector6D)>>((py::function)d["offsetUserFunction_t"]); /* AUTO:  read out dictionary and cast to C++ type*/}
             else {cObjectJointGeneric->GetParameters().offsetUserFunction_t = 0;  /*AUTO: otherwise assign with zero!*/ }} 
         if (EPyUtils::DictItemExists(d, "alternativeConstraints")) { cObjectJointGeneric->GetParameters().alternativeConstraints = py::cast<bool>(d["alternativeConstraints"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
@@ -139,12 +139,12 @@ public: // AUTO:
         d["activeConnector"] = (bool)cObjectJointGeneric->GetParameters().activeConnector; //! AUTO: cast variables into python (not needed for standard types) 
         d["offsetUserFunctionParameters"] = EPyUtils::SlimVector2NumPy(cObjectJointGeneric->GetParameters().offsetUserFunctionParameters); //! AUTO: cast variables into python (not needed for standard types) 
         if (cObjectJointGeneric->GetParameters().offsetUserFunction)
-            {d["offsetUserFunction"] = (std::function<StdVector(const MainSystem&,Real,Index,StdVector6D)>)cObjectJointGeneric->GetParameters().offsetUserFunction;}
+            {d["offsetUserFunction"] = (std::function<StdVector6D(const MainSystem&,Real,Index,StdVector6D)>)cObjectJointGeneric->GetParameters().offsetUserFunction;}
         else
             {d["offsetUserFunction"] = 0;}
  //! AUTO: cast variables into python (not needed for standard types) 
         if (cObjectJointGeneric->GetParameters().offsetUserFunction_t)
-            {d["offsetUserFunction_t"] = (std::function<StdVector(const MainSystem&,Real,Index,StdVector6D)>)cObjectJointGeneric->GetParameters().offsetUserFunction_t;}
+            {d["offsetUserFunction_t"] = (std::function<StdVector6D(const MainSystem&,Real,Index,StdVector6D)>)cObjectJointGeneric->GetParameters().offsetUserFunction_t;}
         else
             {d["offsetUserFunction_t"] = 0;}
  //! AUTO: cast variables into python (not needed for standard types) 
@@ -167,8 +167,8 @@ public: // AUTO:
         else if (parameterName.compare("rotationMarker1") == 0) { return EPyUtils::Matrix2NumPyTemplate(cObjectJointGeneric->GetParameters().rotationMarker1);} //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { return py::cast((bool)cObjectJointGeneric->GetParameters().activeConnector);} //! AUTO: get parameter
         else if (parameterName.compare("offsetUserFunctionParameters") == 0) { return EPyUtils::SlimVector2NumPy(cObjectJointGeneric->GetParameters().offsetUserFunctionParameters);} //! AUTO: get parameter
-        else if (parameterName.compare("offsetUserFunction") == 0) { return py::cast((std::function<StdVector(const MainSystem&,Real,Index,StdVector6D)>)cObjectJointGeneric->GetParameters().offsetUserFunction);} //! AUTO: get parameter
-        else if (parameterName.compare("offsetUserFunction_t") == 0) { return py::cast((std::function<StdVector(const MainSystem&,Real,Index,StdVector6D)>)cObjectJointGeneric->GetParameters().offsetUserFunction_t);} //! AUTO: get parameter
+        else if (parameterName.compare("offsetUserFunction") == 0) { return py::cast((std::function<StdVector6D(const MainSystem&,Real,Index,StdVector6D)>)cObjectJointGeneric->GetParameters().offsetUserFunction);} //! AUTO: get parameter
+        else if (parameterName.compare("offsetUserFunction_t") == 0) { return py::cast((std::function<StdVector6D(const MainSystem&,Real,Index,StdVector6D)>)cObjectJointGeneric->GetParameters().offsetUserFunction_t);} //! AUTO: get parameter
         else if (parameterName.compare("alternativeConstraints") == 0) { return py::cast((bool)cObjectJointGeneric->GetParameters().alternativeConstraints);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectJointGeneric->GetShow());} //! AUTO: get parameter
         else if (parameterName.compare("VaxesRadius") == 0) { return py::cast((float)visualizationObjectJointGeneric->GetAxesRadius());} //! AUTO: get parameter
@@ -189,9 +189,9 @@ public: // AUTO:
         else if (parameterName.compare("rotationMarker1") == 0) { EPyUtils::SetConstMatrixTemplateSafely<3,3>(value, cObjectJointGeneric->GetParameters().rotationMarker1); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { cObjectJointGeneric->GetParameters().activeConnector = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("offsetUserFunctionParameters") == 0) { EPyUtils::SetSlimVectorTemplateSafely<Real, 6>(value, cObjectJointGeneric->GetParameters().offsetUserFunctionParameters); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("offsetUserFunction") == 0) { if (py::isinstance<py::function>(value)) {cObjectJointGeneric->GetParameters().offsetUserFunction = py::cast<std::function<StdVector(const MainSystem&,Real,Index,StdVector6D)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/} else
+        else if (parameterName.compare("offsetUserFunction") == 0) { if (py::isinstance<py::function>(value)) {cObjectJointGeneric->GetParameters().offsetUserFunction = py::cast<std::function<StdVector6D(const MainSystem&,Real,Index,StdVector6D)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/} else
             if (!EPyUtils::IsPyTypeInteger(value) || (py::cast<int>(value) != 0)) {PyError(STDstring("Failed to convert PyFunction: must be either valid python function or 0, but got ")+EXUstd::ToString(value)); }; } //! AUTO: get parameter
-        else if (parameterName.compare("offsetUserFunction_t") == 0) { if (py::isinstance<py::function>(value)) {cObjectJointGeneric->GetParameters().offsetUserFunction_t = py::cast<std::function<StdVector(const MainSystem&,Real,Index,StdVector6D)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/} else
+        else if (parameterName.compare("offsetUserFunction_t") == 0) { if (py::isinstance<py::function>(value)) {cObjectJointGeneric->GetParameters().offsetUserFunction_t = py::cast<std::function<StdVector6D(const MainSystem&,Real,Index,StdVector6D)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/} else
             if (!EPyUtils::IsPyTypeInteger(value) || (py::cast<int>(value) != 0)) {PyError(STDstring("Failed to convert PyFunction: must be either valid python function or 0, but got ")+EXUstd::ToString(value)); }; } //! AUTO: get parameter
         else if (parameterName.compare("alternativeConstraints") == 0) { cObjectJointGeneric->GetParameters().alternativeConstraints = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationObjectJointGeneric->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

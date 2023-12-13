@@ -649,17 +649,17 @@ public: //
 	STDstring PyInfoSummary() const
 	{
 		STDstring info;
-		info += "  Number of nodes= "		+ EXUstd::Num2String(mainNodes.NumberOfItems()) + "\n";
-		info += "  Number of objects = "	+ EXUstd::Num2String(mainObjects.NumberOfItems()) + "\n";
-		//info += "  Number of materials = "+ EXUstd::Num2String(mainMaterials.NumberOfItems()) + "\n";
-		info += "  Number of markers = "	+ EXUstd::Num2String(mainMarkers.NumberOfItems()) + "\n";
-		info += "  Number of loads = " + EXUstd::Num2String(mainLoads.NumberOfItems()) + "\n";
-		info += "  Number of sensors = " + EXUstd::Num2String(mainSensors.NumberOfItems()) + "\n";
+		info += "  Number of nodes= "		+ EXUstd::ToString(mainNodes.NumberOfItems()) + "\n";
+		info += "  Number of objects = "	+ EXUstd::ToString(mainObjects.NumberOfItems()) + "\n";
+		//info += "  Number of materials = "+ EXUstd::ToString(mainMaterials.NumberOfItems()) + "\n";
+		info += "  Number of markers = "	+ EXUstd::ToString(mainMarkers.NumberOfItems()) + "\n";
+		info += "  Number of loads = " + EXUstd::ToString(mainLoads.NumberOfItems()) + "\n";
+		info += "  Number of sensors = " + EXUstd::ToString(mainSensors.NumberOfItems()) + "\n";
 
-		info += "  Number of ODE2 coordinates = " + EXUstd::Num2String(GetCSystemData().GetNumberOfCoordinatesODE2()) + "\n";
-		info += "  Number of ODE1 coordinates = " + EXUstd::Num2String(GetCSystemData().GetNumberOfCoordinatesODE1()) + "\n";
-		info += "  Number of AE coordinates   = " + EXUstd::Num2String(GetCSystemData().GetNumberOfCoordinatesAE()) + "\n";
-		info += "  Number of data coordinates   = " + EXUstd::Num2String(GetCSystemData().GetNumberOfCoordinatesData()) + "\n";
+		info += "  Number of ODE2 coordinates = " + EXUstd::ToString(GetCSystemData().GetNumberOfCoordinatesODE2()) + "\n";
+		info += "  Number of ODE1 coordinates = " + EXUstd::ToString(GetCSystemData().GetNumberOfCoordinatesODE1()) + "\n";
+		info += "  Number of AE coordinates   = " + EXUstd::ToString(GetCSystemData().GetNumberOfCoordinatesAE()) + "\n";
+		info += "  Number of data coordinates   = " + EXUstd::ToString(GetCSystemData().GetNumberOfCoordinatesData()) + "\n";
 
 		return info;
 	}

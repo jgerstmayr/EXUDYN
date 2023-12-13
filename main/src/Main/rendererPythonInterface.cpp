@@ -33,6 +33,8 @@
 #include "Graphics/GlfwClient.h"
 namespace py = pybind11;
 
+#include "Main/Experimental.h"
+extern PySpecial pySpecial;			//! special features; affects exudyn globally; treat with care
 
 #ifdef USE_GLFW_GRAPHICS
 GlfwRenderer& GetGlfwRenderer() { return glfwRenderer; }
@@ -84,6 +86,40 @@ void PySetRendererMultiThreadedDialogs(bool flag) { rendererMultiThreadedDialogs
 //! get state of multithreaded dialog (interaction with renderer during settings dialogs)
 bool PyGetRendererMultiThreadedDialogs() { return rendererMultiThreadedDialogs; }
 
+//! check CTRL+"C" signals
+bool PyCheckSignals()
+{
+	return (PyErr_CheckSignals() != 0);
+}
+
+
+//! this throws an exception for which a (Python) error has already been set, e.g. due to CTRL+"C"
+void PyThrowErrorAlreadySet()
+{
+	if (pySpecial.solver.throwErrorWithCtrlC)
+	{
+		//pout << "raised PyThrowErrorAlreadySet\n" << std::flush;
+		throw py::error_already_set();
+	}
+	//else if (pySpecial.solver.throwErrorWithCtrlC == 1)
+	//{
+	//	throw py::error_already_set();
+	//}
+	//else if (pySpecial.solver.throwErrorWithCtrlC == 2)
+	//{
+	//	try {
+	//		throw py::error_already_set();
+	//	}
+	//	catch (py::error_already_set& eas) {
+	//		eas.discard_as_unraisable(__func__); //remove unraisable error
+	//	}
+	//	CHECKandTHROWstring("Simulation stopped with CTRL-C");
+	//}
+	//else if (pySpecial.solver.throwErrorWithCtrlC == 3)
+	//{
+	//	//works in console
+	//}
+}
 
 //! put process ID into queue, which is then called from main (Python) thread
 void PyQueuePythonProcess(ProcessID::Type processID, Index info)
@@ -600,63 +636,7 @@ else:
 #endif // USE_GLFW_GRAPHICS
 }
 
-//OLD, single line:
-//void PyProcessShowPythonCommandDialog()
-//{
-//#ifdef USE_GLFW_GRAPHICS
-//
-//    //open window to execute a python command ... 
-//    float alphaTransparency = GetGlfwRenderer().GetVisualizationSettings()->dialogs.alphaTransparency;
-//    std::string str = R"(
-//import exudyn
-//import tkinter as tk
-//from exudyn.GUI import GetTkRootAndNewWindow
-//
-//[root, tkWindow, tkRuns] = GetTkRootAndNewWindow()
-//commandString = ''
-//commandSet = False
-//tkWindow.focus_force() #window has focus
-//tkWindow.title("Exudyn command window")
-//)";
-//    if (GetGlfwRenderer().GetVisualizationSettings()->dialogs.alwaysTopmost)
-//    {
-//        str += "tkWindow.attributes('-topmost', True) #puts window topmost (permanent)\n";
-//    }
-//    if (alphaTransparency < 1.f)
-//    {
-//        str += "tkWindow.attributes('-alpha'," + EXUstd::ToString(alphaTransparency) + ") #transparency\n";
-//    }
-//    str += R"(
-//tkWindow.bind("<Escape>", lambda x: tkWindow.destroy())
-//
-//def OnSingleCommandReturn(event): #set command string, but do not execute
-//    commandString = singleCommandEntry.get()
-//    print(commandString) #printout the command
-//    #exec(singleCommandEntry.get(), globals()) #OLD version, does not print return value!
-//    try:
-//        exec(f"""locals()['tempEXUDYNexecute'] = {commandString}""", globals(), locals())
-//        if locals()['tempEXUDYNexecute']!=None:
-//            print(locals()['tempEXUDYNexecute'])
-//        tkWindow.destroy()
-//    except:
-//        print("Execution of command failed. check your code!")
-//
-//label = tk.Label(tkWindow, text="Enter Python command which operates in global scope of you Python model]\nEvaluate you current model or change parameters\npress return to execute:", justify=tk.LEFT) #.grid(row=0, column=0)
-//label.pack(pady=10,padx=(10,40))
-//singleCommandEntry = tk.Entry(tkWindow, width=70);
-//#singleCommandEntry.grid(row=1, column=0)
-//singleCommandEntry.bind('<Return>',OnSingleCommandReturn)
-//singleCommandEntry.pack(pady=15,padx=20)
-//
-//if tkRuns:
-//    root.wait_window(tkWindow)
-//else:
-//    tk.mainloop()
-//)";
-//    PyProcessExecuteStringAsPython(str, !PyGetRendererMultiThreadedDialogs(), true);
-//#endif // USE_GLFW_GRAPHICS
-//}
-//
+
 void PyProcessShowRightMouseSelectionDialog(Index itemID)
 {
 #ifdef USE_GLFW_GRAPHICS //only works with renderer active

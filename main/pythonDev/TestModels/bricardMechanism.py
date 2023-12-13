@@ -132,9 +132,6 @@ simulationSettings.linearSolverType = exu.LinearSolverType.EigenDense
 simulationSettings.linearSolverSettings.ignoreSingularJacobian = True
 # simulationSettings.linearSolverSettings.pivotThreshold = 1e-10
 
-# exu.Experimental().useEigenFullPivotLUsolver = True
-#exu.Experimental().eigenFullPivotLUsolverDebugLevel = 0
-
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #simulation times for system size 65, last joint=RigidBodySpringDamper!:
     # useModifiedNewton = False

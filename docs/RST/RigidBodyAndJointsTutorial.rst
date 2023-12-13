@@ -61,8 +61,8 @@ We add an empty ground body, using default values. It's origin is at [0,0,0] and
 
 .. code-block:: python
 
-  #ground body
-  oGround = mbs.AddObject(ObjectGround())
+  #ground body, located at specific position (there could be several ground objects)
+  oGround = mbs.CreateGround(referencePosition=[0,0,0])
 
 
 
@@ -203,6 +203,24 @@ The revolute joint in this case has a free rotation around the global x-axis:
 
 
 
+Optionally, we could also add forces or torques onto bodies
+
+.. code-block:: python
+
+  #forces can be added like in the following
+  force = [0,0.5,0]       #0.5N   in y-direction
+  torque = [0.1,0,0]      #0.1Nm around x-axis
+  mbs.CreateForce(bodyNumber=b1,
+                  loadVector=force,
+                  localPosition=[0,0,0.5], #at tip
+                  bodyFixed=False) #if True, direction would corotate with body
+  mbs.CreateTorque(bodyNumber=b1, 
+                  loadVector=torque,
+                  localPosition=[0,0,0],   #at body's reference point/center
+                  bodyFixed=False) #if True, direction would corotate with body
+
+
+
 Finally, we also add a sensor for some output of the double pendulum:
 
 .. code-block:: python
@@ -232,21 +250,20 @@ After \ ``Assemble()``\ , markers, nodes, objects, etc. are linked and we can an
     Number of nodes= 2
     Number of objects = 5
     Number of markers = 8
-    Number of loads = 2
+    Number of loads = 4
     Number of sensors = 1
     Number of ODE2 coordinates = 14
     Number of ODE1 coordinates = 0
     Number of AE coordinates   = 12
     Number of data coordinates   = 0
-
-  For details see mbs.systemData, mbs.sys and mbs.variables
+    For details see mbs.systemData, mbs.sys and mbs.variables
   >
 
 
 Note that there are 2 nodes for the two rigid bodies. The five objects are due to ground object, 2 rigid bodies and 2 revolute joints.
 The meaning of markers can be seen in the graphical representation described below.
 
-Alternatively we can print the full internal information as a dictionary using:
+Furthermore, we can print the full internal information as a dictionary using:
 
 .. code-block:: python
 
@@ -294,7 +311,15 @@ This will print:
 
 We see that there are 14 ODE2 coordinates from the two nodes that are based on Euler parameters. The two joints add \ :math:`2\times 5`\  constraints and there are 2 additional Euler parameter constraints, giving a degree of freedom of 2 (as expected ...).
 
-You can try and duplicate the code for the second revolute joint \ ``mbs.CreateRevoluteJoint(bodyNumbers=[b0, b1], ...)``\ , such that we add two identical joints. This will give 
+You can try and duplicate the code for the second revolute joint:
+
+.. code-block:: python
+
+  #add a second constraint for bodies b0 and b1:
+  mbs.CreateRevoluteJoint(bodyNumbers=[b0, b1], ...)
+
+
+such that we have two identical joints (which would be unwanted, in general). This would give 
 
 .. code-block:: 
 
@@ -305,7 +330,7 @@ You can try and duplicate the code for the second revolute joint \ ``mbs.CreateR
   degree of freedom         = 2
 
 
-which clearly shows the 5 redundant constraints, which will lead to a solver failure. In practical cases, redundant constraints may be much more involved, but can be detected in this way.
+which clearly shows the 5 redundant constraints, which will lead to a solver failure (except for the \ ``EigenDense``\  solver, see there). In practical cases, redundant constraints may be much more involved, but can be detected in this way.
 
 A graphical representation of the internal structure of the model can be shown using the command \ ``DrawSystemGraph``\ :
 

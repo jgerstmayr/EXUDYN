@@ -185,6 +185,8 @@ int OutputBuffer::overflow(int c)
 					eas.discard_as_unraisable(__func__); //prints long message ...
 					//py::print(buf); 
 					py::print(buf, "end"_a = "");//try again to print, which should work now
+					//
+					//throw std::runtime_error("Exudyn: print"); //check what happens => still raises an exception (CTRL-C ...) => does not work
 				}
 
 				if (waitMilliSeconds) {

@@ -47,6 +47,7 @@ You can view and download this file on Github: `finiteSegmentMethod.py <https://
    #mode='Trap'
    mode='GA'
    
+   
    inertiaSegment = 0*massPerSegment/(12*segmentLength**2) #inertia of segment needs to be zero to agree with Bernoulli-Euler beam
    
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

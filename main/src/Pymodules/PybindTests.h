@@ -23,7 +23,7 @@
 
 extern void PyTest();
 extern void PythonAlive();
-extern void PythonGo();
+//extern void PythonGo(); moved into .cpp file
 extern void CreateTestSystem(Index systemNumber, Index arg0, Index arg1);
 
 

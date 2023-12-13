@@ -37,8 +37,33 @@ import exudyn.itemInterface as eii
 def GenerateStraightLineANCFCable2D(mbs, positionOfNode0, positionOfNode1, numberOfElements, cableTemplate,
                                 massProportionalLoad=[0,0,0], fixedConstraintsNode0=[0,0,0,0], fixedConstraintsNode1=[0,0,0,0],
                                 nodeNumber0=-1, nodeNumber1=-1):
+
+    return GenerateStraightLineANCFCable(mbs=mbs, positionOfNode0=positionOfNode0, positionOfNode1=positionOfNode1, 
+                                           numberOfElements=numberOfElements, cableTemplate=cableTemplate,
+                                           massProportionalLoad=massProportionalLoad, fixedConstraintsNode0=fixedConstraintsNode0, fixedConstraintsNode1=fixedConstraintsNode1,
+                                           nodeNumber0=nodeNumber0, nodeNumber1=nodeNumber1)
     
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#**function: generate cable elements along straight line with certain discretization
+#**input:
+#  mbs: the system where ANCF cables are added
+#  positionOfNode0: 3D position (list or np.array) for starting point of line
+#  positionOfNode1: 3D position (list or np.array) for end point of line
+#  numberOfElements: for discretization of line
+#  cableTemplate: a ObjectANCFCable object, containing the desired cable properties; cable length and node numbers are set automatically
+#  massProportionalLoad: a 3D list or np.array, containing the gravity vector or zero
+#  fixedConstraintsNode0: a list of binary values, indicating the coordinate contraints on the first node (position and slope); 4 coordinates for 2D and 6 coordinates for 3D node
+#  fixedConstraintsNode1: a list of binary values, indicating the coordinate contraints on the last node (position and slope); 4 coordinates for 2D and 6 coordinates for 3D node
+#  nodeNumber0: if set other than -1, this node number defines the node that shall be used at positionOfNode0
+#  nodeNumber1: if set other than -1, this node number defines the node that shall be used at positionOfNode1
+#**output: returns a list [cableNodeList, cableObjectList, loadList, cableNodePositionList, cableCoordinateConstraintList]
+#**example: 
+# see Examples/ANCF_cantilever_test.py
+def GenerateStraightLineANCFCable(mbs, positionOfNode0, positionOfNode1, numberOfElements, cableTemplate,
+                                massProportionalLoad=[0,0,0], fixedConstraintsNode0=[0,0,0, 0,0,0], fixedConstraintsNode1=[0,0,0, 0,0,0],
+                                nodeNumber0=-1, nodeNumber1=-1):
+    
     cableNodeList=[]
     cableNodePositionList=[positionOfNode0]
     cableObjectList=[]
@@ -46,21 +71,31 @@ def GenerateStraightLineANCFCable2D(mbs, positionOfNode0, positionOfNode1, numbe
     cableCoordinateConstraintList=[]
     
     if len(positionOfNode0) != 3:
-        exudyn.Print('WARNING: GenerateStraightLineANCFCable2D: positionOfNode0 should be a 3D vector')
+        exudyn.Print('WARNING: GenerateStraightLineANCFCable: positionOfNode0 should be a 3D vector')
     if len(positionOfNode1) != 3:
-        exudyn.Print('WARNING: GenerateStraightLineANCFCable2D: positionOfNode1 should be a 3D vector')
+        exudyn.Print('WARNING: GenerateStraightLineANCFCable: positionOfNode1 should be a 3D vector')
+
+    if '__class__' in cableTemplate.__dir__():
+        is2D = ('2D' in str(cableTemplate.__class__))
+        nDOFnode = 6-2*is2D
+        if len(fixedConstraintsNode0) != 0 and len(fixedConstraintsNode0) != nDOFnode and fixedConstraintsNode0.count(0) != 6:
+            exudyn.Print('WARNING: GenerateStraightLineANCFCable: fixedConstraintsNode0 incompatible')
+        if len(fixedConstraintsNode1) != 0 and len(fixedConstraintsNode1) != nDOFnode and fixedConstraintsNode1.count(0) != 6:
+            exudyn.Print('WARNING: GenerateStraightLineANCFCable: fixedConstraintsNode1 incompatible')
+    else:
+        exudyn.Print('WARNING: GenerateStraightLineANCFCable: cableTemplate may be invalid')
 
     # length of one element, calculated from first and last node position:
     vDiff = np.array(positionOfNode1)-np.array(positionOfNode0)
     lDiff = np.linalg.norm(vDiff)
     if (numberOfElements <= 0 or numberOfElements != int(numberOfElements)): 
-        raise ValueError('GenerateStraightLineANCFCable2D: number of elements must be integer, non-zero and positive')
+        raise ValueError('GenerateStraightLineANCFCable: number of elements must be integer, non-zero and positive')
 
     cableLength = lDiff/numberOfElements
     
     # slope of elements in reference position, calculated from first and last node position:
     if (lDiff == 0.): 
-        raise ValueError('GenerateStraightLineANCFCable2D: distance between positionOfNode0 and positionOfNode1 is zero; terminating')
+        raise ValueError('GenerateStraightLineANCFCable: distance between positionOfNode0 and positionOfNode1 is zero; terminating')
     cableSlopeVec = (1./lDiff)*vDiff
    
     # add first ANCF node (straight reference configuration):
@@ -68,7 +103,11 @@ def GenerateStraightLineANCFCable2D(mbs, positionOfNode0, positionOfNode1, numbe
         cableNodeList+=[nodeNumber0]
         nCable0=nodeNumber0
     else:
-        nCable0 = mbs.AddNode(eii.Point2DS1(referenceCoordinates=[positionOfNode0[0],positionOfNode0[1],cableSlopeVec[0],cableSlopeVec[1]])) 
+        if is2D:
+            nCable0 = mbs.AddNode(eii.NodePoint2DSlope1(referenceCoordinates=[positionOfNode0[0],positionOfNode0[1],cableSlopeVec[0],cableSlopeVec[1]])) 
+        else:
+            nCable0 = mbs.AddNode(eii.NodePointSlope1(referenceCoordinates=list(positionOfNode0) + list(cableSlopeVec) ))
+            
         cableNodeList+=[nCable0]
     
     cableTemplate.physicsLength = cableLength
@@ -77,14 +116,21 @@ def GenerateStraightLineANCFCable2D(mbs, positionOfNode0, positionOfNode1, numbe
     for i in range(numberOfElements): 
         
         positionOfCurrentNode=[positionOfNode0[0]+cableLength*cableSlopeVec[0]*(i+1),
-                               positionOfNode0[1]+cableLength*cableSlopeVec[1]*(i+1), 0.]
+                               positionOfNode0[1]+cableLength*cableSlopeVec[1]*(i+1), 
+                               positionOfNode0[2]+cableLength*cableSlopeVec[2]*(i+1), 
+                               ]
+        if is2D: positionOfCurrentNode[2] = 0
+        
         cableNodePositionList+=[positionOfCurrentNode]
         # exudyn.Print('p'+str(i)+'=',positionOfCurrentNode)
         
         if (i==numberOfElements-1 and nodeNumber1!=-1):
             nCableLast = nodeNumber1
         else:
-            nCableLast = mbs.AddNode(eii.Point2DS1(referenceCoordinates=[positionOfCurrentNode[0],positionOfCurrentNode[1],cableSlopeVec[0],cableSlopeVec[1]]))
+            if is2D:
+                nCableLast = mbs.AddNode(eii.NodePoint2DSlope1(referenceCoordinates=[positionOfCurrentNode[0],positionOfCurrentNode[1],cableSlopeVec[0],cableSlopeVec[1]]))
+            else:
+                nCableLast = mbs.AddNode(eii.NodePointSlope1(referenceCoordinates=list(positionOfCurrentNode) + list(cableSlopeVec) ))
         
         cableNodeList+=[nCableLast]
         
@@ -106,15 +152,15 @@ def GenerateStraightLineANCFCable2D(mbs, positionOfNode0, positionOfNode1, numbe
         mGround = mbs.AddMarker(eii.MarkerNodeCoordinate(nodeNumber = nGround, coordinate=0))
     
 
-        for j in range(4):            
-            if fixedConstraintsNode0[j] != 0:            
+        for j in range(len(fixedConstraintsNode0)):            
+            if fixedConstraintsNode0[j] != 0:
                 #fix ANCF coordinates of first node
                 mCableCoordinateConstraint0 = mbs.AddMarker(eii.MarkerNodeCoordinate(nodeNumber = nCable0, coordinate=j)) #add marker
                 cBoundaryCondition=mbs.AddObject(eii.CoordinateConstraint(markerNumbers=[mGround,mCableCoordinateConstraint0])) #add constraint
                 cableCoordinateConstraintList+=[cBoundaryCondition]
             
-        for j in range(4):            
-            if fixedConstraintsNode1[j] != 0:                 
+        for j in range(len(fixedConstraintsNode1)):            
+            if fixedConstraintsNode1[j] != 0:
                 # fix right end position coordinates, i.e., add markers and constraints:
                 mCableCoordinateConstraint1 = mbs.AddMarker(eii.MarkerNodeCoordinate(nodeNumber = nCableLast, coordinate=j))#add marker
                 cBoundaryCondition=mbs.AddObject(eii.CoordinateConstraint(markerNumbers=[mGround,mCableCoordinateConstraint1])) #add constraint  

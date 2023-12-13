@@ -73,7 +73,7 @@ public: //made public for access via pybind
 	//++++++++++++++++++++++++++++++
 	//Lie groups:
 	bool useLieGroupIntegration;
-	ResizableArray<Index> lieGroupDataNodes; //filled with lie group node indices during initialization; ONLY if useLieGroupIntegration=true
+	ResizableArray<Index> lieGroupNodes; //filled with lie group node indices during initialization; ONLY if useLieGroupIntegration=true
 	ResizableArray<Index> nonLieODE2Coordinates; //filled with ODE2 coordinates, for which no Lie group integration is used; ONLY if useLieGroupIntegration=true
 
 public:

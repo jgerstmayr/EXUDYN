@@ -196,7 +196,7 @@ void CObjectANCFCable2DBase::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber)
 		ConstSizeVector<2 * ns> qANCF_t;
 		ComputeCurrentObjectCoordinates(qANCF);
 		ComputeCurrentObjectVelocities(qANCF_t);
-		ComputeODE2LHStemplate<Real>(ode2Lhs, qANCF, qANCF_t);
+		ComputeODE2LHStemplate<Real>(ode2Lhs, qANCF, qANCF_t, objectNumber);
 	}
 	else //ALE
 	{
@@ -204,7 +204,7 @@ void CObjectANCFCable2DBase::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber)
 		ConstSizeVector<2 * ns+1> qANCF_t;
 		ComputeCurrentObjectCoordinates(qANCF);
 		ComputeCurrentObjectVelocities(qANCF_t);
-		ComputeODE2LHStemplate<Real>(ode2Lhs, qANCF, qANCF_t);
+		ComputeODE2LHStemplate<Real>(ode2Lhs, qANCF, qANCF_t, objectNumber);
 
 	}
 }
@@ -232,7 +232,7 @@ void CObjectANCFCable2DBase::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber)
 //! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
 template<class TReal, Index ancfSize>
 void CObjectANCFCable2DBase::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs, 
-	const ConstSizeVectorBase<TReal, ancfSize>& qANCF, const ConstSizeVectorBase<TReal, ancfSize>& qANCF_t) const
+	const ConstSizeVectorBase<TReal, ancfSize>& qANCF, const ConstSizeVectorBase<TReal, ancfSize>& qANCF_t, Index objectNumber) const
 {
 	ode2Lhs.SetNumberOfItems(ancfSize); //works both for ANCF and ALE-ANCF
 	ode2Lhs.SetAll(0.);
@@ -242,6 +242,7 @@ void CObjectANCFCable2DBase::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs,
 	const Index ns = 4;   //number of shape functions
 
 	bool isALE = (ancfSize == nODE2coordinates+1); //simple check to see, if ale terms shall be added
+	bool hasUserFunction = HasUserFunction();
 
 	Real L = GetLength();
 	Real EA, EI, axialStrain0, curvature0, bendingDamping, axialDamping, physicsMovingMassFactor;
@@ -353,8 +354,41 @@ void CObjectANCFCable2DBase::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs,
 			}
 		}
 
-		//elasticForces *= integrationFactor * GetParameters().physicsAxialStiffness * (axialStrain - GetParameters().physicsReferenceAxialStrain);
-		elasticForces *= integrationFactor * (EA * (axialStrain - axialStrainRef) + axialDamping * axialStrain_t);
+		TReal axialForce;
+		if (!HasTorqueUserFunction())
+		{
+			axialForce = (EA * (axialStrain - axialStrainRef) + axialDamping * axialStrain_t);
+		}
+		else
+		{
+			//NOT differentiated!
+			CHECKandTHROW(!isALE || physicsMovingMassFactor != 1., "CObjectANCFCable2DBase: ALE not compatible with user function");
+
+			Vector4D SVxx = ComputeShapeFunctions_xx(x, L);
+			SlimVectorBase<TReal, dim> rxx = MapCoordinates<TReal>(SVxx, qANCF);
+
+			TReal rxCrossRxx = rx.CrossProduct2D(rxx);
+			Real curvature = (Real)(rxCrossRxx / rxNorm2);
+
+			Real curvature_t = ComputeCurvature_t(x, false, physicsMovingMassFactor, ConfigurationType::Current);
+			Real curvatureRef = curvature0;
+			if (StrainIsRelativeToReference() != 0.)
+			{
+				SlimVector<dim> rxRef = MapCoordinates<Real>(SVx, qANCFref);
+				SlimVector<dim> rxxRef = MapCoordinates<Real>(SVxx, qANCFref);
+
+				Real rxNorm2ref = rxRef.GetL2NormSquared();
+				Real rxCrossRxxRef = rxRef.CrossProduct2D(rxxRef);
+				curvatureRef += StrainIsRelativeToReference() * (rxCrossRxxRef / rxNorm2ref);
+			}
+
+			Real axialPositionNormalized = x / L;
+			axialForce = ComputeAxialForceLocalUserFunction(axialPositionNormalized,
+				(Real)axialStrain, (Real)axialStrain_t, axialStrainRef, EA, axialDamping,
+				curvature, curvature_t, curvatureRef, objectNumber, ConfigurationType::Current);
+		}
+
+		elasticForces *= integrationFactor * axialForce;
 
 		ode2Lhs += elasticForces;  //add to element elastic forces
 	}
@@ -491,13 +525,49 @@ void CObjectANCFCable2DBase::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs,
 			}
 		}
 
+		TReal bendingMoment;
+		if (!HasTorqueUserFunction())
+		{
+			bendingMoment = (EI * (curvature - curvatureRef) + bendingDamping * curvature_t);
+		}
+		else
+		{
+			//NOT differentiated!
+			CHECKandTHROW(!isALE || physicsMovingMassFactor != 1., "CObjectANCFCable2DBase: ALE not compatible with user function");
 
-		//elasticForces *= integrationFactor * GetParameters().physicsBendingStiffness * (curvature - GetParameters().physicsReferenceCurvature);
-		elasticForces *= integrationFactor * (EI * (curvature - curvatureRef) + bendingDamping * curvature_t);
+			Real rxNorm = sqrt((Real)rxNorm2);
+			Real axialStrain = rxNorm - 1.; // axial strain
+			Real axialStrain_t = 0.; //rate of axial strain
+
+			Real axialStrainRef = axialStrain0;
+			if (StrainIsRelativeToReference() != 0.)
+			{
+				Vector2D rxRef = MapCoordinates<Real>(SVx, qANCFref);
+				axialStrainRef += StrainIsRelativeToReference() * (rxRef.GetL2Norm() - 1.);
+			}
+
+			SlimVectorBase<TReal, dim> rx_t = MapCoordinates<TReal>(SVx, qANCF_t);
+			axialStrain_t = (Real)((rx * rx_t) / rxNorm); //rate of axial strain
+
+			Real axialPositionNormalized = x / L;
+			bendingMoment = ComputeBendingMomentLocalUserFunction(axialPositionNormalized,
+				(Real)curvature, (Real)curvature_t, curvatureRef, EI, bendingDamping, //curvature: DReal, converted into Real
+				axialStrain, axialStrain_t, axialStrainRef, objectNumber);
+		}
+
+		elasticForces *= integrationFactor * bendingMoment;
 
 		ode2Lhs += elasticForces;  //add to element elastic forces
 	}
 
+}
+
+//return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2 ^ i enum flags
+JacobianType::Type CObjectANCFCable2D::GetAvailableJacobians() const
+{
+	if (HasUserFunction()) { return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t); }
+
+	return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t + JacobianType::ODE2_ODE2_function + JacobianType::ODE2_ODE2_t_function);
 }
 
 //! jacobian of LHS, w.r.t. position AND velocity level coordinates
@@ -523,7 +593,7 @@ void CObjectANCFCable2DBase::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& 
 	ConstSizeVectorBase<DReal16, 2 * ns> ode2Lhs;
 	LinkedDataVectorBase<DReal16> linkedOde2Lhs(ode2Lhs); //added because of decoupling of ConstSizeVectorBase
 
-	ComputeODE2LHStemplate<DReal16>(linkedOde2Lhs, qANCF, qANCF_t);
+	ComputeODE2LHStemplate<DReal16>(linkedOde2Lhs, qANCF, qANCF_t, objectNumber);
 
 	jacobianODE2.SetUseDenseMatrix(true);
 	ResizableMatrix& jac = jacobianODE2.GetInternalDenseMatrix();
@@ -747,8 +817,52 @@ void CObjectANCFCable2DBase::GetAccessFunctionBody(AccessFunctionType accessType
 	}
 }
 
+//! compute local force for user function; axialPositionNormalized is in unit coordinates [-1, +1]
+Real CObjectANCFCable2DBase::ComputeAxialForceLocalUserFunction(Real axialPositionNormalized, 
+	Real axialStrain, Real axialStrain_t, Real axialStrainRef, Real physicsAxialStiffness, Real axialDamping,
+	Real curvature, Real curvature_t, Real curvatureRef, Index itemIndex, ConfigurationType configuration) const
+{
+	if (HasForceUserFunction())
+	{
+		const CObjectANCFCable2D& cable = (const CObjectANCFCable2D&)(*this);
+		Real t = cSystemData->GetCData().Get(configuration).GetTime();
+		Real force;
+		cable.EvaluateUserFunctionAxialForce(force, cSystemData->GetMainSystemBacklink(), t, itemIndex,
+					axialPositionNormalized, axialStrain, axialStrain_t, axialStrainRef, physicsAxialStiffness, axialDamping,
+					curvature, curvature_t, curvatureRef);
+		return force;
+	}
+	else
+	{
+		return physicsAxialStiffness * (axialStrain - axialStrainRef) + axialDamping * axialStrain_t;
+	}
+}
+
+//! compute local torque for user function; axialPositionNormalized is in unit coordinates [-1, +1]
+Real CObjectANCFCable2DBase::ComputeBendingMomentLocalUserFunction(Real axialPositionNormalized,
+	Real curvature, Real curvature_t, Real curvatureRef, Real physicsBendingStiffness, Real bendingDamping,
+	Real axialStrain, Real axialStrain_t, Real axialStrainRef, Index itemIndex, ConfigurationType configuration) const
+{
+	if (HasTorqueUserFunction())
+	{
+		const CObjectANCFCable2D& cable = (const CObjectANCFCable2D&)(*this);
+		Real t = cSystemData->GetCData().Get(configuration).GetTime();
+		Real torque;
+		cable.EvaluateUserFunctionBendingMoment(torque, cSystemData->GetMainSystemBacklink(), t, itemIndex,
+			axialPositionNormalized, curvature, curvature_t, curvatureRef, physicsBendingStiffness, bendingDamping,
+			axialStrain, axialStrain_t, axialStrainRef);
+		return torque;
+	}
+	else
+	{
+		return physicsBendingStiffness * (curvature - curvatureRef) + bendingDamping * curvature_t;
+	}
+}
+
+
 //! provide according output variable in "value"
-void CObjectANCFCable2DBase::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber) const
+void CObjectANCFCable2DBase::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, 
+	ConfigurationType configuration, Vector& value, Index objectNumber) const
 {
 	//outputVariables = "{
 	//'Position':'global position vector of local axis (1) and cross section (2) position', 
@@ -760,7 +874,45 @@ void CObjectANCFCable2DBase::GetOutputVariableBody(OutputVariableType variableTy
 	//'Torque':'(local) bending moment (scalar)'}"
 	Real x = localPosition[0];
 	Real y = localPosition[1];
+	Real L = GetLength();
 	bool isALE = (GetNumberOfNodes() != 2);
+
+	Real physicsBendingStiffness, physicsAxialStiffness, bendingDamping, axialDamping, physicsReferenceAxialStrain, physicsReferenceCurvature, physicsMovingMassFactor;
+	Real curvatureRef;
+	Real axialStrainRef;
+	Real curvature;
+	Real curvature_t;
+	Real axialStrain;
+	Real axialStrain_t;
+	Real axialPositionNormalized;
+
+	if (variableType == OutputVariableType::ForceLocal ||
+		variableType == OutputVariableType::TorqueLocal)
+	{
+		GetMaterialParameters(physicsBendingStiffness, physicsAxialStiffness, bendingDamping, axialDamping, physicsReferenceAxialStrain, physicsReferenceCurvature, physicsMovingMassFactor);
+		axialStrainRef = physicsReferenceAxialStrain;
+		if (StrainIsRelativeToReference() != 0.)
+		{
+			Vector2D rxRef = ComputeSlopeVector(x, ConfigurationType::Reference);
+			axialStrainRef += StrainIsRelativeToReference() * (rxRef.GetL2Norm() - 1.);
+		}
+		axialStrain = ComputeAxialStrain(x, configuration);
+		axialStrain_t = ComputeAxialStrain_t(x, isALE, physicsMovingMassFactor, configuration);
+
+		curvatureRef = physicsReferenceCurvature;
+		if (StrainIsRelativeToReference() != 0.)
+		{
+			Vector2D rxRef = ComputeSlopeVector(x, ConfigurationType::Reference);
+			Vector2D rxxRef = ComputeSlopeVector_x(x, ConfigurationType::Reference);
+
+			Real rxNorm2ref = rxRef.GetL2NormSquared();
+			Real rxCrossRxxRef = rxRef.CrossProduct2D(rxxRef);
+			curvatureRef += StrainIsRelativeToReference() * (rxCrossRxxRef / rxNorm2ref);
+		}
+		curvature = ComputeCurvature(x, configuration);
+		curvature_t = ComputeCurvature_t(x, isALE, physicsMovingMassFactor, configuration);
+		axialPositionNormalized = x / L;
+	}
 
 	switch (variableType)
 	{
@@ -835,39 +987,44 @@ void CObjectANCFCable2DBase::GetOutputVariableBody(OutputVariableType variableTy
 	}
 	case OutputVariableType::ForceLocal: {
 		//do not add this due to drawing function: CHECKandTHROW(y == 0., "CObjectANCFCable2DBase::GetOutputVariableBody: Y-component of localPosition must be zero for ForceLocal");
-		Real physicsBendingStiffness, physicsAxialStiffness, bendingDamping, axialDamping, physicsReferenceAxialStrain, physicsReferenceCurvature, physicsMovingMassFactor;
-		GetMaterialParameters(physicsBendingStiffness, physicsAxialStiffness, bendingDamping, axialDamping, physicsReferenceAxialStrain, physicsReferenceCurvature, physicsMovingMassFactor);
 
-		Real axialStrainRef = physicsReferenceAxialStrain;
-		if (StrainIsRelativeToReference() != 0.)
-		{
-			Vector2D rxRef = ComputeSlopeVector(x, ConfigurationType::Reference);
-			axialStrainRef += StrainIsRelativeToReference()*(rxRef.GetL2Norm() - 1.);
-		}
+		//Real axialStrainRef = physicsReferenceAxialStrain;
+		//if (StrainIsRelativeToReference() != 0.)
+		//{
+		//	Vector2D rxRef = ComputeSlopeVector(x, ConfigurationType::Reference);
+		//	axialStrainRef += StrainIsRelativeToReference()*(rxRef.GetL2Norm() - 1.);
+		//}
+		//Real force = physicsAxialStiffness * (axialStrain - axialStrainRef) + axialDamping * axialStrain_t;
 
-		Real force = physicsAxialStiffness * (ComputeAxialStrain(x, configuration) - axialStrainRef);
-		if (axialDamping != 0) { force += axialDamping * ComputeAxialStrain_t(x, isALE, physicsMovingMassFactor, configuration); }
+		Real force = ComputeAxialForceLocalUserFunction(axialPositionNormalized,
+			axialStrain, axialStrain_t, axialStrainRef, physicsAxialStiffness, axialDamping,
+			curvature, curvature_t, curvatureRef, objectNumber, configuration);
 
 		value.SetVector({ force }); break;
 	}
 	case OutputVariableType::TorqueLocal: {
 		//do not add this due to drawing function: CHECKandTHROW(y == 0., "CObjectANCFCable2DBase::GetOutputVariableBody: Y-component of localPosition must be zero for TorqueLocal");
-		Real physicsBendingStiffness, physicsAxialStiffness, physicsReferenceAxialStrain, physicsReferenceCurvature, bendingDamping, axialDamping, physicsMovingMassFactor;
-		GetMaterialParameters(physicsBendingStiffness, physicsAxialStiffness, bendingDamping, axialDamping, physicsReferenceAxialStrain, physicsReferenceCurvature, physicsMovingMassFactor);
+		//Real physicsBendingStiffness, physicsAxialStiffness, physicsReferenceAxialStrain, physicsReferenceCurvature, bendingDamping, axialDamping, physicsMovingMassFactor;
+		//GetMaterialParameters(physicsBendingStiffness, physicsAxialStiffness, bendingDamping, axialDamping, physicsReferenceAxialStrain, physicsReferenceCurvature, physicsMovingMassFactor);
 
-		Real curvatureRef = physicsReferenceCurvature;
-		if (StrainIsRelativeToReference() != 0.)
-		{
-			Vector2D rxRef = ComputeSlopeVector(x, ConfigurationType::Reference);
-			Vector2D rxxRef = ComputeSlopeVector_x(x, ConfigurationType::Reference);
+		//Real curvatureRef = physicsReferenceCurvature;
+		//if (StrainIsRelativeToReference() != 0.)
+		//{
+		//	Vector2D rxRef = ComputeSlopeVector(x, ConfigurationType::Reference);
+		//	Vector2D rxxRef = ComputeSlopeVector_x(x, ConfigurationType::Reference);
 
-			Real rxNorm2ref = rxRef.GetL2NormSquared();
-			Real rxCrossRxxRef = rxRef.CrossProduct2D(rxxRef);
-			curvatureRef += StrainIsRelativeToReference()*(rxCrossRxxRef / rxNorm2ref);
-		}
+		//	Real rxNorm2ref = rxRef.GetL2NormSquared();
+		//	Real rxCrossRxxRef = rxRef.CrossProduct2D(rxxRef);
+		//	curvatureRef += StrainIsRelativeToReference()*(rxCrossRxxRef / rxNorm2ref);
+		//}
 
-		Real torque = physicsBendingStiffness * (ComputeCurvature(x, configuration) - curvatureRef);
-		if (bendingDamping != 0) { torque += bendingDamping * ComputeCurvature_t(x, isALE, physicsMovingMassFactor, configuration); }
+		//Real torque = physicsBendingStiffness * (ComputeCurvature(x, configuration) - curvatureRef);
+		//if (bendingDamping != 0) { torque += bendingDamping * ComputeCurvature_t(x, isALE, physicsMovingMassFactor, configuration); }
+
+		Real torque = ComputeBendingMomentLocalUserFunction(axialPositionNormalized,
+			curvature, curvature_t, curvatureRef, physicsBendingStiffness, bendingDamping,
+			axialStrain, axialStrain_t, axialStrainRef, objectNumber, configuration);
+
 		value.SetVector({ torque }); break;
 	}
 	default:
@@ -1135,164 +1292,4 @@ Real CObjectANCFCable2DBase::ComputeCurvature_t(Real x, bool isALE, Real physics
 }
 
 
-
-//delete:
-////++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-////ANCFCable2D MAIN part
-//py::object MainObjectANCFCable2D::CallFunction(STDstring functionName, py::dict args) const
-//{
-//	PyError(STDstring("MainObjectMassPoint::CallFunction called with invalid functionName '" + functionName + "'"));
-//	return py::int_(EXUstd::InvalidIndex);
-//}
-
-
-
-//OLD AUTODIFF:
-////! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
-//template<class TReal>
-//void CObjectANCFCable2DBase::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs, const ConstSizeVectorBase<TReal, nODE2coordinates>& qANCF, const ConstSizeVectorBase<TReal, nODE2coordinates>& qANCF_t) const
-//{
-//	ode2Lhs.SetNumberOfItems(nODE2coordinates);
-//	ode2Lhs.SetAll(0.);
-//	//compute work of elastic forces:
-//
-//	const Index dim = 2;  //2D finite element
-//	const Index ns = 4;   //number of shape functions
-//
-//	Real L = GetLength();
-//	Real EA, EI, axialStrain0, curvature0, bendingDamping, axialDamping;
-//	GetMaterialParameters(EI, EA, bendingDamping, axialDamping, axialStrain0, curvature0);
-//
-//	Index cnt;
-//	Real a = 0; //integration interval [a,b]
-//	Real b = L;
-//
-//
-//	ConstSizeVectorBase<TReal, ns*dim> elasticForces;
-//
-//	//numerical integration:
-//	//high accuracy: axialStrain = order9, curvature = order5
-//	//low accuracy : axialStrain = order7, curvature = order3 (lower order not possible, becomes unstable or very inaccurate ...
-//
-//	const Index maxIntegrationPoints = 5;
-//	ConstSizeVector<maxIntegrationPoints> integrationPoints;
-//	ConstSizeVector<maxIntegrationPoints> integrationWeights;
-//
-//	if (UseReducedOrderIntegration())
-//	{
-//		integrationPoints.CopyFrom(EXUmath::gaussRuleOrder7Points); //copy is slower, but cannot link to variable size ==> LinkedDataVector ...
-//		integrationWeights.CopyFrom(EXUmath::gaussRuleOrder7Weights);
-//	}
-//	else
-//	{
-//		integrationPoints.CopyFrom(EXUmath::gaussRuleOrder9Points); //copy is slower, but cannot link to variable size ==> LinkedDataVector ...
-//		integrationWeights.CopyFrom(EXUmath::gaussRuleOrder9Weights);
-//	}
-//
-//	//axial strain:
-//	cnt = 0;
-//	for (auto item : integrationPoints)
-//	{
-//		Real x = 0.5*(b - a)*item + 0.5*(b + a);
-//		Vector4D SVx = ComputeShapeFunctions_x(x, L);
-//		Real integrationFactor = (0.5*(b - a)*integrationWeights[cnt++]);
-//
-//		SlimVectorBase<TReal, 2> rx = MapCoordinates<TReal>(SVx, qANCF);
-//
-//		TReal rxNorm2 = rx.GetL2NormSquared();
-//		TReal rxNorm = sqrt(rxNorm2);
-//		TReal axialStrain = rxNorm - 1.; // axial strain
-//		TReal axialStrain_t = 0.; //rate of axial strain
-//
-//		if (axialDamping != 0.)
-//		{
-//			SlimVectorBase<TReal, 2> rx_t = MapCoordinates<TReal>(SVx, qANCF_t);
-//			axialStrain_t = (rx * rx_t) / rxNorm; //rate of axial strain
-//		}
-//
-//		for (Index i = 0; i < dim; i++)
-//		{
-//			for (Index j = 0; j < ns; j++)
-//			{
-//				elasticForces[j*dim + i] = 1. / rxNorm * SVx[j] * rx[i];
-//			}
-//		}
-//		//elasticForces *= integrationFactor * GetParameters().physicsAxialStiffness * (axialStrain - GetParameters().physicsReferenceAxialStrain);
-//		elasticForces *= integrationFactor * (EA * (axialStrain - axialStrain0) + axialDamping * axialStrain_t);
-//
-//		ode2Lhs += elasticForces;  //add to element elastic forces
-//	}
-//
-//	//++++++++++++++++++++++++++++++
-//	//curvature:
-//	if (UseReducedOrderIntegration())
-//	{
-//		integrationPoints.CopyFrom(EXUmath::gaussRuleOrder3Points);
-//		integrationWeights.CopyFrom(EXUmath::gaussRuleOrder3Weights);
-//	}
-//	else
-//	{
-//		integrationPoints.CopyFrom(EXUmath::gaussRuleOrder5Points);
-//		integrationWeights.CopyFrom(EXUmath::gaussRuleOrder5Weights);
-//	}
-//
-//	cnt = 0;
-//	for (auto item : integrationPoints)
-//	{
-//		Real x = 0.5*(b - a)*item + 0.5*(b + a);
-//		Vector4D SVx = ComputeShapeFunctions_x(x, L);
-//		Vector4D SVxx = ComputeShapeFunctions_xx(x, L);
-//		Real integrationFactor = (0.5*(b - a)*integrationWeights[cnt++]);
-//
-//		SlimVectorBase<TReal, 2> rx = MapCoordinates<TReal>(SVx, qANCF);
-//		SlimVectorBase<TReal, 2> rxx = MapCoordinates<TReal>(SVxx, qANCF);
-//
-//		TReal rxNorm2 = rx.GetL2NormSquared();				//g
-//		//TReal rxNorm = sqrt(rxNorm2);
-//		TReal rxCrossRxx = rx.CrossProduct2D(rxx);			//f
-//		TReal curvature = rxCrossRxx / rxNorm2;				//kappa = (rx x rxx)/rx^2       //WRONG (Andreas/Matlab?): kappa = sqrt(cross2d(rp, rpp) ^ 2) / (rp'*rp);        // material measure of curvature
-//
-//		TReal inv2RxNorm2 = 1. / (rxNorm2*rxNorm2);			//g2inv
-//		TReal tempF = 2. * rxCrossRxx*inv2RxNorm2;			//fn; f ... fraction numerator
-//		TReal tempG = rxNorm2 * inv2RxNorm2;					//gn; g ... fraction denominator
-//		TReal df;
-//
-//		TReal curvature_t = 0.; //rate of curvature
-//		if (bendingDamping != 0.)
-//		{
-//			SlimVectorBase<TReal, 2> rx_t = MapCoordinates<TReal>(SVx, qANCF_t);
-//			SlimVectorBase<TReal, 2> rxx_t = MapCoordinates<TReal>(SVxx, qANCF_t);
-//
-//			TReal rxCrossRxx_t = rx_t.CrossProduct2D(rxx) + rx.CrossProduct2D(rxx_t);	//f_t
-//			TReal rxNorm2_t = 2.*(rx*rx_t);												//g_t
-//
-//			curvature_t = (rxCrossRxx_t * rxNorm2 - rxCrossRxx * rxNorm2_t) / EXUstd::Square(rxNorm2); //rate of bending strain; (f_t*g - f*g_t)/g^2
-//		}
-//
-//		for (Index i = 0; i < dim; i++)
-//		{
-//			for (Index j = 0; j < ns; j++)
-//			{
-//				switch (i) {
-//				case 0:
-//				{
-//					df = SVx[j] * rxx.Y() - SVxx[j] * rx.Y(); break;
-//				}
-//				case 1:
-//				{
-//					df = -SVx[j] * rxx.X() + SVxx[j] * rx.X(); break;
-//				}
-//				default:;
-//				}
-//				TReal dg = rx[i] * SVx[j]; //derivative of denominator
-//				elasticForces[j*dim + i] = df * tempG - tempF * dg;
-//			}
-//		}
-//		//elasticForces *= integrationFactor * GetParameters().physicsBendingStiffness * (curvature - GetParameters().physicsReferenceCurvature);
-//		elasticForces *= integrationFactor * (EI * (curvature - curvature0) + bendingDamping * curvature_t);
-//
-//		ode2Lhs += elasticForces;  //add to element elastic forces
-//	}
-//}
-//
 

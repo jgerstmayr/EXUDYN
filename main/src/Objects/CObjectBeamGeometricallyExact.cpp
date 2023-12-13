@@ -505,6 +505,7 @@ void CObjectBeamGeometricallyExact::GetOutputVariableBody(OutputVariableType var
 	}
 }
 
+//! use matrix logarithm to compute relative frame position
 HomogeneousTransformation CObjectBeamGeometricallyExact::GetLocalPositionFrame(const Vector3D& localPosition, 
 	ConfigurationType configuration) const
 {

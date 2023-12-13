@@ -58,15 +58,16 @@ namespace Node {
 		RotationRxyz = 1 << 8,					//!< used if orientation is described with euler angles
 		RotationRotationVector = 1 << 9,		//!< used if orientation is described with rotation vector parameters
 		LieGroupWithDirectUpdate = 1 << 10,		//!< used if a lie group formulation is used; this means, that equations are written vor angular acc (omega_t), not for rotationParameters_tt
-		LieGroupWithDataCoordinates = 1 << 11,	//!< used if a lie group formulation is used with data variables for start-of-step state and local frame approach
+		//LieGroupWithDataCoordinates = 1 << 11,	//!< used if a lie group formulation is used with data variables for start-of-step state and local frame approach
 		//General
 		GenericODE2 = 1 << 12,					//!< used for node with ODE2 coordinates (no specific access functions, except on coordinate level)
 		GenericODE1 = 1 << 13,					//!< used for node with ODE1 coordinates (no specific access functions, except on coordinate level)
 		GenericAE = 1 << 14,					//!< (CURRENTLY UNUSED!) used for node with AE coordinates (no specific access functions, except on coordinate level)
 		GenericData = 1 << 15,					//!< used for node with data coordinates
 		//ANCF:
-		Point3DSlope1 = 1 << 16,				//!< used for: nodes which provide a position and a slope vector in 1-direction
-		Point3DSlope23 = 1 << 17				//!< used for: nodes which provide a position and slope vectors in 2 and 3-direction
+		PointSlope1 = 1 << 16,				//!< used for: nodes which provide a position and a slope vector in 1-direction
+		PointSlope12 = 1 << 17,				//!< used for: nodes which provide a position and slope vectors in 1 and 2-direction
+		PointSlope23 = 1 << 18				//!< used for: nodes which provide a position and slope vectors in 2 and 3-direction
 		//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		//keep these lists synchronized with autoGeneratePybindings.py lists
 	};
@@ -80,6 +81,9 @@ namespace Node {
 		if (var & Position2D) { t += "Position2D"; }
 		if (var & Orientation2D) { t += "Orientation2D"; }
 		if (var & Point2DSlope1) { t += "Point2DSlope1"; }
+		if (var & PointSlope1) { t += "PointSlope1"; }
+		if (var & PointSlope12) { t += "PointSlope12"; }
+		if (var & PointSlope23) { t += "PointSlope23"; }
 
 		if (var & Position) { t += "Position"; }
 		if (var & Orientation) { t += "Orientation"; }
@@ -89,7 +93,7 @@ namespace Node {
 		if (var & RotationRxyz) { t += "RotationRxyz"; }
 		if (var & RotationRotationVector) { t += "RotationRotationVector"; }
 		if (var & LieGroupWithDirectUpdate) { t += "LieGroupWithDirectUpdate"; }
-		if (var & LieGroupWithDataCoordinates) { t += "LieGroupWithDataCoordinates"; }
+		//if (var & LieGroupWithDataCoordinates) { t += "LieGroupWithDataCoordinates"; }
 
 		if (var & GenericODE2) { t += "GenericODE2"; }
 		if (var & GenericData) { t += "GenericData"; }

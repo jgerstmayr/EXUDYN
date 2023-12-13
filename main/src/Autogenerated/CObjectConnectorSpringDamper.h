@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-12-01  20:24:36 (last modified)
+* @date         2023-11-19  23:09:53 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -31,8 +31,8 @@ class CObjectConnectorSpringDamperParameters // AUTO:
 public: // AUTO: 
     ArrayIndex markerNumbers;                     //!< AUTO: list of markers used in connector
     Real referenceLength;                         //!< AUTO: reference length [SI:m] of spring
-    Real stiffness;                               //!< AUTO: stiffness [SI:N/m] of spring; acts against (length-initialLength)
-    Real damping;                                 //!< AUTO: damping [SI:N/(m s)] of damper; acts against d/dt(length)
+    Real stiffness;                               //!< AUTO: stiffness [SI:N/m] of spring; force acts against (length-initialLength)
+    Real damping;                                 //!< AUTO: damping [SI:N/(m s)] of damper; force acts against d/dt(length)
     Real force;                                   //!< AUTO: added constant force [SI:N] of spring; scalar force; f=1 is equivalent to reducing initialLength by 1/stiffness; f > 0: tension; f < 0: compression; can be used to model actuator force
     Real velocityOffset;                          //!< AUTO: velocity offset [SI:m/s] of damper, being equivalent to time change of reference length
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint

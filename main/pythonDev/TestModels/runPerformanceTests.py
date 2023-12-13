@@ -212,8 +212,9 @@ else:
         exu.Print('  PERFORMANCE TEST ' + str(i) + ' (' + testFileList[i] + ') FAILED')
 
 exu.Print('TOTAL PERFORMANCE TEST TIME = ' + str(totalTime) + ' seconds')
-exu.Print('Reference value (i9)        = 88.12 seconds (32bit) / 74.11 seconds (regular) / 57.30 seconds (exudynFast)')
-#exu.Print('Reference value (i9)        =  seconds (P3.7) / 42.7 seconds (P3.8)')
+#exu.Print('Reference value (i9)        = 88.12 seconds (32bit) / 74.11 seconds (regular) / 57.30 seconds (exudynFast)')
+exu.Print('Reference value (i9, 2023-12, Windows)= 48 - 51 seconds (regular) / 39.5 seconds  (exudynFast)')
+exu.Print('Reference value (i9, 2023-12, Linux  )= 42 - 44 seconds (regular) / 34 - 36 seconds (exudynFast)')
 exu.Print('****************************************************')
 
     

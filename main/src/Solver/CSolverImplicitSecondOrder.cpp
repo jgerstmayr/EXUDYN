@@ -345,17 +345,18 @@ void CSolverImplicitSecondOrderTimeInt::PostInitializeSolverSpecific(CSystem& co
 	{
 		//PrecomputeLieGroupStructures(computationalSystem, simulationSettings);
 		const auto& cNodes = computationalSystem.GetSystemData().GetCNodes();
-		lieGroupDataNodes.SetNumberOfItems(0); //filled with lie group node indices during initialization; ONLY if useLieGroupIntegration=true
+		//lieGroupDataNodes.SetNumberOfItems(0); //filled with lie group node indices during initialization; ONLY if useLieGroupIntegration=true
 		lieGroupDirectUpdateNodes.SetNumberOfItems(0); //filled with lie group node indices during initialization; ONLY if useLieGroupIntegration=true
 		//nonLieODE2Coordinates.SetNumberOfItems(0);
 
 		for (Index i = 0; i < cNodes.NumberOfItems(); i++)
 		{
-			if (EXUstd::IsOfType(cNodes[i]->GetType(), Node::LieGroupWithDataCoordinates))
-			{
-				lieGroupDataNodes.Append(i);
-			}
-			else if (EXUstd::IsOfType(cNodes[i]->GetType(), Node::LieGroupWithDirectUpdate))
+			//if (EXUstd::IsOfType(cNodes[i]->GetType(), Node::LieGroupWithDataCoordinates))
+			//{
+			//	lieGroupDataNodes.Append(i);
+			//}
+			//else 
+				if (EXUstd::IsOfType(cNodes[i]->GetType(), Node::LieGroupWithDirectUpdate))
 			{
 				lieGroupDirectUpdateNodes.Append(i);
 			}
@@ -373,7 +374,7 @@ void CSolverImplicitSecondOrderTimeInt::PostInitializeSolverSpecific(CSystem& co
 			}
 		}
 
-		if (lieGroupDataNodes.NumberOfItems() == 0 && lieGroupDirectUpdateNodes.NumberOfItems() == 0)
+		if (/*lieGroupDataNodes.NumberOfItems() == 0 && */lieGroupDirectUpdateNodes.NumberOfItems() == 0)
 		{ 
 			useLieGroupIntegration = false; //to avoid overheads!
 		} 
@@ -508,44 +509,44 @@ void CSolverImplicitSecondOrderTimeInt::CompositionRuleCoordinatesLieGroupIntegr
 //! apply composition rule to currentODE2 o incrementODE2 for given set of nodes
 //MISSING reference coordinates; ONLY WORKS if only lie group data nodes!!!
 //DELETE!
-void CSolverImplicitSecondOrderTimeInt::UpdateDataCoordinatesLieGroupIntegrator(CSystem& computationalSystem, const ArrayIndex& lieGroupNodes,
-	const ResizableVectorParallel& currentODE2, const ResizableVectorParallel& incrementODE2, ResizableVectorParallel& compositionODE2)
-{
-	//updates for Lie group nodes/coordinates
-	for (Index k : lieGroupNodes)
-	{
-		const CNodeRigidBody& node = (const CNodeRigidBody&)(computationalSystem.GetSystemData().GetCNode(k));
-		Index nPos = node.GetNumberOfDisplacementCoordinates(); //should be 3
-		Index nRot = node.GetNumberOfRotationCoordinates();     //should be 3
-		Index off = node.GetGlobalODE2CoordinateIndex();
-
-		// current state (vec0)
-		LinkedDataVector currentPosition(currentODE2, off, nPos);
-		LinkedDataVector currentOrientation(currentODE2, off + nPos, nRot);
-
-		LinkedDataVector newPosition(compositionODE2, off, nPos);
-		LinkedDataVector newOrientation(compositionODE2, off + nPos, nRot);
-		Vector6D incrementalMotion;
-		incrementalMotion.CopyFrom(LinkedDataVector(incrementODE2, off, nPos + nRot));
-
-
-		// update Lie group node
-		node.CompositionRule(currentPosition, currentOrientation, incrementalMotion, newPosition, newOrientation); //Delta q in Arnold/Bruls is (-1)*Delta q here	
-	}
-}
+//void CSolverImplicitSecondOrderTimeInt::UpdateDataCoordinatesLieGroupIntegrator(CSystem& computationalSystem, const ArrayIndex& lieGroupNodes,
+//	const ResizableVectorParallel& currentODE2, const ResizableVectorParallel& incrementODE2, ResizableVectorParallel& compositionODE2)
+//{
+//	//updates for Lie group nodes/coordinates
+//	for (Index k : lieGroupNodes)
+//	{
+//		const CNodeRigidBody& node = (const CNodeRigidBody&)(computationalSystem.GetSystemData().GetCNode(k));
+//		Index nPos = node.GetNumberOfDisplacementCoordinates(); //should be 3
+//		Index nRot = node.GetNumberOfRotationCoordinates();     //should be 3
+//		Index off = node.GetGlobalODE2CoordinateIndex();
+//
+//		// current state (vec0)
+//		LinkedDataVector currentPosition(currentODE2, off, nPos);
+//		LinkedDataVector currentOrientation(currentODE2, off + nPos, nRot);
+//
+//		LinkedDataVector newPosition(compositionODE2, off, nPos);
+//		LinkedDataVector newOrientation(compositionODE2, off + nPos, nRot);
+//		Vector6D incrementalMotion;
+//		incrementalMotion.CopyFrom(LinkedDataVector(incrementODE2, off, nPos + nRot));
+//
+//
+//		// update Lie group node
+//		node.CompositionRule(currentPosition, currentOrientation, incrementalMotion, newPosition, newOrientation); //Delta q in Arnold/Bruls is (-1)*Delta q here	
+//	}
+//}
 
 void CSolverImplicitSecondOrderTimeInt::ResetCoordinatesLieGroupNodes(CSystem& computationalSystem, 
 	ResizableVectorParallel& solutionODE2, ResizableVectorParallel& previousNewtonSolution)
 {
 	const auto& cNodes = computationalSystem.GetSystemData().GetCNodes();
-	for (Index i : lieGroupDataNodes)
-	{
-		Index nODE2 = cNodes[i]->GetNumberOfODE2Coordinates();
-		for (Index j = 0; j < nODE2; j++)
-		{
-			solutionODE2[cNodes[i]->GetGlobalODE2CoordinateIndex() + j] = 0;
-		}
-	}
+	//for (Index i : lieGroupDataNodes)
+	//{
+	//	Index nODE2 = cNodes[i]->GetNumberOfODE2Coordinates();
+	//	for (Index j = 0; j < nODE2; j++)
+	//	{
+	//		solutionODE2[cNodes[i]->GetGlobalODE2CoordinateIndex() + j] = 0;
+	//	}
+	//}
 
 	previousNewtonSolution.SetNumberOfItems(solutionODE2.NumberOfItems());
 	//in first iteration, Newton solution is set to 0
@@ -723,11 +724,15 @@ void CSolverImplicitSecondOrderTimeInt::ComputeNewtonUpdate(CSystem& computation
 
 	if (useLieGroupIntegration)
 	{
+		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		// REMOVE when LieGroupDataNodes are removed ...
 		//update data coordinates with composition rule:
 		//this won't work in general, must be different functions for data coordinates and for ODE2 coordinates!
-		UpdateDataCoordinatesLieGroupIntegrator(computationalSystem, lieGroupDataNodes,
-			computationalSystem.GetSystemData().GetCData().startOfStepState.dataCoords, 
-			solutionODE2, computationalSystem.GetSystemData().GetCData().currentState.dataCoords);
+		//UpdateDataCoordinatesLieGroupIntegrator(computationalSystem, lieGroupDataNodes,
+		//	computationalSystem.GetSystemData().GetCData().startOfStepState.dataCoords, 
+		//	solutionODE2, computationalSystem.GetSystemData().GetCData().currentState.dataCoords);
+		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 		//update ODE2 coordinates with composition rule; reference configuration is considered in node.ComputationRule
 		CompositionRuleCoordinatesLieGroupIntegrator(computationalSystem, lieGroupDirectUpdateNodes,
 			computationalSystem.GetSystemData().GetCData().startOfStepState.ODE2Coords, //q_n
@@ -782,8 +787,8 @@ void CSolverImplicitSecondOrderTimeInt::ComputeNewtonJacobian(CSystem& computati
 		computationalSystem.JacobianODE2RHS(data.tempCompDataArray, newton.numericalDifferentiation, *(data.systemJacobian),
 			-scalODE2, -gammaPrime * scalODE2 * 0, -scalODE2 * 0, simulationSettings.timeIntegration.computeLoadsJacobian);
 
-		LieGroupNodesApplyTangentOperator(computationalSystem, computationalSystem.GetSystemData().GetCData().currentState.ODE2Coords,
-			lieGroupDataNodes, 0, *(data.systemJacobian));
+		//LieGroupNodesApplyTangentOperator(computationalSystem, computationalSystem.GetSystemData().GetCData().currentState.ODE2Coords,
+		//	lieGroupDataNodes, 0, *(data.systemJacobian));
 		LieGroupNodesApplyTangentOperator(computationalSystem, lieGroupDirectUpdateNewtonSolution,
 			lieGroupDirectUpdateNodes, 0, *(data.systemJacobian));
 
@@ -865,8 +870,8 @@ void CSolverImplicitSecondOrderTimeInt::ComputeNewtonJacobian(CSystem& computati
 	if (useLieGroupIntegration && simulationSettings.timeIntegration.generalizedAlpha.lieGroupAddTangentOperator)
 	{
 		Index startRow = data.nODE2 + data.nODE1;
-		LieGroupNodesApplyTangentOperator(computationalSystem, computationalSystem.GetSystemData().GetCData().currentState.ODE2Coords,
-			lieGroupDataNodes, startRow, *(data.systemJacobian));
+		//LieGroupNodesApplyTangentOperator(computationalSystem, computationalSystem.GetSystemData().GetCData().currentState.ODE2Coords,
+		//	lieGroupDataNodes, startRow, *(data.systemJacobian));
 		LieGroupNodesApplyTangentOperator(computationalSystem, lieGroupDirectUpdateNewtonSolution,
 			lieGroupDirectUpdateNodes, startRow, *(data.systemJacobian));
 	}

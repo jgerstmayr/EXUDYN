@@ -70,6 +70,13 @@ void PySetRendererMultiThreadedDialogs(bool flag);
 //! get state of multithreaded dialog (interaction with renderer during settings dialogs)
 bool PyGetRendererMultiThreadedDialogs();
 
+//! check CTRL+"C" signals
+bool PyCheckSignals();
+
+//! this throws an exception for which a (Python) error has already been set, e.g. due to CTRL+"C"
+void PyThrowErrorAlreadySet();
+
+
 //! get/set result of PyProcess action
 Index PyProcessGetResult();
 void PyProcessSetResult(Index value);

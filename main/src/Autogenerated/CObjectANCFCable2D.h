@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-11-17  15:43:14 (last modified)
+* @date         2023-12-13  14:03:53 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -22,7 +22,9 @@
 #include "Utilities/BasicDefinitions.h"
 #include "System/ItemIndices.h"
 
+#include <functional> //! AUTO: needed for std::function
 #include "Objects/CObjectANCFCable2DBase.h"
+class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 
 //! AUTO: Parameters for class CObjectANCFCable2DParameters
 class CObjectANCFCable2DParameters // AUTO: 
@@ -39,6 +41,8 @@ public: // AUTO:
     Real strainIsRelativeToReference;             //!< AUTO:  if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration plus the values of \f$\varepsilon_0\f$ and \f$\kappa_0\f$ serve as a reference geometry; allows also values between 0. and 1.
     Index2 nodeNumbers;                           //!< AUTO: two node numbers ANCF cable element
     Index useReducedOrderIntegration;             //!< AUTO: 0/false: use Gauss order 9 integration for virtual work of axial forces, order 5 for virtual work of bending moments; 1/true: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments
+    std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real,Real,Real,Real,Real)> axialForceUserFunction;//!< AUTO: A Python function which defines the (nonlinear relations) of local strains (including axial strain and bending strain) as well as time derivatives to the local axial force; see description below
+    std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real,Real,Real,Real,Real)> bendingMomentUserFunction;//!< AUTO: A Python function which defines the (nonlinear relations) of local strains (including axial strain and bending strain) as well as time derivatives to the local bending moment; see description below
     //! AUTO: default constructor with parameter initialization
     CObjectANCFCable2DParameters()
     {
@@ -53,6 +57,8 @@ public: // AUTO:
         strainIsRelativeToReference = 0.;
         nodeNumbers = Index2({EXUstd::InvalidIndex, EXUstd::InvalidIndex});
         useReducedOrderIntegration = 0;
+        axialForceUserFunction = 0;
+        bendingMomentUserFunction = 0;
     };
 };
 
@@ -122,10 +128,7 @@ public: // AUTO:
     }
 
     //! AUTO:  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
-    virtual JacobianType::Type GetAvailableJacobians() const override
-    {
-        return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t + JacobianType::ODE2_ODE2_function + JacobianType::ODE2_ODE2_t_function);
-    }
+    virtual JacobianType::Type GetAvailableJacobians() const override;
 
     //! AUTO:  Get global node number (with local node index); needed for every object ==> does local mapping
     virtual Index GetNodeNumber(Index localIndex) const override
@@ -152,11 +155,29 @@ public: // AUTO:
         return true;
     }
 
+    //! AUTO:  return true if object has force user function
+    virtual bool HasForceUserFunction() const override
+    {
+        return parameters.axialForceUserFunction!=0;
+    }
+
+    //! AUTO:  return true if object has force user function
+    virtual bool HasTorqueUserFunction() const override
+    {
+        return parameters.bendingMomentUserFunction!=0;
+    }
+
     //! AUTO:  This flag is reset upon change of parameters; says that mass matrix (future: other pre-computed values) need to be recomputed
     virtual void ParametersHaveChanged() override
     {
         massMatrixComputed = false;
     }
+
+    //! AUTO:  Safe interface to evaluation of user function
+    void EvaluateUserFunctionBendingMoment(Real& torque, const MainSystemBase& mainSystem, Real t, Index itemIndex, Real axialPositionNormalized, Real curvature, Real curvature_t, Real curvatureRef, Real physicsBendingStiffness, Real physicsBendingDamping, Real axialStrain, Real axialStrain_t, Real axialStrainRef) const;
+
+    //! AUTO:  Safe interface to evaluation of user function
+    void EvaluateUserFunctionAxialForce(Real& force, const MainSystemBase& mainSystem, Real t, Index itemIndex, Real axialPositionNormalized, Real axialStrain, Real axialStrain_t, Real axialStrainRef, Real physicsAxialStiffness, Real physicsAxialDamping, Real curvature, Real curvature_t, Real curvatureRef) const;
 
     virtual OutputVariableType GetOutputVariableTypes() const override
     {

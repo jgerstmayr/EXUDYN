@@ -17,6 +17,9 @@
 ************************************************************************************************ */
 
 #include "Utilities/ExceptionsTemplates.h"
+#include <pybind11/stl.h> 
+#include <pybind11/stl_bind.h>
+#include <pybind11/numpy.h> //accept numpy arrays: numpy array automatically converted to std::vector<Real,...> ==> accepts np.array([1,0,0]) and [1,0,0] as return value!
 //#include "Main/CSystemData.h"
 #include "Main/MainSystem.h" //for GetLoadValues
 #include "Pymodules/PybindUtilities.h"

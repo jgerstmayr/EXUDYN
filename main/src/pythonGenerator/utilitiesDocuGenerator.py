@@ -15,7 +15,7 @@ from autoGenerateHelper import Str2Latex, GenerateLatexStrKeywordExamples, Extra
 maxWarningsMutableArgs = 200 #warnings in case of list or dict default args (mutable args)
 #list of functions for which mutable args have been checked:
 mutableArgsFunctionsChecked = [
-    'GenerateStraightLineANCFCable2D','PointsAndSlopes2ANCFCable2D','GenerateCircularArcANCFCable2D', #beams
+    'GenerateStraightLineANCFCable','GenerateStraightLineANCFCable2D','PointsAndSlopes2ANCFCable2D','GenerateCircularArcANCFCable2D', #beams
     #FEM:
     'CreateReevingCurve', 'AddObjectFFRF','CMSObjectComputeNorm', 'AddObjectFFRFreducedOrderWithUserFunctions',
     'AddObjectFFRFreducedOrder', 'AddElasticSupportAtNode', 'CreateLinearFEMObjectGenericODE2', 
@@ -33,9 +33,10 @@ mutableArgsFunctionsChecked = [
     #kinematicTree:
     'ForwardDynamicsCRB', 'ComputeMassMatrixAndForceTerms', 'AddExternalForces',
     #mainSystemExtensions:
-    'MainSystemCreateMassPoint','MainSystemCreateRigidBody','MainSystemCreateSpringDamper','MainSystemCreateCartesianSpringDamper',
+    'MainSystemCreateGround','MainSystemCreateMassPoint','MainSystemCreateRigidBody','MainSystemCreateSpringDamper','MainSystemCreateCartesianSpringDamper',
     'MainSystemCreateRigidBodySpringDamper', 'MainSystemCreateRevoluteJoint', 'MainSystemCreatePrismaticJoint',
     'MainSystemCreateSphericalJoint', 'MainSystemCreateGenericJoint', 'MainSystemCreateDistanceConstraint',
+    'MainSystemCreateForce','MainSystemCreateTorque',
     #plot:
     'PlotSensor', 'DataArrayFromSensorList',
     #processing:
@@ -64,6 +65,7 @@ theDocDir = '../../../docs/theDoc/'
 rstDir='../../../docs/RST/'
 fileDir='../../pythonDev/exudyn/'
 filesParsed=[
+             'advancedUtilities.py',
              'artificialIntelligence.py',
              'basicUtilities.py',
              'beams.py',

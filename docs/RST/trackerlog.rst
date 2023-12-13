@@ -19,15 +19,183 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.7.5.dev1, 
-+  last change =  2023-10-09, 
-+  Number of issues = 1658, 
-+  Number of resolved issues = 1475 (5 in current version), 
++  Exudyn version = 1.7.57.dev1, 
++  last change =  2023-12-13, 
++  Number of issues = 1732, 
++  Number of resolved issues = 1527 (57 in current version), 
 
 ***********
 Version 1.7
 ***********
 
+ * Version 1.7.57: resolved Issue 1726: SymbolicRealMatrix (extension)
+    - description:  add symbolic matrix for user functions
+    - **notes:** note: currently implemented less efficient with memory allocations
+    - date resolved: **2023-12-13 14:02**\ , date raised: 2023-12-12 
+ * Version 1.7.56: resolved Issue 1731: ANCFCable2D (extension)
+    - description:  add user functions for bending moment and axial force, allowing to implement arbitrary material models
+    - date resolved: **2023-12-13 13:47**\ , date raised: 2023-12-13 
+ * Version 1.7.55: resolved Issue 1730: GenerateStraightLineANCFCable (fix)
+    - description:  raises Warning for default values [0,0,0,0,0,0] in 2D case
+    - date resolved: **2023-12-13 13:27**\ , date raised: 2023-12-13 
+ * Version 1.7.54: resolved Issue 1725: Symbolic (extension)
+    - description:  add ResizableConstMatrix and create symbolic matrix-vector functions
+    - date resolved: **2023-12-12 14:16**\ , date raised: 2023-12-10 
+ * Version 1.7.53: resolved Issue 1716: Symbolic (docu)
+    - description:  add symbolic user function description to documentation; also mention in performance section
+    - date resolved: **2023-12-10 21:57**\ , date raised: 2023-12-08 
+ * Version 1.7.52: resolved Issue 1724: C++ ToString (change)
+    - description:  changing the behavior for standard conversion of double and int values to strings, in particular during errors. Now using the same precision as defined with exudyn.SetOutputPrecision()
+    - date resolved: **2023-12-09 19:26**\ , date raised: 2023-12-09 
+ * Version 1.7.51: resolved Issue 1715: Symbolic (docu)
+    - description:  add symbolic section to documentation
+    - date resolved: **2023-12-09 16:29**\ , date raised: 2023-12-08 
+ * Version 1.7.50: resolved Issue 1708: Symbolic (extension)
+    - description:  make symbolic variable space, available globally in exudyn.symbolic as well as in mbs.symbolic; this allows to store/transfer data into user functions without the need for Python; use integer handles which are returned by creation function: a=NamedReal(value, name); handle=AddVariableReal(a)
+    - **notes:** not yet put into mbs and using no integer handles, but std::unordered_map, which has highly efficient hash table included
+    - date resolved: **2023-12-09 16:29**\ , date raised: 2023-12-03 
+ * Version 1.7.49: resolved Issue 1699: exudyn. ... (docu)
+    - description:  add undocumented features of exudyn module, such as Demo1(), Demo2(), __version__ or C++
+    - date resolved: **2023-12-08 18:41**\ , date raised: 2023-11-22 
+ * Version 1.7.48: resolved Issue 1698: experimental, special (docu)
+    - description:  add experimental and special features to documentation / pybindings
+    - date resolved: **2023-12-08 18:41**\ , date raised: 2023-11-21 
+ * Version 1.7.47: resolved Issue 1710: Symbolic (extension)
+    - description:  add basic (automatic) differentiation feature for expressions: EvaluateDiff()
+    - date resolved: **2023-12-08 07:22**\ , date raised: 2023-12-03 
+ * Version 1.7.46: resolved Issue 1700: ResizableConstSizeVector (extension)
+    - description:  consider a Vector with fixed size, which can be extended if necessary - e.g. for local variables in sensors or GetOutputVariable; is efficient for small vectors and still works for larger one
+    - date resolved: **2023-12-07 23:03**\ , date raised: 2023-11-22 
+ * Version 1.7.45: resolved Issue 1714: Symbolic (extension)
+    - description:  add vector as symbolic expression, allowing vectors in user functions
+    - date resolved: **2023-12-07 19:55**\ , date raised: 2023-12-07 
+ * Version 1.7.44: resolved Issue 1713: user functions (change)
+    - description:  change StdVector to StdVector3D and StdVector6D in relevant cases in order to achieve light-weight interface for symbolic interfaces
+    - date resolved: **2023-12-07 19:53**\ , date raised: 2023-12-07 
+ * Version 1.7.43: resolved Issue 1712: Symbolic (extension)
+    - description:  add automatic creation of user functions to AutoGenerateObjects
+    - date resolved: **2023-12-05 00:06**\ , date raised: 2023-12-03 
+ * Version 1.7.42: resolved Issue 1711: Symbolic (extension)
+    - description:  put most parts of specific user functioninto base SymbolicFunction; EvaluateUF: use variadic args to generalize
+    - date resolved: **2023-12-05 00:06**\ , date raised: 2023-12-03 
+ * Version 1.7.41: resolved Issue 1709: Symbolic (extension)
+    - description:  add most of Pythons math module functions to symbolic functions list
+    - date resolved: **2023-12-03 15:01**\ , date raised: 2023-12-03 
+ * Version 1.7.40: resolved Issue 1705: Symbolic user function (extension)
+    - description:  allow parallel computation of non-Python user functions
+    - **notes:** this is enabled by adding user function after Assemble, thus objects are not registered to have Python user functions
+    - date resolved: **2023-12-03 14:58**\ , date raised: 2023-11-28 
+ * Version 1.7.39: resolved Issue 1706: RigidBodySpringDamper (docu)
+    - description:  intrinsicFormulation: add test to test suite and document new functionality
+    - date resolved: **2023-11-30 23:56**\ , date raised: 2023-11-30 
+ * Version 1.7.38: resolved Issue 1707: RigidBodySpringDamper (check)
+    - description:  intrinsicFormulation: check conserving properties of joint forces for two freely rotating bodies: additional torque of forces may be required in implementation
+    - date resolved: **2023-11-30 23:39**\ , date raised: 2023-11-30 
+ * Version 1.7.37: resolved Issue 1486: RigidBodySpringDamper (extension)
+    - description:  extend for Lie group formulation, evaluating connectors at mid-configuration according to Masarati and Morandini
+    - date resolved: **2023-11-30 20:51**\ , date raised: 2023-04-01 
+ * Version 1.7.36: resolved Issue 1696: exudyn.symbolic (extension)
+    - description:  add experimental expression trees for building symbolic expressions to be used for user functions
+    - **notes:** basic symbolic functionality added; tested with SpringDamper user function, leading to speedup of 10 against regular Python function
+    - date resolved: **2023-11-28 09:08**\ , date raised: 2023-11-21 
+    - resolved by: EXTENSION
+ * Version 1.7.35: resolved Issue 1704: solver timeout (extension)
+    - description:  added module-wide flag for timeout: exudyn.special.solver.timeout in order to stop simulations after certain time; use with care
+    - date resolved: **2023-11-22 09:43**\ , date raised: 2023-11-22 
+ * Version 1.7.34: resolved Issue 1703: Pybind module (change)
+    - description:  use suggestions of from search: pybind11, how to split my code into multiple modules/files - stackoverflow; should improve compilation time
+    - **notes:** created 2 new pybind module files; no major compilation speedup visible on laptop
+    - date resolved: **2023-11-22 08:24**\ , date raised: 2023-11-22 
+ * Version 1.7.33: resolved Issue 1702: PyErr_CheckSignals (check)
+    - description:  check if this method available in pybind helps to allow stopping long-lasting computations in exudyn
+    - **notes:** still does not work in Spyder
+    - date resolved: **2023-11-22 02:03**\ , date raised: 2023-11-22 
+ * Version 1.7.32: resolved Issue 1701: RunCppUnitTests (change)
+    - description:  move to exudyn.special.RunCppUnitTests
+    - date resolved: **2023-11-22 00:29**\ , date raised: 2023-11-22 
+ * Version 1.7.31: resolved Issue 1697: exudyn.experimental (change)
+    - description:  change exudyn.Experimental() into exudyn.experimental structure for clearer view on it; not intended to be used widely
+    - **notes:** see also issue 1613
+    - date resolved: **2023-11-21 21:18**\ , date raised: 2023-11-21 
+ * Version 1.7.30: resolved Issue 1694: load user functions (change)
+    - description:  add stl and numpy bindings in order to have Vector3D converted into numpy arrays in loadVectorUserFunction
+    - date resolved: **2023-11-19 23:05**\ , date raised: 2023-11-19 
+ * Version 1.7.29: resolved Issue 1690: mainSystemExtensions (extension)
+    - description:  add CreateGround() with referencePosition, referenceRotationMatrix and visualization
+    - date resolved: **2023-11-19 23:05**\ , date raised: 2023-11-19 
+ * Version 1.7.28: resolved Issue 1679: CreateTorque (extension)
+    - description:  add create function for nodes and bodies (using node=None, body=None default) to be used either for nodes or bodies; automatically adds markers; bodyFixed=False; add option to add userFunction
+    - date resolved: **2023-11-19 22:22**\ , date raised: 2023-10-29 
+ * Version 1.7.27: resolved Issue 1678: CreateForce (extension)
+    - description:  add create function for nodes and bodies (using node=None, body=None default) to be used either for nodes or bodies; automatically adds markers; bodyFixed=False; add option to add userFunction
+    - date resolved: **2023-11-19 22:22**\ , date raised: 2023-10-29 
+ * Version 1.7.26: resolved Issue 1689: mainSystemExtensions (extension)
+    - description:  change bodyOrNodeList into bodyList; allow bodyOrNodeList as alternative arg, but avoid using in examples
+    - date resolved: **2023-11-19 21:04**\ , date raised: 2023-11-19 
+ * Version 1.7.25: resolved Issue 1688: mainSystemExtensions (extension)
+    - description:  allow special case distance=0 in CreateDistanceConstraint; this will then create a SphericalJoint
+    - date resolved: **2023-11-19 21:04**\ , date raised: 2023-11-19 
+ * Version 1.7.24: resolved Issue 1687: mainSystemExtensions (extension)
+    - description:  allow referenceLength=0 in ConnectorSpringDamper
+    - date resolved: **2023-11-19 21:04**\ , date raised: 2023-11-19 
+ * Version 1.7.23: resolved Issue 1667: ANCFCable (extension)
+    - description:  add visulization with cylinders
+    - date resolved: **2023-11-19 19:39**\ , date raised: 2023-10-16 
+ * Version 1.7.22: resolved Issue 1686: SpringDamper (extension)
+    - description:  allow springLength=0, as it does not cause problems in computations
+    - **notes:** added special behavior for L=0, but velocity not equal 0; may cause convergence issues in particular for static problems; added special behavior for L=0, but velocity not equal 0; may cause convergence issues in particular for static problems; also allow referenceLength=0
+    - date resolved: **2023-11-19 19:11**\ , date raised: 2023-11-19 
+ * Version 1.7.21: resolved Issue 1685: ANCF cable with rigid marker (example)
+    - description:  add example with ANCFCable2D and rigid body marker, prescribing rotation of one end
+    - **notes:** ANCFrotatingCable2D.py
+    - date resolved: **2023-11-07 14:04**\ , date raised: 2023-11-07 
+ * Version 1.7.20: resolved Issue 1673: ReadTheDocs (fix)
+    - description:  add the required .readthedocs.yaml file and move requirements.txt into docs folder, as it is related to sphinx only
+    - date resolved: **2023-10-25 09:16**\ , date raised: 2023-10-25 
+ * Version 1.7.19: resolved Issue 1672: LieGroup explicit integration (change)
+    - description:  fixed lieGroupDataNodes; lieGroupDataNodes renamed into lieGroupNodes in explict integration
+    - date resolved: **2023-10-16 10:00**\ , date raised: 2023-10-16 
+ * Version 1.7.18: resolved Issue 1671: PlotSensor (change)
+    - description:  use IsListOrArray function to check for non-empty offsets and factors, to comply with numpy arrays
+    - date resolved: **2023-10-16 08:32**\ , date raised: 2023-10-16 
+ * Version 1.7.17: resolved Issue 1670: GenerateStraightLineANCFCable (extension)
+    - description:  add GenerateStraightLineANCFCable for 3D cables and adjust 2D version
+    - date resolved: **2023-10-16 08:31**\ , date raised: 2023-10-16 
+ * Version 1.7.16: resolved Issue 1669: NodePoint3DSlope (fix)
+    - description:  adjust all test models and examples for new NodePointSlope... names
+    - date resolved: **2023-10-16 08:02**\ , date raised: 2023-10-16 
+ * Version 1.7.15: resolved Issue 1663: NodePoint3DSlope23 (check)
+    - description:  check d/dt(A) ... computation of time derivative of rotation matrix, also check jacobians and angular velocities; add tests also for Slope12 node
+    - date resolved: **2023-10-16 07:45**\ , date raised: 2023-10-15 
+ * Version 1.7.14: resolved Issue 1666: NodePoint3DSlope1 (change)
+    - description:  change to NodePointSlope1
+    - date resolved: **2023-10-15 22:29**\ , date raised: 2023-10-15 
+ * Version 1.7.13: resolved Issue 1665: Point3DS23 (change)
+    - description:  remove Point3DS23 as its name is inconsistent with 3D convention and not really needed
+    - date resolved: **2023-10-15 22:24**\ , date raised: 2023-10-15 
+ * Version 1.7.12: resolved Issue 1664: NodePoint3DSlope23 (change)
+    - description:  change to NodePointSlope23
+    - date resolved: **2023-10-15 22:23**\ , date raised: 2023-10-15 
+ * Version 1.7.11: resolved Issue 1075: ANCFCable (extension)
+    - description:  add 3D version of cable element, not using BeamSection interface for compatibility with Cable2D
+    - date resolved: **2023-10-15 14:45**\ , date raised: 2022-05-06 
+ * Version 1.7.10: resolved Issue 1661: NodePoint3DSlope12 (extension)
+    - description:  add ANCF node with slopes x/y for thin plate element
+    - date resolved: **2023-10-15 14:21**\ , date raised: 2023-10-15 
+ * Version 1.7.9: resolved Issue 1403: Lie group nodes (change)
+    - description:  remove LieGroup node RigidBodyRotVecDataLG as it is not needed any more as it can be substituted with more efficient RigidBodyRotVecLG
+    - **notes:** right now added comments in C++ files, not completely removed
+    - date resolved: **2023-10-15 11:57**\ , date raised: 2023-01-18 
+ * Version 1.7.8: resolved Issue 1659: remove math.h (change)
+    - description:  change with <cmath> for C++ conformity
+    - date resolved: **2023-10-12 17:04**\ , date raised: 2023-10-12 
+ * Version 1.7.7: resolved Issue 1658: switch to MSVC2022 (change)
+    - description:  change main_sln_Template.sln for 2022 update; use cl.exe from MSVC2022 for compilation of wheels; slightly increases performance
+    - **notes:** compilation successful and TestSuite runs through
+    - date resolved: **2023-10-12 17:04**\ , date raised: 2023-10-12 
+ * Version 1.7.6: resolved Issue 1660: plot (change)
+    - description:  change plt.tight_layout and plt.legend to fig. if possible to avoid warnings
+    - date resolved: **2023-10-12 13:39**\ , date raised: 2023-10-12 
  * Version 1.7.5: resolved Issue 1657: Docu (fix)
     - description:  latex errors in robotics mobile and ROS
     - date resolved: **2023-10-09 20:27**\ , date raised: 2023-10-09 
@@ -4793,6 +4961,106 @@ Version 0.1
 Open issues
 ***********
 
+ * **open issue 1729:** Symbolic            
+    - description:  add vector/matrix tests in comparison with Python numpy and check delete counts
+    - date raised: 2023-12-12 
+
+ * **open issue 1728:** Symbolic            
+    - description:  add scalar tests in comparison with Python math and check delete counts
+    - date raised: 2023-12-12 
+
+ * **open issue 1727:** SymbolicRealMatrix  
+    - description:  add documentation and example for symbolic matrix for user functions
+    - date raised: 2023-12-12 
+
+ * **open issue 1723:** Symbolic            
+    - description:  SymbolicRealVector: add EvaluateItem(i) in operators wherever possible to efficiently evaluate single components instead of all vector components
+    - date raised: 2023-12-09 
+
+ * **open issue 1722:** Parameter type      
+    - description:  add exudyn.Parameter for all parameters occuring in items, such as referencePosition, physicsMass, etc.; this helps to avoid strings in user functions to access parameter and may allow to use  more efficient case/switch in GetObjectParameter(...)
+    - date raised: 2023-12-09 
+
+ * **open issue 1721:** Mainsystem extensions
+    - description:  in extension to issue 1718, change all AddRigidBody(...) functions to CreateRigidBody functionality
+    - date raised: 2023-12-08 
+
+ * **open issue 1720:** Mainsystem extensions
+    - description:  change create2D functions into separate Create functions
+    - date raised: 2023-12-08 
+
+ * **open issue 1719:** generated examples  
+    - description:  add set of generically generated examples, generated examples
+    - date raised: 2023-12-08 
+
+ * **open issue 1718:** Mainsystem extensions
+    - description:  modify some examples for .Create...(...) functions
+    - date raised: 2023-12-08 
+
+ * **open issue 1717:** Symbolic            
+    - description:  add examples to testsuite; modify existing examples
+    - date raised: 2023-12-08 
+
+ * **open issue 1695:** taskmanager         
+    - description:  extend microthreading for taskmanager-based load management; remove taskmanager from repo and create pure BSD license
+    - date raised: 2023-11-19 
+
+ * **open issue 1693:** VObjectGround       
+    - description:  remove parameter color, as it is not used (check)
+    - date raised: 2023-11-19 
+
+ * **open issue 1692:** exudyn.graphics     
+    - description:  change GraphicsData functions in examples to exudyn.graphics
+    - date raised: 2023-11-19 
+
+ * **open issue 1691:** exudyn.graphics     
+    - description:  map graphicsDataUtilities functions to exudyn.graphics for better readability
+    - date raised: 2023-11-19 
+
+ * **open issue 1684:** ObjectIndex         
+    - description:  consider functionality such as ComputeMassMatrix; ComputeODE2RHS, etc.; would require some default simulation settings (store in mainsystem?)
+    - date raised: 2023-10-29 
+
+ * **open issue 1683:** ItemIndices         
+    - description:  consider direct access to outputvariables in node: nodeIndex.current.position; at least nodeIndex.GetOutput(variableType, configuration) would be valuable
+    - date raised: 2023-10-29 
+
+ * **open issue 1682:** ItemIndices         
+    - description:  add previous CallFunction functionalities to NodeIndex, etc.; IsNodeGroup(group), IsNodeType(type), SizeODE2(), ..., 
+    - date raised: 2023-10-29 
+
+ * **open issue 1681:** ItemIndices         
+    - description:  add option to add force/torque directly; add gravity to bodies
+    - date raised: 2023-10-29 
+
+ * **open issue 1680:** chatGPTupdate       
+    - description:  add simple example for load userFunction
+    - date raised: 2023-10-29 
+
+ * **open issue 1677:** systemData          
+    - description:  add GetDict(), Set(systemDict=[Dict]) functions which returns the whole dictionary for the system; containing list of nodes, objects, ...; each item is represented by its dictionary; could be used for set/get in future
+    - date raised: 2023-10-29 
+
+ * **open issue 1676:** ItemIndices         
+    - description:  consider overriding __getattr__ and __setattr__ methods through pybind (or in Python with patching); this should allow to access data directly mapped via the dictionary
+    - date raised: 2023-10-29 
+
+ * **open issue 1675:** ItemIndices         
+    - description:  consider adding MainSystem\* to indices; this would allow to directly operate on Nodes
+    - date raised: 2023-10-29 
+
+ * **open issue 1674:** license.ext         
+    - description:  split into internal and external licenses
+    - date raised: 2023-10-29 
+
+ * **open issue 1668:** ANCFCable           
+    - description:  add test example
+    - date raised: 2023-10-16 
+
+ * **open issue 1662:** ANCFThinPlate       
+    - description:  add ANCF plate element based on 2 inplane slope vectors Slope12, based on Dufva/Shabana
+    - date raised: 2023-10-15 
+
  * **open issue 1653:** ANCFBeam            
     - description:  reconsider name: ANCFBeamStructural, not to have too many cases; use this for 2/3 node, different number of slopes except for 1 slope, which is ANCFCable, the 3D version of ANCFCable2D
     - date raised: 2023-08-16 
@@ -4877,10 +5145,6 @@ Open issues
     - description:  add exception in case that Lie group nodes are used with static solver, which cannot work
     - date raised: 2023-04-06 
 
- * **open issue 1486:** RigidBodySpringDamper
-    - description:  extend for Lie group formulation, evaluating connectors at mid-configuration according to Masarati and Morandini
-    - date raised: 2023-04-01 
-
  * **open issue 1485:** Spring-Damper connector description
     - description:  add general description for connectors based on spring-dampers (penalty)
     - date raised: 2023-04-01 
@@ -4928,10 +5192,6 @@ Open issues
  * **open issue 1414:** InteractiveDialog   
     - description:  extend for explicit solver; needs internally different setup of solvers; use dynamicSolverType with default generalizedAlpha changable to Newmark/Index2 as well as explicit solvers
     - date raised: 2023-01-22 
-
- * :textred:`open issue 1403:` Lie group nodes     
-    - description:  remove LieGroup node RigidBodyRotVecDataLG as it is not needed any more as it can be substituted with more efficient RigidBodyRotVecLG
-    - date raised: 2023-01-18 
 
  * **open issue 1395:** ComputeLinearizedSystem
     - description:  add test model
@@ -5028,10 +5288,6 @@ Open issues
  * **open issue 1078:** BeamSectionGeometry 
     - description:  add BeamSectionGeometry to 2D beam elements
     - date raised: 2022-05-09 
-
- * **open issue 1075:** ANCFCable3D         
-    - description:  add 3D version of cable element, using BeamSection in interface
-    - date raised: 2022-05-06 
 
  * :textred:`open issue 1061:` Reference and copy  
     - description:  add information to theDoc regarding copying and referencing objects, such as mbs, GetObject(...), etc.; add info into description C/R into generatePyBindings?

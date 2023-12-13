@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-03-01  20:14:19 (last modified)
+* @date         2023-12-03  23:26:45 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -25,7 +25,7 @@
 class VisualizationObjectGround: public VisualizationObject // AUTO: 
 {
 protected: // AUTO: 
-    std::function<py::object(const MainSystem&, Index)> graphicsDataUserFunction;//!< AUTO: A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function
+    std::function<py::object(const MainSystem&,Index)> graphicsDataUserFunction;//!< AUTO: A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function
     Float4 color;                                 //!< AUTO: RGB node color; if R==-1, use default color
     BodyGraphicsData graphicsData;                //!< AUTO: Structure contains data for body visualization; data is defined in special list / dictionary structure
 
@@ -52,11 +52,11 @@ public: // AUTO:
     }
 
     //! AUTO:  Write (Reference) access to:A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function
-    void SetGraphicsDataUserFunction(const std::function<py::object(const MainSystem&, Index)>& value) { graphicsDataUserFunction = value; }
+    void SetGraphicsDataUserFunction(const std::function<py::object(const MainSystem&,Index)>& value) { graphicsDataUserFunction = value; }
     //! AUTO:  Read (Reference) access to:A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function
-    const std::function<py::object(const MainSystem&, Index)>& GetGraphicsDataUserFunction() const { return graphicsDataUserFunction; }
+    const std::function<py::object(const MainSystem&,Index)>& GetGraphicsDataUserFunction() const { return graphicsDataUserFunction; }
     //! AUTO:  Read (Reference) access to:A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function
-    std::function<py::object(const MainSystem&, Index)>& GetGraphicsDataUserFunction() { return graphicsDataUserFunction; }
+    std::function<py::object(const MainSystem&,Index)>& GetGraphicsDataUserFunction() { return graphicsDataUserFunction; }
 
     //! AUTO:  Write (Reference) access to:RGB node color; if R==-1, use default color
     void SetColor(const Float4& value) { color = value; }

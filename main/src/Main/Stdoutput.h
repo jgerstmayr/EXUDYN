@@ -39,6 +39,7 @@ public:
 	OutputBuffer() 
 	{ 
 		setbuf(0, 0); //this leads to an overflow in any access to stringbuf!
+		suspendWriting = false;
 		writeToFile = false;
 		writeToConsole = true;
 		waitMilliSeconds = 0;

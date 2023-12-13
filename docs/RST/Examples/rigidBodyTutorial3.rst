@@ -39,8 +39,8 @@ You can view and download this file on Github: `rigidBodyTutorial3.py <https://g
    p0 =    [0,0,0]     #origin of pendulum
    pMid0 = np.array([L*0.5,0,0]) #center of mass, body0
    
-   #ground body
-   oGround = mbs.AddObject(ObjectGround())
+   #ground body, located at specific position (there could be several ground objects)
+   oGround = mbs.CreateGround(referencePosition=[0,0,0])
    
    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++
    #first link:
@@ -78,6 +78,18 @@ You can view and download this file on Github: `rigidBodyTutorial3.py <https://g
    mbs.CreateRevoluteJoint(bodyNumbers=[b0, b1], position=[L,0,0], 
                            axis=[1,0,0], axisRadius=0.2*w, axisLength=1.4*w)
    
+   #forces can be added like in the following
+   force = [0,0.5,0]       #0.5N   in y-direction
+   torque = [0.1,0,0]      #0.1Nm around x-axis
+   mbs.CreateForce(bodyNumber=b1,
+                   loadVector=force,
+                   localPosition=[0,0,0.5], #at tip
+                   bodyFixed=False) #if True, direction would corotate with body
+   mbs.CreateTorque(bodyNumber=b1, 
+                   loadVector=torque,
+                   localPosition=[0,0,0],   #at body's reference point/center
+                   bodyFixed=False) #if True, direction would corotate with body
+     
    #position sensor at tip of body1
    sens1=mbs.AddSensor(SensorBody(bodyNumber=b1, localPosition=[0,0,0.5*L],
                                   fileName='solution/sensorPos.txt',

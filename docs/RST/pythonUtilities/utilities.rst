@@ -346,7 +346,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: DrawSystemGraph
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-`DrawSystemGraph <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L847>`__\ (\ ``mbs``\ , \ ``showLoads = True``\ , \ ``showSensors = True``\ , \ ``useItemNames = False``\ , \ ``useItemTypes = False``\ , \ ``addItemTypeNames = True``\ , \ ``multiLine = True``\ , \ ``fontSizeFactor = 1.``\ , \ ``layoutDistanceFactor = 3.``\ , \ ``layoutIterations = 100``\ , \ ``showLegend = True``\ )
+`DrawSystemGraph <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L848>`__\ (\ ``mbs``\ , \ ``showLoads = True``\ , \ ``showSensors = True``\ , \ ``useItemNames = False``\ , \ ``useItemTypes = False``\ , \ ``addItemTypeNames = True``\ , \ ``multiLine = True``\ , \ ``fontSizeFactor = 1.``\ , \ ``layoutDistanceFactor = 3.``\ , \ ``layoutIterations = 100``\ , \ ``showLegend = True``\ , \ ``tightLayout = True``\ )
 
 
 - | **NOTE**\ : this function is directly available in MainSystem (mbs); it should be directly called as mbs.DrawSystemGraph(...). For description of the interface, see the MainSystem Python extensions,  :ref:`sec-mainsystemextensions-drawsystemgraph`\ 
@@ -360,7 +360,7 @@ Function: DrawSystemGraph
 
 Function: CreateTCPIPconnection
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateTCPIPconnection <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L1246>`__\ (\ ``sendSize``\ , \ ``receiveSize``\ , \ ``IPaddress = '127.0.0.1'``\ , \ ``port = 52421``\ , \ ``bigEndian = False``\ , \ ``verbose = False``\ )
+`CreateTCPIPconnection <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L1248>`__\ (\ ``sendSize``\ , \ ``receiveSize``\ , \ ``IPaddress = '127.0.0.1'``\ , \ ``port = 52421``\ , \ ``bigEndian = False``\ , \ ``verbose = False``\ )
 
 - | \ *function description*\ :
   | function which has to be called before simulation to setup TCP/IP socket (server) for
@@ -425,7 +425,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: TCPIPsendReceive
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
-`TCPIPsendReceive <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L1279>`__\ (\ ``TCPIPobject``\ , \ ``sendData``\ )
+`TCPIPsendReceive <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L1281>`__\ (\ ``TCPIPobject``\ , \ ``sendData``\ )
 
 - | \ *function description*\ :
   | call this function at every simulation step at which you intend to communicate with
@@ -457,7 +457,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: CloseTCPIPconnection
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CloseTCPIPconnection <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L1292>`__\ (\ ``TCPIPobject``\ )
+`CloseTCPIPconnection <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L1294>`__\ (\ ``TCPIPobject``\ )
 
 - | \ *function description*\ :
   | close a previously created TCPIP connection

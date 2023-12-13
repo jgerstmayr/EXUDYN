@@ -320,7 +320,7 @@ namespace EXUlie {
 		}
 		else
 		{
-			f2 = -0.5 + (1 / 24)*phiSquared - (1 / 720)*phiSquared*phiSquared;
+			f2 = -0.5 + (1. / 24)*phiSquared - (1. / 720)*phiSquared*phiSquared;
 		}
 
 		// coefficient f3, see Phd thesis Stefan Hante, Table. 1, page 121
@@ -330,7 +330,7 @@ namespace EXUlie {
 		}
 		else
 		{
-			f3 = 1 / 6 - (1 / 24)*phiSquared - (1 / 720)*phiSquared*phiSquared;
+			f3 = 1. / 6 - (1. / 24)*phiSquared - (1. / 720)*phiSquared*phiSquared;
 		}
 
 		// coefficient f4, see Phd thesis Stefan Hante, Table. 1, page 121
@@ -340,7 +340,7 @@ namespace EXUlie {
 		}
 		else
 		{
-			f4 = 1 / 12 - (1 / 180)*phiSquared + (1 / 6720)*phiSquared*phiSquared - (1 / 453600)*phiSquared*phiSquared*phiSquared;
+			f4 = 1. / 12 - (1. / 180)*phiSquared + (1. / 6720)*phiSquared*phiSquared - (1. / 453600)*phiSquared*phiSquared*phiSquared;
 		}
 
 		// coefficient f5, see Phd thesis Stefan Hante, Table. 1, page 121
@@ -350,7 +350,7 @@ namespace EXUlie {
 		}
 		else
 		{
-			f5 = 1 / 60 - (1 / 1260)*phiSquared + (1 / 60480)*phiSquared*phiSquared - (1 / 4989600)*phiSquared*phiSquared*phiSquared;
+			f5 = 1. / 60 - (1. / 1260)*phiSquared + (1. / 60480)*phiSquared*phiSquared - (1. / 4989600)*phiSquared*phiSquared*phiSquared;
 		}
 
 		Matrix3D TDispRotPlus = f2 * dispSkew;
@@ -418,7 +418,7 @@ namespace EXUlie {
 		}
 			else
 		{
-			f6 = 1 / 12 + (1 / 720)*phiSquared + (1 / 30240)*EXUstd::Square(phiSquared);
+			f6 = 1. / 12 + (1. / 720)*phiSquared + (1. / 30240)*EXUstd::Square(phiSquared);
 		}
 
 		// coefficient f8, see Phd thesis Stefan Hante, Table. 1, page 121
@@ -428,7 +428,7 @@ namespace EXUlie {
 		}
 		else
 		{
-			f8 = 1 / 360 + (1 / 7560)*phiSquared + (1 / 201600)*EXUstd::Square(phiSquared) + (1 / 5987520)*phiSquared*phiSquared*phiSquared + (691 / 130767436800)*phiSquared*phiSquared*phiSquared*phiSquared;
+			f8 = 1. / 360 + (1. / 7560)*phiSquared + (1. / 201600)*EXUstd::Square(phiSquared) + (1. / 5987520)*phiSquared*phiSquared*phiSquared + (691. / 130767436800)*phiSquared*phiSquared*phiSquared*phiSquared;
 		}
 
 		// Matrix C2, see Phd thesis Stefan Hante, Sect.A.3, page 117
@@ -781,7 +781,7 @@ namespace RigidBodyMath {
 	public:
 
 		//! replace default constructor
-		InertiaAtRefPoint() = default;
+		InertiaAtRefPoint(): inertiaTensorAtRefPoint(Matrix3D(3,3,0.)), massCOM(Vector3D(0.)), mass(0.) {}
 
 		//! initialize inertia class with parameters at COM !
 		void SetWithInertiaAtCOM(Real massInit, const Vector3D& comInit, const Matrix3D& inertiaTensorCOMinit)

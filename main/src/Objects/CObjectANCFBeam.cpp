@@ -429,7 +429,7 @@ SlimVectorBase<TReal, 3> GetLocalTwistAndCurvature(Real x, SlimVectorBase<TReal,
 		//d(ei_N)dxi = 1/|ei|*(I - np.outer(ei_N,ei_N))* deidxi ==> kappa+= 0.5/|ei|^2 * ei_N x ((I - 1//|ei|^2 * outer(ei,ei))*d(ei)dxi)
 		//should read: 
 		TReal eiNorm2 = eiBar.GetL2NormSquared();
-        CHECKandTHROW(eiNorm2 != 0., "CObjectANCFBeam: GetLocalTwistAndCurvature: Basis vector has zero length; check initialization of NodePoint3DSlope23");
+        CHECKandTHROW(eiNorm2 != 0., "CObjectANCFBeam: GetLocalTwistAndCurvature: Basis vector has zero length; check initialization of NodePointSlope23");
         eiList[i] = eiBar * (1. / sqrt(eiNorm2));
 
 		//corrected version: (but not big difference ...):
@@ -768,7 +768,7 @@ void CObjectANCFBeam::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs,
 //	ConstSizeVectorBase<DReal16, 2 * ns> ode2Lhs;
 //	LinkedDataVectorBase<DReal16> linkedOde2Lhs(ode2Lhs); //added because of decoupling of ConstSizeVectorBase
 //
-//	ComputeODE2LHStemplate<DReal16>(linkedOde2Lhs, qANCF, qANCF_t);
+//	ComputeODE2LHStemplate<DReal16>(linkedOde2Lhs, qANCF, qANCF_t, Index objectNumber);
 //
 //	jacobianODE2.SetUseDenseMatrix(true);
 //	ResizableMatrix& jac = jacobianODE2.GetInternalDenseMatrix();
@@ -1097,7 +1097,7 @@ Vector3D CObjectANCFBeam::GetAngularVelocity(const Vector3D& localPosition, Conf
 	CHECKandTHROWstring("ObjectANCFBeamBase::GetAngularVelocity: not implemented!");
 	return Vector3D();
 
-	////for details see GetAngularVelocity in Point3DSlope23
+	////for details see GetAngularVelocity in PointSlope23
 
 	//Real xLoc = localPosition[0]; //only x-coordinate
 	//Vector2D slope = ComputeSlopeVector(xLoc, configuration);

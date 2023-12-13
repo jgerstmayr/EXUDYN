@@ -277,7 +277,7 @@ exudynTestGlobals.testResult = np.sum(abs(sol))
 exu.Print('result of coordinateSpringDamperExt=',exudynTestGlobals.testResult) #17.084935539925155
 
 
-if True:
+if False:
     
     mbs.PlotSensor(closeAll = True)
 

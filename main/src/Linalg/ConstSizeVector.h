@@ -652,7 +652,7 @@ typedef ConstSizeVector<3> CSVector3D;
 typedef ConstSizeVector<4> CSVector4D;
 typedef ConstSizeVector<6> CSVector6D; //geometrically exact beam2D
 typedef ConstSizeVector<8> CSVector8D; //ANCF
-typedef ConstSizeVector<9> CSVector9D; //NodePoint3DSlope23
+typedef ConstSizeVector<9> CSVector9D; //NodePointSlope23
 
 template<Index dataSize>
 using ConstSizeVectorF = ConstSizeVectorBase<float, dataSize>;

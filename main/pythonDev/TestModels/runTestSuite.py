@@ -323,11 +323,11 @@ if runMiniExamples:
         for key,value in miniExamplesTestSolList.items(): print("'"+key+"':"+str(value)+",")
     
 if runCppUnitTests:
-    if hasattr(exu, 'RunCppUnitTests'):
+    if hasattr(exu.solver, 'RunCppUnitTests'):
         exu.Print('\n******************************************')
         exu.Print('RUN CPP UNIT TESTS:')
         exu.Print('******************************************')
-        numberOfCppUnitTestsFailed = exu.RunCppUnitTests()
+        numberOfCppUnitTestsFailed = exu.special.RunCppUnitTests()
     else:
         runCppUnitTests = False #will display that they were skipped 
 timeStart += time.time()

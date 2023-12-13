@@ -5,6 +5,9 @@
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
+# authors: original template file used from sphinx; consistently changed by Johannes Gerstmayr
+# data: 2022
+# description: this file is used for converting Exudyn .rst files into html documentation using sphinx
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #create exudynVersionString

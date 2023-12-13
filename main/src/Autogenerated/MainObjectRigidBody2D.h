@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-07-04  22:03:14 (last modified)
+* @date         2023-12-03  23:26:45 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -118,7 +118,7 @@ public: // AUTO:
         EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectRigidBody2D->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "VgraphicsDataUserFunction")) { if (EPyUtils::CheckForValidFunction(d["VgraphicsDataUserFunction"])) 
-            { visualizationObjectRigidBody2D->GetGraphicsDataUserFunction() = py::cast<std::function<py::object(const MainSystem&, Index)>>((py::function)d["VgraphicsDataUserFunction"]); /* AUTO:  read out dictionary and cast to C++ type*/}
+            { visualizationObjectRigidBody2D->GetGraphicsDataUserFunction() = py::cast<std::function<py::object(const MainSystem&,Index)>>((py::function)d["VgraphicsDataUserFunction"]); /* AUTO:  read out dictionary and cast to C++ type*/}
             else {visualizationObjectRigidBody2D->GetGraphicsDataUserFunction() = 0;  /*AUTO: otherwise assign with zero!*/ }} 
         if (EPyUtils::DictItemExists(d, "VgraphicsData")) { PyWriteBodyGraphicsDataList(d, "VgraphicsData", visualizationObjectRigidBody2D->GetGraphicsData()); /*! AUTO: convert dict to BodyGraphicsData*/} 
         GetCObject()->ParametersHaveChanged();
@@ -135,7 +135,7 @@ public: // AUTO:
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationObjectRigidBody2D->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         if (visualizationObjectRigidBody2D->GetGraphicsDataUserFunction())
-            {d["VgraphicsDataUserFunction"] = (std::function<py::object(const MainSystem&, Index)>)visualizationObjectRigidBody2D->GetGraphicsDataUserFunction();}
+            {d["VgraphicsDataUserFunction"] = (std::function<py::object(const MainSystem&,Index)>)visualizationObjectRigidBody2D->GetGraphicsDataUserFunction();}
         else
             {d["VgraphicsDataUserFunction"] = 0;}
  //! AUTO: cast variables into python (not needed for standard types) 
@@ -151,7 +151,7 @@ public: // AUTO:
         else if (parameterName.compare("physicsInertia") == 0) { return py::cast((Real)cObjectRigidBody2D->GetParameters().physicsInertia);} //! AUTO: get parameter
         else if (parameterName.compare("nodeNumber") == 0) { return py::cast((NodeIndex)cObjectRigidBody2D->GetParameters().nodeNumber);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectRigidBody2D->GetShow());} //! AUTO: get parameter
-        else if (parameterName.compare("VgraphicsDataUserFunction") == 0) { return py::cast((std::function<py::object(const MainSystem&, Index)>)visualizationObjectRigidBody2D->GetGraphicsDataUserFunction());} //! AUTO: get parameter
+        else if (parameterName.compare("VgraphicsDataUserFunction") == 0) { return py::cast((std::function<py::object(const MainSystem&,Index)>)visualizationObjectRigidBody2D->GetGraphicsDataUserFunction());} //! AUTO: get parameter
         else  {PyError(STDstring("ObjectRigidBody2D::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
         return py::object();
     }
@@ -165,7 +165,7 @@ public: // AUTO:
         else if (parameterName.compare("physicsInertia") == 0) { cObjectRigidBody2D->GetParameters().physicsInertia = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("nodeNumber") == 0) { cObjectRigidBody2D->GetParameters().nodeNumber = EPyUtils::GetNodeIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationObjectRigidBody2D->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("VgraphicsDataUserFunction") == 0) { if (py::isinstance<py::function>(value)) {visualizationObjectRigidBody2D->GetGraphicsDataUserFunction() = py::cast<std::function<py::object(const MainSystem&, Index)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/} else
+        else if (parameterName.compare("VgraphicsDataUserFunction") == 0) { if (py::isinstance<py::function>(value)) {visualizationObjectRigidBody2D->GetGraphicsDataUserFunction() = py::cast<std::function<py::object(const MainSystem&,Index)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/} else
             if (!EPyUtils::IsPyTypeInteger(value) || (py::cast<int>(value) != 0)) {PyError(STDstring("Failed to convert PyFunction: must be either valid python function or 0, but got ")+EXUstd::ToString(value)); }; } //! AUTO: get parameter
         else  {PyError(STDstring("ObjectRigidBody2D::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();

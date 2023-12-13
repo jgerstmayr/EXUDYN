@@ -106,10 +106,10 @@ if True:
     if compute3D:
         initialRotations = eY+eZ
         # compute nodes and beam elements in loop
-        n0 = mbs.AddNode(NodePoint3DSlope23(referenceCoordinates=[0,0,0]+initialRotations))
+        n0 = mbs.AddNode(NodePointSlope23(referenceCoordinates=[0,0,0]+initialRotations))
         nInit = n0
         for k in range(nElements):
-            n1 = mbs.AddNode(NodePoint3DSlope23(referenceCoordinates=[lElem*(k+1),0,0]+initialRotations))
+            n1 = mbs.AddNode(NodePointSlope23(referenceCoordinates=[lElem*(k+1),0,0]+initialRotations))
     
             oBeam = mbs.AddObject(ObjectANCFBeam(nodeNumbers=[n0,n1], physicsLength = lElem, 
                                                    #testBeamRectangularSize = [h,w],

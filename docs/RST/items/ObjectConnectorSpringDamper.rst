@@ -21,12 +21,12 @@ The item \ **ObjectConnectorSpringDamper**\  with type = 'ConnectorSpringDamper'
   | connector's unique name
 * | **markerNumbers** [\ :math:`[m0,m1]\tp`\ , type = ArrayMarkerIndex, default = [ invalid [-1], invalid [-1] ]]:
   | list of markers used in connector
-* | **referenceLength** [\ :math:`L_0`\ , type = PReal, default = 0.]:
+* | **referenceLength** [\ :math:`L_0`\ , type = UReal, default = 0.]:
   | reference length [SI:m] of spring
 * | **stiffness** [\ :math:`k`\ , type = UReal, default = 0.]:
-  | stiffness [SI:N/m] of spring; acts against (length-initialLength)
+  | stiffness [SI:N/m] of spring; force acts against (length-initialLength)
 * | **damping** [\ :math:`d`\ , type = UReal, default = 0.]:
-  | damping [SI:N/(m s)] of damper; acts against d/dt(length)
+  | damping [SI:N/(m s)] of damper; force acts against d/dt(length)
 * | **force** [\ :math:`f_{a}`\ , type = Real, default = 0.]:
   | added constant force [SI:N] of spring; scalar force; f=1 is equivalent to reducing initialLength by 1/stiffness; f > 0: tension; f < 0: compression; can be used to model actuator force
 * | **velocityOffset** [\ :math:`\dot L_0`\ , type = Real, default = 0.]:
@@ -243,6 +243,9 @@ The Jacobian w.r.t.\ velocity coordinates follows as
    \frac{\partial {\mathbf{Q}}_{SD, m0}}{\partial \dot {\mathbf{q}}_{m0}} &=& -{\mathbf{J}}_{pos,m0}\tp \frac{\partial {\mathbf{v}}_{f} \left( k\cdot(L-L_0) + d \cdot(\dot L - \dot L_0) + f_{a} \right)   }{\partial \dot {\mathbf{q}}_{m0}} \nonumber \\
    &=& {\mathbf{J}}_{pos,m0}\tp \left(d {\mathbf{v}}_{f} \otimes {\mathbf{v}}_{f} \right) \LU{0}{{\mathbf{J}}_{pos,m0}}
 
+
+Note that in case that \ :math:`L=0`\ , the term \ :math:`\frac{1}{L} \left({\mathbf{I}} - \LU{0}{{\mathbf{v}}_{f}} \otimes \LU{0}{{\mathbf{v}}_{f}} \right)`\  is replaced
+by the unit matrix, in order to avoid zero (singular) jacobian; this is a workaround and should only occur in exceptional cases.
 
 The term \ :math:`\frac{\partial \Delta\! \LU{0}{{\mathbf{v}}}}{\partial {\mathbf{q}}_{m0}}`\ , which is important for large damping, yields
 

@@ -32,21 +32,19 @@ f = 80
 x0 = f/k
 #(exact) dynamic result with u0 and v0: (see bottom of file)
 
-#node for mass point:
-n1=mbs.AddNode(Point(referenceCoordinates = [L,0,0], initialCoordinates = [u0,0,0], initialVelocities= [v0,0,0]))
+objectGround = mbs.CreateGround(referencePosition = [0,0,0])
 
-#add mass points and ground object:
-objectGround = mbs.AddObject(ObjectGround(referencePosition = [0,0,0]))
-massPoint = mbs.AddObject(MassPoint(physicsMass = mass, nodeNumber = n1))
+massPoint = mbs.CreateMassPoint(referencePosition=[L,0,0],
+                    initialDisplacement=[u0,0,0],
+                    initialVelocity=[v0,0,0],
+                    physicsMass=mass)
 
-#marker for constraint / springDamper
-groundMarker = mbs.AddMarker(MarkerBodyPosition(bodyNumber = objectGround, localPosition= [0, 0, 0]))
-bodyMarker = mbs.AddMarker(MarkerBodyPosition(bodyNumber = massPoint, localPosition= [0, 0, 0]))
+mbs.CreateCartesianSpringDamper(bodyList=[objectGround, massPoint],
+                                stiffness = [k,k,k], 
+                                damping   = [d,0,0], 
+                                offset    = [L,0,0])
 
-mbs.AddObject(CartesianSpringDamper(markerNumbers = [groundMarker, bodyMarker], stiffness = [k,k,k], damping = [d,0,0], offset = [L,0,0]))
-
-#add loads:
-mbs.AddLoad(Force(markerNumber = bodyMarker, loadVector = [f, 0, 0]))
+mbs.CreateForce(bodyNumber=massPoint, loadVector= [f,0,0])
 
 print(mbs)
 mbs.Assemble()
@@ -66,6 +64,7 @@ mbs.SolveDynamic(simulationSettings)
 #SC.WaitForRenderEngineStopFlag()
 #exu.StopRenderer() #safely close rendering window!
 
+n1 = mbs.GetObject(massPoint)['nodeNumber']
 u = mbs.GetNodeOutput(n1, exu.OutputVariableType.Position)
 uCartesianSpringDamper= u[0] - L
 errorCartesianSpringDamper = uCartesianSpringDamper - 0.011834933407044113 #for 1000 steps, endtime=1; accurate up to 3e-6 to exact solution (0.01183198678754692)

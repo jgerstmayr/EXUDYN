@@ -45,6 +45,11 @@ public:
 	//! access to parameters.strainIsRelativeToReference of derived class
 	virtual Real StrainIsRelativeToReference() const { return 0.; }
 
+	//! in derived class, implement
+	virtual bool HasUserFunction() const override { return HasForceUserFunction() || HasTorqueUserFunction(); }
+	virtual bool HasForceUserFunction() const { return false; }
+	virtual bool HasTorqueUserFunction() const { return false; }
+
 	//!  Computational function: compute mass matrix
 	virtual void ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse=false) const override;
 
@@ -59,7 +64,7 @@ public:
 	//TEMPLATED FUNCTIONS
 	template<class TReal, Index ancfSize>
 	void ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs, const ConstSizeVectorBase<TReal, ancfSize>& qANCF, 
-		const ConstSizeVectorBase<TReal, ancfSize>& qANCF_t) const;
+		const ConstSizeVectorBase<TReal, ancfSize>& qANCF_t, Index objectNumber) const;
 
 	//!  map element coordinates (position or veloctiy level) given by nodal vectors q0 and q1 onto compressed shape function vector to compute position, etc.
 	template<class TReal, Index ancfSize>
@@ -130,7 +135,7 @@ public:
 	virtual Vector3D GetAngularVelocityLocal(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const override
 	{ return GetAngularVelocity(localPosition, configuration); }
 
-	virtual Vector3D GetLocalCenterOfMass() const { return Vector3D({ 0., 0., 0. }); }
+	virtual Vector3D GetLocalCenterOfMass() const { return Vector3D({ 0.5*GetLength(), 0., 0.}); }
 
 	//!  Get type of object, e.g. to categorize and distinguish during assembly and computation
     virtual CObjectType GetType() const override
@@ -238,6 +243,13 @@ public:
 	//!  compute time derivative of the (bending) curvature at a certain axial position, for given configuration
 	Real ComputeCurvature_t(Real x, bool isALE, Real physicsMovingMassFactor, ConfigurationType configuration) const;
 
+	//! compute local force for user function; axialPositionNormalized is in unit coordinates [0, 1]
+	Real ComputeAxialForceLocalUserFunction(Real axialPositionNormalized, Real axialStrain, Real axialStrain_t, Real axialStrain0, 
+		Real physicsAxialStiffness, Real axialDamping,
+		Real curvature, Real curvature_t, Real curvature0, Index itemIndex, ConfigurationType configuration = ConfigurationType::Current) const;
+	//! compute local torque for user function; axialPositionNormalized is in unit coordinates [0, 1]
+	Real ComputeBendingMomentLocalUserFunction(Real axialPositionNormalized, Real curvature, Real curvature_t, Real curvatureRef, Real physicsBendingStiffness, Real bendingDamping,
+		Real axialStrain, Real axialStrain_t, Real axialStrainRef, Index itemIndex, ConfigurationType configuration = ConfigurationType::Current) const;
 };
 
 

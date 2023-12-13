@@ -1312,7 +1312,7 @@ void GeneralContact::ComputeContactTrigsRigidBodyBased(TemporaryComputationDataA
 		//+++++++++++++++++++++++++++++
 		//sphereI is 
 		Index gi = (Index)i + globalContactIndexOffsets[spheresMarkerBasedIndex];
-		const ContactSpheresMarkerBased& sphereI = spheresMarkerBased[i];
+		const ContactSpheresMarkerBased& sphereI = spheresMarkerBased[(Index)i];
 
 		Index minIndex = globalContactIndexOffsets[trigsRigidBodyBasedIndex]; //we are only search for trigs!
 		Index maxIndex = globalContactIndexOffsets[trigsRigidBodyBasedIndex + 1];

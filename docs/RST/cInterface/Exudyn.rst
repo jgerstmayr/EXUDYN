@@ -72,8 +72,24 @@ These are the access functions to the Exudyn module. General usage is explained 
   | Retrieve list of global information on memory allocation and other counts as list:[array_new_counts, array_delete_counts, vector_new_counts, vector_delete_counts, matrix_new_counts, matrix_delete_counts, linkedDataVectorCast_counts]; May be extended in future; if writeOutput==True, it additionally prints the statistics; counts for new vectors and matrices should not depend on numberOfSteps, except for some objects such as ObjectGenericODE2 and for (sensor) output to files; Not available if code is compiled with __FAST_EXUDYN_LINALG flag
 * | **Go**\ (): 
   | Creates a SystemContainer SC and a main multibody system mbs
+* | **Demo1**\ (\ *showAll*\ ): 
+  | Run simple demo without graphics to check functionality, see exudyn/demos.py
+* | **Demo2**\ (\ *showAll*\ ): 
+  | Run advanced demo without graphics to check functionality, see exudyn/demos.py
 * | **InvalidIndex**\ (): 
   | This function provides the invalid index, which may depend on the kind of 32-bit, 64-bit signed or unsigned integer; e.g. node index or item index in list; currently, the InvalidIndex() gives -1, but it may be changed in future versions, therefore you should use this function
+* | **\_\_version\_\_**:
+  | stores the current version of the Exudyn package
+* | **symbolic**:
+  | the symbolic submodule for creating symbolic variables in Python, see documentation of Symbolic; For details, see Section Symbolic.
+* | **experimental**:
+  | Experimental features, not intended for regular users; for available features, see the C++ code class PyExperimental
+* | **special**:
+  | special attributes and functions, such as global (solver) flags or helper functions; not intended for regular users; for available features, see the C++ code class PySpecial
+* | **special.solver**:
+  | special solver attributes and functions; not intended for regular users; for available features, see the C++ code class PySpecialSolver
+* | **special.solver.timeout**:
+  | if >= 0, the solver stops after reaching accoring CPU time specified with timeout; makes sense for parameter variation, automatic testing or for long-running simulations; default=-1 (no timeout)
 * | **variables**:
   | this dictionary may be used by the user to store exudyn-wide data in order to avoid global Python variables; usage: exu.variables["myvar"] = 42 
 * | **sys**:

@@ -90,6 +90,7 @@ def Str2Latex(s, isDefaultValue=False, replaceCurlyBracket=True): #replace _ and
             s = s.replace('false','False') #correct python notation
             s = s.replace('Index2','')
             s = s.replace('Index3','')
+            s = s.replace('Index4','')
             s = s.replace('Float3','')
             s = s.replace('Float4','')
             s = s.replace('Float9','')
@@ -186,6 +187,7 @@ def DefaultValue2Python(s):
         s = s.replace('false','False') #correct python notation
         s = s.replace('Index2','')
         s = s.replace('Index3','')
+        s = s.replace('Index4','')
         s = s.replace('Float3','')
         s = s.replace('Float4','')
         s = s.replace('Float9','')

@@ -37,6 +37,8 @@
 extern STDstring GetExudynPythonVersionString(); //for sensor/solution file headers
 extern STDstring GetExudynBuildVersionString(bool addDetails); //for sensor/solution file headers
 
+#include "Main/Experimental.h"
+extern PySpecial pySpecial;			//! special features; affects exudyn globally; treat with care
 
 namespace py = pybind11;	//for py::object
 
@@ -664,16 +666,6 @@ void CSolverBase::FinalizeSolver(CSystem& computationalSystem, const SimulationS
 
 		if (!simulationSettings.solutionSettings.binarySolutionFile)
 		{
-			//file.solutionFile << "#simulation finished=" << EXUstd::GetDateTimeString() << "\n";
-			//file.solutionFile << "#Solver Info:";
-			//file.solutionFile << " stepReductionFailed(or step failed)=" << conv.stepReductionFailed;
-			//file.solutionFile << ",discontinuousIterationSuccessful=" << conv.discontinuousIterationSuccessful;
-			//file.solutionFile << ",newtonSolutionDiverged=" << conv.newtonSolutionDiverged;
-			//file.solutionFile << ",massMatrixNotInvertible=" << conv.massMatrixNotInvertible;
-			//file.solutionFile << ",total time steps=" << it.currentStepIndex - 1; //initial step is also counted in it.currentStepIndex
-			//file.solutionFile << ",total Newton iterations=" << it.newtonStepsCount;
-			//file.solutionFile << ",total Newton jacobians=" << it.newtonJacobiCount << "\n";
-
 			file.solutionFile << footer;
 		}
 		else
@@ -805,6 +797,7 @@ bool CSolverBase::SolveSteps(CSystem& computationalSystem, const SimulationSetti
 		//do step size reduction
 		while (!stepAccomplished && !conv.stepReductionFailed)
 		{
+			if (PyCheckSignals()) { computationalSystem.GetPostProcessData()->stopSimulation = true; PyThrowErrorAlreadySet(); } //this stops at CTRL+"C"
 
 			//python linking, visualization, output, ... for every step
 			InitializeStep(computationalSystem, simulationSettings);
@@ -960,6 +953,13 @@ void CSolverBase::FinishStep(CSystem& computationalSystem, const SimulationSetti
 	Real tCPU = EXUstd::GetTimeInSeconds();
 	Real timeDelay = 2.; //print output every 2 seconds
 	if (tCPU - output.cpuStartTime > 3600) { timeDelay = 30; }
+	if (pySpecial.solver.timeout >= 0. && (tCPU - output.cpuStartTime) > pySpecial.solver.timeout) 
+	{  
+		computationalSystem.GetPostProcessData()->stopSimulation = true;
+		if (IsVerbose(1)) {
+			Verbose(1, STDstring("\n++++++++++++++++++++++++++++++\nexudyn.special.solver.timeout=" + EXUstd::ToString(pySpecial.solver.timeout)+
+			" seconds reached\nsimulation receives stop signal\n\n")); }
+	}
 
 	//output step information to console and solverFile
 	bool printFile = ((output.verboseModeFile == 1) && ((tCPU - output.cpuLastTimePrinted >= timeDelay)

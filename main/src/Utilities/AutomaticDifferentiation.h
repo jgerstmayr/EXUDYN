@@ -36,7 +36,6 @@ namespace EXUmath
 		typedef AutoDiff<nDiff, TReal> TELEM;
 		typedef TReal TSCAL;
 
-
 		/// elements are undefined
 		// inline AutoDiff  () throw() { };
 		AutoDiff() = default;
@@ -91,6 +90,9 @@ namespace EXUmath
 
 		/// returns partial derivative
 		inline TReal DValue(int i) const throw() { return dval[i]; }
+
+		/// explicit cast operator, will cast (Real)DReal into real
+		inline explicit operator TReal() const { return val; }
 
 		///
 		inline void StoreGradient(TReal * p) const

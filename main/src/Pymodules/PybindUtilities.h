@@ -26,7 +26,7 @@
 #include <pybind11/stl_bind.h>
 //#include <pybind11/operators.h>
 #include <pybind11/numpy.h>			//interface to numpy
-//#include <pybind11/cast.h>		//for argument annotation
+//#include <pybind11/cast.h>		//
 
 //typedef py::array_t<Real> PyNumpyArray; //PyNumpyArray is used at some places to avoid include of pybind
 
@@ -70,6 +70,50 @@ namespace EPyUtils {
 			//py::isinstance<std::int_fast32_t>(pyObject) ||
 			py::isinstance<py::int_>(pyObject);
 	}
+
+	//! check if py::object is list (list of lists) or numpy array
+	//! if yes, return true; columns=0 means vector (list or 1D numpy array); otherwise it is a matrix
+	//! FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX 
+	inline bool GetPyArrayOrListDimensions(const py::object& obj, int& rows, int& columns) 
+	{
+		rows = 0;
+		columns = 0;
+
+		//Check if the object is a numpy array
+		if (py::isinstance<py::array>(obj)) {
+			py::array arr = py::cast<py::array>(obj);
+			py::buffer_info info = arr.request();
+
+			rows = (Index)info.shape[0];
+			if (info.ndim == 2) {
+				columns = (Index)info.shape[1];
+			}
+			else
+			{
+				//return false => superfunction will raise Error anyways
+				PyWarning("Received numpy array with invalid dimension " + EXUstd::ToString(info.ndim));
+				return false;
+			}
+		}
+		//Check if the object is a list (or list of lists)
+		else if (py::isinstance<py::list>(obj)) 
+		{
+			py::list lst = py::cast<py::list>(obj);
+
+			rows = (Index)lst.size();
+			if (rows > 0 && py::isinstance<py::list>(lst[0])) {
+				// Object is a list of lists
+				py::list first_row = py::cast<py::list>(lst[0]);
+				columns = (Index)first_row.size();
+			}
+		}
+		else
+		{
+			return false;
+		}
+		return true;
+	}
+
 
 	inline bool IsNodeIndex(const py::object& pyObject)
 	{
@@ -489,26 +533,7 @@ namespace EPyUtils {
 		return false;
 	}
 
-	//inline bool SetMatrix6DSafely(const py::object& value, Matrix6D& destination) 
-	//{
-	//	return SetConstMatrixTemplateSafely<6, 6>(value, destination);
-	//}
 
-	//DELETE:
-	//inline bool SetMatrix6DSafely(const py::dict& d, const char* item, Matrix6D& destination) 
-	//{
-	//	return SetConstMatrixTemplateSafely<6, 6>(d, item, destination);
-	//}
-
-	//inline bool SetMatrix3DSafely(const py::object& value, Matrix3D& destination) 
-	//{
-	//	return SetConstMatrixTemplateSafely<3, 3>(value, destination);
-	//}
-
-	//inline bool SetMatrix3DSafely(const py::dict& d, const char* item, Matrix3D& destination) 
-	//{
-	//	return SetConstMatrixTemplateSafely<3, 3>(d, item, destination);
-	//}
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//! Set a general sized Matrix from a py::object safely and return false (if failed) and true if value has been set

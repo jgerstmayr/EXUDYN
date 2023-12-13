@@ -131,7 +131,7 @@ if True:
         n0 = mbs.AddNode(NodeClass(referenceCoordinates=[0,0,0]+initialRotationsGE))
     else:
         initialRotations = eY+eZ
-        n0 = mbs.AddNode(NodePoint3DSlope23(referenceCoordinates=[0,0,0]+initialRotations))
+        n0 = mbs.AddNode(NodePointSlope23(referenceCoordinates=[0,0,0]+initialRotations))
     nInit = n0
     for k in range(nElements):
         if useGeometricallyExact:
@@ -141,7 +141,7 @@ if True:
                                                                  sectionData = sectionData,
                                                                  visualization=VBeam3D(sectionGeometry=sectionGeometry)))
         else:
-            n1 = mbs.AddNode(NodePoint3DSlope23(referenceCoordinates=[lElem*(k+1),0,0]+initialRotations))
+            n1 = mbs.AddNode(NodePointSlope23(referenceCoordinates=[lElem*(k+1),0,0]+initialRotations))
             oBeam = mbs.AddObject(ObjectANCFBeam(nodeNumbers=[n0,n1], physicsLength = lElem, 
                                                    #testBeamRectangularSize = [h,w],
                                                    sectionData = sectionData,
@@ -156,7 +156,7 @@ if True:
         n0B = mbs.AddNode(NodeClass(referenceCoordinates=[L,0,0]+initialRotationsGE2))
     else:
         initialRotations = eY+eZ
-        n0B = mbs.AddNode(NodePoint3DSlope23(referenceCoordinates=[L,0,0]+initialRotations))
+        n0B = mbs.AddNode(NodePointSlope23(referenceCoordinates=[L,0,0]+initialRotations))
 
     nInitB = n0B
     for k in range(nElements):
@@ -167,7 +167,7 @@ if True:
                                                                   sectionData = sectionData,
                                                                   visualization=VBeam3D(sectionGeometry=sectionGeometry)))
         else:
-            n1B = mbs.AddNode(NodePoint3DSlope23(referenceCoordinates=[L,-lElem*(k+1),0]+initialRotations))
+            n1B = mbs.AddNode(NodePointSlope23(referenceCoordinates=[L,-lElem*(k+1),0]+initialRotations))
             oBeam = mbs.AddObject(ObjectANCFBeam(nodeNumbers=[n0B,n1B], physicsLength = lElem, 
                                                     #testBeamRectangularSize = [h,w],
                                                     sectionData = sectionData,

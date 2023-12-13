@@ -79,6 +79,88 @@ def JointPreCheckCalc(where, mbs, name, bodyNumbers, position, show, useGlobalFr
 
     return [p0, A0, p1, A1] 
 
+#internal function, which checks bodyList and bodyOrNodeList and returns appropriate bodyOrNodeList
+def ProcessBodyNodeLists(bodyList, bodyOrNodeList, localPosition0, localPosition1, where):
+    if not exudyn.__useExudynFast:
+        if not isinstance(bodyList, list) or len(bodyList) != 2:
+            RaiseTypeError(where=where, argumentName='bodyList', received = bodyList, expectedType = 'list of 2 body or node numbers')
+
+    causingArgName = 'bodyOrNodeList'
+    if bodyList[0] != None or bodyList[1] != None:
+        bodyOrNodeList = [bodyList[0],bodyList[1]] #flat copy, but otherwise would lead to change of args (mutable args!)
+        causingArgName = 'bodyList'
+        # if bodyList[0] == None or bodyList[1] == None:
+        #     raise ValueError(where+': bodyList contained None in one of the list items')
+        
+    if not exudyn.__useExudynFast:
+        if not isinstance(bodyOrNodeList, list) or len(bodyOrNodeList) != 2:
+            RaiseTypeError(where=where, argumentName='bodyOrNodeList', received = bodyOrNodeList, expectedType = 'list of 2 body or node numbers')
+    
+        if not (isinstance(bodyOrNodeList[0], exudyn.ObjectIndex) or (isinstance(bodyOrNodeList[0], exudyn.NodeIndex) and localPosition0==[0.,0.,0.])):
+            RaiseTypeError(where=where, argumentName=''+causingArgName+'[0]', received = bodyOrNodeList[0], 
+                           expectedType = 'expected either ObjectIndex or NodeIndex and localPosition0=[0.,0.,0.]')
+            
+        if not (isinstance(bodyOrNodeList[1], exudyn.ObjectIndex) or (isinstance(bodyOrNodeList[1], exudyn.NodeIndex) and localPosition1==[0.,0.,0.])):
+            RaiseTypeError(where=where, argumentName=''+causingArgName+'[1]', received = bodyOrNodeList[1], 
+                           expectedType = 'expected either ObjectIndex or NodeIndex and localPosition1=[0.,0.,0.]')
+    
+    return bodyOrNodeList
+
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#**function: helper function to create a ground object, using arguments of ObjectGround; this function is mainly added for consistency with other mainSystemExtensions
+#**input: 
+#  mbs: the MainSystem where items are created
+#  name: name string for object
+#  referencePosition: reference coordinates for point node (always a 3D vector, no matter if 2D or 3D mass)
+#  referenceRotationMatrix: reference rotation matrix for rigid body node (always 3D matrix, no matter if 2D or 3D body)
+#  graphicsDataList: list of GraphicsData for optional ground visualization
+#  color: color of node
+#  show: True: show ground object; 
+#**output: ObjectIndex; returns ground object index 
+#**belongsTo: MainSystem
+#**example:
+# import exudyn as exu
+# from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+# import numpy as np
+# SC = exu.SystemContainer()
+# mbs = SC.AddSystem()
+# 
+# ground=mbs.CreateGround(referencePosition = [2,0,0],
+#                         graphicsDataList = [GraphicsDataCheckerBoard(point=[0,0,0], normal=[0,1,0],size=4)])
+# 
+def MainSystemCreateGround(mbs,
+                           name = '',   
+                           referencePosition = [0.,0.,0.],
+                           referenceRotationMatrix = np.eye(3),
+                           graphicsDataList = [],
+                           show = True): 
+
+    #error checks:        
+    if not exudyn.__useExudynFast:
+        where='MainSystem.CreateGround(...)'
+        if not isinstance(name, str):
+            RaiseTypeError(where=where, argumentName='name', received = name, expectedType = ExpectedType.String)
+        if not IsVector(referencePosition, 3):
+            RaiseTypeError(where=where, argumentName='referencePosition', received = referencePosition, expectedType = ExpectedType.Vector, dim=3)
+
+        if not IsSquareMatrix(referenceRotationMatrix, 3):
+            RaiseTypeError(where=where, argumentName='referenceRotationMatrix', received = referenceRotationMatrix, expectedType = ExpectedType.Matrix, dim=3)
+    
+        if not IsValidBool(show):
+            RaiseTypeError(where=where, argumentName='show', received = show, expectedType = ExpectedType.Bool)
+    
+        if type(graphicsDataList) != list:
+            raise ValueError(where+': graphicsDataList must be a (possibly empty) list of dictionaries of graphics data!')
+
+    groundNumber = mbs.AddObject(eii.ObjectGround(name = name, 
+                                    referencePosition=referencePosition,
+                                    referenceRotation=referenceRotationMatrix,
+                                    visualization = eii.VObjectGround(show = show, 
+                                                        graphicsData = graphicsDataList) ))
+    return groundNumber
+
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: helper function to create 2D or 3D mass point object and node, using arguments as in NodePoint and MassPoint
@@ -94,7 +176,7 @@ def JointPreCheckCalc(where, mbs, name, bodyNumbers, position, show, useGlobalFr
 #  drawSize: general drawing size of node
 #  color: color of node
 #  show: True: if graphicsData list is empty, node is shown, otherwise body is shown; otherwise, nothing is shown
-#  create2D: if False, create NodePoint2D and MassPoint2D
+#  create2D: if True, create NodePoint2D and MassPoint2D
 #  returnDict: if False, returns object index; if True, returns dict of all information on created object and node
 #**output: Union[dict, ObjectIndex]; returns mass point object index or dict with all data on request (if returnDict=True)
 #**belongsTo: MainSystem
@@ -131,30 +213,31 @@ def MainSystemCreateMassPoint(mbs,
 
     #error checks:        
     if not exudyn.__useExudynFast:
+        where='MainSystem.CreateMassPoint(...)'
         if not isinstance(name, str):
-            RaiseTypeError(where='MainSystem.CreateMassPoint(...)', argumentName='name', received = name, expectedType = ExpectedType.String)
+            RaiseTypeError(where=where, argumentName='name', received = name, expectedType = ExpectedType.String)
         if not IsVector(referencePosition, 3):
-            RaiseTypeError(where='MainSystem.CreateMassPoint(...)', argumentName='referencePosition', received = referencePosition, expectedType = ExpectedType.Vector, dim=3)
+            RaiseTypeError(where=where, argumentName='referencePosition', received = referencePosition, expectedType = ExpectedType.Vector, dim=3)
         if not IsVector(initialDisplacement, 3):
-            RaiseTypeError(where='MainSystem.CreateMassPoint(...)', argumentName='initialDisplacement', received = initialDisplacement, expectedType = ExpectedType.Vector, dim=3)
+            RaiseTypeError(where=where, argumentName='initialDisplacement', received = initialDisplacement, expectedType = ExpectedType.Vector, dim=3)
         if not IsVector(initialVelocity, 3):
-            RaiseTypeError(where='MainSystem.CreateMassPoint(...)', argumentName='initialVelocity', received = initialVelocity, expectedType = ExpectedType.Vector, dim=3)
+            RaiseTypeError(where=where, argumentName='initialVelocity', received = initialVelocity, expectedType = ExpectedType.Vector, dim=3)
         if not IsVector(gravity, 3):
-            RaiseTypeError(where='MainSystem.CreateMassPoint(...)', argumentName='gravity', received = gravity, expectedType = ExpectedType.Vector, dim=3)
+            RaiseTypeError(where=where, argumentName='gravity', received = gravity, expectedType = ExpectedType.Vector, dim=3)
     
         if not IsValidRealInt(drawSize):
-            RaiseTypeError(where='MainSystem.CreateMassPoint(...)', argumentName='drawSize', received = drawSize, expectedType = ExpectedType.Real)
+            RaiseTypeError(where=where, argumentName='drawSize', received = drawSize, expectedType = ExpectedType.Real)
         if not IsVector(color, 4):
-            RaiseTypeError(where='MainSystem.CreateMassPoint(...)', argumentName='color', received = color, expectedType = ExpectedType.Vector, dim=4)
+            RaiseTypeError(where=where, argumentName='color', received = color, expectedType = ExpectedType.Vector, dim=4)
         if not IsValidBool(show):
-            RaiseTypeError(where='MainSystem.CreateMassPoint(...)', argumentName='show', received = show, expectedType = ExpectedType.Bool)
+            RaiseTypeError(where=where, argumentName='show', received = show, expectedType = ExpectedType.Bool)
         if not IsValidBool(create2D):
-            RaiseTypeError(where='MainSystem.CreateMassPoint(...)', argumentName='create2D', received = create2D, expectedType = ExpectedType.Bool)
+            RaiseTypeError(where=where, argumentName='create2D', received = create2D, expectedType = ExpectedType.Bool)
         if not IsValidBool(returnDict):
-            RaiseTypeError(where='MainSystem.CreateMassPoint(...)', argumentName='returnDict', received = returnDict, expectedType = ExpectedType.Bool)
+            RaiseTypeError(where=where, argumentName='returnDict', received = returnDict, expectedType = ExpectedType.Bool)
     
         if type(graphicsDataList) != list:
-            raise ValueError('MainSystem.CreateMassPoint(...): graphicsDataList must be a (possibly empty) list of dictionaries of graphics data!')
+            raise ValueError(where+': graphicsDataList must be a (possibly empty) list of dictionaries of graphics data!')
 
     nodeName = ''
     if name != '':
@@ -218,7 +301,7 @@ def MainSystemCreateMassPoint(mbs,
 #  drawSize: general drawing size of node
 #  color: color of node
 #  show: True: if graphicsData list is empty, node is shown, otherwise body is shown; False: nothing is shown
-#  create2D: if False, create NodePoint2D and MassPoint2D
+#  create2D: if True, create NodeRigidBody2D and ObjectRigidBody2D
 #  returnDict: if False, returns object index; if True, returns dict of all information on created object and node
 #**output: Union[dict, ObjectIndex]; returns rigid body object index (or dict with 'nodeNumber', 'objectNumber' and possibly 'loadNumber' and 'markerBodyMass' if returnDict=True)
 #**belongsTo: MainSystem
@@ -264,39 +347,40 @@ def MainSystemCreateRigidBody(mbs,
 
     #error checks:        
     if not exudyn.__useExudynFast:
+        where='MainSystem.CreateRigidBody(...)'
         if not isinstance(name, str):
-            RaiseTypeError(where='MainSystem.CreateRigidBody(...)', argumentName='name', received = name, expectedType = ExpectedType.String)
+            RaiseTypeError(where=where, argumentName='name', received = name, expectedType = ExpectedType.String)
         if not IsVector(referencePosition, 3):
-            RaiseTypeError(where='MainSystem.CreateRigidBody(...)', argumentName='referencePosition', received = referencePosition, expectedType = ExpectedType.Vector, dim=3)
+            RaiseTypeError(where=where, argumentName='referencePosition', received = referencePosition, expectedType = ExpectedType.Vector, dim=3)
         if not IsSquareMatrix(referenceRotationMatrix, 3):
-            RaiseTypeError(where='MainSystem.CreateRigidBody(...)', argumentName='referenceRotationMatrix', received = referenceRotationMatrix, expectedType = ExpectedType.Matrix, dim=3)
+            RaiseTypeError(where=where, argumentName='referenceRotationMatrix', received = referenceRotationMatrix, expectedType = ExpectedType.Matrix, dim=3)
 
 
         if not IsVector(initialVelocity, 3):
-            RaiseTypeError(where='MainSystem.CreateRigidBody(...)', argumentName='initialVelocity', received = initialVelocity, expectedType = ExpectedType.Vector, dim=3)
+            RaiseTypeError(where=where, argumentName='initialVelocity', received = initialVelocity, expectedType = ExpectedType.Vector, dim=3)
         if not IsVector(initialAngularVelocity, 3):
-            RaiseTypeError(where='MainSystem.CreateRigidBody(...)', argumentName='initialAngularVelocity', received = initialAngularVelocity, expectedType = ExpectedType.Vector, dim=3)
+            RaiseTypeError(where=where, argumentName='initialAngularVelocity', received = initialAngularVelocity, expectedType = ExpectedType.Vector, dim=3)
         if initialDisplacement != None and not IsVector(initialDisplacement, 3):
-            RaiseTypeError(where='MainSystem.CreateRigidBody(...)', argumentName='initialDisplacement', received = initialDisplacement, expectedType = ExpectedType.Vector, dim=3)
+            RaiseTypeError(where=where, argumentName='initialDisplacement', received = initialDisplacement, expectedType = ExpectedType.Vector, dim=3)
         if initialRotationMatrix != None and not IsSquareMatrix(initialRotationMatrix, 3):
-            RaiseTypeError(where='MainSystem.CreateRigidBody(...)', argumentName='initialRotationMatrix', received = initialRotationMatrix, expectedType = ExpectedType.Matrix, dim=3)
+            RaiseTypeError(where=where, argumentName='initialRotationMatrix', received = initialRotationMatrix, expectedType = ExpectedType.Matrix, dim=3)
 
         if not IsVector(gravity, 3):
-            RaiseTypeError(where='MainSystem.CreateRigidBody(...)', argumentName='gravity', received = gravity, expectedType = ExpectedType.Vector, dim=3)
+            RaiseTypeError(where=where, argumentName='gravity', received = gravity, expectedType = ExpectedType.Vector, dim=3)
     
         if not IsVector(color, 4):
-            RaiseTypeError(where='MainSystem.CreateRigidBody(...)', argumentName='color', received = color, expectedType = ExpectedType.Vector, dim=4)
+            RaiseTypeError(where=where, argumentName='color', received = color, expectedType = ExpectedType.Vector, dim=4)
         if not IsValidBool(show):
-            RaiseTypeError(where='MainSystem.CreateRigidBody(...)', argumentName='show', received = show, expectedType = ExpectedType.Bool)
+            RaiseTypeError(where=where, argumentName='show', received = show, expectedType = ExpectedType.Bool)
         if not IsValidRealInt(drawSize):
-            RaiseTypeError(where='MainSystem.CreateRigidBody(...)', argumentName='drawSize', received = drawSize, expectedType = ExpectedType.Real)
+            RaiseTypeError(where=where, argumentName='drawSize', received = drawSize, expectedType = ExpectedType.Real)
         if not IsValidBool(create2D):
-            RaiseTypeError(where='MainSystem.CreateRigidBody(...)', argumentName='create2D', received = create2D, expectedType = ExpectedType.Bool)
+            RaiseTypeError(where=where, argumentName='create2D', received = create2D, expectedType = ExpectedType.Bool)
         if not IsValidBool(returnDict):
-            RaiseTypeError(where='MainSystem.CreateRigidBody(...)', argumentName='returnDict', received = returnDict, expectedType = ExpectedType.Bool)
+            RaiseTypeError(where=where, argumentName='returnDict', received = returnDict, expectedType = ExpectedType.Bool)
     
         if type(graphicsDataList) != list:
-            raise ValueError('MainSystem.CreateRigidBody(...): graphicsDataList must be a (possibly empty) list of dictionaries of graphics data!')
+            raise ValueError(where+': graphicsDataList must be a (possibly empty) list of dictionaries of graphics data!')
 
         # if create2D:
         #     raise ValueError('MainSystem.CreateRigidBody(...): create2D=True currently not supported')
@@ -427,7 +511,7 @@ def MainSystemCreateRigidBody(mbs,
 #**input: 
 #  mbs: the MainSystem where items are created
 #  name: name string for connector; markers get Marker0:name and Marker1:name
-#  bodyOrNodeList: a list of object numbers (with specific localPosition0/1) or node numbers; may also be of mixed types
+#  bodyList: a list of two body numbers (ObjectIndex) to be connected
 #  localPosition0: local position (as 3D list or numpy array) on body0, if not a node number
 #  localPosition1: local position (as 3D list or numpy array) on body1, if not a node number
 #  referenceLength: if None, length is computed from reference position of bodies or nodes; if not None, this scalar reference length is used for spring
@@ -435,6 +519,7 @@ def MainSystemCreateRigidBody(mbs,
 #  damping: scalar damping coefficient
 #  force: scalar additional force applied
 #  velocityOffset: scalar offset: if referenceLength is changed over time, the velocityOffset may be changed accordingly to emulate a reference motion
+#  bodyOrNodeList: alternative to bodyList; a list of object numbers (with specific localPosition0/1) or node numbers; may also be of mixed types; to use this case, set bodyList = [None,None]
 #  show: if True, connector visualization is drawn
 #  drawSize: general drawing size of connector
 #  color: color of connector
@@ -454,7 +539,7 @@ def MainSystemCreateRigidBody(mbs,
 # 
 # oGround = mbs.AddObject(ObjectGround())
 # #add vertical spring
-# oSD = mbs.CreateSpringDamper(bodyOrNodeList=[oGround, b0],
+# oSD = mbs.CreateSpringDamper(bodyList=[oGround, b0],
 #                              localPosition0=[2,1,0],
 #                              localPosition1=[0,0,0],
 #                              stiffness=1e4, damping=1e2,
@@ -468,51 +553,44 @@ def MainSystemCreateRigidBody(mbs,
 # mbs.SolveDynamic(simulationSettings = simulationSettings)
 def MainSystemCreateSpringDamper(mbs,
                                  name='',
-                                 bodyOrNodeList=[None, None], 
+                                 bodyList=[None, None], 
                                  localPosition0 = [0.,0.,0.],
                                  localPosition1 = [0.,0.,0.], 
                                  referenceLength = None, 
                                  stiffness = 0., damping = 0., force = 0.,
                                  velocityOffset = 0., 
+                                 bodyOrNodeList=[None, None], 
                                  show=True, drawSize=-1, color=color4default):
     #perform some checks:
+    where='MainSystem.CreateSpringDamper(...)'
+    internBodyNodeList = ProcessBodyNodeLists(bodyList, bodyOrNodeList, localPosition0, localPosition1, where)
+    
     if not exudyn.__useExudynFast:
         if not isinstance(name, str):
-            RaiseTypeError(where='MainSystem.CreateSpringDamper(...)', argumentName='name', received = name, expectedType = ExpectedType.String)
-    
-        if not isinstance(bodyOrNodeList, list) or len(bodyOrNodeList) != 2:
-            RaiseTypeError(where='MainSystem.CreateSpringDamper(...)', argumentName='bodyOrNodeList', received = bodyOrNodeList, expectedType = 'list of 2 body or node numbers')
-    
-        if not (isinstance(bodyOrNodeList[0], exudyn.ObjectIndex) or (isinstance(bodyOrNodeList[0], exudyn.NodeIndex) and localPosition0==[0.,0.,0.])):
-            RaiseTypeError(where='MainSystem.CreateSpringDamper(...)', argumentName='bodyOrNodeList[0]', received = bodyOrNodeList[0], 
-                           expectedType = 'expected either ObjectIndex or NodeIndex and localPosition0=[0.,0.,0.]')
-            
-        if not (isinstance(bodyOrNodeList[1], exudyn.ObjectIndex) or (isinstance(bodyOrNodeList[1], exudyn.NodeIndex) and localPosition1==[0.,0.,0.])):
-            RaiseTypeError(where='MainSystem.CreateSpringDamper(...)', argumentName='bodyOrNodeList[1]', received = bodyOrNodeList[1], 
-                           expectedType = 'expected either ObjectIndex or NodeIndex and localPosition1=[0.,0.,0.]')
-            
+            RaiseTypeError(where=where, argumentName='name', received = name, expectedType = ExpectedType.String)
+                
         if not IsVector(localPosition0, 3):
-            RaiseTypeError(where='MainSystem.CreateSpringDamper(...)', argumentName='localPosition0', received = localPosition0, expectedType = ExpectedType.Vector, dim=3)
+            RaiseTypeError(where=where, argumentName='localPosition0', received = localPosition0, expectedType = ExpectedType.Vector, dim=3)
         if not IsVector(localPosition1, 3):
-            RaiseTypeError(where='MainSystem.CreateSpringDamper(...)', argumentName='localPosition1', received = localPosition1, expectedType = ExpectedType.Vector, dim=3)
+            RaiseTypeError(where=where, argumentName='localPosition1', received = localPosition1, expectedType = ExpectedType.Vector, dim=3)
     
-        if referenceLength != None and not IsValidPRealInt(referenceLength):
-            RaiseTypeError(where='MainSystem.CreateSpringDamper(...)', argumentName='referenceLength', received = referenceLength, expectedType = ExpectedType.PReal)
+        if referenceLength != None and not IsValidURealInt(referenceLength):
+            RaiseTypeError(where=where, argumentName='referenceLength', received = referenceLength, expectedType = ExpectedType.PReal)
         if not IsValidRealInt(stiffness):
-            RaiseTypeError(where='MainSystem.CreateSpringDamper(...)', argumentName='stiffness', received = stiffness, expectedType = ExpectedType.Real)
+            RaiseTypeError(where=where, argumentName='stiffness', received = stiffness, expectedType = ExpectedType.Real)
         if not IsValidRealInt(damping):
-            RaiseTypeError(where='MainSystem.CreateSpringDamper(...)', argumentName='damping', received = damping, expectedType = ExpectedType.Real)
+            RaiseTypeError(where=where, argumentName='damping', received = damping, expectedType = ExpectedType.Real)
         if not IsValidRealInt(force):
-            RaiseTypeError(where='MainSystem.CreateSpringDamper(...)', argumentName='force', received = force, expectedType = ExpectedType.Real)
+            RaiseTypeError(where=where, argumentName='force', received = force, expectedType = ExpectedType.Real)
         if not IsValidRealInt(velocityOffset):
-            RaiseTypeError(where='MainSystem.CreateSpringDamper(...)', argumentName='velocityOffset', received = velocityOffset, expectedType = ExpectedType.Real)
+            RaiseTypeError(where=where, argumentName='velocityOffset', received = velocityOffset, expectedType = ExpectedType.Real)
     
         if not IsValidBool(show):
-            RaiseTypeError(where='MainSystem.CreateSpringDamper(...)', argumentName='show', received = show, expectedType = ExpectedType.Bool)
+            RaiseTypeError(where=where, argumentName='show', received = show, expectedType = ExpectedType.Bool)
         if not IsValidRealInt(drawSize):
-            RaiseTypeError(where='MainSystem.CreateSpringDamper(...)', argumentName='drawSize', received = drawSize, expectedType = ExpectedType.Real)
+            RaiseTypeError(where=where, argumentName='drawSize', received = drawSize, expectedType = ExpectedType.Real)
         if not IsVector(color, 4):
-            RaiseTypeError(where='MainSystem.CreateSpringDamper(...)', argumentName='color', received = color, expectedType = ExpectedType.Vector, dim=4)
+            RaiseTypeError(where=where, argumentName='color', received = color, expectedType = ExpectedType.Vector, dim=4)
 
     
     mName0 = ''
@@ -521,29 +599,29 @@ def MainSystemCreateSpringDamper(mbs,
         mName0 = 'Marker0:'+name
         mName1 = 'Marker1:'+name
         
-    if isinstance(bodyOrNodeList[0], exudyn.ObjectIndex):
-        mBody0 = mbs.AddMarker(eii.MarkerBodyPosition(name=mName0,bodyNumber=bodyOrNodeList[0], localPosition=localPosition0))
+    if isinstance(internBodyNodeList[0], exudyn.ObjectIndex):
+        mBody0 = mbs.AddMarker(eii.MarkerBodyPosition(name=mName0,bodyNumber=internBodyNodeList[0], localPosition=localPosition0))
     else:
-        mBody0 = mbs.AddMarker(eii.MarkerNodePosition(name=mName0,nodeNumber=bodyOrNodeList[0]))
+        mBody0 = mbs.AddMarker(eii.MarkerNodePosition(name=mName0,nodeNumber=internBodyNodeList[0]))
 
-    if isinstance(bodyOrNodeList[1], exudyn.ObjectIndex):
-        mBody1 = mbs.AddMarker(eii.MarkerBodyPosition(name=mName1,bodyNumber=bodyOrNodeList[1], localPosition=localPosition1))
+    if isinstance(internBodyNodeList[1], exudyn.ObjectIndex):
+        mBody1 = mbs.AddMarker(eii.MarkerBodyPosition(name=mName1,bodyNumber=internBodyNodeList[1], localPosition=localPosition1))
     else:
-        mBody1 = mbs.AddMarker(eii.MarkerNodePosition(name=mName1,nodeNumber=bodyOrNodeList[1]))
+        mBody1 = mbs.AddMarker(eii.MarkerNodePosition(name=mName1,nodeNumber=internBodyNodeList[1]))
         
     if referenceLength == None: #automatically compute reference length
         
-        if isinstance(bodyOrNodeList[0], exudyn.ObjectIndex):
-            p0 = mbs.GetObjectOutputBody(bodyOrNodeList[0],exudyn.OutputVariableType.Position,
+        if isinstance(internBodyNodeList[0], exudyn.ObjectIndex):
+            p0 = mbs.GetObjectOutputBody(internBodyNodeList[0],exudyn.OutputVariableType.Position,
                                          localPosition=localPosition0, configuration=exudyn.ConfigurationType.Reference)
         else:
-            p0 = mbs.GetNodeOutput(bodyOrNodeList[0],exudyn.OutputVariableType.Position, configuration=exudyn.ConfigurationType.Reference)
+            p0 = mbs.GetNodeOutput(internBodyNodeList[0],exudyn.OutputVariableType.Position, configuration=exudyn.ConfigurationType.Reference)
             
-        if isinstance(bodyOrNodeList[1], exudyn.ObjectIndex):
-            p1 = mbs.GetObjectOutputBody(bodyOrNodeList[1],exudyn.OutputVariableType.Position,
+        if isinstance(internBodyNodeList[1], exudyn.ObjectIndex):
+            p1 = mbs.GetObjectOutputBody(internBodyNodeList[1],exudyn.OutputVariableType.Position,
                                          localPosition=localPosition1, configuration=exudyn.ConfigurationType.Reference)
         else:
-            p1 = mbs.GetNodeOutput(bodyOrNodeList[1],exudyn.OutputVariableType.Position, configuration=exudyn.ConfigurationType.Reference)
+            p1 = mbs.GetNodeOutput(internBodyNodeList[1],exudyn.OutputVariableType.Position, configuration=exudyn.ConfigurationType.Reference)
         
         referenceLength = np.linalg.norm(np.array(p1)-p0)
     
@@ -565,12 +643,13 @@ def MainSystemCreateSpringDamper(mbs,
 #**input: 
 #  mbs: the MainSystem where items are created
 #  name: name string for connector; markers get Marker0:name and Marker1:name
-#  bodyOrNodeList: a list of object numbers (with specific localPosition0/1) or node numbers; may also be of mixed types
+#  bodyList: a list of two body numbers (ObjectIndex) to be connected
 #  localPosition0: local position (as 3D list or numpy array) on body0, if not a node number
 #  localPosition1: local position (as 3D list or numpy array) on body1, if not a node number
 #  stiffness: stiffness coefficients (as 3D list or numpy array)
 #  damping: damping coefficients (as 3D list or numpy array)
 #  offset: offset vector (as 3D list or numpy array)
+#  bodyOrNodeList: alternative to bodyList; a list of object numbers (with specific localPosition0/1) or node numbers; may also be of mixed types; to use this case, set bodyList = [None,None]
 #  show: if True, connector visualization is drawn
 #  drawSize: general drawing size of connector
 #  color: color of connector
@@ -589,7 +668,7 @@ def MainSystemCreateSpringDamper(mbs,
 # 
 # oGround = mbs.AddObject(ObjectGround())
 # 
-# oSD = mbs.CreateCartesianSpringDamper(bodyOrNodeList=[oGround, b0],
+# oSD = mbs.CreateCartesianSpringDamper(bodyList=[oGround, b0],
 #                               localPosition0=[7.5,1,0],
 #                               localPosition1=[0,0,0],
 #                               stiffness=[200,2000,0], damping=[2,20,0],
@@ -604,46 +683,40 @@ def MainSystemCreateSpringDamper(mbs,
 # mbs.SolveDynamic(simulationSettings = simulationSettings)
 def MainSystemCreateCartesianSpringDamper(mbs,
                                  name='',
-                                 bodyOrNodeList=[None, None], 
+                                 bodyList=[None, None], 
                                  localPosition0 = [0.,0.,0.],
                                  localPosition1 = [0.,0.,0.], 
                                  stiffness = [0.,0.,0.], damping = [0.,0.,0.], 
                                  offset = [0.,0.,0.],
+                                 bodyOrNodeList=[None, None], 
                                  show=True, drawSize=-1, color=color4default):
+
+    where='MainSystem.CreateCartesianSpringDamper(...)'
+    internBodyNodeList = ProcessBodyNodeLists(bodyList, bodyOrNodeList, localPosition0, localPosition1, where)
+
     #perform some checks:
     if not exudyn.__useExudynFast:
         if not isinstance(name, str):
-            RaiseTypeError(where='MainSystem.CreateCartesianSpringDamper(...)', argumentName='name', received = name, expectedType = ExpectedType.String)
+            RaiseTypeError(where=where, argumentName='name', received = name, expectedType = ExpectedType.String)
     
-        if not isinstance(bodyOrNodeList, list) or len(bodyOrNodeList) != 2:
-            RaiseTypeError(where='MainSystem.CreateCartesianSpringDamper(...)', argumentName='bodyOrNodeList', received = bodyOrNodeList, expectedType = 'list of 2 body or node numbers')
-    
-        if not (isinstance(bodyOrNodeList[0], exudyn.ObjectIndex) or (isinstance(bodyOrNodeList[0], exudyn.NodeIndex) and localPosition0==[0.,0.,0.])):
-            RaiseTypeError(where='MainSystem.CreateCartesianSpringDamper(...)', argumentName='bodyOrNodeList[0]', received = bodyOrNodeList[0], 
-                           expectedType = 'expected either ObjectIndex or NodeIndex and localPosition0=[0.,0.,0.]')
-            
-        if not (isinstance(bodyOrNodeList[1], exudyn.ObjectIndex) or (isinstance(bodyOrNodeList[1], exudyn.NodeIndex) and localPosition1==[0.,0.,0.])):
-            RaiseTypeError(where='MainSystem.CreateCartesianSpringDamper(...)', argumentName='bodyOrNodeList[1]', received = bodyOrNodeList[1], 
-                           expectedType = 'expected either ObjectIndex or NodeIndex and localPosition1=[0.,0.,0.]')
-            
         if not IsVector(localPosition0, 3):
-            RaiseTypeError(where='MainSystem.CreateCartesianSpringDamper(...)', argumentName='localPosition0', received = localPosition0, expectedType = ExpectedType.Vector, dim=3)
+            RaiseTypeError(where=where, argumentName='localPosition0', received = localPosition0, expectedType = ExpectedType.Vector, dim=3)
         if not IsVector(localPosition1, 3):
-            RaiseTypeError(where='MainSystem.CreateCartesianSpringDamper(...)', argumentName='localPosition1', received = localPosition1, expectedType = ExpectedType.Vector, dim=3)
+            RaiseTypeError(where=where, argumentName='localPosition1', received = localPosition1, expectedType = ExpectedType.Vector, dim=3)
     
         if not IsVector(stiffness, 3):
-            RaiseTypeError(where='MainSystem.CreateCartesianSpringDamper(...)', argumentName='stiffness', received = stiffness, expectedType = ExpectedType.Vector, dim=3)
+            RaiseTypeError(where=where, argumentName='stiffness', received = stiffness, expectedType = ExpectedType.Vector, dim=3)
         if not IsVector(damping, 3):
-            RaiseTypeError(where='MainSystem.CreateCartesianSpringDamper(...)', argumentName='damping', received = damping, expectedType = ExpectedType.Vector, dim=3)
+            RaiseTypeError(where=where, argumentName='damping', received = damping, expectedType = ExpectedType.Vector, dim=3)
         if not IsVector(offset, 3):
-            RaiseTypeError(where='MainSystem.CreateCartesianSpringDamper(...)', argumentName='offset', received = offset, expectedType = ExpectedType.Vector, dim=3)
+            RaiseTypeError(where=where, argumentName='offset', received = offset, expectedType = ExpectedType.Vector, dim=3)
 
         if not IsValidBool(show):
-            RaiseTypeError(where='MainSystem.CreateCartesianSpringDamper(...)', argumentName='show', received = show, expectedType = ExpectedType.Bool)
+            RaiseTypeError(where=where, argumentName='show', received = show, expectedType = ExpectedType.Bool)
         if not IsValidRealInt(drawSize):
-            RaiseTypeError(where='MainSystem.CreateCartesianSpringDamper(...)', argumentName='drawSize', received = drawSize, expectedType = ExpectedType.Real)
+            RaiseTypeError(where=where, argumentName='drawSize', received = drawSize, expectedType = ExpectedType.Real)
         if not IsVector(color, 4):
-            RaiseTypeError(where='MainSystem.CreateCartesianSpringDamper(...)', argumentName='color', received = color, expectedType = ExpectedType.Vector, dim=4)
+            RaiseTypeError(where=where, argumentName='color', received = color, expectedType = ExpectedType.Vector, dim=4)
 
     
     mName0 = ''
@@ -652,15 +725,15 @@ def MainSystemCreateCartesianSpringDamper(mbs,
         mName0 = 'Marker0:'+name
         mName1 = 'Marker1:'+name
         
-    if isinstance(bodyOrNodeList[0], exudyn.ObjectIndex):
-        mBody0 = mbs.AddMarker(eii.MarkerBodyPosition(name=mName0,bodyNumber=bodyOrNodeList[0], localPosition=localPosition0))
+    if isinstance(internBodyNodeList[0], exudyn.ObjectIndex):
+        mBody0 = mbs.AddMarker(eii.MarkerBodyPosition(name=mName0,bodyNumber=internBodyNodeList[0], localPosition=localPosition0))
     else:
-        mBody0 = mbs.AddMarker(eii.MarkerNodePosition(name=mName0,nodeNumber=bodyOrNodeList[0]))
+        mBody0 = mbs.AddMarker(eii.MarkerNodePosition(name=mName0,nodeNumber=internBodyNodeList[0]))
 
-    if isinstance(bodyOrNodeList[1], exudyn.ObjectIndex):
-        mBody1 = mbs.AddMarker(eii.MarkerBodyPosition(name=mName1,bodyNumber=bodyOrNodeList[1], localPosition=localPosition1))
+    if isinstance(internBodyNodeList[1], exudyn.ObjectIndex):
+        mBody1 = mbs.AddMarker(eii.MarkerBodyPosition(name=mName1,bodyNumber=internBodyNodeList[1], localPosition=localPosition1))
     else:
-        mBody1 = mbs.AddMarker(eii.MarkerNodePosition(name=mName1,nodeNumber=bodyOrNodeList[1]))
+        mBody1 = mbs.AddMarker(eii.MarkerNodePosition(name=mName1,nodeNumber=internBodyNodeList[1]))
             
     oConnector = mbs.AddObject(eii.ObjectConnectorCartesianSpringDamper(name=name,markerNumbers = [mBody0,mBody1],
                                                                         stiffness = stiffness, damping = damping, offset = offset,
@@ -675,7 +748,7 @@ def MainSystemCreateCartesianSpringDamper(mbs,
 #**input: 
 #  mbs: the MainSystem where items are created
 #  name: name string for connector; markers get Marker0:name and Marker1:name
-#  bodyOrNodeList: a list of object numbers (with specific localPosition0/1) or node numbers; may also be of mixed types
+#  bodyList: a list of two body numbers (ObjectIndex) to be connected
 #  localPosition0: local position (as 3D list or numpy array) on body0, if not a node number
 #  localPosition1: local position (as 3D list or numpy array) on body1, if not a node number
 #  stiffness: stiffness coefficients (as 6D matrix or numpy array)
@@ -683,6 +756,8 @@ def MainSystemCreateCartesianSpringDamper(mbs,
 #  offset: offset vector (as 6D list or numpy array)
 #  rotationMatrixJoint: additional rotation matrix; in case  useGlobalFrame=False, it transforms body0/node0 local frame to joint frame; if useGlobalFrame=True, it transforms global frame to joint frame
 #  useGlobalFrame: if False, the rotationMatrixJoint is defined in the local coordinate system of body0
+#  intrinsicFormulation: if True, uses intrinsic formulation of Maserati and Morandini, which uses matrix logarithm and is independent of order of markers (preferred formulation); otherwise, Tait-Bryan angles are used for computation of torque, see documentation
+#  bodyOrNodeList: alternative to bodyList; a list of object numbers (with specific localPosition0/1) or node numbers; may also be of mixed types; to use this case, set bodyList = [None,None]
 #  show: if True, connector visualization is drawn
 #  drawSize: general drawing size of connector
 #  color: color of connector
@@ -692,7 +767,7 @@ def MainSystemCreateCartesianSpringDamper(mbs,
 # #TODO
 def MainSystemCreateRigidBodySpringDamper(mbs,
                                  name='',
-                                 bodyOrNodeList=[None, None], 
+                                 bodyList=[None, None], 
                                  localPosition0 = [0.,0.,0.],
                                  localPosition1 = [0.,0.,0.], 
                                  stiffness = np.zeros((6,6)), 
@@ -700,22 +775,18 @@ def MainSystemCreateRigidBodySpringDamper(mbs,
                                  offset = [0.,0.,0.,0.,0.,0.],
                                  rotationMatrixJoint=np.eye(3),
                                  useGlobalFrame=True,
+                                 intrinsicFormulation=True,
+                                 bodyOrNodeList=[None, None],
                                  show=True, drawSize=-1, color=color4default):
+
+    where='MainSystem.CreateRigidBodySpringDamper(...)'
+    internBodyNodeList = ProcessBodyNodeLists(bodyList, bodyOrNodeList, localPosition0, localPosition1, where)
+
     #perform some checks:
     if not exudyn.__useExudynFast:
-    
-        where='MainSystem.CreateRigidBodySpringDamper(...)'
-        if not isinstance(bodyOrNodeList, list) or len(bodyOrNodeList) != 2:
-            RaiseTypeError(where=where, argumentName='bodyOrNodeList', received = bodyOrNodeList, expectedType = 'list of 2 body or node numbers')
-    
-        if not (isinstance(bodyOrNodeList[0], exudyn.ObjectIndex) or (isinstance(bodyOrNodeList[0], exudyn.NodeIndex) and localPosition0==[0.,0.,0.])):
-            RaiseTypeError(where=where, argumentName='bodyOrNodeList[0]', received = bodyOrNodeList[0], 
-                           expectedType = 'expected either ObjectIndex or NodeIndex and localPosition0=[0.,0.,0.]')
-            
-        if not (isinstance(bodyOrNodeList[1], exudyn.ObjectIndex) or (isinstance(bodyOrNodeList[1], exudyn.NodeIndex) and localPosition1==[0.,0.,0.])):
-            RaiseTypeError(where=where, argumentName='bodyOrNodeList[1]', received = bodyOrNodeList[1], 
-                           expectedType = 'expected either ObjectIndex or NodeIndex and localPosition1=[0.,0.,0.]')
-            
+        if not isinstance(name, str):
+            RaiseTypeError(where=where, argumentName='name', received = name, expectedType = ExpectedType.String)
+                
         if not IsVector(localPosition0, 3):
             RaiseTypeError(where=where, argumentName='localPosition0', received = localPosition0, expectedType = ExpectedType.Vector, dim=3)
         if not IsVector(localPosition1, 3):
@@ -751,28 +822,28 @@ def MainSystemCreateRigidBodySpringDamper(mbs,
         mName0 = 'Marker0:'+name
         mName1 = 'Marker1:'+name
     
-    if isinstance(bodyOrNodeList[0], exudyn.ObjectIndex):
-        mBody0 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName0,bodyNumber=bodyOrNodeList[0], localPosition=localPosition0))
-        A0 = mbs.GetObjectOutputBody(objectNumber=bodyOrNodeList[0],variableType=exudyn.OutputVariableType.RotationMatrix,
+    if isinstance(internBodyNodeList[0], exudyn.ObjectIndex):
+        mBody0 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName0,bodyNumber=internBodyNodeList[0], localPosition=localPosition0))
+        A0 = mbs.GetObjectOutputBody(objectNumber=internBodyNodeList[0],variableType=exudyn.OutputVariableType.RotationMatrix,
                                      localPosition=localPosition0,
                                      configuration=exudyn.ConfigurationType.Reference).reshape((3,3))
     else:
-        mBody0 = mbs.AddMarker(eii.MarkerNodePosition(name=mName0,nodeNumber=bodyOrNodeList[0]))
-        A0 = mbs.GetNodeOutput(nodeNumber=bodyOrNodeList[0], variableType=exudyn.OutputVariableType.RotationMatrix,
+        mBody0 = mbs.AddMarker(eii.MarkerNodePosition(name=mName0,nodeNumber=internBodyNodeList[0]))
+        A0 = mbs.GetNodeOutput(nodeNumber=internBodyNodeList[0], variableType=exudyn.OutputVariableType.RotationMatrix,
                                configuration=exudyn.ConfigurationType.Reference).reshape((3,3))
 
-    if isinstance(bodyOrNodeList[1], exudyn.ObjectIndex):
-        mBody1 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName1,bodyNumber=bodyOrNodeList[1], localPosition=localPosition1))
-        A1 = mbs.GetObjectOutputBody(objectNumber=bodyOrNodeList[1],variableType=exudyn.OutputVariableType.RotationMatrix,
+    if isinstance(internBodyNodeList[1], exudyn.ObjectIndex):
+        mBody1 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName1,bodyNumber=internBodyNodeList[1], localPosition=localPosition1))
+        A1 = mbs.GetObjectOutputBody(objectNumber=internBodyNodeList[1],variableType=exudyn.OutputVariableType.RotationMatrix,
                                      localPosition=localPosition1,
                                      configuration=exudyn.ConfigurationType.Reference).reshape((3,3))
     else:
-        mBody1 = mbs.AddMarker(eii.MarkerNodePosition(name=mName1,nodeNumber=bodyOrNodeList[1]))
-        A1 = mbs.GetNodeOutput(nodeNumber=bodyOrNodeList[1], variableType=exudyn.OutputVariableType.RotationMatrix,
+        mBody1 = mbs.AddMarker(eii.MarkerNodePosition(name=mName1,nodeNumber=internBodyNodeList[1]))
+        A1 = mbs.GetNodeOutput(nodeNumber=internBodyNodeList[1], variableType=exudyn.OutputVariableType.RotationMatrix,
                                configuration=exudyn.ConfigurationType.Reference).reshape((3,3))
 
-    print('A0=',A0)
-    print('A1=',A1)
+    # print('A0=',A0)
+    # print('A1=',A1)
     if useGlobalFrame:
         #compute joint marker orientations, rotationMatrixAxes represents global frame:
         MR0 = A0.T @ rotationMatrixJoint
@@ -788,6 +859,7 @@ def MainSystemCreateRigidBodySpringDamper(mbs,
                                                                         offset = offset,
                                                                         rotationMarker0=MR0, 
                                                                         rotationMarker1=MR1,
+                                                                        intrinsicFormulation=intrinsicFormulation,
                                                                         visualization=eii.VRigidBodySpringDamper(show=show, 
                                                                                       drawSize=drawSize, color=color)
                                                                       ))
@@ -838,18 +910,22 @@ def MainSystemCreateRevoluteJoint(mbs, name='', bodyNumbers=[None, None],
                                   position=[], axis=[], useGlobalFrame=True, 
                                   show=True, axisRadius=0.1, axisLength=0.4, color=color4default):
     
+    where = 'MainSystem.CreateRevoluteJoint(...)'
     if not exudyn.__useExudynFast:
+        if not isinstance(name, str):
+            RaiseTypeError(where=where, argumentName='name', received = name, expectedType = ExpectedType.String)
+
         if not IsVector(axis, 3):
-            RaiseTypeError(where='MainSystem.CreateRevoluteJoint', argumentName='axis', received = axis, expectedType = ExpectedType.Vector, dim=3)
+            RaiseTypeError(where=where, argumentName='axis', received = axis, expectedType = ExpectedType.Vector, dim=3)
     
         if not IsValidRealInt(axisRadius):
-            RaiseTypeError(where='MainSystem.CreateRevoluteJoint', argumentName='axisRadius', received = axisRadius, expectedType = ExpectedType.Real)
+            RaiseTypeError(where=where, argumentName='axisRadius', received = axisRadius, expectedType = ExpectedType.Real)
         if not IsValidRealInt(axisLength):
-            RaiseTypeError(where='MainSystem.CreateRevoluteJoint', argumentName='axisLength', received = axisLength, expectedType = ExpectedType.Real)
+            RaiseTypeError(where=where, argumentName='axisLength', received = axisLength, expectedType = ExpectedType.Real)
         if not IsVector(color, 4):
-            RaiseTypeError(where='MainSystem.CreateRevoluteJoint(...)', argumentName='color', received = color, expectedType = ExpectedType.Vector, dim=4)
+            RaiseTypeError(where=where, argumentName='color', received = color, expectedType = ExpectedType.Vector, dim=4)
 
-    [p0, A0, p1, A1] = JointPreCheckCalc('MainSystem.CreateRevoluteJoint', mbs, name, bodyNumbers, position, show, useGlobalFrame)
+    [p0, A0, p1, A1] = JointPreCheckCalc(where, mbs, name, bodyNumbers, position, show, useGlobalFrame)
         
     if useGlobalFrame:
         pJoint = copy.copy(position)
@@ -936,18 +1012,22 @@ def MainSystemCreatePrismaticJoint(mbs, name='', bodyNumbers=[None, None],
                                   position=[], axis=[], useGlobalFrame=True, 
                                   show=True, axisRadius=0.1, axisLength=0.4, color=color4default):
         
+    where = 'MainSystem.CreatePrismaticJoint(...)'
     if not exudyn.__useExudynFast:
+        if not isinstance(name, str):
+            RaiseTypeError(where=where, argumentName='name', received = name, expectedType = ExpectedType.String)
+
         if not IsVector(axis, 3):
-            RaiseTypeError(where='MainSystem.CreatePrismaticJoint', argumentName='axis', received = axis, expectedType = ExpectedType.Vector, dim=3)
+            RaiseTypeError(where=where, argumentName='axis', received = axis, expectedType = ExpectedType.Vector, dim=3)
     
         if not IsValidRealInt(axisRadius):
-            RaiseTypeError(where='MainSystem.CreatePrismaticJoint', argumentName='axisRadius', received = axisRadius, expectedType = ExpectedType.Real)
+            RaiseTypeError(where=where, argumentName='axisRadius', received = axisRadius, expectedType = ExpectedType.Real)
         if not IsValidRealInt(axisLength):
-            RaiseTypeError(where='MainSystem.CreatePrismaticJoint', argumentName='axisLength', received = axisLength, expectedType = ExpectedType.Real)
+            RaiseTypeError(where=where, argumentName='axisLength', received = axisLength, expectedType = ExpectedType.Real)
         if not IsVector(color, 4):
-            RaiseTypeError(where='MainSystem.CreatePrismaticJoint(...)', argumentName='color', received = color, expectedType = ExpectedType.Vector, dim=4)
+            RaiseTypeError(where=where, argumentName='color', received = color, expectedType = ExpectedType.Vector, dim=4)
 
-    [p0, A0, p1, A1] = JointPreCheckCalc('MainSystem.CreatePrismaticJoint', mbs, name, bodyNumbers, position, show, useGlobalFrame)
+    [p0, A0, p1, A1] = JointPreCheckCalc(where, mbs, name, bodyNumbers, position, show, useGlobalFrame)
 
 
     if useGlobalFrame:
@@ -1026,15 +1106,19 @@ def MainSystemCreateSphericalJoint(mbs, name='', bodyNumbers=[None, None],
                                   position=[], constrainedAxes=[1,1,1], useGlobalFrame=True, 
                                   show=True, jointRadius=0.1, color=color4default):
         
+    where = 'MainSystem.CreateSphericalJoint(...)'
     if not exudyn.__useExudynFast:
-        if not IsIntVector(constrainedAxes, 3):
-            RaiseTypeError(where='MainSystem.CreateSphericalJoint', argumentName='constrainedAxes', received = constrainedAxes, expectedType = ExpectedType.IntVector, dim=3)
-        if not IsValidRealInt(jointRadius):
-            RaiseTypeError(where='MainSystem.CreateSphericalJoint', argumentName='jointRadius', received = jointRadius, expectedType = ExpectedType.Real)
-        if not IsVector(color, 4):
-            RaiseTypeError(where='MainSystem.CreateSphericalJoint(...)', argumentName='color', received = color, expectedType = ExpectedType.Vector, dim=4)
+        if not isinstance(name, str):
+            RaiseTypeError(where=where, argumentName='name', received = name, expectedType = ExpectedType.String)
 
-    [p0, A0, p1, A1] = JointPreCheckCalc('MainSystem.CreateSphericalJoint', mbs, name, bodyNumbers, position, show, useGlobalFrame)
+        if not IsIntVector(constrainedAxes, 3):
+            RaiseTypeError(where=where, argumentName='constrainedAxes', received = constrainedAxes, expectedType = ExpectedType.IntVector, dim=3)
+        if not IsValidRealInt(jointRadius):
+            RaiseTypeError(where=where, argumentName='jointRadius', received = jointRadius, expectedType = ExpectedType.Real)
+        if not IsVector(color, 4):
+            RaiseTypeError(where=where, argumentName='color', received = color, expectedType = ExpectedType.Vector, dim=4)
+
+    [p0, A0, p1, A1] = JointPreCheckCalc(where, mbs, name, bodyNumbers, position, show, useGlobalFrame)
 
     if useGlobalFrame:
         pJoint = copy.copy(position)
@@ -1110,18 +1194,22 @@ def MainSystemCreateGenericJoint(mbs, name='', bodyNumbers=[None, None],
                                  constrainedAxes=[1,1,1, 1,1,1], useGlobalFrame=True,
                                  show=True, axesRadius=0.1, axesLength=0.4, color=color4default):
         
+    where = 'MainSystem.CreateGenericJoint(...)'
     if not exudyn.__useExudynFast:
+        if not isinstance(name, str):
+            RaiseTypeError(where=where, argumentName='name', received = name, expectedType = ExpectedType.String)
+
         if not IsIntVector(constrainedAxes, 6):
-            RaiseTypeError(where='MainSystem.CreateGenericJoint', argumentName='constrainedAxes', received = constrainedAxes, expectedType = ExpectedType.IntVector, dim=6)
+            RaiseTypeError(where=where, argumentName='constrainedAxes', received = constrainedAxes, expectedType = ExpectedType.IntVector, dim=6)
     
         if not IsValidRealInt(axesRadius):
-            RaiseTypeError(where='MainSystem.CreateGenericJoint', argumentName='axesRadius', received = axesRadius, expectedType = ExpectedType.Real)
+            RaiseTypeError(where=where, argumentName='axesRadius', received = axesRadius, expectedType = ExpectedType.Real)
         if not IsValidRealInt(axesLength):
-            RaiseTypeError(where='MainSystem.CreateGenericJoint', argumentName='axesLength', received = axesLength, expectedType = ExpectedType.Real)
+            RaiseTypeError(where=where, argumentName='axesLength', received = axesLength, expectedType = ExpectedType.Real)
         if not IsVector(color, 4):
-            RaiseTypeError(where='MainSystem.CreateGenericJoint(...)', argumentName='color', received = color, expectedType = ExpectedType.Vector, dim=4)
+            RaiseTypeError(where=where, argumentName='color', received = color, expectedType = ExpectedType.Vector, dim=4)
 
-    [p0, A0, p1, A1] = JointPreCheckCalc('MainSystem.CreateGenericJoint', mbs, name, bodyNumbers, position, show, useGlobalFrame)
+    [p0, A0, p1, A1] = JointPreCheckCalc(where, mbs, name, bodyNumbers, position, show, useGlobalFrame)
 
 
     if useGlobalFrame:
@@ -1163,10 +1251,11 @@ def MainSystemCreateGenericJoint(mbs, name='', bodyNumbers=[None, None],
 #**input:
 #  mbs: the MainSystem where joint and markers shall be created
 #  name: name string for joint; markers get Marker0:name and Marker1:name
-#  bodyOrNodeList: a list of object numbers (with specific localPosition0/1) or node numbers; may also be of mixed types
+#  bodyList: a list of two body numbers (ObjectIndex) to be constrained
 #  localPosition0: local position (as 3D list or numpy array) on body0, if not a node number
 #  localPosition1: local position (as 3D list or numpy array) on body1, if not a node number
-#  distance: if None, distance is computed from reference position of bodies or nodes; if not None, this distance (which must be always larger than zero) is prescribed between the two positions
+#  distance: if None, distance is computed from reference position of bodies or nodes; if not None, this distance is prescribed between the two positions; if distance = 0, it will create a SphericalJoint as this case is not possible with a DistanceConstraint
+#  bodyOrNodeList: alternative to bodyList; a list of object numbers (with specific localPosition0/1) or node numbers; may also be of mixed types; to use this case, set bodyList = [None,None]
 #  show: if True, connector visualization is drawn
 #  drawSize: general drawing size of node
 #  color: color of connector
@@ -1190,7 +1279,7 @@ def MainSystemCreateGenericJoint(mbs, name='', bodyNumbers=[None, None],
 # n1 = mbs.GetObject(m1)['nodeNumber']
 #     
 # oGround = mbs.AddObject(ObjectGround())
-# mbs.CreateDistanceConstraint(bodyOrNodeList=[oGround, b0], 
+# mbs.CreateDistanceConstraint(bodyList=[oGround, b0], 
 #                              localPosition0 = [6.5,1,0],
 #                              localPosition1 = [0.5,0,0],
 #                              distance=None, #automatically computed
@@ -1209,40 +1298,34 @@ def MainSystemCreateGenericJoint(mbs, name='', bodyNumbers=[None, None],
 # 
 # mbs.SolveDynamic(simulationSettings = simulationSettings)
 def MainSystemCreateDistanceConstraint(mbs, name='', 
-                                       bodyOrNodeList=[None, None], 
+                                       bodyList=[None, None], 
                                        localPosition0 = [0.,0.,0.],
                                        localPosition1 = [0.,0.,0.], 
                                        distance=None, 
+                                       bodyOrNodeList=[None, None],
                                        show=True, drawSize=-1., color=color4default):
+    
+    where = 'MainSystem.CreateDistanceConstraint(...)'
+    internBodyNodeList = ProcessBodyNodeLists(bodyList, bodyOrNodeList, localPosition0, localPosition1, where)
         
     if not exudyn.__useExudynFast:
         if not isinstance(name, str):
-            RaiseTypeError(where='MainSystem.CreateSpringDamper(...)', argumentName='name', received = name, expectedType = ExpectedType.String)
-        if not isinstance(bodyOrNodeList, list) or len(bodyOrNodeList) != 2:
-            RaiseTypeError(where='MainSystem.CreateDistanceConstraint(...)', argumentName='bodyOrNodeList', received = bodyOrNodeList, expectedType = 'list of 2 body or node numbers')
-    
-        if not (isinstance(bodyOrNodeList[0], exudyn.ObjectIndex) or (isinstance(bodyOrNodeList[0], exudyn.NodeIndex) and localPosition0==[0.,0.,0.])):
-            RaiseTypeError(where='MainSystem.CreateDistanceConstraint(...)', argumentName='bodyOrNodeList[0]', received = bodyOrNodeList[0], 
-                           expectedType = 'expected either ObjectIndex or NodeIndex and localPosition0=[0.,0.,0.]')
-            
-        if not (isinstance(bodyOrNodeList[1], exudyn.ObjectIndex) or (isinstance(bodyOrNodeList[1], exudyn.NodeIndex) and localPosition1==[0.,0.,0.])):
-            RaiseTypeError(where='MainSystem.CreateDistanceConstraint(...)', argumentName='bodyOrNodeList[1]', received = bodyOrNodeList[1], 
-                           expectedType = 'expected either ObjectIndex or NodeIndex and localPosition1=[0.,0.,0.]')
+            RaiseTypeError(where=where, argumentName='name', received = name, expectedType = ExpectedType.String)
             
         if not IsVector(localPosition0, 3):
-            RaiseTypeError(where='MainSystem.CreateDistanceConstraint(...)', argumentName='localPosition0', received = localPosition0, expectedType = ExpectedType.Vector, dim=3)
+            RaiseTypeError(where=where, argumentName='localPosition0', received = localPosition0, expectedType = ExpectedType.Vector, dim=3)
         if not IsVector(localPosition1, 3):
-            RaiseTypeError(where='MainSystem.CreateDistanceConstraint(...)', argumentName='localPosition1', received = localPosition1, expectedType = ExpectedType.Vector, dim=3)
+            RaiseTypeError(where=where, argumentName='localPosition1', received = localPosition1, expectedType = ExpectedType.Vector, dim=3)
     
-        if distance != None and not IsValidPRealInt(distance):
-            RaiseTypeError(where='MainSystem.CreateDistanceConstraint(...)', argumentName='distance', received = distance, expectedType = ExpectedType.PReal)
+        if distance != None and not IsValidURealInt(distance):
+            RaiseTypeError(where=where, argumentName='distance', received = distance, expectedType = ExpectedType.PReal)
 
         if not IsValidBool(show):
-            RaiseTypeError(where='MainSystem.CreateSpringDamper(...)', argumentName='show', received = show, expectedType = ExpectedType.Bool)
+            RaiseTypeError(where=where, argumentName='show', received = show, expectedType = ExpectedType.Bool)
         if not IsValidRealInt(drawSize):
-            RaiseTypeError(where='MainSystem.CreateDistanceConstraint(...)', argumentName='drawSize', received = drawSize, expectedType = ExpectedType.Real)
+            RaiseTypeError(where=where, argumentName='drawSize', received = drawSize, expectedType = ExpectedType.Real)
         if not IsVector(color, 4):
-            RaiseTypeError(where='MainSystem.CreateDistanceConstraint(...)', argumentName='color', received = color, expectedType = ExpectedType.Vector, dim=4)
+            RaiseTypeError(where=where, argumentName='color', received = color, expectedType = ExpectedType.Vector, dim=4)
 
 
     mName0 = ''
@@ -1251,37 +1334,200 @@ def MainSystemCreateDistanceConstraint(mbs, name='',
         mName0 = 'Marker0:'+name
         mName1 = 'Marker1:'+name
         
-    if isinstance(bodyOrNodeList[0], exudyn.ObjectIndex):
-        mBody0 = mbs.AddMarker(eii.MarkerBodyPosition(name=mName0,bodyNumber=bodyOrNodeList[0], localPosition=localPosition0))
+    if isinstance(internBodyNodeList[0], exudyn.ObjectIndex):
+        mBody0 = mbs.AddMarker(eii.MarkerBodyPosition(name=mName0,bodyNumber=internBodyNodeList[0], localPosition=localPosition0))
     else:
-        mBody0 = mbs.AddMarker(eii.MarkerNodePosition(name=mName0,nodeNumber=bodyOrNodeList[0]))
+        mBody0 = mbs.AddMarker(eii.MarkerNodePosition(name=mName0,nodeNumber=internBodyNodeList[0]))
 
-    if isinstance(bodyOrNodeList[1], exudyn.ObjectIndex):
-        mBody1 = mbs.AddMarker(eii.MarkerBodyPosition(name=mName1,bodyNumber=bodyOrNodeList[1], localPosition=localPosition1))
+    if isinstance(internBodyNodeList[1], exudyn.ObjectIndex):
+        mBody1 = mbs.AddMarker(eii.MarkerBodyPosition(name=mName1,bodyNumber=internBodyNodeList[1], localPosition=localPosition1))
     else:
-        mBody1 = mbs.AddMarker(eii.MarkerNodePosition(name=mName1,nodeNumber=bodyOrNodeList[1]))
+        mBody1 = mbs.AddMarker(eii.MarkerNodePosition(name=mName1,nodeNumber=internBodyNodeList[1]))
         
     if distance == None: #automatically compute distance
         
-        if isinstance(bodyOrNodeList[0], exudyn.ObjectIndex):
-            p0 = mbs.GetObjectOutputBody(bodyOrNodeList[0],exudyn.OutputVariableType.Position,
+        if isinstance(internBodyNodeList[0], exudyn.ObjectIndex):
+            p0 = mbs.GetObjectOutputBody(internBodyNodeList[0],exudyn.OutputVariableType.Position,
                                          localPosition=localPosition0, configuration=exudyn.ConfigurationType.Reference)
         else:
-            p0 = mbs.GetNodeOutput(bodyOrNodeList[0],exudyn.OutputVariableType.Position, configuration=exudyn.ConfigurationType.Reference)
+            p0 = mbs.GetNodeOutput(internBodyNodeList[0],exudyn.OutputVariableType.Position, configuration=exudyn.ConfigurationType.Reference)
             
-        if isinstance(bodyOrNodeList[1], exudyn.ObjectIndex):
-            p1 = mbs.GetObjectOutputBody(bodyOrNodeList[1],exudyn.OutputVariableType.Position,
+        if isinstance(internBodyNodeList[1], exudyn.ObjectIndex):
+            p1 = mbs.GetObjectOutputBody(internBodyNodeList[1],exudyn.OutputVariableType.Position,
                                          localPosition=localPosition1, configuration=exudyn.ConfigurationType.Reference)
         else:
-            p1 = mbs.GetNodeOutput(bodyOrNodeList[1],exudyn.OutputVariableType.Position, configuration=exudyn.ConfigurationType.Reference)
+            p1 = mbs.GetNodeOutput(internBodyNodeList[1],exudyn.OutputVariableType.Position, configuration=exudyn.ConfigurationType.Reference)
         
         distance = np.linalg.norm(np.array(p1)-p0)
+    
+    if distance != 0:
+        oJoint = mbs.AddObject(eii.ObjectConnectorDistance(name=name,markerNumbers=[mBody0,mBody1], distance=distance,
+                 visualization=eii.VObjectConnectorDistance(show=show, drawSize=drawSize, color=color) ))
+    else:
+        #VERY SPECIAL case, which should help to resolve problems if distance=0 is used ... 
+        exu.Print('WARNING: CreateDistanceConstraint called with distance=0; creating SphericalJoint instead')
+        constrainedAxes = [1,1,1]
+        if isinstance(internBodyNodeList[0], exudyn.ObjectIndex):
+            if '2D' in mbs.GetObject(internBodyNodeList[0])['objectType']:
+                constrainedAxes[2] = 0
+        if isinstance(internBodyNodeList[1], exudyn.ObjectIndex):
+            if '2D' in mbs.GetObject(internBodyNodeList[1])['objectType']:
+                constrainedAxes[2] = 0
+        oJoint = mbs.AddObject(eii.SphericalJoint(name=name,markerNumbers=[mBody0,mBody1], 
+                                                  constrainedAxes=constrainedAxes,
+                                                  visualization=eii.VSphericalJoint(show=show, jointRadius=0.5*drawSize, color=color) ))
         
-    oJoint = mbs.AddObject(eii.ObjectConnectorDistance(name=name,markerNumbers=[mBody0,mBody1], distance=distance,
-             visualization=eii.VObjectConnectorDistance(show=show, drawSize=drawSize, color=color) ))
 
     return [oJoint, mBody0, mBody1]
 
+
+
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#**function: helper function to create force applied to given body
+#**input: 
+#  mbs: the MainSystem where items are created
+#  name: name string for object
+#  bodyNumber: body number (ObjectIndex) at which the force is applied to
+#  loadVector: force vector (as 3D list or numpy array)
+#  localPosition: local position (as 3D list or numpy array) where force is applied
+#  bodyFixed: if True, the force is corotated with the body; else, the force is global
+#  loadVectorUserFunction: A Python function f(mbs, t, load)->loadVector which defines the time-dependent load and replaces loadVector in every time step; the arg load is the static loadVector
+#  show: if True, load is drawn
+#**output: LoadIndex; returns load index
+#**belongsTo: MainSystem
+#**example:
+# import exudyn as exu
+# from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+# import numpy as np
+# SC = exu.SystemContainer()
+# mbs = SC.AddSystem()
+# 
+# b0=mbs.CreateMassPoint(referencePosition = [0,0,0],
+#                        initialVelocity = [2,5,0],
+#                        physicsMass = 1, gravity = [0,-9.81,0],
+#                        drawSize = 0.5, color=color4blue)
+#
+# f0=mbs.CreateForce(bodyNumber=b0, loadVector=[100,0,0],
+#                    localPosition=[0,0,0])
+# 
+# mbs.Assemble()
+# simulationSettings = exu.SimulationSettings() #takes currently set values or default values
+# simulationSettings.timeIntegration.numberOfSteps = 1000
+# simulationSettings.timeIntegration.endTime = 2
+# mbs.SolveDynamic(simulationSettings = simulationSettings)
+def MainSystemCreateForce(mbs,
+                name = '',   
+                bodyNumber = None,
+                loadVector = [0.,0.,0.], 
+                localPosition = [0.,0.,0.], 
+                bodyFixed = False,
+                loadVectorUserFunction = 0,
+                show = True):
+
+    #error checks:        
+    if not exudyn.__useExudynFast:
+        where='MainSystem.CreateForce(...)'
+        if not isinstance(name, str):
+            RaiseTypeError(where=where, argumentName='name', received = name, expectedType = ExpectedType.String)
+
+        if not IsValidObjectIndex(bodyNumber):
+            RaiseTypeError(where=where, argumentName='bodyNumber', received = bodyNumber, expectedType = ExpectedType.ObjectIndex)
+        if not IsVector(loadVector, 3):
+            RaiseTypeError(where=where, argumentName='loadVector', received = loadVector, expectedType = ExpectedType.Vector, dim=3)
+        if not IsVector(localPosition, 3):
+            RaiseTypeError(where=where, argumentName='localPosition', received = localPosition, expectedType = ExpectedType.Vector, dim=3)
+    
+        if not IsValidRealInt(bodyFixed):
+            RaiseTypeError(where=where, argumentName='bodyFixed', received = bodyFixed, expectedType = ExpectedType.Bool)
+        
+        # if not IsUserFunction(loadVectorUserFunction):
+        #     RaiseTypeError(where=where, argumentName='loadVectorUserFunction', received = loadVectorUserFunction, expectedType = ExpectedType.UserFunction)
+        if not IsValidBool(show):
+            RaiseTypeError(where=where, argumentName='show', received = show, expectedType = ExpectedType.Bool)
+    
+
+    if bodyFixed:
+        markerNumber = mbs.AddMarker(eii.MarkerBodyRigid(bodyNumber=bodyNumber, localPosition=localPosition))
+    else:
+        markerNumber = mbs.AddMarker(eii.MarkerBodyPosition(bodyNumber=bodyNumber, localPosition=localPosition))
+        
+    loadNumber = mbs.AddLoad(eii.LoadForceVector(markerNumber=markerNumber, loadVector=loadVector,
+                                                 bodyFixed=bodyFixed, loadVectorUserFunction=loadVectorUserFunction))
+
+    return loadNumber
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#**function: helper function to create torque applied to given body
+#**input: 
+#  mbs: the MainSystem where items are created
+#  name: name string for object
+#  bodyNumber: body number (ObjectIndex) at which the torque is applied to
+#  loadVector: torque vector (as 3D list or numpy array)
+#  localPosition: local position (as 3D list or numpy array) where torque is applied
+#  bodyFixed: if True, the torque is corotated with the body; else, the torque is global
+#  loadVectorUserFunction: A Python function f(mbs, t, load)->loadVector which defines the time-dependent load and replaces loadVector in every time step; the arg load is the static loadVector
+#  show: if True, load is drawn
+#**output: LoadIndex; returns load index
+#**belongsTo: MainSystem
+#**example:
+# import exudyn as exu
+# from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+# import numpy as np
+# SC = exu.SystemContainer()
+# mbs = SC.AddSystem()
+# 
+# b0 = mbs.CreateRigidBody(inertia = InertiaCuboid(density=5000, 
+#                                                  sideLengths=[1,0.1,0.1]),
+#                          referencePosition = [1,3,0],
+#                          gravity = [0,-9.81,0],
+#                          graphicsDataList = [GraphicsDataOrthoCubePoint(size=[1,0.1,0.1], 
+#                                                                       color=color4red)])
+#
+# f0=mbs.CreateTorque(bodyNumber=b0, loadVector=[0,100,0])
+# 
+# mbs.Assemble()
+# simulationSettings = exu.SimulationSettings() #takes currently set values or default values
+# simulationSettings.timeIntegration.numberOfSteps = 1000
+# simulationSettings.timeIntegration.endTime = 2
+# mbs.SolveDynamic(simulationSettings = simulationSettings)
+def MainSystemCreateTorque(mbs,
+                name = '',   
+                bodyNumber = None,
+                loadVector = [0.,0.,0.], 
+                localPosition = [0.,0.,0.], 
+                bodyFixed = False,
+                loadVectorUserFunction = 0,
+                show = True):
+
+    #error checks:        
+    if not exudyn.__useExudynFast:
+        where='MainSystem.CreateTorque(...)'
+        if not isinstance(name, str):
+            RaiseTypeError(where=where, argumentName='name', received = name, expectedType = ExpectedType.String)
+
+        if not IsValidObjectIndex(bodyNumber):
+            RaiseTypeError(where=where, argumentName='bodyNumber', received = bodyNumber, expectedType = ExpectedType.ObjectIndex)
+        if not IsVector(loadVector, 3):
+            RaiseTypeError(where=where, argumentName='loadVector', received = loadVector, expectedType = ExpectedType.Vector, dim=3)
+        if not IsVector(localPosition, 3):
+            RaiseTypeError(where=where, argumentName='localPosition', received = localPosition, expectedType = ExpectedType.Vector, dim=3)
+    
+        if not IsValidRealInt(bodyFixed):
+            RaiseTypeError(where=where, argumentName='bodyFixed', received = bodyFixed, expectedType = ExpectedType.Bool)
+        # if not IsUserFunction(loadVectorUserFunction):
+        #     RaiseTypeError(where=where, argumentName='loadVectorUserFunction', received = loadVectorUserFunction, expectedType = ExpectedType.UserFunction)
+        if not IsValidBool(show):
+            RaiseTypeError(where=where, argumentName='show', received = show, expectedType = ExpectedType.Bool)
+    
+    
+    markerNumber = mbs.AddMarker(eii.MarkerBodyRigid(bodyNumber=bodyNumber, localPosition=localPosition))
+    loadNumber = mbs.AddLoad(eii.LoadTorqueVector(markerNumber=markerNumber, loadVector=loadVector,
+                                                 bodyFixed=bodyFixed, loadVectorUserFunction=loadVectorUserFunction))
+
+    return loadNumber
 
 
 
@@ -1326,6 +1572,10 @@ exu.MainSystem.SolutionViewer=exu.interactive.SolutionViewer
 
 
 #link MainSystem function to Python function:
+exu.MainSystem.CreateGround=MainSystemCreateGround
+
+
+#link MainSystem function to Python function:
 exu.MainSystem.CreateMassPoint=MainSystemCreateMassPoint
 
 
@@ -1363,6 +1613,14 @@ exu.MainSystem.CreateGenericJoint=MainSystemCreateGenericJoint
 
 #link MainSystem function to Python function:
 exu.MainSystem.CreateDistanceConstraint=MainSystemCreateDistanceConstraint
+
+
+#link MainSystem function to Python function:
+exu.MainSystem.CreateForce=MainSystemCreateForce
+
+
+#link MainSystem function to Python function:
+exu.MainSystem.CreateTorque=MainSystemCreateTorque
 
 
 #link MainSystem function to Python function:

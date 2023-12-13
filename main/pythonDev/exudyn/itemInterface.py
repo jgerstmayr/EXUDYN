@@ -53,6 +53,31 @@ def CheckForValidPReal(value, parameterName, objectName):
         return 1. #this position is usually not reached
     return value
 
+userFunctionArgsDict = {'GenericODE2,forceUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector'], ['mbs', 'arg0', 'arg1', 'arg2', 'arg3'], ['StdVector']],
+        'GenericODE1,rhsUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector'], ['mbs', 'arg0', 'arg1', 'arg2'], ['StdVector']],
+        'KinematicTree,forceUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector'], ['mbs', 'arg0', 'arg1', 'arg2', 'arg3'], ['StdVector']],
+        'FFRF,forceUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector'], ['mbs', 'arg0', 'arg1', 'arg2', 'arg3'], ['StdVector']],
+        'FFRFreducedOrder,forceUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector'], ['mbs', 'arg0', 'arg1', 'arg2', 'arg3'], ['StdVector']],
+        'ANCFCable2D,axialForceUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real'], ['mbs', 'arg0', 'arg1', 'arg2', 'arg3', 'arg4', 'arg5', 'arg6', 'arg7', 'arg8', 'arg9', 'arg10'], ['Real']],
+        'ANCFCable2D,bendingMomentUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real'], ['mbs', 'arg0', 'arg1', 'arg2', 'arg3', 'arg4', 'arg5', 'arg6', 'arg7', 'arg8', 'arg9', 'arg10'], ['Real']],
+        'ConnectorSpringDamper,springForceUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'Real', 'Real', 'Real'], ['mbs', 'arg0', 'arg1', 'arg2', 'arg3', 'arg4', 'arg5', 'arg6'], ['Real']],
+        'ConnectorCartesianSpringDamper,springForceUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector3D', 'StdVector3D', 'StdVector3D', 'StdVector3D', 'StdVector3D'], ['mbs', 'arg0', 'arg1', 'arg2', 'arg3', 'arg4', 'arg5', 'arg6'], ['StdVector3D']],
+        'ConnectorRigidBodySpringDamper,springForceTorqueUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector3D', 'StdVector3D', 'StdVector3D', 'StdVector3D', 'StdMatrix6D', 'StdMatrix6D', 'StdMatrix3D', 'StdMatrix3D', 'StdVector6D'], ['mbs', 'arg0', 'arg1', 'arg2', 'arg3', 'arg4', 'arg5', 'arg6', 'arg7', 'arg8', 'arg9', 'arg10'], ['StdVector6D']],
+        'ConnectorRigidBodySpringDamper,postNewtonStepUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector3D', 'StdVector3D', 'StdVector3D', 'StdVector3D', 'StdMatrix6D', 'StdMatrix6D', 'StdMatrix3D', 'StdMatrix3D', 'StdVector6D'], ['mbs', 'arg0', 'arg1', 'arg2', 'arg3', 'arg4', 'arg5', 'arg6', 'arg7', 'arg8', 'arg9', 'arg10', 'arg11'], ['StdVector']],
+        'ConnectorLinearSpringDamper,springForceUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'Real', 'Real', 'Real'], ['mbs', 'arg0', 'arg1', 'arg2', 'arg3', 'arg4', 'arg5', 'arg6'], ['Real']],
+        'ConnectorTorsionalSpringDamper,springTorqueUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'Real', 'Real', 'Real'], ['mbs', 'arg0', 'arg1', 'arg2', 'arg3', 'arg4', 'arg5', 'arg6'], ['Real']],
+        'ConnectorCoordinateSpringDamper,springForceUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'Real', 'Real', 'Real'], ['mbs', 'arg0', 'arg1', 'arg2', 'arg3', 'arg4', 'arg5', 'arg6'], ['Real']],
+        'ConnectorCoordinateSpringDamperExt,springForceUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real'], ['mbs', 'arg0', 'arg1', 'arg2', 'arg3', 'arg4', 'arg5', 'arg6', 'arg7', 'arg8', 'arg9', 'arg10', 'arg11', 'arg12'], ['Real']],
+        'ConnectorCoordinate,offsetUserFunction': [['MainSystem', 'Real', 'Index', 'Real'], ['mbs', 'arg0', 'arg1', 'arg2'], ['Real']],
+        'ConnectorCoordinate,offsetUserFunction_t': [['MainSystem', 'Real', 'Index', 'Real'], ['mbs', 'arg0', 'arg1', 'arg2'], ['Real']],
+        'ConnectorCoordinateVector,constraintUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector', 'bool'], ['mbs', 'arg0', 'arg1', 'arg2', 'arg3', 'arg4'], ['StdVector']],
+        'JointGeneric,offsetUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector6D'], ['mbs', 'arg0', 'arg1', 'arg2'], ['StdVector6D']],
+        'JointGeneric,offsetUserFunction_t': [['MainSystem', 'Real', 'Index', 'StdVector6D'], ['mbs', 'arg0', 'arg1', 'arg2'], ['StdVector6D']],
+        'ForceVector,loadVectorUserFunction': [['MainSystem', 'Real', 'StdVector3D'], ['mbs', 'arg0', 'arg1'], ['StdVector3D']],
+        'TorqueVector,loadVectorUserFunction': [['MainSystem', 'Real', 'StdVector3D'], ['mbs', 'arg0', 'arg1'], ['StdVector3D']],
+        'MassProportional,loadVectorUserFunction': [['MainSystem', 'Real', 'StdVector3D'], ['mbs', 'arg0', 'arg1'], ['StdVector3D']],
+        'Coordinate,loadUserFunction': [['MainSystem', 'Real', 'Real'], ['mbs', 'arg0', 'arg1'], ['Real']]}
+
 
 #+++++++++++++++++++++++++++++++
 #NODE
@@ -243,43 +268,6 @@ class NodeRigidBodyRotVecLG:
 RigidRotVecLG = NodeRigidBodyRotVecLG
 VRigidRotVecLG = VNodeRigidBodyRotVecLG
 
-class VNodeRigidBodyRotVecDataLG:
-    def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
-        self.show = show
-        self.drawSize = drawSize
-        self.color = np.array(color)
-
-    def __iter__(self):
-        yield 'show', self.show
-        yield 'drawSize', self.drawSize
-        yield 'color', self.color
-
-    def __repr__(self):
-        return str(dict(self))
-class NodeRigidBodyRotVecDataLG:
-    def __init__(self, name = '', referenceCoordinates = [0.,0.,0., 0.,0.,0.], initialCoordinates = [0.,0.,0., 0.,0.,0.], initialVelocities = [0.,0.,0., 0.,0.,0.], visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
-        self.name = name
-        self.referenceCoordinates = np.array(referenceCoordinates)
-        self.initialCoordinates = np.array(initialCoordinates)
-        self.initialVelocities = np.array(initialVelocities)
-        self.visualization = CopyDictLevel1(visualization)
-
-    def __iter__(self):
-        yield 'nodeType', 'RigidBodyRotVecDataLG'
-        yield 'name', self.name
-        yield 'referenceCoordinates', self.referenceCoordinates
-        yield 'initialCoordinates', self.initialCoordinates
-        yield 'initialVelocities', self.initialVelocities
-        yield 'Vshow', dict(self.visualization)["show"]
-        yield 'VdrawSize', dict(self.visualization)["drawSize"]
-        yield 'Vcolor', dict(self.visualization)["color"]
-
-    def __repr__(self):
-        return str(dict(self))
-#add typedef for short usage:
-RigidRotVecLG = NodeRigidBodyRotVecDataLG
-VRigidRotVecLG = VNodeRigidBodyRotVecDataLG
-
 class VNodeRigidBody2D:
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
         self.show = show
@@ -381,7 +369,7 @@ class NodePoint2DSlope1:
 Point2DS1 = NodePoint2DSlope1
 VPoint2DS1 = VNodePoint2DSlope1
 
-class VNodePoint3DSlope1:
+class VNodePointSlope1:
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
         self.show = show
         self.drawSize = drawSize
@@ -394,7 +382,7 @@ class VNodePoint3DSlope1:
 
     def __repr__(self):
         return str(dict(self))
-class NodePoint3DSlope1:
+class NodePointSlope1:
     def __init__(self, name = '', referenceCoordinates = [0.,0.,0.,1.,0.,0.], initialCoordinates = [0.,0.,0.,0.,0.,0.], initialVelocities = [0.,0.,0.,0.,0.,0.], visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.referenceCoordinates = np.array(referenceCoordinates)
@@ -403,7 +391,7 @@ class NodePoint3DSlope1:
         self.visualization = CopyDictLevel1(visualization)
 
     def __iter__(self):
-        yield 'nodeType', 'Point3DSlope1'
+        yield 'nodeType', 'PointSlope1'
         yield 'name', self.name
         yield 'referenceCoordinates', self.referenceCoordinates
         yield 'initialCoordinates', self.initialCoordinates
@@ -414,11 +402,7 @@ class NodePoint3DSlope1:
 
     def __repr__(self):
         return str(dict(self))
-#add typedef for short usage:
-Point3DS1 = NodePoint3DSlope1
-VPoint3DS1 = VNodePoint3DSlope1
-
-class VNodePoint3DSlope23:
+class VNodePointSlope12:
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
         self.show = show
         self.drawSize = drawSize
@@ -431,7 +415,7 @@ class VNodePoint3DSlope23:
 
     def __repr__(self):
         return str(dict(self))
-class NodePoint3DSlope23:
+class NodePointSlope12:
     def __init__(self, name = '', referenceCoordinates = [0.,0.,0.,1.,0.,0.,1.,0.,0.], initialCoordinates = [0.,0.,0.,0.,0.,0.,0.,0.,0.], initialVelocities = [0.,0.,0.,0.,0.,0.,0.,0.,0.], visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.referenceCoordinates = np.array(referenceCoordinates)
@@ -440,7 +424,7 @@ class NodePoint3DSlope23:
         self.visualization = CopyDictLevel1(visualization)
 
     def __iter__(self):
-        yield 'nodeType', 'Point3DSlope23'
+        yield 'nodeType', 'PointSlope12'
         yield 'name', self.name
         yield 'referenceCoordinates', self.referenceCoordinates
         yield 'initialCoordinates', self.initialCoordinates
@@ -451,10 +435,39 @@ class NodePoint3DSlope23:
 
     def __repr__(self):
         return str(dict(self))
-#add typedef for short usage:
-Point3DS23 = NodePoint3DSlope23
-VPoint3DS23 = VNodePoint3DSlope23
+class VNodePointSlope23:
+    def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
+        self.show = show
+        self.drawSize = drawSize
+        self.color = np.array(color)
 
+    def __iter__(self):
+        yield 'show', self.show
+        yield 'drawSize', self.drawSize
+        yield 'color', self.color
+
+    def __repr__(self):
+        return str(dict(self))
+class NodePointSlope23:
+    def __init__(self, name = '', referenceCoordinates = [0.,0.,0.,1.,0.,0.,1.,0.,0.], initialCoordinates = [0.,0.,0.,0.,0.,0.,0.,0.,0.], initialVelocities = [0.,0.,0.,0.,0.,0.,0.,0.,0.], visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+        self.name = name
+        self.referenceCoordinates = np.array(referenceCoordinates)
+        self.initialCoordinates = np.array(initialCoordinates)
+        self.initialVelocities = np.array(initialVelocities)
+        self.visualization = CopyDictLevel1(visualization)
+
+    def __iter__(self):
+        yield 'nodeType', 'PointSlope23'
+        yield 'name', self.name
+        yield 'referenceCoordinates', self.referenceCoordinates
+        yield 'initialCoordinates', self.initialCoordinates
+        yield 'initialVelocities', self.initialVelocities
+        yield 'Vshow', dict(self.visualization)["show"]
+        yield 'VdrawSize', dict(self.visualization)["drawSize"]
+        yield 'Vcolor', dict(self.visualization)["color"]
+
+    def __repr__(self):
+        return str(dict(self))
 class VNodeGenericODE2:
     def __init__(self, show = False):
         self.show = show
@@ -1121,6 +1134,57 @@ class ObjectFFRFreducedOrder:
 CMSobject = ObjectFFRFreducedOrder
 VCMSobject = VObjectFFRFreducedOrder
 
+class VObjectANCFCable:
+    def __init__(self, show = True, radius = 0., color = [-1.,-1.,-1.,-1.]):
+        self.show = show
+        self.radius = radius
+        self.color = np.array(color)
+
+    def __iter__(self):
+        yield 'show', self.show
+        yield 'radius', self.radius
+        yield 'color', self.color
+
+    def __repr__(self):
+        return str(dict(self))
+class ObjectANCFCable:
+    def __init__(self, name = '', physicsLength = 0., physicsMassPerLength = 0., physicsBendingStiffness = 0., physicsAxialStiffness = 0., physicsBendingDamping = 0., physicsAxialDamping = 0., physicsReferenceAxialStrain = 0., strainIsRelativeToReference = 0., nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex()], useReducedOrderIntegration = 0, visualization = {'show': True, 'radius': 0., 'color': [-1.,-1.,-1.,-1.]}):
+        self.name = name
+        self.physicsLength = CheckForValidUReal(physicsLength,"physicsLength","ObjectANCFCable")
+        self.physicsMassPerLength = CheckForValidUReal(physicsMassPerLength,"physicsMassPerLength","ObjectANCFCable")
+        self.physicsBendingStiffness = CheckForValidUReal(physicsBendingStiffness,"physicsBendingStiffness","ObjectANCFCable")
+        self.physicsAxialStiffness = CheckForValidUReal(physicsAxialStiffness,"physicsAxialStiffness","ObjectANCFCable")
+        self.physicsBendingDamping = CheckForValidUReal(physicsBendingDamping,"physicsBendingDamping","ObjectANCFCable")
+        self.physicsAxialDamping = CheckForValidUReal(physicsAxialDamping,"physicsAxialDamping","ObjectANCFCable")
+        self.physicsReferenceAxialStrain = physicsReferenceAxialStrain
+        self.strainIsRelativeToReference = strainIsRelativeToReference
+        self.nodeNumbers = copy.copy(nodeNumbers)
+        self.useReducedOrderIntegration = useReducedOrderIntegration
+        self.visualization = CopyDictLevel1(visualization)
+
+    def __iter__(self):
+        yield 'objectType', 'ANCFCable'
+        yield 'name', self.name
+        yield 'physicsLength', self.physicsLength
+        yield 'physicsMassPerLength', self.physicsMassPerLength
+        yield 'physicsBendingStiffness', self.physicsBendingStiffness
+        yield 'physicsAxialStiffness', self.physicsAxialStiffness
+        yield 'physicsBendingDamping', self.physicsBendingDamping
+        yield 'physicsAxialDamping', self.physicsAxialDamping
+        yield 'physicsReferenceAxialStrain', self.physicsReferenceAxialStrain
+        yield 'strainIsRelativeToReference', self.strainIsRelativeToReference
+        yield 'nodeNumbers', self.nodeNumbers
+        yield 'useReducedOrderIntegration', self.useReducedOrderIntegration
+        yield 'Vshow', dict(self.visualization)["show"]
+        yield 'Vradius', dict(self.visualization)["radius"]
+        yield 'Vcolor', dict(self.visualization)["color"]
+
+    def __repr__(self):
+        return str(dict(self))
+#add typedef for short usage:
+Cable = ObjectANCFCable
+VCable = VObjectANCFCable
+
 class VObjectANCFCable2D:
     def __init__(self, show = True, drawHeight = 0., color = [-1.,-1.,-1.,-1.]):
         self.show = show
@@ -1135,7 +1199,7 @@ class VObjectANCFCable2D:
     def __repr__(self):
         return str(dict(self))
 class ObjectANCFCable2D:
-    def __init__(self, name = '', physicsLength = 0., physicsMassPerLength = 0., physicsBendingStiffness = 0., physicsAxialStiffness = 0., physicsBendingDamping = 0., physicsAxialDamping = 0., physicsReferenceAxialStrain = 0., physicsReferenceCurvature = 0., strainIsRelativeToReference = 0., nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex()], useReducedOrderIntegration = 0, visualization = {'show': True, 'drawHeight': 0., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', physicsLength = 0., physicsMassPerLength = 0., physicsBendingStiffness = 0., physicsAxialStiffness = 0., physicsBendingDamping = 0., physicsAxialDamping = 0., physicsReferenceAxialStrain = 0., physicsReferenceCurvature = 0., strainIsRelativeToReference = 0., nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex()], useReducedOrderIntegration = 0, axialForceUserFunction = 0, bendingMomentUserFunction = 0, visualization = {'show': True, 'drawHeight': 0., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.physicsLength = CheckForValidUReal(physicsLength,"physicsLength","ObjectANCFCable2D")
         self.physicsMassPerLength = CheckForValidUReal(physicsMassPerLength,"physicsMassPerLength","ObjectANCFCable2D")
@@ -1148,6 +1212,8 @@ class ObjectANCFCable2D:
         self.strainIsRelativeToReference = strainIsRelativeToReference
         self.nodeNumbers = copy.copy(nodeNumbers)
         self.useReducedOrderIntegration = useReducedOrderIntegration
+        self.axialForceUserFunction = axialForceUserFunction
+        self.bendingMomentUserFunction = bendingMomentUserFunction
         self.visualization = CopyDictLevel1(visualization)
 
     def __iter__(self):
@@ -1164,6 +1230,8 @@ class ObjectANCFCable2D:
         yield 'strainIsRelativeToReference', self.strainIsRelativeToReference
         yield 'nodeNumbers', self.nodeNumbers
         yield 'useReducedOrderIntegration', self.useReducedOrderIntegration
+        yield 'axialForceUserFunction', self.axialForceUserFunction
+        yield 'bendingMomentUserFunction', self.bendingMomentUserFunction
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VdrawHeight', dict(self.visualization)["drawHeight"]
         yield 'Vcolor', dict(self.visualization)["color"]
@@ -1364,6 +1432,42 @@ class ObjectBeamGeometricallyExact:
 Beam3D = ObjectBeamGeometricallyExact
 VBeam3D = VObjectBeamGeometricallyExact
 
+class VObjectANCFThinPlate:
+    def __init__(self, show = True, color = [-1.,-1.,-1.,-1.]):
+        self.show = show
+        self.color = np.array(color)
+
+    def __iter__(self):
+        yield 'show', self.show
+        yield 'color', self.color
+
+    def __repr__(self):
+        return str(dict(self))
+class ObjectANCFThinPlate:
+    def __init__(self, name = '', physicsHeight = 0., physicsStrainCoefficients = IIDiagMatrix(rowsColumns=3,value=1), physicsCurvatureCoefficients = IIDiagMatrix(rowsColumns=3,value=1), strainIsRelativeToReference = 0., nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex(), exudyn.InvalidIndex(), exudyn.InvalidIndex()], useReducedOrderIntegration = 0, visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.]}):
+        self.name = name
+        self.physicsHeight = CheckForValidUReal(physicsHeight,"physicsHeight","ObjectANCFThinPlate")
+        self.physicsStrainCoefficients = np.array(physicsStrainCoefficients)
+        self.physicsCurvatureCoefficients = np.array(physicsCurvatureCoefficients)
+        self.strainIsRelativeToReference = strainIsRelativeToReference
+        self.nodeNumbers = copy.copy(nodeNumbers)
+        self.useReducedOrderIntegration = useReducedOrderIntegration
+        self.visualization = CopyDictLevel1(visualization)
+
+    def __iter__(self):
+        yield 'objectType', 'ANCFThinPlate'
+        yield 'name', self.name
+        yield 'physicsHeight', self.physicsHeight
+        yield 'physicsStrainCoefficients', self.physicsStrainCoefficients
+        yield 'physicsCurvatureCoefficients', self.physicsCurvatureCoefficients
+        yield 'strainIsRelativeToReference', self.strainIsRelativeToReference
+        yield 'nodeNumbers', self.nodeNumbers
+        yield 'useReducedOrderIntegration', self.useReducedOrderIntegration
+        yield 'Vshow', dict(self.visualization)["show"]
+        yield 'Vcolor', dict(self.visualization)["color"]
+
+    def __repr__(self):
+        return str(dict(self))
 class VObjectConnectorSpringDamper:
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
         self.show = show
@@ -1381,7 +1485,7 @@ class ObjectConnectorSpringDamper:
     def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], referenceLength = 0., stiffness = 0., damping = 0., force = 0., velocityOffset = 0., activeConnector = True, springForceUserFunction = 0, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
-        self.referenceLength = CheckForValidPReal(referenceLength,"referenceLength","ObjectConnectorSpringDamper")
+        self.referenceLength = CheckForValidUReal(referenceLength,"referenceLength","ObjectConnectorSpringDamper")
         self.stiffness = CheckForValidUReal(stiffness,"stiffness","ObjectConnectorSpringDamper")
         self.damping = CheckForValidUReal(damping,"damping","ObjectConnectorSpringDamper")
         self.force = force
@@ -1468,7 +1572,7 @@ class VObjectConnectorRigidBodySpringDamper:
     def __repr__(self):
         return str(dict(self))
 class ObjectConnectorRigidBodySpringDamper:
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), stiffness = IIDiagMatrix(rowsColumns=6,value=0.), damping = IIDiagMatrix(rowsColumns=6,value=0.), rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1), rotationMarker1 = IIDiagMatrix(rowsColumns=3,value=1), offset = [0.,0.,0.,0.,0.,0.], activeConnector = True, springForceTorqueUserFunction = 0, postNewtonStepUserFunction = 0, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), stiffness = IIDiagMatrix(rowsColumns=6,value=0.), damping = IIDiagMatrix(rowsColumns=6,value=0.), rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1), rotationMarker1 = IIDiagMatrix(rowsColumns=3,value=1), offset = [0.,0.,0.,0.,0.,0.], intrinsicFormulation = False, activeConnector = True, springForceTorqueUserFunction = 0, postNewtonStepUserFunction = 0, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
@@ -1477,6 +1581,7 @@ class ObjectConnectorRigidBodySpringDamper:
         self.rotationMarker0 = np.array(rotationMarker0)
         self.rotationMarker1 = np.array(rotationMarker1)
         self.offset = np.array(offset)
+        self.intrinsicFormulation = intrinsicFormulation
         self.activeConnector = activeConnector
         self.springForceTorqueUserFunction = springForceTorqueUserFunction
         self.postNewtonStepUserFunction = postNewtonStepUserFunction
@@ -1492,6 +1597,7 @@ class ObjectConnectorRigidBodySpringDamper:
         yield 'rotationMarker0', self.rotationMarker0
         yield 'rotationMarker1', self.rotationMarker1
         yield 'offset', self.offset
+        yield 'intrinsicFormulation', self.intrinsicFormulation
         yield 'activeConnector', self.activeConnector
         yield 'springForceTorqueUserFunction', self.springForceTorqueUserFunction
         yield 'postNewtonStepUserFunction', self.postNewtonStepUserFunction

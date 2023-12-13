@@ -41,7 +41,44 @@ Function: GenerateStraightLineANCFCable2D
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `ANCFALEtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFALEtest.py>`_\  (Ex), \ `ANCFcantileverTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcantileverTest.py>`_\  (Ex), \ `beltDriveALE.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveALE.py>`_\  (Ex), \ `beltDriveReevingSystem.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveReevingSystem.py>`_\  (Ex), \ `beltDrivesComparison.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDrivesComparison.py>`_\  (Ex), \ `ANCFbeltDrive.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py>`_\  (TM), \ `ANCFgeneralContactCircle.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFgeneralContactCircle.py>`_\  (TM), \ `ANCFmovingRigidBodyTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFmovingRigidBodyTest.py>`_\  (TM)
+    \ `ANCFALEtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFALEtest.py>`_\  (Ex), \ `ANCFcantileverTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcantileverTest.py>`_\  (Ex), \ `ANCFrotatingCable2D.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFrotatingCable2D.py>`_\  (Ex), \ `beltDriveALE.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveALE.py>`_\  (Ex), \ `beltDriveReevingSystem.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveReevingSystem.py>`_\  (Ex), \ `ANCFbeltDrive.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py>`_\  (TM), \ `ANCFgeneralContactCircle.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFgeneralContactCircle.py>`_\  (TM), \ `ANCFmovingRigidBodyTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFmovingRigidBodyTest.py>`_\  (TM)
+
+
+
+----
+
+
+.. _sec-beams-generatestraightlineancfcable:
+
+Function: GenerateStraightLineANCFCable
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`GenerateStraightLineANCFCable <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/beams.py\#L63>`__\ (\ ``mbs``\ , \ ``positionOfNode0``\ , \ ``positionOfNode1``\ , \ ``numberOfElements``\ , \ ``cableTemplate``\ , \ ``massProportionalLoad = [0,0,0]``\ , \ ``fixedConstraintsNode0 = [0,0,0, 0,0,0]``\ , \ ``fixedConstraintsNode1 = [0,0,0, 0,0,0]``\ , \ ``nodeNumber0 = -1``\ , \ ``nodeNumber1 = -1``\ )
+
+- | \ *function description*\ :
+  | generate cable elements along straight line with certain discretization
+- | \ *input*\ :
+  | \ ``mbs``\ : the system where ANCF cables are added
+  | \ ``positionOfNode0``\ : 3D position (list or np.array) for starting point of line
+  | \ ``positionOfNode1``\ : 3D position (list or np.array) for end point of line
+  | \ ``numberOfElements``\ : for discretization of line
+  | \ ``cableTemplate``\ : a ObjectANCFCable object, containing the desired cable properties; cable length and node numbers are set automatically
+  | \ ``massProportionalLoad``\ : a 3D list or np.array, containing the gravity vector or zero
+  | \ ``fixedConstraintsNode0``\ : a list of binary values, indicating the coordinate contraints on the first node (position and slope); 4 coordinates for 2D and 6 coordinates for 3D node
+  | \ ``fixedConstraintsNode1``\ : a list of binary values, indicating the coordinate contraints on the last node (position and slope); 4 coordinates for 2D and 6 coordinates for 3D node
+  | \ ``nodeNumber0``\ : if set other than -1, this node number defines the node that shall be used at positionOfNode0
+  | \ ``nodeNumber1``\ : if set other than -1, this node number defines the node that shall be used at positionOfNode1
+- | \ *output*\ :
+  | returns a list [cableNodeList, cableObjectList, loadList, cableNodePositionList, cableCoordinateConstraintList]
+- | \ *example*\ :
+
+.. code-block:: python
+
+  see Examples/ANCF_cantilever_test.py
+
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
+
+    \ `ANCFcableCantilevered.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcableCantilevered.py>`_\  (Ex), \ `ANCFcable2DuserFunction.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcable2DuserFunction.py>`_\  (TM)
 
 
 
@@ -52,7 +89,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: GenerateCircularArcANCFCable2D
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`GenerateCircularArcANCFCable2D <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/beams.py\#L145>`__\ (\ ``mbs``\ , \ ``positionOfNode0``\ , \ ``radius``\ , \ ``startAngle``\ , \ ``arcAngle``\ , \ ``numberOfElements``\ , \ ``cableTemplate``\ , \ ``massProportionalLoad = [0,0,0]``\ , \ ``fixedConstraintsNode0 = [0,0,0,0]``\ , \ ``fixedConstraintsNode1 = [0,0,0,0]``\ , \ ``nodeNumber0 = -1``\ , \ ``nodeNumber1 = -1``\ , \ ``setCurvedReferenceConfiguration = True``\ , \ ``verboseMode = False``\ )
+`GenerateCircularArcANCFCable2D <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/beams.py\#L191>`__\ (\ ``mbs``\ , \ ``positionOfNode0``\ , \ ``radius``\ , \ ``startAngle``\ , \ ``arcAngle``\ , \ ``numberOfElements``\ , \ ``cableTemplate``\ , \ ``massProportionalLoad = [0,0,0]``\ , \ ``fixedConstraintsNode0 = [0,0,0,0]``\ , \ ``fixedConstraintsNode1 = [0,0,0,0]``\ , \ ``nodeNumber0 = -1``\ , \ ``nodeNumber1 = -1``\ , \ ``setCurvedReferenceConfiguration = True``\ , \ ``verboseMode = False``\ )
 
 - | \ *function description*\ :
   | generate cable elements along circular arc with given start point, radius, start angle (measured relative to \ :math:`x`\ -axis, in positive rotation sense) and angle of arc
@@ -87,7 +124,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: CreateReevingCurve
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateReevingCurve <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/beams.py\#L299>`__\ (\ ``circleList``\ , \ ``drawingLinesPerCircle = 64``\ , \ ``numberOfANCFnodes = -1``\ , \ ``removeLastLine = False``\ , \ ``removeFirstLine = False``\ , \ ``radialOffset = 0.``\ , \ ``closedCurve = False``\ , \ ``graphicsElementsPerCircle = 64``\ , \ ``graphicsNodeSize = 0``\ , \ ``colorCircles = [0.,0.5,1.,1.]``\ , \ ``colorLines = [1.,0.5,0.,1.]``\ )
+`CreateReevingCurve <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/beams.py\#L345>`__\ (\ ``circleList``\ , \ ``drawingLinesPerCircle = 64``\ , \ ``numberOfANCFnodes = -1``\ , \ ``removeLastLine = False``\ , \ ``removeFirstLine = False``\ , \ ``radialOffset = 0.``\ , \ ``closedCurve = False``\ , \ ``graphicsElementsPerCircle = 64``\ , \ ``graphicsNodeSize = 0``\ , \ ``colorCircles = [0.,0.5,1.,1.]``\ , \ ``colorLines = [1.,0.5,0.,1.]``\ )
 
 - | \ *function description*\ :
   | CreateReevingCurve for creating the geometry of a reeving system based on circles with radius and left/right side of passing the circles; left/right is seen in the direction passing from one to the next circle
@@ -124,7 +161,7 @@ Function: CreateReevingCurve
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `beltDriveALE.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveALE.py>`_\  (Ex), \ `beltDriveReevingSystem.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveReevingSystem.py>`_\  (Ex), \ `beltDrivesComparison.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDrivesComparison.py>`_\  (Ex), \ `reevingSystem.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/reevingSystem.py>`_\  (Ex)
+    \ `beltDriveALE.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveALE.py>`_\  (Ex), \ `beltDriveReevingSystem.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveReevingSystem.py>`_\  (Ex), \ `beltDrivesComparison.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDrivesComparison.py>`_\  (Ex), \ `reevingSystem.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/reevingSystem.py>`_\  (Ex), \ `reevingSystemOpen.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/reevingSystemOpen.py>`_\  (Ex)
 
 
 
@@ -135,7 +172,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: PointsAndSlopes2ANCFCable2D
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`PointsAndSlopes2ANCFCable2D <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/beams.py\#L528>`__\ (\ ``mbs``\ , \ ``ancfPointsSlopes``\ , \ ``elementLengths``\ , \ ``cableTemplate``\ , \ ``massProportionalLoad = [0,0,0]``\ , \ ``fixedConstraintsNode0 = [0,0,0,0]``\ , \ ``fixedConstraintsNode1 = [0,0,0,0]``\ , \ ``firstNodeIsLastNode = True``\ , \ ``elementCurvatures = []``\ , \ ``graphicsSizeConstraints = -1``\ )
+`PointsAndSlopes2ANCFCable2D <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/beams.py\#L574>`__\ (\ ``mbs``\ , \ ``ancfPointsSlopes``\ , \ ``elementLengths``\ , \ ``cableTemplate``\ , \ ``massProportionalLoad = [0,0,0]``\ , \ ``fixedConstraintsNode0 = [0,0,0,0]``\ , \ ``fixedConstraintsNode1 = [0,0,0,0]``\ , \ ``firstNodeIsLastNode = True``\ , \ ``elementCurvatures = []``\ , \ ``graphicsSizeConstraints = -1``\ )
 
 - | \ *function description*\ :
   | Create nodes and ANCFCable2D elements in MainSystem mbs from a given set of nodes, elements lengths and a template for the cable, based on output of function CreateReevingCurve(...); function works similar to GenerateStraightLineANCFCable2D, but for arbitrary geometry (curved elements); optionally add loads and constraints
@@ -155,7 +192,7 @@ Function: PointsAndSlopes2ANCFCable2D
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `beltDriveALE.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveALE.py>`_\  (Ex), \ `beltDriveReevingSystem.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveReevingSystem.py>`_\  (Ex), \ `beltDrivesComparison.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDrivesComparison.py>`_\  (Ex), \ `reevingSystem.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/reevingSystem.py>`_\  (Ex)
+    \ `beltDriveALE.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveALE.py>`_\  (Ex), \ `beltDriveReevingSystem.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveReevingSystem.py>`_\  (Ex), \ `beltDrivesComparison.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDrivesComparison.py>`_\  (Ex), \ `reevingSystem.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/reevingSystem.py>`_\  (Ex), \ `reevingSystemOpen.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/reevingSystemOpen.py>`_\  (Ex)
 
 
 
@@ -166,7 +203,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: GenerateSlidingJoint
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`GenerateSlidingJoint <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/beams.py\#L612>`__\ (\ ``mbs``\ , \ ``cableObjectList``\ , \ ``markerBodyPositionOfSlidingBody``\ , \ ``localMarkerIndexOfStartCable = 0``\ , \ ``slidingCoordinateStartPosition = 0``\ )
+`GenerateSlidingJoint <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/beams.py\#L658>`__\ (\ ``mbs``\ , \ ``cableObjectList``\ , \ ``markerBodyPositionOfSlidingBody``\ , \ ``localMarkerIndexOfStartCable = 0``\ , \ ``slidingCoordinateStartPosition = 0``\ )
 
 - | \ *function description*\ :
   | generate a sliding joint from a list of cables, marker to a sliding body, etc.
@@ -184,7 +221,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: GenerateAleSlidingJoint
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`GenerateAleSlidingJoint <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/beams.py\#L638>`__\ (\ ``mbs``\ , \ ``cableObjectList``\ , \ ``markerBodyPositionOfSlidingBody``\ , \ ``AleNode``\ , \ ``localMarkerIndexOfStartCable = 0``\ , \ ``AleSlidingOffset = 0``\ , \ ``activeConnector = True``\ , \ ``penaltyStiffness = 0``\ )
+`GenerateAleSlidingJoint <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/beams.py\#L684>`__\ (\ ``mbs``\ , \ ``cableObjectList``\ , \ ``markerBodyPositionOfSlidingBody``\ , \ ``AleNode``\ , \ ``localMarkerIndexOfStartCable = 0``\ , \ ``AleSlidingOffset = 0``\ , \ ``activeConnector = True``\ , \ ``penaltyStiffness = 0``\ )
 
 - | \ *function description*\ :
   | generate an ALE sliding joint from a list of cables, marker to a sliding body, etc.

@@ -568,7 +568,8 @@ typedef SlimVector<4> Vector4D;
 //typedef SlimVector<5> Vector5D; //uncomment as soon it is needed
 typedef SlimVector<6> Vector6D; //inertia parameters, stresses, ...
 typedef SlimVector<7> Vector7D; //rigid body initial/reference/... coordinates
-typedef SlimVector<9> Vector9D; //NodePoint3DSlope23
+typedef SlimVector<9> Vector9D; //NodePointSlope23
+typedef SlimVector<12> Vector12D; //ANCFThinPlate
 
 typedef SlimVectorBase<float, 2> Float2; //!< a triple of float values => for OpenGL
 typedef SlimVectorBase<float, 3> Float3; //!< a triple of float values => for OpenGL

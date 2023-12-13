@@ -175,7 +175,19 @@ public:
 		this->numberOfItems = numberOfItemsLinked;
     }
 
-    ////operators which return a new VectorBase<T> are inefficient ==> use operator+=, *=, -= and similar for LinkedData
+	//! Link this to data given by 'vector' starting at startPosition, using numberOfItemsLinked items (LinkedDataVectorBase has 'numberOfItemsLinked' virtual items); 
+	template <Index dataSize>
+	void LinkDataTo(const ConstSizeVectorBase<T,dataSize>& vector, Index startPosition, Index numberOfItemsLinked)
+	{
+		CHECKandTHROW(startPosition >= 0, "ERROR: LinkedDataVectorBase::LinkDataTo(const ConstSizeVectorBase<T>&, Index), startPosition < 0");
+		CHECKandTHROW(numberOfItemsLinked + startPosition <= vector.NumberOfItems(), "ERROR: LinkedDataVectorBase::LinkDataTo(const ConstSizeVectorBase<T>&, Index, Index), size mismatch");
+
+		const T* ptr = &vector[startPosition];
+		this->data = const_cast<T*>(ptr); //needed, if vector passed as const ... workaround
+		this->numberOfItems = numberOfItemsLinked;
+	}
+
+	////operators which return a new VectorBase<T> are inefficient ==> use operator+=, *=, -= and similar for LinkedData
 
     //WRONG!:
     ////! assignment operator; assign LinkedDataVectorBase to data of VectorBase<T> (linked only); no data copy, no memory allocation

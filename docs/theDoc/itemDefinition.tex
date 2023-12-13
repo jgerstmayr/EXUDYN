@@ -97,10 +97,10 @@ Coordinates\_tt & $\ddot\cv\cConfig = \av\cConfig = [\ddot q_0,\,\ddot q_1,\,\dd
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/plotSensorExamples.py}{\texttt{plotSensorExamples.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTreeDigging.py}{\texttt{serialRobotKinematicTreeDigging.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/SpringWithConstraints.py}{\texttt{SpringWithConstraints.py}} (Examples/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/cartesianSpringDamper.py}{\texttt{cartesianSpringDamper.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ComputeSensitivitiesExample.py}{\texttt{ComputeSensitivitiesExample.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/coordinateSpringDamper.py}{\texttt{coordinateSpringDamper.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/massSpringFrictionInteractive.py}{\texttt{massSpringFrictionInteractive.py}} (Examples/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/minimizeExample.py}{\texttt{minimizeExample.py}} (Examples/)
 \item  ...
 
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py}{\texttt{ACFtest.py}} (TestModels/)
@@ -693,13 +693,13 @@ AngularAcceleration & $\LU{0}{\talpha}\cConfig = \LU{0}{[0,\,0,\,\ddot \psi_0]}\
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDrivesComparison.py}{\texttt{beltDrivesComparison.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/doublePendulum2D.py}{\texttt{doublePendulum2D.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/reevingSystem.py}{\texttt{reevingSystem.py}} (Examples/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/reevingSystemOpen.py}{\texttt{reevingSystemOpen.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/simple4linkPendulumBing.py}{\texttt{simple4linkPendulumBing.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/sliderCrank3DwithANCFbeltDrive2.py}{\texttt{sliderCrank3DwithANCFbeltDrive2.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFmovingRigidbody.py}{\texttt{ANCFmovingRigidbody.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFslidingJoint2D.py}{\texttt{ANCFslidingJoint2D.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFslidingJoint2Drigid.py}{\texttt{ANCFslidingJoint2Drigid.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFswitchingSlidingJoint2D.py}{\texttt{ANCFswitchingSlidingJoint2D.py}} (Examples/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/finiteSegmentMethod.py}{\texttt{finiteSegmentMethod.py}} (Examples/)
 \item  ...
 
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamEigTest.py}{\texttt{ANCFBeamEigTest.py}} (TestModels/)
@@ -896,18 +896,16 @@ Coordinates\_tt &  & acceleration coordinates vector of node (derivative of the 
 
 %+++++++++++++++++++++++++++++++++++
 
-\mysubsubsection{NodePoint3DSlope1}
-\label{sec:item:NodePoint3DSlope1}
+\mysubsubsection{NodePointSlope1}
+\label{sec:item:NodePointSlope1}
 A 3D point/slope vector node for spatial Bernoulli-Euler ANCF (absolute nodal coordinate formulation) beam elements; the node has 6 displacement degrees of freedom (3 for displacement of point node and 3 for the slope vector 'slopex'); all coordinates lead to second order differential equations; the slope vector defines the directional derivative w.r.t the local axial (x) coordinate, denoted as $()^\prime$; in straight configuration aligned at the global x-axis, the slope vector reads $\rv^\prime=[r_x^\prime\;\;r_y^\prime\;\;r_z^\prime]^T=[1\;\;0]^T$.
 \vspace{12pt}\\
 
-\noindent \mybold{Additional information for NodePoint3DSlope1}:
+\noindent \mybold{Additional information for NodePointSlope1}:
 \bi
   \item This \texttt{Node} has/provides the following types = \texttt{Position}
-  \item {\bf Short name} for Python = \texttt{Point3DS1}
-  \item {\bf Short name} for Python visualization object = \texttt{VPoint3DS1}
 \ei\vspace{12pt} \noindent 
-The item \mybold{NodePoint3DSlope1} with type = 'Point3DSlope1' has the following parameters:
+The item \mybold{NodePointSlope1} with type = 'PointSlope1' has the following parameters:
 \vspace{-0.5cm}\\
 \vspace{-0.5cm}\\
 %reference manual TABLE
@@ -920,11 +918,11 @@ The item \mybold{NodePoint3DSlope1} with type = 'Point3DSlope1' has the followin
     referenceCoordinates &     Vector6D &     6 &     [0.,0.,0.,1.,0.,0.] &     \tabnewline reference coordinates (x-pos,y-pos,z-pos; x-slopex, y-slopex, z-slopex) of node; global position of node without displacement\\ \hline
     initialCoordinates &     Vector6D &     6 &     [0.,0.,0.,0.,0.,0.] &     \tabnewline initial displacement coordinates: ux, uy, uz and x/y/z 'displacements' of slopex\\ \hline
     initialVelocities &     Vector6D &     6 &     [0.,0.,0.,0.,0.,0.] &     \tabnewline initial velocity coordinates\\ \hline
-    visualization &     VNodePoint3DSlope1 &      &      &     parameters for visualization of item\\ \hline
+    visualization &     VNodePointSlope1 &      &      &     parameters for visualization of item\\ \hline
 \end{longtable}
 \end{center}
 
-\noindent The item VNodePoint3DSlope1 has the following parameters:
+\noindent The item VNodePointSlope1 has the following parameters:
 %reference manual TABLE
 \begin{center}
   \footnotesize
@@ -937,8 +935,8 @@ The item \mybold{NodePoint3DSlope1} with type = 'Point3DSlope1' has the followin
 \end{longtable}
 \end{center}
 \par\noindent\rule{\textwidth}{0.4pt}
-\mysubsubsubsection{DESCRIPTION of NodePoint3DSlope1:}
-\label{description_NodePoint3DSlope1}
+\mysubsubsubsection{DESCRIPTION of NodePointSlope1:}
+\label{description_NodePointSlope1}
 
 \mybold{The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}:
 \begin{center}
@@ -959,18 +957,16 @@ Coordinates\_tt &  & acceleration coordinates vector of node (derivative of the 
 
 %+++++++++++++++++++++++++++++++++++
 
-\mysubsubsection{NodePoint3DSlope23}
-\label{sec:item:NodePoint3DSlope23}
-A 3D point/slope vector node for spatial, shear and cross-section deformable ANCF (absolute nodal coordinate formulation) beam elements; the node has 9 ODE2 degrees of freedom (3 for displacement of point node and 2 $\times$ 3 for the slope vectors 'slopey' and 'slopez'); all coordinates lead to second order differential equations; the slope vector defines the directional derivative w.r.t the local axial (x) coordinate, denoted as $()^\prime$; in straight configuration aligned at the global x-axis, the slopey vector reads $\rv_y^\prime=[0\;\;1\;\;0]^T$ and slopez gets $\rv_z^\prime=[0\;\;0\;\;1]^T$.
+\mysubsubsection{NodePointSlope12}
+\label{sec:item:NodePointSlope12}
+A 3D point/slope vector node for thin ANCF (absolute nodal coordinate formulation) plate elements; the node has 9 ODE2 degrees of freedom (3 for displacement of point node and 2 $\times$ 3 for the slope vectors 'slopeX' and 'slopeY'); all coordinates lead to second order differential equations; the slopeX vector defines the directional derivative w.r.t the local axial (x) coordinate, etc.; in straight configuration aligned at the global x-axis, the slopeY vector reads $\rv_y^\prime=[0\;\;1\;\;0]^T$.
 \vspace{12pt}\\
 
-\noindent \mybold{Additional information for NodePoint3DSlope23}:
+\noindent \mybold{Additional information for NodePointSlope12}:
 \bi
   \item This \texttt{Node} has/provides the following types = \texttt{Position}, \texttt{Orientation}
-  \item {\bf Short name} for Python = \texttt{Point3DS23}
-  \item {\bf Short name} for Python visualization object = \texttt{VPoint3DS23}
 \ei\vspace{12pt} \noindent 
-The item \mybold{NodePoint3DSlope23} with type = 'Point3DSlope23' has the following parameters:
+The item \mybold{NodePointSlope12} with type = 'PointSlope12' has the following parameters:
 \vspace{-0.5cm}\\
 \vspace{-0.5cm}\\
 %reference manual TABLE
@@ -980,14 +976,14 @@ The item \mybold{NodePoint3DSlope23} with type = 'Point3DSlope23' has the follow
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     node's unique name\\ \hline
-    referenceCoordinates &     Vector9D &     9 &     [0.,0.,0.,1.,0.,0.,1.,0.,0.] &     \tabnewline reference coordinates (x-pos,y-pos,z-pos; x-slopey, y-slopey, z-slopey; x-slopez, y-slopez, z-slopez) of node; global position of node without displacement\\ \hline
+    referenceCoordinates &     Vector9D &     9 &     [0.,0.,0.,1.,0.,0.,1.,0.,0.] &     \tabnewline reference coordinates (x-pos,y-pos,z-pos; x-slopeX, y-slopeX, z-slopeX; x-slopeY, y-slopeY, z-slopeY) of node; global position of node without displacement\\ \hline
     initialCoordinates &     Vector9D &     9 &     [0.,0.,0.,0.,0.,0.,0.,0.,0.] &     \tabnewline initial displacement coordinates relative to reference coordinates\\ \hline
     initialVelocities &     Vector9D &     9 &     [0.,0.,0.,0.,0.,0.,0.,0.,0.] &     \tabnewline initial velocity coordinates\\ \hline
-    visualization &     VNodePoint3DSlope23 &      &      &     parameters for visualization of item\\ \hline
+    visualization &     VNodePointSlope12 &      &      &     parameters for visualization of item\\ \hline
 \end{longtable}
 \end{center}
 
-\noindent The item VNodePoint3DSlope23 has the following parameters:
+\noindent The item VNodePointSlope12 has the following parameters:
 %reference manual TABLE
 \begin{center}
   \footnotesize
@@ -1000,8 +996,73 @@ The item \mybold{NodePoint3DSlope23} with type = 'Point3DSlope23' has the follow
 \end{longtable}
 \end{center}
 \par\noindent\rule{\textwidth}{0.4pt}
-\mysubsubsubsection{DESCRIPTION of NodePoint3DSlope23:}
-\label{description_NodePoint3DSlope23}
+\mysubsubsubsection{DESCRIPTION of NodePointSlope12:}
+\label{description_NodePointSlope12}
+
+\mybold{The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}:
+\begin{center}
+\footnotesize
+\begin{longtable}{| p{5cm} | p{5cm} | p{6cm} |} 
+\hline
+\bf output variable & \bf symbol & \bf description \\ \hline
+Position & $\LU{0}{\pv}\cConfig = \LU{0}{[p_0,\, p_1,\, p_2]}\cConfig\tp$ & global 3D position vector of node (=displacement+reference position)\\ \hline
+Displacement & $\LU{0}{\uv}\cConfig = \LU{0}{[q_0,\, q_1,\, q_2]}\cConfig\tp$ & global 3D displacement vector of node\\ \hline
+Velocity & $\LU{0}{\av}\cConfig = \LU{0}{[\dot q_0,\,\dot q_1,\,\dot q_2]}\cConfig\tp$ & global 3D velocity vector of node\\ \hline
+Acceleration & $\LU{0}{\av}\cConfig = \LU{0}{[\ddot q_0,\,\ddot q_1,\,\ddot q_2]}\cConfig\tp$ & global 3D acceleration vector of node\\ \hline
+Coordinates &  & coordinate vector of node (relative to reference configuration)\\ \hline
+Coordinates\_t &  & velocity coordinates vector of node\\ \hline
+Coordinates\_tt &  & acceleration coordinates vector of node\\ \hline
+RotationMatrix & $[A_{00},\,A_{01},\,A_{02},\,A_{10},\,\ldots,\,A_{21},\,A_{22}]\cConfig\tp$ & vector with 9 components of the rotation matrix $\LU{0b}{\Rot}\cConfig$ in row-major format, in any configuration; the rotation matrix transforms local ($b$) to global (0) coordinates\\ \hline
+Rotation & $[\varphi_0,\,\varphi_1,\,\varphi_2]\tp\cConfig$ & vector with 3 components of the Euler / Tait-Bryan angles in xyz-sequence\\ \hline
+AngularVelocity & $\LU{0}{\tomega}\cConfig = \LU{0}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$ & global 3D angular velocity vector of node\\ \hline
+AngularVelocityLocal & $\LU{b}{\tomega}\cConfig = \LU{b}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$ & local (body-fixed)  3D angular velocity vector of node\\ \hline
+\end{longtable}
+\end{center}
+\newpage
+
+%+++++++++++++++++++++++++++++++++++
+
+\mysubsubsection{NodePointSlope23}
+\label{sec:item:NodePointSlope23}
+A 3D point/slope vector node for spatial, shear and cross-section deformable ANCF (absolute nodal coordinate formulation) beam elements; the node has 9 ODE2 degrees of freedom (3 for displacement of point node and 2 $\times$ 3 for the slope vectors 'slopeY' and 'slopeZ'); all coordinates lead to second order differential equations; the slopeY vector defines the directional derivative w.r.t the local axial (y) coordinate, etc.; the slopeY vector reads $\rv_y^\prime=[0\;\;1\;\;0]^T$ and slopeZ gets $\rv_z^\prime=[0\;\;0\;\;1]^T$.
+\vspace{12pt}\\
+
+\noindent \mybold{Additional information for NodePointSlope23}:
+\bi
+  \item This \texttt{Node} has/provides the following types = \texttt{Position}, \texttt{Orientation}
+\ei\vspace{12pt} \noindent 
+The item \mybold{NodePointSlope23} with type = 'PointSlope23' has the following parameters:
+\vspace{-0.5cm}\\
+\vspace{-0.5cm}\\
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    name &     String &      &     '' &     node's unique name\\ \hline
+    referenceCoordinates &     Vector9D &     9 &     [0.,0.,0.,1.,0.,0.,1.,0.,0.] &     \tabnewline reference coordinates (x-pos,y-pos,z-pos; x-slopey, y-slopey, z-slopey; x-slopez, y-slopez, z-slopez) of node; global position of node without displacement\\ \hline
+    initialCoordinates &     Vector9D &     9 &     [0.,0.,0.,0.,0.,0.,0.,0.,0.] &     \tabnewline initial displacement coordinates relative to reference coordinates\\ \hline
+    initialVelocities &     Vector9D &     9 &     [0.,0.,0.,0.,0.,0.,0.,0.,0.] &     \tabnewline initial velocity coordinates\\ \hline
+    visualization &     VNodePointSlope23 &      &      &     parameters for visualization of item\\ \hline
+\end{longtable}
+\end{center}
+
+\noindent The item VNodePointSlope23 has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+    drawSize &     float &      &     -1. &     drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used\\ \hline
+    color &     Float4 &     4 &     [-1.,-1.,-1.,-1.] &     \tabnewline Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used\\ \hline
+\end{longtable}
+\end{center}
+\par\noindent\rule{\textwidth}{0.4pt}
+\mysubsubsubsection{DESCRIPTION of NodePointSlope23:}
+\label{description_NodePointSlope23}
 
 \mybold{The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}:
 \begin{center}
@@ -1024,7 +1085,7 @@ AngularVelocityLocal & $\LU{b}{\tomega}\cConfig = \LU{b}{[\omega_0,\,\omega_1,\,
 \end{center}
 \vspace{6pt}\par\noindent\rule{\textwidth}{0.4pt}
 %
-\noindent For examples on NodePoint3DSlope23 see Relevant Examples and TestModels with weblink:
+\noindent For examples on NodePointSlope23 see Relevant Examples and TestModels with weblink:
 \bi
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamEigTest.py}{\texttt{ANCFBeamEigTest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamTest.py}{\texttt{ANCFBeamTest.py}} (TestModels/)
@@ -1398,16 +1459,16 @@ Coordinates\_t & $\dot\cv\cConfig =[]$ & vector of length zero\\ \hline
 \bi
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ALEANCFpipe.py}{\texttt{ALEANCFpipe.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFALEtest.py}{\texttt{ANCFALEtest.py}} (Examples/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcableCantilevered.py}{\texttt{ANCFcableCantilevered.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcantileverTest.py}{\texttt{ANCFcantileverTest.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcantileverTestDyn.py}{\texttt{ANCFcantileverTestDyn.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle.py}{\texttt{ANCFcontactCircle.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle2.py}{\texttt{ANCFcontactCircle2.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFmovingRigidbody.py}{\texttt{ANCFmovingRigidbody.py}} (Examples/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFrotatingCable2D.py}{\texttt{ANCFrotatingCable2D.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFslidingJoint2D.py}{\texttt{ANCFslidingJoint2D.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFslidingJoint2Drigid.py}{\texttt{ANCFslidingJoint2Drigid.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFswitchingSlidingJoint2D.py}{\texttt{ANCFswitchingSlidingJoint2D.py}} (Examples/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFtestHalfcircle.py}{\texttt{ANCFtestHalfcircle.py}} (Examples/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFtests2.py}{\texttt{ANCFtests2.py}} (Examples/)
 \item  ...
 
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamEigTest.py}{\texttt{ANCFBeamEigTest.py}} (TestModels/)
@@ -1554,15 +1615,15 @@ RotationMatrix & $\LU{0b}{\Rot}$ & rotation matrix in vector form (stored in row
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addPrismaticJoint.py}{\texttt{addPrismaticJoint.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py}{\texttt{addRevoluteJoint.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ALEANCFpipe.py}{\texttt{ALEANCFpipe.py}} (Examples/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcableCantilevered.py}{\texttt{ANCFcableCantilevered.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcantileverTest.py}{\texttt{ANCFcantileverTest.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcantileverTestDyn.py}{\texttt{ANCFcantileverTestDyn.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle.py}{\texttt{ANCFcontactCircle.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle2.py}{\texttt{ANCFcontactCircle2.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFmovingRigidbody.py}{\texttt{ANCFmovingRigidbody.py}} (Examples/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFrotatingCable2D.py}{\texttt{ANCFrotatingCable2D.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFslidingJoint2D.py}{\texttt{ANCFslidingJoint2D.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFslidingJoint2Drigid.py}{\texttt{ANCFslidingJoint2Drigid.py}} (Examples/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFswitchingSlidingJoint2D.py}{\texttt{ANCFswitchingSlidingJoint2D.py}} (Examples/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFtestHalfcircle.py}{\texttt{ANCFtestHalfcircle.py}} (Examples/)
 \item  ...
 
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/abaqusImportTest.py}{\texttt{abaqusImportTest.py}} (TestModels/)
@@ -1688,7 +1749,6 @@ Acceleration & $\LU{0}{\av}\cConfig = \LU{0}{\ddot\uv}\cConfig = [\ddot q_0,\;\d
 \noindent For examples on ObjectMassPoint see Relevant Examples and TestModels with weblink:
 \bi
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/interactiveTutorial.py}{\texttt{interactiveTutorial.py}} (Examples/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/cartesianSpringDamper.py}{\texttt{cartesianSpringDamper.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ComputeSensitivitiesExample.py}{\texttt{ComputeSensitivitiesExample.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/coordinateSpringDamper.py}{\texttt{coordinateSpringDamper.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/massSpringFrictionInteractive.py}{\texttt{massSpringFrictionInteractive.py}} (Examples/)
@@ -1699,6 +1759,7 @@ Acceleration & $\LU{0}{\av}\cConfig = \LU{0}{\ddot\uv}\cConfig = [\ddot q_0,\;\d
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particleClusters.py}{\texttt{particleClusters.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particlesSilo.py}{\texttt{particlesSilo.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particlesTest.py}{\texttt{particlesTest.py}} (Examples/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particlesTest3D.py}{\texttt{particlesTest3D.py}} (Examples/)
 \item  ...
 
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/connectorGravityTest.py}{\texttt{connectorGravityTest.py}} (TestModels/)
@@ -1827,6 +1888,7 @@ Acceleration & $\LU{0}{\av}\cConfig = \LU{0}{\ddot\uv}\cConfig = [\ddot q_0,\;\d
 \noindent For examples on ObjectMassPoint2D see Relevant Examples and TestModels with weblink:
 \bi
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/myFirstExample.py}{\texttt{myFirstExample.py}} (Examples/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/reevingSystemOpen.py}{\texttt{reevingSystemOpen.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFslidingJoint2D.py}{\texttt{ANCFslidingJoint2D.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFslidingJoint2Drigid.py}{\texttt{ANCFslidingJoint2Drigid.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/geneticOptimizationSliderCrank.py}{\texttt{geneticOptimizationSliderCrank.py}} (Examples/)
@@ -1837,10 +1899,11 @@ Acceleration & $\LU{0}{\av}\cConfig = \LU{0}{\ddot\uv}\cConfig = [\ddot q_0,\;\d
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/slidercrankWithMassSpring.py}{\texttt{slidercrankWithMassSpring.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/SpringDamperMassUserFunction.py}{\texttt{SpringDamperMassUserFunction.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/switchingConstraintsPendulum.py}{\texttt{switchingConstraintsPendulum.py}} (Examples/)
+\item  ...
+
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/modelUnitTests.py}{\texttt{modelUnitTests.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/coordinateVectorConstraint.py}{\texttt{coordinateVectorConstraint.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sliderCrankFloatingTest.py}{\texttt{sliderCrankFloatingTest.py}} (TestModels/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sparseMatrixSpringDamperTest.py}{\texttt{sparseMatrixSpringDamperTest.py}} (TestModels/)
 \item  ...
 
 
@@ -2534,6 +2597,7 @@ AngularAccelerationLocal & $\LU{b}{\talpha}\cConfig = \LU{b0}{\Rot} \LU{0}{\talp
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveReevingSystem.py}{\texttt{beltDriveReevingSystem.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDrivesComparison.py}{\texttt{beltDrivesComparison.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/reevingSystem.py}{\texttt{reevingSystem.py}} (Examples/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/reevingSystemOpen.py}{\texttt{reevingSystemOpen.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/sliderCrank3DwithANCFbeltDrive2.py}{\texttt{sliderCrank3DwithANCFbeltDrive2.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFmovingRigidbody.py}{\texttt{ANCFmovingRigidbody.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFslidingJoint2D.py}{\texttt{ANCFslidingJoint2D.py}} (Examples/)
@@ -2541,7 +2605,6 @@ AngularAccelerationLocal & $\LU{b}{\talpha}\cConfig = \LU{b0}{\Rot} \LU{0}{\talp
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFswitchingSlidingJoint2D.py}{\texttt{ANCFswitchingSlidingJoint2D.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/doublePendulum2D.py}{\texttt{doublePendulum2D.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/finiteSegmentMethod.py}{\texttt{finiteSegmentMethod.py}} (Examples/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/geneticOptimizationSliderCrank.py}{\texttt{geneticOptimizationSliderCrank.py}} (Examples/)
 \item  ...
 
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py}{\texttt{ANCFbeltDrive.py}} (TestModels/)
@@ -3971,6 +4034,124 @@ A FiniteElement is a special Object and Body, which is used to define deformable
 
 %+++++++++++++++++++++++++++++++++++
 
+\mysubsubsection{ObjectANCFCable}
+\label{sec:item:ObjectANCFCable}
+A 3D cable finite element using 2 nodes of type NodePointSlope1. The localPosition of the beam with length $L$=physicsLength and height $h$ ranges in $X$-direction in range $[0, L]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the \hac{EOM}). For description see ObjectANCFCable2D, which is almost identical to 3D case. Note that this element does not include torsion, therfore a torque cannot be applied along the local x-axis.
+\vspace{12pt}\\
+
+\noindent \mybold{Additional information for ObjectANCFCable}:
+\bi
+  \item This \texttt{Object} has/provides the following types = \texttt{Body}, \texttt{MultiNoded}
+  \item Requested \texttt{Node} type = \texttt{Position}
+  \item {\bf Short name} for Python = \texttt{Cable}
+  \item {\bf Short name} for Python visualization object = \texttt{VCable}
+\ei\vspace{12pt} \noindent 
+The item \mybold{ObjectANCFCable} with type = 'ANCFCable' has the following parameters:
+\vspace{-0.5cm}\\
+\vspace{-0.5cm}\\
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    name &     String &      &     '' &     objects's unique name\\ \hline
+    physicsLength &     UReal &      &     0. &      [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives $\rho A L$; must be positive\\ \hline
+    physicsMassPerLength &     UReal &      &     0. &      [SI:kg/m] mass per length of beam\\ \hline
+    physicsBendingStiffness &     UReal &      &     0. &      [SI:Nm$^2$] bending stiffness of beam; the bending moment is $m = EI (\kappa - \kappa_0)$, in which $\kappa$ is the material measure of curvature\\ \hline
+    physicsAxialStiffness &     UReal &      &     0. &      [SI:N] axial stiffness of beam; the axial force is $f_{ax} = EA (\varepsilon -\varepsilon_0)$, in which $\varepsilon = |\rv^\prime|-1$ is the axial strain\\ \hline
+    physicsBendingDamping &     UReal &      &     0. &      [SI:Nm$^2$/s] bending damping of beam ; the additional virtual work due to damping is $\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx$\\ \hline
+    physicsAxialDamping &     UReal &      &     0. &      [SI:N/s] axial damping of beam; the additional virtual work due to damping is $\delta W_{\dot\varepsilon} = \int_0^L \dot \varepsilon \delta \varepsilon dx$\\ \hline
+    physicsReferenceAxialStrain &     Real &      &     0. &      [SI:1] reference axial strain of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference axial strain value\\ \hline
+    strainIsRelativeToReference &     Real &      &     0. &      if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration plus the values of $\varepsilon_0$ and $\kappa_0$ serve as a reference geometry; allows also values between 0. and 1.\\ \hline
+    nodeNumbers &     NodeIndex2 &      &     [invalid [-1], invalid [-1]] &     \tabnewline two node numbers ANCF cable element\\ \hline
+    useReducedOrderIntegration &     Index &      &     0 &     0/false: use Gauss order 9 integration for virtual work of axial forces, order 5 for virtual work of bending moments; 1/true: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments\\ \hline
+    visualization &     VObjectANCFCable &      &      &     parameters for visualization of item\\ \hline
+\end{longtable}
+\end{center}
+
+\noindent The item VObjectANCFCable has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown; note that all quantities are computed at the beam centerline, even if drawn on surface of cylinder of beam; this effects, e.g., Displacement or Velocity, which is drawn constant over cross section\\ \hline
+    radius &     float &      &     0. &     if radius==0, only the centerline is drawn; else, a cylinder with radius is drawn; circumferential tiling follows general.cylinderTiling and beam axis tiling follows bodies.beams.axialTiling\\ \hline
+    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA color of the object; if R==-1, use default color\\ \hline
+\end{longtable}
+\end{center}
+\par\noindent\rule{\textwidth}{0.4pt}
+\mysubsubsubsection{DESCRIPTION of ObjectANCFCable:}
+\label{description_ObjectANCFCable}
+\paragraph{Information on input parameters:} 
+\startTable{input parameter}{symbol}{description see tables above}
+\rowTable{physicsLength}{$L$}{}
+\rowTable{physicsMassPerLength}{$\rho A$}{}
+\rowTable{physicsBendingStiffness}{$EI$}{}
+\rowTable{physicsAxialStiffness}{$EA$}{}
+\rowTable{physicsBendingDamping}{$d_{K}$}{}
+\rowTable{physicsAxialDamping}{$d_{\varepsilon}$}{}
+\rowTable{physicsReferenceAxialStrain}{$\varepsilon_0$}{}
+\rowTable{strainIsRelativeToReference}{$f\cRef$}{}
+\finishTable
+
+\mybold{The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}:
+\begin{center}
+\footnotesize
+\begin{longtable}{| p{5cm} | p{5cm} | p{6cm} |} 
+\hline
+\bf output variable & \bf symbol & \bf description \\ \hline
+Position & $\LU{0}{\pv\cConfig(x,0,0)} = \rv\cConfig(x) + y\cdot \nv\cConfig(x)$ & global position vector of local position $[x,0,0]$\\ \hline
+Displacement & $\LU{0}{\uv\cConfig(x,0,0)} = \LU{0}{\pv\cConfig(x,0,0)} - \LU{0}{\pv\cRef(x,0,0)}$ & global displacement vector of local position\\ \hline
+Velocity & $\LU{0}{\vv(x,0,0)} = \LU{0}{\dot \rv(x)}$ & global velocity vector of local position\\ \hline
+Director1 & $\rv'(x)$ & (axial) slope vector of local axis position (at $y$=0)\\ \hline
+StrainLocal & $\varepsilon$ & axial strain (scalar) of local axis position (at Y=Z=0)\\ \hline
+CurvatureLocal & $[K_x, K_y, K_z]\tp$ & local curvature vector\\ \hline
+ForceLocal & $N$ &  (local) section normal force (scalar, including reference strains) (at $y$=$z$=0); note that strains are highly inaccurate when coupled to bending, thus consider useReducedOrderIntegration=2 and evaluate axial strain at nodes or at midpoint\\ \hline
+TorqueLocal & $M$ &  (local) bending moment (scalar) (at $y$=$z$=0), which are bending moments as there is no torque\\ \hline
+Acceleration & $\LU{0}{\av(x,0,0)} = \LU{0}{\ddot \rv(x)}$ & global acceleration vector of local position\\ \hline
+\end{longtable}
+\end{center}
+ \noindent
+    %%RSTCOMPATIBLE
+\vspace{6pt}\par\noindent\rule{\textwidth}{0.4pt}
+\mysubsubsubsection{MINI EXAMPLE for ObjectANCFCable}
+\label{miniExample_ObjectANCFCable}
+\pythonstyle
+\begin{lstlisting}[language=Python, firstnumber=1]
+    from exudyn.beams import GenerateStraightLineANCFCable
+    rhoA = 78.
+    EA = 1000000.
+    EI = 833.3333333333333
+    cable = Cable(physicsMassPerLength=rhoA, 
+                  physicsBendingStiffness=EI, 
+                  physicsAxialStiffness=EA, 
+                  )
+
+    ancf=GenerateStraightLineANCFCable(mbs=mbs,
+                  positionOfNode0=[0,0,0], positionOfNode1=[2,0,0],
+                  numberOfElements=32, #converged to 4 digits
+                  cableTemplate=cable, #this defines the beam element properties
+                  massProportionalLoad = [0,-9.81,0],
+                  fixedConstraintsNode0 = [1,1,1, 0,1,1], #add constraints for pos and rot (r'_y,r'_z)
+                  )
+    lastNode = ancf[0][-1]
+
+    #assemble and solve system for default parameters
+    mbs.Assemble()
+    mbs.SolveStatic()
+
+    #check result
+    exudynTestGlobals.testResult = mbs.GetNodeOutput(lastNode, exu.OutputVariableType.Displacement)[0]
+    #ux=-0.5013058140308901
+\end{lstlisting}
+
+\newpage
+
+%+++++++++++++++++++++++++++++++++++
+
 \mysubsubsection{ObjectANCFCable2D}
 \label{sec:item:ObjectANCFCable2D}
 A 2D cable finite element using 2 nodes of type NodePoint2DSlope1. The localPosition of the beam with length $L$=physicsLength and height $h$ ranges in $X$-direction in range $[0, L]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the \hac{EOM}).
@@ -4003,6 +4184,8 @@ The item \mybold{ObjectANCFCable2D} with type = 'ANCFCable2D' has the following 
     strainIsRelativeToReference &     Real &      &     0. &      if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration plus the values of $\varepsilon_0$ and $\kappa_0$ serve as a reference geometry; allows also values between 0. and 1.\\ \hline
     nodeNumbers &     NodeIndex2 &      &     [invalid [-1], invalid [-1]] &     \tabnewline two node numbers ANCF cable element\\ \hline
     useReducedOrderIntegration &     Index &      &     0 &     0/false: use Gauss order 9 integration for virtual work of axial forces, order 5 for virtual work of bending moments; 1/true: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments\\ \hline
+    axialForceUserFunction &     PyFunctionMbsScalarIndexScalar9 &     \tabnewline  &     \tabnewline 0 &     A Python function which defines the (nonlinear relations) of local strains (including axial strain and bending strain) as well as time derivatives to the local axial force; see description below\\ \hline
+    bendingMomentUserFunction &     PyFunctionMbsScalarIndexScalar9 &     \tabnewline  &     \tabnewline 0 &     A Python function which defines the (nonlinear relations) of local strains (including axial strain and bending strain) as well as time derivatives to the local bending moment; see description below\\ \hline
     visualization &     VObjectANCFCable2D &      &      &     parameters for visualization of item\\ \hline
 \end{longtable}
 \end{center}
@@ -4033,6 +4216,8 @@ The item \mybold{ObjectANCFCable2D} with type = 'ANCFCable2D' has the following 
 \rowTable{physicsReferenceAxialStrain}{$\varepsilon_0$}{}
 \rowTable{physicsReferenceCurvature}{$\kappa_0$}{}
 \rowTable{strainIsRelativeToReference}{$f\cRef$}{}
+\rowTable{axialForceUserFunction}{$\mathrm{UF} \in \Rcal$}{}
+\rowTable{bendingMomentUserFunction}{$\mathrm{UF} \in \Rcal$}{}
 \finishTable
 
 \mybold{The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}:
@@ -4266,6 +4451,92 @@ AngularAcceleration & $\talpha = [0,\, ,0,\, \dot\omega_2]$ & angular accelerati
       -r'_y \cdot S'_1(x) \frac{1}{\rv^{\prime 2}} & r'_x \cdot S'_1(x) \frac{1}{\rv^{\prime 2}} & 
       -r'_y \cdot S'_2(x) \frac{1}{\rv^{\prime 2}} & \cdots & r'_x \cdot S'_4(x) \frac{1}{\rv^{\prime 2}}  \end{array} \!\!\right]
     \ee
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunction{axialForceUserFunction(mbs, t, itemNumber, axialPositionNormalized, axialStrain, axialStrain\_t, axialStrainRef, physicsAxialStiffness, physicsAxialDamping, curvature, curvature\_t, curvatureRef)}
+    A user function, which computes the axial force depending on time, strains and curvatures and 
+    object parameters (stiffness, damping).
+    The object variables are provided to the function using the current values of the ANCFCable2D object.
+    Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
+    \texttt{mbs.GetObjectParameter(itemNumber, ...)}, see the according description of \texttt{GetObjectParameter}.
+    \mybold{NOTE:} this function has a different interface as compared to the bending moment function.
+    %
+    \startTable{arguments /  return}{type or size}{description}
+      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs to which object belongs}
+      \rowTable{\texttt{t}}{Real}{current time in mbs}
+      \rowTable{\texttt{itemNumber}}{Index}{integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
+      \rowTable{\texttt{axialPositionNormalized}}{Real}{axial position at the cable where the user function is evaluated; range is [0,1]}
+      \rowTable{\texttt{axialStrain}}{Real}{$\varepsilon$}
+      \rowTable{\texttt{axialStrain\_t}}{Real}{$\varepsilon_t$}
+      \rowTable{\texttt{axialStrainRef}}{Real}{$\varepsilon_0 + f\cRef \cdot \varepsilon\cRef$}
+      \rowTable{\texttt{physicsAxialStiffness}}{Real}{as given in object parameters}
+      \rowTable{\texttt{physicsAxialDamping}}{Real}{as given in object parameters}
+      \rowTable{\texttt{curvature}}{Real}{$K$}
+      \rowTable{\texttt{curvature\_t}}{Real}{$\dot K$}
+      \rowTable{\texttt{curvatureRef}}{Real}{$K_0 + f\cRef \cdot K\cRef$}
+      \rowTable{\returnValue}{Real}{scalar value of computed axial force}
+    \finishTable
+    %
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunction{bendingMomentUserFunction(mbs, t, itemNumber, axialPositionNormalized, curvature, curvature\_t, curvatureRef, physicsBendingStiffness, physicsBendingDamping, axialStrain, axialStrain\_t, axialStrainRef)}
+    A user function, which computes the bending moment depending on time, strains and curvatures and 
+    object parameters (stiffness, damping).
+    The object variables are provided to the function using the current values of the ANCFCable2D object.
+    Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
+    \texttt{mbs.GetObjectParameter(itemNumber, ...)}, see the according description of \texttt{GetObjectParameter}.
+    \mybold{NOTE:} this function has a different interface as compared to the axial force function.
+    %
+    \startTable{arguments /  return}{type or size}{description}
+      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs to which object belongs}
+      \rowTable{\texttt{t}}{Real}{current time in mbs}
+      \rowTable{\texttt{itemNumber}}{Index}{integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
+      \rowTable{\texttt{axialPositionNormalized}}{Real}{axial position at the cable where the user function is evaluated; range is [0,1]}
+      \rowTable{\texttt{curvature}}{Real}{$K$}
+      \rowTable{\texttt{curvature\_t}}{Real}{$\dot K$}
+      \rowTable{\texttt{curvatureRef}}{Real}{$K_0 + f\cRef \cdot K\cRef$}
+      \rowTable{\texttt{physicsBendingStiffness}}{Real}{as given in object parameters}
+      \rowTable{\texttt{physicsBendingDamping}}{Real}{as given in object parameters}
+      \rowTable{\texttt{axialStrain}}{Real}{$\varepsilon$}
+      \rowTable{\texttt{axialStrain\_t}}{Real}{$\varepsilon_t$}
+      \rowTable{\texttt{axialStrainRef}}{Real}{$\varepsilon_0 + f\cRef \cdot \varepsilon\cRef$}
+      \rowTable{\returnValue}{Real}{scalar value of computed bending moment}
+    \finishTable
+    %
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunctionExample{}
+    \pythonstyle\begin{lstlisting}
+    #define some material parameters
+    rhoA = 100.
+    EA =   1e7.
+    EI =   1e5
+
+    #example of bending moment user function
+    def bendingMomentUserFunction(mbs, t, itemNumber, axialPositionNormalized, 
+               curvature, curvature_t, curvatureRef, physicsBendingStiffness, physicsBendingDamping,
+               axialStrain, axialStrain_t, axialStrainRef):
+        fact = min(1,t) #runs from 0 to 1
+        #change reference curvature of beam over time:
+        kappa=(curvature-curvatureRef*fact) 
+        return physicsBendingStiffness*(kappa) + physicsBendingDamping*curvature_t
+
+    def axialForceUserFunction(mbs, t, itemNumber, axialPositionNormalized, 
+               axialStrain, axialStrain_t, axialStrainRef, physicsAxialStiffness, physicsAxialDamping,
+               curvature, curvature_t, curvatureRef):
+        fact = min(1,t) #runs from 0 to 1
+        return (physicsAxialStiffness*(axialStrain-fact*axialStrainRef) + 
+                physicsAxialDamping*axialStrain_t)
+
+    cable = ObjectANCFCable2D(physicsMassPerLength=rhoA, 
+                    physicsBendingStiffness=EI, 
+                    physicsBendingDamping = EI*0.1,
+                    physicsAxialStiffness=EA,
+                    physicsAxialDamping=EA*0.05,
+                    physicsReferenceAxialStrain=0.1, #10% stretch
+                    physicsReferenceCurvature=1,     #radius=1
+                    bendingMomentUserFunction=bendingMomentUserFunction,
+                    axialForceUserFunction=axialForceUserFunction,
+                    )
+    #use  cable with GenerateStraightLineANCFCable(...)
+    \end{lstlisting} \vspace{12pt}
     %%RSTCOMPATIBLE
 \vspace{6pt}\par\noindent\rule{\textwidth}{0.4pt}
 \mysubsubsubsection{MINI EXAMPLE for ObjectANCFCable2D}
@@ -4309,11 +4580,11 @@ AngularAcceleration & $\talpha = [0,\, ,0,\, \dot\omega_2]$ & angular accelerati
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle.py}{\texttt{ANCFcontactCircle.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle2.py}{\texttt{ANCFcontactCircle2.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFmovingRigidbody.py}{\texttt{ANCFmovingRigidbody.py}} (Examples/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFrotatingCable2D.py}{\texttt{ANCFrotatingCable2D.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFslidingJoint2D.py}{\texttt{ANCFslidingJoint2D.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFslidingJoint2Drigid.py}{\texttt{ANCFslidingJoint2Drigid.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFswitchingSlidingJoint2D.py}{\texttt{ANCFswitchingSlidingJoint2D.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFtestHalfcircle.py}{\texttt{ANCFtestHalfcircle.py}} (Examples/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFtests2.py}{\texttt{ANCFtests2.py}} (Examples/)
 \item  ...
 
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py}{\texttt{ANCFcontactCircleTest.py}} (TestModels/)
@@ -4714,6 +4985,114 @@ CurvatureLocal &  & 3D vector of curvature, containing only curvature w.r.t. $z$
 \ei
 
 %
+\newpage
+
+%+++++++++++++++++++++++++++++++++++
+
+\mysubsubsection{ObjectANCFThinPlate}
+\label{sec:item:ObjectANCFThinPlate}
+A 3D thin Kirchhoff plate finite element based on the absolute nodal coordinate formulation, using 4 nodes of type NodePointSlope12. The geometry as well as (deformed and distorted) reference configuration is given by the nodes. The localPosition follows unit-coordinates in the range [-1,1] for X, Y and Z coordinates; the thickness of the plate is h; This element is under construction.
+\vspace{12pt}\\
+
+\noindent \mybold{Additional information for ObjectANCFThinPlate}:
+\bi
+  \item This \texttt{Object} has/provides the following types = \texttt{Body}, \texttt{MultiNoded}
+  \item Requested \texttt{Node} type = \texttt{Position}
+\ei\vspace{12pt} \noindent 
+The item \mybold{ObjectANCFThinPlate} with type = 'ANCFThinPlate' has the following parameters:
+\vspace{-0.5cm}\\
+\vspace{-0.5cm}\\
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    name &     String &      &     '' &     objects's unique name\\ \hline
+    physicsHeight &     UReal &      &     0. &      [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives $\rho A L$; must be positive\\ \hline
+    physicsStrainCoefficients &     Matrix3D &      &     [[1,0,0], [0,1,0], [0,0,1]] &     \tabnewline  [SI:N/m] stiffness coefficients related to inplane normal and shear strains, integrated over height of the plate\\ \hline
+    physicsCurvatureCoefficients &     Matrix3D &      &     [[1,0,0], [0,1,0], [0,0,1]] &     \tabnewline  [SI:Nm] stiffness coefficients related to curvatures, integrated over height of the plate\\ \hline
+    strainIsRelativeToReference &     Real &      &     0. &      if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration serves as a reference geometry; allows also values between 0. and 1. to perform a transition during static computation\\ \hline
+    nodeNumbers &     NodeIndex4 &      &     [invalid [-1], invalid [-1], invalid [-1], invalid [-1]] &     \tabnewline 4 NodePointSlope12 node numbers\\ \hline
+    useReducedOrderIntegration &     Index &      &     0 &     0/false: use highest Gauss integration for virtual work of strains, order 5 for bending moments; 1/true: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments\\ \hline
+    visualization &     VObjectANCFThinPlate &      &      &     parameters for visualization of item\\ \hline
+\end{longtable}
+\end{center}
+
+\noindent The item VObjectANCFThinPlate has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown; note that all quantities are computed at the beam centerline, even if drawn on surface of cylinder of beam; this effects, e.g., Displacement or Velocity, which is drawn constant over cross section\\ \hline
+    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA color of the object; if R==-1, use default color\\ \hline
+\end{longtable}
+\end{center}
+\par\noindent\rule{\textwidth}{0.4pt}
+\mysubsubsubsection{DESCRIPTION of ObjectANCFThinPlate:}
+\label{description_ObjectANCFThinPlate}
+\paragraph{Information on input parameters:} 
+\startTable{input parameter}{symbol}{description see tables above}
+\rowTable{physicsHeight}{$L$}{}
+\rowTable{physicsStrainCoefficients}{$\Dm_\varepsilon$}{}
+\rowTable{physicsCurvatureCoefficients}{$\Dm_\kappa$}{}
+\rowTable{strainIsRelativeToReference}{$f\cRef$}{}
+\finishTable
+
+\mybold{The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}:
+\begin{center}
+\footnotesize
+\begin{longtable}{| p{5cm} | p{5cm} | p{6cm} |} 
+\hline
+\bf output variable & \bf symbol & \bf description \\ \hline
+Position & $\LU{0}{\pv\cConfig(x,0,0)} = \rv\cConfig(x) + y\cdot \nv\cConfig(x)$ & global position vector of local position $[x,0,0]$\\ \hline
+Displacement & $\LU{0}{\uv\cConfig(x,0,0)} = \LU{0}{\pv\cConfig(x,0,0)} - \LU{0}{\pv\cRef(x,0,0)}$ & global displacement vector of local position\\ \hline
+Velocity & $\LU{0}{\vv(x,0,0)} = \LU{0}{\dot \rv(x)}$ & global velocity vector of local position\\ \hline
+Director1 & $\rv'(x)$ & (axial) slope vector of local axis position (at $y$=0)\\ \hline
+StrainLocal & $\varepsilon$ & axial strain (scalar) of local axis position (at Y=Z=0)\\ \hline
+CurvatureLocal & $[K_x, K_y, K_z]\tp$ & local curvature vector\\ \hline
+ForceLocal & $N$ &  (local) section normal force (scalar, including reference strains) (at $y$=$z$=0); note that strains are highly inaccurate when coupled to bending, thus consider useReducedOrderIntegration=2 and evaluate axial strain at nodes or at midpoint\\ \hline
+TorqueLocal & $M$ &  (local) bending moment (scalar) (at $y$=$z$=0), which are bending moments as there is no torque\\ \hline
+Acceleration & $\LU{0}{\av(x,0,0)} = \LU{0}{\ddot \rv(x)}$ & global acceleration vector of local position\\ \hline
+\end{longtable}
+\end{center}
+ \noindent
+    %%RSTCOMPATIBLE
+\vspace{6pt}\par\noindent\rule{\textwidth}{0.4pt}
+\mysubsubsubsection{MINI EXAMPLE for ObjectANCFThinPlate}
+\label{miniExample_ObjectANCFThinPlate}
+\pythonstyle
+\begin{lstlisting}[language=Python, firstnumber=1]
+    #NEEDS to be revised
+    from exudyn.beams import GenerateStraightLineANCFCable
+    rhoA = 78.
+    EA = 1000000.
+    EI = 833.3333333333333
+    cable = Cable(physicsMassPerLength=rhoA, 
+                  physicsBendingStiffness=EI, 
+                  physicsAxialStiffness=EA, 
+                  )
+
+    ancf=GenerateStraightLineANCFCable(mbs=mbs,
+                  positionOfNode0=[0,0,0], positionOfNode1=[2,0,0],
+                  numberOfElements=32, #converged to 4 digits
+                  cableTemplate=cable, #this defines the beam element properties
+                  massProportionalLoad = [0,-9.81,0],
+                  fixedConstraintsNode0 = [1,1,1, 0,1,1], #add constraints for pos and rot (r'_y,r'_z)
+                  )
+    lastNode = ancf[0][-1]
+
+    #assemble and solve system for default parameters
+    mbs.Assemble()
+    mbs.SolveStatic()
+
+    #check result
+    exudynTestGlobals.testResult = mbs.GetNodeOutput(lastNode, exu.OutputVariableType.Displacement)[0]
+    #ux=-0.5013058140308901
+\end{lstlisting}
+
 
 \newpage
 %+++++++++++++++++++++++++++++++
@@ -4947,6 +5326,7 @@ TorqueLocal & $\LU{J0}{\mv}$ & joint torque in local $J0$ coordinates; depending
 %
 \noindent For examples on ObjectJointGeneric see Relevant Examples and TestModels with weblink:
 \bi
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFrotatingCable2D.py}{\texttt{ANCFrotatingCable2D.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py}{\texttt{bicycleIftommBenchmark.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/CMSexampleCourse.py}{\texttt{CMSexampleCourse.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/craneReevingSystem.py}{\texttt{craneReevingSystem.py}} (Examples/)
@@ -4958,7 +5338,6 @@ TorqueLocal & $\LU{J0}{\mv}$ & joint torque in local $J0$ coordinates; depending
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/netgenSTLtest.py}{\texttt{netgenSTLtest.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCMStutorial.py}{\texttt{NGsolveCMStutorial.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCraigBampton.py}{\texttt{NGsolveCraigBampton.py}} (Examples/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveLinearFEM.py}{\texttt{NGsolveLinearFEM.py}} (Examples/)
 \item  ...
 
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/driveTrainTest.py}{\texttt{driveTrainTest.py}} (TestModels/)
@@ -5627,6 +6006,7 @@ The item \mybold{ObjectJointRevolute2D} with type = 'JointRevolute2D' has the fo
 \noindent For examples on ObjectJointRevolute2D see Relevant Examples and TestModels with weblink:
 \bi
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/sliderCrank3DwithANCFbeltDrive2.py}{\texttt{sliderCrank3DwithANCFbeltDrive2.py}} (Examples/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFrotatingCable2D.py}{\texttt{ANCFrotatingCable2D.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFslidingJoint2D.py}{\texttt{ANCFslidingJoint2D.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFslidingJoint2Drigid.py}{\texttt{ANCFslidingJoint2Drigid.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveALE.py}{\texttt{beltDriveALE.py}} (Examples/)
@@ -5637,7 +6017,6 @@ The item \mybold{ObjectJointRevolute2D} with type = 'JointRevolute2D' has the fo
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/geneticOptimizationSliderCrank.py}{\texttt{geneticOptimizationSliderCrank.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/HydraulicActuator2Arms.py}{\texttt{HydraulicActuator2Arms.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/HydraulicActuatorStaticInitialization.py}{\texttt{HydraulicActuatorStaticInitialization.py}} (Examples/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/HydraulicsUserFunction.py}{\texttt{HydraulicsUserFunction.py}} (Examples/)
 \item  ...
 
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py}{\texttt{ANCFbeltDrive.py}} (TestModels/)
@@ -6152,9 +6531,9 @@ The item \mybold{ObjectConnectorSpringDamper} with type = 'ConnectorSpringDamper
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     connector's unique name\\ \hline
     markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ invalid [-1], invalid [-1] ] &     \tabnewline list of markers used in connector\\ \hline
-    referenceLength &     PReal &      &     0. &     reference length [SI:m] of spring\\ \hline
-    stiffness &     UReal &      &     0. &     stiffness [SI:N/m] of spring; acts against (length-initialLength)\\ \hline
-    damping &     UReal &      &     0. &     damping [SI:N/(m s)] of damper; acts against d/dt(length)\\ \hline
+    referenceLength &     UReal &      &     0. &     reference length [SI:m] of spring\\ \hline
+    stiffness &     UReal &      &     0. &     stiffness [SI:N/m] of spring; force acts against (length-initialLength)\\ \hline
+    damping &     UReal &      &     0. &     damping [SI:N/(m s)] of damper; force acts against d/dt(length)\\ \hline
     force &     Real &      &     0. &     added constant force [SI:N] of spring; scalar force; f=1 is equivalent to reducing initialLength by 1/stiffness; f > 0: tension; f < 0: compression; can be used to model actuator force\\ \hline
     velocityOffset &     Real &      &     0. &     velocity offset [SI:m/s] of damper, being equivalent to time change of reference length\\ \hline
     activeConnector &     Bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint\\ \hline
@@ -6330,6 +6709,9 @@ ForceLocal & $f_{SD}$ & scalar spring-damper force\\ \hline
       \nonumber \\
       &=& \Jm_{pos,m0}\tp \left(d \vv_{f} \otimes \vv_{f} \right) \LU{0}{\Jm_{pos,m0}} 
     \eea
+    Note that in case that $L=0$, the term $\frac{1}{L} \left(\Im - \LU{0}{\vv_{f}} \otimes \LU{0}{\vv_{f}} \right)$ is replaced
+    by the unit matrix, in order to avoid zero (singular) jacobian; this is a workaround and should only occur in exceptional cases.
+    
     The term $\frac{\partial \Delta\! \LU{0}{\vv}}{\partial \qv_{m0}}$, which is important for large damping, yields
     \be
       \frac{\partial \Delta\! \LU{0}{\vv}}{\partial \qv_{m0}} = 
@@ -6640,12 +7022,12 @@ Force & $\fv_{SD}$ & joint force in global coordinates, see equations\\ \hline
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle.py}{\texttt{ANCFcontactCircle.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle2.py}{\texttt{ANCFcontactCircle2.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFslidingJoint2D.py}{\texttt{ANCFslidingJoint2D.py}} (Examples/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/cartesianSpringDamper.py}{\texttt{cartesianSpringDamper.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/flexibleRotor3Dtest.py}{\texttt{flexibleRotor3Dtest.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/lavalRotor2Dtest.py}{\texttt{lavalRotor2Dtest.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py}{\texttt{NGsolvePistonEngine.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePostProcessingStresses.py}{\texttt{NGsolvePostProcessingStresses.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/objectFFRFreducedOrderNetgen.py}{\texttt{objectFFRFreducedOrderNetgen.py}} (Examples/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particlesTest.py}{\texttt{particlesTest.py}} (Examples/)
 \item  ...
 
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/scissorPrismaticRevolute2D.py}{\texttt{scissorPrismaticRevolute2D.py}} (TestModels/)
@@ -6691,6 +7073,7 @@ The item \mybold{ObjectConnectorRigidBodySpringDamper} with type = 'ConnectorRig
     rotationMarker0 &     Matrix3D &      &     [[1,0,0], [0,1,0], [0,0,1]] &     \tabnewline local rotation matrix for marker 0; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker0\\ \hline
     rotationMarker1 &     Matrix3D &      &     [[1,0,0], [0,1,0], [0,0,1]] &     \tabnewline local rotation matrix for marker 1; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker1\\ \hline
     offset &     Vector6D &      &     [0.,0.,0.,0.,0.,0.] &     \tabnewline translational and rotational offset considered in the spring force calculation\\ \hline
+    intrinsicFormulation &     Bool &      &     False &     if True, the joint uses the intrinsic formulation, which is independent on order of markers, using a mid-point and mid-rotation for evaluation and application of connector forces and torques; this uses a Lie group formulation; in this case, the force/torque vector is computed from the stiffness matrix times the 6-vector of the SE3 matrix logarithm between the two marker positions/rotations, see the equations\\ \hline
     activeConnector &     Bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint\\ \hline
     springForceTorqueUserFunction &     PyFunctionVector6DmbsScalarIndex4Vector3D2Matrix6D2Matrix3DVector6D &     \tabnewline  &     \tabnewline 0 &     \tabnewline A Python function which computes the 6D force-torque vector (3D force + 3D torque) between the two rigid body markers, if activeConnector=True; see description below\\ \hline
     postNewtonStepUserFunction &     PyFunctionVectorMbsScalarIndex4VectorVector3D2Matrix6D2Matrix3DVector6D &     \tabnewline  &     \tabnewline 0 &     \tabnewline A Python function which computes the error of the PostNewtonStep; see description below\\ \hline
@@ -6762,7 +7145,7 @@ TorqueLocal & $\LU{J0}{\mv}$ & joint torque in in local joint0 coordinates\\ \hl
     \rowTable{VelocityLocal}{$\LU{J0}{\Delta\vv}$}{$\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \LU{0}{\Delta\vv}$}
     %
     \rowTable{AngularVelocityLocal}{$\LU{J0}{\Delta\tomega}$}{$\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \left( \LU{0,m1}{\Rot} \LU{m1}{\tomega} - \LU{0,m0}{\Rot} \LU{m0}{\tomega} \right)$}
-    %\rowTable{Rotation}{$\LU{J0}{\ttheta} = [\theta_0,\theta_1,\theta_2]$}{Tait-Bryan angles retrieved from relative rotation matrix, ...}
+    %\rowTable{Rotation}{$\LU{J0}{\ttheta} = [\theta_0,\theta_1,\theta_2]$}{intrinsicFormulation=False: Tait-Bryan angles retrieved from relative rotation matrix; intrinsicFormulation=True: rotation vector of relative rotation matrix}
     %\rowTable{ForceLocal}{$\LU{J0}{\fv}$}{see below}
     %\rowTable{TorqueLocal}{$\LU{J0}{\mv}$}{see below}
     \finishTable
@@ -9776,11 +10159,11 @@ Force & $\lambda_0$ & scalar constraint force (Lagrange multiplier)\\ \hline
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle.py}{\texttt{ANCFcontactCircle.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle2.py}{\texttt{ANCFcontactCircle2.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFmovingRigidbody.py}{\texttt{ANCFmovingRigidbody.py}} (Examples/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFrotatingCable2D.py}{\texttt{ANCFrotatingCable2D.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFslidingJoint2D.py}{\texttt{ANCFslidingJoint2D.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFslidingJoint2Drigid.py}{\texttt{ANCFslidingJoint2Drigid.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFswitchingSlidingJoint2D.py}{\texttt{ANCFswitchingSlidingJoint2D.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFtestHalfcircle.py}{\texttt{ANCFtestHalfcircle.py}} (Examples/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFtests2.py}{\texttt{ANCFtests2.py}} (Examples/)
 \item  ...
 
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamTest.py}{\texttt{ANCFBeamTest.py}} (TestModels/)
@@ -10325,11 +10708,11 @@ The item \mybold{MarkerBodyPosition} with type = 'BodyPosition' has the followin
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFslidingJoint2Drigid.py}{\texttt{ANCFslidingJoint2Drigid.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFswitchingSlidingJoint2D.py}{\texttt{ANCFswitchingSlidingJoint2D.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDrivesComparison.py}{\texttt{beltDrivesComparison.py}} (Examples/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/cartesianSpringDamper.py}{\texttt{cartesianSpringDamper.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/coordinateSpringDamper.py}{\texttt{coordinateSpringDamper.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/finiteSegmentMethod.py}{\texttt{finiteSegmentMethod.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/flexibleRotor3Dtest.py}{\texttt{flexibleRotor3Dtest.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/geneticOptimizationSliderCrank.py}{\texttt{geneticOptimizationSliderCrank.py}} (Examples/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/HydraulicActuator2Arms.py}{\texttt{HydraulicActuator2Arms.py}} (Examples/)
 \item  ...
 
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py}{\texttt{ANCFcontactCircleTest.py}} (TestModels/)
@@ -10395,6 +10778,7 @@ The item \mybold{MarkerBodyRigid} with type = 'BodyRigid' has the following para
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py}{\texttt{addRevoluteJoint.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle.py}{\texttt{ANCFcontactCircle.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle2.py}{\texttt{ANCFcontactCircle2.py}} (Examples/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFrotatingCable2D.py}{\texttt{ANCFrotatingCable2D.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFslidingJoint2D.py}{\texttt{ANCFslidingJoint2D.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFtestHalfcircle.py}{\texttt{ANCFtestHalfcircle.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFtests2.py}{\texttt{ANCFtests2.py}} (Examples/)
@@ -10402,7 +10786,6 @@ The item \mybold{MarkerBodyRigid} with type = 'BodyRigid' has the following para
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveReevingSystem.py}{\texttt{beltDriveReevingSystem.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDrivesComparison.py}{\texttt{beltDrivesComparison.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py}{\texttt{bicycleIftommBenchmark.py}} (Examples/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chatGPTupdate.py}{\texttt{chatGPTupdate.py}} (Examples/)
 \item  ...
 
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/abaqusImportTest.py}{\texttt{abaqusImportTest.py}} (TestModels/)
@@ -10529,6 +10912,7 @@ The item \mybold{MarkerNodeRigid} with type = 'NodeRigid' has the following para
 \bi
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle.py}{\texttt{ANCFcontactCircle.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle2.py}{\texttt{ANCFcontactCircle2.py}} (Examples/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFrotatingCable2D.py}{\texttt{ANCFrotatingCable2D.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFslidingJoint2D.py}{\texttt{ANCFslidingJoint2D.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFtestHalfcircle.py}{\texttt{ANCFtestHalfcircle.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFtests2.py}{\texttt{ANCFtests2.py}} (Examples/)
@@ -10538,7 +10922,6 @@ The item \mybold{MarkerNodeRigid} with type = 'NodeRigid' has the following para
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/CMSexampleCourse.py}{\texttt{CMSexampleCourse.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py}{\texttt{humanRobotInteraction.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCMStutorial.py}{\texttt{NGsolveCMStutorial.py}} (Examples/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCraigBampton.py}{\texttt{NGsolveCraigBampton.py}} (Examples/)
 \item  ...
 
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/abaqusImportTest.py}{\texttt{abaqusImportTest.py}} (TestModels/)
@@ -10603,11 +10986,11 @@ The item \mybold{MarkerNodeCoordinate} with type = 'NodeCoordinate' has the foll
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle.py}{\texttt{ANCFcontactCircle.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle2.py}{\texttt{ANCFcontactCircle2.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFmovingRigidbody.py}{\texttt{ANCFmovingRigidbody.py}} (Examples/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFrotatingCable2D.py}{\texttt{ANCFrotatingCable2D.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFslidingJoint2D.py}{\texttt{ANCFslidingJoint2D.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFslidingJoint2Drigid.py}{\texttt{ANCFslidingJoint2Drigid.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFswitchingSlidingJoint2D.py}{\texttt{ANCFswitchingSlidingJoint2D.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFtestHalfcircle.py}{\texttt{ANCFtestHalfcircle.py}} (Examples/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFtests2.py}{\texttt{ANCFtests2.py}} (Examples/)
 \item  ...
 
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamEigTest.py}{\texttt{ANCFBeamEigTest.py}} (TestModels/)
@@ -12066,6 +12449,7 @@ The item \mybold{SensorBody} with type = 'Body' has the following parameters:
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveALE.py}{\texttt{beltDriveALE.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveReevingSystem.py}{\texttt{beltDriveReevingSystem.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py}{\texttt{bicycleIftommBenchmark.py}} (Examples/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/cartesianSpringDamperUserFunction.py}{\texttt{cartesianSpringDamperUserFunction.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/finiteSegmentMethod.py}{\texttt{finiteSegmentMethod.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/flexiblePendulumANCF.py}{\texttt{flexiblePendulumANCF.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/fourBarMechanism3D.py}{\texttt{fourBarMechanism3D.py}} (Examples/)
@@ -12074,7 +12458,6 @@ The item \mybold{SensorBody} with type = 'Body' has the following parameters:
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial3.py}{\texttt{rigidBodyTutorial3.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial3withMarkers.py}{\texttt{rigidBodyTutorial3withMarkers.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidRotor3DbasicBehaviour.py}{\texttt{rigidRotor3DbasicBehaviour.py}} (Examples/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidRotor3DFWBW.py}{\texttt{rigidRotor3DFWBW.py}} (Examples/)
 \item  ...
 
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFoutputTest.py}{\texttt{ANCFoutputTest.py}} (TestModels/)

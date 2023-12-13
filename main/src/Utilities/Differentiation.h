@@ -91,7 +91,7 @@ namespace EXUmath
 	//! needs to provide temporary vectors tempF0 and tempF1
 	//! x is the point of evaluation and sizeF provides the size of function f; x will not be changed but must be non-const
 	//! function f takes first argument Vector x and second argument Vector f
-	//! see EXAMPLE in NodePoint3DSlope23
+	//! see EXAMPLE in NodePointSlope23
 	template<class TVectorX, class TVectorF, class TMatrixJac, Index sizeF>
 	void NumDiffVectors(void(*f)(const TVectorX&, TVectorF&), TVectorX& x, TVectorF& tempF0, TVectorF& tempF1,
 		TMatrixJac& jacobian, Real relEps = 1e-8, Real minCoord = 1e-2)

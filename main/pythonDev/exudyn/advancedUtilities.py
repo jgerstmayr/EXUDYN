@@ -17,6 +17,8 @@ from enum import Enum
 import copy 
 
 import exudyn
+from exudyn.itemInterface import userFunctionArgsDict
+
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #GENERAL FUNCTIONS
@@ -385,50 +387,153 @@ def RoundMatrix(matrix, treshold = 1e-14):
                 matrix[i,j]=0
 
 
-#DELETE, unused and does not make much sense (slow, not enough information in exception case, etc.)
-# #**function: check if input is list or array with according length; if length==-1, the length is not checked; raises Exception if the check fails
-# #**input: 
-# #  vector: a vector in np.array or list format
-# #  length: desired length of vector; if length=-1, it is ignored
-# #**output: None
-# def CheckInputVector(vector, length=-1):
-#     try:
-#         v = np.array(vector)
-#     except:
-#         raise ValueError("CheckInputVector: expected vector/list of length "+str(length)+
-#                          ", but received '"+str(vector)+"'")
-#     if v.ndim != 1:
-#         raise ValueError("CheckInputVector: expected 1D vector/list of length "+str(length)+
-#                          ", but received '"+str(vector)+"'")
-#     if v.shape[0] != length:
-#         raise ValueError("CheckInputVector: expected vector/list of length "+str(length)+
-#                          ", but received vector with length "+str(v.shape[0])+", vector='"+str(vector)+"'")
-        
-# #**function: check if input is list or array with according length and positive indices; if length==-1, the length is not checked; raises Exception if the check fails
-# #**input: 
-# #  indexArray: a vector in np.array or list format
-# #  length: desired length of vector; if length=-1, it is ignored
-# #**output: None
-# def CheckInputIndexArray(indexArray, length=-1):
-#     try:
-#         v = np.array(indexArray)
-#     except:
-#         raise ValueError("CheckInputIndexArray: expected vector/list of length "+str(length)+
-#                          ", but received '"+str(indexArray)+"'")
-#     if v.ndim != 1:
-#         raise ValueError("CheckInputIndexArray: expected 1D vector/list of length "+str(length)+
-#                          ", but received '"+str(indexArray)+"'")
-#     if v.shape[0] != length:
-#         raise ValueError("CheckInputIndexArray: expected vector/list of length "+str(length)+
-#                          ", but received vector with length "+str(v.shape[0])+", indexArray='"+str(indexArray)+"'")
-    
-#     cnt=0
-#     for i in indexArray:
-#         if i!=int(i) or i < 0:
-#             raise ValueError("CheckInputIndexArray: expected array/list of positive indices (int), but received '"+str(i)+
-#                              "' at position " + str(cnt)+", indexArray='"+str(indexArray)+"'")
-#         cnt+=1   
 
+#**function: Internal function to convert a Python user function into a dictionary containing the symbolic representation;
+#  this function is under development and should be used with care
+#**input:
+#  mbs: MainSystem, needed currently for interface
+#  function: Python function with interface according to desired user function
+#  itemIndex: item index, such as ObjectIndex or LoadIndex
+#  userFunctionName: name of user function item, see documentation; this is required, because some items have several user functions, which need to be distinguished
+#  verbose: if > 0, according output is printed
+#**output: return dictionary with 'functionName', 'argList', and 'returnList'
+def ConvertFunctionToSymbolic(mbs, function, itemIndex, userFunctionName, verbose=0):
+    fnName = function.__name__
+    fnArgs = function.__code__.co_varnames
+    #fnAnnotations = function.__annotations__ #not necessarily present
+    if verbose:
+        #print("Annotations:", fnAnnotations)
+        print("Function Name:", fnName)
+        # print("Docstring:", function.__doc__)
+        print("Number of Arguments:", function.__code__.co_argcount)
+        print("Argument Names:", fnArgs)
+
+    
+    try:
+        typeString = itemIndex.GetTypeString()
+    except:
+        raise ValueError('ConvertFunctionToSymbolic: itemIndex must be a valid exudyn ItemIndex')
+    
+    itemTypeName = None
+    # itemClass = None
+    if typeString == 'ObjectIndex':
+        itemTypeName = mbs.GetObject(itemIndex)['objectType']
+        # itemClass = 'Object'
+    elif typeString == 'LoadIndex':
+        itemTypeName = mbs.GetLoad(itemIndex)['loadType']
+        # itemClass = 'Load'
+    else:
+        raise ValueError('ConvertFunctionToSymbolic: itemIndex has unsupported type')
+
+    recStored = exudyn.symbolic.GetRecording()
+    exudyn.symbolic.SetRecording(True)
+
+    #create args as dict
+    fnDict = {}
+    argList = []
+    argTypeList = []
+    
+    functionArgs = userFunctionArgsDict[itemTypeName+','+userFunctionName]
+    returnType = functionArgs[2][0]
+    nArgs = len(functionArgs[0])
+    if nArgs != function.__code__.co_argcount:
+        
+        sFunctionInterface = 'F('
+        sReturn = ' -> '+returnType+': ...'
+        sep = ''
+        for i in range(nArgs):
+            sFunctionInterface+=sep+functionArgs[1][i]+': '+functionArgs[0][i].replace('MainSystem','exudyn.MainSystem').replace('Real','float').replace('Index','int')
+            sep = ', '
+        sFunctionInterface += ')\n'
+
+        raise ValueError('ConvertFunctionToSymbolic: function "'+fnName+'" does not meet correct number of arguments; '+
+                         'user function should read:\n'+sFunctionInterface+sReturn)
+    
+    for i in range(nArgs):
+        varType = functionArgs[0][i]
+        arg = fnArgs[i] #functionArgs[1][i] 
+        if varType == 'Real':
+            var = exudyn.symbolic.Real(arg, 0.)
+        elif varType == 'Index':
+            var = exudyn.symbolic.Real(arg, 0)
+        elif (varType == 'StdVector3D'
+              or varType == 'StdVector6D'
+              or varType == 'StdVector'
+              ):
+            l = 0
+            if '3D' in varType: l = 3
+            if '6D' in varType: l = 6
+            var = exudyn.symbolic.Vector(arg,[0.]*l)
+        elif (varType == 'NumpyMatrix'
+              or varType == 'StdMatrix3D'
+              or varType == 'StdMatrix6D'
+              ):
+            rowsColumns=1 #zero list would not work for matrix ...
+            if '3D' in varType: rowsColumns = 3
+            if '6D' in varType: rowsColumns = 6
+            var = exudyn.symbolic.Matrix(arg,np.zeros((rowsColumns,rowsColumns)).tolist())
+        elif varType == 'MainSystem':
+            var = mbs
+        else:
+            raise ValueError("ConvertFunctionToSymbolic: unrecognized type in user function; type probably implemented")
+    
+        argList += [var] #float, int, MainSystem, Vector3D, etc.
+        argTypeList += [varType] #float, int, MainSystem, Vector3D, etc.
+        fnDict[arg] = var
+        
+    if verbose > 1:
+        print('\nargList=[mbs]+', argList[1:])
+        print('\nfnDict=', fnDict)
+
+    #now we record the function:
+    returnValue = function(**fnDict)
+    exudyn.symbolic.SetRecording(recStored)
+
+
+    if type(returnValue) is list:
+        #in this case, we create a SymbolicRealVector such that the user also can work with lists ...
+        returnValue = exudyn.symbolic.Vector(returnValue) #create vector from list
+
+    if verbose:
+        print('return value=', returnValue)
+
+    return {'functionName': fnName, 
+            'argList': argList, 
+            'argTypeList': argTypeList,
+            'returnValue': returnValue,
+            'returnType': returnType}
+
+
+#**function: Helper function to convert a Python user function into a symbolic user function;
+#  this function is under development and should be used with care
+#**input:
+#  mbs: MainSystem, needed currently for interface
+#  function: Python function with interface according to desired user function
+#  itemIndex: item index, such as ObjectIndex or LoadIndex
+#  userFunctionName: name of user function item, see documentation; this is required, because some items have several user functions, which need to be distinguished
+#  verbose: if > 0, according output may be printed
+#**output: returns symbolic user function; this can be transfered into an item using TransferUserFunction2Item
+#**notes: keep the return value alive in a variable (or list), as it contains the expression tree which must exist for the lifetime of the user function
+#**example:
+# oGround = mbs.AddObject(ObjectGround())
+#
+# node = mbs.AddNode(NodePoint(referenceCoordinates = [1.05,0,0]))
+# oMassPoint = mbs.AddObject(MassPoint(nodeNumber = node, physicsMass=1))
+#
+# m0 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition=[0,0,0]))
+# m1 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oMassPoint, localPosition=[0,0,0]))
+# co = mbs.AddObject(ObjectConnectorSpringDamper(markerNumbers=[m0,m1],
+#                 referenceLength = 1, stiffness = 100, damping = 1))
+#
+# symbolicFunc = CreateSymbolicUserFunction(mbs, springForceUserFunction, co, 'springForceUserFunction')
+# symbolicFunc.TransferUserFunction2Item(mbs, co, 'springForceUserFunction')    
+# print(symbolicFunc.Evaluate(mbs, 0., 0, 1.1, 0.,  100., 0., 13.) )
+def CreateSymbolicUserFunction(mbs, function, itemIndex, userFunctionName, verbose=0):
+    fnDict = ConvertFunctionToSymbolic(mbs, function, itemIndex, userFunctionName, verbose)
+    symbolicFunc = exudyn.symbolic.UserFunction()
+    symbolicFunc.SetUserFunctionFromDict(mbs, fnDict, itemIndex, userFunctionName)
+    return symbolicFunc
+    
 
 
 

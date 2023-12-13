@@ -31,8 +31,8 @@ This tutorial will set up a mass point and a spring damper, dynamically compute 
 We import the exudyn library and the interface for all nodes, objects, markers, loads and sensors:
 \pythonstyle\begin{lstlisting}
   import exudyn as exu
-  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
-  import numpy as np #for postprocessing
+  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities, rigidBodyUtilities, ...
+  import numpy as np #not required in general, but convenient for linear algebra
 \end{lstlisting}
 %
 Next, we need a \texttt{SystemContainer}, which contains all computable systems and add a new MainSystem \texttt{mbs}.
@@ -90,7 +90,9 @@ In the next step, we add an object\footnote{For the moment, we just need to know
 \pythonstyle\begin{lstlisting}
   massPoint = mbs.AddObject(MassPoint(physicsMass = mass, nodeNumber = n1))
 \end{lstlisting}
-%
+Note that instead of adding a \texttt{NodePoint} and a \texttt{MassPoint} with \texttt{mbs.AddNode(...)}
+and \texttt{mbs.AddObject(...)}, there is also a convenient function \texttt{mbs.CreateMassPoint(...)}, which can do everything at once including the option to add gravity.
+
 In order to apply constraints and loads, we need markers. These markers are used as local positions (and frames), where we can attach a constraint lateron. In this example, we work on the coordinate level, both for forces as well as for constraints.
 Markers are attached to the according ground and regular node number, additionally using a coordinate number (0 ... first coordinate):
 \pythonstyle\begin{lstlisting}
@@ -100,8 +102,7 @@ Markers are attached to the according ground and regular node number, additional
   nodeMarker = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= n1, 
                                                   coordinate = 0))
 \end{lstlisting}
-This means that loads can be applied to the first coordinate of node \texttt{n1} via marker with number \texttt{nodeMarker},
-which is in fact of type \texttt{MarkerIndex}.
+This means that constraints are be applied to the first coordinate of node \texttt{n1} via marker with number \texttt{nodeMarker}, which is in fact of type \texttt{MarkerNodeCoordinate}.
 
 Now we add a spring-damper to the markers with numbers \texttt{groundMarker} and the \texttt{nodeMarker}, providing stiffness and damping parameters:
 \pythonstyle\begin{lstlisting}
@@ -115,7 +116,10 @@ A load is added to marker \texttt{nodeMarker}, with a scalar load with value \te
   nLoad = mbs.AddLoad(LoadCoordinate(markerNumber = nodeMarker, 
                                      load = f))
 \end{lstlisting}
-%
+Again, instead of adding a \texttt{MarkerNodeCoordinate} and a \texttt{LoadCoordinate} with \texttt{mbs.AddLoad(...)},
+we could just use \texttt{mbs.CreateForce(...)} to add a 3D force vector.
+For specific joints, there are also \texttt{mbs.Create...(...)} functions.
+
 Finally, a sensor is added to the coordinate constraint object with number \texttt{nC}, requesting the \texttt{outputVariableType} \texttt{Force}:
 \pythonstyle\begin{lstlisting}
   mbs.AddSensor(SensorObject(objectNumber=nC, fileName='groundForce.txt', 
@@ -310,9 +314,10 @@ The submodule \texttt{exudyn.utilities} contains helper functions for graphics r
 
 \noindent We add an empty ground body, using default values. It's origin is at [0,0,0] and here we use no visualization.
 \pythonstyle\begin{lstlisting}
-  #ground body
-  oGround = mbs.AddObject(ObjectGround())
+  #ground body, located at specific position (there could be several ground objects)
+  oGround = mbs.CreateGround(referencePosition=[0,0,0])
 \end{lstlisting}
+%oGround = mbs.AddObject(ObjectGround())
 
 \horizontalRuler\\
 \noindent For physical parameters of the rigid body, we can use the class \texttt{RigidBodyInertia}, which allows to define mass, center of mass (COM) and inertia parameters, as well as shifting COM or adding inertias.
@@ -419,6 +424,21 @@ For visualization, we need to add some graphics for the body defined as a RigidL
                           axis=[1,0,0], axisRadius=0.2*w, axisLength=1.4*w)
 \end{lstlisting}
 
+\noindent Optionally, we could also add forces or torques onto bodies
+\pythonstyle\begin{lstlisting}
+  #forces can be added like in the following
+  force = [0,0.5,0]       #0.5N   in y-direction
+  torque = [0.1,0,0]      #0.1Nm around x-axis
+  mbs.CreateForce(bodyNumber=b1,
+                  loadVector=force,
+                  localPosition=[0,0,0.5], #at tip
+                  bodyFixed=False) #if True, direction would corotate with body
+  mbs.CreateTorque(bodyNumber=b1, 
+                  loadVector=torque,
+                  localPosition=[0,0,0],   #at body's reference point/center
+                  bodyFixed=False) #if True, direction would corotate with body
+\end{lstlisting}
+
 \noindent Finally, we also add a sensor for some output of the double pendulum:
 \pythonstyle\begin{lstlisting}
   #position sensor at tip of body1
@@ -440,21 +460,20 @@ After \texttt{Assemble()}, markers, nodes, objects, etc. are linked and we can a
     Number of nodes= 2
     Number of objects = 5
     Number of markers = 8
-    Number of loads = 2
+    Number of loads = 4
     Number of sensors = 1
     Number of ODE2 coordinates = 14
     Number of ODE1 coordinates = 0
     Number of AE coordinates   = 12
     Number of data coordinates   = 0
-
-  For details see mbs.systemData, mbs.sys and mbs.variables
+    For details see mbs.systemData, mbs.sys and mbs.variables
   >
 \end{lstlisting}
 %
 Note that there are 2 nodes for the two rigid bodies. The five objects are due to ground object, 2 rigid bodies and 2 revolute joints.
 The meaning of markers can be seen in the graphical representation described below.
 
-Alternatively we can print the full internal information as a dictionary using:
+\noindent Furthermore, we can print the full internal information as a dictionary using:
 \pythonstyle\begin{lstlisting}
   mbs.systemData.Info() #show detailed information
 \end{lstlisting}
@@ -490,7 +509,12 @@ This will print:
 \end{lstlisting}
 We see that there are 14 ODE2 coordinates from the two nodes that are based on Euler parameters. The two joints add $2\times 5$ constraints and there are 2 additional Euler parameter constraints, giving a degree of freedom of 2 (as expected ...).
 
-You can try and duplicate the code for the second revolute joint \texttt{mbs.CreateRevoluteJoint(bodyNumbers=[b0, b1], ...)}, such that we add two identical joints. This will give 
+\noindent You can try and duplicate the code for the second revolute joint:
+\pythonstyle\begin{lstlisting}
+  #add a second constraint for bodies b0 and b1:
+  mbs.CreateRevoluteJoint(bodyNumbers=[b0, b1], ...)
+\end{lstlisting}
+such that we have two identical joints (which would be unwanted, in general). This would give 
 \begin{lstlisting}
   ODE2 coordinates          = 14
   total constraints         = 17
@@ -498,7 +522,7 @@ You can try and duplicate the code for the second revolute joint \texttt{mbs.Cre
   pure algebraic constraints= 0
   degree of freedom         = 2
 \end{lstlisting}
-which clearly shows the 5 redundant constraints, which will lead to a solver failure. In practical cases, redundant constraints may be much more involved, but can be detected in this way.
+which clearly shows the 5 redundant constraints, which will lead to a solver failure (except for the \texttt{EigenDense} solver, see there). In practical cases, redundant constraints may be much more involved, but can be detected in this way.
 
 \noindent A graphical representation of the internal structure of the model can be shown using the command \texttt{DrawSystemGraph}:
 \pythonstyle\begin{lstlisting}

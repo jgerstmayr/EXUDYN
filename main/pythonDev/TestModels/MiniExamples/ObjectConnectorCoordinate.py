@@ -4,6 +4,7 @@
 
 import sys
 sys.path.append('../TestModels')
+sys.path.append('../../TestModels') #for direct run in directory
 
 import exudyn as exu
 from exudyn.utilities import *

@@ -30,48 +30,48 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{D5187A72-DC28-419F-A3E9-24E5204AC07F}</ProjectGuid>
     <RootNamespace>cppsrc</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseP37|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseP37|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -159,7 +159,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\src;$(SolutionDir)\include;$(SolutionDir)\include\lest;$(SolutionDir)\include\glfw;$(SolutionDir)\include\glfw\deps;$(SolutionDir)\include\pybind11local;C:\ProgramData\Anaconda3_64b37\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\src;$(SolutionDir)\include;$(SolutionDir)\include\lest;$(SolutionDir)\include\glfw;$(SolutionDir)\include\glfw\deps;$(SolutionDir)\include\pybind11local;C:\Program Files (x86)\Microsoft Visual Studio\Shared\Python39_64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -172,7 +172,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(SolutionDir)\libs\libs64;C:\ProgramData\Anaconda3_64b37\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\libs\libs64;C:\Program Files (x86)\Microsoft Visual Studio\Shared\Python39_64\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>openvr_api.lib;opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -251,7 +251,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
-      <AdditionalIncludeDirectories>$(SolutionDir)\src;$(SolutionDir)\include;$(SolutionDir)\include\lest;$(SolutionDir)\include\glfw;$(SolutionDir)\include\glfw\deps;$(SolutionDir)\include\pybind11local;C:\ProgramData\Anaconda3_64b36\include;$(SolutionDir)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\src;$(SolutionDir)\include;$(SolutionDir)\include\lest;$(SolutionDir)\include\glfw;$(SolutionDir)\include\glfw\deps;$(SolutionDir)\include\pybind11local;C:\Program Files (x86)\Microsoft Visual Studio\Shared\Python39_64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -264,7 +264,7 @@
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(SolutionDir)\libs\libs64;C:\ProgramData\Anaconda3_64b36\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\libs\libs64;C:\Program Files (x86)\Microsoft Visual Studio\Shared\Python39_64\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>false</GenerateDebugInformation>
     </Link>
@@ -316,6 +316,7 @@
     <ClCompile Include="..\src\Graphics\VisualizationUserFunctions.cpp" />
     <ClCompile Include="..\src\Linalg\LinearSolver.cpp" />
     <ClCompile Include="..\src\Linalg\Matrix.cpp" />
+    <ClCompile Include="..\src\Linalg\Symbolic.cpp" />
     <ClCompile Include="..\src\Linalg\Vector.cpp" />
     <ClCompile Include="..\src\Main\CSystem.cpp" />
     <ClCompile Include="..\src\Main\MainObjectFactory.cpp" />
@@ -347,17 +348,19 @@
     <ClCompile Include="..\src\Objects\CNodePoint.cpp" />
     <ClCompile Include="..\src\Objects\CNodePoint2D.cpp" />
     <ClCompile Include="..\src\Objects\CNodePoint2DSlope1.cpp" />
-    <ClCompile Include="..\src\Objects\CNodePoint3DSlope1.cpp" />
-    <ClCompile Include="..\src\Objects\CNodePoint3DSlope23.cpp" />
     <ClCompile Include="..\src\Objects\CNodePointGround.cpp" />
+    <ClCompile Include="..\src\Objects\CNodePointSlope1.cpp" />
+    <ClCompile Include="..\src\Objects\CNodePointSlope12.cpp" />
+    <ClCompile Include="..\src\Objects\CNodePointSlope23.cpp" />
     <ClCompile Include="..\src\Objects\CNodeRigidBody2D.cpp" />
     <ClCompile Include="..\src\Objects\CNodeRigidBodyEP.cpp" />
-    <ClCompile Include="..\src\Objects\CNodeRigidBodyRotVecDataLG.cpp" />
     <ClCompile Include="..\src\Objects\CNodeRigidBodyRotVecLG.cpp" />
     <ClCompile Include="..\src\Objects\CNodeRigidBodyRxyz.cpp" />
     <ClCompile Include="..\src\Objects\CObjectALEANCFCable2D.cpp" />
     <ClCompile Include="..\src\Objects\CObjectANCFBeam.cpp" />
+    <ClCompile Include="..\src\Objects\CObjectANCFCable.cpp" />
     <ClCompile Include="..\src\Objects\CObjectANCFCable2D.cpp" />
+    <ClCompile Include="..\src\Objects\CObjectANCFThinPlate.cpp" />
     <ClCompile Include="..\src\Objects\CObjectBeamGeometricallyExact.cpp" />
     <ClCompile Include="..\src\Objects\CObjectBeamGeometricallyExact2D.cpp" />
     <ClCompile Include="..\src\Objects\CObjectConnectorCartesianSpringDamper.cpp" />
@@ -403,6 +406,8 @@
     <ClCompile Include="..\src\Objects\evaluateUserFunctions.cpp" />
     <ClCompile Include="..\src\Objects\VisuNodePoint.cpp" />
     <ClCompile Include="..\src\Pymodules\PybindModule.cpp" />
+    <ClCompile Include="..\src\Pymodules\Pybind_manual_classes.cpp" />
+    <ClCompile Include="..\src\Pymodules\Pybind_modules.cpp" />
     <ClCompile Include="..\src\Pymodules\PyMatrixContainer.cpp" />
     <ClCompile Include="..\src\Pymodules\pythonTests.cpp">
       <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Default</BasicRuntimeChecks>
@@ -471,17 +476,18 @@
     <ClInclude Include="..\src\Autogenerated\CNodePoint.h" />
     <ClInclude Include="..\src\Autogenerated\CNodePoint2D.h" />
     <ClInclude Include="..\src\Autogenerated\CNodePoint2DSlope1.h" />
-    <ClInclude Include="..\src\Autogenerated\CNodePoint3DSlope1.h" />
-    <ClInclude Include="..\src\Autogenerated\CNodePoint3DSlope23.h" />
     <ClInclude Include="..\src\Autogenerated\CNodePointGround.h" />
+    <ClInclude Include="..\src\Autogenerated\CNodePointSlope1.h" />
+    <ClInclude Include="..\src\Autogenerated\CNodePointSlope12.h" />
+    <ClInclude Include="..\src\Autogenerated\CNodePointSlope23.h" />
     <ClInclude Include="..\src\Autogenerated\CNodeRigidBody2D.h" />
     <ClInclude Include="..\src\Autogenerated\CNodeRigidBodyEP.h" />
-    <ClInclude Include="..\src\Autogenerated\CNodeRigidBodyRotVecDataLG.h" />
     <ClInclude Include="..\src\Autogenerated\CNodeRigidBodyRotVecLG.h" />
     <ClInclude Include="..\src\Autogenerated\CNodeRigidBodyRxyz.h" />
     <ClInclude Include="..\src\Autogenerated\CObjectALEANCFCable2D.h" />
     <ClInclude Include="..\src\Autogenerated\CObjectANCFBeam.h" />
     <ClInclude Include="..\src\Autogenerated\CObjectANCFCable2D.h" />
+    <ClInclude Include="..\src\Autogenerated\CObjectANCFThinPlate.h" />
     <ClInclude Include="..\src\Autogenerated\CObjectBeamGeometricallyExact.h" />
     <ClInclude Include="..\src\Autogenerated\CObjectBeamGeometricallyExact2D.h" />
     <ClInclude Include="..\src\Autogenerated\CObjectConnectorCartesianSpringDamper.h" />
@@ -557,18 +563,19 @@
     <ClInclude Include="..\src\Autogenerated\MainNodePoint.h" />
     <ClInclude Include="..\src\Autogenerated\MainNodePoint2D.h" />
     <ClInclude Include="..\src\Autogenerated\MainNodePoint2DSlope1.h" />
-    <ClInclude Include="..\src\Autogenerated\MainNodePoint3DSlope1.h" />
-    <ClInclude Include="..\src\Autogenerated\MainNodePoint3DSlope23.h" />
     <ClInclude Include="..\src\Autogenerated\MainNodePointGround.h" />
+    <ClInclude Include="..\src\Autogenerated\MainNodePointSlope1.h" />
+    <ClInclude Include="..\src\Autogenerated\MainNodePointSlope12.h" />
+    <ClInclude Include="..\src\Autogenerated\MainNodePointSlope23.h" />
     <ClInclude Include="..\src\Autogenerated\MainNodeRigidBody2D.h" />
     <ClInclude Include="..\src\Autogenerated\MainNodeRigidBodyEP.h" />
-    <ClInclude Include="..\src\Autogenerated\MainNodeRigidBodyRotVecDataLG.h" />
     <ClInclude Include="..\src\Autogenerated\MainNodeRigidBodyRotVecLG.h" />
     <ClInclude Include="..\src\Autogenerated\MainNodeRigidBodyRxyz.h" />
     <ClInclude Include="..\src\Autogenerated\MainObjectALEANCFCable2D.h" />
     <ClInclude Include="..\src\Autogenerated\MainObjectANCFBeam.h" />
     <ClInclude Include="..\src\Autogenerated\MainObjectANCFBeam3D.h" />
     <ClInclude Include="..\src\Autogenerated\MainObjectANCFCable2D.h" />
+    <ClInclude Include="..\src\Autogenerated\MainObjectANCFThinPlate.h" />
     <ClInclude Include="..\src\Autogenerated\MainObjectBeamGeometricallyExact.h" />
     <ClInclude Include="..\src\Autogenerated\MainObjectBeamGeometricallyExact2D.h" />
     <ClInclude Include="..\src\Autogenerated\MainObjectBeamGeometricallyExact3D.h" />
@@ -622,6 +629,8 @@
     <ClInclude Include="..\src\Autogenerated\pybind_manual_classes.h" />
     <ClInclude Include="..\src\Autogenerated\Pybind_modules.h" />
     <ClInclude Include="..\src\Autogenerated\PyStructuralElementsDataStructures.h" />
+    <ClInclude Include="..\src\Autogenerated\PySymbolicUserFunctionSet.h" />
+    <ClInclude Include="..\src\Autogenerated\PySymbolicUserFunctionTransfer.h" />
     <ClInclude Include="..\src\autogenerated\SimulationSettings.h" />
     <ClInclude Include="..\src\Autogenerated\VisualizationSettings.h" />
     <ClInclude Include="..\src\Autogenerated\VisuLoadCoordinate.h" />
@@ -649,18 +658,19 @@
     <ClInclude Include="..\src\Autogenerated\VisuNodePoint.h" />
     <ClInclude Include="..\src\Autogenerated\VisuNodePoint2D.h" />
     <ClInclude Include="..\src\Autogenerated\VisuNodePoint2DSlope1.h" />
-    <ClInclude Include="..\src\Autogenerated\VisuNodePoint3DSlope1.h" />
-    <ClInclude Include="..\src\Autogenerated\VisuNodePoint3DSlope23.h" />
     <ClInclude Include="..\src\Autogenerated\VisuNodePointGround.h" />
+    <ClInclude Include="..\src\Autogenerated\VisuNodePointSlope1.h" />
+    <ClInclude Include="..\src\Autogenerated\VisuNodePointSlope12.h" />
+    <ClInclude Include="..\src\Autogenerated\VisuNodePointSlope23.h" />
     <ClInclude Include="..\src\Autogenerated\VisuNodeRigidBody2D.h" />
     <ClInclude Include="..\src\Autogenerated\VisuNodeRigidBodyEP.h" />
-    <ClInclude Include="..\src\Autogenerated\VisuNodeRigidBodyRotVecDataLG.h" />
     <ClInclude Include="..\src\Autogenerated\VisuNodeRigidBodyRotVecLG.h" />
     <ClInclude Include="..\src\Autogenerated\VisuNodeRigidBodyRxyz.h" />
     <ClInclude Include="..\src\Autogenerated\VisuObjectALEANCFCable2D.h" />
     <ClInclude Include="..\src\Autogenerated\VisuObjectANCFBeam.h" />
     <ClInclude Include="..\src\Autogenerated\VisuObjectANCFBeam3D.h" />
     <ClInclude Include="..\src\Autogenerated\VisuObjectANCFCable2D.h" />
+    <ClInclude Include="..\src\Autogenerated\VisuObjectANCFThinPlate.h" />
     <ClInclude Include="..\src\Autogenerated\VisuObjectBeamGeometricallyExact.h" />
     <ClInclude Include="..\src\Autogenerated\VisuObjectBeamGeometricallyExact2D.h" />
     <ClInclude Include="..\src\Autogenerated\VisuObjectBeamGeometricallyExact3D.h" />
@@ -740,6 +750,10 @@
     <ClInclude Include="..\src\Linalg\RigidBodyMath.h" />
     <ClInclude Include="..\src\Linalg\SearchTree.h" />
     <ClInclude Include="..\src\linalg\SlimVector.h" />
+    <ClInclude Include="..\src\Linalg\Symbolic.h" />
+    <ClInclude Include="..\src\Linalg\SymbolicMatrix.h" />
+    <ClInclude Include="..\src\Linalg\SymbolicUtilities.h" />
+    <ClInclude Include="..\src\Linalg\SymbolicVector.h" />
     <ClInclude Include="..\src\Linalg\Use_avx.h" />
     <ClInclude Include="..\src\linalg\Vector.h" />
     <ClInclude Include="..\src\Main\CData.h" />

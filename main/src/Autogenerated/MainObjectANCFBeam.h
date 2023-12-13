@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2023-09-08  08:26:17 (last modified)
+* @date         2023-10-15  23:43:49 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -107,7 +107,7 @@ public: // AUTO:
     //! AUTO:  provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()
     virtual Node::Type GetRequestedNodeType() const override
     {
-        return (Node::Type)(Node::Position + Node::Orientation + Node::Point3DSlope23);
+        return (Node::Type)(Node::Position + Node::Orientation + Node::PointSlope23);
     }
 
 

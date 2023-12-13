@@ -19,7 +19,7 @@
 #include "Utilities/Parallel.h" //for local CPU time measurement
 
 #include "Main/Experimental.h"
-extern Experimental experimental; //!this class can be accessed from outside, but also from every other file where this is imported
+extern PyExperimental pyExperimental; //!this class can be accessed from outside, but also from every other file where this is imported
 
 //! factorize matrix (invert, SparseLU, etc.); -1=success; >=0: causing row
 Index GeneralMatrixEXUdense::FactorizeNew() //bool ignoreRedundantEquation, Index redundantEquationsStart)
@@ -60,7 +60,7 @@ Index GeneralMatrixEXUdense::FactorizeNew() //bool ignoreRedundantEquation, Inde
             //{
             //    rv = matrix.NumberOfRows(); //this means that the solver failed, but no causing row known
             //}
-            if (experimental.eigenFullPivotLUsolverDebugLevel >= 1)
+            if (pyExperimental.eigenFullPivotLUsolverDebugLevel >= 1)
             {
                 pout << "eigenFullPivotLU dim=(" << matrix.NumberOfRows() << "," << matrix.NumberOfColumns() << ")\n";
                 pout << "eigenFullPivotLU rank=" << eigenLUfullPivot.rank() << "\n";

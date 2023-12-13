@@ -61,13 +61,13 @@ class NodeType(Enum):
     RotationRxyz = int
     RotationRotationVector = int
     LieGroupWithDirectUpdate = int
-    LieGroupWithDataCoordinates = int
     GenericODE2 = int
     GenericODE1 = int
     GenericAE = int
     GenericData = int
-    Point3DSlope1 = int
-    Point3DSlope23 = int
+    PointSlope1 = int
+    PointSlope12 = int
+    PointSlope23 = int
 
 class JointType(Enum):
     _None = int

@@ -40,7 +40,7 @@ public: //made public for access via pybind
 	bool useLieGroupIntegration;			//!< only used internally to speed up in case of no Lie group nodes
 	//++++++++++++++++++++++++++++++
 	//Lie groups:
-	ResizableArray<Index> lieGroupDataNodes;			//filled with Lie group node indices with data coordinates during initialization; ONLY if useLieGroupIntegration=true
+	//ResizableArray<Index> lieGroupDataNodes;			//filled with Lie group node indices with data coordinates during initialization; ONLY if useLieGroupIntegration=true
 	ResizableArray<Index> lieGroupDirectUpdateNodes;	//filled with Lie group node indices with direct updates during initialization; ONLY if useLieGroupIntegration=true
 	//UNUSED: //ResizableArray<Index> nonLieODE2Coordinates;		//filled with ODE2 coordinates, for which no Lie group integration is used; ONLY if useLieGroupIntegration=true
 	ResizableVectorParallel lieGroupDirectUpdateNewtonSolution; //this is the previous newton solution in case of direct update
@@ -84,9 +84,9 @@ public:
 	//! finalize algorithmic accelerations in generalized alpha method
 	virtual void FinalizeNewton(CSystem& computationalSystem, const SimulationSettings& simulationSettings);
 
-	//! apply composition rule to currentODE2 o incrementODE2 for given set of nodes
-	virtual void UpdateDataCoordinatesLieGroupIntegrator(CSystem& computationalSystem, const ArrayIndex& lieGroupNodes, 
-		const ResizableVectorParallel& currentODE2, const ResizableVectorParallel& incrementODE2, ResizableVectorParallel& compositionODE2);
+	////! apply composition rule to currentODE2 o incrementODE2 for given set of nodes
+	//virtual void UpdateDataCoordinatesLieGroupIntegrator(CSystem& computationalSystem, const ArrayIndex& lieGroupNodes, 
+	//	const ResizableVectorParallel& currentODE2, const ResizableVectorParallel& incrementODE2, ResizableVectorParallel& compositionODE2);
 
 	//! apply composition rule to currentODE2 o incrementODE2 for given set of nodes
 	virtual void CompositionRuleCoordinatesLieGroupIntegrator(CSystem& computationalSystem, const ArrayIndex& lieGroupNodes, 

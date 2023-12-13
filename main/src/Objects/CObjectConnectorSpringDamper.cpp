@@ -24,12 +24,30 @@ void CObjectConnectorSpringDamper::ComputeConnectorProperties(const MarkerDataSt
 	Real springLength = relPos.GetL2Norm();
 	Real springLengthInv;
 
-	if (springLength != 0.) { springLengthInv = 1. / springLength; }
-	else { springLengthInv = 1.; SysError("CObjectConnectorSpringDamper::ComputeODE2LHS: springLength = 0"); }
-
 	//unit direction and relative velocity of spring-damper
-	forceDirection = springLengthInv * relPos;
+	forceDirection = relPos;
 	relVel = (markerData.GetMarkerData(1).velocity - markerData.GetMarkerData(0).velocity);
+
+	if (springLength != 0.) 
+	{ 
+		springLengthInv = 1. / springLength; 
+		forceDirection *= springLengthInv;
+	}
+	else 
+	{ 
+		springLengthInv = 1.; 
+		//not marked as error since issue #1686
+		//SysError("CObjectConnectorSpringDamper::ComputeODE2LHS: springLength = 0"); 
+
+		//compute alternative force-direction for zero distance; alternatively, forceDirection could be [0,0,0]
+		forceDirection = relVel;
+		Real relVelNorm = relVel.GetL2Norm();
+		if (relVelNorm != 0.)
+		{
+			forceDirection *= 1. / relVelNorm;
+		}
+	}
+
 
 	//stiffness term; this is the term without the jacobian [delta l_vec]; compare Shabana MultibodyDynamics1998, page 119:
 	force = 0;
@@ -126,13 +144,10 @@ void CObjectConnectorSpringDamper::ComputeJacobianODE2_ODE2(EXUmath::MatrixConta
 		Vector3D relPos, relVel, forceDirection;
 		ComputeConnectorProperties(markerData, objectNumber, relPos, relVel, force, forceDirection);
 
-		//Real factor = parameters.stiffness * factorODE2 + parameters.damping * factorODE2_t;
-		//temp.localJacobian.SetWithDiadicProduct(factor*forceDirection, forceDirection);
-
-		//Real factor = parameters.stiffness * factorODE2 + parameters.damping * factorODE2_t;
 		Real L = relPos.GetL2Norm();
-		//Real L = relPos * forceDirection;
-		Real Linv = 1. / L;
+		Real Linv = 0.;
+
+		if (L != 0.) { Linv = 1. / L; }
 
 		Matrix3D innerJac;
 
@@ -152,7 +167,15 @@ void CObjectConnectorSpringDamper::ComputeJacobianODE2_ODE2(EXUmath::MatrixConta
 
 		//derivative of force w.r.t. relPos (k) and relVel (d) times direction
 		Matrix3D VV2;
-		VV2.SetWithDiadicProduct((factorODE2*parameters.stiffness + factorODE2_t * parameters.damping)*forceDirection, forceDirection);
+		if (L != 0.)
+		{
+			VV2.SetWithDiadicProduct((factorODE2 * parameters.stiffness + factorODE2_t * parameters.damping) * forceDirection, forceDirection);
+		}
+		else
+		{
+			//behavior like CartesianSpringDamper=> for static problems, first iteration!
+			VV2.SetScalarMatrix(EXUstd::dim3D, factorODE2 * parameters.stiffness + factorODE2_t * parameters.damping ); 
+		}
 		innerJac += VV2;
 
 		temp.localJacobian.CopyFrom(innerJac);

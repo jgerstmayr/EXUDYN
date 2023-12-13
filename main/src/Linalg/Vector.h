@@ -61,7 +61,8 @@ enum class VectorType {
 	Vector = 1,
 	LinkedDataVector = 2,
 	ResizableVector = 3,
-	ConstVector = 4
+	ConstVector = 4,
+	ResizableConstVector = 5
 };
 
 template <typename T, Index dataSize> class SlimVectorBase;
@@ -477,6 +478,22 @@ public:
 		}
 		os << "]";
 		return os;
+	}
+
+	//! add function to be compatible with symbolic
+	virtual STDstring ToString() const
+	{
+		STDstring str = "";
+		char sep = ' ';
+		if (linalgPrintUsePythonFormat) { sep = ','; }
+		str += "[";
+		for (Index i = 0; i < NumberOfItems(); i++) 
+		{
+			str += EXUstd::ToString(GetUnsafe(i));
+			if (i < NumberOfItems() - 1) { str += sep; }
+		}
+		str += "]";
+		return str;
 	}
 
 

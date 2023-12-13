@@ -842,11 +842,12 @@ def AnimateSolution(mbs, solution, rowIncrement = 1, timeout=0.04, createImages 
 #   showLegend: shows legend for different item types
 #   layoutDistanceFactor: this factor influences the arrangement of labels; larger distance values lead to circle-like results
 #   layoutIterations: more iterations lead to better arrangement of the layout, but need more time for larger systems (use 1000-10000 to get good results)
+#   tightLayout: if True, uses matplotlib plt.tight\_layout() which may raise warning
 #**output: [Any, Any, Any]; returns [networkx, G, items] with nx being networkx, G the graph and item what is returned by nx.draw\_networkx\_labels(...)
 #**belongsTo: MainSystem
 def DrawSystemGraph(mbs, showLoads=True, showSensors=True, useItemNames = False, 
                     useItemTypes = False, addItemTypeNames=True, multiLine=True, fontSizeFactor=1., 
-                    layoutDistanceFactor=3., layoutIterations=100, showLegend = True):
+                    layoutDistanceFactor=3., layoutIterations=100, showLegend = True, tightLayout = True):
     
     try:
         #all imports are part of anaconda (e.g. anaconda 5.2.0, python 3.6.5)
@@ -1165,7 +1166,8 @@ def DrawSystemGraph(mbs, showLoads=True, showSensors=True, useItemNames = False,
         items[itemNames[i]].set_fontsize(fontSize)
     
     plt.axis('off') #do not show frame, because usually some nodes are very close to frame ...
-    plt.tight_layout()
+    if tightLayout:
+        plt.tight_layout()
     plt.margins(x=0.1*fontSizeFactor, y=0.1*fontSizeFactor) #larger margin, to avoid clipping of long texts
     plt.draw() #force redraw after colors have changed
     

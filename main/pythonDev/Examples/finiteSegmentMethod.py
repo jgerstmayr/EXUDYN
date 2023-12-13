@@ -35,6 +35,7 @@ offY = 0.2*0      #position offset of ANCF cable
 #mode='Trap'
 mode='GA'
 
+
 inertiaSegment = 0*massPerSegment/(12*segmentLength**2) #inertia of segment needs to be zero to agree with Bernoulli-Euler beam
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

@@ -74,9 +74,9 @@ namespace ExuMath {
 			}
 			x = x - dx; // err/polyval(dpoly, n-1, x);  
 			iterations++;
-			// std::cout << "err=" << std::to_string(err) << "\t x=" << std::to_string(x) <<std::endl;
+			// std::cout << "err=" << EXUstd::ToString(err) << "\t x=" << EXUstd::ToString(x) <<std::endl;
 		}
-		// std::cout << "took iterations=" << std::to_string(iterations) << "\t iterations" << std::endl;    // for debugging
+		// std::cout << "took iterations=" << EXUstd::ToString(iterations) << "\t iterations" << std::endl;    // for debugging
 		return x;
 	}
 

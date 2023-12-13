@@ -13,6 +13,7 @@ Python-C++ command interface
    SystemContainer
    MainSystem
    SystemData
+   Symbolic
    GeneralContact
    DataStructures
    TypeDefinitions

@@ -17,6 +17,7 @@ def TestExamplesReferenceSolution():
     refSol = {
         'abaqusImportTest.py': 0.0005885208722206333,               #new 2023-04-20; 5 modes as 8 modes have sensitive "half mode included"
         'ANCFBeamTest.py': 1.010486312300459,                       #new 2023-04-04, after resolving local kappa bug
+        'ANCFcable2DuserFunction.py': 0.6015588367721232,           #new 2023-12-13
         'ANCFcontactCircleTest.py':-0.4842698420787613,
         'ANCFcontactFrictionTest.py':-0.014187561328096003,         #with old ObjectContactFrictionCircleCable2D until : 2022-03-09: -0.014188649931059739,
         'ANCFgeneralContactCircle.py':-0.5816542531620952,          #new 2022-07-11 (CState Parallel); #before some update to contact module(iterations decreased!):-0.5816521429557808, #2022-02-01
@@ -53,7 +54,7 @@ def TestExamplesReferenceSolution():
         'kinematicTreeAndMBStest.py':2.6388120463802767e-05,        #original but too sensitive to disturbances: 263.88120463802767,
         'kinematicTreeConstraintTest.py':1.8135975384620484 ,
         'kinematicTreeTest.py': -1.309383960216414,
-        'mainSystemExtensionsTests.py': 57.96750245606998,          #updated 2023-06-09; old: new 2023-05-19
+        'mainSystemExtensionsTests.py': 57.64639446941554,          #updated 2023-11-16; updated 2023-06-09; old: new 2023-05-19
         'manualExplicitIntegrator.py':2.059698629692295,
         'mecanumWheelRollingDiscTest.py':0.2714267238324343,
         'objectFFRFreducedOrderAccelerations.py':0.1000057024588858,#before 2022-07-22 (because often small fails); 0.5000285122944431,#before 2022-02-20 (accuracy of internal sensors is higher): 0.5000285122930983,
@@ -69,6 +70,7 @@ def TestExamplesReferenceSolution():
         'revoluteJointprismaticJointTest.py':1.2538806799249342,    #new 2022-07-11 (CState Parallel); #changed to some analytic Connector jacobians (CartSpringDamper), implicit solver (modified Newton restart, etc.); before 2022-01-18: 1.2538806799243265,
         'rigidBodyAsUserFunctionTest.py':8.950865271552148,
         'rigidBodyCOMtest.py':3.409431467726291,
+        'rigidBodySpringDamperIntrinsic.py':0.5472368463500464,     #new 2023-11-30 (intrinsic formulation for rigid body spring damper)
         'rollingCoinTest.py':0.0020040999273379673,
         'rollingCoinPenaltyTest.py':0.03489603106689881,
         'rotatingTableTest.py':7.838680371309492 ,
@@ -131,6 +133,8 @@ def MiniExamplesReferenceSolution():
         'LoadMassProportional.py':-4.904999999999998,
         'MarkerSuperElementPosition.py':1.0039999999354785,
         'ObjectANCFCable2D.py':-0.5013058140308901,
+        'ObjectANCFCable.py':-0.5013058140308919, #added 2023-10-15
+        'ObjectANCFThinPlate.py':0.0,
         'ObjectConnectorSpringDamper.py':0.9733828995763039, #until 2022-01-25 (before analytical Jac for SpringDamper):0.9733828995759499,
         'ObjectConnectorCartesianSpringDamper.py':-0.0009999999999750209,
         'ObjectConnectorRigidBodySpringDamper.py':-0.5349299545315868,

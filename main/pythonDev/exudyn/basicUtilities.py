@@ -17,9 +17,11 @@
 # 			Two variables 'gaussIntegrationPoints' and 'gaussIntegrationWeights' define integration points and weights for function GaussIntegrate(...)
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+import math #always available in Python
 
 #define some constants which would require external libraries
-pi = 3.1415926535897932 #define pi in order to avoid importing large libraries; identical to from math import pi
+#pi = 3.1415926535897932 #define pi in order to avoid importing large libraries; identical to from math import pi
+pi = math.pi
 sqrt2 = 2.**0.5
 g = 9.81 #gravity constant
 

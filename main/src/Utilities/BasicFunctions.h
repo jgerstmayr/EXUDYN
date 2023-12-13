@@ -169,21 +169,7 @@ namespace EXUstd {
 		} while (inc > 1);
 	}
 
-	//! template function to allow string conversion for objects having stream operator
-	template<class T>
-	STDstring ToString(const T& streamableObject)
-	{
-		std::ostringstream sstream;
-		sstream << streamableObject;
-		return sstream.str();
-	}
-
-	template<class T>
-	inline STDstring Num2String(const T& number)
-	{
-		return std::to_string(number);
-	}
-
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//! convert Real to string, using snprintf with precision
 	inline STDstring Num2String(Real number, Index precision, bool leadingSpace = false)
 	{
@@ -205,6 +191,29 @@ namespace EXUstd {
 	inline STDstring Num2String(float number, Index precision, bool leadingSpace = false)
 	{
 		return Num2String((Real)number, Minimum(precision, 7), leadingSpace);
+	}
+
+	//! template function to allow string conversion for objects having stream operator
+	template<class T>
+	STDstring ToString(const T& streamableObject)
+	{
+		std::ostringstream sstream;
+		sstream << streamableObject;
+		return sstream.str();
+	}
+
+	//! specialization for Real
+	template<>
+	inline std::string ToString<Real>(const Real& streamableObject) 
+	{
+		return Num2String(streamableObject, (Index)pout.precision());
+	}
+
+	//! specialization for Index
+	template<>
+	inline std::string ToString<Index>(const Index& streamableObject)
+	{
+		return std::to_string(streamableObject);
 	}
 
 	//! Get current date and time string

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-07-21  19:29:27 (last modified)
+* @date         2023-12-07  19:48:00 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -111,7 +111,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "damping")) { EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(d, "damping", cObjectConnectorCartesianSpringDamper->GetParameters().damping); /*! AUTO:  safely cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "offset")) { EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(d, "offset", cObjectConnectorCartesianSpringDamper->GetParameters().offset); /*! AUTO:  safely cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "springForceUserFunction")) { if (EPyUtils::CheckForValidFunction(d["springForceUserFunction"])) 
-            { cObjectConnectorCartesianSpringDamper->GetParameters().springForceUserFunction = py::cast<std::function<StdVector(const MainSystem&,Real,Index,StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdVector3D)>>((py::function)d["springForceUserFunction"]); /* AUTO:  read out dictionary and cast to C++ type*/}
+            { cObjectConnectorCartesianSpringDamper->GetParameters().springForceUserFunction = py::cast<std::function<StdVector3D(const MainSystem&,Real,Index,StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdVector3D)>>((py::function)d["springForceUserFunction"]); /* AUTO:  read out dictionary and cast to C++ type*/}
             else {cObjectConnectorCartesianSpringDamper->GetParameters().springForceUserFunction = 0;  /*AUTO: otherwise assign with zero!*/ }} 
         if (EPyUtils::DictItemExists(d, "activeConnector")) { cObjectConnectorCartesianSpringDamper->GetParameters().activeConnector = py::cast<bool>(d["activeConnector"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
@@ -131,7 +131,7 @@ public: // AUTO:
         d["damping"] = EPyUtils::SlimVector2NumPy(cObjectConnectorCartesianSpringDamper->GetParameters().damping); //! AUTO: cast variables into python (not needed for standard types) 
         d["offset"] = EPyUtils::SlimVector2NumPy(cObjectConnectorCartesianSpringDamper->GetParameters().offset); //! AUTO: cast variables into python (not needed for standard types) 
         if (cObjectConnectorCartesianSpringDamper->GetParameters().springForceUserFunction)
-            {d["springForceUserFunction"] = (std::function<StdVector(const MainSystem&,Real,Index,StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdVector3D)>)cObjectConnectorCartesianSpringDamper->GetParameters().springForceUserFunction;}
+            {d["springForceUserFunction"] = (std::function<StdVector3D(const MainSystem&,Real,Index,StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdVector3D)>)cObjectConnectorCartesianSpringDamper->GetParameters().springForceUserFunction;}
         else
             {d["springForceUserFunction"] = 0;}
  //! AUTO: cast variables into python (not needed for standard types) 
@@ -151,7 +151,7 @@ public: // AUTO:
         else if (parameterName.compare("stiffness") == 0) { return EPyUtils::SlimVector2NumPy(cObjectConnectorCartesianSpringDamper->GetParameters().stiffness);} //! AUTO: get parameter
         else if (parameterName.compare("damping") == 0) { return EPyUtils::SlimVector2NumPy(cObjectConnectorCartesianSpringDamper->GetParameters().damping);} //! AUTO: get parameter
         else if (parameterName.compare("offset") == 0) { return EPyUtils::SlimVector2NumPy(cObjectConnectorCartesianSpringDamper->GetParameters().offset);} //! AUTO: get parameter
-        else if (parameterName.compare("springForceUserFunction") == 0) { return py::cast((std::function<StdVector(const MainSystem&,Real,Index,StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdVector3D)>)cObjectConnectorCartesianSpringDamper->GetParameters().springForceUserFunction);} //! AUTO: get parameter
+        else if (parameterName.compare("springForceUserFunction") == 0) { return py::cast((std::function<StdVector3D(const MainSystem&,Real,Index,StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdVector3D)>)cObjectConnectorCartesianSpringDamper->GetParameters().springForceUserFunction);} //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { return py::cast((bool)cObjectConnectorCartesianSpringDamper->GetParameters().activeConnector);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectConnectorCartesianSpringDamper->GetShow());} //! AUTO: get parameter
         else if (parameterName.compare("VdrawSize") == 0) { return py::cast((float)visualizationObjectConnectorCartesianSpringDamper->GetDrawSize());} //! AUTO: get parameter
@@ -169,7 +169,7 @@ public: // AUTO:
         else if (parameterName.compare("stiffness") == 0) { EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(value, cObjectConnectorCartesianSpringDamper->GetParameters().stiffness); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("damping") == 0) { EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(value, cObjectConnectorCartesianSpringDamper->GetParameters().damping); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("offset") == 0) { EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(value, cObjectConnectorCartesianSpringDamper->GetParameters().offset); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("springForceUserFunction") == 0) { if (py::isinstance<py::function>(value)) {cObjectConnectorCartesianSpringDamper->GetParameters().springForceUserFunction = py::cast<std::function<StdVector(const MainSystem&,Real,Index,StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdVector3D)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/} else
+        else if (parameterName.compare("springForceUserFunction") == 0) { if (py::isinstance<py::function>(value)) {cObjectConnectorCartesianSpringDamper->GetParameters().springForceUserFunction = py::cast<std::function<StdVector3D(const MainSystem&,Real,Index,StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdVector3D)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/} else
             if (!EPyUtils::IsPyTypeInteger(value) || (py::cast<int>(value) != 0)) {PyError(STDstring("Failed to convert PyFunction: must be either valid python function or 0, but got ")+EXUstd::ToString(value)); }; } //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { cObjectConnectorCartesianSpringDamper->GetParameters().activeConnector = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationObjectConnectorCartesianSpringDamper->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

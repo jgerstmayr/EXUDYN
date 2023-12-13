@@ -9,15 +9,390 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi \small
-  \item Exudyn version = 1.7.5.dev1, 
-  \item last change =  2023-10-09, 
-  \item Number of issues = 1658, 
-  \item Number of resolved issues = 1475 (5 in current version), 
+  \item Exudyn version = 1.7.57.dev1, 
+  \item last change =  2023-12-13, 
+  \item Number of issues = 1732, 
+  \item Number of resolved issues = 1527 (57 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.7.57}:  resolved Issue 1726: {\bf SymbolicRealMatrix}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add symbolic matrix for user functions}
+    \item {\bf notes: note: currently implemented less efficient with memory allocations}
+    \item   date resolved: {\bf 2023-12-13 14:02},
+date raised: 2023-12-12 
+  \ei
+  \item[] {\bf Version 1.7.56}:  resolved Issue 1731: {\bf ANCFCable2D}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add user functions for bending moment and axial force, allowing to implement arbitrary material models}
+    \item   date resolved: {\bf 2023-12-13 13:47},
+date raised: 2023-12-13 
+  \ei
+  \item[] {\bf Version 1.7.55}:  resolved Issue 1730: {\bf GenerateStraightLineANCFCable}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: raises Warning for default values [0,0,0,0,0,0] in 2D case}
+    \item   date resolved: {\bf 2023-12-13 13:27},
+date raised: 2023-12-13 
+  \ei
+  \item[] {\bf Version 1.7.54}:  resolved Issue 1725: {\bf Symbolic}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add ResizableConstMatrix and create symbolic matrix-vector functions}
+    \item   date resolved: {\bf 2023-12-12 14:16},
+date raised: 2023-12-10 
+  \ei
+  \item[] {\bf Version 1.7.53}:  resolved Issue 1716: {\bf Symbolic}
+(docu)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add symbolic user function description to documentation; also mention in performance section}
+    \item   date resolved: {\bf 2023-12-10 21:57},
+date raised: 2023-12-08 
+  \ei
+  \item[] {\bf Version 1.7.52}:  resolved Issue 1724: {\bf C++ ToString}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: changing the behavior for standard conversion of double and int values to strings, in particular during errors. Now using the same precision as defined with exudyn.SetOutputPrecision()}
+    \item   date resolved: {\bf 2023-12-09 19:26},
+date raised: 2023-12-09 
+  \ei
+  \item[] {\bf Version 1.7.51}:  resolved Issue 1715: {\bf Symbolic}
+(docu)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add symbolic section to documentation}
+    \item   date resolved: {\bf 2023-12-09 16:29},
+date raised: 2023-12-08 
+  \ei
+  \item[] {\bf Version 1.7.50}:  resolved Issue 1708: {\bf Symbolic}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: make symbolic variable space, available globally in exudyn.symbolic as well as in mbs.symbolic; this allows to store/transfer data into user functions without the need for Python; use integer handles which are returned by creation function: a=NamedReal(value, name); handle=AddVariableReal(a)}
+    \item {\bf notes: not yet put into mbs and using no integer handles, but std::unordered\_map, which has highly efficient hash table included}
+    \item   date resolved: {\bf 2023-12-09 16:29},
+date raised: 2023-12-03 
+  \ei
+  \item[] {\bf Version 1.7.49}:  resolved Issue 1699: {\bf exudyn. ...}
+(docu)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add undocumented features of exudyn module, such as Demo1(), Demo2(), \_\_version\_\_ or C++}
+    \item   date resolved: {\bf 2023-12-08 18:41},
+date raised: 2023-11-22 
+  \ei
+  \item[] {\bf Version 1.7.48}:  resolved Issue 1698: {\bf experimental, special}
+(docu)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add experimental and special features to documentation / pybindings}
+    \item   date resolved: {\bf 2023-12-08 18:41},
+date raised: 2023-11-21 
+  \ei
+  \item[] {\bf Version 1.7.47}:  resolved Issue 1710: {\bf Symbolic}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add basic (automatic) differentiation feature for expressions: EvaluateDiff()}
+    \item   date resolved: {\bf 2023-12-08 07:22},
+date raised: 2023-12-03 
+  \ei
+  \item[] {\bf Version 1.7.46}:  resolved Issue 1700: {\bf ResizableConstSizeVector}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: consider a Vector with fixed size, which can be extended if necessary - e.g. for local variables in sensors or GetOutputVariable; is efficient for small vectors and still works for larger one}
+    \item   date resolved: {\bf 2023-12-07 23:03},
+date raised: 2023-11-22 
+  \ei
+  \item[] {\bf Version 1.7.45}:  resolved Issue 1714: {\bf Symbolic}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add vector as symbolic expression, allowing vectors in user functions}
+    \item   date resolved: {\bf 2023-12-07 19:55},
+date raised: 2023-12-07 
+  \ei
+  \item[] {\bf Version 1.7.44}:  resolved Issue 1713: {\bf user functions}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: change StdVector to StdVector3D and StdVector6D in relevant cases in order to achieve light-weight interface for symbolic interfaces}
+    \item   date resolved: {\bf 2023-12-07 19:53},
+date raised: 2023-12-07 
+  \ei
+  \item[] {\bf Version 1.7.43}:  resolved Issue 1712: {\bf Symbolic}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add automatic creation of user functions to AutoGenerateObjects}
+    \item   date resolved: {\bf 2023-12-05 00:06},
+date raised: 2023-12-03 
+  \ei
+  \item[] {\bf Version 1.7.42}:  resolved Issue 1711: {\bf Symbolic}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: put most parts of specific user functioninto base SymbolicFunction; EvaluateUF: use variadic args to generalize}
+    \item   date resolved: {\bf 2023-12-05 00:06},
+date raised: 2023-12-03 
+  \ei
+  \item[] {\bf Version 1.7.41}:  resolved Issue 1709: {\bf Symbolic}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add most of Pythons math module functions to symbolic functions list}
+    \item   date resolved: {\bf 2023-12-03 15:01},
+date raised: 2023-12-03 
+  \ei
+  \item[] {\bf Version 1.7.40}:  resolved Issue 1705: {\bf Symbolic user function}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: allow parallel computation of non-Python user functions}
+    \item {\bf notes: this is enabled by adding user function after Assemble, thus objects are not registered to have Python user functions}
+    \item   date resolved: {\bf 2023-12-03 14:58},
+date raised: 2023-11-28 
+  \ei
+  \item[] {\bf Version 1.7.39}:  resolved Issue 1706: {\bf RigidBodySpringDamper}
+(docu)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: intrinsicFormulation: add test to test suite and document new functionality}
+    \item   date resolved: {\bf 2023-11-30 23:56},
+date raised: 2023-11-30 
+  \ei
+  \item[] {\bf Version 1.7.38}:  resolved Issue 1707: {\bf RigidBodySpringDamper}
+(check)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: intrinsicFormulation: check conserving properties of joint forces for two freely rotating bodies: additional torque of forces may be required in implementation}
+    \item   date resolved: {\bf 2023-11-30 23:39},
+date raised: 2023-11-30 
+  \ei
+  \item[] {\bf Version 1.7.37}:  resolved Issue 1486: {\bf RigidBodySpringDamper}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: extend for Lie group formulation, evaluating connectors at mid-configuration according to Masarati and Morandini}
+    \item   date resolved: {\bf 2023-11-30 20:51},
+date raised: 2023-04-01 
+  \ei
+  \item[] {\bf Version 1.7.36}:  resolved Issue 1696: {\bf exudyn.symbolic}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add experimental expression trees for building symbolic expressions to be used for user functions}
+    \item {\bf notes: basic symbolic functionality added; tested with SpringDamper user function, leading to speedup of 10 against regular Python function}
+    \item   date resolved: {\bf 2023-11-28 09:08},
+date raised: 2023-11-21 (resolved by: EXTENSION)
+  \ei
+  \item[] {\bf Version 1.7.35}:  resolved Issue 1704: {\bf solver timeout}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: added module-wide flag for timeout: exudyn.special.solver.timeout in order to stop simulations after certain time; use with care}
+    \item   date resolved: {\bf 2023-11-22 09:43},
+date raised: 2023-11-22 
+  \ei
+  \item[] {\bf Version 1.7.34}:  resolved Issue 1703: {\bf Pybind module}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: use suggestions of from search: pybind11, how to split my code into multiple modules/files - stackoverflow; should improve compilation time}
+    \item {\bf notes: created 2 new pybind module files; no major compilation speedup visible on laptop}
+    \item   date resolved: {\bf 2023-11-22 08:24},
+date raised: 2023-11-22 
+  \ei
+  \item[] {\bf Version 1.7.33}:  resolved Issue 1702: {\bf PyErr\_CheckSignals}
+(check)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: check if this method available in pybind helps to allow stopping long-lasting computations in exudyn}
+    \item {\bf notes: still does not work in Spyder}
+    \item   date resolved: {\bf 2023-11-22 02:03},
+date raised: 2023-11-22 
+  \ei
+  \item[] {\bf Version 1.7.32}:  resolved Issue 1701: {\bf RunCppUnitTests}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: move to exudyn.special.RunCppUnitTests}
+    \item   date resolved: {\bf 2023-11-22 00:29},
+date raised: 2023-11-22 
+  \ei
+  \item[] {\bf Version 1.7.31}:  resolved Issue 1697: {\bf exudyn.experimental}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: change exudyn.Experimental() into exudyn.experimental structure for clearer view on it; not intended to be used widely}
+    \item {\bf notes: see also issue 1613}
+    \item   date resolved: {\bf 2023-11-21 21:18},
+date raised: 2023-11-21 
+  \ei
+  \item[] {\bf Version 1.7.30}:  resolved Issue 1694: {\bf load user functions}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add stl and numpy bindings in order to have Vector3D converted into numpy arrays in loadVectorUserFunction}
+    \item   date resolved: {\bf 2023-11-19 23:05},
+date raised: 2023-11-19 
+  \ei
+  \item[] {\bf Version 1.7.29}:  resolved Issue 1690: {\bf mainSystemExtensions}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add CreateGround() with referencePosition, referenceRotationMatrix and visualization}
+    \item   date resolved: {\bf 2023-11-19 23:05},
+date raised: 2023-11-19 
+  \ei
+  \item[] {\bf Version 1.7.28}:  resolved Issue 1679: {\bf CreateTorque}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add create function for nodes and bodies (using node=None, body=None default) to be used either for nodes or bodies; automatically adds markers; bodyFixed=False; add option to add userFunction}
+    \item   date resolved: {\bf 2023-11-19 22:22},
+date raised: 2023-10-29 
+  \ei
+  \item[] {\bf Version 1.7.27}:  resolved Issue 1678: {\bf CreateForce}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add create function for nodes and bodies (using node=None, body=None default) to be used either for nodes or bodies; automatically adds markers; bodyFixed=False; add option to add userFunction}
+    \item   date resolved: {\bf 2023-11-19 22:22},
+date raised: 2023-10-29 
+  \ei
+  \item[] {\bf Version 1.7.26}:  resolved Issue 1689: {\bf mainSystemExtensions}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: change bodyOrNodeList into bodyList; allow bodyOrNodeList as alternative arg, but avoid using in examples}
+    \item   date resolved: {\bf 2023-11-19 21:04},
+date raised: 2023-11-19 
+  \ei
+  \item[] {\bf Version 1.7.25}:  resolved Issue 1688: {\bf mainSystemExtensions}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: allow special case distance=0 in CreateDistanceConstraint; this will then create a SphericalJoint}
+    \item   date resolved: {\bf 2023-11-19 21:04},
+date raised: 2023-11-19 
+  \ei
+  \item[] {\bf Version 1.7.24}:  resolved Issue 1687: {\bf mainSystemExtensions}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: allow referenceLength=0 in ConnectorSpringDamper}
+    \item   date resolved: {\bf 2023-11-19 21:04},
+date raised: 2023-11-19 
+  \ei
+  \item[] {\bf Version 1.7.23}:  resolved Issue 1667: {\bf ANCFCable}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add visulization with cylinders}
+    \item   date resolved: {\bf 2023-11-19 19:39},
+date raised: 2023-10-16 
+  \ei
+  \item[] {\bf Version 1.7.22}:  resolved Issue 1686: {\bf SpringDamper}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: allow springLength=0, as it does not cause problems in computations}
+    \item {\bf notes: added special behavior for L=0, but velocity not equal 0; may cause convergence issues in particular for static problems; added special behavior for L=0, but velocity not equal 0; may cause convergence issues in particular for static problems; also allow referenceLength=0}
+    \item   date resolved: {\bf 2023-11-19 19:11},
+date raised: 2023-11-19 
+  \ei
+  \item[] {\bf Version 1.7.21}:  resolved Issue 1685: {\bf ANCF cable with rigid marker}
+(example)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add example with ANCFCable2D and rigid body marker, prescribing rotation of one end}
+    \item {\bf notes: ANCFrotatingCable2D.py}
+    \item   date resolved: {\bf 2023-11-07 14:04},
+date raised: 2023-11-07 
+  \ei
+  \item[] {\bf Version 1.7.20}:  resolved Issue 1673: {\bf ReadTheDocs}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add the required .readthedocs.yaml file and move requirements.txt into docs folder, as it is related to sphinx only}
+    \item   date resolved: {\bf 2023-10-25 09:16},
+date raised: 2023-10-25 
+  \ei
+  \item[] {\bf Version 1.7.19}:  resolved Issue 1672: {\bf LieGroup explicit integration}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: fixed lieGroupDataNodes; lieGroupDataNodes renamed into lieGroupNodes in explict integration}
+    \item   date resolved: {\bf 2023-10-16 10:00},
+date raised: 2023-10-16 
+  \ei
+  \item[] {\bf Version 1.7.18}:  resolved Issue 1671: {\bf PlotSensor}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: use IsListOrArray function to check for non-empty offsets and factors, to comply with numpy arrays}
+    \item   date resolved: {\bf 2023-10-16 08:32},
+date raised: 2023-10-16 
+  \ei
+  \item[] {\bf Version 1.7.17}:  resolved Issue 1670: {\bf GenerateStraightLineANCFCable}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add GenerateStraightLineANCFCable for 3D cables and adjust 2D version}
+    \item   date resolved: {\bf 2023-10-16 08:31},
+date raised: 2023-10-16 
+  \ei
+  \item[] {\bf Version 1.7.16}:  resolved Issue 1669: {\bf NodePoint3DSlope}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: adjust all test models and examples for new NodePointSlope... names}
+    \item   date resolved: {\bf 2023-10-16 08:02},
+date raised: 2023-10-16 
+  \ei
+  \item[] {\bf Version 1.7.15}:  resolved Issue 1663: {\bf NodePoint3DSlope23}
+(check)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: check d/dt(A) ... computation of time derivative of rotation matrix, also check jacobians and angular velocities; add tests also for Slope12 node}
+    \item   date resolved: {\bf 2023-10-16 07:45},
+date raised: 2023-10-15 
+  \ei
+  \item[] {\bf Version 1.7.14}:  resolved Issue 1666: {\bf NodePoint3DSlope1}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: change to NodePointSlope1}
+    \item   date resolved: {\bf 2023-10-15 22:29},
+date raised: 2023-10-15 
+  \ei
+  \item[] {\bf Version 1.7.13}:  resolved Issue 1665: {\bf Point3DS23}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: remove Point3DS23 as its name is inconsistent with 3D convention and not really needed}
+    \item   date resolved: {\bf 2023-10-15 22:24},
+date raised: 2023-10-15 
+  \ei
+  \item[] {\bf Version 1.7.12}:  resolved Issue 1664: {\bf NodePoint3DSlope23}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: change to NodePointSlope23}
+    \item   date resolved: {\bf 2023-10-15 22:23},
+date raised: 2023-10-15 
+  \ei
+  \item[] {\bf Version 1.7.11}:  resolved Issue 1075: {\bf ANCFCable}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add 3D version of cable element, not using BeamSection interface for compatibility with Cable2D}
+    \item   date resolved: {\bf 2023-10-15 14:45},
+date raised: 2022-05-06 
+  \ei
+  \item[] {\bf Version 1.7.10}:  resolved Issue 1661: {\bf NodePoint3DSlope12}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add ANCF node with slopes x/y for thin plate element}
+    \item   date resolved: {\bf 2023-10-15 14:21},
+date raised: 2023-10-15 
+  \ei
+  \item[] {\bf Version 1.7.9}:  resolved Issue 1403: {\bf Lie group nodes}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: remove LieGroup node RigidBodyRotVecDataLG as it is not needed any more as it can be substituted with more efficient RigidBodyRotVecLG}
+    \item {\bf notes: right now added comments in C++ files, not completely removed}
+    \item   date resolved: {\bf 2023-10-15 11:57},
+date raised: 2023-01-18 
+  \ei
+  \item[] {\bf Version 1.7.8}:  resolved Issue 1659: {\bf remove math.h}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: change with <cmath> for C++ conformity}
+    \item   date resolved: {\bf 2023-10-12 17:04},
+date raised: 2023-10-12 
+  \ei
+  \item[] {\bf Version 1.7.7}:  resolved Issue 1658: {\bf switch to MSVC2022}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: change main\_sln\_Template.sln for 2022 update; use cl.exe from MSVC2022 for compilation of wheels; slightly increases performance}
+    \item {\bf notes: compilation successful and TestSuite runs through}
+    \item   date resolved: {\bf 2023-10-12 17:04},
+date raised: 2023-10-12 
+  \ei
+  \item[] {\bf Version 1.7.6}:  resolved Issue 1660: {\bf plot}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: change plt.tight\_layout and plt.legend to fig. if possible to avoid warnings}
+    \item   date resolved: {\bf 2023-10-12 13:39},
+date raised: 2023-10-12 
+  \ei
   \item[] {\bf Version 1.7.5}:  resolved Issue 1657: {\bf Docu}
 (fix)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

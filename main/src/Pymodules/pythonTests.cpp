@@ -63,23 +63,6 @@ namespace py = pybind11;
 #include <vector>
 
 
-////++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-////++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-////for user function test
-//
-//#include "Main/MainSystem.h"
-//
-////test performance of user functions
-//Real TestSD(const MainSystem& mainSystem, Real t, Index itemIndex, Real relPos, Real relVel,
-//	Real stiffness, Real damping, Real offset, Real dryFriction, Real dryFrictionProportionalZone)
-//{
-//	return relPos * stiffness + relVel * damping;
-//	return 0.1 * stiffness * relPos + stiffness * EXUstd::Cube(relPos) + relVel * damping;
-//}
-//
-//this is slower than Python user functions due to pybind11 overhead in std::function, see pybind11 description; check alternatives!!!
-//std::function<Real(const MainSystem&, Real, Index, Real, Real, Real, Real, Real, Real, Real)> springForceUserFunction = &TestSD;
-//std::function<Real(const MainSystem&, Real, Index, Real, Real, Real, Real, Real, Real, Real)> GetTestSD() { return &TestSD; }
 
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -91,226 +74,13 @@ namespace py = pybind11;
 //#include "../Eigen/src/Eigenvalues/ComplexEigenSolver.h"
 //#include "ngs-core-master/ngs_core.hpp"
 
-#include "Utilities/Parallel.h" //ParallelFor
+//#include "Utilities/Parallel.h" //ParallelFor
 
 
-//namespace multiThreading = ngstd;
-namespace multiThreading = MicroThreading;
 
-template<typename T>
-class ResizableVectorParallelBase2 : public ResizableVectorBase<T>
+void PyTest2()
 {
-private:
-	static Index constexpr multithreadingLimit = 1; //lower limit below which multithreading acceleration will not be used; measured for i7-8650U 4core; using more cores just makes sense for larger systems!
 
-//public:
-//	Index multithreadingLimit;
-//	Index factorThreads; //set to 1 by default; set to 8 above 100.000
-
-public:
-	//! default constructor
-	ResizableVectorParallelBase2() : ResizableVectorBase<T>() {}
-
-	//! initialize ResizableVectorBase numberOfItemsInit
-	ResizableVectorParallelBase2(Index numberOfItemsInit) : ResizableVectorBase<T>(numberOfItemsInit) {}
-
-	//! initialize ResizableVectorBase with numberOfItemsInit Reals; assign all data items with 'initializationValue'
-	ResizableVectorParallelBase2(Index numberOfItemsInit, T initializationValue) : ResizableVectorBase<T>(numberOfItemsInit, initializationValue) {}
-
-	//! constructor with initializer list; memory allocation!
-	ResizableVectorParallelBase2(std::initializer_list<T> listOfReals) : ResizableVectorBase<T>(listOfReals) {}
-
-	template <class Tvector>
-	ResizableVectorParallelBase2& operator+=(const Tvector& v)
-	{
-		CHECKandTHROW((this->NumberOfItems() == v.NumberOfItems()), "ResizableVectorParallelBase2::operator+=: incompatible size of vectors");
-
-		if (this->numberOfItems < multithreadingLimit || multiThreading::TaskManager::GetNumThreads() == 1)
-		{
-			Index nAVX = this->numberOfItems >> AVXRealShift;
-
-			PReal* ptrData = (PReal*)(this->data);
-			PReal* ptrVector = (PReal*)(v.GetDataPointer());
-			for(Index i=0; i < nAVX; i++)
-			{
-				ptrData[i] += ptrVector[i]; //AVX operation, gives ~4 time speedup for AVX2 in chached operations
-			}
-
-			//process remaining items:
-			for (Index i = (nAVX << AVXRealShift); i < this->numberOfItems; i++)
-			{
-				this->data[i] += v[i];
-			}
-		}
-		else
-		{
-			Index nThreads = multiThreading::TaskManager::GetNumThreads();
-
-			Index nAVX = this->numberOfItems >> AVXRealShift;
-			PReal* ptrData = (PReal*)(this->data);
-			PReal* ptrVector = (PReal*)(v.GetDataPointer());
-
-			multiThreading::ParallelFor((int)(nAVX), [this, &nAVX, &ptrData, &ptrVector](NGSsizeType i)
-			{
-				ptrData[i] += ptrVector[i]; //AVX operation, gives ~4 time speedup for AVX2 in chached operations
-			}, nThreads); //for numberOfItems=400.000, ideal factor=32, numberOfItems=100.000, ideal factor=8;
-
-			//process remaining items:
-			for (Index i = (nAVX << AVXRealShift); i < this->numberOfItems; i++)
-			{
-				this->data[i] += v[i];
-			}
-		}
-
-		return *this;
-	}
-
-	template <class Tvector>
-	ResizableVectorParallelBase2& operator-=(const Tvector& v)
-	{
-		CHECKandTHROW((this->NumberOfItems() == v.NumberOfItems()), "ResizableVectorParallelBase2::operator-=: incompatible size of vectors");
-
-		if (this->numberOfItems < multithreadingLimit || multiThreading::TaskManager::GetNumThreads() == 1)
-		{
-			Index nAVX = this->numberOfItems >> AVXRealShift;
-
-			PReal* ptrData = (PReal*)(this->data);
-			PReal* ptrVector = (PReal*)(v.GetDataPointer());
-			for (Index i = 0; i < nAVX; i++)
-			{
-				ptrData[i] -= ptrVector[i]; //AVX operation, gives ~4 time speedup for AVX2 in chached operations
-			}
-
-			//process remaining items:
-			for (Index i = (nAVX << AVXRealShift); i < this->numberOfItems; i++)
-			{
-				this->data[i] -= v[i];
-			}
-		}
-		else
-		{
-			Index nThreads = multiThreading::TaskManager::GetNumThreads();
-			//multiThreading::ParallelFor((int)(this->numberOfItems), [this, &v](NGSsizeType j)
-			//{
-			//	this->data[j] -= v[j];
-			//}, nThreads*factorThreads); //for numberOfItems=400.000, ideal factor=32, numberOfItems=100.000, ideal factor=8
-
-			Index nAVX = this->numberOfItems >> AVXRealShift;
-			PReal* ptrData = (PReal*)(this->data);
-			PReal* ptrVector = (PReal*)(v.GetDataPointer());
-
-			multiThreading::ParallelFor((int)(nAVX), [&nAVX, &ptrData, &ptrVector](NGSsizeType i)
-			{
-				ptrData[i] -= ptrVector[i]; //AVX operation, gives ~4 time speedup for AVX2 in chached operations
-			}, nThreads); //for numberOfItems=400.000, ideal factor=32, numberOfItems=100.000, ideal factor=8;
-
-			//process remaining items:
-			for (Index i = (nAVX << AVXRealShift); i < this->numberOfItems; i++)
-			{
-				this->data[i] -= v[i];
-			}
-		}
-
-		return *this;
-	}
-
-};
-
-//Real testCppDirect()
-//{
-//    return 42.;
-//}
-//
-//extern "C" double __declspec(dllexport) __stdcall function1()
-//{
-//    return 3.;
-//}
-//
-//extern "C" double __declspec(dllexport) __stdcall function2(double p)
-//{
-//    return 13.*p;
-//}
-//
-//extern "C" int __declspec(dllexport) __stdcall function2(int p)
-//{
-//    return 7*p;
-//}
-//
-////direct call to C++ function fCppDirect(x)
-//std::function<Real()> fCppDirect = &testCppDirect;
-////std::function<Real(Real)> fCppDirect = &testCppDirect;
-//
-//void SetCppDirect(std::function<Real()>& value)
-//{
-//    fCppDirect = value;
-//}
-//
-//void SetCppDirect2(void* value)
-//{
-//    fCppDirect = reinterpret_cast<std::function<Real()>&>(value);
-//    //(double (*)(/*int*/))dlsym(value, “afunction”);
-//}
-//
-//std::function<Real()> GetCppDirect()
-//{
-//    return testCppDirect;
-//}
-
-//Real(*fCppDirect2)();
-//
-//void SetCppDirect2(void* value)
-//{
-//    fCppDirect2 = (Real(*)() )value;
-//}
-
-//void SetCppDirect(std::function<Real(Real)>& value)
-//{
-//    fCppDirect = value;
-//}
-//
-//Real RunCppDirect(int count)
-//{
-//    Real y = 0.;
-//    for (Index i = 0; i < count; i++)
-//    {
-//        y += fCppDirect();
-//        //y += fCppDirect((Real)i);
-//    }
-//    return y;
-//}
-
-//Real RunCppDirect2(int count)
-//{
-//    Real y = 0.;
-//    for (Index i = 0; i < count; i++)
-//    {
-//        y += fCppDirect2();
-//        //y += fCppDirect((Real)i);
-//    }
-//    return y;
-//}
-
-//tests for MainLoadCoordinate.h, but did not succeed:
-        //else if (parameterName.compare("loadUserFunction") == 0) {
-        //if (true || py::isinstance<py::function>(value))
-        //{
-        //    //void* func = py::cast<void *>(value); /* AUTO:  read out dictionary and cast to C++ type*/
-        //    ////cLoadCoordinate->GetParameters().loadUserFunction = reinterpret_cast<std::function<Real(const MainSystem&, Real, Real)>&>(func);
-        //    //std::function<Real(Real, Real, Real)> loadUserFunction2 = reinterpret_cast<std::function<Real(Real, Real, Real)>&>(func);
-
-        //    std::function<Real(Real, Real, Real)> loadUserFunction2 = py::cast<std::function<Real(Real, Real, Real)>>(value);
-        //    //std::function<Real(Real, Real, Real)> loadUserFunction2 = reinterpret_cast<std::function<Real(Real, Real, Real)>&>(py::cast<std::uintptr_t&>(value));
-        //    //std::function<Real(Real, Real, Real)> loadUserFunction2 = reinterpret_cast<std::function<Real(Real, Real, Real)>&>(py::cast<void*&>(value));
-        //    //std::uintptr_t fnPtr = py::cast<std::uintptr_t>(value);
-        //    auto fnPtr = (Real(*)(Real, Real, Real))(loadUserFunction2);
-        //    std::function<Real(Real, Real, Real)> loadUserFunction2 = reinterpret_cast<std::function<Real(Real, Real, Real)>&>(fnPtr);
-
-        //    //cLoadCoordinate->GetParameters().loadUserFunction = py::cast<std::function<Real(const MainSystem&, Real, Real)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/
-        //}
-
-
-void PyTest()
-{
 	//if (1)
 	//{
 	//	Matrix3D A1 = RigidBodyMath::RotationMatrix1(0.2) * RigidBodyMath::RotationMatrix3(0.1) * RigidBodyMath::RotationMatrix2(-0.3);
@@ -420,87 +190,87 @@ void PyTest()
 
 	//}
 	//parallelization tests:
-	if (1)
-	{
-		pout << "AVXsize= " << AVXRealSize << "\n";
-		pout << "AVXRealShift= " << AVXRealShift << "\n";
-		//double d = 12;
-		//PReal P;
-		//P = _mm_set1_(d);
+	//if (1)
+	//{
+	//	pout << "AVXsize= " << AVXRealSize << "\n";
+	//	pout << "AVXRealShift= " << AVXRealShift << "\n";
+	//	//double d = 12;
+	//	//PReal P;
+	//	//P = _mm_set1_(d);
 
-		Index f = 256;
-		Index n = f*800+1; //on Surface, cache limit around n=200000
-		Index its = 1000000 / f;
-		//Index its = 2 / f;
-
-
-		//Vector x(n);
-		//Vector z(n, 0.);
-		ResizableVectorParallelBase2<Real> x(n);
-		ResizableVectorParallelBase2<Real> z(n, 0.);
-
-		ResizableVectorParallelBase2<Real> xpar(n);
-		ResizableVectorParallelBase2<Real> zpar(n, 0.);
-
-		for (Index i = 0; i < n; i++)
-		{
-			x[i] = 0.1*i;
-			xpar[i] = 0.1*i;
-		}
-
-		Real ts, tm;
-		if (1)
-		{
-			ts = EXUstd::GetTimeInSeconds();
-			for (Index k = 0; k < its; k++)
-			{
-				z += x;
-			}
-			tm = EXUstd::GetTimeInSeconds() - ts;
-			pout << "vector operations needed=" << tm << ", GFlops=" << ((Real)n*its) / (1e9*tm)
-				<< ", result=" << z.GetL2Norm() << "\n";
-		}
-
-		multiThreading::TaskManager::SetNumThreads(4); //necessary in order that computation functions have reserved correct size of arrays
-		Index taskmanagerNumthreads = multiThreading::EnterTaskManager(); //this is needed in order that any ParallelFor is executed in parallel during solving
-
-		for (Index ii = 0; ii < 14; ii++)
-		{
-			Index f = 1<<ii;
-			Index n = f * 200 + 1; //on Surface, cache limit around n=200000
-			Index its = 1000000 / f;
-			
-			//its = 1;
-			//n = 10;
+	//	Index f = 256;
+	//	Index n = f*800+1; //on Surface, cache limit around n=200000
+	//	Index its = 1000000 / f;
+	//	//Index its = 2 / f;
 
 
-			ResizableVectorParallelBase2<Real> xpar(n);
-			ResizableVectorParallelBase2<Real> zpar(n, 0.);
-			Vector xref(n);
+	//	//Vector x(n);
+	//	//Vector z(n, 0.);
+	//	ResizableVectorParallelBase<Real> x(n);
+	//	ResizableVectorParallelBase<Real> z(n, 0.);
 
-			for (Index i = 0; i < n; i++)
-			{
-				xpar[i] = 0.1*i;
-				xref[i] = 0.1*i;
-			}
+	//	ResizableVectorParallelBase<Real> xpar(n);
+	//	ResizableVectorParallelBase<Real> zpar(n, 0.);
 
-			Index factorThreads = 1;
-			pout << "factor threads = " << factorThreads << ", ";
-			pout << "vector size = " << n << "\n";
-			zpar.SetAll(0.);
-			//zpar.factorThreads = factorThreads;
-			//zpar.multithreadingLimit = 100000000;
-			ts = EXUstd::GetTimeInSeconds();
-			for (Index k = 0; k < its; k++)
-			{
-				zpar += xpar;
-			}
-			tm = EXUstd::GetTimeInSeconds() - ts;
-			pout << "  parallel vector operations needed=" << tm << ", GFlops=" << ((Real)n*its) / (1e9*tm)
-				<< ", error=" << (zpar - its*xref).GetL2Norm() << "\n";
-		}
-		multiThreading::ExitTaskManager(taskmanagerNumthreads);
-	}
+	//	for (Index i = 0; i < n; i++)
+	//	{
+	//		x[i] = 0.1*i;
+	//		xpar[i] = 0.1*i;
+	//	}
+
+	//	Real ts, tm;
+	//	if (1)
+	//	{
+	//		ts = EXUstd::GetTimeInSeconds();
+	//		for (Index k = 0; k < its; k++)
+	//		{
+	//			z += x;
+	//		}
+	//		tm = EXUstd::GetTimeInSeconds() - ts;
+	//		pout << "vector operations needed=" << tm << ", GFlops=" << ((Real)n*its) / (1e9*tm)
+	//			<< ", result=" << z.GetL2Norm() << "\n";
+	//	}
+
+	//	multiThreading::TaskManager::SetNumThreads(4); //necessary in order that computation functions have reserved correct size of arrays
+	//	Index taskmanagerNumthreads = multiThreading::EnterTaskManager(); //this is needed in order that any ParallelFor is executed in parallel during solving
+
+	//	for (Index ii = 0; ii < 14; ii++)
+	//	{
+	//		Index f = 1<<ii;
+	//		Index n = f * 200 + 1; //on Surface, cache limit around n=200000
+	//		Index its = 1000000 / f;
+	//		
+	//		//its = 1;
+	//		//n = 10;
+
+
+	//		ResizableVectorParallelBase<Real> xpar(n);
+	//		ResizableVectorParallelBase<Real> zpar(n, 0.);
+	//		Vector xref(n);
+
+	//		for (Index i = 0; i < n; i++)
+	//		{
+	//			xpar[i] = 0.1*i;
+	//			xref[i] = 0.1*i;
+	//		}
+
+	//		Index factorThreads = 1;
+	//		pout << "factor threads = " << factorThreads << ", ";
+	//		pout << "vector size = " << n << "\n";
+	//		zpar.SetAll(0.);
+	//		//zpar.factorThreads = factorThreads;
+	//		//zpar.multithreadingLimit = 100000000;
+	//		ts = EXUstd::GetTimeInSeconds();
+	//		for (Index k = 0; k < its; k++)
+	//		{
+	//			zpar += xpar;
+	//		}
+	//		tm = EXUstd::GetTimeInSeconds() - ts;
+	//		pout << "  parallel vector operations needed=" << tm << ", GFlops=" << ((Real)n*its) / (1e9*tm)
+	//			<< ", error=" << (zpar - its*xref).GetL2Norm() << "\n";
+	//	}
+	//	multiThreading::ExitTaskManager(taskmanagerNumthreads);
+	//}
 
 	
 	//if (0)
@@ -916,17 +686,6 @@ void PythonAlive()
 	EXUmath::MatrixTests(); //perform matrix inverse tests
 }
 
-void PythonGo()
-{
-	py::exec(R"(
-import exudyn
-systemContainer = exudyn.SystemContainer()
-mbs = systemContainer.AddSystem()
-    )");
-	pout << "main variables:\n systemContainer=exudyn.SystemContainer()\n mbs = systemContainer.AddSystem()\n";
-	//pout << "ready to go\n";
-}
-
 #ifdef _MYDEBUG //only in debug mode!
 void CreateTestSystem(Index systemNumber, Index arg0, Index arg1)
 {
@@ -979,6 +738,103 @@ void CreateTestSystem(Index systemNumber, Index arg0, Index arg1)
 	else { PyWarning("CreateTestSystem: no valid System number!"); }
 
 }
+
+
+
+//Real testCppDirect()
+//{
+//    return 42.;
+//}
+//
+//extern "C" double __declspec(dllexport) __stdcall function1()
+//{
+//    return 3.;
+//}
+//
+//extern "C" double __declspec(dllexport) __stdcall function2(double p)
+//{
+//    return 13.*p;
+//}
+//
+//extern "C" int __declspec(dllexport) __stdcall function2(int p)
+//{
+//    return 7*p;
+//}
+//
+////direct call to C++ function fCppDirect(x)
+//std::function<Real()> fCppDirect = &testCppDirect;
+////std::function<Real(Real)> fCppDirect = &testCppDirect;
+//
+//void SetCppDirect(std::function<Real()>& value)
+//{
+//    fCppDirect = value;
+//}
+//
+//void SetCppDirect2(void* value)
+//{
+//    fCppDirect = reinterpret_cast<std::function<Real()>&>(value);
+//    //(double (*)(/*int*/))dlsym(value, “afunction”);
+//}
+//
+//std::function<Real()> GetCppDirect()
+//{
+//    return testCppDirect;
+//}
+
+//Real(*fCppDirect2)();
+//
+//void SetCppDirect2(void* value)
+//{
+//    fCppDirect2 = (Real(*)() )value;
+//}
+
+//void SetCppDirect(std::function<Real(Real)>& value)
+//{
+//    fCppDirect = value;
+//}
+//
+//Real RunCppDirect(int count)
+//{
+//    Real y = 0.;
+//    for (Index i = 0; i < count; i++)
+//    {
+//        y += fCppDirect();
+//        //y += fCppDirect((Real)i);
+//    }
+//    return y;
+//}
+
+//Real RunCppDirect2(int count)
+//{
+//    Real y = 0.;
+//    for (Index i = 0; i < count; i++)
+//    {
+//        y += fCppDirect2();
+//        //y += fCppDirect((Real)i);
+//    }
+//    return y;
+//}
+
+//tests for MainLoadCoordinate.h, but did not succeed:
+		//else if (parameterName.compare("loadUserFunction") == 0) {
+		//if (true || py::isinstance<py::function>(value))
+		//{
+		//    //void* func = py::cast<void *>(value); /* AUTO:  read out dictionary and cast to C++ type*/
+		//    ////cLoadCoordinate->GetParameters().loadUserFunction = reinterpret_cast<std::function<Real(const MainSystem&, Real, Real)>&>(func);
+		//    //std::function<Real(Real, Real, Real)> loadUserFunction2 = reinterpret_cast<std::function<Real(Real, Real, Real)>&>(func);
+
+		//    std::function<Real(Real, Real, Real)> loadUserFunction2 = py::cast<std::function<Real(Real, Real, Real)>>(value);
+		//    //std::function<Real(Real, Real, Real)> loadUserFunction2 = reinterpret_cast<std::function<Real(Real, Real, Real)>&>(py::cast<std::uintptr_t&>(value));
+		//    //std::function<Real(Real, Real, Real)> loadUserFunction2 = reinterpret_cast<std::function<Real(Real, Real, Real)>&>(py::cast<void*&>(value));
+		//    //std::uintptr_t fnPtr = py::cast<std::uintptr_t>(value);
+		//    auto fnPtr = (Real(*)(Real, Real, Real))(loadUserFunction2);
+		//    std::function<Real(Real, Real, Real)> loadUserFunction2 = reinterpret_cast<std::function<Real(Real, Real, Real)>&>(fnPtr);
+
+		//    //cLoadCoordinate->GetParameters().loadUserFunction = py::cast<std::function<Real(const MainSystem&, Real, Real)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/
+		//}
+
+
+
 #endif
 
 
