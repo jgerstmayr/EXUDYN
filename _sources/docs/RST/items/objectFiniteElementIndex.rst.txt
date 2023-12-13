@@ -7,9 +7,11 @@ A FiniteElement is a special Object and Body, which is used to define deformable
 .. toctree::
    :maxdepth: 2
 
+   ObjectANCFCable.rst
    ObjectANCFCable2D.rst
    ObjectALEANCFCable2D.rst
    ObjectANCFBeam.rst
    ObjectBeamGeometricallyExact2D.rst
    ObjectBeamGeometricallyExact.rst
+   ObjectANCFThinPlate.rst
 

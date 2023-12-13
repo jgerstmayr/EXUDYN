@@ -34,6 +34,8 @@ The item \ **ObjectConnectorRigidBodySpringDamper**\  with type = 'ConnectorRigi
   | local rotation matrix for marker 1; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker1
 * | **offset** [type = Vector6D, default = [0.,0.,0.,0.,0.,0.]]:
   | translational and rotational offset considered in the spring force calculation
+* | **intrinsicFormulation** [type = Bool, default = False]:
+  | if True, the joint uses the intrinsic formulation, which is independent on order of markers, using a mid-point and mid-rotation for evaluation and application of connector forces and torques; this uses a Lie group formulation; in this case, the force/torque vector is computed from the stiffness matrix times the 6-vector of the SE3 matrix logarithm between the two marker positions/rotations, see the equations
 * | **activeConnector** [type = Bool, default = True]:
   | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
 * | **springForceTorqueUserFunction** [\ :math:`\mathrm{UF} \in \Rcal^6`\ , type = PyFunctionVector6DmbsScalarIndex4Vector3D2Matrix6D2Matrix3DVector6D, default =  0]:

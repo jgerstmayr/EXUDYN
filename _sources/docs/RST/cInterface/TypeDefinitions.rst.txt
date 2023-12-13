@@ -192,8 +192,6 @@ This section shows the NodeType structure, which is used for defining node types
   | node with 3D orientations that are modelled with the rotation vector
 * | **LieGroupWithDirectUpdate**:
   | node to be solved with Lie group methods, without data coordinates
-* | **LieGroupWithDataCoordinates**:
-  | node to be solved with Lie group methods, having data coordinates
 * | **GenericODE2**:
   | node with general ODE2 variables
 * | **GenericODE1**:
@@ -202,9 +200,11 @@ This section shows the NodeType structure, which is used for defining node types
   | node with general algebraic variables
 * | **GenericData**:
   | node with general data variables
-* | **Point3DSlope1**:
+* | **PointSlope1**:
   | node with 1 slope vector
-* | **Point3DSlope23**:
+* | **PointSlope12**:
+  | node with 2 slope vectors in x and y direction
+* | **PointSlope23**:
   | node with 2 slope vectors in y and z direction
 
 

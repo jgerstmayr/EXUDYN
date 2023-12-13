@@ -1,22 +1,24 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Issue tracker &mdash; Exudyn1.7.5.dev1 1.7.5.dev1 documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  <title>Issue tracker &mdash; Exudyn1.7.57.dev1 1.7.57.dev1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=82a976d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=e11081fd" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
         <script src="../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=e63eafc5"></script>
+        <script src="../../_static/documentation_options.js?v=cc931d05"></script>
         <script src="../../_static/doctools.js?v=888ff710"></script>
         <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -40,7 +42,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.7.5.dev1
+            Exudyn1.7.57.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -95,7 +97,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.7.5.dev1</a>
+          <a href="../../index.html">Exudyn1.7.57.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -120,15 +122,443 @@ The extension <code class="docutils literal notranslate"><span class="pre">.dev1
 BUG numbers refer to the according issue numbers.</p>
 <p>General information on current version:</p>
 <ul class="simple">
-<li><p>Exudyn version = 1.7.5.dev1,</p></li>
-<li><p>last change =  2023-10-09,</p></li>
-<li><p>Number of issues = 1658,</p></li>
-<li><p>Number of resolved issues = 1475 (5 in current version),</p></li>
+<li><p>Exudyn version = 1.7.57.dev1,</p></li>
+<li><p>last change =  2023-12-13,</p></li>
+<li><p>Number of issues = 1732,</p></li>
+<li><p>Number of resolved issues = 1527 (57 in current version),</p></li>
 </ul>
 <section id="version-1-7">
 <h2>Version 1.7<a class="headerlink" href="#version-1-7" title="Link to this heading"></a></h2>
 <blockquote>
 <div><ul class="simple">
+<li><dl class="simple">
+<dt>Version 1.7.57: resolved Issue 1726: SymbolicRealMatrix (extension)</dt><dd><ul>
+<li><p>description:  add symbolic matrix for user functions</p></li>
+<li><p><strong>notes:</strong> note: currently implemented less efficient with memory allocations</p></li>
+<li><p>date resolved: <strong>2023-12-13 14:02</strong>, date raised: 2023-12-12</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.56: resolved Issue 1731: ANCFCable2D (extension)</dt><dd><ul>
+<li><p>description:  add user functions for bending moment and axial force, allowing to implement arbitrary material models</p></li>
+<li><p>date resolved: <strong>2023-12-13 13:47</strong>, date raised: 2023-12-13</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.55: resolved Issue 1730: GenerateStraightLineANCFCable (fix)</dt><dd><ul>
+<li><p>description:  raises Warning for default values [0,0,0,0,0,0] in 2D case</p></li>
+<li><p>date resolved: <strong>2023-12-13 13:27</strong>, date raised: 2023-12-13</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.54: resolved Issue 1725: Symbolic (extension)</dt><dd><ul>
+<li><p>description:  add ResizableConstMatrix and create symbolic matrix-vector functions</p></li>
+<li><p>date resolved: <strong>2023-12-12 14:16</strong>, date raised: 2023-12-10</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.53: resolved Issue 1716: Symbolic (docu)</dt><dd><ul>
+<li><p>description:  add symbolic user function description to documentation; also mention in performance section</p></li>
+<li><p>date resolved: <strong>2023-12-10 21:57</strong>, date raised: 2023-12-08</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.52: resolved Issue 1724: C++ ToString (change)</dt><dd><ul>
+<li><p>description:  changing the behavior for standard conversion of double and int values to strings, in particular during errors. Now using the same precision as defined with exudyn.SetOutputPrecision()</p></li>
+<li><p>date resolved: <strong>2023-12-09 19:26</strong>, date raised: 2023-12-09</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.51: resolved Issue 1715: Symbolic (docu)</dt><dd><ul>
+<li><p>description:  add symbolic section to documentation</p></li>
+<li><p>date resolved: <strong>2023-12-09 16:29</strong>, date raised: 2023-12-08</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.50: resolved Issue 1708: Symbolic (extension)</dt><dd><ul>
+<li><p>description:  make symbolic variable space, available globally in exudyn.symbolic as well as in mbs.symbolic; this allows to store/transfer data into user functions without the need for Python; use integer handles which are returned by creation function: a=NamedReal(value, name); handle=AddVariableReal(a)</p></li>
+<li><p><strong>notes:</strong> not yet put into mbs and using no integer handles, but std::unordered_map, which has highly efficient hash table included</p></li>
+<li><p>date resolved: <strong>2023-12-09 16:29</strong>, date raised: 2023-12-03</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.49: resolved Issue 1699: exudyn. … (docu)</dt><dd><ul>
+<li><p>description:  add undocumented features of exudyn module, such as Demo1(), Demo2(), __version__ or C++</p></li>
+<li><p>date resolved: <strong>2023-12-08 18:41</strong>, date raised: 2023-11-22</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.48: resolved Issue 1698: experimental, special (docu)</dt><dd><ul>
+<li><p>description:  add experimental and special features to documentation / pybindings</p></li>
+<li><p>date resolved: <strong>2023-12-08 18:41</strong>, date raised: 2023-11-21</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.47: resolved Issue 1710: Symbolic (extension)</dt><dd><ul>
+<li><p>description:  add basic (automatic) differentiation feature for expressions: EvaluateDiff()</p></li>
+<li><p>date resolved: <strong>2023-12-08 07:22</strong>, date raised: 2023-12-03</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.46: resolved Issue 1700: ResizableConstSizeVector (extension)</dt><dd><ul>
+<li><p>description:  consider a Vector with fixed size, which can be extended if necessary - e.g. for local variables in sensors or GetOutputVariable; is efficient for small vectors and still works for larger one</p></li>
+<li><p>date resolved: <strong>2023-12-07 23:03</strong>, date raised: 2023-11-22</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.45: resolved Issue 1714: Symbolic (extension)</dt><dd><ul>
+<li><p>description:  add vector as symbolic expression, allowing vectors in user functions</p></li>
+<li><p>date resolved: <strong>2023-12-07 19:55</strong>, date raised: 2023-12-07</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.44: resolved Issue 1713: user functions (change)</dt><dd><ul>
+<li><p>description:  change StdVector to StdVector3D and StdVector6D in relevant cases in order to achieve light-weight interface for symbolic interfaces</p></li>
+<li><p>date resolved: <strong>2023-12-07 19:53</strong>, date raised: 2023-12-07</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.43: resolved Issue 1712: Symbolic (extension)</dt><dd><ul>
+<li><p>description:  add automatic creation of user functions to AutoGenerateObjects</p></li>
+<li><p>date resolved: <strong>2023-12-05 00:06</strong>, date raised: 2023-12-03</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.42: resolved Issue 1711: Symbolic (extension)</dt><dd><ul>
+<li><p>description:  put most parts of specific user functioninto base SymbolicFunction; EvaluateUF: use variadic args to generalize</p></li>
+<li><p>date resolved: <strong>2023-12-05 00:06</strong>, date raised: 2023-12-03</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.41: resolved Issue 1709: Symbolic (extension)</dt><dd><ul>
+<li><p>description:  add most of Pythons math module functions to symbolic functions list</p></li>
+<li><p>date resolved: <strong>2023-12-03 15:01</strong>, date raised: 2023-12-03</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.40: resolved Issue 1705: Symbolic user function (extension)</dt><dd><ul>
+<li><p>description:  allow parallel computation of non-Python user functions</p></li>
+<li><p><strong>notes:</strong> this is enabled by adding user function after Assemble, thus objects are not registered to have Python user functions</p></li>
+<li><p>date resolved: <strong>2023-12-03 14:58</strong>, date raised: 2023-11-28</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.39: resolved Issue 1706: RigidBodySpringDamper (docu)</dt><dd><ul>
+<li><p>description:  intrinsicFormulation: add test to test suite and document new functionality</p></li>
+<li><p>date resolved: <strong>2023-11-30 23:56</strong>, date raised: 2023-11-30</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.38: resolved Issue 1707: RigidBodySpringDamper (check)</dt><dd><ul>
+<li><p>description:  intrinsicFormulation: check conserving properties of joint forces for two freely rotating bodies: additional torque of forces may be required in implementation</p></li>
+<li><p>date resolved: <strong>2023-11-30 23:39</strong>, date raised: 2023-11-30</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.37: resolved Issue 1486: RigidBodySpringDamper (extension)</dt><dd><ul>
+<li><p>description:  extend for Lie group formulation, evaluating connectors at mid-configuration according to Masarati and Morandini</p></li>
+<li><p>date resolved: <strong>2023-11-30 20:51</strong>, date raised: 2023-04-01</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.36: resolved Issue 1696: exudyn.symbolic (extension)</dt><dd><ul>
+<li><p>description:  add experimental expression trees for building symbolic expressions to be used for user functions</p></li>
+<li><p><strong>notes:</strong> basic symbolic functionality added; tested with SpringDamper user function, leading to speedup of 10 against regular Python function</p></li>
+<li><p>date resolved: <strong>2023-11-28 09:08</strong>, date raised: 2023-11-21</p></li>
+<li><p>resolved by: EXTENSION</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.35: resolved Issue 1704: solver timeout (extension)</dt><dd><ul>
+<li><p>description:  added module-wide flag for timeout: exudyn.special.solver.timeout in order to stop simulations after certain time; use with care</p></li>
+<li><p>date resolved: <strong>2023-11-22 09:43</strong>, date raised: 2023-11-22</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.34: resolved Issue 1703: Pybind module (change)</dt><dd><ul>
+<li><p>description:  use suggestions of from search: pybind11, how to split my code into multiple modules/files - stackoverflow; should improve compilation time</p></li>
+<li><p><strong>notes:</strong> created 2 new pybind module files; no major compilation speedup visible on laptop</p></li>
+<li><p>date resolved: <strong>2023-11-22 08:24</strong>, date raised: 2023-11-22</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.33: resolved Issue 1702: PyErr_CheckSignals (check)</dt><dd><ul>
+<li><p>description:  check if this method available in pybind helps to allow stopping long-lasting computations in exudyn</p></li>
+<li><p><strong>notes:</strong> still does not work in Spyder</p></li>
+<li><p>date resolved: <strong>2023-11-22 02:03</strong>, date raised: 2023-11-22</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.32: resolved Issue 1701: RunCppUnitTests (change)</dt><dd><ul>
+<li><p>description:  move to exudyn.special.RunCppUnitTests</p></li>
+<li><p>date resolved: <strong>2023-11-22 00:29</strong>, date raised: 2023-11-22</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.31: resolved Issue 1697: exudyn.experimental (change)</dt><dd><ul>
+<li><p>description:  change exudyn.Experimental() into exudyn.experimental structure for clearer view on it; not intended to be used widely</p></li>
+<li><p><strong>notes:</strong> see also issue 1613</p></li>
+<li><p>date resolved: <strong>2023-11-21 21:18</strong>, date raised: 2023-11-21</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.30: resolved Issue 1694: load user functions (change)</dt><dd><ul>
+<li><p>description:  add stl and numpy bindings in order to have Vector3D converted into numpy arrays in loadVectorUserFunction</p></li>
+<li><p>date resolved: <strong>2023-11-19 23:05</strong>, date raised: 2023-11-19</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.29: resolved Issue 1690: mainSystemExtensions (extension)</dt><dd><ul>
+<li><p>description:  add CreateGround() with referencePosition, referenceRotationMatrix and visualization</p></li>
+<li><p>date resolved: <strong>2023-11-19 23:05</strong>, date raised: 2023-11-19</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.28: resolved Issue 1679: CreateTorque (extension)</dt><dd><ul>
+<li><p>description:  add create function for nodes and bodies (using node=None, body=None default) to be used either for nodes or bodies; automatically adds markers; bodyFixed=False; add option to add userFunction</p></li>
+<li><p>date resolved: <strong>2023-11-19 22:22</strong>, date raised: 2023-10-29</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.27: resolved Issue 1678: CreateForce (extension)</dt><dd><ul>
+<li><p>description:  add create function for nodes and bodies (using node=None, body=None default) to be used either for nodes or bodies; automatically adds markers; bodyFixed=False; add option to add userFunction</p></li>
+<li><p>date resolved: <strong>2023-11-19 22:22</strong>, date raised: 2023-10-29</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.26: resolved Issue 1689: mainSystemExtensions (extension)</dt><dd><ul>
+<li><p>description:  change bodyOrNodeList into bodyList; allow bodyOrNodeList as alternative arg, but avoid using in examples</p></li>
+<li><p>date resolved: <strong>2023-11-19 21:04</strong>, date raised: 2023-11-19</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.25: resolved Issue 1688: mainSystemExtensions (extension)</dt><dd><ul>
+<li><p>description:  allow special case distance=0 in CreateDistanceConstraint; this will then create a SphericalJoint</p></li>
+<li><p>date resolved: <strong>2023-11-19 21:04</strong>, date raised: 2023-11-19</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.24: resolved Issue 1687: mainSystemExtensions (extension)</dt><dd><ul>
+<li><p>description:  allow referenceLength=0 in ConnectorSpringDamper</p></li>
+<li><p>date resolved: <strong>2023-11-19 21:04</strong>, date raised: 2023-11-19</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.23: resolved Issue 1667: ANCFCable (extension)</dt><dd><ul>
+<li><p>description:  add visulization with cylinders</p></li>
+<li><p>date resolved: <strong>2023-11-19 19:39</strong>, date raised: 2023-10-16</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.22: resolved Issue 1686: SpringDamper (extension)</dt><dd><ul>
+<li><p>description:  allow springLength=0, as it does not cause problems in computations</p></li>
+<li><p><strong>notes:</strong> added special behavior for L=0, but velocity not equal 0; may cause convergence issues in particular for static problems; added special behavior for L=0, but velocity not equal 0; may cause convergence issues in particular for static problems; also allow referenceLength=0</p></li>
+<li><p>date resolved: <strong>2023-11-19 19:11</strong>, date raised: 2023-11-19</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.21: resolved Issue 1685: ANCF cable with rigid marker (example)</dt><dd><ul>
+<li><p>description:  add example with ANCFCable2D and rigid body marker, prescribing rotation of one end</p></li>
+<li><p><strong>notes:</strong> ANCFrotatingCable2D.py</p></li>
+<li><p>date resolved: <strong>2023-11-07 14:04</strong>, date raised: 2023-11-07</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.20: resolved Issue 1673: ReadTheDocs (fix)</dt><dd><ul>
+<li><p>description:  add the required .readthedocs.yaml file and move requirements.txt into docs folder, as it is related to sphinx only</p></li>
+<li><p>date resolved: <strong>2023-10-25 09:16</strong>, date raised: 2023-10-25</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.19: resolved Issue 1672: LieGroup explicit integration (change)</dt><dd><ul>
+<li><p>description:  fixed lieGroupDataNodes; lieGroupDataNodes renamed into lieGroupNodes in explict integration</p></li>
+<li><p>date resolved: <strong>2023-10-16 10:00</strong>, date raised: 2023-10-16</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.18: resolved Issue 1671: PlotSensor (change)</dt><dd><ul>
+<li><p>description:  use IsListOrArray function to check for non-empty offsets and factors, to comply with numpy arrays</p></li>
+<li><p>date resolved: <strong>2023-10-16 08:32</strong>, date raised: 2023-10-16</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.17: resolved Issue 1670: GenerateStraightLineANCFCable (extension)</dt><dd><ul>
+<li><p>description:  add GenerateStraightLineANCFCable for 3D cables and adjust 2D version</p></li>
+<li><p>date resolved: <strong>2023-10-16 08:31</strong>, date raised: 2023-10-16</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.16: resolved Issue 1669: NodePoint3DSlope (fix)</dt><dd><ul>
+<li><p>description:  adjust all test models and examples for new NodePointSlope… names</p></li>
+<li><p>date resolved: <strong>2023-10-16 08:02</strong>, date raised: 2023-10-16</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.15: resolved Issue 1663: NodePoint3DSlope23 (check)</dt><dd><ul>
+<li><p>description:  check d/dt(A) … computation of time derivative of rotation matrix, also check jacobians and angular velocities; add tests also for Slope12 node</p></li>
+<li><p>date resolved: <strong>2023-10-16 07:45</strong>, date raised: 2023-10-15</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.14: resolved Issue 1666: NodePoint3DSlope1 (change)</dt><dd><ul>
+<li><p>description:  change to NodePointSlope1</p></li>
+<li><p>date resolved: <strong>2023-10-15 22:29</strong>, date raised: 2023-10-15</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.13: resolved Issue 1665: Point3DS23 (change)</dt><dd><ul>
+<li><p>description:  remove Point3DS23 as its name is inconsistent with 3D convention and not really needed</p></li>
+<li><p>date resolved: <strong>2023-10-15 22:24</strong>, date raised: 2023-10-15</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.12: resolved Issue 1664: NodePoint3DSlope23 (change)</dt><dd><ul>
+<li><p>description:  change to NodePointSlope23</p></li>
+<li><p>date resolved: <strong>2023-10-15 22:23</strong>, date raised: 2023-10-15</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.11: resolved Issue 1075: ANCFCable (extension)</dt><dd><ul>
+<li><p>description:  add 3D version of cable element, not using BeamSection interface for compatibility with Cable2D</p></li>
+<li><p>date resolved: <strong>2023-10-15 14:45</strong>, date raised: 2022-05-06</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.10: resolved Issue 1661: NodePoint3DSlope12 (extension)</dt><dd><ul>
+<li><p>description:  add ANCF node with slopes x/y for thin plate element</p></li>
+<li><p>date resolved: <strong>2023-10-15 14:21</strong>, date raised: 2023-10-15</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.9: resolved Issue 1403: Lie group nodes (change)</dt><dd><ul>
+<li><p>description:  remove LieGroup node RigidBodyRotVecDataLG as it is not needed any more as it can be substituted with more efficient RigidBodyRotVecLG</p></li>
+<li><p><strong>notes:</strong> right now added comments in C++ files, not completely removed</p></li>
+<li><p>date resolved: <strong>2023-10-15 11:57</strong>, date raised: 2023-01-18</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.8: resolved Issue 1659: remove math.h (change)</dt><dd><ul>
+<li><p>description:  change with &lt;cmath&gt; for C++ conformity</p></li>
+<li><p>date resolved: <strong>2023-10-12 17:04</strong>, date raised: 2023-10-12</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.7: resolved Issue 1658: switch to MSVC2022 (change)</dt><dd><ul>
+<li><p>description:  change main_sln_Template.sln for 2022 update; use cl.exe from MSVC2022 for compilation of wheels; slightly increases performance</p></li>
+<li><p><strong>notes:</strong> compilation successful and TestSuite runs through</p></li>
+<li><p>date resolved: <strong>2023-10-12 17:04</strong>, date raised: 2023-10-12</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.6: resolved Issue 1660: plot (change)</dt><dd><ul>
+<li><p>description:  change plt.tight_layout and plt.legend to fig. if possible to avoid warnings</p></li>
+<li><p>date resolved: <strong>2023-10-12 13:39</strong>, date raised: 2023-10-12</p></li>
+</ul>
+</dd>
+</dl>
+</li>
 <li><dl class="simple">
 <dt>Version 1.7.5: resolved Issue 1657: Docu (fix)</dt><dd><ul>
 <li><p>description:  latex errors in robotics mobile and ROS</p></li>
@@ -12253,6 +12683,206 @@ BUG numbers refer to the according issue numbers.</p>
 <blockquote>
 <div><ul class="simple">
 <li><dl class="simple">
+<dt><strong>open issue 1729:</strong> Symbolic</dt><dd><ul>
+<li><p>description:  add vector/matrix tests in comparison with Python numpy and check delete counts</p></li>
+<li><p>date raised: 2023-12-12</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>open issue 1728:</strong> Symbolic</dt><dd><ul>
+<li><p>description:  add scalar tests in comparison with Python math and check delete counts</p></li>
+<li><p>date raised: 2023-12-12</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>open issue 1727:</strong> SymbolicRealMatrix</dt><dd><ul>
+<li><p>description:  add documentation and example for symbolic matrix for user functions</p></li>
+<li><p>date raised: 2023-12-12</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>open issue 1723:</strong> Symbolic</dt><dd><ul>
+<li><p>description:  SymbolicRealVector: add EvaluateItem(i) in operators wherever possible to efficiently evaluate single components instead of all vector components</p></li>
+<li><p>date raised: 2023-12-09</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>open issue 1722:</strong> Parameter type</dt><dd><ul>
+<li><p>description:  add exudyn.Parameter for all parameters occuring in items, such as referencePosition, physicsMass, etc.; this helps to avoid strings in user functions to access parameter and may allow to use  more efficient case/switch in GetObjectParameter(…)</p></li>
+<li><p>date raised: 2023-12-09</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>open issue 1721:</strong> Mainsystem extensions</dt><dd><ul>
+<li><p>description:  in extension to issue 1718, change all AddRigidBody(…) functions to CreateRigidBody functionality</p></li>
+<li><p>date raised: 2023-12-08</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>open issue 1720:</strong> Mainsystem extensions</dt><dd><ul>
+<li><p>description:  change create2D functions into separate Create functions</p></li>
+<li><p>date raised: 2023-12-08</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>open issue 1719:</strong> generated examples</dt><dd><ul>
+<li><p>description:  add set of generically generated examples, generated examples</p></li>
+<li><p>date raised: 2023-12-08</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>open issue 1718:</strong> Mainsystem extensions</dt><dd><ul>
+<li><p>description:  modify some examples for .Create…(…) functions</p></li>
+<li><p>date raised: 2023-12-08</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>open issue 1717:</strong> Symbolic</dt><dd><ul>
+<li><p>description:  add examples to testsuite; modify existing examples</p></li>
+<li><p>date raised: 2023-12-08</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>open issue 1695:</strong> taskmanager</dt><dd><ul>
+<li><p>description:  extend microthreading for taskmanager-based load management; remove taskmanager from repo and create pure BSD license</p></li>
+<li><p>date raised: 2023-11-19</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>open issue 1693:</strong> VObjectGround</dt><dd><ul>
+<li><p>description:  remove parameter color, as it is not used (check)</p></li>
+<li><p>date raised: 2023-11-19</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>open issue 1692:</strong> exudyn.graphics</dt><dd><ul>
+<li><p>description:  change GraphicsData functions in examples to exudyn.graphics</p></li>
+<li><p>date raised: 2023-11-19</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>open issue 1691:</strong> exudyn.graphics</dt><dd><ul>
+<li><p>description:  map graphicsDataUtilities functions to exudyn.graphics for better readability</p></li>
+<li><p>date raised: 2023-11-19</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>open issue 1684:</strong> ObjectIndex</dt><dd><ul>
+<li><p>description:  consider functionality such as ComputeMassMatrix; ComputeODE2RHS, etc.; would require some default simulation settings (store in mainsystem?)</p></li>
+<li><p>date raised: 2023-10-29</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>open issue 1683:</strong> ItemIndices</dt><dd><ul>
+<li><p>description:  consider direct access to outputvariables in node: nodeIndex.current.position; at least nodeIndex.GetOutput(variableType, configuration) would be valuable</p></li>
+<li><p>date raised: 2023-10-29</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>open issue 1682:</strong> ItemIndices</dt><dd><ul>
+<li><p>description:  add previous CallFunction functionalities to NodeIndex, etc.; IsNodeGroup(group), IsNodeType(type), SizeODE2(), …,</p></li>
+<li><p>date raised: 2023-10-29</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>open issue 1681:</strong> ItemIndices</dt><dd><ul>
+<li><p>description:  add option to add force/torque directly; add gravity to bodies</p></li>
+<li><p>date raised: 2023-10-29</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>open issue 1680:</strong> chatGPTupdate</dt><dd><ul>
+<li><p>description:  add simple example for load userFunction</p></li>
+<li><p>date raised: 2023-10-29</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>open issue 1677:</strong> systemData</dt><dd><ul>
+<li><p>description:  add GetDict(), Set(systemDict=[Dict]) functions which returns the whole dictionary for the system; containing list of nodes, objects, …; each item is represented by its dictionary; could be used for set/get in future</p></li>
+<li><p>date raised: 2023-10-29</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>open issue 1676:</strong> ItemIndices</dt><dd><ul>
+<li><p>description:  consider overriding __getattr__ and __setattr__ methods through pybind (or in Python with patching); this should allow to access data directly mapped via the dictionary</p></li>
+<li><p>date raised: 2023-10-29</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>open issue 1675:</strong> ItemIndices</dt><dd><ul>
+<li><p>description:  consider adding MainSystem* to indices; this would allow to directly operate on Nodes</p></li>
+<li><p>date raised: 2023-10-29</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>open issue 1674:</strong> license.ext</dt><dd><ul>
+<li><p>description:  split into internal and external licenses</p></li>
+<li><p>date raised: 2023-10-29</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>open issue 1668:</strong> ANCFCable</dt><dd><ul>
+<li><p>description:  add test example</p></li>
+<li><p>date raised: 2023-10-16</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>open issue 1662:</strong> ANCFThinPlate</dt><dd><ul>
+<li><p>description:  add ANCF plate element based on 2 inplane slope vectors Slope12, based on Dufva/Shabana</p></li>
+<li><p>date raised: 2023-10-15</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
 <dt><strong>open issue 1653:</strong> ANCFBeam</dt><dd><ul>
 <li><p>description:  reconsider name: ANCFBeamStructural, not to have too many cases; use this for 2/3 node, different number of slopes except for 1 slope, which is ANCFCable, the 3D version of ANCFCable2D</p></li>
 <li><p>date raised: 2023-08-16</p></li>
@@ -12421,14 +13051,6 @@ BUG numbers refer to the according issue numbers.</p>
 </dl>
 </li>
 <li><dl class="simple">
-<dt><strong>open issue 1486:</strong> RigidBodySpringDamper</dt><dd><ul>
-<li><p>description:  extend for Lie group formulation, evaluating connectors at mid-configuration according to Masarati and Morandini</p></li>
-<li><p>date raised: 2023-04-01</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
 <dt><strong>open issue 1485:</strong> Spring-Damper connector description</dt><dd><ul>
 <li><p>description:  add general description for connectors based on spring-dampers (penalty)</p></li>
 <li><p>date raised: 2023-04-01</p></li>
@@ -12520,14 +13142,6 @@ BUG numbers refer to the according issue numbers.</p>
 <dt><strong>open issue 1414:</strong> InteractiveDialog</dt><dd><ul>
 <li><p>description:  extend for explicit solver; needs internally different setup of solvers; use dynamicSolverType with default generalizedAlpha changable to Newmark/Index2 as well as explicit solvers</p></li>
 <li><p>date raised: 2023-01-22</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt><span class="textred">open issue 1403:</span> Lie group nodes</dt><dd><ul>
-<li><p>description:  remove LieGroup node RigidBodyRotVecDataLG as it is not needed any more as it can be substituted with more efficient RigidBodyRotVecLG</p></li>
-<li><p>date raised: 2023-01-18</p></li>
 </ul>
 </dd>
 </dl>
@@ -12720,14 +13334,6 @@ BUG numbers refer to the according issue numbers.</p>
 <dt><strong>open issue 1078:</strong> BeamSectionGeometry</dt><dd><ul>
 <li><p>description:  add BeamSectionGeometry to 2D beam elements</p></li>
 <li><p>date raised: 2022-05-09</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt><strong>open issue 1075:</strong> ANCFCable3D</dt><dd><ul>
-<li><p>description:  add 3D version of cable element, using BeamSection in interface</p></li>
-<li><p>date raised: 2022-05-06</p></li>
 </ul>
 </dd>
 </dl>

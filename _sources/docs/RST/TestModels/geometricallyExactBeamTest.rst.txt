@@ -215,7 +215,7 @@ You can view and download this file on Github: `geometricallyExactBeamTest.py <h
                n0 = mbs.AddNode(NodeClass(referenceCoordinates=[0,0,0]+initialRotationsGE))
            else:
                initialRotations = eY+eZ
-               n0 = mbs.AddNode(NodePoint3DSlope23(referenceCoordinates=[0,0,0]+initialRotations))
+               n0 = mbs.AddNode(NodePointSlope23(referenceCoordinates=[0,0,0]+initialRotations))
            nInit = n0
            for k in range(nElements):
                if useGeometricallyExact:
@@ -225,7 +225,7 @@ You can view and download this file on Github: `geometricallyExactBeamTest.py <h
                                                                         sectionData = sectionData,
                                                                         visualization=VBeam3D(sectionGeometry=sectionGeometry)))
                else:
-                   n1 = mbs.AddNode(NodePoint3DSlope23(referenceCoordinates=[lElem*(k+1),0,0]+initialRotations))
+                   n1 = mbs.AddNode(NodePointSlope23(referenceCoordinates=[lElem*(k+1),0,0]+initialRotations))
                    oBeam = mbs.AddObject(ObjectANCFBeam(nodeNumbers=[n0,n1], physicsLength = lElem, 
                                                           #testBeamRectangularSize = [h,w],
                                                           sectionData = sectionData,

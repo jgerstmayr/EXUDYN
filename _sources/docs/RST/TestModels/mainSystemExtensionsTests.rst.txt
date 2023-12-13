@@ -109,7 +109,7 @@ You can view and download this file on Github: `mainSystemExtensionsTests.py <ht
    
    oGround = mbs.AddObject(ObjectGround())
    #add vertical spring
-   oSD = mbs.CreateSpringDamper(bodyOrNodeList=[oGround, b0],
+   oSD = mbs.CreateSpringDamper(bodyList=[oGround, b0],
                                 localPosition0=[2,1,0],
                                 localPosition1=[0,0,0],
                                 stiffness=1e4, damping=1e2,
@@ -142,7 +142,7 @@ You can view and download this file on Github: `mainSystemExtensionsTests.py <ht
    
    oGround = mbs.AddObject(ObjectGround())
    
-   oSD = mbs.CreateCartesianSpringDamper(bodyOrNodeList=[oGround, b0],
+   oSD = mbs.CreateCartesianSpringDamper(bodyList=[oGround, b0],
                                  localPosition0=[7.5,1,0],
                                  localPosition1=[0,0,0],
                                  stiffness=[200,2000,0], damping=[2,20,0],
@@ -273,6 +273,22 @@ You can view and download this file on Github: `mainSystemExtensionsTests.py <ht
                           rotationMatrixAxes=RotationMatrixX(0.125*pi), #tilt axes
                           useGlobalFrame=True, axesRadius=0.02, axesLength=0.2)
    
+   #add global force:
+   f0 = mbs.CreateForce(bodyNumber=b0, loadVector=[0.,20.,0.], localPosition=[0.5,0,0])
+   
+   #define user function for torque
+   def UFtorque(mbs, t, load):
+       val = 1
+       if t < 1:
+           val = t*t
+       #print('load type=',type(load))
+       # return val*load
+       return val*np.array(load)
+   
+   #add torque applied in body coordinates:
+   t0 = mbs.CreateTorque(bodyNumber=b0, loadVector=[0.,0.,10.], bodyFixed=True,
+                         loadVectorUserFunction=UFtorque)
+   
    mbs.Assemble()
    simulationSettings = exu.SimulationSettings() #takes currently set values or default values
    simulationSettings.timeIntegration.numberOfSteps = 1000
@@ -300,7 +316,7 @@ You can view and download this file on Github: `mainSystemExtensionsTests.py <ht
    
    oGround = mbs.AddObject(ObjectGround())
    #add vertical spring
-   oSD = mbs.CreateSpringDamper(bodyOrNodeList=[oGround, b0],
+   oSD = mbs.CreateSpringDamper(bodyList=[oGround, b0],
                                 localPosition0=[2,1,0],
                                 localPosition1=[0,0,0],
                                 stiffness=1e4, damping=1e2,
@@ -354,7 +370,7 @@ You can view and download this file on Github: `mainSystemExtensionsTests.py <ht
        exu.Print("numpy, networkx and matplotlib required for DrawSystemGraph(...); skipping test")
    
    if testDrawSystemGraph:
-       mbs.DrawSystemGraph(useItemTypes=True)
+       mbs.DrawSystemGraph(useItemTypes=True, tightLayout=False)
        if not useGraphics:
            import matplotlib.pyplot as plt
            plt.close('all')
@@ -383,7 +399,7 @@ You can view and download this file on Github: `mainSystemExtensionsTests.py <ht
    n1 = mbs.GetObject(m1)['nodeNumber']
        
    oGround = mbs.AddObject(ObjectGround())
-   mbs.CreateDistanceConstraint(bodyOrNodeList=[oGround, b0], 
+   mbs.CreateDistanceConstraint(bodyList=[oGround, b0], 
                                 localPosition0 = [6.5,1,0],
                                 localPosition1 = [0.5,0,0],
                                 distance=None, #automatically computed
@@ -408,12 +424,11 @@ You can view and download this file on Github: `mainSystemExtensionsTests.py <ht
    testError = np.linalg.norm(mbs.systemData.GetODE2Coordinates())
    testErrorTotal += testError
    exu.Print('solution of mainSystemExtensions test DC=',testError)
-   #%%++++++++++++++++++++++++++++++++++++++++++++++++++++
    
    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++
    
    exu.Print('solution of mainSystemExtensions TOTAL=',testErrorTotal)
-   exudynTestGlobals.testError = testErrorTotal - (57.96750245606998)   #2023-05-19: 51.699269012604674 
+   exudynTestGlobals.testError = testErrorTotal - (57.64639446941554)   #up to 2023-11-19:57.96750245606998 (added force/torque) #2023-05-19: 51.699269012604674 
    exudynTestGlobals.testResult = testErrorTotal
 
 

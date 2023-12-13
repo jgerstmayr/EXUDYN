@@ -40,6 +40,10 @@ The item \ **ObjectANCFCable2D**\  with type = 'ANCFCable2D' has the following p
   | two node numbers ANCF cable element
 * | **useReducedOrderIntegration** [type = Index, default = 0]:
   | 0/false: use Gauss order 9 integration for virtual work of axial forces, order 5 for virtual work of bending moments; 1/true: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments
+* | **axialForceUserFunction** [\ :math:`\mathrm{UF} \in \Rcal`\ , type = PyFunctionMbsScalarIndexScalar9, default =  0]:
+  | A Python function which defines the (nonlinear relations) of local strains (including axial strain and bending strain) as well as time derivatives to the local axial force; see description below
+* | **bendingMomentUserFunction** [\ :math:`\mathrm{UF} \in \Rcal`\ , type = PyFunctionMbsScalarIndexScalar9, default =  0]:
+  | A Python function which defines the (nonlinear relations) of local strains (including axial strain and bending strain) as well as time derivatives to the local bending moment; see description below
 * | **visualization** [type = VObjectANCFCable2D]:
   | parameters for visualization of item
 
@@ -413,6 +417,169 @@ For application of torques at any axis point \ :math:`x`\ , the rotation / angul
 
 
 
+--------
+
+\ **Userfunction**\ : ``axialForceUserFunction(mbs, t, itemNumber, axialPositionNormalized, axialStrain, axialStrain_t, axialStrainRef, physicsAxialStiffness, physicsAxialDamping, curvature, curvature_t, curvatureRef)`` 
+
+
+A user function, which computes the axial force depending on time, strains and curvatures and 
+object parameters (stiffness, damping).
+The object variables are provided to the function using the current values of the ANCFCable2D object.
+Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
+\ ``mbs.GetObjectParameter(itemNumber, ...)``\ , see the according description of \ ``GetObjectParameter``\ .
+\ **NOTE:**\  this function has a different interface as compared to the bending moment function.
+
+.. list-table:: \ 
+   :widths: auto
+   :header-rows: 1
+
+   * - | arguments /  return
+     - | type or size
+     - | description
+   * - | \ ``mbs``\ 
+     - | MainSystem
+     - | provides MainSystem mbs to which object belongs
+   * - | \ ``t``\ 
+     - | Real
+     - | current time in mbs
+   * - | \ ``itemNumber``\ 
+     - | Index
+     - | integer number \ :math:`i_N`\  of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+   * - | \ ``axialPositionNormalized``\ 
+     - | Real
+     - | axial position at the cable where the user function is evaluated; range is [0,1]
+   * - | \ ``axialStrain``\ 
+     - | Real
+     - | \ :math:`\varepsilon`\ 
+   * - | \ ``axialStrain_t``\ 
+     - | Real
+     - | \ :math:`\varepsilon_t`\ 
+   * - | \ ``axialStrainRef``\ 
+     - | Real
+     - | \ :math:`\varepsilon_0 + f\cRef \cdot \varepsilon\cRef`\ 
+   * - | \ ``physicsAxialStiffness``\ 
+     - | Real
+     - | as given in object parameters
+   * - | \ ``physicsAxialDamping``\ 
+     - | Real
+     - | as given in object parameters
+   * - | \ ``curvature``\ 
+     - | Real
+     - | \ :math:`K`\ 
+   * - | \ ``curvature_t``\ 
+     - | Real
+     - | \ :math:`\dot K`\ 
+   * - | \ ``curvatureRef``\ 
+     - | Real
+     - | \ :math:`K_0 + f\cRef \cdot K\cRef`\ 
+   * - | \returnValue
+     - | Real
+     - | scalar value of computed axial force
+
+
+--------
+
+\ **Userfunction**\ : ``bendingMomentUserFunction(mbs, t, itemNumber, axialPositionNormalized, curvature, curvature_t, curvatureRef, physicsBendingStiffness, physicsBendingDamping, axialStrain, axialStrain_t, axialStrainRef)`` 
+
+
+A user function, which computes the bending moment depending on time, strains and curvatures and 
+object parameters (stiffness, damping).
+The object variables are provided to the function using the current values of the ANCFCable2D object.
+Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
+\ ``mbs.GetObjectParameter(itemNumber, ...)``\ , see the according description of \ ``GetObjectParameter``\ .
+\ **NOTE:**\  this function has a different interface as compared to the axial force function.
+
+.. list-table:: \ 
+   :widths: auto
+   :header-rows: 1
+
+   * - | arguments /  return
+     - | type or size
+     - | description
+   * - | \ ``mbs``\ 
+     - | MainSystem
+     - | provides MainSystem mbs to which object belongs
+   * - | \ ``t``\ 
+     - | Real
+     - | current time in mbs
+   * - | \ ``itemNumber``\ 
+     - | Index
+     - | integer number \ :math:`i_N`\  of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+   * - | \ ``axialPositionNormalized``\ 
+     - | Real
+     - | axial position at the cable where the user function is evaluated; range is [0,1]
+   * - | \ ``curvature``\ 
+     - | Real
+     - | \ :math:`K`\ 
+   * - | \ ``curvature_t``\ 
+     - | Real
+     - | \ :math:`\dot K`\ 
+   * - | \ ``curvatureRef``\ 
+     - | Real
+     - | \ :math:`K_0 + f\cRef \cdot K\cRef`\ 
+   * - | \ ``physicsBendingStiffness``\ 
+     - | Real
+     - | as given in object parameters
+   * - | \ ``physicsBendingDamping``\ 
+     - | Real
+     - | as given in object parameters
+   * - | \ ``axialStrain``\ 
+     - | Real
+     - | \ :math:`\varepsilon`\ 
+   * - | \ ``axialStrain_t``\ 
+     - | Real
+     - | \ :math:`\varepsilon_t`\ 
+   * - | \ ``axialStrainRef``\ 
+     - | Real
+     - | \ :math:`\varepsilon_0 + f\cRef \cdot \varepsilon\cRef`\ 
+   * - | \returnValue
+     - | Real
+     - | scalar value of computed bending moment
+
+
+--------
+
+\ **User function example**\ :
+
+
+
+.. code-block:: python
+
+#define some material parameters
+rhoA = 100.
+EA =   1e7.
+EI =   1e5
+
+#example of bending moment user function
+def bendingMomentUserFunction(mbs, t, itemNumber, axialPositionNormalized, 
+           curvature, curvature_t, curvatureRef, physicsBendingStiffness, physicsBendingDamping,
+           axialStrain, axialStrain_t, axialStrainRef):
+    fact = min(1,t) #runs from 0 to 1
+    #change reference curvature of beam over time:
+    kappa=(curvature-curvatureRef*fact) 
+    return physicsBendingStiffness*(kappa) + physicsBendingDamping*curvature_t
+
+def axialForceUserFunction(mbs, t, itemNumber, axialPositionNormalized, 
+           axialStrain, axialStrain_t, axialStrainRef, physicsAxialStiffness, physicsAxialDamping,
+           curvature, curvature_t, curvatureRef):
+    fact = min(1,t) #runs from 0 to 1
+    return (physicsAxialStiffness*(axialStrain-fact*axialStrainRef) + 
+            physicsAxialDamping*axialStrain_t)
+
+cable = ObjectANCFCable2D(physicsMassPerLength=rhoA, 
+                physicsBendingStiffness=EI, 
+                physicsBendingDamping = EI*0.1,
+                physicsAxialStiffness=EA,
+                physicsAxialDamping=EA*0.05,
+                physicsReferenceAxialStrain=0.1, #10
+                physicsReferenceCurvature=1,     #radius=1
+                bendingMomentUserFunction=bendingMomentUserFunction,
+                axialForceUserFunction=axialForceUserFunction,
+                )
+#use  cable with GenerateStraightLineANCFCable(...)
+
+ 
+
 
 
 .. _miniexample-objectancfcable2d:
@@ -451,7 +618,7 @@ MINI EXAMPLE for ObjectANCFCable2D
 
 Relevant Examples and TestModels with weblink:
 
-    \ `sliderCrank3DwithANCFbeltDrive2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/sliderCrank3DwithANCFbeltDrive2.py>`_\  (Examples/), \ `ALEANCFpipe.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ALEANCFpipe.py>`_\  (Examples/), \ `ANCFcantileverTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcantileverTest.py>`_\  (Examples/), \ `ANCFcantileverTestDyn.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcantileverTestDyn.py>`_\  (Examples/), \ `ANCFcontactCircle.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle.py>`_\  (Examples/), \ `ANCFcontactCircle2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle2.py>`_\  (Examples/), \ `ANCFmovingRigidbody.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFmovingRigidbody.py>`_\  (Examples/), \ `ANCFslidingJoint2D.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFslidingJoint2D.py>`_\  (Examples/), \ `ANCFslidingJoint2Drigid.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFslidingJoint2Drigid.py>`_\  (Examples/), \ `ANCFswitchingSlidingJoint2D.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFswitchingSlidingJoint2D.py>`_\  (Examples/), \ `ANCFtestHalfcircle.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFtestHalfcircle.py>`_\  (Examples/), \ `ANCFtests2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFtests2.py>`_\  (Examples/), \ `ANCFcontactCircleTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py>`_\  (TestModels/), \ `ANCFcontactFrictionTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactFrictionTest.py>`_\  (TestModels/), \ `computeODE2EigenvaluesTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/computeODE2EigenvaluesTest.py>`_\  (TestModels/)
+    \ `sliderCrank3DwithANCFbeltDrive2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/sliderCrank3DwithANCFbeltDrive2.py>`_\  (Examples/), \ `ALEANCFpipe.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ALEANCFpipe.py>`_\  (Examples/), \ `ANCFcantileverTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcantileverTest.py>`_\  (Examples/), \ `ANCFcantileverTestDyn.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcantileverTestDyn.py>`_\  (Examples/), \ `ANCFcontactCircle.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle.py>`_\  (Examples/), \ `ANCFcontactCircle2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle2.py>`_\  (Examples/), \ `ANCFmovingRigidbody.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFmovingRigidbody.py>`_\  (Examples/), \ `ANCFrotatingCable2D.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFrotatingCable2D.py>`_\  (Examples/), \ `ANCFslidingJoint2D.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFslidingJoint2D.py>`_\  (Examples/), \ `ANCFslidingJoint2Drigid.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFslidingJoint2Drigid.py>`_\  (Examples/), \ `ANCFswitchingSlidingJoint2D.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFswitchingSlidingJoint2D.py>`_\  (Examples/), \ `ANCFtestHalfcircle.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFtestHalfcircle.py>`_\  (Examples/), \ `ANCFcontactCircleTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py>`_\  (TestModels/), \ `ANCFcontactFrictionTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactFrictionTest.py>`_\  (TestModels/), \ `computeODE2EigenvaluesTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/computeODE2EigenvaluesTest.py>`_\  (TestModels/)
 
 
 

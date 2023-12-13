@@ -6,6 +6,7 @@ Python Utility Functions
    :maxdepth: 2
    
    pythonUtilities
+   advancedUtilities
    artificialIntelligence
    basicUtilities
    beams

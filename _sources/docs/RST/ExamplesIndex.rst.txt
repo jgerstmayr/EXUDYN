@@ -15,11 +15,13 @@ This section includes all Examples for Exudyn.They can also be found and downloa
    Examples/addRevoluteJoint
    Examples/ALEANCFpipe
    Examples/ANCFALEtest
+   Examples/ANCFcableCantilevered
    Examples/ANCFcantileverTest
    Examples/ANCFcantileverTestDyn
    Examples/ANCFcontactCircle
    Examples/ANCFcontactCircle2
    Examples/ANCFmovingRigidbody
+   Examples/ANCFrotatingCable2D
    Examples/ANCFslidingJoint2D
    Examples/ANCFslidingJoint2Drigid
    Examples/ANCFswitchingSlidingJoint2D
@@ -30,6 +32,7 @@ This section includes all Examples for Exudyn.They can also be found and downloa
    Examples/beltDrivesComparison
    Examples/bicycleIftommBenchmark
    Examples/cartesianSpringDamper
+   Examples/cartesianSpringDamperUserFunction
    Examples/chatGPTupdate
    Examples/chatGPTupdate2
    Examples/CMSexampleCourse
@@ -92,6 +95,7 @@ This section includes all Examples for Exudyn.They can also be found and downloa
    Examples/performanceMultiThreadingNG
    Examples/plotSensorExamples
    Examples/reevingSystem
+   Examples/reevingSystemOpen
    Examples/rigid3Dexample
    Examples/rigidBodyIMUtest
    Examples/rigidBodyTutorial
@@ -133,6 +137,7 @@ This section includes all Examples for Exudyn.They can also be found and downloa
    Examples/stiffFlyballGovernorKT
    Examples/stlFileImport
    Examples/switchingConstraintsPendulum
+   Examples/symbolicUserFunctionMasses
    Examples/TCPIPclientTest
    Examples/TCPIPexudynMatlab
    Examples/TCPIPserverTest
@@ -141,4 +146,5 @@ This section includes all Examples for Exudyn.They can also be found and downloa
    Examples/testGymDoublePendulum
    Examples/testGymDoublePendulumEnv
    Examples/tippeTop
+   Examples/universalJoint
 

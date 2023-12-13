@@ -1,22 +1,24 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mass-Spring-Damper tutorial &mdash; Exudyn1.7.5.dev1 1.7.5.dev1 documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  <title>Mass-Spring-Damper tutorial &mdash; Exudyn1.7.57.dev1 1.7.57.dev1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=82a976d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=e11081fd" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
         <script src="../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=e63eafc5"></script>
+        <script src="../../_static/documentation_options.js?v=cc931d05"></script>
         <script src="../../_static/doctools.js?v=888ff710"></script>
         <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -39,7 +41,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.7.5.dev1
+            Exudyn1.7.57.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -86,7 +88,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.7.5.dev1</a>
+          <a href="../../index.html">Exudyn1.7.57.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -118,8 +120,8 @@
 <p>This tutorial will set up a mass point and a spring damper, dynamically compute the solution and evaluate the reference solution.</p>
 <p>We import the exudyn library and the interface for all nodes, objects, markers, loads and sensors:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
-<span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="o">*</span> <span class="c1">#includes itemInterface, graphicsDataUtilities and rigidBodyUtilities</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span> <span class="c1">#for postprocessing</span>
+<span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="o">*</span> <span class="c1">#includes itemInterface, graphicsDataUtilities, rigidBodyUtilities, ...</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span> <span class="c1">#not required in general, but convenient for linear algebra</span>
 </pre></div>
 </div>
 <p>Next, we need a <code class="docutils literal notranslate"><span class="pre">SystemContainer</span></code>, which contains all computable systems and add a new MainSystem <code class="docutils literal notranslate"><span class="pre">mbs</span></code>.
@@ -147,7 +149,7 @@ in case of reporting some compatibility issues:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">u0</span><span class="o">=-</span><span class="mf">0.08</span>            <span class="c1">#initial displacement</span>
 <span class="n">v0</span><span class="o">=</span><span class="mi">1</span>                <span class="c1">#initial velocity</span>
 <span class="n">x0</span><span class="o">=</span><span class="n">f</span><span class="o">/</span><span class="n">spring</span>         <span class="c1">#static displacement</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;resonance frequency = &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">spring</span><span class="o">/</span><span class="n">mass</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;resonance frequency = &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="nf">sqrt</span><span class="p">(</span><span class="n">spring</span><span class="o">/</span><span class="n">mass</span><span class="p">)))</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;static displacement = &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">x0</span><span class="p">))</span>
 </pre></div>
 </div>
@@ -169,6 +171,7 @@ Such a ground node is added via:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">massPoint</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">MassPoint</span><span class="p">(</span><span class="n">physicsMass</span> <span class="o">=</span> <span class="n">mass</span><span class="p">,</span> <span class="n">nodeNumber</span> <span class="o">=</span> <span class="n">n1</span><span class="p">))</span>
 </pre></div>
 </div>
+<p>Note that instead of adding a <code class="docutils literal notranslate"><span class="pre">NodePoint</span></code> and a <code class="docutils literal notranslate"><span class="pre">MassPoint</span></code> with <code class="docutils literal notranslate"><span class="pre">mbs.AddNode(...)</span></code>and <code class="docutils literal notranslate"><span class="pre">mbs.AddObject(...)</span></code>, there is also a convenient function <code class="docutils literal notranslate"><span class="pre">mbs.CreateMassPoint(...)</span></code>, which can do everything at once including the option to add gravity.</p>
 <p>In order to apply constraints and loads, we need markers. These markers are used as local positions (and frames), where we can attach a constraint lateron. In this example, we work on the coordinate level, both for forces as well as for constraints.
 Markers are attached to the according ground and regular node number, additionally using a coordinate number (0 … first coordinate):</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">groundMarker</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerNodeCoordinate</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span> <span class="n">nGround</span><span class="p">,</span>
@@ -178,8 +181,7 @@ Markers are attached to the according ground and regular node number, additional
                                                 <span class="n">coordinate</span> <span class="o">=</span> <span class="mi">0</span><span class="p">))</span>
 </pre></div>
 </div>
-<p>This means that loads can be applied to the first coordinate of node <code class="docutils literal notranslate"><span class="pre">n1</span></code> via marker with number <code class="docutils literal notranslate"><span class="pre">nodeMarker</span></code>,
-which is in fact of type <code class="docutils literal notranslate"><span class="pre">MarkerIndex</span></code>.</p>
+<p>This means that constraints are be applied to the first coordinate of node <code class="docutils literal notranslate"><span class="pre">n1</span></code> via marker with number <code class="docutils literal notranslate"><span class="pre">nodeMarker</span></code>, which is in fact of type <code class="docutils literal notranslate"><span class="pre">MarkerNodeCoordinate</span></code>.</p>
 <p>Now we add a spring-damper to the markers with numbers <code class="docutils literal notranslate"><span class="pre">groundMarker</span></code> and the <code class="docutils literal notranslate"><span class="pre">nodeMarker</span></code>, providing stiffness and damping parameters:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">nC</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">CoordinateSpringDamper</span><span class="p">(</span><span class="n">markerNumbers</span> <span class="o">=</span> <span class="p">[</span><span class="n">groundMarker</span><span class="p">,</span> <span class="n">nodeMarker</span><span class="p">],</span>
                                      <span class="n">stiffness</span> <span class="o">=</span> <span class="n">spring</span><span class="p">,</span>
@@ -191,6 +193,9 @@ which is in fact of type <code class="docutils literal notranslate"><span class=
                                    <span class="n">load</span> <span class="o">=</span> <span class="n">f</span><span class="p">))</span>
 </pre></div>
 </div>
+<p>Again, instead of adding a <code class="docutils literal notranslate"><span class="pre">MarkerNodeCoordinate</span></code> and a <code class="docutils literal notranslate"><span class="pre">LoadCoordinate</span></code> with <code class="docutils literal notranslate"><span class="pre">mbs.AddLoad(...)</span></code>,
+we could just use <code class="docutils literal notranslate"><span class="pre">mbs.CreateForce(...)</span></code> to add a 3D force vector.
+For specific joints, there are also <code class="docutils literal notranslate"><span class="pre">mbs.Create...(...)</span></code> functions.</p>
 <p>Finally, a sensor is added to the coordinate constraint object with number <code class="docutils literal notranslate"><span class="pre">nC</span></code>, requesting the <code class="docutils literal notranslate"><span class="pre">outputVariableType</span></code> <code class="docutils literal notranslate"><span class="pre">Force</span></code>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorObject</span><span class="p">(</span><span class="n">objectNumber</span><span class="o">=</span><span class="n">nC</span><span class="p">,</span> <span class="n">fileName</span><span class="o">=</span><span class="s1">&#39;groundForce.txt&#39;</span><span class="p">,</span>
                            <span class="n">outputVariableType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="nc">Force</span><span class="p">))</span>
@@ -253,9 +258,9 @@ Sometimes you would like to wait until closing the render window, using <code cl
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">matplotlib.ticker</span> <span class="k">as</span> <span class="nn">ticker</span>
 
-<span class="n">omega0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">spring</span><span class="o">/</span><span class="n">mass</span><span class="p">)</span>          <span class="c1">#eigen frequency of undamped system</span>
-<span class="n">dRel</span> <span class="o">=</span> <span class="n">damper</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">spring</span><span class="o">*</span><span class="n">mass</span><span class="p">))</span> <span class="c1">#dimensionless damping</span>
-<span class="n">omega</span> <span class="o">=</span> <span class="n">omega0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">dRel</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>      <span class="c1">#eigen freq of damped system</span>
+<span class="n">omega0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="nf">sqrt</span><span class="p">(</span><span class="n">spring</span><span class="o">/</span><span class="n">mass</span><span class="p">)</span>          <span class="c1">#eigen frequency of undamped system</span>
+<span class="n">dRel</span> <span class="o">=</span> <span class="n">damper</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="nf">sqrt</span><span class="p">(</span><span class="n">spring</span><span class="o">*</span><span class="n">mass</span><span class="p">))</span> <span class="c1">#dimensionless damping</span>
+<span class="n">omega</span> <span class="o">=</span> <span class="n">omega0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="nf">sqrt</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">dRel</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>      <span class="c1">#eigen freq of damped system</span>
 <span class="n">C1</span> <span class="o">=</span> <span class="n">u0</span><span class="o">-</span><span class="n">x0</span> <span class="c1">#static solution needs to be considered!</span>
 <span class="n">C2</span> <span class="o">=</span> <span class="p">(</span><span class="n">v0</span><span class="o">+</span><span class="n">omega0</span><span class="o">*</span><span class="n">dRel</span><span class="o">*</span><span class="n">C1</span><span class="p">)</span> <span class="o">/</span> <span class="n">omega</span>       <span class="c1">#C1, C2 are coeffs for solution</span>
 <span class="n">steps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tEnd</span><span class="o">/</span><span class="n">h</span><span class="p">)</span>                    <span class="c1">#use same steps for reference solution</span>
@@ -264,7 +269,7 @@ Sometimes you would like to wait until closing the render window, using <code cl
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">steps</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
   <span class="n">t</span> <span class="o">=</span> <span class="n">tEnd</span><span class="o">*</span><span class="n">i</span><span class="o">/</span><span class="n">steps</span>
   <span class="n">refSol</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">t</span>
-  <span class="n">refSol</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">omega0</span><span class="o">*</span><span class="n">dRel</span><span class="o">*</span><span class="n">t</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">C1</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">omega</span><span class="o">*</span><span class="n">t</span><span class="p">)</span><span class="o">+</span><span class="n">C2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">omega</span><span class="o">*</span><span class="n">t</span><span class="p">))</span><span class="o">+</span><span class="n">x0</span>
+  <span class="n">refSol</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="nf">exp</span><span class="p">(</span><span class="o">-</span><span class="n">omega0</span><span class="o">*</span><span class="n">dRel</span><span class="o">*</span><span class="n">t</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">C1</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="nf">cos</span><span class="p">(</span><span class="n">omega</span><span class="o">*</span><span class="n">t</span><span class="p">)</span><span class="o">+</span><span class="n">C2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="nf">sin</span><span class="p">(</span><span class="n">omega</span><span class="o">*</span><span class="n">t</span><span class="p">))</span><span class="o">+</span><span class="n">x0</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">refSol</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">refSol</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;r-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;displacement (m); exact solution&#39;</span><span class="p">)</span>
 </pre></div>

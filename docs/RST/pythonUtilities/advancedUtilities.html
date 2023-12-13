@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module: advancedUtilities &mdash; Exudyn1.7.57.dev1 1.7.57.dev1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e11081fd" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=cc931d05"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../../_static/copybutton.js?v=f281be69"></script>
+        <script src="../../../_static/js/rtd_search_config.js"></script>
+        <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Module: artificialIntelligence" href="artificialIntelligence.html" />
+    <link rel="prev" title="Python Utility Functions" href="pythonUtilities.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn1.7.57.dev1
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Exudyn.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NotationIndex.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TheoryAndFormulationsIndex.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../SolversIndex.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Python Utility Functions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="pythonUtilities.html">Python Utility Functions</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Module: advancedUtilities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#function-plotlinecode">Function: PlotLineCode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-findobjectindex">Function: FindObjectIndex</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-findnodeindex">Function: FindNodeIndex</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-islistorarray">Function: IsListOrArray</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-raisetypeerror">Function: RaiseTypeError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-isvalidbool">Function: IsValidBool</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-isvalidrealint">Function: IsValidRealInt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-isvalidprealint">Function: IsValidPRealInt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-isvalidurealint">Function: IsValidURealInt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-isreal">Function: IsReal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-isinteger">Function: IsInteger</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-isvector">Function: IsVector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-isintvector">Function: IsIntVector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-issquarematrix">Function: IsSquareMatrix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-isvalidobjectindex">Function: IsValidObjectIndex</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-isvalidnodeindex">Function: IsValidNodeIndex</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-isvalidmarkerindex">Function: IsValidMarkerIndex</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-fillinsubmatrix">Function: FillInSubMatrix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-sweepsin">Function: SweepSin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-sweepcos">Function: SweepCos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-frequencysweep">Function: FrequencySweep</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-smoothstep">Function: SmoothStep</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-smoothstepderivative">Function: SmoothStepDerivative</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-indexfromvalue">Function: IndexFromValue</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-roundmatrix">Function: RoundMatrix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-convertfunctiontosymbolic">Function: ConvertFunctionToSymbolic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-createsymbolicuserfunction">Function: CreateSymbolicUserFunction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-expectedtype-enum-in-module-advancedutilities">CLASS ExpectedType(Enum) (in module advancedUtilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="artificialIntelligence.html">Module: artificialIntelligence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basicUtilities.html">Module: basicUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="beams.html">Module: beams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html">Module: FEM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html">Module: graphicsDataUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GUI.html">Module: GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interactive.html">Module: interactive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinematicTree.html">Module: kinematicTree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html">Module: lieGroupBasics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mainSystemExtensions.html">Module: mainSystemExtensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="physics.html">Module: physics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html">Module: plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processing.html">Module: processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html">Module: rigidBodyUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.html">Module: robotics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.rosInterface.html">Module: robotics.rosInterface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.future.html">Module: robotics.future</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.models.html">Module: robotics.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.mobile.html">Module: robotics.mobile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.motion.html">Module: robotics.motion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.special.html">Module: robotics.special</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.utilities.html">Module: robotics.utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="signalProcessing.html">Module: signalProcessing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solver.html">Module: solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utilities.html">Module: utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structures/StructuresAndSettingsIndex.html">Structures and Settings</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Misc</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ExamplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TestModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn1.7.57.dev1</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Python Utility Functions</a></li>
+      <li class="breadcrumb-item active">Module: advancedUtilities</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/RST/pythonUtilities/advancedUtilities.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-advancedutilities">
+<span id="sec-module-advancedutilities"></span><h1>Module: advancedUtilities<a class="headerlink" href="#module-advancedutilities" title="Link to this heading"></a></h1>
+<p>Advanced utility functions only depending on numpy or specified exudyn modules;
+Here, we gather special functions, which are depending on other modules and do not fit into exudyn.utilities as they cannot be imported e.g. in rigidBodyUtilities</p>
+<ul class="simple">
+<li><p>Author:    Johannes Gerstmayr</p></li>
+<li><p>Date:      2023-01-06 (created)</p></li>
+</ul>
+<section id="function-plotlinecode">
+<span id="sec-advancedutilities-plotlinecode"></span><h2>Function: PlotLineCode<a class="headerlink" href="#function-plotlinecode" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L30">PlotLineCode</a>(<code class="docutils literal notranslate"><span class="pre">index</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">helper functions for matplotlib, returns a list of 28 line codes to be used in plot, e.g. ‘r-’ for red solid line</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line">index in range(0:28)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">a color and line style code for matplotlib plot</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotInteractiveLimits.py">serialRobotInteractiveLimits.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTSD.py">serialRobotTSD.py</a> (Ex)</p>
+</div></blockquote>
+<hr class="docutils" />
+</section>
+<section id="function-findobjectindex">
+<span id="sec-advancedutilities-findobjectindex"></span><h2>Function: FindObjectIndex<a class="headerlink" href="#function-findobjectindex" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L47">FindObjectIndex</a>(<code class="docutils literal notranslate"><span class="pre">i</span></code>, <code class="docutils literal notranslate"><span class="pre">globalVariables</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">simple function to find object index i within the local or global scope of variables</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line">i, the integer object number and  globalVariables=globals()</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>example</em>:</div>
+</div>
+</li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nf">FindObjectIndex</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nb">locals</span><span class="p">()</span> <span class="p">)</span>  <span class="c1">#usually sufficient</span>
+<span class="nf">FindObjectIndex</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nb">globals</span><span class="p">()</span> <span class="p">)</span> <span class="c1">#wider search</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+</section>
+<section id="function-findnodeindex">
+<span id="sec-advancedutilities-findnodeindex"></span><h2>Function: FindNodeIndex<a class="headerlink" href="#function-findnodeindex" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L63">FindNodeIndex</a>(<code class="docutils literal notranslate"><span class="pre">i</span></code>, <code class="docutils literal notranslate"><span class="pre">globalVariables</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">simple function to find node index i within the local or global scope of variables</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line">i, the integer node number and  globalVariables=globals()</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>example</em>:</div>
+</div>
+</li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nf">FindObjectIndex</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nb">locals</span><span class="p">()</span> <span class="p">)</span>  <span class="c1">#usually sufficient</span>
+<span class="nf">FindObjectIndex</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nb">globals</span><span class="p">()</span> <span class="p">)</span> <span class="c1">#wider search</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+</section>
+<section id="function-islistorarray">
+<span id="sec-advancedutilities-islistorarray"></span><h2>Function: IsListOrArray<a class="headerlink" href="#function-islistorarray" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L79">IsListOrArray</a>(<code class="docutils literal notranslate"><span class="pre">data</span></code>, <code class="docutils literal notranslate"><span class="pre">checkIfNoneEmpty</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">checks, if data is of type list or np.array; used in functions to check input data</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">data</span></code>: any type, preferrably list or numpy.array</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">checkIfNoneEmpty</span></code>: if True, function only returns True if type is list or array AND if length is non-zero</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">returns True/False</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+</section>
+<section id="function-raisetypeerror">
+<span id="sec-advancedutilities-raisetypeerror"></span><h2>Function: RaiseTypeError<a class="headerlink" href="#function-raisetypeerror" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L112">RaiseTypeError</a>(<code class="docutils literal notranslate"><span class="pre">where</span> <span class="pre">=</span> <span class="pre">''</span></code>, <code class="docutils literal notranslate"><span class="pre">argumentName</span> <span class="pre">=</span> <span class="pre">''</span></code>, <code class="docutils literal notranslate"><span class="pre">received</span> <span class="pre">=</span> <span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">expectedType</span> <span class="pre">=</span> <span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">dim</span> <span class="pre">=</span> <span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">cols</span> <span class="pre">=</span> <span class="pre">None</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">internal function which is used to raise common errors in case of wrong types; dim is used for vectors and square matrices, cols is used for non-square matrices</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+</section>
+<section id="function-isvalidbool">
+<span id="sec-advancedutilities-isvalidbool"></span><h2>Function: IsValidBool<a class="headerlink" href="#function-isvalidbool" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L145">IsValidBool</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">return True, if x is int, float, np.double, np.integer or similar types that can be automatically casted to pybind11</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+</section>
+<section id="function-isvalidrealint">
+<span id="sec-advancedutilities-isvalidrealint"></span><h2>Function: IsValidRealInt<a class="headerlink" href="#function-isvalidrealint" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L154">IsValidRealInt</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">return True, if x is int, float, np.double, np.integer or similar types that can be automatically casted to pybind11</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+</section>
+<section id="function-isvalidprealint">
+<span id="sec-advancedutilities-isvalidprealint"></span><h2>Function: IsValidPRealInt<a class="headerlink" href="#function-isvalidprealint" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L164">IsValidPRealInt</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">return True, if x is valid Real/Int and positive</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+</section>
+<section id="function-isvalidurealint">
+<span id="sec-advancedutilities-isvalidurealint"></span><h2>Function: IsValidURealInt<a class="headerlink" href="#function-isvalidurealint" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L170">IsValidURealInt</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">return True, if x is valid Real/Int and unsigned (non-negative)</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+</section>
+<section id="function-isreal">
+<span id="sec-advancedutilities-isreal"></span><h2>Function: IsReal<a class="headerlink" href="#function-isreal" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L176">IsReal</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">return True, if x is any python or numpy float type; could also be called IsFloat(), but Real has special meaning in Exudyn</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+</section>
+<section id="function-isinteger">
+<span id="sec-advancedutilities-isinteger"></span><h2>Function: IsInteger<a class="headerlink" href="#function-isinteger" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L183">IsInteger</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">return True, if x is any python or numpy float type</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+</section>
+<section id="function-isvector">
+<span id="sec-advancedutilities-isvector"></span><h2>Function: IsVector<a class="headerlink" href="#function-isvector" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L190">IsVector</a>(<code class="docutils literal notranslate"><span class="pre">v</span></code>, <code class="docutils literal notranslate"><span class="pre">expectedSize</span> <span class="pre">=</span> <span class="pre">None</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">check if v is a valid vector with floats or ints; if expectedSize!=None, the length is also checked</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+</section>
+<section id="function-isintvector">
+<span id="sec-advancedutilities-isintvector"></span><h2>Function: IsIntVector<a class="headerlink" href="#function-isintvector" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L204">IsIntVector</a>(<code class="docutils literal notranslate"><span class="pre">v</span></code>, <code class="docutils literal notranslate"><span class="pre">expectedSize</span> <span class="pre">=</span> <span class="pre">None</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">check if v is a valid vector with floats or ints; if expectedSize!=None, the length is also checked</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+</section>
+<section id="function-issquarematrix">
+<span id="sec-advancedutilities-issquarematrix"></span><h2>Function: IsSquareMatrix<a class="headerlink" href="#function-issquarematrix" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L219">IsSquareMatrix</a>(<code class="docutils literal notranslate"><span class="pre">m</span></code>, <code class="docutils literal notranslate"><span class="pre">expectedSize</span> <span class="pre">=</span> <span class="pre">None</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">check if v is a valid vector with floats or ints; if expectedSize!=None, the length is also checked</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+</section>
+<section id="function-isvalidobjectindex">
+<span id="sec-advancedutilities-isvalidobjectindex"></span><h2>Function: IsValidObjectIndex<a class="headerlink" href="#function-isvalidobjectindex" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L236">IsValidObjectIndex</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">return True, if x is valid exudyn object index</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+</section>
+<section id="function-isvalidnodeindex">
+<span id="sec-advancedutilities-isvalidnodeindex"></span><h2>Function: IsValidNodeIndex<a class="headerlink" href="#function-isvalidnodeindex" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L242">IsValidNodeIndex</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">return True, if x is valid exudyn node index</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+</section>
+<section id="function-isvalidmarkerindex">
+<span id="sec-advancedutilities-isvalidmarkerindex"></span><h2>Function: IsValidMarkerIndex<a class="headerlink" href="#function-isvalidmarkerindex" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L248">IsValidMarkerIndex</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">return True, if x is valid exudyn marker index</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+</section>
+<section id="function-fillinsubmatrix">
+<span id="sec-advancedutilities-fillinsubmatrix"></span><h2>Function: FillInSubMatrix<a class="headerlink" href="#function-fillinsubmatrix" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L263">FillInSubMatrix</a>(<code class="docutils literal notranslate"><span class="pre">subMatrix</span></code>, <code class="docutils literal notranslate"><span class="pre">destinationMatrix</span></code>, <code class="docutils literal notranslate"><span class="pre">destRow</span></code>, <code class="docutils literal notranslate"><span class="pre">destColumn</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">fill submatrix into given destinationMatrix; all matrices must be numpy arrays</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">subMatrix</span></code>: input matrix, which is filled into destinationMatrix</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">destinationMatrix</span></code>: the subMatrix is entered here</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">destRow</span></code>: row destination of subMatrix</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">destColumn</span></code>: column destination of subMatrix</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">destinationMatrix is changed after function call</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>notes</em>:</div>
+<div class="line">may be erased in future!</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest.py">objectFFRFTest.py</a> (TM)</p>
+</div></blockquote>
+<hr class="docutils" />
+</section>
+<section id="function-sweepsin">
+<span id="sec-advancedutilities-sweepsin"></span><h2>Function: SweepSin<a class="headerlink" href="#function-sweepsin" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L282">SweepSin</a>(<code class="docutils literal notranslate"><span class="pre">t</span></code>, <code class="docutils literal notranslate"><span class="pre">t1</span></code>, <code class="docutils literal notranslate"><span class="pre">f0</span></code>, <code class="docutils literal notranslate"><span class="pre">f1</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">compute sin sweep at given time t</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">t</span></code>: evaluate of sweep at time t</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">t1</span></code>: end time of sweep frequency range</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">f0</span></code>: start of frequency interval [f0,f1] in Hz</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">f1</span></code>: end of frequency interval [f0,f1] in Hz</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">evaluation of sin sweep (in range -1..+1)</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectGenericODE2Test.py">objectGenericODE2Test.py</a> (TM)</p>
+</div></blockquote>
+<hr class="docutils" />
+</section>
+<section id="function-sweepcos">
+<span id="sec-advancedutilities-sweepcos"></span><h2>Function: SweepCos<a class="headerlink" href="#function-sweepcos" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L293">SweepCos</a>(<code class="docutils literal notranslate"><span class="pre">t</span></code>, <code class="docutils literal notranslate"><span class="pre">t1</span></code>, <code class="docutils literal notranslate"><span class="pre">f0</span></code>, <code class="docutils literal notranslate"><span class="pre">f1</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">compute cos sweep at given time t</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">t</span></code>: evaluate of sweep at time t</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">t1</span></code>: end time of sweep frequency range</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">f0</span></code>: start of frequency interval [f0,f1] in Hz</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">f1</span></code>: end of frequency interval [f0,f1] in Hz</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">evaluation of cos sweep (in range -1..+1)</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidRotor3DbasicBehaviour.py">rigidRotor3DbasicBehaviour.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidRotor3Drunup.py">rigidRotor3Drunup.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectGenericODE2Test.py">objectGenericODE2Test.py</a> (TM)</p>
+</div></blockquote>
+<hr class="docutils" />
+</section>
+<section id="function-frequencysweep">
+<span id="sec-advancedutilities-frequencysweep"></span><h2>Function: FrequencySweep<a class="headerlink" href="#function-frequencysweep" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L304">FrequencySweep</a>(<code class="docutils literal notranslate"><span class="pre">t</span></code>, <code class="docutils literal notranslate"><span class="pre">t1</span></code>, <code class="docutils literal notranslate"><span class="pre">f0</span></code>, <code class="docutils literal notranslate"><span class="pre">f1</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">frequency according to given sweep functions SweepSin, SweepCos</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">t</span></code>: evaluate of frequency at time t</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">t1</span></code>: end time of sweep frequency range</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">f0</span></code>: start of frequency interval [f0,f1] in Hz</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">f1</span></code>: end of frequency interval [f0,f1] in Hz</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">frequency in Hz</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectGenericODE2Test.py">objectGenericODE2Test.py</a> (TM)</p>
+</div></blockquote>
+<hr class="docutils" />
+</section>
+<section id="function-smoothstep">
+<span id="sec-advancedutilities-smoothstep"></span><h2>Function: SmoothStep<a class="headerlink" href="#function-smoothstep" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L315">SmoothStep</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">x0</span></code>, <code class="docutils literal notranslate"><span class="pre">x1</span></code>, <code class="docutils literal notranslate"><span class="pre">value0</span></code>, <code class="docutils literal notranslate"><span class="pre">value1</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">step function with smooth transition from value0 to value1; transition is computed with cos function</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">x</span></code>: argument at which function is evaluated</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">x0</span></code>: start of step (f(x) = value0)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">x1</span></code>: end of step (f(x) = value1)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">value0</span></code>: value before smooth step</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">value1</span></code>: value at end of smooth step</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">returns f(x)</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveALE.py">beltDriveALE.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveReevingSystem.py">beltDriveReevingSystem.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/craneReevingSystem.py">craneReevingSystem.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/leggedRobot.py">leggedRobot.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/openVRengine.py">openVRengine.py</a> (Ex)</p>
+</div></blockquote>
+<hr class="docutils" />
+</section>
+<section id="function-smoothstepderivative">
+<span id="sec-advancedutilities-smoothstepderivative"></span><h2>Function: SmoothStepDerivative<a class="headerlink" href="#function-smoothstepderivative" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L334">SmoothStepDerivative</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">x0</span></code>, <code class="docutils literal notranslate"><span class="pre">x1</span></code>, <code class="docutils literal notranslate"><span class="pre">value0</span></code>, <code class="docutils literal notranslate"><span class="pre">value1</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">derivative of SmoothStep using same arguments</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">x</span></code>: argument at which function is evaluated</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">x0</span></code>: start of step (f(x) = value0)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">x1</span></code>: end of step (f(x) = value1)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">value0</span></code>: value before smooth step</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">value1</span></code>: value at end of smooth step</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">returns d/dx(f(x))</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/leggedRobot.py">leggedRobot.py</a> (Ex)</p>
+</div></blockquote>
+<hr class="docutils" />
+</section>
+<section id="function-indexfromvalue">
+<span id="sec-advancedutilities-indexfromvalue"></span><h2>Function: IndexFromValue<a class="headerlink" href="#function-indexfromvalue" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L350">IndexFromValue</a>(<code class="docutils literal notranslate"><span class="pre">data</span></code>, <code class="docutils literal notranslate"><span class="pre">value</span></code>, <code class="docutils literal notranslate"><span class="pre">tolerance</span> <span class="pre">=</span> <span class="pre">1e-7</span></code>, <code class="docutils literal notranslate"><span class="pre">assumeConstantSampleRate</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">rangeWarning</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">get index from value in given data vector (numpy array); usually used to get specific index of time vector; this function is slow (linear search), if sampling rate is non-constant; otherwise set assumeConstantSampleRate=True!</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">data</span></code>: containing (almost) equidistant values of time</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">value</span></code>: e.g., time to be found in data</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">tolerance</span></code>: tolerance, which is accepted (default: tolerance=1e-7)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">rangeWarning</span></code>: warn, if index returns out of range; if warning is deactivated, function uses the closest value</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">index</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>notes</em>:</div>
+<div class="line">to obtain the interpolated value of a time-signal array, use GetInterpolatedSignalValue() in exudyn.signalProcessing</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+</section>
+<section id="function-roundmatrix">
+<span id="sec-advancedutilities-roundmatrix"></span><h2>Function: RoundMatrix<a class="headerlink" href="#function-roundmatrix" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L382">RoundMatrix</a>(<code class="docutils literal notranslate"><span class="pre">matrix</span></code>, <code class="docutils literal notranslate"><span class="pre">treshold</span> <span class="pre">=</span> <span class="pre">1e-14</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">set all entries in matrix to zero which are smaller than given treshold; operates directly on matrix</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line">matrix as np.array, treshold as positive value</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">changes matrix</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+</section>
+<section id="function-convertfunctiontosymbolic">
+<span id="sec-advancedutilities-convertfunctiontosymbolic"></span><h2>Function: ConvertFunctionToSymbolic<a class="headerlink" href="#function-convertfunctiontosymbolic" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L400">ConvertFunctionToSymbolic</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">function</span></code>, <code class="docutils literal notranslate"><span class="pre">itemIndex</span></code>, <code class="docutils literal notranslate"><span class="pre">userFunctionName</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">0</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">Internal function to convert a Python user function into a dictionary containing the symbolic representation;</div>
+<div class="line">this function is under development and should be used with care</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: MainSystem, needed currently for interface</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">function</span></code>: Python function with interface according to desired user function</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">itemIndex</span></code>: item index, such as ObjectIndex or LoadIndex</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">userFunctionName</span></code>: name of user function item, see documentation; this is required, because some items have several user functions, which need to be distinguished</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">verbose</span></code>: if &gt; 0, according output is printed</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">return dictionary with ‘functionName’, ‘argList’, and ‘returnList’</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/symbolicUserFunctionMasses.py">symbolicUserFunctionMasses.py</a> (Ex)</p>
+</div></blockquote>
+<hr class="docutils" />
+</section>
+<section id="function-createsymbolicuserfunction">
+<span id="sec-advancedutilities-createsymbolicuserfunction"></span><h2>Function: CreateSymbolicUserFunction<a class="headerlink" href="#function-createsymbolicuserfunction" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L531">CreateSymbolicUserFunction</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">function</span></code>, <code class="docutils literal notranslate"><span class="pre">itemIndex</span></code>, <code class="docutils literal notranslate"><span class="pre">userFunctionName</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">0</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">Helper function to convert a Python user function into a symbolic user function;</div>
+<div class="line">this function is under development and should be used with care</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: MainSystem, needed currently for interface</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">function</span></code>: Python function with interface according to desired user function</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">itemIndex</span></code>: item index, such as ObjectIndex or LoadIndex</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">userFunctionName</span></code>: name of user function item, see documentation; this is required, because some items have several user functions, which need to be distinguished</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">verbose</span></code>: if &gt; 0, according output may be printed</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">returns symbolic user function; this can be transfered into an item using TransferUserFunction2Item</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>notes</em>:</div>
+<div class="line">keep the return value alive in a variable (or list), as it contains the expression tree which must exist for the lifetime of the user function</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>example</em>:</div>
+</div>
+</li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">oGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectGround</span><span class="p">())</span>
+<span class="n">node</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">NodePoint</span><span class="p">(</span><span class="n">referenceCoordinates</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.05</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+<span class="n">oMassPoint</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">MassPoint</span><span class="p">(</span><span class="n">nodeNumber</span> <span class="o">=</span> <span class="n">node</span><span class="p">,</span> <span class="n">physicsMass</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">m0</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerBodyPosition</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">oGround</span><span class="p">,</span> <span class="n">localPosition</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+<span class="n">m1</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerBodyPosition</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">oMassPoint</span><span class="p">,</span> <span class="n">localPosition</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+<span class="n">co</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectConnectorSpringDamper</span><span class="p">(</span><span class="n">markerNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">m0</span><span class="p">,</span><span class="n">m1</span><span class="p">],</span>
+                <span class="n">referenceLength</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">stiffness</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">damping</span> <span class="o">=</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">symbolicFunc</span> <span class="o">=</span> <span class="nf">CreateSymbolicUserFunction</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">springForceUserFunction</span><span class="p">,</span> <span class="n">co</span><span class="p">,</span> <span class="s1">&#39;springForceUserFunction&#39;</span><span class="p">)</span>
+<span class="n">symbolicFunc</span><span class="o">.</span><span class="nf">TransferUserFunction2Item</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">co</span><span class="p">,</span> <span class="s1">&#39;springForceUserFunction&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">symbolicFunc</span><span class="o">.</span><span class="nf">Evaluate</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span>  <span class="mf">100.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">13.</span><span class="p">)</span> <span class="p">)</span>
+</pre></div>
+</div>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/cartesianSpringDamperUserFunction.py">cartesianSpringDamperUserFunction.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/SpringDamperMassUserFunction.py">SpringDamperMassUserFunction.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/symbolicUserFunctionMasses.py">symbolicUserFunctionMasses.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/symbolicUserFunctionTest.py">symbolicUserFunctionTest.py</a> (TM)</p>
+</div></blockquote>
+</section>
+<section id="class-expectedtype-enum-in-module-advancedutilities">
+<span id="sec-module-advancedutilities-class-expectedtype-enum"></span><h2>CLASS ExpectedType(Enum) (in module advancedUtilities)<a class="headerlink" href="#class-expectedtype-enum-in-module-advancedutilities" title="Link to this heading"></a></h2>
+<p><strong>class description</strong>:</p>
+<blockquote>
+<div><p>internal type which is used for type checking in exudyn Python user functions; used to create unique error messages</p>
+</div></blockquote>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="pythonUtilities.html" class="btn btn-neutral float-left" title="Python Utility Functions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="artificialIntelligence.html" class="btn btn-neutral float-right" title="Module: artificialIntelligence" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

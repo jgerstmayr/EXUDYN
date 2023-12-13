@@ -289,7 +289,7 @@ You can view and download this file on Github: `coordinateSpringDamperExt.py <ht
    exu.Print('result of coordinateSpringDamperExt=',exudynTestGlobals.testResult) #17.084935539925155
    
    
-   if True:
+   if False:
        
        mbs.PlotSensor(closeAll = True)
    

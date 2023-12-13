@@ -1,22 +1,24 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>bricardMechanism.py &mdash; Exudyn1.7.5.dev1 1.7.5.dev1 documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  <title>bricardMechanism.py &mdash; Exudyn1.7.57.dev1 1.7.57.dev1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e11081fd" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=e63eafc5"></script>
+        <script src="../../../_static/documentation_options.js?v=cc931d05"></script>
         <script src="../../../_static/doctools.js?v=888ff710"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -39,7 +41,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.7.5.dev1
+            Exudyn1.7.57.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -74,6 +76,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../TestModelsIndex.html">TestModels</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="abaqusImportTest.html">abaqusImportTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ANCFBeamTest.html">ANCFBeamTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ANCFcable2DuserFunction.html">ANCFcable2DuserFunction.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ANCFcontactCircleTest.html">ANCFcontactCircleTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ANCFcontactFrictionTest.html">ANCFcontactFrictionTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ANCFgeneralContactCircle.html">ANCFgeneralContactCircle.py</a></li>
@@ -126,6 +129,7 @@
 <li class="toctree-l2"><a class="reference internal" href="revoluteJointprismaticJointTest.html">revoluteJointprismaticJointTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rigidBodyAsUserFunctionTest.html">rigidBodyAsUserFunctionTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rigidBodyCOMtest.html">rigidBodyCOMtest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodySpringDamperIntrinsic.html">rigidBodySpringDamperIntrinsic.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rollingCoinTest.html">rollingCoinTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rollingCoinPenaltyTest.html">rollingCoinPenaltyTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rotatingTableTest.html">rotatingTableTest.py</a></li>
@@ -151,7 +155,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.7.5.dev1</a>
+          <a href="../../../index.html">Exudyn1.7.57.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -307,56 +311,53 @@
 <span class="linenos">132</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">linearSolverSettings</span><span class="o">.</span><span class="n">ignoreSingularJacobian</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="linenos">133</span><span class="c1"># simulationSettings.linearSolverSettings.pivotThreshold = 1e-10</span>
 <span class="linenos">134</span>
-<span class="linenos">135</span><span class="c1"># exu.Experimental().useEigenFullPivotLUsolver = True</span>
-<span class="linenos">136</span><span class="c1">#exu.Experimental().eigenFullPivotLUsolverDebugLevel = 0</span>
-<span class="linenos">137</span>
-<span class="linenos">138</span><span class="c1">#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos">139</span><span class="c1">#simulation times for system size 65, last joint=RigidBodySpringDamper!:</span>
-<span class="linenos">140</span>    <span class="c1"># useModifiedNewton = False</span>
-<span class="linenos">141</span>    <span class="c1"># 10000 steps</span>
-<span class="linenos">142</span>    <span class="c1"># endTime=5</span>
-<span class="linenos">143</span>    <span class="c1"># EXUdense:               tCPU=5.67 / factorization=55.1% / NewtonInc= 1.59% / factTime=3.124</span>
-<span class="linenos">144</span>    <span class="c1"># EigenDense / PartPivLU: tCPU=3.57 / factorization=34.7% / NewtonInc= 1.92% / factTime=1.239</span>
-<span class="linenos">145</span>    <span class="c1"># EigenDense / FullPivLU: tCPU=5.43 / factorization=55.6% / NewtonInc= 4.83% / factTime=3.019</span>
-<span class="linenos">146</span><span class="c1">#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos">147</span>
-<span class="linenos">148</span>
-<span class="linenos">149</span><span class="c1"># SC.visualizationSettings.general.drawWorldBasis = True</span>
-<span class="linenos">150</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">shadow</span> <span class="o">=</span> <span class="mf">0.3</span>
-<span class="linenos">151</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">light0position</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
-<span class="linenos">152</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">multiSampling</span> <span class="o">=</span> <span class="mi">4</span>
-<span class="linenos">153</span>
-<span class="linenos">154</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">autoFitScene</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1">#prevent from autozoom</span>
-<span class="linenos">155</span>
-<span class="linenos">156</span><span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
-<span class="linenos">157</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StartRenderer</span><span class="p">()</span>
-<span class="linenos">158</span>    <span class="k">if</span> <span class="s1">&#39;renderState&#39;</span> <span class="ow">in</span> <span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">:</span>
-<span class="linenos">159</span>        <span class="n">SC</span><span class="o">.</span><span class="nf">SetRenderState</span><span class="p">(</span><span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span><span class="s1">&#39;renderState&#39;</span><span class="p">])</span>
-<span class="linenos">160</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">WaitForUserToContinue</span><span class="p">()</span>
-<span class="linenos">161</span>
-<span class="linenos">162</span><span class="n">dof</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">ComputeSystemDegreeOfFreedom</span><span class="p">()</span>
-<span class="linenos">163</span><span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s1">&#39;dof&#39;</span><span class="p">,</span><span class="n">dof</span><span class="p">)</span>
-<span class="linenos">164</span><span class="p">[</span><span class="n">eigenValues</span><span class="p">,</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">ComputeODE2Eigenvalues</span><span class="p">()</span>
-<span class="linenos">165</span><span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s1">&#39;eigenvalues=&#39;</span><span class="p">,</span><span class="n">eigenValues</span><span class="p">)</span>
-<span class="linenos">166</span>
-<span class="linenos">167</span><span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">simulationSettings</span><span class="p">)</span>
+<span class="linenos">135</span><span class="c1">#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">136</span><span class="c1">#simulation times for system size 65, last joint=RigidBodySpringDamper!:</span>
+<span class="linenos">137</span>    <span class="c1"># useModifiedNewton = False</span>
+<span class="linenos">138</span>    <span class="c1"># 10000 steps</span>
+<span class="linenos">139</span>    <span class="c1"># endTime=5</span>
+<span class="linenos">140</span>    <span class="c1"># EXUdense:               tCPU=5.67 / factorization=55.1% / NewtonInc= 1.59% / factTime=3.124</span>
+<span class="linenos">141</span>    <span class="c1"># EigenDense / PartPivLU: tCPU=3.57 / factorization=34.7% / NewtonInc= 1.92% / factTime=1.239</span>
+<span class="linenos">142</span>    <span class="c1"># EigenDense / FullPivLU: tCPU=5.43 / factorization=55.6% / NewtonInc= 4.83% / factTime=3.019</span>
+<span class="linenos">143</span><span class="c1">#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">144</span>
+<span class="linenos">145</span>
+<span class="linenos">146</span><span class="c1"># SC.visualizationSettings.general.drawWorldBasis = True</span>
+<span class="linenos">147</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">shadow</span> <span class="o">=</span> <span class="mf">0.3</span>
+<span class="linenos">148</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">light0position</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos">149</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">multiSampling</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="linenos">150</span>
+<span class="linenos">151</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">autoFitScene</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1">#prevent from autozoom</span>
+<span class="linenos">152</span>
+<span class="linenos">153</span><span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
+<span class="linenos">154</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StartRenderer</span><span class="p">()</span>
+<span class="linenos">155</span>    <span class="k">if</span> <span class="s1">&#39;renderState&#39;</span> <span class="ow">in</span> <span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">:</span>
+<span class="linenos">156</span>        <span class="n">SC</span><span class="o">.</span><span class="nf">SetRenderState</span><span class="p">(</span><span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span><span class="s1">&#39;renderState&#39;</span><span class="p">])</span>
+<span class="linenos">157</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">WaitForUserToContinue</span><span class="p">()</span>
+<span class="linenos">158</span>
+<span class="linenos">159</span><span class="n">dof</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">ComputeSystemDegreeOfFreedom</span><span class="p">()</span>
+<span class="linenos">160</span><span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s1">&#39;dof&#39;</span><span class="p">,</span><span class="n">dof</span><span class="p">)</span>
+<span class="linenos">161</span><span class="p">[</span><span class="n">eigenValues</span><span class="p">,</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">ComputeODE2Eigenvalues</span><span class="p">()</span>
+<span class="linenos">162</span><span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s1">&#39;eigenvalues=&#39;</span><span class="p">,</span><span class="n">eigenValues</span><span class="p">)</span>
+<span class="linenos">163</span>
+<span class="linenos">164</span><span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">simulationSettings</span><span class="p">)</span>
+<span class="linenos">165</span>
+<span class="linenos">166</span><span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
+<span class="linenos">167</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StopRenderer</span><span class="p">()</span>
 <span class="linenos">168</span>
-<span class="linenos">169</span><span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
-<span class="linenos">170</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StopRenderer</span><span class="p">()</span>
-<span class="linenos">171</span>
-<span class="linenos">172</span><span class="k">if</span> <span class="kc">False</span><span class="p">:</span>
-<span class="linenos">173</span>    <span class="c1">#%%++++</span>
-<span class="linenos">174</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">SolutionViewer</span><span class="p">()</span>
-<span class="linenos">175</span>
-<span class="linenos">176</span><span class="c1">#%%++++</span>
-<span class="linenos">177</span><span class="n">testError</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetODE2Coordinates</span><span class="p">())</span>
-<span class="linenos">178</span><span class="n">testError</span> <span class="o">+=</span> <span class="n">dof</span><span class="p">[</span><span class="s1">&#39;degreeOfFreedom&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">dof</span><span class="p">[</span><span class="s1">&#39;redundantConstraints&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">eigenValues</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="linenos">179</span><span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s1">&#39;solution of bricardMechanism test=&#39;</span><span class="p">,</span><span class="n">testError</span><span class="p">)</span>
-<span class="linenos">180</span>
-<span class="linenos">181</span><span class="c1">#%%++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos">182</span>
-<span class="linenos">183</span><span class="n">exudynTestGlobals</span><span class="o">.</span><span class="n">testError</span> <span class="o">=</span> <span class="n">testError</span> <span class="o">-</span> <span class="p">(</span><span class="mf">4.172189649307425</span><span class="p">)</span>   <span class="c1">#2023-06-12: 4.172189649307425</span>
-<span class="linenos">184</span><span class="n">exudynTestGlobals</span><span class="o">.</span><span class="n">testResult</span> <span class="o">=</span> <span class="n">testError</span>
+<span class="linenos">169</span><span class="k">if</span> <span class="kc">False</span><span class="p">:</span>
+<span class="linenos">170</span>    <span class="c1">#%%++++</span>
+<span class="linenos">171</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">SolutionViewer</span><span class="p">()</span>
+<span class="linenos">172</span>
+<span class="linenos">173</span><span class="c1">#%%++++</span>
+<span class="linenos">174</span><span class="n">testError</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetODE2Coordinates</span><span class="p">())</span>
+<span class="linenos">175</span><span class="n">testError</span> <span class="o">+=</span> <span class="n">dof</span><span class="p">[</span><span class="s1">&#39;degreeOfFreedom&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">dof</span><span class="p">[</span><span class="s1">&#39;redundantConstraints&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">eigenValues</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos">176</span><span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s1">&#39;solution of bricardMechanism test=&#39;</span><span class="p">,</span><span class="n">testError</span><span class="p">)</span>
+<span class="linenos">177</span>
+<span class="linenos">178</span><span class="c1">#%%++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">179</span>
+<span class="linenos">180</span><span class="n">exudynTestGlobals</span><span class="o">.</span><span class="n">testError</span> <span class="o">=</span> <span class="n">testError</span> <span class="o">-</span> <span class="p">(</span><span class="mf">4.172189649307425</span><span class="p">)</span>   <span class="c1">#2023-06-12: 4.172189649307425</span>
+<span class="linenos">181</span><span class="n">exudynTestGlobals</span><span class="o">.</span><span class="n">testResult</span> <span class="o">=</span> <span class="n">testError</span>
 </pre></div>
 </div>
 </section>

@@ -318,7 +318,7 @@ You can view and download this file on Github: `serialRobotKinematicTree.py <htt
        sJointRotComponents = list(np.arange(0,nJoints))
        sTorqueComponents = list(np.arange(0,nJoints))
    
-       sJointRot = mbs.AddSensor(SensorObject(objectNumber=oKT, storeInternal=True, 
+       sJointRot = mbs.AddSensor(SensorBody(objectNumber=oKT, storeInternal=True, 
                                              outputVariableType=exu.OutputVariableType.Coordinates))
        sListJointAngles = [sJointRot]*6
    

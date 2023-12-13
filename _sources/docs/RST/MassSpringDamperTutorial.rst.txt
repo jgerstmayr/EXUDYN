@@ -17,8 +17,8 @@ We import the exudyn library and the interface for all nodes, objects, markers, 
 .. code-block:: python
 
   import exudyn as exu
-  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
-  import numpy as np #for postprocessing
+  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities, rigidBodyUtilities, ...
+  import numpy as np #not required in general, but convenient for linear algebra
 
 
 Next, we need a \ ``SystemContainer``\ , which contains all computable systems and add a new MainSystem \ ``mbs``\ .
@@ -90,6 +90,9 @@ In the next step, we add an object\ (For the moment, we just need to know that o
   massPoint = mbs.AddObject(MassPoint(physicsMass = mass, nodeNumber = n1))
 
 
+Note that instead of adding a \ ``NodePoint``\  and a \ ``MassPoint``\  with \ ``mbs.AddNode(...)``\ 
+and \ ``mbs.AddObject(...)``\ , there is also a convenient function \ ``mbs.CreateMassPoint(...)``\ , which can do everything at once including the option to add gravity.
+
 In order to apply constraints and loads, we need markers. These markers are used as local positions (and frames), where we can attach a constraint lateron. In this example, we work on the coordinate level, both for forces as well as for constraints.
 Markers are attached to the according ground and regular node number, additionally using a coordinate number (0 ... first coordinate):
 
@@ -102,8 +105,7 @@ Markers are attached to the according ground and regular node number, additional
                                                   coordinate = 0))
 
 
-This means that loads can be applied to the first coordinate of node \ ``n1``\  via marker with number \ ``nodeMarker``\ ,
-which is in fact of type \ ``MarkerIndex``\ .
+This means that constraints are be applied to the first coordinate of node \ ``n1``\  via marker with number \ ``nodeMarker``\ , which is in fact of type \ ``MarkerNodeCoordinate``\ .
 
 Now we add a spring-damper to the markers with numbers \ ``groundMarker``\  and the \ ``nodeMarker``\ , providing stiffness and damping parameters:
 
@@ -121,6 +123,10 @@ A load is added to marker \ ``nodeMarker``\ , with a scalar load with value \ ``
   nLoad = mbs.AddLoad(LoadCoordinate(markerNumber = nodeMarker, 
                                      load = f))
 
+
+Again, instead of adding a \ ``MarkerNodeCoordinate``\  and a \ ``LoadCoordinate``\  with \ ``mbs.AddLoad(...)``\ ,
+we could just use \ ``mbs.CreateForce(...)``\  to add a 3D force vector.
+For specific joints, there are also \ ``mbs.Create...(...)``\  functions.
 
 Finally, a sensor is added to the coordinate constraint object with number \ ``nC``\ , requesting the \ ``outputVariableType``\  \ ``Force``\ :
 

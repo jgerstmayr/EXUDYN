@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Symbolic &mdash; Exudyn1.7.57.dev1 1.7.57.dev1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e11081fd" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=cc931d05"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../../_static/copybutton.js?v=f281be69"></script>
+        <script src="../../../_static/js/rtd_search_config.js"></script>
+        <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+        <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "vrRow": ["{[#1,\\, #2,\\, #3]}", 3], "vsix": ["{\\left[\\!\\! \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} \\!\\!\\right]}", 6], "vsixb": ["{\\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "vsixs": ["{ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "omegaBDtilde": "{\\LU{b}{\\tilde \\tomega_\\mathrm{bd}}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}", "termA": ["{\\color{blue}{#1}}", 1], "termB": ["{\\color{red}{#1}}", 1], "termC": ["{\\color{green}{#1}}", 1], "avu": "{\\ddot \\mathbf{q}}", "GA": "{G\\alpha}", "aalg": "{\\mathbf{a}}", "vel": "{\\mathbf{v}}"}}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="GeneralContact" href="GeneralContact.html" />
+    <link rel="prev" title="SystemData" href="SystemData.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn1.7.57.dev1
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../Exudyn.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NotationIndex.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TheoryAndFormulationsIndex.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../SolversIndex.html">Solvers</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="CInterfaceIndex.html">Python-C++ command interface</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="GeneralInformation.html">General information on Python-C++ interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Exudyn.html">Exudyn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SystemContainer.html">SystemContainer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MainSystem.html">MainSystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SystemData.html">SystemData</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Symbolic</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#symbolic-real">symbolic.Real</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#symbolic-vector">symbolic.Vector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#symbolic-variableset">symbolic.VariableSet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#symbolic-userfunction">symbolic.UserFunction</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="GeneralContact.html">GeneralContact</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DataStructures.html">Data structures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html">Type definitions</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../pythonUtilities/index.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structures/StructuresAndSettingsIndex.html">Structures and Settings</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Misc</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ExamplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TestModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn1.7.57.dev1</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="CInterfaceIndex.html">Python-C++ command interface</a></li>
+      <li class="breadcrumb-item active">Symbolic</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/RST/cInterface/Symbolic.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="symbolic">
+<span id="sec-cinterface-symbolic"></span><h1>Symbolic<a class="headerlink" href="#symbolic" title="Link to this heading"></a></h1>
+<p>The Symbolic sub-module in <code class="docutils literal notranslate"><span class="pre">exudyn.symbolic</span></code> allows limited symbolic manipulations in Exudyn and is currently under development In particular, symbolic user functions can be created, which allow significant speedup of Python user functions. However, <strong>always veryfy your symbolic expressions or user functions</strong>, as behavior may be unexpected in some cases.</p>
+<section id="symbolic-real">
+<h2>symbolic.Real<a class="headerlink" href="#symbolic-real" title="Link to this heading"></a></h2>
+<p>The symbolic Real type allows to replace Python’s float by a symbolic quantity. The <code class="docutils literal notranslate"><span class="pre">symbolic.Real</span></code> may be directly set to a float and be evaluated as float. However, turing on recording by using       extttexudyn.symbolic.SetRecording(True) (on by default), results are stored as expression trees, which may be evaluated in C++ or Python, in particular in user functions, see the following example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
+<span class="linenos"> 2</span><span class="n">esym</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">symbolic</span>     <span class="c1">#abbreviation</span>
+<span class="linenos"> 3</span><span class="n">SymReal</span> <span class="o">=</span> <span class="n">esym</span><span class="o">.</span><span class="n">Real</span>     <span class="c1">#abbreviation</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="c1">#create some variables</span>
+<span class="linenos"> 6</span><span class="n">a</span> <span class="o">=</span> <span class="n">SymReal</span><span class="p">(</span><span class="mf">42.</span><span class="p">,</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>    <span class="c1">#use named expression</span>
+<span class="linenos"> 7</span><span class="n">b</span> <span class="o">=</span> <span class="n">SymReal</span><span class="p">(</span><span class="mi">13</span><span class="p">)</span>         <span class="c1">#b is 13</span>
+<span class="linenos"> 8</span><span class="n">c</span> <span class="o">=</span> <span class="n">a</span><span class="o">+</span><span class="n">b</span><span class="o">*</span><span class="mf">7.</span><span class="o">+</span><span class="mf">1.</span><span class="o">-</span><span class="mi">3</span>         <span class="c1">#c stores expression tree</span>
+<span class="linenos"> 9</span><span class="n">d</span> <span class="o">=</span> <span class="n">c</span>                   <span class="c1">#d and c are containing same tree!</span>
+<span class="linenos">10</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;a: &#39;</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="s1">&#39; = &#39;</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="nf">Evaluate</span><span class="p">())</span>
+<span class="linenos">11</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;c: &#39;</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="s1">&#39; = &#39;</span><span class="p">,</span><span class="n">c</span><span class="o">.</span><span class="nf">Evaluate</span><span class="p">())</span>
+<span class="linenos">12</span>
+<span class="linenos">13</span><span class="c1">#use special functions:</span>
+<span class="linenos">14</span><span class="n">d</span> <span class="o">=</span> <span class="n">a</span><span class="o">+</span><span class="n">b</span><span class="o">*</span><span class="n">esym</span><span class="o">.</span><span class="nf">sin</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">+</span><span class="n">esym</span><span class="o">.</span><span class="nf">cos</span><span class="p">(</span><span class="n">SymReal</span><span class="p">(</span><span class="mi">7</span><span class="p">))</span>
+<span class="linenos">15</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;d: &#39;</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="s1">&#39; = &#39;</span><span class="p">,</span><span class="n">d</span><span class="o">.</span><span class="nf">Evaluate</span><span class="p">())</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span><span class="c1">#compute derivatives (automatic differentiation):</span>
+<span class="linenos">18</span><span class="n">x</span> <span class="o">=</span> <span class="n">SymReal</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+<span class="linenos">19</span><span class="n">f</span> <span class="o">=</span> <span class="n">a</span><span class="o">+</span><span class="n">b</span><span class="o">*</span><span class="n">esym</span><span class="o">.</span><span class="nf">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">+</span><span class="n">esym</span><span class="o">.</span><span class="nf">cos</span><span class="p">(</span><span class="n">SymReal</span><span class="p">(</span><span class="mi">7</span><span class="p">))</span><span class="o">+</span><span class="n">x</span><span class="o">**</span><span class="mi">4</span>
+<span class="linenos">20</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;f=&#39;</span><span class="p">,</span><span class="n">f</span><span class="o">.</span><span class="nf">Evaluate</span><span class="p">(),</span> <span class="s1">&#39;, diff=&#39;</span><span class="p">,</span><span class="n">f</span><span class="o">.</span><span class="nf">Diff</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<span class="linenos">21</span>
+<span class="linenos">22</span><span class="c1">#turn off recording of trees (globally for all symbolic.Real!):</span>
+<span class="linenos">23</span><span class="n">esym</span><span class="o">.</span><span class="nf">SetRecording</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+<span class="linenos">24</span><span class="n">x</span> <span class="o">=</span> <span class="n">SymReal</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span> <span class="c1">#now, only represents a value</span>
+<span class="linenos">25</span><span class="n">y</span> <span class="o">=</span> <span class="n">x</span><span class="o">/</span><span class="mf">3.</span>       <span class="c1">#directly evaluates to 14</span>
+</pre></div>
+</div>
+<p>To create a symbolic Real, use <code class="docutils literal notranslate"><span class="pre">aa=symbolic.Real(1.23)</span></code> to build a Python object aa with value 1.23. In order to use a named value, use <code class="docutils literal notranslate"><span class="pre">pi=symbolic.Real(3.14,'pi')</span></code>. Note that in the following, we use the abbreviation <code class="docutils literal notranslate"><span class="pre">SymReal=exudyn.symbolic.Real</span></code>. Member functions of <code class="docutils literal notranslate"><span class="pre">SymReal</span></code>, which are <strong>not recorded</strong>, are:</p>
+<p>The class <strong>symbolic.Real</strong> has the following <strong>functions and structures</strong>:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>SetValue</strong>(<em>valueInit</em>):</div>
+<div class="line">Set either internal float value or value of named expression; cannot change symbolic expressions.</div>
+<div class="line"><em>Example</em>:</div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">b</span> <span class="o">=</span> <span class="n">SymReal</span><span class="p">(</span><span class="mi">13</span><span class="p">)</span>
+<span class="n">b</span><span class="o">.</span><span class="nf">SetValue</span><span class="p">(</span><span class="mi">14</span><span class="p">)</span> <span class="c1">#now b is 14\#b.SetValue(a+3.) #not possible!</span>
+</pre></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>Evaluate</strong>():</div>
+<div class="line">return evaluated expression (prioritized) or stored Real value.</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>Diff</strong>(<em>var</em>):</div>
+<div class="line">return derivative of stored expression with respect to given variable.</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>value</strong>:</div>
+<div class="line">access to internal float value, which is used in case that symbolic.Real has been built from a float (but without a name and without symbolic expression)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>__float__</strong>:</div>
+<div class="line">evaluation of expression and conversion of symbolic.Real to Python float</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>__str__</strong>:</div>
+<div class="line">conversion of symbolic.Real to string</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>__repr__</strong>:</div>
+<div class="line">representation of symbolic.Real in Python</div>
+</div>
+</li>
+</ul>
+<p>The remaining operators and mathematical functions are recorded within expressions. Main mathematical operators for <code class="docutils literal notranslate"><span class="pre">SymReal</span></code> exist, similar to Python, such as:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="n">a</span> <span class="o">=</span> <span class="n">SymReal</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="linenos"> 2</span><span class="n">b</span> <span class="o">=</span> <span class="n">SymReal</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span><span class="n">r1</span> <span class="o">=</span> <span class="n">a</span><span class="o">+</span><span class="n">b</span>
+<span class="linenos"> 5</span><span class="n">r1</span> <span class="o">=</span> <span class="n">a</span><span class="o">-</span><span class="n">b</span>
+<span class="linenos"> 6</span><span class="n">r1</span> <span class="o">=</span> <span class="n">a</span><span class="o">*</span><span class="n">b</span>
+<span class="linenos"> 7</span><span class="n">r1</span> <span class="o">=</span> <span class="n">a</span><span class="o">/</span><span class="n">b</span>
+<span class="linenos"> 8</span><span class="n">r1</span> <span class="o">=</span> <span class="o">-</span><span class="n">a</span>
+<span class="linenos"> 9</span><span class="n">r1</span> <span class="o">=</span> <span class="n">a</span><span class="o">**</span><span class="n">b</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span><span class="n">c</span> <span class="o">=</span> <span class="n">SymReal</span><span class="p">(</span><span class="mf">3.3</span><span class="p">)</span>
+<span class="linenos">12</span><span class="n">c</span> <span class="o">+=</span> <span class="n">b</span>
+<span class="linenos">13</span><span class="n">c</span> <span class="o">-=</span> <span class="n">b</span>
+<span class="linenos">14</span><span class="n">c</span> <span class="o">*=</span> <span class="n">b</span>
+<span class="linenos">15</span><span class="n">c</span> <span class="o">/=</span> <span class="n">b</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span><span class="n">c</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span> <span class="o">==</span> <span class="n">b</span><span class="p">)</span>
+<span class="linenos">18</span><span class="n">c</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span> <span class="o">!=</span> <span class="n">b</span><span class="p">)</span>
+<span class="linenos">19</span><span class="n">c</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span><span class="p">)</span>
+<span class="linenos">20</span><span class="n">c</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span> <span class="o">&gt;</span> <span class="n">b</span><span class="p">)</span>
+<span class="linenos">21</span><span class="n">c</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span> <span class="o">&lt;=</span> <span class="n">b</span><span class="p">)</span>
+<span class="linenos">22</span><span class="n">c</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span> <span class="o">&gt;=</span> <span class="n">b</span><span class="p">)</span>
+<span class="linenos">23</span>
+<span class="linenos">24</span><span class="c1">#in most cases, we can also mix with float:</span>
+<span class="linenos">25</span><span class="n">c</span> <span class="o">=</span> <span class="n">a</span><span class="o">*</span><span class="mi">7</span> <span class="o">+</span> <span class="n">SymReal</span><span class="o">.</span><span class="nf">sin</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Mathematical functions may be called with an <code class="docutils literal notranslate"><span class="pre">SymReal</span></code> or with a <code class="docutils literal notranslate"><span class="pre">float</span></code>. Most standard mathematical functions exist for <code class="docutils literal notranslate"><span class="pre">SymReal</span></code>, e.g., as <code class="docutils literal notranslate"><span class="pre">SymReal.abs</span></code>. <strong>HINT</strong>: function names are lower-case for compatibility with Python’s math library. Thus, you can easily exchange math.sin with SymReal.sin, and you may want to use a generic name, such as myMath=SymReal in order to switch between Python and symbolic user functions. The following functions exist:</p>
+<p>The class <strong>symbolic.Real</strong> has the following <strong>functions and structures</strong>:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>isfinite</strong>(<em>x</em>):</div>
+<div class="line">according to specification of C++ std::isfinite</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>abs</strong>(<em>x</em>):</div>
+<div class="line">according to specification of C++ std::abs</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>round</strong>(<em>x</em>):</div>
+<div class="line">according to specification of C++ std::round</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>ceil</strong>(<em>x</em>):</div>
+<div class="line">according to specification of C++ std::ceil</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>floor</strong>(<em>x</em>):</div>
+<div class="line">according to specification of C++ std::floor</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>sqrt</strong>(<em>x</em>):</div>
+<div class="line">according to specification of C++ std::sqrt</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>exp</strong>(<em>x</em>):</div>
+<div class="line">according to specification of C++ std::exp</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>log</strong>(<em>x</em>):</div>
+<div class="line">according to specification of C++ std::log</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>sin</strong>(<em>x</em>):</div>
+<div class="line">according to specification of C++ std::sin</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>cos</strong>(<em>x</em>):</div>
+<div class="line">according to specification of C++ std::cos</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>tan</strong>(<em>x</em>):</div>
+<div class="line">according to specification of C++ std::tan</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>asin</strong>(<em>x</em>):</div>
+<div class="line">according to specification of C++ std::asin</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>acos</strong>(<em>x</em>):</div>
+<div class="line">according to specification of C++ std::acos</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>atan</strong>(<em>x</em>):</div>
+<div class="line">according to specification of C++ std::atan</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>sinh</strong>(<em>x</em>):</div>
+<div class="line">according to specification of C++ std::sinh</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>cosh</strong>(<em>x</em>):</div>
+<div class="line">according to specification of C++ std::cosh</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>tanh</strong>(<em>x</em>):</div>
+<div class="line">according to specification of C++ std::tanh</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>asinh</strong>(<em>x</em>):</div>
+<div class="line">according to specification of C++ std::asinh</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>acosh</strong>(<em>x</em>):</div>
+<div class="line">according to specification of C++ std::acosh</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>atanh</strong>(<em>x</em>):</div>
+<div class="line">according to specification of C++ std::atanh</div>
+</div>
+</li>
+</ul>
+<p>The following table lists special functions for <code class="docutils literal notranslate"><span class="pre">SymReal</span></code>:</p>
+<p>The class <strong>symbolic.Real</strong> has the following <strong>functions and structures</strong>:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>sign</strong>(<em>x</em>):</div>
+<div class="line">returns 0 for x=0, -1 for x&lt;0 and 1 for x&gt;1.</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>Not</strong>(<em>x</em>):</div>
+<div class="line">returns logical not of expression, equal to Python’s ‘not’. Not(True)=False, Not(0.)=True, Not(-0.1)=False</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>min</strong>(<em>x</em>, <em>y</em>):</div>
+<div class="line">return minimum of x and y.</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>max</strong>(<em>x</em>, <em>y</em>):</div>
+<div class="line">return maximum of x and y.</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>mod</strong>(<em>x</em>, <em>y</em>):</div>
+<div class="line">return floating-point remainder of the division operation x / y. For example, mod(5.1, 3) gives 2.1 as a remainder.</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>pow</strong>(<em>x</em>, <em>y</em>):</div>
+<div class="line">return <span class="math notranslate nohighlight">\(x^y\)</span>.</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>max</strong>(<em>x</em>, <em>y</em>):</div>
+<div class="line">return maximum of x and y.</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>IfThenElse</strong>(<em>condition</em>, <em>ifTrue</em>, <em>ifFalse</em>):</div>
+<div class="line">Symbolic function for conditional evaluation. If the condition evaluates to True, the expression ifTrue is evaluated, while otherwise expression ifFalse is evaluated</div>
+<div class="line"><em>Example</em>:</div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">x</span><span class="o">=</span><span class="n">SymReal</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">y</span><span class="o">=</span><span class="n">SymReal</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+<span class="n">a</span><span class="o">=</span><span class="n">SymReal</span><span class="o">.</span><span class="nf">IfThenElse</span><span class="p">(</span><span class="n">x</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+</pre></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>SetRecording</strong>(<em>flag</em>):</div>
+<div class="line">Set current (global / module-wide) status of expression recording. By default, recording is on.</div>
+<div class="line"><em>Example</em>:</div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">SymReal</span><span class="o">.</span><span class="nf">SetRecording</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>GetRecording</strong>():</div>
+<div class="line">Get current (global / module-wide) status of expression recording.</div>
+<div class="line"><em>Example</em>:</div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">SymReal</span><span class="o">.</span><span class="nf">GetRecording</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="symbolic-vector">
+<h2>symbolic.Vector<a class="headerlink" href="#symbolic-vector" title="Link to this heading"></a></h2>
+<p>A symbolic Vector type to replace Python’s (1D) numpy array in symbolic expressions. The <code class="docutils literal notranslate"><span class="pre">symbolic.Vector</span></code> may be directly set to a list of floats or (1D) numpy array and be evaluated as array. However, turing on recording by using   extttexudyn.symbolic.SetRecording(True) (on by default), results are stored as expression trees, which may be evaluated in C++ or Python, in particular in user functions, see the following example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
+<span class="linenos"> 2</span><span class="n">esym</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">symbolic</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span><span class="n">SymVector</span> <span class="o">=</span> <span class="n">esym</span><span class="o">.</span><span class="n">Vector</span>
+<span class="linenos"> 5</span><span class="n">SymReal</span> <span class="o">=</span> <span class="n">esym</span><span class="o">.</span><span class="n">Real</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span><span class="n">a</span> <span class="o">=</span> <span class="n">SymReal</span><span class="p">(</span><span class="mf">42.</span><span class="p">,</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>
+<span class="linenos"> 8</span><span class="n">b</span> <span class="o">=</span> <span class="n">SymReal</span><span class="p">(</span><span class="mi">13</span><span class="p">)</span>
+<span class="linenos"> 9</span><span class="n">c</span> <span class="o">=</span> <span class="n">a</span><span class="o">-</span><span class="mi">3</span><span class="o">*</span><span class="n">b</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span><span class="c1">#create from list:</span>
+<span class="linenos">12</span><span class="n">v1</span> <span class="o">=</span> <span class="n">SymVector</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+<span class="linenos">13</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;v1: &#39;</span><span class="p">,</span><span class="n">v1</span><span class="p">)</span>
+<span class="linenos">14</span>
+<span class="linenos">15</span><span class="c1">#create from numpy array:</span>
+<span class="linenos">16</span><span class="n">v2</span> <span class="o">=</span> <span class="n">SymVector</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">]))</span>
+<span class="linenos">17</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;v2 initial: &#39;</span><span class="p">,</span><span class="n">v2</span><span class="p">)</span>
+<span class="linenos">18</span>
+<span class="linenos">19</span><span class="c1">#create from list, mixing symbolic expressions and numbers:</span>
+<span class="linenos">20</span><span class="n">v2</span> <span class="o">=</span> <span class="n">SymVector</span><span class="p">([</span><span class="n">a</span><span class="p">,</span><span class="mi">42</span><span class="p">,</span><span class="n">c</span><span class="p">])</span>
+<span class="linenos">21</span>
+<span class="linenos">22</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;v2 now: &#39;</span><span class="p">,</span><span class="n">v2</span><span class="p">,</span><span class="s2">&quot;=&quot;</span><span class="p">,</span><span class="n">v2</span><span class="o">.</span><span class="nf">Evaluate</span><span class="p">())</span>
+<span class="linenos">23</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;v1+v2: &#39;</span><span class="p">,</span><span class="n">v1</span><span class="o">+</span><span class="n">v2</span><span class="p">,</span><span class="s2">&quot;=&quot;</span><span class="p">,(</span><span class="n">v1</span><span class="o">+</span><span class="n">v2</span><span class="p">)</span><span class="o">.</span><span class="nf">Evaluate</span><span class="p">())</span> <span class="c1">#evaluate as vector</span>
+<span class="linenos">24</span>
+<span class="linenos">25</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;v1*v2: &#39;</span><span class="p">,</span><span class="n">v1</span><span class="o">*</span><span class="n">v2</span><span class="p">,</span><span class="s2">&quot;=&quot;</span><span class="p">,(</span><span class="n">v1</span><span class="o">*</span><span class="n">v2</span><span class="p">)</span><span class="o">.</span><span class="nf">Evaluate</span><span class="p">())</span> <span class="c1">#evaluate as Real</span>
+<span class="linenos">26</span>
+<span class="linenos">27</span><span class="c1">#access of vector component:</span>
+<span class="linenos">28</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;v1[2]: &#39;</span><span class="p">,</span><span class="n">v1</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="s2">&quot;=&quot;</span><span class="p">,</span><span class="n">v1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="nf">Evaluate</span><span class="p">())</span>   <span class="c1">#evaluate as Real</span>
+</pre></div>
+</div>
+<p>To create a symbolic Vector, use <code class="docutils literal notranslate"><span class="pre">aa=symbolic.Vector([3,4.2,5]</span></code> to build a Python object aa with values [3,4.2,5]. In order to use a named vector, use <code class="docutils literal notranslate"><span class="pre">v=symbolic.Vector([3,4.2,5],'myVec')</span></code>. Vectors can be also created from mixed symbolic expressions and numbers, such as <code class="docutils literal notranslate"><span class="pre">v=symbolic.Vector([x,x**2,3.14])</span></code>, however, this cannot become a named vector as it contains expressions. Note that in the following, we use the abbreviation <code class="docutils literal notranslate"><span class="pre">SymVector=exudyn.symbolic.Vector</span></code>. Note that only functions are able to be recorded. Member functions of <code class="docutils literal notranslate"><span class="pre">SymVector</span></code> are:</p>
+<p>The class <strong>symbolic.Vector</strong> has the following <strong>functions and structures</strong>:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>Evaluate</strong>():</div>
+<div class="line">Return evaluated expression (prioritized) or stored vector value. (not recorded)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>SetVector</strong>(<em>vector</em>):</div>
+<div class="line">Set stored vector or named vector expression to new given (non-symbolic) vector. Only works, if SymVector contains no expression. (may lead to inconsistencies in recording)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>NumberOfItems</strong>():</div>
+<div class="line">Get size of Vector (may require to evaluate expression; not recording)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>data[index]= …</strong><em>i</em>:</div>
+<div class="line">bracket [] operator for setting a component of the vector. Only works, if SymVector contains no expression. (may lead to inconsistencies in recording)</div>
+<div class="line"><em>Example</em>:</div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">v1</span> <span class="o">=</span> <span class="n">SymVector</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">v1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">=</span><span class="mf">13.</span>
+</pre></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>NormL2</strong>():</div>
+<div class="line">return (symbolic) L2-norm of vector.</div>
+<div class="line"><em>Example</em>:</div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">v1</span> <span class="o">=</span> <span class="n">SymVector</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">8</span><span class="p">])</span>
+<span class="n">length</span> <span class="o">=</span> <span class="n">v1</span><span class="o">.</span><span class="nf">NormL2</span><span class="p">()</span> <span class="c1">#gives 9.</span>
+</pre></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>MultComponents</strong>(<em>other</em>):</div>
+<div class="line">Perform component-wise multiplication of vector times other vector and return result.</div>
+<div class="line"><em>Example</em>:</div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">v1</span> <span class="o">=</span> <span class="n">SymVector</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
+<span class="n">v2</span> <span class="o">=</span> <span class="n">SymVector</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.25</span><span class="p">])</span>
+<span class="n">v3</span> <span class="o">=</span> <span class="n">v1</span><span class="o">.</span><span class="nf">MultComponents</span><span class="p">(</span><span class="n">v2</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>… = data[index]</strong><em>i</em>:</div>
+<div class="line">return (symbolic) component of vector, allowing only read-access. Index may also evaluate from an expression.</div>
+<div class="line"><em>Example</em>:</div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">v1</span> <span class="o">=</span> <span class="n">SymVector</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;v1.z=&#39;</span><span class="p">,</span><span class="n">v1</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+</pre></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>__str__</strong>:</div>
+<div class="line">conversion of SymVector to string</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>__repr__</strong>:</div>
+<div class="line">representation of SymVector in Python</div>
+</div>
+</li>
+</ul>
+<p>Standard vector operators are available for <code class="docutils literal notranslate"><span class="pre">SymVector</span></code>, see the following examples:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="n">v</span> <span class="o">=</span> <span class="n">SymVector</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+<span class="linenos"> 2</span><span class="n">w</span> <span class="o">=</span> <span class="n">SymVector</span><span class="p">([</span><span class="mf">3.3</span><span class="p">,</span><span class="mf">2.2</span><span class="p">,</span><span class="mf">1.1</span><span class="p">])</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span><span class="n">u</span> <span class="o">=</span> <span class="n">v</span><span class="o">+</span><span class="n">w</span>
+<span class="linenos"> 5</span><span class="n">u</span> <span class="o">=</span> <span class="n">v</span><span class="o">-</span><span class="n">w</span>
+<span class="linenos"> 6</span><span class="n">u</span> <span class="o">=</span> <span class="o">-</span><span class="n">v</span>
+<span class="linenos"> 7</span><span class="c1">#scalar multiplication; evaluates to SymReal:</span>
+<span class="linenos"> 8</span><span class="n">x</span> <span class="o">=</span> <span class="n">v</span><span class="o">*</span><span class="n">w</span>
+<span class="linenos"> 9</span><span class="c1">#NOTE: component-wise multiplication, returns SymVector:</span>
+<span class="linenos">10</span><span class="n">u</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="nf">MultComponents</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+<span class="linenos">11</span>
+<span class="linenos">12</span><span class="c1">#inplace operators:</span>
+<span class="linenos">13</span><span class="n">v</span> <span class="o">+=</span> <span class="n">w</span>
+<span class="linenos">14</span><span class="n">v</span> <span class="o">-=</span> <span class="n">w</span>
+<span class="linenos">15</span><span class="n">v</span> <span class="o">*=</span> <span class="n">SymReal</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="symbolic-variableset">
+<h2>symbolic.VariableSet<a class="headerlink" href="#symbolic-variableset" title="Link to this heading"></a></h2>
+<p>A container for symbolic variables, in particular for exchange between user functions and the model. For details, see the following example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
+<span class="linenos"> 2</span><span class="kn">import</span> <span class="nn">math</span>
+<span class="linenos"> 3</span><span class="n">SymReal</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">symbolic</span><span class="o">.</span><span class="n">Real</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="c1">#use global variable set:</span>
+<span class="linenos"> 6</span><span class="n">variables</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">symbolic</span><span class="o">.</span><span class="n">variables</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span><span class="c1">#create a named Real</span>
+<span class="linenos"> 9</span><span class="n">a</span> <span class="o">=</span> <span class="n">SymReal</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span><span class="mf">42.</span><span class="p">)</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span><span class="c1">#regular way to add variable:</span>
+<span class="linenos">12</span><span class="n">variables</span><span class="o">.</span><span class="nf">Add</span><span class="p">(</span><span class="s1">&#39;pi&#39;</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+<span class="linenos">13</span>
+<span class="linenos">14</span><span class="c1">#add named variable (doesn&#39;t need a name):</span>
+<span class="linenos">15</span><span class="n">variables</span><span class="o">.</span><span class="nf">Add</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span><span class="c1">#print current variable set</span>
+<span class="linenos">18</span><span class="nb">print</span><span class="p">(</span><span class="n">variables</span><span class="p">)</span>
+<span class="linenos">19</span>
+<span class="linenos">20</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;pi=&#39;</span><span class="p">,</span><span class="n">variables</span><span class="o">.</span><span class="nf">Get</span><span class="p">(</span><span class="s1">&#39;pi&#39;</span><span class="p">)</span><span class="o">.</span><span class="nf">Evaluate</span><span class="p">())</span> <span class="c1">#3.14</span>
+<span class="linenos">21</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;a=&#39;</span><span class="p">,</span><span class="n">variables</span><span class="o">.</span><span class="nf">Get</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">))</span> <span class="c1">#prints &#39;a&#39;</span>
+<span class="linenos">22</span>
+<span class="linenos">23</span><span class="n">x</span><span class="o">=</span><span class="n">variables</span><span class="o">.</span><span class="nf">Get</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
+<span class="linenos">24</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;x=&#39;</span><span class="p">,</span><span class="n">x</span><span class="o">.</span><span class="nf">Evaluate</span><span class="p">())</span> <span class="c1">#x=42</span>
+<span class="linenos">25</span>
+<span class="linenos">26</span><span class="c1">#override a</span>
+<span class="linenos">27</span><span class="n">variables</span><span class="o">.</span><span class="nf">Set</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="mf">3.33</span><span class="p">)</span>
+<span class="linenos">28</span>
+<span class="linenos">29</span><span class="c1">#x is depending on a:</span>
+<span class="linenos">30</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;x:&#39;</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="s2">&quot;=&quot;</span><span class="p">,</span><span class="n">x</span><span class="o">.</span><span class="nf">Evaluate</span><span class="p">())</span> <span class="c1">#3.33</span>
+<span class="linenos">31</span>
+<span class="linenos">32</span><span class="c1">#create your own variable set</span>
+<span class="linenos">33</span><span class="n">mySet</span> <span class="o">=</span> <span class="n">esym</span><span class="o">.</span><span class="n">VariableSet</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The class <strong>symbolic.VariableSet</strong> has the following <strong>functions and structures</strong>:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>Add</strong>(<em>name</em>, <em>value</em>):</div>
+<div class="line">Add a variable with name and value (name may not exist)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>Add</strong>(<em>namedReal</em>):</div>
+<div class="line">Add a variable with named real (name may not exist)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>Set</strong>(<em>name</em>, <em>value</em>):</div>
+<div class="line">Set a variable with name and value (adds new or overrides existing)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>Get</strong>(<em>name</em>):</div>
+<div class="line">Get a variable by name</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>Exists</strong>(<em>name</em>):</div>
+<div class="line">Return True, if variable name exists</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>Reset</strong>():</div>
+<div class="line">Erase all variables and reset VariableSet</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>NumberOfItems</strong>(<em>name</em>):</div>
+<div class="line">Return True, if variable name exists</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>GetNames</strong>():</div>
+<div class="line">Get list of stored variable names</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>data[index]= …</strong><em>name</em>, <em>value</em>:</div>
+<div class="line">bracket [] operator for setting a variable to a specific value</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>… = data[index]</strong><em>name</em>:</div>
+<div class="line">bracket [] operator for getting a specific variable by name</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>__str__</strong>:</div>
+<div class="line">create string of set of variables</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>__repr__</strong>:</div>
+<div class="line">representation of SymVector in Python</div>
+</div>
+</li>
+</ul>
+</section>
+<section id="symbolic-userfunction">
+<h2>symbolic.UserFunction<a class="headerlink" href="#symbolic-userfunction" title="Link to this heading"></a></h2>
+<p>A class for creating and handling symbolic user functions in C++. Use these functions for high performance extensions, e.g., of existing objects or loadsFor details, see the following example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
+<span class="linenos"> 2</span><span class="n">esym</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">symbolic</span>
+<span class="linenos"> 3</span><span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="o">*</span> <span class="c1">#advancedUtilities with user function utilities included</span>
+<span class="linenos"> 4</span><span class="n">SymReal</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">symbolic</span><span class="o">.</span><span class="n">Real</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span><span class="c1">#regular Python user function with esym math functions</span>
+<span class="linenos"> 7</span><span class="k">def</span> <span class="nf">UFload</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">load</span><span class="p">):</span>
+<span class="linenos"> 8</span>    <span class="k">return</span> <span class="n">load</span><span class="o">*</span><span class="n">esym</span><span class="o">.</span><span class="nf">sin</span><span class="p">(</span><span class="mi">10</span><span class="o">*</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">pi</span><span class="p">)</span><span class="o">*</span><span class="n">t</span><span class="p">)</span>
+<span class="linenos"> 9</span>
+<span class="linenos">10</span><span class="c1">#add ground and mass point:</span>
+<span class="linenos">11</span><span class="n">oGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateGround</span><span class="p">()</span>
+<span class="linenos">12</span><span class="n">oMassPoint</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateMassPoint</span><span class="p">(</span><span class="n">referencePosition</span><span class="o">=</span><span class="p">[</span><span class="mf">1.</span><span class="o">+</span><span class="mf">0.05</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">physicsMass</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="linenos">13</span>
+<span class="linenos">14</span><span class="c1">#add marker and load:</span>
+<span class="linenos">15</span><span class="n">mc</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerNodeCoordinate</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">GetObject</span><span class="p">[</span><span class="n">oMassPoint</span><span class="p">][</span><span class="s1">&#39;nodeNumber&#39;</span><span class="p">],</span> <span class="n">coordinate</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+<span class="linenos">16</span><span class="n">load</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddLoad</span><span class="p">(</span><span class="nc">LoadCoordinate</span><span class="p">(</span><span class="n">markerNumber</span><span class="o">=</span><span class="n">mc</span><span class="p">,</span> <span class="n">load</span><span class="o">=</span><span class="mi">10</span><span class="p">))</span>
+<span class="linenos">17</span>
+<span class="linenos">18</span><span class="c1">#create symbolic user function from Python user function:</span>
+<span class="linenos">19</span><span class="n">symFuncLoad</span> <span class="o">=</span> <span class="nf">CreateSymbolicUserFunction</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">UFload</span><span class="p">,</span> <span class="n">load</span><span class="p">,</span> <span class="s1">&#39;loadUserFunction&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="linenos">20</span><span class="c1">#set this user function to C++ object:</span>
+<span class="linenos">21</span><span class="n">c</span><span class="o">.</span><span class="nf">TransferUserFunction2Item</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">load</span><span class="p">,</span> <span class="s1">&#39;loadUserFunction&#39;</span><span class="p">)</span>
+<span class="linenos">22</span>
+<span class="linenos">23</span><span class="c1">#print string of symbolic expression of user function (to check if it looks ok):</span>
+<span class="linenos">24</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;load user function: &#39;</span><span class="p">,</span><span class="n">symFuncLoad</span><span class="p">)</span>
+<span class="linenos">25</span>
+<span class="linenos">26</span><span class="c1">#test evaluate user function; requires args of user function:</span>
+<span class="linenos">27</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;load user function: &#39;</span><span class="p">,</span><span class="n">symFuncLoad</span><span class="o">.</span><span class="nf">Evaluate</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="mf">0.025</span><span class="p">,</span> <span class="mf">10.</span><span class="p">))</span>
+<span class="linenos">28</span>
+<span class="linenos">29</span><span class="c1">#now you could add further items or simulate ...</span>
+</pre></div>
+</div>
+<p>The class <strong>symbolic.UserFunction</strong> has the following <strong>functions and structures</strong>:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>Evaluate</strong>():</div>
+<div class="line">Evaluate symbolic function with test values; requires exactly same args as Python user functions; this is slow and only intended for testing</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>SetUserFunctionFromDict</strong>(<em>mainSystem</em>, <em>fcnDict</em>, <em>itemIndex</em>, <em>userFunctionName</em>):</div>
+<div class="line">Create C++ std::function (as requested in C++ item) with symbolic user function as recorded in given dictionary, as created with ConvertFunctionToSymbolic(…).</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>TransferUserFunction2Item</strong>(<em>mainSystem</em>, <em>itemIndex</em>, <em>userFunctionName</em>):</div>
+<div class="line">Transfer the std::function to a given object, load or other; this needs to be done purely in C++ to avoid Pybind overheads.</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>__repr__</strong>:</div>
+<div class="line">Representation of Symbolic function</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>__str__</strong>:</div>
+<div class="line">Convert stored symbolic function to string</div>
+</div>
+</li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="SystemData.html" class="btn btn-neutral float-left" title="SystemData" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="GeneralContact.html" class="btn btn-neutral float-right" title="GeneralContact" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,22 +1,24 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Exudyn &mdash; Exudyn1.7.5.dev1 1.7.5.dev1 documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  <title>Exudyn &mdash; Exudyn1.7.57.dev1 1.7.57.dev1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e11081fd" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=e63eafc5"></script>
+        <script src="../../../_static/documentation_options.js?v=cc931d05"></script>
         <script src="../../../_static/doctools.js?v=888ff710"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -39,7 +41,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.7.5.dev1
+            Exudyn1.7.57.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -65,6 +67,7 @@
 <li class="toctree-l2"><a class="reference internal" href="SystemContainer.html">SystemContainer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="MainSystem.html">MainSystem</a></li>
 <li class="toctree-l2"><a class="reference internal" href="SystemData.html">SystemData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Symbolic.html">Symbolic</a></li>
 <li class="toctree-l2"><a class="reference internal" href="GeneralContact.html">GeneralContact</a></li>
 <li class="toctree-l2"><a class="reference internal" href="DataStructures.html">Data structures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html">Type definitions</a></li>
@@ -91,7 +94,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.7.5.dev1</a>
+          <a href="../../../index.html">Exudyn1.7.57.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -229,8 +232,48 @@
 </div>
 </li>
 <li><div class="line-block">
+<div class="line"><strong>Demo1</strong>(<em>showAll</em>):</div>
+<div class="line">Run simple demo without graphics to check functionality, see exudyn/demos.py</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>Demo2</strong>(<em>showAll</em>):</div>
+<div class="line">Run advanced demo without graphics to check functionality, see exudyn/demos.py</div>
+</div>
+</li>
+<li><div class="line-block">
 <div class="line"><strong>InvalidIndex</strong>():</div>
 <div class="line">This function provides the invalid index, which may depend on the kind of 32-bit, 64-bit signed or unsigned integer; e.g. node index or item index in list; currently, the InvalidIndex() gives -1, but it may be changed in future versions, therefore you should use this function</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>__version__</strong>:</div>
+<div class="line">stores the current version of the Exudyn package</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>symbolic</strong>:</div>
+<div class="line">the symbolic submodule for creating symbolic variables in Python, see documentation of Symbolic; For details, see Section Symbolic.</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>experimental</strong>:</div>
+<div class="line">Experimental features, not intended for regular users; for available features, see the C++ code class PyExperimental</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>special</strong>:</div>
+<div class="line">special attributes and functions, such as global (solver) flags or helper functions; not intended for regular users; for available features, see the C++ code class PySpecial</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>special.solver</strong>:</div>
+<div class="line">special solver attributes and functions; not intended for regular users; for available features, see the C++ code class PySpecialSolver</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>special.solver.timeout</strong>:</div>
+<div class="line">if &gt;= 0, the solver stops after reaching accoring CPU time specified with timeout; makes sense for parameter variation, automatic testing or for long-running simulations; default=-1 (no timeout)</div>
 </div>
 </li>
 <li><div class="line-block">

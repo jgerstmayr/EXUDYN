@@ -1,22 +1,24 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>mainSystemExtensionsTests.py &mdash; Exudyn1.7.5.dev1 1.7.5.dev1 documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  <title>mainSystemExtensionsTests.py &mdash; Exudyn1.7.57.dev1 1.7.57.dev1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e11081fd" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=e63eafc5"></script>
+        <script src="../../../_static/documentation_options.js?v=cc931d05"></script>
         <script src="../../../_static/doctools.js?v=888ff710"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -39,7 +41,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.7.5.dev1
+            Exudyn1.7.57.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -74,6 +76,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../TestModelsIndex.html">TestModels</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="abaqusImportTest.html">abaqusImportTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ANCFBeamTest.html">ANCFBeamTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ANCFcable2DuserFunction.html">ANCFcable2DuserFunction.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ANCFcontactCircleTest.html">ANCFcontactCircleTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ANCFcontactFrictionTest.html">ANCFcontactFrictionTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ANCFgeneralContactCircle.html">ANCFgeneralContactCircle.py</a></li>
@@ -126,6 +129,7 @@
 <li class="toctree-l2"><a class="reference internal" href="revoluteJointprismaticJointTest.html">revoluteJointprismaticJointTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rigidBodyAsUserFunctionTest.html">rigidBodyAsUserFunctionTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rigidBodyCOMtest.html">rigidBodyCOMtest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodySpringDamperIntrinsic.html">rigidBodySpringDamperIntrinsic.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rollingCoinTest.html">rollingCoinTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rollingCoinPenaltyTest.html">rollingCoinPenaltyTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rotatingTableTest.html">rotatingTableTest.py</a></li>
@@ -151,7 +155,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.7.5.dev1</a>
+          <a href="../../../index.html">Exudyn1.7.57.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -272,7 +276,7 @@
 <span class="linenos"> 97</span>
 <span class="linenos"> 98</span><span class="n">oGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectGround</span><span class="p">())</span>
 <span class="linenos"> 99</span><span class="c1">#add vertical spring</span>
-<span class="linenos">100</span><span class="n">oSD</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateSpringDamper</span><span class="p">(</span><span class="n">bodyOrNodeList</span><span class="o">=</span><span class="p">[</span><span class="n">oGround</span><span class="p">,</span> <span class="n">b0</span><span class="p">],</span>
+<span class="linenos">100</span><span class="n">oSD</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateSpringDamper</span><span class="p">(</span><span class="n">bodyList</span><span class="o">=</span><span class="p">[</span><span class="n">oGround</span><span class="p">,</span> <span class="n">b0</span><span class="p">],</span>
 <span class="linenos">101</span>                             <span class="n">localPosition0</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
 <span class="linenos">102</span>                             <span class="n">localPosition1</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
 <span class="linenos">103</span>                             <span class="n">stiffness</span><span class="o">=</span><span class="mf">1e4</span><span class="p">,</span> <span class="n">damping</span><span class="o">=</span><span class="mf">1e2</span><span class="p">,</span>
@@ -305,7 +309,7 @@
 <span class="linenos">130</span>
 <span class="linenos">131</span><span class="n">oGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectGround</span><span class="p">())</span>
 <span class="linenos">132</span>
-<span class="linenos">133</span><span class="n">oSD</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateCartesianSpringDamper</span><span class="p">(</span><span class="n">bodyOrNodeList</span><span class="o">=</span><span class="p">[</span><span class="n">oGround</span><span class="p">,</span> <span class="n">b0</span><span class="p">],</span>
+<span class="linenos">133</span><span class="n">oSD</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateCartesianSpringDamper</span><span class="p">(</span><span class="n">bodyList</span><span class="o">=</span><span class="p">[</span><span class="n">oGround</span><span class="p">,</span> <span class="n">b0</span><span class="p">],</span>
 <span class="linenos">134</span>                              <span class="n">localPosition0</span><span class="o">=</span><span class="p">[</span><span class="mf">7.5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
 <span class="linenos">135</span>                              <span class="n">localPosition1</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
 <span class="linenos">136</span>                              <span class="n">stiffness</span><span class="o">=</span><span class="p">[</span><span class="mi">200</span><span class="p">,</span><span class="mi">2000</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">damping</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
@@ -436,148 +440,163 @@
 <span class="linenos">261</span>                       <span class="n">rotationMatrixAxes</span><span class="o">=</span><span class="nf">RotationMatrixX</span><span class="p">(</span><span class="mf">0.125</span><span class="o">*</span><span class="n">pi</span><span class="p">),</span> <span class="c1">#tilt axes</span>
 <span class="linenos">262</span>                       <span class="n">useGlobalFrame</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">axesRadius</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">axesLength</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
 <span class="linenos">263</span>
-<span class="linenos">264</span><span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
-<span class="linenos">265</span><span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">()</span> <span class="c1">#takes currently set values or default values</span>
-<span class="linenos">266</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="mi">1000</span>
-<span class="linenos">267</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="mi">2</span>
-<span class="linenos">268</span>
-<span class="linenos">269</span><span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">simulationSettings</span><span class="p">)</span>
-<span class="linenos">270</span><span class="c1"># mbs.SolutionViewer()</span>
-<span class="linenos">271</span>
-<span class="linenos">272</span><span class="n">testError</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetODE2Coordinates</span><span class="p">())</span>
-<span class="linenos">273</span><span class="n">testErrorTotal</span> <span class="o">+=</span> <span class="n">testError</span>
-<span class="linenos">274</span><span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s1">&#39;solution of mainSystemExtensions test GJ=&#39;</span><span class="p">,</span><span class="n">testError</span><span class="p">)</span>
+<span class="linenos">264</span><span class="c1">#add global force:</span>
+<span class="linenos">265</span><span class="n">f0</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateForce</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">b0</span><span class="p">,</span> <span class="n">loadVector</span><span class="o">=</span><span class="p">[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">20.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],</span> <span class="n">localPosition</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="linenos">266</span>
+<span class="linenos">267</span><span class="c1">#define user function for torque</span>
+<span class="linenos">268</span><span class="k">def</span> <span class="nf">UFtorque</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">load</span><span class="p">):</span>
+<span class="linenos">269</span>    <span class="n">val</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="linenos">270</span>    <span class="k">if</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+<span class="linenos">271</span>        <span class="n">val</span> <span class="o">=</span> <span class="n">t</span><span class="o">*</span><span class="n">t</span>
+<span class="linenos">272</span>    <span class="c1">#print(&#39;load type=&#39;,type(load))</span>
+<span class="linenos">273</span>    <span class="c1"># return val*load</span>
+<span class="linenos">274</span>    <span class="k">return</span> <span class="n">val</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">load</span><span class="p">)</span>
 <span class="linenos">275</span>
-<span class="linenos">276</span><span class="c1">#%%++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos">277</span><span class="c1">#create single mass point and compute linearized system and eigenvalues:</span>
-<span class="linenos">278</span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
-<span class="linenos">279</span><span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="o">*</span> <span class="c1">#includes itemInterface, graphicsDataUtilities and rigidBodyUtilities</span>
-<span class="linenos">280</span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="linenos">281</span><span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
-<span class="linenos">282</span><span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
-<span class="linenos">283</span>
-<span class="linenos">284</span><span class="n">b0</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateMassPoint</span><span class="p">(</span><span class="n">referencePosition</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-<span class="linenos">285</span>                         <span class="n">initialVelocity</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-<span class="linenos">286</span>                         <span class="n">physicsMass</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">gravity</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">9.81</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-<span class="linenos">287</span>                         <span class="n">drawSize</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color4blue</span><span class="p">)</span>
-<span class="linenos">288</span>
-<span class="linenos">289</span><span class="n">oGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectGround</span><span class="p">())</span>
-<span class="linenos">290</span><span class="c1">#add vertical spring</span>
-<span class="linenos">291</span><span class="n">oSD</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateSpringDamper</span><span class="p">(</span><span class="n">bodyOrNodeList</span><span class="o">=</span><span class="p">[</span><span class="n">oGround</span><span class="p">,</span> <span class="n">b0</span><span class="p">],</span>
-<span class="linenos">292</span>                             <span class="n">localPosition0</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-<span class="linenos">293</span>                             <span class="n">localPosition1</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-<span class="linenos">294</span>                             <span class="n">stiffness</span><span class="o">=</span><span class="mf">1e4</span><span class="p">,</span> <span class="n">damping</span><span class="o">=</span><span class="mf">1e2</span><span class="p">,</span>
-<span class="linenos">295</span>                             <span class="n">drawSize</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
-<span class="linenos">296</span>
-<span class="linenos">297</span><span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
-<span class="linenos">298</span><span class="p">[</span><span class="n">M</span><span class="p">,</span><span class="n">K</span><span class="p">,</span><span class="n">D</span><span class="p">]</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">ComputeLinearizedSystem</span><span class="p">()</span>
-<span class="linenos">299</span><span class="c1"># exu.Print(&#39;M=\n&#39;,M,&#39;\nK=\n&#39;,K,&#39;\nD=\n&#39;,D) #check if K makes sense?</span>
-<span class="linenos">300</span>
-<span class="linenos">301</span><span class="p">[</span><span class="n">eigenvalues</span><span class="p">,</span> <span class="n">eigenvectors</span><span class="p">]</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">ComputeODE2Eigenvalues</span><span class="p">()</span>
-<span class="linenos">302</span><span class="c1"># exu.Print(&#39;eigenvalues=\n&#39;,eigenvalues)</span>
-<span class="linenos">303</span><span class="c1"># exu.Print(&#39;eigenvectors=\n&#39;,eigenvectors)</span>
+<span class="linenos">276</span><span class="c1">#add torque applied in body coordinates:</span>
+<span class="linenos">277</span><span class="n">t0</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateTorque</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">b0</span><span class="p">,</span> <span class="n">loadVector</span><span class="o">=</span><span class="p">[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">10.</span><span class="p">],</span> <span class="n">bodyFixed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">278</span>                      <span class="n">loadVectorUserFunction</span><span class="o">=</span><span class="n">UFtorque</span><span class="p">)</span>
+<span class="linenos">279</span>
+<span class="linenos">280</span><span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
+<span class="linenos">281</span><span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">()</span> <span class="c1">#takes currently set values or default values</span>
+<span class="linenos">282</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="linenos">283</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="linenos">284</span>
+<span class="linenos">285</span><span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">simulationSettings</span><span class="p">)</span>
+<span class="linenos">286</span><span class="c1"># mbs.SolutionViewer()</span>
+<span class="linenos">287</span>
+<span class="linenos">288</span><span class="n">testError</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetODE2Coordinates</span><span class="p">())</span>
+<span class="linenos">289</span><span class="n">testErrorTotal</span> <span class="o">+=</span> <span class="n">testError</span>
+<span class="linenos">290</span><span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s1">&#39;solution of mainSystemExtensions test GJ=&#39;</span><span class="p">,</span><span class="n">testError</span><span class="p">)</span>
+<span class="linenos">291</span>
+<span class="linenos">292</span><span class="c1">#%%++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">293</span><span class="c1">#create single mass point and compute linearized system and eigenvalues:</span>
+<span class="linenos">294</span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
+<span class="linenos">295</span><span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="o">*</span> <span class="c1">#includes itemInterface, graphicsDataUtilities and rigidBodyUtilities</span>
+<span class="linenos">296</span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="linenos">297</span><span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
+<span class="linenos">298</span><span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
+<span class="linenos">299</span>
+<span class="linenos">300</span><span class="n">b0</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateMassPoint</span><span class="p">(</span><span class="n">referencePosition</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos">301</span>                         <span class="n">initialVelocity</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos">302</span>                         <span class="n">physicsMass</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">gravity</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">9.81</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos">303</span>                         <span class="n">drawSize</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color4blue</span><span class="p">)</span>
 <span class="linenos">304</span>
-<span class="linenos">305</span><span class="n">testError</span> <span class="o">=</span> <span class="mf">1e-3</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">)</span>
-<span class="linenos">306</span><span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s1">&#39;solution of mainSystemExtensions test LinEig=&#39;</span><span class="p">,</span><span class="n">testError</span><span class="p">)</span>
-<span class="linenos">307</span><span class="n">testErrorTotal</span> <span class="o">+=</span> <span class="n">testError</span>
-<span class="linenos">308</span>
-<span class="linenos">309</span><span class="c1">#%%++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos">310</span><span class="c1">#create rigid body with generic joint: compute system DOF</span>
-<span class="linenos">311</span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
-<span class="linenos">312</span><span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="o">*</span> <span class="c1">#includes itemInterface, graphicsDataUtilities and rigidBodyUtilities</span>
-<span class="linenos">313</span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="linenos">314</span><span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
-<span class="linenos">315</span><span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
+<span class="linenos">305</span><span class="n">oGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectGround</span><span class="p">())</span>
+<span class="linenos">306</span><span class="c1">#add vertical spring</span>
+<span class="linenos">307</span><span class="n">oSD</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateSpringDamper</span><span class="p">(</span><span class="n">bodyList</span><span class="o">=</span><span class="p">[</span><span class="n">oGround</span><span class="p">,</span> <span class="n">b0</span><span class="p">],</span>
+<span class="linenos">308</span>                             <span class="n">localPosition0</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos">309</span>                             <span class="n">localPosition1</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos">310</span>                             <span class="n">stiffness</span><span class="o">=</span><span class="mf">1e4</span><span class="p">,</span> <span class="n">damping</span><span class="o">=</span><span class="mf">1e2</span><span class="p">,</span>
+<span class="linenos">311</span>                             <span class="n">drawSize</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="linenos">312</span>
+<span class="linenos">313</span><span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
+<span class="linenos">314</span><span class="p">[</span><span class="n">M</span><span class="p">,</span><span class="n">K</span><span class="p">,</span><span class="n">D</span><span class="p">]</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">ComputeLinearizedSystem</span><span class="p">()</span>
+<span class="linenos">315</span><span class="c1"># exu.Print(&#39;M=\n&#39;,M,&#39;\nK=\n&#39;,K,&#39;\nD=\n&#39;,D) #check if K makes sense?</span>
 <span class="linenos">316</span>
-<span class="linenos">317</span><span class="n">b0</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateRigidBody</span><span class="p">(</span><span class="n">inertia</span> <span class="o">=</span> <span class="nc">InertiaCuboid</span><span class="p">(</span><span class="n">density</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span>
-<span class="linenos">318</span>                                                 <span class="n">sideLengths</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.1</span><span class="p">]),</span>
-<span class="linenos">319</span>                         <span class="n">referencePosition</span> <span class="o">=</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-<span class="linenos">320</span>                         <span class="n">initialAngularVelocity</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-<span class="linenos">321</span>                         <span class="n">gravity</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">9.81</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-<span class="linenos">322</span>                         <span class="n">graphicsDataList</span> <span class="o">=</span> <span class="p">[</span><span class="nf">GraphicsDataOrthoCubePoint</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.1</span><span class="p">],</span>
-<span class="linenos">323</span>                                                                      <span class="n">color</span><span class="o">=</span><span class="n">color4orange</span><span class="p">)])</span>
-<span class="linenos">324</span><span class="n">oGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectGround</span><span class="p">())</span>
-<span class="linenos">325</span><span class="n">mbs</span><span class="o">.</span><span class="nf">CreateGenericJoint</span><span class="p">(</span><span class="n">bodyNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">oGround</span><span class="p">,</span> <span class="n">b0</span><span class="p">],</span> <span class="n">position</span><span class="o">=</span><span class="p">[</span><span class="mf">5.5</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-<span class="linenos">326</span>                       <span class="n">constrainedAxes</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-<span class="linenos">327</span>                       <span class="n">rotationMatrixAxes</span><span class="o">=</span><span class="nf">RotationMatrixX</span><span class="p">(</span><span class="mf">0.125</span><span class="o">*</span><span class="n">pi</span><span class="p">),</span> <span class="c1">#tilt axes</span>
-<span class="linenos">328</span>                       <span class="n">useGlobalFrame</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">axesRadius</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">axesLength</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
-<span class="linenos">329</span>
-<span class="linenos">330</span><span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
-<span class="linenos">331</span><span class="n">res</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">ComputeSystemDegreeOfFreedom</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="linenos">317</span><span class="p">[</span><span class="n">eigenvalues</span><span class="p">,</span> <span class="n">eigenvectors</span><span class="p">]</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">ComputeODE2Eigenvalues</span><span class="p">()</span>
+<span class="linenos">318</span><span class="c1"># exu.Print(&#39;eigenvalues=\n&#39;,eigenvalues)</span>
+<span class="linenos">319</span><span class="c1"># exu.Print(&#39;eigenvectors=\n&#39;,eigenvectors)</span>
+<span class="linenos">320</span>
+<span class="linenos">321</span><span class="n">testError</span> <span class="o">=</span> <span class="mf">1e-3</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">)</span>
+<span class="linenos">322</span><span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s1">&#39;solution of mainSystemExtensions test LinEig=&#39;</span><span class="p">,</span><span class="n">testError</span><span class="p">)</span>
+<span class="linenos">323</span><span class="n">testErrorTotal</span> <span class="o">+=</span> <span class="n">testError</span>
+<span class="linenos">324</span>
+<span class="linenos">325</span><span class="c1">#%%++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">326</span><span class="c1">#create rigid body with generic joint: compute system DOF</span>
+<span class="linenos">327</span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
+<span class="linenos">328</span><span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="o">*</span> <span class="c1">#includes itemInterface, graphicsDataUtilities and rigidBodyUtilities</span>
+<span class="linenos">329</span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="linenos">330</span><span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
+<span class="linenos">331</span><span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
 <span class="linenos">332</span>
-<span class="linenos">333</span>
-<span class="linenos">334</span><span class="n">testDrawSystemGraph</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="linenos">335</span><span class="k">try</span><span class="p">:</span>
-<span class="linenos">336</span>    <span class="c1">#all imports are part of anaconda (e.g. anaconda 5.2.0, python 3.6.5)</span>
-<span class="linenos">337</span>    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="linenos">338</span>    <span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span> <span class="c1">#for generating graphs and graph arrangement</span>
-<span class="linenos">339</span>    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span> <span class="c1">#for drawing</span>
-<span class="linenos">340</span>    <span class="n">testDrawSystemGraph</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="linenos">341</span><span class="k">except</span><span class="p">:</span>
-<span class="linenos">342</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s2">&quot;numpy, networkx and matplotlib required for DrawSystemGraph(...); skipping test&quot;</span><span class="p">)</span>
-<span class="linenos">343</span>
-<span class="linenos">344</span><span class="k">if</span> <span class="n">testDrawSystemGraph</span><span class="p">:</span>
-<span class="linenos">345</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">DrawSystemGraph</span><span class="p">(</span><span class="n">useItemTypes</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="linenos">346</span>    <span class="k">if</span> <span class="ow">not</span> <span class="n">useGraphics</span><span class="p">:</span>
-<span class="linenos">347</span>        <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="linenos">348</span>        <span class="n">plt</span><span class="o">.</span><span class="nf">close</span><span class="p">(</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
+<span class="linenos">333</span><span class="n">b0</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateRigidBody</span><span class="p">(</span><span class="n">inertia</span> <span class="o">=</span> <span class="nc">InertiaCuboid</span><span class="p">(</span><span class="n">density</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span>
+<span class="linenos">334</span>                                                 <span class="n">sideLengths</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.1</span><span class="p">]),</span>
+<span class="linenos">335</span>                         <span class="n">referencePosition</span> <span class="o">=</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos">336</span>                         <span class="n">initialAngularVelocity</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos">337</span>                         <span class="n">gravity</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">9.81</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos">338</span>                         <span class="n">graphicsDataList</span> <span class="o">=</span> <span class="p">[</span><span class="nf">GraphicsDataOrthoCubePoint</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.1</span><span class="p">],</span>
+<span class="linenos">339</span>                                                                      <span class="n">color</span><span class="o">=</span><span class="n">color4orange</span><span class="p">)])</span>
+<span class="linenos">340</span><span class="n">oGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectGround</span><span class="p">())</span>
+<span class="linenos">341</span><span class="n">mbs</span><span class="o">.</span><span class="nf">CreateGenericJoint</span><span class="p">(</span><span class="n">bodyNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">oGround</span><span class="p">,</span> <span class="n">b0</span><span class="p">],</span> <span class="n">position</span><span class="o">=</span><span class="p">[</span><span class="mf">5.5</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos">342</span>                       <span class="n">constrainedAxes</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos">343</span>                       <span class="n">rotationMatrixAxes</span><span class="o">=</span><span class="nf">RotationMatrixX</span><span class="p">(</span><span class="mf">0.125</span><span class="o">*</span><span class="n">pi</span><span class="p">),</span> <span class="c1">#tilt axes</span>
+<span class="linenos">344</span>                       <span class="n">useGlobalFrame</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">axesRadius</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">axesLength</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="linenos">345</span>
+<span class="linenos">346</span><span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
+<span class="linenos">347</span><span class="n">res</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">ComputeSystemDegreeOfFreedom</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="linenos">348</span>
 <span class="linenos">349</span>
-<span class="linenos">350</span><span class="n">testError</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">values</span><span class="p">())[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">])</span>
-<span class="linenos">351</span><span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s1">&#39;solution of mainSystemExtensions test DOF=&#39;</span><span class="p">,</span><span class="n">testError</span><span class="p">)</span>
-<span class="linenos">352</span><span class="n">testErrorTotal</span> <span class="o">+=</span> <span class="n">testError</span>
-<span class="linenos">353</span>
-<span class="linenos">354</span>
-<span class="linenos">355</span><span class="c1">#%%++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos">356</span><span class="c1">#create rigid body and mass point with distance constraint</span>
-<span class="linenos">357</span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
-<span class="linenos">358</span><span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="o">*</span> <span class="c1">#includes itemInterface, graphicsDataUtilities and rigidBodyUtilities</span>
-<span class="linenos">359</span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="linenos">360</span><span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
-<span class="linenos">361</span><span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
-<span class="linenos">362</span>
-<span class="linenos">363</span><span class="n">b0</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateRigidBody</span><span class="p">(</span><span class="n">inertia</span> <span class="o">=</span> <span class="nc">InertiaCuboid</span><span class="p">(</span><span class="n">density</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span>
-<span class="linenos">364</span>                                                  <span class="n">sideLengths</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.1</span><span class="p">]),</span>
-<span class="linenos">365</span>                          <span class="n">referencePosition</span> <span class="o">=</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-<span class="linenos">366</span>                          <span class="n">gravity</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">9.81</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-<span class="linenos">367</span>                          <span class="n">graphicsDataList</span> <span class="o">=</span> <span class="p">[</span><span class="nf">GraphicsDataOrthoCubePoint</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.1</span><span class="p">],</span>
-<span class="linenos">368</span>                                                                      <span class="n">color</span><span class="o">=</span><span class="n">color4orange</span><span class="p">)])</span>
-<span class="linenos">369</span><span class="n">m1</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateMassPoint</span><span class="p">(</span><span class="n">referencePosition</span><span class="o">=</span><span class="p">[</span><span class="mf">5.5</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-<span class="linenos">370</span>                         <span class="n">physicsMass</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">drawSize</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">)</span>
-<span class="linenos">371</span><span class="n">n1</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetObject</span><span class="p">(</span><span class="n">m1</span><span class="p">)[</span><span class="s1">&#39;nodeNumber&#39;</span><span class="p">]</span>
-<span class="linenos">372</span>
-<span class="linenos">373</span><span class="n">oGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectGround</span><span class="p">())</span>
-<span class="linenos">374</span><span class="n">mbs</span><span class="o">.</span><span class="nf">CreateDistanceConstraint</span><span class="p">(</span><span class="n">bodyOrNodeList</span><span class="o">=</span><span class="p">[</span><span class="n">oGround</span><span class="p">,</span> <span class="n">b0</span><span class="p">],</span>
-<span class="linenos">375</span>                             <span class="n">localPosition0</span> <span class="o">=</span> <span class="p">[</span><span class="mf">6.5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-<span class="linenos">376</span>                             <span class="n">localPosition1</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-<span class="linenos">377</span>                             <span class="n">distance</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="c1">#automatically computed</span>
-<span class="linenos">378</span>                             <span class="n">drawSize</span><span class="o">=</span><span class="mf">0.06</span><span class="p">)</span>
-<span class="linenos">379</span>
-<span class="linenos">380</span><span class="n">mbs</span><span class="o">.</span><span class="nf">CreateDistanceConstraint</span><span class="p">(</span><span class="n">bodyOrNodeList</span><span class="o">=</span><span class="p">[</span><span class="n">b0</span><span class="p">,</span> <span class="n">n1</span><span class="p">],</span>
-<span class="linenos">381</span>                             <span class="n">localPosition0</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-<span class="linenos">382</span>                             <span class="n">localPosition1</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],</span> <span class="c1">#must be [0,0,0] for Node</span>
-<span class="linenos">383</span>                             <span class="n">distance</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="c1">#automatically computed</span>
-<span class="linenos">384</span>                             <span class="n">drawSize</span><span class="o">=</span><span class="mf">0.06</span><span class="p">)</span>
-<span class="linenos">385</span>
-<span class="linenos">386</span><span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
-<span class="linenos">387</span><span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">()</span> <span class="c1">#takes currently set values or default values</span>
-<span class="linenos">388</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="mi">1000</span>
-<span class="linenos">389</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="mi">2</span>
-<span class="linenos">390</span>
-<span class="linenos">391</span><span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">simulationSettings</span><span class="p">)</span>
-<span class="linenos">392</span>
-<span class="linenos">393</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">drawNodesAsPoint</span><span class="o">=</span><span class="kc">False</span>
-<span class="linenos">394</span><span class="c1">#mbs.SolutionViewer()</span>
+<span class="linenos">350</span><span class="n">testDrawSystemGraph</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="linenos">351</span><span class="k">try</span><span class="p">:</span>
+<span class="linenos">352</span>    <span class="c1">#all imports are part of anaconda (e.g. anaconda 5.2.0, python 3.6.5)</span>
+<span class="linenos">353</span>    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="linenos">354</span>    <span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span> <span class="c1">#for generating graphs and graph arrangement</span>
+<span class="linenos">355</span>    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span> <span class="c1">#for drawing</span>
+<span class="linenos">356</span>    <span class="n">testDrawSystemGraph</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">357</span><span class="k">except</span><span class="p">:</span>
+<span class="linenos">358</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s2">&quot;numpy, networkx and matplotlib required for DrawSystemGraph(...); skipping test&quot;</span><span class="p">)</span>
+<span class="linenos">359</span>
+<span class="linenos">360</span><span class="k">if</span> <span class="n">testDrawSystemGraph</span><span class="p">:</span>
+<span class="linenos">361</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">DrawSystemGraph</span><span class="p">(</span><span class="n">useItemTypes</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">tightLayout</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="linenos">362</span>    <span class="k">if</span> <span class="ow">not</span> <span class="n">useGraphics</span><span class="p">:</span>
+<span class="linenos">363</span>        <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="linenos">364</span>        <span class="n">plt</span><span class="o">.</span><span class="nf">close</span><span class="p">(</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
+<span class="linenos">365</span>
+<span class="linenos">366</span><span class="n">testError</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">values</span><span class="p">())[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">])</span>
+<span class="linenos">367</span><span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s1">&#39;solution of mainSystemExtensions test DOF=&#39;</span><span class="p">,</span><span class="n">testError</span><span class="p">)</span>
+<span class="linenos">368</span><span class="n">testErrorTotal</span> <span class="o">+=</span> <span class="n">testError</span>
+<span class="linenos">369</span>
+<span class="linenos">370</span>
+<span class="linenos">371</span><span class="c1">#%%++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">372</span><span class="c1">#create rigid body and mass point with distance constraint</span>
+<span class="linenos">373</span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
+<span class="linenos">374</span><span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="o">*</span> <span class="c1">#includes itemInterface, graphicsDataUtilities and rigidBodyUtilities</span>
+<span class="linenos">375</span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="linenos">376</span><span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
+<span class="linenos">377</span><span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
+<span class="linenos">378</span>
+<span class="linenos">379</span><span class="n">b0</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateRigidBody</span><span class="p">(</span><span class="n">inertia</span> <span class="o">=</span> <span class="nc">InertiaCuboid</span><span class="p">(</span><span class="n">density</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span>
+<span class="linenos">380</span>                                                  <span class="n">sideLengths</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.1</span><span class="p">]),</span>
+<span class="linenos">381</span>                          <span class="n">referencePosition</span> <span class="o">=</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos">382</span>                          <span class="n">gravity</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">9.81</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos">383</span>                          <span class="n">graphicsDataList</span> <span class="o">=</span> <span class="p">[</span><span class="nf">GraphicsDataOrthoCubePoint</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.1</span><span class="p">],</span>
+<span class="linenos">384</span>                                                                      <span class="n">color</span><span class="o">=</span><span class="n">color4orange</span><span class="p">)])</span>
+<span class="linenos">385</span><span class="n">m1</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateMassPoint</span><span class="p">(</span><span class="n">referencePosition</span><span class="o">=</span><span class="p">[</span><span class="mf">5.5</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos">386</span>                         <span class="n">physicsMass</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">drawSize</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">)</span>
+<span class="linenos">387</span><span class="n">n1</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetObject</span><span class="p">(</span><span class="n">m1</span><span class="p">)[</span><span class="s1">&#39;nodeNumber&#39;</span><span class="p">]</span>
+<span class="linenos">388</span>
+<span class="linenos">389</span><span class="n">oGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectGround</span><span class="p">())</span>
+<span class="linenos">390</span><span class="n">mbs</span><span class="o">.</span><span class="nf">CreateDistanceConstraint</span><span class="p">(</span><span class="n">bodyList</span><span class="o">=</span><span class="p">[</span><span class="n">oGround</span><span class="p">,</span> <span class="n">b0</span><span class="p">],</span>
+<span class="linenos">391</span>                             <span class="n">localPosition0</span> <span class="o">=</span> <span class="p">[</span><span class="mf">6.5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos">392</span>                             <span class="n">localPosition1</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos">393</span>                             <span class="n">distance</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="c1">#automatically computed</span>
+<span class="linenos">394</span>                             <span class="n">drawSize</span><span class="o">=</span><span class="mf">0.06</span><span class="p">)</span>
 <span class="linenos">395</span>
-<span class="linenos">396</span><span class="n">testError</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetODE2Coordinates</span><span class="p">())</span>
-<span class="linenos">397</span><span class="n">testErrorTotal</span> <span class="o">+=</span> <span class="n">testError</span>
-<span class="linenos">398</span><span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s1">&#39;solution of mainSystemExtensions test DC=&#39;</span><span class="p">,</span><span class="n">testError</span><span class="p">)</span>
-<span class="linenos">399</span><span class="c1">#%%++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos">400</span>
-<span class="linenos">401</span><span class="c1">#%%++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos">402</span>
-<span class="linenos">403</span><span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s1">&#39;solution of mainSystemExtensions TOTAL=&#39;</span><span class="p">,</span><span class="n">testErrorTotal</span><span class="p">)</span>
-<span class="linenos">404</span><span class="n">exudynTestGlobals</span><span class="o">.</span><span class="n">testError</span> <span class="o">=</span> <span class="n">testErrorTotal</span> <span class="o">-</span> <span class="p">(</span><span class="mf">57.96750245606998</span><span class="p">)</span>   <span class="c1">#2023-05-19: 51.699269012604674</span>
-<span class="linenos">405</span><span class="n">exudynTestGlobals</span><span class="o">.</span><span class="n">testResult</span> <span class="o">=</span> <span class="n">testErrorTotal</span>
+<span class="linenos">396</span><span class="n">mbs</span><span class="o">.</span><span class="nf">CreateDistanceConstraint</span><span class="p">(</span><span class="n">bodyOrNodeList</span><span class="o">=</span><span class="p">[</span><span class="n">b0</span><span class="p">,</span> <span class="n">n1</span><span class="p">],</span>
+<span class="linenos">397</span>                             <span class="n">localPosition0</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos">398</span>                             <span class="n">localPosition1</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],</span> <span class="c1">#must be [0,0,0] for Node</span>
+<span class="linenos">399</span>                             <span class="n">distance</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="c1">#automatically computed</span>
+<span class="linenos">400</span>                             <span class="n">drawSize</span><span class="o">=</span><span class="mf">0.06</span><span class="p">)</span>
+<span class="linenos">401</span>
+<span class="linenos">402</span><span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
+<span class="linenos">403</span><span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">()</span> <span class="c1">#takes currently set values or default values</span>
+<span class="linenos">404</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="linenos">405</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="linenos">406</span>
+<span class="linenos">407</span><span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">simulationSettings</span><span class="p">)</span>
+<span class="linenos">408</span>
+<span class="linenos">409</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">drawNodesAsPoint</span><span class="o">=</span><span class="kc">False</span>
+<span class="linenos">410</span><span class="c1">#mbs.SolutionViewer()</span>
+<span class="linenos">411</span>
+<span class="linenos">412</span><span class="n">testError</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetODE2Coordinates</span><span class="p">())</span>
+<span class="linenos">413</span><span class="n">testErrorTotal</span> <span class="o">+=</span> <span class="n">testError</span>
+<span class="linenos">414</span><span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s1">&#39;solution of mainSystemExtensions test DC=&#39;</span><span class="p">,</span><span class="n">testError</span><span class="p">)</span>
+<span class="linenos">415</span>
+<span class="linenos">416</span><span class="c1">#%%++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">417</span>
+<span class="linenos">418</span><span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s1">&#39;solution of mainSystemExtensions TOTAL=&#39;</span><span class="p">,</span><span class="n">testErrorTotal</span><span class="p">)</span>
+<span class="linenos">419</span><span class="n">exudynTestGlobals</span><span class="o">.</span><span class="n">testError</span> <span class="o">=</span> <span class="n">testErrorTotal</span> <span class="o">-</span> <span class="p">(</span><span class="mf">57.64639446941554</span><span class="p">)</span>   <span class="c1">#up to 2023-11-19:57.96750245606998 (added force/torque) #2023-05-19: 51.699269012604674</span>
+<span class="linenos">420</span><span class="n">exudynTestGlobals</span><span class="o">.</span><span class="n">testResult</span> <span class="o">=</span> <span class="n">testErrorTotal</span>
 </pre></div>
 </div>
 </section>

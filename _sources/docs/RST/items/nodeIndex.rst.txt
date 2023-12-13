@@ -15,8 +15,9 @@ Nodes provide coordinates for objects. Loads can be applied and Markers or Senso
    NodeRigidBody2D.rst
    Node1D.rst
    NodePoint2DSlope1.rst
-   NodePoint3DSlope1.rst
-   NodePoint3DSlope23.rst
+   NodePointSlope1.rst
+   NodePointSlope12.rst
+   NodePointSlope23.rst
    NodeGenericODE2.rst
    NodeGenericODE1.rst
    NodeGenericAE.rst

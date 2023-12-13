@@ -12,6 +12,7 @@ This section includes all TestModels for Exudyn.They can also be found and downl
     
    TestModels/abaqusImportTest
    TestModels/ANCFBeamTest
+   TestModels/ANCFcable2DuserFunction
    TestModels/ANCFcontactCircleTest
    TestModels/ANCFcontactFrictionTest
    TestModels/ANCFgeneralContactCircle
@@ -64,6 +65,7 @@ This section includes all TestModels for Exudyn.They can also be found and downl
    TestModels/revoluteJointprismaticJointTest
    TestModels/rigidBodyAsUserFunctionTest
    TestModels/rigidBodyCOMtest
+   TestModels/rigidBodySpringDamperIntrinsic
    TestModels/rollingCoinTest
    TestModels/rollingCoinPenaltyTest
    TestModels/rotatingTableTest
