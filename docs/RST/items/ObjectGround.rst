@@ -31,8 +31,6 @@ The item VObjectGround has the following parameters:
   | set true, if item is shown in visualization and false if it is not shown
 * | **graphicsDataUserFunction** [type = PyFunctionGraphicsData, default =  0]:
   | A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function
-* | **color** [type = Float4, default = [-1.,-1.,-1.,-1.]]:
-  | RGB node color; if R==-1, use default color
 * | **graphicsData** [type = BodyGraphicsData]:
   | Structure contains data for body visualization; data is defined in special list / dictionary structure
 

@@ -612,22 +612,20 @@ VPointGround = VNodePointGround
 #+++++++++++++++++++++++++++++++
 #OBJECT
 class VObjectGround:
-    def __init__(self, show = True, graphicsDataUserFunction = 0, color = [-1.,-1.,-1.,-1.], graphicsData = []):
+    def __init__(self, show = True, graphicsDataUserFunction = 0, graphicsData = []):
         self.show = show
         self.graphicsDataUserFunction = graphicsDataUserFunction
-        self.color = np.array(color)
         self.graphicsData = copy.copy(graphicsData)
 
     def __iter__(self):
         yield 'show', self.show
         yield 'graphicsDataUserFunction', self.graphicsDataUserFunction
-        yield 'color', self.color
         yield 'graphicsData', self.graphicsData
 
     def __repr__(self):
         return str(dict(self))
 class ObjectGround:
-    def __init__(self, name = '', referencePosition = [0.,0.,0.], referenceRotation = IIDiagMatrix(rowsColumns=3,value=1), visualization = {'show': True, 'graphicsDataUserFunction': 0, 'color': [-1.,-1.,-1.,-1.], 'graphicsData': []}):
+    def __init__(self, name = '', referencePosition = [0.,0.,0.], referenceRotation = IIDiagMatrix(rowsColumns=3,value=1), visualization = {'show': True, 'graphicsDataUserFunction': 0, 'graphicsData': []}):
         self.name = name
         self.referencePosition = np.array(referencePosition)
         self.referenceRotation = np.array(referenceRotation)
@@ -640,7 +638,6 @@ class ObjectGround:
         yield 'referenceRotation', self.referenceRotation
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VgraphicsDataUserFunction', dict(self.visualization)["graphicsDataUserFunction"]
-        yield 'Vcolor', dict(self.visualization)["color"]
         yield 'VgraphicsData', dict(self.visualization)["graphicsData"]
 
     def __repr__(self):

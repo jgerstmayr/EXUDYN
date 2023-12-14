@@ -32,8 +32,8 @@ cPosZ = 0.1 #offset of constraint in z-direction
 #create background, in order to have according zoom all
 # background0 = GraphicsDataRectangle(-zz,-2*zz,zz,zz,color4white)
 background0 = GraphicsDataCheckerBoard(point=[0,-0.5*zz,-0.25*zz],size=6*zz)
-oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0], 
-                                   visualization=VObjectGround(graphicsData= [background0])))
+oGround=mbs.CreateGround(referencePosition= [0,0,0], 
+                         graphicsDataList = [background0])
 mPosLast = mbs.AddMarker(MarkerBodyPosition(bodyNumber = oGround, 
                                             localPosition=[-2*sx,0,cPosZ]))
 
@@ -63,9 +63,6 @@ for i in range(20):
     mMassRB = mbs.AddMarker(MarkerBodyMass(bodyNumber = oRB))
     mbs.AddLoad(Gravity(markerNumber = mMassRB, loadVector=[0.,-9.81,0.])) #gravity in negative z-direction
 
-    #mCenterRB = mbs.AddMarker(MarkerBodyRigid(bodyNumber = oRB, localPosition = [0.,0.,0.]))
-    #mbs.AddLoad(Torque(markerNumber = mCenterRB, loadVector=[0.,10000.,100000.])) #gravity in negative z-direction
-
     k = 1e7
     d=0.01*k
     mPos = mbs.AddMarker(MarkerBodyPosition(bodyNumber = oRB, localPosition = [-sx,0.,cPosZ]))
@@ -86,9 +83,8 @@ simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.tim
 simulationSettings.timeIntegration.verboseMode = 1
 
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
-simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = False
-simulationSettings.timeIntegration.generalizedAlpha.useNewmark = False
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.6 #0.6 works well 
+simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
 
 simulationSettings.solutionSettings.solutionInformation = "rigid body tests"
 SC.visualizationSettings.nodes.defaultSize = 0.05

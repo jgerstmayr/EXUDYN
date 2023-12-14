@@ -785,13 +785,22 @@ We are trying hard to achieve error-free algorithms of physically correct models
 \mysubsubsectionlabel{Removing convergence problems and solver failures}{sec:overview:basics:convergenceproblems}
 Nonlinear formulations (such as most multibody systems, especially nonlinear finite elements) cause problems and there is no general nonlinear solver which may reliably and accurately solve such problems.
 Tuning solver parameters is at hand of the user. 
-In general, the Newton solver tries to reduce the error by the factor given in \texttt{simulationSettings.staticSolver.newton.relativeTolerance} (for static solver), which is not possible for very small (or zero) initial residuals. The absolute tolerance is helping out as a lower bound for the error, given in \texttt{simulationSettings.staticSolver.newton.absoluteTolerance} (for static solver), which is by default rather low (1e-10) -- in order to achieve accurate results for small systems or small motion (in mm or $\mu$m regime). Increasing this value helps to solve such problems. Nevertheless, you should usually set tolerances as low as possible because otherwise, your solution may become inaccurate.
+In general, the Newton solver tries to reduce the error by the factor given in 
+\bi
+  \item \texttt{simulationSettings.staticSolver.newton.relativeTolerance} (for static solver), 
+\ei
+which is not possible for very small (or zero) initial residuals. The absolute tolerance is helping out as a lower bound for the error, given in
+\bi
+  \item \texttt{simulationSettings.staticSolver.newton.absoluteTolerance} (for static solver),
+\ei
+which is by default rather low (1e-10) -- in order to achieve accurate results for small systems or small motion (in mm or $\mu$m regime). Increasing this value helps to solve such problems. Nevertheless, you should usually set tolerances as low as possible because otherwise, your solution may become inaccurate.
 
 \noindent The following hints / rules for described problems shall be followed.
 \bi
   \item \mybold{static solver}: \mybold{load steps get very small} even if the solution seems to be smooth (or linear) and less steps are expected:
   \bi
-  \item[$\ra$] this may happen for \mybold{system without loads}; larger number of steps may happen for finer discretization; you may adjust (increase) \texttt{.newton.relativeTolerance} / \texttt{.newton.absoluteTolerance} in static solver or in time integration to resolve such problems, but check if solution achieves according accuracy
+  \item[$\ra$] this may happen for \mybold{system without loads}; larger number of steps may happen for finer discretization; 
+  \item[$\ra$] you may adjust (increase) \texttt{.newton.relativeTolerance} / \texttt{.newton.absoluteTolerance} in static solver or in time integration to resolve such problems, but check if solution achieves according accuracy
   \ei
   \item \mybold{static solver}:  load steps are reduced significantly for \mybold{highly nonlinear problems}: 
   \bi
@@ -814,7 +823,10 @@ In general, the Newton solver tries to reduce the error by the factor given in \
   \ei
   \item \mybold{singular Jacobians} or \mybold{redundant constraints}:
   \bi
-  \item[$\ra$] in case of systems that lead to a singular Jacobian due to redundant constraints or kinematic DOF in static solutions, you may switch to Eigen's FullPivotLU solver using \texttt{simulationSettings.linearSolverType = exu.LinearSolverType.EigenDense} and \texttt{simulationSettings.linearSolverSettings.ignoreSingularJacobian=True}; however, check you results as they may be erroneous, because the solver tries to find an optimal solution / compromise which may not be what you intend to get!
+  \item[$\ra$] in case of systems that lead to a singular Jacobian due to redundant constraints or kinematic DOF in static solutions, you may switch to Eigen's FullPivotLU solver using:
+  \item[$\ra$] \texttt{simulationSettings.linearSolverType = exu.LinearSolverType.EigenDense} and 
+  \item[$\ra$] \texttt{simulationSettings.linearSolverSettings.ignoreSingularJacobian=True} ;
+  \item[$\ra$] however, check your results as they may be erroneous, because the solver tries to find an optimal solution / compromise which may not be what you intend to get!
   \ei
   \item if you see further problems, please post them (including relevant example) at the \codeName\ github page!
 \ei
@@ -842,9 +854,7 @@ The faster versions are available for all release versions, but only for some \t
   \item when preferring dense direct solvers, switching to Eigen's PartialPivLU solver might greatly improve speed: \texttt{simulationSettings.linearSolverType = exu.LinearSolverType.EigenDense}; however, the flag \texttt{simulationSettings.linearSolverSettings.ignoreSingularJacobian=True} will switch to the much slower (but more robust) Eigen's FullPivLU
   \item try to avoid Python functions or try to speed up Python functions; if this is not possible, see solutions below
   \item instead of user functions in objects or loads (computed in every iteration), some problems would also work if these parameters are only updated in \texttt{mbs.SetPreStepUserFunction(...)}
-  \item Python user functions can be speed up (since \codeName\ V1.7.40) by converting conventional Python functions into
-        \codeName\ (internal) symbolic user functions, which have similar performance as C++ functions with the ability to parallelize;
-        see \refSection{sec:cinterface:symbolic}
+  \item Python user functions can be speed up (since \codeName\ V1.7.40) by converting conventional Python functions into \codeName\ (internal) symbolic user functions, which have similar performance as C++ functions with the ability to parallelize; see \refSection{sec:cinterface:symbolic}
   \item Alternatively, Python user functions can be speed up using the Python numba package, using \texttt{@jit} in front of functions (for more options, see \exuUrl{https://numba.pydata.org/numba-doc/dev/user/index.html}{https://numba.pydata.org/numba-doc/dev/user/index.html}); Example given in \texttt{Examples/springDamperUserFunctionNumbaJIT.py} showing speedups of factor 4; more complicated Python functions may see speedups of 10 - 50
   %
   \item for \mybold{discontinuous problems}, try to adjust solver parameters; especially the discontinuous.iterationTolerance which may be too tight and cause many iterations; iterations may be limited by discontinuous.maxIterations, which at larger values solely multiplies the computation time with a factor if all iterations are performed
@@ -864,7 +874,8 @@ The faster versions are available for all release versions, but only for some \t
   \item try to have \mybold{constant mass matrices} (see according objects, which have constant mass matrices; e.g. rigid bodies using RotationVector Lie group node have constant mass matrix)
   \item for explicit integration, set \texttt{computeEndOfStepAccelerations = False}, if you do not need accurate evaluation of accelerations at end of time step (will then be taken from beginning)
   \item for explicit integration, set \texttt{explicitIntegration.computeMassMatrixInversePerBody=True}, which avoids factorization and back substitution, which may speed up computations with many bodies / particles
-  \item if you are sure that your mass matrix is constant, set \texttt{simulationSettings.timeIntegration.reuseConstantMassMatrix = True}; check results!
+  \item if you are sure that your mass matrix is constant, set:
+  \item[] \texttt{simulationSettings.timeIntegration.reuseConstantMassMatrix = True}; check results!
   \item check that \texttt{simulationSettings.timeIntegration.simulateInRealtime = False}; if set True, it breaks down simulation to real time
   \item do not record images, if not needed: \texttt{simulationSettings.solutionSettings.recordImagesInterval = -1}
   \item in case of bad convergence, decreasing the step size might also help; check also other flags for adaptive step size and for Newton

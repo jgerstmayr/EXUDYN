@@ -114,27 +114,40 @@ graphicsAB = GraphicsDataRigidLink(p0=[0,0,0],p1=[0,0,lAB], axis0=[1,0,0],
                                    radius=[0.01,0.01], thickness = 0.01, 
                                    width = [0.02,0.02], color=color4steelblue)
 
-[n0,b0]=AddRigidBody(mainSys = mbs, inertia=inertiaAB, nodeType=str(nodeType), 
-                    position=pA, 
-                    angularVelocity=omega0, gravity=g, 
-                    graphicsDataList=[graphicsAB])
+b0 = mbs.CreateRigidBody(inertia=inertiaAB, 
+                         nodeType=nodeType,
+                         referencePosition=pA, 
+                         initialAngularVelocity=omega0, 
+                         gravity=g, 
+                         graphicsDataList=[graphicsAB])
+
+n0 = mbs.GetObject(b0)['nodeNumber']
 
 ################ Body1: CONROD
 graphicsBC = GraphicsDataRigidLink(p0=[-0.5*lBC,0,0],p1=[0.5*lBC,0,0], axis1=[0,0,0], 
                                    radius=[0.01,0.01], thickness = 0.01, 
                                    width = [0.02,0.02], color=color4lightred)
 pBC = ScalarMult(0.5,VAdd(pB,pC))
-[n1,b1]=AddRigidBody(mainSys = mbs, inertia=inertiaBC, nodeType=str(nodeType), 
-                    position=pBC, velocity=v1Init, angularVelocity=omega1Init, 
-                    rotationMatrix=rotMatBC, gravity=g, graphicsDataList=[graphicsBC])
+b1 = mbs.CreateRigidBody(inertia=inertiaBC, 
+                         nodeType=nodeType,
+                         referencePosition=pBC, 
+                         initialVelocity=v1Init, 
+                         initialAngularVelocity=omega1Init, 
+                         referenceRotationMatrix=rotMatBC, 
+                         gravity=g, graphicsDataList=[graphicsBC])
+n1 = mbs.GetObject(b1)['nodeNumber']
 
 ################ Body2: SLIDER
 dSlider = 0.02
 graphicsSlider = GraphicsDataOrthoCubePoint(size=[dSlider*2,dSlider,dSlider], color=color4dodgerblue[0:3]+[0.5])
-[n2,b2]=AddRigidBody(mainSys = mbs, inertia=inertiaSlider, nodeType=str(nodeType), 
-                    position=pC, velocity=v2Init, angularVelocity=[0,0,0],
-                    gravity=g,
-                    graphicsDataList=[graphicsSlider])
+b2 = mbs.CreateRigidBody(inertia=inertiaSlider, 
+                         nodeType=nodeType,
+                         referencePosition=pC, 
+                         initialVelocity=v2Init, 
+                         initialAngularVelocity=[0,0,0],
+                         gravity=g,
+                         graphicsDataList=[graphicsSlider])
+n2 = mbs.GetObject(b2)['nodeNumber']
 
 dimT = 0.02
 dimZ = 0.2
@@ -145,41 +158,39 @@ gGround+= [GraphicsDataOrthoCubePoint([0.5*dimX-dimT,0,-dimT*0.5-dSlider*0.5],[d
 gGround+= [GraphicsDataOrthoCubePoint([0.5*dimX-dimT,-dSlider*0.25-dimY*0.25,-dimT*0.5],[dimX, dimY*0.5-dSlider*0.5, dimT], color=color4grey) ]
 gGround+= [GraphicsDataOrthoCubePoint([0.5*dimX-dimT,+dSlider*0.25+dimY*0.25,-dimT*0.5],[dimX, dimY*0.5-dSlider*0.5, dimT], color=color4grey) ]
 
-oGround = mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=gGround)))
+#simple function to add ground:
+oGround = mbs.CreateGround(graphicsDataList = gGround)
+
+#conveniently add generic joints:
+mbs.CreateGenericJoint(bodyNumbers=[oGround, b0],
+                       position=pA,
+                       constrainedAxes=[1,1,1,0,1,1],
+                       useGlobalFrame=False,
+                       axesRadius=0.005, axesLength=0.02)
+
+mbs.CreateGenericJoint(bodyNumbers=[oGround, b2],
+                       position=[0,0,0],
+                       constrainedAxes=[0,1,1,1,1,1],
+                       useGlobalFrame=False,
+                       axesRadius=0.005, axesLength=0.02)
+
+mbs.CreateGenericJoint(bodyNumbers=[b0, b1],
+                       position=[0,0,lAB],
+                       constrainedAxes=[1,1,1,0,0,0],
+                       useGlobalFrame=False,
+                       axesRadius=0.005, axesLength=0.02)
+
+mbs.CreateGenericJoint(bodyNumbers=[b2, b1],
+                       position=[0,0,0],
+                       constrainedAxes=[1,1,1,0,0,1],
+                       useGlobalFrame=False,
+                       axesRadius=0.005, axesLength=0.02)
+
 markerGroundA = mbs.AddMarker(MarkerBodyRigid(name='markerGroundA', bodyNumber=oGround, localPosition=pA))
-markerGroundD = mbs.AddMarker(MarkerBodyRigid(name='markerGroundD', bodyNumber=oGround, localPosition=[0,0,0]))
-
 markerCrankA = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b0))
-markerCrankB = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b0, localPosition=[0,0,lAB]))
-
-markerConrodB = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b1, localPosition=[-0.5*lBC,0,0]))
-markerConrodC = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b1, localPosition=[ 0.5*lBC,0,0]))
-
-markerSlider = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b2))
-
-mbs.AddObject(GenericJoint(markerNumbers=[markerGroundA, markerCrankA], constrainedAxes=[1,1,1,0,1,1], 
-                           visualization=VObjectJointGeneric(axesRadius=0.005, axesLength=0.02)))
-
-mbs.AddObject(GenericJoint(markerNumbers=[markerGroundD, markerSlider], constrainedAxes=[0,1,1,1,1,1],
-                            visualization=VObjectJointGeneric(axesRadius=0.005, axesLength=0.02)))
-
-mbs.AddObject(GenericJoint(markerNumbers=[markerCrankB, markerConrodB], constrainedAxes=[1,1,1,0,0,0],
-                            visualization=VObjectJointGeneric(axesRadius=0.005, axesLength=0.02)))
-
-
-# mbs.AddObject(GenericJoint(markerNumbers=[markerConrodC, markerSlider], constrainedAxes=[1,1,1,1,0,0], 
-#                             visualization=VObjectJointGeneric(axesRadius=0.005, axesLength=0.02)))
-
-mbs.AddObject(GenericJoint(markerNumbers=[markerSlider, markerConrodC], constrainedAxes=[1,1,1,0,0,1],
-                            visualization=VObjectJointGeneric(axesRadius=0.005, axesLength=0.02)))
-
-
-#markerCrankMid = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b0, localPosition=[0,0,0.5*lAB]))
 
 
 if useGraphics:
-    # sCrankAngle=mbs.AddSensor(SensorNode(nodeNumber = n0, storeInternal=True,fileName='solution/crankAngle.txt',
-    #                           outputVariableType=exu.OutputVariableType.Rotation))
     sCrankAngVel=mbs.AddSensor(SensorNode(nodeNumber = n0, storeInternal=True,fileName='solution/crankAngularVelocity.txt',
                              outputVariableType=exu.OutputVariableType.AngularVelocity))
     sSliderPos=mbs.AddSensor(SensorNode(nodeNumber = n2, storeInternal=True,fileName='solution/sliderPosition.txt',

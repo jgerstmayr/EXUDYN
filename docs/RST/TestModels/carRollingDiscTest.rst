@@ -79,16 +79,15 @@ You can view and download this file on Github: `carRollingDiscTest.py <https://g
    #%%++++++++++++++++++++++++++++++
    #create car node and body:
    graphicsCar = GraphicsDataOrthoCubePoint(centerPoint=[0,0,0],size=[wCar-1.1*wWheel, lCar, hCar], color=color4lightred)
-   [nCar,bCar]=AddRigidBody(mainSys = mbs, 
-                            inertia = inertiaCar, 
-                            nodeType = str(exu.NodeType.RotationEulerParameters), 
-                            position = p0Car, 
-                            rotationMatrix = initialRotationCar,
-                            angularVelocity = omega0Car,
-                            velocity=v0Car,
+   bCar=mbs.CreateRigidBody(inertia = inertiaCar, 
+                            referencePosition = p0Car, 
+                            referenceRotationMatrix = initialRotationCar,
+                            initialAngularVelocity = omega0Car,
+                            initialVelocity = v0Car,
                             gravity = g, 
                             graphicsDataList = [graphicsCar])
    
+   nCar = mbs.GetObject(bCar)['nodeNumber']
    nWheels = 4
    markerWheels=[]
    markerCarAxles=[]
@@ -154,15 +153,15 @@ You can view and download this file on Github: `carRollingDiscTest.py <https://g
    
    
        #add wheel body
-       [n0,b0]=AddRigidBody(mainSys = mbs, 
-                            inertia = inertiaWheel, 
-                            nodeType = str(exu.NodeType.RotationEulerParameters), 
-                            position = VAdd(p0Wheel,pOff), 
-                            rotationMatrix = initialRotation, #np.diag([1,1,1]),
-                            angularVelocity = omega0Wheel,
-                            velocity=v0Wheel,
-                            gravity = g, 
-                            graphicsDataList = [graphicsWheel])
+       b0 = mbs.CreateRigidBody(inertia = inertiaWheel, 
+                                referencePosition = VAdd(p0Wheel,pOff), 
+                                referenceRotationMatrix = initialRotation, #np.diag([1,1,1]),
+                                initialAngularVelocity = omega0Wheel,
+                                initialVelocity = v0Wheel,
+                                gravity = g, 
+                                graphicsDataList = [graphicsWheel])
+   
+       n0 = mbs.GetObject(b0)['nodeNumber']
    
        #markers for rigid body:
        mWheel = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b0, localPosition=[0,0,0]))

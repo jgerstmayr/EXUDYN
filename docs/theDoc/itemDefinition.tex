@@ -1524,7 +1524,6 @@ The item \mybold{ObjectGround} with type = 'Ground' has the following parameters
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
     graphicsDataUserFunction &     PyFunctionGraphicsData &     \tabnewline  &     \tabnewline 0 &     A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function\\ \hline
-    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     \tabnewline RGB node color; if R==-1, use default color\\ \hline
     graphicsData &     BodyGraphicsData &     \tabnewline  &      &     Structure contains data for body visualization; data is defined in special list / dictionary structure\\ \hline
 \end{longtable}
 \end{center}
@@ -4475,7 +4474,6 @@ AngularAcceleration & $\talpha = [0,\, ,0,\, \dot\omega_2]$ & angular accelerati
       \rowTable{\texttt{curvatureRef}}{Real}{$K_0 + f\cRef \cdot K\cRef$}
       \rowTable{\returnValue}{Real}{scalar value of computed axial force}
     \finishTable
-    %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \userFunction{bendingMomentUserFunction(mbs, t, itemNumber, axialPositionNormalized, curvature, curvature\_t, curvatureRef, physicsBendingStiffness, physicsBendingDamping, axialStrain, axialStrain\_t, axialStrainRef)}
     A user function, which computes the bending moment depending on time, strains and curvatures and 
@@ -4504,38 +4502,38 @@ AngularAcceleration & $\talpha = [0,\, ,0,\, \dot\omega_2]$ & angular accelerati
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \userFunctionExample{}
     \pythonstyle\begin{lstlisting}
-    #define some material parameters
-    rhoA = 100.
-    EA =   1e7.
-    EI =   1e5
+        #define some material parameters
+        rhoA = 100.
+        EA =   1e7.
+        EI =   1e5
 
-    #example of bending moment user function
-    def bendingMomentUserFunction(mbs, t, itemNumber, axialPositionNormalized, 
-               curvature, curvature_t, curvatureRef, physicsBendingStiffness, physicsBendingDamping,
-               axialStrain, axialStrain_t, axialStrainRef):
-        fact = min(1,t) #runs from 0 to 1
-        #change reference curvature of beam over time:
-        kappa=(curvature-curvatureRef*fact) 
-        return physicsBendingStiffness*(kappa) + physicsBendingDamping*curvature_t
+        #example of bending moment user function
+        def bendingMomentUserFunction(mbs, t, itemNumber, axialPositionNormalized, 
+                   curvature, curvature_t, curvatureRef, physicsBendingStiffness, 
+                   physicsBendingDamping, axialStrain, axialStrain_t, axialStrainRef):
+            fact = min(1,t) #runs from 0 to 1
+            #change reference curvature of beam over time:
+            kappa=(curvature-curvatureRef*fact) 
+            return physicsBendingStiffness*(kappa) + physicsBendingDamping*curvature_t
 
-    def axialForceUserFunction(mbs, t, itemNumber, axialPositionNormalized, 
-               axialStrain, axialStrain_t, axialStrainRef, physicsAxialStiffness, physicsAxialDamping,
-               curvature, curvature_t, curvatureRef):
-        fact = min(1,t) #runs from 0 to 1
-        return (physicsAxialStiffness*(axialStrain-fact*axialStrainRef) + 
-                physicsAxialDamping*axialStrain_t)
+        def axialForceUserFunction(mbs, t, itemNumber, axialPositionNormalized, 
+                   axialStrain, axialStrain_t, axialStrainRef, physicsAxialStiffness, 
+                   physicsAxialDamping, curvature, curvature_t, curvatureRef):
+            fact = min(1,t) #runs from 0 to 1
+            return (physicsAxialStiffness*(axialStrain-fact*axialStrainRef) + 
+                    physicsAxialDamping*axialStrain_t)
 
-    cable = ObjectANCFCable2D(physicsMassPerLength=rhoA, 
-                    physicsBendingStiffness=EI, 
-                    physicsBendingDamping = EI*0.1,
-                    physicsAxialStiffness=EA,
-                    physicsAxialDamping=EA*0.05,
-                    physicsReferenceAxialStrain=0.1, #10% stretch
-                    physicsReferenceCurvature=1,     #radius=1
-                    bendingMomentUserFunction=bendingMomentUserFunction,
-                    axialForceUserFunction=axialForceUserFunction,
-                    )
-    #use  cable with GenerateStraightLineANCFCable(...)
+        cable = ObjectANCFCable2D(physicsMassPerLength=rhoA, 
+                        physicsBendingStiffness=EI, 
+                        physicsBendingDamping = EI*0.1,
+                        physicsAxialStiffness=EA,
+                        physicsAxialDamping=EA*0.05,
+                        physicsReferenceAxialStrain=0.1, #10% stretch
+                        physicsReferenceCurvature=1,     #radius=1
+                        bendingMomentUserFunction=bendingMomentUserFunction,
+                        axialForceUserFunction=axialForceUserFunction,
+                        )
+        #use  cable with GenerateStraightLineANCFCable(...)
     \end{lstlisting} \vspace{12pt}
     %%RSTCOMPATIBLE
 \vspace{6pt}\par\noindent\rule{\textwidth}{0.4pt}
@@ -12021,9 +12019,9 @@ The item \mybold{LoadTorqueVector} with type = 'TorqueVector' has the following 
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFtestHalfcircle.py}{\texttt{ANCFtestHalfcircle.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFtests2.py}{\texttt{ANCFtests2.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/flexibleRotor3Dtest.py}{\texttt{flexibleRotor3Dtest.py}} (Examples/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigid3Dexample.py}{\texttt{rigid3Dexample.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyIMUtest.py}{\texttt{rigidBodyIMUtest.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidRotor3DbasicBehaviour.py}{\texttt{rigidRotor3DbasicBehaviour.py}} (Examples/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidRotor3DFWBW.py}{\texttt{rigidRotor3DFWBW.py}} (Examples/)
 \item  ...
 
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py}{\texttt{ANCFbeltDrive.py}} (TestModels/)

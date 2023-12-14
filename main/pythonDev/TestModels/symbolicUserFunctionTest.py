@@ -13,35 +13,51 @@ import sys
 sys.exudynFast = True
 
 import exudyn as exu
-esym = exu.symbolic
 from exudyn.utilities import *
+
+useGraphics = False #without test
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
+try: #only if called from test suite
+    from modelUnitTests import exudynTestGlobals #for globally storing test results
+    useGraphics = exudynTestGlobals.useGraphics
+except:
+    class ExudynTestGlobals:
+        pass
+    exudynTestGlobals = ExudynTestGlobals()
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+esym = exu.symbolic
 import numpy as np
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
 useSymbolicUF = True
-if useSymbolicUF:
-    mysym = esym #np or esym
-    myabs = esym.abs
-    myReal = esym.Real
-else: #regular mode with numpy / Python functions
-    mysym = np #np or esym
-    myabs = abs
-    myReal = float
 
 #variable can be used to switch behavior
 esym.variables.Set('flag',1)
 
-def springForceUserFunction(mbs, t, itemNumber, deltaL, deltaL_t, stiffness, damping, force):
-    #f0 = damping*deltaL_t + stiffness*deltaL + force #linear
-    #f0 = damping*esym.sign(deltaL_t) + stiffness*deltaL*(1+deltaL*deltaL)
-    fact = esym.variables.Get('flag')
-    f0 = fact*10*damping*deltaL_t + stiffness*mysym.sign(deltaL) * (myabs(deltaL))**myReal(1.2) + force
-    return f0
+if useSymbolicUF:
+    def springForceUserFunction(mbs, t, itemNumber, deltaL, deltaL_t, stiffness, damping, force):
+        #f0 = damping*deltaL_t + stiffness*deltaL + force #linear
+        fact = esym.variables.Get('flag')
+        f0 = fact*10*damping*deltaL_t + stiffness*esym.sign(deltaL) * (esym.abs(deltaL))**1.2 + force
+        return f0
+    
+    def UFload(mbs, t, load):
+        return load*esym.sin(10*(2*pi)*t)
+else:
+    def springForceUserFunction(mbs, t, itemNumber, deltaL, deltaL_t, stiffness, damping, force):
+        f0 = 10*damping*deltaL_t + stiffness*np.sign(deltaL) * (np.abs(deltaL))**1.2 + force
+        return f0
+    
+    def UFload(mbs, t, load):
+        return load*np.sin(10*(2*pi)*t)
 
-def UFload(mbs, t, load):
-    return load*mysym.sin(10*(2*pi)*t)
+# no user function:    
+# UFload=0
+# springForceUserFunction=0
 
 oGround = mbs.CreateGround()
 
@@ -70,28 +86,53 @@ else:
 #assemble and solve system for default parameters
 mbs.Assemble()
 
-fact = 1000
-endTime = 1*fact
+endTime = 50
 stepSize = 0.005
 
 simulationSettings = exu.SimulationSettings()
-simulationSettings.solutionSettings.solutionWritePeriod = 0.01
-# simulationSettings.solutionSettings.writeSolutionToFile = False
+#simulationSettings.solutionSettings.solutionWritePeriod = 0.01
+simulationSettings.solutionSettings.writeSolutionToFile = False
+simulationSettings.timeIntegration.verboseMode = 1
 
 simulationSettings.timeIntegration.numberOfSteps = int(endTime/stepSize)
 simulationSettings.timeIntegration.endTime = endTime
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
+
+if useGraphics:
+    exu.StartRenderer()
+    # mbs.WaitForUserToContinue()
 
 import time
 ts = time.time()
 print('start simulation')
 mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.RK44)
 print('finished: ', time.time()-ts, 'seconds')
-# mbs.SolutionViewer()
 
-# esym.variables.Set('flag',0)
+if useGraphics:
+    exu.StopRenderer() #safely close rendering window!
 
+n = mbs.GetObject(oMassPoint)['nodeNumber']
+p = mbs.GetNodeOutput(n, exu.OutputVariableType.Position)
+u = NormL2(p)
 
+print('u=',u)
+exu.Print('solution of symbolicUserFunctionTest=',u)
+
+# result for 10000 steps; identical for both UF cases
+exudynTestGlobals.testError = u - (0.10039884426884882) 
+exudynTestGlobals.testResult = u
+
+#++++++++++++++++++++++++++++++
+#i7-1390, boost
+#results for ExplicitMidpoint, 1e6 steps, best of three, exudynFast=True:
+#C++:                    1.71s  #1710ns/step
+#Python user function:  13.56s  #
+#Symbolic user function: 2.28s  #570ns overhead for 2 x user function
+# => speedup of user function part 20.8
+
+#++++++++++++++++++++++++++++++
+#OLD/original timings, one user function spring-damper
+#timings for 2e6 steps
 #i7-1390, power saving
 #results for ExplicitMidpoint, 2e6 steps, best of three, exudynFast=False:
 #C++:                   2.99s

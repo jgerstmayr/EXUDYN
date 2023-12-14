@@ -92,14 +92,14 @@ omega0 = np.array([0,0*v0[0]/radius,0])
 gObject = [GraphicsDataSphere(radius=radius, color=color4orange, nTiles=20)]
 gObject += [GraphicsDataBasis(length=2*radius)]
 RBinertia = InertiaSphere(m, radius)
-[nMass, oMass] = AddRigidBody(mainSys=mbs, inertia=RBinertia, 
-                        nodeType=exu.NodeType.RotationRotationVector,
-                        position=p0, 
-                        velocity=v0,
-                        angularVelocity=omega0,
-                        graphicsDataList=gObject,
-                        gravity=[0,0,-g],
-                        )
+oMass = mbs.CreateRigidBody(referencePosition=p0, 
+                            initialVelocity=v0,
+                            initialAngularVelocity=omega0,
+                            gravity=[0,0,-g],
+                            graphicsDataList=gObject,
+                            )
+nMass = mbs.GetObject(oMass)['nodeNumber']
+
 mThis = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nMass))
 
 gContact.AddSphereWithMarker(mThis, radius=radius, contactStiffness=k, contactDamping=d, 

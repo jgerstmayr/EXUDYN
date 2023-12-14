@@ -1088,7 +1088,6 @@ Fv,     V,      UpdateGraphics,                 ,               ,      void,    
 Fv,     V,      CallUserFunction,               ,               ,      void,         ,                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, const MainSystem& mainSystem, Index itemNumber", DI,  "user function which is called to update specific object graphics computed in Python functions; this is rather slow, but useful for user elements"  
 Fv,     V,      HasUserFunction,                ,               ,      Bool,         "return graphicsDataUserFunction!=0;",                        "", CI,  "return true, if object has a user function to be called during redraw"  
 V,      V,      graphicsDataUserFunction,       ,               ,      PyFunctionGraphicsData, 0,               ,       IO,     "A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function"
-V,      V,      color,                          ,               ,      Float4,        "Float4({-1.f,-1.f,-1.f,-1.f})",, IO,  "RGB node color; if R==-1, use default color" 
 V,      V,      graphicsData,                   ,               ,      BodyGraphicsData, ,                     ,       IO,      "Structure contains data for body visualization; data is defined in special list / dictionary structure"
 #file names automatically determined from class name
 writeFile = True
@@ -3793,7 +3792,6 @@ equations =
       \rowTable{\texttt{curvatureRef}}{Real}{$K_0 + f\cRef \cdot K\cRef$}
       \rowTable{\returnValue}{Real}{scalar value of computed axial force}
     \finishTable
-    %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \userFunction{bendingMomentUserFunction(mbs, t, itemNumber, axialPositionNormalized, curvature, curvature\_t, curvatureRef, physicsBendingStiffness, physicsBendingDamping, axialStrain, axialStrain\_t, axialStrainRef)}
     A user function, which computes the bending moment depending on time, strains and curvatures and 
@@ -3822,38 +3820,38 @@ equations =
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \userFunctionExample{}
     \pythonstyle\begin{lstlisting}
-    #define some material parameters
-    rhoA = 100.
-    EA =   1e7.
-    EI =   1e5
+        #define some material parameters
+        rhoA = 100.
+        EA =   1e7.
+        EI =   1e5
 
-    #example of bending moment user function
-    def bendingMomentUserFunction(mbs, t, itemNumber, axialPositionNormalized, 
-               curvature, curvature_t, curvatureRef, physicsBendingStiffness, physicsBendingDamping,
-               axialStrain, axialStrain_t, axialStrainRef):
-        fact = min(1,t) #runs from 0 to 1
-        #change reference curvature of beam over time:
-        kappa=(curvature-curvatureRef*fact) 
-        return physicsBendingStiffness*(kappa) + physicsBendingDamping*curvature_t
+        #example of bending moment user function
+        def bendingMomentUserFunction(mbs, t, itemNumber, axialPositionNormalized, 
+                   curvature, curvature_t, curvatureRef, physicsBendingStiffness, 
+                   physicsBendingDamping, axialStrain, axialStrain_t, axialStrainRef):
+            fact = min(1,t) #runs from 0 to 1
+            #change reference curvature of beam over time:
+            kappa=(curvature-curvatureRef*fact) 
+            return physicsBendingStiffness*(kappa) + physicsBendingDamping*curvature_t
 
-    def axialForceUserFunction(mbs, t, itemNumber, axialPositionNormalized, 
-               axialStrain, axialStrain_t, axialStrainRef, physicsAxialStiffness, physicsAxialDamping,
-               curvature, curvature_t, curvatureRef):
-        fact = min(1,t) #runs from 0 to 1
-        return (physicsAxialStiffness*(axialStrain-fact*axialStrainRef) + 
-                physicsAxialDamping*axialStrain_t)
+        def axialForceUserFunction(mbs, t, itemNumber, axialPositionNormalized, 
+                   axialStrain, axialStrain_t, axialStrainRef, physicsAxialStiffness, 
+                   physicsAxialDamping, curvature, curvature_t, curvatureRef):
+            fact = min(1,t) #runs from 0 to 1
+            return (physicsAxialStiffness*(axialStrain-fact*axialStrainRef) + 
+                    physicsAxialDamping*axialStrain_t)
 
-    cable = ObjectANCFCable2D(physicsMassPerLength=rhoA, 
-                    physicsBendingStiffness=EI, 
-                    physicsBendingDamping = EI*0.1,
-                    physicsAxialStiffness=EA,
-                    physicsAxialDamping=EA*0.05,
-                    physicsReferenceAxialStrain=0.1, #10% stretch
-                    physicsReferenceCurvature=1,     #radius=1
-                    bendingMomentUserFunction=bendingMomentUserFunction,
-                    axialForceUserFunction=axialForceUserFunction,
-                    )
-    #use  cable with GenerateStraightLineANCFCable(...)
+        cable = ObjectANCFCable2D(physicsMassPerLength=rhoA, 
+                        physicsBendingStiffness=EI, 
+                        physicsBendingDamping = EI*0.1,
+                        physicsAxialStiffness=EA,
+                        physicsAxialDamping=EA*0.05,
+                        physicsReferenceAxialStrain=0.1, #10% stretch
+                        physicsReferenceCurvature=1,     #radius=1
+                        bendingMomentUserFunction=bendingMomentUserFunction,
+                        axialForceUserFunction=axialForceUserFunction,
+                        )
+        #use  cable with GenerateStraightLineANCFCable(...)
     \end{lstlisting} \vspace{12pt}
     %%RSTCOMPATIBLE
 /end

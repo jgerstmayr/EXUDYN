@@ -84,7 +84,8 @@ def TestExamplesReferenceSolution():
         'sphericalJointTest.py':4.409080446575089,                  #new 2022-07-11 (CState Parallel); 
         'springDamperUserFunctionTest.py':0.5062872273010911,
         'stiffFlyballGovernor.py':0.8962488779114738,
-        'superElementRigidJointTest.py':0.015217208913989071,#before 2022-02-20 (accuracy of internal sensors is higher): 0.015217208913983024,
+        'superElementRigidJointTest.py':0.015217208913989071,       #before 2022-02-20 (accuracy of internal sensors is higher): 0.015217208913983024,
+        'symbolicUserFunctionTest.py':0.10039884426884882,          #2023-12-13  
         }
 
     if (sys.version_info.major == 3 and sys.version_info.minor == 6): #different solutions without AVX

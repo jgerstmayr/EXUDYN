@@ -34,8 +34,8 @@ mbs = SC.AddSystem()
 scb, g1, g2 = 0.5, 0.92, 0.72
 graphGround = GraphicsDataCheckerBoard (point= [0,0,0], normal= [0,0,1], size= scb, color= [g1, g1, g1, 1.0],
                                         alternatingColor= [g2, g2, g2, 1.0], nTiles= 12)
-oGround = mbs.AddObject(ObjectGround(referencePosition= [0,0,0], 
-                                   visualization=VObjectGround(graphicsData=[graphGround])))
+oGround = mbs.CreateGround(referencePosition = [0,0,0], 
+                           graphicsDataList=[graphGround])
 mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround,localPosition = [0,0,0], name='Ground'))
 nGround0=mbs.AddNode(NodePointGround(referenceCoordinates = [0,0,0]))
 
@@ -51,15 +51,15 @@ graphRoll = [GraphicsDataSolidOfRevolution([0,0,0], [1,0,0], contour, color4ligh
                                           alternatingColor=color4blue, nTiles = 32)]
 
 InertiaRoll = InertiaCylinder(density=7800, length=length, outerRadius=3e-3, axis=0) 
-[nRoll, bRoll]=AddRigidBody(mainSys = mbs,
-                              inertia = InertiaRoll, 
-                              nodeType = str(exu.NodeType.RotationEulerParameters), 
-                              position = [0,0,poly[-1]*1.2],  
-                              rotationMatrix =RotationMatrixY(np.pi/16),
-                              angularVelocity = RotationMatrixY(np.pi/16) @ np.array([-1000,0,0]),  # in Global coordinates
-                              velocity= [0,0,0],
-                              gravity = [0,0,-9.81], 
-                              graphicsDataList = graphRoll) 
+bRoll = mbs.CreateRigidBody(inertia = InertiaRoll, 
+                            referencePosition = [0,0,poly[-1]*1.2],  
+                            referenceRotationMatrix =RotationMatrixY(np.pi/16),
+                            initialAngularVelocity = RotationMatrixY(np.pi/16) @ np.array([-1000,0,0]),  # in Global coordinates
+                            initialVelocity= [0,0,0],
+                            gravity = [0,0,-9.81], 
+                            graphicsDataList = graphRoll) 
+
+nRoll = mbs.GetObject(bRoll)['nodeNumber']
         
 nData = mbs.AddNode(NodeGenericData(initialCoordinates=[0,0,0], numberOfDataCoordinates=3))
 mRoll = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nRoll))

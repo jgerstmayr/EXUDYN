@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2023-12-03  23:26:45 (last modified)
+* @date         2023-12-14  08:22:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -26,7 +26,6 @@ class VisualizationObjectGround: public VisualizationObject // AUTO:
 {
 protected: // AUTO: 
     std::function<py::object(const MainSystem&,Index)> graphicsDataUserFunction;//!< AUTO: A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function
-    Float4 color;                                 //!< AUTO: RGB node color; if R==-1, use default color
     BodyGraphicsData graphicsData;                //!< AUTO: Structure contains data for body visualization; data is defined in special list / dictionary structure
 
 public: // AUTO: 
@@ -35,7 +34,6 @@ public: // AUTO:
     {
         show = true;
         graphicsDataUserFunction = 0;
-        color = Float4({-1.f,-1.f,-1.f,-1.f});
     };
 
     // AUTO: access functions
@@ -57,13 +55,6 @@ public: // AUTO:
     const std::function<py::object(const MainSystem&,Index)>& GetGraphicsDataUserFunction() const { return graphicsDataUserFunction; }
     //! AUTO:  Read (Reference) access to:A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function
     std::function<py::object(const MainSystem&,Index)>& GetGraphicsDataUserFunction() { return graphicsDataUserFunction; }
-
-    //! AUTO:  Write (Reference) access to:RGB node color; if R==-1, use default color
-    void SetColor(const Float4& value) { color = value; }
-    //! AUTO:  Read (Reference) access to:RGB node color; if R==-1, use default color
-    const Float4& GetColor() const { return color; }
-    //! AUTO:  Read (Reference) access to:RGB node color; if R==-1, use default color
-    Float4& GetColor() { return color; }
 
     //! AUTO:  Write (Reference) access to:Structure contains data for body visualization; data is defined in special list / dictionary structure
     void SetGraphicsData(const BodyGraphicsData& value) { graphicsData = value; }
