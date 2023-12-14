@@ -74,11 +74,10 @@ You can view and download this file on Github: `rotatingTableTest.py <https://gi
        graphicsBodyWheel+= [GraphicsDataCylinder(pAxis=[0,0,-0.5*w], vAxis=[0,0,w], radius=r, color=color4dodgerblue, nTiles=32, addEdges=True)]
        graphicsBodyWheel+= [GraphicsDataCylinder(pAxis=[0,0,-d], vAxis=[0,0,d], radius=0.5*w, 
                                                  color=color4orange, addEdges=True)]
-       [nWheel,bWheel]=AddRigidBody(mainSys = mbs, 
-                            inertia = iWheel, 
-                            position = p0Wheel, 
-                            gravity = gravity, 
-                            graphicsDataList = graphicsBodyWheel)
+       bWheel = mbs.CreateRigidBody(inertia = iWheel, 
+                                    referencePosition = p0Wheel, 
+                                    gravity = gravity, 
+                                    graphicsDataList = graphicsBodyWheel)
        
        #ground body and marker
        p0Ground= p0Plane
@@ -87,11 +86,10 @@ You can view and download this file on Github: `rotatingTableTest.py <https://gi
        oGround = mbs.AddObject(ObjectGround(referencePosition=p0Plane))
        
        #ground is also a movable rigid body
-       [nPlane,bPlane]=AddRigidBody(mainSys = mbs, 
-                            inertia = iPlane, 
-                            position = p0Plane, 
-                            gravity = gravity, 
-                            graphicsDataList = graphicsPlane)
+       bPlane = mbs.CreateRigidBody(inertia = iPlane, 
+                                    referencePosition = p0Plane, 
+                                    gravity = gravity, 
+                                    graphicsDataList = graphicsPlane)
        
        #++++++++++++++++++++
        #joint for plane

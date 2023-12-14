@@ -29,7 +29,8 @@ For details on the interaction of nodes, objects, markers and loads see Section 
 
 There are several journal papers of the developers which were using Exudyn (list may be incomplete):
 
-+  J. Gerstmayr. Exudyn -- A C++ based Python package for flexible multibody systems. Preprint, Research Square, 2023.  \ `https://doi.org/10.21203/rs.3.rs-2693700/v1 <https://doi.org/10.21203/rs.3.rs-2693700/v1>`_\ 
++  J. Gerstmayr. Exudyn -- a C++-based Python package for flexible multibody systems. Multibody System Dynamics (2023). \ `https://doi.org/10.1007/s11044-023-09937-1 <https://doi.org/10.1007/s11044-023-09937-1>`_\  
++  J. Gerstmayr, P. Manzl, M. Pieber. Multibody Models Generated from Natural Language, Preprint, Research Square, 2023. \ `https://doi.org/10.21203/rs.3.rs-3552291/v1 <https://doi.org/10.21203/rs.3.rs-3552291/v1>`_\  
 +  P. Manzl, O. Rogov, J. Gerstmayr, A. Mikkola, G. Orzechowski. Reliability Evaluation of Reinforcement Learning Methods for Mechanical Systems with Increasing Complexity.  Preprint, Research Square, 2023.  \ `https://doi.org/10.21203/rs.3.rs-3066420/v1 <https://doi.org/10.21203/rs.3.rs-3066420/v1>`_\ 
 +  S. Holzinger, M. Arnold, J. Gerstmayr. Evaluation and Implementation of Lie Group Integration Methods for Rigid Multibody Systems. Preprint, Research Square, 2023.  \ `https://doi.org/10.21203/rs.3.rs-2715112/v1 <https://doi.org/10.21203/rs.3.rs-2715112/v1>`_\  
 +  M. Sereinig, P. Manzl, and J. Gerstmayr. Task Dependent Comfort Zone, a Base Placement Strategy for Autonomous Mobile Manipulators using Manipulability Measures, Robotics and Autonomous Systems, submitted. 

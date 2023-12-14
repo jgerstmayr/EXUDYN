@@ -15,8 +15,9 @@ Requirements for Exudyn ?
 Exudyn only works with Python. Thus, you need an appropriate Python installation.
 So far (2021-07), we tested
 
++  \ **Anaconda 2023-07, 64bit, Python 3.11**\  with Spyder 5.4
 +  \ **Anaconda 2021-11, 64bit, Python 3.9**\ \ (older Anaconda3 versions can be downloaded via the repository archive \ ``https://repo.anaconda.com/archive/``\ )
-+  Currently, we work with Python 3.6 - Python 3.11 \ **conda environments**\  on Windows, Linux and MacOS (3.8-3.11).
++  Currently, we support Python 3.8 - Python 3.11 \ **conda environments**\  on Windows, Linux and MacOS (with restrictions to some older and exotic operating systems).
 +  \ **Spyder 5.1.5**\  (with Python 3.9.7, 64bit) and \ **Spyder 4.1.3**\  (with Python 3.7.7, 64bit), which is included in the Anaconda installation\ (Note that it is important that Spyder, Python and Exudyn  are \ **either**\  32bit \ **or**\  64bit and are compiled up to the same minor version, i.e., 3.7.x. There will be a strange .DLL error, if you mix up 32/64bit. It is possible to install both, Anaconda 32bit and Anaconda 64bit -- then you should follow the recommendations of paths as suggested by Anaconda installer.); Spyder works with all virtual environments
 
 Many alternative options exist:
@@ -25,8 +26,8 @@ Many alternative options exist:
 +  Anaconda 2020-11 with \ **Python 3.8**\  and Spyder 4.1.5: no problems except some regular crashes of Spyder, TestSuite runs without problems since Exudyn version 1.0.182.
 +  Alternative option with more stable Spyder (as compared to Spyder 4.1.3): Anaconda, 64bit, Python 3.6.5)\ (Anaconda 64bit with Python3.6 can be downloaded via the repository archive \ ``https://repo.anaconda.com/archive/``\  choosing \ ``Anaconda3-5.2.0-Windows-x86_64.exe``\  for 64bit.)
 
-If you plan to extend the C++ code, we recommend to use VS2017\ (previously, VS2019 was recommended: However, VS2019 has problems with the library 'Eigen' and therefore leads to erroneous results with the sparse solver. VS2017 can also be configured with Python 3.7 now.) to compile your code, which offers Python 3.7 compatibility.
-Once again, remember that Python versions and the version of the Exudyn module must be identical (e.g., Python 3.6 32 bit \ **both**\  in the Exudyn module and in Spyder).
+If you plan to extend the C++ code, we recommend to use Microsoft Visual Studio (VS2022) and previously VS2017\ (Note: VS2019 has problems with the library 'Eigen' and therefore leads to erroneous results with the sparse solver.) to compile your code, which offers Python 3.x compatibility.
+Remember that Python versions and the version of the Exudyn module must be identical (e.g., Python 3.9 64 bit \ **both**\  in the Exudyn module and e.g. in Spyder).
 
 
 Run without Anaconda

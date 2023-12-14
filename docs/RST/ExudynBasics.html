@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Exudyn Basics &mdash; Exudyn1.7.57.dev1 1.7.57.dev1 documentation</title>
+  <title>Exudyn Basics &mdash; Exudyn1.7.59.dev1 1.7.59.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=cc931d05"></script>
+        <script src="../../_static/documentation_options.js?v=18ccdb8d"></script>
         <script src="../../_static/doctools.js?v=888ff710"></script>
         <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -43,7 +43,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.7.57.dev1
+            Exudyn1.7.59.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -111,7 +111,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.7.57.dev1</a>
+          <a href="../../index.html">Exudyn1.7.59.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -512,13 +512,22 @@ However, the output of the performance tests is not stored on github.</p>
 <span id="sec-overview-basics-convergenceproblems"></span><h2>Removing convergence problems and solver failures<a class="headerlink" href="#removing-convergence-problems-and-solver-failures" title="Link to this heading"></a></h2>
 <p>Nonlinear formulations (such as most multibody systems, especially nonlinear finite elements) cause problems and there is no general nonlinear solver which may reliably and accurately solve such problems.
 Tuning solver parameters is at hand of the user.
-In general, the Newton solver tries to reduce the error by the factor given in <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.relativeTolerance</span></code> (for static solver), which is not possible for very small (or zero) initial residuals. The absolute tolerance is helping out as a lower bound for the error, given in <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.absoluteTolerance</span></code> (for static solver), which is by default rather low (1e-10) – in order to achieve accurate results for small systems or small motion (in mm or <span class="math notranslate nohighlight">\(\mu\)</span>m regime). Increasing this value helps to solve such problems. Nevertheless, you should usually set tolerances as low as possible because otherwise, your solution may become inaccurate.</p>
+In general, the Newton solver tries to reduce the error by the factor given in</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.relativeTolerance</span></code> (for static solver),</p></li>
+</ul>
+<p>which is not possible for very small (or zero) initial residuals. The absolute tolerance is helping out as a lower bound for the error, given in</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.absoluteTolerance</span></code> (for static solver),</p></li>
+</ul>
+<p>which is by default rather low (1e-10) – in order to achieve accurate results for small systems or small motion (in mm or <span class="math notranslate nohighlight">\(\mu\)</span>m regime). Increasing this value helps to solve such problems. Nevertheless, you should usually set tolerances as low as possible because otherwise, your solution may become inaccurate.</p>
 <p>The following hints / rules for described problems shall be followed.</p>
 <ul>
 <li><p><strong>static solver</strong>: <strong>load steps get very small</strong> even if the solution seems to be smooth (or linear) and less steps are expected:</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line">→  this may happen for <strong>system without loads</strong>; larger number of steps may happen for finer discretization; you may adjust (increase) <code class="docutils literal notranslate"><span class="pre">.newton.relativeTolerance</span></code> / <code class="docutils literal notranslate"><span class="pre">.newton.absoluteTolerance</span></code> in static solver or in time integration to resolve such problems, but check if solution achieves according accuracy</div>
+<div class="line">→  this may happen for <strong>system without loads</strong>; larger number of steps may happen for finer discretization;</div>
+<div class="line">→  you may adjust (increase) <code class="docutils literal notranslate"><span class="pre">.newton.relativeTolerance</span></code> / <code class="docutils literal notranslate"><span class="pre">.newton.absoluteTolerance</span></code> in static solver or in time integration to resolve such problems, but check if solution achieves according accuracy</div>
 </div>
 </div></blockquote>
 </li>
@@ -556,7 +565,10 @@ In general, the Newton solver tries to reduce the error by the factor given in <
 <li><p><strong>singular Jacobians</strong> or <strong>redundant constraints</strong>:</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line">→  in case of systems that lead to a singular Jacobian due to redundant constraints or kinematic DOF in static solutions, you may switch to Eigen’s FullPivotLU solver using <code class="docutils literal notranslate"><span class="pre">simulationSettings.linearSolverType</span> <span class="pre">=</span> <span class="pre">exu.LinearSolverType.EigenDense</span></code> and <code class="docutils literal notranslate"><span class="pre">simulationSettings.linearSolverSettings.ignoreSingularJacobian=True</span></code>; however, check you results as they may be erroneous, because the solver tries to find an optimal solution / compromise which may not be what you intend to get!</div>
+<div class="line">→  in case of systems that lead to a singular Jacobian due to redundant constraints or kinematic DOF in static solutions, you may switch to Eigen’s FullPivotLU solver using:</div>
+<div class="line">→  <code class="docutils literal notranslate"><span class="pre">simulationSettings.linearSolverType</span> <span class="pre">=</span> <span class="pre">exu.LinearSolverType.EigenDense</span></code> and</div>
+<div class="line">→  <code class="docutils literal notranslate"><span class="pre">simulationSettings.linearSolverSettings.ignoreSingularJacobian=True</span></code> ;</div>
+<div class="line">→  however, check your results as they may be erroneous, because the solver tries to find an optimal solution / compromise which may not be what you intend to get!</div>
 </div>
 </div></blockquote>
 </li>
@@ -582,12 +594,7 @@ In general, to see where CPU time is lost, use the option turn on <code class="d
 <li><p>when preferring dense direct solvers, switching to Eigen’s PartialPivLU solver might greatly improve speed: <code class="docutils literal notranslate"><span class="pre">simulationSettings.linearSolverType</span> <span class="pre">=</span> <span class="pre">exu.LinearSolverType.EigenDense</span></code>; however, the flag <code class="docutils literal notranslate"><span class="pre">simulationSettings.linearSolverSettings.ignoreSingularJacobian=True</span></code> will switch to the much slower (but more robust) Eigen’s FullPivLU</p></li>
 <li><p>try to avoid Python functions or try to speed up Python functions; if this is not possible, see solutions below</p></li>
 <li><p>instead of user functions in objects or loads (computed in every iteration), some problems would also work if these parameters are only updated in <code class="docutils literal notranslate"><span class="pre">mbs.SetPreStepUserFunction(...)</span></code></p></li>
-<li><dl class="simple">
-<dt>Python user functions can be speed up (since Exudyn V1.7.40) by converting conventional Python functions into</dt><dd><p>Exudyn (internal) symbolic user functions, which have similar performance as C++ functions with the ability to parallelize;
-see Section <a class="reference internal" href="cInterface/Symbolic.html#sec-cinterface-symbolic"><span class="std std-ref">Symbolic</span></a></p>
-</dd>
-</dl>
-</li>
+<li><p>Python user functions can be speed up (since Exudyn V1.7.40) by converting conventional Python functions into Exudyn (internal) symbolic user functions, which have similar performance as C++ functions with the ability to parallelize; see Section <a class="reference internal" href="cInterface/Symbolic.html#sec-cinterface-symbolic"><span class="std std-ref">Symbolic</span></a></p></li>
 <li><p>Alternatively, Python user functions can be speed up using the Python numba package, using <code class="docutils literal notranslate"><span class="pre">&#64;jit</span></code> in front of functions (for more options, see <a class="reference external" href="https://numba.pydata.org/numba-doc/dev/user/index.html">https://numba.pydata.org/numba-doc/dev/user/index.html</a>); Example given in <code class="docutils literal notranslate"><span class="pre">Examples/springDamperUserFunctionNumbaJIT.py</span></code> showing speedups of factor 4; more complicated Python functions may see speedups of 10 - 50</p></li>
 <li><p>for <strong>discontinuous problems</strong>, try to adjust solver parameters; especially the discontinuous.iterationTolerance which may be too tight and cause many iterations; iterations may be limited by discontinuous.maxIterations, which at larger values solely multiplies the computation time with a factor if all iterations are performed</p></li>
 <li><p>For multiple computations / multiple runs of Exudyn (parameter variation, optimization, compute sensitivities), you can use the processing sub module of Exudyn to parallelize computations and achieve speedups proporional to the number of cores/threads of your computer; specifically using the <code class="docutils literal notranslate"><span class="pre">multiThreading</span></code> option or even using a cluster (using <code class="docutils literal notranslate"><span class="pre">dispy</span></code>, see <code class="docutils literal notranslate"><span class="pre">ParameterVariation(...)</span></code> function)</p></li>
@@ -606,7 +613,8 @@ see Section <a class="reference internal" href="cInterface/Symbolic.html#sec-cin
 <li><p>try to have <strong>constant mass matrices</strong> (see according objects, which have constant mass matrices; e.g. rigid bodies using RotationVector Lie group node have constant mass matrix)</p></li>
 <li><p>for explicit integration, set <code class="docutils literal notranslate"><span class="pre">computeEndOfStepAccelerations</span> <span class="pre">=</span> <span class="pre">False</span></code>, if you do not need accurate evaluation of accelerations at end of time step (will then be taken from beginning)</p></li>
 <li><p>for explicit integration, set <code class="docutils literal notranslate"><span class="pre">explicitIntegration.computeMassMatrixInversePerBody=True</span></code>, which avoids factorization and back substitution, which may speed up computations with many bodies / particles</p></li>
-<li><p>if you are sure that your mass matrix is constant, set <code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.reuseConstantMassMatrix</span> <span class="pre">=</span> <span class="pre">True</span></code>; check results!</p></li>
+<li><p>if you are sure that your mass matrix is constant, set:
+<code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.reuseConstantMassMatrix</span> <span class="pre">=</span> <span class="pre">True</span></code>; check results!</p></li>
 <li><p>check that <code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.simulateInRealtime</span> <span class="pre">=</span> <span class="pre">False</span></code>; if set True, it breaks down simulation to real time</p></li>
 <li><p>do not record images, if not needed: <code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.recordImagesInterval</span> <span class="pre">=</span> <span class="pre">-1</span></code></p></li>
 <li><p>in case of bad convergence, decreasing the step size might also help; check also other flags for adaptive step size and for Newton</p></li>

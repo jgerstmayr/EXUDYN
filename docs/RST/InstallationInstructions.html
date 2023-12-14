@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Installation instructions &mdash; Exudyn1.7.57.dev1 1.7.57.dev1 documentation</title>
+  <title>Installation instructions &mdash; Exudyn1.7.59.dev1 1.7.59.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=cc931d05"></script>
+        <script src="../../_static/documentation_options.js?v=18ccdb8d"></script>
         <script src="../../_static/doctools.js?v=888ff710"></script>
         <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -43,7 +43,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.7.57.dev1
+            Exudyn1.7.59.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -103,7 +103,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.7.57.dev1</a>
+          <a href="../../index.html">Exudyn1.7.59.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -129,8 +129,9 @@
 <p>Exudyn only works with Python. Thus, you need an appropriate Python installation.
 So far (2021-07), we tested</p>
 <ul class="simple">
+<li><p><strong>Anaconda 2023-07, 64bit, Python 3.11</strong> with Spyder 5.4</p></li>
 <li><p><strong>Anaconda 2021-11, 64bit, Python 3.9</strong>(older Anaconda3 versions can be downloaded via the repository archive <code class="docutils literal notranslate"><span class="pre">https://repo.anaconda.com/archive/</span></code>)</p></li>
-<li><p>Currently, we work with Python 3.6 - Python 3.11 <strong>conda environments</strong> on Windows, Linux and MacOS (3.8-3.11).</p></li>
+<li><p>Currently, we support Python 3.8 - Python 3.11 <strong>conda environments</strong> on Windows, Linux and MacOS (with restrictions to some older and exotic operating systems).</p></li>
 <li><p><strong>Spyder 5.1.5</strong> (with Python 3.9.7, 64bit) and <strong>Spyder 4.1.3</strong> (with Python 3.7.7, 64bit), which is included in the Anaconda installation(Note that it is important that Spyder, Python and Exudyn  are <strong>either</strong> 32bit <strong>or</strong> 64bit and are compiled up to the same minor version, i.e., 3.7.x. There will be a strange .DLL error, if you mix up 32/64bit. It is possible to install both, Anaconda 32bit and Anaconda 64bit – then you should follow the recommendations of paths as suggested by Anaconda installer.); Spyder works with all virtual environments</p></li>
 </ul>
 <p>Many alternative options exist:</p>
@@ -139,8 +140,8 @@ So far (2021-07), we tested</p>
 <li><p>Anaconda 2020-11 with <strong>Python 3.8</strong> and Spyder 4.1.5: no problems except some regular crashes of Spyder, TestSuite runs without problems since Exudyn version 1.0.182.</p></li>
 <li><p>Alternative option with more stable Spyder (as compared to Spyder 4.1.3): Anaconda, 64bit, Python 3.6.5)(Anaconda 64bit with Python3.6 can be downloaded via the repository archive <code class="docutils literal notranslate"><span class="pre">https://repo.anaconda.com/archive/</span></code> choosing <code class="docutils literal notranslate"><span class="pre">Anaconda3-5.2.0-Windows-x86_64.exe</span></code> for 64bit.)</p></li>
 </ul>
-<p>If you plan to extend the C++ code, we recommend to use VS2017(previously, VS2019 was recommended: However, VS2019 has problems with the library ‘Eigen’ and therefore leads to erroneous results with the sparse solver. VS2017 can also be configured with Python 3.7 now.) to compile your code, which offers Python 3.7 compatibility.
-Once again, remember that Python versions and the version of the Exudyn module must be identical (e.g., Python 3.6 32 bit <strong>both</strong> in the Exudyn module and in Spyder).</p>
+<p>If you plan to extend the C++ code, we recommend to use Microsoft Visual Studio (VS2022) and previously VS2017(Note: VS2019 has problems with the library ‘Eigen’ and therefore leads to erroneous results with the sparse solver.) to compile your code, which offers Python 3.x compatibility.
+Remember that Python versions and the version of the Exudyn module must be identical (e.g., Python 3.9 64 bit <strong>both</strong> in the Exudyn module and e.g. in Spyder).</p>
 <section id="run-without-anaconda">
 <h3>Run without Anaconda<a class="headerlink" href="#run-without-anaconda" title="Link to this heading"></a></h3>
 <p>If you do not install Anaconda (e.g., under Linux), make sure that you have the according Python packages installed:</p>

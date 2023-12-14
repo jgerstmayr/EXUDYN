@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.7.57.dev1, 
-+  last change =  2023-12-13, 
++  Exudyn version = 1.7.59.dev1, 
++  last change =  2023-12-14, 
 +  Number of issues = 1732, 
-+  Number of resolved issues = 1527 (57 in current version), 
++  Number of resolved issues = 1529 (59 in current version), 
 
 ***********
 Version 1.7
 ***********
 
+ * Version 1.7.59: resolved Issue 1680: chatGPTupdate (example)
+    - description:  add simple example for load userFunction
+    - date resolved: **2023-12-14 00:01**\ , date raised: 2023-10-29 
+ * Version 1.7.58: resolved Issue 1693: VObjectGround (fix)
+    - description:  remove parameter color, as it is not used (check)
+    - date resolved: **2023-12-13 23:40**\ , date raised: 2023-11-19 
  * Version 1.7.57: resolved Issue 1726: SymbolicRealMatrix (extension)
     - description:  add symbolic matrix for user functions
     - **notes:** note: currently implemented less efficient with memory allocations
@@ -5005,10 +5011,6 @@ Open issues
     - description:  extend microthreading for taskmanager-based load management; remove taskmanager from repo and create pure BSD license
     - date raised: 2023-11-19 
 
- * **open issue 1693:** VObjectGround       
-    - description:  remove parameter color, as it is not used (check)
-    - date raised: 2023-11-19 
-
  * **open issue 1692:** exudyn.graphics     
     - description:  change GraphicsData functions in examples to exudyn.graphics
     - date raised: 2023-11-19 
@@ -5031,10 +5033,6 @@ Open issues
 
  * **open issue 1681:** ItemIndices         
     - description:  add option to add force/torque directly; add gravity to bodies
-    - date raised: 2023-10-29 
-
- * **open issue 1680:** chatGPTupdate       
-    - description:  add simple example for load userFunction
     - date raised: 2023-10-29 
 
  * **open issue 1677:** systemData          

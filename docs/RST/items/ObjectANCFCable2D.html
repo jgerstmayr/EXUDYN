@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ObjectANCFCable2D &mdash; Exudyn1.7.57.dev1 1.7.57.dev1 documentation</title>
+  <title>ObjectANCFCable2D &mdash; Exudyn1.7.59.dev1 1.7.59.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=cc931d05"></script>
+        <script src="../../../_static/documentation_options.js?v=18ccdb8d"></script>
         <script src="../../../_static/doctools.js?v=888ff710"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -43,7 +43,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.7.57.dev1
+            Exudyn1.7.59.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -107,7 +107,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.7.57.dev1</a>
+          <a href="../../../index.html">Exudyn1.7.59.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -977,48 +977,40 @@ Note that itemNumber represents the index of the object in mbs, which can be use
 </table>
 <hr class="docutils" />
 <p><strong>User function example</strong>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#define some material parameters</span>
+<span class="n">rhoA</span> <span class="o">=</span> <span class="mf">100.</span>
+<span class="n">EA</span> <span class="o">=</span>   <span class="mf">1e7</span><span class="o">.</span>
+<span class="n">EI</span> <span class="o">=</span>   <span class="mf">1e5</span>
+
+<span class="c1">#example of bending moment user function</span>
+<span class="k">def</span> <span class="nf">bendingMomentUserFunction</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">itemNumber</span><span class="p">,</span> <span class="n">axialPositionNormalized</span><span class="p">,</span>
+           <span class="n">curvature</span><span class="p">,</span> <span class="n">curvature_t</span><span class="p">,</span> <span class="n">curvatureRef</span><span class="p">,</span> <span class="n">physicsBendingStiffness</span><span class="p">,</span>
+           <span class="n">physicsBendingDamping</span><span class="p">,</span> <span class="n">axialStrain</span><span class="p">,</span> <span class="n">axialStrain_t</span><span class="p">,</span> <span class="n">axialStrainRef</span><span class="p">):</span>
+    <span class="n">fact</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">t</span><span class="p">)</span> <span class="c1">#runs from 0 to 1</span>
+    <span class="c1">#change reference curvature of beam over time:</span>
+    <span class="n">kappa</span><span class="o">=</span><span class="p">(</span><span class="n">curvature</span><span class="o">-</span><span class="n">curvatureRef</span><span class="o">*</span><span class="n">fact</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">physicsBendingStiffness</span><span class="o">*</span><span class="p">(</span><span class="n">kappa</span><span class="p">)</span> <span class="o">+</span> <span class="n">physicsBendingDamping</span><span class="o">*</span><span class="n">curvature_t</span>
+
+<span class="k">def</span> <span class="nf">axialForceUserFunction</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">itemNumber</span><span class="p">,</span> <span class="n">axialPositionNormalized</span><span class="p">,</span>
+           <span class="n">axialStrain</span><span class="p">,</span> <span class="n">axialStrain_t</span><span class="p">,</span> <span class="n">axialStrainRef</span><span class="p">,</span> <span class="n">physicsAxialStiffness</span><span class="p">,</span>
+           <span class="n">physicsAxialDamping</span><span class="p">,</span> <span class="n">curvature</span><span class="p">,</span> <span class="n">curvature_t</span><span class="p">,</span> <span class="n">curvatureRef</span><span class="p">):</span>
+    <span class="n">fact</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">t</span><span class="p">)</span> <span class="c1">#runs from 0 to 1</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">physicsAxialStiffness</span><span class="o">*</span><span class="p">(</span><span class="n">axialStrain</span><span class="o">-</span><span class="n">fact</span><span class="o">*</span><span class="n">axialStrainRef</span><span class="p">)</span> <span class="o">+</span>
+            <span class="n">physicsAxialDamping</span><span class="o">*</span><span class="n">axialStrain_t</span><span class="p">)</span>
+
+<span class="n">cable</span> <span class="o">=</span> <span class="nc">ObjectANCFCable2D</span><span class="p">(</span><span class="n">physicsMassPerLength</span><span class="o">=</span><span class="n">rhoA</span><span class="p">,</span>
+                <span class="n">physicsBendingStiffness</span><span class="o">=</span><span class="n">EI</span><span class="p">,</span>
+                <span class="n">physicsBendingDamping</span> <span class="o">=</span> <span class="n">EI</span><span class="o">*</span><span class="mf">0.1</span><span class="p">,</span>
+                <span class="n">physicsAxialStiffness</span><span class="o">=</span><span class="n">EA</span><span class="p">,</span>
+                <span class="n">physicsAxialDamping</span><span class="o">=</span><span class="n">EA</span><span class="o">*</span><span class="mf">0.05</span><span class="p">,</span>
+                <span class="n">physicsReferenceAxialStrain</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="c1">#10</span>
+                <span class="n">physicsReferenceCurvature</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>     <span class="c1">#radius=1</span>
+                <span class="n">bendingMomentUserFunction</span><span class="o">=</span><span class="n">bendingMomentUserFunction</span><span class="p">,</span>
+                <span class="n">axialForceUserFunction</span><span class="o">=</span><span class="n">axialForceUserFunction</span><span class="p">,</span>
+                <span class="p">)</span>
+<span class="c1">#use  cable with GenerateStraightLineANCFCable(...)</span>
 </pre></div>
 </div>
-<p>#define some material parameters
-rhoA = 100.
-EA =   1e7.
-EI =   1e5</p>
-<p>#example of bending moment user function
-def bendingMomentUserFunction(mbs, t, itemNumber, axialPositionNormalized,</p>
-<blockquote>
-<div><blockquote>
-<div><p>curvature, curvature_t, curvatureRef, physicsBendingStiffness, physicsBendingDamping,
-axialStrain, axialStrain_t, axialStrainRef):</p>
-</div></blockquote>
-<p>fact = min(1,t) #runs from 0 to 1
-#change reference curvature of beam over time:
-kappa=(curvature-curvatureRef*fact)
-return physicsBendingStiffness*(kappa) + physicsBendingDamping*curvature_t</p>
-</div></blockquote>
-<dl>
-<dt>def axialForceUserFunction(mbs, t, itemNumber, axialPositionNormalized,</dt><dd><blockquote>
-<div><p>axialStrain, axialStrain_t, axialStrainRef, physicsAxialStiffness, physicsAxialDamping,
-curvature, curvature_t, curvatureRef):</p>
-</div></blockquote>
-<p>fact = min(1,t) #runs from 0 to 1
-return (physicsAxialStiffness*(axialStrain-fact*axialStrainRef) +</p>
-<blockquote>
-<div><p>physicsAxialDamping*axialStrain_t)</p>
-</div></blockquote>
-</dd>
-<dt>cable = ObjectANCFCable2D(physicsMassPerLength=rhoA,</dt><dd><p>physicsBendingStiffness=EI,
-physicsBendingDamping = EI*0.1,
-physicsAxialStiffness=EA,
-physicsAxialDamping=EA*0.05,
-physicsReferenceAxialStrain=0.1, #10
-physicsReferenceCurvature=1,     #radius=1
-bendingMomentUserFunction=bendingMomentUserFunction,
-axialForceUserFunction=axialForceUserFunction,
-)</p>
-</dd>
-</dl>
-<p>#use  cable with GenerateStraightLineANCFCable(…)</p>
 </section>
 <section id="mini-example-for-objectancfcable2d">
 <span id="miniexample-objectancfcable2d"></span><h2>MINI EXAMPLE for ObjectANCFCable2D<a class="headerlink" href="#mini-example-for-objectancfcable2d" title="Link to this heading"></a></h2>

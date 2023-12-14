@@ -524,13 +524,22 @@ Removing convergence problems and solver failures
 
 Nonlinear formulations (such as most multibody systems, especially nonlinear finite elements) cause problems and there is no general nonlinear solver which may reliably and accurately solve such problems.
 Tuning solver parameters is at hand of the user. 
-In general, the Newton solver tries to reduce the error by the factor given in \ ``simulationSettings.staticSolver.newton.relativeTolerance``\  (for static solver), which is not possible for very small (or zero) initial residuals. The absolute tolerance is helping out as a lower bound for the error, given in \ ``simulationSettings.staticSolver.newton.absoluteTolerance``\  (for static solver), which is by default rather low (1e-10) -- in order to achieve accurate results for small systems or small motion (in mm or \ :math:`\mu`\ m regime). Increasing this value helps to solve such problems. Nevertheless, you should usually set tolerances as low as possible because otherwise, your solution may become inaccurate.
+In general, the Newton solver tries to reduce the error by the factor given in 
+
++  \ ``simulationSettings.staticSolver.newton.relativeTolerance``\  (for static solver), 
+
+which is not possible for very small (or zero) initial residuals. The absolute tolerance is helping out as a lower bound for the error, given in
+
++  \ ``simulationSettings.staticSolver.newton.absoluteTolerance``\  (for static solver),
+
+which is by default rather low (1e-10) -- in order to achieve accurate results for small systems or small motion (in mm or \ :math:`\mu`\ m regime). Increasing this value helps to solve such problems. Nevertheless, you should usually set tolerances as low as possible because otherwise, your solution may become inaccurate.
 
 The following hints / rules for described problems shall be followed.
 
 +  \ **static solver**\ : \ **load steps get very small**\  even if the solution seems to be smooth (or linear) and less steps are expected:
   
-    |  →  this may happen for \ **system without loads**\ ; larger number of steps may happen for finer discretization; you may adjust (increase) \ ``.newton.relativeTolerance``\  / \ ``.newton.absoluteTolerance``\  in static solver or in time integration to resolve such problems, but check if solution achieves according accuracy
+    |  →  this may happen for \ **system without loads**\ ; larger number of steps may happen for finer discretization; 
+    |  →  you may adjust (increase) \ ``.newton.relativeTolerance``\  / \ ``.newton.absoluteTolerance``\  in static solver or in time integration to resolve such problems, but check if solution achieves according accuracy
   
 +  \ **static solver**\ :  load steps are reduced significantly for \ **highly nonlinear problems**\ : 
   
@@ -553,7 +562,10 @@ The following hints / rules for described problems shall be followed.
   
 +  \ **singular Jacobians**\  or \ **redundant constraints**\ :
   
-    |  →  in case of systems that lead to a singular Jacobian due to redundant constraints or kinematic DOF in static solutions, you may switch to Eigen's FullPivotLU solver using \ ``simulationSettings.linearSolverType = exu.LinearSolverType.EigenDense``\  and \ ``simulationSettings.linearSolverSettings.ignoreSingularJacobian=True``\ ; however, check you results as they may be erroneous, because the solver tries to find an optimal solution / compromise which may not be what you intend to get!
+    |  →  in case of systems that lead to a singular Jacobian due to redundant constraints or kinematic DOF in static solutions, you may switch to Eigen's FullPivotLU solver using:
+    |  →  \ ``simulationSettings.linearSolverType = exu.LinearSolverType.EigenDense``\  and 
+    |  →  \ ``simulationSettings.linearSolverSettings.ignoreSingularJacobian=True``\  ;
+    |  →  however, check your results as they may be erroneous, because the solver tries to find an optimal solution / compromise which may not be what you intend to get!
   
 +  if you see further problems, please post them (including relevant example) at the Exudyn github page!
 
@@ -588,9 +600,7 @@ However, there are many \ **ways to speed up Exudyn in general**\ :
 +  when preferring dense direct solvers, switching to Eigen's PartialPivLU solver might greatly improve speed: \ ``simulationSettings.linearSolverType = exu.LinearSolverType.EigenDense``\ ; however, the flag \ ``simulationSettings.linearSolverSettings.ignoreSingularJacobian=True``\  will switch to the much slower (but more robust) Eigen's FullPivLU
 +  try to avoid Python functions or try to speed up Python functions; if this is not possible, see solutions below
 +  instead of user functions in objects or loads (computed in every iteration), some problems would also work if these parameters are only updated in \ ``mbs.SetPreStepUserFunction(...)``\ 
-+  Python user functions can be speed up (since Exudyn V1.7.40) by converting conventional Python functions into
-        Exudyn (internal) symbolic user functions, which have similar performance as C++ functions with the ability to parallelize;
-        see Section :ref:`sec-cinterface-symbolic`\ 
++  Python user functions can be speed up (since Exudyn V1.7.40) by converting conventional Python functions into Exudyn (internal) symbolic user functions, which have similar performance as C++ functions with the ability to parallelize; see Section :ref:`sec-cinterface-symbolic`\ 
 +  Alternatively, Python user functions can be speed up using the Python numba package, using \ ``@jit``\  in front of functions (for more options, see `https://numba.pydata.org/numba-doc/dev/user/index.html <https://numba.pydata.org/numba-doc/dev/user/index.html>`_); Example given in \ ``Examples/springDamperUserFunctionNumbaJIT.py``\  showing speedups of factor 4; more complicated Python functions may see speedups of 10 - 50
 +  for \ **discontinuous problems**\ , try to adjust solver parameters; especially the discontinuous.iterationTolerance which may be too tight and cause many iterations; iterations may be limited by discontinuous.maxIterations, which at larger values solely multiplies the computation time with a factor if all iterations are performed
 +  For multiple computations / multiple runs of Exudyn (parameter variation, optimization, compute sensitivities), you can use the processing sub module of Exudyn to parallelize computations and achieve speedups proporional to the number of cores/threads of your computer; specifically using the \ ``multiThreading``\  option or even using a cluster (using \ ``dispy``\ , see \ ``ParameterVariation(...)``\  function)
@@ -608,7 +618,8 @@ However, there are many \ **ways to speed up Exudyn in general**\ :
 +  try to have \ **constant mass matrices**\  (see according objects, which have constant mass matrices; e.g. rigid bodies using RotationVector Lie group node have constant mass matrix)
 +  for explicit integration, set \ ``computeEndOfStepAccelerations = False``\ , if you do not need accurate evaluation of accelerations at end of time step (will then be taken from beginning)
 +  for explicit integration, set \ ``explicitIntegration.computeMassMatrixInversePerBody=True``\ , which avoids factorization and back substitution, which may speed up computations with many bodies / particles
-+  if you are sure that your mass matrix is constant, set \ ``simulationSettings.timeIntegration.reuseConstantMassMatrix = True``\ ; check results!
++  if you are sure that your mass matrix is constant, set:
+   \ ``simulationSettings.timeIntegration.reuseConstantMassMatrix = True``\ ; check results!
 +  check that \ ``simulationSettings.timeIntegration.simulateInRealtime = False``\ ; if set True, it breaks down simulation to real time
 +  do not record images, if not needed: \ ``simulationSettings.solutionSettings.recordImagesInterval = -1``\ 
 +  in case of bad convergence, decreasing the step size might also help; check also other flags for adaptive step size and for Newton

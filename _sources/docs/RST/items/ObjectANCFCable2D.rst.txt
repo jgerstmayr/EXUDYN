@@ -545,38 +545,38 @@ Note that itemNumber represents the index of the object in mbs, which can be use
 
 .. code-block:: python
 
-#define some material parameters
-rhoA = 100.
-EA =   1e7.
-EI =   1e5
+    #define some material parameters
+    rhoA = 100.
+    EA =   1e7.
+    EI =   1e5
 
-#example of bending moment user function
-def bendingMomentUserFunction(mbs, t, itemNumber, axialPositionNormalized, 
-           curvature, curvature_t, curvatureRef, physicsBendingStiffness, physicsBendingDamping,
-           axialStrain, axialStrain_t, axialStrainRef):
-    fact = min(1,t) #runs from 0 to 1
-    #change reference curvature of beam over time:
-    kappa=(curvature-curvatureRef*fact) 
-    return physicsBendingStiffness*(kappa) + physicsBendingDamping*curvature_t
+    #example of bending moment user function
+    def bendingMomentUserFunction(mbs, t, itemNumber, axialPositionNormalized, 
+               curvature, curvature_t, curvatureRef, physicsBendingStiffness, 
+               physicsBendingDamping, axialStrain, axialStrain_t, axialStrainRef):
+        fact = min(1,t) #runs from 0 to 1
+        #change reference curvature of beam over time:
+        kappa=(curvature-curvatureRef*fact) 
+        return physicsBendingStiffness*(kappa) + physicsBendingDamping*curvature_t
 
-def axialForceUserFunction(mbs, t, itemNumber, axialPositionNormalized, 
-           axialStrain, axialStrain_t, axialStrainRef, physicsAxialStiffness, physicsAxialDamping,
-           curvature, curvature_t, curvatureRef):
-    fact = min(1,t) #runs from 0 to 1
-    return (physicsAxialStiffness*(axialStrain-fact*axialStrainRef) + 
-            physicsAxialDamping*axialStrain_t)
+    def axialForceUserFunction(mbs, t, itemNumber, axialPositionNormalized, 
+               axialStrain, axialStrain_t, axialStrainRef, physicsAxialStiffness, 
+               physicsAxialDamping, curvature, curvature_t, curvatureRef):
+        fact = min(1,t) #runs from 0 to 1
+        return (physicsAxialStiffness*(axialStrain-fact*axialStrainRef) + 
+                physicsAxialDamping*axialStrain_t)
 
-cable = ObjectANCFCable2D(physicsMassPerLength=rhoA, 
-                physicsBendingStiffness=EI, 
-                physicsBendingDamping = EI*0.1,
-                physicsAxialStiffness=EA,
-                physicsAxialDamping=EA*0.05,
-                physicsReferenceAxialStrain=0.1, #10
-                physicsReferenceCurvature=1,     #radius=1
-                bendingMomentUserFunction=bendingMomentUserFunction,
-                axialForceUserFunction=axialForceUserFunction,
-                )
-#use  cable with GenerateStraightLineANCFCable(...)
+    cable = ObjectANCFCable2D(physicsMassPerLength=rhoA, 
+                    physicsBendingStiffness=EI, 
+                    physicsBendingDamping = EI*0.1,
+                    physicsAxialStiffness=EA,
+                    physicsAxialDamping=EA*0.05,
+                    physicsReferenceAxialStrain=0.1, #10
+                    physicsReferenceCurvature=1,     #radius=1
+                    bendingMomentUserFunction=bendingMomentUserFunction,
+                    axialForceUserFunction=axialForceUserFunction,
+                    )
+    #use  cable with GenerateStraightLineANCFCable(...)
 
  
 

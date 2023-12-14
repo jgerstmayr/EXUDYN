@@ -61,11 +61,19 @@ You can view and download this file on Github: `chatGPTupdate.py <https://github
                             gravity = [0,-9.81,0],
                             graphicsDataList = [graphicsCube])
    
-   #add an additional load to rigid body at left end; this always requires markers; 
-   #for torques use Torque(...) instead of Force(...)
-   markerBody0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b0, localPosition=[-0.5,0,0]))
-   mbs.AddLoad(Force(markerNumber=markerBody0, 
-                     loadVector=[10,0,0])) #load is 10N in x-direction
+   #add an load with user function:
+   def UFforce(mbs, t, loadVector):
+       #define time-dependent function:
+       return [10+5*np.sin(t*10*2*pi),0,0]
+   
+   mbs.CreateForce(bodyNumber=b0, localPosition=[-0.5,0,0],
+                   loadVector=[10,0,0], 
+                   loadVectorUserFunction=UFforce,
+                   ) #load is 10N in x-direction
+   
+   #add torque to rigid body at left end
+   mbs.CreateTorque(bodyNumber=b0, localPosition=[0.5,0,0],
+                   loadVector=[0,1,0]) #torque of 1N around y-axis
    
    #create a simple mass point at [1,-1,0] with initial velocity
    m1 = mbs.CreateMassPoint(referencePosition=[1,-1,0],
@@ -79,7 +87,7 @@ You can view and download this file on Github: `chatGPTupdate.py <https://github
    gGround0 = GraphicsDataSphere(point=[3,1,0], radius = 0.1, color=color4red, nTiles=16)
    #graphics for checkerboard background:
    gGround1 = GraphicsDataCheckerBoard(point=[3,0,-2], normal=[0,0,1], size=10)
-   oGround = mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=[gGround0,gGround1])))
+   oGround = mbs.CreateGround(graphicsDataList=[gGround0,gGround1])
    
    #create a rigid distance between bodies (using local position) or between nodes
    mbs.CreateDistanceConstraint(bodyOrNodeList=[oGround, b0], 
