@@ -19,15 +19,36 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.7.59.dev1, 
-+  last change =  2023-12-14, 
-+  Number of issues = 1732, 
-+  Number of resolved issues = 1529 (59 in current version), 
++  Exudyn version = 1.7.66.dev1, 
++  last change =  2023-12-15, 
++  Number of issues = 1737, 
++  Number of resolved issues = 1536 (66 in current version), 
 
 ***********
 Version 1.7
 ***********
 
+ * Version 1.7.66: :textred:`resolved BUG 1736` : symbolic 
+    - description:  symbolic user function: crashes when user function object is deleted
+    - date resolved: **2023-12-15 18:01**\ , date raised: 2023-12-15 
+ * Version 1.7.65: resolved Issue 1735: symbolic (fix)
+    - description:  check delete counts and reference counts for +=, etc.
+    - date resolved: **2023-12-15 18:01**\ , date raised: 2023-12-15 
+ * Version 1.7.64: resolved Issue 1729: Symbolic (testing)
+    - description:  add vector/matrix tests in comparison with Python numpy and check delete counts
+    - date resolved: **2023-12-15 13:52**\ , date raised: 2023-12-12 
+ * Version 1.7.63: resolved Issue 1728: Symbolic (testing)
+    - description:  add scalar tests in comparison with Python math and check delete counts
+    - date resolved: **2023-12-15 13:52**\ , date raised: 2023-12-12 
+ * Version 1.7.62: resolved Issue 1733: symbolic (check)
+    - description:  check overloading __len__ operator for vector
+    - date resolved: **2023-12-15 13:06**\ , date raised: 2023-12-15 
+ * Version 1.7.61: resolved Issue 1734: symbolic (fix)
+    - description:  write operator[] for Matrix and Vector fails
+    - date resolved: **2023-12-15 11:51**\ , date raised: 2023-12-15 
+ * Version 1.7.60: :textred:`resolved BUG 1732` : symbolic 
+    - description:  Vector.SetVector(...), Matrix.SetMatrix(...) not working; fix Pybind interface
+    - date resolved: **2023-12-15 11:12**\ , date raised: 2023-12-15 
  * Version 1.7.59: resolved Issue 1680: chatGPTupdate (example)
     - description:  add simple example for load userFunction
     - date resolved: **2023-12-14 00:01**\ , date raised: 2023-10-29 
@@ -4966,14 +4987,6 @@ Version 0.1
 ***********
 Open issues
 ***********
-
- * **open issue 1729:** Symbolic            
-    - description:  add vector/matrix tests in comparison with Python numpy and check delete counts
-    - date raised: 2023-12-12 
-
- * **open issue 1728:** Symbolic            
-    - description:  add scalar tests in comparison with Python math and check delete counts
-    - date raised: 2023-12-12 
 
  * **open issue 1727:** SymbolicRealMatrix  
     - description:  add documentation and example for symbolic matrix for user functions

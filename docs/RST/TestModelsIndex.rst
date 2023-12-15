@@ -81,4 +81,5 @@ This section includes all TestModels for Exudyn.They can also be found and downl
    TestModels/stiffFlyballGovernor
    TestModels/superElementRigidJointTest
    TestModels/symbolicUserFunctionTest
+   TestModels/symbolicModuleTest
 

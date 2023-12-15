@@ -37,6 +37,7 @@ private:
 public:
 
 	SymbolicGeneric() : type(0), real(nullptr), vector(nullptr), matrix(nullptr) {}
+	//~SymbolicGeneric() { Delete(); } //do not add destructur, because data won't be initialized in ResizableArray! (consider resize, etc.!)
 	void Initialize() { type = 0; real = nullptr; vector = nullptr; matrix = nullptr; }
 	bool IsReal() const { return type == 0; }
 	bool IsVector() const { return type == 1; }
@@ -44,9 +45,14 @@ public:
 	void SetType(Index t) { type = t; }
 	void Delete()
 	{
-		if (type == 0) { delete real; }
-		else if (type == 1) { delete vector; }
-		else if (type == 2) { delete matrix; }
+		//BECAUSE THERE IS NO new, we also do not delete!!!
+		//if (type == 0) { if (real) { delete real; } }
+		//else if (type == 1) { if (vector) { delete vector; } }
+		//else if (type == 2) { if (matrix) { delete matrix;} }
+		real = nullptr;
+		vector = nullptr;
+		matrix = nullptr;
+		type = 0;
 	}
 
 	template<typename T>
@@ -72,6 +78,7 @@ public:
 private:
 	void SetValue(SReal* value) 
 	{ 
+		Delete();
 		type = 0;
 		vector = nullptr;
 		real = value;
@@ -79,6 +86,7 @@ private:
 	}
 	void SetValue(SymbolicRealVector* value) 
 	{ 
+		Delete();
 		type = 1;
 		real = nullptr;
 		vector = value;
@@ -86,6 +94,7 @@ private:
 	}
 	void SetValue(SymbolicRealMatrix* value) 
 	{ 
+		Delete();
 		type = 2;
 		real = nullptr;
 		vector = nullptr;
@@ -143,10 +152,12 @@ public:
 
 	virtual void Delete()
 	{
+		//done by destructors:
 		for (SymbolicGeneric& linkedRealPtr : argRealList)
 		{
 			linkedRealPtr.Delete();
 		}
+		returnValue.Delete();
 		argRealList.SetMaxNumberOfItems(0);
 	}
 
@@ -191,6 +202,8 @@ class PySymbolicUserFunction : public SymbolicFunction
 	//! list here different kinds of user functions:
 	//std::function<Real(const MainSystem&, Real, Index, Real, Real, Real, Real, Real)> mbsScalarIndexScalar5;
 public:
+	PySymbolicUserFunction() : SymbolicFunction() {}
+
 	//! read out and store user function from given Python dictionary
 	//! this function is called by particular user function
 	virtual void SetupUserFunction(py::dict pyObject, const STDstring& itemTypeName, const STDstring& userFunctionName)
@@ -202,11 +215,6 @@ public:
 		const STDstring keyReturnType = "returnType";
 
 		auto where = [&itemTypeName, &userFunctionName]() { return STDstring("In ") + itemTypeName + ", user function " + userFunctionName + ": "; };
-
-		//if (!py::isinstance<py::dict>(pyObject))
-		//{
-		//	PyError(where() + "expected a dictionary representing the function with 'functionName', 'argList', 'argTypeList', 'returnValue' and 'returnType'");
-		//}
 
 		functionDict = py::cast<py::dict>(pyObject);
 		if (!functionDict.contains(keyFunction) || !py::isinstance<py::str>(functionDict[keyFunction.c_str()]))
@@ -236,7 +244,7 @@ public:
 			PyError(STDstring(where() + "expected dict with key '") + keyReturnType + "' representing a string");
 		}
 		STDstring returnTypeStr = py::cast<STDstring>(functionDict[keyReturnType.c_str()]);
-		py::object returnValue = functionDict[keyReturnValue.c_str()];
+		py::object pyReturnValue = functionDict[keyReturnValue.c_str()];
 
 		Delete(); //delete argRealList, if an earlier list exists
 
@@ -245,12 +253,14 @@ public:
 		Index nArgs = (Index)stdArgList.size();
 
 		//process arguments
+		argRealList.SetMaxNumberOfItems(nArgs);
 		for (Index i = 0; i < nArgs; i++)
 		{
 			if (i != 0) //first arg is mbs, but not convertible for now; // if (!py::isinstance<MainSystem>(stdArgList[i]))
 			{
 				//if instance = SReal ...
-				SymbolicGeneric symGeneric;
+				SymbolicGeneric symGeneric; 
+				symGeneric.Initialize(); //initialize symGeneric
 				const py::object& arg = stdArgList[i];
 				STDstring argType = py::cast<std::string>(argTypeList[i]);
 				if (argType == "Real" || argType == "Index")
@@ -278,14 +288,14 @@ public:
 			//process return type and set function
 			if (returnTypeStr == "Real")
 			{
-				SetScalarType(py::cast<SReal*>(returnValue)); //returnValue is always list, also for Real
+				SetScalarType(py::cast<SReal*>(pyReturnValue)); //pyReturnValue is Real
 			}
 			else if (ArgTypeIsVector(returnTypeStr))
 			{
 				Index returnSize = -1; //unknown vector size => not needed here
 				if (returnTypeStr.find("3D") != std::string::npos) { returnSize = 3; }
 				if (returnTypeStr.find("6D") != std::string::npos) { returnSize = 6; }
-				SetVectorType(returnSize, py::cast<SymbolicRealVector*>(returnValue)); //returnValue is always list, also for Real
+				SetVectorType(returnSize, py::cast<SymbolicRealVector*>(pyReturnValue)); //pyReturnValue is list/numpy array
 			}
 			else if (ArgTypeIsMatrix(returnTypeStr))
 			{

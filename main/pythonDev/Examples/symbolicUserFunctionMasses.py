@@ -34,92 +34,33 @@ else: #regular mode with numpy / Python functions
     myabs = abs
     myReal = float
 
-def springForceUserFunction(mbs: exu.MainSystem, t: float, itemNumber: int, 
-                            deltaL: float, deltaL_t: float, stiffness: float,
-                            damping: float, force: float):
+def springForceUserFunction(mbs, t, itemNumber, 
+                            deltaL, deltaL_t, stiffness,
+                            damping, force):
     #f0 = damping*deltaL_t + stiffness*deltaL + force
     f0 = (damping*deltaL_t + stiffness*deltaL)*(mysym.sign(-deltaL+myReal(0.005))+1.)*0.5
     #f0 = (damping*deltaL_t + stiffness*deltaL)*esym.IfThenElse(deltaL > 0.01,myReal(0),myReal(1))
     return f0
-
-
-#**function: internal function to convert a Python user function into a symbolic representation
-def ConvertFunctionToSymbolic(mbs, function, verbose=0):
-    fnName = function.__name__
-    fnArgs = function.__code__.co_varnames
-    fnAnnotations = function.__annotations__
-    if verbose:
-        print("Annotations:", fnAnnotations)
-        print("Function Name:", fnName)
-        print("Docstring:", function.__doc__)
-        print("Number of Arguments:", function.__code__.co_argcount)
-        print("Argument Names:", fnArgs)
-
-    recStored = exu.symbolic.GetRecording()
-    exu.symbolic.SetRecording(True)
-
-    #create args as dict
-    fnDict = {}
-    argList = []
-    for arg in fnArgs[:function.__code__.co_argcount]: #fnArgs contains also other vars inside function code
-        varType = fnAnnotations[arg]
-        # print('arg:',arg,', varType:',varType)
-        var = None
-        if varType == float:
-            var = exu.symbolic.Real(0.,arg)
-            # print(arg,"=",var.ToString())
-            #var = float(0.)
-        elif varType == int:
-            var = exu.symbolic.Real(0,arg)
-            #var = int(0)
-        elif varType == exu.MainSystem:
-            var = mbs
-    
-        argList += [var] #float, int, MainSystem, Vector3D, etc.
-        fnDict[arg] = var
-
-    if verbose:
-        print('\nargList=', argList)
-        print('\nfnDict=', fnDict)
-
-    #now we record the function:
-    returnValue = function(**fnDict)
-    exu.symbolic.SetRecording(recStored)
-
-    if verbose:
-        print('return value=', returnValue)
-
-    returnList = []
-    if type(returnValue) is list:
-        #requires to store a list of symbolic functions
-        returnList = returnValue
-    else:
-        returnList = [returnValue]
-
-    fnDict = {'functionName': fnName, 
-              'argList': argList, 
-              'returnList': returnList}
-    return fnDict
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
 Lx = 2
 Ly= 0.2
-Lz = 0.4
+Lz = 0.2
 aFact = 2
 
-ff = 2
+ff = 1 #use 2 for finer model
 nx = 25*ff
 ny = 4*ff
 # nx = 15
 # ny = 3
-nz = 2*ny
+nz = 1*ny
 
 g = [0,-9.81,0]
 m = 1 / (nx*ny*4)
 stiffness = 200
-damping = 2e-3*stiffness
+damping = 0.5e-3*stiffness
 
 drawSize = 0.2/ff
 showSprings = False
@@ -165,26 +106,19 @@ for i in range(nx):
                     if j>0:
                         cList += [mbs.CreateSpringDamper(bodyList=[bList[i,j,k], bList[i,j-1,k+1]], stiffness=stiffness*rr, damping=damping,drawSize = 0, show=showSprings)]
 
-def CreateSymbolicUserFunction(mbs, function, itemIndex, userFunctionName, verbose=0):
-    fnDict = ConvertFunctionToSymbolic(mbs, function)
-    symbolicFunc = exu.symbolic.SymbolicUserFunction()
-    symbolicFunc.SetUserFunctionFromDict(mbs, fnDict, itemIndex, userFunctionName)
-    return symbolicFunc
-    
-if useSymbolicUF:
-    symbolicFunc = CreateSymbolicUserFunction(mbs, springForceUserFunction, cList[0], 'springForceUserFunction')
-    # x = symbolicFunc.Evaluate(mbs, 0., 0, 1.1, 0.,  100., 0., 13.)
-    # print('x=', x)
-
 
 # CAUTION: this only works, if every object has its own user function!!!
 if useSymbolicUF: #do assemble before adding user functions => then, they will be parallelized
     mbs.Assemble()
 
+listUF = []
 if True:
     for cc in cList:
         if useSymbolicUF:
+            #create separate user function for each spring-damper!
+            symbolicFunc = CreateSymbolicUserFunction(mbs, springForceUserFunction, cList[0], 'springForceUserFunction')
             symbolicFunc.TransferUserFunction2Item(mbs, cc, 'springForceUserFunction')    
+            listUF += [symbolicFunc] #store, such that they are not deleted!!!
         else:
             mbs.SetObjectParameter(cc, 'springForceUserFunction', springForceUserFunction)
 
@@ -193,7 +127,7 @@ if True:
 if not useSymbolicUF: #do assemble before adding user functions => then, they will be parallelized
     mbs.Assemble()
 
-endTime = 0.01#10
+endTime = 10
 stepSize = 1e-4
 if ff==1: stepSize = 5e-4
 if ff>2: stepSize = 0.5e-5

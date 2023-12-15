@@ -997,7 +997,7 @@ Mathematical functions may be called with an \texttt{SymReal} or with a \texttt{
 \hline
 {\bf function/structure name} & {\bf description}\\ \hline
   isfinite(x) & according to specification of C++ std::isfinite\\ \hline 
-  abs(x) & according to specification of C++ std::abs\\ \hline 
+  abs(x) & according to specification of C++ std::fabs\\ \hline 
   round(x) & according to specification of C++ std::round\\ \hline 
   ceil(x) & according to specification of C++ std::ceil\\ \hline 
   floor(x) & according to specification of C++ std::floor\\ \hline 
@@ -1086,7 +1086,7 @@ print('v1[2]: ',v1[2],"=",v1[2].Evaluate())   #evaluate as Real
 \end{lstlisting}
 
 
-To create a symbolic Vector, use \texttt{aa=symbolic.Vector([3,4.2,5]} to build a Python object aa with values [3,4.2,5]. In order to use a named vector, use \texttt{v=symbolic.Vector([3,4.2,5],'myVec')}. Vectors can be also created from mixed symbolic expressions and numbers, such as \texttt{v=symbolic.Vector([x,x**2,3.14])}, however, this cannot become a named vector as it contains expressions. Note that in the following, we use the abbreviation \texttt{SymVector=exudyn.symbolic.Vector}. Note that only functions are able to be recorded. Member functions of \texttt{SymVector} are:
+To create a symbolic Vector, use \texttt{aa=symbolic.Vector([3,4.2,5]} to build a Python object aa with values [3,4.2,5]. In order to use a named vector, use \texttt{v=symbolic.Vector([3,4.2,5],'myVec')}. Vectors can be also created from mixed symbolic expressions and numbers, such as \texttt{v=symbolic.Vector([x,x**2,3.14])}, however, this cannot become a named vector as it contains expressions. There is a significance difference to numpy, such that '*' represents the scalar vector multplication which gives a scalar. Furthermore, the comparison operator '==' gives only True, if all components are equal, and the operator '!=' gives True, if any component is unequal. Note that in the following, we use the abbreviation \texttt{SymVector=exudyn.symbolic.Vector}. Note that only functions are able to be recorded. Member functions of \texttt{SymVector} are:
 \begin{center}
 \footnotesize
 \begin{longtable}{| p{8cm} | p{8cm} |} 
@@ -1103,7 +1103,7 @@ To create a symbolic Vector, use \texttt{aa=symbolic.Vector([3,4.2,5]} to build 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{v1 = SymVector([1,4,8])\tabnewline
     length = v1.NormL2() \#gives 9.}}\\ \hline 
-  MultComponents(other) & Perform component-wise multiplication of vector times other vector and return result.\tabnewline 
+  MultComponents(other) & Perform component-wise multiplication of vector times other vector and return result. This corresponds to the numpy multiplication using '*'.\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{v1 = SymVector([1,2,4])\tabnewline
     v2 = SymVector([1,0.5,0.25])\tabnewline

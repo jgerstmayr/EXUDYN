@@ -36,12 +36,13 @@ mbs = SC.AddSystem()
 useSymbolicUF = True
 
 #variable can be used to switch behavior
-esym.variables.Set('flag',1)
+#esym.variables.Set('flag',1)
 
 if useSymbolicUF:
     def springForceUserFunction(mbs, t, itemNumber, deltaL, deltaL_t, stiffness, damping, force):
         #f0 = damping*deltaL_t + stiffness*deltaL + force #linear
-        fact = esym.variables.Get('flag')
+        # fact = esym.variables.Get('flag')
+        fact = 1
         f0 = fact*10*damping*deltaL_t + stiffness*esym.sign(deltaL) * (esym.abs(deltaL))**1.2 + force
         return f0
     
@@ -74,12 +75,12 @@ if useSymbolicUF:
     symbolicFunc = CreateSymbolicUserFunction(mbs, springForceUserFunction, co, 'springForceUserFunction')
     symbolicFunc.TransferUserFunction2Item(mbs, co, 'springForceUserFunction')    
 
-    symFuncLoad = CreateSymbolicUserFunction(mbs, UFload, load, 'loadUserFunction',1)
+    symFuncLoad = CreateSymbolicUserFunction(mbs, UFload, load, 'loadUserFunction')
     symFuncLoad.TransferUserFunction2Item(mbs, load, 'loadUserFunction')    
     
     #check function:
-    print('spring user function:',symbolicFunc)
-    print('load user function:  ',symFuncLoad)
+    exu.Print('spring user function:',symbolicFunc)
+    exu.Print('load user function:  ',symFuncLoad)
 else:
     mbs.SetObjectParameter(co, 'springForceUserFunction', springForceUserFunction)
 
@@ -104,9 +105,9 @@ if useGraphics:
 
 import time
 ts = time.time()
-print('start simulation')
+exu.Print('start simulation')
 mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.RK44)
-print('finished: ', time.time()-ts, 'seconds')
+exu.Print('finished: ', time.time()-ts, 'seconds')
 
 if useGraphics:
     exu.StopRenderer() #safely close rendering window!
@@ -115,7 +116,7 @@ n = mbs.GetObject(oMassPoint)['nodeNumber']
 p = mbs.GetNodeOutput(n, exu.OutputVariableType.Position)
 u = NormL2(p)
 
-print('u=',u)
+exu.Print('u=',u)
 exu.Print('solution of symbolicUserFunctionTest=',u)
 
 # result for 10000 steps; identical for both UF cases

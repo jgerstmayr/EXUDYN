@@ -38,7 +38,11 @@ public:
 	ExpressionBase() : referenceCounter(0) {}
 
 	void IncreaseReferenceCounter() { referenceCounter++; }
-	void DecreaseReferenceCounter() { referenceCounter--; }
+	void DecreaseReferenceCounter() 
+	{ 
+		referenceCounter--; 
+		//CHECKandTHROW(referenceCounter >= 0, "ExpressionBase::referenceCounter < 0");
+	}
 	int ReferenceCounter() const { return referenceCounter; }
 	void SetReferenceCounter(Index value) { referenceCounter = value; }
 
@@ -83,7 +87,11 @@ public:
 	VectorExpressionBase() : referenceCounter(0) {}
 
 	void IncreaseReferenceCounter() { referenceCounter++; }
-	void DecreaseReferenceCounter() { referenceCounter--; }
+	void DecreaseReferenceCounter() 
+	{ 
+		referenceCounter--; 
+		//CHECKandTHROW(referenceCounter >= 0, "VectorExpressionBase::referenceCounter < 0");
+	}
 	int ReferenceCounter() const { return referenceCounter; }
 	void SetReferenceCounter(Index value) { referenceCounter = value; }
 	virtual void Destroy() = 0;
@@ -108,7 +116,11 @@ public:
 	MatrixExpressionBase() : referenceCounter(0) {}
 
 	void IncreaseReferenceCounter() { referenceCounter++; }
-	void DecreaseReferenceCounter() { referenceCounter--; }
+	void DecreaseReferenceCounter() 
+	{ 
+		referenceCounter--; 
+		//CHECKandTHROW(referenceCounter >= 0, "MatrixExpressionBase::referenceCounter < 0");
+	}
 	int ReferenceCounter() const { return referenceCounter; }
 	void SetReferenceCounter(Index value) { referenceCounter = value; }
 	virtual void Destroy() = 0;
@@ -1165,13 +1177,13 @@ private:
 		return x.value;
 	}
 	//! Get Expression* either for SReal or Real
-	static ExpressionBase* GetFunctionExpression(const SReal& x)
+	static ExpressionBase* GetFunctionExpression(const SReal& x, bool increaseReferenceCounter = true)
 	{
 		ExpressionBase::NewCount() += (x.expr == 0);
-		if (x.expr) { x.expr->IncreaseReferenceCounter(); }
+		if (x.expr && increaseReferenceCounter) { x.expr->IncreaseReferenceCounter(); }
 		return x.expr ? x.expr : new ExpressionReal(x.value);
 	}
-	static ExpressionBase* GetFunctionExpression(Real x)
+	static ExpressionBase* GetFunctionExpression(Real x, bool increaseReferenceCounter = true)
 	{
 		ExpressionBase::NewCount() += 1;
 		return new ExpressionReal(x);
@@ -1192,7 +1204,8 @@ public:
 			return *this;
 		}
 		ExpressionBase::NewCount() += 1;
-		expr = new ExpressionOperatorPlus(GetFunctionExpression(*this), GetFunctionExpression(rhs));
+		expr = new ExpressionOperatorPlus(GetFunctionExpression(*this, false), //for inplace operatoins, expression is moved; no new reference!
+			GetFunctionExpression(rhs));
 		expr->IncreaseReferenceCounter();
 		return *this;
 	}
@@ -1203,7 +1216,7 @@ public:
 			return *this;
 		}
 		ExpressionBase::NewCount() += 1;
-		expr = new ExpressionOperatorMinus(GetFunctionExpression(*this), GetFunctionExpression(rhs));
+		expr = new ExpressionOperatorMinus(GetFunctionExpression(*this, false), GetFunctionExpression(rhs));
 		expr->IncreaseReferenceCounter();
 		return *this;
 	}
@@ -1214,7 +1227,7 @@ public:
 			return *this;
 		}
 		ExpressionBase::NewCount() += 1;
-		expr = new ExpressionOperatorMul(GetFunctionExpression(*this), GetFunctionExpression(rhs));
+		expr = new ExpressionOperatorMul(GetFunctionExpression(*this, false), GetFunctionExpression(rhs));
 		expr->IncreaseReferenceCounter();
 		return *this;
 	}
@@ -1225,7 +1238,7 @@ public:
 			return *this;
 		}
 		ExpressionBase::NewCount() += 1;
-		expr = new ExpressionOperatorDiv(GetFunctionExpression(*this), GetFunctionExpression(rhs));
+		expr = new ExpressionOperatorDiv(GetFunctionExpression(*this, false), GetFunctionExpression(rhs));
 		expr->IncreaseReferenceCounter();
 		return *this;
 	}

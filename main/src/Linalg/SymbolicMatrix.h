@@ -748,16 +748,19 @@ public:
 		GetExpressionNamedReal().SetMatrix(matrixInit);
 	}
 
-	void SetSymbolicMatrix(const ResizableConstMatrix& matrixInit)
+	//! set with numpy matrix
+	void SetSymbolicMatrix(const py::array_t<Real>& matrixInit)
 	{
+		ResizableConstMatrix temp;
+		EPyUtils::NumPy2Matrix(matrixInit, temp);
 		if (IsExpressionNamedReal())
 		{
-			GetExpressionNamedReal().SetMatrix(matrixInit);
+			GetExpressionNamedReal().SetMatrix(temp);
 		}
 		else
 		{
 			CHECKandTHROW(exprMatrix == nullptr, "SymbolicRealMatrix::SetValue can only be called for symbolic Real variables");
-			matrix = matrixInit;
+			matrix = temp;
 		}
 	}
 
@@ -766,17 +769,17 @@ public:
 	{
 		if (IsExpressionNamedReal())
 		{
-			CHECKandTHROW(GetExpressionNamedReal().NumberOfRows() <= row,
+			CHECKandTHROW(row < GetExpressionNamedReal().NumberOfRows(),
 				"SymbolicRealMatrix::SetExpressionNamedMatrixComponent: row out of range");
-			CHECKandTHROW(GetExpressionNamedReal().NumberOfColumns() <= column,
+			CHECKandTHROW(column < GetExpressionNamedReal().NumberOfColumns(),
 				"SymbolicRealMatrix::SetExpressionNamedMatrixComponent: column out of range");
 			GetExpressionNamedReal().SetComponent(row, column, value);
 		}
 		else
 		{
 			CHECKandTHROW(exprMatrix == nullptr, "SymbolicRealMatrix::SetMatrix can only be called for symbolic Matrix variables");
-			CHECKandTHROW(matrix.NumberOfRows() <= row, "SymbolicRealMatrix::SetExpressionNamedMatrixComponent: row out of range");
-			CHECKandTHROW(matrix.NumberOfColumns() <= column, "SymbolicRealMatrix::SetExpressionNamedMatrixComponent: column out of range");
+			CHECKandTHROW(row < matrix.NumberOfRows(), "SymbolicRealMatrix::SetExpressionNamedMatrixComponent: row out of range");
+			CHECKandTHROW(column < matrix.NumberOfColumns(), "SymbolicRealMatrix::SetExpressionNamedMatrixComponent: column out of range");
 			matrix(row, column) = value;
 		}
 	}
@@ -912,13 +915,13 @@ private:
 	}
 
 	//! Get Expression* either for SymbolicRealMatrix or Matrix
-	static MatrixExpressionBase* GetFunctionExpression(const SymbolicRealMatrix& x)
+	static MatrixExpressionBase* GetFunctionExpression(const SymbolicRealMatrix& x, bool increaseReferenceCounter = true)
 	{
 		MatrixExpressionBase::newCount += (x.exprMatrix == 0);
-		if (x.exprMatrix) { x.exprMatrix->IncreaseReferenceCounter(); }
+		if (x.exprMatrix && increaseReferenceCounter) { x.exprMatrix->IncreaseReferenceCounter(); }
 		return x.exprMatrix ? x.exprMatrix : new MatrixExpressionReal(x.matrix);
 	}
-	static MatrixExpressionBase* GetFunctionExpression(const Matrix& x)
+	static MatrixExpressionBase* GetFunctionExpression(const Matrix& x, bool increaseReferenceCounter = true)
 	{
 		MatrixExpressionBase::newCount += 1;
 		return new MatrixExpressionReal(x);
@@ -1021,7 +1024,7 @@ public:
 			return *this;
 		}
 		MatrixExpressionBase::newCount += 1;
-		exprMatrix = new MatrixExpressionOperatorPlus(GetFunctionExpression(*this), GetFunctionExpression(rhs));
+		exprMatrix = new MatrixExpressionOperatorPlus(GetFunctionExpression(*this, false), GetFunctionExpression(rhs));
 		exprMatrix->IncreaseReferenceCounter();
 		return *this;
 	}
@@ -1032,7 +1035,7 @@ public:
 			return *this;
 		}
 		MatrixExpressionBase::newCount += 1;
-		exprMatrix = new MatrixExpressionOperatorMinus(GetFunctionExpression(*this), GetFunctionExpression(rhs));
+		exprMatrix = new MatrixExpressionOperatorMinus(GetFunctionExpression(*this, false), GetFunctionExpression(rhs));
 		exprMatrix->IncreaseReferenceCounter();
 		return *this;
 	}
@@ -1043,7 +1046,7 @@ public:
 			return *this;
 		}
 		MatrixExpressionBase::newCount += 1;
-		exprMatrix = new MatrixExpressionOperatorMultScalarMatrix(GetFunctionExpressionSReal(rhs), GetFunctionExpression(*this));
+		exprMatrix = new MatrixExpressionOperatorMultScalarMatrix(GetFunctionExpressionSReal(rhs), GetFunctionExpression(*this, false));
 		exprMatrix->IncreaseReferenceCounter();
 		return *this;
 	}
@@ -1055,7 +1058,7 @@ public:
 			return -1. * matrix;
 		}
 		MatrixExpressionBase::NewCount()++;
-		return new MatrixExpressionUnaryMinus(GetFunctionExpression(*this));
+		return new MatrixExpressionUnaryMinus(GetFunctionExpression(*this, true));
 	}
 
 	SymbolicRealMatrix operator+() const
@@ -1064,7 +1067,7 @@ public:
 			return matrix;
 		}
 		MatrixExpressionBase::NewCount()++;
-		return new MatrixExpressionUnaryPlus(GetFunctionExpression(*this));
+		return new MatrixExpressionUnaryPlus(GetFunctionExpression(*this, true));
 	}
 
 
@@ -1142,7 +1145,7 @@ public:
 			return matrix(row, column);
 		}
 		ExpressionBase::NewCount()++;
-		return new MatrixExpressionOperatorBracket(GetFunctionExpression(*this),
+		return new MatrixExpressionOperatorBracket(GetFunctionExpression(*this, true),
 			GetFunctionExpressionSReal(srow), GetFunctionExpressionSReal(scolumn));
 	}
 

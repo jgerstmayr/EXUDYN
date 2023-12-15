@@ -422,14 +422,18 @@ void Init_Pybind_Symbolic(py::module& m) {
 		.def("__setitem__", [](Symbolic::SymbolicRealVector& self, Index index, Real value)
 			{ self.SetSymbolicVectorComponent(index, value); })
 
+		.def("__len__", [](const Symbolic::SymbolicRealVector& item) {
+		return item.NumberOfItems();
+			}, "return number of items")
+
 		//+++++++++++++++++++++++++++++++++++++++++++
 		//representation:
 		.def("__str__", [](const Symbolic::SymbolicRealVector& item) {
 		return item.ToString();
-			}, "return evaluated expression (prioritized) or stored Real value")
+			}, "return evaluated expression (prioritized) or stored vector")
 		.def("__repr__", [](const Symbolic::SymbolicRealVector& item) {
 				return item.ToString();
-			}, "return evaluated expression (prioritized) or stored Real value")
+			}, "return evaluated expression (prioritized) or stored vector")
 				
 
 		//+++++++++++++++++++++++++++++++++++++++++++
@@ -488,17 +492,17 @@ void Init_Pybind_Symbolic(py::module& m) {
 
 		//this could be allowed in certain cases, such as if we carry a MatrixExpressionSReal or MatrixExpressionReal
 		//but it would be not possible then to record operations in the tree ...
-		.def("__setitem__", [](Symbolic::SymbolicRealMatrix& self, Index row, Index column, Real value)
-			{ self.SetSymbolicMatrixComponent(row, column, value); })
+		.def("__setitem__", [](Symbolic::SymbolicRealMatrix& self, std::pair<Index, Index> index, Real value)
+			{ self.SetSymbolicMatrixComponent(index.first, index.second, value); })
 
 		//+++++++++++++++++++++++++++++++++++++++++++
 		//representation:
 		.def("__str__", [](const Symbolic::SymbolicRealMatrix& item) {
 		return item.ToString();
-			}, "return evaluated expression (prioritized) or stored Real value")
+			}, "return evaluated expression (prioritized) or stored matrix")
 		.def("__repr__", [](const Symbolic::SymbolicRealMatrix& item) {
 				return item.ToString();
-			}, "return evaluated expression (prioritized) or stored Real value")
+			}, "return evaluated expression (prioritized) or stored matrix")
 
 
 		//+++++++++++++++++++++++++++++++++++++++++++

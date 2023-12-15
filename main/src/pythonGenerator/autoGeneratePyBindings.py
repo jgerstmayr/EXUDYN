@@ -2201,8 +2201,11 @@ fnList=['isfinite','abs',#'sign',
                 ]
 
 for fnName in fnList:
+    cfnName = fnName
+    if fnName=='abs' or fnName=='mod':
+        cfnName = 'f'+cfnName
     plr.DefPyFunctionAccess(cClass=classStr, pyName=fnName, cName='', 
-                            description="according to specification of C++ std::"+fnName,
+                            description="according to specification of C++ std::"+cfnName,
                             argList=['x'],
                             argTypes=['symbolic.Real'],
                             returnType='symbolic.Real',
@@ -2340,6 +2343,9 @@ plr.AddDocu('To create a symbolic Vector, use \\texttt{aa=symbolic.Vector([3,4.2
             "use \\texttt{v=symbolic.Vector([3,4.2,5],'myVec')}. "+
             "Vectors can be also created from mixed symbolic expressions and numbers, such as \\texttt{v=symbolic.Vector([x,x**2,3.14])}, "+
             "however, this cannot become a named vector as it contains expressions. "+
+            "There is a significance difference to numpy, such that '*' represents the scalar vector multplication which gives a scalar. "+
+            "Furthermore, the comparison operator '==' gives only True, if all components are equal, "+
+            "and the operator '!=' gives True, if any component is unequal. "+
             "Note that in the following, we use the abbreviation \\texttt{SymVector=exudyn.symbolic.Vector}. "+
             "Note that only functions are able to be recorded. "
             "Member functions of \\texttt{SymVector} are:")
@@ -2379,7 +2385,7 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='NormL2', cName='',
                         )
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='MultComponents', cName='', 
-                        description="Perform component-wise multiplication of vector times other vector and return result.",
+                        description="Perform component-wise multiplication of vector times other vector and return result. This corresponds to the numpy multiplication using '*'.",
                         example = "v1 = SymVector([1,2,4])\\\\v2 = SymVector([1,0.5,0.25])\\\\v3 = v1.MultComponents(v2)",
                         argList=['other'],
                         argTypes=['sym.Vector'],

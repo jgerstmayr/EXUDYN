@@ -95,6 +95,8 @@ RBinertia = InertiaSphere(m, radius)
 oMass = mbs.CreateRigidBody(referencePosition=p0, 
                             initialVelocity=v0,
                             initialAngularVelocity=omega0,
+                            inertia=RBinertia,
+                            nodeType=exu.NodeType.RotationRotationVector, #for explicit integration
                             gravity=[0,0,-g],
                             graphicsDataList=gObject,
                             )

@@ -81,7 +81,10 @@ class VectorExpressionSReal: public VectorExpressionBase
 protected:
 	ExpressionList exprList; //list of expressions; if an item exists, it always refers to an expression
 public:
-	VectorExpressionSReal() : VectorExpressionBase() {}
+	VectorExpressionSReal() : VectorExpressionBase() 
+	{
+		IncreaseReferenceCounter(); //immediately referenced ...
+	}
 
 	virtual ~VectorExpressionSReal()
 	{
@@ -90,6 +93,7 @@ public:
 	//! build from initializer list, only using SReal
 	VectorExpressionSReal(std::initializer_list<SReal> listOfSReals) : VectorExpressionBase()
 	{
+		IncreaseReferenceCounter();
 		exprList.SetNumberOfItems((Index)listOfSReals.size());
 		Index cnt = 0;
 		for (const auto& sreal : listOfSReals) 
@@ -104,6 +108,7 @@ public:
 	}
 	VectorExpressionSReal(std::vector<SReal> listOfSReals) : VectorExpressionBase()
 	{
+		IncreaseReferenceCounter();
 		exprList.SetNumberOfItems((Index)listOfSReals.size());
 		Index cnt = 0;
 		for (const auto& sreal : listOfSReals)
@@ -423,7 +428,10 @@ class VectorExpressionNormL2: public ExpressionBase
 public:
 	VectorExpressionNormL2(VectorExpressionBase* op) : ExpressionBase(), operand(op) {}
 
-	virtual void Destroy() { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; ExpressionBase::deleteCount++; } } }
+	virtual void Destroy() 
+	{ 
+		if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; VectorExpressionBase::deleteCount++; } }
+	}
 
 	virtual Real Evaluate() const override 
 	{ 
@@ -464,7 +472,8 @@ public:
 	}
 };
 
-class VectorExpressionOperatorEQ: public ExpressionBase {
+class VectorExpressionOperatorEQ: public ExpressionBase 
+{
 	VectorExpressionBase* left, * right;
 public:
 	VectorExpressionOperatorEQ(VectorExpressionBase* l, VectorExpressionBase* r) : ExpressionBase(), left(l), right(r) {}
@@ -485,7 +494,8 @@ public:
 	}
 };
 
-class VectorExpressionOperatorNEQ: public ExpressionBase {
+class VectorExpressionOperatorNEQ: public ExpressionBase 
+{
 	VectorExpressionBase* left, * right;
 public:
 	VectorExpressionOperatorNEQ(VectorExpressionBase* l, VectorExpressionBase* r) : ExpressionBase(), left(l), right(r) {}
@@ -576,7 +586,6 @@ public:
 				}
 				cnt++;
 			}
-			exprList->IncreaseReferenceCounter();
 
 		}
 
@@ -608,7 +617,6 @@ public:
 		{
 			VectorExpressionBase::NewCount()++;
 			exprList = new VectorExpressionSReal(listOfSReals);
-			exprList->IncreaseReferenceCounter();
 		}
 	}
 
@@ -637,16 +645,17 @@ public:
 		GetExpressionNamedReal().SetVector(vectorInit);
 	}
 
-	void SetSymbolicVector(const ResizableConstVector& vectorInit)
+	//! set with numpy array or list
+	void SetSymbolicVector(const std::vector<Real>& vectorInit)
 	{
 		if (IsExpressionNamedReal())
 		{
-			GetExpressionNamedReal().SetVector(vectorInit);
+			GetExpressionNamedReal().SetVector(ResizableConstVector(vectorInit));
 		}
 		else
 		{
 			CHECKandTHROW(exprList == nullptr, "SymbolicRealVector::SetValue can only be called for symbolic Real variables");
-			vector = vectorInit;
+			vector = ResizableConstVector(vectorInit);
 		}
 	}
 
@@ -655,14 +664,14 @@ public:
 	{
 		if (IsExpressionNamedReal())
 		{
-			CHECKandTHROW(GetExpressionNamedReal().NumberOfItems() <= index,
+			CHECKandTHROW(index < GetExpressionNamedReal().NumberOfItems(),
 				"SymbolicRealVector::SetExpressionNamedVectorComponent: index out of range");
 			GetExpressionNamedReal().SetComponent(index, value);
 		}
 		else
 		{
 			CHECKandTHROW(exprList == nullptr, "SymbolicRealVector::SetVector can only be called for symbolic Vector variables");
-			CHECKandTHROW(vector.NumberOfItems() <= index,
+			CHECKandTHROW(index < vector.NumberOfItems(),
 				"SymbolicRealVector::SetExpressionNamedVectorComponent: index out of range");
 			vector[index] = value;
 		}
@@ -794,13 +803,13 @@ private:
 	}
 
 	//! Get Expression* either for SymbolicRealVector or Vector
-	static VectorExpressionBase* GetFunctionExpression(const SymbolicRealVector& x)
+	static VectorExpressionBase* GetFunctionExpression(const SymbolicRealVector& x, bool increaseReferenceCounter = true)
 	{
 		VectorExpressionBase::NewCount() += (x.exprList == 0);
-		if (x.exprList) { x.exprList->IncreaseReferenceCounter(); }
+		if (x.exprList && increaseReferenceCounter) { x.exprList->IncreaseReferenceCounter(); }
 		return x.exprList ? x.exprList : new VectorExpressionReal(x.vector);
 	}
-	static VectorExpressionBase* GetFunctionExpression(const Vector& x)
+	static VectorExpressionBase* GetFunctionExpression(const Vector& x, bool increaseReferenceCounter = true)
 	{
 		VectorExpressionBase::NewCount() += 1;
 		return new VectorExpressionReal(x);
@@ -866,18 +875,18 @@ public:
 			return *this;
 		}
 		VectorExpressionBase::NewCount() += 1;
-		exprList = new VectorExpressionOperatorPlus(GetFunctionExpression(*this), GetFunctionExpression(rhs));
+		exprList = new VectorExpressionOperatorPlus(GetFunctionExpression(*this, false), GetFunctionExpression(rhs));
 		exprList->IncreaseReferenceCounter();
 		return *this;
 	}
-
+	
 	SymbolicRealVector& operator-=(const SymbolicRealVector& rhs) {
 		if (!SReal::recordExpressions) {
 			vector -= rhs.vector;
 			return *this;
 		}
 		VectorExpressionBase::NewCount() += 1;
-		exprList = new VectorExpressionOperatorMinus(GetFunctionExpression(*this), GetFunctionExpression(rhs));
+		exprList = new VectorExpressionOperatorMinus(GetFunctionExpression(*this, false), GetFunctionExpression(rhs));
 		exprList->IncreaseReferenceCounter();
 		return *this;
 	}
@@ -888,7 +897,7 @@ public:
 			return *this;
 		}
 		VectorExpressionBase::NewCount() += 1;
-		exprList = new VectorExpressionOperatorMultScalarVector(GetFunctionExpressionSReal(rhs), GetFunctionExpression(*this));
+		exprList = new VectorExpressionOperatorMultScalarVector(GetFunctionExpressionSReal(rhs), GetFunctionExpression(*this, false));
 		exprList->IncreaseReferenceCounter();
 		return *this;
 	}
@@ -900,7 +909,7 @@ public:
 			return -1.*vector;
 		}
 		VectorExpressionBase::NewCount()++;
-		return new VectorExpressionUnaryMinus(GetFunctionExpression(*this));
+		return new VectorExpressionUnaryMinus(GetFunctionExpression(*this, true));
 	}
 
 	SymbolicRealVector operator+() const
@@ -909,7 +918,7 @@ public:
 			return vector;
 		}
 		VectorExpressionBase::NewCount()++;
-		return new VectorExpressionUnaryPlus(GetFunctionExpression(*this));
+		return new VectorExpressionUnaryPlus(GetFunctionExpression(*this, true));
 	}
 
 
@@ -957,7 +966,7 @@ public:
 			return result;
 		}
 		VectorExpressionBase::NewCount()++;
-		return new VectorExpressionMultComponents(GetFunctionExpression(*this), GetFunctionExpression(right));
+		return new VectorExpressionMultComponents(GetFunctionExpression(*this, true), GetFunctionExpression(right));
 	}
 
 	SReal NormL2() const
@@ -966,7 +975,7 @@ public:
 			return vector.GetL2Norm();
 		}
 		ExpressionBase::NewCount()++;
-		return new VectorExpressionNormL2(GetFunctionExpression(*this));
+		return new VectorExpressionNormL2(GetFunctionExpression(*this, true));
 	}
 
 	template<typename RealType>
@@ -981,7 +990,7 @@ public:
 			return vector[i];
 		}
 		ExpressionBase::NewCount()++;
-		return new VectorExpressionOperatorBracket(GetFunctionExpression(*this), 
+		return new VectorExpressionOperatorBracket(GetFunctionExpression(*this, true),
 			GetFunctionExpressionSReal(index));
 	}
 

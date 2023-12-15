@@ -111,7 +111,7 @@ Mathematical functions may be called with an \ ``SymReal``\  or with a \ ``float
 * | **isfinite**\ (\ *x*\ ): 
   | according to specification of C++ std::isfinite
 * | **abs**\ (\ *x*\ ): 
-  | according to specification of C++ std::abs
+  | according to specification of C++ std::fabs
 * | **round**\ (\ *x*\ ): 
   | according to specification of C++ std::round
 * | **ceil**\ (\ *x*\ ): 
@@ -238,7 +238,7 @@ A symbolic Vector type to replace Python's (1D) numpy array in symbolic expressi
    #access of vector component:
    print('v1[2]: ',v1[2],"=",v1[2].Evaluate())   #evaluate as Real
 
-To create a symbolic Vector, use \ ``aa=symbolic.Vector([3,4.2,5]``\  to build a Python object aa with values [3,4.2,5]. In order to use a named vector, use \ ``v=symbolic.Vector([3,4.2,5],'myVec')``\ . Vectors can be also created from mixed symbolic expressions and numbers, such as \ ``v=symbolic.Vector([x,x**2,3.14])``\ , however, this cannot become a named vector as it contains expressions. Note that in the following, we use the abbreviation \ ``SymVector=exudyn.symbolic.Vector``\ . Note that only functions are able to be recorded. Member functions of \ ``SymVector``\  are:
+To create a symbolic Vector, use \ ``aa=symbolic.Vector([3,4.2,5]``\  to build a Python object aa with values [3,4.2,5]. In order to use a named vector, use \ ``v=symbolic.Vector([3,4.2,5],'myVec')``\ . Vectors can be also created from mixed symbolic expressions and numbers, such as \ ``v=symbolic.Vector([x,x**2,3.14])``\ , however, this cannot become a named vector as it contains expressions. There is a significance difference to numpy, such that '*' represents the scalar vector multplication which gives a scalar. Furthermore, the comparison operator '==' gives only True, if all components are equal, and the operator '!=' gives True, if any component is unequal. Note that in the following, we use the abbreviation \ ``SymVector=exudyn.symbolic.Vector``\ . Note that only functions are able to be recorded. Member functions of \ ``SymVector``\  are:
 
 \ The class **symbolic.Vector** has the following **functions and structures**:
 
@@ -267,7 +267,7 @@ To create a symbolic Vector, use \ ``aa=symbolic.Vector([3,4.2,5]``\  to build a
      length = v1.NormL2() #gives 9.
 
 * | **MultComponents**\ (\ *other*\ ): 
-  | Perform component-wise multiplication of vector times other vector and return result.
+  | Perform component-wise multiplication of vector times other vector and return result. This corresponds to the numpy multiplication using '*'.
   | *Example*:
 
   .. code-block:: python
