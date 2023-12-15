@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Issue tracker &mdash; Exudyn1.7.59.dev1 1.7.59.dev1 documentation</title>
+  <title>Issue tracker &mdash; Exudyn1.7.66.dev1 1.7.66.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=18ccdb8d"></script>
+        <script src="../../_static/documentation_options.js?v=631ec0cd"></script>
         <script src="../../_static/doctools.js?v=888ff710"></script>
         <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -30,7 +30,7 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="prev" title="symbolicUserFunctionTest.py" href="TestModels/symbolicUserFunctionTest.html" /> 
+    <link rel="prev" title="symbolicModuleTest.py" href="TestModels/symbolicModuleTest.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -42,7 +42,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.7.59.dev1
+            Exudyn1.7.66.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -97,7 +97,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.7.59.dev1</a>
+          <a href="../../index.html">Exudyn1.7.66.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -122,15 +122,71 @@ The extension <code class="docutils literal notranslate"><span class="pre">.dev1
 BUG numbers refer to the according issue numbers.</p>
 <p>General information on current version:</p>
 <ul class="simple">
-<li><p>Exudyn version = 1.7.59.dev1,</p></li>
-<li><p>last change =  2023-12-14,</p></li>
-<li><p>Number of issues = 1732,</p></li>
-<li><p>Number of resolved issues = 1529 (59 in current version),</p></li>
+<li><p>Exudyn version = 1.7.66.dev1,</p></li>
+<li><p>last change =  2023-12-15,</p></li>
+<li><p>Number of issues = 1737,</p></li>
+<li><p>Number of resolved issues = 1536 (66 in current version),</p></li>
 </ul>
 <section id="version-1-7">
 <h2>Version 1.7<a class="headerlink" href="#version-1-7" title="Link to this heading"></a></h2>
 <blockquote>
 <div><ul class="simple">
+<li><dl class="simple">
+<dt>Version 1.7.66: <span class="textred">resolved BUG 1736</span><span class="classifier">symbolic</span></dt><dd><ul>
+<li><p>description:  symbolic user function: crashes when user function object is deleted</p></li>
+<li><p>date resolved: <strong>2023-12-15 18:01</strong>, date raised: 2023-12-15</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.65: resolved Issue 1735: symbolic (fix)</dt><dd><ul>
+<li><p>description:  check delete counts and reference counts for +=, etc.</p></li>
+<li><p>date resolved: <strong>2023-12-15 18:01</strong>, date raised: 2023-12-15</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.64: resolved Issue 1729: Symbolic (testing)</dt><dd><ul>
+<li><p>description:  add vector/matrix tests in comparison with Python numpy and check delete counts</p></li>
+<li><p>date resolved: <strong>2023-12-15 13:52</strong>, date raised: 2023-12-12</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.63: resolved Issue 1728: Symbolic (testing)</dt><dd><ul>
+<li><p>description:  add scalar tests in comparison with Python math and check delete counts</p></li>
+<li><p>date resolved: <strong>2023-12-15 13:52</strong>, date raised: 2023-12-12</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.62: resolved Issue 1733: symbolic (check)</dt><dd><ul>
+<li><p>description:  check overloading __len__ operator for vector</p></li>
+<li><p>date resolved: <strong>2023-12-15 13:06</strong>, date raised: 2023-12-15</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.61: resolved Issue 1734: symbolic (fix)</dt><dd><ul>
+<li><p>description:  write operator[] for Matrix and Vector fails</p></li>
+<li><p>date resolved: <strong>2023-12-15 11:51</strong>, date raised: 2023-12-15</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.7.60: <span class="textred">resolved BUG 1732</span><span class="classifier">symbolic</span></dt><dd><ul>
+<li><p>description:  Vector.SetVector(…), Matrix.SetMatrix(…) not working; fix Pybind interface</p></li>
+<li><p>date resolved: <strong>2023-12-15 11:12</strong>, date raised: 2023-12-15</p></li>
+</ul>
+</dd>
+</dl>
+</li>
 <li><dl class="simple">
 <dt>Version 1.7.59: resolved Issue 1680: chatGPTupdate (example)</dt><dd><ul>
 <li><p>description:  add simple example for load userFunction</p></li>
@@ -12699,22 +12755,6 @@ BUG numbers refer to the according issue numbers.</p>
 <blockquote>
 <div><ul class="simple">
 <li><dl class="simple">
-<dt><strong>open issue 1729:</strong> Symbolic</dt><dd><ul>
-<li><p>description:  add vector/matrix tests in comparison with Python numpy and check delete counts</p></li>
-<li><p>date raised: 2023-12-12</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt><strong>open issue 1728:</strong> Symbolic</dt><dd><ul>
-<li><p>description:  add scalar tests in comparison with Python math and check delete counts</p></li>
-<li><p>date raised: 2023-12-12</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
 <dt><strong>open issue 1727:</strong> SymbolicRealMatrix</dt><dd><ul>
 <li><p>description:  add documentation and example for symbolic matrix for user functions</p></li>
 <li><p>date raised: 2023-12-12</p></li>
@@ -14338,7 +14378,7 @@ BUG numbers refer to the according issue numbers.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="TestModels/symbolicUserFunctionTest.html" class="btn btn-neutral float-left" title="symbolicUserFunctionTest.py" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="TestModels/symbolicModuleTest.html" class="btn btn-neutral float-left" title="symbolicModuleTest.py" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

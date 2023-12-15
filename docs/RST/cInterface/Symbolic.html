@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Symbolic &mdash; Exudyn1.7.59.dev1 1.7.59.dev1 documentation</title>
+  <title>Symbolic &mdash; Exudyn1.7.66.dev1 1.7.66.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=18ccdb8d"></script>
+        <script src="../../../_static/documentation_options.js?v=631ec0cd"></script>
         <script src="../../../_static/doctools.js?v=888ff710"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -43,7 +43,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.7.59.dev1
+            Exudyn1.7.66.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -102,7 +102,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.7.59.dev1</a>
+          <a href="../../../index.html">Exudyn1.7.66.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -236,7 +236,7 @@
 </li>
 <li><div class="line-block">
 <div class="line"><strong>abs</strong>(<em>x</em>):</div>
-<div class="line">according to specification of C++ std::abs</div>
+<div class="line">according to specification of C++ std::fabs</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -432,7 +432,7 @@
 <span class="linenos">28</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;v1[2]: &#39;</span><span class="p">,</span><span class="n">v1</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="s2">&quot;=&quot;</span><span class="p">,</span><span class="n">v1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="nf">Evaluate</span><span class="p">())</span>   <span class="c1">#evaluate as Real</span>
 </pre></div>
 </div>
-<p>To create a symbolic Vector, use <code class="docutils literal notranslate"><span class="pre">aa=symbolic.Vector([3,4.2,5]</span></code> to build a Python object aa with values [3,4.2,5]. In order to use a named vector, use <code class="docutils literal notranslate"><span class="pre">v=symbolic.Vector([3,4.2,5],'myVec')</span></code>. Vectors can be also created from mixed symbolic expressions and numbers, such as <code class="docutils literal notranslate"><span class="pre">v=symbolic.Vector([x,x**2,3.14])</span></code>, however, this cannot become a named vector as it contains expressions. Note that in the following, we use the abbreviation <code class="docutils literal notranslate"><span class="pre">SymVector=exudyn.symbolic.Vector</span></code>. Note that only functions are able to be recorded. Member functions of <code class="docutils literal notranslate"><span class="pre">SymVector</span></code> are:</p>
+<p>To create a symbolic Vector, use <code class="docutils literal notranslate"><span class="pre">aa=symbolic.Vector([3,4.2,5]</span></code> to build a Python object aa with values [3,4.2,5]. In order to use a named vector, use <code class="docutils literal notranslate"><span class="pre">v=symbolic.Vector([3,4.2,5],'myVec')</span></code>. Vectors can be also created from mixed symbolic expressions and numbers, such as <code class="docutils literal notranslate"><span class="pre">v=symbolic.Vector([x,x**2,3.14])</span></code>, however, this cannot become a named vector as it contains expressions. There is a significance difference to numpy, such that ‘*’ represents the scalar vector multplication which gives a scalar. Furthermore, the comparison operator ‘==’ gives only True, if all components are equal, and the operator ‘!=’ gives True, if any component is unequal. Note that in the following, we use the abbreviation <code class="docutils literal notranslate"><span class="pre">SymVector=exudyn.symbolic.Vector</span></code>. Note that only functions are able to be recorded. Member functions of <code class="docutils literal notranslate"><span class="pre">SymVector</span></code> are:</p>
 <p>The class <strong>symbolic.Vector</strong> has the following <strong>functions and structures</strong>:</p>
 <ul>
 <li><div class="line-block">
@@ -472,7 +472,7 @@
 </li>
 <li><div class="line-block">
 <div class="line"><strong>MultComponents</strong>(<em>other</em>):</div>
-<div class="line">Perform component-wise multiplication of vector times other vector and return result.</div>
+<div class="line">Perform component-wise multiplication of vector times other vector and return result. This corresponds to the numpy multiplication using ‘*’.</div>
 <div class="line"><em>Example</em>:</div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">v1</span> <span class="o">=</span> <span class="n">SymVector</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>

@@ -107,6 +107,8 @@ You can view and download this file on Github: `distanceSensor.py <https://githu
    oMass = mbs.CreateRigidBody(referencePosition=p0, 
                                initialVelocity=v0,
                                initialAngularVelocity=omega0,
+                               inertia=RBinertia,
+                               nodeType=exu.NodeType.RotationRotationVector, #for explicit integration
                                gravity=[0,0,-g],
                                graphicsDataList=gObject,
                                )

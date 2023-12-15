@@ -493,10 +493,6 @@ Function: ConvertFunctionToSymbolic
 - | \ *output*\ :
   | return dictionary with 'functionName', 'argList', and 'returnList'
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github:
-
-    \ `symbolicUserFunctionMasses.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/symbolicUserFunctionMasses.py>`_\  (Ex)
-
 
 
 ----
