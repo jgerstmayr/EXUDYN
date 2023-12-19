@@ -1097,15 +1097,37 @@ class PyLatexRST:
         self.sRST += '\n'
 
     #add latex table entry / RST list entry for data variable
-    def DefLatexDataAccess(self, name, description, dataType = '', isExudyn = False): 
+    def DefLatexDataAccess(self, name, description, dataType = '', isTopLevel = False): 
         self.sLatex += '  ' + Str2Latex(name) + ' & '+Str2Latex(description) + '\\\\ \\hline  \n'
         self.sRST += '* | ' + '**'+Str2Latex(name)+'**:\n'
         self.sRST += RemoveIndentation(LatexString2RST(description), '  | ') + '\n'
         
         if dataType != '':
-            if not isExudyn:
+            if not isTopLevel:
                 self.sPyi += ' '*4
             self.sPyi += name + ':' + dataType+'\n'
+            
+    #add latex table entry / RST list entry for data variable
+    def DefLatexOperator(self, name, description, returnType = '', 
+                         argList=[], defaultArgs=[], argTypes=[], 
+                         isTopLevel = False): 
+        hasArgs = bool(len(argList))
+        if len(defaultArgs):
+            argStr = (', '.join([f'{key}={value}' for key, value in zip(argList, defaultArgs)]) )*hasArgs
+        else:
+            argStr = (', '.join(argList) )*hasArgs
+        
+        self.sLatex += '  operator ' + Str2Latex(name) + '('+argStr+') & '+Str2Latex(description) + '\\\\ \\hline  \n'
+        self.sRST += '* | operator ' + '**'+Str2Latex(name)+'**\ ('+argStr+'):\n'
+        self.sRST += RemoveIndentation(LatexString2RST(description), '  | ') + '\n'
+        
+        if returnType != '':
+            pyiIndent = ''
+            if not isTopLevel:
+                pyiIndent = ' '*4
+            argStr = (', '+', '.join([f'{key}: {value}' for key, value in zip(argList, argTypes)]))*hasArgs
+            self.sPyi += pyiIndent+'@overload\n'
+            self.sPyi += pyiIndent+'def ' + name + '(self'+argStr+') -> ' + returnType+': ...\n'
             
         
     #************************************************

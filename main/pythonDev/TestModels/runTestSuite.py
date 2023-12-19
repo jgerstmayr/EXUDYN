@@ -139,59 +139,6 @@ exu.Print('+++++++++++++++++++++++++++++++++++++++++++')
 exu.SetWriteToConsole(writeToConsole) #stop output from now on
 
 
-#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# testFileList = [
-#                 'ANCFcontactCircleTest.py',
-#                 'ANCFcontactFrictionTest.py',
-#                 'ANCFmovingRigidBodyTest.py',
-#                 'ACNFslidingAndALEjointTest.py',
-#                 'carRollingDiscTest.py',
-#                 'compareAbaqusAnsysRotorEigenfrequencies.py',
-#                 'compareFullModifiedNewton.py',
-#                 'computeODE2EigenvaluesTest.py',
-#                 'contactCoordinateTest.py',
-#                 'driveTrainTest.py',
-#                 'explicitLieGroupIntegratorPythonTest.py',
-#                 'explicitLieGroupIntegratorTest.py',
-#                 'fourBarMechanismTest.py', 
-#                 'generalContactFrictionTests.py',
-#                 'generalContactSpheresTest.py',
-#                 'genericJointUserFunctionTest.py',
-#                 'genericODE2test.py',
-#                 'geneticOptimizationTest.py',
-#                 'geometricallyExactBeam2Dtest.py',
-#                 'heavyTop.py',
-#                 'manualExplicitIntegrator.py',
-#                 'mecanumWheelRollingDiscTest.py',
-#                 'objectFFRFreducedOrderAccelerations.py',
-#                 'objectFFRFreducedOrderTest.py',
-#                 'objectFFRFTest.py',
-#                 'objectFFRFTest2.py',
-#                 'objectGenericODE2Test.py',
-#                 'PARTS_ATEs_moving.py',
-#                 'pendulumFriction.py',
-#                 'postNewtonStepContactTest.py',
-#                 'revoluteJointprismaticJointTest.py',
-#                 'rigidBodyAsUserFunctionTest.py',
-#                 'rigidBodyCOMtest.py',
-#                 'rollingCoinTest.py',
-#                 'rollingCoinPenaltyTest.py',
-#                 'scissorPrismaticRevolute2D.py',
-#                 'serialRobotTest.py',
-#                 'sliderCrank3Dbenchmark.py',
-#                 'sliderCrankFloatingTest.py',
-#                 'solverExplicitODE1ODE2test.py',
-#                 'sparseMatrixSpringDamperTest.py',
-#                 'sphericalJointTest.py',
-#                 'springDamperUserFunctionTest.py',
-#                 'stiffFlyballGovernor.py',
-#                 'superElementRigidJointTest.py',
-#                 'connectorRigidBodySpringDamperTest.py',
-#                 'sensorUserFunctionTest.py',
-#                 'ConvexContactTest.py'
-#                 ]
-
-
 #testFileList = ['Examples/fourBarMechanism.py']
 testsFailed = [] #list of numbers containing the test numbers of failed tests
 exudynTestGlobals.useGraphics = False

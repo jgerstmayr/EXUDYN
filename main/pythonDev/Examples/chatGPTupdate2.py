@@ -50,7 +50,7 @@ mbs = SC.AddSystem() #create a MainSystem 'mbs' to work with
 #graphics data for checkerboard background (not required):
 gGround0 = GraphicsDataCheckerBoard(point=[3,0,-2], normal=[0,0,1], size=10)
 #add ground object and background graphics; visualization is optional
-oGround = mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=[gGround0])))
+oGround = mbs.CreateGround(graphicsDataList=[gGround0])
 
 #create a cube with length L (X-direction), height H (Y) and width W (Z)
 L=1

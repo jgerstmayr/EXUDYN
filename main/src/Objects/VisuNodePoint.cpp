@@ -1284,7 +1284,7 @@ void VisualizationObjectANCFCable::UpdateGraphics(const VisualizationSettings& v
 	Index tilingCyl = visualizationSettings.general.cylinderTiling; //circumferential
 	const Index tilingCylMax = 32;
 	tilingCyl = EXUstd::Minimum(tilingCylMax, tilingCyl);
-	if (radius == 0) { tilingCyl = 1; }
+	if (radius == 0 || !drawWithTriangles) { tilingCyl = 1; }
 
 	GLLine item;
 	item.itemID = itemID;

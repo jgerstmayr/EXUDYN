@@ -128,7 +128,7 @@ void CObjectANCFCable::ComputeCurrentNodeVelocities(ConstSizeVector<6>& qNode0, 
 void CObjectANCFCable::ComputeCurrentObjectCoordinates(ConstSizeVector<nODE2coordinates>& qANCF) const
 {
 	const Index dim = 3;		//3D finite element
-	const Index ns = 4;			//number of shape functions
+	//const Index ns = 4;			//number of shape functions
 	const Index nnc = dim * 2;  //number of node coordinates
 	LinkedDataVector qNode0(qANCF, 0, nnc);		//link node values to element vector
 	LinkedDataVector qNode1(qANCF, nnc, nnc);		//link node values to element vector
@@ -143,7 +143,7 @@ void CObjectANCFCable::ComputeCurrentObjectCoordinates(ConstSizeVector<nODE2coor
 void CObjectANCFCable::ComputeCurrentObjectVelocities(ConstSizeVector<nODE2coordinates>& qANCF_t) const
 {
 	const Index dim = 3;		//3D finite element
-	const Index ns = 4;			//number of shape functions
+	//const Index ns = 4;			//number of shape functions
 	const Index nnc = dim * 2;  //number of node coordinates
 
 	LinkedDataVector qNode0(qANCF_t, 0, nnc);		//link node values to element vector
@@ -840,7 +840,7 @@ Vector3D CObjectANCFCable::ComputeCurvature_t(Real x, ConfigurationType configur
 	Vector3D rx_t = ComputeSlopeVector_t(x, configuration);
 	Vector3D rxx_t = ComputeSlopeVector_xt(x, configuration);
 
-	Real rxNorm2 = rx.GetL2NormSquared(); //computation see ComputeODE2LHS(...)
+	//Real rxNorm2 = rx.GetL2NormSquared(); //computation see ComputeODE2LHS(...)
 
 	Vector3D rxCrossRxx = rx.CrossProduct(rxx);
 

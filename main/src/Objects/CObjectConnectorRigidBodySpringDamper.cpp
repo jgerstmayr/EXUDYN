@@ -121,11 +121,11 @@ void CObjectConnectorRigidBodySpringDamper::ComputeODE2LHS(Vector& ode2Lhs, cons
 		EXUmath::MultMatrixVector(Ajoint, fPosLoc, fPos);
 		EXUmath::MultMatrixVector(Ajoint, fRotLoc, fRot);
 		Vector3D torque(0.);
-		if (parameters.intrinsicFormulation && true)
+		if (parameters.intrinsicFormulation)
 		{
 			//additional torque due to distance of connector center-pos to marker location
 			//this torque is the same on both sides
-			HomogeneousTransformation HTrel = EXUlie::ExpSE3(0.5 * vLocPos, 0.5 * vLocRot);
+			//HomogeneousTransformation HTrel = EXUlie::ExpSE3(0.5 * vLocPos, 0.5 * vLocRot);
 
 			//torque = (Ajoint * (HTrel.GetTranslation())).CrossProduct(fPos); //vLocPos is in Lie-algebra and can be halfed
 			torque = (Ajoint * (-0.5*vLocPos)).CrossProduct(fPos); //vLocPos is in Lie-algebra and can be halfed

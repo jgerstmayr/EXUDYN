@@ -85,6 +85,7 @@ public:
 	static int deleteCount;
 
 	VectorExpressionBase() : referenceCounter(0) {}
+	virtual ~VectorExpressionBase() = default;
 
 	void IncreaseReferenceCounter() { referenceCounter++; }
 	void DecreaseReferenceCounter() 
@@ -114,6 +115,7 @@ public:
 	static int deleteCount;
 
 	MatrixExpressionBase() : referenceCounter(0) {}
+	virtual ~MatrixExpressionBase() = default;
 
 	void IncreaseReferenceCounter() { referenceCounter++; }
 	void DecreaseReferenceCounter() 
@@ -1016,15 +1018,15 @@ public:
 	static bool flagDebug;
 
 	SReal() : expr(nullptr), value(0.) {}
-	SReal(const Real& val) : value(val), expr(nullptr) {}
-	SReal(const Index& val) : value((Real)val), expr(nullptr) {}
+	SReal(const Real& val) : expr(nullptr), value(val) {}
+	SReal(const Index& val) : expr(nullptr), value((Real)val) {}
 	SReal(ExpressionBase* e) : expr(e), value(e ? e->Evaluate() : 0) //needed???
 	{
 		if (e) { e->IncreaseReferenceCounter(); }
 	}
 	//! constructor with value and name, gives subexpression
 	//! used for variables
-	SReal(const STDstring& name, const Real& val) : value(val), expr(nullptr)
+	SReal(const STDstring& name, const Real& val) : expr(nullptr), value(val)
 	{
 		if (recordExpressions) {
 			ExpressionBase::NewCount()++;
@@ -1032,7 +1034,7 @@ public:
 		}
 	}
 	//! copy constructor
-	SReal(const SReal& other) : value(other.value), expr(other.expr)
+	SReal(const SReal& other) : expr(other.expr), value(other.value)
 	{
 		if (GetFlagDebug()) { std::cout << "copy constructor: " << ToString() << "\n"; }
 		if (expr) { expr->IncreaseReferenceCounter(); }

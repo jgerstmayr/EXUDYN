@@ -99,7 +99,6 @@ public:
 			for (const auto& sreal : sVector)
 			{
 				ExpressionBase* expr = sreal.GetExpression();
-				Real value = sreal.GetValue();
 				ExpressionBase::NewCount() += (expr == 0);
 				if (expr) { expr->IncreaseReferenceCounter(); }
 				exprMatrix[row][column] = expr ? expr : new ExpressionReal(sreal.GetValue());
@@ -132,7 +131,6 @@ public:
 	}
 	virtual void Destroy() override
 	{
-		Index row = 0;
 		for (const auto& sVector : exprMatrix)
 		{
 			for (const auto& item : sVector)
@@ -483,7 +481,8 @@ public:
 	virtual Real EvaluateComponent(Index row, Index column) const override
 	{
 		Index nSum = left->NumberOfColumns();
-		CHECKandTHROW((row < left->NumberOfRows()) && (column < right->NumberOfColumns()) && (nSum == row < right->NumberOfRows()),
+		CHECKandTHROW((row < left->NumberOfRows()) && (column < right->NumberOfColumns()) && 
+			(nSum == (row < right->NumberOfRows())),
 			"symbolic.Matrix::operator* (matrix): invalid row/column");
 		Real result = 0;
 
@@ -592,7 +591,7 @@ public:
 	//! cast from Matrix; for internal usage:
 	SymbolicRealMatrix(const Matrix& matrixInit) : exprMatrix(nullptr), matrix(matrixInit) {}
 	//! cast from name and Matrix; for internal usage:
-	SymbolicRealMatrix(const STDstring& name, const Matrix& matrixInit) : matrix(matrixInit), exprMatrix(nullptr)
+	SymbolicRealMatrix(const STDstring& name, const Matrix& matrixInit) : exprMatrix(nullptr), matrix(matrixInit)
 	{
 		if (SReal::recordExpressions) {
 			MatrixExpressionBase::NewCount()++;
@@ -712,7 +711,7 @@ public:
 			matrix = Matrix();
 		}
 	}
-	SymbolicRealMatrix(const SymbolicRealMatrix& other) : matrix(other.matrix), exprMatrix(other.exprMatrix)
+	SymbolicRealMatrix(const SymbolicRealMatrix& other) : exprMatrix(other.exprMatrix), matrix(other.matrix)
 	{
 		if (GetFlagDebug()) { std::cout << "copy constructor: " << ToString() << "\n"; }
 		if (exprMatrix) { exprMatrix->IncreaseReferenceCounter(); }

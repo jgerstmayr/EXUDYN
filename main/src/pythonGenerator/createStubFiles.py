@@ -3,7 +3,8 @@
 # This is an EXUDYN autogeneration file
 #
 # Details: 	used to create a single __init__.pyi file for the exudyn module;
-#           alleviates auto-completion in Spyder or VScode
+#           alleviates auto-completion in Spyder or VScode;
+#           also create a symbolic.pyi for the submodule
 #
 # Author:   Johannes Gerstmayr
 # Date:     2023-05-09 (created)
@@ -81,5 +82,21 @@ if True:
     file.close()
 
 
+
+
+if True: 
+    destFile2=  '../../../main/pythonDev/exudyn/symbolic.pyi'
+
+    file=io.open('stubHeader.pyi','r',encoding='utf8')  
+    mergedText = file.read()
+    file.close()
+
+    file=io.open('generated/stubSymbolic.pyi','r',encoding='utf8')  
+    mergedText += file.read()
+    file.close()
+
+    file=io.open(destFile2,'w',encoding='utf8')
+    file.write(mergedText)
+    file.close()
 
 

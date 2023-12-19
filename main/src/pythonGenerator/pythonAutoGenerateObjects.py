@@ -1500,7 +1500,6 @@ def CreateStringSymbolicUserFunctionSet(pySymbolicUserFunction):
 	void SetUserFunctionFromDict(MainSystem& mainSystem, py::dict pyObject, TItemIndex itemIndex, const STDstring& userFunctionName)
 	{
 		STDstring sType = itemIndex.GetTypeString();
-		Index itemNumber = itemIndex.GetIndex();
 		STDstring itemTypeName = GetItemTypeName(mainSystem, itemIndex);
 
 		SetupUserFunction(pyObject, itemTypeName, userFunctionName);

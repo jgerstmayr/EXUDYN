@@ -24,7 +24,7 @@ The symbolic Real type allows to replace Python's float by a symbolic quantity. 
    SymReal = esym.Real     #abbreviation
    
    #create some variables
-   a = SymReal(42.,"a")    #use named expression
+   a = SymReal('a',42.)    #use named expression
    b = SymReal(13)         #b is 13
    c = a+b*7.+1.-3         #c stores expression tree
    d = c                   #d and c are containing same tree!
@@ -36,7 +36,7 @@ The symbolic Real type allows to replace Python's float by a symbolic quantity. 
    print('d: ',d,' = ',d.Evaluate())
    
    #compute derivatives (automatic differentiation):
-   x = SymReal(0.5,"x")
+   x = SymReal("x",0.5)
    f = a+b*esym.sin(x)+esym.cos(SymReal(7))+x**4
    print('f=',f.Evaluate(), ', diff=',f.Diff(x))
    
@@ -45,10 +45,14 @@ The symbolic Real type allows to replace Python's float by a symbolic quantity. 
    x = SymReal(42) #now, only represents a value
    y = x/3.       #directly evaluates to 14
 
-To create a symbolic Real, use \ ``aa=symbolic.Real(1.23)``\  to build a Python object aa with value 1.23. In order to use a named value, use \ ``pi=symbolic.Real(3.14,'pi')``\ . Note that in the following, we use the abbreviation \ ``SymReal=exudyn.symbolic.Real``\ . Member functions of \ ``SymReal``\ , which are \ **not recorded**\ , are:
+To create a symbolic Real, use \ ``aa=symbolic.Real(1.23)``\  to build a Python object aa with value 1.23. In order to use a named value, use \ ``pi=symbolic.Real('pi',3.14)``\ . Note that in the following, we use the abbreviation \ ``SymReal=exudyn.symbolic.Real``\ . Member functions of \ ``SymReal``\ , which are \ **not recorded**\ , are:
 
 \ The class **symbolic.Real** has the following **functions and structures**:
 
+* | **\_\_init\_\_**\ (\ *value*\ ): 
+  | Construct symbolic.Real from float.
+* | **\_\_init\_\_**\ (\ *name*\ , \ *value*\ ): 
+  | Construct named symbolic.Real from name and float.
 * | **SetValue**\ (\ *valueInit*\ ): 
   | Set either internal float value or value of named expression; cannot change symbolic expressions.
   | *Example*:
@@ -61,14 +65,22 @@ To create a symbolic Real, use \ ``aa=symbolic.Real(1.23)``\  to build a Python 
 * | **Evaluate**\ (): 
   | return evaluated expression (prioritized) or stored Real value.
 * | **Diff**\ (\ *var*\ ): 
-  | return derivative of stored expression with respect to given variable.
+  | (UNTESTED!) return derivative of stored expression with respect to given symbolic named variable; NOTE: when defining the expression of the variable which shall be differentiated, the variable may only be changed with the SetValue(...) method hereafter!
+  | *Example*:
+
+  .. code-block:: python
+
+     x=SymReal('x',2)
+     f=3*x+x**2*sin(x)
+     f.Diff(x) #evaluate derivative w.r.t. x
+
 * | **value**:
   | access to internal float value, which is used in case that symbolic.Real has been built from a float (but without a name and without symbolic expression)
-* | **\_\_float\_\_**:
+* | operator **\_\_float\_\_**\ ():
   | evaluation of expression and conversion of symbolic.Real to Python float
-* | **\_\_str\_\_**:
+* | operator **\_\_str\_\_**\ ():
   | conversion of symbolic.Real to string
-* | **\_\_repr\_\_**:
+* | operator **\_\_repr\_\_**\ ():
   | representation of symbolic.Real in Python
 
 
@@ -104,9 +116,9 @@ The remaining operators and mathematical functions are recorded within expressio
    #in most cases, we can also mix with float:
    c = a*7 + SymReal.sin(8)
 
-Mathematical functions may be called with an \ ``SymReal``\  or with a \ ``float``\ . Most standard mathematical functions exist for \ ``SymReal``\ , e.g., as \ ``SymReal.abs``\ . \ **HINT**\ : function names are lower-case for compatibility with Python's math library. Thus, you can easily exchange math.sin with SymReal.sin, and you may want to use a generic name, such as myMath=SymReal in order to switch between Python and symbolic user functions. The following functions exist:
+Mathematical functions may be called with an \ ``SymReal``\  or with a \ ``float``\ . Most standard mathematical functions exist for \ ``symbolic``\ , e.g., as \ ``symbolic.abs``\ . \ **HINT**\ : function names are lower-case for compatibility with Python's math library. Thus, you can easily exchange math.sin with esym.sin, and you may want to use a generic name, such as myMath=symbolic in order to switch between Python and symbolic user functions. The following functions exist:
 
-\ The class **symbolic.Real** has the following **functions and structures**:
+\ The class **symbolic** has the following **functions and structures**:
 
 * | **isfinite**\ (\ *x*\ ): 
   | according to specification of C++ std::isfinite
@@ -153,7 +165,7 @@ Mathematical functions may be called with an \ ``SymReal``\  or with a \ ``float
 
 The following table lists special functions for \ ``SymReal``\ : 
 
-\ The class **symbolic.Real** has the following **functions and structures**:
+\ The class **symbolic** has the following **functions and structures**:
 
 * | **sign**\ (\ *x*\ ): 
   | returns 0 for x=0, -1 for x<0 and 1 for x>1.
@@ -193,7 +205,7 @@ The following table lists special functions for \ ``SymReal``\ :
 
   .. code-block:: python
 
-     SymReal.GetRecording()
+     symbolic.Real.GetRecording()
 
 
 
@@ -215,7 +227,7 @@ A symbolic Vector type to replace Python's (1D) numpy array in symbolic expressi
    SymVector = esym.Vector
    SymReal = esym.Real 
    
-   a = SymReal(42.,"a")
+   a = SymReal('a',42.)
    b = SymReal(13)
    c = a-3*b
    
@@ -238,10 +250,14 @@ A symbolic Vector type to replace Python's (1D) numpy array in symbolic expressi
    #access of vector component:
    print('v1[2]: ',v1[2],"=",v1[2].Evaluate())   #evaluate as Real
 
-To create a symbolic Vector, use \ ``aa=symbolic.Vector([3,4.2,5]``\  to build a Python object aa with values [3,4.2,5]. In order to use a named vector, use \ ``v=symbolic.Vector([3,4.2,5],'myVec')``\ . Vectors can be also created from mixed symbolic expressions and numbers, such as \ ``v=symbolic.Vector([x,x**2,3.14])``\ , however, this cannot become a named vector as it contains expressions. There is a significance difference to numpy, such that '*' represents the scalar vector multplication which gives a scalar. Furthermore, the comparison operator '==' gives only True, if all components are equal, and the operator '!=' gives True, if any component is unequal. Note that in the following, we use the abbreviation \ ``SymVector=exudyn.symbolic.Vector``\ . Note that only functions are able to be recorded. Member functions of \ ``SymVector``\  are:
+To create a symbolic Vector, use \ ``aa=symbolic.Vector([3,4.2,5]``\  to build a Python object aa with values [3,4.2,5]. In order to use a named vector, use \ ``v=symbolic.Vector('myVec',[3,4.2,5])``\ . Vectors can be also created from mixed symbolic expressions and numbers, such as \ ``v=symbolic.Vector([x,x**2,3.14])``\ , however, this cannot become a named vector as it contains expressions. There is a significance difference to numpy, such that '*' represents the scalar vector multplication which gives a scalar. Furthermore, the comparison operator '==' gives only True, if all components are equal, and the operator '!=' gives True, if any component is unequal. Note that in the following, we use the abbreviation \ ``SymVector=exudyn.symbolic.Vector``\ . Note that only functions are able to be recorded. Member functions of \ ``SymVector``\  are:
 
 \ The class **symbolic.Vector** has the following **functions and structures**:
 
+* | **\_\_init\_\_**\ (\ *vector*\ ): 
+  | Construct symbolic.Vector from vector represented as numpy array or list (which may contain symbolic expressions).
+* | **\_\_init\_\_**\ (\ *name*\ , \ *vector*\ ): 
+  | Construct named symbolic.Vector from name and vector represented as numpy array or list (which may contain symbolic expressions).
 * | **Evaluate**\ (): 
   | Return evaluated expression (prioritized) or stored vector value. (not recorded)
 * | **SetVector**\ (\ *vector*\ ): 
@@ -257,6 +273,8 @@ To create a symbolic Vector, use \ ``aa=symbolic.Vector([3,4.2,5]``\  to build a
      v1 = SymVector([1,3,2])
      v1[2]=13.
 
+* | operator **\_\_setitem\_\_**\ (index):
+  | bracket [] operator for setting a component of the vector. Only works, if SymVector contains no expression. (may lead to inconsistencies in recording)
 * | **NormL2**\ (): 
   | return (symbolic) L2-norm of vector.
   | *Example*:
@@ -276,18 +294,11 @@ To create a symbolic Vector, use \ ``aa=symbolic.Vector([3,4.2,5]``\  to build a
      v2 = SymVector([1,0.5,0.25])
      v3 = v1.MultComponents(v2)
 
-* | **... = data[index]**\ \ *i*\ : 
-  | return (symbolic) component of vector, allowing only read-access. Index may also evaluate from an expression.
-  | *Example*:
-
-  .. code-block:: python
-
-     v1 = SymVector([1,3,2])
-     print('v1.z=',v1[2])
-
-* | **\_\_str\_\_**:
+* | operator **\_\_getitem\_\_**\ (index):
+  | bracket [] operator to return (symbolic) component of vector, allowing read-access. Index may also evaluate from an expression.
+* | operator **\_\_str\_\_**\ ():
   | conversion of SymVector to string
-* | **\_\_repr\_\_**:
+* | operator **\_\_repr\_\_**\ ():
   | representation of SymVector in Python
 
 
@@ -313,6 +324,98 @@ Standard vector operators are available for \ ``SymVector``\ , see the following
    v -= w
    v *= SymReal(0.5)
 
+symbolic.Matrix
+===============
+
+
+
+
+A symbolic Matrix type to replace Python's (2D) numpy array in symbolic expressions. The \ ``symbolic.Matrix``\  may be directly set to a list of list of floats or (2D) numpy array and be evaluated as array. However, turing on recording by using 	extttexudyn.symbolic.SetRecording(True) (on by default), results are stored as expression trees, which may be evaluated in C++ or Python, in particular in user functions, see the following example:
+
+.. code-block:: python
+   :linenos:
+   
+   import exudyn as exu
+   import numpy as np
+   esym = exu.symbolic
+   
+   SymMatrix = esym.Matrix
+   SymReal = esym.Real 
+   
+   a = SymReal('a',42.)
+   b = SymReal(13)
+   
+   #create matrix from list of lists
+   m1 = SymMatrix([[1,3,2],[4,5,6]])
+   
+   #create symbolic matrix from list of lists
+   m3 = SymMatrix([[a,3*b,2],[4,5,6]])
+   
+   #create from numpy array
+   m2 = SymMatrix(np.ones((3,3))-np.eye(3))
+   
+   m1 += m3
+   m1 *= 3
+   m1 -= 3*m3
+   print('m1: ',m1)
+   print('m2: ',m2)
+   
+
+To create a symbolic Matrix, use \ ``aa=symbolic.Matrix([[3,4.2],[3.3,1.2]]``\  to build a Python object aa. In order to use a named matrix, use \ ``v=symbolic.Matrix('myMat',[3,4.2,5])``\ . Matrixs can be also created from mixed symbolic expressions and numbers, such as \ ``v=symbolic.Matrix([x,x**2,3.14])``\ , however, this cannot become a named matrix as it contains expressions. There is a significance difference to numpy, such that '*' represents the matrix multplication (compute components from row times column operations). Note that in the following, we use the abbreviation \ ``SymMatrix=exudyn.symbolic.Matrix``\ . Member functions of \ ``SymMatrix``\  are:
+
+\ The class **symbolic.Matrix** has the following **functions and structures**:
+
+* | **\_\_init\_\_**\ (\ *matrix*\ ): 
+  | Construct symbolic.Matrix from vector represented as numpy array or list of lists (which may contain symbolic expressions).
+* | **\_\_init\_\_**\ (\ *name*\ , \ *matrix*\ ): 
+  | Construct named symbolic.Matrix from name and vector represented as numpy array or list of lists (which may contain symbolic expressions).
+* | **Evaluate**\ (): 
+  | Return evaluated expression (prioritized) or stored Matrix value. (not recorded)
+* | **SetMatrix**\ (\ *matrix*\ ): 
+  | Set stored Matrix or named Matrix expression to new given (non-symbolic) Matrix. Only works, if SymMatrix contains no expression. (may lead to inconsistencies in recording)
+* | **NumberOfRows**\ (): 
+  | Get number of rows (may require to evaluate expression; not recording)
+* | **NumberOfColumns**\ (): 
+  | Get number of columns (may require to evaluate expression; not recording)
+* | operator **\_\_setitem\_\_**\ (row, column):
+  | bracket [] operator for (symbolic) component of Matrix (write-access). Only works, if SymMatrix contains no expression. (may lead to inconsistencies in recording)
+* | operator **\_\_getitem\_\_**\ (row, column):
+  | bracket [] operator for (symbolic) component of Matrix (read-access). Row and column may also evaluate from an expression.
+* | operator **\_\_str\_\_**\ ():
+  | conversion of SymMatrix to string
+* | operator **\_\_repr\_\_**\ ():
+  | representation of SymMatrix in Python
+
+
+
+Standard Matrix operators are available for \ ``SymMatrix``\ , see the following examples:
+
+.. code-block:: python
+   :linenos:
+   
+   m1 = SymMatrix([[1,7],[4,5]])
+   m2 = SymMatrix([[1,2.2],[4,4.3]])
+   v = SymVector([1.5,3])
+   
+   m3 = m1+m2
+   m3 = m1-m2
+   m3 = m1*m2
+   
+   #multiply with scalar
+   m3 = 13*m2
+   m3 = m2*3.14
+   
+   #multiply with vector
+   m3 = m2*v
+   
+   #transposed:
+   m3 = v*m2 #equals numpy operation m2.T @ v
+   
+   #inplace operators:
+   m1 += m1
+   m1 -= m1
+   m1 *= 3.14
+
 symbolic.VariableSet
 ====================
 
@@ -332,7 +435,7 @@ A container for symbolic variables, in particular for exchange between user func
    variables = exu.symbolic.variables
    
    #create a named Real
-   a = SymReal("a",42.)
+   a = SymReal('a',42.)
    
    #regular way to add variable:
    variables.Add('pi', math.pi)
@@ -380,10 +483,10 @@ A container for symbolic variables, in particular for exchange between user func
   | bracket [] operator for setting a variable to a specific value
 * | **... = data[index]**\ \ *name*\ : 
   | bracket [] operator for getting a specific variable by name
-* | **\_\_str\_\_**:
+* | operator **\_\_str\_\_**\ ():
   | create string of set of variables
-* | **\_\_repr\_\_**:
-  | representation of SymVector in Python
+* | operator **\_\_repr\_\_**\ ():
+  | representation of SymMatrix in Python
 
 
 
@@ -436,9 +539,9 @@ A class for creating and handling symbolic user functions in C++. Use these func
   | Create C++ std::function (as requested in C++ item) with symbolic user function as recorded in given dictionary, as created with ConvertFunctionToSymbolic(...).
 * | **TransferUserFunction2Item**\ (\ *mainSystem*\ , \ *itemIndex*\ , \ *userFunctionName*\ ): 
   | Transfer the std::function to a given object, load or other; this needs to be done purely in C++ to avoid Pybind overheads.
-* | **\_\_repr\_\_**:
+* | operator **\_\_repr\_\_**\ ():
   | Representation of Symbolic function
-* | **\_\_str\_\_**:
+* | operator **\_\_str\_\_**\ ():
   | Convert stored symbolic function to string
 
 

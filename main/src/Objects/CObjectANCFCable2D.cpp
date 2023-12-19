@@ -242,7 +242,7 @@ void CObjectANCFCable2DBase::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs,
 	const Index ns = 4;   //number of shape functions
 
 	bool isALE = (ancfSize == nODE2coordinates+1); //simple check to see, if ale terms shall be added
-	bool hasUserFunction = HasUserFunction();
+	//bool hasUserFunction = HasUserFunction();
 
 	Real L = GetLength();
 	Real EA, EI, axialStrain0, curvature0, bendingDamping, axialDamping, physicsMovingMassFactor;

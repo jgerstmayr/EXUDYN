@@ -755,36 +755,36 @@ plr.DefPyFunctionAccess('', 'InvalidIndex', 'GetInvalidIndex',
                             )
 
 plr.DefLatexDataAccess('__version__','stores the current version of the Exudyn package',
-                       dataType='str', isExudyn = True,
+                       dataType='str', isTopLevel = True,
                        )
 
 #plr.sPy += '        m.attr("symbolic") = symbolic;\n' 
 plr.DefLatexDataAccess('symbolic','the symbolic submodule for creating symbolic variables in Python, see documentation of Symbolic; For details, see Section Symbolic.',
-                       dataType='', isExudyn = True,
+                       dataType='', isTopLevel = True,
                        )
 
 plr.sPy += '        m.attr("experimental") = py::cast(&pyExperimental);\n' 
 plr.DefLatexDataAccess('experimental','Experimental features, not intended for regular users; for available features, see the C++ code class PyExperimental',
-                       dataType='Experimental', isExudyn = True)
+                       dataType='Experimental', isTopLevel = True)
 
 plr.sPy += '        m.attr("special") = py::cast(&pySpecial);\n' 
 plr.DefLatexDataAccess('special','special attributes and functions, such as global (solver) flags or helper functions; not intended for regular users; for available features, see the C++ code class PySpecial',
-                        dataType='Special', isExudyn = True)
+                        dataType='Special', isTopLevel = True)
 
 plr.DefLatexDataAccess('special.solver','special solver attributes and functions; not intended for regular users; for available features, see the C++ code class PySpecialSolver',
-                        dataType='SpecialSolver', isExudyn = True)
+                        dataType='SpecialSolver', isTopLevel = True)
 
 plr.DefLatexDataAccess('special.solver.timeout','if >= 0, the solver stops after reaching accoring CPU time specified with timeout; makes sense for parameter variation, automatic testing or for long-running simulations; default=-1 (no timeout)',
-                        dataType='Real', isExudyn = True)
+                        dataType='float', isTopLevel = True)
 
 
 plr.sPy += '        m.attr("variables") = exudynVariables;\n' 
 plr.DefLatexDataAccess('variables','this dictionary may be used by the user to store exudyn-wide data in order to avoid global Python variables; usage: exu.variables["myvar"] = 42 ',
-                       dataType='dict', isExudyn = True)
+                       dataType='dict', isTopLevel = True)
 
 plr.sPy += '        m.attr("sys") = exudynSystemVariables;\n' 
 plr.DefLatexDataAccess('sys',"this dictionary is used and reserved by the system, e.g. for testsuite, graphics or system function to store module-wide data in order to avoid global Python variables; the variable exu.sys['renderState'] contains the last render state after exu.StopRenderer() and can be used for subsequent simulations ",
-                       dataType='dict', isExudyn = True)
+                       dataType='dict', isTopLevel = True)
 
 
 plr.DefPyFinishClass('')
@@ -2072,22 +2072,25 @@ pyClassStr = 'symbolic.Real'
 classStr = 'Symbolic::SReal'
 sPyOld = plr.PyStr() #systemcontainer manually added in C++
 
-plr.DefPyStartClass(classStr, pyClassStr, '', subSection=True)
+plrsym = PyLatexRST('','', '') #plrsym: pyi part goes into separate symbolic.pyi file
 
-plr.AddDocu("The symbolic Real type allows to replace Python's float by a symbolic quantity. "+
+
+plrsym.DefPyStartClass(classStr, pyClassStr, '', subSection=True)
+
+plrsym.AddDocu("The symbolic Real type allows to replace Python's float by a symbolic quantity. "+
             'The \\texttt{symbolic.Real} may be directly set to a float and be evaluated as float. '+
             'However, turing on recording by using \texttt{exudyn.symbolic.SetRecording(True)} (on by default), '+
             'results are stored as expression trees, which may be evaluated in C++ or Python, '+
             'in particular in user functions, see the following example:'
             )
 
-plr.AddDocuCodeBlock(code="""
+plrsym.AddDocuCodeBlock(code="""
 import exudyn as exu
 esym = exu.symbolic     #abbreviation
 SymReal = esym.Real     #abbreviation
 
 #create some variables
-a = SymReal(42.,"a")    #use named expression
+a = SymReal('a',42.)    #use named expression
 b = SymReal(13)         #b is 13
 c = a+b*7.+1.-3         #c stores expression tree
 d = c                   #d and c are containing same tree!
@@ -2099,7 +2102,7 @@ d = a+b*esym.sin(a)+esym.cos(SymReal(7))
 print('d: ',d,' = ',d.Evaluate())
 
 #compute derivatives (automatic differentiation):
-x = SymReal(0.5,"x")
+x = SymReal("x",0.5)
 f = a+b*esym.sin(x)+esym.cos(SymReal(7))+x**4
 print('f=',f.Evaluate(), ', diff=',f.Diff(x))
 
@@ -2109,15 +2112,30 @@ x = SymReal(42) #now, only represents a value
 y = x/3.       #directly evaluates to 14
 """)
 
-plr.AddDocu('To create a symbolic Real, use \\texttt{aa=symbolic.Real(1.23)} to build '+
+plrsym.AddDocu('To create a symbolic Real, use \\texttt{aa=symbolic.Real(1.23)} to build '+
             'a Python object aa with value 1.23. In order to use a named value, '+
-            "use \\texttt{pi=symbolic.Real(3.14,'pi')}. Note that in the following, "+
+            "use \\texttt{pi=symbolic.Real('pi',3.14)}. Note that in the following, "+
             "we use the abbreviation \\texttt{SymReal=exudyn.symbolic.Real}. "+
             "Member functions of \\texttt{SymReal}, which are \\mybold{not recorded}, are:")
 
-plr.DefLatexStartTable(pyClassStr)
+plrsym.DefLatexStartTable(pyClassStr)
 
-plr.DefPyFunctionAccess(cClass=classStr, pyName='SetValue', cName='', 
+# def __init__(self, arg1: int, arg2: float) -> None: ...
+plrsym.DefPyFunctionAccess(cClass=classStr, pyName='__init__', cName='', 
+                        description="Construct symbolic.Real from float.",
+                        argList=['value'],
+                        argTypes=['float'],
+                        returnType='None',
+                        )
+
+plrsym.DefPyFunctionAccess(cClass=classStr, pyName='__init__', cName='', 
+                        description="Construct named symbolic.Real from name and float.",
+                        argList=['name', 'value'],
+                        argTypes=['str', 'float'],
+                        returnType='None',
+                        )
+
+plrsym.DefPyFunctionAccess(cClass=classStr, pyName='SetValue', cName='', 
                         description="Set either internal float value or value of named expression; cannot change symbolic expressions.",
                         example = "b = SymReal(13)\\\\b.SetValue(14) #now b is 14\\\\#b.SetValue(a+3.) #not possible!",
                         argList=['valueInit'],
@@ -2125,38 +2143,39 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='SetValue', cName='',
                         returnType='None',
                         )
 
-plr.DefPyFunctionAccess(cClass=classStr, pyName='Evaluate', cName='', 
+plrsym.DefPyFunctionAccess(cClass=classStr, pyName='Evaluate', cName='', 
                         description="return evaluated expression (prioritized) or stored Real value.",
                         returnType='float',
                         )
 
-plr.DefPyFunctionAccess(cClass=classStr, pyName='Diff', cName='', 
-                        description="return derivative of stored expression with respect to given variable.",
+plrsym.DefPyFunctionAccess(cClass=classStr, pyName='Diff', cName='', 
+                        description="(UNTESTED!) return derivative of stored expression with respect to given symbolic named variable; NOTE: when defining the expression of the variable which shall be differentiated, the variable may only be changed with the SetValue(...) method hereafter!",
+                        example = "x=SymReal('x',2)\\\\f=3*x+x**2*sin(x)\\\\f.Diff(x) #evaluate derivative w.r.t. x",
                         returnType='float',
                         argList=['var'],
                         argTypes=['symbolic.Real'],
                         )
 
-plr.DefLatexDataAccess('value','access to internal float value, which is used in case that symbolic.Real has been built from a float (but without a name and without symbolic expression)',
+plrsym.DefLatexDataAccess('value','access to internal float value, which is used in case that symbolic.Real has been built from a float (but without a name and without symbolic expression)',
                        dataType = 'float')
 
-plr.DefLatexDataAccess('__float__','evaluation of expression and conversion of symbolic.Real to Python float',
-                       dataType = 'float')
+plrsym.DefLatexOperator('__float__','evaluation of expression and conversion of symbolic.Real to Python float',
+                       returnType = 'float')
 
-plr.DefLatexDataAccess('__str__','conversion of symbolic.Real to string',
-                       dataType = 'str')
+plrsym.DefLatexOperator('__str__','conversion of symbolic.Real to string',
+                       returnType = 'str')
 
-plr.DefLatexDataAccess('__repr__','representation of symbolic.Real in Python',
-                       dataType = 'str')
+plrsym.DefLatexOperator('__repr__','representation of symbolic.Real in Python',
+                       returnType = 'str')
 
-plr.DefLatexFinishTable()#only finalize latex table
+plrsym.DefLatexFinishTable()#only finalize latex table
 
 
-plr.AddDocu("The remaining operators and mathematical functions are recorded within expressions. "
+plrsym.AddDocu("The remaining operators and mathematical functions are recorded within expressions. "
             "Main mathematical operators for \\texttt{SymReal} exist, similar to "+
             "Python, such as:")
 
-plr.AddDocuCodeBlock(code="""
+plrsym.AddDocuCodeBlock(code="""
 a = SymReal(1)
 b = SymReal(2)
 
@@ -2184,15 +2203,19 @@ c = (a >= b)
 c = a*7 + SymReal.sin(8)
 """)
 
-plr.AddDocu("Mathematical functions may be called with an \\texttt{SymReal} or with a \\texttt{float}. "+
-            "Most standard mathematical functions exist for \\texttt{SymReal}, e.g., as \\texttt{SymReal.abs}. "+
+plrsym.AddDocu("Mathematical functions may be called with an \\texttt{SymReal} or with a \\texttt{float}. "+
+            "Most standard mathematical functions exist for \\texttt{symbolic}, e.g., as \\texttt{symbolic.abs}. "+
             "\\mybold{HINT}: function names are lower-case for compatibility with Python's math library. "+
-            "Thus, you can easily exchange math.sin with SymReal.sin, and you may want to use a generic "+
-            "name, such as myMath=SymReal in order to switch between Python and symbolic user functions. "+
+            "Thus, you can easily exchange math.sin with esym.sin, and you may want to use a generic "+
+            "name, such as myMath=symbolic in order to switch between Python and symbolic user functions. "+
             "The following functions exist:")
 
+plrsym.sPyi += '\n#functions directly in symbolic module:\n'
+
+pyClassStr = 'symbolic'
+classStr = ''
 #these functions are in symbolic.Real:
-plr.DefLatexStartTable(pyClassStr)
+plrsym.DefLatexStartTable(pyClassStr)
 fnList=['isfinite','abs',#'sign',
         'round','ceil','floor',
         'sqrt','exp','log',
@@ -2204,80 +2227,81 @@ for fnName in fnList:
     cfnName = fnName
     if fnName=='abs' or fnName=='mod':
         cfnName = 'f'+cfnName
-    plr.DefPyFunctionAccess(cClass=classStr, pyName=fnName, cName='', 
+    #empty class indicates that these are functions in symbolic:
+    plrsym.DefPyFunctionAccess(cClass='', pyName=fnName, cName='', 
                             description="according to specification of C++ std::"+cfnName,
                             argList=['x'],
                             argTypes=['symbolic.Real'],
                             returnType='symbolic.Real',
                             )
 
-plr.DefLatexFinishTable()#only finalize latex table
+plrsym.DefLatexFinishTable()#only finalize latex table
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-plr.AddDocu("The following table lists special functions for \\texttt{SymReal}: ")
+plrsym.AddDocu("The following table lists special functions for \\texttt{SymReal}: ")
 
-plr.DefLatexStartTable(pyClassStr)
+plrsym.DefLatexStartTable(pyClassStr)
 
-plr.DefPyFunctionAccess(cClass=classStr, pyName='sign', cName='', 
+plrsym.DefPyFunctionAccess(cClass=classStr, pyName='sign', cName='', 
                         description="returns 0 for x=0, -1 for x<0 and 1 for x>1.",
                         argList=['x'],
                         argTypes=['symbolic.Real'],
                         returnType='symbolic.Real',
                         )
 
-plr.DefPyFunctionAccess(cClass=classStr, pyName='Not', cName='', 
+plrsym.DefPyFunctionAccess(cClass=classStr, pyName='Not', cName='', 
                         description="returns logical not of expression, equal to Python's 'not'. Not(True)=False, Not(0.)=True, Not(-0.1)=False",
                         argList=['x'],
                         argTypes=['symbolic.Real'],
                         returnType='symbolic.Real',
                         )
 
-plr.DefPyFunctionAccess(cClass=classStr, pyName='min', cName='', 
+plrsym.DefPyFunctionAccess(cClass=classStr, pyName='min', cName='', 
                         description="return minimum of x and y. ",
                         argList=['x','y'],
                         argTypes=['symbolic.Real','symbolic.Real'],
                         returnType='symbolic.Real',
                         )
 
-plr.DefPyFunctionAccess(cClass=classStr, pyName='max', cName='', 
+plrsym.DefPyFunctionAccess(cClass=classStr, pyName='max', cName='', 
                         description="return maximum of x and y. ",
                         argList=['x','y'],
                         argTypes=['symbolic.Real','symbolic.Real'],
                         returnType='symbolic.Real',
                         )
 
-plr.DefPyFunctionAccess(cClass=classStr, pyName='mod', cName='', 
+plrsym.DefPyFunctionAccess(cClass=classStr, pyName='mod', cName='', 
                         description="return floating-point remainder of the division operation x / y. For example, mod(5.1, 3) gives 2.1 as a remainder.",
                         argList=['x','y'],
                         argTypes=['symbolic.Real','symbolic.Real'],
                         returnType='symbolic.Real',
                         )
 
-plr.DefPyFunctionAccess(cClass=classStr, pyName='pow', cName='', 
+plrsym.DefPyFunctionAccess(cClass=classStr, pyName='pow', cName='', 
                         description="return $x^y$. ",
                         argList=['x','y'],
                         argTypes=['symbolic.Real','symbolic.Real'],
                         returnType='symbolic.Real',
                         )
 
-plr.DefPyFunctionAccess(cClass=classStr, pyName='max', cName='', 
+plrsym.DefPyFunctionAccess(cClass=classStr, pyName='max', cName='', 
                         description="return maximum of x and y. ",
                         argList=['x','y'],
                         argTypes=['symbolic.Real','symbolic.Real'],
                         returnType='symbolic.Real',
                         )
 
-plr.DefPyFunctionAccess(cClass=classStr, pyName='IfThenElse', cName='', 
+plrsym.DefPyFunctionAccess(cClass=classStr, pyName='IfThenElse', cName='', 
                         description="Symbolic function for conditional evaluation. If the condition evaluates to True, the expression ifTrue is evaluated, while otherwise expression ifFalse is evaluated",
                         example = "x=SymReal(-1)\\\\y=SymReal(2,'y')\\\\a=SymReal.IfThenElse(x<0, y+1, y-1))",
                         argList=['condition','ifTrue','ifFalse'],
-                        argTypes=['symbolic.Real','symbolic.Real'],
+                        argTypes=['symbolic.Real','symbolic.Real','symbolic.Real'],
                         returnType='symbolic.Real',
                         )
 
 #+++++++++++++++++++++++
-plr.DefPyFunctionAccess(cClass=classStr, pyName='SetRecording', cName='', 
+plrsym.DefPyFunctionAccess(cClass=classStr, pyName='SetRecording', cName='', 
                         description="Set current (global / module-wide) status of expression recording. By default, recording is on.",
                         example = "SymReal.SetRecording(True)",
                         argList=['flag'],
@@ -2285,36 +2309,37 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='SetRecording', cName='',
                         returnType='None',
                         )
 
-plr.DefPyFunctionAccess(cClass=classStr, pyName='GetRecording', cName='', 
+plrsym.DefPyFunctionAccess(cClass=classStr, pyName='GetRecording', cName='', 
                         description="Get current (global / module-wide) status of expression recording.",
-                        example = "SymReal.GetRecording()",
+                        example = "symbolic.Real.GetRecording()",
                         returnType='bool',
                         )
 
-plr.DefLatexFinishTable()#only finalize latex table
+plrsym.DefLatexFinishTable()#only finalize latex table
+plrsym.sPyi += '\n'
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #currently, only latex + RST binding:
 pyClassStr = 'symbolic.Vector'
 classStr = 'Symbolic::SymbolicRealVector'
 
-plr.DefPyStartClass(classStr, pyClassStr, '', subSection=True)
+plrsym.DefPyStartClass(classStr, pyClassStr, '', subSection=True)
 
-plr.AddDocu("A symbolic Vector type to replace Python's (1D) numpy array in symbolic expressions. "+
+plrsym.AddDocu("A symbolic Vector type to replace Python's (1D) numpy array in symbolic expressions. "+
             'The \\texttt{symbolic.Vector} may be directly set to a list of floats or (1D) numpy array and be evaluated as array. '+
             'However, turing on recording by using \texttt{exudyn.symbolic.SetRecording(True)} (on by default), '+
             'results are stored as expression trees, which may be evaluated in C++ or Python, '+
             'in particular in user functions, see the following example:'
             )
 
-plr.AddDocuCodeBlock(code="""
+plrsym.AddDocuCodeBlock(code="""
 import exudyn as exu
 esym = exu.symbolic
 
 SymVector = esym.Vector
 SymReal = esym.Real 
 
-a = SymReal(42.,"a")
+a = SymReal('a',42.)
 b = SymReal(13)
 c = a-3*b
 
@@ -2338,9 +2363,9 @@ print('v1*v2: ',v1*v2,"=",(v1*v2).Evaluate()) #evaluate as Real
 print('v1[2]: ',v1[2],"=",v1[2].Evaluate())   #evaluate as Real
 """)
 
-plr.AddDocu('To create a symbolic Vector, use \\texttt{aa=symbolic.Vector([3,4.2,5]} to build '+
+plrsym.AddDocu('To create a symbolic Vector, use \\texttt{aa=symbolic.Vector([3,4.2,5]} to build '+
             'a Python object aa with values [3,4.2,5]. In order to use a named vector, '+
-            "use \\texttt{v=symbolic.Vector([3,4.2,5],'myVec')}. "+
+            "use \\texttt{v=symbolic.Vector('myVec',[3,4.2,5])}. "+
             "Vectors can be also created from mixed symbolic expressions and numbers, such as \\texttt{v=symbolic.Vector([x,x**2,3.14])}, "+
             "however, this cannot become a named vector as it contains expressions. "+
             "There is a significance difference to numpy, such that '*' represents the scalar vector multplication which gives a scalar. "+
@@ -2350,71 +2375,90 @@ plr.AddDocu('To create a symbolic Vector, use \\texttt{aa=symbolic.Vector([3,4.2
             "Note that only functions are able to be recorded. "
             "Member functions of \\texttt{SymVector} are:")
 
-plr.DefLatexStartTable(pyClassStr)
+plrsym.DefLatexStartTable(pyClassStr)
 
-plr.DefPyFunctionAccess(cClass=classStr, pyName='Evaluate', cName='', 
+plrsym.DefPyFunctionAccess(cClass=classStr, pyName='__init__', cName='', 
+                        description="Construct symbolic.Vector from vector represented as numpy array or list (which may contain symbolic expressions).",
+                        argList=['vector'],
+                        argTypes=['List[float]'],
+                        returnType='None',
+                        )
+
+plrsym.DefPyFunctionAccess(cClass=classStr, pyName='__init__', cName='', 
+                        description="Construct named symbolic.Vector from name and vector represented as numpy array or list (which may contain symbolic expressions).",
+                        argList=['name', 'vector'],
+                        argTypes=['str', 'List[float]'],
+                        returnType='None',
+                        )
+
+plrsym.DefPyFunctionAccess(cClass=classStr, pyName='Evaluate', cName='', 
                         description="Return evaluated expression (prioritized) or stored vector value. (not recorded)",
                         returnType='List[float]',
                         )
 
-plr.DefPyFunctionAccess(cClass=classStr, pyName='SetVector', cName='', 
+plrsym.DefPyFunctionAccess(cClass=classStr, pyName='SetVector', cName='', 
                         description="Set stored vector or named vector expression to new given (non-symbolic) vector. Only works, if SymVector contains no expression. (may lead to inconsistencies in recording)",
                         argList=['vector'],
-                        argTypes=['Vector'],
+                        argTypes=['symbolic.Vector'],
                         returnType='None',
                         )
 
-plr.DefPyFunctionAccess(cClass=classStr, pyName='NumberOfItems', cName='', 
+plrsym.DefPyFunctionAccess(cClass=classStr, pyName='NumberOfItems', cName='', 
                         description="Get size of Vector (may require to evaluate expression; not recording)",
                         returnType='int',
                         )
 
-plr.DefPyFunctionAccess(cClass=classStr, pyName='__setitem__', cName='', 
+plrsym.DefPyFunctionAccess(cClass=classStr, pyName='__setitem__', cName='', 
                         description="bracket [] operator for setting a component of the vector. Only works, if SymVector contains no expression. (may lead to inconsistencies in recording)",
                         example = "v1 = SymVector([1,3,2])\\\\v1[2]=13.",
                         argList=['i'],
                         argTypes=['symbolic.Real'],
                         returnType='None',
                         )
+plrsym.DefLatexOperator(name='__setitem__', 
+                     description="bracket [] operator for setting a component of the vector. Only works, if SymVector contains no expression. (may lead to inconsistencies in recording)",
+                     argList=['index'],
+                     argTypes=['symbolic.Real'],
+                     returnType='symbolic.Real',
+                     )
 
 #recorded:
-plr.DefPyFunctionAccess(cClass=classStr, pyName='NormL2', cName='', 
+plrsym.DefPyFunctionAccess(cClass=classStr, pyName='NormL2', cName='', 
                         description="return (symbolic) L2-norm of vector.",
                         example = "v1 = SymVector([1,4,8])\\\\length = v1.NormL2() #gives 9.",
                         returnType='symbolic.Real',
                         )
 
-plr.DefPyFunctionAccess(cClass=classStr, pyName='MultComponents', cName='', 
+plrsym.DefPyFunctionAccess(cClass=classStr, pyName='MultComponents', cName='', 
                         description="Perform component-wise multiplication of vector times other vector and return result. This corresponds to the numpy multiplication using '*'.",
                         example = "v1 = SymVector([1,2,4])\\\\v2 = SymVector([1,0.5,0.25])\\\\v3 = v1.MultComponents(v2)",
                         argList=['other'],
-                        argTypes=['sym.Vector'],
+                        argTypes=['symbolic.Vector'],
                         returnType='symbolic.Real',
                         )
 
-plr.DefPyFunctionAccess(cClass=classStr, pyName='__getitem__', cName='', 
-                        description="return (symbolic) component of vector, allowing only read-access. Index may also evaluate from an expression.",
-                        example = "v1 = SymVector([1,3,2])\\\\print('v1.z=',v1[2])",
-                        argList=['i'],
-                        argTypes=['symbolic.Real'],
-                        returnType='symbolic.Real',
-                        )
+plrsym.DefLatexOperator(name='__getitem__', 
+                     description="bracket [] operator to return (symbolic) component of vector, allowing read-access. Index may also evaluate from an expression.",
+                     argList=['index'],
+                     argTypes=['symbolic.Real'],
+                     returnType='symbolic.Real',
+                     )
 
 
-plr.DefLatexDataAccess('__str__','conversion of SymVector to string',
-                       dataType = 'str')
+plrsym.DefLatexOperator('__str__','conversion of SymVector to string',
+                       returnType = 'str')
 
-plr.DefLatexDataAccess('__repr__','representation of SymVector in Python',
-                       dataType = 'str')
+plrsym.DefLatexOperator('__repr__','representation of SymVector in Python',
+                       returnType = 'str')
 
 
 #+++++++++
-plr.DefLatexFinishTable()#only finalize latex table
+plrsym.DefLatexFinishTable()#only finalize latex table
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-plr.AddDocu("Standard vector operators are available for \\texttt{SymVector}, see the following examples:")
+plrsym.AddDocu("Standard vector operators are available for \\texttt{SymVector}, see the following examples:")
 
-plr.AddDocuCodeBlock(code="""
+plrsym.AddDocuCodeBlock(code="""
 v = SymVector([1,3,2])
 w = SymVector([3.3,2.2,1.1])
 
@@ -2432,20 +2476,177 @@ v -= w
 v *= SymReal(0.5)
 """)
 
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#currently, only latex + RST binding:
+pyClassStr = 'symbolic.Matrix'
+classStr = 'Symbolic::SymbolicRealMatrix'
+
+plrsym.DefPyStartClass(classStr, pyClassStr, '', subSection=True)
+
+plrsym.AddDocu("A symbolic Matrix type to replace Python's (2D) numpy array in symbolic expressions. "+
+            'The \\texttt{symbolic.Matrix} may be directly set to a list of list of floats or (2D) numpy array and be evaluated as array. '+
+            'However, turing on recording by using \texttt{exudyn.symbolic.SetRecording(True)} (on by default), '+
+            'results are stored as expression trees, which may be evaluated in C++ or Python, '+
+            'in particular in user functions, see the following example:'
+            )
+
+plrsym.AddDocuCodeBlock(code="""
+import exudyn as exu
+import numpy as np
+esym = exu.symbolic
+
+SymMatrix = esym.Matrix
+SymReal = esym.Real 
+
+a = SymReal('a',42.)
+b = SymReal(13)
+
+#create matrix from list of lists
+m1 = SymMatrix([[1,3,2],[4,5,6]])
+
+#create symbolic matrix from list of lists
+m3 = SymMatrix([[a,3*b,2],[4,5,6]])
+
+#create from numpy array
+m2 = SymMatrix(np.ones((3,3))-np.eye(3))
+
+m1 += m3
+m1 *= 3
+m1 -= 3*m3
+print('m1: ',m1)
+print('m2: ',m2)
+
+""")
+
+plrsym.AddDocu('To create a symbolic Matrix, use \\texttt{aa=symbolic.Matrix([[3,4.2],[3.3,1.2]]} to build '+
+            'a Python object aa. In order to use a named matrix, '+
+            "use \\texttt{v=symbolic.Matrix('myMat',[3,4.2,5])}. "+
+            "Matrixs can be also created from mixed symbolic expressions and numbers, such as \\texttt{v=symbolic.Matrix([x,x**2,3.14])}, "+
+            "however, this cannot become a named matrix as it contains expressions. "+
+            "There is a significance difference to numpy, such that '*' represents the matrix multplication (compute components from row times column operations). "+
+            "Note that in the following, we use the abbreviation \\texttt{SymMatrix=exudyn.symbolic.Matrix}. "+
+            "Member functions of \\texttt{SymMatrix} are:")
+
+plrsym.DefLatexStartTable(pyClassStr)
+
+plrsym.DefPyFunctionAccess(cClass=classStr, pyName='__init__', cName='', 
+                        description="Construct symbolic.Matrix from vector represented as numpy array or list of lists (which may contain symbolic expressions).",
+                        argList=['matrix'],
+                        argTypes=['List[List[float]]'],
+                        returnType='None',
+                        )
+
+plrsym.DefPyFunctionAccess(cClass=classStr, pyName='__init__', cName='', 
+                        description="Construct named symbolic.Matrix from name and vector represented as numpy array or list of lists (which may contain symbolic expressions).",
+                        argList=['name', 'matrix'],
+                        argTypes=['str', 'List[List[float]]'],
+                        returnType='None',
+                        )
+
+plrsym.DefPyFunctionAccess(cClass=classStr, pyName='Evaluate', cName='', 
+                        description="Return evaluated expression (prioritized) or stored Matrix value. (not recorded)",
+                        returnType='List[float]',
+                        )
+
+plrsym.DefPyFunctionAccess(cClass=classStr, pyName='SetMatrix', cName='', 
+                        description="Set stored Matrix or named Matrix expression to new given (non-symbolic) Matrix. Only works, if SymMatrix contains no expression. (may lead to inconsistencies in recording)",
+                        argList=['matrix'],
+                        argTypes=['NDArray[Any, float]'],
+                        returnType='None',
+                        )
+
+plrsym.DefPyFunctionAccess(cClass=classStr, pyName='NumberOfRows', cName='', 
+                        description="Get number of rows (may require to evaluate expression; not recording)",
+                        returnType='int',
+                        )
+
+plrsym.DefPyFunctionAccess(cClass=classStr, pyName='NumberOfColumns', cName='', 
+                        description="Get number of columns (may require to evaluate expression; not recording)",
+                        returnType='int',
+                        )
+
+plrsym.DefLatexOperator(name='__setitem__', 
+                     description="bracket [] operator for (symbolic) component of Matrix (write-access). Only works, if SymMatrix contains no expression. (may lead to inconsistencies in recording)",
+                     argList=['row','column'],
+                     argTypes=['symbolic.Real','symbolic.Real'],
+                     returnType='symbolic.Real',
+                     )
+
+#recorded:
+# plrsym.DefPyFunctionAccess(cClass=classStr, pyName='NormL2', cName='', 
+#                         description="return (symbolic) L2-norm of Matrix.",
+#                         example = "v1 = SymMatrix([1,4,8])\\\\length = v1.NormL2() #gives 9.",
+#                         returnType='symbolic.Real',
+#                         )
+
+# plrsym.DefPyFunctionAccess(cClass=classStr, pyName='MultComponents', cName='', 
+#                         description="Perform component-wise multiplication of Matrix times other Matrix and return result. This corresponds to the numpy multiplication using '*'.",
+#                         example = "v1 = SymMatrix([1,2,4])\\\\v2 = SymMatrix([1,0.5,0.25])\\\\v3 = v1.MultComponents(v2)",
+#                         argList=['other'],
+#                         argTypes=['sym.Matrix'],
+#                         returnType='symbolic.Real',
+#                         )
+
+plrsym.DefLatexOperator(name='__getitem__', 
+                     description="bracket [] operator for (symbolic) component of Matrix (read-access). Row and column may also evaluate from an expression.",
+                     argList=['row','column'],
+                     argTypes=['symbolic.Real','symbolic.Real'],
+                     returnType='symbolic.Real',
+                     )
+
+
+plrsym.DefLatexOperator('__str__','conversion of SymMatrix to string',
+                     returnType = 'str')
+
+plrsym.DefLatexOperator('__repr__','representation of SymMatrix in Python',
+                     returnType = 'str')
+
+
+#+++++++++
+plrsym.DefLatexFinishTable()#only finalize latex table
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+plrsym.AddDocu("Standard Matrix operators are available for \\texttt{SymMatrix}, see the following examples:")
+
+plrsym.AddDocuCodeBlock(code="""
+m1 = SymMatrix([[1,7],[4,5]])
+m2 = SymMatrix([[1,2.2],[4,4.3]])
+v = SymVector([1.5,3])
+
+m3 = m1+m2
+m3 = m1-m2
+m3 = m1*m2
+
+#multiply with scalar
+m3 = 13*m2
+m3 = m2*3.14
+
+#multiply with vector
+m3 = m2*v
+
+#transposed:
+m3 = v*m2 #equals numpy operation m2.T @ v
+
+#inplace operators:
+m1 += m1
+m1 -= m1
+m1 *= 3.14
+""")
+
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #currently, only latex + RST binding:
 pyClassStr = 'symbolic.VariableSet'
 classStr = 'Symbolic::VariableSet'
 
-plr.DefPyStartClass(classStr, pyClassStr, '', subSection=True)
+plrsym.DefPyStartClass(classStr, pyClassStr, '', subSection=True)
 
-plr.AddDocu("A container for symbolic variables, in particular for exchange between "+
+plrsym.AddDocu("A container for symbolic variables, in particular for exchange between "+
             "user functions and the model. "+
             "For details, see the following example:"
             )
 
-plr.AddDocuCodeBlock(code="""
+plrsym.AddDocuCodeBlock(code="""
 import exudyn as exu
 import math
 SymReal = exu.symbolic.Real
@@ -2454,7 +2655,7 @@ SymReal = exu.symbolic.Real
 variables = exu.symbolic.variables
 
 #create a named Real
-a = SymReal("a",42.)
+a = SymReal('a',42.)
 
 #regular way to add variable:
 variables.Add('pi', math.pi)
@@ -2481,7 +2682,7 @@ print('x:',x,"=",x.Evaluate()) #3.33
 mySet = esym.VariableSet()
 """)
 
-plr.DefLatexStartTable(pyClassStr)
+plrsym.DefLatexStartTable(pyClassStr)
 
 # 		//+++++++++++++++++++++++++++++++++++++++++++
 
@@ -2490,66 +2691,66 @@ plr.DefLatexStartTable(pyClassStr)
 # 		.def("__setitem__", [](Symbolic::SymbolicVariableSet& self, std::string name, Real value)
 # 			{ return self.SetVariable(name, value); })
 
-plr.DefPyFunctionAccess(cClass=classStr, pyName='Add', cName='', 
+plrsym.DefPyFunctionAccess(cClass=classStr, pyName='Add', cName='', 
                         description="Add a variable with name and value (name may not exist)",
                         argList=['name','value'],
                         argTypes=['str','float'],
                         returnType='None',
                         )
 
-plr.DefPyFunctionAccess(cClass=classStr, pyName='Add', cName='', 
+plrsym.DefPyFunctionAccess(cClass=classStr, pyName='Add', cName='', 
                         description="Add a variable with named real (name may not exist)",
                         argList=['namedReal'],
                         argTypes=['symbolic.Real'],
                         returnType='None',
                         )
 
-plr.DefPyFunctionAccess(cClass=classStr, pyName='Set', cName='', 
+plrsym.DefPyFunctionAccess(cClass=classStr, pyName='Set', cName='', 
                         description="Set a variable with name and value (adds new or overrides existing)",
                         argList=['name','value'],
                         argTypes=['str','float'],
                         returnType='None',
                         )
 
-plr.DefPyFunctionAccess(cClass=classStr, pyName='Get', cName='', 
+plrsym.DefPyFunctionAccess(cClass=classStr, pyName='Get', cName='', 
                         description="Get a variable by name",
                         argList=['name'],
                         argTypes=['str'],
                         returnType='symbolic.Real',
                         )
 
-plr.DefPyFunctionAccess(cClass=classStr, pyName='Exists', cName='', 
+plrsym.DefPyFunctionAccess(cClass=classStr, pyName='Exists', cName='', 
                         description="Return True, if variable name exists",
                         argList=['name'],
                         argTypes=['str'],
                         returnType='bool',
                         )
 
-plr.DefPyFunctionAccess(cClass=classStr, pyName='Reset', cName='', 
+plrsym.DefPyFunctionAccess(cClass=classStr, pyName='Reset', cName='', 
                         description="Erase all variables and reset VariableSet",
                         returnType='None',
                         )
 
-plr.DefPyFunctionAccess(cClass=classStr, pyName='NumberOfItems', cName='', 
+plrsym.DefPyFunctionAccess(cClass=classStr, pyName='NumberOfItems', cName='', 
                         description="Return True, if variable name exists",
                         argList=['name'],
                         argTypes=['str'],
                         returnType='bool',
                         )
 
-plr.DefPyFunctionAccess(cClass=classStr, pyName='GetNames', cName='', 
+plrsym.DefPyFunctionAccess(cClass=classStr, pyName='GetNames', cName='', 
                         description="Get list of stored variable names",
                         returnType='List[str]',
                         )
 
-plr.DefPyFunctionAccess(cClass=classStr, pyName='__setitem__', cName='', 
+plrsym.DefPyFunctionAccess(cClass=classStr, pyName='__setitem__', cName='', 
                         description="bracket [] operator for setting a variable to a specific value",
                         argList=['name','value'],
                         argTypes=['str','float'],
                         returnType='None',
                         )
 
-plr.DefPyFunctionAccess(cClass=classStr, pyName='__getitem__', cName='', 
+plrsym.DefPyFunctionAccess(cClass=classStr, pyName='__getitem__', cName='', 
                         description="bracket [] operator for getting a specific variable by name",
                         argList=['name'],
                         argTypes=['str'],
@@ -2557,15 +2758,15 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='__getitem__', cName='',
                         )
 
 
-plr.DefLatexDataAccess('__str__','create string of set of variables',
-                       dataType = 'str')
+plrsym.DefLatexOperator('__str__','create string of set of variables',
+                       returnType = 'str')
 
-plr.DefLatexDataAccess('__repr__','representation of SymVector in Python',
-                       dataType = 'str')
+plrsym.DefLatexOperator('__repr__','representation of SymMatrix in Python',
+                       returnType = 'str')
 
 
 #+++++++++
-plr.DefLatexFinishTable()#only finalize latex table
+plrsym.DefLatexFinishTable()#only finalize latex table
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -2573,14 +2774,14 @@ plr.DefLatexFinishTable()#only finalize latex table
 pyClassStr = 'symbolic.UserFunction'
 classStr = 'Symbolic::PySymbolicUserFunction'
 
-plr.DefPyStartClass(classStr, pyClassStr, '', subSection=True)
+plrsym.DefPyStartClass(classStr, pyClassStr, '', subSection=True)
 
-plr.AddDocu("A class for creating and handling symbolic user functions in C++. "+
+plrsym.AddDocu("A class for creating and handling symbolic user functions in C++. "+
             "Use these functions for high performance extensions, e.g., of existing objects or loads"+
             "For details, see the following example:"
             )
 
-plr.AddDocuCodeBlock(code="""
+plrsym.AddDocuCodeBlock(code="""
 import exudyn as exu
 esym = exu.symbolic
 from exudyn.utilities import * #advancedUtilities with user function utilities included
@@ -2612,43 +2813,47 @@ print('load user function: ',symFuncLoad.Evaluate(mbs, 0.025, 10.))
 #now you could add further items or simulate ...
 """)
 
-plr.DefLatexStartTable(pyClassStr)
+plrsym.DefLatexStartTable(pyClassStr)
 
-plr.DefPyFunctionAccess(cClass=classStr, pyName='Evaluate', cName='', 
+plrsym.DefPyFunctionAccess(cClass=classStr, pyName='Evaluate', cName='', 
                         description="Evaluate symbolic function with test values; requires exactly same args as Python user functions; this is slow and only intended for testing",
                         # returnType='None', #Real or Vector
                         )
 
-plr.DefPyFunctionAccess(cClass=classStr, pyName='SetUserFunctionFromDict', cName='', 
+plrsym.DefPyFunctionAccess(cClass=classStr, pyName='SetUserFunctionFromDict', cName='', 
                         description="Create C++ std::function (as requested in C++ item) with symbolic user function as recorded in given dictionary, as created with ConvertFunctionToSymbolic(...).",
                         argList=['mainSystem','fcnDict','itemIndex','userFunctionName'],
                         argTypes=['MainSystem','dict','ItemIndex','str'],
                         returnType='None',
                         )
 
-plr.DefPyFunctionAccess(cClass=classStr, pyName='TransferUserFunction2Item', cName='', 
+plrsym.DefPyFunctionAccess(cClass=classStr, pyName='TransferUserFunction2Item', cName='', 
                         description="Transfer the std::function to a given object, load or other; this needs to be done purely in C++ to avoid Pybind overheads.",
                         argList=['mainSystem','itemIndex','userFunctionName'],
                         argTypes=['MainSystem','ItemIndex','str'],
                         returnType='None',
                         )
 
-plr.DefLatexDataAccess('__repr__','Representation of Symbolic function',
-                       dataType = 'str')
+plrsym.DefLatexOperator('__repr__','Representation of Symbolic function',
+                       returnType = 'str')
 
-plr.DefLatexDataAccess('__str__','Convert stored symbolic function to string',
-                       dataType = 'str')
+plrsym.DefLatexOperator('__str__','Convert stored symbolic function to string',
+                       returnType = 'str')
 
 
 #+++++++++
-plr.DefLatexFinishTable()#only finalize latex table
+plrsym.DefLatexFinishTable()#only finalize latex table
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+#plrsym.sPyi = plrsym.sPyi.replace('class symbolic.','class ')
+plrsym.sPyi = plrsym.sPyi.replace('symbolic.','')
+#plrsym.sPy = sPyOld  #symbolic added manually in .cpp
 
-plr.sPy = sPyOld  #system container manually added 
-
-savedPyi = plr.sPyi+savedPyi
-plr.sPyi = ''
+#add RST and Latex parts to plr
+plr.sRST += plrsym.sRST
+plr.sLatex += plrsym.sLatex
+#savedPyi = plr.sPyi+savedPyi
+#plr.sPyi = ''
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -3406,6 +3611,12 @@ file.close()
 #stub file .pyi (will be merged with general file)
 file=io.open('generated/stubAutoBindings.pyi','w',encoding='utf8')  #clear file by one write access
 file.write(savedPyi)
+#file.write(plr.sPyi)
+file.close()
+
+#stub file symbolic.pyi (will be merged with general file)
+file=io.open('generated/stubSymbolic.pyi','w',encoding='utf8')  #clear file by one write access
+file.write(plrsym.sPyi)
 #file.write(plr.sPyi)
 file.close()
 

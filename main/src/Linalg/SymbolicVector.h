@@ -99,7 +99,6 @@ public:
 		for (const auto& sreal : listOfSReals) 
 		{
 			ExpressionBase* expr = sreal.GetExpression();
-			Real value = sreal.GetValue();
 			ExpressionBase::NewCount() += (expr == 0);
 			if (expr) { expr->IncreaseReferenceCounter(); }
 			exprList[cnt] = expr ? expr : new ExpressionReal(sreal.GetValue());
@@ -114,7 +113,6 @@ public:
 		for (const auto& sreal : listOfSReals)
 		{
 			ExpressionBase* expr = sreal.GetExpression();
-			Real value = sreal.GetValue();
 			ExpressionBase::NewCount() += (expr == 0);
 			if (expr) { expr->IncreaseReferenceCounter(); }
 			exprList[cnt] = expr ? expr : new ExpressionReal(sreal.GetValue());
@@ -528,7 +526,7 @@ public:
 	//cast from Vector, but also from py::list as well as numpy array:
 	SymbolicRealVector(const Vector& vectorInit) : exprList(nullptr), vector(vectorInit) {}
 	//! constructor with value and name, gives subexpression; casts from std::vector<Real> as well
-	SymbolicRealVector(const STDstring& name, const Vector& vectorInit) : vector(vectorInit), exprList(nullptr)
+	SymbolicRealVector(const STDstring& name, const Vector& vectorInit) : exprList(nullptr), vector(vectorInit)
 	{
 		if (SReal::recordExpressions) {
 			VectorExpressionBase::NewCount()++;
@@ -586,7 +584,6 @@ public:
 				}
 				cnt++;
 			}
-
 		}
 
 	} 
@@ -594,7 +591,7 @@ public:
 	{
 		if (e) { e->IncreaseReferenceCounter(); }
 	}
-	SymbolicRealVector(const SymbolicRealVector& other) : vector(other.vector), exprList(other.exprList)
+	SymbolicRealVector(const SymbolicRealVector& other) : exprList(other.exprList), vector(other.vector)
 	{
 		if (GetFlagDebug()) { std::cout << "copy constructor: " << ToString() << "\n"; }
 		if (exprList) { exprList->IncreaseReferenceCounter(); }
