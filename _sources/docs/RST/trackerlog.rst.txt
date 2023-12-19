@@ -19,15 +19,24 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.7.66.dev1, 
-+  last change =  2023-12-15, 
-+  Number of issues = 1737, 
-+  Number of resolved issues = 1536 (66 in current version), 
++  Exudyn version = 1.7.69.dev1, 
++  last change =  2023-12-18, 
++  Number of issues = 1739, 
++  Number of resolved issues = 1539 (69 in current version), 
 
 ***********
 Version 1.7
 ***********
 
+ * Version 1.7.69: resolved Issue 1737: symbolic (extension)
+    - description:  add symbolic.pyi stub file for autocompletion of symbolic features
+    - date resolved: **2023-12-18 19:48**\ , date raised: 2023-12-18 
+ * Version 1.7.68: resolved Issue 1738: symbolic (docu)
+    - description:  fix documentation for operators
+    - date resolved: **2023-12-18 19:47**\ , date raised: 2023-12-18 
+ * Version 1.7.67: resolved Issue 1727: SymbolicRealMatrix (docu)
+    - description:  add documentation and example for symbolic matrix for user functions
+    - date resolved: **2023-12-18 08:24**\ , date raised: 2023-12-12 
  * Version 1.7.66: :textred:`resolved BUG 1736` : symbolic 
     - description:  symbolic user function: crashes when user function object is deleted
     - date resolved: **2023-12-15 18:01**\ , date raised: 2023-12-15 
@@ -4987,10 +4996,6 @@ Version 0.1
 ***********
 Open issues
 ***********
-
- * **open issue 1727:** SymbolicRealMatrix  
-    - description:  add documentation and example for symbolic matrix for user functions
-    - date raised: 2023-12-12 
 
  * **open issue 1723:** Symbolic            
     - description:  SymbolicRealVector: add EvaluateItem(i) in operators wherever possible to efficiently evaluate single components instead of all vector components

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Symbolic &mdash; Exudyn1.7.66.dev1 1.7.66.dev1 documentation</title>
+  <title>Symbolic &mdash; Exudyn1.7.69.dev1 1.7.69.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=631ec0cd"></script>
+        <script src="../../../_static/documentation_options.js?v=280392df"></script>
         <script src="../../../_static/doctools.js?v=888ff710"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -43,7 +43,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.7.66.dev1
+            Exudyn1.7.69.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -72,6 +72,7 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Symbolic</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#symbolic-real">symbolic.Real</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#symbolic-vector">symbolic.Vector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#symbolic-matrix">symbolic.Matrix</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#symbolic-variableset">symbolic.VariableSet</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#symbolic-userfunction">symbolic.UserFunction</a></li>
 </ul>
@@ -102,7 +103,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.7.66.dev1</a>
+          <a href="../../../index.html">Exudyn1.7.69.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -132,7 +133,7 @@
 <span class="linenos"> 3</span><span class="n">SymReal</span> <span class="o">=</span> <span class="n">esym</span><span class="o">.</span><span class="n">Real</span>     <span class="c1">#abbreviation</span>
 <span class="linenos"> 4</span>
 <span class="linenos"> 5</span><span class="c1">#create some variables</span>
-<span class="linenos"> 6</span><span class="n">a</span> <span class="o">=</span> <span class="n">SymReal</span><span class="p">(</span><span class="mf">42.</span><span class="p">,</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>    <span class="c1">#use named expression</span>
+<span class="linenos"> 6</span><span class="n">a</span> <span class="o">=</span> <span class="n">SymReal</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="mf">42.</span><span class="p">)</span>    <span class="c1">#use named expression</span>
 <span class="linenos"> 7</span><span class="n">b</span> <span class="o">=</span> <span class="n">SymReal</span><span class="p">(</span><span class="mi">13</span><span class="p">)</span>         <span class="c1">#b is 13</span>
 <span class="linenos"> 8</span><span class="n">c</span> <span class="o">=</span> <span class="n">a</span><span class="o">+</span><span class="n">b</span><span class="o">*</span><span class="mf">7.</span><span class="o">+</span><span class="mf">1.</span><span class="o">-</span><span class="mi">3</span>         <span class="c1">#c stores expression tree</span>
 <span class="linenos"> 9</span><span class="n">d</span> <span class="o">=</span> <span class="n">c</span>                   <span class="c1">#d and c are containing same tree!</span>
@@ -144,7 +145,7 @@
 <span class="linenos">15</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;d: &#39;</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="s1">&#39; = &#39;</span><span class="p">,</span><span class="n">d</span><span class="o">.</span><span class="nf">Evaluate</span><span class="p">())</span>
 <span class="linenos">16</span>
 <span class="linenos">17</span><span class="c1">#compute derivatives (automatic differentiation):</span>
-<span class="linenos">18</span><span class="n">x</span> <span class="o">=</span> <span class="n">SymReal</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+<span class="linenos">18</span><span class="n">x</span> <span class="o">=</span> <span class="n">SymReal</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span><span class="mf">0.5</span><span class="p">)</span>
 <span class="linenos">19</span><span class="n">f</span> <span class="o">=</span> <span class="n">a</span><span class="o">+</span><span class="n">b</span><span class="o">*</span><span class="n">esym</span><span class="o">.</span><span class="nf">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">+</span><span class="n">esym</span><span class="o">.</span><span class="nf">cos</span><span class="p">(</span><span class="n">SymReal</span><span class="p">(</span><span class="mi">7</span><span class="p">))</span><span class="o">+</span><span class="n">x</span><span class="o">**</span><span class="mi">4</span>
 <span class="linenos">20</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;f=&#39;</span><span class="p">,</span><span class="n">f</span><span class="o">.</span><span class="nf">Evaluate</span><span class="p">(),</span> <span class="s1">&#39;, diff=&#39;</span><span class="p">,</span><span class="n">f</span><span class="o">.</span><span class="nf">Diff</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
 <span class="linenos">21</span>
@@ -154,9 +155,19 @@
 <span class="linenos">25</span><span class="n">y</span> <span class="o">=</span> <span class="n">x</span><span class="o">/</span><span class="mf">3.</span>       <span class="c1">#directly evaluates to 14</span>
 </pre></div>
 </div>
-<p>To create a symbolic Real, use <code class="docutils literal notranslate"><span class="pre">aa=symbolic.Real(1.23)</span></code> to build a Python object aa with value 1.23. In order to use a named value, use <code class="docutils literal notranslate"><span class="pre">pi=symbolic.Real(3.14,'pi')</span></code>. Note that in the following, we use the abbreviation <code class="docutils literal notranslate"><span class="pre">SymReal=exudyn.symbolic.Real</span></code>. Member functions of <code class="docutils literal notranslate"><span class="pre">SymReal</span></code>, which are <strong>not recorded</strong>, are:</p>
+<p>To create a symbolic Real, use <code class="docutils literal notranslate"><span class="pre">aa=symbolic.Real(1.23)</span></code> to build a Python object aa with value 1.23. In order to use a named value, use <code class="docutils literal notranslate"><span class="pre">pi=symbolic.Real('pi',3.14)</span></code>. Note that in the following, we use the abbreviation <code class="docutils literal notranslate"><span class="pre">SymReal=exudyn.symbolic.Real</span></code>. Member functions of <code class="docutils literal notranslate"><span class="pre">SymReal</span></code>, which are <strong>not recorded</strong>, are:</p>
 <p>The class <strong>symbolic.Real</strong> has the following <strong>functions and structures</strong>:</p>
 <ul>
+<li><div class="line-block">
+<div class="line"><strong>__init__</strong>(<em>value</em>):</div>
+<div class="line">Construct symbolic.Real from float.</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>__init__</strong>(<em>name</em>, <em>value</em>):</div>
+<div class="line">Construct named symbolic.Real from name and float.</div>
+</div>
+</li>
 <li><div class="line-block">
 <div class="line"><strong>SetValue</strong>(<em>valueInit</em>):</div>
 <div class="line">Set either internal float value or value of named expression; cannot change symbolic expressions.</div>
@@ -174,7 +185,13 @@
 </li>
 <li><div class="line-block">
 <div class="line"><strong>Diff</strong>(<em>var</em>):</div>
-<div class="line">return derivative of stored expression with respect to given variable.</div>
+<div class="line">(UNTESTED!) return derivative of stored expression with respect to given symbolic named variable; NOTE: when defining the expression of the variable which shall be differentiated, the variable may only be changed with the SetValue(…) method hereafter!</div>
+<div class="line"><em>Example</em>:</div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">x</span><span class="o">=</span><span class="n">SymReal</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">f</span><span class="o">=</span><span class="mi">3</span><span class="o">*</span><span class="n">x</span><span class="o">+</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="nf">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">f</span><span class="o">.</span><span class="nf">Diff</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="c1">#evaluate derivative w.r.t. x</span>
+</pre></div>
 </div>
 </li>
 <li><div class="line-block">
@@ -183,17 +200,17 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>__float__</strong>:</div>
+<div class="line">operator <strong>__float__</strong>():</div>
 <div class="line">evaluation of expression and conversion of symbolic.Real to Python float</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>__str__</strong>:</div>
+<div class="line">operator <strong>__str__</strong>():</div>
 <div class="line">conversion of symbolic.Real to string</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>__repr__</strong>:</div>
+<div class="line">operator <strong>__repr__</strong>():</div>
 <div class="line">representation of symbolic.Real in Python</div>
 </div>
 </li>
@@ -226,8 +243,8 @@
 <span class="linenos">25</span><span class="n">c</span> <span class="o">=</span> <span class="n">a</span><span class="o">*</span><span class="mi">7</span> <span class="o">+</span> <span class="n">SymReal</span><span class="o">.</span><span class="nf">sin</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Mathematical functions may be called with an <code class="docutils literal notranslate"><span class="pre">SymReal</span></code> or with a <code class="docutils literal notranslate"><span class="pre">float</span></code>. Most standard mathematical functions exist for <code class="docutils literal notranslate"><span class="pre">SymReal</span></code>, e.g., as <code class="docutils literal notranslate"><span class="pre">SymReal.abs</span></code>. <strong>HINT</strong>: function names are lower-case for compatibility with Python’s math library. Thus, you can easily exchange math.sin with SymReal.sin, and you may want to use a generic name, such as myMath=SymReal in order to switch between Python and symbolic user functions. The following functions exist:</p>
-<p>The class <strong>symbolic.Real</strong> has the following <strong>functions and structures</strong>:</p>
+<p>Mathematical functions may be called with an <code class="docutils literal notranslate"><span class="pre">SymReal</span></code> or with a <code class="docutils literal notranslate"><span class="pre">float</span></code>. Most standard mathematical functions exist for <code class="docutils literal notranslate"><span class="pre">symbolic</span></code>, e.g., as <code class="docutils literal notranslate"><span class="pre">symbolic.abs</span></code>. <strong>HINT</strong>: function names are lower-case for compatibility with Python’s math library. Thus, you can easily exchange math.sin with esym.sin, and you may want to use a generic name, such as myMath=symbolic in order to switch between Python and symbolic user functions. The following functions exist:</p>
+<p>The class <strong>symbolic</strong> has the following <strong>functions and structures</strong>:</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><strong>isfinite</strong>(<em>x</em>):</div>
@@ -331,7 +348,7 @@
 </li>
 </ul>
 <p>The following table lists special functions for <code class="docutils literal notranslate"><span class="pre">SymReal</span></code>:</p>
-<p>The class <strong>symbolic.Real</strong> has the following <strong>functions and structures</strong>:</p>
+<p>The class <strong>symbolic</strong> has the following <strong>functions and structures</strong>:</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><strong>sign</strong>(<em>x</em>):</div>
@@ -393,7 +410,7 @@
 <div class="line">Get current (global / module-wide) status of expression recording.</div>
 <div class="line"><em>Example</em>:</div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">SymReal</span><span class="o">.</span><span class="nf">GetRecording</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">symbolic</span><span class="o">.</span><span class="n">Real</span><span class="o">.</span><span class="nf">GetRecording</span><span class="p">()</span>
 </pre></div>
 </div>
 </li>
@@ -408,7 +425,7 @@
 <span class="linenos"> 4</span><span class="n">SymVector</span> <span class="o">=</span> <span class="n">esym</span><span class="o">.</span><span class="n">Vector</span>
 <span class="linenos"> 5</span><span class="n">SymReal</span> <span class="o">=</span> <span class="n">esym</span><span class="o">.</span><span class="n">Real</span>
 <span class="linenos"> 6</span>
-<span class="linenos"> 7</span><span class="n">a</span> <span class="o">=</span> <span class="n">SymReal</span><span class="p">(</span><span class="mf">42.</span><span class="p">,</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>
+<span class="linenos"> 7</span><span class="n">a</span> <span class="o">=</span> <span class="n">SymReal</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="mf">42.</span><span class="p">)</span>
 <span class="linenos"> 8</span><span class="n">b</span> <span class="o">=</span> <span class="n">SymReal</span><span class="p">(</span><span class="mi">13</span><span class="p">)</span>
 <span class="linenos"> 9</span><span class="n">c</span> <span class="o">=</span> <span class="n">a</span><span class="o">-</span><span class="mi">3</span><span class="o">*</span><span class="n">b</span>
 <span class="linenos">10</span>
@@ -432,9 +449,19 @@
 <span class="linenos">28</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;v1[2]: &#39;</span><span class="p">,</span><span class="n">v1</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="s2">&quot;=&quot;</span><span class="p">,</span><span class="n">v1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="nf">Evaluate</span><span class="p">())</span>   <span class="c1">#evaluate as Real</span>
 </pre></div>
 </div>
-<p>To create a symbolic Vector, use <code class="docutils literal notranslate"><span class="pre">aa=symbolic.Vector([3,4.2,5]</span></code> to build a Python object aa with values [3,4.2,5]. In order to use a named vector, use <code class="docutils literal notranslate"><span class="pre">v=symbolic.Vector([3,4.2,5],'myVec')</span></code>. Vectors can be also created from mixed symbolic expressions and numbers, such as <code class="docutils literal notranslate"><span class="pre">v=symbolic.Vector([x,x**2,3.14])</span></code>, however, this cannot become a named vector as it contains expressions. There is a significance difference to numpy, such that ‘*’ represents the scalar vector multplication which gives a scalar. Furthermore, the comparison operator ‘==’ gives only True, if all components are equal, and the operator ‘!=’ gives True, if any component is unequal. Note that in the following, we use the abbreviation <code class="docutils literal notranslate"><span class="pre">SymVector=exudyn.symbolic.Vector</span></code>. Note that only functions are able to be recorded. Member functions of <code class="docutils literal notranslate"><span class="pre">SymVector</span></code> are:</p>
+<p>To create a symbolic Vector, use <code class="docutils literal notranslate"><span class="pre">aa=symbolic.Vector([3,4.2,5]</span></code> to build a Python object aa with values [3,4.2,5]. In order to use a named vector, use <code class="docutils literal notranslate"><span class="pre">v=symbolic.Vector('myVec',[3,4.2,5])</span></code>. Vectors can be also created from mixed symbolic expressions and numbers, such as <code class="docutils literal notranslate"><span class="pre">v=symbolic.Vector([x,x**2,3.14])</span></code>, however, this cannot become a named vector as it contains expressions. There is a significance difference to numpy, such that ‘*’ represents the scalar vector multplication which gives a scalar. Furthermore, the comparison operator ‘==’ gives only True, if all components are equal, and the operator ‘!=’ gives True, if any component is unequal. Note that in the following, we use the abbreviation <code class="docutils literal notranslate"><span class="pre">SymVector=exudyn.symbolic.Vector</span></code>. Note that only functions are able to be recorded. Member functions of <code class="docutils literal notranslate"><span class="pre">SymVector</span></code> are:</p>
 <p>The class <strong>symbolic.Vector</strong> has the following <strong>functions and structures</strong>:</p>
 <ul>
+<li><div class="line-block">
+<div class="line"><strong>__init__</strong>(<em>vector</em>):</div>
+<div class="line">Construct symbolic.Vector from vector represented as numpy array or list (which may contain symbolic expressions).</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>__init__</strong>(<em>name</em>, <em>vector</em>):</div>
+<div class="line">Construct named symbolic.Vector from name and vector represented as numpy array or list (which may contain symbolic expressions).</div>
+</div>
+</li>
 <li><div class="line-block">
 <div class="line"><strong>Evaluate</strong>():</div>
 <div class="line">Return evaluated expression (prioritized) or stored vector value. (not recorded)</div>
@@ -461,6 +488,11 @@
 </div>
 </li>
 <li><div class="line-block">
+<div class="line">operator <strong>__setitem__</strong>(index):</div>
+<div class="line">bracket [] operator for setting a component of the vector. Only works, if SymVector contains no expression. (may lead to inconsistencies in recording)</div>
+</div>
+</li>
+<li><div class="line-block">
 <div class="line"><strong>NormL2</strong>():</div>
 <div class="line">return (symbolic) L2-norm of vector.</div>
 <div class="line"><em>Example</em>:</div>
@@ -482,22 +514,17 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>… = data[index]</strong><em>i</em>:</div>
-<div class="line">return (symbolic) component of vector, allowing only read-access. Index may also evaluate from an expression.</div>
-<div class="line"><em>Example</em>:</div>
-</div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">v1</span> <span class="o">=</span> <span class="n">SymVector</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;v1.z=&#39;</span><span class="p">,</span><span class="n">v1</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
-</pre></div>
+<div class="line">operator <strong>__getitem__</strong>(index):</div>
+<div class="line">bracket [] operator to return (symbolic) component of vector, allowing read-access. Index may also evaluate from an expression.</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>__str__</strong>:</div>
+<div class="line">operator <strong>__str__</strong>():</div>
 <div class="line">conversion of SymVector to string</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>__repr__</strong>:</div>
+<div class="line">operator <strong>__repr__</strong>():</div>
 <div class="line">representation of SymVector in Python</div>
 </div>
 </li>
@@ -521,6 +548,115 @@
 </pre></div>
 </div>
 </section>
+<section id="symbolic-matrix">
+<h2>symbolic.Matrix<a class="headerlink" href="#symbolic-matrix" title="Link to this heading"></a></h2>
+<p>A symbolic Matrix type to replace Python’s (2D) numpy array in symbolic expressions. The <code class="docutils literal notranslate"><span class="pre">symbolic.Matrix</span></code> may be directly set to a list of list of floats or (2D) numpy array and be evaluated as array. However, turing on recording by using   extttexudyn.symbolic.SetRecording(True) (on by default), results are stored as expression trees, which may be evaluated in C++ or Python, in particular in user functions, see the following example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
+<span class="linenos"> 2</span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="linenos"> 3</span><span class="n">esym</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">symbolic</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="n">SymMatrix</span> <span class="o">=</span> <span class="n">esym</span><span class="o">.</span><span class="n">Matrix</span>
+<span class="linenos"> 6</span><span class="n">SymReal</span> <span class="o">=</span> <span class="n">esym</span><span class="o">.</span><span class="n">Real</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span><span class="n">a</span> <span class="o">=</span> <span class="n">SymReal</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="mf">42.</span><span class="p">)</span>
+<span class="linenos"> 9</span><span class="n">b</span> <span class="o">=</span> <span class="n">SymReal</span><span class="p">(</span><span class="mi">13</span><span class="p">)</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span><span class="c1">#create matrix from list of lists</span>
+<span class="linenos">12</span><span class="n">m1</span> <span class="o">=</span> <span class="n">SymMatrix</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">]])</span>
+<span class="linenos">13</span>
+<span class="linenos">14</span><span class="c1">#create symbolic matrix from list of lists</span>
+<span class="linenos">15</span><span class="n">m3</span> <span class="o">=</span> <span class="n">SymMatrix</span><span class="p">([[</span><span class="n">a</span><span class="p">,</span><span class="mi">3</span><span class="o">*</span><span class="n">b</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">]])</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span><span class="c1">#create from numpy array</span>
+<span class="linenos">18</span><span class="n">m2</span> <span class="o">=</span> <span class="n">SymMatrix</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+<span class="linenos">19</span>
+<span class="linenos">20</span><span class="n">m1</span> <span class="o">+=</span> <span class="n">m3</span>
+<span class="linenos">21</span><span class="n">m1</span> <span class="o">*=</span> <span class="mi">3</span>
+<span class="linenos">22</span><span class="n">m1</span> <span class="o">-=</span> <span class="mi">3</span><span class="o">*</span><span class="n">m3</span>
+<span class="linenos">23</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;m1: &#39;</span><span class="p">,</span><span class="n">m1</span><span class="p">)</span>
+<span class="linenos">24</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;m2: &#39;</span><span class="p">,</span><span class="n">m2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To create a symbolic Matrix, use <code class="docutils literal notranslate"><span class="pre">aa=symbolic.Matrix([[3,4.2],[3.3,1.2]]</span></code> to build a Python object aa. In order to use a named matrix, use <code class="docutils literal notranslate"><span class="pre">v=symbolic.Matrix('myMat',[3,4.2,5])</span></code>. Matrixs can be also created from mixed symbolic expressions and numbers, such as <code class="docutils literal notranslate"><span class="pre">v=symbolic.Matrix([x,x**2,3.14])</span></code>, however, this cannot become a named matrix as it contains expressions. There is a significance difference to numpy, such that ‘*’ represents the matrix multplication (compute components from row times column operations). Note that in the following, we use the abbreviation <code class="docutils literal notranslate"><span class="pre">SymMatrix=exudyn.symbolic.Matrix</span></code>. Member functions of <code class="docutils literal notranslate"><span class="pre">SymMatrix</span></code> are:</p>
+<p>The class <strong>symbolic.Matrix</strong> has the following <strong>functions and structures</strong>:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>__init__</strong>(<em>matrix</em>):</div>
+<div class="line">Construct symbolic.Matrix from vector represented as numpy array or list of lists (which may contain symbolic expressions).</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>__init__</strong>(<em>name</em>, <em>matrix</em>):</div>
+<div class="line">Construct named symbolic.Matrix from name and vector represented as numpy array or list of lists (which may contain symbolic expressions).</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>Evaluate</strong>():</div>
+<div class="line">Return evaluated expression (prioritized) or stored Matrix value. (not recorded)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>SetMatrix</strong>(<em>matrix</em>):</div>
+<div class="line">Set stored Matrix or named Matrix expression to new given (non-symbolic) Matrix. Only works, if SymMatrix contains no expression. (may lead to inconsistencies in recording)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>NumberOfRows</strong>():</div>
+<div class="line">Get number of rows (may require to evaluate expression; not recording)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>NumberOfColumns</strong>():</div>
+<div class="line">Get number of columns (may require to evaluate expression; not recording)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line">operator <strong>__setitem__</strong>(row, column):</div>
+<div class="line">bracket [] operator for (symbolic) component of Matrix (write-access). Only works, if SymMatrix contains no expression. (may lead to inconsistencies in recording)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line">operator <strong>__getitem__</strong>(row, column):</div>
+<div class="line">bracket [] operator for (symbolic) component of Matrix (read-access). Row and column may also evaluate from an expression.</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line">operator <strong>__str__</strong>():</div>
+<div class="line">conversion of SymMatrix to string</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line">operator <strong>__repr__</strong>():</div>
+<div class="line">representation of SymMatrix in Python</div>
+</div>
+</li>
+</ul>
+<p>Standard Matrix operators are available for <code class="docutils literal notranslate"><span class="pre">SymMatrix</span></code>, see the following examples:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="n">m1</span> <span class="o">=</span> <span class="n">SymMatrix</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">7</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]])</span>
+<span class="linenos"> 2</span><span class="n">m2</span> <span class="o">=</span> <span class="n">SymMatrix</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mf">2.2</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mf">4.3</span><span class="p">]])</span>
+<span class="linenos"> 3</span><span class="n">v</span> <span class="o">=</span> <span class="n">SymVector</span><span class="p">([</span><span class="mf">1.5</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="n">m3</span> <span class="o">=</span> <span class="n">m1</span><span class="o">+</span><span class="n">m2</span>
+<span class="linenos"> 6</span><span class="n">m3</span> <span class="o">=</span> <span class="n">m1</span><span class="o">-</span><span class="n">m2</span>
+<span class="linenos"> 7</span><span class="n">m3</span> <span class="o">=</span> <span class="n">m1</span><span class="o">*</span><span class="n">m2</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span><span class="c1">#multiply with scalar</span>
+<span class="linenos">10</span><span class="n">m3</span> <span class="o">=</span> <span class="mi">13</span><span class="o">*</span><span class="n">m2</span>
+<span class="linenos">11</span><span class="n">m3</span> <span class="o">=</span> <span class="n">m2</span><span class="o">*</span><span class="mf">3.14</span>
+<span class="linenos">12</span>
+<span class="linenos">13</span><span class="c1">#multiply with vector</span>
+<span class="linenos">14</span><span class="n">m3</span> <span class="o">=</span> <span class="n">m2</span><span class="o">*</span><span class="n">v</span>
+<span class="linenos">15</span>
+<span class="linenos">16</span><span class="c1">#transposed:</span>
+<span class="linenos">17</span><span class="n">m3</span> <span class="o">=</span> <span class="n">v</span><span class="o">*</span><span class="n">m2</span> <span class="c1">#equals numpy operation m2.T @ v</span>
+<span class="linenos">18</span>
+<span class="linenos">19</span><span class="c1">#inplace operators:</span>
+<span class="linenos">20</span><span class="n">m1</span> <span class="o">+=</span> <span class="n">m1</span>
+<span class="linenos">21</span><span class="n">m1</span> <span class="o">-=</span> <span class="n">m1</span>
+<span class="linenos">22</span><span class="n">m1</span> <span class="o">*=</span> <span class="mf">3.14</span>
+</pre></div>
+</div>
+</section>
 <section id="symbolic-variableset">
 <h2>symbolic.VariableSet<a class="headerlink" href="#symbolic-variableset" title="Link to this heading"></a></h2>
 <p>A container for symbolic variables, in particular for exchange between user functions and the model. For details, see the following example:</p>
@@ -532,7 +668,7 @@
 <span class="linenos"> 6</span><span class="n">variables</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">symbolic</span><span class="o">.</span><span class="n">variables</span>
 <span class="linenos"> 7</span>
 <span class="linenos"> 8</span><span class="c1">#create a named Real</span>
-<span class="linenos"> 9</span><span class="n">a</span> <span class="o">=</span> <span class="n">SymReal</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span><span class="mf">42.</span><span class="p">)</span>
+<span class="linenos"> 9</span><span class="n">a</span> <span class="o">=</span> <span class="n">SymReal</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="mf">42.</span><span class="p">)</span>
 <span class="linenos">10</span>
 <span class="linenos">11</span><span class="c1">#regular way to add variable:</span>
 <span class="linenos">12</span><span class="n">variables</span><span class="o">.</span><span class="nf">Add</span><span class="p">(</span><span class="s1">&#39;pi&#39;</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
@@ -612,13 +748,13 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>__str__</strong>:</div>
+<div class="line">operator <strong>__str__</strong>():</div>
 <div class="line">create string of set of variables</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>__repr__</strong>:</div>
-<div class="line">representation of SymVector in Python</div>
+<div class="line">operator <strong>__repr__</strong>():</div>
+<div class="line">representation of SymMatrix in Python</div>
 </div>
 </li>
 </ul>
@@ -675,12 +811,12 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>__repr__</strong>:</div>
+<div class="line">operator <strong>__repr__</strong>():</div>
 <div class="line">Representation of Symbolic function</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>__str__</strong>:</div>
+<div class="line">operator <strong>__str__</strong>():</div>
 <div class="line">Convert stored symbolic function to string</div>
 </div>
 </li>
