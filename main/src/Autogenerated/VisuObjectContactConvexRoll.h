@@ -2,9 +2,9 @@
 * @class        VisualizationObjectContactConvexRoll
 * @brief        A contact connector representing a convex roll (marker 1) on a flat surface (marker 0, ground body, not moving) in global \f$x\f$-\f$y\f$ plane. The connector is similar to ObjectConnectorRollingDiscPenalty, but includes a (strictly) convex shape of the roll defined by a polynomial. It is based on a penalty formulation and adds friction and slipping. The formulation is still under development and needs further testing. Note that the rolling body must have the reference point at the center of the disc.
 *
-* @author       Gerstmayr Johannes
+* @author       Manzl Peter
 * @date         2019-07-01 (generated)
-* @date         2021-07-19  13:28:41 (last modfied)
+* @date         2024-02-03  15:27:07 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

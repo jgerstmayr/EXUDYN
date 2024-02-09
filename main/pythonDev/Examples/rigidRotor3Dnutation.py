@@ -16,7 +16,6 @@ import exudyn as exu
 from exudyn.itemInterface import *
 from exudyn.utilities import *
 
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals #for testing
 import time
 import numpy as np
 
@@ -131,7 +130,7 @@ exu.StopRenderer()               #safely close rendering window!
 #import matplotlib.pyplot as plt
 #import matplotlib.ticker as ticker
 #
-#if exudynTestGlobals.useGraphics:
+#if True:
 #    data = np.loadtxt('coordinatesSolution.txt', comments='#', delimiter=',')
 #    n=steps
 #    #plt.plot(data[:,2], data[:,3], 'r-') #numerical solution

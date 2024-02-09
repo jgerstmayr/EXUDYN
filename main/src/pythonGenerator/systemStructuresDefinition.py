@@ -442,7 +442,7 @@ V,      showBasis,                  ,                  ,     bool,         false
 V,      basisSize,                  ,                  ,     float,        "0.2f",                   , P,      "size of basis for nodes"
 V,      tiling,                     ,                  ,     PInt,         "4",                      , P,      "tiling for node if drawn as sphere; used to lower the amount of triangles to draw each node; if drawn as circle, this value is multiplied with 4"
 V,      defaultSize,                ,                  ,     float,        "-1.f",                   , P,      "global node size; if -1.f, node size is relative to openGL.initialMaxSceneSize"
-V,      defaultColor,               ,                  4,    Float4,       "Float4({0.2f,0.2f,1.f,1.f})",, P,  "default cRGB color for nodes; 4th value is alpha-transparency"
+V,      defaultColor,               ,                  4,    Float4,       "Float4({0.2f,0.2f,1.f,1.f})",, P,  "default RGBA color for nodes; 4th value is alpha-transparency"
 V,      showNodalSlopes,            ,                  ,     UInt,         false,                    , P,      "draw nodal slope vectors, e.g. in ANCF beam finite elements"
 #
 writeFile=VisualizationSettings.h
@@ -494,7 +494,7 @@ classDescription = "Visualization settings for bodies."
 V,      show,                       ,                  ,     bool,         true,                       , P,    "flag to decide, whether the bodies are shown"
 V,      showNumbers,                ,                  ,     bool,         false,                      , P,    "flag to decide, whether the body(=object) number is shown"
 V,      defaultSize,                ,                  3,    Float3,       "Float3({1.f,1.f,1.f})",    , P,    "global body size of xyz-cube"
-V,      defaultColor,               ,                  4,    Float4,       "Float4({0.3f,0.3f,1.f,1.f})",, P,  "default cRGB color for bodies; 4th value is "
+V,      defaultColor,               ,                  4,    Float4,       "Float4({0.3f,0.3f,1.f,1.f})",, P,  "default RGBA color for bodies; 4th value is "
 V,      deformationScaleFactor,     ,                  ,     float,        "1",                        , P,    "global deformation scale factor; also applies to nodes, if drawn; used for scaled drawing of (linear) finite elements, beams, etc."
 V,      beams,                      ,                  ,     VSettingsBeams,   ,                       , PS,   "visualization settings for beams (e.g. ANCFCable or other beam elements)"
 V,      kinematicTree,              ,                  ,     VSettingsKinematicTree,   ,               , PS,   "visualization settings for kinematic tree"
@@ -519,7 +519,7 @@ V,      jointAxesRadius,            ,                  ,     float,        "0.02
 V,      showContact,                ,                  ,     bool,         false,                      , P,    "flag to decide, whether contact points, lines, etc. are shown"
 V,      springNumberOfWindings,     ,                  ,     PInt,         8,                          , P,    "number of windings for springs drawn as helical spring"
 V,      contactPointsDefaultSize,   ,                  ,     float,        "0.02f",                      , P,    "DEPRECATED: do not use! global contact points size; if -1.f, connector size is relative to maxSceneSize"
-V,      defaultColor,               ,                  4,    Float4,       "Float4({0.2f,0.2f,1.f,1.f})",, P,    "default cRGB color for connectors; 4th value is alpha-transparency"
+V,      defaultColor,               ,                  4,    Float4,       "Float4({0.2f,0.2f,1.f,1.f})",, P,    "default RGBA color for connectors; 4th value is alpha-transparency"
 #
 writeFile=VisualizationSettings.h
 
@@ -534,7 +534,7 @@ V,      show,                       ,                  ,     bool,         true,
 V,      showNumbers,                ,                  ,     bool,         false,                      , P,    "flag to decide, whether the marker numbers are shown"
 V,      drawSimplified,             ,                  ,     bool,         true,                       , P,    "draw markers with simplified symbols"
 V,      defaultSize,                ,                  ,     float,        "-1.f",                     , P,    "global marker size; if -1.f, marker size is relative to maxSceneSize"
-V,      defaultColor,               ,                  4,    Float4,       "Float4({0.1f,0.5f,0.1f,1.f})",, P,    "default cRGB color for markers; 4th value is alpha-transparency"
+V,      defaultColor,               ,                  4,    Float4,       "Float4({0.1f,0.5f,0.1f,1.f})",, P,    "default RGBA color for markers; 4th value is alpha-transparency"
 #
 writeFile=VisualizationSettings.h
 
@@ -552,7 +552,7 @@ V,      defaultRadius,              ,                  ,     float,        "0.00
 V,      fixedLoadSize,              ,                  ,     bool,         true,                       , P,    "if true, the load is drawn with a fixed vector length in direction of the load vector, independently of the load size"
 V,      drawSimplified,             ,                  ,     bool,         true,                       , P,    "draw markers with simplified symbols"
 V,      loadSizeFactor,             ,                  ,     float,        "0.1f",                     , P,    "if fixedLoadSize=false, then this scaling factor is used to draw the load vector"
-V,      defaultColor,               ,                  4,    Float4,       "Float4({0.7f,0.1f,0.1f,1.f})",, P,    "default cRGB color for loads; 4th value is alpha-transparency"
+V,      defaultColor,               ,                  4,    Float4,       "Float4({0.7f,0.1f,0.1f,1.f})",, P,    "default RGBA color for loads; 4th value is alpha-transparency"
 #
 writeFile=VisualizationSettings.h
 
@@ -601,7 +601,7 @@ V,      show,                       ,                  ,     bool,         true,
 V,      showNumbers,                ,                  ,     bool,         false,                      , P,    "flag to decide, whether the sensor numbers are shown"
 V,      drawSimplified,             ,                  ,     bool,         true,                       , P,    "draw sensors with simplified symbols"
 V,      defaultSize,                ,                  ,     float,        "-1.f",                     , P,    "global sensor size; if -1.f, sensor size is relative to maxSceneSize"
-V,      defaultColor,               ,                  4,    Float4,       "Float4({0.6f,0.6f,0.1f,1.f})",, P, "default cRGB color for sensors; 4th value is alpha-transparency"
+V,      defaultColor,               ,                  4,    Float4,       "Float4({0.6f,0.6f,0.1f,1.f})",, P, "default RGBA color for sensors; 4th value is alpha-transparency"
 V,      traces,                     ,                  ,     VSettingsSensorTraces,  ,                 , PS,   "settings for showing (position) sensor traces and vector plots in the render window"
 #
 writeFile=VisualizationSettings.h
@@ -614,11 +614,17 @@ typicalPaths = SC.visualizationSettings
 classDescription = "Global visualization settings for GeneralContact. This allows to easily switch on/off during visualization"
 #V|F,   pythonName,                   cplusplusName,      size, type,          defaultValue,args,           cFlags, parameterDescription
 #      showContactObjects,         ,                  ,     bool,         true,                       , P,    "show or hide contact objects in all GeneralContacts"
-V,      showSearchTree,             ,                  ,     bool,         false,                      , P,    "show search tree of all GeneralContacts"
-V,      showSearchTreeCells,        ,                  ,     bool,         false,                      , P,    "show cells inside search tree"
-V,      showBoundingBoxes,          ,                  ,     bool,         false,                      , P,    "show bounding boxes of all GeneralContacts"
-V,      colorSearchTree,            ,                  4,    Float4,       "Float4({0.1f,0.1f,0.9f,1.f})",, P, "cRGB color"
-V,      colorBoundingBoxes,         ,                  4,    Float4,       "Float4({0.9f,0.1f,0.1f,1.f})",, P, "cRGB color"
+V,      showSearchTree,             ,                  ,     bool,         false,                      , P,    "show outer box of search tree for all GeneralContacts"
+V,      showSearchTreeCells,        ,                  ,     bool,         false,                      , P,    "show all cells of search tree; empty cells have colorSearchTree, cells with contact objects have higher red value; Warning: avoid for large number of search tree cells!"
+V,      showBoundingBoxes,          ,                  ,     bool,         false,                      , P,    "show computed bounding boxes of all GeneralContacts; Warning: avoid for large number of contact objects!"
+V,      showTriangles,              ,                  ,     bool,         false,                      , P,    "show contact triangles (TrianglesRigidBodyBased, ...)"
+V,      showSpheres,                ,                  ,     bool,         false,                      , P,    "show contact spheres (SpheresWithMarker, ...)"
+V,      tilingSpheres,              ,                  ,     PInt,         4,                          , P,    "tiling for spheres; higher values give smoother spheres, but may lead to lower frame rates"
+#
+V,      colorSearchTree,            ,                  4,    Float4,       "Float4({0.1f,0.1f,0.9f,1.f})",, P, "RGBA color for search tree, see showSearchTree"
+V,      colorBoundingBoxes,         ,                  4,    Float4,       "Float4({0.9f,0.1f,0.1f,1.f})",, P, "RGBA color for boudnding boxes, see showBoundingBoxes"
+V,      colorTriangles,             ,                  4,    Float4,       "Float4({0.5f,0.5f,0.5f,1.f})",, P, "RGBA color for contact triangles, see showTriangles"
+V,      colorSpheres,               ,                  4,    Float4,       "Float4({0.8f,0.8f,0.2f,1.f})",, P, "RGBA color for contact spheres, see showSpheres"
 #
 #for connectors:
 V,      contactPointsDefaultSize,   ,                  ,     float,        "0.001f",                   , P,    "global contact points size; if -1.f, connector size is relative to maxSceneSize; used for some contacts, e.g., in ContactFrictionCircle"
@@ -787,8 +793,8 @@ V,      pauseWithSpacebar,              ,                  ,     bool,         t
 V,      highlightItemIndex,             ,                  ,     Int,          "-1",                   , P,      "index of item that shall be highlighted (e.g., need to find item due to errors); if set -1, no item is highlighted"
 V,      highlightItemType,              ,                  ,     ItemType,     "ItemType::_None",      , P,      "item type (Node, Object, ...) that shall be highlighted (e.g., need to find item due to errors)"
 V,      highlightMbsNumber,             ,                  ,     UInt,         "0",                    , P,      "index of main system (mbs) for which the item shall be highlighted; number is related to the ID in SystemContainer (first mbs = 0, second = 1, ...)"
-V,      highlightColor,                 ,                  4,    Float4,       "Float4({0.8f,0.05f,0.05f,0.75f})",, P, "cRGB color for highlighted item; 4th value is alpha-transparency"
-V,      highlightOtherColor,            ,                  4,    Float4,       "Float4({0.5f,0.5f,0.5f,0.4f})", , P, "cRGB color for other items (which are not highlighted); 4th value is alpha-transparency"
+V,      highlightColor,                 ,                  4,    Float4,       "Float4({0.8f,0.05f,0.05f,0.75f})",, P, "RGBA color for highlighted item; 4th value is alpha-transparency"
+V,      highlightOtherColor,            ,                  4,    Float4,       "Float4({0.5f,0.5f,0.5f,0.4f})", , P, "RGBA color for other items (which are not highlighted); 4th value is alpha-transparency"
 #marker tracking
 V,      trackMarker,                    ,                  ,     Int,          "-1",                  , P,      "if valid marker index is provided and marker provides position (and orientation), the centerpoint of the scene follows the marker (and orientation); depends on trackMarkerPosition and trackMarkerOrientation; by default, only position is tracked"
 V,      trackMarkerMbsNumber,           ,                  ,     Index,        "0",                   , P,      "number of main system which is used to track marker; if only 1 mbs is in the SystemContainer, use 0; if there are several mbs, it needs to specify the number"

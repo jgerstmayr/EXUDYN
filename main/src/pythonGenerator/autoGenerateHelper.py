@@ -16,6 +16,10 @@ localListFunctionNames = []
 localListClassNames = []
 localListEnumNames = []
 
+#empty default argument
+ArgNotSet = 'ArgNotSet'
+
+
 #******************************************************************************************************
 def GetDateStr():
     now=datetime.datetime.now()
@@ -1237,7 +1241,7 @@ class PyLatexRST:
 
             example = example.replace('\\TAB','\\phantom{XXXX}') #phantom spaces, not visible
             self.sLatex += '\\tabnewline \n    \\textcolor{steelblue}{{\\bf EXAMPLE}: \\tabnewline \n    \\texttt{' + example.replace("'","{\\textquotesingle}") + '}}'
-            exampleRST = exampleRST.replace('\\#','#').replace('\\\\','\n')
+            exampleRST = exampleRST.replace('\\\\','\n').replace('\\#','#')
             
             self.sRST += '  | *Example*:\n\n'
             self.sRST += '  '+RSTcodeBlock(RemoveIndentation(exampleRST,'   '+'  ', False).replace('\\TAB','  '), 'python') + '\n' #TAB=2 spaces +2 spaces surrounding

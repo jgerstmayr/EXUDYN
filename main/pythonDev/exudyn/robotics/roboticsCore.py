@@ -1,9 +1,9 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# This is an EXUDYN python utility library
+# This is an EXUDYN python utility library for robotics
 #
 # Details:  A library which includes support functions for robotics;
-#			the library is built on standard Denavit-Hartenberg Parameters and
-#			Homogeneous Transformations (HT) to describe transformations and coordinate systems;
+#           the library is built on standard Denavit-Hartenberg Parameters and
+#           Homogeneous Transformations (HT) to describe transformations and coordinate systems;
 #           import this library e.g. with import exudyn.robotics as robotics
 #
 # Author:   Johannes Gerstmayr
@@ -11,7 +11,7 @@
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
-# Example:	New robot model uses the class Robot with class RobotLink; the old dictionary structure is defined in the example in ComputeJointHT for the definition of the 'robot' dictionary.
+# Example:    New robot model uses the class Robot with class RobotLink; the old dictionary structure is defined in the example in ComputeJointHT for the definition of the 'robot' dictionary.
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -1041,9 +1041,9 @@ def StdDH2HT(DHparameters):
                      [ 0, 0    , 0    , 1   ]])
 
 #\mfour{\cos \theta_j &-\sin \theta_j \cos \alpha_j & \sin \theta_j \sin \alpha_j & a_j \cos \theta_j}
-#														{\sin \theta_j & \cos \theta_j \cos \alpha_j &-\cos \theta_j \sin \alpha_j & a_j \sin \theta_j}
-#														{0             & \sin \alpha_j               & \cos \alpha_j               & d_j }
-#														{0 & 0 & 0 & 1}
+#                                                        {\sin \theta_j & \cos \theta_j \cos \alpha_j &-\cos \theta_j \sin \alpha_j & a_j \sin \theta_j}
+#                                                        {0             & \sin \alpha_j               & \cos \alpha_j               & d_j }
+#                                                        {0 & 0 & 0 & 1}
 #Test (compared with Robotcs, Vision and Control book of P. Corke:
 #print("std. DH =\n", DH2HT([0.5, 0.1, 0.2, np.pi/2]).round(4))
 

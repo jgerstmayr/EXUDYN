@@ -1,5 +1,5 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# This is a submodule of the EXUDYN python robotics library
+# This is an EXUDYN python utility library for robotics
 #
 # Details:  The utilities contains general helper functions for the robotics module
 #

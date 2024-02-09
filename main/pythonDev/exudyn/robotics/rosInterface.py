@@ -1,8 +1,8 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# This is an EXUDYN python ROS interface
+# This is an EXUDYN python utility library for robotics
 #
 # Details:  This interface collects interfaces and functionality for ROS comunication
-#			This library is under construction (2023-05);
+#           This library is under construction (2023-05);
 #           To make use of this libraries, you need to 
 #           install ROS (ROS1 noetic) including rospy
 #           Please consider following workflow:

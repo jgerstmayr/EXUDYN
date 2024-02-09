@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2023-12-13  10:03:34 (last modified)
+* @date         2024-02-03  15:37:34 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -126,12 +126,8 @@ public: // AUTO:
         cObjectANCFCable2D->GetParameters().strainIsRelativeToReference = py::cast<Real>(d["strainIsRelativeToReference"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectANCFCable2D->GetParameters().nodeNumbers = EPyUtils::GetNodeIndex2Safely(d["nodeNumbers"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectANCFCable2D->GetParameters().useReducedOrderIntegration = py::cast<Index>(d["useReducedOrderIntegration"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "axialForceUserFunction")) { if (EPyUtils::CheckForValidFunction(d["axialForceUserFunction"])) 
-            { cObjectANCFCable2D->GetParameters().axialForceUserFunction = py::cast<std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real,Real,Real,Real,Real)>>((py::function)d["axialForceUserFunction"]); /* AUTO:  read out dictionary and cast to C++ type*/}
-            else {cObjectANCFCable2D->GetParameters().axialForceUserFunction = 0;  /*AUTO: otherwise assign with zero!*/ }} 
-        if (EPyUtils::DictItemExists(d, "bendingMomentUserFunction")) { if (EPyUtils::CheckForValidFunction(d["bendingMomentUserFunction"])) 
-            { cObjectANCFCable2D->GetParameters().bendingMomentUserFunction = py::cast<std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real,Real,Real,Real,Real)>>((py::function)d["bendingMomentUserFunction"]); /* AUTO:  read out dictionary and cast to C++ type*/}
-            else {cObjectANCFCable2D->GetParameters().bendingMomentUserFunction = 0;  /*AUTO: otherwise assign with zero!*/ }} 
+        if (EPyUtils::DictItemExists(d, "axialForceUserFunction")) { cObjectANCFCable2D->GetParameters().axialForceUserFunction = d["axialForceUserFunction"]; /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "bendingMomentUserFunction")) { cObjectANCFCable2D->GetParameters().bendingMomentUserFunction = d["bendingMomentUserFunction"]; /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectANCFCable2D->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "VdrawHeight")) { visualizationObjectANCFCable2D->GetDrawHeight() = py::cast<float>(d["VdrawHeight"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
@@ -155,16 +151,8 @@ public: // AUTO:
         d["strainIsRelativeToReference"] = (Real)cObjectANCFCable2D->GetParameters().strainIsRelativeToReference; //! AUTO: cast variables into python (not needed for standard types) 
         d["nodeNumbers"] = EPyUtils::GetArrayNodeIndex(ArrayIndex(cObjectANCFCable2D->GetParameters().nodeNumbers)); //! AUTO: cast variables into python (not needed for standard types) 
         d["useReducedOrderIntegration"] = (Index)cObjectANCFCable2D->GetParameters().useReducedOrderIntegration; //! AUTO: cast variables into python (not needed for standard types) 
-        if (cObjectANCFCable2D->GetParameters().axialForceUserFunction)
-            {d["axialForceUserFunction"] = (std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real,Real,Real,Real,Real)>)cObjectANCFCable2D->GetParameters().axialForceUserFunction;}
-        else
-            {d["axialForceUserFunction"] = 0;}
- //! AUTO: cast variables into python (not needed for standard types) 
-        if (cObjectANCFCable2D->GetParameters().bendingMomentUserFunction)
-            {d["bendingMomentUserFunction"] = (std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real,Real,Real,Real,Real)>)cObjectANCFCable2D->GetParameters().bendingMomentUserFunction;}
-        else
-            {d["bendingMomentUserFunction"] = 0;}
- //! AUTO: cast variables into python (not needed for standard types) 
+        d["axialForceUserFunction"] = (py::object)cObjectANCFCable2D->GetParameters().axialForceUserFunction; //! AUTO: cast variables into python (not needed for standard types) 
+        d["bendingMomentUserFunction"] = (py::object)cObjectANCFCable2D->GetParameters().bendingMomentUserFunction; //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationObjectANCFCable2D->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         d["VdrawHeight"] = (float)visualizationObjectANCFCable2D->GetDrawHeight(); //! AUTO: cast variables into python (not needed for standard types) 
@@ -187,8 +175,8 @@ public: // AUTO:
         else if (parameterName.compare("strainIsRelativeToReference") == 0) { return py::cast((Real)cObjectANCFCable2D->GetParameters().strainIsRelativeToReference);} //! AUTO: get parameter
         else if (parameterName.compare("nodeNumbers") == 0) { return py::cast(EPyUtils::GetArrayNodeIndex(ArrayIndex(cObjectANCFCable2D->GetParameters().nodeNumbers)));} //! AUTO: get parameter
         else if (parameterName.compare("useReducedOrderIntegration") == 0) { return py::cast((Index)cObjectANCFCable2D->GetParameters().useReducedOrderIntegration);} //! AUTO: get parameter
-        else if (parameterName.compare("axialForceUserFunction") == 0) { return py::cast((std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real,Real,Real,Real,Real)>)cObjectANCFCable2D->GetParameters().axialForceUserFunction);} //! AUTO: get parameter
-        else if (parameterName.compare("bendingMomentUserFunction") == 0) { return py::cast((std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real,Real,Real,Real,Real)>)cObjectANCFCable2D->GetParameters().bendingMomentUserFunction);} //! AUTO: get parameter
+        else if (parameterName.compare("axialForceUserFunction") == 0) { return cObjectANCFCable2D->GetParameters().axialForceUserFunction.GetPythonDictionary();;} //! AUTO: get parameter
+        else if (parameterName.compare("bendingMomentUserFunction") == 0) { return cObjectANCFCable2D->GetParameters().bendingMomentUserFunction.GetPythonDictionary();;} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectANCFCable2D->GetShow());} //! AUTO: get parameter
         else if (parameterName.compare("VdrawHeight") == 0) { return py::cast((float)visualizationObjectANCFCable2D->GetDrawHeight());} //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { return py::cast((std::vector<float>)visualizationObjectANCFCable2D->GetColor());} //! AUTO: get parameter
@@ -212,10 +200,8 @@ public: // AUTO:
         else if (parameterName.compare("strainIsRelativeToReference") == 0) { cObjectANCFCable2D->GetParameters().strainIsRelativeToReference = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("nodeNumbers") == 0) { cObjectANCFCable2D->GetParameters().nodeNumbers = EPyUtils::GetNodeIndex2Safely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("useReducedOrderIntegration") == 0) { cObjectANCFCable2D->GetParameters().useReducedOrderIntegration = py::cast<Index>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("axialForceUserFunction") == 0) { if (py::isinstance<py::function>(value)) {cObjectANCFCable2D->GetParameters().axialForceUserFunction = py::cast<std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real,Real,Real,Real,Real)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/} else
-            if (!EPyUtils::IsPyTypeInteger(value) || (py::cast<int>(value) != 0)) {PyError(STDstring("Failed to convert PyFunction: must be either valid python function or 0, but got ")+EXUstd::ToString(value)); }; } //! AUTO: get parameter
-        else if (parameterName.compare("bendingMomentUserFunction") == 0) { if (py::isinstance<py::function>(value)) {cObjectANCFCable2D->GetParameters().bendingMomentUserFunction = py::cast<std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real,Real,Real,Real,Real)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/} else
-            if (!EPyUtils::IsPyTypeInteger(value) || (py::cast<int>(value) != 0)) {PyError(STDstring("Failed to convert PyFunction: must be either valid python function or 0, but got ")+EXUstd::ToString(value)); }; } //! AUTO: get parameter
+        else if (parameterName.compare("axialForceUserFunction") == 0) { cObjectANCFCable2D->GetParameters().axialForceUserFunction = value; } //! AUTO: get parameter
+        else if (parameterName.compare("bendingMomentUserFunction") == 0) { cObjectANCFCable2D->GetParameters().bendingMomentUserFunction = value; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationObjectANCFCable2D->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VdrawHeight") == 0) { visualizationObjectANCFCable2D->GetDrawHeight() = py::cast<float>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { visualizationObjectANCFCable2D->GetColor() = py::cast<std::vector<float>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

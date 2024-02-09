@@ -2589,8 +2589,8 @@ Fv,     C,      ComputeODE2LHS,                 ,               ,       void,   
 Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type,  ,                  ,          CDI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
 Fv,     C,      GetAccessFunctionTypes,         ,               ,       AccessFunctionType,,                    ,          CDI, "Flags to determine, which access (forces, moments, connectors, ...) to object are possible" 
 Fv,     C,      GetAccessFunctionBody,          ,               ,       void,       ,                           "AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value",          DC, "provide Jacobian at localPosition in 'value' according to object access" 
-#Fv,     C,      GetOutputVariableBody,          ,               ,       void,       ,                           "OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber",          DC, "provide according output variable in 'value'" 
-Fv,     C,      GetOutputVariable,              ,               ,       void,       ,                           "OutputVariableType variableType, Vector& value, ConfigurationType configuration, Index objectNumber",          DC, "provide according output variable in 'value'" 
+Fv,     C,      GetOutputVariableBody,          ,               ,       void,       ,                           "OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber",          DC, "provide according output variable in 'value'" 
+#Fv,     C,      GetOutputVariable,              ,               ,       void,       ,                           "OutputVariableType variableType, Vector& value, ConfigurationType configuration, Index objectNumber",          DC, "provide according output variable in 'value'" 
 Fv,     C,      GetPosition,                    ,               ,       Vector3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) position of 'localPosition' according to configuration type" 
 Fv,     C,      GetDisplacement,                ,               ,       Vector3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) position of 'localPosition' according to configuration type" 
 Fv,     C,      GetVelocity,                    ,               ,       Vector3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) velocity of 'localPosition' according to configuration type" 
@@ -4146,7 +4146,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = ObjectBeamGeometricallyExact2D
-classDescription = "A 2D geometrically exact beam finite element, currently using 2 nodes of type NodeRigidBody2D; FURTHER TESTS REQUIRED. Note that the orientation of the nodes need to follow the cross section orientation; e.g., an angle 0 represents the cross section pointing in $y$-direction, while and angle $\pi$ means that the cross section points in negative $x$-direction and the axis shows in positive $y$-direction. The localPosition of the beam with length $L$=physicsLength and height $h$ ranges in $X$-direction in range $[-L/2, L/2]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the \hac{EOM})."
+classDescription = "A 2D geometrically exact beam finite element, currently using 2 nodes of type NodeRigidBody2D; FURTHER TESTS REQUIRED. Note that the orientation of the nodes need to follow the cross section orientation in case that includeReferenceRotations=True; e.g., an angle 0 represents the cross section aligned with the $y$-axis, while and angle $\pi/2$ means that the cross section points in negative $x$-direction. Pre-curvature can be included with physicsReferenceCurvature and axial pre-stress can be considered by using a physicsLength different from the reference configuration of the nodes. The localPosition of the beam with length $L$=physicsLength and height $h$ ranges in $X$-direction in range $[-L/2, L/2]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the \hac{EOM})."
 cParentClass = CObjectBody
 mainParentClass = MainObjectBody
 visuParentClass = VisualizationObject
@@ -4174,9 +4174,9 @@ V,      CP,     physicsShearStiffness,          ,               ,       UReal,  
 V,      CP,     physicsBendingDamping,          ,               ,       UReal,      "0.",                       ,       I,      "$d_{K}$ [SI:Nm$^2$/s] viscous damping of bending deformation; the additional virtual work due to damping is $\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx$"
 V,      CP,     physicsAxialDamping,            ,               ,       UReal,      "0.",                       ,       I,      "$d_{\varepsilon}$ [SI:N/s] viscous damping of axial deformation"
 V,      CP,     physicsShearDamping,            ,               ,       UReal,      "0.",                       ,       I,      "$d_{\gamma}$ [SI:N/s] viscous damping of shear deformation"
-#V,      CP,     physicsReferenceAxialStrain,    ,               ,       Real,       "0.",                       ,       I,      "$\varepsilon_0$ [SI:1] reference axial strain of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference axial strain value"
+#Not needed, is included by length vs distance of nodes #V,      CP,     physicsReferenceAxialStrain,    ,               ,       Real,       "0.",                       ,       I,      "$\varepsilon_0$ [SI:1] reference axial strain of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference axial strain value"
 V,      CP,     physicsReferenceCurvature,      ,               ,       Real,       "0.",                       ,       I,      "$\kappa_0$ [SI:1/m] reference curvature of beam (pre-deformation) of beam"
-V,      CP,     includeReferenceRotations,      ,               ,       bool,       "false",                    ,       I,      "if True, the computation of bending strains considers reference rotations in nodes; otherwise, the strains are relative to reference values (which allows to consider pre-curved geometries naturally)"
+V,      CP,     includeReferenceRotations,      ,               ,       bool,       "false",                    ,       I,      "if True, rotations at nodes consider reference rotations, which are used for the computation of bending strains (this means that a pre-curved beam is stress-free); if False, the reference rotation of the cross section is orthogonal to the direction between the reference position of the end nodes. This allows to easily share nodes among several beams with different cross section orientation."
 #default: V,      CP,     useReducedOrderIntegration,     ,               ,       Bool,       false,                      ,       I,      "false: use Gauss order 9 integration for virtual work of axial forces, order 5 for virtual work of bending moments; true: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments"
 #
 Fv,     C,      ComputeMassMatrix,              ,               ,       void,       ,                           "EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse=false",       CDI,    "Computational function: compute mass matrix"
@@ -4192,6 +4192,8 @@ Fv,     C,      GetVelocity,                    ,               ,       Vector3D
 Fv,     C,      GetRotationMatrix,              ,               9,      Matrix3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent rotation matrix of beam; returns always a 3D Matrix, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect" 
 F,      C,      GetRotation,                    ,               ,       Real,       ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent rotation of beam (Tait-Bryan angles); returns 3D Vector with z-component" 
 Fv,     C,      GetAngularVelocity,             ,               3,      Vector3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent angular velocity of node; returns always a 3D Vector, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect" 
+Fv,     C,      GetLocalCenterOfMass,           ,               3,      Vector3D,   "return Vector3D({0.,0.,0.});", , CI, "return the local position of the center of mass, needed for equations of motion and for massProportionalLoad" 
+#
 Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'BeamGeometricallyExact2D';" ,    ,       CI,     "Get type name of object; could also be realized via a string -> type conversion?" 
 Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "CHECKandTHROW(localIndex <= 1, __EXUDYN_invalid_local_node1);\n        return parameters.nodeNumbers[localIndex];",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
 Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return 2;",                ,       CI,     "number of nodes; needed for every object" 
@@ -4267,6 +4269,8 @@ Fv,     C,      GetDisplacement,                ,               ,       Vector3D
 Fv,     C,      GetVelocity,                    ,               ,       Vector3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) velocity of 'localPosition' according to configuration type" 
 Fv,     C,      GetRotationMatrix,              ,               9,      Matrix3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent rotation matrix of node; returns always a 3D Matrix, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect" 
 Fv,     C,      GetAngularVelocity,             ,               3,      Vector3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent angular velocity of node; returns always a 3D Vector, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect" 
+Fv,     C,      GetLocalCenterOfMass,           ,               3,      Vector3D,   "return Vector3D({0.,0.,0.});", , CI, "return the local position of the center of mass, needed for equations of motion and for massProportionalLoad" 
+#
 Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'BeamGeometricallyExact3D';" ,    ,       CI,     "Get type name of object; could also be realized via a string -> type conversion?" 
 Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "CHECKandTHROW(localIndex <= 1, __EXUDYN_invalid_local_node1);\n        return parameters.nodeNumbers[localIndex];",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
 Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return 2;",                ,       CI,    "number of nodes; needed for every object" 
@@ -4310,43 +4314,22 @@ equations =
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 miniExample =
-    #NEEDS to be revised
-    from exudyn.beams import GenerateStraightLineANCFCable
-    rhoA = 78.
-    EA = 1000000.
-    EI = 833.3333333333333
-    cable = Cable(physicsMassPerLength=rhoA, 
-                  physicsBendingStiffness=EI, 
-                  physicsAxialStiffness=EA, 
-                  )
-
-    ancf=GenerateStraightLineANCFCable(mbs=mbs,
-                  positionOfNode0=[0,0,0], positionOfNode1=[2,0,0],
-                  numberOfElements=32, #converged to 4 digits
-                  cableTemplate=cable, #this defines the beam element properties
-                  massProportionalLoad = [0,-9.81,0],
-                  fixedConstraintsNode0 = [1,1,1, 0,1,1], #add constraints for pos and rot (r'_y,r'_z)
-                  )
-    lastNode = ancf[0][-1]
-
-    #assemble and solve system for default parameters
-    mbs.Assemble()
-    mbs.SolveStatic()
+    #to be done
 
     #check result
-    exudynTestGlobals.testResult = mbs.GetNodeOutput(lastNode, exu.OutputVariableType.Displacement)[0]
+    exudynTestGlobals.testResult = 0
     #ux=-0.5013058140308901
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
 Vp,     M,      name,                           ,               ,       String,     "",                       ,       I,      "objects's unique name"
-V,      CP,     physicsHeight,                  ,               ,       UReal,      "0.",                       ,       I,      "$L$ [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives $\rho A L$; must be positive"
+V,      CP,     physicsThickness,               ,               ,       UReal,      "0.",                     ,       I,      "$h$ [SI:m] thickness of plate"
+V,      CP,     physicsDensity,                 ,               ,       UReal,      "0.",                     ,       I,      "$\rho$ [SI:kg/m$^3$] density of the plate, possibly averaged over thickness"
 V,      CP,     physicsStrainCoefficients,      ,               ,       Matrix3D,   "EXUmath::unitMatrix3D",    ,       I,      "$\Dm_\varepsilon$ [SI:N/m] stiffness coefficients related to inplane normal and shear strains, integrated over height of the plate"
 V,      CP,     physicsCurvatureCoefficients,   ,               ,       Matrix3D,   "EXUmath::unitMatrix3D",    ,       I,      "$\Dm_\kappa$ [SI:Nm] stiffness coefficients related to curvatures, integrated over height of the plate"
-#this is impossible for Cable 3D: V,      CP,     physicsReferenceCurvature,      ,               ,       Real,       "0.",                       ,       I,      "$\kappa_0$ [SI:1/m] reference curvature of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference curvature value"
-V,      CP,     strainIsRelativeToReference,    ,               ,       Real,       "0.",                       ,       I,      "$f\cRef$ if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration serves as a reference geometry; allows also values between 0. and 1. to perform a transition during static computation"
+V,      CP,     strainIsRelativeToReference,    ,               ,       Real,       "1.",                       ,       I,      "$f\cRef$ if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration serves as a reference geometry; allows also values between 0. and 1. to perform a transition during static computation"
 V,      CP,     nodeNumbers,                    ,               ,       NodeIndex4,     "Index4({EXUstd::InvalidIndex, EXUstd::InvalidIndex, EXUstd::InvalidIndex, EXUstd::InvalidIndex})",       ,       I,      "4 NodePointSlope12 node numbers"
-V,      CP,     useReducedOrderIntegration,     ,               ,       Index,      0,                      ,       I,      "0/false: use highest Gauss integration for virtual work of strains, order 5 for bending moments; 1/true: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments"
+V,      CP,     useReducedOrderIntegration,     ,               ,       Index,      0,                      ,       I,      "0/false: use highest Gauss integration for virtual work of strains"
 #access to parameters for Base class:
 #
 Fv,     C,      ComputeMassMatrix,              ,               ,       void,       ,                           "EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse=false",       CDI,    "Computational function: compute mass matrix"
@@ -4362,7 +4345,7 @@ Fv,     C,      GetVelocity,                    ,               ,       Vector3D
 F,      C,      GetAcceleration,                ,               ,       Vector3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) acceleration of 'localPosition' according to configuration type" 
 #this is impossible for Cable 3D: Fv,     C,      GetRotationMatrix,              ,               9,      Matrix3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent rotation matrix of node; returns always a 3D Matrix, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect" 
 Fv,     C,      GetAngularVelocity,             ,               3,      Vector3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent angular velocity of node; returns always a 3D Vector, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect" 
-Fv,     C,      GetLocalCenterOfMass,           ,               3,      Vector3D,   "return Vector3D({0.5*parameters.physicsLength,0.,0.});", , CI, "return the local position of the center of mass, needed for equations of motion and for massProportionalLoad" 
+Fv,     C,      GetLocalCenterOfMass,           ,               3,      Vector3D,   "return Vector3D({0.,0.,0.});", , CI, "return the local position of the center of mass, needed for equations of motion and for massProportionalLoad" 
 #
 Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'ANCFCable';" ,    ,       CI,     "Get type name of object; could also be realized via a string -> type conversion?" 
 Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "CHECKandTHROW(localIndex <= 1, __EXUDYN_invalid_local_node1);\n        return parameters.nodeNumbers[localIndex];",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
@@ -4374,10 +4357,10 @@ Fv,     C,      HasConstantMassMatrix,          ,               ,       bool,   
 Fv,     C,      ParametersHaveChanged,          ,               ,       void,        "massMatrixComputed = false;", ,     I,    "This flag is reset upon change of parameters; says that mass matrix (future: other pre-computed values) need to be recomputed" 
 Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
 #internal functions:
-Fs,     C,      MapCoordinates,                 ,               ,       Vector3D,   ,                           "const Vector4D& SV, const LinkedDataVector& q0, const LinkedDataVector& q1",          DI, "map element coordinates (position or veloctiy level) given by nodal vectors q0 and q1 onto compressed shape function vector to compute position, etc." 
-# Fs,     C,      ComputeShapeFunctions,          ,               ,       Vector4D,   ,                           "Real x, Real L",          DI, "get compressed shape function vector $\Sm_v$, depending local position $x \in [0,L]$"
-# Fs,     C,      ComputeShapeFunctions_x,        ,               ,       Vector4D,   ,                           "Real x, Real L",          DI, "get first derivative of compressed shape function vector $\frac{\partial \Sm_v}{\partial x}$, depending local position $x \in [0,L]$"
-# Fs,     C,      ComputeShapeFunctions_xx,       ,               ,       Vector4D,   ,                           "Real x, Real L",          DI, "get second derivative of compressed shape function vector $\frac{\partial^2 \Sm_v}{\partial^2 x}$, depending local position $x \in [0,L]$"
+Fs,     C,      MapCoordinates,                 ,               ,       Vector3D,   ,                           "const Vector12D& SV, const LinkedDataVector& q0, const LinkedDataVector& q1, const LinkedDataVector& q2, const LinkedDataVector& q3",          DI, "map element coordinates (position or veloctiy level) given by nodal vectors q0, ..., q3 onto compressed shape function vector to compute position, etc." 
+Fs,     C,      ComputeShapeFunctions,          ,               ,       void,       ,                           "Real xi, Real eta, Vector12D& sf",          DI, "get compressed shape function vector $\Sm_v$, depending on local position $[\xi, \eta] \in [-1,1] \times [-1,1]$ (in unit coordinates)"
+Fs,     C,      ComputeShapeFunctions_xy,       ,               ,       void,       ,                           "Real xi, Real eta, Vector12D& sf_x, Vector12D& sf_y",          DI, "get first derivatives of compressed shape function vector $\Sm_v$, depending on local position $[\xi, \eta] \in [-1,1] \times [-1,1]$ (in unit coordinates)"
+Fs,     C,      ComputeShapeFunctions_xxyy,     ,               ,       void,       ,                           "Real xi, Real eta, Vector12D& sf_xx, Vector12D& sf_yy, Vector12D& sf_xy",          DI, "get second derivatives of compressed shape function vector $\Sm_v$, depending on local position $[\xi, \eta] \in [-1,1] \times [-1,1]$ (in unit coordinates)"
 F,      C,      ComputeCurrentNodeCoordinates,  ,               ,       void,       ,                           "ConstSizeVector<6>& qNode0, ConstSizeVector<6>& qNode1",          CDI, "Compute node coordinates in current configuration including reference coordinates" 
 F,      C,      ComputeCurrentNodeVelocities,   ,               ,       void,       ,                           "ConstSizeVector<6>& qNode0, ConstSizeVector<6>& qNode1",          CDI, "Compute node velocity coordinates in current configuration" 
 F,      C,      ComputeCurrentObjectCoordinates,,               ,       void,       ,                           "ConstSizeVector<nODE2coordinates>& qANCF",          CDI, "Compute object (finite element) coordinates in current configuration including reference coordinates" 

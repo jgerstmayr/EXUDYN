@@ -16,7 +16,6 @@ import exudyn as exu
 from exudyn.itemInterface import *
 from exudyn.utilities import *
 
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals #for testing
 import time
 import numpy as np
 
@@ -190,9 +189,7 @@ u = mbs.GetNodeOutput(n1, exu.OutputVariableType.AngularVelocity)
 print('omega=',u)
 #print('displacement=',u[0])
 
-#exudynTestGlobals.testError = u[0] - (0.5152217339585201) #2019-12-01;
-
-##+++++++++++++++++++++++++++++++++++++++++++++++++++++
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 

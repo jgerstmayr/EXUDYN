@@ -315,8 +315,6 @@ You can view and download this file on Github: `pendulumVerify.py <https://githu
        
        h=0.25e-3*4
        tEnd = 0.25*8
-       #if exudynTestGlobals.useGraphics:
-       #    tEnd = 0.1
        
        simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
        simulationSettings.timeIntegration.endTime = tEnd

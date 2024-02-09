@@ -65,7 +65,9 @@ You can view and download this file on Github: `ANCFmovingRigidBodyTest.py <http
    fixANCFRotation = 1
    
    #######################SUSPENSION ROPE##################################################################################################################################################################
-   suspensionCableTemplate=Cable2D(physicsMassPerLength=20.87, physicsBendingStiffness=78878*complianceFactBend, physicsAxialStiffness=398240000*complianceFactAxial)
+   suspensionCableTemplate=Cable2D(physicsMassPerLength=20.87, 
+                                   physicsBendingStiffness=78878*complianceFactBend, 
+                                   physicsAxialStiffness=398240000*complianceFactAxial)
    
    [suspensionCableNodeList, suspensionCableObjectList, suspensionLoadList, suspensionCableNodePositionList, dummy]=GenerateStraightLineANCFCable2D(mbs=mbs, positionOfNode0=[0,0,0], positionOfNode1=[L,0,0], numberOfElements=nEl, cableTemplate=suspensionCableTemplate,
                                                                      massProportionalLoad=[0,-gravityFieldConstant,0], fixedConstraintsNode0=[1,1,0,fixANCFRotation], fixedConstraintsNode1=[1,1,0,fixANCFRotation])
@@ -77,10 +79,11 @@ You can view and download this file on Github: `ANCFmovingRigidBodyTest.py <http
    nALE = mbs.AddNode(NodeGenericODE2(numberOfODE2Coordinates=1, referenceCoordinates=[0], initialCoordinates=[0], initialCoordinates_t=[vALE]))
    mALE = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nALE, coordinate=0)) #ALE velocity  marker
    
-   haulageCableTemplate=ALECable2D(physicsMassPerLength=6.96, physicsBendingStiffness=5956*complianceFactBend, 
+   haulageCableTemplate=ALECable2D(physicsMassPerLength=6.96, 
+                                   physicsBendingStiffness=5956*complianceFactBend, 
                                    physicsAxialStiffness=96725000*complianceFactAxial,
                                    physicsAddALEvariation=False) #for compatibility with test suite results
-   haulageCableTemplate.nodeNumbers[2]=nALE
+   haulageCableTemplate.nodeNumbers[2]=nALE #this will not be overwritten!
    
    [haulageCableNodeList, haulageCableObjectList, haulageLoadList, haulageCableNodePositionList, dummy]=GenerateStraightLineANCFCable2D(mbs=mbs, 
                         positionOfNode0=[0,offset,0], positionOfNode1=[L,offset,0], numberOfElements=nEl, cableTemplate=haulageCableTemplate,

@@ -143,13 +143,13 @@ public: //
 	//! reduce step size (1..normal, 2..severe problems); return true, if reduction was successful
 	virtual bool ReduceStepSize(MainSystem& mainSystem, const SimulationSettings& simulationSettings, Index severity) 
 	{
-		CheckInitialized(mainSystem); return GetCSolver().ReduceStepSize(*(mainSystem.cSystem), simulationSettings, severity);
+		CheckInitialized(mainSystem); return GetCSolver().ReduceStepSize(mainSystem.cSystem, simulationSettings, severity);
 	}
 
 	//! increase step size if convergence is good
 	virtual void IncreaseStepSize(MainSystem& mainSystem, const SimulationSettings& simulationSettings) 
 	{
-		CheckInitialized(mainSystem); GetCSolver().IncreaseStepSize(*(mainSystem.cSystem), simulationSettings);
+		CheckInitialized(mainSystem); GetCSolver().IncreaseStepSize(mainSystem.cSystem, simulationSettings);
 	}
 
 	//! increase step size if convergence is good
@@ -169,7 +169,7 @@ public: //
 	virtual bool InitializeSolver(MainSystem& mainSystem, const SimulationSettings& simulationSettings)
 	{
 		InitializeCheckInitialized(mainSystem); //in order to allow user functions within InitializeSolver()
-		bool returnValue = GetCSolver().InitializeSolver(*(mainSystem.cSystem), simulationSettings);
+		bool returnValue = GetCSolver().InitializeSolver(mainSystem.cSystem, simulationSettings);
 		if (!returnValue) { isInitialized = false; }
 
 		return returnValue;
@@ -178,121 +178,121 @@ public: //
 	//! pre-initialize for solver specific tasks; called at beginning of InitializeSolver, right after Solver data reset
 	virtual void PreInitializeSolverSpecific(MainSystem& mainSystem, const SimulationSettings& simulationSettings) 
 	{
-		CheckInitialized(mainSystem); GetCSolver().PreInitializeSolverSpecific(*(mainSystem.cSystem), simulationSettings);
+		CheckInitialized(mainSystem); GetCSolver().PreInitializeSolverSpecific(mainSystem.cSystem, simulationSettings);
 	}
 
 	//! initialize output files; called from InitializeSolver()
 	virtual void InitializeSolverOutput(MainSystem& mainSystem, const SimulationSettings& simulationSettings)
 	{
-		CheckInitialized(mainSystem); GetCSolver().InitializeSolverOutput(*(mainSystem.cSystem), simulationSettings);
+		CheckInitialized(mainSystem); GetCSolver().InitializeSolverOutput(mainSystem.cSystem, simulationSettings);
 	}
 
 	//! check if system is solvable; initialize dense/sparse computation modes
 	virtual bool InitializeSolverPreChecks(MainSystem& mainSystem, const SimulationSettings& simulationSettings) 
 	{
-		CheckInitialized(mainSystem); return GetCSolver().InitializeSolverPreChecks(*(mainSystem.cSystem), simulationSettings);
+		CheckInitialized(mainSystem); return GetCSolver().InitializeSolverPreChecks(mainSystem.cSystem, simulationSettings);
 	}
 
 	//! initialize all data,it,conv; called from InitializeSolver()
 	virtual void InitializeSolverData(MainSystem& mainSystem, const SimulationSettings& simulationSettings)
 	{
-		CheckInitialized(mainSystem); GetCSolver().InitializeSolverData(*(mainSystem.cSystem), simulationSettings);
+		CheckInitialized(mainSystem); GetCSolver().InitializeSolverData(mainSystem.cSystem, simulationSettings);
 	}
 
 	//! set/compute initial conditions (solver-specific!); called from InitializeSolver()
 	virtual void InitializeSolverInitialConditions(MainSystem& mainSystem, const SimulationSettings& simulationSettings) 
 	{
-		CheckInitialized(mainSystem); GetCSolver().InitializeSolverInitialConditions(*(mainSystem.cSystem), simulationSettings);
+		CheckInitialized(mainSystem); GetCSolver().InitializeSolverInitialConditions(mainSystem.cSystem, simulationSettings);
 	}
 
 	//! post-initialize for solver specific tasks; called at the end of InitializeSolver
 	virtual void PostInitializeSolverSpecific(MainSystem& mainSystem, const SimulationSettings& simulationSettings) {
-		CheckInitialized(mainSystem); GetCSolver().PostInitializeSolverSpecific(*(mainSystem.cSystem), simulationSettings);
+		CheckInitialized(mainSystem); GetCSolver().PostInitializeSolverSpecific(mainSystem.cSystem, simulationSettings);
 	}
 
 	//! solve System: InitializeSolver, SolveSteps, FinalizeSolver
 	virtual bool SolveSystem(MainSystem& mainSystem, const SimulationSettings& simulationSettings) 
 	{
 		InitializeCheckInitialized(mainSystem); //needs to be called, as otherwise, user functions will fail!
-		return GetCSolver().SolveSystem(*(mainSystem.cSystem), simulationSettings);
+		return GetCSolver().SolveSystem(mainSystem.cSystem, simulationSettings);
 	}
 
 	//! write concluding information (timer statistics, messages) and close files
 	virtual void FinalizeSolver(MainSystem& mainSystem, const SimulationSettings& simulationSettings) 
 	{
-		CheckInitialized(mainSystem); GetCSolver().FinalizeSolver(*(mainSystem.cSystem), simulationSettings);
+		CheckInitialized(mainSystem); GetCSolver().FinalizeSolver(mainSystem.cSystem, simulationSettings);
 	}
 
 	//! main solver part: calls multiple InitializeStep(...)/ DiscontinuousIteration(...)/ FinishStep(...); do step reduction if necessary; return true if success, false else
 	virtual bool SolveSteps(MainSystem& mainSystem, const SimulationSettings& simulationSettings) 
 	{
-		CheckInitialized(mainSystem); return GetCSolver().SolveSteps(*(mainSystem.cSystem), simulationSettings);
+		CheckInitialized(mainSystem); return GetCSolver().SolveSteps(mainSystem.cSystem, simulationSettings);
 	}
 
 	//! update currentTime (and load factor); MUST be overwritten in special solver class
 	virtual void UpdateCurrentTime(MainSystem& mainSystem, const SimulationSettings& simulationSettings) 
 	{
-		CheckInitialized(mainSystem); GetCSolver().UpdateCurrentTime(*(mainSystem.cSystem), simulationSettings);
+		CheckInitialized(mainSystem); GetCSolver().UpdateCurrentTime(mainSystem.cSystem, simulationSettings);
 	}
 
 	//! initialize static step / time step; python-functions; do some outputs, checks, etc.
 	virtual void InitializeStep(MainSystem& mainSystem, const SimulationSettings& simulationSettings)
 	{
-		CheckInitialized(mainSystem); GetCSolver().InitializeStep(*(mainSystem.cSystem), simulationSettings);
+		CheckInitialized(mainSystem); GetCSolver().InitializeStep(mainSystem.cSystem, simulationSettings);
 	}
 
 	//! finish static step / time step; write output of results to file; writeSolution not available here as compared to CSolverBase.h!
 	virtual void FinishStep(MainSystem& mainSystem, const SimulationSettings& simulationSettings)
 	{
-		CheckInitialized(mainSystem); GetCSolver().FinishStep(*(mainSystem.cSystem), simulationSettings);
+		CheckInitialized(mainSystem); GetCSolver().FinishStep(mainSystem.cSystem, simulationSettings);
 	}
 
 	//! perform discontinuousIteration for static step / time step; CALLS ComputeNewtonResidual
 	virtual bool DiscontinuousIteration(MainSystem& mainSystem, const SimulationSettings& simulationSettings)
 	{
-		CheckInitialized(mainSystem); return GetCSolver().DiscontinuousIteration(*(mainSystem.cSystem), simulationSettings);
+		CheckInitialized(mainSystem); return GetCSolver().DiscontinuousIteration(mainSystem.cSystem, simulationSettings);
 	}
 
 	//! perform Newton method for given solver method
 	virtual bool Newton(MainSystem& mainSystem, const SimulationSettings& simulationSettings)
 	{
-		CheckInitialized(mainSystem); return GetCSolver().Newton(*(mainSystem.cSystem), simulationSettings);
+		CheckInitialized(mainSystem); return GetCSolver().Newton(mainSystem.cSystem, simulationSettings);
 	}
 
 	//! perform PostNewton method for given solver method
 	virtual Real PostNewton(MainSystem& mainSystem, const SimulationSettings& simulationSettings)
 	{
-		CheckInitialized(mainSystem); return GetCSolver().PostNewton(*(mainSystem.cSystem), simulationSettings);
+		CheckInitialized(mainSystem); return GetCSolver().PostNewton(mainSystem.cSystem, simulationSettings);
 	}
 
 	//! compute residual for Newton method (e.g. static or time step); store result vector in systemResidual and return scalar residual
 	virtual Real ComputeNewtonResidual(MainSystem& mainSystem, const SimulationSettings& simulationSettings)
 	{
-		CheckInitialized(mainSystem); return GetCSolver().ComputeNewtonResidual(*(mainSystem.cSystem), simulationSettings);
+		CheckInitialized(mainSystem); return GetCSolver().ComputeNewtonResidual(mainSystem.cSystem, simulationSettings);
 	}
 
 	//! compute update for currentState from newtonSolution (decrement from residual and jacobian)
 	virtual void ComputeNewtonUpdate(MainSystem& mainSystem, const SimulationSettings& simulationSettings, bool initial = false)
 	{
-		CheckInitialized(mainSystem); GetCSolver().ComputeNewtonUpdate(*(mainSystem.cSystem), simulationSettings, initial);
+		CheckInitialized(mainSystem); GetCSolver().ComputeNewtonUpdate(mainSystem.cSystem, simulationSettings, initial);
 	}
 
 	//! compute jacobian for newton method of given solver method; store result in systemJacobian
 	virtual void ComputeNewtonJacobian(MainSystem& mainSystem, const SimulationSettings& simulationSettings) 
 	{
-		CheckInitialized(mainSystem); GetCSolver().ComputeNewtonJacobian(*(mainSystem.cSystem), simulationSettings);
+		CheckInitialized(mainSystem); GetCSolver().ComputeNewtonJacobian(mainSystem.cSystem, simulationSettings);
 	}
 
 	//! write unique file header, depending on static/ dynamic simulation
 	virtual void WriteSolutionFileHeader(MainSystem& mainSystem, const SimulationSettings& simulationSettings) 
 	{
-		CheckInitialized(mainSystem); GetCSolver().WriteSolutionFileHeader(*(mainSystem.cSystem), simulationSettings);
+		CheckInitialized(mainSystem); GetCSolver().WriteSolutionFileHeader(mainSystem.cSystem, simulationSettings);
 	}
 
 	//! write unique coordinates solution file
 	virtual void WriteCoordinatesToFile(MainSystem& mainSystem, const SimulationSettings& simulationSettings) 
 	{
-		CheckInitialized(mainSystem); GetCSolver().WriteCoordinatesToFile(*(mainSystem.cSystem), simulationSettings);
+		CheckInitialized(mainSystem); GetCSolver().WriteCoordinatesToFile(mainSystem.cSystem, simulationSettings);
 	}
 
 	//! return true, if file or console output is at or above the given level

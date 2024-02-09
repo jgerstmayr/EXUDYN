@@ -18,7 +18,6 @@ from exudyn.itemInterface import *
 from exudyn.utilities import *
 from math import cos, sin
 
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals #for testing
 import time
 import numpy as np
 
@@ -222,7 +221,6 @@ if True:
     print('omega final (Hz)=',(1./(2.*np.pi))*u)
     #print('displacement=',u[0])
 
-#exudynTestGlobals.testError = u[0] - (0.5152217339585201) #2019-12-01;
 
 ##+++++++++++++++++++++++++++++++++++++++++++++++++++++
 import matplotlib.pyplot as plt

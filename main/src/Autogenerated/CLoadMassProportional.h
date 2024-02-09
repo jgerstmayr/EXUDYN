@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2023-12-07  19:56:09 (last modified)
+* @date         2024-02-02  20:40:04 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -23,6 +23,7 @@
 #include "System/ItemIndices.h"
 
 #include <functional> //! AUTO: needed for std::function
+#include "Pymodules/PythonUserFunctions.h" //! AUTO: needed for user functions, without pybind11
 class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 
 //! AUTO: Parameters for class CLoadMassProportionalParameters
@@ -31,7 +32,7 @@ class CLoadMassProportionalParameters // AUTO:
 public: // AUTO: 
     Index markerNumber;                           //!< AUTO: marker's number to which load is applied
     Vector3D loadVector;                          //!< AUTO: vector-valued load [SI:N/kg = m/s\f$^2\f$]; typically, this will be the gravity vector in global coordinates; in case of a user function, this v is ignored
-    std::function<StdVector3D(const MainSystem&,Real,StdVector3D)> loadVectorUserFunction;//!< AUTO: A Python function which defines the time-dependent load; see description below; see also notes on loadFactor and drawing in LoadForceVector!
+    PythonUserFunctionBase< std::function<StdVector3D(const MainSystem&,Real,StdVector3D)> > loadVectorUserFunction;//!< AUTO: A Python function which defines the time-dependent load; see description below; see also notes on loadFactor and drawing in LoadForceVector!
     //! AUTO: default constructor with parameter initialization
     CLoadMassProportionalParameters()
     {

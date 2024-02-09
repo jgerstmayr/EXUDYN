@@ -1,7 +1,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN python utility library
 #
-# Details: 	Advanced utility functions only depending on numpy or specified exudyn modules;
+# Details:  Advanced utility functions only depending on numpy or specified exudyn modules;
 #           Here, we gather special functions, which are depending on other modules and do not fit into exudyn.utilities as they cannot be imported e.g. in rigidBodyUtilities
 #
 # Author:   Johannes Gerstmayr
@@ -393,11 +393,13 @@ def RoundMatrix(matrix, treshold = 1e-14):
 #**input:
 #  mbs: MainSystem, needed currently for interface
 #  function: Python function with interface according to desired user function
-#  itemIndex: item index, such as ObjectIndex or LoadIndex
+#  itemIndex: item index, such as ObjectIndex or LoadIndex; -1 indicates MainSystem; if None, itemTypeName must be provided instead
+#  itemTypeName: use of type name, such as ObjectConnectorSpringDamper; in this case, itemIndex must be None
+#  itemIndex: item index, such as ObjectIndex or LoadIndex; -1 indicates MainSystem
 #  userFunctionName: name of user function item, see documentation; this is required, because some items have several user functions, which need to be distinguished
 #  verbose: if > 0, according output is printed
 #**output: return dictionary with 'functionName', 'argList', and 'returnList'
-def ConvertFunctionToSymbolic(mbs, function, itemIndex, userFunctionName, verbose=0):
+def ConvertFunctionToSymbolic(mbs, function, userFunctionName, itemIndex=None, itemTypeName=None, verbose=0):
     fnName = function.__name__
     fnArgs = function.__code__.co_varnames
     #fnAnnotations = function.__annotations__ #not necessarily present
@@ -408,22 +410,27 @@ def ConvertFunctionToSymbolic(mbs, function, itemIndex, userFunctionName, verbos
         print("Number of Arguments:", function.__code__.co_argcount)
         print("Argument Names:", fnArgs)
 
-    
-    try:
-        typeString = itemIndex.GetTypeString()
-    except:
-        raise ValueError('ConvertFunctionToSymbolic: itemIndex must be a valid exudyn ItemIndex')
-    
-    itemTypeName = None
-    # itemClass = None
-    if typeString == 'ObjectIndex':
-        itemTypeName = mbs.GetObject(itemIndex)['objectType']
-        # itemClass = 'Object'
-    elif typeString == 'LoadIndex':
-        itemTypeName = mbs.GetLoad(itemIndex)['loadType']
-        # itemClass = 'Load'
+
+    if itemTypeName != None:
+        itemTypeNameCopy = itemTypeName
+        if itemIndex != None: raise ValueError('ConvertFunctionToSymbolic: if itemTypeName is provided, itemIndex must be None')
+    elif itemIndex == -1: #MainSystem or other function
+        itemTypeNameCopy = 'MainSystem'
     else:
-        raise ValueError('ConvertFunctionToSymbolic: itemIndex has unsupported type')
+        #regular item
+        try:
+            typeString = itemIndex.GetTypeString()
+        except:
+            raise ValueError('ConvertFunctionToSymbolic: itemIndex must be a valid exudyn ItemIndex or itemTypeName has to be provided instead')
+        
+        itemTypeNameCopy = None
+        # itemClass = None
+        if typeString == 'ObjectIndex':
+            itemTypeNameCopy = 'Object'+mbs.GetObject(itemIndex)['objectType']
+        elif typeString == 'LoadIndex':
+            itemTypeNameCopy = 'Load'+mbs.GetLoad(itemIndex)['loadType']
+        else:
+            raise ValueError('ConvertFunctionToSymbolic: itemIndex has unsupported type')
 
     recStored = exudyn.symbolic.GetRecording()
     exudyn.symbolic.SetRecording(True)
@@ -433,7 +440,7 @@ def ConvertFunctionToSymbolic(mbs, function, itemIndex, userFunctionName, verbos
     argList = []
     argTypeList = []
     
-    functionArgs = userFunctionArgsDict[itemTypeName+','+userFunctionName]
+    functionArgs = userFunctionArgsDict[itemTypeNameCopy+','+userFunctionName]
     returnType = functionArgs[2][0]
     nArgs = len(functionArgs[0])
     if nArgs != function.__code__.co_argcount:
@@ -509,7 +516,8 @@ def ConvertFunctionToSymbolic(mbs, function, itemIndex, userFunctionName, verbos
 #**input:
 #  mbs: MainSystem, needed currently for interface
 #  function: Python function with interface according to desired user function
-#  itemIndex: item index, such as ObjectIndex or LoadIndex
+#  itemIndex: item index, such as ObjectIndex or LoadIndex; -1 indicates MainSystem; if None, itemTypeName must be provided instead
+#  itemTypeName: use of type name, such as ObjectConnectorSpringDamper; in this case, itemIndex must be None
 #  userFunctionName: name of user function item, see documentation; this is required, because some items have several user functions, which need to be distinguished
 #  verbose: if > 0, according output may be printed
 #**output: returns symbolic user function; this can be transfered into an item using TransferUserFunction2Item
@@ -520,18 +528,21 @@ def ConvertFunctionToSymbolic(mbs, function, itemIndex, userFunctionName, verbos
 # node = mbs.AddNode(NodePoint(referenceCoordinates = [1.05,0,0]))
 # oMassPoint = mbs.AddObject(MassPoint(nodeNumber = node, physicsMass=1))
 #
+# symbolicFunc = CreateSymbolicUserFunction(mbs, function=springForceUserFunction, 
+#                                           userFunctionName='springForceUserFunction', 
+#                                           itemTypeName='ObjectConnectorSpringDamper')
+#
 # m0 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition=[0,0,0]))
 # m1 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oMassPoint, localPosition=[0,0,0]))
 # co = mbs.AddObject(ObjectConnectorSpringDamper(markerNumbers=[m0,m1],
-#                 referenceLength = 1, stiffness = 100, damping = 1))
+#                    referenceLength = 1, stiffness = 100, damping = 1, 
+#                    springForceUserFunction=symbolicFunc))
 #
-# symbolicFunc = CreateSymbolicUserFunction(mbs, springForceUserFunction, co, 'springForceUserFunction')
-# symbolicFunc.TransferUserFunction2Item(mbs, co, 'springForceUserFunction')    
 # print(symbolicFunc.Evaluate(mbs, 0., 0, 1.1, 0.,  100., 0., 13.) )
-def CreateSymbolicUserFunction(mbs, function, itemIndex, userFunctionName, verbose=0):
-    fnDict = ConvertFunctionToSymbolic(mbs, function, itemIndex, userFunctionName, verbose)
+def CreateSymbolicUserFunction(mbs, function, userFunctionName, itemIndex=None, itemTypeName=None, verbose=0):
+    fnDict = ConvertFunctionToSymbolic(mbs, function, userFunctionName, itemIndex, itemTypeName, verbose)
     symbolicFunc = exudyn.symbolic.UserFunction()
-    symbolicFunc.SetUserFunctionFromDict(mbs, fnDict, itemIndex, userFunctionName)
+    symbolicFunc.SetUserFunctionFromDict(mbs, fnDict, userFunctionName, itemIndex, str(itemTypeName))
     return symbolicFunc
     
 

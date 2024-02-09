@@ -30,7 +30,6 @@ except:
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
-# exudynTestGlobals.useGraphics = True
 withUserFunction = False #compare to user function based test
 
 #define parameters of mass point

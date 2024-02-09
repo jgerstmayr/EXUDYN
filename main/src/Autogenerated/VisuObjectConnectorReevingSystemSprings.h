@@ -1,10 +1,10 @@
 /** ***********************************************************************************************
 * @class        VisualizationObjectConnectorReevingSystemSprings
-* @brief        A 2D reeving system defined by a list of torque-free and friction-free sheaves or points that are connected with one rope (modelled as massless spring). The force is assumed to be constant all over the rope. The sheaves or connection points are defined by \f$nr\f$ rigid body markers \f$[m_0, \, m_1, \, \ldots, \, m_{nr-1}]\f$. At both ends of the rope there may be a prescribed motion coupled to a coordinate marker each, given by \f$m_{c0}\f$ and \f$m_{c1}\f$ .
+* @brief        A rD reeving system defined by a list of torque-free and friction-free sheaves or points that are connected with one rope (modelled as massless spring). NOTE that the spring can undergo tension AND compression (in order to avoid compression, use a PreStepUserFunction to turn off stiffness and damping in this case!). The force is assumed to be constant all over the rope. The sheaves or connection points are defined by \f$nr\f$ rigid body markers \f$[m_0, \, m_1, \, \ldots, \, m_{nr-1}]\f$. At both ends of the rope there may be a prescribed motion coupled to a coordinate marker each, given by \f$m_{c0}\f$ and \f$m_{c1}\f$ .
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-11-18  16:48:34 (last modified)
+* @date         2024-02-03  15:27:07 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

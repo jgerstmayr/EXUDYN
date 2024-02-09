@@ -9,15 +9,263 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi \small
-  \item Exudyn version = 1.7.69.dev1, 
-  \item last change =  2023-12-18, 
-  \item Number of issues = 1739, 
-  \item Number of resolved issues = 1539 (69 in current version), 
+  \item Exudyn version = 1.7.104.dev1, 
+  \item last change =  2024-02-08, 
+  \item Number of issues = 1782, 
+  \item Number of resolved issues = 1574 (104 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.7.104}:  resolved Issue 1781: {\bf GeneralContact}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add function Get/SetTriangleRigidBodyBased, to get data or modify data of current contact triangle}
+    \item   date resolved: {\bf 2024-02-08 20:38},
+date raised: 2024-02-08 
+  \ei
+  \item[] {\bf Version 1.7.103}:  resolved Issue 1780: {\bf GeneralContact}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add function SetSphereMarkerBased to set data for spheres during simulation}
+    \item   date resolved: {\bf 2024-02-08 20:38},
+date raised: 2024-02-08 
+  \ei
+  \item[] {\bf Version 1.7.102}:  resolved Issue 1779: {\bf GeneralContact}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: GetMarkerBasedSphere: change to GetSphereMarkerBased; add flag to decide whether to add basic data or not}
+    \item   date resolved: {\bf 2024-02-08 19:08},
+date raised: 2024-02-08 
+  \ei
+  \item[] {\bf Version 1.7.101}:  resolved Issue 1778: {\bf cRGB settings}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: change cRGB consistently to RGBA in visualization settings}
+    \item   date resolved: {\bf 2024-02-08 18:57},
+date raised: 2024-02-08 
+  \ei
+  \item[] {\bf Version 1.7.100}:  resolved Issue 1775: {\bf BodyGraphicsData}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: access with Get/SetObjectParameter is missing for graphicsData}
+    \item   date resolved: {\bf 2024-02-04 22:01},
+date raised: 2024-02-04 
+  \ei
+  \item[] {\bf Version 1.7.99}:  resolved Issue 1774: {\bf CreateSymbolicUserFunction}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: change order of args userFunctionName, itemIndex, and verbose; add additional itemTypeName}
+    \item   date resolved: {\bf 2024-02-04 00:36},
+date raised: 2024-02-04 
+  \ei
+  \item[] {\bf Version 1.7.98}:  resolved Issue 1773: {\bf CreateSymbolicUserFunction}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add option to directly pass itemTypeName instead of itemIndex in order to pre-compute user function}
+    \item   date resolved: {\bf 2024-02-04 00:36},
+date raised: 2024-02-04 
+  \ei
+  \item[] {\bf Version 1.7.97}:  resolved Issue 1771: {\bf TransferUserFunction2Item}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add functionality to allow direct assignment of symbolic user functions to userFunction parameters in objects, loads, etc.; remove TransferUserFunction2Item as this function is then no longer needed}
+    \item   date resolved: {\bf 2024-02-03 23:55},
+date raised: 2024-02-03 
+  \ei
+  \item[] {\bf Version 1.7.96}:  resolved Issue 1766: {\bf Python user functions}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: use PythonUserFunctionBase class for all Item user functions; add consistent Get/Set function for item access; should then automatically work with pickle}
+    \item   date resolved: {\bf 2024-02-03 23:54},
+date raised: 2024-02-02 
+  \ei
+  \item[] {\bf Version 1.7.95}:  resolved Issue 1750: {\bf python user functions}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add additional py::function to user functions in order to store original python function for pickling}
+    \item   date resolved: {\bf 2024-02-03 23:54},
+date raised: 2024-01-29 
+  \ei
+  \item[] {\bf Version 1.7.94}:  resolved Issue 1759: {\bf Renderer}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: there is an issue when restarting the renderer, which displays previous (old) data; requires to add some function which erases stored graphics data on call of StartRenderer()}
+    \item   date resolved: {\bf 2024-02-03 23:53},
+date raised: 2024-01-31 
+  \ei
+  \item[] {\bf Version 1.7.93}:  resolved Issue 1770: {\bf mainsystem extensions}
+(extensions)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add user function to mbs.Create...() functions}
+    \item   date resolved: {\bf 2024-02-03 22:50},
+date raised: 2024-02-03 
+  \ei
+  \item[] {\bf Version 1.7.92}:  resolved Issue 1763: {\bf Python user functions}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add pickle functionality (requires issue 1752)}
+    \item   date resolved: {\bf 2024-02-02 10:36},
+date raised: 2024-01-31 
+  \ei
+  \item[] {\bf Version 1.7.91}:  resolved Issue 1752: {\bf user functions types}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: create UserFunctionBase class and derived classes, containing std::function, and a py::object with metadata (Python function, Symbolic function, etc.); When settings user functions, they can be either initialized with 0 / Python function or with a UserFunction dict, which contains additional decorators; In particular, user functions will be rebuilt as symbolic; return values of user functions are then dictionaries}
+    \item   date resolved: {\bf 2024-02-02 10:36},
+date raised: 2024-01-29 
+  \ei
+  \item[] {\bf Version 1.7.90}:  resolved Issue 1765: {\bf MainSystem user functions}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: test special class for MainSystem user functions such as preStepUserFunction; if requeste, convert to Dict, in particular for symbolic or other special user functions}
+    \item   date resolved: {\bf 2024-02-02 10:33},
+date raised: 2024-02-02 
+  \ei
+  \item[] {\bf Version 1.7.89}:  resolved Issue 1762: {\bf SystemContainer}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add pickle functionality}
+    \item   date resolved: {\bf 2024-01-31 20:22},
+date raised: 2024-01-31 
+  \ei
+  \item[] {\bf Version 1.7.88}:  resolved Issue 1628: {\bf pickle MainSystem}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: consider a pickle method for certain objects; add consistent info in description; MainSystem, SimulationSettings, VisualizationSettings}
+    \item {\bf notes: consider with care, as not all things are copied (user functions, contact, ...)}
+    \item   date resolved: {\bf 2024-01-31 20:22},
+date raised: 2023-06-23 
+  \ei
+  \item[] {\bf Version 1.7.87}:  resolved Issue 1761: {\bf pickle}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add pickle to settings and structures}
+    \item   date resolved: {\bf 2024-01-31 20:21},
+date raised: 2024-01-31 
+  \ei
+  \item[] {\bf Version 1.7.86}:  resolved Issue 1760: {\bf pickle}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add pickle to ItemIndices}
+    \item   date resolved: {\bf 2024-01-31 20:21},
+date raised: 2024-01-31 
+  \ei
+  \item[] {\bf Version 1.7.85}:  resolved Issue 1757: {\bf DictionariesGetSet}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add C++ GetDictionary(...) function for read/write of system structures; add Get/SetDictionary to pybind interface}
+    \item   date resolved: {\bf 2024-01-31 17:27},
+date raised: 2024-01-30 
+  \ei
+  \item[] {\bf Version 1.7.84}:  resolved Issue 1758: {\bf StartRenderer}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add UpdateGraphicsDataNow() after start of renderer in order to avoid showing stored data for second run or renderer}
+    \item   date resolved: {\bf 2024-01-31 12:52},
+date raised: 2024-01-31 
+  \ei
+  \item[] {\bf Version 1.7.83}:  resolved Issue 1755: {\bf CSystem in MainSystem}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: change CSystem* to CSystem in MainSystem, to make copying easier}
+    \item   date resolved: {\bf 2024-01-30 16:43},
+date raised: 2024-01-30 
+  \ei
+  \item[] {\bf Version 1.7.82}:  resolved Issue 1756: {\bf SystemContainer}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: remove SystemContainer and just keep MainSystemContainer, as it is not needed; simplifies copying}
+    \item   date resolved: {\bf 2024-01-30 16:42},
+date raised: 2024-01-30 
+  \ei
+  \item[] {\bf Version 1.7.81}:  resolved Issue 1754: {\bf MainSystem}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: change creation of MainSystem; allow construction like exudyn.MainSystem(), add new function AppendSystem(MainSystem) to MainSystemContainer; this will allow pickling both of MainSystem and MainSystemContainer}
+    \item   date resolved: {\bf 2024-01-30 14:34},
+date raised: 2024-01-30 
+  \ei
+  \item[] {\bf Version 1.7.80}:  resolved Issue 1753: {\bf postStepUserFunction}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add user function to be called at end of time step, just before storing results to file; this allows to override results, etc.}
+    \item   date resolved: {\bf 2024-01-30 08:01},
+date raised: 2024-01-30 
+  \ei
+  \item[] {\bf Version 1.7.79}:  resolved Issue 1748: {\bf user functions}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: check option to set them to 0; PreStepUserFunction as well as item user functions}
+    \item {\bf notes: Note that when reading user functions, mbs.GetObjectParameter(...) also consistently gives now 0 instead of previously None}
+    \item   date resolved: {\bf 2024-01-29 14:41},
+date raised: 2024-01-29 
+  \ei
+  \item[] {\bf Version 1.7.78}:  resolved Issue 1749: {\bf User function}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: allow assignment to 0 for MainSystem user functions; SetPreStepUserFunction and SetPostNewtonUserFunction}
+    \item   date resolved: {\bf 2024-01-29 14:34},
+date raised: 2024-01-29 
+  \ei
+  \item[] {\bf Version 1.7.77}:  resolved Issue 1746: {\bf GenerateStraightBeam}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: build generic function to create beams along straight line; add interface both for ANCF (old GenerateStraightLineANCFCable function) as well as for geometrically exact beam}
+    \item   date resolved: {\bf 2024-01-28 19:46},
+date raised: 2024-01-28 
+  \ei
+  \item[] {\bf Version 1.7.76}:  resolved Issue 1747: {\bf GeometricallyExactBeam2D}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: finish interface for load mass proportional}
+    \item {\bf notes: also done for 3D version}
+    \item   date resolved: {\bf 2024-01-28 18:17},
+date raised: 2024-01-28 
+  \ei
+  \item[] {\bf Version 1.7.75}:  resolved Issue 1745: {\bf geometrically exact beam 2D}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: adjust implementation of reference strains to allow connection of several beams at one node in case that includeReferenceRotations=0}
+    \item   date resolved: {\bf 2024-01-27 22:16},
+date raised: 2024-01-27 
+  \ei
+  \item[] {\bf Version 1.7.74}:  resolved Issue 1744: {\bf geometrically exact beam 2D}
+(docu)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: fix inconsistent documentation of reference strains}
+    \item   date resolved: {\bf 2024-01-27 22:16},
+date raised: 2024-01-27 
+  \ei
+  \item[] {\bf Version 1.7.73}:  resolved Issue 1743: {\bf CreateRevoluteJoint}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: Description for local/global axis is wrong; behavior is switched by useGlobalFrame flag}
+    \item   date resolved: {\bf 2024-01-06 11:20},
+date raised: 2024-01-06 
+  \ei
+  \item[] {\bf Version 1.7.72}:  resolved Issue 1742: {\bf CreatePrismaticJoint}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: Description for local/global axis is wrong; behavior is switched by useGlobalFrame flag}
+    \item   date resolved: {\bf 2024-01-06 11:20},
+date raised: 2024-01-06 
+  \ei
+  \item[] {\bf Version 1.7.71}: {\bf \color{warningRed}  resolved BUG 1741}: {\bf ObjectKinematicTree}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: SensorObject does not work with OutputVariableType Coordinates; example does not work;}
+    \item {\bf notes: Coordinates, Force, etc. now available with GetObjectOutputBody and SensorBody}
+    \item   date resolved: {\bf 2024-01-06 11:02},
+date raised: 2024-01-06 
+  \ei
+  \item[] {\bf Version 1.7.70}:  resolved Issue 1739: {\bf symbolic}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: SetValue should raise exception if called with symbolic expression}
+    \item   date resolved: {\bf 2023-12-19 08:30},
+date raised: 2023-12-19 
+  \ei
   \item[] {\bf Version 1.7.69}:  resolved Issue 1737: {\bf symbolic}
 (extension)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
@@ -8357,6 +8605,11 @@ date raised: 2020-07-20
 \ei
 \mysubsection{Known open bugs}
 \bi \footnotesize 
+  \item open {\bf BUG 1772}:  {\bf item.GetDictionary}
+  \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: item.GetDictionary not working for new user function interface with symbolic user function}
+    \item date raised: 2024-02-04 
+  \ei
   \item open {\bf BUG 1639}:  {\bf SolveDynamic FFRF}
   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: repeated call to mbs.SolveDynamic gives divergence; attributed to FFRFreducedOrder model; workaround uses repeated build of model before calling solver again; may be related to FFRF or MarkerSuperElement-internal variables}

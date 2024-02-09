@@ -29,7 +29,6 @@ You can view and download this file on Github: `lavalRotor2Dtest.py <https://git
    from exudyn.itemInterface import *
    from exudyn.utilities import *
    
-   from modelUnitTests import ExudynTestStructure, exudynTestGlobals #for testing
    import time
    import numpy as np
    
@@ -122,19 +121,16 @@ You can view and download this file on Github: `lavalRotor2Dtest.py <https://git
    simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1
    
    exu.StartRenderer()              #start graphics visualization
-   #mbs.WaitForUserToContinue()    #wait for pressing SPACE bar to continue
+   mbs.WaitForUserToContinue()    #wait for pressing SPACE bar to continue
    
    #start solver:
    mbs.SolveDynamic(simulationSettings)
    
-   #SC.WaitForRenderEngineStopFlag()#wait for pressing 'Q' to quit
    exu.StopRenderer()               #safely close rendering window!
    
    #evaluate final (=current) output values
    u = mbs.GetNodeOutput(n1, exu.OutputVariableType.Position)
    print('displacement=',u[0])
-   
-   #exudynTestGlobals.testError = u[0] - (0.5152217339585201) #2019-12-01;
    
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++
    import matplotlib.pyplot as plt

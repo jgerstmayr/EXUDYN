@@ -2,7 +2,7 @@
 # This is an EXUDYN python example how to use ROS and EXUDYN
 #
 # Details:  This example shows how to communicate between an exudyn simulation
-#			and ROS publisher and subscriber from bash
+#           and ROS publisher and subscriber from bash
 #           To make use of this example, you need to 
 #           install ROS (ROS1 noetic) including rospy (see rosInterface.py)
 #           prerequisits to use: 

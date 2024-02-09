@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2023-01-23  08:25:49 (last modified)
+* @date         2024-02-03  15:37:35 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -136,9 +136,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "limitStopsDamping")) { cObjectConnectorCoordinateSpringDamperExt->GetParameters().limitStopsDamping = py::cast<Real>(d["limitStopsDamping"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "useLimitStops")) { cObjectConnectorCoordinateSpringDamperExt->GetParameters().useLimitStops = py::cast<bool>(d["useLimitStops"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "activeConnector")) { cObjectConnectorCoordinateSpringDamperExt->GetParameters().activeConnector = py::cast<bool>(d["activeConnector"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "springForceUserFunction")) { if (EPyUtils::CheckForValidFunction(d["springForceUserFunction"])) 
-            { cObjectConnectorCoordinateSpringDamperExt->GetParameters().springForceUserFunction = py::cast<std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real,Real,Real,Real,Real,Real,Real)>>((py::function)d["springForceUserFunction"]); /* AUTO:  read out dictionary and cast to C++ type*/}
-            else {cObjectConnectorCoordinateSpringDamperExt->GetParameters().springForceUserFunction = 0;  /*AUTO: otherwise assign with zero!*/ }} 
+        if (EPyUtils::DictItemExists(d, "springForceUserFunction")) { cObjectConnectorCoordinateSpringDamperExt->GetParameters().springForceUserFunction = d["springForceUserFunction"]; /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectConnectorCoordinateSpringDamperExt->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "VdrawSize")) { visualizationObjectConnectorCoordinateSpringDamperExt->GetDrawSize() = py::cast<float>(d["VdrawSize"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
@@ -172,11 +170,7 @@ public: // AUTO:
         d["limitStopsDamping"] = (Real)cObjectConnectorCoordinateSpringDamperExt->GetParameters().limitStopsDamping; //! AUTO: cast variables into python (not needed for standard types) 
         d["useLimitStops"] = (bool)cObjectConnectorCoordinateSpringDamperExt->GetParameters().useLimitStops; //! AUTO: cast variables into python (not needed for standard types) 
         d["activeConnector"] = (bool)cObjectConnectorCoordinateSpringDamperExt->GetParameters().activeConnector; //! AUTO: cast variables into python (not needed for standard types) 
-        if (cObjectConnectorCoordinateSpringDamperExt->GetParameters().springForceUserFunction)
-            {d["springForceUserFunction"] = (std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real,Real,Real,Real,Real,Real,Real)>)cObjectConnectorCoordinateSpringDamperExt->GetParameters().springForceUserFunction;}
-        else
-            {d["springForceUserFunction"] = 0;}
- //! AUTO: cast variables into python (not needed for standard types) 
+        d["springForceUserFunction"] = (py::object)cObjectConnectorCoordinateSpringDamperExt->GetParameters().springForceUserFunction; //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationObjectConnectorCoordinateSpringDamperExt->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         d["VdrawSize"] = (float)visualizationObjectConnectorCoordinateSpringDamperExt->GetDrawSize(); //! AUTO: cast variables into python (not needed for standard types) 
@@ -209,7 +203,7 @@ public: // AUTO:
         else if (parameterName.compare("limitStopsDamping") == 0) { return py::cast((Real)cObjectConnectorCoordinateSpringDamperExt->GetParameters().limitStopsDamping);} //! AUTO: get parameter
         else if (parameterName.compare("useLimitStops") == 0) { return py::cast((bool)cObjectConnectorCoordinateSpringDamperExt->GetParameters().useLimitStops);} //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { return py::cast((bool)cObjectConnectorCoordinateSpringDamperExt->GetParameters().activeConnector);} //! AUTO: get parameter
-        else if (parameterName.compare("springForceUserFunction") == 0) { return py::cast((std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real,Real,Real,Real,Real,Real,Real)>)cObjectConnectorCoordinateSpringDamperExt->GetParameters().springForceUserFunction);} //! AUTO: get parameter
+        else if (parameterName.compare("springForceUserFunction") == 0) { return cObjectConnectorCoordinateSpringDamperExt->GetParameters().springForceUserFunction.GetPythonDictionary();;} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectConnectorCoordinateSpringDamperExt->GetShow());} //! AUTO: get parameter
         else if (parameterName.compare("VdrawSize") == 0) { return py::cast((float)visualizationObjectConnectorCoordinateSpringDamperExt->GetDrawSize());} //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { return py::cast((std::vector<float>)visualizationObjectConnectorCoordinateSpringDamperExt->GetColor());} //! AUTO: get parameter
@@ -243,8 +237,7 @@ public: // AUTO:
         else if (parameterName.compare("limitStopsDamping") == 0) { cObjectConnectorCoordinateSpringDamperExt->GetParameters().limitStopsDamping = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("useLimitStops") == 0) { cObjectConnectorCoordinateSpringDamperExt->GetParameters().useLimitStops = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { cObjectConnectorCoordinateSpringDamperExt->GetParameters().activeConnector = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("springForceUserFunction") == 0) { if (py::isinstance<py::function>(value)) {cObjectConnectorCoordinateSpringDamperExt->GetParameters().springForceUserFunction = py::cast<std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real,Real,Real,Real,Real,Real,Real)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/} else
-            if (!EPyUtils::IsPyTypeInteger(value) || (py::cast<int>(value) != 0)) {PyError(STDstring("Failed to convert PyFunction: must be either valid python function or 0, but got ")+EXUstd::ToString(value)); }; } //! AUTO: get parameter
+        else if (parameterName.compare("springForceUserFunction") == 0) { cObjectConnectorCoordinateSpringDamperExt->GetParameters().springForceUserFunction = value; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationObjectConnectorCoordinateSpringDamperExt->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VdrawSize") == 0) { visualizationObjectConnectorCoordinateSpringDamperExt->GetDrawSize() = py::cast<float>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { visualizationObjectConnectorCoordinateSpringDamperExt->GetColor() = py::cast<std::vector<float>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

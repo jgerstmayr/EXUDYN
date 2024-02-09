@@ -15,30 +15,33 @@ You can view and download this file on Github: `ANCFcantileverTest.py <https://g
    #
    # Details:  ANCF Cable2D cantilever test
    #
+   # Model:    Cantilever beam with cable elements
+   #
    # Author:   Johannes Gerstmayr
    # Date:     2019-11-15
    # Update:   2022-03-16: get to run static example again, compared to paper!
    #
    # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
    #
+   # *clean example*
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    
+   ## import exudyn and utilities
    import exudyn as exu
-   from exudyn.itemInterface import *
    from exudyn.utilities import *
    
+   ## create container and main system to work with
    SC = exu.SystemContainer()
    mbs = SC.AddSystem()
    
    
-   #background
+   ## create graphics background
    rect = [-0.5,-2,2.5,0.5] #xmin,ymin,xmax,ymax
    background = {'type':'Line', 'color':[0.1,0.1,0.8,1], 'data':[rect[0],rect[1],0, rect[2],rect[1],0, rect[2],rect[3],0, rect[0],rect[3],0, rect[0],rect[1],0]} #background
    oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0], visualization=VObjectGround(graphicsData= [background])))
    
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-   #cable:
-   
+   ## define beam dimensions and tip load
    L=2                    # length of ANCF element in m
    E=2.07e11             # Young's modulus of ANCF element in N/m^2
    rho=7800               # density of ANCF element in kg/m^3
@@ -50,11 +53,8 @@ You can view and download this file on Github: `ANCFcantileverTest.py <https://g
    
    print("load f="+str(f))
    
-   nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0])) #ground node for coordinate constraint
-   mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nGround, coordinate=0)) #Ground node ==> no action
-   
    #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-   #generate ANCF beams with utilities function
+   ## generate ANCFCable2D template containing beam parameters
    cableTemplate = Cable2D(#physicsLength = L / nElements, #set in GenerateStraightLineANCFCable2D(...)
                            physicsMassPerLength = rho*A,
                            physicsBendingStiffness = E*I,
@@ -63,10 +63,14 @@ You can view and download this file on Github: `ANCFcantileverTest.py <https://g
                            #nodeNumbers = [0, 0], #will be filled in GenerateStraightLineANCFCable2D(...)
                            )
    
+   ## define nodal positions of beam (3D vectors, while cable element is only 2D)
    positionOfNode0 = [0, 0, 0] # starting point of line
    positionOfNode1 = [L, 0, 0] # end point of line
-   numberOfElements = 32*2#32*2
    
+   ## number of cable elements for discretization
+   numberOfElements = 64
+   
+   ## use utility function to create set of straight cable elements between two positions with options for constraints at supports
    #alternative to mbs.AddObject(Cable2D(...)) with nodes:
    ancf=GenerateStraightLineANCFCable2D(mbs,
                    positionOfNode0, positionOfNode1,
@@ -75,13 +79,16 @@ You can view and download this file on Github: `ANCFcantileverTest.py <https://g
                    massProportionalLoad = [0,-9.81*0,0], #optionally add gravity
                    fixedConstraintsNode0 = [1,1,0,1], #add constraints for pos and rot (r'_y)
                    fixedConstraintsNode1 = [0,0,0,0])
+   
+   ## add load vector on last node in y-direction
    mANCFLast = mbs.AddMarker(MarkerNodePosition(nodeNumber=ancf[0][-1])) #ancf[0][-1] = last node
    mbs.AddLoad(Force(markerNumber = mANCFLast, loadVector = [0, -f, 0])) #will be changed in load steps
    
    
    #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+   ## assemble system and create simulation settings
    mbs.Assemble()
-   # print(mbs)
+   
    simulationSettings = exu.SimulationSettings() #takes currently set values or default values
    
    tEnd = 0.1
@@ -95,28 +102,28 @@ You can view and download this file on Github: `ANCFcantileverTest.py <https://g
    
    simulationSettings.timeIntegration.newton.useModifiedNewton = True
    
-   simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
-   simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
-   
    simulationSettings.displayStatistics = True
-   #simulationSettings.displayComputationTime = True
+   simulationSettings.displayComputationTime = True
    
    SC.visualizationSettings.nodes.defaultSize = 0.01
-   
    simulationSettings.solutionSettings.solutionInformation = "ANCF cantilever beam"
    simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
    
    doDynamicSimulation = True #switch between static and dynamic simulation
    
+   
    if doDynamicSimulation:
+       ## do dynamic simulation
        exu.StartRenderer()
        mbs.SolveDynamic(simulationSettings)
        SC.WaitForRenderEngineStopFlag()
        exu.StopRenderer() #safely close rendering window!
+       ## 
    else:
+       ## perform static simulation with manual load stepping
        simulationSettings.staticSolver.verboseMode = 0
        
-       simulationSettings.staticSolver.newton.relativeTolerance = 1e-10
+       simulationSettings.staticSolver.newton.relativeTolerance = 1e-8
        simulationSettings.staticSolver.newton.absoluteTolerance = 1e-3 #1 for 256 elements; needs to be larger for larger number of load steps
        #simulationSettings.staticSolver.numberOfLoadSteps = 1
        
@@ -130,7 +137,6 @@ You can view and download this file on Github: `ANCFcantileverTest.py <https://g
            print('load vector=' + str(mbs.GetLoadParameter(nLoad, 'loadVector')) )
        
            mbs.SolveStatic(simulationSettings, updateInitialValues=True)
-           #mbs.SolveStatic(simulationSettings, updateInitialValues=False) #second solve to increase accuracy
        
            sol = mbs.systemData.GetODE2Coordinates()
            
@@ -166,9 +172,6 @@ You can view and download this file on Github: `ANCFcantileverTest.py <https://g
            #sol = mbs.systemData.GetODE2Coordinates(exu.ConfigurationType.Initial)
            #print('initial values='+str(sol))
        
-       
-       #SC.WaitForRenderEngineStopFlag()
-       #exu.StopRenderer() #safely close rendering window!
        
    
 

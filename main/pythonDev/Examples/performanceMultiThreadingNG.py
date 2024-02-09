@@ -11,9 +11,6 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# This is an EXUDYN example
-
 import exudyn as exu
 from exudyn.itemInterface import *
 from exudyn.utilities import *

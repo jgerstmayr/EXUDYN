@@ -53,7 +53,7 @@ CSolverBase& MainSolverBase::GetCSolver() { CHECKandTHROWstring("MainSolverBase:
 //! check if MainSolverBase is initialized ==> otherwise raise SysError
 bool MainSolverBase::CheckInitialized(const MainSystem& mainSystem) const
 {
-	if (!mainSystem.cSystem->IsSystemConsistent())
+	if (!mainSystem.cSystem.IsSystemConsistent())
 	{
 		SysError("MainSystem (mbs) is not correctly initialized; call MainSystem.Assemble() first");
 		return false;
@@ -69,10 +69,10 @@ bool MainSolverBase::CheckInitialized(const MainSystem& mainSystem) const
 		return false;
 	}
 
-	if (!(GetCSolver().data.nODE2==mainSystem.cSystem->GetSystemData().GetNumberOfCoordinatesODE2() &&
-		GetCSolver().data.nODE1 == mainSystem.cSystem->GetSystemData().GetNumberOfCoordinatesODE1() &&
-		GetCSolver().data.nAE ==   mainSystem.cSystem->GetSystemData().GetNumberOfCoordinatesAE() &&
-		GetCSolver().data.nData == mainSystem.cSystem->GetSystemData().GetNumberOfCoordinatesData()))
+	if (!(GetCSolver().data.nODE2==mainSystem.cSystem.GetSystemData().GetNumberOfCoordinatesODE2() &&
+		GetCSolver().data.nODE1 == mainSystem.cSystem.GetSystemData().GetNumberOfCoordinatesODE1() &&
+		GetCSolver().data.nAE ==   mainSystem.cSystem.GetSystemData().GetNumberOfCoordinatesAE() &&
+		GetCSolver().data.nData == mainSystem.cSystem.GetSystemData().GetNumberOfCoordinatesData()))
 	{
 		SysError("Systen sizes do not match; either MainSolverBase is not correctly initialized or MainSystem (mbs) has changed; call Assemble() and InitializeSolver() first");
 		return false;
@@ -103,16 +103,16 @@ void MainSolverBase::InitializeCheckInitialized(const MainSystem& mainSystem)
 {
 	isInitialized = true;
 	//workaround, as the cSolver is not initialized when this function is called!
-	initializedSystemSizes[0] = mainSystem.GetCSystem()->GetSystemData().GetNumberOfCoordinatesODE2();
-	initializedSystemSizes[1] = mainSystem.GetCSystem()->GetSystemData().GetNumberOfCoordinatesODE1();
-	initializedSystemSizes[2] = mainSystem.GetCSystem()->GetSystemData().GetNumberOfCoordinatesAE();
-	initializedSystemSizes[3] = mainSystem.GetCSystem()->GetSystemData().GetNumberOfCoordinatesData();
+	initializedSystemSizes[0] = mainSystem.GetCSystem().GetSystemData().GetNumberOfCoordinatesODE2();
+	initializedSystemSizes[1] = mainSystem.GetCSystem().GetSystemData().GetNumberOfCoordinatesODE1();
+	initializedSystemSizes[2] = mainSystem.GetCSystem().GetSystemData().GetNumberOfCoordinatesAE();
+	initializedSystemSizes[3] = mainSystem.GetCSystem().GetSystemData().GetNumberOfCoordinatesData();
 }
 
 ////! initialize solverSpecific,data,it,conv; set/compute initial conditions (solver-specific!); initialize output files
 //bool MainSolverBase::InitializeSolver(MainSystem& mainSystem, const SimulationSettings& simulationSettings)
 //{
-//	bool returnValue = GetCSolver().InitializeSolver(*(mainSystem.cSystem), simulationSettings);
+//	bool returnValue = GetCSolver().InitializeSolver(mainSystem.cSystem, simulationSettings);
 //	if (returnValue) { InitializeCheckInitialized(); }
 //
 //	//isInitialized = true;
@@ -197,7 +197,7 @@ void MainSolverBase::ComputeMassMatrix(MainSystem& mainSystem/*, const Simulatio
 	CheckInitialized(mainSystem);
 
 	GetCSolver().data.systemMassMatrix->SetAllZero();
-	mainSystem.cSystem->ComputeMassMatrix(GetCSolver().data.tempCompDataArray, *(GetCSolver().data.systemMassMatrix));
+	mainSystem.cSystem.ComputeMassMatrix(GetCSolver().data.tempCompDataArray, *(GetCSolver().data.systemMassMatrix));
 	if (scalarFactor != 1.) { GetCSolver().data.systemMassMatrix->MultiplyWithFactor(scalarFactor); }
 }
 
@@ -213,7 +213,7 @@ void MainSolverBase::ComputeJacobianODE2RHS(MainSystem& mainSystem, Real scalarF
 	GetCSolver().data.systemJacobian->SetAllZero(); //entries are not set to zero inside jacobian computation!
 
 
-	mainSystem.cSystem->JacobianODE2RHS(GetCSolver().data.tempCompDataArray, GetCSolver().newton.numericalDifferentiation,
+	mainSystem.cSystem.JacobianODE2RHS(GetCSolver().data.tempCompDataArray, GetCSolver().newton.numericalDifferentiation,
 		*(GetCSolver().data.systemJacobian), scalarFactor_ODE2, scalarFactor_ODE2_t, scalarFactor_ODE1, computeLoadsJacobian);
 }
 
@@ -224,7 +224,7 @@ void MainSolverBase::ComputeJacobianODE1RHS(MainSystem& mainSystem, Real scalarF
 
 	//Index nSys = initializedSystemSizes[0] + initializedSystemSizes[1] + initializedSystemSizes[2]; //nODE2+nODE1+nAE; check initialized guarantees that this is same as in mainSystem
 
-	mainSystem.cSystem->JacobianODE1RHS(GetCSolver().data.tempCompDataArray, GetCSolver().newton.numericalDifferentiation,
+	mainSystem.cSystem.JacobianODE1RHS(GetCSolver().data.tempCompDataArray, GetCSolver().newton.numericalDifferentiation,
 		*(GetCSolver().data.systemJacobian), scalarFactor_ODE2, scalarFactor_ODE2_t, scalarFactor_ODE1); 
 }
 
@@ -234,7 +234,7 @@ void MainSolverBase::ComputeJacobianODE1RHS(MainSystem& mainSystem, Real scalarF
 //{
 //	CheckInitialized(mainSystem);
 //
-//	mainSystem.cSystem->JacobianODE2RHS(GetCSolver().data.tempCompDataArray, GetCSolver().newton.numericalDifferentiation,
+//	mainSystem.cSystem.JacobianODE2RHS(GetCSolver().data.tempCompDataArray, GetCSolver().newton.numericalDifferentiation,
 //		*(GetCSolver().data.systemJacobian), 0., 0., scalarFactor); //only ODE2_t part computed
 //}
 
@@ -245,7 +245,7 @@ void MainSolverBase::ComputeJacobianAE(MainSystem& mainSystem,
 	CheckInitialized(mainSystem);
 
 	//only add terms!
-	mainSystem.cSystem->JacobianAE(GetCSolver().data.tempCompDataArray, GetCSolver().newton, *(GetCSolver().data.systemJacobian), 
+	mainSystem.cSystem.JacobianAE(GetCSolver().data.tempCompDataArray, GetCSolver().newton, *(GetCSolver().data.systemJacobian), 
 		scalarFactor_ODE2, scalarFactor_ODE2_t, scalarFactor_ODE1, velocityLevel);// , true);
 }
 
@@ -255,7 +255,7 @@ void MainSolverBase::ComputeODE2RHS(MainSystem& mainSystem/*, const SimulationSe
 	CheckInitialized(mainSystem);
 	LinkedDataVector linkODE2residual(GetCSolver().data.systemResidual, 0, GetCSolver().data.nODE2);
 
-	mainSystem.cSystem->ComputeSystemODE2RHS(GetCSolver().data.tempCompDataArray, linkODE2residual); //entries initialized in ComputeSystemODE2RHS
+	mainSystem.cSystem.ComputeSystemODE2RHS(GetCSolver().data.tempCompDataArray, linkODE2residual); //entries initialized in ComputeSystemODE2RHS
 }
 
 //! compute the RHS of ODE1 equations in systemResidual in range(nODE2,nODE2+nODE1)
@@ -264,7 +264,7 @@ void MainSolverBase::ComputeODE1RHS(MainSystem& mainSystem/*, const SimulationSe
 	CheckInitialized(mainSystem);
 	LinkedDataVector linkODE1residual(GetCSolver().data.systemResidual, GetCSolver().data.nODE2, GetCSolver().data.nODE2+ GetCSolver().data.nODE1);
 
-	mainSystem.cSystem->ComputeSystemODE1RHS(GetCSolver().data.tempCompData, linkODE1residual); //entries initialized in ComputeSystemODE1RHS
+	mainSystem.cSystem.ComputeSystemODE1RHS(GetCSolver().data.tempCompData, linkODE1residual); //entries initialized in ComputeSystemODE1RHS
 }
 
 //! compute the algebraic equations in systemResidual in range(nODE2+nODE1,nODE2+nODE1+nAE)
@@ -277,7 +277,7 @@ void MainSolverBase::ComputeAlgebraicEquations(MainSystem& mainSystem/*, const S
 		Index nODE21 = GetCSolver().data.nODE2 + GetCSolver().data.nODE1;
 		LinkedDataVector linkAEresidual(GetCSolver().data.systemResidual, nODE21, nODE21 + GetCSolver().data.nAE);
 
-		mainSystem.cSystem->ComputeAlgebraicEquations(GetCSolver().data.tempCompDataArray, linkAEresidual, velocityLevel); //in staticsolver use always index2constraints simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints);
+		mainSystem.cSystem.ComputeAlgebraicEquations(GetCSolver().data.tempCompDataArray, linkAEresidual, velocityLevel); //in staticsolver use always index2constraints simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints);
 	}
 }
 

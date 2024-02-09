@@ -56,29 +56,36 @@ void PostProcessData::SendRedrawSignal()
 //! wait for user to press space
 void PostProcessData::WaitForUserToContinue(bool printMessage)
 {
-	if (visualizationSystem->GetMainSystemBacklink()->GetMainSystemContainer().GetVisualizationSystemContainer().RendererIsRunning()) //do this only if visualization is running, otherwise application cannot recognize SPACE press
+	if (visualizationSystem->GetMainSystemBacklink()->HasMainSystemContainer())
 	{
-		simulationPaused = true;
-		STDstring strSolver = GetSolverMessage();
-		SetSolverMessage("Computation paused... (press SPACE to continue / Q to quit)");
-        if (printMessage)
-        {
-            pout << "Computation paused... (press SPACE in render window to continue / Q to quit)\n";
-        }
-
-		while (visualizationSystem->GetMainSystemBacklink()->GetMainSystemContainer().GetVisualizationSystemContainer().DoIdleOperations() && simulationPaused)
+		if (visualizationSystem->GetMainSystemBacklink()->GetMainSystemContainer().GetVisualizationSystemContainer().RendererIsRunning()) //do this only if visualization is running, otherwise application cannot recognize SPACE press
 		{
-			std::this_thread::sleep_for(std::chrono::milliseconds(20)); //give thread time to finish the stop simulation command
-		}
+			simulationPaused = true;
+			STDstring strSolver = GetSolverMessage();
+			SetSolverMessage("Computation paused... (press SPACE to continue / Q to quit)");
+			if (printMessage)
+			{
+				pout << "Computation paused... (press SPACE in render window to continue / Q to quit)\n";
+			}
 
-		simulationPaused = false; //in case that visualization system was closed in the meantime
-		SetSolverMessage(strSolver);
+			while (visualizationSystem->GetMainSystemBacklink()->GetMainSystemContainer().GetVisualizationSystemContainer().DoIdleOperations() && simulationPaused)
+			{
+				std::this_thread::sleep_for(std::chrono::milliseconds(20)); //give thread time to finish the stop simulation command
+			}
+
+			simulationPaused = false; //in case that visualization system was closed in the meantime
+			SetSolverMessage(strSolver);
+		}
+	}
+	else
+	{
+		pout << "WaitForUserToContinue: ignored, because no SystemContainer is linked to MainSystem.\n";
 	}
 }
 
 bool PostProcessData::VisualizationIsRunning() const
 {
-	return visualizationSystem->GetMainSystemBacklink()->GetMainSystemContainer().GetVisualizationSystemContainer().RendererIsRunning();
+	return visualizationSystem->GetMainSystemBacklink()->HasMainSystemContainer() && visualizationSystem->GetMainSystemBacklink()->GetMainSystemContainer().GetVisualizationSystemContainer().RendererIsRunning();
 }
 
 
@@ -86,7 +93,7 @@ void PostProcessData::ProcessUserFunctionDrawing()
 {
 	EXUstd::WaitAndLockSemaphore(requestUserFunctionDrawingAtomicFlag);
 
-	if (requestUserFunctionDrawing)
+	if (requestUserFunctionDrawing && visualizationSystem->GetMainSystemBacklink()->HasMainSystemContainer())
 	{
 		const VisualizationSettings& visSettings = visualizationSystem->GetMainSystemBacklink()->GetMainSystemContainerConst().PyGetVisualizationSettings();
 		//std::cout << "requestUserFunctionDrawing ...\n";

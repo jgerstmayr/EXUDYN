@@ -115,10 +115,6 @@ protected:
 	//ResizableArray<ExpressionNamedReal*> argRealList;
 	ResizableArray<SymbolicGeneric> argRealList;
 	SymbolicGeneric returnValue;
-	//bool scalarType;
-	//Index vectorSize; //may be -1 if unknown
-	//ResizableConstVector returnValues; //temporary values; as argRealList is required, returnvalues can also be stored
-	//alternative, but not better: std::vector<Real> returnValues; //temporary values; immediate cast to Python or internal std::function
 	STDstring functionName; //!< will be set by derived class
 
 public:
@@ -286,7 +282,7 @@ public:
 		GenericExceptionHandling([&]
 		{
 			//process return type and set function
-			if (returnTypeStr == "Real")
+			if (returnTypeStr == "Real" || returnTypeStr == "bool")
 			{
 				SetScalarType(py::cast<SReal*>(pyReturnValue)); //pyReturnValue is Real
 			}
@@ -340,6 +336,28 @@ public:
 
 	//! variadic template to evaluate all kinds of user functions (templates created/defined by Pybind interface)
 	template<typename... Args>
+	bool EvaluateBool(const MainSystem& mainSystem, Args... args)
+	{
+		// Process the rest of the arguments
+		Index argIndex = 0;
+		(..., processArgument(args, argRealList, argIndex));
+
+		return bool(EvaluateReturnValue());
+	}
+
+	//! variadic template to evaluate all kinds of user functions (templates created/defined by Pybind interface)
+	template<typename... Args>
+	StdVector2D EvaluateStdVector2D(const MainSystem& mainSystem, Args... args)
+	{
+		// Process the rest of the arguments
+		Index argIndex = 0;
+		(..., processArgument(args, argRealList, argIndex));
+
+		return (StdVector2D)EvaluateReturnVector();
+	}
+
+	//! variadic template to evaluate all kinds of user functions (templates created/defined by Pybind interface)
+	template<typename... Args>
 	StdVector3D EvaluateStdVector3D(const MainSystem& mainSystem, Args... args)
 	{
 		// Process the rest of the arguments
@@ -347,10 +365,6 @@ public:
 		(..., processArgument(args, argRealList, argIndex));
 
 		return (StdVector3D)EvaluateReturnVector();
-		//EvaluateReturnValues(); //evaluate symbolic expression trees
-		//CHECKandTHROW(returnValues.size() == 3, "SymbolicUserFunction::EvaluateVector3D: size mismatch");
-		//return StdVector3D({ returnValues[0],returnValues[1],returnValues[2] });
-		//return StdVector3D(returnValues);
 	}
 
 	//! variadic template to evaluate all kinds of user functions (templates created/defined by Pybind interface)
@@ -362,12 +376,6 @@ public:
 		(..., processArgument(args, argRealList, argIndex));
 
 		return (StdVector6D)EvaluateReturnVector();
-		//EvaluateReturnValues(); //evaluate symbolic expression trees
-
-		//CHECKandTHROW(returnValues.size() == 6, "SymbolicUserFunction::EvaluateVector6D: size mismatch");
-		//return StdVector6D({ returnValues[0],returnValues[1],returnValues[2],
-		//	returnValues[3],returnValues[4],returnValues[5],
-		//	});
 	}
 
 	//! variadic template to evaluate all kinds of user functions (templates created/defined by Pybind interface)
@@ -474,36 +482,71 @@ public:
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//! get itemName from itemIndex
-	template<typename TItemIndex>
-	STDstring GetItemTypeName(MainSystem& mainSystem, const TItemIndex& itemIndex)
+	void GetItemTypeName(MainSystem& mainSystem, const py::object& pyItemIndex, 
+		STDstring& indexType, STDstring& itemTypeName, Index& itemNumber)
 	{
-		STDstring sType = itemIndex.GetTypeString();
-		Index itemNumber = itemIndex.GetIndex();
-		if (sType == "ObjectIndex")
+
+		if (py::isinstance<ObjectIndex>(pyItemIndex)) //sType == "ObjectIndex")
 		{
-			CHECKandTHROW(itemNumber < mainSystem.GetCSystem()->GetSystemData().GetCObjects().NumberOfItems(),
+			ObjectIndex itemIndex = py::cast<ObjectIndex>(pyItemIndex);
+			itemNumber = itemIndex.GetIndex();
+			indexType = itemIndex.GetTypeString();
+
+			CHECKandTHROW(itemNumber < mainSystem.GetCSystem().GetSystemData().GetCObjects().NumberOfItems(),
 				"Symbolic::SymbolicUserFunction: illegal objectNumber");
-			return mainSystem.GetMainSystemData().GetMainObjects()[itemNumber]->GetTypeName();
+			itemTypeName = STDstring("Object")+mainSystem.GetMainSystemData().GetMainObjects()[itemNumber]->GetTypeName();
 		}
-		else if (sType == "LoadIndex")
+		else if (py::isinstance<LoadIndex>(pyItemIndex)) //(sType == "LoadIndex")
 		{
-			CHECKandTHROW(itemNumber < mainSystem.GetCSystem()->GetSystemData().GetCLoads().NumberOfItems(),
+			LoadIndex itemIndex = py::cast<LoadIndex>(pyItemIndex);
+			itemNumber = itemIndex.GetIndex();
+			indexType = itemIndex.GetTypeString();
+
+			CHECKandTHROW(itemNumber < mainSystem.GetCSystem().GetSystemData().GetCLoads().NumberOfItems(),
 				"Symbolic::SymbolicUserFunction: illegal loadNumber");
-			return mainSystem.GetMainSystemData().GetMainLoads()[itemNumber]->GetTypeName();
+			itemTypeName = STDstring("Load") + mainSystem.GetMainSystemData().GetMainLoads()[itemNumber]->GetTypeName();
+		}
+		else if (py::isinstance<py::int_>(pyItemIndex)) //MainSystem
+		{
+			Index itemIndex = py::cast<Index>(pyItemIndex);
+			CHECKandTHROW(itemIndex == -1, "Symbolic::SymbolicUserFunction: invalid item type (must be ObjectIndex, LoadIndex or -1 for MainSystem)");
+			indexType = "None";
+			itemTypeName = "MainSystem";
+			itemNumber = -1;
 		}
 		else
 		{
-			PyError(STDstring("Symbolic::GetItemTypeName") + ": invalid item type(must be Object or Load)");
-			return "";
+			PyError(STDstring("Symbolic::GetItemTypeName") + ": invalid item type (must be ObjectIndex, LoadIndex or -1 for MainSystem)");
 		}
 	}
 
 
 	//automatically generated functions for all kinds of user functions
-#include "Autogenerated/PySymbolicUserFunctionTransfer.h"
 #include "Autogenerated/PySymbolicUserFunctionSet.h"
 
+public:
+	//! this function allows access to all std::functions by name, e.g.:
+	//! auto f = GetSTDfunction(PySymbolicUserFunction::mbsScalar2);
+	//! WORKS?
+	//template<typename T>
+	//const T& GetSTDfunction(T PySymbolicUserFunction::*stdFunction) const {
+	//	return this->*stdFunction;
+	//}
 
+	////! for specific user function type, get user function by type and name
+	//template<typename UFT>
+	//UFT GetSTDfunction() const
+	//{
+	//	if constexpr (std::is_same_v<UFT, std::function<bool(const MainSystem &, Real)>>)
+	//	{
+	//		return boolMbsScalar;
+	//	}
+	//	else if constexpr (std::is_same_v<UFT, std::function<Real(const MainSystem&, Real, Real)>>)
+	//	{
+	//		return mbsScalar2;
+	//	}
+	//	return UFT(0); //will never happen, but is needed
+	//}
 
 
 

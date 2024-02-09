@@ -22,34 +22,35 @@
 #include "Main/OutputVariable.h"
 #include "Linalg/BasicLinalg.h"
 
-class SystemContainer // 
-{
-public: // 
-  ResizableArray<CSystem*> cSystems;              //!< contains one or a set of complete multibody/finite element systems
-
-
-public: // 
-
-  // access functions
-  //! Read (Reference) access to: contains one or a set of complete multibody/finite element systems
-  const ResizableArray<CSystem*>& GetCSystems() const { return cSystems; }
-  //! Write (Reference) access to: contains one or a set of complete multibody/finite element systems
-  ResizableArray<CSystem*>& GetCSystems() { return cSystems; }
-
-  //! print function used in ostream operator (print is virtual and can thus be overloaded)
-  virtual void Print(std::ostream& os) const
-  {
-    os << "SystemContainer" << ":\n";
-    os << "  cSystems = " << cSystems << "\n";
-    os << "\n";
-  }
-
-  friend std::ostream& operator<<(std::ostream& os, const SystemContainer& object)
-  {
-    object.Print(os);
-    return os;
-  }
-
-};
+//remove 2024-01-30:
+//class SystemContainer // 
+//{
+//public: // 
+//  ResizableArray<CSystem*> cSystems;              //!< contains one or a set of complete multibody/finite element systems
+//
+//
+//public: // 
+//
+//  // access functions
+//  //! Read (Reference) access to: contains one or a set of complete multibody/finite element systems
+//  const ResizableArray<CSystem*>& GetCSystems() const { return cSystems; }
+//  //! Write (Reference) access to: contains one or a set of complete multibody/finite element systems
+//  ResizableArray<CSystem*>& GetCSystems() { return cSystems; }
+//
+//  //! print function used in ostream operator (print is virtual and can thus be overloaded)
+//  virtual void Print(std::ostream& os) const
+//  {
+//    os << "SystemContainer" << ":\n";
+//    os << "  cSystems = " << cSystems << "\n";
+//    os << "\n";
+//  }
+//
+//  friend std::ostream& operator<<(std::ostream& os, const SystemContainer& object)
+//  {
+//    object.Print(os);
+//    return os;
+//  }
+//
+//};
 
 #endif

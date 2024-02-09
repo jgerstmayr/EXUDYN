@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-12-13  19:36:37 (last modified)
+* @date         2024-02-02  20:39:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -23,6 +23,7 @@
 #include "System/ItemIndices.h"
 
 #include <functional> //! AUTO: needed for std::function
+#include "Pymodules/PythonUserFunctions.h" //! AUTO: needed for user functions, without pybind11
 
 //! AUTO: Parameters for class CObjectRigidBodyParameters
 class CObjectRigidBodyParameters // AUTO: 

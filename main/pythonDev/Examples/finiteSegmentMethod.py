@@ -1,9 +1,7 @@
-# Example 2D rigid double pendulum
-
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  Example of 2D finite segment method
+# Details:  Example of 2D finite segment method compared with ANCF cable elements
 #
 # Author:   Johannes Gerstmayr
 # Date:     2021-06-16

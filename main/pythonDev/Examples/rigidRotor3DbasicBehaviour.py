@@ -17,7 +17,6 @@ import exudyn as exu
 from exudyn.itemInterface import *
 from exudyn.utilities import *
 
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals #for testing
 import time
 import numpy as np
 
@@ -240,8 +239,6 @@ c = mbs.GetNodeOutput(n1, exu.OutputVariableType.Coordinates)
 c_t = mbs.GetNodeOutput(n1, exu.OutputVariableType.Coordinates_t)
 print("nc=",c)
 print("nc_t=",c_t)
-
-#exudynTestGlobals.testError = u[0] - (0.5152217339585201) #2019-12-01;
 
 ##+++++++++++++++++++++++++++++++++++++++++++++++++++++
 import matplotlib.pyplot as plt

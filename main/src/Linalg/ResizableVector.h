@@ -378,15 +378,18 @@ public:
 		this->data = &localData[0];
 	}
 
+	//! cast to StdVector2D
+	virtual operator std::array<T, 2>() const
+	{
+		CHECKandTHROW(this->numberOfItems == 2, "cast of ResizableConstVector to StdVector2D called for size != 2");
+		return std::array<T, 2>({ this->data[0], this->data[1]});
+	}
+
 	//! cast to StdVector3D
 	virtual operator std::array<T, 3>() const
 	{
 		CHECKandTHROW(this->numberOfItems == 3, "cast of ResizableConstVector to StdVector3D called for size != 3");
-		return std::array<T, 3>({ this->data[0], this->data[1], this->data[2]});
-
-		//std::array<T, 3> stdArray;
-		//std::copy(v.begin(), v.begin() + 3, stdArray.begin());
-		//return stdArray;
+		return std::array<T, 3>({ this->data[0], this->data[1], this->data[2] });
 	}
 
 	//! cast to StdVector6D

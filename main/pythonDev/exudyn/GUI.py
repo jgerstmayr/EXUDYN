@@ -8,7 +8,7 @@
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
-# Notes:	This is an internal library, which is only used inside Exudyn for modifying settings.
+# Notes:    This is an internal library, which is only used inside Exudyn for modifying settings.
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import tkinter as tk

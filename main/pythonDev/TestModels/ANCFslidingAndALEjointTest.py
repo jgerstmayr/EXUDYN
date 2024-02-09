@@ -92,9 +92,9 @@ fixANCFRotation = 0
 cable2Template=Cable2D(physicsMassPerLength=10, physicsBendingStiffness=50000*complianceFactBend, physicsAxialStiffness=2e8*complianceFactAxial)
 
 [cable2NodeList, cable2ObjectList, suspensionLoadList, cable2NodePositionList, dummy]=GenerateStraightLineANCFCable2D(mbs=mbs, 
-				positionOfNode0=[0,0,0], positionOfNode1=[L,0,0], numberOfElements=nEl, 
-				cableTemplate=cable2Template, massProportionalLoad=[0,-gravityFieldConstant,0], 
-				fixedConstraintsNode0=[1,1,0,fixANCFRotation], fixedConstraintsNode1=[1,1,0,fixANCFRotation])
+                positionOfNode0=[0,0,0], positionOfNode1=[L,0,0], numberOfElements=nEl, 
+                cableTemplate=cable2Template, massProportionalLoad=[0,-gravityFieldConstant,0], 
+                fixedConstraintsNode0=[1,1,0,fixANCFRotation], fixedConstraintsNode1=[1,1,0,fixANCFRotation])
 ##################################################################################################################################################################
 
  
@@ -104,14 +104,14 @@ nALE = mbs.AddNode(NodeGenericODE2(numberOfODE2Coordinates=1, referenceCoordinat
 mALE = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nALE, coordinate=0)) #ALE velocity  marker
 
 cable1Template=ALECable2D(physicsMassPerLength=3, physicsBendingStiffness=4000*complianceFactBend, 
-						  physicsAxialStiffness=5e7*complianceFactAxial,physicsUseCouplingTerms=False,
+                          physicsAxialStiffness=5e7*complianceFactAxial,physicsUseCouplingTerms=False,
                           physicsAddALEvariation=False) #for compatibility with test suite results
 cable1Template.nodeNumbers[2]=nALE
 
 [cable1NodeList, cable1ObjectList, haulageLoadList, cable1NodePositionList, dummy]=GenerateStraightLineANCFCable2D(mbs=mbs, 
-			positionOfNode0=[0,-offset,0], positionOfNode1=[L,-offset,0], numberOfElements=nEl, 
-			cableTemplate=cable1Template, massProportionalLoad=[0,-gravityFieldConstant,0], 
-			fixedConstraintsNode0=[1,1,0,fixANCFRotation], fixedConstraintsNode1=[1,1,0,fixANCFRotation])
+            positionOfNode0=[0,-offset,0], positionOfNode1=[L,-offset,0], numberOfElements=nEl, 
+            cableTemplate=cable1Template, massProportionalLoad=[0,-gravityFieldConstant,0], 
+            fixedConstraintsNode0=[1,1,0,fixANCFRotation], fixedConstraintsNode1=[1,1,0,fixANCFRotation])
 
 cAleConstraint=mbs.AddObject(CoordinateConstraint(markerNumbers=[mGlobalGround,mALE]))
 ###################################################################################################################################################################
@@ -125,7 +125,7 @@ mSuspensionRopeAttachmentNodeY=mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = c
 graphicsCarrier={'type':'Circle', 'color':[.1,0.1,0.8,1], 'position':[0,0,0], 'radius': carrierWheelRadius}
 nCarrierRigidBody = mbs.AddNode(Rigid2D(referenceCoordinates=[L/2,offsetCarrier-carrierWheelRadius,0]))
 oCarrierRigidBody = mbs.AddObject(RigidBody2D(physicsMass=200, physicsInertia=1, 
-								nodeNumber=nCarrierRigidBody,visualization=VObjectRigidBody2D(graphicsData= [graphicsCarrier])))  
+                                nodeNumber=nCarrierRigidBody,visualization=VObjectRigidBody2D(graphicsData= [graphicsCarrier])))  
 
 mCarrierX = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nCarrierRigidBody,coordinate=0))
 mCarrierY = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nCarrierRigidBody,coordinate=1))
@@ -153,12 +153,12 @@ for i in cable1ObjectList:
     nodeDataContactCable = mbs.AddNode(NodeGenericData(initialCoordinates=initialGapList,numberOfDataCoordinates=nSegments*nFactFriction)) 
     if useFriction: 
         mbs.AddObject(ObjectContactFrictionCircleCable2D(markerNumbers=[mContactCarrier, mContactCable], 
-						nodeNumber = nodeDataContactCable, numberOfContactSegments=nSegments, 
-						contactStiffness = cStiffness, circleRadius = carrierWheelRadius))  
+                        nodeNumber = nodeDataContactCable, numberOfContactSegments=nSegments, 
+                        contactStiffness = cStiffness, circleRadius = carrierWheelRadius))  
     else:
         mbs.AddObject(ObjectContactCircleCable2D(markerNumbers=[mContactCarrier, mContactCable], 
-					nodeNumber = nodeDataContactCable, numberOfContactSegments=nSegments, 
-					contactStiffness = cStiffness, circleRadius = carrierWheelRadius, offset = 0))  
+                    nodeNumber = nodeDataContactCable, numberOfContactSegments=nSegments, 
+                    contactStiffness = cStiffness, circleRadius = carrierWheelRadius, offset = 0))  
       
 
 

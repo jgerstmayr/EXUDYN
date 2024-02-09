@@ -1,3 +1,14 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  Micro example from documentation; use this to check if Exudyn works
+#
+# Author:   Johannes Gerstmayr
+# Date:     2019-08-01
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu               #EXUDYN package including C++ core part
 from exudyn.itemInterface import * #conversion of data to exudyn dictionaries

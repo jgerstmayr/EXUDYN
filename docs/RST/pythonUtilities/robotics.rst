@@ -11,7 +11,7 @@ import this library e.g. with import exudyn.robotics as robotics
 
 - Author:    Johannes Gerstmayr 
 - Date:      2020-04-14 
-- Example: 	New robot model uses the class Robot with class RobotLink; the old dictionary structure is defined in the example in ComputeJointHT for the definition of the 'robot' dictionary. 
+- Example:     New robot model uses the class Robot with class RobotLink; the old dictionary structure is defined in the example in ComputeJointHT for the definition of the 'robot' dictionary. 
 
 
 .. _sec-roboticscore-stddh2ht:

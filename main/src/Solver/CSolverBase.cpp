@@ -909,13 +909,13 @@ void CSolverBase::InitializeStep(CSystem& computationalSystem, const SimulationS
 	//	it.endTime = simulationSettings.timeIntegration.endTime; //update time, which may be updated for long integration time
 	//}
 
-	STARTTIMER(timer.python);
-	if (computationalSystem.GetPythonUserFunctions().preStepFunction)
+	if (computationalSystem.GetPythonUserFunctions().preStepFunction.IsValid())
 	{
+		STARTTIMER(timer.python);
 		bool rvPreStep = false; //initialize to suppress gcc warning
 		UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 		{
-			rvPreStep = computationalSystem.GetPythonUserFunctions().preStepFunction(*(computationalSystem.GetPythonUserFunctions().mainSystem),
+			rvPreStep = computationalSystem.GetPythonUserFunctions().preStepFunction.userFunction(*(computationalSystem.GetPythonUserFunctions().mainSystem),
 				it.currentTime);
 		}, "CSolverBase::InitializeStep: PythonPreStepUserFunction failed (check code; check return value)");
 		if (!rvPreStep)
@@ -923,10 +923,10 @@ void CSolverBase::InitializeStep(CSystem& computationalSystem, const SimulationS
 			if (IsVerbose(1)) { Verbose(1, STDstring("\n++++++++++++++++++++++++++++++\nPreStepUserFunction returned False; simulation is stopped after current step\n\n")); }
 			computationalSystem.GetPostProcessData()->stopSimulation = true;
 		}
+		STOPTIMER(timer.python);
 	}
 
 	DoIdleOperations(computationalSystem);
-	STOPTIMER(timer.python);
 }
 
 
@@ -1046,6 +1046,27 @@ void CSolverBase::FinishStep(CSystem& computationalSystem, const SimulationSetti
 		STOPTIMER(timer.overhead);
 	}
 
+
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	if (computationalSystem.GetPythonUserFunctions().postStepFunction.IsValid())
+	{
+		STARTTIMER(timer.python);
+		bool rvPostStep = false; //initialize to suppress gcc warning
+		UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
+			{
+				rvPostStep = computationalSystem.GetPythonUserFunctions().postStepFunction.userFunction(*(computationalSystem.GetPythonUserFunctions().mainSystem),
+				it.currentTime);
+			}, "CSolverBase::InitializeStep: PythonPostStepUserFunction failed (check code; check return value)");
+		if (!rvPostStep)
+		{
+			if (IsVerbose(1)) { Verbose(1, STDstring("\n++++++++++++++++++++++++++++++\nPostStepUserFunction returned False; simulation is stopped after current step\n\n")); }
+			computationalSystem.GetPostProcessData()->stopSimulation = true;
+		}
+		STOPTIMER(timer.python);
+	}
+
+
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	if (output.writeToSolutionFile && writeSolution)
 	{
 
@@ -1560,13 +1581,13 @@ Real CSolverBase::PostNewton(CSystem& computationalSystem, const SimulationSetti
 
     Real discontinuousError = 0;	
 	it.recommendedStepSize = -1;
-	if (computationalSystem.GetPythonUserFunctions().postNewtonFunction)
+	if (computationalSystem.GetPythonUserFunctions().postNewtonFunction.IsValid())
 	{
 		STARTTIMER(timer.python);
 		StdVector2D rv = {0,0};
 		UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 		{
-			rv = computationalSystem.GetPythonUserFunctions().postNewtonFunction(*(computationalSystem.GetPythonUserFunctions().mainSystem),
+			rv = computationalSystem.GetPythonUserFunctions().postNewtonFunction.userFunction(*(computationalSystem.GetPythonUserFunctions().mainSystem),
 				it.currentTime);
 		}, "CSolverBase::InitializeStep: Python PostNewtonUserFunction failed (check code; check return value)");
 		discontinuousError = fabs(rv[0]); //only use absolute error, in order to avoid problems, if user returns negative values ...

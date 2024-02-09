@@ -29,7 +29,7 @@ if netgenDrawing:
 def RotationMatrixZ(angleRad):
     return np.array([ [np.cos(angleRad),-np.sin(angleRad), 0],
                       [np.sin(angleRad), np.cos(angleRad), 0],
-                      [0,	    0,        1] ]);
+                      [0,        0,        1] ]);
 
 def VAdd(v0, v1):
     if len(v0) != len(v1): print("ERROR in VAdd: incompatible vectors!")

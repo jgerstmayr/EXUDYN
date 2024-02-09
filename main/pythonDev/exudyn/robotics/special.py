@@ -1,16 +1,16 @@
-# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# This is a submodule of the EXUDYN python robotics library
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN python utility library for robotics
 #
 # Details:  additional support functions for robotics;
-#			The library is built on Denavit-Hartenberg Parameters and
-#			Homogeneous Transformations (HT) to describe transformations and coordinate systems
+#           The library is built on Denavit-Hartenberg Parameters and
+#           Homogeneous Transformations (HT) to describe transformations and coordinate systems
 #
 # Author:   Martin Sereinig
 # Date:     2021-22-09
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
-# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import numpy as np
 import exudyn.robotics as rob
@@ -343,7 +343,7 @@ def CalculateAllMeasures(robot,robotDic,q,mode, flag = [0,0,0,0] ):
 #testing of module spezial
 if __name__ == '__main__':
 
-	#imports
+    #imports
     from exudyn.utilities import *
     from exudyn.rigidBodyUtilities import *
     from exudyn.graphicsDataUtilities import *

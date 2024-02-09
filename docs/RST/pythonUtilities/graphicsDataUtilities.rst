@@ -11,7 +11,7 @@ which contain line, text or triangle primitives for drawing in Exudyn using Open
 - Author:    Johannes Gerstmayr 
 - Date:      2020-07-26 (created) 
 - | Notes:
-  | Some useful colors are defined, using RGBA (Red, Green, Blue and Alpha = opacity) channels 			in the range [0,1], e.g., red = [1,0,0,1].
+  | Some useful colors are defined, using RGBA (Red, Green, Blue and Alpha = opacity) channels            in the range [0,1], e.g., red = [1,0,0,1].
   | Available colors are: color4red, color4green, color4blue, color4cyan, color4magenta, color4yellow, color4orange, color4pink, color4lawngreen, color4violet, color4springgreen, color4dodgerblue, color4grey, color4darkgrey, color4lightgrey, color4lightred, color4lightgreen, color4steelblue, color4brown, color4black, color4darkgrey2, color4lightgrey2, color4white
   | Additionally, a list of 16 colors 'color4list' is available, which is intended to be used, e.g., for creating n bodies with different colors
 
@@ -186,7 +186,7 @@ Function: MoveGraphicsData
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `graphicsDataExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/graphicsDataExample.py>`_\  (Ex), \ `humanRobotInteraction.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py>`_\  (Ex), \ `kinematicTreeAndMBS.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py>`_\  (Ex), \ `openVRengine.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/openVRengine.py>`_\  (Ex), \ `rigidBodyAsUserFunctionTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rigidBodyAsUserFunctionTest.py>`_\  (TM)
+    \ `graphicsDataExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/graphicsDataExample.py>`_\  (Ex), \ `humanRobotInteraction.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py>`_\  (Ex), \ `kinematicTreeAndMBS.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py>`_\  (Ex), \ `openVRengine.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/openVRengine.py>`_\  (Ex), \ `pistonEngine.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/pistonEngine.py>`_\  (Ex), \ `rigidBodyAsUserFunctionTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rigidBodyAsUserFunctionTest.py>`_\  (TM)
 
 
 
@@ -325,7 +325,7 @@ Function: GraphicsDataOrthoCubeLines
 `GraphicsDataOrthoCubeLines <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L411>`__\ (\ ``xMin``\ , \ ``yMin``\ , \ ``zMin``\ , \ ``xMax``\ , \ ``yMax``\ , \ ``zMax``\ , \ ``color = [0.,0.,0.,1.]``\ )
 
 - | \ *function description*\ :
-  | generate graphics data for orthogonal cube drawn with lines
+  | generate graphics data for orthogonal block drawn with lines
 - | \ *input*\ :
   | minimal and maximal cartesian coordinates for orthogonal cube; color provided as list of 4 RGBA values
 - | \ *output*\ :
@@ -347,7 +347,7 @@ Function: GraphicsDataOrthoCube
 `GraphicsDataOrthoCube <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L428>`__\ (\ ``xMin``\ , \ ``yMin``\ , \ ``zMin``\ , \ ``xMax``\ , \ ``yMax``\ , \ ``zMax``\ , \ ``color = [0.,0.,0.,1.]``\ , \ ``addNormals = False``\ , \ ``addEdges = False``\ , \ ``edgeColor = color4black``\ , \ ``addFaces = True``\ )
 
 - | \ *function description*\ :
-  | generate graphics data for orthogonal 3D cube with min and max dimensions
+  | generate graphics data for orthogonal 3D block with min and max dimensions
 - | \ *input*\ :
   | \ ``x/y/z/Min/Max``\ : minimal and maximal cartesian coordinates for orthogonal cube
   | \ ``color``\ : list of 4 RGBA values
@@ -374,7 +374,7 @@ Function: GraphicsDataOrthoCubePoint
 `GraphicsDataOrthoCubePoint <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L444>`__\ (\ ``centerPoint = [0,0,0]``\ , \ ``size = [0.1,0.1,0.1]``\ , \ ``color = [0.,0.,0.,1.]``\ , \ ``addNormals = False``\ , \ ``addEdges = False``\ , \ ``edgeColor = color4black``\ , \ ``addFaces = True``\ )
 
 - | \ *function description*\ :
-  | generate graphics data forfor orthogonal 3D cube with center point and size
+  | generate graphics data forfor orthogonal 3D block with center point and size
 - | \ *input*\ :
   | \ ``centerPoint``\ : center of cube as 3D list or np.array
   | \ ``size``\ : size as 3D list or np.array
@@ -402,7 +402,7 @@ Function: GraphicsDataCube
 `GraphicsDataCube <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L471>`__\ (\ ``pList``\ , \ ``color = [0.,0.,0.,1.]``\ , \ ``faces = [1,1,1,1,1,1]``\ , \ ``addNormals = False``\ , \ ``addEdges = False``\ , \ ``edgeColor = color4black``\ , \ ``addFaces = True``\ )
 
 - | \ *function description*\ :
-  | generate graphics data for general cube with endpoints, according to given vertex definition
+  | generate graphics data for general block with endpoints, according to given vertex definition
 - | \ *input*\ :
   | \ ``pList``\ : is a list of points [[x0,y0,z0],[x1,y1,z1],...]
   | \ ``color``\ : provided as list of 4 RGBA values

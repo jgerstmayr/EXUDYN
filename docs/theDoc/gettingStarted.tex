@@ -676,9 +676,9 @@ to explicitly load the version without AVX2.
 %
 \item[$\ra$] such an error points to the line of your code (line 42), but in fact the error may have been caused in previous code, such as in this case there was a missing brace in the line 40, which caused the error:
 \pythonstyle\begin{lstlisting}
-  38  n1=mbs.AddNode(Point(referenceCoordinates = [L,0,0], 
-  39                       initialCoordinates = [u0,0,0], 
-  40                       initialVelocities= [v0,0,0])	
+  38  n1=mbs.AddNode(Point(referenceCoordinates = [L,0,0],
+  39                       initialCoordinates = [u0,0,0],
+  40                       initialVelocities= [v0,0,0])
   41  #ground node
   42  nGround=mbs.AddNode(NodePointGround(referenceCoordinates = [0,0,0]))
   43  
@@ -869,7 +869,7 @@ which draws the according object in red and others gray/transparent (but sometim
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \item I do not understand the \mybold{Python errors} -- how can I find the reason of the error or crash?
 \bi
-\item[$\ra$] Read trouble shooting section above!	
+\item[$\ra$] Read trouble shooting section above! 
 \item[$\ra$] First, you should read all error messages and warnings: from the very first to the last message. Very often, there is a definite line number which shows the error. Note, that if you are executing a string (or module) as a Python code, the line numbers refer to the local line number inside the script or module.
 \item[$\ra$] If everything fails, try to execute only part of the code to find out where the first error occurs. By omiting parts of the code, you should find the according source of the error.
 \item[$\ra$] If you think, it is a bug: send an email with a representative code snippet, version, etc.\ to \texttt{ reply.exudyn@gmail.com}
@@ -887,7 +887,7 @@ which draws the according object in red and others gray/transparent (but sometim
 \bi
 \item[$\ra$] \codeName\ is only available via the Python interface as a module '\texttt{exudyn}', the C++ code being inside of \texttt{exudynCPP.pyd}, which is located in the exudyn folder where you installed the package. This means that you need to \mybold{run Python} (best: Spyder) and import the \codeName\ module.
 \ei
-	%
+ %
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \item I get the error message 'check potential mixing of different (object, node, marker, ...) indices', what does it mean?
@@ -897,7 +897,7 @@ which draws the according object in red and others gray/transparent (but sometim
 \item[$\ra$] Usually, this is an ERROR in your code, it does not make sense to mix up these indexes!
 \item[$\ra$] In the exceptional case, that you want to convert numbers, see beginning of \refSection{sec:PCpp:command:interface}.
 \ei
-	%
+ %
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \item Why does \mybold{type auto completion} / intellisense not work for mbs (MainSystem)?
@@ -907,7 +907,7 @@ which draws the according object in red and others gray/transparent (but sometim
 \item[$\ra$] most Python environments (e.g., with Spyder 3) only have information up to the first sub-structure, e.g., \texttt{SC=exu.SystemContainer()} provides full access to SC in the type completion, but \texttt{mbs=SC.AddSystem()} is at the second sub-structure of the module and is not accessible.
 \item[$\ra$] WORKAROUND: type \texttt{mbs=MainSystem()} \mybold{before} the \texttt{mbs=SC.AddSystem()} command and the interpreter will know what type mbs is. This also works for settings, e.g., simulation settings 'Newton'.
 \ei
-	%
+ %
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \item How to add graphics?

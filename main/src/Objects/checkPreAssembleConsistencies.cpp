@@ -109,10 +109,10 @@ bool MainMarkerNodeCoordinate::CheckPreAssembleConsistency(const MainSystem& mai
 
 	Index coordinate = cMarker->GetCoordinateNumber();
 	Index nodeNumber = cMarker->GetNodeNumber();
-	Index nodeCoordinates = mainSystem.GetCSystem()->GetSystemData().GetCNode(nodeNumber).GetNumberOfAccessibleCoordinates();
+	Index nodeCoordinates = mainSystem.GetCSystem().GetSystemData().GetCNode(nodeNumber).GetNumberOfAccessibleCoordinates();
 
 	//nodenumber has been checked already at this point!
-	if (coordinate >= nodeCoordinates && !mainSystem.GetCSystem()->GetSystemData().GetCNode(nodeNumber).IsGroundNode())
+	if (coordinate >= nodeCoordinates && !mainSystem.GetCSystem().GetSystemData().GetCNode(nodeNumber).IsGroundNode())
 	{
 		errorString = "MarkerNodeCoordinate: coordinate index (=" + EXUstd::ToString(coordinate) + ") out of range of number of nodal coordinates (0 .." + EXUstd::ToString(nodeCoordinates - 1) + ")";
 		return false;
@@ -127,12 +127,12 @@ bool MainMarkerNodeCoordinates::CheckPreAssembleConsistency(const MainSystem& ma
 	//CMarkerNodeCoordinates* cMarker = (CMarkerNodeCoordinates*)GetCMarker();
 
 	//Index nodeNumber = cMarker->GetNodeNumber();
-	//Index nodeCoordinates0 = mainSystem.GetCSystem()->GetSystemData().GetCNode(nodeNumber).GetNumberOfAccessibleCoordinates();
+	//Index nodeCoordinates0 = mainSystem.GetCSystem().GetSystemData().GetCNode(nodeNumber).GetNumberOfAccessibleCoordinates();
 
 	//nothing to check here, function could be erased
 
 	////nodenumber has been checked already at this point!
-	//if (coordinate >= nodeNumberOfCoordinates && !mainSystem.GetCSystem()->GetSystemData().GetCNode(nodeNumber).IsGroundNode())
+	//if (coordinate >= nodeNumberOfCoordinates && !mainSystem.GetCSystem().GetSystemData().GetCNode(nodeNumber).IsGroundNode())
 	//{
 	//	errorString = "MarkerNodeCoordinates: coordinate index (=" + EXUstd::ToString(coordinate) + ") out of range of number of nodal coordinates (0 .." + EXUstd::ToString(coordinate - 1) + ")";
 	//	return false;
@@ -148,10 +148,10 @@ bool MainMarkerNodeODE1Coordinate::CheckPreAssembleConsistency(const MainSystem&
 
 	Index coordinate = cMarker->GetCoordinateNumber();
 	Index nodeNumber = cMarker->GetNodeNumber();
-	Index nodeNumberOfCoordinates = mainSystem.GetCSystem()->GetSystemData().GetCNode(nodeNumber).GetNumberOfAccessibleCoordinates();
+	Index nodeNumberOfCoordinates = mainSystem.GetCSystem().GetSystemData().GetCNode(nodeNumber).GetNumberOfAccessibleCoordinates();
 
 	//nodenumber has been checked already at this point!
-	if (coordinate >= nodeNumberOfCoordinates && !mainSystem.GetCSystem()->GetSystemData().GetCNode(nodeNumber).IsGroundNode())
+	if (coordinate >= nodeNumberOfCoordinates && !mainSystem.GetCSystem().GetSystemData().GetCNode(nodeNumber).IsGroundNode())
 	{
 		errorString = "MarkerNodeODE1Coordinate: coordinate index (=" + EXUstd::ToString(coordinate) + ") out of range of number of nodal coordinates (0 .." + EXUstd::ToString(coordinate - 1) + ")";
 		return false;
@@ -167,7 +167,7 @@ bool MainMarkerNodeRotationCoordinate::CheckPreAssembleConsistency(const MainSys
 
 	Index coordinate = cMarker->GetRotationCoordinateNumber();
 	Index nodeNumber = cMarker->GetNodeNumber();
-	//Index nodeNumberOfCoordinates = mainSystem.GetCSystem()->GetSystemData().GetCNode(nodeNumber).GetNumberOfAccessibleCoordinates();
+	//Index nodeNumberOfCoordinates = mainSystem.GetCSystem().GetSystemData().GetCNode(nodeNumber).GetNumberOfAccessibleCoordinates();
 
 	//check if coordinate < 3 and if is rigid body!
 	//nodenumber already checked in CSystem
@@ -817,7 +817,7 @@ bool MainObjectConnectorReevingSystemSprings::CheckPreAssembleConsistency(const 
 	const ArrayIndex& nMarkers = cObject->GetMarkerNumbers();
 	for (Index i = 0; i < nRigidBodyMarkers; i++)
 	{
-		const CMarker& marker = mainSystem.GetCSystem()->GetSystemData().GetCMarker(nMarkers[i]);
+		const CMarker& marker = mainSystem.GetCSystem().GetSystemData().GetCMarker(nMarkers[i]);
 
 		if (!EXUstd::IsOfTypeAndNotNone((Index)marker.GetType(),(Index)Marker::Position + (Index)Marker::Orientation))
 		{
@@ -828,7 +828,7 @@ bool MainObjectConnectorReevingSystemSprings::CheckPreAssembleConsistency(const 
 
 	for (Index i = 0; i < 2* hasCoordinateMarkers; i++)
 	{
-		const CMarker& marker = mainSystem.GetCSystem()->GetSystemData().GetCMarker(nMarkers[nRigidBodyMarkers + i]);
+		const CMarker& marker = mainSystem.GetCSystem().GetSystemData().GetCMarker(nMarkers[nRigidBodyMarkers + i]);
 
 		if (!EXUstd::IsOfTypeAndNotNone(marker.GetType(), Marker::Coordinate))
 		{
@@ -907,8 +907,8 @@ bool MainObjectConnectorCoordinateVector::CheckPreAssembleConsistency(const Main
 
 	//marker numbers have already been checked in CSystem::CheckSystemIntegrity
 	const ArrayIndex& nMarkers = cObject->GetMarkerNumbers();
-	const CMarker& marker0 = mainSystem.GetCSystem()->GetSystemData().GetCMarker(nMarkers[0]);
-	const CMarker& marker1 = mainSystem.GetCSystem()->GetSystemData().GetCMarker(nMarkers[1]);
+	const CMarker& marker0 = mainSystem.GetCSystem().GetSystemData().GetCMarker(nMarkers[0]);
+	const CMarker& marker1 = mainSystem.GetCSystem().GetSystemData().GetCMarker(nMarkers[1]);
 
 	if (!(marker0.GetType() & Marker::Coordinates))
 	{
@@ -926,26 +926,26 @@ bool MainObjectConnectorCoordinateVector::CheckPreAssembleConsistency(const Main
 	if (cObject->GetParameters().constraintUserFunction == 0)
 	{
 
-		if (marker0.GetDimension(mainSystem.GetCSystem()->GetSystemData()) != m0Columns && m0Columns != 0)
+		if (marker0.GetDimension(mainSystem.GetCSystem().GetSystemData()) != m0Columns && m0Columns != 0)
 		{
 			errorString = STDstring("ObjectConnectorCoordinateVector: marker 0 must have number of (marker) coordinates same as the number of columns in scalingMarker0");
 			return false;
 		}
 
-		if (marker1.GetDimension(mainSystem.GetCSystem()->GetSystemData()) != m1Columns && m0Columns != 0)
+		if (marker1.GetDimension(mainSystem.GetCSystem().GetSystemData()) != m1Columns && m0Columns != 0)
 		{
 			errorString = STDstring("ObjectConnectorCoordinateVector: marker 1 must have number of (marker) coordinates same as the number of columns in scalingMarker1");
 			return false;
 		}
 
 		//check quadratic terms
-		if (marker0.GetDimension(mainSystem.GetCSystem()->GetSystemData()) != mQ0Columns && mQ0Columns != 0)
+		if (marker0.GetDimension(mainSystem.GetCSystem().GetSystemData()) != mQ0Columns && mQ0Columns != 0)
 		{
 			errorString = STDstring("ObjectConnectorCoordinateVector: marker 0 must have number of (marker) coordinates same as the number of columns in quadraticTermMarker0");
 			return false;
 		}
 
-		if (marker1.GetDimension(mainSystem.GetCSystem()->GetSystemData()) != mQ1Columns && mQ0Columns != 0)
+		if (marker1.GetDimension(mainSystem.GetCSystem().GetSystemData()) != mQ1Columns && mQ0Columns != 0)
 		{
 			errorString = STDstring("ObjectConnectorCoordinateVector: marker 1 must have number of (marker) coordinates same as the number of columns in quadraticTermMarker1");
 			return false;
@@ -1016,7 +1016,7 @@ bool MainObjectContactCircleCable2D::CheckPreAssembleConsistency(const MainSyste
 	}
 
 	const ArrayIndex& nMarkers = cObject->GetMarkerNumbers();
-	if (!(mainSystem.GetCSystem()->GetSystemData().GetCMarker(nMarkers[0]).GetType() & Marker::Position))
+	if (!(mainSystem.GetCSystem().GetSystemData().GetCMarker(nMarkers[0]).GetType() & Marker::Position))
 	{
 		errorString = STDstring("ObjectContactCircleCable2D: Marker 0 must be of type = 'Position'");
 		return false;
@@ -1087,7 +1087,7 @@ bool MainObjectContactFrictionCircleCable2D::CheckPreAssembleConsistency(const M
 	}
 
 	const ArrayIndex& nMarkers = cObject->GetMarkerNumbers();
-	Marker::Type mType = mainSystem.GetCSystem()->GetSystemData().GetCMarker(nMarkers[0]).GetType();
+	Marker::Type mType = mainSystem.GetCSystem().GetSystemData().GetCMarker(nMarkers[0]).GetType();
 	if (!((mType & Marker::Position) && (mType & Marker::Orientation)))
 	{
 		errorString = STDstring("ObjectContactFrictionCircleCable2D: Marker 0 must be of type = 'Rigid' (Position + Orientation)");
@@ -1095,8 +1095,8 @@ bool MainObjectContactFrictionCircleCable2D::CheckPreAssembleConsistency(const M
 	}
 
 	//DELETE: (not needed because of templated function avoiding temporary vector
-	//Index object0Index = mainSystem.GetCSystem()->GetSystemData().GetCMarker(nMarkers[0]).GetObjectNumber();
-	//if (mainSystem.GetCSystem()->GetSystemData().GetCObjects()[object0Index]->GetNumberOfCoordinates() > CObjectContactFrictionCircleCable2DmaxObject0Coordinates)
+	//Index object0Index = mainSystem.GetCSystem().GetSystemData().GetCMarker(nMarkers[0]).GetObjectNumber();
+	//if (mainSystem.GetCSystem().GetSystemData().GetCObjects()[object0Index]->GetNumberOfCoordinates() > CObjectContactFrictionCircleCable2DmaxObject0Coordinates)
 	//{
 	//	errorString = STDstring("ObjectContactFrictionCircleCable2D: Marker 0 must refer to an object which has no more than ") + EXUstd::ToString(CObjectContactFrictionCircleCable2DmaxObject0Coordinates) + " coordinates";
 	//	return false;
@@ -1141,15 +1141,15 @@ bool MainObjectContactFrictionCircleCable2DOld::CheckPreAssembleConsistency(cons
 	}
 
 	const ArrayIndex& nMarkers = cObject->GetMarkerNumbers();
-	Marker::Type mType = mainSystem.GetCSystem()->GetSystemData().GetCMarker(nMarkers[0]).GetType();
+	Marker::Type mType = mainSystem.GetCSystem().GetSystemData().GetCMarker(nMarkers[0]).GetType();
 	if (!((mType & Marker::Position) && (mType & Marker::Orientation)))
 	{
 		errorString = STDstring("ObjectContactFrictionCircleCable2DOld: Marker 0 must be of type = 'Rigid' (Position + Orientation)");
 		return false;
 	}
 
-	Index object0Index = mainSystem.GetCSystem()->GetSystemData().GetCMarker(nMarkers[0]).GetObjectNumber();
-	if (mainSystem.GetCSystem()->GetSystemData().GetCObjects()[object0Index]->GetNumberOfCoordinates() > CObjectContactFrictionCircleCable2DOldmaxObject0Coordinates)
+	Index object0Index = mainSystem.GetCSystem().GetSystemData().GetCMarker(nMarkers[0]).GetObjectNumber();
+	if (mainSystem.GetCSystem().GetSystemData().GetCObjects()[object0Index]->GetNumberOfCoordinates() > CObjectContactFrictionCircleCable2DOldmaxObject0Coordinates)
 	{
 		errorString = STDstring("ObjectContactFrictionCircleCable2DOld: Marker 0 must refer to an object which has no more than ") + EXUstd::ToString(CObjectContactFrictionCircleCable2DOldmaxObject0Coordinates) + " coordinates";
 		return false;
@@ -1610,7 +1610,7 @@ bool MainObjectKinematicTree::CheckPreAssembleConsistency(const MainSystem& main
 
 	//now check size of vectors and matrices
 	Index nodeNumber = cObject->GetNodeNumber(0);
-	const CNodeODE2* node = &(const CNodeODE2&)(mainSystem.GetCSystem()->GetSystemData().GetCNode(nodeNumber));
+	const CNodeODE2* node = &(const CNodeODE2&)(mainSystem.GetCSystem().GetSystemData().GetCNode(nodeNumber));
 
 	//Index nODE2 = cObject->GetODE2Size();
 	Index nLinks = node->GetNumberOfODE2Coordinates();
@@ -1793,19 +1793,19 @@ bool MainObjectJointRollingDisc::CheckPreAssembleConsistency(const MainSystem& m
 
 	//check that marker m0 is either ground body or rigid body with reference position = 0
 	const ArrayIndex& nMarkers = cObject->GetMarkerNumbers();
-	const CMarker& cMarker0 = mainSystem.GetCSystem()->GetSystemData().GetCMarker(nMarkers[0]);
+	const CMarker& cMarker0 = mainSystem.GetCSystem().GetSystemData().GetCMarker(nMarkers[0]);
 
 	if (EXUstd::IsOfType(cMarker0.GetType(), Marker::Body))
 	{
 		Index nBody = cMarker0.GetObjectNumber();
-		const CObjectBody& body = mainSystem.GetCSystem()->GetSystemData().GetCObjectBody(nBody);
+		const CObjectBody& body = mainSystem.GetCSystem().GetSystemData().GetCObjectBody(nBody);
 		if (!EXUstd::IsOfType(body.GetType(), CObjectType::Ground)) //for ground always ok
 		{
 			//only alternative: must be rigid body
 			//now check, if reference position of RigidBody Marker is 0
 			if (EXUstd::IsOfType(cMarker0.GetType(), (Marker::Type)((Index)Marker::Orientation + (Index)Marker::Position)))
 			{
-				CMarker* cMarker0Ptr = mainSystem.GetCSystem()->GetSystemData().GetCMarkers()[nMarkers[0]];
+				CMarker* cMarker0Ptr = mainSystem.GetCSystem().GetSystemData().GetCMarkers()[nMarkers[0]];
 				if (dynamic_cast<CMarkerBodyRigid*>(cMarker0Ptr) != nullptr)
 				{
 					Vector3D p = dynamic_cast<CMarkerBodyRigid*>(cMarker0Ptr)->GetParameters().localPosition;
@@ -1887,13 +1887,13 @@ bool MainObjectJointSliding2D::CheckPreAssembleConsistency(const MainSystem& mai
 	const ArrayIndex& nMarkers = cObject->GetMarkerNumbers();
 	if (cObject->GetParameters().constrainRotation)
 	{
-		if (!EXUstd::IsOfType(mainSystem.GetCSystem()->GetSystemData().GetCMarker(nMarkers[0]).GetType(), (Marker::Type)((Index)Marker::Position + (Index)Marker::Orientation)))
+		if (!EXUstd::IsOfType(mainSystem.GetCSystem().GetSystemData().GetCMarker(nMarkers[0]).GetType(), (Marker::Type)((Index)Marker::Position + (Index)Marker::Orientation)))
 		{
 			errorString = STDstring("ObjectJointSliding2D: in case of constrainRotation == True, Marker 0 must be of type = 'Position' + 'Orientation'");
 			return false;
 		}
 	}
-	else if (!EXUstd::IsOfType(mainSystem.GetCSystem()->GetSystemData().GetCMarker(nMarkers[0]).GetType(), Marker::Position))
+	else if (!EXUstd::IsOfType(mainSystem.GetCSystem().GetSystemData().GetCMarker(nMarkers[0]).GetType(), Marker::Position))
 	{
 		errorString = STDstring("ObjectJointSliding2D: Marker 0 must be of type = 'Position'");
 		return false;
@@ -1968,7 +1968,7 @@ bool MainObjectJointALEMoving2D::CheckPreAssembleConsistency(const MainSystem& m
 
 	//Check indidual types:
 	const ArrayIndex& nMarkers = cObject->GetMarkerNumbers();
-	if (!(mainSystem.GetCSystem()->GetSystemData().GetCMarker(nMarkers[0]).GetType() & Marker::Position))
+	if (!(mainSystem.GetCSystem().GetSystemData().GetCMarker(nMarkers[0]).GetType() & Marker::Position))
 	{
 		errorString = STDstring("ObjectJointALEMoving2D: Marker 0 must be of type = 'Position'");
 		return false;

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-07-04  22:03:14 (last modified)
+* @date         2024-02-04  22:08:12 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -128,7 +128,7 @@ public: // AUTO:
         d["nodeNumber"] = (NodeIndex)cObjectMassPoint2D->GetParameters().nodeNumber; //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationObjectMassPoint2D->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
-        d["VgraphicsData"] = PyGetBodyGraphicsDataList(visualizationObjectMassPoint2D->GetGraphicsData(), addGraphicsData); //! AUTO: generate dictionary with special function
+        d["VgraphicsData"] = PyGetBodyGraphicsDataList(visualizationObjectMassPoint2D->GetGraphicsData(), addGraphicsData); //! AUTO: cast variables into python (not needed for standard types) 
         return d; 
     }
 
@@ -139,6 +139,7 @@ public: // AUTO:
         else if (parameterName.compare("physicsMass") == 0) { return py::cast((Real)cObjectMassPoint2D->GetParameters().physicsMass);} //! AUTO: get parameter
         else if (parameterName.compare("nodeNumber") == 0) { return py::cast((NodeIndex)cObjectMassPoint2D->GetParameters().nodeNumber);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectMassPoint2D->GetShow());} //! AUTO: get parameter
+        else if (parameterName.compare("VgraphicsData") == 0) { return PyGetBodyGraphicsDataList(visualizationObjectMassPoint2D->GetGraphicsData(), true);} //! AUTO: get parameter
         else  {PyError(STDstring("ObjectMassPoint2D::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
         return py::object();
     }
@@ -151,6 +152,7 @@ public: // AUTO:
         else if (parameterName.compare("physicsMass") == 0) { cObjectMassPoint2D->GetParameters().physicsMass = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("nodeNumber") == 0) { cObjectMassPoint2D->GetParameters().nodeNumber = EPyUtils::GetNodeIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationObjectMassPoint2D->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("VgraphicsData") == 0) { PyWriteBodyGraphicsDataList(value, visualizationObjectMassPoint2D->GetGraphicsData()); } //! AUTO: get parameter
         else  {PyError(STDstring("ObjectMassPoint2D::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();
     }

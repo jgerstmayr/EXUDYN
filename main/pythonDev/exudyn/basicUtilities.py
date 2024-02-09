@@ -1,20 +1,20 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN python utility library
 #
-# Details: 	Basic utility functions and constants, not depending on numpy or other python modules.
+# Details:  Basic utility functions and constants, not depending on numpy or other python modules.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2020-03-10 (created)
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
-# Notes: 	Additional constants are defined: \\
-#			pi = 3.1415926535897932 \\
-#			sqrt2 = 2**0.5\\
-#			g=9.81\\
-#			eye2D (2x2 diagonal matrix)\\
-#			eye3D (3x3 diagonal matrix)\\
-# 			Two variables 'gaussIntegrationPoints' and 'gaussIntegrationWeights' define integration points and weights for function GaussIntegrate(...)
+# Notes:    Additional constants are defined: \\
+#           pi = 3.1415926535897932 \\
+#           sqrt2 = 2**0.5\\
+#           g=9.81\\
+#           eye2D (2x2 diagonal matrix)\\
+#           eye3D (3x3 diagonal matrix)\\
+#           Two variables 'gaussIntegrationPoints' and 'gaussIntegrationWeights' define integration points and weights for function GaussIntegrate(...)
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import math #always available in Python

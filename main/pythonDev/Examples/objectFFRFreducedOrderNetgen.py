@@ -13,16 +13,11 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-import sys
-sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
-
 import exudyn as exu
 from exudyn.itemInterface import *
 from exudyn.utilities import *
 from exudyn.FEM import *
 from exudyn.graphicsDataUtilities import *
-
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -46,9 +41,6 @@ a = 0.025 #height/width of beam
 L = 1     #Length of beam
 
 if False: #needs netgen/ngsolve to be installed to compute mesh, see e.g.: https://github.com/NGSolve/ngsolve/releases
-    import sys
-    #adjust path to your ngsolve installation (if not added to global path)
-    sys.path.append('C:/ProgramData/ngsolve/lib/site-packages') 
 
     from ngsolve import *
     from netgen.geom2d import unit_square
@@ -186,8 +178,6 @@ if True: #now import mesh as mechanical model to EXUDYN
     
     h=5e-4
     tEnd = 3
-    #if exudynTestGlobals.useGraphics:
-    #    tEnd = 0.1
     
     simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
     simulationSettings.timeIntegration.endTime = tEnd
@@ -224,11 +214,4 @@ if True: #now import mesh as mechanical model to EXUDYN
             exu.StopRenderer() #safely close rendering window!
             lastRenderState = SC.GetRenderState() #store model view for next simulation
     
-
-
-
-
-
-
-
 

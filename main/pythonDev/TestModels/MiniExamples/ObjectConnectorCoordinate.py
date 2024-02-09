@@ -1,6 +1,11 @@
-#+++++++++++++++++++++++++++++++++++++++++++
-# Mini example for class ObjectConnectorCoordinate
-#+++++++++++++++++++++++++++++++++++++++++++
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+# 
+# Details:  Mini example for class ObjectConnectorCoordinate
+# 
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+# 
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import sys
 sys.path.append('../TestModels')
@@ -19,30 +24,25 @@ mbs = SC.AddSystem()
 oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0]))
 nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 
-exu.Print("start mini example for class ObjectConnectorCoordinate")
-try: #puts example in safe environment
-    def OffsetUF(mbs, t, itemNumber, lOffset): #gives 0.05 at t=1
-        return 0.5*(1-np.cos(2*3.141592653589793*0.25*t))*lOffset
+def OffsetUF(mbs, t, itemNumber, lOffset): #gives 0.05 at t=1
+    return 0.5*(1-np.cos(2*3.141592653589793*0.25*t))*lOffset
 
-    nMass=mbs.AddNode(Point(referenceCoordinates = [2,0,0]))
-    massPoint = mbs.AddObject(MassPoint(physicsMass = 5, nodeNumber = nMass))
-    
-    groundMarker=mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nGround, coordinate = 0))
-    nodeMarker  =mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nMass, coordinate = 0))
-    
-    #Spring-Damper between two marker coordinates
-    mbs.AddObject(CoordinateConstraint(markerNumbers = [groundMarker, nodeMarker], 
-                                       offset = 0.1, offsetUserFunction = OffsetUF)) 
+nMass=mbs.AddNode(Point(referenceCoordinates = [2,0,0]))
+massPoint = mbs.AddObject(MassPoint(physicsMass = 5, nodeNumber = nMass))
 
-    #assemble and solve system for default parameters
-    mbs.Assemble()
-    mbs.SolveDynamic()
+groundMarker=mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nGround, coordinate = 0))
+nodeMarker  =mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nMass, coordinate = 0))
 
-    #check result at default integration time
-    exudynTestGlobals.testResult  = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Displacement)[0]
+#Spring-Damper between two marker coordinates
+mbs.AddObject(CoordinateConstraint(markerNumbers = [groundMarker, nodeMarker], 
+                                   offset = 0.1, offsetUserFunction = OffsetUF)) 
 
-except BaseException as e:
-    exu.Print("An error occured in test example for ObjectConnectorCoordinate:", e)
-else:
-    exu.Print("example for ObjectConnectorCoordinate completed, test result =", exudynTestGlobals.testResult)
+#assemble and solve system for default parameters
+mbs.Assemble()
+mbs.SolveDynamic()
+
+#check result at default integration time
+exudynTestGlobals.testResult  = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Displacement)[0]
+
+exu.Print("example for ObjectConnectorCoordinate completed, test result =", exudynTestGlobals.testResult)
 

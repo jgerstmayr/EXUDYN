@@ -479,7 +479,7 @@ Function: RoundMatrix
 
 Function: ConvertFunctionToSymbolic
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ConvertFunctionToSymbolic <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L400>`__\ (\ ``mbs``\ , \ ``function``\ , \ ``itemIndex``\ , \ ``userFunctionName``\ , \ ``verbose = 0``\ )
+`ConvertFunctionToSymbolic <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L402>`__\ (\ ``mbs``\ , \ ``function``\ , \ ``userFunctionName``\ , \ ``itemIndex = None``\ , \ ``itemTypeName = None``\ , \ ``verbose = 0``\ )
 
 - | \ *function description*\ :
   | Internal function to convert a Python user function into a dictionary containing the symbolic representation;
@@ -487,7 +487,9 @@ Function: ConvertFunctionToSymbolic
 - | \ *input*\ :
   | \ ``mbs``\ : MainSystem, needed currently for interface
   | \ ``function``\ : Python function with interface according to desired user function
-  | \ ``itemIndex``\ : item index, such as ObjectIndex or LoadIndex
+  | \ ``itemIndex``\ : item index, such as ObjectIndex or LoadIndex; -1 indicates MainSystem; if None, itemTypeName must be provided instead
+  | \ ``itemTypeName``\ : use of type name, such as ObjectConnectorSpringDamper; in this case, itemIndex must be None
+  | \ ``itemIndex``\ : item index, such as ObjectIndex or LoadIndex; -1 indicates MainSystem
   | \ ``userFunctionName``\ : name of user function item, see documentation; this is required, because some items have several user functions, which need to be distinguished
   | \ ``verbose``\ : if > 0, according output is printed
 - | \ *output*\ :
@@ -502,7 +504,7 @@ Function: ConvertFunctionToSymbolic
 
 Function: CreateSymbolicUserFunction
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateSymbolicUserFunction <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L531>`__\ (\ ``mbs``\ , \ ``function``\ , \ ``itemIndex``\ , \ ``userFunctionName``\ , \ ``verbose = 0``\ )
+`CreateSymbolicUserFunction <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L542>`__\ (\ ``mbs``\ , \ ``function``\ , \ ``userFunctionName``\ , \ ``itemIndex = None``\ , \ ``itemTypeName = None``\ , \ ``verbose = 0``\ )
 
 - | \ *function description*\ :
   | Helper function to convert a Python user function into a symbolic user function;
@@ -510,7 +512,8 @@ Function: CreateSymbolicUserFunction
 - | \ *input*\ :
   | \ ``mbs``\ : MainSystem, needed currently for interface
   | \ ``function``\ : Python function with interface according to desired user function
-  | \ ``itemIndex``\ : item index, such as ObjectIndex or LoadIndex
+  | \ ``itemIndex``\ : item index, such as ObjectIndex or LoadIndex; -1 indicates MainSystem; if None, itemTypeName must be provided instead
+  | \ ``itemTypeName``\ : use of type name, such as ObjectConnectorSpringDamper; in this case, itemIndex must be None
   | \ ``userFunctionName``\ : name of user function item, see documentation; this is required, because some items have several user functions, which need to be distinguished
   | \ ``verbose``\ : if > 0, according output may be printed
 - | \ *output*\ :
@@ -524,12 +527,14 @@ Function: CreateSymbolicUserFunction
   oGround = mbs.AddObject(ObjectGround())
   node = mbs.AddNode(NodePoint(referenceCoordinates = [1.05,0,0]))
   oMassPoint = mbs.AddObject(MassPoint(nodeNumber = node, physicsMass=1))
+  symbolicFunc = CreateSymbolicUserFunction(mbs, function=springForceUserFunction,
+                                            userFunctionName='springForceUserFunction',
+                                            itemTypeName='ObjectConnectorSpringDamper')
   m0 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition=[0,0,0]))
   m1 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oMassPoint, localPosition=[0,0,0]))
   co = mbs.AddObject(ObjectConnectorSpringDamper(markerNumbers=[m0,m1],
-                  referenceLength = 1, stiffness = 100, damping = 1))
-  symbolicFunc = CreateSymbolicUserFunction(mbs, springForceUserFunction, co, 'springForceUserFunction')
-  symbolicFunc.TransferUserFunction2Item(mbs, co, 'springForceUserFunction')
+                     referenceLength = 1, stiffness = 100, damping = 1,
+                     springForceUserFunction=symbolicFunc))
   print(symbolicFunc.Evaluate(mbs, 0., 0, 1.1, 0.,  100., 0., 13.) )
 
 

@@ -39,7 +39,7 @@ void VisualizationObjectGround::CallUserFunction(const VisualizationSettings& vi
 	py::object pyBodyGraphicsData;
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		pyBodyGraphicsData = graphicsDataUserFunction(mainSystem, itemNumber);
+		pyBodyGraphicsData = graphicsDataUserFunction.userFunction(mainSystem, itemNumber);
 	}, "VisualizationObjectGround::CallUserFunction");
 
 	CObjectGround* cObject = (CObjectGround*)vSystem->systemData->GetCObjects()[itemNumber];
@@ -60,7 +60,7 @@ void VisualizationObjectRigidBody::CallUserFunction(const VisualizationSettings&
 	py::object pyBodyGraphicsData;
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		pyBodyGraphicsData = graphicsDataUserFunction(mainSystem, itemNumber);
+		pyBodyGraphicsData = graphicsDataUserFunction.userFunction(mainSystem, itemNumber);
 	}, "VisualizationObjectRigidBody::CallUserFunction");
 
 	CObjectRigidBody* cObject = (CObjectRigidBody*)vSystem->systemData->GetCObjects()[itemNumber];
@@ -82,7 +82,7 @@ void VisualizationObjectRigidBody2D::CallUserFunction(const VisualizationSetting
 	py::object pyBodyGraphicsData;
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		pyBodyGraphicsData = graphicsDataUserFunction(mainSystem, itemNumber);
+		pyBodyGraphicsData = graphicsDataUserFunction.userFunction(mainSystem, itemNumber);
 	}, "VisualizationObjectRigidBody2D::CallUserFunction");
 
 	CObjectRigidBody2D* cObject = (CObjectRigidBody2D*)vSystem->systemData->GetCObjects()[itemNumber];
@@ -104,7 +104,7 @@ void VisualizationObjectGenericODE2::CallUserFunction(const VisualizationSetting
 	py::object pyBodyGraphicsData;
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		pyBodyGraphicsData = graphicsDataUserFunction(mainSystem, itemNumber);
+		pyBodyGraphicsData = graphicsDataUserFunction.userFunction(mainSystem, itemNumber);
 	}, "VisualizationObjectGenericODE2::CallUserFunction");
 
 	//CObjectGenericODE2* cObject = (CObjectGenericODE2*)vSystem->systemData->GetCObjects()[itemNumber];

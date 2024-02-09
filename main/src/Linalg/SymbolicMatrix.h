@@ -755,6 +755,7 @@ public:
 		if (IsExpressionNamedReal())
 		{
 			GetExpressionNamedReal().SetMatrix(temp);
+			matrix = temp; //for consistency
 		}
 		else
 		{

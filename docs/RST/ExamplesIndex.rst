@@ -90,9 +90,12 @@ This section includes all Examples for Exudyn.They can also be found and downloa
    Examples/particlesTest3D2
    Examples/pendulum
    Examples/pendulum2Dconstraint
+   Examples/pendulumGeomExactBeam2D
+   Examples/pendulumGeomExactBeam2Dsimple
    Examples/pendulumIftommBenchmark
    Examples/pendulumVerify
    Examples/performanceMultiThreadingNG
+   Examples/pistonEngine
    Examples/plotSensorExamples
    Examples/reevingSystem
    Examples/reevingSystemOpen

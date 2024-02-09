@@ -8,14 +8,17 @@ goal: generate latex documentation for all utilities packages
 """
 import copy #for deep copies
 import io   #for utf-8 encoding
+import numpy as np
 from autoGenerateHelper import Str2Latex, GenerateLatexStrKeywordExamples, ExtractExamplesWithKeyword, \
           RemoveIndentation, RSTheaderString, RSTlabelString, RSTinlineMath, RSTmath, RSTurl, RSTmarkup, RSTcodeBlock, \
-          LatexString2RST, Latex2RSTlabel
+          LatexString2RST, Latex2RSTlabel, ArgNotSet
+
+from exudynVersion import exudynVersionString
 
 maxWarningsMutableArgs = 200 #warnings in case of list or dict default args (mutable args)
 #list of functions for which mutable args have been checked:
 mutableArgsFunctionsChecked = [
-    'GenerateStraightLineANCFCable','GenerateStraightLineANCFCable2D','PointsAndSlopes2ANCFCable2D','GenerateCircularArcANCFCable2D', #beams
+    'GenerateStraightLineANCFCable','GenerateStraightLineANCFCable2D','PointsAndSlopes2ANCFCable2D','GenerateCircularArcANCFCable2D', 'GenerateStraightBeam', #beams
     #FEM:
     'CreateReevingCurve', 'AddObjectFFRF','CMSObjectComputeNorm', 'AddObjectFFRFreducedOrderWithUserFunctions',
     'AddObjectFFRFreducedOrder', 'AddElasticSupportAtNode', 'CreateLinearFEMObjectGenericODE2', 
@@ -654,6 +657,12 @@ rstExtensions = {} #for C++ extension functions
 pyiExtensions = {} #for stub files of C++ extension functions
 pyExtensions = ''  #for extension of C++ class, added lateron to mainSystemExtensions; ONLY one string
 
+#added structures for creating dictionaries for modules, functions and classes; saved via numpy save
+dictModules = {}
+dictModules['modules'] = [] #contains list of modules
+dictModules['version'] = exudynVersionString
+dictModules['name'] = 'utilities'
+
 #special strings, to put MainSystemExtensions (CreateMassPoint, ...) on top of RST and Latex description!
 latexExtensionsMainSystem = ''
 rstExtensionsMainSystem = ''
@@ -668,12 +677,20 @@ file.close()
 
 
 for fileName in filesParsed:
+    dictModule = {}
     sRST = ''
     [functionList,classList,header] = ParsePythonFile(fileDir+fileName)
     moduleName = fileName[:-3]
     moduleNameLatex = moduleName.replace('robotics/roboticsCore','robotics').replace('/','.')
     
     moduleNamePython = moduleName.split('/')[-1]
+    baseModule = ''
+    if '/' in moduleName:
+        baseModule = moduleName.split('/')[0]
+        
+    dictModule['baseModule'] = baseModule 
+    dictModule['name'] = moduleNamePython
+    
     strSub = ''
     sectionLevel = 2
     if '.' in moduleNameLatex: #don't do it for robotics core 
@@ -692,6 +709,7 @@ for fileName in filesParsed:
         if 'Details' in header: #write details as intro to section
             sLatex += header['Details'] #+ '\n'
             sRST += LatexString2RSTspecial(RemoveIndentation(header['Details']))
+            dictModule['details'] = RemoveIndentation(header['Details'])
             #print('header=\n'+sRST)
         if len(header)>1:
             sLatex += '\\begin{itemize}[leftmargin=1.4cm]\n'
@@ -723,14 +741,18 @@ for fileName in filesParsed:
         sRST += mseText 
 
     #*****************************************************
+    dictModuleFunctions = [] #list of functions
+    cnt=0
     isFirstFunction = True
     #insert function descriptions 
     for funcDict in functionList:
         if 'functionName' not in funcDict:
             print('SpecialAppend: missing functionName in: ',funcDict)
 
+        # if "example" in funcDict:#['defaultArgumentsList']:
+            #print(funcDict)
 
-        belongsTo = ''
+        belongsTo = '' #for mainSystemExtensions
         if 'belongsTo' in funcDict:
             belongsTo = funcDict['belongsTo'].strip()
 
@@ -797,6 +819,11 @@ for fileName in filesParsed:
 
         #add remaining part to original latex and RST
         if moduleNamePython != 'mainSystemExtensions': #no description for this!
+            #prepare for exporting dict:
+            exportDict = copy.deepcopy(funcDict)
+            exportDict['functionName'] = exportDict['functionName'].replace('\\','')
+            dictModuleFunctions.append(exportDict)
+
             [sFuncLatex, sFuncRST, sPyi, sPy] = WriteFunctionDescription2LatexRST(funcDict, moduleNamePython, fileName, 
                                                                                   createPyiFile=False, 
                                                                                   redirectBelongsTo=(belongsTo != ''))
@@ -823,11 +850,22 @@ for fileName in filesParsed:
 
         isFirstFunction=False
 
+    dictModule['functions'] = dictModuleFunctions
+
+    dictModuleClasses = [] #list of functions
+
     #insert class descriptions with functions
     #there is no MainSystem extensions part here!
     for classDict in classList:
         SpecialAppend(localListClassNames, classDict['className'])
         # print(classDict['className'])
+        #print(classDict)
+
+        exportDict = copy.deepcopy(classDict)
+        exportDict['className'] = exportDict['className'].replace('\\','')
+        for fn in exportDict['functionList']: 
+            fn['functionName'] = fn['functionName'].replace('\\','')
+        dictModuleClasses.append(exportDict)
         
         sLatex += '\\my'+strSub+'subsubsection{CLASS '+classDict['className']+' (in module '+moduleNameLatex+')}\n'
         #sLatex += '\\bi'
@@ -874,9 +912,18 @@ for fileName in filesParsed:
             sLatex += sExamples
             sRST += '\n'+sExamplesRST
 
+    dictModule['classes'] = dictModuleClasses
+
     sRST = sRST #.replace('**kwargs','\\*\\*kwargs').replace('*args','\\*args') #only needed, if not in literal
     #listRST += [(moduleNameLatex, LatexString2RSTspecial(sRST, replaceMarkups=False))]
     listRST += [(moduleNameLatex, sRST)]
+
+    dictModules['modules'].append(dictModule)
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++        
+np.save('generated/utilitiesDocuData.npy', dictModules)
+#utilitiesData = np.load('generated/utilitiesDocuData.npy', allow_pickle=True).item()
+
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++        
 latexFile = theDocDir+'pythonUtilitiesDescription.tex'

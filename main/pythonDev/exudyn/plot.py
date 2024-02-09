@@ -1,14 +1,14 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN python utility library
 #
-# Details: 	Plot utility functions based on matplotlib, including plotting of sensors and FFT.
+# Details:  Plot utility functions based on matplotlib, including plotting of sensors and FFT.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2020-09-16 (created)
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
-# Notes:	For a list of plot colors useful for matplotlib, see also advancedUtilities.PlotLineCode(...)
+# Notes:    For a list of plot colors useful for matplotlib, see also advancedUtilities.PlotLineCode(...)
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
@@ -126,7 +126,7 @@ def ParseOutputFileHeader(lines):
                 writtenCoordinateTypes = line.split('=')[0].split('[')[1].split(']')[0].replace(' ','').split(',')
                 writtenCoordinates = line.split('=')[1].split('[')[1].split(']')[0].replace(' ','').split(',')
                 variableTypes = ['time']
-                print('writtenCoordinates=',writtenCoordinates)
+                #print('writtenCoordinates=',writtenCoordinates)
                 for j in range(len(writtenCoordinateTypes)):
                     for k in range(int(writtenCoordinates[j])):
                        variableTypes += [writtenCoordinateTypes[j].strip('n')+'-'+str(k)]

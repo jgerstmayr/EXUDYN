@@ -36,9 +36,6 @@ You can view and download this file on Github: `NGsolveLinearFEM.py <https://git
    import sys
    import time
    
-   #adjust path to your ngsolve installation (if not added to global path)
-   sys.path.append('C:/ProgramData/ngsolve/lib/site-packages')
-   
    
    #import netgen.geom2d as geom2d
    from netgen.occ import *
@@ -166,8 +163,6 @@ You can view and download this file on Github: `NGsolveLinearFEM.py <https://git
        
    h=1e-3*0.5
    tEnd = 2
-   #if exudynTestGlobals.useGraphics:
-   #    tEnd = 0.1
    
    simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
    simulationSettings.timeIntegration.endTime = tEnd

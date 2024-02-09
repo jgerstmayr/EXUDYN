@@ -183,7 +183,7 @@ void VisualizationSystem::UpdateGraphicsData(VisualizationSystemContainer& visua
 		//if (visualizationSystemContainer.settings.contact.showSearchTree)
 		//{
 		//	CSystem* cSystem = GetMainSystemBacklink()->GetCSystem();
-		//	for (auto gContact : cSystem->GetGeneralContacts())
+		//	for (auto gContact : cSystem.GetGeneralContacts())
 		//	{
 
 		//	}
@@ -369,8 +369,8 @@ void VisualizationSystem::UpdateGraphicsData(VisualizationSystemContainer& visua
 		//visualize GeneralContacts:
 		if (true)
 		{
-			const CSystem* cSystem = GetMainSystemBacklink()->GetCSystem();
-			for (GeneralContact* gc : cSystem->GetGeneralContacts()) //usually only 1
+			const CSystem& cSystem = GetMainSystemBacklink()->GetCSystem();
+			for (GeneralContact* gc : cSystem.GetGeneralContacts()) //usually only 1
 			{
 				gc->visualization.DrawContacts(*gc, visualizationSystemContainer.GetVisualizationSettings(), this);
 			}

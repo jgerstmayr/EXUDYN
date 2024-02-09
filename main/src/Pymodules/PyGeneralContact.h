@@ -176,7 +176,7 @@ public:
 	}
 
 	//! collect data for marker based sphere
-	py::object PyGetMarkerBasedSphere(Index localIndex)
+	py::object PyGetSphereMarkerBased(Index localIndex, bool addData = false) const
 	{
 		if (localIndex >= spheresMarkerBased.NumberOfItems())
 		{
@@ -184,11 +184,82 @@ public:
 		}
 		const ContactSpheresMarkerBased& data = spheresMarkerBased[localIndex];
 		auto d = py::dict();
-		d["markerIndex"] = py::cast<MarkerIndex>(data.markerIndex);
-		d["radius"] = (py::float_)data.radius;
 		d["position"] = EPyUtils::SlimVector2NumPy(data.position);
+		d["orientation"] = EPyUtils::Matrix2NumPyTemplate<Matrix3D>(data.orientation);
+		d["velocity"] = EPyUtils::SlimVector2NumPy(data.velocity);
+		d["angularVelocity"] = EPyUtils::SlimVector2NumPy(data.angularVelocity);
+		if (addData)
+		{
+			d["markerIndex"] = py::cast<MarkerIndex>(data.markerIndex);
+			d["contactStiffness"] = (py::float_)data.contactStiffness;
+			d["contactDamping"] = (py::float_)data.contactDamping;
+			d["radius"] = (py::float_)data.radius;
+			d["frictionMaterialIndex"] = (py::int_)data.frictionMaterialIndex;
+		}
 
 		return d;
+	}
+
+	//! set data for marker based sphere; -1 means that value is not overwritten
+	void PySetSphereMarkerBased(Index localIndex, Real contactStiffness=-1., Real contactDamping=-1., Real radius=-1., Index frictionMaterialIndex=-1)
+	{
+		if (localIndex >= spheresMarkerBased.NumberOfItems())
+		{
+			PyError("GeneralContact::SetMarkerBasedSphere: localIndex out of range");
+		}
+		ContactSpheresMarkerBased& data = spheresMarkerBased[localIndex];
+		
+		if (contactStiffness >= 0) { data.contactStiffness = contactStiffness; }
+		if (contactDamping >= 0) { data.contactDamping = contactDamping; }
+		if (radius >= 0) { data.radius = radius; }
+		if (frictionMaterialIndex >= 0) 
+		{
+			CHECKandTHROW(frictionMaterialIndex < settings.frictionPairings.NumberOfRows(), "SetSphereMarkerBased: frictionMaterialIndex out of valid range");
+			data.frictionMaterialIndex = frictionMaterialIndex;
+		}
+		
+	}
+
+	//! collect data for marker based sphere
+	py::object PyGetTriangleRigidBodyBased(Index localIndex) const
+	{
+		if (localIndex >= trigsRigidBodyBased.NumberOfItems())
+		{
+			PyError("GeneralContact::GetTriangleRigidBodyBased: localIndex out of range");
+		}
+		const ContactTriangleRigidBodyBased& data = trigsRigidBodyBased[localIndex];
+		auto d = py::dict();
+
+		d["contactRigidBodyIndex"] = (py::int_)data.contactRigidBodyIndex;
+		Matrix3D points(3, 3); //store as matrix (numpy; points as rows)
+		points(0, 0) = data.points[0][0]; points(0, 1) = data.points[0][1]; points(0, 2) = data.points[0][2];
+		points(1, 0) = data.points[1][0]; points(1, 1) = data.points[1][1]; points(1, 2) = data.points[1][2];
+		points(2, 0) = data.points[2][0]; points(2, 1) = data.points[2][1]; points(2, 2) = data.points[2][2];
+		d["points"] = EPyUtils::Matrix2NumPyTemplate<Matrix3D>(points);
+		d["normal"] = EPyUtils::SlimVector2NumPy(data.normal);
+
+		return d;
+	}
+
+	//! set data for marker based sphere; -1 means that value is not overwritten
+	void PySetTriangleRigidBodyBased(Index localIndex, const std::array<std::array<Real,3>,3>& points, Index contactRigidBodyIndex = -1)
+	{
+		if (localIndex >= trigsRigidBodyBased.NumberOfItems())
+		{
+			PyError("GeneralContact::SetTriangleRigidBodyBased: localIndex out of range");
+		}
+		ContactTriangleRigidBodyBased& data = trigsRigidBodyBased[localIndex];
+
+		if (contactRigidBodyIndex >= 0) 
+		{ 
+			CHECKandTHROW(contactRigidBodyIndex < rigidBodyMarkerBased.NumberOfItems(), "SetTriangleRigidBodyBased: contactRigidBodyIndex out of valid range");
+			data.contactRigidBodyIndex = contactRigidBodyIndex;
+		}
+
+		for (Index i=0; i < data.points.size(); i++)
+		{
+			data.points[i] = Vector3D(points[i]);
+		}
 	}
 
 	//! measure shortest distance to object along line with start point and direction; return false, if no item found inside given min/max distance
@@ -230,7 +301,7 @@ public:
     //! update contact interactions, e.g. for ShortestDistanceAlongLine or for getting items in box
     void PyUpdateContacts(const MainSystem& mainSystem)
     {
-        UpdateContacts(*mainSystem.GetCSystem());
+        UpdateContacts(mainSystem.GetCSystem());
     }
 
     //! get contact interactions of itemIndex of type selectedTypeIndex, e.g. IndexSpheresMarkerBased with index 2

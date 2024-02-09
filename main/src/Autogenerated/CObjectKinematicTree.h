@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2023-05-05  23:12:40 (last modified)
+* @date         2024-02-03  15:27:06 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -23,6 +23,7 @@
 #include "System/ItemIndices.h"
 
 #include <functional> //! AUTO: needed for std::function
+#include "Pymodules/PythonUserFunctions.h" //! AUTO: needed for user functions, without pybind11
 #include "Linalg/KinematicsBasics.h"//for transformations
 #include "Pymodules/PyMatrixVector.h"//for some matrix and vector lists
 #include "Main/OutputVariable.h"
@@ -53,7 +54,7 @@ public: // AUTO:
     Vector jointVelocityOffsetVector;             //!< AUTO: velocity offset for joint coordinates used in (P)D control; acts in positive joint direction similar to jointForceVector; should be modified, e.g., in preStepUserFunction; must be either empty list/array \f$[]\f$ (default) or have size \f$n\f$
     Vector jointPControlVector;                   //!< AUTO: proportional (P) control values per joint (multiplied with position error between joint value and offset \f$\uv_o\f$); note that more complicated control laws must be implemented with user functions; must be either empty list/array \f$[]\f$ (default) or have size \f$n\f$
     Vector jointDControlVector;                   //!< AUTO: derivative (D) control values per joint (multiplied with velocity error between joint velocity and velocity offset \f$\vv_o\f$); note that more complicated control laws must be implemented with user functions; must be either empty list/array \f$[]\f$ (default) or have size \f$n\f$
-    std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector)> forceUserFunction;//!< AUTO: A Python user function which computes the generalized force vector on RHS with identical action as jointForceVector; see description below
+    PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector)> > forceUserFunction;//!< AUTO: A Python user function which computes the generalized force vector on RHS with identical action as jointForceVector; see description below
     //! AUTO: default constructor with parameter initialization
     CObjectKinematicTreeParameters()
     {
@@ -266,7 +267,7 @@ public: // AUTO:
     virtual void GetAccessFunctionBody(AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value) const override;
 
     //! AUTO:  provide according output variable in 'value'
-    virtual void GetOutputVariable(OutputVariableType variableType, Vector& value, ConfigurationType configuration, Index objectNumber) const override;
+    virtual void GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber) const override;
 
     //! AUTO:  return the (global) position of 'localPosition' according to configuration type
     virtual Vector3D GetPosition(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const override;

@@ -22,14 +22,11 @@ You can view and download this file on Github: `slidercrankWithMassSpring.py <ht
    # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
    #
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-   import sys
-   sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
    
    import exudyn as exu
    from exudyn.itemInterface import *
    from exudyn.utilities import *
    
-   from modelUnitTests import ExudynTestStructure, exudynTestGlobals
    import numpy as np
    import matplotlib.pyplot as plt
    import matplotlib.ticker as ticker
@@ -37,6 +34,8 @@ You can view and download this file on Github: `slidercrankWithMassSpring.py <ht
    SC = exu.SystemContainer()
    mbs = SC.AddSystem()
    
+   
+   useGraphics = True
    
    nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0])) #ground node for coordinate constraint
    mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nGround, coordinate=0)) #Ground node ==> no action
@@ -160,8 +159,7 @@ You can view and download this file on Github: `slidercrankWithMassSpring.py <ht
    #++++++++++++++++++++++++++++++++
    #assemble, adjust settings and start time integration
    mbs.Assemble()
-   #exudynTestGlobals.useGraphics = True
-   if exudynTestGlobals.useGraphics: 
+   if useGraphics: 
        exu.StartRenderer()
        #mbs.WaitForUserToContinue()
    
@@ -204,7 +202,7 @@ You can view and download this file on Github: `slidercrankWithMassSpring.py <ht
    
    mbs.SolveDynamic(simulationSettings)
        
-   if exudynTestGlobals.useGraphics: 
+   if useGraphics: 
        #+++++++++++++++++++++++++++++++++++++
        #animate solution
    #        mbs.WaitForUserToContinue
@@ -222,10 +220,9 @@ You can view and download this file on Github: `slidercrankWithMassSpring.py <ht
    
    
    print('solutionSliderCrankIndex2=',solutionSliderCrank)
-   exudynTestGlobals.testError = solutionSliderCrank - 0 #2019-12-28: 
    
    
-   plotResults = exudynTestGlobals.useGraphics#constrainGroundBody #comparison only works in case of fixed ground
+   plotResults = useGraphics#constrainGroundBody #comparison only works in case of fixed ground
    if plotResults:
        data = np.loadtxt('coordinatesSolution.txt', comments='#', delimiter=',')
                                

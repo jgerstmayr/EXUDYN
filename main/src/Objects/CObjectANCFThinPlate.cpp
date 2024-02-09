@@ -31,13 +31,13 @@ void CObjectANCFThinPlate::ComputeShapeFunctions(Real xi, Real eta, Vector12D& s
 {
 	Real xieta = xi * eta;
 	Real xi2 = xi * xi;
-	Real xi3 = xi * xi;
+	Real xi3 = xi * xi2;
 	Real eta2 = eta * eta;
 	Real eta3 = eta * eta2;
 
 	sf.SetVector({ xieta * 0.5 - xi3 * eta * 0.125 - xi * eta3 * 0.125 + 0.25 + xi3 * 0.125 + eta2
 			* eta * 0.125 - 0.375 * eta - 0.375 * xi,
-		size1 * xi2 * eta 0.0625 + size1 * 0.0625 + size1 * xieta * 0.0625 - size1 * xi * 0.0625 - size1 * xi2 * 0.0625 - size1 *
+		size1 * xi2 * eta * 0.0625 + size1 * 0.0625 + size1 * xieta * 0.0625 - size1 * xi * 0.0625 - size1 * xi2 * 0.0625 - size1 *
 			xi3 * eta * 0.0625 + size1 * xi3 * 0.0625 - size1 * eta * 0.0625,
 		size2 * 0.0625 - size2 * xi * eta3 * 0.0625 - size2 * eta * 0.0625 - size2 * eta2 * 0.0625 + size2 * eta3 /
 			16. - size2 * xi * 0.0625 + size2 * xieta * 0.0625 + size2 * xi * eta2 * 0.0625,
@@ -66,7 +66,7 @@ void CObjectANCFThinPlate::ComputeShapeFunctions_xy(Real xi, Real eta, Vector12D
 {
 	Real xieta = xi * eta;
 	Real xi2 = xi * xi;
-	Real xi3 = xi * xi;
+	Real xi3 = xi * xi2;
 	Real eta2 = eta * eta;
 	Real eta3 = eta * eta2;
 
@@ -107,7 +107,7 @@ void CObjectANCFThinPlate::ComputeShapeFunctions_xxyy(Real xi, Real eta,
 {
 	Real xieta = xi * eta;
 	Real xi2 = xi * xi;
-	Real xi3 = xi * xi;
+	Real xi3 = xi * xi2;
 	Real eta2 = eta * eta;
 	Real eta3 = eta * eta2;
 
@@ -227,28 +227,38 @@ void CObjectANCFThinPlate::PreComputeMassTerms() const
 	if (!massMatrixComputed)
 	{
 		precomputedMassMatrix.SetScalarMatrix(nODE2coordinates, 0.); //set 8x8 matrix
-		Real L = parameters.physicsLength;
-		Real rhoA = parameters.physicsMassPerLength;
+		Real t = parameters.physicsThickness;
+		Real rhoT = t * parameters.physicsDensity;
 		const Index dim = 3;		//3D finite element
-		const Index ns = 4;			//number of shape functions
+		const Index ns = 12;			//number of shape functions
+
+		Vector12D SV;
+		//integration rules in HOTINT:
+		// mass matrix: order 4
 
 		Index cnt = 0;
-		Real a = 0; //integration interval [a,b]
-		Real b = L;
-		for (auto item : EXUmath::gaussRuleOrder7Points)
+		for (Index iXi=0; iXi < EXUmath::gaussRuleOrder5Points.NumberOfItems(); iXi++)
 		{
-			Real x = 0.5*(b - a)*item + 0.5*(b + a);
-			Vector4D SV = ComputeShapeFunctions(x, L);
-			Vector4D SVint = SV;
-			SVint *= rhoA * (0.5*(b - a)*EXUmath::gaussRuleOrder7Weights[cnt++]);
-
-			for (Index i = 0; i < ns; i++)
+			Real xi = EXUmath::gaussRuleOrder5Points[iXi];
+			for (Index iEta = 0; iEta < EXUmath::gaussRuleOrder5Points.NumberOfItems(); iEta++)
 			{
-				for (Index j = 0; j < ns; j++)
+				Real eta = EXUmath::gaussRuleOrder5Points[iEta];
+				ComputeShapeFunctions(xi, eta, SV);
+
+				Vector12D SVint = SV; //copy
+				Real factor = rhoT * EXUmath::gaussRuleOrder5Weights[iXi] * EXUmath::gaussRuleOrder5Weights[iEta];
+
+				Real jacDet = GetJacobianDeterminant(); //for non-rectangular element
+
+				for (Index i = 0; i < ns; i++)
 				{
-					precomputedMassMatrix(i * dim,     j * dim) += SV[i] * SVint[j];
-					precomputedMassMatrix(i * dim + 1, j * dim + 1) += SV[i] * SVint[j];
-					precomputedMassMatrix(i * dim + 2, j * dim + 2) += SV[i] * SVint[j];
+					for (Index j = 0; j < ns; j++)
+					{
+						Real value = SV[i] * SV[j] * factor;
+						precomputedMassMatrix(i * dim, j * dim) += value;
+						precomputedMassMatrix(i * dim + 1, j * dim + 1) += value;
+						precomputedMassMatrix(i * dim + 2, j * dim + 2) += value;
+					}
 				}
 			}
 		}
@@ -259,7 +269,7 @@ void CObjectANCFThinPlate::PreComputeMassTerms() const
 //! Computational function: compute mass matrix
 void CObjectANCFThinPlate::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse) const
 {
-	CHECKandTHROW(!computeInverse, "CObjectANCFThinPlate::ComputeMassMatrix: computeMassMatrixInversePerBody=True is not possible for this type of element; change solver settings");
+	CHECKandTHROW(!computeInverse, "CObjectANCFThinPlate::ComputeMassMatrix: computeMassMatrixInversePerBody=True is not implemented; change solver settings");
 
 	Matrix& massMatrix = massMatrixC.GetInternalDenseMatrix();
 	PreComputeMassTerms();
@@ -270,18 +280,20 @@ void CObjectANCFThinPlate::ComputeMassMatrix(EXUmath::MatrixContainer& massMatri
 void CObjectANCFThinPlate::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
 {
 	const Index dim = 3;		//3D finite element
-	const Index ns = 4;			//number of shape functions
-	//pout << "GetNumberOfNodes() =" << GetNumberOfNodes() << "\n";
+	const Index ns = 12;			//number of shape functions
 
 	ConstSizeVector<dim * ns> qANCF;
 	ConstSizeVector<dim * ns> qANCF_t;
 	ComputeCurrentObjectCoordinates(qANCF);
 	ComputeCurrentObjectVelocities(qANCF_t);
-	ComputeODE2LHStemplate<Real>(ode2Lhs, qANCF, qANCF_t);
+	//ComputeODE2LHStemplate<Real>(ode2Lhs, qANCF, qANCF_t);
+	ComputeODE2LHStemplate(ode2Lhs, qANCF, qANCF_t);
 }
 
 //! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
-template<class TReal, Index ancfSize>
+//template<class TReal, Index ancfSize>
+//constexpr Index ancfSize = 36;
+//typedef Real TReal;
 void CObjectANCFThinPlate::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs, 
 	const ConstSizeVectorBase<TReal, ancfSize>& qANCF, const ConstSizeVectorBase<TReal, ancfSize>& qANCF_t) const
 {
@@ -290,213 +302,101 @@ void CObjectANCFThinPlate::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs,
 
 	//compute work of elastic forces:
 	const Index dim = 3;		//3D finite element
-	const Index ns = 4;			//number of shape functions
-	const Index nnc = dim * 2;  //number of node coordinates
+	const Index ns = 12;		//number of shape functions
+	const Index nnc = dim*3;	//number of node coordinates
+	const Index nn = 4;			//number of nodes
 
-	Real L = parameters.physicsLength;
-	Real EA = parameters.physicsAxialStiffness;
-	Real EI = parameters.physicsBendingStiffness;
-	Real axialStrain0 = parameters.physicsReferenceAxialStrain;
-	Real bendingDamping = parameters.physicsBendingDamping;
-	Real axialDamping = parameters.physicsAxialDamping;
 
-	Index cnt;
-	Real a = 0; //integration interval [a,b]
-	Real b = L;
-
-	ConstSizeVector<2 * nnc> qANCFref;
+	Real t = parameters.physicsThickness;
+	const Matrix3D& Dkappa = parameters.physicsCurvatureCoefficients;
+	const Matrix3D& Deps = parameters.physicsStrainCoefficients;
+	
+	ConstSizeVector<nn * nnc> qANCFref;
 	if (parameters.strainIsRelativeToReference != 0.)
 	{
-		LinkedDataVector qNode0ref(qANCFref, 0, nnc);		//link node values to element vector
-		LinkedDataVector qNode1ref(qANCFref, nnc, nnc);		//link node values to element vector
-		qNode0ref = ((CNodeODE2*)GetCNode(0))->GetReferenceCoordinateVector();
-		qNode1ref = ((CNodeODE2*)GetCNode(1))->GetReferenceCoordinateVector();
+		for (Index i = 0; i < nn; i++)
+		{
+			LinkedDataVector qNodeRef(qANCFref, nnc*i, nnc);		//link node values to element vector
+			qNodeRef = ((CNodeODE2*)GetCNode(i))->GetReferenceCoordinateVector();
+		}
 	}
 
 	ConstSizeVectorBase<TReal, ancfSize> elasticForces;
-
-	//numerical integration:
-	//accurate integration: axialStrain = order9, curvature = order5
-	//reduced order 1: axialStrain = order7, curvature = order3 (lower Gauss order not possible, becomes unstable or very inaccurate ...
-	//reduced order 2: axialStrain = order4, curvature = order3 (less oscillations in axial strains, if evaluated at [0,0.5L,L]
-	//reduced order 3: axialStrain = order6, curvature = order5 
-	//reduced order 4: axialStrain = order5, curvature = order6 
 
 	const Index maxIntegrationPoints = 5;
 	ConstSizeVector<maxIntegrationPoints> integrationPoints;
 	ConstSizeVector<maxIntegrationPoints> integrationWeights;
 
-	if (parameters.useReducedOrderIntegration == 0) //A9-B5 (max. integration axial order 9, bending order 5)
+	//integration rules in HOTINT:
+	// stiffness: order 8 (large deformation), 6 (moderately large)
+	if (parameters.useReducedOrderIntegration == 0)
 	{
-		integrationPoints.CopyFrom(EXUmath::gaussRuleOrder9Points); //copy is slower, but cannot link to variable size ==> LinkedDataVector ...
+		integrationPoints.CopyFrom(EXUmath::gaussRuleOrder9Points); 
 		integrationWeights.CopyFrom(EXUmath::gaussRuleOrder9Weights);
 	}
-	else if (parameters.useReducedOrderIntegration == 1) //A7-B3
+	else if (parameters.useReducedOrderIntegration == 1)
 	{
-		integrationPoints.CopyFrom(EXUmath::gaussRuleOrder7Points); //copy is slower, but cannot link to variable size ==> LinkedDataVector ...
+		integrationPoints.CopyFrom(EXUmath::gaussRuleOrder7Points); 
 		integrationWeights.CopyFrom(EXUmath::gaussRuleOrder7Weights);
 	}
-	else if (parameters.useReducedOrderIntegration == 2) //A4-B3 ; gives excellent axial strain at 0, L/2 and L !!
-	{
-		integrationPoints.CopyFrom(EXUmath::lobattoRuleOrder3Points); //copy is slower, but cannot link to variable size ==> LinkedDataVector ...
-		integrationWeights.CopyFrom(EXUmath::lobattoRuleOrder3Weights);
-	}
 	else { CHECKandTHROWstring("ObjectANCFThinPlate::ComputeODE2LHS: useReducedOrderIntegration must be between 0 and 2"); }
 
-	//axial strain:
-	cnt = 0;
-	for (auto item : integrationPoints)
+	//integrate to compute elastic forces:
+	for (Index iXi = 0; iXi < integrationPoints.NumberOfItems(); iXi++)
 	{
-		Real x = 0.5*(b - a)*item + 0.5*(b + a);
-		Vector4D SVx = ComputeShapeFunctions_x(x, L);
-		Real integrationFactor = (0.5*(b - a)*integrationWeights[cnt++]);
-
-		SlimVectorBase<TReal, dim> rx = MapCoordinatesElement<TReal, dim * ns>(SVx, qANCF);
-
-		TReal rxNorm2 = rx.GetL2NormSquared();
-		TReal rxNorm = sqrt(rxNorm2);
-
-		TReal axialStrain = rxNorm - 1.; // axial strain
-		TReal axialStrain_t = 0.; //rate of axial strain
-
-		Real axialStrainRef = axialStrain0;
-		if (parameters.strainIsRelativeToReference != 0.)
+		Real xi = integrationPoints[iXi];
+		for (Index iEta = 0; iEta < integrationPoints.NumberOfItems(); iEta++)
 		{
-			Vector3D rxRef = MapCoordinatesElement<Real, dim * ns>(SVx, qANCFref);
-			axialStrainRef += parameters.strainIsRelativeToReference * (rxRef.GetL2Norm() - 1.);
+			Real eta = integrationPoints[iEta];
+			Real integrationFactor = integrationWeights[iXi] * integrationWeights[iEta];
+
+			Vector12D SV, SV_x, SV_y, SV_xx, SV_yy, SV_xy;
+			ComputeShapeFunctions(xi, eta, SV);
+			ComputeShapeFunctions_xy(xi, eta, SV_x, SV_y);
+			ComputeShapeFunctions_xxyy(xi, eta, SV_xx, SV_yy, SV_xy);
+
+			SlimVectorBase<TReal, dim> r_x = MapCoordinatesElement<TReal, dim* ns>(SV_x, qANCF);
+			SlimVectorBase<TReal, dim> r_y = MapCoordinatesElement<TReal, dim* ns>(SV_y, qANCF);
+
+			SlimVectorBase<TReal, dim> r_xx = MapCoordinatesElement<TReal, dim* ns>(SV_xx, qANCF);
+			SlimVectorBase<TReal, dim> r_yy = MapCoordinatesElement<TReal, dim* ns>(SV_yy, qANCF);
+			SlimVectorBase<TReal, dim> r_xy = MapCoordinatesElement<TReal, dim* ns>(SV_xy, qANCF);
+
+			SlimVectorBase<TReal, dim> nNorm3 = r_x.CrossProduct(r_y);
+			TReal nNorm = nNorm3.GetL2Norm();
+			//TReal nNormCubic = nNorm * nNorm * nNorm;
+			nNorm3 *= 1. / (nNorm * nNorm * nNorm);
+
+			SlimVectorBase<TReal, dim> kappa({ nNorm3 * r_xx, nNorm3 * r_yy, nNorm3 * r_xy });
+
+			SlimVectorBase<TReal, dim> epsMidplane({ 0.5 * (r_x * r_x - 1), 0.5 * (r_y * r_y - 1), (r_x * r_y) });
+
+			Vector12D nNorm3_q = ...
+
+			...
+				deltaKappa d(kappa)/d(qANCF) = { 
+				d(nNorm3 * r_xx) / d(qANCF) => ,
+				d(nNorm3 * r_yy) / d(qANCF),
+				d(nNorm3 * r_xy) / d(qANCF) }
+
+				deltaEpsMidplane
+				//int_A [(eps * Deps * delta eps + kappa * Dkappa * delta kappa) * |det(jac)| ]
+
+
+
+			//elasticForces *= integrationFactor * GetParameters().physicsAxialStiffness * (axialStrain - GetParameters().physicsReferenceAxialStrain);
+			//elasticForces *= integrationFactor * (EA * (axialStrain - axialStrainRef) + axialDamping * axialStrain_t);
+
+			ode2Lhs += elasticForces;  //add to element elastic forces
 		}
-
-		if (axialDamping != 0.)
-		{
-			SlimVectorBase<TReal, dim> rx_t = MapCoordinatesElement<TReal, dim* ns>(SVx, qANCF_t);
-			axialStrain_t = (rx * rx_t) / rxNorm; //rate of axial strain
-		}
-
-		//term due to variation of axialStrain
-		for (Index i = 0; i < dim; i++)
-		{
-			for (Index j = 0; j < ns; j++)
-			{
-				elasticForces[j*dim + i] = 1. / rxNorm * SVx[j] * rx[i];
-			}
-		}
-
-		//elasticForces *= integrationFactor * GetParameters().physicsAxialStiffness * (axialStrain - GetParameters().physicsReferenceAxialStrain);
-		elasticForces *= integrationFactor * (EA * (axialStrain - axialStrainRef) + axialDamping * axialStrain_t);
-
-		ode2Lhs += elasticForces;  //add to element elastic forces
 	}
 
-	//++++++++++++++++++++++++++++++
-	//curvature:
 
-	if (parameters.useReducedOrderIntegration == 0) //A9-B5 (max. integration axial order 9, bending order 5)
-	{
-		integrationPoints.CopyFrom(EXUmath::gaussRuleOrder5Points); //copy is slower, but cannot link to variable size ==> LinkedDataVector ...
-		integrationWeights.CopyFrom(EXUmath::gaussRuleOrder5Weights);
-	}
-	else if (parameters.useReducedOrderIntegration == 1) //A7-B3
-	{
-		integrationPoints.CopyFrom(EXUmath::gaussRuleOrder3Points); 
-		integrationWeights.CopyFrom(EXUmath::gaussRuleOrder3Weights);
-	}
-	else if (parameters.useReducedOrderIntegration == 2) //A4-B3 ; gives excellent axial strain at 0, L/2 and L !!
-	{
-		integrationPoints.CopyFrom(EXUmath::gaussRuleOrder3Points); 
-		integrationWeights.CopyFrom(EXUmath::gaussRuleOrder3Weights);
-	}
-	else { CHECKandTHROWstring("ObjectANCFThinPlate::ComputeODE2LHS: useReducedOrderIntegration must be between 0 and 2"); }
+}
 
-	cnt = 0;
-	for (auto item : integrationPoints)
-	{
-		Real x = 0.5*(b - a)*item + 0.5*(b + a);
-		Vector4D SVx = ComputeShapeFunctions_x(x, L);
-		Vector4D SVxx = ComputeShapeFunctions_xx(x, L);
-		Real integrationFactor = (0.5*(b - a)*integrationWeights[cnt++]);
-
-		//Vector3D rx = MapCoordinates(SVx, q0, q1);
-		//Vector3D rxx = MapCoordinates(SVxx, q0, q1);
-		SlimVectorBase<TReal, dim> rx = MapCoordinatesElement<TReal, dim* ns>(SVx, qANCF);
-		SlimVectorBase<TReal, dim> rxx = MapCoordinatesElement<TReal, dim* ns>(SVxx, qANCF);
-
-		TReal rxNorm2 = rx.GetL2NormSquared();				//g
-		//TReal rxNorm = sqrt(rxNorm2);				
-		SlimVectorBase<TReal, dim> rxCrossRxx = rx.CrossProduct(rxx);			//f
-		SlimVectorBase<TReal, dim> curvature = rxCrossRxx * (1. / rxNorm2);				//kappa = (rx x rxx)/rx^2       //material measure of curvature
-
-		Vector3D curvatureRef(0.);
-		if (parameters.strainIsRelativeToReference != 0.)
-		{
-			Vector3D rxRef = MapCoordinatesElement<Real, dim * ns>(SVx, qANCFref);
-			Vector3D rxxRef = MapCoordinatesElement<Real, dim * ns>(SVxx, qANCFref);
-
-			Real rxNorm2ref = rxRef.GetL2NormSquared();
-			Vector3D rxCrossRxxRef = rxRef.CrossProduct(rxxRef);
-			curvatureRef += parameters.strainIsRelativeToReference*(rxCrossRxxRef * (1. / rxNorm2ref) );
-		}
-
-		TReal inv2RxNorm2 = 1. / (rxNorm2*rxNorm2);			//g2inv
-		SlimVectorBase<TReal, dim> tempF = 2. * rxCrossRxx*inv2RxNorm2;			//fn; f ... fraction numerator
-		TReal tempG = rxNorm2 * inv2RxNorm2;				//gn; g ... fraction denominator
-		SlimVectorBase<TReal, dim> df;
-
-		SlimVectorBase<TReal, dim> curvature_t(0.); //rate of curvature
-		if (bendingDamping != 0.)
-		{
-			//Vector3D rx_t = MapCoordinates(SVx, q0_t, q1_t);
-			//Vector3D rxx_t = MapCoordinates(SVxx, q0_t, q1_t);
-			SlimVectorBase<TReal, dim> rx_t = MapCoordinatesElement<TReal, dim* ns>(SVx, qANCF_t);
-			SlimVectorBase<TReal, dim> rxx_t = MapCoordinatesElement<TReal, dim* ns>(SVxx, qANCF_t);
-
-			SlimVectorBase<TReal, dim> rxCrossRxx_t = rx_t.CrossProduct(rxx) + rx.CrossProduct(rxx_t);	//f_t
-			TReal rxNorm2_t = 2.*(rx*rx_t);												//g_t
-
-			curvature_t = (rxCrossRxx_t * rxNorm2 - rxCrossRxx * rxNorm2_t) * (1. / EXUstd::Square(rxNorm2) ); //rate of bending strain; (f_t*g - f*g_t)/g^2
-		}
-
-		//precompute 3D torque times integration factor
-		curvature[0] -= curvatureRef[0]; //needs to be done component-wise as it is Real and TReal
-		curvature[1] -= curvatureRef[1];
-		curvature[2] -= curvatureRef[2];
-		SlimVectorBase<TReal, dim> curvatureFactor = integrationFactor * (EI * (curvature) + bendingDamping * curvature_t);
-
-		for (Index i = 0; i < dim; i++)
-		{
-			for (Index j = 0; j < ns; j++)
-			{
-				switch (i) {
-				case 0:
-				{
-					df[0] = 0.;
-					df[1] = -SVx[j] * rxx.Z() + SVxx[j] * rx.Z();
-					df[2] = SVx[j] * rxx.Y() - SVxx[j] * rx.Y();
-					break;
-				}
-				case 1:
-				{
-					df[0] = SVx[j] * rxx.Z() - SVxx[j] * rx.Z();
-					df[1] = 0;
-					df[2] = -SVx[j] * rxx.X() + SVxx[j] * rx.X(); 
-					break;
-				}
-				case 2:
-				{
-					df[0] = -SVx[j] * rxx.Y() + SVxx[j] * rx.Y();
-					df[1] = +SVx[j] * rxx.X() - SVxx[j] * rx.X();
-					df[2] = 0; 
-					break;
-				}
-				default:;
-				}
-				TReal dg = rx[i] * SVx[j]; //derivative of denominator
-				elasticForces[j*dim + i] = (df * tempG - tempF * dg) * curvatureFactor;
-			}
-		}
-
-		ode2Lhs += elasticForces;  //add to element elastic forces
-	}
-
+void GetJacobianDeterminant() const
+{
+    ...
 }
 
 //! jacobian of LHS, w.r.t. position AND velocity level coordinates
@@ -505,6 +405,8 @@ void CObjectANCFThinPlate::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& ja
 	Real factorODE2, Real factorODE2_t,
 	Index objectNumber, const ArrayIndex& ltg) const
 {
+	==> johannes
+
 	const Index dim = 3;		//3D finite element
 	const Index ns = 4;			//number of shape functions
 	//const Index nnc = dim * 2;  //number of node coordinates
@@ -587,33 +489,6 @@ void CObjectANCFThinPlate::GetAccessFunctionBody(AccessFunctionType accessType, 
 
 		break;
 	}
-	//thin ancf 3D cable: torque cannot be applied in such a way: 
-	//case AccessFunctionType::AngularVelocity_qt: 
-	//{
-	//	//const Index dim = 3;		//3D finite element
-	//	const Index ns = 4;			//number of shape functions
-	//	//const Index nnc = dim * 2;  //number of node coordinates
-
-	//	Real xLoc = localPosition[0]; //only x-coordinate
-	//	Vector3D slope = ComputeSlopeVector(xLoc, ConfigurationType::Current);
-	//	Real x = slope[0]; //x-slopex
-	//	Real y = slope[1]; //y-slopex
-
-	//	Vector4D SVx = ComputeShapeFunctions_x(xLoc, L);
-	//	Real fact0 = -y / (x*x + y * y);
-	//	Real fact1 = x / (x*x + y * y);
-
-	//	value.SetNumberOfRowsAndColumns(3, 8);
-	//	value.SetAll(0.); //last row not necessary to set to zero ... 
-	//	for (Index i = 0; i < ns; i++)
-	//	{
-	//		value(2, i*2) = SVx[i] * fact0; //last row of jacobian
-	//		value(2, i * 2 + 1) = SVx[i] * fact1;
-	//		value(2, i * 2 + 1) = SVx[i] * fact1;
-	//	}
-
-	//	break;
-	//}
 	case AccessFunctionType::DisplacementMassIntegral_q:
 	{
 		const Index dim = 3;		//3D finite element
@@ -700,57 +575,57 @@ void CObjectANCFThinPlate::GetOutputVariableBody(OutputVariableType variableType
 		Vector3D rx = ComputeSlopeVector(localPosition[0], configuration);
 		value.SetVector({rx[0], rx[1] , rx[2]});
 		break; }
-	case OutputVariableType::StrainLocal:	
-	{
-		//CHECKandTHROW(y == 0., "CObjectANCFThinPlate::GetOutputVariableBody: Y-component of localPosition must be zero for StrainLocal");
-		Real strain = ComputeAxialStrain(x, configuration);
+	//case OutputVariableType::StrainLocal:	
+	//{
+	//	//CHECKandTHROW(y == 0., "CObjectANCFThinPlate::GetOutputVariableBody: Y-component of localPosition must be zero for StrainLocal");
+	//	Real strain = ComputeAxialStrain(x, configuration);
 
-		value.SetVector({ strain }); 
-		break;
-	}
-	case OutputVariableType::CurvatureLocal:	
-	{
-		//CHECKandTHROW(y == 0., "CObjectANCFThinPlate::GetOutputVariableBody: Y-component of localPosition must be zero for CurvatureLocal");
-		value.CopyFrom( ComputeCurvature(x, configuration) );
-		break;
-	}
-	case OutputVariableType::ForceLocal: {
-		//do not add this due to drawing function: CHECKandTHROW(y == 0., "CObjectANCFThinPlate::GetOutputVariableBody: Y-component of localPosition must be zero for ForceLocal");
+	//	value.SetVector({ strain }); 
+	//	break;
+	//}
+	//case OutputVariableType::CurvatureLocal:	
+	//{
+	//	//CHECKandTHROW(y == 0., "CObjectANCFThinPlate::GetOutputVariableBody: Y-component of localPosition must be zero for CurvatureLocal");
+	//	value.CopyFrom( ComputeCurvature(x, configuration) );
+	//	break;
+	//}
+	//case OutputVariableType::ForceLocal: {
+	//	//do not add this due to drawing function: CHECKandTHROW(y == 0., "CObjectANCFThinPlate::GetOutputVariableBody: Y-component of localPosition must be zero for ForceLocal");
 
-		Real axialStrainRef = parameters.physicsReferenceAxialStrain;
-		if (parameters.strainIsRelativeToReference != 0.)
-		{
-			Vector3D rxRef = ComputeSlopeVector(x, ConfigurationType::Reference);
-			axialStrainRef += parameters.strainIsRelativeToReference*(rxRef.GetL2Norm() - 1.);
-		}
+	//	Real axialStrainRef = parameters.physicsReferenceAxialStrain;
+	//	if (parameters.strainIsRelativeToReference != 0.)
+	//	{
+	//		Vector3D rxRef = ComputeSlopeVector(x, ConfigurationType::Reference);
+	//		axialStrainRef += parameters.strainIsRelativeToReference*(rxRef.GetL2Norm() - 1.);
+	//	}
 
-		Real force = parameters.physicsAxialStiffness * (ComputeAxialStrain(x, configuration) - axialStrainRef);
-		if (parameters.physicsAxialDamping != 0) { force += parameters.physicsAxialDamping * ComputeAxialStrain_t(x, configuration); }
+	//	Real force = parameters.physicsAxialStiffness * (ComputeAxialStrain(x, configuration) - axialStrainRef);
+	//	if (parameters.physicsAxialDamping != 0) { force += parameters.physicsAxialDamping * ComputeAxialStrain_t(x, configuration); }
 
-		value.SetVector({ force }); break;
-	}
-	case OutputVariableType::TorqueLocal: {
-		//do not add this due to drawing function: CHECKandTHROW(y == 0., "CObjectANCFThinPlate::GetOutputVariableBody: Y-component of localPosition must be zero for TorqueLocal");
+	//	value.SetVector({ force }); break;
+	//}
+	//case OutputVariableType::TorqueLocal: {
+	//	//do not add this due to drawing function: CHECKandTHROW(y == 0., "CObjectANCFThinPlate::GetOutputVariableBody: Y-component of localPosition must be zero for TorqueLocal");
 
-		Vector3D curvatureRef(0.);
-		if (parameters.strainIsRelativeToReference != 0.)
-		{
-			Vector3D rxRef = ComputeSlopeVector(x, ConfigurationType::Reference);
-			Vector3D rxxRef = ComputeSlopeVector_x(x, ConfigurationType::Reference);
+	//	Vector3D curvatureRef(0.);
+	//	if (parameters.strainIsRelativeToReference != 0.)
+	//	{
+	//		Vector3D rxRef = ComputeSlopeVector(x, ConfigurationType::Reference);
+	//		Vector3D rxxRef = ComputeSlopeVector_x(x, ConfigurationType::Reference);
 
-			Real rxNorm2ref = rxRef.GetL2NormSquared();
-			Vector3D rxCrossRxxRef = rxRef.CrossProduct(rxxRef);
-			curvatureRef += parameters.strainIsRelativeToReference*(rxCrossRxxRef * (1. / rxNorm2ref) );
-		}
+	//		Real rxNorm2ref = rxRef.GetL2NormSquared();
+	//		Vector3D rxCrossRxxRef = rxRef.CrossProduct(rxxRef);
+	//		curvatureRef += parameters.strainIsRelativeToReference*(rxCrossRxxRef * (1. / rxNorm2ref) );
+	//	}
 
-		Vector3D torque = parameters.physicsBendingStiffness * (ComputeCurvature(x, configuration) - curvatureRef);
-		if (parameters.physicsBendingDamping != 0) 
-		{ 
-			torque += parameters.physicsBendingDamping * ComputeCurvature_t(x, configuration); 
-		}
-		value.CopyFrom(torque); 
-		break;
-	}
+	//	Vector3D torque = parameters.physicsBendingStiffness * (ComputeCurvature(x, configuration) - curvatureRef);
+	//	if (parameters.physicsBendingDamping != 0) 
+	//	{ 
+	//		torque += parameters.physicsBendingDamping * ComputeCurvature_t(x, configuration); 
+	//	}
+	//	value.CopyFrom(torque); 
+	//	break;
+	//}
 	default:
 		SysError("CObjectANCFThinPlate::GetOutputVariableBody failed"); //error should not occur, because types are checked!
 	}
@@ -759,8 +634,7 @@ void CObjectANCFThinPlate::GetOutputVariableBody(OutputVariableType variableType
 //  return the (global) position of "localPosition" according to configuration type
 Vector3D CObjectANCFThinPlate::GetPosition(const Vector3D& localPosition, ConfigurationType configuration) const
 {
-	Real x = localPosition[0]; //only x-coordinate
-	Vector4D SV = ComputeShapeFunctions(x, GetLength());
+	Vector12D SV = ComputeShapeFunctions(localPosition[0], localPosition[1], GetLength());
 	
 	Vector3D v = MapCoordinates(SV, ((CNodeODE2*)GetCNode(0))->GetCoordinateVector(configuration), ((CNodeODE2*)GetCNode(1))->GetCoordinateVector(configuration));
 	if (configuration != ConfigurationType::Reference)
@@ -822,21 +696,21 @@ Vector3D CObjectANCFThinPlate::GetAngularVelocity(const Vector3D& localPosition,
 	CHECKandTHROWstring("CObjectANCFThinPlate::GetAngularVelocity: not implemented!!!");
 	//for details see GetAngularVelocity in Point2DSlope1
 
-	Real xLoc = localPosition[0]; //only x-coordinate
-	Vector3D slope = ComputeSlopeVector(xLoc, configuration);
-	Real x = slope[0]; //x-slopex
-	Real y = slope[1]; //y-slopex
-	//REQUIRES SOME 3D FORMULA!!!!!!!!!!!!!!!!!!
+	//Real xLoc = localPosition[0]; //only x-coordinate
+	//Vector3D slope = ComputeSlopeVector(xLoc, configuration);
+	//Real x = slope[0]; //x-slopex
+	//Real y = slope[1]; //y-slopex
+	////REQUIRES SOME 3D FORMULA!!!!!!!!!!!!!!!!!!
 
-	Vector4D SVx = ComputeShapeFunctions_x(xLoc, GetLength());
-	Vector3D slope_t = MapCoordinates(SVx, ((CNodeODE2*)GetCNode(0))->GetCoordinateVector_t(configuration), ((CNodeODE2*)GetCNode(1))->GetCoordinateVector_t(configuration));
-	//Vector3D slope_t = MapCoordinates(SVx, ((CNodeODE2*)GetCNode(0))->GetCurrentCoordinateVector_t(), ((CNodeODE2*)GetCNode(1))->GetCurrentCoordinateVector_t());
+	//Vector4D SVx = ComputeShapeFunctions_x(xLoc, GetLength());
+	//Vector3D slope_t = MapCoordinates(SVx, ((CNodeODE2*)GetCNode(0))->GetCoordinateVector_t(configuration), ((CNodeODE2*)GetCNode(1))->GetCoordinateVector_t(configuration));
+	////Vector3D slope_t = MapCoordinates(SVx, ((CNodeODE2*)GetCNode(0))->GetCurrentCoordinateVector_t(), ((CNodeODE2*)GetCNode(1))->GetCurrentCoordinateVector_t());
 
-	//compare this function to GetRotationMatrix(...)
-	return Vector3D({ 0., 0., (-y * slope_t[0] + x * slope_t[1]) / (x*x + y * y) }); //!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	////compare this function to GetRotationMatrix(...)
+	//return Vector3D({ 0., 0., (-y * slope_t[0] + x * slope_t[1]) / (x*x + y * y) }); //!!!!!!!!!!!!!!!!!!!!!!!!!!!
 }
 
-Vector3D CObjectANCFThinPlate::ComputeSlopeVector(Real x, ConfigurationType configuration) const
+void CObjectANCFThinPlate::ComputeSlopeVectors(Real x, ConfigurationType configuration, Vector3D& slopeX, Vector3D& slopeY) const
 {
 	Vector4D SVx = ComputeShapeFunctions_x(x, GetLength());
 
@@ -850,22 +724,8 @@ Vector3D CObjectANCFThinPlate::ComputeSlopeVector(Real x, ConfigurationType conf
 
 }
 
-Vector3D CObjectANCFThinPlate::ComputeSlopeVector_x(Real x, ConfigurationType configuration) const
-{
-	Vector4D SVxx = ComputeShapeFunctions_xx(x, GetLength());
-
-	Vector3D slope_x = MapCoordinates(SVxx, ((CNodeODE2*)GetCNode(0))->GetCoordinateVector(configuration), ((CNodeODE2*)GetCNode(1))->GetCoordinateVector(configuration));
-	if (configuration != ConfigurationType::Reference) //add reference configuration to any current, initial, visualization coordinates (except reference configuration!)
-	{
-		slope_x += MapCoordinates(SVxx, ((CNodeODE2*)GetCNode(0))->GetCoordinateVector(ConfigurationType::Reference), ((CNodeODE2*)GetCNode(1))->GetCoordinateVector(ConfigurationType::Reference));
-	}
-
-	return slope_x;
-
-}
-
-//!  compute the axial strain at a certain axial position, for given configuration
-Real CObjectANCFThinPlate::ComputeAxialStrain(Real x, ConfigurationType configuration) const
+//!  compute inplane strains xx, yy, xy
+Vector3D CObjectANCFThinPlate::ComputeInplaneStrains(Real x, ConfigurationType configuration) const
 {
 	Vector3D rx = ComputeSlopeVector(x, configuration);
 
@@ -874,66 +734,19 @@ Real CObjectANCFThinPlate::ComputeAxialStrain(Real x, ConfigurationType configur
 	return rxNorm - 1.; // axial strain
 }
 
-//!  compute the axial strain at a certain axial position, for given configuration
-Real CObjectANCFThinPlate::ComputeAxialStrain_t(Real x, ConfigurationType configuration) const
-{
-	Vector3D rx = ComputeSlopeVector(x, configuration);
-	Vector3D rx_t = ComputeSlopeVector_t(x, configuration);
-
-	Real rxNorm2 = rx.GetL2NormSquared();
-	Real rxNorm = sqrt(rxNorm2);
-
-	return (rx * rx_t) / rxNorm; //rate of axial strain
-}
-
 
 //!  compute the (bending) curvature at a certain axial position, for given configuration
-Vector3D CObjectANCFThinPlate::ComputeCurvature(Real x, ConfigurationType configuration) const
+Vector3D CObjectANCFThinPlate::ComputeCurvatures(Real x, ConfigurationType configuration) const
 {
-	Vector3D rx = ComputeSlopeVector(x, configuration);
-	Vector3D rxx = ComputeSlopeVector_x(x, configuration);
+	//Vector3D rx = ComputeSlopeVector(x, configuration);
+	//Vector3D rxx = ComputeSlopeVector_x(x, configuration);
 
-	Real rxNorm2 = rx.GetL2NormSquared(); //computation see ComputeODE2LHS(...)
+	//Real rxNorm2 = rx.GetL2NormSquared(); //computation see ComputeODE2LHS(...)
 
-	Vector3D rxCrossRxx = rx.CrossProduct(rxx);
-	return rxCrossRxx * (1. / rxNorm2); //curvature
+	//Vector3D rxCrossRxx = rx.CrossProduct(rxx);
+	//return rxCrossRxx * (1. / rxNorm2); //curvature
 }
 
-//!  compute the (bending) curvature at a certain axial position, for given configuration
-Vector3D CObjectANCFThinPlate::ComputeCurvature_t(Real x, ConfigurationType configuration) const
-{
-	Vector3D rx = ComputeSlopeVector(x, configuration);
-	Vector3D rxx = ComputeSlopeVector_x(x, configuration);
-
-	Vector3D rx_t = ComputeSlopeVector_t(x, configuration);
-	Vector3D rxx_t = ComputeSlopeVector_xt(x, configuration);
-
-	Real rxNorm2 = rx.GetL2NormSquared(); //computation see ComputeODE2LHS(...)
-
-	Vector3D rxCrossRxx = rx.CrossProduct(rxx);
-
-	//apply differentiation formula: (f/g)' = (f'g - fg') / g^2
-	Real g = rx.GetL2NormSquared();				//g
-	Vector3D f = rx.CrossProduct(rxx);			//f
-	Vector3D f_t = rx_t.CrossProduct(rxx) + rx.CrossProduct(rxx_t);
-	Real g_t = 2. * (rx_t * rx);
-
-	return (f_t * g - f * g_t) * (1. / EXUstd::Square(g));
-}
-
-Vector3D CObjectANCFThinPlate::ComputeSlopeVector_t(Real x, ConfigurationType configuration) const
-{
-	Vector4D SVx = ComputeShapeFunctions_x(x, GetLength());
-
-	return MapCoordinates(SVx, ((CNodeODE2*)GetCNode(0))->GetCoordinateVector_t(configuration), ((CNodeODE2*)GetCNode(1))->GetCoordinateVector_t(configuration));
-}
-
-Vector3D CObjectANCFThinPlate::ComputeSlopeVector_xt(Real x, ConfigurationType configuration) const
-{
-	Vector4D SVxx = ComputeShapeFunctions_xx(x, GetLength());
-
-	return MapCoordinates(SVxx, ((CNodeODE2*)GetCNode(0))->GetCoordinateVector_t(configuration), ((CNodeODE2*)GetCNode(1))->GetCoordinateVector_t(configuration));
-}
 
 
 #endif //USE_COBJECTANCFTHINPLATE

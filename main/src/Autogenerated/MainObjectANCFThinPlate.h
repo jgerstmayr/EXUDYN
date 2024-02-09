@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2023-10-17  07:45:52 (last modified)
+* @date         2024-02-03  15:35:22 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -114,7 +114,8 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        cObjectANCFThinPlate->GetParameters().physicsHeight = py::cast<Real>(d["physicsHeight"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        cObjectANCFThinPlate->GetParameters().physicsThickness = py::cast<Real>(d["physicsThickness"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        cObjectANCFThinPlate->GetParameters().physicsDensity = py::cast<Real>(d["physicsDensity"]); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::SetConstMatrixTemplateSafely<3,3>(d, "physicsStrainCoefficients", cObjectANCFThinPlate->GetParameters().physicsStrainCoefficients); /*! AUTO:  safely cast to C++ type*/
         EPyUtils::SetConstMatrixTemplateSafely<3,3>(d, "physicsCurvatureCoefficients", cObjectANCFThinPlate->GetParameters().physicsCurvatureCoefficients); /*! AUTO:  safely cast to C++ type*/
         cObjectANCFThinPlate->GetParameters().strainIsRelativeToReference = py::cast<Real>(d["strainIsRelativeToReference"]); /* AUTO:  read out dictionary and cast to C++ type*/
@@ -131,7 +132,8 @@ public: // AUTO:
     {
         auto d = py::dict();
         d["objectType"] = (std::string)GetTypeName();
-        d["physicsHeight"] = (Real)cObjectANCFThinPlate->GetParameters().physicsHeight; //! AUTO: cast variables into python (not needed for standard types) 
+        d["physicsThickness"] = (Real)cObjectANCFThinPlate->GetParameters().physicsThickness; //! AUTO: cast variables into python (not needed for standard types) 
+        d["physicsDensity"] = (Real)cObjectANCFThinPlate->GetParameters().physicsDensity; //! AUTO: cast variables into python (not needed for standard types) 
         d["physicsStrainCoefficients"] = EPyUtils::Matrix2NumPyTemplate(cObjectANCFThinPlate->GetParameters().physicsStrainCoefficients); //! AUTO: cast variables into python (not needed for standard types) 
         d["physicsCurvatureCoefficients"] = EPyUtils::Matrix2NumPyTemplate(cObjectANCFThinPlate->GetParameters().physicsCurvatureCoefficients); //! AUTO: cast variables into python (not needed for standard types) 
         d["strainIsRelativeToReference"] = (Real)cObjectANCFThinPlate->GetParameters().strainIsRelativeToReference; //! AUTO: cast variables into python (not needed for standard types) 
@@ -147,7 +149,8 @@ public: // AUTO:
     virtual py::object GetParameter(const STDstring& parameterName) const override 
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
-        else if (parameterName.compare("physicsHeight") == 0) { return py::cast((Real)cObjectANCFThinPlate->GetParameters().physicsHeight);} //! AUTO: get parameter
+        else if (parameterName.compare("physicsThickness") == 0) { return py::cast((Real)cObjectANCFThinPlate->GetParameters().physicsThickness);} //! AUTO: get parameter
+        else if (parameterName.compare("physicsDensity") == 0) { return py::cast((Real)cObjectANCFThinPlate->GetParameters().physicsDensity);} //! AUTO: get parameter
         else if (parameterName.compare("physicsStrainCoefficients") == 0) { return EPyUtils::Matrix2NumPyTemplate(cObjectANCFThinPlate->GetParameters().physicsStrainCoefficients);} //! AUTO: get parameter
         else if (parameterName.compare("physicsCurvatureCoefficients") == 0) { return EPyUtils::Matrix2NumPyTemplate(cObjectANCFThinPlate->GetParameters().physicsCurvatureCoefficients);} //! AUTO: get parameter
         else if (parameterName.compare("strainIsRelativeToReference") == 0) { return py::cast((Real)cObjectANCFThinPlate->GetParameters().strainIsRelativeToReference);} //! AUTO: get parameter
@@ -164,7 +167,8 @@ public: // AUTO:
     virtual void SetParameter(const STDstring& parameterName, const py::object& value) override 
     {
         if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("physicsHeight") == 0) { cObjectANCFThinPlate->GetParameters().physicsHeight = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("physicsThickness") == 0) { cObjectANCFThinPlate->GetParameters().physicsThickness = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("physicsDensity") == 0) { cObjectANCFThinPlate->GetParameters().physicsDensity = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("physicsStrainCoefficients") == 0) { EPyUtils::SetConstMatrixTemplateSafely<3,3>(value, cObjectANCFThinPlate->GetParameters().physicsStrainCoefficients); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("physicsCurvatureCoefficients") == 0) { EPyUtils::SetConstMatrixTemplateSafely<3,3>(value, cObjectANCFThinPlate->GetParameters().physicsCurvatureCoefficients); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("strainIsRelativeToReference") == 0) { cObjectANCFThinPlate->GetParameters().strainIsRelativeToReference = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

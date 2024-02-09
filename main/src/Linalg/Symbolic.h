@@ -1099,21 +1099,39 @@ public:
 	static bool GetFlagDebug() { return flagDebug; }
 
 	//access to internal value, not intended for Python
-	void SetValue(Real valueInit) { value = valueInit; }
-	Real GetValue() const { return value; }
+	void SetValue(Real valueInit)
+	{
+		CHECKandTHROW(expr == nullptr, "value can only be accessed if Real does not contain an expression");
+		value = valueInit;
+	}
+	Real GetValue() const 
+	{ 
+		CHECKandTHROW(expr == nullptr, "value can only be accessed if Real does not contain an expression");
+		return value;
+	}
 
 	//! set value either for named real or for internal value
-	void SetSymbolicValue(Real valueInit)
+	template<typename RealType>
+	void SetSymbolicValue(RealType valueInit)
 	{
+		CHECKandTHROW((typeid(RealType) == typeid(Real)),
+			"SetValue can only be called with float numbers");
 		if (IsExpressionNamedReal())
 		{
-			GetExpressionNamedReal().SetValue(valueInit);
+			GetExpressionNamedReal().SetValue((Real)valueInit);
+			value = (Real)valueInit; //to make it consistent!
 		}
 		else
 		{
 			CHECKandTHROW(expr == nullptr, "SetValue can only be called for symbolic Real variables");
-			value = valueInit;
+			value = (Real)valueInit;
 		}
+	}
+
+	//! set value either for named real or for internal value
+	void SetSymbolicValue(const SReal& valueInit)
+	{
+		CHECKandTHROWstring("SetValue can only be called with float numbers");
 	}
 
 	void SetExpression(ExpressionBase* e) { expr = e; if (e) { e->IncreaseReferenceCounter(); } }

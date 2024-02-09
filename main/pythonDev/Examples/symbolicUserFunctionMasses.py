@@ -116,7 +116,7 @@ if True:
     for cc in cList:
         if useSymbolicUF:
             #create separate user function for each spring-damper!
-            symbolicFunc = CreateSymbolicUserFunction(mbs, springForceUserFunction, cList[0], 'springForceUserFunction')
+            symbolicFunc = CreateSymbolicUserFunction(mbs, springForceUserFunction, 'springForceUserFunction', cList[0])
             symbolicFunc.TransferUserFunction2Item(mbs, cc, 'springForceUserFunction')    
             listUF += [symbolicFunc] #store, such that they are not deleted!!!
         else:

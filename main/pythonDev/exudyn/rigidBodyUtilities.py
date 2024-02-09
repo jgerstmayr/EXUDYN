@@ -1,9 +1,9 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN python utility library
 #
-# Details: 	Advanced utility/mathematical functions for reference frames, rigid body kinematics
-#			and dynamics. Useful Euler parameter and Tait-Bryan angle conversion functions
-#			are included. A class for rigid body inertia creating and transformation is available.
+# Details:  Advanced utility/mathematical functions for reference frames, rigid body kinematics
+#           and dynamics. Useful Euler parameter and Tait-Bryan angle conversion functions
+#           are included. A class for rigid body inertia creating and transformation is available.
 #
 # Author:   Johannes Gerstmayr, Stefan Holzinger (rotation vector and Tait-Bryan angles)
 # Date:     2020-03-10 (created)
@@ -566,7 +566,7 @@ def RotationMatrixY(angleRad):
 def RotationMatrixZ(angleRad):
     return np.array([ [np.cos(angleRad),-np.sin(angleRad), 0],
                       [np.sin(angleRad), np.cos(angleRad), 0],
-                      [0,	    0,        1] ]);
+                      [0,        0,        1] ]);
 
     
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

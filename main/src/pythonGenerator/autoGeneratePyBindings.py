@@ -10,13 +10,11 @@ automatically generate pybindings for specific classes and functions AND latex d
 #TODO:
 #add citations
 #add missing figures (items, ?check other replacements)
-#fix eq references as: \eq -> :eq: ...
-# .. math:: e^{i\pi} + 1 = 0
-#    :label: euler
-#
-# Euler's identity, equation :eq:`euler`, was elected one of the most
-# beautiful mathematical formulas.
 
+import io   #for utf-8 encoding
+import copy
+
+from exudynVersion import exudynVersionString
 
 from autoGenerateHelper import PyLatexRST, GetDateStr, RSTlabelString
      #AddEnumValue, DefPyFunctionAccess, DefPyStartClass, DefPyFinishClass, DefLatexStartClass, DefLatexFinishTable
@@ -41,8 +39,31 @@ vector6D = '[float,float,float,float,float,float]'#stub type for Vector6D
 matrix3D = 'NDArray[Shape2D[3,3], float]'#stub type for Matrix3D
 matrix6D = 'NDArray[Shape2D[6,6], float]'#stub type for Matrix6D
 
-import io   #for utf-8 encoding
-import copy
+#for objects with trivial or implemented copy constructor:
+pickleDictTemplate = """        .def(py::pickle(
+            [](const {ClassName}& self) {
+                return py::make_tuple(self.GetDictionary());
+            },
+            [](const py::tuple& t) {
+                CHECKandTHROW(t.size() == 1, "{ClassName}: loading data with pickle received invalid data structure!");
+                {ClassName} self;
+                self.SetDictionary(py::cast<py::dict>(t[0]));
+                return self;
+            }))
+"""
+#for objects which cannot be copied:
+pickleDictTemplateNew = """        .def(py::pickle(
+            [](const {ClassName}& self) {
+                return py::make_tuple(self.GetDictionary());
+            },
+            [](const py::tuple& t) {
+                CHECKandTHROW(t.size() == 1, "{ClassName}: loading data with pickle received invalid data structure!");
+                {ClassName}* self = new {ClassName}();
+                self->SetDictionary(py::cast<py::dict>(t[0]));
+                return self;
+            }))
+"""
+
 
 # s = ''  #C++ pybind local includes
 # sL = '' #Latex documentation
@@ -222,7 +243,7 @@ plrmain.AddDocu('Another error results from internal type and range checking, sa
 
 plrmain.AddDocuCodeBlock(code="mbs.AddObject('abc')")
 
-plrmain.AddDocu('Which results in a error message similar to:')
+plrmain.AddDocu('Which results in an error message similar to:')
 plrmain.AddDocuCodeBlock(code="""
 =========================================
 User ERROR [file 'C:\\Users\\username\\AppData\\Local\\Temp\\ipykernel_24988\\2838049308.py', line 1]: 
@@ -237,6 +258,7 @@ Traceback (most recent call last):
     mbs.AddObject('abc')
 
 RuntimeError: Exudyn: parsing of Python file terminated due to Python (user) error
+
 """, pythonStyle=False)
 
 plrmain.AddDocu('Finally, there may be system errors. They may be caused due to previous wrong input, but '+
@@ -832,8 +854,16 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='Reset', cName='Reset',
                         )
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='AddSystem', cName='AddMainSystem', 
-                        description="add a new computational system", options='py::return_value_policy::reference',
+                        description="add a new computational system", 
+                        options='py::return_value_policy::reference',
                         returnType='MainSystem',
+                        )
+
+plr.DefPyFunctionAccess(cClass=classStr, pyName='AppendSystem', cName='AppendMainSystem', 
+                        description="append an exsiting computational system to the system container; returns the number of MainSystem in system container", options='py::return_value_policy::reference',
+                        argList=['mainSystem'],
+                        argTypes=['MainSystem'],
+                        returnType='int',
                         )
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='NumberOfSystems', cName='NumberOfSystems', 
@@ -851,6 +881,21 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='GetSystem', cName='GetMainSyste
 #plr.sPy += '        .def_property("visualizationSettings", &MainSystemContainer::PyGetVisualizationSettings, &MainSystemContainer::PySetVisualizationSettings)\n' 
 plr.DefLatexDataAccess('visualizationSettings','this structure is read/writeable and contains visualization settings, which are immediately applied to the rendering window. \\tabnewline\n    EXAMPLE:\\tabnewline\n    SC = exu.SystemContainer()\\tabnewline\n    SC.visualizationSettings.autoFitScene=False  ',
                        dataType = 'VisualizationSettings')
+
+plr.DefPyFunctionAccess(cClass=classStr, pyName='GetDictionary', cName='GetDictionary', 
+                        description="[UNDER DEVELOPMENT]: return the dictionary of the system container data, e.g., to copy the system or for pickling",
+                        argList=[],
+                        argTypes=[],
+                        returnType='dict',
+                        )
+
+plr.DefPyFunctionAccess(cClass=classStr, pyName='SetDictionary', cName='SetDictionary', 
+                        description="[UNDER DEVELOPMENT]: set system container data from given dictionary; used for pickling",
+                        argList=['systemDict'],
+                        argTypes=['dict'],
+                        returnType='None',
+                        )
+
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='GetRenderState', cName='PyGetRenderState', 
                         description="Get dictionary with current render state (openGL zoom, modelview, etc.); will have no effect if GLFW_GRAPHICS is deactivated",
@@ -917,10 +962,10 @@ plr.sPyi = ''
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 plr.CreateNewRSTfile('MainSystem')
 classStr = 'MainSystem'
-plr.DefPyStartClass(classStr, classStr, '', forbidPythonConstructor=True)
+plr.DefPyStartClass(classStr, classStr, '', forbidPythonConstructor=False)
 
 plr.AddDocu("This is the class which defines a (multibody) system. "+
-            "The MainSystem shall only be created by \\texttt{SC.AddSystem()}, not with \\texttt{exu.MainSystem()}, as the latter one would not be linked to a SystemContainer. "+
+            "The MainSystem shall only be created by \\texttt{SC.AddSystem()}, not with \\texttt{exu.MainSystem()}, as the latter one would not be linked to a SystemContainer. In some cases, you may use SC.AppendSystem(mbs). "+
             "In C++, there is a MainSystem (the part which links to Python) and a System (computational part). "+
             "For that reason, the name is MainSystem on the Python side, but it is often just called 'system'. "+
             "For compatibility, it is recommended to denote the variable holding this system as mbs, the multibody dynamics system. "+
@@ -1004,20 +1049,53 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='ActivateRendering', cName='Acti
                         )
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='SetPreStepUserFunction', cName='PySetPreStepUserFunction', 
-                        description="Sets a user function PreStepUserFunction(mbs, t) executed at beginning of every computation step; in normal case return True; return False to stop simulation after current step",
-                        example = 'def PreStepUserFunction(mbs, t):\\\\ \\TAB print(mbs.systemData.NumberOfNodes())\\\\ \\TAB if(t>1): \\\\ \\TAB  \\TAB return False \\\\ \\TAB return True \\\\ mbs.SetPreStepUserFunction(PreStepUserFunction)',
+                        description="Sets a user function PreStepUserFunction(mbs, t) executed at beginning of every computation step; in normal case return True; return False to stop simulation after current step; set to 0 (integer) in order to erase user function. Note that the time returned is already the end of the step, which allows to compute forces consistently with trapezoidal integrators; for higher order Runge-Kutta methods, step time will be available only in object-user functions.",
+                        example = 'def PreStepUserFunction(mbs, t):\\\\ \\TAB print(mbs.systemData.NumberOfNodes())\\\\ \\TAB if(t>1): \\\\ \\TAB  \\TAB return False \\\\ \\TAB return True \\\\mbs.SetPreStepUserFunction(PreStepUserFunction)',
                         argList=['value'],
                         argTypes=['Callable[[MainSystem, float],bool]'],
                         returnType='None',
                         )
                                                       
+plr.DefPyFunctionAccess(cClass=classStr, pyName='GetPreStepUserFunction', cName='PyGetPreStepUserFunction', 
+                        description="Returns the preStepUserFunction.",
+                        argList=['asDict'],
+                        argTypes=['bool'],
+                        defaultArgs=['False'],
+                        returnType='Callable[[MainSystem, float],bool]',
+                        )
+                                                      
+plr.DefPyFunctionAccess(cClass=classStr, pyName='SetPostStepUserFunction', cName='PySetPostStepUserFunction', 
+                        description="Sets a user function PostStepUserFunction(mbs, t) executed at beginning of every computation step; in normal case return True; return False to stop simulation after current step; set to 0 (integer) in order to erase user function.",
+                        example = 'def PostStepUserFunction(mbs, t):\\\\ \\TAB print(mbs.systemData.NumberOfNodes())\\\\ \\TAB if(t>1): \\\\ \\TAB  \\TAB return False \\\\ \\TAB return True \\\\mbs.SetPostStepUserFunction(PostStepUserFunction)',
+                        argList=['value'],
+                        argTypes=['Callable[[MainSystem, float],bool]'],
+                        returnType='None',
+                        )
+                                                      
+plr.DefPyFunctionAccess(cClass=classStr, pyName='GetPostStepUserFunction', cName='PyGetPostStepUserFunction', 
+                        description="Returns the postStepUserFunction.",
+                        argList=['asDict'],
+                        argTypes=['bool'],
+                        defaultArgs=['False'],
+                        returnType='Callable[[MainSystem, float],bool]',
+                        )
+                                                      
 plr.DefPyFunctionAccess(cClass=classStr, pyName='SetPostNewtonUserFunction', cName='PySetPostNewtonUserFunction', 
-                        description="Sets a user function PostNewtonUserFunction(mbs, t) executed after successful Newton iteration in implicit or static solvers and after step update of explicit solvers, but BEFORE PostNewton functions are called by the solver; function returns list [discontinuousError, recommendedStepSize], containing a error of the PostNewtonStep, which is compared to [solver].discontinuous.iterationTolerance. The recommendedStepSize shall be negative, if no recommendation is given, 0 in order to enforce minimum step size or a specific value to which the current step size will be reduced and the step will be repeated; use this function, e.g., to reduce step size after impact or change of data variables",
-                        example = 'def PostNewtonUserFunction(mbs, t):\\\\ \\TAB if(t>1): \\\\ \\TAB  \\TAB return [0, 1e-6] \\\\ \\TAB return [0,0] \\\\ mbs.SetPostNewtonUserFunction(PostNewtonUserFunction)',
+                        description="Sets a user function PostNewtonUserFunction(mbs, t) executed after successful Newton iteration in implicit or static solvers and after step update of explicit solvers, but BEFORE PostNewton functions are called by the solver; function returns list [discontinuousError, recommendedStepSize], containing a error of the PostNewtonStep, which is compared to [solver].discontinuous.iterationTolerance. The recommendedStepSize shall be negative, if no recommendation is given, 0 in order to enforce minimum step size or a specific value to which the current step size will be reduced and the step will be repeated; use this function, e.g., to reduce step size after impact or change of data variables; set to 0 (integer) in order to erase user function.",
+                        example = 'def PostNewtonUserFunction(mbs, t):\\\\ \\TAB if(t>1): \\\\ \\TAB  \\TAB return [0, 1e-6] \\\\ \\TAB return [0,0] \\\\mbs.SetPostNewtonUserFunction(PostNewtonUserFunction)',
                         argList=['value'],
                         argTypes=['Callable[[MainSystem, float],[float,float]]'],
                         returnType='None',
                         )
+
+plr.DefPyFunctionAccess(cClass=classStr, pyName='GetPostNewtonUserFunction', cName='PyGetPostNewtonUserFunction', 
+                        description="Returns the postNewtonUserFunction.",
+                        argList=['asDict'],
+                        argTypes=['bool'],
+                        defaultArgs=['False'],
+                        returnType='Callable[[MainSystem, float],bool]',
+                        )
+                                                      
 
 #contact:                                      
 plr.DefPyFunctionAccess(cClass=classStr, pyName='AddGeneralContact', cName='AddGeneralContact', 
@@ -1046,7 +1124,40 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='NumberOfGeneralContacts', cName
                         description="Return number of GeneralContact objects in mbs", 
                         returnType='int',
                         )
-#++++++++++++++++
+#++++++++++++++++++++++++++++++++++++++++++++++++++
+#see: https://pybind11.readthedocs.io/en/stable/upgrade.html
+plr.DefPyFunctionAccess(cClass=classStr, pyName='GetDictionary', cName='GetDictionary', 
+                        description="[UNDER DEVELOPMENT]: return the dictionary of the system data (todo: and state), e.g., to copy the system or for pickling",
+                        argList=[],
+                        argTypes=[],
+                        returnType='dict',
+                        )
+
+plr.DefPyFunctionAccess(cClass=classStr, pyName='SetDictionary', cName='SetDictionary', 
+                        description="[UNDER DEVELOPMENT]: set system data (todo: and state) from given dictionary; used for pickling",
+                        argList=['systemDict'],
+                        argTypes=['dict'],
+                        returnType='None',
+                        )
+
+plr.sPy += pickleDictTemplateNew.replace('{ClassName}', classStr)
+#in C++:
+        # .def(py::pickle(
+        #     [](const MainSystem& self) {
+        #         return py::make_tuple(self.GetDictionary());
+        #     },
+        #     [](const py::tuple& t) {
+        #         CHECKandTHROW(t.size() == 1, "MainSystem: loading data with pickle received invalid data structure!");
+
+        #         MainSystem* self = new MainSystem();
+        #         //self.SetDictionary(t[0].cast<py::dict>());
+        #         self->SetDictionary(py::cast<py::dict>(t[0]));
+
+        #         return self;
+        #     }))
+
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #old version, with variables: plr.DefPyFunctionAccess(cClass=classStr, pyName='__repr__', cName='[](const MainSystem &ms) {\n            return "<systemData: \\n" + ms.GetMainSystemData().PyInfoSummary() + "\\nmainSystem:\\n  variables = " + EXUstd::ToString(ms.variables) + "\\n  sys = " + EXUstd::ToString(ms.systemVariables) + "\\n>\\n"; }', 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='__repr__', cName='[](const MainSystem &ms) {\n            return "<systemData: \\n" + ms.GetMainSystemData().PyInfoSummary() + "\\nFor details see mbs.systemData, mbs.sys and mbs.variables\\n>\\n"; }', 
@@ -2101,6 +2212,12 @@ print('c: ',c,' = ',c.Evaluate())
 d = a+b*esym.sin(a)+esym.cos(SymReal(7))
 print('d: ',d,' = ',d.Evaluate())
 
+a.SetValue(14)          #variable a set to new value; influences d
+print('d: ',d,' = ',d.Evaluate())
+
+a = SymReal(1000)       #a is now a new variable; not updated in d!
+print('d: ',d,' = ',d.Evaluate())
+
 #compute derivatives (automatic differentiation):
 x = SymReal("x",0.5)
 f = a+b*esym.sin(x)+esym.cos(SymReal(7))+x**4
@@ -2408,13 +2525,13 @@ plrsym.DefPyFunctionAccess(cClass=classStr, pyName='NumberOfItems', cName='',
                         returnType='int',
                         )
 
-plrsym.DefPyFunctionAccess(cClass=classStr, pyName='__setitem__', cName='', 
-                        description="bracket [] operator for setting a component of the vector. Only works, if SymVector contains no expression. (may lead to inconsistencies in recording)",
-                        example = "v1 = SymVector([1,3,2])\\\\v1[2]=13.",
-                        argList=['i'],
-                        argTypes=['symbolic.Real'],
-                        returnType='None',
-                        )
+# plrsym.DefPyFunctionAccess(cClass=classStr, pyName='__setitem__', cName='', 
+#                         description="bracket [] operator for setting a component of the vector. Only works, if SymVector contains no expression. (may lead to inconsistencies in recording)",
+#                         example = "v1 = SymVector([1,3,2])\\\\v1[2]=13.",
+#                         argList=['i'],
+#                         argTypes=['symbolic.Real'],
+#                         returnType='None',
+#                         )
 plrsym.DefLatexOperator(name='__setitem__', 
                      description="bracket [] operator for setting a component of the vector. Only works, if SymVector contains no expression. (may lead to inconsistencies in recording)",
                      argList=['index'],
@@ -2787,22 +2904,24 @@ esym = exu.symbolic
 from exudyn.utilities import * #advancedUtilities with user function utilities included
 SymReal = exu.symbolic.Real
 
+SC = exu.SystemContainer()
+mbs = SC.AddSystem()
+
 #regular Python user function with esym math functions
 def UFload(mbs, t, load):
     return load*esym.sin(10*(2*pi)*t)
+
+#create symbolic user function from Python user function:
+symFuncLoad = CreateSymbolicUserFunction(mbs, UFload, load, 'loadUserFunction',verbose=1)
 
 #add ground and mass point:
 oGround = mbs.CreateGround()
 oMassPoint = mbs.CreateMassPoint(referencePosition=[1.+0.05,0,0], physicsMass=1)
 
 #add marker and load:
-mc = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=mbs.GetObject[oMassPoint]['nodeNumber'], coordinate=0))
-load = mbs.AddLoad(LoadCoordinate(markerNumber=mc, load=10))
-
-#create symbolic user function from Python user function:
-symFuncLoad = CreateSymbolicUserFunction(mbs, UFload, load, 'loadUserFunction',1)
-#set this user function to C++ object:
-c.TransferUserFunction2Item(mbs, load, 'loadUserFunction')    
+mc = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=mbs.GetObject(oMassPoint)['nodeNumber'], coordinate=0))
+load = mbs.AddLoad(LoadCoordinate(markerNumber=mc, load=10,
+                                  loadUserFunction=symFuncLoad))
 
 #print string of symbolic expression of user function (to check if it looks ok):
 print('load user function: ',symFuncLoad)
@@ -2827,12 +2946,13 @@ plrsym.DefPyFunctionAccess(cClass=classStr, pyName='SetUserFunctionFromDict', cN
                         returnType='None',
                         )
 
-plrsym.DefPyFunctionAccess(cClass=classStr, pyName='TransferUserFunction2Item', cName='', 
-                        description="Transfer the std::function to a given object, load or other; this needs to be done purely in C++ to avoid Pybind overheads.",
-                        argList=['mainSystem','itemIndex','userFunctionName'],
-                        argTypes=['MainSystem','ItemIndex','str'],
-                        returnType='None',
-                        )
+# not needed any more (use userFunction directly, same as Python function)
+# plrsym.DefPyFunctionAccess(cClass=classStr, pyName='TransferUserFunction2Item', cName='', 
+#                         description="Transfer the std::function to a given object, load or other; this needs to be done purely in C++ to avoid Pybind overheads.",
+#                         argList=['mainSystem','itemIndex','userFunctionName'],
+#                         argTypes=['MainSystem','ItemIndex','str'],
+#                         returnType='None',
+#                         )
 
 plrsym.DefLatexOperator('__repr__','Representation of Symbolic function',
                        returnType = 'str')
@@ -3049,12 +3169,41 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='GetItemsInBox', cName='PyGetIte
                         returnType='Union[dict,bool]',
                         )
 
-plr.DefPyFunctionAccess(cClass=classStr, pyName='GetMarkerBasedSphere', cName='PyGetMarkerBasedSphere', 
-                        argList=['localIndex'],
-                        description="Get dictionary with position, radius and markerIndex for markerBasedSphere index, as returned e.g. from GetItemsInBox",
-                        argTypes=['int'],
+#++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+plr.DefPyFunctionAccess(cClass=classStr, pyName='GetSphereMarkerBased', cName='PyGetSphereMarkerBased', 
+                        argList=['localIndex','addData'],
+                        description="Get dictionary with current position, orientation, velocity, angular velocity as computed in last contact iteration; if addData=True, adds stored data of contact element, such as radius, markerIndex and contact parameters; localIndex is the internal index of contact element, as returned e.g. from GetItemsInBox",
+                        argTypes=['int','bool'],
+                        defaultArgs=['','False'],
                         returnType='dict',
                         )
+
+plr.DefPyFunctionAccess(cClass=classStr, pyName='SetSphereMarkerBased', cName='PySetSphereMarkerBased', 
+                        argList=['localIndex','contactStiffness','contactDamping','radius','frictionMaterialIndex'],
+                        description="Set data of marker based sphere with localIndex (as internally stored) with given arguments; arguments that are < 0 (default) imply that current values are not overwritten",
+                        argTypes=['int','float','float','float','int'],
+                        defaultArgs=['','-1.','-1.','-1.','-1'],
+                        returnType='None',
+                        )
+
+plr.DefPyFunctionAccess(cClass=classStr, pyName='GetTriangleRigidBodyBased', cName='PyGetTriangleRigidBodyBased', 
+                        argList=['localIndex'],
+                        description="Get dictionary with rigid body index, local position of triangle vertices (nodes) and triangle normal; NOTE: the mesh added to contact is different from this structure, as it contains nodes and connectivity lists; the triangle index corresponds to the order as triangles are added to GeneralContact",
+                        argTypes=['int'],
+                        defaultArgs=[''],
+                        returnType='dict',
+                        )
+
+plr.DefPyFunctionAccess(cClass=classStr, pyName='SetTriangleRigidBodyBased', cName='PySetTriangleRigidBodyBased', 
+                        argList=['localIndex','points','contactRigidBodyIndex'],
+                        description="Set data of marker based sphere with localIndex (triangle index); points are provided as 3x3 numpy array, with point coordinates in rows; contactRigidBodyIndex<0 indicates no change of the current index (and changing this index should be handled with care)",
+                        argTypes=['int',matrix3D,'int'],
+                        defaultArgs=['','','-1'],
+                        returnType='None',
+                        )
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='ShortestDistanceAlongLine', cName='PyShortestDistanceAlongLine', 
                         argList=['pStart','direction','minDistance','maxDistance','asDictionary','cylinderRadius','typeIndex'],

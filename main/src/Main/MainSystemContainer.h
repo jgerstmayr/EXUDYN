@@ -21,7 +21,7 @@
 //! This is the extension of SystemContainer, which contains all objects needed for management and in the Python world.
 //  The System objects have their corresponding python object, which contains a pointer to the system (main) objects.
 //  Thus, any object list in SystemContainer is doubled by its Main correspondent
-class MainSystemContainer : public SystemContainer
+class MainSystemContainer // : public SystemContainer
 {
 protected:
 	ResizableArray<MainSystem*> mainSystems;			//!< contains one or a set of complete multibody/finite element systems
@@ -39,6 +39,13 @@ public:
 	{
 		Reset(); //delete operator needs to delete all systems (otherwise they could do illegal operations)
 	}
+
+	//! function for getting all data and state; for pickling
+	py::dict GetDictionary() const;
+	//! function for setting all data from dict; for pickling
+	void SetDictionary(const py::dict& d);
+
+
 
 	//! Write (Reference) access to:contains one or a set of complete multibody/finite element systems
 	ResizableArray<MainSystem*>& GetMainSystems() { return mainSystems; }
@@ -127,6 +134,9 @@ public:
 	//!Add a MainSystem (and its according CSystem) to the system container
 	MainSystem& AddMainSystem();
 
+	//! append an existing mainSystem, which is already initialized to SystemContainer
+	Index AppendMainSystem(MainSystem& mainSystem);
+
 	//! delete all MainSystems, detach render engine from main systems and and, delete all VisualizationSystems
 	void Reset();
 
@@ -134,6 +144,21 @@ public:
 	MainSystem& GetMainSystem(Index systemNumber);
 
 	void SendRedrawSignal();
+
+	//delete:
+	//virtual void Print(std::ostream& os) const
+	//{
+	//	os << "SystemContainer" << ":\n";
+	//	os << "  cSystems = " << mainSystems << "\n";
+	//	os << "\n";
+	//}
+
+	//friend std::ostream& operator<<(std::ostream& os, const MainSystemContainer& object)
+	//{
+	//	object.Print(os);
+	//	return os;
+	//}
+
 };
 
 #endif

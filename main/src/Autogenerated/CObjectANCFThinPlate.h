@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2023-10-17  22:36:49 (last modified)
+* @date         2024-01-28  18:16:35 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -27,19 +27,21 @@
 class CObjectANCFThinPlateParameters // AUTO: 
 {
 public: // AUTO: 
-    Real physicsHeight;                           //!< AUTO:  [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives \f$\rho A L\f$; must be positive
+    Real physicsThickness;                        //!< AUTO:  [SI:m] thickness of plate
+    Real physicsDensity;                          //!< AUTO:  [SI:kg/m\f$^3\f$] density of the plate, possibly averaged over thickness
     Matrix3D physicsStrainCoefficients;           //!< AUTO:  [SI:N/m] stiffness coefficients related to inplane normal and shear strains, integrated over height of the plate
     Matrix3D physicsCurvatureCoefficients;        //!< AUTO:  [SI:Nm] stiffness coefficients related to curvatures, integrated over height of the plate
     Real strainIsRelativeToReference;             //!< AUTO:  if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration serves as a reference geometry; allows also values between 0. and 1. to perform a transition during static computation
     Index4 nodeNumbers;                           //!< AUTO: 4 NodePointSlope12 node numbers
-    Index useReducedOrderIntegration;             //!< AUTO: 0/false: use highest Gauss integration for virtual work of strains, order 5 for bending moments; 1/true: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments
+    Index useReducedOrderIntegration;             //!< AUTO: 0/false: use highest Gauss integration for virtual work of strains
     //! AUTO: default constructor with parameter initialization
     CObjectANCFThinPlateParameters()
     {
-        physicsHeight = 0.;
+        physicsThickness = 0.;
+        physicsDensity = 0.;
         physicsStrainCoefficients = EXUmath::unitMatrix3D;
         physicsCurvatureCoefficients = EXUmath::unitMatrix3D;
-        strainIsRelativeToReference = 0.;
+        strainIsRelativeToReference = 1.;
         nodeNumbers = Index4({EXUstd::InvalidIndex, EXUstd::InvalidIndex, EXUstd::InvalidIndex, EXUstd::InvalidIndex});
         useReducedOrderIntegration = 0;
     };
@@ -127,7 +129,7 @@ public: // AUTO:
     //! AUTO:  return the local position of the center of mass, needed for equations of motion and for massProportionalLoad
     virtual Vector3D GetLocalCenterOfMass() const override
     {
-        return Vector3D({0.5*parameters.physicsLength,0.,0.});
+        return Vector3D({0.,0.,0.});
     }
 
     //! AUTO:  Get global node number (with local node index); needed for every object ==> does local mapping
@@ -167,8 +169,17 @@ public: // AUTO:
         massMatrixComputed = false;
     }
 
-    //! AUTO:  map element coordinates (position or veloctiy level) given by nodal vectors q0 and q1 onto compressed shape function vector to compute position, etc.
-    static Vector3D MapCoordinates(const Vector4D& SV, const LinkedDataVector& q0, const LinkedDataVector& q1);
+    //! AUTO:  map element coordinates (position or veloctiy level) given by nodal vectors q0, ..., q3 onto compressed shape function vector to compute position, etc.
+    static Vector3D MapCoordinates(const Vector12D& SV, const LinkedDataVector& q0, const LinkedDataVector& q1, const LinkedDataVector& q2, const LinkedDataVector& q3);
+
+    //! AUTO:  get compressed shape function vector \f$\Sm_v\f$, depending on local position \f$[\xi, \eta] \in [-1,1] \times [-1,1]\f$ (in unit coordinates)
+    static void ComputeShapeFunctions(Real xi, Real eta, Vector12D& sf);
+
+    //! AUTO:  get first derivatives of compressed shape function vector \f$\Sm_v\f$, depending on local position \f$[\xi, \eta] \in [-1,1] \times [-1,1]\f$ (in unit coordinates)
+    static void ComputeShapeFunctions_xy(Real xi, Real eta, Vector12D& sf_x, Vector12D& sf_y);
+
+    //! AUTO:  get second derivatives of compressed shape function vector \f$\Sm_v\f$, depending on local position \f$[\xi, \eta] \in [-1,1] \times [-1,1]\f$ (in unit coordinates)
+    static void ComputeShapeFunctions_xxyy(Real xi, Real eta, Vector12D& sf_xx, Vector12D& sf_yy, Vector12D& sf_xy);
 
     //! AUTO:  Compute node coordinates in current configuration including reference coordinates
     void ComputeCurrentNodeCoordinates(ConstSizeVector<6>& qNode0, ConstSizeVector<6>& qNode1) const;

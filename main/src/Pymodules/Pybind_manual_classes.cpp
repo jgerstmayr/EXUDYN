@@ -322,9 +322,22 @@ void Init_Pybind_manual_classes(py::module& m) {
 		.def_readwrite("throwErrorWithCtrlC", &PySpecialSolver::throwErrorWithCtrlC)
 
 		//representation:
-		.def("__repr__", [](const PyExperimental& item) {
+		.def("__repr__", [](const PySpecialSolver& item) {
 		return STDstring(EXUstd::ToString(item));
 			}, "return the string representation of SpecialSolver class")
+		;
+
+	//Python version of SpecialSolver class
+	py::class_<PySpecialExceptions>(m, "SpecialExceptions", "SpecialExceptions features, to be handled with care")
+		.def(py::init<>())
+		//+++++++++++++++++++++++++++++++++++++++++++
+		.def_readwrite("dictionaryNonCopyable", &PySpecialExceptions::dictionaryNonCopyable)
+		.def_readwrite("dictionaryVersionMismatch", &PySpecialExceptions::dictionaryVersionMismatch)
+
+		//representation:
+		.def("__repr__", [](const PySpecialExceptions& item) {
+		return STDstring(EXUstd::ToString(item));
+			}, "return the string representation of SpecialExceptions class")
 		;
 
 	//Python version of Special class
@@ -332,6 +345,7 @@ void Init_Pybind_manual_classes(py::module& m) {
 		.def(py::init<>())
 		//+++++++++++++++++++++++++++++++++++++++++++
 		.def_readwrite("solver", &PySpecial::solver)
+		.def_readwrite("exceptions", &PySpecial::exceptions)
 
 #ifdef PERFORM_UNIT_TESTS
 			.def("RunCppUnitTests", &PySpecial::SpecialRunUnitTests, "Run C++ unit tests and return int with 'number of fails' (0 if all tests passed); reportOnPass=True also outputs the passed tests; printOutput prints according output to console",

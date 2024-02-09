@@ -130,7 +130,8 @@ public:
 	}
 
 	//! this function is used to copy the current state to the visualization state and to send a signal that the PostProcessData has been updated
-	void UpdatePostProcessData(bool recordImage = false);
+	//! graphicsData.visualizationStateUpdate is updated in case that visualizationStateUpdateAvailable=true
+	void UpdatePostProcessData(bool recordImage = false, bool visualizationStateUpdateAvailable = true);
 
 	SolverData& GetSolverData() { return solverData; }
 	const SolverData& GetSolverData() const { return solverData; }

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes, Zw\"olfer Andreas
 * @date         2019-07-01 (generated)
-* @date         2022-07-21  20:27:17 (last modified)
+* @date         2024-02-03  15:37:34 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -120,12 +120,8 @@ public: // AUTO:
         EPyUtils::SetPyMatrixContainerSafely(d, "stiffnessMatrixFF", cObjectFFRF->GetParameters().stiffnessMatrixFF); /*! AUTO:  safely cast to C++ type*/
         EPyUtils::SetPyMatrixContainerSafely(d, "dampingMatrixFF", cObjectFFRF->GetParameters().dampingMatrixFF); /*! AUTO:  safely cast to C++ type*/
         EPyUtils::SetNumpyVectorSafely(d, "forceVector", cObjectFFRF->GetParameters().forceVector); /*! AUTO:  safely cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "forceUserFunction")) { if (EPyUtils::CheckForValidFunction(d["forceUserFunction"])) 
-            { cObjectFFRF->GetParameters().forceUserFunction = py::cast<std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector)>>((py::function)d["forceUserFunction"]); /* AUTO:  read out dictionary and cast to C++ type*/}
-            else {cObjectFFRF->GetParameters().forceUserFunction = 0;  /*AUTO: otherwise assign with zero!*/ }} 
-        if (EPyUtils::DictItemExists(d, "massMatrixUserFunction")) { if (EPyUtils::CheckForValidFunction(d["massMatrixUserFunction"])) 
-            { cObjectFFRF->GetParameters().massMatrixUserFunction = py::cast<std::function<NumpyMatrix(const MainSystem&,Real,Index,StdVector,StdVector)>>((py::function)d["massMatrixUserFunction"]); /* AUTO:  read out dictionary and cast to C++ type*/}
-            else {cObjectFFRF->GetParameters().massMatrixUserFunction = 0;  /*AUTO: otherwise assign with zero!*/ }} 
+        if (EPyUtils::DictItemExists(d, "forceUserFunction")) { cObjectFFRF->GetParameters().forceUserFunction = d["forceUserFunction"]; /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "massMatrixUserFunction")) { cObjectFFRF->GetParameters().massMatrixUserFunction = d["massMatrixUserFunction"]; /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "computeFFRFterms")) { cObjectFFRF->GetParameters().computeFFRFterms = py::cast<bool>(d["computeFFRFterms"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "objectIsInitialized")) { cObjectFFRF->GetObjectIsInitialized() = py::cast<bool>(d["objectIsInitialized"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
@@ -146,16 +142,8 @@ public: // AUTO:
         d["stiffnessMatrixFF"] = (PyMatrixContainer)cObjectFFRF->GetParameters().stiffnessMatrixFF; //! AUTO: cast variables into python (not needed for standard types) 
         d["dampingMatrixFF"] = (PyMatrixContainer)cObjectFFRF->GetParameters().dampingMatrixFF; //! AUTO: cast variables into python (not needed for standard types) 
         d["forceVector"] = EPyUtils::Vector2NumPy(cObjectFFRF->GetParameters().forceVector); //! AUTO: cast variables into python (not needed for standard types) 
-        if (cObjectFFRF->GetParameters().forceUserFunction)
-            {d["forceUserFunction"] = (std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector)>)cObjectFFRF->GetParameters().forceUserFunction;}
-        else
-            {d["forceUserFunction"] = 0;}
- //! AUTO: cast variables into python (not needed for standard types) 
-        if (cObjectFFRF->GetParameters().massMatrixUserFunction)
-            {d["massMatrixUserFunction"] = (std::function<NumpyMatrix(const MainSystem&,Real,Index,StdVector,StdVector)>)cObjectFFRF->GetParameters().massMatrixUserFunction;}
-        else
-            {d["massMatrixUserFunction"] = 0;}
- //! AUTO: cast variables into python (not needed for standard types) 
+        d["forceUserFunction"] = (py::object)cObjectFFRF->GetParameters().forceUserFunction; //! AUTO: cast variables into python (not needed for standard types) 
+        d["massMatrixUserFunction"] = (py::object)cObjectFFRF->GetParameters().massMatrixUserFunction; //! AUTO: cast variables into python (not needed for standard types) 
         d["computeFFRFterms"] = (bool)cObjectFFRF->GetParameters().computeFFRFterms; //! AUTO: cast variables into python (not needed for standard types) 
         d["coordinateIndexPerNode"] = (std::vector<Index>)cObjectFFRF->GetCoordinateIndexPerNode(); //! AUTO: cast variables into python (not needed for standard types) 
         d["objectIsInitialized"] = (bool)cObjectFFRF->GetObjectIsInitialized(); //! AUTO: cast variables into python (not needed for standard types) 
@@ -186,8 +174,8 @@ public: // AUTO:
         else if (parameterName.compare("stiffnessMatrixFF") == 0) { return py::cast((PyMatrixContainer)cObjectFFRF->GetParameters().stiffnessMatrixFF);} //! AUTO: get parameter
         else if (parameterName.compare("dampingMatrixFF") == 0) { return py::cast((PyMatrixContainer)cObjectFFRF->GetParameters().dampingMatrixFF);} //! AUTO: get parameter
         else if (parameterName.compare("forceVector") == 0) { return EPyUtils::Vector2NumPy(cObjectFFRF->GetParameters().forceVector);} //! AUTO: get parameter
-        else if (parameterName.compare("forceUserFunction") == 0) { return py::cast((std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector)>)cObjectFFRF->GetParameters().forceUserFunction);} //! AUTO: get parameter
-        else if (parameterName.compare("massMatrixUserFunction") == 0) { return py::cast((std::function<NumpyMatrix(const MainSystem&,Real,Index,StdVector,StdVector)>)cObjectFFRF->GetParameters().massMatrixUserFunction);} //! AUTO: get parameter
+        else if (parameterName.compare("forceUserFunction") == 0) { return cObjectFFRF->GetParameters().forceUserFunction.GetPythonDictionary();;} //! AUTO: get parameter
+        else if (parameterName.compare("massMatrixUserFunction") == 0) { return cObjectFFRF->GetParameters().massMatrixUserFunction.GetPythonDictionary();;} //! AUTO: get parameter
         else if (parameterName.compare("computeFFRFterms") == 0) { return py::cast((bool)cObjectFFRF->GetParameters().computeFFRFterms);} //! AUTO: get parameter
         else if (parameterName.compare("coordinateIndexPerNode") == 0) { return py::cast((std::vector<Index>)cObjectFFRF->GetCoordinateIndexPerNode());} //! AUTO: get parameter
         else if (parameterName.compare("objectIsInitialized") == 0) { return py::cast((bool)cObjectFFRF->GetObjectIsInitialized());} //! AUTO: get parameter
@@ -219,10 +207,8 @@ public: // AUTO:
         else if (parameterName.compare("stiffnessMatrixFF") == 0) { EPyUtils::SetPyMatrixContainerSafely(value, cObjectFFRF->GetParameters().stiffnessMatrixFF); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("dampingMatrixFF") == 0) { EPyUtils::SetPyMatrixContainerSafely(value, cObjectFFRF->GetParameters().dampingMatrixFF); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("forceVector") == 0) { EPyUtils::SetNumpyVectorSafely(value, cObjectFFRF->GetParameters().forceVector); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("forceUserFunction") == 0) { if (py::isinstance<py::function>(value)) {cObjectFFRF->GetParameters().forceUserFunction = py::cast<std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/} else
-            if (!EPyUtils::IsPyTypeInteger(value) || (py::cast<int>(value) != 0)) {PyError(STDstring("Failed to convert PyFunction: must be either valid python function or 0, but got ")+EXUstd::ToString(value)); }; } //! AUTO: get parameter
-        else if (parameterName.compare("massMatrixUserFunction") == 0) { if (py::isinstance<py::function>(value)) {cObjectFFRF->GetParameters().massMatrixUserFunction = py::cast<std::function<NumpyMatrix(const MainSystem&,Real,Index,StdVector,StdVector)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/} else
-            if (!EPyUtils::IsPyTypeInteger(value) || (py::cast<int>(value) != 0)) {PyError(STDstring("Failed to convert PyFunction: must be either valid python function or 0, but got ")+EXUstd::ToString(value)); }; } //! AUTO: get parameter
+        else if (parameterName.compare("forceUserFunction") == 0) { cObjectFFRF->GetParameters().forceUserFunction = value; } //! AUTO: get parameter
+        else if (parameterName.compare("massMatrixUserFunction") == 0) { cObjectFFRF->GetParameters().massMatrixUserFunction = value; } //! AUTO: get parameter
         else if (parameterName.compare("computeFFRFterms") == 0) { cObjectFFRF->GetParameters().computeFFRFterms = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("objectIsInitialized") == 0) { cObjectFFRF->GetObjectIsInitialized() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationObjectFFRF->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

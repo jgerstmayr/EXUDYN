@@ -1,10 +1,10 @@
 /** ***********************************************************************************************
 * @class        VisualizationObjectANCFCable2D
-* @brief        A 2D cable finite element using 2 nodes of type NodePoint2DSlope1. For a detailed description of this beam element, see Gerstmayr and Irschik \\cite{GerstmayrIrschik2008}.
+* @brief        A 2D cable finite element using 2 nodes of type NodePoint2DSlope1. The localPosition of the beam with length \f$L\f$=physicsLength and height \f$h\f$ ranges in \f$X\f$-direction in range \f$[0, L]\f$ and in \f$Y\f$-direction in range \f$[-h/2,h/2]\f$ (which is in fact not needed in the \hac{EOM}).
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-09-16  11:17:18 (last modfied)
+* @date         2024-02-03  15:27:06 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

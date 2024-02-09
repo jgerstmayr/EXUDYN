@@ -418,10 +418,10 @@ def Generatrix2Polynomial(param, GeneratrixFunction, tol=1e-14, nFit=101, nTest 
     err = []
     order = [] 
     nFits = 10
-	#++++++++++++++++++++++++++++++++++++++++++
-	#approximate function values y via polynomial given by ** coeffs
-	#iterate over polyfit until error of approximation is smaller than tol
-	#==>nFits ==> int(maxOrder/2)
+    #++++++++++++++++++++++++++++++++++++++++++
+    #approximate function values y via polynomial given by ** coeffs
+    #iterate over polyfit until error of approximation is smaller than tol
+    #==>nFits ==> int(maxOrder/2)
     for i in range(nFits): 
         order += [2*i]
         coefficients += [np.polyfit(x, y, order[i], rcond=None, full=False, w=None, cov=False)]
@@ -431,7 +431,7 @@ def Generatrix2Polynomial(param, GeneratrixFunction, tol=1e-14, nFit=101, nTest 
         err     += [yTest - np.polyval(coefficients[i], xTest)]
         # exu.Print('Polynomial of order ' + str(order[i]) + ' is used for Roll Geometry, max err = ' + str(max(abs(err[i]))))
         
-		#break for loop if tolerance reached
+        #break for loop if tolerance reached
         if max(abs(err[i])) < tol:
             ibest = i
             # print('tolerance reached for order '+ str(order[i]) + '.')

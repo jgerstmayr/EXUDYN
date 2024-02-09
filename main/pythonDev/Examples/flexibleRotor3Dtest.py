@@ -164,9 +164,7 @@ exu.StopRenderer()               #safely close rendering window!
 #evaluate final (=current) output values
 u = mbs.GetNodeOutput(n1, exu.OutputVariableType.AngularVelocity)
 print('omega=',u)
-#print('displacement=',u[0])
 
-#exudynTestGlobals.testError = u[0] - (0.5152217339585201) #2019-12-01;
 
 ##+++++++++++++++++++++++++++++++++++++++++++++++++++++
 import matplotlib.pyplot as plt
@@ -177,10 +175,7 @@ if True:
     n=steps
     plt.rcParams.update({'font.size': 24})
 
-    #plt.plot(data[:,2], data[:,3], 'r-') #numerical solution
-    #plt.plot(data[:,0], data[:,2], 'b-') #numerical solution
     plt.plot(data[:,0], data[:,3], 'r-') #numerical solution
-    #plt.plot(data[n-500:n-1,1], data[n-500:n-1,2], 'r-') #numerical solution
     
     ax=plt.gca() # get current axes
     ax.grid(True, 'major', 'both')

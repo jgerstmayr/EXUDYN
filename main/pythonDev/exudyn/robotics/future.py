@@ -32,12 +32,12 @@ from exudyn.rigidBodyUtilities import RotationMatrix2RotZYZ, HT2rotationMatrix, 
 #**output: serial robot object by corke
 #**author: Martin Sereinig
 #**notes: 
-#	DH Parameter Information:
-#	stdH = [theta, d, a, alpha] with Rz(theta) * Tz(d) * Tx(a) * Rx(alpha)
-#	modDH = [alpha, dx, theta, rz] with 
-#	used by Corke and Lynch: Rx(alpha) * Tx(a) * Rz(theta) * Tz(d)
-#	used by Khali:           Rx(alpha) * Tx(d) * Rz(theta) * Tz(r)
-#	Important note:  d(khali)=a(corke)  and r(khali)=d(corke)  
+#    DH Parameter Information:
+#    stdH = [theta, d, a, alpha] with Rz(theta) * Tz(d) * Tx(a) * Rx(alpha)
+#    modDH = [alpha, dx, theta, rz] with 
+#    used by Corke and Lynch: Rx(alpha) * Tx(a) * Rz(theta) * Tz(d)
+#    used by Khali:           Rx(alpha) * Tx(d) * Rz(theta) * Tz(r)
+#    Important note:  d(khali)=a(corke)  and r(khali)=d(corke)  
 def MakeCorkeRobot(robotDic):
     
     try:
@@ -438,7 +438,7 @@ def ComputeIKUR(robotDic, HTdes):
 #testing of module future
 if __name__ == '__main__':
     
-	#imports
+    #imports
     from exudyn.utilities import *
     from exudyn.rigidBodyUtilities import *
     from exudyn.graphicsDataUtilities import *

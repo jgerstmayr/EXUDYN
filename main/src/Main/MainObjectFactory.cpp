@@ -137,7 +137,7 @@ MainNode* MainObjectFactory::CreateMainNode(MainSystem& mainSystem, STDstring no
 	if (nodeType == "Point")
 	{
 		CNodePoint* cNode = new CNodePoint();										//computational item
-		cNode->GetCData() = &(mainSystem.GetCSystem()->GetSystemData().GetCData()); //add CData reference to CNode
+		cNode->GetCData() = &(mainSystem.GetCSystem().GetSystemData().GetCData()); //add CData reference to CNode
 		node = new MainNodePoint(); //new main node
 		((MainNodePoint*)node)->SetCNodePoint(cNode);
 		VisualizationNodePoint* vNode = new VisualizationNodePoint();				
@@ -146,7 +146,7 @@ MainNode* MainObjectFactory::CreateMainNode(MainSystem& mainSystem, STDstring no
 	else if (nodeType == "PointGround")
 	{
 		CNodePointGround* cNode = new CNodePointGround();										//computational item
-		cNode->GetCData() = &(mainSystem.GetCSystem()->GetSystemData().GetCData()); //add CData reference to CNode
+		cNode->GetCData() = &(mainSystem.GetCSystem().GetSystemData().GetCData()); //add CData reference to CNode
 		node = new MainNodePointGround(); //new main node
 		((MainNodePointGround*)node)->SetCNodePointGround(cNode);
 		VisualizationNodePointGround* vNode = new VisualizationNodePointGround();				
@@ -155,7 +155,7 @@ MainNode* MainObjectFactory::CreateMainNode(MainSystem& mainSystem, STDstring no
 	else if (nodeType == "Point2D")
 	{
 		CNodePoint2D* cNode = new CNodePoint2D();										//computational item
-		cNode->GetCData() = &(mainSystem.GetCSystem()->GetSystemData().GetCData()); //add CData reference to CNode
+		cNode->GetCData() = &(mainSystem.GetCSystem().GetSystemData().GetCData()); //add CData reference to CNode
 		node = new MainNodePoint2D(); //new main node
 		((MainNodePoint2D*)node)->SetCNodePoint2D(cNode);
 		VisualizationNodePoint2D* vNode = new VisualizationNodePoint2D();				
@@ -164,7 +164,7 @@ MainNode* MainObjectFactory::CreateMainNode(MainSystem& mainSystem, STDstring no
 	else if (nodeType == "RigidBodyEP")
 	{
 		CNodeRigidBodyEP* cNode = new CNodeRigidBodyEP();										//computational item
-		cNode->GetCData() = &(mainSystem.GetCSystem()->GetSystemData().GetCData()); //add CData reference to CNode
+		cNode->GetCData() = &(mainSystem.GetCSystem().GetSystemData().GetCData()); //add CData reference to CNode
 		node = new MainNodeRigidBodyEP(); //new main node
 		((MainNodeRigidBodyEP*)node)->SetCNodeRigidBodyEP(cNode);
 		VisualizationNodeRigidBodyEP* vNode = new VisualizationNodeRigidBodyEP();				
@@ -173,7 +173,7 @@ MainNode* MainObjectFactory::CreateMainNode(MainSystem& mainSystem, STDstring no
 	else if (nodeType == "RigidBodyRxyz")
 	{
 		CNodeRigidBodyRxyz* cNode = new CNodeRigidBodyRxyz();										//computational item
-		cNode->GetCData() = &(mainSystem.GetCSystem()->GetSystemData().GetCData()); //add CData reference to CNode
+		cNode->GetCData() = &(mainSystem.GetCSystem().GetSystemData().GetCData()); //add CData reference to CNode
 		node = new MainNodeRigidBodyRxyz(); //new main node
 		((MainNodeRigidBodyRxyz*)node)->SetCNodeRigidBodyRxyz(cNode);
 		VisualizationNodeRigidBodyRxyz* vNode = new VisualizationNodeRigidBodyRxyz();				
@@ -182,7 +182,7 @@ MainNode* MainObjectFactory::CreateMainNode(MainSystem& mainSystem, STDstring no
 	else if (nodeType == "RigidBodyRotVecLG")
 	{
 		CNodeRigidBodyRotVecLG* cNode = new CNodeRigidBodyRotVecLG();										//computational item
-		cNode->GetCData() = &(mainSystem.GetCSystem()->GetSystemData().GetCData()); //add CData reference to CNode
+		cNode->GetCData() = &(mainSystem.GetCSystem().GetSystemData().GetCData()); //add CData reference to CNode
 		node = new MainNodeRigidBodyRotVecLG(); //new main node
 		((MainNodeRigidBodyRotVecLG*)node)->SetCNodeRigidBodyRotVecLG(cNode);
 		VisualizationNodeRigidBodyRotVecLG* vNode = new VisualizationNodeRigidBodyRotVecLG();
@@ -191,7 +191,7 @@ MainNode* MainObjectFactory::CreateMainNode(MainSystem& mainSystem, STDstring no
 	//else if (nodeType == "RigidBodyRotVecDataLG")
 	//{
 	//	CNodeRigidBodyRotVecDataLG* cNode = new CNodeRigidBodyRotVecDataLG();										//computational item
-	//	cNode->GetCData() = &(mainSystem.GetCSystem()->GetSystemData().GetCData()); //add CData reference to CNode
+	//	cNode->GetCData() = &(mainSystem.GetCSystem().GetSystemData().GetCData()); //add CData reference to CNode
 	//	node = new MainNodeRigidBodyRotVecDataLG(); //new main node
 	//	((MainNodeRigidBodyRotVecDataLG*)node)->SetCNodeRigidBodyRotVecDataLG(cNode);
 	//	VisualizationNodeRigidBodyRotVecDataLG* vNode = new VisualizationNodeRigidBodyRotVecDataLG();
@@ -200,7 +200,7 @@ MainNode* MainObjectFactory::CreateMainNode(MainSystem& mainSystem, STDstring no
 	else if (nodeType == "RigidBody2D")
 	{
 		CNodeRigidBody2D* cNode = new CNodeRigidBody2D();										//computational item
-		cNode->GetCData() = &(mainSystem.GetCSystem()->GetSystemData().GetCData()); //add CData reference to CNode
+		cNode->GetCData() = &(mainSystem.GetCSystem().GetSystemData().GetCData()); //add CData reference to CNode
 		node = new MainNodeRigidBody2D(); //new main node
 		((MainNodeRigidBody2D*)node)->SetCNodeRigidBody2D(cNode);
 		VisualizationNodeRigidBody2D* vNode = new VisualizationNodeRigidBody2D();				
@@ -209,7 +209,7 @@ MainNode* MainObjectFactory::CreateMainNode(MainSystem& mainSystem, STDstring no
 	else if (nodeType == "1D")
 	{
 		CNode1D* cNode = new CNode1D();										//computational item
-		cNode->GetCData() = &(mainSystem.GetCSystem()->GetSystemData().GetCData()); //add CData reference to CNode
+		cNode->GetCData() = &(mainSystem.GetCSystem().GetSystemData().GetCData()); //add CData reference to CNode
 		node = new MainNode1D(); //new main node
 		((MainNode1D*)node)->SetCNode1D(cNode);
 		VisualizationNode1D* vNode = new VisualizationNode1D();				
@@ -218,7 +218,7 @@ MainNode* MainObjectFactory::CreateMainNode(MainSystem& mainSystem, STDstring no
 	else if (nodeType == "Point2DSlope1")
 	{
 		CNodePoint2DSlope1* cNode = new CNodePoint2DSlope1();										//computational item
-		cNode->GetCData() = &(mainSystem.GetCSystem()->GetSystemData().GetCData()); //add CData reference to CNode
+		cNode->GetCData() = &(mainSystem.GetCSystem().GetSystemData().GetCData()); //add CData reference to CNode
 		node = new MainNodePoint2DSlope1(); //new main node
 		((MainNodePoint2DSlope1*)node)->SetCNodePoint2DSlope1(cNode);
 		VisualizationNodePoint2DSlope1* vNode = new VisualizationNodePoint2DSlope1();
@@ -227,7 +227,7 @@ MainNode* MainObjectFactory::CreateMainNode(MainSystem& mainSystem, STDstring no
 	else if (nodeType == "PointSlope1")
 	{
 		CNodePointSlope1* cNode = new CNodePointSlope1();										//computational item
-		cNode->GetCData() = &(mainSystem.GetCSystem()->GetSystemData().GetCData()); //add CData reference to CNode
+		cNode->GetCData() = &(mainSystem.GetCSystem().GetSystemData().GetCData()); //add CData reference to CNode
 		node = new MainNodePointSlope1(); //new main node
 		((MainNodePointSlope1*)node)->SetCNodePointSlope1(cNode);
 		VisualizationNodePointSlope1* vNode = new VisualizationNodePointSlope1();
@@ -236,7 +236,7 @@ MainNode* MainObjectFactory::CreateMainNode(MainSystem& mainSystem, STDstring no
 	else if (nodeType == "PointSlope12")
 	{
 		CNodePointSlope12* cNode = new CNodePointSlope12();										//computational item
-		cNode->GetCData() = &(mainSystem.GetCSystem()->GetSystemData().GetCData()); //add CData reference to CNode
+		cNode->GetCData() = &(mainSystem.GetCSystem().GetSystemData().GetCData()); //add CData reference to CNode
 		node = new MainNodePointSlope12(); //new main node
 		((MainNodePointSlope12*)node)->SetCNodePointSlope12(cNode);
 		VisualizationNodePointSlope12* vNode = new VisualizationNodePointSlope12();
@@ -245,7 +245,7 @@ MainNode* MainObjectFactory::CreateMainNode(MainSystem& mainSystem, STDstring no
 	else if (nodeType == "PointSlope23")
 	{
 		CNodePointSlope23* cNode = new CNodePointSlope23();										//computational item
-		cNode->GetCData() = &(mainSystem.GetCSystem()->GetSystemData().GetCData()); //add CData reference to CNode
+		cNode->GetCData() = &(mainSystem.GetCSystem().GetSystemData().GetCData()); //add CData reference to CNode
 		node = new MainNodePointSlope23(); //new main node
 		((MainNodePointSlope23*)node)->SetCNodePointSlope23(cNode);
 		VisualizationNodePointSlope23* vNode = new VisualizationNodePointSlope23();
@@ -254,7 +254,7 @@ MainNode* MainObjectFactory::CreateMainNode(MainSystem& mainSystem, STDstring no
 	else if (nodeType == "GenericODE2")
 	{
 		CNodeGenericODE2* cNode = new CNodeGenericODE2();										//computational item
-		cNode->GetCData() = &(mainSystem.GetCSystem()->GetSystemData().GetCData()); //add CData reference to CNode
+		cNode->GetCData() = &(mainSystem.GetCSystem().GetSystemData().GetCData()); //add CData reference to CNode
 		node = new MainNodeGenericODE2(); //new main node
 		((MainNodeGenericODE2*)node)->SetCNodeGenericODE2(cNode);
 		VisualizationNodeGenericODE2* vNode = new VisualizationNodeGenericODE2();				
@@ -263,7 +263,7 @@ MainNode* MainObjectFactory::CreateMainNode(MainSystem& mainSystem, STDstring no
 	else if (nodeType == "GenericODE1")
 	{
 		CNodeGenericODE1* cNode = new CNodeGenericODE1();										//computational item
-		cNode->GetCData() = &(mainSystem.GetCSystem()->GetSystemData().GetCData()); //add CData reference to CNode
+		cNode->GetCData() = &(mainSystem.GetCSystem().GetSystemData().GetCData()); //add CData reference to CNode
 		node = new MainNodeGenericODE1(); //new main node
 		((MainNodeGenericODE1*)node)->SetCNodeGenericODE1(cNode);
 		VisualizationNodeGenericODE1* vNode = new VisualizationNodeGenericODE1();
@@ -272,7 +272,7 @@ MainNode* MainObjectFactory::CreateMainNode(MainSystem& mainSystem, STDstring no
 	else if (nodeType == "GenericAE")
 	{
 		CNodeGenericAE* cNode = new CNodeGenericAE();										//computational item
-		cNode->GetCData() = &(mainSystem.GetCSystem()->GetSystemData().GetCData()); //add CData reference to CNode
+		cNode->GetCData() = &(mainSystem.GetCSystem().GetSystemData().GetCData()); //add CData reference to CNode
 		node = new MainNodeGenericAE(); //new main node
 		((MainNodeGenericAE*)node)->SetCNodeGenericAE(cNode);
 		VisualizationNodeGenericAE* vNode = new VisualizationNodeGenericAE();
@@ -281,7 +281,7 @@ MainNode* MainObjectFactory::CreateMainNode(MainSystem& mainSystem, STDstring no
 	else if (nodeType == "GenericData")
 	{
 		CNodeGenericData* cNode = new CNodeGenericData();										//computational item
-		cNode->GetCData() = &(mainSystem.GetCSystem()->GetSystemData().GetCData()); //add CData reference to CNode
+		cNode->GetCData() = &(mainSystem.GetCSystem().GetSystemData().GetCData()); //add CData reference to CNode
 		node = new MainNodeGenericData(); //new main node
 		((MainNodeGenericData*)node)->SetCNodeGenericData(cNode);
 		VisualizationNodeGenericData* vNode = new VisualizationNodeGenericData();				
@@ -304,9 +304,11 @@ bool MainObjectFactory::DictHasValidName(const MainSystem& mainSystem, const py:
 		{
 			STDstring nameString = py::cast<std::string>(d["name"]); //! read out dictionary and cast to C++ type
 
-			if (nameString.size() != 0) //empty string '' shall not raise error, but generate name==>this is the default value for python interface classes
+			//allow baseItem + EXUstd::ToString(currentNumber) for loading from dict!
+			if (nameString != baseItem + EXUstd::ToString(currentNumber) && nameString.size() != 0) //empty string '' shall not raise error, but generate name==>this is the default value for python interface classes
 			{
 				hasName = true;
+
 				//check if name conflicts with item enumeration (having the according name + a digit)
 				if ((Index)nameString.size() > baseItemLength && nameString.substr(0, baseItemLength) == baseItem && isdigit(nameString[baseItemLength]))
 				{
@@ -421,7 +423,7 @@ Index MainObjectFactory::AddMainNode(MainSystem& mainSystem, const py::dict& d)
 				if (mainNode != NULL)
 				{
 					mainNode->SetWithDictionary(d);
-					mainSystem.GetCSystem()->GetSystemData().GetCNodes().Append(mainNode->GetCNode());
+					mainSystem.GetCSystem().GetSystemData().GetCNodes().Append(mainNode->GetCNode());
 					mainSystem.GetVisualizationSystem().GetVisualizationSystemData().GetVisualizationNodes().Append(mainNode->GetVisualizationNode());
 					return mainSystem.GetMainSystemData().GetMainNodes().Append(mainNode);
 				}
@@ -463,7 +465,7 @@ MainObject* MainObjectFactory::CreateMainObject(MainSystem& mainSystem, STDstrin
 	if (objectType == "MassPoint")
 	{
 		CObjectMassPoint* cObject = new CObjectMassPoint();							
-		cObject->SetCSystemData(&(mainSystem.GetCSystem()->GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
+		cObject->SetCSystemData(&(mainSystem.GetCSystem().GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
 		object = new MainObjectMassPoint(); //new main object
 		((MainObjectMassPoint*)object)->SetCObjectMassPoint(cObject);
 		VisualizationObjectMassPoint* vObject = new VisualizationObjectMassPoint();				
@@ -472,7 +474,7 @@ MainObject* MainObjectFactory::CreateMainObject(MainSystem& mainSystem, STDstrin
 	else if (objectType == "MassPoint2D")
 	{
 		CObjectMassPoint2D* cObject = new CObjectMassPoint2D();
-		cObject->SetCSystemData(&(mainSystem.GetCSystem()->GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
+		cObject->SetCSystemData(&(mainSystem.GetCSystem().GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
 		object = new MainObjectMassPoint2D(); //new main object
 		((MainObjectMassPoint2D*)object)->SetCObjectMassPoint2D(cObject);
 		VisualizationObjectMassPoint2D* vObject = new VisualizationObjectMassPoint2D();				
@@ -481,7 +483,7 @@ MainObject* MainObjectFactory::CreateMainObject(MainSystem& mainSystem, STDstrin
 	else if (objectType == "Mass1D")
 	{
 		CObjectMass1D* cObject = new CObjectMass1D();
-		cObject->SetCSystemData(&(mainSystem.GetCSystem()->GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
+		cObject->SetCSystemData(&(mainSystem.GetCSystem().GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
 		object = new MainObjectMass1D(); //new main object
 		((MainObjectMass1D*)object)->SetCObjectMass1D(cObject);
 		VisualizationObjectMass1D* vObject = new VisualizationObjectMass1D();				
@@ -490,7 +492,7 @@ MainObject* MainObjectFactory::CreateMainObject(MainSystem& mainSystem, STDstrin
 	else if (objectType == "RotationalMass1D")
 	{
 		CObjectRotationalMass1D* cObject = new CObjectRotationalMass1D();
-		cObject->SetCSystemData(&(mainSystem.GetCSystem()->GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
+		cObject->SetCSystemData(&(mainSystem.GetCSystem().GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
 		object = new MainObjectRotationalMass1D(); //new main object
 		((MainObjectRotationalMass1D*)object)->SetCObjectRotationalMass1D(cObject);
 		VisualizationObjectRotationalMass1D* vObject = new VisualizationObjectRotationalMass1D();				
@@ -499,7 +501,7 @@ MainObject* MainObjectFactory::CreateMainObject(MainSystem& mainSystem, STDstrin
 	else if (objectType == "RigidBody")
 	{
 		CObjectRigidBody* cObject = new CObjectRigidBody();
-		cObject->SetCSystemData(&(mainSystem.GetCSystem()->GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
+		cObject->SetCSystemData(&(mainSystem.GetCSystem().GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
 		object = new MainObjectRigidBody(); //new main object
 		((MainObjectRigidBody*)object)->SetCObjectRigidBody(cObject);
 		VisualizationObjectRigidBody* vObject = new VisualizationObjectRigidBody();				
@@ -508,7 +510,7 @@ MainObject* MainObjectFactory::CreateMainObject(MainSystem& mainSystem, STDstrin
 	else if (objectType == "RigidBody2D")
 	{
 		CObjectRigidBody2D* cObject = new CObjectRigidBody2D();
-		cObject->SetCSystemData(&(mainSystem.GetCSystem()->GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
+		cObject->SetCSystemData(&(mainSystem.GetCSystem().GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
 		object = new MainObjectRigidBody2D(); //new main object
 		((MainObjectRigidBody2D*)object)->SetCObjectRigidBody2D(cObject);
 		VisualizationObjectRigidBody2D* vObject = new VisualizationObjectRigidBody2D();				
@@ -517,7 +519,7 @@ MainObject* MainObjectFactory::CreateMainObject(MainSystem& mainSystem, STDstrin
 	else if (objectType == "GenericODE2")
 	{
 		CObjectGenericODE2* cObject = new CObjectGenericODE2();
-		cObject->SetCSystemData(&(mainSystem.GetCSystem()->GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
+		cObject->SetCSystemData(&(mainSystem.GetCSystem().GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
 		object = new MainObjectGenericODE2(); //new main object
 		((MainObjectGenericODE2*)object)->SetCObjectGenericODE2(cObject);
 		VisualizationObjectGenericODE2* vObject = new VisualizationObjectGenericODE2();				
@@ -526,7 +528,7 @@ MainObject* MainObjectFactory::CreateMainObject(MainSystem& mainSystem, STDstrin
 	else if (objectType == "GenericODE1")
 	{
 		CObjectGenericODE1* cObject = new CObjectGenericODE1();
-		cObject->SetCSystemData(&(mainSystem.GetCSystem()->GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
+		cObject->SetCSystemData(&(mainSystem.GetCSystem().GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
 		object = new MainObjectGenericODE1(); //new main object
 		((MainObjectGenericODE1*)object)->SetCObjectGenericODE1(cObject);
 		VisualizationObjectGenericODE1* vObject = new VisualizationObjectGenericODE1();				
@@ -535,7 +537,7 @@ MainObject* MainObjectFactory::CreateMainObject(MainSystem& mainSystem, STDstrin
 	else if (objectType == "KinematicTree")
 	{
 		CObjectKinematicTree* cObject = new CObjectKinematicTree();
-		cObject->SetCSystemData(&(mainSystem.GetCSystem()->GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
+		cObject->SetCSystemData(&(mainSystem.GetCSystem().GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
 		object = new MainObjectKinematicTree(); //new main object
 		((MainObjectKinematicTree*)object)->SetCObjectKinematicTree(cObject);
 		VisualizationObjectKinematicTree* vObject = new VisualizationObjectKinematicTree();
@@ -544,7 +546,7 @@ MainObject* MainObjectFactory::CreateMainObject(MainSystem& mainSystem, STDstrin
 	else if (objectType == "FFRF")
 	{
 		CObjectFFRF* cObject = new CObjectFFRF();
-		cObject->SetCSystemData(&(mainSystem.GetCSystem()->GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
+		cObject->SetCSystemData(&(mainSystem.GetCSystem().GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
 		object = new MainObjectFFRF(); //new main object
 		((MainObjectFFRF*)object)->SetCObjectFFRF(cObject);
 		VisualizationObjectFFRF* vObject = new VisualizationObjectFFRF();				
@@ -553,7 +555,7 @@ MainObject* MainObjectFactory::CreateMainObject(MainSystem& mainSystem, STDstrin
 	else if (objectType == "FFRFreducedOrder")
 	{
 		CObjectFFRFreducedOrder* cObject = new CObjectFFRFreducedOrder();
-		cObject->SetCSystemData(&(mainSystem.GetCSystem()->GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
+		cObject->SetCSystemData(&(mainSystem.GetCSystem().GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
 		object = new MainObjectFFRFreducedOrder(); //new main object
 		((MainObjectFFRFreducedOrder*)object)->SetCObjectFFRFreducedOrder(cObject);
 		VisualizationObjectFFRFreducedOrder* vObject = new VisualizationObjectFFRFreducedOrder();				
@@ -562,7 +564,7 @@ MainObject* MainObjectFactory::CreateMainObject(MainSystem& mainSystem, STDstrin
 	else if (objectType == "Ground")
 	{
 		CObjectGround* cObject = new CObjectGround();								
-		cObject->SetCSystemData(&(mainSystem.GetCSystem()->GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
+		cObject->SetCSystemData(&(mainSystem.GetCSystem().GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
 		object = new MainObjectGround(); //new main object
 		((MainObjectGround*)object)->SetCObjectGround(cObject);
 		VisualizationObjectGround* vObject = new VisualizationObjectGround();				
@@ -573,7 +575,7 @@ MainObject* MainObjectFactory::CreateMainObject(MainSystem& mainSystem, STDstrin
 	{
 
 		CObjectANCFCable2D* cObject = new CObjectANCFCable2D();
-		cObject->SetCSystemData(&(mainSystem.GetCSystem()->GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
+		cObject->SetCSystemData(&(mainSystem.GetCSystem().GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
 		object = new MainObjectANCFCable2D(); //new main object
 		((MainObjectANCFCable2D*)object)->SetCObjectANCFCable2D(cObject);
 		VisualizationObjectANCFCable2D* vObject = new VisualizationObjectANCFCable2D();
@@ -583,7 +585,7 @@ MainObject* MainObjectFactory::CreateMainObject(MainSystem& mainSystem, STDstrin
 	{
 
 		CObjectANCFCable* cObject = new CObjectANCFCable();
-		cObject->SetCSystemData(&(mainSystem.GetCSystem()->GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
+		cObject->SetCSystemData(&(mainSystem.GetCSystem().GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
 		object = new MainObjectANCFCable(); //new main object
 		((MainObjectANCFCable*)object)->SetCObjectANCFCable(cObject);
 		VisualizationObjectANCFCable* vObject = new VisualizationObjectANCFCable();
@@ -593,7 +595,7 @@ MainObject* MainObjectFactory::CreateMainObject(MainSystem& mainSystem, STDstrin
 	{
 
 		CObjectALEANCFCable2D* cObject = new CObjectALEANCFCable2D();
-		cObject->SetCSystemData(&(mainSystem.GetCSystem()->GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
+		cObject->SetCSystemData(&(mainSystem.GetCSystem().GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
 		object = new MainObjectALEANCFCable2D(); //new main object
 		((MainObjectALEANCFCable2D*)object)->SetCObjectALEANCFCable2D(cObject);
 		VisualizationObjectALEANCFCable2D* vObject = new VisualizationObjectALEANCFCable2D();				
@@ -603,7 +605,7 @@ MainObject* MainObjectFactory::CreateMainObject(MainSystem& mainSystem, STDstrin
 	{
 
 		CObjectANCFBeam* cObject = new CObjectANCFBeam();
-		cObject->SetCSystemData(&(mainSystem.GetCSystem()->GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
+		cObject->SetCSystemData(&(mainSystem.GetCSystem().GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
 		object = new MainObjectANCFBeam(); //new main object
 		((MainObjectANCFBeam*)object)->SetCObjectANCFBeam(cObject);
 		VisualizationObjectANCFBeam* vObject = new VisualizationObjectANCFBeam();
@@ -612,7 +614,7 @@ MainObject* MainObjectFactory::CreateMainObject(MainSystem& mainSystem, STDstrin
 	else if (objectType == "BeamGeometricallyExact2D")
 	{
 		CObjectBeamGeometricallyExact2D* cObject = new CObjectBeamGeometricallyExact2D();
-		cObject->SetCSystemData(&(mainSystem.GetCSystem()->GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
+		cObject->SetCSystemData(&(mainSystem.GetCSystem().GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
 		object = new MainObjectBeamGeometricallyExact2D(); //new main object
 		((MainObjectBeamGeometricallyExact2D*)object)->SetCObjectBeamGeometricallyExact2D(cObject);
 		VisualizationObjectBeamGeometricallyExact2D* vObject = new VisualizationObjectBeamGeometricallyExact2D();
@@ -621,7 +623,7 @@ MainObject* MainObjectFactory::CreateMainObject(MainSystem& mainSystem, STDstrin
 	else if (objectType == "BeamGeometricallyExact")
 	{
 		CObjectBeamGeometricallyExact* cObject = new CObjectBeamGeometricallyExact();
-		cObject->SetCSystemData(&(mainSystem.GetCSystem()->GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
+		cObject->SetCSystemData(&(mainSystem.GetCSystem().GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
 		object = new MainObjectBeamGeometricallyExact(); //new main object
 		((MainObjectBeamGeometricallyExact*)object)->SetCObjectBeamGeometricallyExact(cObject);
 		VisualizationObjectBeamGeometricallyExact* vObject = new VisualizationObjectBeamGeometricallyExact();
@@ -632,7 +634,7 @@ MainObject* MainObjectFactory::CreateMainObject(MainSystem& mainSystem, STDstrin
 	else if (objectType == "ConnectorSpringDamper")
 	{
 		CObjectConnectorSpringDamper* cObject = new CObjectConnectorSpringDamper();
-		cObject->SetCSystemData(&(mainSystem.GetCSystem()->GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
+		cObject->SetCSystemData(&(mainSystem.GetCSystem().GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
 		object = new MainObjectConnectorSpringDamper(); //new main object
 		((MainObjectConnectorSpringDamper*)object)->SetCObjectConnectorSpringDamper(cObject);
 		VisualizationObjectConnectorSpringDamper* vObject = new VisualizationObjectConnectorSpringDamper();
@@ -641,7 +643,7 @@ MainObject* MainObjectFactory::CreateMainObject(MainSystem& mainSystem, STDstrin
 	else if (objectType == "ConnectorGravity")
 	{
 		CObjectConnectorGravity* cObject = new CObjectConnectorGravity();
-		cObject->SetCSystemData(&(mainSystem.GetCSystem()->GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
+		cObject->SetCSystemData(&(mainSystem.GetCSystem().GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
 		object = new MainObjectConnectorGravity(); //new main object
 		((MainObjectConnectorGravity*)object)->SetCObjectConnectorGravity(cObject);
 		VisualizationObjectConnectorGravity* vObject = new VisualizationObjectConnectorGravity();
@@ -650,7 +652,7 @@ MainObject* MainObjectFactory::CreateMainObject(MainSystem& mainSystem, STDstrin
 	else if (objectType == "ConnectorHydraulicActuatorSimple")
 	{
 	CObjectConnectorHydraulicActuatorSimple* cObject = new CObjectConnectorHydraulicActuatorSimple();
-	cObject->SetCSystemData(&(mainSystem.GetCSystem()->GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
+	cObject->SetCSystemData(&(mainSystem.GetCSystem().GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
 	object = new MainObjectConnectorHydraulicActuatorSimple(); //new main object
 	((MainObjectConnectorHydraulicActuatorSimple*)object)->SetCObjectConnectorHydraulicActuatorSimple(cObject);
 	VisualizationObjectConnectorHydraulicActuatorSimple* vObject = new VisualizationObjectConnectorHydraulicActuatorSimple();
@@ -659,7 +661,7 @@ MainObject* MainObjectFactory::CreateMainObject(MainSystem& mainSystem, STDstrin
 	else if (objectType == "ConnectorReevingSystemSprings")
 	{
 	CObjectConnectorReevingSystemSprings* cObject = new CObjectConnectorReevingSystemSprings();
-	cObject->SetCSystemData(&(mainSystem.GetCSystem()->GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
+	cObject->SetCSystemData(&(mainSystem.GetCSystem().GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
 	object = new MainObjectConnectorReevingSystemSprings(); //new main object
 	((MainObjectConnectorReevingSystemSprings*)object)->SetCObjectConnectorReevingSystemSprings(cObject);
 	VisualizationObjectConnectorReevingSystemSprings* vObject = new VisualizationObjectConnectorReevingSystemSprings();
@@ -668,7 +670,7 @@ MainObject* MainObjectFactory::CreateMainObject(MainSystem& mainSystem, STDstrin
 	else if (objectType == "ConnectorCartesianSpringDamper")
 	{
 		CObjectConnectorCartesianSpringDamper* cObject = new CObjectConnectorCartesianSpringDamper();
-		cObject->SetCSystemData(&(mainSystem.GetCSystem()->GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
+		cObject->SetCSystemData(&(mainSystem.GetCSystem().GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
 		object = new MainObjectConnectorCartesianSpringDamper(); //new main object
 		((MainObjectConnectorCartesianSpringDamper*)object)->SetCObjectConnectorCartesianSpringDamper(cObject);
 		VisualizationObjectConnectorCartesianSpringDamper* vObject = new VisualizationObjectConnectorCartesianSpringDamper();				
@@ -677,7 +679,7 @@ MainObject* MainObjectFactory::CreateMainObject(MainSystem& mainSystem, STDstrin
 	else if (objectType == "ConnectorRigidBodySpringDamper")
 	{
 		CObjectConnectorRigidBodySpringDamper* cObject = new CObjectConnectorRigidBodySpringDamper();
-		cObject->SetCSystemData(&(mainSystem.GetCSystem()->GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
+		cObject->SetCSystemData(&(mainSystem.GetCSystem().GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
 		object = new MainObjectConnectorRigidBodySpringDamper(); //new main object
 		((MainObjectConnectorRigidBodySpringDamper*)object)->SetCObjectConnectorRigidBodySpringDamper(cObject);
 		VisualizationObjectConnectorRigidBodySpringDamper* vObject = new VisualizationObjectConnectorRigidBodySpringDamper();				
@@ -686,7 +688,7 @@ MainObject* MainObjectFactory::CreateMainObject(MainSystem& mainSystem, STDstrin
 	else if (objectType == "ConnectorLinearSpringDamper")
 	{
 	CObjectConnectorLinearSpringDamper* cObject = new CObjectConnectorLinearSpringDamper();
-	cObject->SetCSystemData(&(mainSystem.GetCSystem()->GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
+	cObject->SetCSystemData(&(mainSystem.GetCSystem().GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
 	object = new MainObjectConnectorLinearSpringDamper(); //new main object
 	((MainObjectConnectorLinearSpringDamper*)object)->SetCObjectConnectorLinearSpringDamper(cObject);
 	VisualizationObjectConnectorLinearSpringDamper* vObject = new VisualizationObjectConnectorLinearSpringDamper();
@@ -695,7 +697,7 @@ MainObject* MainObjectFactory::CreateMainObject(MainSystem& mainSystem, STDstrin
 	else if (objectType == "ConnectorTorsionalSpringDamper")
 	{
 	CObjectConnectorTorsionalSpringDamper* cObject = new CObjectConnectorTorsionalSpringDamper();
-	cObject->SetCSystemData(&(mainSystem.GetCSystem()->GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
+	cObject->SetCSystemData(&(mainSystem.GetCSystem().GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
 	object = new MainObjectConnectorTorsionalSpringDamper(); //new main object
 	((MainObjectConnectorTorsionalSpringDamper*)object)->SetCObjectConnectorTorsionalSpringDamper(cObject);
 	VisualizationObjectConnectorTorsionalSpringDamper* vObject = new VisualizationObjectConnectorTorsionalSpringDamper();
@@ -704,7 +706,7 @@ MainObject* MainObjectFactory::CreateMainObject(MainSystem& mainSystem, STDstrin
 	else if (objectType == "ConnectorCoordinateSpringDamper")
 	{
 		CObjectConnectorCoordinateSpringDamper* cObject = new CObjectConnectorCoordinateSpringDamper();
-		cObject->SetCSystemData(&(mainSystem.GetCSystem()->GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
+		cObject->SetCSystemData(&(mainSystem.GetCSystem().GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
 		object = new MainObjectConnectorCoordinateSpringDamper(); //new main object
 		((MainObjectConnectorCoordinateSpringDamper*)object)->SetCObjectConnectorCoordinateSpringDamper(cObject);
 		VisualizationObjectConnectorCoordinateSpringDamper* vObject = new VisualizationObjectConnectorCoordinateSpringDamper();				
@@ -713,7 +715,7 @@ MainObject* MainObjectFactory::CreateMainObject(MainSystem& mainSystem, STDstrin
 	else if (objectType == "ConnectorCoordinateSpringDamperExt")
 	{
 		CObjectConnectorCoordinateSpringDamperExt* cObject = new CObjectConnectorCoordinateSpringDamperExt();
-		cObject->SetCSystemData(&(mainSystem.GetCSystem()->GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
+		cObject->SetCSystemData(&(mainSystem.GetCSystem().GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
 		object = new MainObjectConnectorCoordinateSpringDamperExt(); //new main object
 		((MainObjectConnectorCoordinateSpringDamperExt*)object)->SetCObjectConnectorCoordinateSpringDamperExt(cObject);
 		VisualizationObjectConnectorCoordinateSpringDamperExt* vObject = new VisualizationObjectConnectorCoordinateSpringDamperExt();				
@@ -722,7 +724,7 @@ MainObject* MainObjectFactory::CreateMainObject(MainSystem& mainSystem, STDstrin
 	else if (objectType == "ConnectorDistance")
 	{
 		CObjectConnectorDistance* cObject = new CObjectConnectorDistance();							
-		cObject->SetCSystemData(&(mainSystem.GetCSystem()->GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
+		cObject->SetCSystemData(&(mainSystem.GetCSystem().GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
 		object = new MainObjectConnectorDistance(); //new main object
 		((MainObjectConnectorDistance*)object)->SetCObjectConnectorDistance(cObject);
 		VisualizationObjectConnectorDistance* vObject = new VisualizationObjectConnectorDistance();				
@@ -731,7 +733,7 @@ MainObject* MainObjectFactory::CreateMainObject(MainSystem& mainSystem, STDstrin
 	else if (objectType == "ConnectorCoordinate")
 	{
 	CObjectConnectorCoordinate* cObject = new CObjectConnectorCoordinate();
-	cObject->SetCSystemData(&(mainSystem.GetCSystem()->GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
+	cObject->SetCSystemData(&(mainSystem.GetCSystem().GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
 	object = new MainObjectConnectorCoordinate(); //new main object
 	((MainObjectConnectorCoordinate*)object)->SetCObjectConnectorCoordinate(cObject);
 	VisualizationObjectConnectorCoordinate* vObject = new VisualizationObjectConnectorCoordinate();				
@@ -740,7 +742,7 @@ MainObject* MainObjectFactory::CreateMainObject(MainSystem& mainSystem, STDstrin
 	else if (objectType == "ConnectorCoordinateVector")
 	{
 	CObjectConnectorCoordinateVector* cObject = new CObjectConnectorCoordinateVector();
-	cObject->SetCSystemData(&(mainSystem.GetCSystem()->GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
+	cObject->SetCSystemData(&(mainSystem.GetCSystem().GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
 	object = new MainObjectConnectorCoordinateVector(); //new main object
 	((MainObjectConnectorCoordinateVector*)object)->SetCObjectConnectorCoordinateVector(cObject);
 	VisualizationObjectConnectorCoordinateVector* vObject = new VisualizationObjectConnectorCoordinateVector();				
@@ -749,7 +751,7 @@ MainObject* MainObjectFactory::CreateMainObject(MainSystem& mainSystem, STDstrin
 	else if (objectType == "ConnectorRollingDiscPenalty")
 	{
 	CObjectConnectorRollingDiscPenalty* cObject = new CObjectConnectorRollingDiscPenalty();
-	cObject->SetCSystemData(&(mainSystem.GetCSystem()->GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
+	cObject->SetCSystemData(&(mainSystem.GetCSystem().GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
 	object = new MainObjectConnectorRollingDiscPenalty(); //new main object
 	((MainObjectConnectorRollingDiscPenalty*)object)->SetCObjectConnectorRollingDiscPenalty(cObject);
 	VisualizationObjectConnectorRollingDiscPenalty* vObject = new VisualizationObjectConnectorRollingDiscPenalty();
@@ -758,7 +760,7 @@ MainObject* MainObjectFactory::CreateMainObject(MainSystem& mainSystem, STDstrin
 	else if (objectType == "ContactConvexRoll")
 	{
 	CObjectContactConvexRoll* cObject = new CObjectContactConvexRoll();
-	cObject->SetCSystemData(&(mainSystem.GetCSystem()->GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
+	cObject->SetCSystemData(&(mainSystem.GetCSystem().GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
 	object = new MainObjectContactConvexRoll(); //new main object
 	((MainObjectContactConvexRoll*)object)->SetCObjectContactConvexRoll(cObject);
 	VisualizationObjectContactConvexRoll* vObject = new VisualizationObjectContactConvexRoll();
@@ -767,7 +769,7 @@ MainObject* MainObjectFactory::CreateMainObject(MainSystem& mainSystem, STDstrin
 	else if (objectType == "ContactCoordinate")
 	{
 		CObjectContactCoordinate* cObject = new CObjectContactCoordinate();
-		cObject->SetCSystemData(&(mainSystem.GetCSystem()->GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
+		cObject->SetCSystemData(&(mainSystem.GetCSystem().GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
 		object = new MainObjectContactCoordinate(); //new main object
 		((MainObjectContactCoordinate*)object)->SetCObjectContactCoordinate(cObject);
 		VisualizationObjectContactCoordinate* vObject = new VisualizationObjectContactCoordinate();				
@@ -776,7 +778,7 @@ MainObject* MainObjectFactory::CreateMainObject(MainSystem& mainSystem, STDstrin
 	else if (objectType == "ContactCircleCable2D")
 	{
 		CObjectContactCircleCable2D* cObject = new CObjectContactCircleCable2D();
-		cObject->SetCSystemData(&(mainSystem.GetCSystem()->GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
+		cObject->SetCSystemData(&(mainSystem.GetCSystem().GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
 		object = new MainObjectContactCircleCable2D(); //new main object
 		((MainObjectContactCircleCable2D*)object)->SetCObjectContactCircleCable2D(cObject);
 		VisualizationObjectContactCircleCable2D* vObject = new VisualizationObjectContactCircleCable2D();				
@@ -785,7 +787,7 @@ MainObject* MainObjectFactory::CreateMainObject(MainSystem& mainSystem, STDstrin
 	else if (objectType == "ContactFrictionCircleCable2D")
 	{
 	CObjectContactFrictionCircleCable2D* cObject = new CObjectContactFrictionCircleCable2D();
-	cObject->SetCSystemData(&(mainSystem.GetCSystem()->GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
+	cObject->SetCSystemData(&(mainSystem.GetCSystem().GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
 	object = new MainObjectContactFrictionCircleCable2D(); //new main object
 	((MainObjectContactFrictionCircleCable2D*)object)->SetCObjectContactFrictionCircleCable2D(cObject);
 	VisualizationObjectContactFrictionCircleCable2D* vObject = new VisualizationObjectContactFrictionCircleCable2D();
@@ -794,7 +796,7 @@ MainObject* MainObjectFactory::CreateMainObject(MainSystem& mainSystem, STDstrin
 	else if (objectType == "ContactFrictionCircleCable2DOld")
 	{
 	CObjectContactFrictionCircleCable2DOld* cObject = new CObjectContactFrictionCircleCable2DOld();
-	cObject->SetCSystemData(&(mainSystem.GetCSystem()->GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
+	cObject->SetCSystemData(&(mainSystem.GetCSystem().GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
 	object = new MainObjectContactFrictionCircleCable2DOld(); //new main object
 	((MainObjectContactFrictionCircleCable2DOld*)object)->SetCObjectContactFrictionCircleCable2DOld(cObject);
 	VisualizationObjectContactFrictionCircleCable2DOld* vObject = new VisualizationObjectContactFrictionCircleCable2DOld();
@@ -803,7 +805,7 @@ MainObject* MainObjectFactory::CreateMainObject(MainSystem& mainSystem, STDstrin
 	else if (objectType == "JointGeneric")
 	{
 	CObjectJointGeneric* cObject = new CObjectJointGeneric();
-	cObject->SetCSystemData(&(mainSystem.GetCSystem()->GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
+	cObject->SetCSystemData(&(mainSystem.GetCSystem().GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
 	object = new MainObjectJointGeneric(); //new main object
 	((MainObjectJointGeneric*)object)->SetCObjectJointGeneric(cObject);
 	VisualizationObjectJointGeneric* vObject = new VisualizationObjectJointGeneric();
@@ -812,7 +814,7 @@ MainObject* MainObjectFactory::CreateMainObject(MainSystem& mainSystem, STDstrin
 	else if (objectType == "JointRevoluteZ")
 	{
 	CObjectJointRevoluteZ* cObject = new CObjectJointRevoluteZ();
-	cObject->SetCSystemData(&(mainSystem.GetCSystem()->GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
+	cObject->SetCSystemData(&(mainSystem.GetCSystem().GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
 	object = new MainObjectJointRevoluteZ(); //new main object
 	((MainObjectJointRevoluteZ*)object)->SetCObjectJointRevoluteZ(cObject);
 	VisualizationObjectJointRevoluteZ* vObject = new VisualizationObjectJointRevoluteZ();
@@ -821,7 +823,7 @@ MainObject* MainObjectFactory::CreateMainObject(MainSystem& mainSystem, STDstrin
 	else if (objectType == "JointPrismaticX")
 	{
 	CObjectJointPrismaticX* cObject = new CObjectJointPrismaticX();
-	cObject->SetCSystemData(&(mainSystem.GetCSystem()->GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
+	cObject->SetCSystemData(&(mainSystem.GetCSystem().GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
 	object = new MainObjectJointPrismaticX(); //new main object
 	((MainObjectJointPrismaticX*)object)->SetCObjectJointPrismaticX(cObject);
 	VisualizationObjectJointPrismaticX* vObject = new VisualizationObjectJointPrismaticX();
@@ -830,7 +832,7 @@ MainObject* MainObjectFactory::CreateMainObject(MainSystem& mainSystem, STDstrin
 	else if (objectType == "JointSpherical")
 	{
 	CObjectJointSpherical* cObject = new CObjectJointSpherical();
-	cObject->SetCSystemData(&(mainSystem.GetCSystem()->GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
+	cObject->SetCSystemData(&(mainSystem.GetCSystem().GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
 	object = new MainObjectJointSpherical(); //new main object
 	((MainObjectJointSpherical*)object)->SetCObjectJointSpherical(cObject);
 	VisualizationObjectJointSpherical* vObject = new VisualizationObjectJointSpherical();				
@@ -839,7 +841,7 @@ MainObject* MainObjectFactory::CreateMainObject(MainSystem& mainSystem, STDstrin
 	else if (objectType == "JointRollingDisc")
 	{
 	CObjectJointRollingDisc* cObject = new CObjectJointRollingDisc();
-	cObject->SetCSystemData(&(mainSystem.GetCSystem()->GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
+	cObject->SetCSystemData(&(mainSystem.GetCSystem().GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
 	object = new MainObjectJointRollingDisc(); //new main object
 	((MainObjectJointRollingDisc*)object)->SetCObjectJointRollingDisc(cObject);
 	VisualizationObjectJointRollingDisc* vObject = new VisualizationObjectJointRollingDisc();				
@@ -848,7 +850,7 @@ MainObject* MainObjectFactory::CreateMainObject(MainSystem& mainSystem, STDstrin
 	else if (objectType == "JointRevolute2D")
 	{
 	CObjectJointRevolute2D* cObject = new CObjectJointRevolute2D();
-	cObject->SetCSystemData(&(mainSystem.GetCSystem()->GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
+	cObject->SetCSystemData(&(mainSystem.GetCSystem().GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
 	object = new MainObjectJointRevolute2D(); //new main object
 	((MainObjectJointRevolute2D*)object)->SetCObjectJointRevolute2D(cObject);
 	VisualizationObjectJointRevolute2D* vObject = new VisualizationObjectJointRevolute2D();				
@@ -857,7 +859,7 @@ MainObject* MainObjectFactory::CreateMainObject(MainSystem& mainSystem, STDstrin
 	else if (objectType == "JointPrismatic2D")
 	{
 		CObjectJointPrismatic2D* cObject = new CObjectJointPrismatic2D();
-		cObject->SetCSystemData(&(mainSystem.GetCSystem()->GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
+		cObject->SetCSystemData(&(mainSystem.GetCSystem().GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
 		object = new MainObjectJointPrismatic2D(); //new main object
 		((MainObjectJointPrismatic2D*)object)->SetCObjectJointPrismatic2D(cObject);
 		VisualizationObjectJointPrismatic2D* vObject = new VisualizationObjectJointPrismatic2D();				
@@ -866,7 +868,7 @@ MainObject* MainObjectFactory::CreateMainObject(MainSystem& mainSystem, STDstrin
 	else if (objectType == "JointSliding2D")
 	{
 		CObjectJointSliding2D* cObject = new CObjectJointSliding2D();
-		cObject->SetCSystemData(&(mainSystem.GetCSystem()->GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
+		cObject->SetCSystemData(&(mainSystem.GetCSystem().GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
 		object = new MainObjectJointSliding2D(); //new main object
 		((MainObjectJointSliding2D*)object)->SetCObjectJointSliding2D(cObject);
 		VisualizationObjectJointSliding2D* vObject = new VisualizationObjectJointSliding2D();				
@@ -875,7 +877,7 @@ MainObject* MainObjectFactory::CreateMainObject(MainSystem& mainSystem, STDstrin
 	else if (objectType == "JointALEMoving2D")
 	{
 		CObjectJointALEMoving2D* cObject = new CObjectJointALEMoving2D();
-		cObject->SetCSystemData(&(mainSystem.GetCSystem()->GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
+		cObject->SetCSystemData(&(mainSystem.GetCSystem().GetSystemData()));		//add CSystemData* to objects (workaround, will be removed)
 		object = new MainObjectJointALEMoving2D(); //new main object
 		((MainObjectJointALEMoving2D*)object)->SetCObjectJointALEMoving2D(cObject);
 		VisualizationObjectJointALEMoving2D* vObject = new VisualizationObjectJointALEMoving2D();				
@@ -912,7 +914,7 @@ Index MainObjectFactory::AddMainObject(MainSystem& mainSystem, const py::dict& d
 				if (mainObject != NULL)
 				{
 					mainObject->SetWithDictionary(d);
-					mainSystem.GetCSystem()->GetSystemData().GetCObjects().Append(mainObject->GetCObject());
+					mainSystem.GetCSystem().GetSystemData().GetCObjects().Append(mainObject->GetCObject());
 					mainSystem.GetVisualizationSystem().GetVisualizationSystemData().GetVisualizationObjects().Append(mainObject->GetVisualizationObject());
 					return mainSystem.GetMainSystemData().GetMainObjects().Append(mainObject);
 				}
@@ -1098,7 +1100,7 @@ Index MainObjectFactory::AddMainMarker(MainSystem& mainSystem, const py::dict& d
 				if (mainMarker != NULL)
 				{
 					mainMarker->SetWithDictionary(d);
-					mainSystem.GetCSystem()->GetSystemData().GetCMarkers().Append(mainMarker->GetCMarker());
+					mainSystem.GetCSystem().GetSystemData().GetCMarkers().Append(mainMarker->GetCMarker());
 					mainSystem.GetVisualizationSystem().GetVisualizationSystemData().GetVisualizationMarkers().Append(mainMarker->GetVisualizationMarker());
 					return mainSystem.GetMainSystemData().GetMainMarkers().Append(mainMarker);
 				}
@@ -1195,7 +1197,7 @@ Index MainObjectFactory::AddMainLoad(MainSystem& mainSystem, const py::dict& d)
 				if (mainLoad != NULL)
 				{
 					mainLoad->SetWithDictionary(d);
-					mainSystem.GetCSystem()->GetSystemData().GetCLoads().Append(mainLoad->GetCLoad());
+					mainSystem.GetCSystem().GetSystemData().GetCLoads().Append(mainLoad->GetCLoad());
 					mainSystem.GetVisualizationSystem().GetVisualizationSystemData().GetVisualizationLoads().Append(mainLoad->GetVisualizationLoad());
 					return mainSystem.GetMainSystemData().GetMainLoads().Append(mainLoad);
 				}
@@ -1325,7 +1327,7 @@ Index MainObjectFactory::AddMainSensor(MainSystem& mainSystem, const py::dict& d
 				if (mainSensor != NULL)
 				{
 					mainSensor->SetWithDictionary(d);
-					mainSystem.GetCSystem()->GetSystemData().GetCSensors().Append(mainSensor->GetCSensor());
+					mainSystem.GetCSystem().GetSystemData().GetCSensors().Append(mainSensor->GetCSensor());
 					mainSystem.GetVisualizationSystem().GetVisualizationSystemData().GetVisualizationSensors().Append(mainSensor->GetVisualizationSensor());
 					return mainSystem.GetMainSystemData().GetMainSensors().Append(mainSensor);
 				}

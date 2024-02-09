@@ -1,48 +1,48 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  Stiff flyball governor (iftomm benchmark problem) extended to compliant case
+# Details:  Stiff flyball governor with rigid and compliant joints (IFToMM benchmark problem);
 #           Ref.: https://www.iftomm-multibody.org/benchmark/problem/Stiff_flyball_governor/
 #           This version uses the newer C++ implemented Lie group solvers
+#
+# Model:    Flyball governor as redundant multibody system
 #
 # Author:   Johannes Gerstmayr, Stefan Holzinger
 # Date:     2020-02-13
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
+# *clean example*
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-import sys
-sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
-
+## import libaries
 import exudyn as exu
 from exudyn.itemInterface import *
 from exudyn.utilities import *
 from exudyn.graphicsDataUtilities import *
-# from exudyn.lieGroupBasics import *
-# from exudyn.lieGroupIntegration import *
 
-#from modelUnitTests import ExudynTestStructure, exudynTestGlobals
 import numpy as np
 from numpy import linalg as LA
 
+## set up MainSystem mbs
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
-useLieGroup = True
+## 
+useCompliantCase = False
+useLieGroup = useCompliantCase
 
+
+## create background graphics and ground object
 color = [0.1,0.1,0.8,1]
 r = 0.2 #radius
 L = 1   #length
 
-
 background0 = GraphicsDataRectangle(-L,-L,L,L,color)
 oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0], visualization=VObjectGround(graphicsData= [background0])))
 
-
-
-###############################################################################
-## body dimensions according to reference in m
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+## set up body dimensions according to reference in m
 
 # shaft
 lengthShaft = 1     #z
@@ -64,9 +64,7 @@ initAngleRod = np.deg2rad(60)
 # initial angular velocity of shaft and slider
 omega0 = [0., 0., 0.16*2*np.pi]
 
-
-
-###############################################################################
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ## body masses according to reference in kg
 
 density = 3000
@@ -78,11 +76,11 @@ mMassPoint    = 5
 mRodMassPoint = mRod + mMassPoint
 
 
-###############################################################################
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # gravity
 g = [0,0,-9.81]
 
-#setup rod along x-direction
+## setup inertia for rod along x-direction
 iRod = InertiaCuboid(density=density, sideLengths=[lengthRod,widthRod,0.01])
 iMass = InertiaMassPoint(mass=mMassPoint).Translated([lengthRod/2,0,0])
 iRodSum = iRod+iMass
@@ -91,43 +89,39 @@ iRodSum = iRod+iMass
 refRod = -iRodSum.com
 iRodSum = iRodSum.Translated(refRod)
 
-#exu.Print("refRod=", refRod)
-#exu.Print("iRodSum=", iRodSum)
-
 if useLieGroup:
     nodeType = exu.NodeType.RotationRotationVector
 else:
     nodeType = exu.NodeType.RotationEulerParameters
-    #nodeType = exu.NodeType.RotationRxyz
 
 
 nRigidBodyNodes = 4
 #nRB=[-1]*nRigidBodyNodes #final node numbers
 
+## create inertia for shaft and slider
 inertiaList=[InertiaCuboid(density=density, sideLengths=[widthShaft,widthShaft,lengthShaft]),
              InertiaCuboid(density=density, sideLengths=[dimSlider,dimSlider,dimSlider]),
              iRodSum, iRodSum]
 
+## set up reference position list
 refPosList=[[0,0,lengthShaft/2], # shaft
             [0,0,sSlider], # slider
             [ xAB/2 + (lengthRod/2-refRod[0])*np.cos(beta0), 0, lengthShaft - (lengthRod/2-refRod[0])*np.sin(beta0)], # rodAC
             [-xAB/2 - (lengthRod/2-refRod[0])*np.cos(beta0), 0, lengthShaft - (lengthRod/2-refRod[0])*np.sin(beta0)]] # rodBD
 
+## set up initial velocity vector list
 refVelList = [[0., 0., 0.], # shaft
               [0., 0., 0.], # slider
-#              np.dot(Skew(omega0), np.array([lengthRod/2-refRod[0], 0, 0])), # rodAC
-#              np.dot(Skew(omega0), np.array([-(lengthRod/2-refRod[0]), 0, 0]))] # rodBD
               [0,omega0[2]*refPosList[2][0],0], # rodAC
               [0,omega0[2]*refPosList[3][0],0]] # rodBD
 
-#global initial angular velocities
+## set up initial (global) angular velocity vector list
 refAngularVelList = [omega0,     # shaft
                      omega0,     # slider
                      omega0,    # rodAC
                      omega0]    # rodBD
 
-#GraphicsDataOrthoCube(xMin, yMin, zMin, xMax, yMax, zMax, color=[0.,0.,0.,1.]): 
-#graphicsRod    = GraphicsDataOrthoCube(-lengthRod/2,-widthRod/2,-widthRod/2, lengthRod/2,widthRod/2,widthRod/2, [0.1,0.1,0.8,1])
+## create graphics objects for bodies
 graphicsRodAC  = GraphicsDataOrthoCube(-(lengthRod/2-refRod[0]),-widthRod/2,-widthRod/2, lengthRod/2+refRod[0],widthRod/2,widthRod/2, [0.1,0.1,0.8,1])
 graphicsRodBD  = GraphicsDataOrthoCube(-lengthRod/2-refRod[0],-widthRod/2,-widthRod/2, lengthRod/2-refRod[0],widthRod/2,widthRod/2, [0.1,0.1,0.8,1])
 graphicsSlider = GraphicsDataOrthoCube(-dimSlider/2,-dimSlider/2,-dimSlider/2, dimSlider/2,dimSlider/2,dimSlider/2, [0.1,0.1,0.8,1])
@@ -188,7 +182,7 @@ for i in range(nRigidBodyNodes):
 
 
 
-###############################################################################
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ## spring-damper parameters for connecting the rods with the slider
 
 # spring
@@ -239,7 +233,7 @@ markerGround = mbs.AddMarker(MarkerBodyRigid(name='markerGround', bodyNumber=oGr
 
 nj2=-1
 
-if False:
+if not useCompliantCase:
     
     mbs.AddObject(GenericJoint(markerNumbers=[markerGround, markerShaftGround], constrainedAxes=[1,1,1,1,1,0],
                                 visualization=VObjectJointGeneric(axesRadius=0.01, axesLength=0.1)))
@@ -284,7 +278,7 @@ mbs.AddSensor(SensorNode(nodeNumber = nodeNumberList[2], fileName='solution/flyb
 mbs.AddSensor(SensorNode(nodeNumber = nodeNumberList[0], fileName='solution/flyballShaftAngularVelocity.txt',outputVariableType=exu.OutputVariableType.AngularVelocity))
 
 
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 mbs.Assemble()
 
 
@@ -321,12 +315,6 @@ else:
     simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations = False
 
     
-# if True:
-# #if nodeType == exu.NodeType.RotationRotationVector:
-#     LieGroupExplicitRKInitialize(mbs)
-#     dynamicSolver.SetUserFunctionNewton(mbs, UserFunctionNewtonLieGroupRK4)
-
-# dynamicSolver.SolveSystem(mbs, simulationSettings)
 solverType = exu.DynamicSolverType.TrapezoidalIndex2
 if useLieGroup:
     solverType = exu.DynamicSolverType.RK44
@@ -337,7 +325,6 @@ print(mbs.sys['dynamicSolver'].it)
 
 
 if useGraphics: #only start graphics once, but after background is set
-    #SC.WaitForRenderEngineStopFlag()
     exu.StopRenderer() #safely close rendering window!
 
 
@@ -356,8 +343,6 @@ for i in range(2):
 result = mbs.GetNodeOutput(2,exu.OutputVariableType.Velocity)[1] #y-velocity of bar
 exu.Print('solution of stiffFlyballGovernor=',result)
 
-# exudynTestGlobals.testError = result - (0.8962488779114738) #2021-01-04: 0.015213599619996604 (Python3.7)
-
 
 plist=[]
 plist += [mbs.GetObjectOutputBody(objectNumber = bodyNumberList[2], variableType = exu.OutputVariableType.Velocity, localPosition = list(pointARodAC), configuration =
@@ -366,8 +351,6 @@ plist += [mbs.GetObjectOutputBody(objectNumber = bodyNumberList[2], variableType
 exu.ConfigurationType.Current)]
 plist += [mbs.GetObjectOutputBody(objectNumber = bodyNumberList[3], variableType = exu.OutputVariableType.Velocity, localPosition = pointARodBD, configuration =
 exu.ConfigurationType.Current)]
-# for i in range(3):
-#     exu.Print("vX",i,"=",plist[i])
 
 #locU = mbs.GetObjectOutput(objectNumber = nj2, variableType =exu.OutputVariableType.DisplacementLocal)
 #exu.Print('locU=', locU)

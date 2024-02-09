@@ -3,8 +3,8 @@
 #
 # Details:  This module contains robotics models; They can be imported by simply calling the functions,
 #           which return the according robot dictionary;
-#			the library is built on Denavit-Hartenberg Parameters and
-#			Homogeneous Transformations (HT) to describe transformations and coordinate systems
+#            the library is built on Denavit-Hartenberg Parameters and
+#            Homogeneous Transformations (HT) to describe transformations and coordinate systems
 #
 # Authors:   Martin Sereinig; Peter Manzl; Johannes Gerstmayr
 # Date:     2021-01-10
@@ -666,7 +666,7 @@ def LinkDictModDHKK2Robot(robotLinkDict, robotClass=None):
 #testing of module models
 if __name__ == '__main__':
 
-	#imports
+    #imports
     from exudyn.utilities import *
     from exudyn.rigidBodyUtilities import *
     from exudyn.graphicsDataUtilities import *

@@ -27,6 +27,7 @@
 //#include <pybind11/operators.h>
 #include <pybind11/numpy.h>			//interface to numpy
 //#include <pybind11/cast.h>		//
+#include <pybind11/functional.h>    //not sure if this is needed, but for safety as functions are converted here as well; for function handling ... otherwise gives a python error (no compilation error in C++ !)
 
 //typedef py::array_t<Real> PyNumpyArray; //PyNumpyArray is used at some places to avoid include of pybind
 
@@ -373,15 +374,43 @@ namespace EPyUtils {
 		{
 			if (py::cast<int>(pyObject) != 0) 
 			{ 
-				PyError(STDstring("Failed to convert PyFunction: must be either valid python function or 0, but got ")+EXUstd::ToString(pyObject)); 
+				PyError(STDstring("Failed to convert PyFunction: must be either valid Python function or 0, but got ")+EXUstd::ToString(pyObject)); 
 			}
 			return false; //this is a valid value, but no function (0-function pointer means empty function (in C++: nullptr))
 		}
 		else
 		{
-			PyError(STDstring("Failed to convert PyFunction: must be either valid py::function or int, but got ")+ EXUstd::ToString(pyObject));
+			PyError(STDstring("Failed to convert PyFunction: must be either valid Python function or int, but got ")+ EXUstd::ToString(pyObject));
 		}
 		return false;
+	}
+
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//! cast py::object to std::function; accept also zero
+	template<typename STDfunction>
+	STDfunction GetSTDfunction(const py::object& function, const char* info="GetSTDfunction")
+	{
+		if (py::isinstance<py::int_>(function))
+		{
+			Index num = py::cast<py::int_>(function);
+			if (num != 0)
+			{
+				CHECKandTHROWstring( (STDstring(info)+": parameter must be either a Python function or 0 but received: "+EXUstd::ToString(function)).c_str() );
+			}
+			else
+			{
+				return 0;
+			}
+		}
+		else if (py::isinstance<py::function>(function))
+
+		{
+			return py::cast<STDfunction>(function);
+		}
+		else
+		{
+			CHECKandTHROWstring((STDstring(info) + ": parameter must be either a Python function or 0 but received '" + EXUstd::ToString(function)+"'").c_str());
+		}
 	}
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

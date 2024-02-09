@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2023-12-07  19:56:09 (last modified)
+* @date         2024-02-03  15:37:36 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -109,9 +109,7 @@ public: // AUTO:
         cLoadForceVector->GetParameters().markerNumber = EPyUtils::GetMarkerIndexSafely(d["markerNumber"]); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(d, "loadVector", cLoadForceVector->GetParameters().loadVector); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "bodyFixed")) { cLoadForceVector->GetParameters().bodyFixed = py::cast<bool>(d["bodyFixed"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "loadVectorUserFunction")) { if (EPyUtils::CheckForValidFunction(d["loadVectorUserFunction"])) 
-            { cLoadForceVector->GetParameters().loadVectorUserFunction = py::cast<std::function<StdVector3D(const MainSystem&,Real,StdVector3D)>>((py::function)d["loadVectorUserFunction"]); /* AUTO:  read out dictionary and cast to C++ type*/}
-            else {cLoadForceVector->GetParameters().loadVectorUserFunction = 0;  /*AUTO: otherwise assign with zero!*/ }} 
+        if (EPyUtils::DictItemExists(d, "loadVectorUserFunction")) { cLoadForceVector->GetParameters().loadVectorUserFunction = d["loadVectorUserFunction"]; /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationLoadForceVector->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
     }
@@ -124,11 +122,7 @@ public: // AUTO:
         d["markerNumber"] = (MarkerIndex)cLoadForceVector->GetParameters().markerNumber; //! AUTO: cast variables into python (not needed for standard types) 
         d["loadVector"] = EPyUtils::SlimVector2NumPy(cLoadForceVector->GetParameters().loadVector); //! AUTO: cast variables into python (not needed for standard types) 
         d["bodyFixed"] = (bool)cLoadForceVector->GetParameters().bodyFixed; //! AUTO: cast variables into python (not needed for standard types) 
-        if (cLoadForceVector->GetParameters().loadVectorUserFunction)
-            {d["loadVectorUserFunction"] = (std::function<StdVector3D(const MainSystem&,Real,StdVector3D)>)cLoadForceVector->GetParameters().loadVectorUserFunction;}
-        else
-            {d["loadVectorUserFunction"] = 0;}
- //! AUTO: cast variables into python (not needed for standard types) 
+        d["loadVectorUserFunction"] = (py::object)cLoadForceVector->GetParameters().loadVectorUserFunction; //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationLoadForceVector->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         return d; 
@@ -141,7 +135,7 @@ public: // AUTO:
         else if (parameterName.compare("markerNumber") == 0) { return py::cast((MarkerIndex)cLoadForceVector->GetParameters().markerNumber);} //! AUTO: get parameter
         else if (parameterName.compare("loadVector") == 0) { return EPyUtils::SlimVector2NumPy(cLoadForceVector->GetParameters().loadVector);} //! AUTO: get parameter
         else if (parameterName.compare("bodyFixed") == 0) { return py::cast((bool)cLoadForceVector->GetParameters().bodyFixed);} //! AUTO: get parameter
-        else if (parameterName.compare("loadVectorUserFunction") == 0) { return py::cast((std::function<StdVector3D(const MainSystem&,Real,StdVector3D)>)cLoadForceVector->GetParameters().loadVectorUserFunction);} //! AUTO: get parameter
+        else if (parameterName.compare("loadVectorUserFunction") == 0) { return cLoadForceVector->GetParameters().loadVectorUserFunction.GetPythonDictionary();;} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationLoadForceVector->GetShow());} //! AUTO: get parameter
         else  {PyError(STDstring("LoadForceVector::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
         return py::object();
@@ -155,8 +149,7 @@ public: // AUTO:
         else if (parameterName.compare("markerNumber") == 0) { cLoadForceVector->GetParameters().markerNumber = EPyUtils::GetMarkerIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("loadVector") == 0) { EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(value, cLoadForceVector->GetParameters().loadVector); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("bodyFixed") == 0) { cLoadForceVector->GetParameters().bodyFixed = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("loadVectorUserFunction") == 0) { if (py::isinstance<py::function>(value)) {cLoadForceVector->GetParameters().loadVectorUserFunction = py::cast<std::function<StdVector3D(const MainSystem&,Real,StdVector3D)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/} else
-            if (!EPyUtils::IsPyTypeInteger(value) || (py::cast<int>(value) != 0)) {PyError(STDstring("Failed to convert PyFunction: must be either valid python function or 0, but got ")+EXUstd::ToString(value)); }; } //! AUTO: get parameter
+        else if (parameterName.compare("loadVectorUserFunction") == 0) { cLoadForceVector->GetParameters().loadVectorUserFunction = value; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationLoadForceVector->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("LoadForceVector::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
     }

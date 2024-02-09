@@ -142,13 +142,13 @@ void VisualizationSystemContainer::RedrawAndSaveImage()
 
 
 //! Renderer reports to simulation that simulation shall be interrupted
-void VisualizationSystemContainer::StopSimulation()
+void VisualizationSystemContainer::StopSimulation(bool flag)
 {
 	//as we do not know, which simulation is executed, all system computations are interrupted
-	stopSimulationFlag = true; //tell also VisualizationSystemContainer
+	stopSimulationFlagSC = flag; //tell also VisualizationSystemContainer
 	for (auto item : visualizationSystems)
 	{
-		item->postProcessData->stopSimulation = true;
+		item->postProcessData->stopSimulation = flag;
 	}
 
 }
@@ -220,7 +220,7 @@ bool VisualizationSystemContainer::RendererIsRunning() const
 bool VisualizationSystemContainer::DoIdleOperations()
 {
 #ifdef USE_GLFW_GRAPHICS
-	if (!stopSimulationFlag && RendererIsRunning())
+	if (!stopSimulationFlagSC && RendererIsRunning())
 	{
 		//std::this_thread::sleep_for(std::chrono::milliseconds(50));
 		PyProcessExecuteQueue(); //use time to execute incoming python tasks
@@ -233,7 +233,9 @@ bool VisualizationSystemContainer::DoIdleOperations()
 	}
 	else
 	{
-		stopSimulationFlag = false; //initialize the flag, if used several times; this is thread safe
+		//if (stopSimulationFlagSC) { pout << "VisualizationSystemContainer::DoIdleOperations(): stopSimulationFlagSC was 1\n"; }
+		stopSimulationFlagSC = false; //initialize the flag, if used several times; this is thread safe
+		//StopSimulation(false); //also reset all simulation stop flags?
 	}
 #endif
 	return false;
@@ -315,18 +317,18 @@ void VisualizationSystemContainer::GetMarkerPositionOrientation(Index markerNumb
 	hasOrientation = false;
 	if (mbsNumber >= 0 && mbsNumber < NumberOFMainSystemsBacklink())
 	{
-		CSystem* cSystem = GetMainSystemBacklink(mbsNumber)->GetCSystem();
-		if (markerNumber >= 0 && markerNumber < cSystem->GetSystemData().GetCMarkers().NumberOfItems())
+		const CSystem& cSystem = GetMainSystemBacklink(mbsNumber)->GetCSystem();
+		if (markerNumber >= 0 && markerNumber < cSystem.GetSystemData().GetCMarkers().NumberOfItems())
 		{
-			const CMarker& marker = cSystem->GetSystemData().GetCMarker(markerNumber);
+			const CMarker& marker = cSystem.GetSystemData().GetCMarker(markerNumber);
 			if (EXUstd::IsOfType(marker.GetType(), Marker::Position))
 			{
-				marker.GetPosition(cSystem->GetSystemData(), position, ConfigurationType::Visualization);
+				marker.GetPosition(cSystem.GetSystemData(), position, ConfigurationType::Visualization);
 				hasPosition = true;
 			}
 			if (EXUstd::IsOfType(marker.GetType(), Marker::Orientation))
 			{
-				marker.GetRotationMatrix(cSystem->GetSystemData(), orientation, ConfigurationType::Visualization);
+				marker.GetRotationMatrix(cSystem.GetSystemData(), orientation, ConfigurationType::Visualization);
 				hasOrientation = true;
 			}
 		}
@@ -348,11 +350,11 @@ bool VisualizationSystemContainer::GetSensorsPositionsVectorsLists(Index mbsNumb
 
     if (mbsNumber >= 0 && mbsNumber < NumberOFMainSystemsBacklink())
     {
-        CSystem* cSystem = GetMainSystemBacklink(mbsNumber)->GetCSystem();
-        Real time = cSystem->GetSystemData().GetCData().GetVisualization().GetTime();
-        if (positionSensorIndex >= 0 && positionSensorIndex < cSystem->GetSystemData().GetCSensors().NumberOfItems())
+		const CSystem& cSystem = GetMainSystemBacklink(mbsNumber)->GetCSystem();
+        Real time = cSystem.GetSystemData().GetCData().GetVisualization().GetTime();
+        if (positionSensorIndex >= 0 && positionSensorIndex < cSystem.GetSystemData().GetCSensors().NumberOfItems())
         {
-            const CSensor& sensor = *cSystem->GetSystemData().GetCSensors()[positionSensorIndex];
+            const CSensor& sensor = *cSystem.GetSystemData().GetCSensors()[positionSensorIndex];
             if (EXUstd::IsOfType(sensor.GetOutputVariableType(), OutputVariableType::Position))
             {
                 const ResizableMatrix& data = sensor.GetInternalStorage();
@@ -370,9 +372,9 @@ bool VisualizationSystemContainer::GetSensorsPositionsVectorsLists(Index mbsNumb
                     }
                 }
 
-                if (traces.showVectors && vectorSensorIndex >= 0 && vectorSensorIndex < cSystem->GetSystemData().GetCSensors().NumberOfItems())
+                if (traces.showVectors && vectorSensorIndex >= 0 && vectorSensorIndex < cSystem.GetSystemData().GetCSensors().NumberOfItems())
                 {
-                    const CSensor& vectorSensor = *cSystem->GetSystemData().GetCSensors()[vectorSensorIndex];
+                    const CSensor& vectorSensor = *cSystem.GetSystemData().GetCSensors()[vectorSensorIndex];
                     const ResizableMatrix& data = vectorSensor.GetInternalStorage();
                     if (data.NumberOfRows() > 0 && data.NumberOfColumns() == 4) //must be Vector3D data
                     {
@@ -389,7 +391,7 @@ bool VisualizationSystemContainer::GetSensorsPositionsVectorsLists(Index mbsNumb
                         //this won't work, as in solution viewer current values are not "current"!
                         //if (showCurrent)
                         //{
-                        //    vectorSensor.GetSensorValues(cSystem->GetSystemData(), sensorTraceValues, ConfigurationType::Visualization);
+                        //    vectorSensor.GetSensorValues(cSystem.GetSystemData(), sensorTraceValues, ConfigurationType::Visualization);
                         //    if (sensorTraceValues.NumberOfItems() == 3)
                         //    {
                         //        Vector3D v({ sensorTraceValues[0],
@@ -400,10 +402,10 @@ bool VisualizationSystemContainer::GetSensorsPositionsVectorsLists(Index mbsNumb
                         //}
                     }
                 }
-                if (traces.showTriads && triadSensorIndex >= 0 && triadSensorIndex < cSystem->GetSystemData().GetCSensors().NumberOfItems())
+                if (traces.showTriads && triadSensorIndex >= 0 && triadSensorIndex < cSystem.GetSystemData().GetCSensors().NumberOfItems())
                 {
                     //std::cout << "A," << GetOutputVariableTypeString(triadSensor.GetOutputVariableType()) << ";\n";
-                    const CSensor& triadSensor = *cSystem->GetSystemData().GetCSensors()[triadSensorIndex];
+                    const CSensor& triadSensor = *cSystem.GetSystemData().GetCSensors()[triadSensorIndex];
                     const ResizableMatrix& data = triadSensor.GetInternalStorage();
                     if (data.NumberOfRows() > 0 && data.NumberOfColumns() == 10 &&
                         EXUstd::IsOfType(triadSensor.GetOutputVariableType(), OutputVariableType::RotationMatrix)) //must be Matrix3D data
@@ -423,7 +425,7 @@ bool VisualizationSystemContainer::GetSensorsPositionsVectorsLists(Index mbsNumb
                         }
                         //if (showCurrent)
                         //{
-                        //    triadSensor.GetSensorValues(cSystem->GetSystemData(), sensorTraceValues, ConfigurationType::Visualization);
+                        //    triadSensor.GetSensorValues(cSystem.GetSystemData(), sensorTraceValues, ConfigurationType::Visualization);
                         //    if (sensorTraceValues.NumberOfItems() == 10)
                         //    {
                         //        Matrix3D m(3, 3, { sensorTraceValues[1], sensorTraceValues[2], sensorTraceValues[3],
@@ -436,7 +438,7 @@ bool VisualizationSystemContainer::GetSensorsPositionsVectorsLists(Index mbsNumb
                 }
             }
         }
-        if (positionSensorIndex < cSystem->GetSystemData().GetCSensors().NumberOfItems()-1)
+        if (positionSensorIndex < cSystem.GetSystemData().GetCSensors().NumberOfItems()-1)
         {
             return true;
         }
@@ -474,15 +476,17 @@ bool PyWriteBodyGraphicsDataList(const py::dict& d, const char* item, BodyGraphi
 		GenericExceptionHandling([&]
 		{
 			py::object other = d[item]; //this is necessary to make isinstance work
-			return PyWriteBodyGraphicsDataList(other, data);
+			return PyWriteBodyGraphicsDataList(other, data, false);
 		}, "Exception raised when writing BodyGraphicsData: check format");
 
 	}//if "GraphicsData" does not exist, no error is displayed
 	return true;
 }
 //! python function to read BodyGraphicsData from py::object, which must be a list of graphicsData dictionaries
-bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data)
+bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data, bool eraseData)
 {
+	if (eraseData) { data.FlushData(); }
+
 	if (py::isinstance<py::list>(object)) //must be a list of graphicsData dictionaries
 	{
 		py::list list = (py::list)(object);
@@ -1076,7 +1080,7 @@ bool PyWriteBodyGraphicsDataListOfLists(const py::object object, BodyGraphicsDat
 				BodyGraphicsData oneData;
 				Index i = data.Append(oneData);
 
-				PyWriteBodyGraphicsDataList(pyObject, data[i]);
+				PyWriteBodyGraphicsDataList(pyObject, data[i], false);
 			}
 		}, "Exception raised when writing BodyGraphicsDataList: check format");
 	}

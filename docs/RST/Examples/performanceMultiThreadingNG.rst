@@ -23,9 +23,6 @@ You can view and download this file on Github: `performanceMultiThreadingNG.py <
    #
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    
-   #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-   # This is an EXUDYN example
-   
    import exudyn as exu
    from exudyn.itemInterface import *
    from exudyn.utilities import *

@@ -12,6 +12,8 @@ from autoGenerateHelper import RemoveSpacesTabs, CountLines, TypeConversion, Gen
     PyLatexRST #RemoveIndentation, LatexString2RST
 import copy
 import io
+import numpy as np
+from exudynVersion import exudynVersionString
 
 sortStructures = True
 
@@ -35,7 +37,18 @@ convertToDict = {'ResizableVector':'Vector', 'StdArray33F':'MatrixFloat',
                 'Index2':'IndexArray', 'Index4':'IndexArray', 
                 'ArrayIndex':'IndexArray', 'ArrayFloat':'VectorFloat',
                 'Float4':'VectorFloat', 'Float3':'VectorFloat' #,'String':'std::string'
-                } 
+                }
+
+#for LLMs
+convertToPython = {'Real': 'float',
+                   'std::string': 'str',
+                   'Index': 'int',
+                   'ResizableVectorParallel': 'numpy.ndarray',
+                   'std::vector<float>': 'numpy.ndarray',
+                   'std::array<Index,2>': '[int,int]',
+                   'std::array<float,3>': '[float,float,float]',
+                   'std::array<float,4>': '[float,float,float,float]',
+                   }
 
 #convert special size parameters:
 sizeParameterConvert = {'3x3':'9', '2x2':'4'} 
@@ -68,6 +81,11 @@ def RemoveLatexCommands(s):
     s = s.replace('\\hac{ODE1}','ODE1')
     s = s.replace('\\hac{AE}','AE')
     return s
+
+def ClassHasGetSetDictionary(className):
+    return (className.find('Solver') == -1 
+        or className == 'StaticSolverSettings'
+        or className == 'LinearSolverSettings')
 
 globalList=[]
 
@@ -355,14 +373,19 @@ def WriteFile(parseInfo, parameterList, typeConversion):
 #    s+='  virtual ' + parseInfo['class'] + '* GetClone() const { return new '+parseInfo['class']+'(*this); }\n'
 #    s+='  \n'
     sDictGet = ''
-    sDictGet += '  //! AUTO: read access to structure; converting into dictionary\n'
-    sDictGet += '  py::dict GetDictionaryWithTypeInfo(const ' + parseInfo['class'] + '& data) {\n'
+    sDictGet += '//! AUTO: read access to structure; converting into dictionary\n'
+    sDictGet += 'inline py::dict GetDictionaryWithTypeInfo(const ' + parseInfo['class'] + '& data) {\n'
     sDictGet += '    auto structureDict = py::dict();\n'
     sDictGet += '    auto d = py::dict(); //local dict\n'
 
+    sDictGetPure = ''
+    sDictGetPure += '//! AUTO: read access to structure; converting into dictionary without type info\n'
+    sDictGetPure += 'inline py::dict GetDictionary(const ' + parseInfo['class'] + '& data) {\n'
+    sDictGetPure += '    auto structureDict = py::dict();\n'
+
     sDictSet = ''
-    sDictSet += '  //! AUTO: write access to data structure; converting dictionary d into structure\n'
-    sDictSet += '  void SetDictionary(' + parseInfo['class'] + '& data, const py::dict& d) {\n'
+    sDictSet += '//! AUTO: write access to data structure; converting dictionary d into structure\n'
+    sDictSet += 'inline void SetDictionary(' + parseInfo['class'] + '& data, const py::dict& d) {\n'
 
     #************************************
     #access functions and dictionaries for visualization dialog ...:
@@ -383,6 +406,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
         parameterListSorted2 = copy.deepcopy(parameterListSorted) 
         
         
+    parameterInfo = [] #list for exporting dictionaries
     for parameter in parameterListSorted2:
         if (parameter['lineType'].find('V') != -1): #only if it is a member variable
             origType = parameter['type']
@@ -470,7 +494,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                 #check if substructure (folder)
                 if parameter['cFlags'].find('S') != -1:
                     sDictGet += '    structureDict["' + parameter['pythonName'] + '"] = GetDictionaryWithTypeInfo(data.' + parameter['cplusplusName'] + ');\n'
-                    #sDictSet+= '    data.' + parameter['cplusplusName'] + ' = py::cast<' + parameter['type'] + '>(d["' + parameter['pythonName']  + '"]);\n'
+                    sDictGetPure += '    structureDict["' + parameter['pythonName'] + '"] = GetDictionary(data.' + parameter['cplusplusName'] + ');\n'
                     sDictSet+= '    SetDictionary(data.' + parameter['cplusplusName'] + ', py::cast<py::dict>(d["' + parameter['pythonName']  + '"]));\n'
                 else: #parameter
                     cValueStr = parameter['cplusplusName'];
@@ -513,9 +537,27 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                         sDictGet += '    d["description"] = "' + descrStr + '";\n'
                         sDictGet += '    structureDict["' + parameter['pythonName'] + '"] = d;\n' #keyName used to identify the object
                         sDictGet += '\n'
+
+                        sDictGetPure += '    structureDict["' + parameter['pythonName'] + '"] = '
+                        sDictGetPure += 'data.' + cValueStr + ';\n'
                         
                         #set functions:
                         sDictSet += '    data.' + parameter['cplusplusName'] + ' = py::cast<' + typeCastStr + '>(d["' + parameter['pythonName']  + '"]);\n'
+                        
+                        #dict for exporting
+                        pythonTypeStr = typeCastStr
+                        if pythonTypeStr in convertToPython:
+                            pythonTypeStr = convertToPython[pythonTypeStr]
+                        # print(pythonTypeStr)
+                            
+                        parameterDict={'name': parameter['pythonName'],
+                                       'type': pythonTypeStr,
+                                       'description': parameter['parameterDescription'].replace("\\_","_"),
+                                       'size': pSize,
+                                       'default': parameter['defaultValue'],
+                            }
+                        parameterInfo.append(parameterDict)
+                        
             #++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
     
@@ -546,13 +588,15 @@ def WriteFile(parseInfo, parameterList, typeConversion):
     
         
     sDictGet += '    return structureDict;\n'
-    sDictGet += '  }\n'
-    sDictSet += '  }\n'
+    sDictGet += '}\n\n'
+    sDictGetPure += '    return structureDict;\n'
+    sDictGetPure += '}\n\n'
+    sDictSet += '}\n\n'
 
-    if (parseInfo['class'].find('Solver') == -1 
-        or parseInfo['class'] == 'StaticSolverSettings'
-        or parseInfo['class'] == 'LinearSolverSettings'):
+        
+    if ClassHasGetSetDictionary(parseInfo['class']):
         sGetSetDictionarys += sDictGet
+        sGetSetDictionarys += sDictGetPure
         sGetSetDictionarys += sDictSet
         #s += '  //! AUTO: read access to structure; converting into dictionary\n'
         #s += '  py::dict GetDictionaryWithTypeInfo() const;\n' #don't do that as we do not want to add pybind to settings files!
@@ -614,7 +658,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
     # if not hasPybindInterface:
     #     stubStr = ''
 
-    return [s, plr.sLatex, sGetSetDictionarys, plr.sRST, stubStr]
+    return [s, plr.sLatex, sGetSetDictionarys, plr.sRST, stubStr, parameterInfo]
 
 #**************************************************************************************
 #**************************************************************************************
@@ -629,6 +673,18 @@ def CreatePybindHeaders(parseInfo, parameterList, typeConversion):
         s = s.replace('\\hac','')
         s = s.replace('\\','')
         return s
+    
+    pickleDictTemplate = """        .def(py::pickle(
+            [](const {ClassName}& self) {
+                return py::make_tuple(EPyUtils::GetDictionary(self));
+            },
+            [](const py::tuple& t) {
+                CHECKandTHROW(t.size() == 1, "{ClassName}: loading data with pickle received invalid data structure!");
+                {ClassName} self;
+                EPyUtils::SetDictionary(self,py::cast<py::dict>(t[0]));
+                return self;
+            }))
+"""
 
     spaces1 = '    '            #first level
     spaces2 = spaces1+'    '    #second level
@@ -721,7 +777,10 @@ def CreatePybindHeaders(parseInfo, parameterList, typeConversion):
     
     if parseInfo['addDictionaryAccess'] == 'True':
         s += spaces2 + '.def("GetDictionaryWithTypeInfo", [](const ' + parseInfo['class'] + ' &item) { return EPyUtils::GetDictionaryWithTypeInfo(item); }) //!< AUTO: add read as dictionary with type information access\n'
+    if ClassHasGetSetDictionary(parseInfo['class']):
+        s += spaces2 + '.def("GetDictionary", [](const ' + parseInfo['class'] + ' &item) { return EPyUtils::GetDictionary(item); }) //!< AUTO: add read for dictionary access\n'
         s += spaces2 + '.def("SetDictionary", [](' + parseInfo['class'] + ' &item, const py::dict& d) { return EPyUtils::SetDictionary(item, d); }) //!< AUTO: add write from dictionary access\n'
+        s += pickleDictTemplate.replace('{ClassName}', parseInfo['class'])
 #		.def("GetDictionary", [](const VisualizationSettings &item) { return EPyUtils::GetDictionaryWithTypeInfo(item); }) //!< AUTO: add representation for object based on ostream operator
 
     s += spaces2 + '; // AUTO: end of class definition!!!\n'
@@ -745,6 +804,13 @@ rstFileDict={'SimulationSettings':'',
              'PyStructuralElementsDataStructures':'',
              'BeamSectionGeometry':'',
              } #contains available file names and text
+
+
+#added structures for creating dictionaries for settings; saved via numpy save
+dictSystemStructures = {}
+dictSystemStructures['structures'] = [] #contains list of modules
+dictSystemStructures['version'] = exudynVersionString
+dictSystemStructures['name'] = 'systemStructures'
 
 
 try: #still close file if crashes
@@ -907,7 +973,7 @@ try: #still close file if crashes
                                     mode = 0
                                     #++++++++++++++++++++++++++++++
                                     #now write C++ header file for defined class
-                                    [fileStr, latexStr, getSetDict, rstStr, stubStr] = WriteFile(parseInfo, parameterList, typeConversion)
+                                    [fileStr, latexStr, getSetDict, rstStr, stubStr, parameterInfo] = WriteFile(parseInfo, parameterList, typeConversion)
                                     globalLatexStr += latexStr
                                     globalStubStr += stubStr
                                     strFileMode = 'w'
@@ -936,6 +1002,14 @@ try: #still close file if crashes
                                         #print('file=', d['cplusplusName'], ', getset=',getSetDict)
                                         file.write(getSetDict)
                                         file.close()
+                                    
+                                    if len(parameterInfo) != 0:
+                                        classDict = {'class':parseInfo['class'],
+                                                     'description':parseInfo['classDescription'],
+                                                     'typicalPaths':copy.copy(parseInfo['typicalPaths']),
+                                                     'parameters':copy.copy(parameterInfo)
+                                                     }
+                                        dictSystemStructures['structures'].append(classDict)
                                     
                                     #++++++++++++++++++++++++++++++
                                     #reset structures for next file
@@ -1028,6 +1102,18 @@ Structures and Settings
     file=io.open(rstDir+'StructuresAndSettingsIndex.rst','w',encoding='utf8')  #clear file by one write access
     file.write(rstIndex+'\n')
     file.close()
+
+
+
+    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    structList = dictSystemStructures['structures']
+    paramCnt = 0
+    for pList in structList: 
+        paramCnt+=len(pList['parameters'])
+    print('total number of parameters (excl. classes):',paramCnt)
+
+    np.save('generated/systemStructuresData.npy', dictSystemStructures)
+    #utilitiesData = np.load('generated/systemStructuresData.npy', allow_pickle=True).item()
 
 finally:    
     file.close()

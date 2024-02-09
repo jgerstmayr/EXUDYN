@@ -1,9 +1,7 @@
-#!/usr/bin/env python3
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# This is an EXUDYN python example how to use ROS and EXUDYN
+# This is an EXUDYN python example
 #
-# Details:  This example shows how to communicate between an exudyn simulation
-#			and ROS
+# Details:  This example shows how to communicate between an Exudyn simulation and ROS
 #           To make use of this example, you need to 
 #           install ROS (ROS1 noetic) including rospy (see rosInterface.py)
 #           prerequisite to use: 
@@ -11,12 +9,13 @@
 #               roscore 
 #           then run the simulation:
 #               python 3 ROSMobileManipulator.py
-#           you can use the prepared ROS node, ROSControlMobileManipulator to control the simulation
+#           You can use the prepared ROS node, ROSControlMobileManipulator to control the simulation
 #           use a bash terminal to start the recommended file  (see folder Examples/supplementary):
 #               python3 ROSControlMobileManipulator.py
-#           for even more ROS functionality create a ROS package (e.q. myExudynInterface) in a catkin workspace, 
+#           For even more ROS functionality create a ROS package (e.q. myExudynInterface) in a catkin workspace, 
 #           copy files ROSMobileManipulator.py, ROSbodykairos.stl and ROSControlMobileManipulator.py in corresponding folders within the package
-#           for more functionality see also: ROSMassPoint.py, ROSBringupTurtle.launch, ROSControlTurtleVelocity.py from the EXUDYN examples folder
+#           For more functionality see also: ROSMassPoint.py, ROSBringupTurtle.launch, ROSControlTurtleVelocity.py from the EXUDYN examples folder
+# 
 # Author:   Martin Sereinig, Peter Manzl 
 # Date:     2023-05-31 (created)
 # last Update: 2023-09-11

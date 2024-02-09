@@ -8,7 +8,7 @@ Plot utility functions based on matplotlib, including plotting of sensors and FF
 
 - Author:    Johannes Gerstmayr 
 - Date:      2020-09-16 (created) 
-- Notes: 	For a list of plot colors useful for matplotlib, see also advancedUtilities.PlotLineCode(...) 
+- Notes:     For a list of plot colors useful for matplotlib, see also advancedUtilities.PlotLineCode(...) 
 
 
 .. _sec-plot-parseoutputfileheader:

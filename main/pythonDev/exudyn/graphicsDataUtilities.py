@@ -1,19 +1,19 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN python utility library
 #
-# Details: 	Utility functions for visualization, which provides functions for basic shapes
-#			like cube, cylinder, sphere, solid of revolution. Functions generate dictionaries
-#			which contain line, text or triangle primitives for drawing in Exudyn using OpenGL.
+# Details:  Utility functions for visualization, which provides functions for basic shapes
+#           like cube, cylinder, sphere, solid of revolution. Functions generate dictionaries
+#           which contain line, text or triangle primitives for drawing in Exudyn using OpenGL.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2020-07-26 (created)
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
-# Notes: 	Some useful colors are defined, using RGBA (Red, Green, Blue and Alpha = opacity) channels
-#			in the range [0,1], e.g., red = [1,0,0,1].\\
-#			Available colors are: color4red, color4green, color4blue, color4cyan, color4magenta, color4yellow, color4orange, color4pink, color4lawngreen, color4violet, color4springgreen, color4dodgerblue, color4grey, color4darkgrey, color4lightgrey, color4lightred, color4lightgreen, color4steelblue, color4brown, color4black, color4darkgrey2, color4lightgrey2, color4white\\
-#			Additionally, a list of 16 colors 'color4list' is available, which is intended to be used, e.g., for creating n bodies with different colors
+# Notes:    Some useful colors are defined, using RGBA (Red, Green, Blue and Alpha = opacity) channels
+#           in the range [0,1], e.g., red = [1,0,0,1].\\
+#           Available colors are: color4red, color4green, color4blue, color4cyan, color4magenta, color4yellow, color4orange, color4pink, color4lawngreen, color4violet, color4springgreen, color4dodgerblue, color4grey, color4darkgrey, color4lightgrey, color4lightred, color4lightgreen, color4steelblue, color4brown, color4black, color4darkgrey2, color4lightgrey2, color4white\\
+#           Additionally, a list of 16 colors 'color4list' is available, which is intended to be used, e.g., for creating n bodies with different colors
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn.basicUtilities as ebu
@@ -405,7 +405,7 @@ def GraphicsDataRectangle(xMin, yMin, xMax, yMax, color=[0.,0.,0.,1.]):
     return dataRect
 
 #************************************************
-#**function: generate graphics data for orthogonal cube drawn with lines
+#**function: generate graphics data for orthogonal block drawn with lines
 #**input: minimal and maximal cartesian coordinates for orthogonal cube; color provided as list of 4 RGBA values
 #**output: graphicsData dictionary, to be used in visualization of EXUDYN objects
 def GraphicsDataOrthoCubeLines(xMin, yMin, zMin, xMax, yMax, zMax, color=[0.,0.,0.,1.]): 
@@ -416,7 +416,7 @@ def GraphicsDataOrthoCubeLines(xMin, yMin, zMin, xMax, yMax, zMax, color=[0.,0.,
 
     return dataRect
 
-#**function: generate graphics data for orthogonal 3D cube with min and max dimensions
+#**function: generate graphics data for orthogonal 3D block with min and max dimensions
 #**input: 
 #  x/y/z/Min/Max: minimal and maximal cartesian coordinates for orthogonal cube
 #  color: list of 4 RGBA values
@@ -431,7 +431,7 @@ def GraphicsDataOrthoCube(xMin, yMin, zMin, xMax, yMax, zMax, color=[0.,0.,0.,1.
              [xMin,yMin,zMax], [xMax,yMin,zMax], [xMax,yMax,zMax], [xMin,yMax,zMax]]
     return GraphicsDataCube(pList, list(color), addNormals=addNormals, addEdges=addEdges, edgeColor=edgeColor, addFaces=addFaces)
 
-#**function: generate graphics data forfor orthogonal 3D cube with center point and size
+#**function: generate graphics data forfor orthogonal 3D block with center point and size
 #**input: 
 #  centerPoint: center of cube as 3D list or np.array
 #  size: size as 3D list or np.array
@@ -458,7 +458,7 @@ def GraphicsDataOrthoCubePoint(centerPoint=[0,0,0], size=[0.1,0.1,0.1], color=[0
         #print('new2')
     return gCube
 
-#**function: generate graphics data for general cube with endpoints, according to given vertex definition
+#**function: generate graphics data for general block with endpoints, according to given vertex definition
 #**input: 
 #  pList: is a list of points [[x0,y0,z0],[x1,y1,z1],...]
 #  color: provided as list of 4 RGBA values

@@ -648,6 +648,7 @@ public:
 		if (IsExpressionNamedReal())
 		{
 			GetExpressionNamedReal().SetVector(ResizableConstVector(vectorInit));
+			vector = ResizableConstVector(vectorInit); //for consistency
 		}
 		else
 		{

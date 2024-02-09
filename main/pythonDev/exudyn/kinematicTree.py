@@ -2,9 +2,9 @@
 # This is an EXUDYN python utility library
 #
 # Details:  A library for preparation of minimal coordinates (kinematic tree) formulation.
-#			This library follows mostly the algorithms of Roy Featherstone, see http://royfeatherstone.org/
+#           This library follows mostly the algorithms of Roy Featherstone, see http://royfeatherstone.org/
 #           His code is availble in MATLAB as well as described in the Springer Handbook of Robotics \cite{Siciliano2016}.
-#			The main formalisms are based on 6x6 matrices, so-called Pl\"ucker transformations, denoted as \ac{T66}, as defined by Featherstone.
+#           The main formalisms are based on 6x6 matrices, so-called Pl\"ucker transformations, denoted as \ac{T66}, as defined by Featherstone.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2021-06-22
@@ -411,11 +411,11 @@ class KinematicTree33:
 #**function: computes cross product operator for motion from 6D vector v; CRM(v) @ m computes the cross product of v and motion m
 def CRM(v):
       return np.array([[0   , -v[2] , v[1]  , 0    , 0    , 0    ],
-             	      [ v[2],  0    ,-v[0]  , 0    , 0    , 0    ],
-             	      [-v[1],  v[0] , 0     , 0    , 0    , 0    ],
-             	      [ 0   , -v[5] , v[4]  , 0    ,-v[2] , v[1] ],
-             	      [ v[5],  0    ,-v[3]  , v[2] , 0    ,-v[0] ],
-             	      [-v[4],  v[3] , 0     ,-v[1] , v[0] , 0    ] ])
+                       [ v[2],  0    ,-v[0]  , 0    , 0    , 0    ],
+                       [-v[1],  v[0] , 0     , 0    , 0    , 0    ],
+                       [ 0   , -v[5] , v[4]  , 0    ,-v[2] , v[1] ],
+                       [ v[5],  0    ,-v[3]  , v[2] , 0    ,-v[0] ],
+                       [-v[4],  v[3] , 0     ,-v[1] , v[0] , 0    ] ])
 
 #**function: computes cross product operator for force from 6D vector v; CRF(v) @ f computes the cross product of v and force f
 def CRF(v):

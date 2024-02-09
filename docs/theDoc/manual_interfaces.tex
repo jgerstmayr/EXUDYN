@@ -169,7 +169,7 @@ mbs.AddObject('abc')
 \end{lstlisting}
 
 
-Which results in a error message similar to:
+Which results in an error message similar to:
 \pythonstyle
 \begin{lstlisting}[language=Python, firstnumber=1]
 
@@ -186,6 +186,7 @@ Traceback (most recent call last):
     mbs.AddObject('abc')
 
 RuntimeError: Exudyn: parsing of Python file terminated due to Python (user) error
+
 \end{lstlisting}
 
 
@@ -277,12 +278,15 @@ mbs = SC.AddSystem()
 {\bf function/structure name} & {\bf description}\\ \hline
   Reset() & delete all multibody systems and reset SystemContainer (including graphics); this also releases SystemContainer from the renderer, which requires SC.AttachToRenderEngine() to be called in order to reconnect to rendering; a safer way is to delete the current SystemContainer and create a new one (SC=SystemContainer() )\\ \hline 
   AddSystem() & add a new computational system\\ \hline 
+  AppendSystem(mainSystem) & append an exsiting computational system to the system container; returns the number of MainSystem in system container\\ \hline 
   NumberOfSystems() & obtain number of multibody systems available in system container\\ \hline 
   GetSystem(systemNumber) & obtain multibody systems with index from system container\\ \hline 
   visualizationSettings & this structure is read/writeable and contains visualization settings, which are immediately applied to the rendering window. \tabnewline
     EXAMPLE:\tabnewline
     SC = exu.SystemContainer()\tabnewline
     SC.visualizationSettings.autoFitScene=False  \\ \hline  
+  GetDictionary() & [UNDER DEVELOPMENT]: return the dictionary of the system container data, e.g., to copy the system or for pickling\\ \hline 
+  SetDictionary(systemDict) & [UNDER DEVELOPMENT]: set system container data from given dictionary; used for pickling\\ \hline 
   GetRenderState() & Get dictionary with current render state (openGL zoom, modelview, etc.); will have no effect if GLFW\_GRAPHICS is deactivated\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{SC = exu.SystemContainer()\tabnewline
@@ -307,7 +311,7 @@ mbs = SC.AddSystem()
 
 
 
-This is the class which defines a (multibody) system. The MainSystem shall only be created by \texttt{SC.AddSystem()}, not with \texttt{exu.MainSystem()}, as the latter one would not be linked to a SystemContainer. In C++, there is a MainSystem (the part which links to Python) and a System (computational part). For that reason, the name is MainSystem on the Python side, but it is often just called 'system'. For compatibility, it is recommended to denote the variable holding this system as mbs, the multibody dynamics system. It can be created, visualized and computed. Use the following functions for system manipulation.
+This is the class which defines a (multibody) system. The MainSystem shall only be created by \texttt{SC.AddSystem()}, not with \texttt{exu.MainSystem()}, as the latter one would not be linked to a SystemContainer. In some cases, you may use SC.AppendSystem(mbs). In C++, there is a MainSystem (the part which links to Python) and a System (computational part). For that reason, the name is MainSystem on the Python side, but it is often just called 'system'. For compatibility, it is recommended to denote the variable holding this system as mbs, the multibody dynamics system. It can be created, visualized and computed. Use the following functions for system manipulation.
 \pythonstyle
 \begin{lstlisting}[language=Python, firstnumber=1]
 
@@ -333,27 +337,40 @@ mbs = SC.AddSystem()
   GetRenderEngineStopFlag() & get the current stop simulation flag; True=user wants to stop simulation\\ \hline 
   SetRenderEngineStopFlag(stopFlag) & set the current stop simulation flag; set to False, in order to continue a previously user-interrupted simulation\\ \hline 
   ActivateRendering(flag = True) & activate (flag=True) or deactivate (flag=False) rendering for this system\\ \hline 
-  SetPreStepUserFunction(value) & Sets a user function PreStepUserFunction(mbs, t) executed at beginning of every computation step; in normal case return True; return False to stop simulation after current step\tabnewline 
+  SetPreStepUserFunction(value) & Sets a user function PreStepUserFunction(mbs, t) executed at beginning of every computation step; in normal case return True; return False to stop simulation after current step; set to 0 (integer) in order to erase user function. Note that the time returned is already the end of the step, which allows to compute forces consistently with trapezoidal integrators; for higher order Runge-Kutta methods, step time will be available only in object-user functions.\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{def PreStepUserFunction(mbs, t):\tabnewline
      \phantom{XXXX} print(mbs.systemData.NumberOfNodes())\tabnewline
      \phantom{XXXX} if(t>1): \tabnewline
      \phantom{XXXX}  \phantom{XXXX} return False \tabnewline
      \phantom{XXXX} return True \tabnewline
-     mbs.SetPreStepUserFunction(PreStepUserFunction)}}\\ \hline 
-  SetPostNewtonUserFunction(value) & Sets a user function PostNewtonUserFunction(mbs, t) executed after successful Newton iteration in implicit or static solvers and after step update of explicit solvers, but BEFORE PostNewton functions are called by the solver; function returns list [discontinuousError, recommendedStepSize], containing a error of the PostNewtonStep, which is compared to [solver].discontinuous.iterationTolerance. The recommendedStepSize shall be negative, if no recommendation is given, 0 in order to enforce minimum step size or a specific value to which the current step size will be reduced and the step will be repeated; use this function, e.g., to reduce step size after impact or change of data variables\tabnewline 
+    mbs.SetPreStepUserFunction(PreStepUserFunction)}}\\ \hline 
+  GetPreStepUserFunction(asDict = False) & Returns the preStepUserFunction.\\ \hline 
+  SetPostStepUserFunction(value) & Sets a user function PostStepUserFunction(mbs, t) executed at beginning of every computation step; in normal case return True; return False to stop simulation after current step; set to 0 (integer) in order to erase user function.\tabnewline 
+    \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
+    \texttt{def PostStepUserFunction(mbs, t):\tabnewline
+     \phantom{XXXX} print(mbs.systemData.NumberOfNodes())\tabnewline
+     \phantom{XXXX} if(t>1): \tabnewline
+     \phantom{XXXX}  \phantom{XXXX} return False \tabnewline
+     \phantom{XXXX} return True \tabnewline
+    mbs.SetPostStepUserFunction(PostStepUserFunction)}}\\ \hline 
+  GetPostStepUserFunction(asDict = False) & Returns the postStepUserFunction.\\ \hline 
+  SetPostNewtonUserFunction(value) & Sets a user function PostNewtonUserFunction(mbs, t) executed after successful Newton iteration in implicit or static solvers and after step update of explicit solvers, but BEFORE PostNewton functions are called by the solver; function returns list [discontinuousError, recommendedStepSize], containing a error of the PostNewtonStep, which is compared to [solver].discontinuous.iterationTolerance. The recommendedStepSize shall be negative, if no recommendation is given, 0 in order to enforce minimum step size or a specific value to which the current step size will be reduced and the step will be repeated; use this function, e.g., to reduce step size after impact or change of data variables; set to 0 (integer) in order to erase user function.\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{def PostNewtonUserFunction(mbs, t):\tabnewline
      \phantom{XXXX} if(t>1): \tabnewline
      \phantom{XXXX}  \phantom{XXXX} return [0, 1e-6] \tabnewline
      \phantom{XXXX} return [0,0] \tabnewline
-     mbs.SetPostNewtonUserFunction(PostNewtonUserFunction)}}\\ \hline 
+    mbs.SetPostNewtonUserFunction(PostNewtonUserFunction)}}\\ \hline 
+  GetPostNewtonUserFunction(asDict = False) & Returns the postNewtonUserFunction.\\ \hline 
   AddGeneralContact() & add a new general contact, used to enable efficient contact computation between objects (nodes or markers)\\ \hline 
   GetGeneralContact(generalContactNumber) & get read/write access to GeneralContact with index generalContactNumber stored in mbs; Examples shows how to access the GeneralContact object added with last AddGeneralContact() command:\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{gc=mbs.GetGeneralContact(mbs.NumberOfGeneralContacts()-1)}}\\ \hline 
   DeleteGeneralContact(generalContactNumber) & delete GeneralContact with index generalContactNumber in mbs; other general contacts are resorted (index changes!)\\ \hline 
   NumberOfGeneralContacts() & Return number of GeneralContact objects in mbs\\ \hline 
+  GetDictionary() & [UNDER DEVELOPMENT]: return the dictionary of the system data (todo: and state), e.g., to copy the system or for pickling\\ \hline 
+  SetDictionary(systemDict) & [UNDER DEVELOPMENT]: set system data (todo: and state) from given dictionary; used for pickling\\ \hline 
   \_\_repr\_\_() & return the representation of the system, which can be, e.g., printed\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{print(mbs)}}\\ \hline 
@@ -926,6 +943,12 @@ print('c: ',c,' = ',c.Evaluate())
 d = a+b*esym.sin(a)+esym.cos(SymReal(7))
 print('d: ',d,' = ',d.Evaluate())
 
+a.SetValue(14)          #variable a set to new value; influences d
+print('d: ',d,' = ',d.Evaluate())
+
+a = SymReal(1000)       #a is now a new variable; not updated in d!
+print('d: ',d,' = ',d.Evaluate())
+
 #compute derivatives (automatic differentiation):
 x = SymReal("x",0.5)
 f = a+b*esym.sin(x)+esym.cos(SymReal(7))+x**4
@@ -1103,10 +1126,6 @@ To create a symbolic Vector, use \texttt{aa=symbolic.Vector([3,4.2,5]} to build 
   Evaluate() & Return evaluated expression (prioritized) or stored vector value. (not recorded)\\ \hline 
   SetVector(vector) & Set stored vector or named vector expression to new given (non-symbolic) vector. Only works, if SymVector contains no expression. (may lead to inconsistencies in recording)\\ \hline 
   NumberOfItems() & Get size of Vector (may require to evaluate expression; not recording)\\ \hline 
-  data[index]= ...i & bracket [] operator for setting a component of the vector. Only works, if SymVector contains no expression. (may lead to inconsistencies in recording)\tabnewline 
-    \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    \texttt{v1 = SymVector([1,3,2])\tabnewline
-    v1[2]=13.}}\\ \hline 
   operator \_\_setitem\_\_(index) & bracket [] operator for setting a component of the vector. Only works, if SymVector contains no expression. (may lead to inconsistencies in recording)\\ \hline  
   NormL2() & return (symbolic) L2-norm of vector.\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
@@ -1308,22 +1327,24 @@ esym = exu.symbolic
 from exudyn.utilities import * #advancedUtilities with user function utilities included
 SymReal = exu.symbolic.Real
 
+SC = exu.SystemContainer()
+mbs = SC.AddSystem()
+
 #regular Python user function with esym math functions
 def UFload(mbs, t, load):
     return load*esym.sin(10*(2*pi)*t)
+
+#create symbolic user function from Python user function:
+symFuncLoad = CreateSymbolicUserFunction(mbs, UFload, load, 'loadUserFunction',verbose=1)
 
 #add ground and mass point:
 oGround = mbs.CreateGround()
 oMassPoint = mbs.CreateMassPoint(referencePosition=[1.+0.05,0,0], physicsMass=1)
 
 #add marker and load:
-mc = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=mbs.GetObject[oMassPoint]['nodeNumber'], coordinate=0))
-load = mbs.AddLoad(LoadCoordinate(markerNumber=mc, load=10))
-
-#create symbolic user function from Python user function:
-symFuncLoad = CreateSymbolicUserFunction(mbs, UFload, load, 'loadUserFunction',1)
-#set this user function to C++ object:
-c.TransferUserFunction2Item(mbs, load, 'loadUserFunction')    
+mc = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=mbs.GetObject(oMassPoint)['nodeNumber'], coordinate=0))
+load = mbs.AddLoad(LoadCoordinate(markerNumber=mc, load=10,
+                                  loadUserFunction=symFuncLoad))
 
 #print string of symbolic expression of user function (to check if it looks ok):
 print('load user function: ',symFuncLoad)
@@ -1341,7 +1362,6 @@ print('load user function: ',symFuncLoad.Evaluate(mbs, 0.025, 10.))
 {\bf function/structure name} & {\bf description}\\ \hline
   Evaluate() & Evaluate symbolic function with test values; requires exactly same args as Python user functions; this is slow and only intended for testing\\ \hline 
   SetUserFunctionFromDict(mainSystem, fcnDict, itemIndex, userFunctionName) & Create C++ std::function (as requested in C++ item) with symbolic user function as recorded in given dictionary, as created with ConvertFunctionToSymbolic(...).\\ \hline 
-  TransferUserFunction2Item(mainSystem, itemIndex, userFunctionName) & Transfer the std::function to a given object, load or other; this needs to be done purely in C++ to avoid Pybind overheads.\\ \hline 
   operator \_\_repr\_\_() & Representation of Symbolic function\\ \hline  
   operator \_\_str\_\_() & Convert stored symbolic function to string\\ \hline  
 \end{longtable}
@@ -1406,7 +1426,10 @@ gContact.SetFrictionPairings(...) #set friction pairings and adjust searchTree i
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{gContact.GetItemsInBox(pMin=[0,1,1],\tabnewline
      \phantom{XXXX} pMax=[2,3,2])}}\\ \hline 
-  GetMarkerBasedSphere(localIndex) & Get dictionary with position, radius and markerIndex for markerBasedSphere index, as returned e.g. from GetItemsInBox\\ \hline 
+  GetSphereMarkerBased(localIndex, addData = False) & Get dictionary with current position, orientation, velocity, angular velocity as computed in last contact iteration; if addData=True, adds stored data of contact element, such as radius, markerIndex and contact parameters; localIndex is the internal index of contact element, as returned e.g. from GetItemsInBox\\ \hline 
+  SetSphereMarkerBased(localIndex, contactStiffness = -1., contactDamping = -1., radius = -1., frictionMaterialIndex = -1) & Set data of marker based sphere with localIndex (as internally stored) with given arguments; arguments that are < 0 (default) imply that current values are not overwritten\\ \hline 
+  GetTriangleRigidBodyBased(localIndex) & Get dictionary with rigid body index, local position of triangle vertices (nodes) and triangle normal; NOTE: the mesh added to contact is different from this structure, as it contains nodes and connectivity lists; the triangle index corresponds to the order as triangles are added to GeneralContact\\ \hline 
+  SetTriangleRigidBodyBased(localIndex, points, contactRigidBodyIndex = -1) & Set data of marker based sphere with localIndex (triangle index); points are provided as 3x3 numpy array, with point coordinates in rows; contactRigidBodyIndex<0 indicates no change of the current index (and changing this index should be handled with care)\\ \hline 
   ShortestDistanceAlongLine(pStart = [0,0,0], direction = [1,0,0], minDistance = -1e-7, maxDistance = 1e7, asDictionary = False, cylinderRadius = 0, typeIndex = Contact.IndexEndOfEnumList) & Find shortest distance to contact objects in GeneralContact along line with pStart (given as 3D list or numpy array) and direction (as 3D list or numpy array with no need to be normalized); the function returns the distance which is >= minDistance and < maxDistance; in case of beam elements, it measures the distance to the beam centerline; the distance is measured from pStart along given direction and can also be negative; if no item is found along line, the maxDistance is returned; if asDictionary=False, the result is a float, while otherwise details are returned as dictionary (including distance, velocityAlongLine (which is the object velocity in given direction and may be different from the time derivative of the distance; works similar to a laser Doppler vibrometer - LDV), itemIndex and itemType in GeneralContact); the cylinderRadius, if not equal to 0, will be used for spheres to find closest sphere along cylinder with given point and direction; the typeIndex can be set to a specific contact type, e.g., which are searched for (otherwise all objects are considered)\\ \hline 
   UpdateContacts(mainSystem) & Update contact sets, e.g. if no contact is simulated (isActive=False) but user functions need up-to-date contact states for GetItemsInBox(...) or for GetActiveContacts(...)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 

@@ -1,5 +1,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# This is the EXUDYN module initialization file
+# This is an EXUDYN example
+#
+# Details:  Main Python library file for import of C++ module
 #
 # Author:   Johannes Gerstmayr
 # Date:     2020-08-14

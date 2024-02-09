@@ -249,22 +249,27 @@ if runMiniExamples:
         SC.Reset()
         testError = -1
         fileDir = 'MiniExamples/'+file
-        exec(open(fileDir).read(), globals())
-        exudynTestGlobals.testError = exudynTestGlobals.testResult-miniExamplesRefSol[name]
-        if abs(exudynTestGlobals.testError) < testTolerance:
-            exu.Print('  MINI EXAMPLE ' + str(testExamplesCnt) + ' ("' + file + '") FINISHED SUCCESSFUL')
-            exu.Print('  RESULT = ' + str(exudynTestGlobals.testResult))
-            exu.Print('  ERROR  = ' + str(exudynTestGlobals.testError))
-        else:
-            exu.Print('******************************************')
-            exu.Print('  MINI EXAMPLE ' + str(testExamplesCnt) + ' ("' + file + '") *FAILED*')
-            exu.Print('  RESULT = ' + str(exudynTestGlobals.testResult))
-            exu.Print('  ERROR  = ' + str(exudynTestGlobals.testError))
-            exu.Print('******************************************')
-            miniExamplesFailed += [testExamplesCnt]
-        miniExamplesTestSolList[name] = exudynTestGlobals.testResult #this list contains reference solutions, can be used for miniExamplesRefSol
-        miniExamplesTestErrorList[name] = exudynTestGlobals.testError #this list contains errors
-        testExamplesCnt+=1
+        try:
+            exec(open(fileDir).read(), globals())
+        except Exception as e:
+            exu.Print('MINI EXAMPLE ' + str(testExamplesCnt) + ' ("' + file + '") raised exception:\n'+str(e))
+            print('MINI EXAMPLE ' + str(testExamplesCnt) + ' ("' + file + '") raised exception:\n'+str(e), flush=True)
+        finally:
+            exudynTestGlobals.testError = exudynTestGlobals.testResult-miniExamplesRefSol[name]
+            if abs(exudynTestGlobals.testError) < testTolerance:
+                exu.Print('  MINI EXAMPLE ' + str(testExamplesCnt) + ' ("' + file + '") FINISHED SUCCESSFUL')
+                exu.Print('  RESULT = ' + str(exudynTestGlobals.testResult))
+                exu.Print('  ERROR  = ' + str(exudynTestGlobals.testError))
+            else:
+                exu.Print('******************************************')
+                exu.Print('  MINI EXAMPLE ' + str(testExamplesCnt) + ' ("' + file + '") *FAILED*')
+                exu.Print('  RESULT = ' + str(exudynTestGlobals.testResult))
+                exu.Print('  ERROR  = ' + str(exudynTestGlobals.testError))
+                exu.Print('******************************************')
+                miniExamplesFailed += [testExamplesCnt]
+            miniExamplesTestSolList[name] = exudynTestGlobals.testResult #this list contains reference solutions, can be used for miniExamplesRefSol
+            miniExamplesTestErrorList[name] = exudynTestGlobals.testError #this list contains errors
+            testExamplesCnt+=1
 
     if printTestResults: #print reference solution list:
         for key,value in miniExamplesTestSolList.items(): print("'"+key+"':"+str(value)+",")

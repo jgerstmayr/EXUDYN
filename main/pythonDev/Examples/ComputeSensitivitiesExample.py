@@ -12,10 +12,6 @@
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-import sys
-sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals
-
 
 import exudyn as exu
 from exudyn.itemInterface import *
@@ -154,12 +150,12 @@ if __name__ == '__main__': #include this to enable parallel processing
                                          useMultiProcessing=False,
                                          showProgress=True,)
     
-    exudynTestGlobals.testResult = np.average(np.abs(sensitivity))
-    if exudynTestGlobals.useGraphics: 
+    testResult = np.average(np.abs(sensitivity))
+    if True: 
         print("--- %s seconds ---" % (time.time() - start_time))
         PlotSensitivityResults(valRef, valuesSorted, sensitivity, strYAxis=['avg. $|x|$', 'x0', ''])
     else: 
-        exu.Print('result of ConvexContactTest=',exudynTestGlobals.testResult)
+        exu.Print('result of ConvexContactTest=',testResult)
     
 
 

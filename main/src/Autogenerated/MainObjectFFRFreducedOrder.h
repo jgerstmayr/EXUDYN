@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes, Zw\"olfer Andreas
 * @date         2019-07-01 (generated)
-* @date         2022-07-21  20:27:17 (last modified)
+* @date         2024-02-03  15:37:34 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -119,12 +119,8 @@ public: // AUTO:
         EPyUtils::SetPyMatrixContainerSafely(d, "massMatrixReduced", cObjectFFRFreducedOrder->GetParameters().massMatrixReduced); /*! AUTO:  safely cast to C++ type*/
         EPyUtils::SetPyMatrixContainerSafely(d, "stiffnessMatrixReduced", cObjectFFRFreducedOrder->GetParameters().stiffnessMatrixReduced); /*! AUTO:  safely cast to C++ type*/
         EPyUtils::SetPyMatrixContainerSafely(d, "dampingMatrixReduced", cObjectFFRFreducedOrder->GetParameters().dampingMatrixReduced); /*! AUTO:  safely cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "forceUserFunction")) { if (EPyUtils::CheckForValidFunction(d["forceUserFunction"])) 
-            { cObjectFFRFreducedOrder->GetParameters().forceUserFunction = py::cast<std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector)>>((py::function)d["forceUserFunction"]); /* AUTO:  read out dictionary and cast to C++ type*/}
-            else {cObjectFFRFreducedOrder->GetParameters().forceUserFunction = 0;  /*AUTO: otherwise assign with zero!*/ }} 
-        if (EPyUtils::DictItemExists(d, "massMatrixUserFunction")) { if (EPyUtils::CheckForValidFunction(d["massMatrixUserFunction"])) 
-            { cObjectFFRFreducedOrder->GetParameters().massMatrixUserFunction = py::cast<std::function<NumpyMatrix(const MainSystem&,Real,Index,StdVector,StdVector)>>((py::function)d["massMatrixUserFunction"]); /* AUTO:  read out dictionary and cast to C++ type*/}
-            else {cObjectFFRFreducedOrder->GetParameters().massMatrixUserFunction = 0;  /*AUTO: otherwise assign with zero!*/ }} 
+        if (EPyUtils::DictItemExists(d, "forceUserFunction")) { cObjectFFRFreducedOrder->GetParameters().forceUserFunction = d["forceUserFunction"]; /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "massMatrixUserFunction")) { cObjectFFRFreducedOrder->GetParameters().massMatrixUserFunction = d["massMatrixUserFunction"]; /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "computeFFRFterms")) { cObjectFFRFreducedOrder->GetParameters().computeFFRFterms = py::cast<bool>(d["computeFFRFterms"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::SetNumpyMatrixSafely(d, "modeBasis", cObjectFFRFreducedOrder->GetParameters().modeBasis); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "outputVariableModeBasis")) { EPyUtils::SetNumpyMatrixSafely(d, "outputVariableModeBasis", cObjectFFRFreducedOrder->GetParameters().outputVariableModeBasis); /*! AUTO:  safely cast to C++ type*/} 
@@ -158,16 +154,8 @@ public: // AUTO:
         d["massMatrixReduced"] = (PyMatrixContainer)cObjectFFRFreducedOrder->GetParameters().massMatrixReduced; //! AUTO: cast variables into python (not needed for standard types) 
         d["stiffnessMatrixReduced"] = (PyMatrixContainer)cObjectFFRFreducedOrder->GetParameters().stiffnessMatrixReduced; //! AUTO: cast variables into python (not needed for standard types) 
         d["dampingMatrixReduced"] = (PyMatrixContainer)cObjectFFRFreducedOrder->GetParameters().dampingMatrixReduced; //! AUTO: cast variables into python (not needed for standard types) 
-        if (cObjectFFRFreducedOrder->GetParameters().forceUserFunction)
-            {d["forceUserFunction"] = (std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector)>)cObjectFFRFreducedOrder->GetParameters().forceUserFunction;}
-        else
-            {d["forceUserFunction"] = 0;}
- //! AUTO: cast variables into python (not needed for standard types) 
-        if (cObjectFFRFreducedOrder->GetParameters().massMatrixUserFunction)
-            {d["massMatrixUserFunction"] = (std::function<NumpyMatrix(const MainSystem&,Real,Index,StdVector,StdVector)>)cObjectFFRFreducedOrder->GetParameters().massMatrixUserFunction;}
-        else
-            {d["massMatrixUserFunction"] = 0;}
- //! AUTO: cast variables into python (not needed for standard types) 
+        d["forceUserFunction"] = (py::object)cObjectFFRFreducedOrder->GetParameters().forceUserFunction; //! AUTO: cast variables into python (not needed for standard types) 
+        d["massMatrixUserFunction"] = (py::object)cObjectFFRFreducedOrder->GetParameters().massMatrixUserFunction; //! AUTO: cast variables into python (not needed for standard types) 
         d["computeFFRFterms"] = (bool)cObjectFFRFreducedOrder->GetParameters().computeFFRFterms; //! AUTO: cast variables into python (not needed for standard types) 
         d["modeBasis"] = EPyUtils::Matrix2NumPy(cObjectFFRFreducedOrder->GetParameters().modeBasis); //! AUTO: cast variables into python (not needed for standard types) 
         d["outputVariableModeBasis"] = EPyUtils::Matrix2NumPy(cObjectFFRFreducedOrder->GetParameters().outputVariableModeBasis); //! AUTO: cast variables into python (not needed for standard types) 
@@ -201,8 +189,8 @@ public: // AUTO:
         else if (parameterName.compare("massMatrixReduced") == 0) { return py::cast((PyMatrixContainer)cObjectFFRFreducedOrder->GetParameters().massMatrixReduced);} //! AUTO: get parameter
         else if (parameterName.compare("stiffnessMatrixReduced") == 0) { return py::cast((PyMatrixContainer)cObjectFFRFreducedOrder->GetParameters().stiffnessMatrixReduced);} //! AUTO: get parameter
         else if (parameterName.compare("dampingMatrixReduced") == 0) { return py::cast((PyMatrixContainer)cObjectFFRFreducedOrder->GetParameters().dampingMatrixReduced);} //! AUTO: get parameter
-        else if (parameterName.compare("forceUserFunction") == 0) { return py::cast((std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector)>)cObjectFFRFreducedOrder->GetParameters().forceUserFunction);} //! AUTO: get parameter
-        else if (parameterName.compare("massMatrixUserFunction") == 0) { return py::cast((std::function<NumpyMatrix(const MainSystem&,Real,Index,StdVector,StdVector)>)cObjectFFRFreducedOrder->GetParameters().massMatrixUserFunction);} //! AUTO: get parameter
+        else if (parameterName.compare("forceUserFunction") == 0) { return cObjectFFRFreducedOrder->GetParameters().forceUserFunction.GetPythonDictionary();;} //! AUTO: get parameter
+        else if (parameterName.compare("massMatrixUserFunction") == 0) { return cObjectFFRFreducedOrder->GetParameters().massMatrixUserFunction.GetPythonDictionary();;} //! AUTO: get parameter
         else if (parameterName.compare("computeFFRFterms") == 0) { return py::cast((bool)cObjectFFRFreducedOrder->GetParameters().computeFFRFterms);} //! AUTO: get parameter
         else if (parameterName.compare("modeBasis") == 0) { return EPyUtils::Matrix2NumPy(cObjectFFRFreducedOrder->GetParameters().modeBasis);} //! AUTO: get parameter
         else if (parameterName.compare("outputVariableModeBasis") == 0) { return EPyUtils::Matrix2NumPy(cObjectFFRFreducedOrder->GetParameters().outputVariableModeBasis);} //! AUTO: get parameter
@@ -237,10 +225,8 @@ public: // AUTO:
         else if (parameterName.compare("massMatrixReduced") == 0) { EPyUtils::SetPyMatrixContainerSafely(value, cObjectFFRFreducedOrder->GetParameters().massMatrixReduced); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("stiffnessMatrixReduced") == 0) { EPyUtils::SetPyMatrixContainerSafely(value, cObjectFFRFreducedOrder->GetParameters().stiffnessMatrixReduced); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("dampingMatrixReduced") == 0) { EPyUtils::SetPyMatrixContainerSafely(value, cObjectFFRFreducedOrder->GetParameters().dampingMatrixReduced); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("forceUserFunction") == 0) { if (py::isinstance<py::function>(value)) {cObjectFFRFreducedOrder->GetParameters().forceUserFunction = py::cast<std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/} else
-            if (!EPyUtils::IsPyTypeInteger(value) || (py::cast<int>(value) != 0)) {PyError(STDstring("Failed to convert PyFunction: must be either valid python function or 0, but got ")+EXUstd::ToString(value)); }; } //! AUTO: get parameter
-        else if (parameterName.compare("massMatrixUserFunction") == 0) { if (py::isinstance<py::function>(value)) {cObjectFFRFreducedOrder->GetParameters().massMatrixUserFunction = py::cast<std::function<NumpyMatrix(const MainSystem&,Real,Index,StdVector,StdVector)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/} else
-            if (!EPyUtils::IsPyTypeInteger(value) || (py::cast<int>(value) != 0)) {PyError(STDstring("Failed to convert PyFunction: must be either valid python function or 0, but got ")+EXUstd::ToString(value)); }; } //! AUTO: get parameter
+        else if (parameterName.compare("forceUserFunction") == 0) { cObjectFFRFreducedOrder->GetParameters().forceUserFunction = value; } //! AUTO: get parameter
+        else if (parameterName.compare("massMatrixUserFunction") == 0) { cObjectFFRFreducedOrder->GetParameters().massMatrixUserFunction = value; } //! AUTO: get parameter
         else if (parameterName.compare("computeFFRFterms") == 0) { cObjectFFRFreducedOrder->GetParameters().computeFFRFterms = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("modeBasis") == 0) { EPyUtils::SetNumpyMatrixSafely(value, cObjectFFRFreducedOrder->GetParameters().modeBasis); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("outputVariableModeBasis") == 0) { EPyUtils::SetNumpyMatrixSafely(value, cObjectFFRFreducedOrder->GetParameters().outputVariableModeBasis); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter

@@ -12,8 +12,10 @@ from autoGenerateHelper import GenerateLatexStrKeywordExamples, ExtractExamplesW
     TypeConversion, GenerateHeader, SplitString, Str2Latex, DefaultValue2Python, Str2Doxygen, GetDateStr, GetTypesStringLatex, \
     PyLatexRST, LatexString2RST, RSTheaderString, RSTlabelString, FileNameLower, RemoveIndentation
 
+import copy
 import os
 import io #RST files written as UTF-8
+from exudynVersion import exudynVersionString
 
 space4 = '    '
 space8 = space4+space4
@@ -50,8 +52,25 @@ possibleTypes = {'Object':['_None','Ground','Connector','Constraint','Body','Sin
                            'BodyVolume','BodyMass','BodySurfaceNormal'],
                  'Load':[], 'Sensor':[]}
 
+#consider templated function in future:
+#     template<typename ReturnType, typename... Args>
+# ReturnType invokeFunction(std::function<ReturnType(Args...)> func, Args... args) {
+#     return func(args...); //
+# }
+#example use:
+# std::function<double(double, int)> multiply = [](double x, int y) -> double {
+#         return x * y;
+#     };
+# std::cout << invokeFunction(multiply, 3.5, 2) << std::endl; // Outputs: 7.0
+
+useNewUserFunctions = True
+
 #conversion list for python functions; names must always start with 'PyFunction'...
-pyFunctionTypeConversion = {'PyFunctionGraphicsData': 'std::function<py::object(const MainSystem&,Index)>',
+pyFunctionTypeConversion = {#for MainSystem => see other MainSystemUserFunctions
+                            'PyFunctionBoolMbsScalar': 'std::function<bool(const MainSystem&,Real)>',#PreStepUserFunction, PostStepUserFunction
+                            'PyFunctionVector2DMbsScalar': 'std::function<StdVector2D(const MainSystem&,Real)>',#PreStepUserFunction, PostStepUserFunction
+                            #for items:
+                            'PyFunctionGraphicsData': 'std::function<py::object(const MainSystem&,Index)>',
                             'PyFunctionMbsScalar2': 'std::function<Real(const MainSystem&,Real,Real)>',#LoadCoordinate
                             'PyFunctionVector3DmbsScalarVector3D': 'std::function<StdVector3D(const MainSystem&,Real,StdVector3D)>', #LoadForceVector, LoadTorqueVector, LoadMassProportional
                             'PyFunctionMbsScalarIndexScalar': 'std::function<Real(const MainSystem&,Real,Index,Real)>', #ConnectorCoordinate
@@ -72,6 +91,11 @@ pyFunctionTypeConversion = {'PyFunctionGraphicsData': 'std::function<py::object(
                             'PyFunctionVectorMbsScalarArrayIndexVectorConfiguration': 'std::function<StdVector(const MainSystem&,Real,StdArrayIndex,StdVector,ConfigurationType)>', #SensorUserFunction
 #StdVector3D=std::array<Real,3> does not accept numpy::array                            'PyFunctionVector3DScalarVector3D': 'std::function<StdVector3D(Real,StdVector3D)>', #LoadForceVector, LoadTorqueVector, LoadMassProportional
                             }
+pyFunctionTypeConversionUFtemplate = '{UFT}'
+if useNewUserFunctions:
+    pyFunctionTypeConversionUFtemplate = 'PythonUserFunctionBase< {UFT} >'
+
+
 
 #this for mutable args
 def IsASafelyVector(parameterType):
@@ -253,16 +277,25 @@ def ExtractLatexSymbol(s):
 
 #function which writes the mini examples for every item into a separate file
 def WriteMiniExample(className, miniExample):
-    s = '#+++++++++++++++++++++++++++++++++++++++++++\n'
-    s+= '# Mini example for class ' + className + '\n'
-    s+= '#+++++++++++++++++++++++++++++++++++++++++++\n\n'
+    s=''
+    # s+= '#+++++++++++++++++++++++++++++++++++++++++++\n'
+    # s+= '# Mini example for class ' + className + '\n'
+    # s+= '#+++++++++++++++++++++++++++++++++++++++++++\n\n'
+    
+    s+= '#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n'
+    s+= '# This is an EXUDYN example\n'
+    s+= '# \n'
+    s+= '# Details:  Mini example for class ' + className + '\n'
+    s+= '# \n'
+    s+= "# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.\n"
+    s+= '# \n'
+    s+= '#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n'
 
     s+= 'import sys\n'
-    #s+= "sys.path.append('../../bin/WorkingRelease')\n"
     s+= "sys.path.append('../TestModels')\n"
     s+= "sys.path.append('../../TestModels') #for direct run in directory\n\n"
     s+= 'import exudyn as exu\n'
-    #s+= 'from exudyn.itemInterface import *\n' #not needed any more
+
     s+= 'from exudyn.utilities import *\n\n'
     s+= 'from modelUnitTests import ExudynTestStructure, exudynTestGlobals\n'
     s+= 'import numpy as np\n'
@@ -275,14 +308,16 @@ def WriteMiniExample(className, miniExample):
     s+= 'nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))\n'
     s+= '\n'
     # s+= 'testError=1 #set default error, if failed\n'
-    s+= 'exu.Print("start mini example for class ' + className + '")\n'
-    s+= 'try: #puts example in safe environment\n'
-    s+= miniExample
+    #s+= 'exu.Print("start mini example for class ' + className + '")\n'
+    #s+= 'try: #puts example in safe environment\n'
+    #s+= miniExample
+    s+= RemoveIndentation( miniExample, removeAllSpaces=False)
     s+= '\n'
-    s+= 'except BaseException as e:\n'
-    s+= space4+'exu.Print("An error occured in test example for ' + className + ':", e)\n'
-    s+= 'else:\n'
-    s+= space4+'exu.Print("example for ' + className + ' completed, test result =", exudynTestGlobals.testResult)\n'
+    #s+= 'except BaseException as e:\n'
+    #s+= space4+'exu.Print("An error occured in test example for ' + className + ':", e)\n'
+    #s+= 'else:\n'
+    #s+= space4+'exu.Print("example for ' + className + ' completed, test result =", exudynTestGlobals.testResult)\n'
+    s+= 'exu.Print("example for ' + className + ' completed, test result =", exudynTestGlobals.testResult)\n'
     s+= '\n'
     
     fileExample=open('../../pythonDev/TestModels/MiniExamples/'+className+'.py','w') 
@@ -356,8 +391,15 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                  'Float9': 'std::vector<float>', 'Float16': 'std::vector<float>', #e.g. for OpenGL rotation matrix and homogenous transformation
                  'Index2': 'std::vector<Index>', 'Index3': 'std::vector<Index>', 'Index4': 'std::vector<Index>',
                  } #convert parameter types to C++/EXUDYN types
-
     typeCasts.update(pyFunctionTypeConversion)#add the list of python (user) functions
+
+    typeConversionUF = {}
+    for key, value in typeConversion.items():
+        if 'PyFunction' in key:
+            typeConversionUF[key] = pyFunctionTypeConversionUFtemplate.replace('{UFT}',value)
+        else:
+            typeConversionUF[key] = value
+    typeConversion = typeConversionUF #for new user functions
     
     classStr = parseInfo['class']
     
@@ -371,7 +413,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
     visuClassStr = "Visualization" + classStr
 
     symbolicUserFunctionSet = []
-    symbolicUserFunctionArgs = {}
+    #symbolicUserFunctionArgs = {}
     
     classNames = [compParamClassStr, mainParamClassStr, compClassStr, mainClassStr, visuClassStr]
 
@@ -395,6 +437,11 @@ def WriteFile(parseInfo, parameterList, typeConversion):
     if usesPyFunction:
         sParamMain += '#include <pybind11/functional.h> //! AUTO: for function handling ... otherwise gives a python error (no compilation error in C++ !)\n'
         sParamComp += '#include <functional> //! AUTO: needed for std::function\n'
+        
+        if useNewUserFunctions:
+            sParamComp += '#include "Pymodules/PythonUserFunctions.h" //! AUTO: needed for user functions, without pybind11\n'
+
+            
 
     #sParamMain += 'using namespace pybind11::literals; //! # enables the "_a" literals\n\n'
     sParamMain += '#include "Autogenerated/' + compClassStr + '.h"\n\n'
@@ -854,7 +901,14 @@ def WriteFile(parseInfo, parameterList, typeConversion):
     for parameter in parameterList:
         if (parameter['lineType'] == 'V' and
             not IsInternalSetGetParameter(parameter['type']) ): #only if it is a member variable but not special one with conversion
-            typeStr = TypeConversion(parameter['type'], typeConversion)
+        
+            isPyFunction = (parameter['type'].find('PyFunction') != -1) 
+
+            if isPyFunction:
+                typeStr = TypeConversion(parameter['type'], typeConversionUF)
+            else:
+                typeStr = TypeConversion(parameter['type'], typeConversion)
+            
             if parameter['cFlags'].find('U') != -1:
                 typeStr = 'mutable ' + typeStr #make this variable changable in GetMassMatrix(), ComputeODE2RHS(), ... functions
                 #print(typeStr)
@@ -994,28 +1048,31 @@ def WriteFile(parseInfo, parameterList, typeConversion):
             if typeStr[len(typeStr)-1] == '*':
                 refChar = ''
     
+            isPyFunction = (parameter['type'].find('PyFunction') != -1) #in case of function, special conversion and tests are necessary (function is either 0 or a python function)
+
+            paramStrAccess = paramStr
+            # if isPyFunction:
+            #     paramStrAccess += '.userFunction'
+
             #add function definition for internal conversion functions:
             if IsInternalSetGetParameter(parameter['type']):
                 sList[i]+=space4+'void SetInternal' + parameter['type'] + '(const py::object& pyObject); //! AUTO: special function which writes pyObject into local data\n'
                 sList[i]+=space4+'Py' + parameter['type']+' GetInternal' + parameter['type'] + '() const; //! AUTO: special function which returns '+parameter['type'] +' converted from local data\n'
             #add Get/Set class function except from members in CItem parameter classes, which are public
             elif (i > 1) and (parameter['lineType'] != 'Vp'): #must be comp, main or visu class; don't do it, if variable of parent class
-                #print('add access to:',compClassStr,':',paramStr)
+                #print('add access to:',compClassStr,':',paramStrAccess)
                 sList[i]+=space4+'//! AUTO:  Write (Reference) access to:' + Str2Doxygen(parameter['parameterDescription']) + '\n'
                 sList[i]+=space4+'void Set' + functionStr + '(const ' + TypeConversion(parameter['type'], typeConversion)
-                sList[i]+='& value) { ' + paramStr + ' = value; }\n'
+                sList[i]+='& value) { ' + paramStrAccess + ' = value; }\n'
         
                 sList[i]+=space4+'//! AUTO:  Read (Reference) access to:' + Str2Doxygen(parameter['parameterDescription']) + '\n'
                 sList[i]+=space4+'const ' + typeStr + refChar + ' '
-                sList[i]+='Get' + functionStr + '() const { return '+paramStr+'; }\n'
+                sList[i]+='Get' + functionStr + '() const { return '+paramStrAccess+'; }\n'
                 if (i == 2) | (i == 4) : #in comp and visu class, also add the Get...() Reference access
                     sList[i]+=space4+'//! AUTO:  Read (Reference) access to:' + Str2Doxygen(parameter['parameterDescription']) + '\n'
                     sList[i]+=space4 + typeStr + refChar + ' '
-                    sList[i]+='Get' + functionStr + '() { return '+paramStr+'; }\n'
+                    sList[i]+='Get' + functionStr + '() { return '+paramStrAccess+'; }\n'
                 sList[i]+='\n'
-
-                
-
 
             destFolder = '' #destination folder string (e.g. GetParameters())
             if parameter['destination'].find('C') != -1: #computation
@@ -1047,9 +1104,11 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                 parRead = '' #used for dictionary read and for parameter read
                 parWrite = '' #used for dictionary write and for parameter write
                 if parameter['type'] == 'BodyGraphicsData': #special conversion routine
-                    dictListRead[i] +=space8+'d["' + pyName + '"] = PyGetBodyGraphicsDataList(' + destStr + addGraphicsData+'); //! AUTO: generate dictionary with special function\n'
+                    #dictListRead[i] +=space8+'d["' + pyName + '"] = PyGetBodyGraphicsDataList(' + destStr + addGraphicsData+'); //! AUTO: generate dictionary with special function\n'
+                    parRead = 'PyGetBodyGraphicsDataList(' + destStr + addGraphicsData+')'
                 elif parameter['type'] == 'BodyGraphicsDataList': #special conversion routine
-                    dictListRead[i] +=space8+'d["' + pyName + '"] = PyGetBodyGraphicsDataListOfLists(' + destStr + addGraphicsData+'); //! AUTO: generate dictionary with special function\n'                    
+                    #dictListRead[i] +=space8+'d["' + pyName + '"] = PyGetBodyGraphicsDataListOfLists(' + destStr + addGraphicsData+'); //! AUTO: generate dictionary with special function\n'                    
+                    parRead = 'PyGetBodyGraphicsDataListOfLists(' + destStr + addGraphicsData+')'
                 elif IsInternalSetGetParameter(parameter['type']):
                     parRead = 'GetInternal'+ parameter['type'] +'()'
                 elif parameter['type'][:-2] == 'Matrix' and parameter['type'][-1] == 'D':
@@ -1082,12 +1141,12 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                         #parRead = 'EPyUtils::GetArrayNodeIndexFromSlimArray(' + destStr + ')'
                     else:
                         parRead = '(' + typeCastStr + ')' + destStr
+                elif isPyFunction:
+                    parRead = '(py::object)'+destStr
                 else:
                     parRead = '(' + typeCastStr + ')' + destStr
 
-                isPyFunction = False                
-                if parameter['type'].find('PyFunction') != -1: #in case of function, special conversion and tests are necessary (function is either 0 or a python function)
-                    isPyFunction = True
+                # isPyFunction = (parameter['type'].find('PyFunction') != -1) #in case of function, special conversion and tests are necessary (function is either 0 or a python function)
                     
                 #+++++++++++++++++
                 #add information for symbolic user function
@@ -1100,33 +1159,25 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                                       'classType':classTypeStr,
                                       'userFunctionName':parameter['cplusplusName'],
                                       'pyUserFunctionType':pyUserFunctionType,
+                                      'stdFunctionType':stdFunctionType,
                                       }
 
-                    # #create dictionaries to convert itemtype+user function into stdFunctionType
-                    # symbolicUserFunctionArgs[symbolicNewSet['itemType']+'#'+
-                    #                          symbolicNewSet['userFunctionName'] ] = stdFunctionType
-
-                    if not (#'StdVector' in stdFunctionType or
-                        'GraphicsData' in pyUserFunctionType
-                        #or 'StdMatrix' in stdFunctionType
-                        or 'NumpyMatrix' in stdFunctionType
-                        or 'py::object' in stdFunctionType
-                        or 'StdArrayIndex' in stdFunctionType
-                        ):
-                        # print('user function in '+classStr)
-                        symbolicUserFunctionSet += [symbolicNewSet]
+                    symbolicUserFunctionSet += [symbolicNewSet]
 
                 
                 #+++++++++++++++++
                 #read from dictionary
                 if len(parRead) != 0:
                     dictListRead[i] += space8
-                    if isPyFunction: 
-                        dictListRead[i]+='if ('+destStr+')\n            {' #avoid that 'None' is returned in dict due to empty user function
+                    # if isPyFunction: #old style; now already correct object returned
+                    #     dictListRead[i]+='if ('+destStr+')\n            {' #avoid that 'None' is returned in dict due to empty user function
+                    # parReadDict = parRead
+                    # if isPyFunction: 
+                    #     parRead += '.GetGetPythonDictionary()'
                     dictListRead[i] +='d["' + pyName + '"] = ' + parRead + ';'
-                    if isPyFunction: 
-                        dictListRead[i]+='}\n        else\n'
-                        dictListRead[i]+=space8+'    {d["' + pyName + '"] = 0;}\n'
+                    # if isPyFunction: 
+                    #     dictListRead[i]+='}\n        else\n'
+                    #     dictListRead[i]+=space8+'    {d["' + pyName + '"] = 0;}\n'
                             
                     dictListRead[i] +=' //! AUTO: cast variables into python (not needed for standard types) \n'
                                                     
@@ -1151,22 +1202,24 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                     else:
                         dictStr = 'd["' + pyName + '"]'
                         if isPyFunction: #in case of function, special conversion and tests are necessary (function is either 0 or a python function)
-                            dictListWrite[i]+='if (EPyUtils::CheckForValidFunction(d["'+pyName+'"])) \n'+space12+'{ '
-                            dictStr = '(py::function)'+dictStr
-
-                        if typeCastStr != 'OutputVariableType':
-                            if IsItemIndex(parameter['type']):
-                                dictListWrite[i]+=destStr + ' = ' + 'EPyUtils::Get'+parameter['type']+'Safely'
-                            else:
-                                dictListWrite[i]+=destStr + ' = py::cast<' + typeCastStr + '>'
+                            #dictListWrite[i]+=  destStr + ' = ' + 'EPyUtils::GetSTDfunction<' + typeCastStr + '>('+dictStr+', "'+classStr+'.'+parameter['pythonName']+'")'
+                            dictListWrite[i]+=  destStr + ' = ' + dictStr #py::object can be directly written 
                         else:
-                            dictListWrite[i]+=destStr + ' = (OutputVariableType)py::cast<Index>'
+                            if typeCastStr != 'OutputVariableType':
+                                if IsItemIndex(parameter['type']):
+                                    dictListWrite[i]+=destStr + ' = ' + 'EPyUtils::Get'+parameter['type']+'Safely'
+                                else:
+                                    dictListWrite[i]+=destStr + ' = py::cast<' + typeCastStr + '>'
+                            else:
+                                dictListWrite[i]+=destStr + ' = (OutputVariableType)py::cast<Index>'
                             
-                        dictListWrite[i]+='(' + dictStr + '); /* AUTO:  read out dictionary and cast to C++ type*/'
+                            dictListWrite[i]+='(' + dictStr + ')'
 
-                        if isPyFunction: 
-                            dictListWrite[i]+='}\n'+space12
-                            dictListWrite[i]+='else {' + destStr  + ' = 0;  /*AUTO: otherwise assign with zero!*/ }'
+                        dictListWrite[i]+='; /* AUTO:  read out dictionary and cast to C++ type*/'
+
+                        # if isPyFunction: 
+                        #     dictListWrite[i]+='}\n'+space12
+                        #     dictListWrite[i]+='else {' + destStr  + ' = 0;  /*AUTO: otherwise assign with zero!*/ }'
                    
                     if parameter['cFlags'].find('O') != -1: #optional ==> means that we have to check first, if it exists in the dictionary
                         dictListWrite[i]+='} '
@@ -1183,19 +1236,15 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                     elif IsInternalSetGetParameter(parameter['type']):
                         parWrite+='SetInternal' + parameter['type'] + '(value); /*! AUTO:  safely cast to C++ type*/'
                     elif parameter['type'] == 'BodyGraphicsData': #special conversion routine
-                        parWrite+='' #not implemented right now!
+                        parWrite+= 'PyWriteBodyGraphicsDataList(value, '+destStr+')'
                     elif parameter['type'] == 'BodyGraphicsDataList': #special conversion routine
-                        parWrite+='' #not implemented right now!
+                        parWrite+='PyWriteBodyGraphicsDataListOfLists(value, '+destStr+')'
                     elif IsItemIndex(parameter['type']):
                         parWrite+=destStr + ' = ' + 'EPyUtils::Get'+parameter['type']+'Safely'
                         parWrite+='(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/'
                     elif isPyFunction:
-                        parWrite+='if (py::isinstance<py::function>(value)) {'
-                        parWrite+=destStr + ' = py::cast<' + typeCastStr + '>'
-                        parWrite+='(value); /* AUTO:  read out dictionary and cast to C++ type*/} else\n'+space12
-                        parWrite+='if (!EPyUtils::IsPyTypeInteger(value) || (py::cast<int>(value) != 0)) '
-                        parWrite+='{PyError(STDstring("Failed to convert PyFunction: must be either valid python function or 0, but got ")+EXUstd::ToString(value)); }'
-                        
+                        #parWrite+=destStr + ' = EPyUtils::GetSTDfunction<' + typeCastStr + '>(value, "'+classStr+'.'+parameter['pythonName']+'")'
+                        parWrite+=destStr + ' = value' #py::object can be directly written 
                     else:
                         parWrite+=destStr + ' = py::cast<' + typeCastStr + '>'
                         parWrite+='(value); /* AUTO:  read out dictionary and cast to C++ type*/'
@@ -1204,12 +1253,20 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                 #parameter read
                 if parRead != '':
                     #if parameter['type'].find('Numpy') != -1: #do not add py::cast(...) NumpyMatrix/Vector
+                    parameterReadStr += 'if (parameterName.compare("' + pyName + '") == 0) { return '
                     if (parRead.find('EPyUtils::Matrix') != -1 
                         or parRead.find('EPyUtils::Vector') != -1
                         or parRead.find('EPyUtils::SlimVector') != -1): #do not add py::cast(...) to anything already having a special PyUtils function
-                        parameterReadStr += 'if (parameterName.compare("' + pyName + '") == 0) { return ' + parRead + ';} //! AUTO: get parameter\n        else '
+                        parameterReadStr += parRead
+                    elif isPyFunction:
+                        #parameterReadStr += destStr+' ? py::cast('+parRead+') : py::cast((int)0);'
+                        parameterReadStr += destStr+'.GetPythonDictionary();'
+                    elif 'BodyGraphicsData' in parameter['type']:
+                        parameterReadStr += parRead.replace(', addGraphicsData',', true')
                     else:
-                        parameterReadStr += 'if (parameterName.compare("' + pyName + '") == 0) { return py::cast(' + parRead + ');} //! AUTO: get parameter\n        else '
+                        parameterReadStr += 'py::cast(' + parRead + ')'
+                    
+                    parameterReadStr += ';} //! AUTO: get parameter\n        else '
                 
                 if parWrite != '':
                     parameterWriteStr += 'if (parameterName.compare("' + pyName + '") == 0) { ' + parWrite + '; } //! AUTO: get parameter\n        else '
@@ -1321,39 +1378,6 @@ def WriteFile(parseInfo, parameterList, typeConversion):
 
     #.def("__repr__", &Vector2::toString);
 
-    #************************************
-    # SIMPLE ostream operator:
-#    s+=('  friend std::ostream& operator<<(std::ostream& os, const ' + 
-#       parseInfo['class'] + '& object);\n')
-
-    # FULL ostream operator - THIS IS DONE LATERON:
-#    s+='  virtual void Print (std::ostream& os) const\n'
-#    s+='  {\n'
-#    s+=space4+'os << "' + parseInfo['class'] + '";\n'
-#    if len(parseInfo['parentClass']) != 0:
-#        s+=space4+'os << ":"; \n'
-#        s+=space4+'' + parseInfo['parentClass'] + '::Print(os);\n'
-#        
-#    #output each parameter
-#    for parameter in parameterList:
-#        if (parameter['lineType'] == 'V'): #only if it is a member variable
-#            paramStr = parameter['cplusplusName']
-#            typeStr = TypeConversion(parameter['type'], typeConversion)
-#            refChar = ''
-#            if typeStr[len(typeStr)-1] == '*':
-#                refChar = '*' #print content of object, not the pointer address
-#            s+=space4+'os << "  ' + paramStr + ' = " << ' + refChar + paramStr + ' << "\\n";\n'
-#         
-#    s+=space4+'os << "\\n";\n'
-#    s+='  }\n\n' # end ostream operator
-#
-#    if len(parseInfo['parentClass']) == 0:
-#        s+=('  friend std::ostream& operator<<(std::ostream& os, const ' + parseInfo['class'] + '& object)\n')
-#        s+= '  {\n'
-#        s+= space4+'object.Print(os);\n'
-#        s+= space4+'return os;\n'
-#        s+= '  }\n\n' # end ostream operator
-#    
     for i in range(nClasses):
         sList[i]+='};\n\n\n' #class
 
@@ -1362,7 +1386,8 @@ def WriteFile(parseInfo, parameterList, typeConversion):
     sList[4] += '\n#endif //#ifdef include once...\n'
 
     s = [sList[0]+sList[2], sList[1]+sList[3], sList[4], plr.sLatex, sLatexItemList, 
-         classTypeStr, sPythonClass, plr.sRST, [symbolicUserFunctionSet,symbolicUserFunctionArgs]] #s[7] = plr string, s[5]=class type (e.g. Node)
+         classTypeStr, sPythonClass, plr.sRST, [symbolicUserFunctionSet]] #s[7] = plr string, s[5]=class type (e.g. Node)
+    #,symbolicUserFunctionArgs]] 
 
     return s
 
@@ -1415,15 +1440,32 @@ def CutString(theString, numberOfCutLines):
 
 #%%************************************************
 #helper functions for symbolic user functions:
+
+#define types, not available for symbolic user functions:
+def FitsSymbolicUF(pyUserFunctionType, stdFunctionType):
+    return not (#'StdVector' in stdFunctionType or
+                'GraphicsData' in pyUserFunctionType
+                or 'NumpyMatrix' in stdFunctionType
+                or 'py::object' in stdFunctionType
+                or 'StdArrayIndex' in stdFunctionType
+                )
+
+    
+# NOTE: WILL BE DELETED, because not needed in FUTURE !!!!!!!!!!
 def CreateStringSymbolicUserFunctionTransfer(pySymbolicUserFunction):
+    # template<typename TItemIndex>
+    # void TransferUserFunction2Item(MainSystem& mainSystem, TItemIndex itemIndex, const STDstring& userFunctionName)
     s = """public:
     //! this function realizes the assignment of user function to item fully in C++, to avoid 2 x Python-casts!
-    template<typename TItemIndex>
-    void TransferUserFunction2Item(MainSystem& mainSystem, TItemIndex itemIndex, const STDstring& userFunctionName)
+    void TransferUserFunction2Item(MainSystem& mainSystem, py::object itemIndex, const STDstring& userFunctionName)
     {
-        STDstring sType = itemIndex.GetTypeString();
-        Index itemNumber = itemIndex.GetIndex();
-        STDstring itemTypeName = GetItemTypeName(mainSystem, itemIndex);
+		STDstring sType;
+		STDstring itemTypeName;
+        Index itemNumber;
+		GetItemTypeName(mainSystem, itemIndex, sType, itemTypeName, itemNumber);
+        //Index itemNumber = itemIndex.GetIndex();
+        //STDstring sType = itemIndex.GetTypeString();
+        //STDstring itemTypeName = GetItemTypeName(mainSystem, itemIndex);
 
 """
     endClassStr = """
@@ -1435,51 +1477,58 @@ def CreateStringSymbolicUserFunctionTransfer(pySymbolicUserFunction):
         }
 """
     functionTypeList = []
-    sFunctionsStr = 'protected:\n    //collect all kinds of user functions\n'
+    sFunctionsStr = 'public:\n    //collect all kinds of user functions\n'
     classTypeList = []
     useElse = ''
     useElseClassType = ''
 
+    # print("pySymbolicUserFunction\n",pySymbolicUserFunction)
 
     for item in pySymbolicUserFunction:
         if len(item) == 0: continue
     
-        itemType = item['itemType'] #ConnectorSpringDamper
+        itemType = item['itemType']     #ConnectorSpringDamper
         classType = item['classType']   #Object, Node
         userFunctionName = item['userFunctionName']
         pyUserFunctionType = item['pyUserFunctionType']
         userFunctionType = pyUserFunctionType.replace('PyFunction','')
         userFunctionType = userFunctionType[0].lower()+userFunctionType[1:]
+        stdFunctionType = pyFunctionTypeConversion[pyUserFunctionType]
 
         cItem = 'C'+classType+itemType
 
         if userFunctionType not in functionTypeList:
             functionTypeList += [userFunctionType]
+            # print(userFunctionType)
             sFunctionsStr += ' '*4+pyFunctionTypeConversion[pyUserFunctionType]+' '
             sFunctionsStr += userFunctionType + ';\n'
         # else:
         #     print('is there:', userFunctionType)
         
-        if classType not in classTypeList:
-            if len(classTypeList) != 0:
-                s+=endClassStr
-            useElse = ''
-
-            classTypeList += [classType]
-            s+= ' '*8+useElseClassType+'if (sType == "'+classType+'Index")\n'
-            useElseClassType = 'else '
-            s+="""        {
-            CHECKandTHROW(itemNumber < mainSystem.GetCSystem()->GetSystemData().GetCObjects().NumberOfItems(),
+        if not FitsSymbolicUF(pyUserFunctionType, stdFunctionType): continue
+        
+        if itemType != 'MainSystem':
+            if classType not in classTypeList:
+                if len(classTypeList) != 0:
+                    s+=endClassStr
+                useElse = ''
+    
+                classTypeList += [classType]
+                s+= ' '*8+useElseClassType+'if (sType == "'+classType+'Index")\n'
+                useElseClassType = 'else '
+                s+="""        {
+            CHECKandTHROW(itemNumber < mainSystem.GetCSystem().GetSystemData().GetCObjects().NumberOfItems(),
                           "Symbolic::TransferUserFunction2Item: illegal objectNumber");
 
 """
-        s+= ' '*12+useElse+'if (itemTypeName == "'+itemType+'" && userFunctionName == "'+userFunctionName+'")\n'
-        s+= ' '*12+'{\n'
-        s+= ' '*16+cItem+'* cItem = ('+cItem+'*)(mainSystem.GetCSystem()->GetSystemData().GetC'+classType+'s()[itemNumber]);\n'
-        s+= ' '*16+'cItem->GetParameters().'+ userFunctionName + ' = '+ userFunctionType + ';\n' #mbsScalarIndexScalar5; //UFlocal;
-        s+= ' '*12+'}\n'
-        #PyFunctionMbsScalarIndexScalar5
-        useElse = 'else '
+            s+= ' '*12+useElse+'if (itemTypeName == "'+itemType+'" && userFunctionName == "'+userFunctionName+'")\n'
+            s+= ' '*12+'{\n'
+            s+= ' '*16+cItem+'* cItem = ('+cItem+'*)(mainSystem.GetCSystem().GetSystemData().GetC'+classType+'s()[itemNumber]);\n'
+            #s+= ' '*16+'cItem->GetParameters().'+ userFunctionName + ' = '+ userFunctionType + ';\n' #mbsScalarIndexScalar5; //UFlocal;
+            s+= ' '*16+'cItem->GetParameters().'+ userFunctionName + '.SetSymbolicUserFunction('+ userFunctionType + ');\n' #mbsScalarIndexScalar5; //UFlocal;
+            
+            s+= ' '*12+'}\n'
+            useElse = 'else '
 
 
     s+=endClassStr
@@ -1493,14 +1542,45 @@ def CreateStringSymbolicUserFunctionTransfer(pySymbolicUserFunction):
     return s
 
 
+#create C++ code for included .h file for symbolic user functions
 def CreateStringSymbolicUserFunctionSet(pySymbolicUserFunction):
+    
+    sTemplateInstantiation = '//included into SymbolicUtilities.h\n//templates require explicit instantiations for each template because otherwise linker problems ... (alternative: include everything into .h files ...)\n'
+    stdFunctionMember = '//collect all kinds of user functions\npublic:\n'
+
+    #templates for UFT GetSTDfunction()
+    sSTDfunctionTemplate="""if constexpr (std::is_same_v<UFT, {stdFunction}>)
+		{
+			return {varName};
+		}
+"""
+    
+    sSTDfunction = """
+	//! for specific user function type, get user function by type and name
+    template<typename UFT>
+    UFT GetSTDfunction() const
+    {
+"""
+    sSTDfunctionEnd = """
+		return UFT(0); //will never happen, but avoids errors/warnings
+    }
+
+"""
+    
     s = """
 	//! set up general user function from dictionary:
-	template<typename TItemIndex>
-	void SetUserFunctionFromDict(MainSystem& mainSystem, py::dict pyObject, TItemIndex itemIndex, const STDstring& userFunctionName)
+	void SetUserFunctionFromDict(MainSystem& mainSystem, py::dict pyObject, const STDstring& userFunctionName, py::object itemIndex, STDstring itemTypeName)
 	{
-		STDstring sType = itemIndex.GetTypeString();
-		STDstring itemTypeName = GetItemTypeName(mainSystem, itemIndex);
+        if (itemTypeName == "None")
+        {
+            STDstring sType;
+            Index itemNumber;
+            GetItemTypeName(mainSystem, itemIndex, sType, itemTypeName, itemNumber);
+        }
+        else
+        {
+            CHECKandTHROW(itemIndex.is_none(), "SetUserFunctionFromDict: if itemTypeName is provided, itemIndex must be None");
+        }
 
 		SetupUserFunction(pyObject, itemTypeName, userFunctionName);
 
@@ -1510,41 +1590,41 @@ def CreateStringSymbolicUserFunctionSet(pySymbolicUserFunction):
     sFunctionsStr = '' #collect all kinds of user functions
     classTypeList = []
     useElse = ''
+    stdFunctionElse = ''
+    previousList = []
     for item in pySymbolicUserFunction:
         if len(item) == 0: continue
-    
+        
         itemType = item['itemType'] #ConnectorSpringDamper
+    
         classType = item['classType']   #Object, Node
         userFunctionName = item['userFunctionName']
         pyUserFunctionType = item['pyUserFunctionType']
         userFunctionType = pyUserFunctionType.replace('PyFunction','')
         userFunctionType = userFunctionType[0].lower()+userFunctionType[1:]
-        cUserFunction = pyFunctionTypeConversion[pyUserFunctionType]
+        stdFunctionType = pyFunctionTypeConversion[pyUserFunctionType]
         
-        cUserFunctionReturn = cUserFunction.split('<')[1].split('(')[0].strip()
+        if stdFunctionType in previousList: 
+            # print('double: ',stdFunctionType)
+            continue
+        previousList.append(stdFunctionType)
+        
+        sSTDfunction += '        '+stdFunctionElse+sSTDfunctionTemplate.replace('{varName}',userFunctionType).replace('{stdFunction}',stdFunctionType)
+        stdFunctionElse = 'else '
+        
+        sTemplateInstantiation += 'template class PythonUserFunctionBase<{stdFunction}>;\n'.replace('{stdFunction}',stdFunctionType)
+        stdFunctionMember += ' '*4+stdFunctionType+' ' + userFunctionType + ';\n'
 
-        returnValueType = cUserFunctionReturn.replace('py::object','PyObject')
+        if not FitsSymbolicUF(pyUserFunctionType, stdFunctionType): continue
+        
+        stdFunctionTypeReturn = stdFunctionType.split('<')[1].split('(')[0].strip()
+
+        returnValueType = stdFunctionTypeReturn.replace('py::object','PyObject').replace('bool','Bool')
                 
-        # returnValueType = 'Scalar'
-        # if 'StdVector3D' in cUserFunctionReturn:
-        #     returnValueType = 'Vector3D'
-        # elif 'StdVector6D' in cUserFunctionReturn:
-        #     returnValueType = 'Vector6D'
-        # elif 'StdVector' in cUserFunctionReturn:
-        #     returnValueType = 'Vector'
-        # elif 'NumpyMatrix' in cUserFunctionReturn:
-        #     returnValueType = 'Matrix'
-        # elif 'StdMatrix3D' in cUserFunctionReturn:
-        #     returnValueType = 'Matrix3D'
-        # elif 'StdMatrix6D' in cUserFunctionReturn:
-        #     returnValueType = 'Matrix6D'
-        # elif 'py::object' in cUserFunctionReturn:
-        #     returnValueType = 'PyObject'
-
         cItem = 'C'+classType+itemType
 
         #create string for function named args
-        fcnArgs = cUserFunction.split('(')[1].split(')')[0].split(',')
+        fcnArgs = stdFunctionType.split('(')[1].split(')')[0].split(',')
         fcnArgsStr = fcnArgs[0]+' mainSystem'
         fcnArgsOnly = 'mainSystem'
         cnt = 0
@@ -1554,7 +1634,7 @@ def CreateStringSymbolicUserFunctionSet(pySymbolicUserFunction):
             cnt+=1
 
         #create additional if for specific item / UF case
-        s+= ' '*8 + useElse+'if (itemTypeName == "'+itemType+'" && userFunctionName == "'
+        s+= ' '*8 + useElse+'if (itemTypeName == "'+classType+itemType+'" && userFunctionName == "'
         s+= userFunctionName+'")\n'
         s+= ' '*8 +'{'
         s+= ' '*12+'//define the user function as lambda function of this\n'
@@ -1575,8 +1655,10 @@ def CreateStringSymbolicUserFunctionSet(pySymbolicUserFunction):
 	}
 
 """    
+    s = stdFunctionMember + s
+    s+= sSTDfunction + sSTDfunctionEnd
     # print(s)
-    return s
+    return [[s,'PySymbolicUserFunctionSet'],[sTemplateInstantiation, 'PythonUserFunctionsTemplates']]
 
 
 #create dictionary for converting item-userfunction strings into user function arg list
@@ -1591,11 +1673,8 @@ def CreateStringSymbolicUserFunctionArgs(pySymbolicUserFunction):
         userFunctionName = item['userFunctionName']
         pyUserFunctionType = item['pyUserFunctionType']
         # userFunctionType = pyUserFunctionType.replace('PyFunction','')
-        # userFunctionType = userFunctionType[0].lower()+userFunctionType[1:]
-        # cItem = 'C'+classType+itemType
 
         #create string for function named args
-        #  example: std::function<py::object(const MainSystem&,Index)>
         fcnArgs = pyFunctionTypeConversion[pyUserFunctionType].split('(')[1].split(')')[0].split(',')
         fcnType = pyFunctionTypeConversion[pyUserFunctionType].split('(')[0].split('<')[1].strip()
         # print('fcnType:',fcnType)
@@ -1608,7 +1687,7 @@ def CreateStringSymbolicUserFunctionArgs(pySymbolicUserFunction):
             fcnTypesList += [arg.strip()]
             cnt+=1
         
-        userFunctionArgsDict[itemType+','+userFunctionName] = [fcnTypesList,fcnArgsList,[fcnType]]
+        userFunctionArgsDict[classType+itemType+','+userFunctionName] = [fcnTypesList,fcnArgsList,[fcnType]]
     
     return userFunctionArgsDict
 
@@ -1722,7 +1801,21 @@ try: #still close file if crashes
     sLatexGlobalNames = ['Nodes']
     objectClassDict = {} #convert objectType to objectClass number
     symbolicUserFunctionSet = [] #for both set and transfer of symbolic user functions 
-    symbolicUserFunctionArgs = {}
+
+    #manually add MainSystem user functions => see MainSystemUserFunctions:
+    symbolicUserFunctionSet.append({'itemType': 'MainSystem',
+                                    'classType': '', 
+                                    'userFunctionName': 'preStepUserFunction', 
+                                    'pyUserFunctionType': 'PyFunctionBoolMbsScalar'})
+    symbolicUserFunctionSet.append({'itemType': 'MainSystem',
+                                    'classType': '', 
+                                    'userFunctionName': 'postStepUserFunction', 
+                                    'pyUserFunctionType': 'PyFunctionBoolMbsScalar'})
+    symbolicUserFunctionSet.append({'itemType': 'MainSystem',
+                                    'classType': '', 
+                                    'userFunctionName': 'postNewtonFunction', 
+                                    'pyUserFunctionType': 'PyFunctionVector2DMbsScalar'})
+    
     
     for oi, oClass in enumerate(sLatexObjectClass):
         sLatexGlobalNames += ['Objects ('+oClass+')']
@@ -1842,7 +1935,7 @@ try: #still close file if crashes
 
                                 #for symbolic user function:
                                 symbolicUserFunctionSet += fileStr[8][0]
-                                symbolicUserFunctionArgs.update(fileStr[8][1])
+                                #symbolicUserFunctionArgs.update(fileStr[8][1])
 
                                 if typeInd == -1:
                                     print("ERROR: no valid base name found")
@@ -1973,7 +2066,7 @@ try: #still close file if crashes
     #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #write include files (.h) for user functions
     incFiles = [[CreateStringSymbolicUserFunctionTransfer(symbolicUserFunctionSet), 'PySymbolicUserFunctionTransfer']]
-    incFiles += [[CreateStringSymbolicUserFunctionSet(symbolicUserFunctionSet), 'PySymbolicUserFunctionSet']]
+    incFiles += CreateStringSymbolicUserFunctionSet(symbolicUserFunctionSet)
     for [pyStr, name] in incFiles:
         fileUserFunction = directoryString + name+'.h'
         totalNumberOfLines += pyStr.count('\n')
@@ -2019,11 +2112,15 @@ For description of types (e.g., the meaning of \texttt{Vector3D} or \texttt{Nump
     #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #write Python itemInterface
     filePython=open('../../pythonDev/exudyn/itemInterface.py','w') 
-    s = '#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n'
-    s += '#automatically generated file for conversion of item (node, object, marker, ...) data to dictionaries\n'
-    s += '#author: Johannes Gerstmayr\n'
-    s += '#created: 2019-07-01\n'
-    s += '#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n'
+    s = ''
+    s += '#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n'
+    s += '# This is an EXUDYN example \n'
+    s += '# \n'
+    s += '# Details:  automatically generated file for conversion of item (node, object, marker, ...) data to dictionaries\n'
+    s += '# \n'
+    s += '# Author:   Johannes Gerstmayr\n'
+    s += '# Date:     2019-07-01\n'
+    s += '#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n'
     #s += 'from exudyn import OutputVariableType\n\n' #do not import exudyn, causes problems e.g. with exudynFast, ...
     s += '#item interface diagonal matrix creator\n'
     s += '\n'

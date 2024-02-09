@@ -70,7 +70,7 @@ JacobianType::Type CObjectKinematicTree::GetAvailableJacobians() const
 }
 
 //! provide according output variable in "value"
-void CObjectKinematicTree::GetOutputVariable(OutputVariableType variableType, Vector& value, ConfigurationType configuration, Index objectNumber) const
+void CObjectKinematicTree::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber) const
 {
 	switch (variableType)
 	{

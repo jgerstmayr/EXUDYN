@@ -13,8 +13,6 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
            
-#from modelUnitTests import ExudynTestStructure, exudynTestGlobals
-
 import exudyn as exu
 from exudyn.itemInterface import *
 from exudyn.utilities import *
@@ -26,7 +24,6 @@ mbs = SC.AddSystem()
 
 import numpy as np
 
-#exudynTestGlobals.useGraphics=False
 CMS=True
 nModes = 8 #calculate for 2,4,8,16 modes and non-reduced solution to show convergence
 
@@ -445,7 +442,6 @@ simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
 
 #simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.6 #SHOULD work with 0.9 as well
 
-#exudynTestGlobals.useGraphics:
 exu.StartRenderer()
 if 'lastRenderState' in vars():
     SC.SetRenderState(lastRenderState) #load last model view
@@ -454,7 +450,6 @@ if 'lastRenderState' in vars():
 
 mbs.SolveDynamic(simulationSettings)
 
-#if exudynTestGlobals.useGraphics:
 SC.WaitForRenderEngineStopFlag()
 exu.StopRenderer() #safely close rendering window!
 lastRenderState = SC.GetRenderState() #store model view for next simulation

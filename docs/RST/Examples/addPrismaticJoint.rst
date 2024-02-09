@@ -13,38 +13,44 @@ You can view and download this file on Github: `addPrismaticJoint.py <https://gi
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    # This is an EXUDYN example
    #
-   # Details:  Test for CreatePrismaticJoint utility function
+   # Details:  Create a chain of bodies connected with prismatic joints; Example for CreatePrismaticJoint utility function
+   #
+   # Model:    N-link chain of rigid bodies connected by prismatic joints
    #
    # Author:   Johannes Gerstmayr 
    # Date:     2021-07-02
    #
    # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
    #
+   # *clean example*
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    
+   ## import libaries
    import exudyn as exu
-   from exudyn.itemInterface import *
    from exudyn.utilities import *
-   
-   # from modelUnitTests import ExudynTestStructure, exudynTestGlobals
    
    from math import sin, cos, pi
    import numpy as np
    
+   ## set up mbs
    SC = exu.SystemContainer()
    mbs = SC.AddSystem()
    
-   
-   #background
-   color = [0.1,0.1,0.8,1]
+   ## define overall parameters
    L = 0.4 #length of bodies
    d = 0.1 #diameter of bodies
+   p0 = [0.,0.,0] #reference position
+   vLoc = np.array([L,0,0]) #last to next joint
+   g = [0,-9.81,0]
    
+   ## create ground with marker
    oGround=mbs.AddObject(ObjectGround(referencePosition= [-0.5*L,0,0])) 
    mPosLast = mbs.AddMarker(MarkerBodyRigid(bodyNumber = oGround, localPosition=[0,0,0]))
+   bodyLast = oGround
+   
+   ## set up rotation matrices for relative rotation of joints
    A0 = np.eye(3)
    Alast = A0 #previous marker
-   bodyLast = oGround
    
    A0 = RotationMatrixX(0)
    A1 = RotationMatrixY(0.5*pi)
@@ -52,26 +58,22 @@ You can view and download this file on Github: `addPrismaticJoint.py <https://gi
    A3 = RotationMatrixX(-0.5*pi)
    Alist=[A0,A1,A2,A3]
    
+   ## set up list of vectors defining axes
    v0=[0,0,1]
    v1=[1,1,1]
    v2=[1,0,0]
    v3=[0,0,1]
    axisList=[v0,v1,v2,v3]
    
-   p0 = [0.,0.,0] #reference position
-   vLoc = np.array([L,0,0]) #last to next joint
-   #g = [0,0,-9.81]
-   g = [0,-9.81,0]
-   
-   #create a chain of bodies:
+   ## loop to create a chain of 4 bodies under gravity connected with prismatic joints
    for i in range(4):
-       #print("Build Object", i)
+       ### create inertia for block with dimensions [L,d,d]
        inertia = InertiaCuboid(density=1000, sideLengths=[L,d,d])
-       p0 += Alist[i] @ (0.5*vLoc)
-       #p0 += (0.5*vLoc)
+       ### create graphics for body as block with (body-fixed) centerPoint, size and color
+       graphicsBody = GraphicsDataOrthoCubePoint(centerPoint=[0,0,0], size=[0.96*L,d,d], color=color4steelblue)
    
-       ep0 = eulerParameters0 #no rotation
-       graphicsBody = GraphicsDataOrthoCubePoint([0,0,0], [0.96*L,d,d], color4steelblue)
+       ### create and add rigid body to mbs
+       p0 += Alist[i] @ (0.5*vLoc)
        oRB = mbs.CreateRigidBody(inertia=inertia, 
                                  referencePosition=p0,
                                  referenceRotationMatrix=Alist[i],
@@ -81,22 +83,21 @@ You can view and download this file on Github: `addPrismaticJoint.py <https://gi
    
        body0 = bodyLast
        body1 = oRB
+       ### retrieve reference position for simpler definition of global joint position
        point = mbs.GetObjectOutputBody(oRB,exu.OutputVariableType.Position,
                                        localPosition=[-0.5*L,0,0],
                                        configuration=exu.ConfigurationType.Reference)
-       #axis = [0,0,1]
        axis = axisList[i]
+       ### set up prismatic joint between two bodies, at global position and with global axis
        mbs.CreatePrismaticJoint(bodyNumbers=[body0, body1], position=point, axis=axis, 
                                 useGlobalFrame=True, axisRadius=0.6*d, axisLength=1.2*d)
    
        bodyLast = oRB
        
        p0 += Alist[i] @ (0.5*vLoc)
-       #p0 += (0.5*vLoc)
        Alast = Alist[i]
    
-   #mbs.AddLoad(LoadForceVector(markerNumber=mPosLast, loadVector=[0,0,20]))
-   
+   ## assemble and set up simulation settings
    mbs.Assemble()
    
    simulationSettings = exu.SimulationSettings() #takes currently set values or default values
@@ -106,8 +107,7 @@ You can view and download this file on Github: `addPrismaticJoint.py <https://gi
    
    simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
    simulationSettings.timeIntegration.endTime = tEnd
-   simulationSettings.solutionSettings.solutionWritePeriod = 0.001
-   simulationSettings.solutionSettings.sensorsWritePeriod = 0.01
+   simulationSettings.solutionSettings.solutionWritePeriod = 0.005
    #simulationSettings.timeIntegration.simulateInRealtime = True
    simulationSettings.timeIntegration.realtimeFactor = 0.5
    simulationSettings.timeIntegration.verboseMode = 1
@@ -115,7 +115,6 @@ You can view and download this file on Github: `addPrismaticJoint.py <https://gi
    simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.8
    simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations=True
    simulationSettings.timeIntegration.newton.useModifiedNewton = True
-   #simulationSettings.timeIntegration.newton.modifiedNewtonJacUpdatePerStep = True
    
    SC.visualizationSettings.nodes.show = True
    SC.visualizationSettings.nodes.drawNodesAsPoint  = False
@@ -126,8 +125,6 @@ You can view and download this file on Github: `addPrismaticJoint.py <https://gi
    #for snapshot:
    SC.visualizationSettings.openGL.multiSampling=4
    SC.visualizationSettings.openGL.lineWidth=2
-   # SC.visualizationSettings.window.renderWindowSize = [800,600]
-   # SC.visualizationSettings.general.drawCoordinateSystem=False
    
    SC.visualizationSettings.general.autoFitScene = False #use loaded render state
    useGraphics = True
@@ -135,36 +132,25 @@ You can view and download this file on Github: `addPrismaticJoint.py <https://gi
        simulationSettings.displayComputationTime = True
        simulationSettings.displayStatistics = True
        exu.StartRenderer()
+       ## reload previous render configuration
        if 'renderState' in exu.sys:
            SC.SetRenderState(exu.sys[ 'renderState' ])
-       #mbs.WaitForUserToContinue()
    else:
        simulationSettings.solutionSettings.writeSolutionToFile = False
    
-   #mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.TrapezoidalIndex2)
+   ## start solver
    mbs.SolveDynamic(simulationSettings, showHints=True)
    
-   if True: #use this to reload the solution and use SolutionViewer
-       
-       mbs.SolutionViewer(runMode=2, runOnStart=True)
+   ## visualization
+   mbs.SolutionViewer(runMode=2, runOnStart=True)
    
-   
+   ## evaluate some results
    u0 = mbs.GetNodeOutput(nRB, exu.OutputVariableType.Displacement)
    rot0 = mbs.GetNodeOutput(nRB, exu.OutputVariableType.Rotation)
    exu.Print('u0=',u0,', rot0=', rot0)
    
    result = (abs(u0)+abs(rot0)).sum()
-   exu.Print('solution of addRevoluteJoint=',result)
-   
-   # exudynTestGlobals.testError = result - (1.2538806799246283) #2020-07-01: 1.2538806799246283
-   # exudynTestGlobals.testResult = result
-   
-   
-   
-   #%%+++++++++++++++++++++++++++++
-   if useGraphics:
-       SC.WaitForRenderEngineStopFlag()
-       exu.StopRenderer() #safely close rendering window!
+   exu.Print('solution of addPrismaticJoint=',result)
    
    
 

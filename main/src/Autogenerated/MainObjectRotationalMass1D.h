@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-07-21  20:27:17 (last modified)
+* @date         2024-02-04  22:08:12 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -132,7 +132,7 @@ public: // AUTO:
         d["referenceRotation"] = EPyUtils::Matrix2NumPyTemplate(cObjectRotationalMass1D->GetParameters().referenceRotation); //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationObjectRotationalMass1D->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
-        d["VgraphicsData"] = PyGetBodyGraphicsDataList(visualizationObjectRotationalMass1D->GetGraphicsData(), addGraphicsData); //! AUTO: generate dictionary with special function
+        d["VgraphicsData"] = PyGetBodyGraphicsDataList(visualizationObjectRotationalMass1D->GetGraphicsData(), addGraphicsData); //! AUTO: cast variables into python (not needed for standard types) 
         return d; 
     }
 
@@ -145,6 +145,7 @@ public: // AUTO:
         else if (parameterName.compare("referencePosition") == 0) { return EPyUtils::SlimVector2NumPy(cObjectRotationalMass1D->GetParameters().referencePosition);} //! AUTO: get parameter
         else if (parameterName.compare("referenceRotation") == 0) { return EPyUtils::Matrix2NumPyTemplate(cObjectRotationalMass1D->GetParameters().referenceRotation);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectRotationalMass1D->GetShow());} //! AUTO: get parameter
+        else if (parameterName.compare("VgraphicsData") == 0) { return PyGetBodyGraphicsDataList(visualizationObjectRotationalMass1D->GetGraphicsData(), true);} //! AUTO: get parameter
         else  {PyError(STDstring("ObjectRotationalMass1D::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
         return py::object();
     }
@@ -159,6 +160,7 @@ public: // AUTO:
         else if (parameterName.compare("referencePosition") == 0) { EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(value, cObjectRotationalMass1D->GetParameters().referencePosition); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("referenceRotation") == 0) { EPyUtils::SetConstMatrixTemplateSafely<3,3>(value, cObjectRotationalMass1D->GetParameters().referenceRotation); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationObjectRotationalMass1D->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("VgraphicsData") == 0) { PyWriteBodyGraphicsDataList(value, visualizationObjectRotationalMass1D->GetGraphicsData()); } //! AUTO: get parameter
         else  {PyError(STDstring("ObjectRotationalMass1D::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();
     }

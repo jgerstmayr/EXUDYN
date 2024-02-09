@@ -2,7 +2,7 @@
 # This is an EXUDYN python utility library
 #
 # Details:  Basic support functions for simpler creation of Exudyn models.
-#			Advanced functions for loading and animating solutions and for drawing a graph of the mbs system.
+#           Advanced functions for loading and animating solutions and for drawing a graph of the mbs system.
 #           This library requires numpy (as well as time and copy)
 #
 # Author:   Johannes Gerstmayr
@@ -25,7 +25,8 @@ from exudyn.graphicsDataUtilities import *
 from exudyn.itemInterface import *
 
 #for compatibility with older models:
-from exudyn.beams import GenerateStraightLineANCFCable2D, GenerateSlidingJoint, GenerateAleSlidingJoint
+from exudyn.beams import GenerateStraightLineANCFCable2D, GenerateSlidingJoint, GenerateAleSlidingJoint,\
+                         GenerateStraightBeam
 
 
 
@@ -477,7 +478,7 @@ def LoadBinarySolutionFile(fileName, maxRows=-1, verbose=True):
 
         if verbose: print('read binary file')
         fileEnd = False
-# 			ExuFile::BinaryWriteHeader(solFile, bfs);
+#             ExuFile::BinaryWriteHeader(solFile, bfs);
         dataHeader = np.fromfile(file, dtype=np.byte, count=10)
         #dataHeader[0] == '\n'
         indexSize = int(dataHeader[1])
@@ -505,70 +506,70 @@ def LoadBinarySolutionFile(fileName, maxRows=-1, verbose=True):
             print('  pointerSize=',pointerSize)
             print('  bigEndian=',bigEndian)
 
-# 		ExuFile::BinaryWrite(EXUstd::exudynVersion, solFile, bfs);
+#         ExuFile::BinaryWrite(EXUstd::exudynVersion, solFile, bfs);
         sVersion, fileEnd=BinaryReadString(file, intType)
         if verbose: print('  version=',sVersion)
 
-# 		ExuFile::BinaryWrite(STDstring("Mode0000"), solFile, bfs); //change this in future to add new features
+#         ExuFile::BinaryWrite(STDstring("Mode0000"), solFile, bfs); //change this in future to add new features
         sMode, fileEnd=BinaryReadString(file, intType)
         if int(verbose)>1: print('  mode=',sMode)
 
-# 			STDstring str = "Exudyn " + GetSolverName() + " ";
-# 			if (isStatic) { str+="static "; }
-# 			str+="solver solution file";
-# 			ExuFile::BinaryWrite(str, solFile, bfs);
+#             STDstring str = "Exudyn " + GetSolverName() + " ";
+#             if (isStatic) { str+="static "; }
+#             str+="solver solution file";
+#             ExuFile::BinaryWrite(str, solFile, bfs);
         sSolver, fileEnd=BinaryReadString(file, intType)
         if int(verbose)>1: print('  solver=',sSolver)
 
-# 			//solFile << "#simulation started=" << EXUstd::GetDateTimeString() << "\n";
-# 			ExuFile::BinaryWrite(EXUstd::GetDateTimeString(), solFile, bfs);
+#             //solFile << "#simulation started=" << EXUstd::GetDateTimeString() << "\n";
+#             ExuFile::BinaryWrite(EXUstd::GetDateTimeString(), solFile, bfs);
         sTime, fileEnd=BinaryReadString(file, intType)
         if int(verbose)>1: print('  data/time=',sTime)
 
-# 			//not needed in binary format:
-# 			//solFile << "#columns contain: time, ODE2 displacements";
-# 			//if (solutionSettings.exportVelocities) { solFile << ", ODE2 velocities"; }
-# 			//if (solutionSettings.exportAccelerations) { solFile << ", ODE2 accelerations"; }
-# 			//if (nODE1) { solFile << ", ODE1 coordinates"; } //currently not available, but for future solFile structure necessary!
-# 			//if (nVel1) { solFile << ", ODE1 velocities"; }
-# 			//if (solutionSettings.exportAlgebraicCoordinates) { solFile << ", AE coordinates"; }
-# 			//if (solutionSettings.exportDataCoordinates) { solFile << ", ODE2 velocities"; }
-# 			//solFile << "\n";
+#             //not needed in binary format:
+#             //solFile << "#columns contain: time, ODE2 displacements";
+#             //if (solutionSettings.exportVelocities) { solFile << ", ODE2 velocities"; }
+#             //if (solutionSettings.exportAccelerations) { solFile << ", ODE2 accelerations"; }
+#             //if (nODE1) { solFile << ", ODE1 coordinates"; } //currently not available, but for future solFile structure necessary!
+#             //if (nVel1) { solFile << ", ODE1 velocities"; }
+#             //if (solutionSettings.exportAlgebraicCoordinates) { solFile << ", AE coordinates"; }
+#             //if (solutionSettings.exportDataCoordinates) { solFile << ", ODE2 velocities"; }
+#             //solFile << "\n";
 
-# 			//solFile << "#number of system coordinates [nODE2, nODE1, nAlgebraic, nData] = [" <<
-# 			//	nODE2 << "," << nODE1 << "," << nAE << "," << nData << "]\n"; //this will allow to know the system information, independently of coordinates written
-# 			ArrayIndex sysCoords({nODE2, nODE1, nAE, nData});
-# 			ExuFile::BinaryWrite(sysCoords, solFile, bfs);
+#             //solFile << "#number of system coordinates [nODE2, nODE1, nAlgebraic, nData] = [" <<
+#             //    nODE2 << "," << nODE1 << "," << nAE << "," << nData << "]\n"; //this will allow to know the system information, independently of coordinates written
+#             ArrayIndex sysCoords({nODE2, nODE1, nAE, nData});
+#             ExuFile::BinaryWrite(sysCoords, solFile, bfs);
         systemSizes, fileEnd=BinaryReadArrayIndex(file, intType)
         if verbose: print('  systemSizes=',systemSizes)
 
 
-# 			//solFile << "#number of written coordinates [nODE2, nVel2, nAcc2, nODE1, nVel1, nAlgebraic, nData] = [" << //these are the exported coordinates line-by-line
-# 			//	nODE2 << "," << nVel2 << "," << nAcc2 << "," << nODE1 << "," << nVel1 << "," << nAEexported << "," << nDataExported << "]\n"; //python convert line with v=eval(line.split('=')[1])
-# 			ArrayIndex writtenCoords({ nODE2, nVel2, nAcc2, nODE1, nVel1, nAEexported, nDataExported });
-# 			ExuFile::BinaryWrite(writtenCoords, solFile, bfs);
+#             //solFile << "#number of written coordinates [nODE2, nVel2, nAcc2, nODE1, nVel1, nAlgebraic, nData] = [" << //these are the exported coordinates line-by-line
+#             //    nODE2 << "," << nVel2 << "," << nAcc2 << "," << nODE1 << "," << nVel1 << "," << nAEexported << "," << nDataExported << "]\n"; //python convert line with v=eval(line.split('=')[1])
+#             ArrayIndex writtenCoords({ nODE2, nVel2, nAcc2, nODE1, nVel1, nAEexported, nDataExported });
+#             ExuFile::BinaryWrite(writtenCoords, solFile, bfs);
         columnsExported, fileEnd=BinaryReadArrayIndex(file, intType)
         if verbose: print('  columnsExported=',columnsExported)
         nColumns = sum(columnsExported) #total size of data per row
         
-# 			//solFile << "#total columns exported  (excl. time) = " << totalCoordinates << "\n";
-# 			ExuFile::BinaryWrite(totalCoordinates, solFile, bfs);
+#             //solFile << "#total columns exported  (excl. time) = " << totalCoordinates << "\n";
+#             ExuFile::BinaryWrite(totalCoordinates, solFile, bfs);
         totalCoordinates, fileEnd = BinaryReadIndex(file, intType)
 
-# 			Index numberOfSteps;
-# 			if (!isStatic) { numberOfSteps = timeint.numberOfSteps; }
-# 			else { numberOfSteps = staticSolver.numberOfLoadSteps; }
-# 			ExuFile::BinaryWrite(numberOfSteps, solFile, bfs);
+#             Index numberOfSteps;
+#             if (!isStatic) { numberOfSteps = timeint.numberOfSteps; }
+#             else { numberOfSteps = staticSolver.numberOfLoadSteps; }
+#             ExuFile::BinaryWrite(numberOfSteps, solFile, bfs);
         numberOfSteps, fileEnd = BinaryReadIndex(file, intType)
         
-# 			//solution information: always export string, even if has zero length:
-# 			ExuFile::BinaryWrite(solutionSettings.solutionInformation, solFile, bfs);
+#             //solution information: always export string, even if has zero length:
+#             ExuFile::BinaryWrite(solutionSettings.solutionInformation, solFile, bfs);
         solutionInformation, fileEnd=BinaryReadString(file, intType)
         if int(verbose)>1: print('  solutionInformation="'+solutionInformation+'"')
 
-# 			//add some checksum ...
-# 			ExuFile::BinaryWrite(STDstring("EndOfHeader"), solFile, bfs);
-# 			//next byte starts with solution
+#             //add some checksum ...
+#             ExuFile::BinaryWrite(STDstring("EndOfHeader"), solFile, bfs);
+#             //next byte starts with solution
         EndOfHeader, fileEnd=BinaryReadString(file, intType)
         if int(verbose)>1: print('  EndOfHeader found: ',EndOfHeader)
         if EndOfHeader!='EndOfHeader':
@@ -577,13 +578,13 @@ def LoadBinarySolutionFile(fileName, maxRows=-1, verbose=True):
 
         #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         #read time steps
-# 		if (isBinary) //add size, only in binary mode
-# 		{
-# 			//including 1 real for time+1 Index for nVectors, but excluding bytes for this Index
-# 			Index lineSizeBytes = nVectors * bfs.indexSize + nValues * bfs.realSize + bfs.indexSize + bfs.realSize;
-# 			ExuFile::BinaryWrite(lineSizeBytes, solFile, bfs); //size of line, for fast skipping of solution line
-# 			ExuFile::BinaryWrite(nVectors, solFile, bfs); //number of vectors could vary if needed
-# 		}
+#         if (isBinary) //add size, only in binary mode
+#         {
+#             //including 1 real for time+1 Index for nVectors, but excluding bytes for this Index
+#             Index lineSizeBytes = nVectors * bfs.indexSize + nValues * bfs.realSize + bfs.indexSize + bfs.realSize;
+#             ExuFile::BinaryWrite(lineSizeBytes, solFile, bfs); //size of line, for fast skipping of solution line
+#             ExuFile::BinaryWrite(nVectors, solFile, bfs); //number of vectors could vary if needed
+#         }
         if fileEnd: print('  ==> end of file found during in header')
         fileEnd = False
         data = np.zeros((0,nColumns+1))

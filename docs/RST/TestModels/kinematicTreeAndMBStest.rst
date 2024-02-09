@@ -29,13 +29,11 @@ You can view and download this file on Github: `kinematicTreeAndMBStest.py <http
    import numpy as np
    
    useGraphics = True
-   #performTest = True
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    #you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
    try: #only if called from test suite
        from modelUnitTests import exudynTestGlobals #for globally storing test results
        useGraphics = exudynTestGlobals.useGraphics
-       performTest = True
    except:
        class ExudynTestGlobals:
            pass

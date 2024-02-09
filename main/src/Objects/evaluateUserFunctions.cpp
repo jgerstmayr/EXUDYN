@@ -47,7 +47,7 @@ void CObjectConnectorCartesianSpringDamper::EvaluateUserFunctionForce(Vector3D& 
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		force = parameters.springForceUserFunction((const MainSystem&)mainSystem, t, itemIndex, vPos, vVel,
+		force = parameters.springForceUserFunction.userFunction((const MainSystem&)mainSystem, t, itemIndex, vPos, vVel,
 			parameters.stiffness, parameters.damping, parameters.offset);
 	}, "ObjectConnectorCartesianSpringDamper::springForceUserFunction");
 }
@@ -58,7 +58,7 @@ void CObjectConnectorCoordinate::EvaluateUserFunctionOffset(Real& offset, const 
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		offset = parameters.offsetUserFunction((const MainSystem&)mainSystem, t, itemIndex, parameters.offset);
+		offset = parameters.offsetUserFunction.userFunction((const MainSystem&)mainSystem, t, itemIndex, parameters.offset);
 	}, "ObjectConnectorCoordinate::offsetUserFunction");
 }
 
@@ -67,7 +67,7 @@ void CObjectConnectorCoordinate::EvaluateUserFunctionOffset_t(Real& offset, cons
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		offset = parameters.offsetUserFunction_t((const MainSystem&)mainSystem,  t, itemIndex, parameters.offset);
+		offset = parameters.offsetUserFunction_t.userFunction((const MainSystem&)mainSystem,  t, itemIndex, parameters.offset);
 	}, "ObjectConnectorCoordinate::offsetUserFunction_t");
 }
 
@@ -78,7 +78,7 @@ void CObjectConnectorCoordinateVector::EvaluateUserFunctionConstraint(Vector& al
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		algebraicEquations.CopyFrom(parameters.constraintUserFunction((const MainSystem&)mainSystem, t, itemIndex, 
+		algebraicEquations.CopyFrom(parameters.constraintUserFunction.userFunction((const MainSystem&)mainSystem, t, itemIndex, 
 			(StdVector)(qMarker0.Append(qMarker1)), (StdVector)(qMarker0_t.Append(qMarker1_t)), velocityLevel));
 	}, "ObjectConnectorCoordinateVector::constraintUserFunction");
 }
@@ -89,7 +89,7 @@ void CObjectConnectorCoordinateVector::EvaluateUserFunctionJacobian(EXUmath::Mat
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		PyMatrixContainer PMC(parameters.jacobianUserFunction((const MainSystem&)mainSystem, t, itemIndex,
+		PyMatrixContainer PMC(parameters.jacobianUserFunction.userFunction((const MainSystem&)mainSystem, t, itemIndex,
 			(StdVector)(qMarker0.Append(qMarker1)), (StdVector)(qMarker0_t.Append(qMarker1_t)), velocityLevel));
 
 		CHECKandTHROW(PMC.UseDenseMatrix(), "ObjectConnectorCoordinateVector::EvaluateUserFunctionJacobian: jacobian currently only accepts dense matrices");
@@ -117,7 +117,7 @@ void CObjectConnectorRigidBodySpringDamper::EvaluateUserFunctionForce(Vector6D& 
 
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		fLocVec6D = parameters.springForceTorqueUserFunction((const MainSystem&)mainSystem, t, itemIndex,
+		fLocVec6D = parameters.springForceTorqueUserFunction.userFunction((const MainSystem&)mainSystem, t, itemIndex,
 			u, rot, v, omega, EXUmath::Matrix6DToStdArray66(parameters.stiffness), EXUmath::Matrix6DToStdArray66(parameters.damping),
 			EXUmath::Matrix3DToStdArray33(parameters.rotationMarker0), EXUmath::Matrix3DToStdArray33(parameters.rotationMarker1),
 			parameters.offset);
@@ -140,7 +140,7 @@ void CObjectConnectorRigidBodySpringDamper::EvaluateUserFunctionPostNewtonStep(V
 
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		returnValue = parameters.postNewtonStepUserFunction((const MainSystem&)mainSystem, t, itemIndex, (std::vector<Real>)dataCoordinates,
+		returnValue = parameters.postNewtonStepUserFunction.userFunction((const MainSystem&)mainSystem, t, itemIndex, (std::vector<Real>)dataCoordinates,
 			u, rot, v, omega, EXUmath::Matrix6DToStdArray66(parameters.stiffness), EXUmath::Matrix6DToStdArray66(parameters.damping),
 			EXUmath::Matrix3DToStdArray33(parameters.rotationMarker0), EXUmath::Matrix3DToStdArray33(parameters.rotationMarker1),
 			parameters.offset);
@@ -156,7 +156,7 @@ void CObjectConnectorLinearSpringDamper::EvaluateUserFunctionForce(Real& force, 
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		force = parameters.springForceUserFunction((const MainSystem&)mainSystem, t, itemIndex,
+		force = parameters.springForceUserFunction.userFunction((const MainSystem&)mainSystem, t, itemIndex,
 			displacement, velocity, parameters.stiffness, parameters.damping, parameters.offset);
 
 	}, "CObjectConnectorLinearSpringDamper::springForceUserFunction");
@@ -169,7 +169,7 @@ void CObjectConnectorTorsionalSpringDamper::EvaluateUserFunctionForce(Real& torq
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		torque = parameters.springTorqueUserFunction((const MainSystem&)mainSystem, t, itemIndex,
+		torque = parameters.springTorqueUserFunction.userFunction((const MainSystem&)mainSystem, t, itemIndex,
 			angle, omega, parameters.stiffness, parameters.damping, parameters.offset);
 
 	}, "CObjectConnectorTorsionalSpringDamper::springTorqueUserFunction");
@@ -183,7 +183,7 @@ void CObjectConnectorCoordinateSpringDamper::EvaluateUserFunctionForce(Real& for
     UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
     {
         //user function args:(deltaL, deltaL_t, Real stiffness, Real damping, Real offset, Real dryFriction, Real dryFrictionProportionalZone)
-        force = parameters.springForceUserFunction((const MainSystem&)cSystemData->GetMainSystemBacklink(), t, itemIndex,
+        force = parameters.springForceUserFunction.userFunction((const MainSystem&)cSystemData->GetMainSystemBacklink(), t, itemIndex,
             relPos, relVel, parameters.stiffness, parameters.damping, parameters.offset); // , parameters.dryFriction, parameters.dryFrictionProportionalZone);
     }, "ObjectConnectorCoordinateSpringDamper::springForceUserFunction");
 }
@@ -196,7 +196,7 @@ void CObjectConnectorCoordinateSpringDamperExt::EvaluateUserFunctionForce(Real& 
     UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
     {
         //user function args:(deltaL, deltaL_t, Real stiffness, Real damping, Real offset, Real dryFriction, Real dryFrictionProportionalZone)
-        force = parameters.springForceUserFunction((const MainSystem&)cSystemData->GetMainSystemBacklink(), t, itemIndex,
+        force = parameters.springForceUserFunction.userFunction((const MainSystem&)cSystemData->GetMainSystemBacklink(), t, itemIndex,
             relPos, relVel, parameters.stiffness, parameters.damping, parameters.offset, parameters.velocityOffset,
             parameters.fDynamicFriction, parameters.fStaticFrictionOffset, parameters.exponentialDecayStatic,
             parameters.fViscousFriction, parameters.frictionProportionalZone);
@@ -211,7 +211,7 @@ void CObjectJointGeneric::EvaluateUserFunctionOffset(Vector6D& offset, const Mai
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
 		//user function args:(Real t, Real load)
-		offset = (Vector6D)(parameters.offsetUserFunction((const MainSystem&)mainSystem, t, itemIndex, parameters.offsetUserFunctionParameters));
+		offset = (Vector6D)(parameters.offsetUserFunction.userFunction((const MainSystem&)mainSystem, t, itemIndex, parameters.offsetUserFunctionParameters));
 	}, "ObjectJointGeneric::offsetUserFunction");
 
 }
@@ -222,7 +222,7 @@ void CObjectJointGeneric::EvaluateUserFunctionOffset_t(Vector6D& offset, const M
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
 		//user function args:(Real t, Real load)
-		offset = (Vector6D)(parameters.offsetUserFunction((const MainSystem&)mainSystem, t, itemIndex, parameters.offsetUserFunctionParameters));
+		offset = (Vector6D)(parameters.offsetUserFunction.userFunction((const MainSystem&)mainSystem, t, itemIndex, parameters.offsetUserFunctionParameters));
 	}, "ObjectJointGeneric::offsetUserFunction  (called from ComputeJacobianAE)");
 
 }
@@ -235,7 +235,7 @@ void CObjectConnectorSpringDamper::EvaluateUserFunctionForce(Real& force, const 
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
 		//user function args:(deltaL, deltaL_t, Real stiffness, Real damping, Real springForce)
-		force = parameters.springForceUserFunction((const MainSystem&)mainSystem, t, itemIndex,
+		force = parameters.springForceUserFunction.userFunction((const MainSystem&)mainSystem, t, itemIndex,
 			deltaL, deltaL_t, parameters.stiffness, parameters.damping, parameters.force);
 	}, "ObjectConnectorSpringDamper::springForceUserFunction");
 }
@@ -246,7 +246,7 @@ void CObjectGenericODE2::EvaluateUserFunctionForce(Vector& force, const MainSyst
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		force = (Vector)(parameters.forceUserFunction((const MainSystem&)mainSystem, t, objectNumber, coordinates, coordinates_t));
+		force = (Vector)(parameters.forceUserFunction.userFunction((const MainSystem&)mainSystem, t, objectNumber, coordinates, coordinates_t));
 	}, "ObjectGenericODE2::forceUserFunction");
 }
 
@@ -256,8 +256,8 @@ void CObjectGenericODE2::EvaluateUserFunctionMassMatrix(EXUmath::MatrixContainer
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		//EPyUtils::NumPy2Matrix(parameters.massMatrixUserFunction((const MainSystem&)mainSystem, t, objectNumber, coordinates, coordinates_t), massMatrix);
-		massMatrix.CopyOrAddTriplets(PyMatrixContainer(parameters.massMatrixUserFunction((const MainSystem&)mainSystem, t, objectNumber, coordinates, coordinates_t)), ltg);
+		//EPyUtils::NumPy2Matrix(parameters.massMatrixUserFunction.userFunction((const MainSystem&)mainSystem, t, objectNumber, coordinates, coordinates_t), massMatrix);
+		massMatrix.CopyOrAddTriplets(PyMatrixContainer(parameters.massMatrixUserFunction.userFunction((const MainSystem&)mainSystem, t, objectNumber, coordinates, coordinates_t)), ltg);
 		//pout << "Mass=" << massMatrix.GetEXUdenseMatrix() << "\n";
 	}, "ObjectGenericODE2::massMatrixUserFunction");
 }
@@ -269,7 +269,7 @@ void CObjectGenericODE2::EvaluateUserFunctionJacobian(EXUmath::MatrixContainer& 
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
 		//factorODE2 / factorODE2_t must be added in user function, ltg-transformation done by CopyOrAddTriplets
-		jacobianODE2.CopyOrAddTriplets(PyMatrixContainer(parameters.jacobianUserFunction((const MainSystem&)mainSystem, t, objectNumber, 
+		jacobianODE2.CopyOrAddTriplets(PyMatrixContainer(parameters.jacobianUserFunction.userFunction((const MainSystem&)mainSystem, t, objectNumber, 
 			coordinates, coordinates_t, factorODE2, factorODE2_t)), ltg);
 	}, "ObjectGenericODE2::jacobianUserFunction");
 }
@@ -280,7 +280,7 @@ void CObjectGenericODE1::EvaluateUserFunctionRHS(Vector& force, const MainSystem
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		force = (Vector)(parameters.rhsUserFunction((const MainSystem&)mainSystem, t, objectNumber, coordinates));
+		force = (Vector)(parameters.rhsUserFunction.userFunction((const MainSystem&)mainSystem, t, objectNumber, coordinates));
 	}, "ObjectGenericODE1::rhsUserFunction");
 }
 
@@ -290,7 +290,7 @@ void CObjectKinematicTree::EvaluateUserFunctionForce(Vector& force, const MainSy
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		force = (Vector)(parameters.forceUserFunction((const MainSystem&)mainSystem, t, objectNumber, coordinates, coordinates_t));
+		force = (Vector)(parameters.forceUserFunction.userFunction((const MainSystem&)mainSystem, t, objectNumber, coordinates, coordinates_t));
 	}, "ObjectKinematicTree::forceUserFunction");
 }
 
@@ -300,7 +300,7 @@ void CObjectFFRF::EvaluateUserFunctionForce(Vector& force, const MainSystemBase&
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		force = (Vector)(parameters.forceUserFunction((const MainSystem&)mainSystem, t, objectNumber, coordinates, coordinates_t));
+		force = (Vector)(parameters.forceUserFunction.userFunction((const MainSystem&)mainSystem, t, objectNumber, coordinates, coordinates_t));
 	}, "ObjectFFRF::forceUserFunction");
 }
 
@@ -309,7 +309,7 @@ void CObjectFFRF::EvaluateUserFunctionMassMatrix(Matrix& massMatrix, const MainS
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		EPyUtils::NumPy2Matrix(parameters.massMatrixUserFunction((const MainSystem&)mainSystem, t, objectNumber, coordinates, coordinates_t), massMatrix);
+		EPyUtils::NumPy2Matrix(parameters.massMatrixUserFunction.userFunction((const MainSystem&)mainSystem, t, objectNumber, coordinates, coordinates_t), massMatrix);
 	}, "ObjectFFRF::massMatrixUserFunction");
 }
 
@@ -319,7 +319,7 @@ void CObjectFFRFreducedOrder::EvaluateUserFunctionForce(Vector& force, const Mai
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		force = (Vector)(parameters.forceUserFunction((const MainSystem&)mainSystem, t, objectNumber, coordinates, coordinates_t));
+		force = (Vector)(parameters.forceUserFunction.userFunction((const MainSystem&)mainSystem, t, objectNumber, coordinates, coordinates_t));
 	}, "ObjectFFRFreducedOrder::forceUserFunction");
 }
 
@@ -329,7 +329,7 @@ void CObjectFFRFreducedOrder::EvaluateUserFunctionMassMatrix(Matrix& massMatrix,
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		EPyUtils::NumPy2Matrix(parameters.massMatrixUserFunction((const MainSystem&)mainSystem, t, objectNumber, coordinates, coordinates_t), massMatrix);
+		EPyUtils::NumPy2Matrix(parameters.massMatrixUserFunction.userFunction((const MainSystem&)mainSystem, t, objectNumber, coordinates, coordinates_t), massMatrix);
 	}, "ObjectFFRFreducedOrder::massMatrixUserFunction");
 }
 
@@ -341,7 +341,7 @@ void CObjectANCFCable2D::EvaluateUserFunctionBendingMoment(Real& torque, const M
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 		{
-			torque = parameters.bendingMomentUserFunction((const MainSystem&)mainSystem, t, itemIndex,
+			torque = parameters.bendingMomentUserFunction.userFunction((const MainSystem&)mainSystem, t, itemIndex,
 			axialPositionNormalized, curvature, curvature_t, curvatureRef, physicsBendingStiffness, physicsBendingDamping,
 			axialStrain, axialStrain_t, axialStrainRef); 
 		}, "CObjectANCFCable2D::bendingMomentUserFunction");
@@ -353,7 +353,7 @@ void CObjectANCFCable2D::EvaluateUserFunctionAxialForce(Real& force, const MainS
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 		{
-			force = parameters.axialForceUserFunction((const MainSystem&)mainSystem, t, itemIndex,
+			force = parameters.axialForceUserFunction.userFunction((const MainSystem&)mainSystem, t, itemIndex,
 			axialPositionNormalized, axialStrain, axialStrain_t, axialStrainRef, physicsAxialStiffness, physicsAxialDamping,
 			curvature, curvature_t, curvatureRef);
 		}, "CObjectANCFCable2D::axialForceUserFunction");
@@ -367,7 +367,7 @@ void CSensorUserFunction::EvaluateUserFunction(Vector& sensorValues, const MainS
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
 		//user function args:(deltaL, deltaL_t, Real stiffness, Real damping, Real springForce)
-		sensorValues = parameters.sensorUserFunction((const MainSystem&)mainSystem, t, parameters.sensorNumbers, parameters.factors, configuration);
+		sensorValues = parameters.sensorUserFunction.userFunction((const MainSystem&)mainSystem, t, parameters.sensorNumbers, parameters.factors, configuration);
 	}, "SensorUserFunction::sensorUserFunction");
 }
 

@@ -48,12 +48,14 @@ def TestExamplesReferenceSolution():
         'genericODE2test.py':0.036045463499024655,                  #new 2022-07-11 (CState Parallel); #changed to some analytic Connector jacobians (CartSpringDamper), implicit solver(modified Newton restart, etc.); before 2022-01-18: 0.036045463498793825,
         'geneticOptimizationTest.py':0.10117518366826603,           #before 2022-02-20 (accuracy of internal sensors is higher); 0.10117518367051619, #changed to some analytic Connector jacobians (CartSpringDamper), implicit solver(modified Newton restart, etc.); before 2022-01-18: 0.10117518366934351,
         'geometricallyExactBeam2Dtest.py':-2.2115028353806547,
-        'geometricallyExactBeamTest.py':1.012822053539261,          #before 2023-05-05: 1.0128218992948643 (changed Texp function); new 2023-04-06 may still include small errors in implementation
+        'geometricallyExactBeamTest.py':1.0128209428598958,         #before 2023-01-29: 1.012822053539261; before 2023-05-05: 1.0128218992948643 (changed Texp function); new 2023-04-06 may still include small errors in implementation
+        'gridGeomExactBeam2D.py':-1.582796574326255,                #new 2024-01-28
         'heavyTop.py':33.42312575174431,                            #new 2022-07-11 (CState Parallel); 
         'hydraulicActuatorSimpleTest.py':7.130440021870293,
         'kinematicTreeAndMBStest.py':2.6388120463802767e-05,        #original but too sensitive to disturbances: 263.88120463802767,
         'kinematicTreeConstraintTest.py':1.8135975384620484 ,
-        'kinematicTreeTest.py': -1.309383960216414,
+        'kinematicTreeTest.py':-1.309383960216414,
+        'LShapeGeomExactBeam2D.py':-0.9181474511543884,             #new 2024-01-28
         'mainSystemExtensionsTests.py': 57.64639446941554,          #updated 2023-11-16; updated 2023-06-09; old: new 2023-05-19
         'manualExplicitIntegrator.py':2.059698629692295,
         'mecanumWheelRollingDiscTest.py':0.2714267238324343,

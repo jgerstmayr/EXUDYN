@@ -46,6 +46,8 @@
 //! Prepare a newly created System of nodes, objects, loads, ... for computation
 void CSystem::Assemble(const MainSystem& mainSystem)
 {
+	if (!mainSystem.HasMainSystemContainer()) { PyError("MainSystem has not been yet linked to a system container. Having a MainSystem mbs, you need to do first:\n SC=exudyn.SystemContainer()\nSC.Append(mbs)\n"); }
+
 	globalTimers.Reset(); //timers already used by finalize contact ...
 	for (CObject* object : cSystemData.GetCObjects())
 	{
@@ -388,7 +390,7 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 		{
 			CLoad* cLoad = item->GetCLoad();
 
-			if (cLoad->IsBodyFixed() && ((mainSystem.GetCSystem()->GetSystemData().GetCMarker(cLoad->GetMarkerNumber()).GetType() & Marker::Orientation) == 0))
+			if (cLoad->IsBodyFixed() && ((mainSystem.GetCSystem().GetSystemData().GetCMarker(cLoad->GetMarkerNumber()).GetType() & Marker::Orientation) == 0))
 			{
 				PyError(STDstring("Load ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() +
 					": marker (marker number = " + EXUstd::ToString(cLoad->GetMarkerNumber()) + 
@@ -1184,8 +1186,14 @@ void CSystem::AssembleInitializeSystemCoordinates(const MainSystem& mainSystem)
 	//initial values are also used for current step ==> from here on, the system can be visualized!
 	cSystemData.GetCData().currentState = cSystemData.GetCData().initialState;
 	cSystemData.GetCData().visualizationState = cSystemData.GetCData().initialState; //from this point on, drawing should be possible
-	postProcessData.SetVisualizationStateUpdateAvailable(false);
 	cSystemData.GetCData().startOfStepState = cSystemData.GetCData().initialState; //2023-01-12: done also at beginning of solver/time integration, but to be consistent with all configurations!
+
+	//! this is used for immediate redraw:
+	UpdatePostProcessData(false, false);
+	postProcessData.updateCounter++;
+	postProcessData.postProcessDataReady = true;
+	postProcessData.SetVisualizationStateUpdateAvailable(false); //signals that visualizationStateUpdate would be used instead of visualiuationState
+	//postProcessData.GetVisualizationStateUpdate() = cSystemData.GetCData().initialState; //if previous solution exists ...
 }
 
 
@@ -3624,7 +3632,8 @@ void CSystem::ComputeConstraintJacobianTimesVector(TemporaryComputationData& tem
 
 
 //! this function is used to copy the current state to the visualization state and to send a signal that the PostProcessData has been updated
-void CSystem::UpdatePostProcessData(bool recordImage)
+	//! graphicsData.visualizationStateUpdate is updated in case that visualizationStateUpdateAvailable=true
+void CSystem::UpdatePostProcessData(bool recordImage, bool visualizationStateUpdateAvailable)
 {
 	Index timeOut = 1000;		 //max iterations to wait, before frame is redrawn and saved
 	Index timerMilliseconds = 2; //this is a hard-coded value, as visualizationSettings are not available here ...
@@ -3647,11 +3656,14 @@ void CSystem::UpdatePostProcessData(bool recordImage)
 	EXUstd::WaitAndLockSemaphore(postProcessData.accessState); //lock PostProcessData
 
 	postProcessData.updateCounter++;
-	postProcessData.postProcessDataReady = true;
 	if (recordImage) { postProcessData.recordImageCounter = postProcessData.updateCounter; } //this is the condition to record an image
+	postProcessData.postProcessDataReady = true;
 
-	postProcessData.GetVisualizationStateUpdate() = GetSystemData().GetCData().currentState;
-	postProcessData.SetVisualizationStateUpdateAvailable(true);
+	if (visualizationStateUpdateAvailable)
+	{
+		postProcessData.GetVisualizationStateUpdate() = GetSystemData().GetCData().currentState;
+	}
+	postProcessData.SetVisualizationStateUpdateAvailable(visualizationStateUpdateAvailable);
 
 	EXUstd::ReleaseSemaphore(postProcessData.accessState); //clear PostProcessData
 }

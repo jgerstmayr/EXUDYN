@@ -90,41 +90,57 @@ void CObjectBeamGeometricallyExact2D::ComputeGeneralizedStrains(Real x, Real& th
 	Real& gamma1, Real& gamma2, Real& theta_x, Real& gamma1_t, Real& gamma2_t, Real& theta_xt, 
 	CSVector6D& deltaGamma1, CSVector6D& deltaGamma2) const
 {
+	const Index indRot = 2;
 	SV = ComputeShapeFunctions(x);
 	SV_x = ComputeShapeFunctions_x(x);
 
 	//could be speed up by only computing relevant components!
 	//const int ns = 2; //number of shape functions
-	CSVector3D qNode0(((CNodeODE2*)GetCNode(0))->GetCurrentCoordinateVector(), 0); //displacement coordinates node 0
-	CSVector3D qNode1(((CNodeODE2*)GetCNode(1))->GetCurrentCoordinateVector(), 0); //displacement coordinates node 1
+	CSVector3D qNode0Current(((CNodeODE2*)GetCNode(0))->GetCurrentCoordinateVector(), 0); //displacement coordinates node 0
+	CSVector3D qNode1Current(((CNodeODE2*)GetCNode(1))->GetCurrentCoordinateVector(), 0); //displacement coordinates node 1
 
 	CSVector3D qNode0_t(((CNodeODE2*)GetCNode(0))->GetCurrentCoordinateVector_t(), 0); //displacement coordinates node 0
 	CSVector3D qNode1_t(((CNodeODE2*)GetCNode(1))->GetCurrentCoordinateVector_t(), 0); //displacement coordinates node 1
 
-	CSVector3D qNode0Ref(((CNodeODE2*)GetCNode(0))->GetReferenceCoordinateVector(), 0);
-	CSVector3D qNode1Ref(((CNodeODE2*)GetCNode(1))->GetReferenceCoordinateVector(), 0);
+	CSVector3D qNode0(((CNodeODE2*)GetCNode(0))->GetReferenceCoordinateVector(), 0);
+	CSVector3D qNode1(((CNodeODE2*)GetCNode(1))->GetReferenceCoordinateVector(), 0);
 
-	Vector2D referenceSlopeVector({ SV_x[0] * qNode0Ref[0] + SV_x[1] * qNode1Ref[0] ,
-									SV_x[0] * qNode0Ref[1] + SV_x[1] * qNode1Ref[1] }); //reference slope vector, r'=d r / dx needed in reference configuration needed for computation of strains
+	Vector2D referenceSlopeVector({ SV_x[0] * qNode0[0] + SV_x[1] * qNode1[0] ,
+									SV_x[0] * qNode0[1] + SV_x[1] * qNode1[1] }); //reference slope vector, r'=d r / dx needed in reference configuration needed for computation of strains
 
-	qNode0Ref += qNode0;
-	qNode1Ref += qNode1;
+	//adjust reference rotation if requested
+	//this allows to connect nodes at arbitrary angles
 
-	theta = SV[0] * qNode0Ref[2] + SV[1] * qNode1Ref[2]; //rotations need also reference values
-
-	Real u1_x = SV_x[0] * qNode0[0] + SV_x[1] * qNode1[0]; //here, reference values are not directly meaningful: length L would need to be included
-	Real u2_x = SV_x[0] * qNode0[1] + SV_x[1] * qNode1[1];
-
-	if (parameters.includeReferenceRotations)
+	if (!parameters.includeReferenceRotations)
 	{
-		theta_x = SV_x[0] * qNode0Ref[2] + SV_x[1] * qNode1Ref[2] - parameters.physicsReferenceCurvature; //in precurved case, reference values shall not contribute to curvature
-		//u1_x = SV_x[0] * qNode0Ref[0] + SV_x[1] * qNode1Ref[0];
-		//u2_x = SV_x[0] * qNode0Ref[1] + SV_x[1] * qNode1Ref[1];
+		Vector3D p0(((CNodeODE2*)GetCNode(0))->GetReferenceCoordinateVector(), 0);
+		Vector3D p1(((CNodeODE2*)GetCNode(1))->GetReferenceCoordinateVector(), 0);
+		Vector2D d({ p1[0] - p0[0], p1[1] - p0[1] });
+
+		CHECKandTHROW(d.GetL2NormSquared() > 0, "CObjectBeamGeometricallyExact2D::ComputeGeneralizedStrains reference positions of nodes of beam may not be equivalent.");
+
+		Real phi = atan2(d[1], d[0]);
+		qNode0[indRot] = phi; //as both reference rotations are the same, there is no influence on bending!
+		qNode1[indRot] = phi;
 	}
-	else
-	{
-		theta_x = SV_x[0] * qNode0[2] + SV_x[1] * qNode1[2] - parameters.physicsReferenceCurvature; //in precurved case, reference values shall not contribute to curvature
-	}
+	qNode0 += qNode0Current;
+	qNode1 += qNode1Current;
+
+	theta = SV[0] * qNode0[indRot] + SV[1] * qNode1[indRot]; //interpolation of rotation of cross section
+
+	Real u1_x = SV_x[0] * qNode0Current[0] + SV_x[1] * qNode1Current[0]; //here, reference values are not directly meaningful: length L would need to be included
+	Real u2_x = SV_x[0] * qNode0Current[1] + SV_x[1] * qNode1Current[1];
+
+	theta_x = SV_x[0] * qNode0[indRot] + SV_x[1] * qNode1[indRot] - parameters.physicsReferenceCurvature; //in precurved case, reference values shall not contribute to curvature
+
+	//if (parameters.includeReferenceRotations)
+	//{
+	//	theta_x = SV_x[0] * qNode0[indRot] + SV_x[1] * qNode1[indRot] - parameters.physicsReferenceCurvature; //in precurved case, reference values shall not contribute to curvature
+	//}
+	//else
+	//{
+	//	theta_x = SV_x[0] * qNode0Current[indRot] + SV_x[1] * qNode1Current[indRot] - parameters.physicsReferenceCurvature; //in precurved case, reference values shall not contribute to curvature
+	//}
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	Real cosTheta = cos(theta);
@@ -150,7 +166,7 @@ void CObjectBeamGeometricallyExact2D::ComputeGeneralizedStrains(Real x, Real& th
 
 	if (parameters.physicsBendingDamping != 0.)
 	{
-		theta_xt = SV_x[0] * qNode0_t[2] + SV_x[1] * qNode1_t[2]; //in precurved case, reference values shall not contribute to curvature
+		theta_xt = SV_x[0] * qNode0_t[indRot] + SV_x[1] * qNode1_t[indRot]; //in precurved case, reference values shall not contribute to curvature
 	}
 
 	if (parameters.physicsAxialDamping != 0. || parameters.physicsShearDamping != 0.)
@@ -317,10 +333,12 @@ Vector3D CObjectBeamGeometricallyExact2D::GetPosition(const Vector3D& localPosit
 	{
 		u += MapCoordinates(SV, ((CNodeODE2*)GetCNode(0))->GetCoordinateVector(ConfigurationType::Reference), ((CNodeODE2*)GetCNode(1))->GetCoordinateVector(ConfigurationType::Reference));
 	}
+	Real phi = GetRotation(localPosition, configuration); //possibly different from u[2] ...
+
 	//include off-axis position:
 	if (localPosition[1] != 0.)
 	{
-		Vector2D p = GetRotationMatrix2D(u[2]) * Vector2D({ 0,localPosition[1] });
+		Vector2D p = GetRotationMatrix2D(phi) * Vector2D({ 0,localPosition[1] });
 		u[0] += p[0];
 		u[1] += p[1];
 	}
@@ -341,11 +359,12 @@ Vector3D CObjectBeamGeometricallyExact2D::GetVelocity(const Vector3D& localPosit
 	Real x = localPosition[0]; //only x-coordinate
 	Vector2D SV = ComputeShapeFunctions(x);
 
-	Vector3D u = MapCoordinates(SV, ((CNodeODE2*)GetCNode(0))->GetCoordinateVector(configuration), ((CNodeODE2*)GetCNode(1))->GetCoordinateVector(configuration));
-	if (configuration != ConfigurationType::Reference)
-	{
-		u += MapCoordinates(SV, ((CNodeODE2*)GetCNode(0))->GetCoordinateVector(ConfigurationType::Reference), ((CNodeODE2*)GetCNode(1))->GetCoordinateVector(ConfigurationType::Reference));
-	}
+	//Vector3D u = MapCoordinates(SV, ((CNodeODE2*)GetCNode(0))->GetCoordinateVector(configuration), ((CNodeODE2*)GetCNode(1))->GetCoordinateVector(configuration));
+	//if (configuration != ConfigurationType::Reference)
+	//{
+	//	u += MapCoordinates(SV, ((CNodeODE2*)GetCNode(0))->GetCoordinateVector(ConfigurationType::Reference), ((CNodeODE2*)GetCNode(1))->GetCoordinateVector(ConfigurationType::Reference));
+	//}
+	Real phi = GetRotation(localPosition, configuration);
 
 	Vector3D v = MapCoordinates(SV, ((CNodeODE2*)GetCNode(0))->GetCoordinateVector_t(configuration), ((CNodeODE2*)GetCNode(1))->GetCoordinateVector_t(configuration));
 
@@ -353,7 +372,7 @@ Vector3D CObjectBeamGeometricallyExact2D::GetVelocity(const Vector3D& localPosit
 	if (localPosition[1] != 0.)
 	{
 		//add velocity due to rotation of cross section
-		Vector2D vRot = GetRotationMatrix2D(u[2]) * Vector2D({ -v[2]*localPosition[1] , 0}); //omega x locPos
+		Vector2D vRot = GetRotationMatrix2D(phi) * Vector2D({ -v[2]*localPosition[1] , 0}); //omega x locPos
 		v[0] += vRot[0];
 		v[1] += vRot[1];
 	}
@@ -366,16 +385,17 @@ Vector3D CObjectBeamGeometricallyExact2D::GetVelocity(const Vector3D& localPosit
 Matrix3D CObjectBeamGeometricallyExact2D::GetRotationMatrix(const Vector3D& localPosition, ConfigurationType configuration) const
 {
 	Real x = localPosition[0]; //only x-coordinate
-	Vector2D SV = ComputeShapeFunctions(x);
 
-	Vector3D u = MapCoordinates(SV, ((CNodeODE2*)GetCNode(0))->GetCoordinateVector(configuration), ((CNodeODE2*)GetCNode(1))->GetCoordinateVector(configuration));
-	if (configuration != ConfigurationType::Reference)
-	{
-		u += MapCoordinates(SV, ((CNodeODE2*)GetCNode(0))->GetCoordinateVector(ConfigurationType::Reference), ((CNodeODE2*)GetCNode(1))->GetCoordinateVector(ConfigurationType::Reference));
-	}
+	//Vector2D SV = ComputeShapeFunctions(x);
+	//Vector3D u = MapCoordinates(SV, ((CNodeODE2*)GetCNode(0))->GetCoordinateVector(configuration), ((CNodeODE2*)GetCNode(1))->GetCoordinateVector(configuration));
+	//if (configuration != ConfigurationType::Reference)
+	//{
+	//	u += MapCoordinates(SV, ((CNodeODE2*)GetCNode(0))->GetCoordinateVector(ConfigurationType::Reference), ((CNodeODE2*)GetCNode(1))->GetCoordinateVector(ConfigurationType::Reference));
+	//}
+	Real phi = GetRotation(localPosition, configuration);
 
-	return Matrix3D(3, 3, { cos(u[2]), -sin(u[2]), 0,
-							sin(u[2]),  cos(u[2]), 0,
+	return Matrix3D(3, 3, { cos(phi), -sin(phi), 0,
+							sin(phi),  cos(phi), 0,
 							0,          0,         1 }); //rotation about z-axis, stored in 3D matrix
 }
 
@@ -384,14 +404,39 @@ Real CObjectBeamGeometricallyExact2D::GetRotation(const Vector3D& localPosition,
 {
 	Real x = localPosition[0]; //only x-coordinate
 	Vector2D SV = ComputeShapeFunctions(x);
+	const Index indRot = 2;
 
-	Vector3D u = MapCoordinates(SV, ((CNodeODE2*)GetCNode(0))->GetCoordinateVector(configuration), ((CNodeODE2*)GetCNode(1))->GetCoordinateVector(configuration));
-	if (configuration != ConfigurationType::Reference)
+	Real phi;
+	
+	if (parameters.includeReferenceRotations)
 	{
-		u += MapCoordinates(SV, ((CNodeODE2*)GetCNode(0))->GetCoordinateVector(ConfigurationType::Reference), ((CNodeODE2*)GetCNode(1))->GetCoordinateVector(ConfigurationType::Reference));
+		Real phiNode0 = ((CNodeODE2*)GetCNode(0))->GetReferenceCoordinateVector()[indRot];
+		Real phiNode1 = ((CNodeODE2*)GetCNode(1))->GetReferenceCoordinateVector()[indRot];
+		phi = SV[0] * phiNode0 + SV[1] * phiNode1;
+		//u = MapCoordinates(SV, ((CNodeODE2*)GetCNode(0))->GetCoordinateVector(ConfigurationType::Reference),
+		//	((CNodeODE2*)GetCNode(1))->GetCoordinateVector(ConfigurationType::Reference));
+	}
+	else //reference rotation is given by direction between nodal reference position; constant over beam element
+	{
+		Vector3D p0(((CNodeODE2*)GetCNode(0))->GetReferenceCoordinateVector(), 0);
+		Vector3D p1(((CNodeODE2*)GetCNode(1))->GetReferenceCoordinateVector(), 0);
+		Vector2D d({ p1[0] - p0[0], p1[1] - p0[1] });
+
+		CHECKandTHROW(d.GetL2NormSquared() > 0, "CObjectBeamGeometricallyExact2D: reference positions of nodes of beam may not be equivalent.");
+
+		phi = atan2(d[1], d[0]);
 	}
 
-	return u[2];
+	if (configuration != ConfigurationType::Reference)
+	{
+		Real phiNode0 = ((CNodeODE2*)GetCNode(0))->GetCoordinateVector(configuration)[indRot];
+		Real phiNode1 = ((CNodeODE2*)GetCNode(1))->GetCoordinateVector(configuration)[indRot];
+
+		phi += SV[0] * phiNode0 + SV[1] * phiNode1;
+		//u += MapCoordinates(SV, ((CNodeODE2*)GetCNode(0))->GetCoordinateVector(configuration), ((CNodeODE2*)GetCNode(1))->GetCoordinateVector(configuration));
+	}
+
+	return phi;
 }
 
 //! return configuration dependent angular velocity of node; returns always a 3D Vector, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect

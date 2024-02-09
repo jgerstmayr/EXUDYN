@@ -1,7 +1,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  This example shows how to use parallel computation of EXUDYN models
+# Details:  Example to show how to use parallel computation of EXUDYN models;
 #           Using multiprocessing, several instances of EXUDYN are executed (graphics DISABLED!!!)
 #           This represents a very simple possibility to run parallel simulations;
 #           More advanced parameter variation is available in exudyn.processing.ParameterVariation(...)

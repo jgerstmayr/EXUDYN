@@ -10,7 +10,6 @@ You can view and download this file on Github: `scissorPrismaticRevolute2D.py <h
 .. code-block:: python
    :linenos:
 
-   
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    # This is an EXUDYN example
    #

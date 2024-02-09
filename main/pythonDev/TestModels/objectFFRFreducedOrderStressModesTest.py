@@ -10,25 +10,22 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-import sys, platform
-
-#workingReleasePath = 'C:\\DATA\\cpp\\EXUDYN_git\\main\\bin\\WorkingRelease' #absolute path for python 3.7
-#if platform.architecture()[0] == '64bit':
-#    workingReleasePath += '64'
-#if sys.version_info.major == 3 and sys.version_info.minor == 7:
-#    workingReleasePath += 'P37'
-#if sys.version_info.major != 3 or sys.version_info.minor < 6 or sys.version_info.minor > 7:
-#    raise ImportError("EXUDYN only supports python 3.6 or python 3.7")
-#sys.path.append(workingReleasePath) #for exudyn, itemInterface and from exudyn.utilities import *
-          
 import exudyn as exu
-from exudyn.itemInterface import *
 from exudyn.utilities import *
 from exudyn.FEM import *
-from exudyn.graphicsDataUtilities import *
-
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals
 import numpy as np
+
+useGraphics = True
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
+try: #only if called from test suite
+    from modelUnitTests import exudynTestGlobals #for globally storing test results
+    useGraphics = exudynTestGlobals.useGraphics
+except:
+    class ExudynTestGlobals:
+        pass
+    exudynTestGlobals = ExudynTestGlobals()
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -71,7 +68,7 @@ def GenerateStressModesFromPyAnsys(rstFileName, outPutTxtFileName):
 #Use FEMinterface to import FEM model and create FFRFreducedOrder object
 fem = FEMinterface()
 inputFileName = 'TestModels/testData/rotorAnsys' #runTestSuite.py is at another directory
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     inputFileName = 'testData/rotorAnsys'        #if executed in current directory
 
 fem.ReadMassMatrixFromAnsys(fileName=inputFileName + 'MassMatrixSparse.txt', 
@@ -233,8 +230,6 @@ simulationSettings.solutionSettings.solutionInformation = "ObjectFFRFreducedOrde
 
 h=1e-4*0.1
 tEnd = 0.01#*1000
-#if exudynTestGlobals.useGraphics:
-#    tEnd = 0.1
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
@@ -255,7 +250,7 @@ simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5 #SHOULD
 #simulationSettings.solutionSettings.recordImagesInterval = 0.0002
 #SC.visualizationSettings.exportImages.saveImageFileName = "animation/frame"
 
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     exu.StartRenderer()
     if 'lastRenderState' in vars():
         SC.SetRenderState(lastRenderState) #load last model view
@@ -274,16 +269,14 @@ exu.Print('solution of ObjectFFRFreducedOrder=',result)
 #currently not used test case!
 exudynTestGlobals.testResult = 0.1*result
 
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     SC.WaitForRenderEngineStopFlag()
     exu.StopRenderer() #safely close rendering window!
     lastRenderState = SC.GetRenderState() #store model view for next simulation
 
 ##++++++++++++++++++++++++++++++++++++++++++++++q+++++++
 #plot results
-if exudynTestGlobals.useGraphics:
-    
-    
+if useGraphics:
     mbs.PlotSensor([fileDir+'nMidDisplacementCMS8.txt',sDisp,fileDir+'nMidDisplacementFFRF.txt'],
                components=1, closeAll=True)
 

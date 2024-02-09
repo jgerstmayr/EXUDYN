@@ -762,7 +762,7 @@ Index CSolverExplicitTimeInt::ComputeButcherTableau(DynamicSolverType dynamicSol
 			   35. / 384, 0, 500. / 1113, 125. / 192, -2187. / 6784, 11. / 84, 0 });
 			rkData.time = Vector({ 0., 1. / 5, 3. / 10, 4. / 5, 8. / 9, 1., 1. });
 			rkData.weight = Vector({ 35. / 384, 0., 500. / 1113, 125. / 192, -2187. / 6784, 11. / 84, 0. });
-			//Vector delta({ 71. / 57600, 0, -71. / 16695, 71. / 1920, -17253. / 339200, 22. / 525, -1. / 40 }); //wrong in Mathematica tutorial ...
+			//Vector delta({ 71. / 57600, 0, -71. / 16695, 71. / 1920, -17253. / 339200, 22. / 525, -1. / 40 }); //wrong in Mathematica tutorial; sign? => compare with Scipy implementation ...
 			rkData.weightEE = Vector({ 5179. / 57600, 0., 7571. / 16695, 393. / 640, -92097. / 339200, 187. / 2100, 1. / 40 });
 
 			rkData.hasStepSizeControl = true;
@@ -771,7 +771,8 @@ Index CSolverExplicitTimeInt::ComputeButcherTableau(DynamicSolverType dynamicSol
 			return rkData.time.NumberOfItems(); //nStages
 			break;
 		}
-		default: 
+		//case DynamicSolverType::DOPRI853: //could be implemented similarly as in https://github.com/scipy/scipy/blob/v1.11.4/scipy/integrate/_ivp/rk.py#L405
+		default:
 		{
 			PyError("SolverExplicit: invalid explicitIntegration.dynamicSolverType; must be explicit solver!", file.solverFile);
 			return 0;

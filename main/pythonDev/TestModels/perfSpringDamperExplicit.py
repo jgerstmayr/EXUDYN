@@ -1,7 +1,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  This is the file for the EXUDYN first tutorial example showing a simple masspoint with coordinateSpringDamper connector
+# Details:  Performance test with a simple mass point and coordinate spring-damper with explicit integration
 #
 # Author:   Johannes Gerstmayr
 # Date:     2019-11-15
@@ -30,10 +30,6 @@ except:
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
-
-import sys
-sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals
 
 
 L=0.5

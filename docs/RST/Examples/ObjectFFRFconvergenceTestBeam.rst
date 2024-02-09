@@ -84,9 +84,6 @@ You can view and download this file on Github: `ObjectFFRFconvergenceTestBeam.py
    
    #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
    if True: #needs netgen/ngsolve to be installed to compute mesh, see e.g.: https://github.com/NGSolve/ngsolve/releases
-       import sys
-       #adjust path to your ngsolve installation (if not added to global path)
-       sys.path.append('C:/ProgramData/ngsolve/lib/site-packages') 
    
        import ngsolve as ngs
        from netgen.geom2d import unit_square
@@ -254,8 +251,6 @@ You can view and download this file on Github: `ObjectFFRFconvergenceTestBeam.py
        
        h=0.25e-3
        tEnd = 0.12
-       #if exudynTestGlobals.useGraphics:
-       #    tEnd = 0.1
        
        simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
        simulationSettings.timeIntegration.endTime = tEnd

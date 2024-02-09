@@ -106,6 +106,40 @@ public:
 
 };
 
+class PySpecialExceptions
+{
+public:
+    bool dictionaryVersionMismatch;  //!< warn on version mismatch in SetDictionary(...)
+    bool dictionaryNonCopyable;          //!< raise exception if things cannot be copied in GetDictionary(...)
+
+    PySpecialExceptions()
+    {
+        Initialize();
+    }
+
+    void Initialize()
+    {
+        dictionaryVersionMismatch = true;
+        dictionaryNonCopyable = true;
+    }
+
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    virtual void Print(std::ostream& os) const
+    {
+        os << "  dictionaryVersionMismatch = " << dictionaryVersionMismatch << "\n";
+        os << "  dictionaryNonCopyable = " << dictionaryNonCopyable << "\n";
+        os << "\n";
+    }
+
+    friend std::ostream& operator<<(std::ostream& os, const PySpecialExceptions& item)
+    {
+        item.Print(os);
+        return os;
+    }
+
+};
+
+
 
 //!class with according structure in PybindModule.cpp which can be accessed from Python and inside C++
 //!used for special features and global settings
@@ -113,6 +147,7 @@ class PySpecial
 {
 public:
     PySpecialSolver solver;
+    PySpecialExceptions exceptions;
 
     PySpecial()
     {
@@ -122,6 +157,7 @@ public:
     void Initialize()
     {
         solver.Initialize();
+        exceptions.Initialize();
     }
 
     //! put RunCppUnitTests into special class
@@ -139,6 +175,7 @@ public:
     virtual void Print(std::ostream& os) const
     {
         os << "solver:\n" << solver;
+        os << "exceptions:\n" << exceptions;
         os << "\n";
     }
 

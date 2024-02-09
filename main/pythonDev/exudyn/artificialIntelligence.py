@@ -2,7 +2,7 @@
 # This is an EXUDYN python artificial intelligence library
 #
 # Details:  This library collects interfaces and functionality for artificial intelligence
-#			This library is under construction (2022-05);
+#           This library is under construction (2022-05);
 #           To make use of this libraries, you need to install openAI gym with 'pip install gym';
 #           For standard machine learning algorithms, install e.g. stable\_baselines3 using 'pip install stable\_baselines3'
 #

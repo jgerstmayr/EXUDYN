@@ -316,7 +316,7 @@ if False:
     SC.visualizationSettings.contact.showSearchTreeCells =True
     SC.visualizationSettings.contact.showBoundingBoxes = True
 
-if exudynTestGlobals.useGraphics: 
+if useGraphics: 
     exu.StartRenderer()
     mbs.WaitForUserToContinue()
 
@@ -326,7 +326,7 @@ else:
     mbs.SolveStatic(simulationSettings) #183 Newton iterations, 0.114 seconds
 
 
-if exudynTestGlobals.useGraphics and True:
+if useGraphics and True:
     SC.visualizationSettings.general.autoFitScene = False
     SC.visualizationSettings.general.graphicsUpdateInterval=0.02
     
@@ -335,7 +335,7 @@ if exudynTestGlobals.useGraphics and True:
     mbs.SolutionViewer(sol)
 
 
-if exudynTestGlobals.useGraphics: 
+if useGraphics: 
     SC.WaitForRenderEngineStopFlag()
     exu.StopRenderer() #safely close rendering window!
     

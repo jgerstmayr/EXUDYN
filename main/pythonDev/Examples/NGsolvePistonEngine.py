@@ -1,7 +1,8 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  generate a piston engine with variable number of pistons
+# Details:  generate a piston engine with finite element mesh 
+#           created with NGsolve and with variable number of pistons
 #
 # Author:   Johannes Gerstmayr
 # Date:     2020-06-12
@@ -20,8 +21,6 @@ from exudyn.rigidBodyUtilities import *
 from exudyn.FEM import *
 
 import time
-import sys
-sys.path.append('C:/ProgramData/ngsolve/lib/site-packages')
 
 import mkl
 mkl.set_num_threads(20)
@@ -50,8 +49,8 @@ showStresses = True #may take very long for large number of modes/nodes
 def RotationMatrixZ(angleRad):
     return np.array([ [np.cos(angleRad),-np.sin(angleRad), 0],
                       [np.sin(angleRad), np.cos(angleRad), 0],
-                      [0,	    0,        1] ]);
-
+                      [0,        0,        1] ]);
+    
 def VAdd(v0, v1):
     if len(v0) != len(v1): print("ERROR in VAdd: incompatible vectors!")
     n = len(v0)

@@ -28,9 +28,6 @@ import numpy as np
 import scipy
 import sys
 
-#adjust path to your ngsolve installation (if not added to global path)
-sys.path.append('C:/ProgramData/ngsolve/lib/site-packages')
-
 
 from netgen.occ import *
 import ngsolve as ngs
@@ -344,8 +341,6 @@ SC.visualizationSettings.openGL.lineWidth=2
     
 h=1e-3*5 #default: 5e-4
 tEnd = 5
-#if exudynTestGlobals.useGraphics:
-#    tEnd = 0.1
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd

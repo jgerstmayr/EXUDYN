@@ -29,7 +29,7 @@ public:
 	//! OpenGL renderer sends message that graphics shall be updated
 	virtual void UpdateGraphicsData() = 0;		//!< renderer reports to simulation to update the graphics data
 	virtual void InitializeView() = 0;	//!< renderer reports to update the maximum scene coordinates (on initialization)
-	virtual void StopSimulation() = 0;			//!< renderer reports to simulation that simulation shall be interrupted
+	virtual void StopSimulation(bool flag = true) = 0;			//!< renderer reports to simulation that simulation shall be interrupted
 	virtual void ForceQuitSimulation(bool flag = true) = 0;		//!< renderer reports that render window is closed and simulation shall be shut down
     virtual void ContinueSimulation() = 0;		//!< renderer reports to simulation that simulation can be continued
     virtual void SwitchPauseSimulation() = 0;		//!< renderer reports to simulation that paused shall be switched

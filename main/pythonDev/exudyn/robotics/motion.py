@@ -1,5 +1,5 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# This is an EXUDYN python utility library
+# This is an EXUDYN python utility library for robotics
 #
 # Details:  functionality for motion including generation of trajectories with acceleration profiles,
 #           path planning and motion

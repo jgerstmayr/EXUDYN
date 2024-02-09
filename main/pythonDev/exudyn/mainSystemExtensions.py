@@ -1,8 +1,8 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN python utility library
 #
-# Details: 	This module provides an extension interface to the C++ class MainSystem;
-#			MainSystem is extended by Python interface functions to easily create
+# Details:  This module provides an extension interface to the C++ class MainSystem;
+#           MainSystem is extended by Python interface functions to easily create
 #           bodies and point masses without the need to create an according node and
 #           connectors and joints without the need to create markers.
 #           For activation of Python extension in the mainSystem, 
@@ -116,6 +116,7 @@ def ProcessBodyNodeLists(bodyList, bodyOrNodeList, localPosition0, localPosition
 #  referencePosition: reference coordinates for point node (always a 3D vector, no matter if 2D or 3D mass)
 #  referenceRotationMatrix: reference rotation matrix for rigid body node (always 3D matrix, no matter if 2D or 3D body)
 #  graphicsDataList: list of GraphicsData for optional ground visualization
+#  graphicsDataUserFunction: a user function graphicsDataUserFunction(mbs, itemNumber)->BodyGraphicsData (list of GraphicsData), which can be used to draw user-defined graphics; this is much slower than regular GraphicsData
 #  color: color of node
 #  show: True: show ground object; 
 #**output: ObjectIndex; returns ground object index 
@@ -135,6 +136,7 @@ def MainSystemCreateGround(mbs,
                            referencePosition = [0.,0.,0.],
                            referenceRotationMatrix = np.eye(3),
                            graphicsDataList = [],
+                           graphicsDataUserFunction = 0,
                            show = True): 
 
     #error checks:        
@@ -154,10 +156,11 @@ def MainSystemCreateGround(mbs,
         if type(graphicsDataList) != list:
             raise ValueError(where+': graphicsDataList must be a (possibly empty) list of dictionaries of graphics data!')
 
-    groundNumber = mbs.AddObject(eii.ObjectGround(name = name, 
+    groundNumber = mbs.AddObject(eii.ObjectGround(name = name,
                                     referencePosition=referencePosition,
                                     referenceRotation=referenceRotationMatrix,
                                     visualization = eii.VObjectGround(show = show, 
+                                                        graphicsDataUserFunction=graphicsDataUserFunction,
                                                         graphicsData = graphicsDataList) ))
     return groundNumber
 
@@ -198,7 +201,7 @@ def MainSystemCreateGround(mbs,
 # simulationSettings.timeIntegration.endTime = 2
 # mbs.SolveDynamic(simulationSettings = simulationSettings)
 def MainSystemCreateMassPoint(mbs,
-                           name = '',   
+                           name = '',
                            referencePosition = [0.,0.,0.],
                            initialDisplacement = [0.,0.,0.],
                            initialVelocity = [0.,0.,0.],
@@ -250,7 +253,7 @@ def MainSystemCreateMassPoint(mbs,
                          initialVelocities=initialVelocity,
                          visualization = eii.VNodePoint(show = show and (graphicsDataList == []), drawSize = drawSize, color = color),
                          ))
-        bodyNumber = mbs.AddObject(eii.MassPoint(name = name, 
+        bodyNumber = mbs.AddObject(eii.MassPoint(name = name,
                                                 physicsMass=physicsMass,
                                                 nodeNumber = nodeNumber,
                                                 visualization = eii.VMassPoint(show = graphicsDataList != [], 
@@ -298,6 +301,7 @@ def MainSystemCreateMassPoint(mbs,
 #  inertia: an instance of class RigidBodyInertia, see rigidBodyUtilities; may also be from derived class (InertiaCuboid, InertiaMassPoint, InertiaCylinder, ...)
 #  gravity: gravity vevtor applied (always a 3D vector, no matter if 2D or 3D mass)
 #  graphicsDataList: list of GraphicsData for rigid body visualization; use graphicsDataUtilities function GraphicsData...(...)
+#  graphicsDataUserFunction: a user function graphicsDataUserFunction(mbs, itemNumber)->BodyGraphicsData (list of GraphicsData), which can be used to draw user-defined graphics; this is much slower than regular GraphicsData
 #  drawSize: general drawing size of node
 #  color: color of node
 #  show: True: if graphicsData list is empty, node is shown, otherwise body is shown; False: nothing is shown
@@ -339,6 +343,7 @@ def MainSystemCreateRigidBody(mbs,
                            gravity = [0.,0.,0.],
                            nodeType=exudyn.NodeType.RotationEulerParameters,
                            graphicsDataList = [],
+                           graphicsDataUserFunction = 0,
                            drawSize = -1,
                            color =  [-1.,-1.,-1.,-1.],
                            show = True, 
@@ -443,7 +448,8 @@ def MainSystemCreateRigidBody(mbs,
         bodyNumber = mbs.AddObject(eii.ObjectRigidBody(name=name, physicsMass=inertia.mass, physicsInertia=inertia.GetInertia6D(), 
                                                        physicsCenterOfMass=inertia.com,
                                                        nodeNumber=nodeNumber, 
-                                                       visualization=eii.VObjectRigidBody(show = graphicsDataList != [],
+                                                       visualization=eii.VObjectRigidBody(show = graphicsDataList != [], 
+                                                                                          graphicsDataUserFunction = graphicsDataUserFunction,
                                                                                           graphicsData=graphicsDataList)))
     else: #2D
         A = np.array(referenceRotationMatrix)
@@ -485,8 +491,9 @@ def MainSystemCreateRigidBody(mbs,
         nodeNumber = mbs.AddNode(nodeItem)
         bodyNumber = mbs.AddObject(eii.ObjectRigidBody2D(name=name, physicsMass=inertia.mass, physicsInertia=inertia.GetInertia6D()[2],
                                                        #physicsCenterOfMass=inertia.com,
-                                                       nodeNumber=nodeNumber, 
+                                                       nodeNumber=nodeNumber,
                                                        visualization=eii.VObjectRigidBody(show = graphicsDataList != [],
+                                                                                          graphicsDataUserFunction=graphicsDataUserFunction,
                                                                                           graphicsData=graphicsDataList)))
         
     if returnDict:
@@ -507,7 +514,7 @@ def MainSystemCreateRigidBody(mbs,
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**function: helper function to create SpringDamper connector, using arguments from ObjectConnectorSpringDamper; similar interface as CreateDistanceConstraint(...)
+#**function: helper function to create SpringDamper connector, using arguments from ObjectConnectorSpringDamper; similar interface as CreateDistanceConstraint(...), see there for for further information
 #**input: 
 #  mbs: the MainSystem where items are created
 #  name: name string for connector; markers get Marker0:name and Marker1:name
@@ -519,6 +526,7 @@ def MainSystemCreateRigidBody(mbs,
 #  damping: scalar damping coefficient
 #  force: scalar additional force applied
 #  velocityOffset: scalar offset: if referenceLength is changed over time, the velocityOffset may be changed accordingly to emulate a reference motion
+#  springForceUserFunction: a user function springForceUserFunction(mbs, t, itemNumber, deltaL, deltaL_t, stiffness, damping, force)->float ; this function replaces the internal connector force compuation
 #  bodyOrNodeList: alternative to bodyList; a list of object numbers (with specific localPosition0/1) or node numbers; may also be of mixed types; to use this case, set bodyList = [None,None]
 #  show: if True, connector visualization is drawn
 #  drawSize: general drawing size of connector
@@ -559,6 +567,7 @@ def MainSystemCreateSpringDamper(mbs,
                                  referenceLength = None, 
                                  stiffness = 0., damping = 0., force = 0.,
                                  velocityOffset = 0., 
+                                 springForceUserFunction = 0,
                                  bodyOrNodeList=[None, None], 
                                  show=True, drawSize=-1, color=color4default):
     #perform some checks:
@@ -629,8 +638,9 @@ def MainSystemCreateSpringDamper(mbs,
                                                                       referenceLength = referenceLength,
                                                                       stiffness = stiffness,
                                                                       damping = damping,
-                                                                      force = force,
+                                                                      force = force, 
                                                                       velocityOffset = velocityOffset,
+                                                                      springForceUserFunction=springForceUserFunction,
                                                                       visualization=eii.VSpringDamper(show=show, drawSize=drawSize,
                                                                                                       color=color)
                                                                       ))
@@ -649,6 +659,7 @@ def MainSystemCreateSpringDamper(mbs,
 #  stiffness: stiffness coefficients (as 3D list or numpy array)
 #  damping: damping coefficients (as 3D list or numpy array)
 #  offset: offset vector (as 3D list or numpy array)
+#  springForceUserFunction: a user function springForceUserFunction(mbs, t, itemNumber, displacement, velocity, stiffness, damping, offset)->[float,float,float] ; this function replaces the internal connector force compuation
 #  bodyOrNodeList: alternative to bodyList; a list of object numbers (with specific localPosition0/1) or node numbers; may also be of mixed types; to use this case, set bodyList = [None,None]
 #  show: if True, connector visualization is drawn
 #  drawSize: general drawing size of connector
@@ -688,6 +699,7 @@ def MainSystemCreateCartesianSpringDamper(mbs,
                                  localPosition1 = [0.,0.,0.], 
                                  stiffness = [0.,0.,0.], damping = [0.,0.,0.], 
                                  offset = [0.,0.,0.],
+                                 springForceUserFunction = 0,
                                  bodyOrNodeList=[None, None], 
                                  show=True, drawSize=-1, color=color4default):
 
@@ -737,6 +749,7 @@ def MainSystemCreateCartesianSpringDamper(mbs,
             
     oConnector = mbs.AddObject(eii.ObjectConnectorCartesianSpringDamper(name=name,markerNumbers = [mBody0,mBody1],
                                                                         stiffness = stiffness, damping = damping, offset = offset,
+                                                                        springForceUserFunction=springForceUserFunction,
                                                                         visualization=eii.VCartesianSpringDamper(show=show, 
                                                                                       drawSize=drawSize, color=color)
                                                                       ))
@@ -744,7 +757,7 @@ def MainSystemCreateCartesianSpringDamper(mbs,
     return oConnector
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**function: helper function to create RigidBodySpringDamper connector, using arguments from ObjectConnectorRigidBodySpringDamper
+#**function: helper function to create RigidBodySpringDamper connector, using arguments from ObjectConnectorRigidBodySpringDamper, see there for the full documentation
 #**input: 
 #  mbs: the MainSystem where items are created
 #  name: name string for connector; markers get Marker0:name and Marker1:name
@@ -757,6 +770,8 @@ def MainSystemCreateCartesianSpringDamper(mbs,
 #  rotationMatrixJoint: additional rotation matrix; in case  useGlobalFrame=False, it transforms body0/node0 local frame to joint frame; if useGlobalFrame=True, it transforms global frame to joint frame
 #  useGlobalFrame: if False, the rotationMatrixJoint is defined in the local coordinate system of body0
 #  intrinsicFormulation: if True, uses intrinsic formulation of Maserati and Morandini, which uses matrix logarithm and is independent of order of markers (preferred formulation); otherwise, Tait-Bryan angles are used for computation of torque, see documentation
+#  springForceTorqueUserFunction: a user function springForceTorqueUserFunction(mbs, t, itemNumber, displacement, rotation, velocity, angularVelocity, stiffness, damping, rotJ0, rotJ1, offset)->[float,float,float, float,float,float] ; this function replaces the internal connector force / torque compuation
+#  postNewtonStepUserFunction: a special user function postNewtonStepUserFunction(mbs, t, Index itemIndex, dataCoordinates, displacement, rotation, velocity, angularVelocity, stiffness, damping, rotJ0, rotJ1, offset)->[PNerror, recommendedStepSize, data[0], data[1], ...] ; for details, see RigidBodySpringDamper for full docu
 #  bodyOrNodeList: alternative to bodyList; a list of object numbers (with specific localPosition0/1) or node numbers; may also be of mixed types; to use this case, set bodyList = [None,None]
 #  show: if True, connector visualization is drawn
 #  drawSize: general drawing size of connector
@@ -776,6 +791,8 @@ def MainSystemCreateRigidBodySpringDamper(mbs,
                                  rotationMatrixJoint=np.eye(3),
                                  useGlobalFrame=True,
                                  intrinsicFormulation=True,
+                                 springForceTorqueUserFunction=0,
+                                 postNewtonStepUserFunction=0,
                                  bodyOrNodeList=[None, None],
                                  show=True, drawSize=-1, color=color4default):
 
@@ -860,6 +877,8 @@ def MainSystemCreateRigidBodySpringDamper(mbs,
                                                                         rotationMarker0=MR0, 
                                                                         rotationMarker1=MR1,
                                                                         intrinsicFormulation=intrinsicFormulation,
+                                                                        springForceTorqueUserFunction=springForceTorqueUserFunction, 
+                                                                        postNewtonStepUserFunction=postNewtonStepUserFunction,
                                                                         visualization=eii.VRigidBodySpringDamper(show=show, 
                                                                                       drawSize=drawSize, color=color)
                                                                       ))
@@ -875,8 +894,8 @@ def MainSystemCreateRigidBodySpringDamper(mbs,
 #  name: name string for joint; markers get Marker0:name and Marker1:name
 #  bodyNumbers: a list of object numbers for body0 and body1; must be rigid body or ground object
 #  position: a 3D vector as list or np.array: if useGlobalFrame=True it describes the global position of the joint in reference configuration; else: local position in body0
-#  axis: a 3D vector as list or np.array: if  useGlobalFrame=True it describes the global rotation axis of the joint in reference configuration; else: local axis in body0
-#  useGlobalFrame: if False, the point and axis vectors are defined in the local coordinate system of body0
+#  axis: a 3D vector as list or np.array containing the joint axis either in local body0 coordinates (useGlobalFrame=False), or in global reference configuration (useGlobalFrame=True)
+#  useGlobalFrame: if False, the position and axis vectors are defined in the local coordinate system of body0, otherwise in global (reference) coordinates
 #  show: if True, connector visualization is drawn
 #  axisRadius: radius of axis for connector graphical representation
 #  axisLength: length of axis for connector graphical representation
@@ -975,8 +994,8 @@ def MainSystemCreateRevoluteJoint(mbs, name='', bodyNumbers=[None, None],
 #  name: name string for joint; markers get Marker0:name and Marker1:name
 #  bodyNumbers: a list of object numbers for body0 and body1; must be rigid body or ground object
 #  position: a 3D vector as list or np.array: if useGlobalFrame=True it describes the global position of the joint in reference configuration; else: local position in body0
-#  axis: a 3D vector as list or np.array containing the global translation axis of the joint in reference configuration
-#  useGlobalFrame: if False, the point and axis vectors are defined in the local coordinate system of body0
+#  axis: a 3D vector as list or np.array containing the joint axis either in local body0 coordinates (useGlobalFrame=False), or in global reference configuration (useGlobalFrame=True)
+#  useGlobalFrame: if False, the position and axis vectors are defined in the local coordinate system of body0, otherwise in global (reference) coordinates
 #  show: if True, connector visualization is drawn
 #  axisRadius: radius of axis for connector graphical representation
 #  axisLength: length of axis for connector graphical representation
@@ -1139,7 +1158,8 @@ def MainSystemCreateSphericalJoint(mbs, name='', bodyNumbers=[None, None],
     mBody0 = mbs.AddMarker(eii.MarkerBodyPosition(name=mName0,bodyNumber=bodyNumbers[0], localPosition=pJ0))
     mBody1 = mbs.AddMarker(eii.MarkerBodyPosition(name=mName1,bodyNumber=bodyNumbers[1], localPosition=pJ1))
     
-    oJoint = mbs.AddObject(eii.ObjectJointSpherical(name=name,markerNumbers=[mBody0,mBody1], constrainedAxes=constrainedAxes,
+    oJoint = mbs.AddObject(eii.ObjectJointSpherical(name=name,markerNumbers=[mBody0,mBody1], 
+                                                    constrainedAxes=constrainedAxes,
              visualization=eii.VObjectJointSpherical(show=show, jointRadius=jointRadius, color=color) ))
 
     return [oJoint, mBody0, mBody1]
@@ -1157,6 +1177,8 @@ def MainSystemCreateSphericalJoint(mbs, name='', bodyNumbers=[None, None],
 #  rotationMatrixAxes: rotation matrix which defines orientation of constrainedAxes; if useGlobalFrame, this rotation matrix is global, else the rotation matrix is post-multiplied with the rotation of body0, identical with rotationMarker0 in the joint
 #  constrainedAxes: flag, which determines which translation (0,1,2) and rotation (3,4,5) axes are constrained; each entry may only be 0 (=free) axis or 1 (=constrained axis); ALL constrained Axes are defined relative to reference rotation of body0 times rotation0
 #  useGlobalFrame: if False, the position is defined in the local coordinate system of body0, otherwise it is defined in global coordinates
+#  offsetUserFunction: a user function offsetUserFunction(mbs, t, itemNumber, offsetUserFunctionParameters)->float ; this function replaces the internal (constant) by a user-defined offset. This allows to realize rheonomic joints and allows kinematic simulation
+#  offsetUserFunction_t: a user function offsetUserFunction\_t(mbs, t, itemNumber, offsetUserFunctionParameters)->float ; this function replaces the internal (constant) by a user-defined offset velocity; this function is used instead of offsetUserFunction, if velocityLevel (index2) time integration
 #  show: if True, connector visualization is drawn
 #  axesRadius: radius of axes for connector graphical representation
 #  axesLength: length of axes for connector graphical representation
@@ -1190,8 +1212,11 @@ def MainSystemCreateSphericalJoint(mbs, name='', bodyNumbers=[None, None],
 # 
 # mbs.SolveDynamic(simulationSettings = simulationSettings)
 def MainSystemCreateGenericJoint(mbs, name='', bodyNumbers=[None, None], 
-                                 position=[], rotationMatrixAxes=np.eye(3), 
-                                 constrainedAxes=[1,1,1, 1,1,1], useGlobalFrame=True,
+                                 position=[], 
+                                 rotationMatrixAxes=np.eye(3), 
+                                 constrainedAxes=[1,1,1, 1,1,1], 
+                                 useGlobalFrame=True,
+                                 offsetUserFunction=0, offsetUserFunction_t=0,
                                  show=True, axesRadius=0.1, axesLength=0.4, color=color4default):
         
     where = 'MainSystem.CreateGenericJoint(...)'
@@ -1241,7 +1266,9 @@ def MainSystemCreateGenericJoint(mbs, name='', bodyNumbers=[None, None],
     oJoint = mbs.AddObject(eii.ObjectJointGeneric(name=name,markerNumbers=[mBody0,mBody1],
                                                   constrainedAxes = constrainedAxes,
                                                   rotationMarker0=MR0,
-                                                  rotationMarker1=MR1,
+                                                  rotationMarker1=MR1, 
+                                                  offsetUserFunction=offsetUserFunction,
+                                                  offsetUserFunction_t=offsetUserFunction_t,
              visualization=eii.VObjectJointGeneric(show=show, axesRadius=axesRadius, axesLength=axesLength, color=color) ))
 
     return [oJoint, mBody0, mBody1]
@@ -1453,8 +1480,10 @@ def MainSystemCreateForce(mbs,
     else:
         markerNumber = mbs.AddMarker(eii.MarkerBodyPosition(bodyNumber=bodyNumber, localPosition=localPosition))
         
-    loadNumber = mbs.AddLoad(eii.LoadForceVector(markerNumber=markerNumber, loadVector=loadVector,
-                                                 bodyFixed=bodyFixed, loadVectorUserFunction=loadVectorUserFunction))
+    loadNumber = mbs.AddLoad(eii.LoadForceVector(markerNumber=markerNumber, 
+                                                 loadVector=loadVector,
+                                                 bodyFixed=bodyFixed, 
+                                                 loadVectorUserFunction=loadVectorUserFunction))
 
     return loadNumber
 
@@ -1524,8 +1553,10 @@ def MainSystemCreateTorque(mbs,
     
     
     markerNumber = mbs.AddMarker(eii.MarkerBodyRigid(bodyNumber=bodyNumber, localPosition=localPosition))
-    loadNumber = mbs.AddLoad(eii.LoadTorqueVector(markerNumber=markerNumber, loadVector=loadVector,
-                                                 bodyFixed=bodyFixed, loadVectorUserFunction=loadVectorUserFunction))
+    loadNumber = mbs.AddLoad(eii.LoadTorqueVector(markerNumber=markerNumber, 
+                                                  loadVector=loadVector,
+                                                  bodyFixed=bodyFixed,
+                                                  loadVectorUserFunction=loadVectorUserFunction))
 
     return loadNumber
 

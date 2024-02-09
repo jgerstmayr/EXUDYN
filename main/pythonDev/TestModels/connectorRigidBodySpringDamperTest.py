@@ -62,7 +62,7 @@ k=5000
 mbs.AddObject(RigidBodySpringDamper(markerNumbers = [mGround, mBody], 
                                     stiffness = np.diag([k,k,k, 0,0,0]), 
                                     damping = np.diag([0,k*0.01,0, 0,0,0]), 
-									offset = [0,1,0, 0,0,0],
+                                    offset = [0,1,0, 0,0,0],
                                     springForceTorqueUserFunction = UFforce))
 
 mbs.Assemble()

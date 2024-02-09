@@ -462,10 +462,11 @@ inline std::ostream& operator<<(std::ostream& os, const ItemType& object)
 
 const int index2ItemIDindexShift = 3; //3 bits for item Type (5 values + 0)
 const int type2ItemIDindexShift = 4;  //4 bits for mbs number (16 values)
+const int itemIDinvalidValue = -1;
 //! conversion of mbsNumber (m), type (t) and index (i) bits for 32 bits: [iiiiiiii iiiiiiii iiiiiiii itttmmmm]
 inline Index Index2ItemID(Index index, ItemType type, Index mbsNumber)
 {
-	if (mbsNumber == -1) { return -1; }
+	if (mbsNumber == -1) { return itemIDinvalidValue; }
 	return (index << (index2ItemIDindexShift + type2ItemIDindexShift)) +
 		((Index)type << type2ItemIDindexShift) + mbsNumber;
 }
@@ -473,7 +474,7 @@ inline Index Index2ItemID(Index index, ItemType type, Index mbsNumber)
 //! inverse operation of Index2ItemID
 inline void ItemID2IndexType(Index itemID, Index& index, ItemType& type, Index& mbsNumber)
 {
-	if (itemID != -1)
+	if (itemID != itemIDinvalidValue)
 	{
 		mbsNumber = (itemID & ((1 << type2ItemIDindexShift) - 1)); //logical and with mask for first 4 bits
 		type = (ItemType)((itemID >> type2ItemIDindexShift) & ((1 << index2ItemIDindexShift) - 1)); //logical and with mask for  bits 5-7

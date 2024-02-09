@@ -22,7 +22,7 @@ import numpy as np
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
-useSymbolicUserFunction = False
+useSymbolicUserFunction = True
 
 #defines relative displacement, relative velocity, stiffness k, damping d, and additional spring force f0
 def springForce(mbs, t, itemIndex, u, v, k, d, f0):
@@ -73,10 +73,11 @@ for j in range(nBodies2-1):
 if useSymbolicUserFunction:
     #create symbolic version of Python user function (only works for limited kinds of functions)
     #we have to keep this handle, do not overwrite:
-    symbolicFunc = CreateSymbolicUserFunction(mbs, springForce, coList[0], 'springForceUserFunction')
+    symbolicFunc = CreateSymbolicUserFunction(mbs, springForce, 'springForceUserFunction', coList[0])
     for co in coList:
         #now inject symbolic user function into object, directly done inside C++ (no Pybind overhead):
-        symbolicFunc.TransferUserFunction2Item(mbs, co, 'springForceUserFunction')    
+        #symbolicFunc.TransferUserFunction2Item(mbs, co, 'springForceUserFunction')    
+        mbs.SetObjectParameter(co, 'springForceUserFunction', symbolicFunc)
 
 
 #optional:
@@ -94,13 +95,15 @@ if useGraphics:
     exu.StartRenderer()
 
 simulationSettings = exu.SimulationSettings()
-simulationSettings.timeIntegration.numberOfSteps = 100*20
-simulationSettings.timeIntegration.endTime = 1*20
+simulationSettings.timeIntegration.numberOfSteps = 100*200
+simulationSettings.timeIntegration.endTime = 1*200
+simulationSettings.solutionSettings.writeSolutionToFile = False
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5
 simulationSettings.timeIntegration.verboseMode = 1
 simulationSettings.displayStatistics = True
 simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
 #simulationSettings.linearSolverType = exu.LinearSolverType.EXUdense
+simulationSettings.displayComputationTime = True
 
 SC.visualizationSettings.nodes.show = True
 SC.visualizationSettings.bodies.show = False

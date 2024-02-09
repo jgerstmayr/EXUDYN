@@ -99,8 +99,14 @@ Structure to define general and highly efficient contact functionality in multib
      gContact.GetItemsInBox(pMin=[0,1,1],
          pMax=[2,3,2])
 
-* | **GetMarkerBasedSphere**\ (\ *localIndex*\ ): 
-  | Get dictionary with position, radius and markerIndex for markerBasedSphere index, as returned e.g. from GetItemsInBox
+* | **GetSphereMarkerBased**\ (\ *localIndex*\ , \ *addData*\  = False): 
+  | Get dictionary with current position, orientation, velocity, angular velocity as computed in last contact iteration; if addData=True, adds stored data of contact element, such as radius, markerIndex and contact parameters; localIndex is the internal index of contact element, as returned e.g. from GetItemsInBox
+* | **SetSphereMarkerBased**\ (\ *localIndex*\ , \ *contactStiffness*\  = -1., \ *contactDamping*\  = -1., \ *radius*\  = -1., \ *frictionMaterialIndex*\  = -1): 
+  | Set data of marker based sphere with localIndex (as internally stored) with given arguments; arguments that are < 0 (default) imply that current values are not overwritten
+* | **GetTriangleRigidBodyBased**\ (\ *localIndex*\ ): 
+  | Get dictionary with rigid body index, local position of triangle vertices (nodes) and triangle normal; NOTE: the mesh added to contact is different from this structure, as it contains nodes and connectivity lists; the triangle index corresponds to the order as triangles are added to GeneralContact
+* | **SetTriangleRigidBodyBased**\ (\ *localIndex*\ , \ *points*\ , \ *contactRigidBodyIndex*\  = -1): 
+  | Set data of marker based sphere with localIndex (triangle index); points are provided as 3x3 numpy array, with point coordinates in rows; contactRigidBodyIndex<0 indicates no change of the current index (and changing this index should be handled with care)
 * | **ShortestDistanceAlongLine**\ (\ *pStart*\  = [0,0,0], \ *direction*\  = [1,0,0], \ *minDistance*\  = -1e-7, \ *maxDistance*\  = 1e7, \ *asDictionary*\  = False, \ *cylinderRadius*\  = 0, \ *typeIndex*\  = Contact.IndexEndOfEnumList): 
   | Find shortest distance to contact objects in GeneralContact along line with pStart (given as 3D list or numpy array) and direction (as 3D list or numpy array with no need to be normalized); the function returns the distance which is >= minDistance and < maxDistance; in case of beam elements, it measures the distance to the beam centerline; the distance is measured from pStart along given direction and can also be negative; if no item is found along line, the maxDistance is returned; if asDictionary=False, the result is a float, while otherwise details are returned as dictionary (including distance, velocityAlongLine (which is the object velocity in given direction and may be different from the time derivative of the distance; works similar to a laser Doppler vibrometer - LDV), itemIndex and itemType in GeneralContact); the cylinderRadius, if not equal to 0, will be used for spheres to find closest sphere along cylinder with given point and direction; the typeIndex can be set to a specific contact type, e.g., which are searched for (otherwise all objects are considered)
 * | **UpdateContacts**\ (\ *mainSystem*\ ): 
@@ -118,7 +124,8 @@ Structure to define general and highly efficient contact functionality in multib
   .. code-block:: python
 
      #if explicit solver is used, we first need to update contacts:
-     gContact.UpdateContacts(mbs)\#obtain active contacts of marker based sphere 42:
+     gContact.UpdateContacts(mbs)
+     #obtain active contacts of marker based sphere 42:
      gList = gContact.GetActiveContacts(exu.ContactTypeIndex.IndexSpheresMarkerBased, 42)
 
 * | **\_\_repr\_\_()**\ : 

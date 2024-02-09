@@ -65,24 +65,28 @@ oGround = mbs.CreateGround()
 oMassPoint = mbs.CreateMassPoint(referencePosition=[1.+0.05,0,0], physicsMass=1)
 co = mbs.CreateSpringDamper(bodyList=[oGround, oMassPoint],
                             referenceLength = 0.1, stiffness = 100, 
-                            damping = 1)
+                            damping = 1,
+                            springForceUserFunction = springForceUserFunction,
+                            )
 
 mc = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=0, coordinate=0))
 load = mbs.AddLoad(LoadCoordinate(markerNumber=mc, load=10,
                                   loadUserFunction=UFload))
 
 if useSymbolicUF:
-    symbolicFunc = CreateSymbolicUserFunction(mbs, springForceUserFunction, co, 'springForceUserFunction')
-    symbolicFunc.TransferUserFunction2Item(mbs, co, 'springForceUserFunction')    
+    symbolicFunc = CreateSymbolicUserFunction(mbs, springForceUserFunction, 'springForceUserFunction', co)
+    # symbolicFunc.TransferUserFunction2Item(mbs, co, 'springForceUserFunction')    
+    mbs.SetObjectParameter(co, 'springForceUserFunction', symbolicFunc)
+    
 
-    symFuncLoad = CreateSymbolicUserFunction(mbs, UFload, load, 'loadUserFunction')
-    symFuncLoad.TransferUserFunction2Item(mbs, load, 'loadUserFunction')    
+    symFuncLoad = CreateSymbolicUserFunction(mbs, UFload, 'loadUserFunction', load)
+    # symFuncLoad.TransferUserFunction2Item(mbs, load, 'loadUserFunction')    
+    mbs.SetLoadParameter(load, 'loadUserFunction', symFuncLoad)
     
     #check function:
     exu.Print('spring user function:',symbolicFunc)
     exu.Print('load user function:  ',symFuncLoad)
-else:
-    mbs.SetObjectParameter(co, 'springForceUserFunction', springForceUserFunction)
+
 
 #assemble and solve system for default parameters
 mbs.Assemble()

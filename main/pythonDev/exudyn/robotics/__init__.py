@@ -1,5 +1,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# This the EXUDYN robotics submodule initialization file
+# This is an EXUDYN python utility library for robotics
+#
+# Details:  This the EXUDYN robotics submodule initialization file
 #
 # Author:   Johannes Gerstmayr
 # Date:     2021-12-02

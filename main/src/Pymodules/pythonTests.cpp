@@ -77,9 +77,15 @@ namespace py = pybind11;
 //#include "Utilities/Parallel.h" //ParallelFor
 
 
+void f() {};
 
-void PyTest2()
+void PyTest()
 {
+	//std::cout << "Size of empty py::object: " << sizeof(py::object) << " bytes" << std::endl; //8 bytes ... it is a handle basically, everything else is static
+
+	//py::function f = py::cast((std::function<void()>)f);
+	//py::function f = py::function();
+	//std::cout << "Size of empty py::function: " << sizeof(py::function) << " bytes" << std::endl; //only 8 bytes ...
 
 	//if (1)
 	//{

@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-09-07 (last modfied)
+* @date         AUTO: 2024-02-08 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -207,7 +207,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-09-07 (last modfied)
+* @date         AUTO: 2024-02-08 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -299,7 +299,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-09-07 (last modfied)
+* @date         AUTO: 2024-02-08 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -318,7 +318,7 @@ class VSettingsNodes // AUTO:
 {
 public: // AUTO: 
   float basisSize;                                //!< AUTO: size of basis for nodes
-  Float4 defaultColor;                            //!< AUTO: default cRGB color for nodes; 4th value is alpha-transparency
+  Float4 defaultColor;                            //!< AUTO: default RGBA color for nodes; 4th value is alpha-transparency
   float defaultSize;                              //!< AUTO: global node size; if -1.f, node size is relative to openGL.initialMaxSceneSize
   bool drawNodesAsPoint;                          //!< AUTO: simplified/faster drawing of nodes; uses general->pointSize as drawing size; if drawNodesAsPoint==True, the basis of the node will be drawn with lines
   bool show;                                      //!< AUTO: flag to decide, whether the nodes are shown
@@ -344,9 +344,9 @@ public: // AUTO:
   };
 
   // AUTO: access functions
-  //! AUTO: Set function (needed in pybind) for: default cRGB color for nodes; 4th value is alpha-transparency
+  //! AUTO: Set function (needed in pybind) for: default RGBA color for nodes; 4th value is alpha-transparency
   void PySetDefaultColor(const std::array<float,4>& defaultColorInit) { defaultColor = defaultColorInit; }
-  //! AUTO: Read (Copy) access to: default cRGB color for nodes; 4th value is alpha-transparency
+  //! AUTO: Read (Copy) access to: default RGBA color for nodes; 4th value is alpha-transparency
   std::array<float,4> PyGetDefaultColor() const { return std::array<float,4>(defaultColor); }
 
   //! AUTO: Set function (needed in pybind) for: draw nodal slope vectors, e.g. in ANCF beam finite elements
@@ -390,7 +390,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-09-07 (last modfied)
+* @date         AUTO: 2024-02-08 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -484,7 +484,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-09-07 (last modfied)
+* @date         AUTO: 2024-02-08 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -545,7 +545,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-09-07 (last modfied)
+* @date         AUTO: 2024-02-08 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -565,7 +565,7 @@ class VSettingsBodies // AUTO:
 public: // AUTO: 
   VSettingsBeams beams;                           //!< AUTO: visualization settings for beams (e.g. ANCFCable or other beam elements)
   VSettingsKinematicTree kinematicTree;           //!< AUTO: visualization settings for kinematic tree
-  Float4 defaultColor;                            //!< AUTO: default cRGB color for bodies; 4th value is 
+  Float4 defaultColor;                            //!< AUTO: default RGBA color for bodies; 4th value is 
   Float3 defaultSize;                             //!< AUTO: global body size of xyz-cube
   float deformationScaleFactor;                   //!< AUTO: global deformation scale factor; also applies to nodes, if drawn; used for scaled drawing of (linear) finite elements, beams, etc.
   bool show;                                      //!< AUTO: flag to decide, whether the bodies are shown
@@ -584,9 +584,9 @@ public: // AUTO:
   };
 
   // AUTO: access functions
-  //! AUTO: Set function (needed in pybind) for: default cRGB color for bodies; 4th value is 
+  //! AUTO: Set function (needed in pybind) for: default RGBA color for bodies; 4th value is 
   void PySetDefaultColor(const std::array<float,4>& defaultColorInit) { defaultColor = defaultColorInit; }
-  //! AUTO: Read (Copy) access to: default cRGB color for bodies; 4th value is 
+  //! AUTO: Read (Copy) access to: default RGBA color for bodies; 4th value is 
   std::array<float,4> PyGetDefaultColor() const { return std::array<float,4>(defaultColor); }
 
   //! AUTO: Set function (needed in pybind) for: global body size of xyz-cube
@@ -623,7 +623,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-09-07 (last modfied)
+* @date         AUTO: 2024-02-08 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -642,7 +642,7 @@ class VSettingsConnectors // AUTO:
 {
 public: // AUTO: 
   float contactPointsDefaultSize;                 //!< AUTO: DEPRECATED: do not use! global contact points size; if -1.f, connector size is relative to maxSceneSize
-  Float4 defaultColor;                            //!< AUTO: default cRGB color for connectors; 4th value is alpha-transparency
+  Float4 defaultColor;                            //!< AUTO: default RGBA color for connectors; 4th value is alpha-transparency
   float defaultSize;                              //!< AUTO: global connector size; if -1.f, connector size is relative to maxSceneSize
   float jointAxesLength;                          //!< AUTO: global joint axes length
   float jointAxesRadius;                          //!< AUTO: global joint axes radius
@@ -670,9 +670,9 @@ public: // AUTO:
   };
 
   // AUTO: access functions
-  //! AUTO: Set function (needed in pybind) for: default cRGB color for connectors; 4th value is alpha-transparency
+  //! AUTO: Set function (needed in pybind) for: default RGBA color for connectors; 4th value is alpha-transparency
   void PySetDefaultColor(const std::array<float,4>& defaultColorInit) { defaultColor = defaultColorInit; }
-  //! AUTO: Read (Copy) access to: default cRGB color for connectors; 4th value is alpha-transparency
+  //! AUTO: Read (Copy) access to: default RGBA color for connectors; 4th value is alpha-transparency
   std::array<float,4> PyGetDefaultColor() const { return std::array<float,4>(defaultColor); }
 
   //! AUTO: Set function (needed in pybind) for: number of windings for springs drawn as helical spring
@@ -712,7 +712,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-09-07 (last modfied)
+* @date         AUTO: 2024-02-08 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -730,7 +730,7 @@ public: // AUTO:
 class VSettingsMarkers // AUTO: 
 {
 public: // AUTO: 
-  Float4 defaultColor;                            //!< AUTO: default cRGB color for markers; 4th value is alpha-transparency
+  Float4 defaultColor;                            //!< AUTO: default RGBA color for markers; 4th value is alpha-transparency
   float defaultSize;                              //!< AUTO: global marker size; if -1.f, marker size is relative to maxSceneSize
   bool drawSimplified;                            //!< AUTO: draw markers with simplified symbols
   bool show;                                      //!< AUTO: flag to decide, whether the markers are shown
@@ -749,9 +749,9 @@ public: // AUTO:
   };
 
   // AUTO: access functions
-  //! AUTO: Set function (needed in pybind) for: default cRGB color for markers; 4th value is alpha-transparency
+  //! AUTO: Set function (needed in pybind) for: default RGBA color for markers; 4th value is alpha-transparency
   void PySetDefaultColor(const std::array<float,4>& defaultColorInit) { defaultColor = defaultColorInit; }
-  //! AUTO: Read (Copy) access to: default cRGB color for markers; 4th value is alpha-transparency
+  //! AUTO: Read (Copy) access to: default RGBA color for markers; 4th value is alpha-transparency
   std::array<float,4> PyGetDefaultColor() const { return std::array<float,4>(defaultColor); }
 
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
@@ -781,7 +781,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-09-07 (last modfied)
+* @date         AUTO: 2024-02-08 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -799,7 +799,7 @@ public: // AUTO:
 class VSettingsLoads // AUTO: 
 {
 public: // AUTO: 
-  Float4 defaultColor;                            //!< AUTO: default cRGB color for loads; 4th value is alpha-transparency
+  Float4 defaultColor;                            //!< AUTO: default RGBA color for loads; 4th value is alpha-transparency
   float defaultRadius;                            //!< AUTO: global radius of load axis if drawn in 3D
   float defaultSize;                              //!< AUTO: global load size; if -1.f, load size is relative to maxSceneSize
   bool drawSimplified;                            //!< AUTO: draw markers with simplified symbols
@@ -824,9 +824,9 @@ public: // AUTO:
   };
 
   // AUTO: access functions
-  //! AUTO: Set function (needed in pybind) for: default cRGB color for loads; 4th value is alpha-transparency
+  //! AUTO: Set function (needed in pybind) for: default RGBA color for loads; 4th value is alpha-transparency
   void PySetDefaultColor(const std::array<float,4>& defaultColorInit) { defaultColor = defaultColorInit; }
-  //! AUTO: Read (Copy) access to: default cRGB color for loads; 4th value is alpha-transparency
+  //! AUTO: Read (Copy) access to: default RGBA color for loads; 4th value is alpha-transparency
   std::array<float,4> PyGetDefaultColor() const { return std::array<float,4>(defaultColor); }
 
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
@@ -859,7 +859,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-09-07 (last modfied)
+* @date         AUTO: 2024-02-08 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -999,7 +999,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-09-07 (last modfied)
+* @date         AUTO: 2024-02-08 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1018,7 +1018,7 @@ class VSettingsSensors // AUTO:
 {
 public: // AUTO: 
   VSettingsSensorTraces traces;                   //!< AUTO: settings for showing (position) sensor traces and vector plots in the render window
-  Float4 defaultColor;                            //!< AUTO: default cRGB color for sensors; 4th value is alpha-transparency
+  Float4 defaultColor;                            //!< AUTO: default RGBA color for sensors; 4th value is alpha-transparency
   float defaultSize;                              //!< AUTO: global sensor size; if -1.f, sensor size is relative to maxSceneSize
   bool drawSimplified;                            //!< AUTO: draw sensors with simplified symbols
   bool show;                                      //!< AUTO: flag to decide, whether the sensors are shown
@@ -1037,9 +1037,9 @@ public: // AUTO:
   };
 
   // AUTO: access functions
-  //! AUTO: Set function (needed in pybind) for: default cRGB color for sensors; 4th value is alpha-transparency
+  //! AUTO: Set function (needed in pybind) for: default RGBA color for sensors; 4th value is alpha-transparency
   void PySetDefaultColor(const std::array<float,4>& defaultColorInit) { defaultColor = defaultColorInit; }
-  //! AUTO: Read (Copy) access to: default cRGB color for sensors; 4th value is alpha-transparency
+  //! AUTO: Read (Copy) access to: default RGBA color for sensors; 4th value is alpha-transparency
   std::array<float,4> PyGetDefaultColor() const { return std::array<float,4>(defaultColor); }
 
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
@@ -1070,7 +1070,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-09-07 (last modfied)
+* @date         AUTO: 2024-02-08 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1088,15 +1088,20 @@ public: // AUTO:
 class VSettingsContact // AUTO: 
 {
 public: // AUTO: 
-  Float4 colorBoundingBoxes;                      //!< AUTO: cRGB color
-  Float4 colorSearchTree;                         //!< AUTO: cRGB color
+  Float4 colorBoundingBoxes;                      //!< AUTO: RGBA color for boudnding boxes, see showBoundingBoxes
+  Float4 colorSearchTree;                         //!< AUTO: RGBA color for search tree, see showSearchTree
+  Float4 colorSpheres;                            //!< AUTO: RGBA color for contact spheres, see showSpheres
+  Float4 colorTriangles;                          //!< AUTO: RGBA color for contact triangles, see showTriangles
   float contactForcesFactor;                      //!< AUTO: factor used for scaling of contact forces is showContactForces=True
   float contactPointsDefaultSize;                 //!< AUTO: global contact points size; if -1.f, connector size is relative to maxSceneSize; used for some contacts, e.g., in ContactFrictionCircle
-  bool showBoundingBoxes;                         //!< AUTO: show bounding boxes of all GeneralContacts
+  bool showBoundingBoxes;                         //!< AUTO: show computed bounding boxes of all GeneralContacts; Warning: avoid for large number of contact objects!
   bool showContactForces;                         //!< AUTO: if True, contact forces are drawn for certain contact models
   bool showContactForcesValues;                   //!< AUTO: if True and showContactForces=True, numerical values for  contact forces are shown at certain points
-  bool showSearchTree;                            //!< AUTO: show search tree of all GeneralContacts
-  bool showSearchTreeCells;                       //!< AUTO: show cells inside search tree
+  bool showSearchTree;                            //!< AUTO: show outer box of search tree for all GeneralContacts
+  bool showSearchTreeCells;                       //!< AUTO: show all cells of search tree; empty cells have colorSearchTree, cells with contact objects have higher red value; Warning: avoid for large number of search tree cells!
+  bool showSpheres;                               //!< AUTO: show contact spheres (SpheresWithMarker, ...)
+  bool showTriangles;                             //!< AUTO: show contact triangles (TrianglesRigidBodyBased, ...)
+  Index tilingSpheres;                            //!< AUTO: tiling for spheres; higher values give smoother spheres, but may lead to lower frame rates
 
 
 public: // AUTO: 
@@ -1105,6 +1110,8 @@ public: // AUTO:
   {
     colorBoundingBoxes = Float4({0.9f,0.1f,0.1f,1.f});
     colorSearchTree = Float4({0.1f,0.1f,0.9f,1.f});
+    colorSpheres = Float4({0.8f,0.8f,0.2f,1.f});
+    colorTriangles = Float4({0.5f,0.5f,0.5f,1.f});
     contactForcesFactor = 0.001f;
     contactPointsDefaultSize = 0.001f;
     showBoundingBoxes = false;
@@ -1112,18 +1119,36 @@ public: // AUTO:
     showContactForcesValues = false;
     showSearchTree = false;
     showSearchTreeCells = false;
+    showSpheres = false;
+    showTriangles = false;
+    tilingSpheres = 4;
   };
 
   // AUTO: access functions
-  //! AUTO: Set function (needed in pybind) for: cRGB color
+  //! AUTO: Set function (needed in pybind) for: RGBA color for boudnding boxes, see showBoundingBoxes
   void PySetColorBoundingBoxes(const std::array<float,4>& colorBoundingBoxesInit) { colorBoundingBoxes = colorBoundingBoxesInit; }
-  //! AUTO: Read (Copy) access to: cRGB color
+  //! AUTO: Read (Copy) access to: RGBA color for boudnding boxes, see showBoundingBoxes
   std::array<float,4> PyGetColorBoundingBoxes() const { return std::array<float,4>(colorBoundingBoxes); }
 
-  //! AUTO: Set function (needed in pybind) for: cRGB color
+  //! AUTO: Set function (needed in pybind) for: RGBA color for search tree, see showSearchTree
   void PySetColorSearchTree(const std::array<float,4>& colorSearchTreeInit) { colorSearchTree = colorSearchTreeInit; }
-  //! AUTO: Read (Copy) access to: cRGB color
+  //! AUTO: Read (Copy) access to: RGBA color for search tree, see showSearchTree
   std::array<float,4> PyGetColorSearchTree() const { return std::array<float,4>(colorSearchTree); }
+
+  //! AUTO: Set function (needed in pybind) for: RGBA color for contact spheres, see showSpheres
+  void PySetColorSpheres(const std::array<float,4>& colorSpheresInit) { colorSpheres = colorSpheresInit; }
+  //! AUTO: Read (Copy) access to: RGBA color for contact spheres, see showSpheres
+  std::array<float,4> PyGetColorSpheres() const { return std::array<float,4>(colorSpheres); }
+
+  //! AUTO: Set function (needed in pybind) for: RGBA color for contact triangles, see showTriangles
+  void PySetColorTriangles(const std::array<float,4>& colorTrianglesInit) { colorTriangles = colorTrianglesInit; }
+  //! AUTO: Read (Copy) access to: RGBA color for contact triangles, see showTriangles
+  std::array<float,4> PyGetColorTriangles() const { return std::array<float,4>(colorTriangles); }
+
+  //! AUTO: Set function (needed in pybind) for: tiling for spheres; higher values give smoother spheres, but may lead to lower frame rates
+  void PySetTilingSpheres(const Index& tilingSpheresInit) { tilingSpheres = EXUstd::GetSafelyPInt(tilingSpheresInit,"tilingSpheres"); }
+  //! AUTO: Read (Copy) access to: tiling for spheres; higher values give smoother spheres, but may lead to lower frame rates
+  Index PyGetTilingSpheres() const { return Index(tilingSpheres); }
 
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
@@ -1131,6 +1156,8 @@ public: // AUTO:
     os << "VSettingsContact" << ":\n";
     os << "  colorBoundingBoxes = " << colorBoundingBoxes << "\n";
     os << "  colorSearchTree = " << colorSearchTree << "\n";
+    os << "  colorSpheres = " << colorSpheres << "\n";
+    os << "  colorTriangles = " << colorTriangles << "\n";
     os << "  contactForcesFactor = " << contactForcesFactor << "\n";
     os << "  contactPointsDefaultSize = " << contactPointsDefaultSize << "\n";
     os << "  showBoundingBoxes = " << showBoundingBoxes << "\n";
@@ -1138,6 +1165,9 @@ public: // AUTO:
     os << "  showContactForcesValues = " << showContactForcesValues << "\n";
     os << "  showSearchTree = " << showSearchTree << "\n";
     os << "  showSearchTreeCells = " << showSearchTreeCells << "\n";
+    os << "  showSpheres = " << showSpheres << "\n";
+    os << "  showTriangles = " << showTriangles << "\n";
+    os << "  tilingSpheres = " << tilingSpheres << "\n";
     os << "\n";
   }
 
@@ -1156,7 +1186,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-09-07 (last modfied)
+* @date         AUTO: 2024-02-08 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1254,7 +1284,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-09-07 (last modfied)
+* @date         AUTO: 2024-02-08 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1328,7 +1358,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-09-07 (last modfied)
+* @date         AUTO: 2024-02-08 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1600,7 +1630,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-09-07 (last modfied)
+* @date         AUTO: 2024-02-08 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1702,7 +1732,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-09-07 (last modfied)
+* @date         AUTO: 2024-02-08 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1763,7 +1793,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-09-07 (last modfied)
+* @date         AUTO: 2024-02-08 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1782,11 +1812,11 @@ class VSettingsInteractive // AUTO:
 {
 public: // AUTO: 
   VSettingsOpenVR openVR;                         //!< AUTO: openVR visualization settings
-  Float4 highlightColor;                          //!< AUTO: cRGB color for highlighted item; 4th value is alpha-transparency
+  Float4 highlightColor;                          //!< AUTO: RGBA color for highlighted item; 4th value is alpha-transparency
   Index highlightItemIndex;                       //!< AUTO: index of item that shall be highlighted (e.g., need to find item due to errors); if set -1, no item is highlighted
   ItemType highlightItemType;                     //!< AUTO: item type (Node, Object, ...) that shall be highlighted (e.g., need to find item due to errors)
   Index highlightMbsNumber;                       //!< AUTO: index of main system (mbs) for which the item shall be highlighted; number is related to the ID in SystemContainer (first mbs = 0, second = 1, ...)
-  Float4 highlightOtherColor;                     //!< AUTO: cRGB color for other items (which are not highlighted); 4th value is alpha-transparency
+  Float4 highlightOtherColor;                     //!< AUTO: RGBA color for other items (which are not highlighted); 4th value is alpha-transparency
   float joystickScaleRotation;                    //!< AUTO: rotation scaling factor for joystick input
   float joystickScaleTranslation;                 //!< AUTO: translation scaling factor for joystick input
   float keypressRotationStep;                     //!< AUTO: rotation increment per keypress in degree (full rotation = 360 degree)
@@ -1835,9 +1865,9 @@ public: // AUTO:
   };
 
   // AUTO: access functions
-  //! AUTO: Set function (needed in pybind) for: cRGB color for highlighted item; 4th value is alpha-transparency
+  //! AUTO: Set function (needed in pybind) for: RGBA color for highlighted item; 4th value is alpha-transparency
   void PySetHighlightColor(const std::array<float,4>& highlightColorInit) { highlightColor = highlightColorInit; }
-  //! AUTO: Read (Copy) access to: cRGB color for highlighted item; 4th value is alpha-transparency
+  //! AUTO: Read (Copy) access to: RGBA color for highlighted item; 4th value is alpha-transparency
   std::array<float,4> PyGetHighlightColor() const { return std::array<float,4>(highlightColor); }
 
   //! AUTO: Set function (needed in pybind) for: index of main system (mbs) for which the item shall be highlighted; number is related to the ID in SystemContainer (first mbs = 0, second = 1, ...)
@@ -1845,9 +1875,9 @@ public: // AUTO:
   //! AUTO: Read (Copy) access to: index of main system (mbs) for which the item shall be highlighted; number is related to the ID in SystemContainer (first mbs = 0, second = 1, ...)
   Index PyGetHighlightMbsNumber() const { return Index(highlightMbsNumber); }
 
-  //! AUTO: Set function (needed in pybind) for: cRGB color for other items (which are not highlighted); 4th value is alpha-transparency
+  //! AUTO: Set function (needed in pybind) for: RGBA color for other items (which are not highlighted); 4th value is alpha-transparency
   void PySetHighlightOtherColor(const std::array<float,4>& highlightOtherColorInit) { highlightOtherColor = highlightOtherColorInit; }
-  //! AUTO: Read (Copy) access to: cRGB color for other items (which are not highlighted); 4th value is alpha-transparency
+  //! AUTO: Read (Copy) access to: RGBA color for other items (which are not highlighted); 4th value is alpha-transparency
   std::array<float,4> PyGetHighlightOtherColor() const { return std::array<float,4>(highlightOtherColor); }
 
   //! AUTO: Set function (needed in pybind) for: choose which orientation axes (x,y,z) are tracked; currently can only be all zero or all one
@@ -1905,7 +1935,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-09-07 (last modfied)
+* @date         AUTO: 2024-02-08 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

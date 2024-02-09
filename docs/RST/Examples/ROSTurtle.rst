@@ -10,27 +10,25 @@ You can view and download this file on Github: `ROSTurtle.py <https://github.com
 .. code-block:: python
    :linenos:
 
-   #!/usr/bin/env python3
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-   # This is an EXUDYN python example how to use ROS and EXUDYN
+   # This is an EXUDYN python example
    #
-   # Details:  This example shows how to communicate between an exudyn simulation
-   #            and ROS
+   # Details:  This example shows how to communicate between an exudyn simulation and ROS
    #           To make use of this example, you need to 
    #           install ROS (ROS1 noetic) including rospy (see rosInterface.py)
    #           prerequisite to use: 
    #           use a bash terminal to start the roscore with: 
    #               roscore 
-   #           you can also use the ROS turtlesim_node to subsrcibe the Twist massage from exudyn
+   #           You can also use the ROS turtlesim_node to subsrcibe the Twist massage from exudyn
    #           use a bash terminal to start the turtlesim node with:
    #               rosrun turtlesim turtlesim_node turtle1/cmd_vel:=exudyn/Twist
-   #           start example with argument -pub, to use it with external publisher: 
+   #           Start example with argument -pub, to use it with external publisher: 
    #               python3 ROSTurtle.py -pub
-   #           start example with argument -noTrack, to not track the turtle:
+   #           Start example with argument -noTrack, to not track the turtle:
    #               python3 ROSTurtle.py -noTrack
-   #           for even more ROS functionality create a ROS package (e.q. myExudynInterface) in a catkin workspace, 
+   #           For even more ROS functionality create a ROS package (e.q. myExudynInterface) in a catkin workspace, 
    #           copy files  ROSTurtle.py, Turtle.stl and ROSBringupTurtle.launch file  (see folder Examples/supplementary) in corresponding folders within the package
-   #           for more functionality see also: ROSMassPoint.py, ROSBringupTurtle.launch, ROSControlTurtleVelocity.py
+   #           For more functionality see also: ROSMassPoint.py, ROSBringupTurtle.launch, ROSControlTurtleVelocity.py
    # Author:   Martin Sereinig, Peter Manzl 
    # Date:     2023-05-31 (created)
    #

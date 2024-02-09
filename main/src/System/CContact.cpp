@@ -58,6 +58,62 @@ TimerStructureRegistrator TSRcontactANCFCable4("Contact:ANCFCable4", TScontactAN
 void VisuGeneralContact::DrawContacts(const GeneralContact& gContact, const VisualizationSettings& visualizationSettings,
 	VisualizationSystem* vSystem)
 {
+	if (visualizationSettings.contact.showSpheres)
+	{
+		const ResizableArray<ContactSpheresMarkerBased>& spheres = gContact.GetSpheresMarkerBased();
+		Vector3D p(0);
+		for (const auto& item : spheres)
+		{
+			vSystem->systemData->GetCMarker(item.markerIndex).GetPosition(*vSystem->systemData, p,
+				ConfigurationType::Visualization);
+
+			vSystem->graphicsData.AddSphere(p, visualizationSettings.contact.colorSpheres,
+				itemIDinvalidValue, item.radius, visualizationSettings.contact.tilingSpheres);
+		}
+	}
+
+	if (visualizationSettings.contact.showTriangles)
+	{
+		const ResizableArray<ContactTriangleRigidBodyBased>& trigs = gContact.TrigsRigidBodyBased();
+		const ResizableArray<ContactRigidBodyMarkerBased>& markers = gContact.RigidBodyMarkerBased();
+
+		MarkerData markerData;
+
+		// set up additional temp visualization list of pos/rot for markers
+		ResizableArray<Vector3D> markerPositions(markers.NumberOfItems());
+		ResizableArray<Matrix3D> markerRotations(markers.NumberOfItems());
+		for (const auto& item : markers)
+		{
+			vSystem->systemData->GetCMarker(item.markerIndex).ComputeMarkerData(*vSystem->systemData, false, markerData);
+			markerPositions.Append(markerData.position);
+			if (EXUstd::IsOfType(vSystem->systemData->GetCMarker(item.markerIndex).GetType(), Marker::Orientation))
+			{
+				markerRotations.Append(markerData.orientation);
+			}
+			else
+			{
+				markerRotations.Append(EXUmath::unitMatrix3D);
+			}
+		}
+
+		std::array<Vector3D, 3> points;
+		std::array<Float4, 3> colors;
+		for (Index i = 0; i < colors.size(); i++) { colors[i] = visualizationSettings.contact.colorTriangles; }
+
+		for (const auto& item : trigs)
+		{
+			const ContactRigidBodyMarkerBased& rigidMarker = markers[item.contactRigidBodyIndex];
+
+			Box3D box; //empty box
+
+			for (Index i = 0; i < (Index)item.points.size(); i++)
+			{
+				points[i] = rigidMarker.orientation * item.points[i] + rigidMarker.position;
+			}
+			vSystem->graphicsData.AddTriangle(points, colors, itemIDinvalidValue);
+		}
+	}
+
 	if (visualizationSettings.contact.showSearchTree)
 	{
 		Box3D box = gContact.GetSearchTree().GetBox();

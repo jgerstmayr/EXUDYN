@@ -1396,7 +1396,8 @@ bool GlfwRenderer::SetupRenderer(Index verbose)
 			basicVisualizationSystemContainer->SetZoomAllRequest(true); 
 			//pout << "set zoom all\n";
 		}
-		basicVisualizationSystemContainer->ForceQuitSimulation(false); //reset flag if set from earlier simulations
+		basicVisualizationSystemContainer->ForceQuitSimulation(false);	//reset flag if set from earlier simulations
+		basicVisualizationSystemContainer->StopSimulation(false);		//reset flag if set from earlier simulations; the SC and all mbs stop flags are set true only at exit of renderer, therefore must be reset when restarting!
 
 		rendererError = 0; 
 
@@ -1434,6 +1435,7 @@ bool GlfwRenderer::SetupRenderer(Index verbose)
 			if (rendererActive)
 			{
 				if (verboseRenderer) { pout << "OpenGL renderer started!\n"; }
+				UpdateGraphicsDataNow(); //in case of previous run, otherwise old state will be shown
 				//not needed as called via backlink to GLFWrenderer: basicVisualizationSystemContainer->SetVisualizationIsRunning(true); //render engine runs, graphicsupdate shall be done
 				return true;
 			}
@@ -1459,6 +1461,7 @@ bool GlfwRenderer::SetupRenderer(Index verbose)
 			if (rendererActive)
 			{
 				if (verboseRenderer) { pout << "Single-threaded OpenGL renderer started!\n"; }
+				UpdateGraphicsDataNow(); //in case of previous run, otherwise old state will be shown
 				return true;
 			}
 			else
@@ -2918,7 +2921,7 @@ void GlfwRenderer::RenderGraphicsData(bool selectionMode)
 		//glDisable(GL_POLYGON_OFFSET_FILL);
 		//glEnable(GL_POLYGON_OFFSET_LINE);
 
-		Index lastItemID = invalidIndex;
+		Index lastItemID = itemIDinvalidValue;
 		if (selectionMode)
 		{
 			glLoadName(invalidIndex); //to have some name in it

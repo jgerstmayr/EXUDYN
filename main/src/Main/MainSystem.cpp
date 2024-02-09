@@ -30,22 +30,44 @@
 
 #include "Pymodules/PyGeneralContact.h"
 #include "Utilities/ExceptionsTemplates.h" //for exceptions in solver steps
+#include "System/versionCpp.h"
 
+#include "Main/Experimental.h"
+extern PySpecial pySpecial;			//! special features; affects exudyn globally; treat with care
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //  SYSTEM FUNCTIONS
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+//! build main system (unconventional way!)
+MainSystem::MainSystem()
+{
+	//CSystem* cSystem = new CSystem();
+
+	//MainSystem* mainSystem = new MainSystem();
+	cSystem.GetSystemData().SetMainSystemBacklink(this);
+	//this->cSystem = cSystem;
+	this->mainSystemData.SetCSystemData(&(cSystem.GetSystemData()));
+	this->LinkToVisualizationSystem(); //links the system to be rendered in OpenGL
+	this->SetInteractiveMode(false);
+
+	this->SetMainSystemIndex(-1); //indicates that there is no system container so far
+	this->SetMainSystemContainer(nullptr);
+}
+
+
+
 //! reset all lists and deallocate memory
 void MainSystem::Reset()
 {
 	mainSystemData.Reset(); //
-	GetCSystem()->GetSystemData().Reset();
-	GetCSystem()->GetPythonUserFunctions().Reset();
-	GetCSystem()->Initialize();
-	GetCSystem()->GetPostProcessData()->Reset();
-	GetCSystem()->ResetGeneralContacts();
+	GetCSystem().GetSystemData().Reset();
+	GetCSystem().GetPythonUserFunctions().Reset();
+	GetCSystem().Initialize();
+	GetCSystem().GetPostProcessData()->Reset();
+	GetCSystem().ResetGeneralContacts();
 
 	visualizationSystem.Reset();
 
@@ -55,8 +77,121 @@ void MainSystem::Reset()
 
 void MainSystem::SystemHasChanged()
 {
-	GetCSystem()->SystemHasChanged();
+	if (!HasMainSystemContainer()) { PyWarning("MainSystem has not been yet linked to a system container. Having a MainSystem mbs, you should do first:\nSC=exudyn.SystemContainer()\nSC.AppendSystem(mbs)\n"); }
+	GetCSystem().SystemHasChanged();
 	GetVisualizationSystem().SetSystemHasChanged(true);
+}
+
+//! consistent saving template; flag is related to graphicsData (objects only)
+template <typename ItemType>
+auto AddItemsToList = [](py::dict& dict, const STDstring& dictName, const ResizableArray<ItemType*>& items) {
+	auto itemList = py::list();
+	for (ItemType* item : items) {
+		itemList.append(item->GetDictionary());
+	}
+	dict[dictName.c_str()] = itemList;
+};
+
+
+//! function for getting all data and state; for pickling
+py::dict MainSystem::GetDictionary() const
+{
+	auto d = py::dict();
+	d["__version__"] = EXUstd::exudynVersion;
+
+	if (GetCSystem().GetGeneralContacts().NumberOfItems() != 0)
+	{
+		PyWarning(STDstring("GetDictionary (pickle/copy): MainSystem contains GeneralContact which cannot be copied!"));
+	}
+
+	//const CSystemData& csd = GetCSystem().GetSystemData();
+	const MainSystemData& msd = GetMainSystemData();
+
+	AddItemsToList<MainNode>(d, "nodeList", msd.GetMainNodes());
+
+	//AddItemsToList<MainObject>(d, "objectList", msd.GetMainObjects());
+	auto itemList = py::list();
+	for (MainObject* item : msd.GetMainObjects()) 
+	{
+		if (item->GetCObject()->HasUserFunction())
+		{
+			if (pySpecial.exceptions.dictionaryNonCopyable)
+			{
+				PyError(STDstring("GetDictionary (pickle/copy): MainSystem object '") + item->GetName() + "' has a user function which cannot be copied!");
+			}
+		}
+		itemList.append(item->GetDictionary(true));
+	}
+	d["objectList"] = itemList;
+
+	AddItemsToList<MainMarker>(d, "markerList", msd.GetMainMarkers());
+	AddItemsToList<MainLoad>(d, "loadList", msd.GetMainLoads());
+	AddItemsToList<MainSensor>(d, "sensorList", msd.GetMainSensors());
+
+	auto userFunctions = py::dict();
+	userFunctions["preStepFunction"] = cSystem.GetPythonUserFunctions().preStepFunction.GetPythonDictionary();
+	userFunctions["postStepFunction"] = cSystem.GetPythonUserFunctions().postStepFunction.GetPythonDictionary();
+	userFunctions["postNewtonFunction"] = cSystem.GetPythonUserFunctions().postNewtonFunction.GetPythonDictionary();
+	d["userFunctions"] = userFunctions;
+
+	//if (pySpecial.exceptions.dictionaryNonCopyable)
+	//{
+	//	if (cSystem.GetPythonUserFunctions().preStepFunction.userFunction != 0
+	//		|| cSystem.GetPythonUserFunctions().postStepFunction.userFunction != 0
+	//		|| cSystem.GetPythonUserFunctions().postNewtonFunction.userFunction != 0)
+	//	{
+	//		PyError(STDstring("GetDictionary (pickle/copy): MainSystem contains preStep / postStep / postNewton user function which cannot be copied!"));
+	//	}
+	//}
+
+
+	auto settings = py::dict();
+	settings["interactiveMode"] = interactiveMode;
+	d["settings"] = settings;
+
+	d["variables"] = variables;
+	d["systemVariables"] = systemVariables;
+
+	//missing:
+	//d["cSystemData"]
+	//d["cData"]
+
+	return d;
+}
+
+//! function for setting all data from dict; for pickling
+void MainSystem::SetDictionary(const py::dict& d)
+{
+	Reset();
+
+	if (EXUstd::exudynVersion != py::cast<STDstring>(d["__version__"]) && pySpecial.exceptions.dictionaryVersionMismatch)
+	{
+		PyError(STDstring("SetDictionary: Exudyn version is ") + EXUstd::exudynVersion +
+			", but loaded dictionary has been built with version " + py::cast<STDstring>(d["__version__"])+"; you can disable this exception in exudyn.special.exceptions");
+	}
+
+	const MainSystemData& msd = GetMainSystemData();
+	const CSystemData& csd = GetCSystem().GetSystemData();
+
+	py::list nodeList   = py::cast<py::list>(d["nodeList"]);
+	py::list objectList = py::cast<py::list>(d["objectList"]);
+	py::list markerList = py::cast<py::list>(d["markerList"]);
+	py::list loadList   = py::cast<py::list>(d["loadList"]);
+	py::list sensorList = py::cast<py::list>(d["sensorList"]);
+	for (auto item : nodeList  ) { mainObjectFactory.AddMainNode(*this, py::cast<py::dict>(item)); }
+	for (auto item : objectList) { mainObjectFactory.AddMainObject(*this, py::cast<py::dict>(item)); }
+	for (auto item : markerList) { mainObjectFactory.AddMainMarker(*this, py::cast<py::dict>(item)); }
+	for (auto item : loadList  ) { mainObjectFactory.AddMainLoad(*this, py::cast<py::dict>(item)); }
+	for (auto item : sensorList) { mainObjectFactory.AddMainSensor(*this, py::cast<py::dict>(item)); }
+
+	cSystem.GetPythonUserFunctions().preStepFunction.SetPythonObject(d["userFunctions"]["preStepFunction"]);
+	cSystem.GetPythonUserFunctions().postStepFunction.SetPythonObject(d["userFunctions"]["postStepFunction"]);
+	cSystem.GetPythonUserFunctions().postNewtonFunction.SetPythonObject(d["userFunctions"]["postNewtonFunction"]);
+
+	interactiveMode = py::cast<bool>(d["settings"]["interactiveMode"]);
+
+	variables = d["variables"];
+	systemVariables = d["systemVariables"];
 }
 
 MainSystemContainer& MainSystem::GetMainSystemContainer() 
@@ -73,8 +208,8 @@ void MainSystem::InteractiveModeActions()
 {
 	if (GetInteractiveMode())
 	{
-		GetCSystem()->Assemble(*this);
-		GetCSystem()->GetPostProcessData()->SendRedrawSignal();
+		GetCSystem().Assemble(*this);
+		GetCSystem().GetPostProcessData()->SendRedrawSignal();
 	}
 }
 
@@ -83,9 +218,39 @@ void MainSystem::PySetPreStepUserFunction(const py::object& value)
 {
     GenericExceptionHandling([&]
     {
-        cSystem->GetPythonUserFunctions().preStepFunction = py::cast<std::function <bool(const MainSystem& mainSystem, Real t)>>(value);
-	    cSystem->GetPythonUserFunctions().mainSystem = this;
-    }, "MainSystem::SetPreStepUserFunction (check function arguments!)");
+		//cSystem.GetPythonUserFunctions().preStepFunction.userFunction = EPyUtils::GetSTDfunction< std::function<bool(const MainSystem&, Real)>>(value, "MainSystem::SetPreStepUserFunction");
+		cSystem.GetPythonUserFunctions().preStepFunction.SetPythonUserFunction(value);
+
+		cSystem.GetPythonUserFunctions().mainSystem = this;
+    }, "MainSystem::SetPreStepUserFunction: argument must be Python function or 0");
+}
+
+//! set user function to be called by solvers at beginning of step (static or dynamic step)
+py::object MainSystem::PyGetPreStepUserFunction(bool asDict)
+{
+	return cSystem.GetPythonUserFunctions().preStepFunction.GetPythonDictionary();
+	//return preStepFunctionPython; //in future, but added to PythonUserFunctions
+	//.def("GetPreStepUserFunction", &MainSystem::PyGetPreStepUserFunction, "...")
+}
+
+//! set user function to be called by solvers at end of step, just before writing results (static or dynamic step)
+void MainSystem::PySetPostStepUserFunction(const py::object& value)
+{
+	GenericExceptionHandling([&]
+		{
+			//cSystem.GetPythonUserFunctions().postStepFunction.userFunction = EPyUtils::GetSTDfunction< std::function<bool(const MainSystem & mainSystem, Real t)>>(value, "MainSystem::SetPostStepUserFunction");
+			cSystem.GetPythonUserFunctions().postStepFunction.SetPythonUserFunction(value);
+
+			cSystem.GetPythonUserFunctions().mainSystem = this;
+		}, "MainSystem::SetPostStepUserFunction: argument must be Python function or 0");
+}
+
+//! set user function to be called by solvers at beginning of step (static or dynamic step)
+py::object MainSystem::PyGetPostStepUserFunction(bool asDict)
+{
+	return cSystem.GetPythonUserFunctions().postStepFunction.GetPythonDictionary();
+	//return postStepFunctionPython; //in future, but added to PythonUserFunctions
+	//.def("GetPostStepUserFunction", &MainSystem::PyGetPostStepUserFunction, "...")
 }
 
 //! set user function to be called immediately after Newton (after an update of the solution has been computed, but before discontinuous iteration)
@@ -93,40 +258,47 @@ void MainSystem::PySetPostNewtonUserFunction(const py::object& value)
 {
     GenericExceptionHandling([&]
     {
-        cSystem->GetPythonUserFunctions().postNewtonFunction = py::cast<std::function <StdVector2D(const MainSystem& mainSystem, Real t)>>(value);
-	    cSystem->GetPythonUserFunctions().mainSystem = this;
-    }, "MainSystem::SetPostNewtonUserFunction (check function arguments!)");
+		//cSystem.GetPythonUserFunctions().postNewtonFunction.userFunction = EPyUtils::GetSTDfunction< std::function<StdVector2D(const MainSystem & mainSystem, Real t)>>(value, "MainSystem::SetPostNewtonUserFunction");
+		cSystem.GetPythonUserFunctions().postNewtonFunction.SetPythonUserFunction(value);
+		
+		cSystem.GetPythonUserFunctions().mainSystem = this;
+    }, "MainSystem::SetPostNewtonUserFunction: argument must be Python function or 0");
+}
+
+py::object MainSystem::PyGetPostNewtonUserFunction(bool asDict)
+{
+	return cSystem.GetPythonUserFunctions().postNewtonFunction.GetPythonDictionary();
 }
 
 //create a new general contact and add to system
 PyGeneralContact& MainSystem::AddGeneralContact()
 {
 	PyGeneralContact* gContact = new PyGeneralContact();
-	cSystem->GetGeneralContacts().Append((GeneralContact*)(gContact)); //(GeneralContact*)
-	return (PyGeneralContact&)*cSystem->GetGeneralContacts().Last();
+	cSystem.GetGeneralContacts().Append((GeneralContact*)(gContact)); //(GeneralContact*)
+	return (PyGeneralContact&)*cSystem.GetGeneralContacts().Last();
 }
 
 //obtain read/write access to general contact
 PyGeneralContact& MainSystem::GetGeneralContact(Index generalContactNumber)
 {
-	if (generalContactNumber >= 0 && generalContactNumber < cSystem->GetGeneralContacts().NumberOfItems())
+	if (generalContactNumber >= 0 && generalContactNumber < cSystem.GetGeneralContacts().NumberOfItems())
 	{
-		return (PyGeneralContact&)*cSystem->GetGeneralContacts().Last();
+		return (PyGeneralContact&)*cSystem.GetGeneralContacts().Last();
 	}
 	else
 	{
 		PyError("MainSystem::GeneralContact: access to invalid index " + EXUstd::ToString(generalContactNumber));
-		return (PyGeneralContact&)*cSystem->GetGeneralContacts().Last(); //code not reached ...
+		return (PyGeneralContact&)*cSystem.GetGeneralContacts().Last(); //code not reached ...
 	}
 }
 
 //delete general contact, resort indices
 void MainSystem::DeleteGeneralContact(Index generalContactNumber)
 {
-	if (generalContactNumber >= 0 && generalContactNumber < cSystem->GetGeneralContacts().NumberOfItems())
+	if (generalContactNumber >= 0 && generalContactNumber < cSystem.GetGeneralContacts().NumberOfItems())
 	{
-		delete cSystem->GetGeneralContacts()[generalContactNumber];
-		cSystem->GetGeneralContacts().Remove(generalContactNumber); //rearrange array
+		delete cSystem.GetGeneralContacts()[generalContactNumber];
+		cSystem.GetGeneralContacts().Remove(generalContactNumber); //rearrange array
 	}
 	else
 	{
@@ -137,7 +309,7 @@ void MainSystem::DeleteGeneralContact(Index generalContactNumber)
 
 Index MainSystem::NumberOfGeneralContacts() const
 {
-	return cSystem->GetGeneralContacts().NumberOfItems();
+	return cSystem.GetGeneralContacts().NumberOfItems();
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -156,9 +328,9 @@ void MainSystem::ActivateRendering(bool flag)
 //  This function is called on creation of a main system and automatically links to renderer
 bool MainSystem::LinkToVisualizationSystem()
 {
-	visualizationSystem.LinkToSystemData(&GetCSystem()->GetSystemData());
+	visualizationSystem.LinkToSystemData(&GetCSystem().GetSystemData());
 	visualizationSystem.LinkToMainSystem(this);
-	visualizationSystem.LinkPostProcessData(GetCSystem()->GetPostProcessData());
+	visualizationSystem.LinkPostProcessData(GetCSystem().GetPostProcessData());
 	visualizationSystem.ActivateRendering(true); //activate rendering on startup
 	return true; 
 }
@@ -626,7 +798,7 @@ py::object MainSystem::PyGetObjectOutputVariable(const py::object& itemIndex, Ou
 			MarkerDataStructure markerDataStructure;
 			const bool computeJacobian = false; //not needed for OutputVariables
 			CObjectConnector* connector = (CObjectConnector*)(mainSystemData.GetMainObjects().GetItem(itemNumber)->GetCObject());
-			GetCSystem()->GetSystemData().ComputeMarkerDataStructure(connector, computeJacobian, markerDataStructure);
+			GetCSystem().GetSystemData().ComputeMarkerDataStructure(connector, computeJacobian, markerDataStructure);
 
 			return mainSystemData.GetMainObjects().GetItem(itemNumber)->GetOutputVariableConnector(variableType, markerDataStructure, itemNumber);
 
@@ -897,7 +1069,7 @@ py::object MainSystem::PyGetMarkerOutputVariable(const py::object& itemIndex, Ou
 		GetMainSystemData().RaiseIfNotOutputVariableTypeForReferenceConfiguration("GetObjectOutputVariableSuperElement", variableType, configuration, itemNumber, ItemType::Marker);
 
 		//the marker function itself will raise an error, if it is not able to return the according output variable
-		return mainSystemData.GetMainMarkers().GetItem(itemNumber)->GetOutputVariable(GetCSystem()->GetSystemData(), variableType, configuration);
+		return mainSystemData.GetMainMarkers().GetItem(itemNumber)->GetOutputVariable(GetCSystem().GetSystemData(), variableType, configuration);
 	}
 	else
 	{
@@ -1045,8 +1217,8 @@ py::object MainSystem::PyGetLoadValues(const py::object& itemIndex) const
 	if (itemNumber < mainSystemData.GetMainLoads().NumberOfItems())
 	{
 		GetMainSystemData().RaiseIfNotConsistent("GetLoadValues", itemNumber, ItemType::Load);
-		Real t = GetCSystem()->GetSystemData().GetCData().GetCurrent().GetTime(); //only current time available
-		return mainSystemData.GetMainLoads().GetItem(itemNumber)->GetLoadValues(GetCSystem()->GetSystemData().GetMainSystemBacklink(), t);
+		Real t = GetCSystem().GetSystemData().GetCData().GetCurrent().GetTime(); //only current time available
+		return mainSystemData.GetMainLoads().GetItem(itemNumber)->GetLoadValues(GetCSystem().GetSystemData().GetMainSystemBacklink(), t);
 	}
 	else
 	{
@@ -1224,7 +1396,7 @@ py::object MainSystem::PyGetSensorValues(const py::object& itemIndex, Configurat
 	if (itemNumber < mainSystemData.GetMainSensors().NumberOfItems())
 	{
 		GetMainSystemData().RaiseIfNotConsistentNorReference("GetSensorValues", configuration, itemNumber, ItemType::Sensor);
-		return mainSystemData.GetMainSensors().GetItem(itemNumber)->GetSensorValues(GetCSystem()->GetSystemData(), configuration);
+		return mainSystemData.GetMainSensors().GetItem(itemNumber)->GetSensorValues(GetCSystem().GetSystemData(), configuration);
 	}
 	else
 	{

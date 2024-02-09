@@ -341,6 +341,8 @@ class VSettingsSensors:
 class VSettingsContact:
     colorBoundingBoxes: Tuple[float,float,float,float]
     colorSearchTree: Tuple[float,float,float,float]
+    colorSpheres: Tuple[float,float,float,float]
+    colorTriangles: Tuple[float,float,float,float]
     contactForcesFactor: float
     contactPointsDefaultSize: float
     showBoundingBoxes: bool
@@ -348,6 +350,9 @@ class VSettingsContact:
     showContactForcesValues: bool
     showSearchTree: bool
     showSearchTreeCells: bool
+    showSpheres: bool
+    showTriangles: bool
+    tilingSpheres: int
 
 #information for VSettingsWindow
 class VSettingsWindow:

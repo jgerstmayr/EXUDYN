@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[2]:
-
-
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
@@ -16,11 +10,6 @@
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-
-# # Important modules to be imported
-
-# In[3]:
 
 
 import exudyn as exu
@@ -39,10 +28,6 @@ fileName = 'testData/FMBStest1' #for load/save of FEM data
 
 # # Parameter Definition
 # ![example geometry](exampleBody.png "Geometry")
-
-# In[4]:
-
-
 
 #flexible body dimensions:
 femInterface = FEMinterface()
@@ -67,9 +52,6 @@ nu=0.3
 
 
 # # Create FEM mesh in Netgen
-
-# In[5]:
-
 
 if doMeshing: #needs netgen/ngsolve to be installed to compute mesh, see e.g.: https://github.com/NGSolve/ngsolve/releases
 
@@ -123,10 +105,6 @@ if doMeshing: #needs netgen/ngsolve to be installed to compute mesh, see e.g.: h
 
 
 # # Import mesh into Exudyn
-
-# In[7]:
-
-
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
@@ -171,9 +149,6 @@ if False: #activate to animate modes
 
 
 # # Define interfaces
-
-# In[6]:
-
 addSensors = True
 pLeft = [0,0,0] #midpoint of bolt
 pRight = [L,0,-t] #midpoint of hole
@@ -203,10 +178,6 @@ boundaryList = [nodesLeft, nodesRight] #second boudary (right plane) not needed 
 
 
 # # Compute eigenmodes
-
-# In[7]:
-
-
 #remark: ComputeEigenmodes requires upgrade of scipy (python -m pip install --upgrade scipy) as compared to Anaconda installation...
 import time
 
@@ -228,9 +199,6 @@ print("eigen freq.=", femInterface.GetEigenFrequenciesHz())
 
 
 # # Compute stresses
-
-# In[8]:
-
 
 femModesName = fileName+'modes'
 if useHCBmodes:
@@ -259,10 +227,6 @@ else:
 
 
 # # Setup flexible body in exudyn
-
-# In[9]:
-
-
 cms = ObjectFFRFreducedOrderInterface(femInterface)
 
 objFFRF = cms.AddObjectFFRFreducedOrder(mbs, positionRef=[0,0,0], 
@@ -273,10 +237,6 @@ objFFRF = cms.AddObjectFFRFreducedOrder(mbs, positionRef=[0,0,0],
 
 
 # # Visualize modes
-
-# In[10]:
-
-
 if False:
     from exudyn.interactive import AnimateModes
     mbs.Assemble()
@@ -344,14 +304,7 @@ if False: #if this is used, remove offset in MarkerSuperElementRigid above
     print('jointOffset=',jointOffset)
 
 
-# In[13]:
-
-
 # # Add sensors
-
-# In[14]:
-
-
 fileDir = 'solution/'
 if addSensors:
     sMidDispl = mbs.AddSensor(SensorSuperElement(bodyNumber=objFFRF['oFFRFreducedOrder'], 
@@ -366,10 +319,6 @@ if addSensors:
 
 # # Set up visualization
 # (not needed)
-
-# In[15]:
-
-
 nodeDrawSize = 0.0025 #for joint drawing
 SC.visualizationSettings.nodes.defaultSize = nodeDrawSize
 SC.visualizationSettings.nodes.drawNodesAsPoint = False
@@ -403,10 +352,6 @@ SC.visualizationSettings.openGL.multiSampling = 4
 
 
 # # Set up simulation
-
-# In[16]:
-
-
 mbs.Assemble() #initialize bodies, assemble system; necessary to simulate
 
 simulationSettings = exu.SimulationSettings()
@@ -432,9 +377,6 @@ simulationSettings.displayComputationTime = True
 
 # # Start renderer and Simulate
 
-# In[17]:
-
-
 lifeVisualization = True
 
 if lifeVisualization:
@@ -456,10 +398,6 @@ if lifeVisualization:
 
 
 # # 3D rendering of FMBS
-
-# In[18]:
-
-
 if False: #use this to reload the solution and use SolutionViewer
     SC.visualizationSettings.general.autoFitScene=False #if reloaded view settings
 
@@ -469,16 +407,9 @@ if False: #use this to reload the solution and use SolutionViewer
 
 # # Plot sensor
 
-# In[19]:
-
-
 if addSensors:
     
     mbs.PlotSensor(sensorNumbers=[sMidDispl,sMidDispl,sMidDispl], components=[0,1,2])
-
-
-# In[ ]:
-
 
 
 

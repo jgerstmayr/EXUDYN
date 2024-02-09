@@ -415,10 +415,10 @@ public:
 	Index TotalJacobians() const { return globalJacobianIndexOffsets.Last(); }
 
 	//**ICI individual contact implementation
-	const ResizableArray<ContactSpheresMarkerBased>& GetSpheresMarkerBased() { return spheresMarkerBased; }
-	const ResizableArray<ContactANCFCable2D>& GetANCFCable2D() { return ancfCable2D; }
-	const ResizableArray<ContactTriangleRigidBodyBased>& TrigsRigidBodyBased() { return trigsRigidBodyBased; }
-	const ResizableArray<ContactRigidBodyMarkerBased>& TigidBodyMarkerBased() { return rigidBodyMarkerBased; }
+	const ResizableArray<ContactSpheresMarkerBased>& GetSpheresMarkerBased() const { return spheresMarkerBased; }
+	const ResizableArray<ContactANCFCable2D>& GetANCFCable2D() const { return ancfCable2D; }
+	const ResizableArray<ContactTriangleRigidBodyBased>& TrigsRigidBodyBased() const { return trigsRigidBodyBased; }
+	const ResizableArray<ContactRigidBodyMarkerBased>& RigidBodyMarkerBased() const { return rigidBodyMarkerBased; }
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

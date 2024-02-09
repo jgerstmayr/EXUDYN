@@ -51,9 +51,9 @@ using namespace pybind11::literals; //brings in the '_a' literals; e.g. for shor
 #include "Main/SystemContainer.h"
 #include "Main/MainSystemContainer.h"
 
-
 //for special test functions:
 #include "Pymodules/PybindTests.h"
+#include "Pymodules/PybindUtilities.h"
 
 //#pragma message("==========================")
 #ifdef use_AVX2
@@ -109,7 +109,8 @@ Real PyReadRealFromSysDictionary(const STDstring& key)
     return py::cast<Real>(exudynModule.attr("sys")[key.c_str()]);
 }
 
-
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -272,6 +273,16 @@ PYBIND11_MODULE(exudynCPP, m) {
 		.def(int() * py::self)
 		.def(py::self * int())
 		.def(-py::self)
+		//pickle:
+		.def(py::pickle(
+			[](const NodeIndex& self) {
+				return py::make_tuple(self.GetIndex());
+			},
+			[](const py::tuple& t) {
+				CHECKandTHROW(t.size() == 1, "NodeIndex: loading data with pickle received invalid data structure!");
+				NodeIndex self(py::cast<Index>(t[0]));
+				return self;
+			}))
 		//representation:
 		.def("__repr__", [](const NodeIndex &item) {
 			return STDstring(EXUstd::ToString(item.GetIndex()));
@@ -303,6 +314,16 @@ PYBIND11_MODULE(exudynCPP, m) {
 		.def(int() * py::self)
 		.def(py::self * int())
 		.def(-py::self)
+		//pickle:
+		.def(py::pickle(
+			[](const ObjectIndex& self) {
+				return py::make_tuple(self.GetIndex());
+			},
+			[](const py::tuple& t) {
+				CHECKandTHROW(t.size() == 1, "ObjectIndex: loading data with pickle received invalid data structure!");
+				ObjectIndex self(py::cast<Index>(t[0]));
+				return self;
+			}))
 		//representation:
 		.def("__repr__", [](const ObjectIndex &item) {
 			return STDstring(EXUstd::ToString(item.GetIndex()));
@@ -334,6 +355,16 @@ PYBIND11_MODULE(exudynCPP, m) {
 		.def(int() * py::self)
 		.def(py::self * int())
 		.def(-py::self)
+		//pickle:
+		.def(py::pickle(
+			[](const MarkerIndex& self) {
+				return py::make_tuple(self.GetIndex());
+			},
+			[](const py::tuple& t) {
+				CHECKandTHROW(t.size() == 1, "MarkerIndex: loading data with pickle received invalid data structure!");
+				MarkerIndex self(py::cast<Index>(t[0]));
+				return self;
+			}))
 		//representation:
 		.def("__repr__", [](const MarkerIndex &item) {
 			return STDstring(EXUstd::ToString(item.GetIndex()));
@@ -365,6 +396,16 @@ PYBIND11_MODULE(exudynCPP, m) {
 		.def(int() * py::self)
 		.def(py::self * int())
 		.def(-py::self)
+		//pickle:
+		.def(py::pickle(
+			[](const LoadIndex& self) {
+				return py::make_tuple(self.GetIndex());
+			},
+			[](const py::tuple& t) {
+				CHECKandTHROW(t.size() == 1, "LoadIndex: loading data with pickle received invalid data structure!");
+				LoadIndex self(py::cast<Index>(t[0]));
+				return self;
+			}))
 		//representation:
 		.def("__repr__", [](const LoadIndex &item) {
 			return STDstring(EXUstd::ToString(item.GetIndex()));
@@ -396,6 +437,16 @@ PYBIND11_MODULE(exudynCPP, m) {
 		.def(int() * py::self)
 		.def(py::self * int())
 		.def(-py::self)
+		//pickle:
+		.def(py::pickle(
+			[](const SensorIndex& self) {
+				return py::make_tuple(self.GetIndex());
+			},
+			[](const py::tuple& t) {
+				CHECKandTHROW(t.size() == 1, "SensorIndex: loading data with pickle received invalid data structure!");
+				SensorIndex self(py::cast<Index>(t[0]));
+				return self;
+			}))
 		//representation:
 		.def("__repr__", [](const SensorIndex &item) {
 			return STDstring(EXUstd::ToString(item.GetIndex()));
@@ -434,6 +485,8 @@ PYBIND11_MODULE(exudynCPP, m) {
 		//System functions:
 		.def("AddSystem", &MainSystemContainer::AddMainSystem, "add a new computational system", py::return_value_policy::reference)
 
+		.def("AppendSystem", &MainSystemContainer::AppendMainSystem, "append an existing computational system")
+
 		.def_property("visualizationSettings", &MainSystemContainer::PyGetVisualizationSettings, &MainSystemContainer::PySetVisualizationSettings)//, py::return_value_policy::reference)
 
 		.def("GetRenderState", &MainSystemContainer::PyGetRenderState, "Get dictionary with current render state (openGL zoom, modelview, etc.)")
@@ -460,13 +513,27 @@ PYBIND11_MODULE(exudynCPP, m) {
 
 		.def("GetSystem", &MainSystemContainer::GetMainSystem, "Get main system i from system container", py::return_value_policy::reference) //added reference options as otherwise system is copied
 
+		.def("GetDictionary", &MainSystemContainer::GetDictionary, "Get dictionary which represents system container; for pickle and copy")
+
+		.def("SetDictionary", &MainSystemContainer::SetDictionary, "Set class with dictionary which represents system container; for pickle and copy")
+
+		.def(py::pickle(
+			[](const MainSystemContainer& self) {
+				return py::make_tuple(self.GetDictionary());
+			},
+			[](const py::tuple& t) {
+				CHECKandTHROW(t.size() == 1, "MainSystem: loading data with pickle received invalid data structure!");
+				MainSystemContainer* self = new MainSystemContainer();
+				self->SetDictionary(py::cast<py::dict>(t[0]));
+				return self;
+			}))
 
 		.def("__repr__", [](const MainSystemContainer &item) {
 			STDstring str = "SystemContainer:\n";
 
 			for (Index i = 0; i < item.GetMainSystems().NumberOfItems(); i++)
 			{
-				str += "System " + EXUstd::ToString(i) + " <systemData:\n";
+				str += "System " + EXUstd::ToString(i) + ": <systemData:\n";
 				str += item.GetMainSystems()[i]->GetMainSystemData().PyInfoSummary() + ">\n";
 			}
 			return str;

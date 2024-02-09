@@ -14,7 +14,7 @@
 import numpy as np #LoadSolutionFile
 from math import sin, pi #for animation
 #import time        
-import copy		   #copy numpy objects
+import copy           #copy numpy objects
 import exudyn
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

@@ -45,7 +45,7 @@ EI = 2000
 #example of bending moment user function
 #limit bending moment with atan function
 def bendingMomentUserFunction(mbs, t, itemNumber, axialPositionNormalized, curvature, curvature_t, curvatureRef, physicsBendingStiffness, physicsBendingDamping,
-			                        axialStrain, axialStrain_t, axialStrainRef):
+                                    axialStrain, axialStrain_t, axialStrainRef):
     #m = physicsBendingStiffness*(curvature-curvatureRef) + physicsBendingDamping*curvature_t #this is the linear, conventional case
     kappa=(curvature-curvatureRef)
     kappa = 0.1*atan(10*kappa) #nonlinear behavior, somehow like elasto-plastic
@@ -54,7 +54,7 @@ def bendingMomentUserFunction(mbs, t, itemNumber, axialPositionNormalized, curva
 #example of axial force user function
 #reduce stiffness over time
 def axialForceUserFunction(mbs, t, itemNumber, axialPositionNormalized, axialStrain, axialStrain_t, axialStrainRef, physicsAxialStiffness, physicsAxialDamping,
-			curvature, curvature_t, curvatureRef):
+            curvature, curvature_t, curvatureRef):
     fact = max(0.02,(2-t**0.5)) #make axial stiffness it softer over time
     return fact*physicsAxialStiffness*(axialStrain-axialStrainRef) + physicsAxialDamping*axialStrain_t
 

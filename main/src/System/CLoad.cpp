@@ -52,7 +52,7 @@ Real CLoadCoordinate::GetLoadValue(const MainSystemBase& mbs, Real t) const
 		Real returnValue;
 		UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 		{
-			returnValue = parameters.loadUserFunction((const MainSystem&)mbs, t, parameters.load);
+			returnValue = parameters.loadUserFunction.userFunction((const MainSystem&)mbs, t, parameters.load);
 		}, "LoadCoordinate::loadVectorUserFunction");
 		return returnValue;
 	}
@@ -73,7 +73,7 @@ Vector3D CLoadForceVector::GetLoadVector(const MainSystemBase& mbs, Real t) cons
 		Vector3D returnValue;
 		UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 		{
-			returnValue = (Vector3D)parameters.loadVectorUserFunction((const MainSystem&)mbs, t, parameters.loadVector);
+			returnValue = (Vector3D)parameters.loadVectorUserFunction.userFunction((const MainSystem&)mbs, t, parameters.loadVector);
 		},"LoadForceVector::loadVectorUserFunction");
 
 		return returnValue;
@@ -93,7 +93,7 @@ Vector3D CLoadTorqueVector::GetLoadVector(const MainSystemBase& mbs, Real t) con
 		Vector3D returnValue;
 		UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 		{
-			returnValue = (Vector3D)parameters.loadVectorUserFunction((const MainSystem&)mbs, t, parameters.loadVector);
+			returnValue = (Vector3D)parameters.loadVectorUserFunction.userFunction((const MainSystem&)mbs, t, parameters.loadVector);
 		}, "LoadTorqueVector::loadVectorUserFunction");
 		return returnValue;
 
@@ -113,7 +113,7 @@ Vector3D CLoadMassProportional::GetLoadVector(const MainSystemBase& mbs, Real t)
 		Vector3D returnValue;
 		UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 		{
-			returnValue = (Vector3D)parameters.loadVectorUserFunction((const MainSystem&)mbs, t, parameters.loadVector);
+			returnValue = (Vector3D)parameters.loadVectorUserFunction.userFunction((const MainSystem&)mbs, t, parameters.loadVector);
 		}, "LoadMassProportional::loadVectorUserFunction");
 		return returnValue;
 	}

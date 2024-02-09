@@ -348,7 +348,7 @@ if useGraphics:
         ax1.plot(data1[:,0], data1[:,2], 'c:', label='Ref Bushan: crank angle')  
         data1 = np.loadtxt(directory+'Slidercrank3DiftommBenchmark/Spatial rigid slider-crank_mechanism_PingZhou.txt', comments='#', delimiter=',')
         ax1.plot(data1[:,0], data1[:,3], 'm:', label='Ref Zhou: crank angle')  
-	
+    
     # data2 = np.loadtxt('solution/sliderPosition.txt', comments='#', delimiter=',')
     data2 = mbs.GetSensorStoredData(sSliderPos)
     ax2.plot(data2[:,0], data2[:,1], 'b-', label='slider position')  
