@@ -10,12 +10,18 @@ You can view and download this file on Github: `InverseKinematicsNumericalExampl
 .. code-block:: python
    :linenos:
 
-   # -*- coding: utf-8 -*-
-   """
-   Created on Tue Mar 21 18:27:50 2023
+   #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+   # This is an EXUDYN example
+   #
+   # Details:  example for inverse kinematics of serial manipulator UR5
+   #
+   # Author:   Peter Manzel; Johannes Gerstmayr
+   # Date:     2019-07-15
+   #
+   # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+   #
+   #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    
-   @author: c8501100
-   """
    import exudyn as exu
    from exudyn.itemInterface import *
    from exudyn.utilities import *

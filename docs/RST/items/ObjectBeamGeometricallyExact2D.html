@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ObjectBeamGeometricallyExact2D &mdash; Exudyn1.7.69.dev1 1.7.69.dev1 documentation</title>
+  <title>ObjectBeamGeometricallyExact2D &mdash; Exudyn1.7.104.dev1 1.7.104.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=280392df"></script>
+        <script src="../../../_static/documentation_options.js?v=74f3cfff"></script>
         <script src="../../../_static/doctools.js?v=888ff710"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -43,7 +43,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.7.69.dev1
+            Exudyn1.7.104.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -107,7 +107,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.7.69.dev1</a>
+          <a href="../../../index.html">Exudyn1.7.104.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -129,7 +129,7 @@
              
   <section id="objectbeamgeometricallyexact2d">
 <span id="sec-item-objectbeamgeometricallyexact2d"></span><h1>ObjectBeamGeometricallyExact2D<a class="headerlink" href="#objectbeamgeometricallyexact2d" title="Link to this heading"></a></h1>
-<p>A 2D geometrically exact beam finite element, currently using 2 nodes of type NodeRigidBody2D; FURTHER TESTS REQUIRED. Note that the orientation of the nodes need to follow the cross section orientation; e.g., an angle 0 represents the cross section pointing in <span class="math notranslate nohighlight">\(y\)</span>-direction, while and angle <span class="math notranslate nohighlight">\(\pi\)</span> means that the cross section points in negative <span class="math notranslate nohighlight">\(x\)</span>-direction and the axis shows in positive <span class="math notranslate nohighlight">\(y\)</span>-direction. The localPosition of the beam with length <span class="math notranslate nohighlight">\(L\)</span>=physicsLength and height <span class="math notranslate nohighlight">\(h\)</span> ranges in <span class="math notranslate nohighlight">\(X\)</span>-direction in range <span class="math notranslate nohighlight">\([-L/2, L/2]\)</span> and in <span class="math notranslate nohighlight">\(Y\)</span>-direction in range <span class="math notranslate nohighlight">\([-h/2,h/2]\)</span> (which is in fact not needed in the <a class="reference internal" href="../Abbreviations.html#eom"><span class="std std-ref">EOM</span></a>).</p>
+<p>A 2D geometrically exact beam finite element, currently using 2 nodes of type NodeRigidBody2D; FURTHER TESTS REQUIRED. Note that the orientation of the nodes need to follow the cross section orientation in case that includeReferenceRotations=True; e.g., an angle 0 represents the cross section aligned with the <span class="math notranslate nohighlight">\(y\)</span>-axis, while and angle <span class="math notranslate nohighlight">\(\pi/2\)</span> means that the cross section points in negative <span class="math notranslate nohighlight">\(x\)</span>-direction. Pre-curvature can be included with physicsReferenceCurvature and axial pre-stress can be considered by using a physicsLength different from the reference configuration of the nodes. The localPosition of the beam with length <span class="math notranslate nohighlight">\(L\)</span>=physicsLength and height <span class="math notranslate nohighlight">\(h\)</span> ranges in <span class="math notranslate nohighlight">\(X\)</span>-direction in range <span class="math notranslate nohighlight">\([-L/2, L/2]\)</span> and in <span class="math notranslate nohighlight">\(Y\)</span>-direction in range <span class="math notranslate nohighlight">\([-h/2,h/2]\)</span> (which is in fact not needed in the <a class="reference internal" href="../Abbreviations.html#eom"><span class="std std-ref">EOM</span></a>).</p>
 <p><strong>Additional information for ObjectBeamGeometricallyExact2D</strong>:</p>
 <ul>
 <li><div class="line-block">
@@ -213,7 +213,7 @@
 </li>
 <li><div class="line-block">
 <div class="line"><strong>includeReferenceRotations</strong> [type = bool, default = False]:</div>
-<div class="line">if True, the computation of bending strains considers reference rotations in nodes; otherwise, the strains are relative to reference values (which allows to consider pre-curved geometries naturally)</div>
+<div class="line">if True, rotations at nodes consider reference rotations, which are used for the computation of bending strains (this means that a pre-curved beam is stress-free); if False, the reference rotation of the cross section is orthogonal to the direction between the reference position of the end nodes. This allows to easily share nodes among several beams with different cross section orientation.</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -290,7 +290,7 @@
 Detailed description coming later.</p>
 <p>Relevant Examples and TestModels with weblink:</p>
 <blockquote>
-<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamEigTest.py">ANCFBeamEigTest.py</a> (TestModels/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geometricallyExactBeam2Dtest.py">geometricallyExactBeam2Dtest.py</a> (TestModels/)</p>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/pendulumGeomExactBeam2D.py">pendulumGeomExactBeam2D.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamEigTest.py">ANCFBeamEigTest.py</a> (TestModels/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geometricallyExactBeam2Dtest.py">geometricallyExactBeam2Dtest.py</a> (TestModels/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/gridGeomExactBeam2D.py">gridGeomExactBeam2D.py</a> (TestModels/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/LShapeGeomExactBeam2D.py">LShapeGeomExactBeam2D.py</a> (TestModels/)</p>
 </div></blockquote>
 <p><strong>The web version may not be complete. For details, consider also the Exudyn PDF documentation</strong> : <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf">theDoc.pdf</a></p>
 </section>

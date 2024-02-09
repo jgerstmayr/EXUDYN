@@ -10,12 +10,6 @@ You can view and download this file on Github: `CMSexampleCourse.py <https://git
 .. code-block:: python
    :linenos:
 
-   #!/usr/bin/env python
-   # coding: utf-8
-   
-   # In[2]:
-   
-   
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    # This is an EXUDYN example
    #
@@ -28,11 +22,6 @@ You can view and download this file on Github: `CMSexampleCourse.py <https://git
    # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
    #
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-   
-   
-   # # Important modules to be imported
-   
-   # In[3]:
    
    
    import exudyn as exu
@@ -51,10 +40,6 @@ You can view and download this file on Github: `CMSexampleCourse.py <https://git
    
    # # Parameter Definition
    # ![example geometry](exampleBody.png "Geometry")
-   
-   # In[4]:
-   
-   
    
    #flexible body dimensions:
    femInterface = FEMinterface()
@@ -79,9 +64,6 @@ You can view and download this file on Github: `CMSexampleCourse.py <https://git
    
    
    # # Create FEM mesh in Netgen
-   
-   # In[5]:
-   
    
    if doMeshing: #needs netgen/ngsolve to be installed to compute mesh, see e.g.: https://github.com/NGSolve/ngsolve/releases
    
@@ -135,10 +117,6 @@ You can view and download this file on Github: `CMSexampleCourse.py <https://git
    
    
    # # Import mesh into Exudyn
-   
-   # In[7]:
-   
-   
    SC = exu.SystemContainer()
    mbs = SC.AddSystem()
    
@@ -183,9 +161,6 @@ You can view and download this file on Github: `CMSexampleCourse.py <https://git
    
    
    # # Define interfaces
-   
-   # In[6]:
-   
    addSensors = True
    pLeft = [0,0,0] #midpoint of bolt
    pRight = [L,0,-t] #midpoint of hole
@@ -215,10 +190,6 @@ You can view and download this file on Github: `CMSexampleCourse.py <https://git
    
    
    # # Compute eigenmodes
-   
-   # In[7]:
-   
-   
    #remark: ComputeEigenmodes requires upgrade of scipy (python -m pip install --upgrade scipy) as compared to Anaconda installation...
    import time
    
@@ -240,9 +211,6 @@ You can view and download this file on Github: `CMSexampleCourse.py <https://git
    
    
    # # Compute stresses
-   
-   # In[8]:
-   
    
    femModesName = fileName+'modes'
    if useHCBmodes:
@@ -271,10 +239,6 @@ You can view and download this file on Github: `CMSexampleCourse.py <https://git
    
    
    # # Setup flexible body in exudyn
-   
-   # In[9]:
-   
-   
    cms = ObjectFFRFreducedOrderInterface(femInterface)
    
    objFFRF = cms.AddObjectFFRFreducedOrder(mbs, positionRef=[0,0,0], 
@@ -285,10 +249,6 @@ You can view and download this file on Github: `CMSexampleCourse.py <https://git
    
    
    # # Visualize modes
-   
-   # In[10]:
-   
-   
    if False:
        from exudyn.interactive import AnimateModes
        mbs.Assemble()
@@ -356,14 +316,7 @@ You can view and download this file on Github: `CMSexampleCourse.py <https://git
        print('jointOffset=',jointOffset)
    
    
-   # In[13]:
-   
-   
    # # Add sensors
-   
-   # In[14]:
-   
-   
    fileDir = 'solution/'
    if addSensors:
        sMidDispl = mbs.AddSensor(SensorSuperElement(bodyNumber=objFFRF['oFFRFreducedOrder'], 
@@ -378,10 +331,6 @@ You can view and download this file on Github: `CMSexampleCourse.py <https://git
    
    # # Set up visualization
    # (not needed)
-   
-   # In[15]:
-   
-   
    nodeDrawSize = 0.0025 #for joint drawing
    SC.visualizationSettings.nodes.defaultSize = nodeDrawSize
    SC.visualizationSettings.nodes.drawNodesAsPoint = False
@@ -415,10 +364,6 @@ You can view and download this file on Github: `CMSexampleCourse.py <https://git
    
    
    # # Set up simulation
-   
-   # In[16]:
-   
-   
    mbs.Assemble() #initialize bodies, assemble system; necessary to simulate
    
    simulationSettings = exu.SimulationSettings()
@@ -444,9 +389,6 @@ You can view and download this file on Github: `CMSexampleCourse.py <https://git
    
    # # Start renderer and Simulate
    
-   # In[17]:
-   
-   
    lifeVisualization = True
    
    if lifeVisualization:
@@ -468,10 +410,6 @@ You can view and download this file on Github: `CMSexampleCourse.py <https://git
    
    
    # # 3D rendering of FMBS
-   
-   # In[18]:
-   
-   
    if False: #use this to reload the solution and use SolutionViewer
        SC.visualizationSettings.general.autoFitScene=False #if reloaded view settings
    
@@ -481,16 +419,9 @@ You can view and download this file on Github: `CMSexampleCourse.py <https://git
    
    # # Plot sensor
    
-   # In[19]:
-   
-   
    if addSensors:
        
        mbs.PlotSensor(sensorNumbers=[sMidDispl,sMidDispl,sMidDispl], components=[0,1,2])
-   
-   
-   # In[ ]:
-   
    
    
    

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Module: beams &mdash; Exudyn1.7.69.dev1 1.7.69.dev1 documentation</title>
+  <title>Module: beams &mdash; Exudyn1.7.104.dev1 1.7.104.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=280392df"></script>
+        <script src="../../../_static/documentation_options.js?v=74f3cfff"></script>
         <script src="../../../_static/doctools.js?v=888ff710"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -43,7 +43,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.7.69.dev1
+            Exudyn1.7.104.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -75,6 +75,7 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Module: beams</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#function-generatestraightlineancfcable2d">Function: GenerateStraightLineANCFCable2D</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-generatestraightlineancfcable">Function: GenerateStraightLineANCFCable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-generatestraightbeam">Function: GenerateStraightBeam</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-generatecirculararcancfcable2d">Function: GenerateCircularArcANCFCable2D</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-createreevingcurve">Function: CreateReevingCurve</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-pointsandslopes2ancfcable2d">Function: PointsAndSlopes2ANCFCable2D</a></li>
@@ -123,7 +124,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.7.69.dev1</a>
+          <a href="../../../index.html">Exudyn1.7.104.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -148,15 +149,15 @@
 <ul class="simple">
 <li><p>Author:    Johannes Gerstmayr</p></li>
 <li><p>Date:      2022-01-30 (created)</p></li>
-<li><p>Notes:        For a list of plot colors useful for matplotlib, see also utilities.PlotLineCode(…)</p></li>
+<li><p>Notes:     For a list of plot colors useful for matplotlib, see also utilities.PlotLineCode(…)</p></li>
 </ul>
 <section id="function-generatestraightlineancfcable2d">
 <span id="sec-beams-generatestraightlineancfcable2d"></span><h2>Function: GenerateStraightLineANCFCable2D<a class="headerlink" href="#function-generatestraightlineancfcable2d" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/beams.py#L37">GenerateStraightLineANCFCable2D</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">positionOfNode0</span></code>, <code class="docutils literal notranslate"><span class="pre">positionOfNode1</span></code>, <code class="docutils literal notranslate"><span class="pre">numberOfElements</span></code>, <code class="docutils literal notranslate"><span class="pre">cableTemplate</span></code>, <code class="docutils literal notranslate"><span class="pre">massProportionalLoad</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">fixedConstraintsNode0</span> <span class="pre">=</span> <span class="pre">[0,0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">fixedConstraintsNode1</span> <span class="pre">=</span> <span class="pre">[0,0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">nodeNumber0</span> <span class="pre">=</span> <span class="pre">-1</span></code>, <code class="docutils literal notranslate"><span class="pre">nodeNumber1</span> <span class="pre">=</span> <span class="pre">-1</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/beams.py#L38">GenerateStraightLineANCFCable2D</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">positionOfNode0</span></code>, <code class="docutils literal notranslate"><span class="pre">positionOfNode1</span></code>, <code class="docutils literal notranslate"><span class="pre">numberOfElements</span></code>, <code class="docutils literal notranslate"><span class="pre">cableTemplate</span></code>, <code class="docutils literal notranslate"><span class="pre">massProportionalLoad</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">fixedConstraintsNode0</span> <span class="pre">=</span> <span class="pre">[0,0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">fixedConstraintsNode1</span> <span class="pre">=</span> <span class="pre">[0,0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">nodeNumber0</span> <span class="pre">=</span> <span class="pre">-1</span></code>, <code class="docutils literal notranslate"><span class="pre">nodeNumber1</span> <span class="pre">=</span> <span class="pre">-1</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">generate cable elements along straight line with certain discretization</div>
+<div class="line">generate 2D ANCF cable elements along straight line given by two points; applies discretization (numberOfElements) and may apply gravity as well as nodal constraints</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -167,15 +168,20 @@
 <div class="line"><code class="docutils literal notranslate"><span class="pre">numberOfElements</span></code>: for discretization of line</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">cableTemplate</span></code>: a ObjectANCFCable2D object, containing the desired cable properties; cable length and node numbers are set automatically</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">massProportionalLoad</span></code>: a 3D list or np.array, containing the gravity vector or zero</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">fixedConstraintsNode0</span></code>: a list of 4 binary values, indicating the coordinate contraints on the first node (x,y-position and x,y-slope)</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">fixedConstraintsNode1</span></code>: a list of 4 binary values, indicating the coordinate contraints on the last node (x,y-position and x,y-slope)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">fixedConstraintsNode0</span></code>: a list of 4 binary values, indicating the coordinate contraints on the first node (x,y-position and x,y-slope); use None in order to apply no constraints</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">fixedConstraintsNode1</span></code>: a list of 4 binary values, indicating the coordinate contraints on the last node (x,y-position and x,y-slope); use None in order to apply no constraints</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">nodeNumber0</span></code>: if set other than -1, this node number defines the node that shall be used at positionOfNode0</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">nodeNumber1</span></code>: if set other than -1, this node number defines the node that shall be used at positionOfNode1</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><em>output</em>:</div>
-<div class="line">returns a list [cableNodeList, cableObjectList, loadList, cableNodePositionList, cableCoordinateConstraintList]</div>
+<div class="line">returns a list containing created items [cableNodeList, cableObjectList, loadList, cableNodePositionList, cableCoordinateConstraintList]</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>notes</em>:</div>
+<div class="line">use GenerateStraightBeam instead</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -194,11 +200,11 @@
 </section>
 <section id="function-generatestraightlineancfcable">
 <span id="sec-beams-generatestraightlineancfcable"></span><h2>Function: GenerateStraightLineANCFCable<a class="headerlink" href="#function-generatestraightlineancfcable" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/beams.py#L63">GenerateStraightLineANCFCable</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">positionOfNode0</span></code>, <code class="docutils literal notranslate"><span class="pre">positionOfNode1</span></code>, <code class="docutils literal notranslate"><span class="pre">numberOfElements</span></code>, <code class="docutils literal notranslate"><span class="pre">cableTemplate</span></code>, <code class="docutils literal notranslate"><span class="pre">massProportionalLoad</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">fixedConstraintsNode0</span> <span class="pre">=</span> <span class="pre">[0,0,0,</span> <span class="pre">0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">fixedConstraintsNode1</span> <span class="pre">=</span> <span class="pre">[0,0,0,</span> <span class="pre">0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">nodeNumber0</span> <span class="pre">=</span> <span class="pre">-1</span></code>, <code class="docutils literal notranslate"><span class="pre">nodeNumber1</span> <span class="pre">=</span> <span class="pre">-1</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/beams.py#L66">GenerateStraightLineANCFCable</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">positionOfNode0</span></code>, <code class="docutils literal notranslate"><span class="pre">positionOfNode1</span></code>, <code class="docutils literal notranslate"><span class="pre">numberOfElements</span></code>, <code class="docutils literal notranslate"><span class="pre">cableTemplate</span></code>, <code class="docutils literal notranslate"><span class="pre">massProportionalLoad</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">fixedConstraintsNode0</span> <span class="pre">=</span> <span class="pre">[0,0,0,</span> <span class="pre">0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">fixedConstraintsNode1</span> <span class="pre">=</span> <span class="pre">[0,0,0,</span> <span class="pre">0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">nodeNumber0</span> <span class="pre">=</span> <span class="pre">-1</span></code>, <code class="docutils literal notranslate"><span class="pre">nodeNumber1</span> <span class="pre">=</span> <span class="pre">-1</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">generate cable elements along straight line with certain discretization</div>
+<div class="line">generate 3D ANCF cable elements along straight line given by two points; applies discretization (numberOfElements) and may apply gravity as well as nodal constraints</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -209,15 +215,15 @@
 <div class="line"><code class="docutils literal notranslate"><span class="pre">numberOfElements</span></code>: for discretization of line</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">cableTemplate</span></code>: a ObjectANCFCable object, containing the desired cable properties; cable length and node numbers are set automatically</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">massProportionalLoad</span></code>: a 3D list or np.array, containing the gravity vector or zero</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">fixedConstraintsNode0</span></code>: a list of binary values, indicating the coordinate contraints on the first node (position and slope); 4 coordinates for 2D and 6 coordinates for 3D node</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">fixedConstraintsNode1</span></code>: a list of binary values, indicating the coordinate contraints on the last node (position and slope); 4 coordinates for 2D and 6 coordinates for 3D node</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">fixedConstraintsNode0</span></code>: a list of binary values, indicating the coordinate contraints on the first node (position and slope); 4 coordinates for 2D and 6 coordinates for 3D node; use None in order to apply no constraints</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">fixedConstraintsNode1</span></code>: a list of binary values, indicating the coordinate contraints on the last node (position and slope); 4 coordinates for 2D and 6 coordinates for 3D node; use None in order to apply no constraints</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">nodeNumber0</span></code>: if set other than -1, this node number defines the node that shall be used at positionOfNode0</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">nodeNumber1</span></code>: if set other than -1, this node number defines the node that shall be used at positionOfNode1</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><em>output</em>:</div>
-<div class="line">returns a list [cableNodeList, cableObjectList, loadList, cableNodePositionList, cableCoordinateConstraintList]</div>
+<div class="line">returns a list containing created items [cableNodeList, cableObjectList, loadList, cableNodePositionList, cableCoordinateConstraintList]</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -234,9 +240,67 @@
 </div></blockquote>
 <hr class="docutils" />
 </section>
+<section id="function-generatestraightbeam">
+<span id="sec-beams-generatestraightbeam"></span><h2>Function: GenerateStraightBeam<a class="headerlink" href="#function-generatestraightbeam" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/beams.py#L109">GenerateStraightBeam</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">positionOfNode0</span></code>, <code class="docutils literal notranslate"><span class="pre">positionOfNode1</span></code>, <code class="docutils literal notranslate"><span class="pre">numberOfElements</span></code>, <code class="docutils literal notranslate"><span class="pre">beamTemplate</span></code>, <code class="docutils literal notranslate"><span class="pre">gravity</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">fixedConstraintsNode0</span> <span class="pre">=</span> <span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">fixedConstraintsNode1</span> <span class="pre">=</span> <span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">nodeNumber0</span> <span class="pre">=</span> <span class="pre">-1</span></code>, <code class="docutils literal notranslate"><span class="pre">nodeNumber1</span> <span class="pre">=</span> <span class="pre">-1</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">generic function to create beam elements along straight line given by two points; applies discretization (numberOfElements) and may apply gravity as well as nodal constraints</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: the system where beam elements are added</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">positionOfNode0</span></code>: 3D position (list or np.array) for starting point of line</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">positionOfNode1</span></code>: 3D position (list or np.array) for end point of line</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">numberOfElements</span></code>: for discretization of line</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">beamTemplate</span></code>: a Beam object (ObjectANCFCable2D, ObjectBeamGeometricallyExact2D, ObjectALEANCFCable2D, etc.), containing the desired beam type and properties; finite (beam) element length and node numbers are set automatically; for ALE element, the beamTemplate.nodeNumbers[2] must be set in the template and will not be overwritten</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">gravity</span></code>: a 3D list or np.array, containing the gravity vector or zero</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">fixedConstraintsNode0</span></code>: a list of binary values, indicating the coordinate contraints on the first node (position and slope); must agree with the number of coordinates in the node; use None to add no constraints</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">fixedConstraintsNode1</span></code>: a list of binary values, indicating the coordinate contraints on the last node (position and slope); must agree with the number of coordinates in the node; use None to add no constraints</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">nodeNumber0</span></code>: if set other than -1, this node number defines the node that shall be used at positionOfNode0</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">nodeNumber1</span></code>: if set other than -1, this node number defines the node that shall be used at positionOfNode1</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">returns a list containing created items [cableNodeList, cableObjectList, loadList, cableNodePositionList, cableCoordinateConstraintList]</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>example</em>:</div>
+</div>
+</li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
+<span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="o">*</span> <span class="c1">#includes exudyn.beams</span>
+<span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
+<span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
+<span class="c1">#example of flexible pendulum</span>
+<span class="n">beamTemplate</span> <span class="o">=</span> <span class="nc">ObjectBeamGeometricallyExact2D</span><span class="p">(</span><span class="n">physicsMassPerLength</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span>
+                    <span class="n">physicsCrossSectionInertia</span><span class="o">=</span><span class="mf">8e-9</span><span class="p">,</span>
+                    <span class="n">physicsBendingStiffness</span><span class="o">=</span><span class="mf">8e-4</span><span class="p">,</span>
+                    <span class="n">physicsAxialStiffness</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span>
+                    <span class="n">physicsShearStiffness</span><span class="o">=</span><span class="mi">650</span><span class="p">,</span>
+                    <span class="n">visualization</span><span class="o">=</span><span class="nc">VObjectBeamGeometricallyExact2D</span><span class="p">(</span><span class="n">drawHeight</span> <span class="o">=</span> <span class="mf">0.002</span><span class="p">))</span>
+<span class="c1">#create straight beam with 10 elements, apply gravity and fix (x,y) position of node 0 (rotation left free)</span>
+<span class="n">beamInfo</span> <span class="o">=</span> <span class="nf">GenerateStraightBeam</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">positionOfNode0</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">positionOfNode1</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                                <span class="n">numberOfElements</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">beamTemplate</span><span class="o">=</span><span class="n">beamTemplate</span><span class="p">,</span>
+                                <span class="n">gravity</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">9.81</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">fixedConstraintsNode0</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],)</span>
+<span class="c1">#beamInfo contains nodes, beamObjects, loads, etc.</span>
+<span class="c1">#Assemble and solve</span>
+</pre></div>
+</div>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/pendulumGeomExactBeam2Dsimple.py">pendulumGeomExactBeam2Dsimple.py</a> (Ex)</p>
+</div></blockquote>
+<hr class="docutils" />
+</section>
 <section id="function-generatecirculararcancfcable2d">
 <span id="sec-beams-generatecirculararcancfcable2d"></span><h2>Function: GenerateCircularArcANCFCable2D<a class="headerlink" href="#function-generatecirculararcancfcable2d" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/beams.py#L191">GenerateCircularArcANCFCable2D</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">positionOfNode0</span></code>, <code class="docutils literal notranslate"><span class="pre">radius</span></code>, <code class="docutils literal notranslate"><span class="pre">startAngle</span></code>, <code class="docutils literal notranslate"><span class="pre">arcAngle</span></code>, <code class="docutils literal notranslate"><span class="pre">numberOfElements</span></code>, <code class="docutils literal notranslate"><span class="pre">cableTemplate</span></code>, <code class="docutils literal notranslate"><span class="pre">massProportionalLoad</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">fixedConstraintsNode0</span> <span class="pre">=</span> <span class="pre">[0,0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">fixedConstraintsNode1</span> <span class="pre">=</span> <span class="pre">[0,0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">nodeNumber0</span> <span class="pre">=</span> <span class="pre">-1</span></code>, <code class="docutils literal notranslate"><span class="pre">nodeNumber1</span> <span class="pre">=</span> <span class="pre">-1</span></code>, <code class="docutils literal notranslate"><span class="pre">setCurvedReferenceConfiguration</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">verboseMode</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/beams.py#L272">GenerateCircularArcANCFCable2D</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">positionOfNode0</span></code>, <code class="docutils literal notranslate"><span class="pre">radius</span></code>, <code class="docutils literal notranslate"><span class="pre">startAngle</span></code>, <code class="docutils literal notranslate"><span class="pre">arcAngle</span></code>, <code class="docutils literal notranslate"><span class="pre">numberOfElements</span></code>, <code class="docutils literal notranslate"><span class="pre">cableTemplate</span></code>, <code class="docutils literal notranslate"><span class="pre">massProportionalLoad</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">fixedConstraintsNode0</span> <span class="pre">=</span> <span class="pre">[0,0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">fixedConstraintsNode1</span> <span class="pre">=</span> <span class="pre">[0,0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">nodeNumber0</span> <span class="pre">=</span> <span class="pre">-1</span></code>, <code class="docutils literal notranslate"><span class="pre">nodeNumber1</span> <span class="pre">=</span> <span class="pre">-1</span></code>, <code class="docutils literal notranslate"><span class="pre">setCurvedReferenceConfiguration</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">verboseMode</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -275,7 +339,7 @@
 </section>
 <section id="function-createreevingcurve">
 <span id="sec-beams-createreevingcurve"></span><h2>Function: CreateReevingCurve<a class="headerlink" href="#function-createreevingcurve" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/beams.py#L345">CreateReevingCurve</a>(<code class="docutils literal notranslate"><span class="pre">circleList</span></code>, <code class="docutils literal notranslate"><span class="pre">drawingLinesPerCircle</span> <span class="pre">=</span> <span class="pre">64</span></code>, <code class="docutils literal notranslate"><span class="pre">numberOfANCFnodes</span> <span class="pre">=</span> <span class="pre">-1</span></code>, <code class="docutils literal notranslate"><span class="pre">removeLastLine</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">removeFirstLine</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">radialOffset</span> <span class="pre">=</span> <span class="pre">0.</span></code>, <code class="docutils literal notranslate"><span class="pre">closedCurve</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">graphicsElementsPerCircle</span> <span class="pre">=</span> <span class="pre">64</span></code>, <code class="docutils literal notranslate"><span class="pre">graphicsNodeSize</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">colorCircles</span> <span class="pre">=</span> <span class="pre">[0.,0.5,1.,1.]</span></code>, <code class="docutils literal notranslate"><span class="pre">colorLines</span> <span class="pre">=</span> <span class="pre">[1.,0.5,0.,1.]</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/beams.py#L426">CreateReevingCurve</a>(<code class="docutils literal notranslate"><span class="pre">circleList</span></code>, <code class="docutils literal notranslate"><span class="pre">drawingLinesPerCircle</span> <span class="pre">=</span> <span class="pre">64</span></code>, <code class="docutils literal notranslate"><span class="pre">numberOfANCFnodes</span> <span class="pre">=</span> <span class="pre">-1</span></code>, <code class="docutils literal notranslate"><span class="pre">removeLastLine</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">removeFirstLine</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">radialOffset</span> <span class="pre">=</span> <span class="pre">0.</span></code>, <code class="docutils literal notranslate"><span class="pre">closedCurve</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">graphicsElementsPerCircle</span> <span class="pre">=</span> <span class="pre">64</span></code>, <code class="docutils literal notranslate"><span class="pre">graphicsNodeSize</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">colorCircles</span> <span class="pre">=</span> <span class="pre">[0.,0.5,1.,1.]</span></code>, <code class="docutils literal notranslate"><span class="pre">colorLines</span> <span class="pre">=</span> <span class="pre">[1.,0.5,0.,1.]</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -328,7 +392,7 @@
 </section>
 <section id="function-pointsandslopes2ancfcable2d">
 <span id="sec-beams-pointsandslopes2ancfcable2d"></span><h2>Function: PointsAndSlopes2ANCFCable2D<a class="headerlink" href="#function-pointsandslopes2ancfcable2d" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/beams.py#L574">PointsAndSlopes2ANCFCable2D</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">ancfPointsSlopes</span></code>, <code class="docutils literal notranslate"><span class="pre">elementLengths</span></code>, <code class="docutils literal notranslate"><span class="pre">cableTemplate</span></code>, <code class="docutils literal notranslate"><span class="pre">massProportionalLoad</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">fixedConstraintsNode0</span> <span class="pre">=</span> <span class="pre">[0,0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">fixedConstraintsNode1</span> <span class="pre">=</span> <span class="pre">[0,0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">firstNodeIsLastNode</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">elementCurvatures</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">graphicsSizeConstraints</span> <span class="pre">=</span> <span class="pre">-1</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/beams.py#L655">PointsAndSlopes2ANCFCable2D</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">ancfPointsSlopes</span></code>, <code class="docutils literal notranslate"><span class="pre">elementLengths</span></code>, <code class="docutils literal notranslate"><span class="pre">cableTemplate</span></code>, <code class="docutils literal notranslate"><span class="pre">massProportionalLoad</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">fixedConstraintsNode0</span> <span class="pre">=</span> <span class="pre">[0,0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">fixedConstraintsNode1</span> <span class="pre">=</span> <span class="pre">[0,0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">firstNodeIsLastNode</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">elementCurvatures</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">graphicsSizeConstraints</span> <span class="pre">=</span> <span class="pre">-1</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -363,11 +427,16 @@
 </section>
 <section id="function-generateslidingjoint">
 <span id="sec-beams-generateslidingjoint"></span><h2>Function: GenerateSlidingJoint<a class="headerlink" href="#function-generateslidingjoint" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/beams.py#L658">GenerateSlidingJoint</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">cableObjectList</span></code>, <code class="docutils literal notranslate"><span class="pre">markerBodyPositionOfSlidingBody</span></code>, <code class="docutils literal notranslate"><span class="pre">localMarkerIndexOfStartCable</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">slidingCoordinateStartPosition</span> <span class="pre">=</span> <span class="pre">0</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/beams.py#L740">GenerateSlidingJoint</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">cableObjectList</span></code>, <code class="docutils literal notranslate"><span class="pre">markerBodyPositionOfSlidingBody</span></code>, <code class="docutils literal notranslate"><span class="pre">localMarkerIndexOfStartCable</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">slidingCoordinateStartPosition</span> <span class="pre">=</span> <span class="pre">0</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
 <div class="line">generate a sliding joint from a list of cables, marker to a sliding body, etc.</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">returns the sliding joint object</div>
 </div>
 </li>
 </ul>
@@ -379,11 +448,16 @@
 </section>
 <section id="function-generatealeslidingjoint">
 <span id="sec-beams-generatealeslidingjoint"></span><h2>Function: GenerateAleSlidingJoint<a class="headerlink" href="#function-generatealeslidingjoint" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/beams.py#L684">GenerateAleSlidingJoint</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">cableObjectList</span></code>, <code class="docutils literal notranslate"><span class="pre">markerBodyPositionOfSlidingBody</span></code>, <code class="docutils literal notranslate"><span class="pre">AleNode</span></code>, <code class="docutils literal notranslate"><span class="pre">localMarkerIndexOfStartCable</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">AleSlidingOffset</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">activeConnector</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">penaltyStiffness</span> <span class="pre">=</span> <span class="pre">0</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/beams.py#L767">GenerateAleSlidingJoint</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">cableObjectList</span></code>, <code class="docutils literal notranslate"><span class="pre">markerBodyPositionOfSlidingBody</span></code>, <code class="docutils literal notranslate"><span class="pre">AleNode</span></code>, <code class="docutils literal notranslate"><span class="pre">localMarkerIndexOfStartCable</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">AleSlidingOffset</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">activeConnector</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">penaltyStiffness</span> <span class="pre">=</span> <span class="pre">0</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
 <div class="line">generate an ALE sliding joint from a list of cables, marker to a sliding body, etc.</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">returns the sliding joint object</div>
 </div>
 </li>
 </ul>

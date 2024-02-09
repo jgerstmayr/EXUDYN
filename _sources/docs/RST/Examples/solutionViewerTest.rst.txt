@@ -26,8 +26,6 @@ You can view and download this file on Github: `solutionViewerTest.py <https://g
    from exudyn.itemInterface import *
    from exudyn.utilities import *
    
-   # from modelUnitTests import ExudynTestStructure, exudynTestGlobals
-   
    from math import sin, cos, pi
    import numpy as np
    
@@ -165,9 +163,6 @@ You can view and download this file on Github: `solutionViewerTest.py <https://g
    
    result = (abs(u0)+abs(rot0)).sum()
    exu.Print('solution of addRevoluteJoint=',result)
-   
-   # exudynTestGlobals.testError = result - (1.2538806799246283) #2020-07-01: 1.2538806799246283
-   # exudynTestGlobals.testResult = result
    
    
    

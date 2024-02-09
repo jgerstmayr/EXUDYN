@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>serialRobotFlexible.py &mdash; Exudyn1.7.69.dev1 1.7.69.dev1 documentation</title>
+  <title>serialRobotFlexible.py &mdash; Exudyn1.7.104.dev1 1.7.104.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=280392df"></script>
+        <script src="../../../_static/documentation_options.js?v=74f3cfff"></script>
         <script src="../../../_static/doctools.js?v=888ff710"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -41,7 +41,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.7.69.dev1
+            Exudyn1.7.104.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -153,9 +153,12 @@
 <li class="toctree-l2"><a class="reference internal" href="particlesTest3D2.html">particlesTest3D2.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pendulum.html">pendulum.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pendulum2Dconstraint.html">pendulum2Dconstraint.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pendulumGeomExactBeam2D.html">pendulumGeomExactBeam2D.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pendulumGeomExactBeam2Dsimple.html">pendulumGeomExactBeam2Dsimple.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pendulumIftommBenchmark.html">pendulumIftommBenchmark.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pendulumVerify.html">pendulumVerify.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="performanceMultiThreadingNG.html">performanceMultiThreadingNG.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pistonEngine.html">pistonEngine.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plotSensorExamples.html">plotSensorExamples.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reevingSystem.html">reevingSystem.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reevingSystemOpen.html">reevingSystemOpen.py</a></li>
@@ -222,7 +225,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.7.69.dev1</a>
+          <a href="../../../index.html">Exudyn1.7.104.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -780,38 +783,34 @@
 <span class="linenos">534</span>    <span class="n">measuredTorques</span> <span class="o">+=</span> <span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="n">mbs</span><span class="o">.</span><span class="nf">GetSensorValues</span><span class="p">(</span><span class="n">sensorNumber</span><span class="p">))]</span>
 <span class="linenos">535</span><span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s1">&#39;torques at tEnd=&#39;</span><span class="p">,</span> <span class="nf">VSum</span><span class="p">(</span><span class="n">measuredTorques</span><span class="p">))</span>
 <span class="linenos">536</span>
-<span class="linenos">537</span><span class="c1">#add larger test tolerance for 32/64bits difference</span>
-<span class="linenos">538</span><span class="c1"># exudynTestGlobals.testError = 1e-2*(VSum(measuredTorques) - 76.80031232091771 )  #old controller: 77.12176106978085) #OLDER results: up to 2021-06-28: 0.7712176106955341; 2020-08-25: 77.13193176752571 (32bits),   2020-08-24: (64bits)77.13193176846507</span>
-<span class="linenos">539</span><span class="c1"># exudynTestGlobals.testResult = 1e-2*VSum(measuredTorques)</span>
+<span class="linenos">537</span>
+<span class="linenos">538</span><span class="c1">#%%+++++++++++++++++++++</span>
+<span class="linenos">539</span><span class="k">if</span> <span class="kc">True</span><span class="p">:</span>
 <span class="linenos">540</span>
-<span class="linenos">541</span>
-<span class="linenos">542</span><span class="c1">#%%+++++++++++++++++++++</span>
-<span class="linenos">543</span><span class="k">if</span> <span class="kc">True</span><span class="p">:</span>
-<span class="linenos">544</span>
-<span class="linenos">545</span>    <span class="kn">import</span> <span class="nn">exudyn.plot</span>
-<span class="linenos">546</span>    <span class="n">exudyn</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="nf">PlotSensorDefaults</span><span class="p">()</span><span class="o">.</span><span class="n">fontSize</span> <span class="o">=</span> <span class="mi">12</span>
-<span class="linenos">547</span>
-<span class="linenos">548</span>    <span class="n">title</span> <span class="o">=</span> <span class="n">baseType</span> <span class="o">+</span> <span class="s1">&#39; base&#39;</span>
-<span class="linenos">549</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sensorNumbers</span><span class="o">=</span><span class="n">jointTorque0List</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;joint torques, &#39;</span><span class="o">+</span><span class="n">title</span><span class="p">,</span> <span class="n">closeAll</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<span class="linenos">550</span>               <span class="n">fileName</span><span class="o">=</span><span class="s1">&#39;solution/robotJointTorques&#39;</span><span class="o">+</span><span class="n">baseType</span><span class="o">+</span><span class="s1">&#39;.pdf&#39;</span>
-<span class="linenos">551</span>               <span class="p">)</span>
-<span class="linenos">552</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sensorNumbers</span><span class="o">=</span><span class="n">jointRotList</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;joint angles, &#39;</span><span class="o">+</span><span class="n">title</span><span class="p">,</span>
-<span class="linenos">553</span>               <span class="n">fileName</span><span class="o">=</span><span class="s1">&#39;solution/robotJointAngles&#39;</span><span class="o">+</span><span class="n">baseType</span><span class="o">+</span><span class="s1">&#39;.pdf&#39;</span>
-<span class="linenos">554</span>               <span class="p">)</span>
-<span class="linenos">555</span>
-<span class="linenos">556</span>    <span class="n">fPos</span> <span class="o">=</span> <span class="s1">&#39;flexible base, Pos &#39;</span>
-<span class="linenos">557</span>    <span class="n">fVel</span> <span class="o">=</span> <span class="s1">&#39;flexible base, Vel &#39;</span>
-<span class="linenos">558</span>    <span class="n">rPos</span> <span class="o">=</span> <span class="s1">&#39;rigid base, Pos &#39;</span>
-<span class="linenos">559</span>    <span class="n">rVel</span> <span class="o">=</span> <span class="s1">&#39;rigid base, Vel &#39;</span>
-<span class="linenos">560</span>    <span class="k">if</span> <span class="n">baseType</span><span class="o">==</span><span class="s1">&#39;Flexible&#39;</span><span class="p">:</span>
-<span class="linenos">561</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sensorNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">sHandPos</span><span class="p">]</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="p">[</span><span class="s1">&#39;solution/handPosRigid.txt&#39;</span><span class="p">]</span><span class="o">*</span><span class="mi">3</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span>
-<span class="linenos">562</span>                   <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="n">fPos</span><span class="o">+</span><span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="n">fPos</span><span class="o">+</span><span class="s1">&#39;Y&#39;</span><span class="p">,</span> <span class="n">fPos</span><span class="o">+</span><span class="s1">&#39;Z&#39;</span><span class="p">,</span> <span class="n">rPos</span><span class="o">+</span><span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="n">rPos</span><span class="o">+</span><span class="s1">&#39;Y&#39;</span><span class="p">,</span> <span class="n">rPos</span><span class="o">+</span><span class="s1">&#39;Z&#39;</span><span class="p">],</span>
-<span class="linenos">563</span>                   <span class="n">fileName</span><span class="o">=</span><span class="s1">&#39;solution/robotPosition&#39;</span><span class="o">+</span><span class="n">baseType</span><span class="o">+</span><span class="s1">&#39;.pdf&#39;</span>
+<span class="linenos">541</span>    <span class="kn">import</span> <span class="nn">exudyn.plot</span>
+<span class="linenos">542</span>    <span class="n">exudyn</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="nf">PlotSensorDefaults</span><span class="p">()</span><span class="o">.</span><span class="n">fontSize</span> <span class="o">=</span> <span class="mi">12</span>
+<span class="linenos">543</span>
+<span class="linenos">544</span>    <span class="n">title</span> <span class="o">=</span> <span class="n">baseType</span> <span class="o">+</span> <span class="s1">&#39; base&#39;</span>
+<span class="linenos">545</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sensorNumbers</span><span class="o">=</span><span class="n">jointTorque0List</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;joint torques, &#39;</span><span class="o">+</span><span class="n">title</span><span class="p">,</span> <span class="n">closeAll</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">546</span>               <span class="n">fileName</span><span class="o">=</span><span class="s1">&#39;solution/robotJointTorques&#39;</span><span class="o">+</span><span class="n">baseType</span><span class="o">+</span><span class="s1">&#39;.pdf&#39;</span>
+<span class="linenos">547</span>               <span class="p">)</span>
+<span class="linenos">548</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sensorNumbers</span><span class="o">=</span><span class="n">jointRotList</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;joint angles, &#39;</span><span class="o">+</span><span class="n">title</span><span class="p">,</span>
+<span class="linenos">549</span>               <span class="n">fileName</span><span class="o">=</span><span class="s1">&#39;solution/robotJointAngles&#39;</span><span class="o">+</span><span class="n">baseType</span><span class="o">+</span><span class="s1">&#39;.pdf&#39;</span>
+<span class="linenos">550</span>               <span class="p">)</span>
+<span class="linenos">551</span>
+<span class="linenos">552</span>    <span class="n">fPos</span> <span class="o">=</span> <span class="s1">&#39;flexible base, Pos &#39;</span>
+<span class="linenos">553</span>    <span class="n">fVel</span> <span class="o">=</span> <span class="s1">&#39;flexible base, Vel &#39;</span>
+<span class="linenos">554</span>    <span class="n">rPos</span> <span class="o">=</span> <span class="s1">&#39;rigid base, Pos &#39;</span>
+<span class="linenos">555</span>    <span class="n">rVel</span> <span class="o">=</span> <span class="s1">&#39;rigid base, Vel &#39;</span>
+<span class="linenos">556</span>    <span class="k">if</span> <span class="n">baseType</span><span class="o">==</span><span class="s1">&#39;Flexible&#39;</span><span class="p">:</span>
+<span class="linenos">557</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sensorNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">sHandPos</span><span class="p">]</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="p">[</span><span class="s1">&#39;solution/handPosRigid.txt&#39;</span><span class="p">]</span><span class="o">*</span><span class="mi">3</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span>
+<span class="linenos">558</span>                   <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="n">fPos</span><span class="o">+</span><span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="n">fPos</span><span class="o">+</span><span class="s1">&#39;Y&#39;</span><span class="p">,</span> <span class="n">fPos</span><span class="o">+</span><span class="s1">&#39;Z&#39;</span><span class="p">,</span> <span class="n">rPos</span><span class="o">+</span><span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="n">rPos</span><span class="o">+</span><span class="s1">&#39;Y&#39;</span><span class="p">,</span> <span class="n">rPos</span><span class="o">+</span><span class="s1">&#39;Z&#39;</span><span class="p">],</span>
+<span class="linenos">559</span>                   <span class="n">fileName</span><span class="o">=</span><span class="s1">&#39;solution/robotPosition&#39;</span><span class="o">+</span><span class="n">baseType</span><span class="o">+</span><span class="s1">&#39;.pdf&#39;</span>
+<span class="linenos">560</span>                   <span class="p">)</span>
+<span class="linenos">561</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sensorNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">sHandVel</span><span class="p">]</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="p">[</span><span class="s1">&#39;solution/handVelRigid.txt&#39;</span><span class="p">]</span><span class="o">*</span><span class="mi">3</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span>
+<span class="linenos">562</span>                   <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="n">fVel</span><span class="o">+</span><span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="n">fVel</span><span class="o">+</span><span class="s1">&#39;Y&#39;</span><span class="p">,</span> <span class="n">fVel</span><span class="o">+</span><span class="s1">&#39;Z&#39;</span><span class="p">,</span> <span class="n">rVel</span><span class="o">+</span><span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="n">rVel</span><span class="o">+</span><span class="s1">&#39;Y&#39;</span><span class="p">,</span> <span class="n">rVel</span><span class="o">+</span><span class="s1">&#39;Z&#39;</span><span class="p">],</span>
+<span class="linenos">563</span>                   <span class="n">fileName</span><span class="o">=</span><span class="s1">&#39;solution/robotVelocity&#39;</span><span class="o">+</span><span class="n">baseType</span><span class="o">+</span><span class="s1">&#39;.pdf&#39;</span>
 <span class="linenos">564</span>                   <span class="p">)</span>
-<span class="linenos">565</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sensorNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">sHandVel</span><span class="p">]</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="p">[</span><span class="s1">&#39;solution/handVelRigid.txt&#39;</span><span class="p">]</span><span class="o">*</span><span class="mi">3</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span>
-<span class="linenos">566</span>                   <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="n">fVel</span><span class="o">+</span><span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="n">fVel</span><span class="o">+</span><span class="s1">&#39;Y&#39;</span><span class="p">,</span> <span class="n">fVel</span><span class="o">+</span><span class="s1">&#39;Z&#39;</span><span class="p">,</span> <span class="n">rVel</span><span class="o">+</span><span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="n">rVel</span><span class="o">+</span><span class="s1">&#39;Y&#39;</span><span class="p">,</span> <span class="n">rVel</span><span class="o">+</span><span class="s1">&#39;Z&#39;</span><span class="p">],</span>
-<span class="linenos">567</span>                   <span class="n">fileName</span><span class="o">=</span><span class="s1">&#39;solution/robotVelocity&#39;</span><span class="o">+</span><span class="n">baseType</span><span class="o">+</span><span class="s1">&#39;.pdf&#39;</span>
-<span class="linenos">568</span>                   <span class="p">)</span>
 </pre></div>
 </div>
 </section>

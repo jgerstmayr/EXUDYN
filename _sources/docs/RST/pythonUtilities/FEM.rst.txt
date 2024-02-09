@@ -9,7 +9,7 @@ Support functions and helper classes for import of meshes, finite element models
 - | Author:
   | Johannes Gerstmayr; Stefan Holzinger (Abaqus and Ansys import utilities); Joachim Schöberl (support for Netgen and NGsolve  import and eigen computations)
 - Date:      2020-03-10 (created) 
-- Notes:  	internal CSR matrix storage format contains 3 float numbers per row: [row, column, value], can be converted to scipy csr sparse matrices with function CSRtoScipySparseCSR(...) 
+- Notes:     internal CSR matrix storage format contains 3 float numbers per row: [row, column, value], can be converted to scipy csr sparse matrices with function CSRtoScipySparseCSR(...) 
 
 
 .. _sec-fem-compressedrowsparsetodensematrix:

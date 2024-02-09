@@ -139,7 +139,8 @@ This is the data structure of a system which contains Objects (bodies/constraint
 
   .. code-block:: python
 
-     mbs.systemData.AddODE2LoadDependencies(0,[0,1,2])\#add dependency of load 5 onto node 2 coordinates:
+     mbs.systemData.AddODE2LoadDependencies(0,[0,1,2])
+     #add dependency of load 5 onto node 2 coordinates:
      nodeLTG2 = mbs.systemData.GetNodeLTGODE2(2)
      mbs.systemData.AddODE2LoadDependencies(5,nodeLTG2)
 

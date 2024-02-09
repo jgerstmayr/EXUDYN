@@ -13,7 +13,7 @@ You can view and download this file on Github: `interactiveTutorial.py <https://
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    # This is an EXUDYN example
    #
-   # Details:  The following lines can be entered in interactive mode (without comments)
+   # Details:  Example for interactive mode; NOTE: the following lines can be entered using mbs.interactiveMode=True
    #
    # Author:   Johannes Gerstmayr
    # Date:     2020-03-15

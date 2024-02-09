@@ -44,11 +44,13 @@ This section includes all TestModels for Exudyn.They can also be found and downl
    TestModels/geneticOptimizationTest
    TestModels/geometricallyExactBeam2Dtest
    TestModels/geometricallyExactBeamTest
+   TestModels/gridGeomExactBeam2D
    TestModels/heavyTop
    TestModels/hydraulicActuatorSimpleTest
    TestModels/kinematicTreeAndMBStest
    TestModels/kinematicTreeConstraintTest
    TestModels/kinematicTreeTest
+   TestModels/LShapeGeomExactBeam2D
    TestModels/mainSystemExtensionsTests
    TestModels/manualExplicitIntegrator
    TestModels/mecanumWheelRollingDiscTest

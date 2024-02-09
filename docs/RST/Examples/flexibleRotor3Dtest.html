@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>flexibleRotor3Dtest.py &mdash; Exudyn1.7.69.dev1 1.7.69.dev1 documentation</title>
+  <title>flexibleRotor3Dtest.py &mdash; Exudyn1.7.104.dev1 1.7.104.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=280392df"></script>
+        <script src="../../../_static/documentation_options.js?v=74f3cfff"></script>
         <script src="../../../_static/doctools.js?v=888ff710"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -41,7 +41,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.7.69.dev1
+            Exudyn1.7.104.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -153,9 +153,12 @@
 <li class="toctree-l2"><a class="reference internal" href="particlesTest3D2.html">particlesTest3D2.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pendulum.html">pendulum.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pendulum2Dconstraint.html">pendulum2Dconstraint.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pendulumGeomExactBeam2D.html">pendulumGeomExactBeam2D.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pendulumGeomExactBeam2Dsimple.html">pendulumGeomExactBeam2Dsimple.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pendulumIftommBenchmark.html">pendulumIftommBenchmark.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pendulumVerify.html">pendulumVerify.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="performanceMultiThreadingNG.html">performanceMultiThreadingNG.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pistonEngine.html">pistonEngine.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plotSensorExamples.html">plotSensorExamples.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reevingSystem.html">reevingSystem.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reevingSystemOpen.html">reevingSystemOpen.py</a></li>
@@ -222,7 +225,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.7.69.dev1</a>
+          <a href="../../../index.html">Exudyn1.7.104.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -410,30 +413,25 @@
 <span class="linenos">164</span><span class="c1">#evaluate final (=current) output values</span>
 <span class="linenos">165</span><span class="n">u</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetNodeOutput</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">AngularVelocity</span><span class="p">)</span>
 <span class="linenos">166</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;omega=&#39;</span><span class="p">,</span><span class="n">u</span><span class="p">)</span>
-<span class="linenos">167</span><span class="c1">#print(&#39;displacement=&#39;,u[0])</span>
+<span class="linenos">167</span>
 <span class="linenos">168</span>
-<span class="linenos">169</span><span class="c1">#exudynTestGlobals.testError = u[0] - (0.5152217339585201) #2019-12-01;</span>
-<span class="linenos">170</span>
-<span class="linenos">171</span><span class="c1">##+++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos">172</span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="linenos">173</span><span class="kn">import</span> <span class="nn">matplotlib.ticker</span> <span class="k">as</span> <span class="nn">ticker</span>
-<span class="linenos">174</span>
-<span class="linenos">175</span><span class="k">if</span> <span class="kc">True</span><span class="p">:</span>
-<span class="linenos">176</span>    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s1">&#39;coordinatesSolution.txt&#39;</span><span class="p">,</span> <span class="n">comments</span><span class="o">=</span><span class="s1">&#39;#&#39;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
-<span class="linenos">177</span>    <span class="n">n</span><span class="o">=</span><span class="n">steps</span>
-<span class="linenos">178</span>    <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;font.size&#39;</span><span class="p">:</span> <span class="mi">24</span><span class="p">})</span>
+<span class="linenos">169</span><span class="c1">##+++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">170</span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="linenos">171</span><span class="kn">import</span> <span class="nn">matplotlib.ticker</span> <span class="k">as</span> <span class="nn">ticker</span>
+<span class="linenos">172</span>
+<span class="linenos">173</span><span class="k">if</span> <span class="kc">True</span><span class="p">:</span>
+<span class="linenos">174</span>    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s1">&#39;coordinatesSolution.txt&#39;</span><span class="p">,</span> <span class="n">comments</span><span class="o">=</span><span class="s1">&#39;#&#39;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+<span class="linenos">175</span>    <span class="n">n</span><span class="o">=</span><span class="n">steps</span>
+<span class="linenos">176</span>    <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;font.size&#39;</span><span class="p">:</span> <span class="mi">24</span><span class="p">})</span>
+<span class="linenos">177</span>
+<span class="linenos">178</span>    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="p">[:,</span><span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;r-&#39;</span><span class="p">)</span> <span class="c1">#numerical solution</span>
 <span class="linenos">179</span>
-<span class="linenos">180</span>    <span class="c1">#plt.plot(data[:,2], data[:,3], &#39;r-&#39;) #numerical solution</span>
-<span class="linenos">181</span>    <span class="c1">#plt.plot(data[:,0], data[:,2], &#39;b-&#39;) #numerical solution</span>
-<span class="linenos">182</span>    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="p">[:,</span><span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;r-&#39;</span><span class="p">)</span> <span class="c1">#numerical solution</span>
-<span class="linenos">183</span>    <span class="c1">#plt.plot(data[n-500:n-1,1], data[n-500:n-1,2], &#39;r-&#39;) #numerical solution</span>
-<span class="linenos">184</span>
-<span class="linenos">185</span>    <span class="n">ax</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span> <span class="c1"># get current axes</span>
-<span class="linenos">186</span>    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="s1">&#39;both&#39;</span><span class="p">)</span>
-<span class="linenos">187</span>    <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">ticker</span><span class="o">.</span><span class="n">MaxNLocator</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
-<span class="linenos">188</span>    <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">ticker</span><span class="o">.</span><span class="n">MaxNLocator</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
-<span class="linenos">189</span>    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-<span class="linenos">190</span>    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="linenos">180</span>    <span class="n">ax</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span> <span class="c1"># get current axes</span>
+<span class="linenos">181</span>    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="s1">&#39;both&#39;</span><span class="p">)</span>
+<span class="linenos">182</span>    <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">ticker</span><span class="o">.</span><span class="n">MaxNLocator</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+<span class="linenos">183</span>    <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">ticker</span><span class="o">.</span><span class="n">MaxNLocator</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+<span class="linenos">184</span>    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="linenos">185</span>    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </section>

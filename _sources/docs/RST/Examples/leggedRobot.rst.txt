@@ -253,15 +253,6 @@ You can view and download this file on Github: `leggedRobot.py <https://github.c
    sLeg = mbs.AddSensor(SensorLoad(loadNumber=loadLegB, fileName='solution/torqueLeg.txt'))
    sFemoral = mbs.AddSensor(SensorLoad(loadNumber=loadFemoralB, fileName='solution/torqueFemoral.txt'))
    
-   # #sensor for trace of contact point:
-   # if exudynTestGlobals.useGraphics:
-   #     mbs.AddSensor(SensorObject(objectNumber=oRolling, fileName='solution/rollingDiscTrail.txt', 
-   #                                outputVariableType = exu.OutputVariableType.Position))
-       
-   #     mbs.AddSensor(SensorObject(objectNumber=oRolling, fileName='solution/rollingDiscTrailVel.txt', 
-   #                                outputVariableType = exu.OutputVariableType.Velocity))
-       
-   
    #%%++++++++++++++++++++++++++++++++++++++++++++++++
    #simulate:
    mbs.Assemble()
@@ -277,8 +268,6 @@ You can view and download this file on Github: `leggedRobot.py <https://github.c
    simulationSettings.solutionSettings.sensorsWritePeriod = 0.0005
    simulationSettings.timeIntegration.verboseMode = 1
    
-   # simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
-   # simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
    simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.6
    simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations=True
    

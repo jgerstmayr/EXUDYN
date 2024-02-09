@@ -178,7 +178,7 @@ VSettingsNodes has the following items:
   | size of basis for nodes
 * | **defaultColor** [type = Float4, default = [0.2,0.2,1.,1.], size = 4]:
   | \ ``SC.visualizationSettings.nodes.defaultColor``\ 
-  | default cRGB color for nodes; 4th value is alpha-transparency
+  | default RGBA color for nodes; 4th value is alpha-transparency
 * | **defaultSize** [type = float, default = -1.]:
   | \ ``SC.visualizationSettings.nodes.defaultSize``\ 
   | global node size; if -1.f, node size is relative to openGL.initialMaxSceneSize
@@ -286,7 +286,7 @@ VSettingsBodies has the following items:
   | visualization settings for kinematic tree
 * | **defaultColor** [type = Float4, default = [0.3,0.3,1.,1.], size = 4]:
   | \ ``SC.visualizationSettings.bodies.defaultColor``\ 
-  | default cRGB color for bodies; 4th value is 
+  | default RGBA color for bodies; 4th value is 
 * | **defaultSize** [type = Float3, default = [1.,1.,1.], size = 3]:
   | \ ``SC.visualizationSettings.bodies.defaultSize``\ 
   | global body size of xyz-cube
@@ -316,7 +316,7 @@ VSettingsConnectors has the following items:
   | DEPRECATED: do not use! global contact points size; if -1.f, connector size is relative to maxSceneSize
 * | **defaultColor** [type = Float4, default = [0.2,0.2,1.,1.], size = 4]:
   | \ ``SC.visualizationSettings.connectors.defaultColor``\ 
-  | default cRGB color for connectors; 4th value is alpha-transparency
+  | default RGBA color for connectors; 4th value is alpha-transparency
 * | **defaultSize** [type = float, default = 0.1]:
   | \ ``SC.visualizationSettings.connectors.defaultSize``\ 
   | global connector size; if -1.f, connector size is relative to maxSceneSize
@@ -355,7 +355,7 @@ VSettingsMarkers has the following items:
 
 * | **defaultColor** [type = Float4, default = [0.1,0.5,0.1,1.], size = 4]:
   | \ ``SC.visualizationSettings.markers.defaultColor``\ 
-  | default cRGB color for markers; 4th value is alpha-transparency
+  | default RGBA color for markers; 4th value is alpha-transparency
 * | **defaultSize** [type = float, default = -1.]:
   | \ ``SC.visualizationSettings.markers.defaultSize``\ 
   | global marker size; if -1.f, marker size is relative to maxSceneSize
@@ -382,7 +382,7 @@ VSettingsLoads has the following items:
 
 * | **defaultColor** [type = Float4, default = [0.7,0.1,0.1,1.], size = 4]:
   | \ ``SC.visualizationSettings.loads.defaultColor``\ 
-  | default cRGB color for loads; 4th value is alpha-transparency
+  | default RGBA color for loads; 4th value is alpha-transparency
 * | **defaultRadius** [type = float, default = 0.005]:
   | \ ``SC.visualizationSettings.loads.defaultRadius``\ 
   | global radius of load axis if drawn in 3D
@@ -484,7 +484,7 @@ VSettingsSensors has the following items:
   | settings for showing (position) sensor traces and vector plots in the render window
 * | **defaultColor** [type = Float4, default = [0.6,0.6,0.1,1.], size = 4]:
   | \ ``SC.visualizationSettings.sensors.defaultColor``\ 
-  | default cRGB color for sensors; 4th value is alpha-transparency
+  | default RGBA color for sensors; 4th value is alpha-transparency
 * | **defaultSize** [type = float, default = -1.]:
   | \ ``SC.visualizationSettings.sensors.defaultSize``\ 
   | global sensor size; if -1.f, sensor size is relative to maxSceneSize
@@ -511,10 +511,16 @@ VSettingsContact has the following items:
 
 * | **colorBoundingBoxes** [type = Float4, default = [0.9,0.1,0.1,1.], size = 4]:
   | \ ``SC.visualizationSettings.contact.colorBoundingBoxes``\ 
-  | cRGB color
+  | RGBA color for boudnding boxes, see showBoundingBoxes
 * | **colorSearchTree** [type = Float4, default = [0.1,0.1,0.9,1.], size = 4]:
   | \ ``SC.visualizationSettings.contact.colorSearchTree``\ 
-  | cRGB color
+  | RGBA color for search tree, see showSearchTree
+* | **colorSpheres** [type = Float4, default = [0.8,0.8,0.2,1.], size = 4]:
+  | \ ``SC.visualizationSettings.contact.colorSpheres``\ 
+  | RGBA color for contact spheres, see showSpheres
+* | **colorTriangles** [type = Float4, default = [0.5,0.5,0.5,1.], size = 4]:
+  | \ ``SC.visualizationSettings.contact.colorTriangles``\ 
+  | RGBA color for contact triangles, see showTriangles
 * | **contactForcesFactor** [type = float, default = 0.001]:
   | \ ``SC.visualizationSettings.contact.contactForcesFactor``\ 
   | factor used for scaling of contact forces is showContactForces=True
@@ -523,7 +529,7 @@ VSettingsContact has the following items:
   | global contact points size; if -1.f, connector size is relative to maxSceneSize; used for some contacts, e.g., in ContactFrictionCircle
 * | **showBoundingBoxes** [type = bool, default = False]:
   | \ ``SC.visualizationSettings.contact.showBoundingBoxes``\ 
-  | show bounding boxes of all GeneralContacts
+  | show computed bounding boxes of all GeneralContacts; Warning: avoid for large number of contact objects!
 * | **showContactForces** [type = bool, default = False]:
   | \ ``SC.visualizationSettings.contact.showContactForces``\ 
   | if True, contact forces are drawn for certain contact models
@@ -532,10 +538,19 @@ VSettingsContact has the following items:
   | if True and showContactForces=True, numerical values for  contact forces are shown at certain points
 * | **showSearchTree** [type = bool, default = False]:
   | \ ``SC.visualizationSettings.contact.showSearchTree``\ 
-  | show search tree of all GeneralContacts
+  | show outer box of search tree for all GeneralContacts
 * | **showSearchTreeCells** [type = bool, default = False]:
   | \ ``SC.visualizationSettings.contact.showSearchTreeCells``\ 
-  | show cells inside search tree
+  | show all cells of search tree; empty cells have colorSearchTree, cells with contact objects have higher red value; Warning: avoid for large number of search tree cells!
+* | **showSpheres** [type = bool, default = False]:
+  | \ ``SC.visualizationSettings.contact.showSpheres``\ 
+  | show contact spheres (SpheresWithMarker, ...)
+* | **showTriangles** [type = bool, default = False]:
+  | \ ``SC.visualizationSettings.contact.showTriangles``\ 
+  | show contact triangles (TrianglesRigidBodyBased, ...)
+* | **tilingSpheres** [type = PInt, default = 4]:
+  | \ ``SC.visualizationSettings.contact.tilingSpheres``\ 
+  | tiling for spheres; higher values give smoother spheres, but may lead to lower frame rates
 
 
 
@@ -846,7 +861,7 @@ VSettingsInteractive has the following items:
   | openVR visualization settings
 * | **highlightColor** [type = Float4, default = [0.8,0.05,0.05,0.75], size = 4]:
   | \ ``SC.visualizationSettings.interactive.highlightColor``\ 
-  | cRGB color for highlighted item; 4th value is alpha-transparency
+  | RGBA color for highlighted item; 4th value is alpha-transparency
 * | **highlightItemIndex** [type = Int, default = -1]:
   | \ ``SC.visualizationSettings.interactive.highlightItemIndex``\ 
   | index of item that shall be highlighted (e.g., need to find item due to errors); if set -1, no item is highlighted
@@ -858,7 +873,7 @@ VSettingsInteractive has the following items:
   | index of main system (mbs) for which the item shall be highlighted; number is related to the ID in SystemContainer (first mbs = 0, second = 1, ...)
 * | **highlightOtherColor** [type = Float4, default = [0.5,0.5,0.5,0.4], size = 4]:
   | \ ``SC.visualizationSettings.interactive.highlightOtherColor``\ 
-  | cRGB color for other items (which are not highlighted); 4th value is alpha-transparency
+  | RGBA color for other items (which are not highlighted); 4th value is alpha-transparency
 * | **joystickScaleRotation** [type = float, default = 200.]:
   | \ ``SC.visualizationSettings.interactive.joystickScaleRotation``\ 
   | rotation scaling factor for joystick input

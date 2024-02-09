@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>leggedRobot.py &mdash; Exudyn1.7.69.dev1 1.7.69.dev1 documentation</title>
+  <title>leggedRobot.py &mdash; Exudyn1.7.104.dev1 1.7.104.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=280392df"></script>
+        <script src="../../../_static/documentation_options.js?v=74f3cfff"></script>
         <script src="../../../_static/doctools.js?v=888ff710"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -41,7 +41,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.7.69.dev1
+            Exudyn1.7.104.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -153,9 +153,12 @@
 <li class="toctree-l2"><a class="reference internal" href="particlesTest3D2.html">particlesTest3D2.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pendulum.html">pendulum.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pendulum2Dconstraint.html">pendulum2Dconstraint.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pendulumGeomExactBeam2D.html">pendulumGeomExactBeam2D.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pendulumGeomExactBeam2Dsimple.html">pendulumGeomExactBeam2Dsimple.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pendulumIftommBenchmark.html">pendulumIftommBenchmark.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pendulumVerify.html">pendulumVerify.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="performanceMultiThreadingNG.html">performanceMultiThreadingNG.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pistonEngine.html">pistonEngine.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plotSensorExamples.html">plotSensorExamples.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reevingSystem.html">reevingSystem.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reevingSystemOpen.html">reevingSystemOpen.py</a></li>
@@ -222,7 +225,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.7.69.dev1</a>
+          <a href="../../../index.html">Exudyn1.7.104.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -487,83 +490,72 @@
 <span class="linenos">241</span><span class="n">sLeg</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorLoad</span><span class="p">(</span><span class="n">loadNumber</span><span class="o">=</span><span class="n">loadLegB</span><span class="p">,</span> <span class="n">fileName</span><span class="o">=</span><span class="s1">&#39;solution/torqueLeg.txt&#39;</span><span class="p">))</span>
 <span class="linenos">242</span><span class="n">sFemoral</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorLoad</span><span class="p">(</span><span class="n">loadNumber</span><span class="o">=</span><span class="n">loadFemoralB</span><span class="p">,</span> <span class="n">fileName</span><span class="o">=</span><span class="s1">&#39;solution/torqueFemoral.txt&#39;</span><span class="p">))</span>
 <span class="linenos">243</span>
-<span class="linenos">244</span><span class="c1"># #sensor for trace of contact point:</span>
-<span class="linenos">245</span><span class="c1"># if exudynTestGlobals.useGraphics:</span>
-<span class="linenos">246</span><span class="c1">#     mbs.AddSensor(SensorObject(objectNumber=oRolling, fileName=&#39;solution/rollingDiscTrail.txt&#39;,</span>
-<span class="linenos">247</span><span class="c1">#                                outputVariableType = exu.OutputVariableType.Position))</span>
-<span class="linenos">248</span>
-<span class="linenos">249</span><span class="c1">#     mbs.AddSensor(SensorObject(objectNumber=oRolling, fileName=&#39;solution/rollingDiscTrailVel.txt&#39;,</span>
-<span class="linenos">250</span><span class="c1">#                                outputVariableType = exu.OutputVariableType.Velocity))</span>
-<span class="linenos">251</span>
+<span class="linenos">244</span><span class="c1">#%%++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">245</span><span class="c1">#simulate:</span>
+<span class="linenos">246</span><span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
+<span class="linenos">247</span>
+<span class="linenos">248</span><span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">()</span> <span class="c1">#takes currently set values or default values</span>
+<span class="linenos">249</span>
+<span class="linenos">250</span><span class="n">tEnd</span> <span class="o">=</span> <span class="mf">2.8</span>
+<span class="linenos">251</span><span class="n">h</span><span class="o">=</span><span class="mf">0.0002</span>  <span class="c1">#use small step size to detext contact switching</span>
 <span class="linenos">252</span>
-<span class="linenos">253</span><span class="c1">#%%++++++++++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos">254</span><span class="c1">#simulate:</span>
-<span class="linenos">255</span><span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
-<span class="linenos">256</span>
-<span class="linenos">257</span><span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">()</span> <span class="c1">#takes currently set values or default values</span>
+<span class="linenos">253</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tEnd</span><span class="o">/</span><span class="n">h</span><span class="p">)</span>
+<span class="linenos">254</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="n">tEnd</span>
+<span class="linenos">255</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">writeSolutionToFile</span><span class="o">=</span> <span class="kc">False</span>
+<span class="linenos">256</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">sensorsWritePeriod</span> <span class="o">=</span> <span class="mf">0.0005</span>
+<span class="linenos">257</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">verboseMode</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="linenos">258</span>
-<span class="linenos">259</span><span class="n">tEnd</span> <span class="o">=</span> <span class="mf">2.8</span>
-<span class="linenos">260</span><span class="n">h</span><span class="o">=</span><span class="mf">0.0002</span>  <span class="c1">#use small step size to detext contact switching</span>
+<span class="linenos">259</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">generalizedAlpha</span><span class="o">.</span><span class="n">spectralRadius</span> <span class="o">=</span> <span class="mf">0.6</span>
+<span class="linenos">260</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">generalizedAlpha</span><span class="o">.</span><span class="n">computeInitialAccelerations</span><span class="o">=</span><span class="kc">True</span>
 <span class="linenos">261</span>
-<span class="linenos">262</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tEnd</span><span class="o">/</span><span class="n">h</span><span class="p">)</span>
-<span class="linenos">263</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="n">tEnd</span>
-<span class="linenos">264</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">writeSolutionToFile</span><span class="o">=</span> <span class="kc">False</span>
-<span class="linenos">265</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">sensorsWritePeriod</span> <span class="o">=</span> <span class="mf">0.0005</span>
-<span class="linenos">266</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">verboseMode</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="linenos">262</span>
+<span class="linenos">263</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">show</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">264</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">drawNodesAsPoint</span>  <span class="o">=</span> <span class="kc">False</span>
+<span class="linenos">265</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">showBasis</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">266</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">basisSize</span> <span class="o">=</span> <span class="mf">0.015</span>
 <span class="linenos">267</span>
-<span class="linenos">268</span><span class="c1"># simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True</span>
-<span class="linenos">269</span><span class="c1"># simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True</span>
-<span class="linenos">270</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">generalizedAlpha</span><span class="o">.</span><span class="n">spectralRadius</span> <span class="o">=</span> <span class="mf">0.6</span>
-<span class="linenos">271</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">generalizedAlpha</span><span class="o">.</span><span class="n">computeInitialAccelerations</span><span class="o">=</span><span class="kc">True</span>
-<span class="linenos">272</span>
+<span class="linenos">268</span><span class="k">if</span> <span class="kc">False</span><span class="p">:</span> <span class="c1">#record animation frames:</span>
+<span class="linenos">269</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">exportImages</span><span class="o">.</span><span class="n">saveImageFileName</span> <span class="o">=</span> <span class="s2">&quot;animation/frame&quot;</span>
+<span class="linenos">270</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">renderWindowSize</span><span class="o">=</span><span class="p">[</span><span class="mi">1980</span><span class="p">,</span><span class="mi">1080</span><span class="p">]</span>
+<span class="linenos">271</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">multiSampling</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="linenos">272</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">recordImagesInterval</span> <span class="o">=</span> <span class="mf">0.01</span>
 <span class="linenos">273</span>
-<span class="linenos">274</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">show</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="linenos">275</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">drawNodesAsPoint</span>  <span class="o">=</span> <span class="kc">False</span>
-<span class="linenos">276</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">showBasis</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="linenos">277</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">basisSize</span> <span class="o">=</span> <span class="mf">0.015</span>
-<span class="linenos">278</span>
-<span class="linenos">279</span><span class="k">if</span> <span class="kc">False</span><span class="p">:</span> <span class="c1">#record animation frames:</span>
-<span class="linenos">280</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">exportImages</span><span class="o">.</span><span class="n">saveImageFileName</span> <span class="o">=</span> <span class="s2">&quot;animation/frame&quot;</span>
-<span class="linenos">281</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">renderWindowSize</span><span class="o">=</span><span class="p">[</span><span class="mi">1980</span><span class="p">,</span><span class="mi">1080</span><span class="p">]</span>
-<span class="linenos">282</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">multiSampling</span> <span class="o">=</span> <span class="mi">4</span>
-<span class="linenos">283</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">recordImagesInterval</span> <span class="o">=</span> <span class="mf">0.01</span>
-<span class="linenos">284</span>
-<span class="linenos">285</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">autoFitScene</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1">#use loaded render state</span>
-<span class="linenos">286</span><span class="n">useGraphics</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="linenos">287</span><span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
-<span class="linenos">288</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StartRenderer</span><span class="p">()</span>
-<span class="linenos">289</span>    <span class="k">if</span> <span class="s1">&#39;renderState&#39;</span> <span class="ow">in</span> <span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">:</span>
-<span class="linenos">290</span>        <span class="n">SC</span><span class="o">.</span><span class="nf">SetRenderState</span><span class="p">(</span><span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span> <span class="s1">&#39;renderState&#39;</span> <span class="p">])</span>
-<span class="linenos">291</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">WaitForUserToContinue</span><span class="p">()</span>
-<span class="linenos">292</span><span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="p">)</span>
+<span class="linenos">274</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">autoFitScene</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1">#use loaded render state</span>
+<span class="linenos">275</span><span class="n">useGraphics</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">276</span><span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
+<span class="linenos">277</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StartRenderer</span><span class="p">()</span>
+<span class="linenos">278</span>    <span class="k">if</span> <span class="s1">&#39;renderState&#39;</span> <span class="ow">in</span> <span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">:</span>
+<span class="linenos">279</span>        <span class="n">SC</span><span class="o">.</span><span class="nf">SetRenderState</span><span class="p">(</span><span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span> <span class="s1">&#39;renderState&#39;</span> <span class="p">])</span>
+<span class="linenos">280</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">WaitForUserToContinue</span><span class="p">()</span>
+<span class="linenos">281</span><span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="p">)</span>
+<span class="linenos">282</span>
+<span class="linenos">283</span>
+<span class="linenos">284</span><span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
+<span class="linenos">285</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">WaitForRenderEngineStopFlag</span><span class="p">()</span>
+<span class="linenos">286</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StopRenderer</span><span class="p">()</span> <span class="c1">#safely close rendering window!</span>
+<span class="linenos">287</span>
+<span class="linenos">288</span>    <span class="c1">##++++++++++++++++++++++++++++++++++++++++++++++q+++++++</span>
+<span class="linenos">289</span>    <span class="c1">#plot results</span>
+<span class="linenos">290</span>
+<span class="linenos">291</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sensorNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">sLeg</span><span class="p">,</span><span class="n">sFemoral</span><span class="p">],</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="linenos">292</span>
 <span class="linenos">293</span>
-<span class="linenos">294</span>
-<span class="linenos">295</span><span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
-<span class="linenos">296</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">WaitForRenderEngineStopFlag</span><span class="p">()</span>
-<span class="linenos">297</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StopRenderer</span><span class="p">()</span> <span class="c1">#safely close rendering window!</span>
-<span class="linenos">298</span>
-<span class="linenos">299</span>    <span class="c1">##++++++++++++++++++++++++++++++++++++++++++++++q+++++++</span>
-<span class="linenos">300</span>    <span class="c1">#plot results</span>
-<span class="linenos">301</span>
-<span class="linenos">302</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sensorNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">sLeg</span><span class="p">,</span><span class="n">sFemoral</span><span class="p">],</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
-<span class="linenos">303</span>
-<span class="linenos">304</span>
-<span class="linenos">305</span>    <span class="k">if</span> <span class="kc">False</span><span class="p">:</span>
-<span class="linenos">306</span>        <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="linenos">307</span>        <span class="kn">import</span> <span class="nn">matplotlib.ticker</span> <span class="k">as</span> <span class="nn">ticker</span>
-<span class="linenos">308</span>
-<span class="linenos">309</span>        <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s1">&#39;solution/rollingDiscPos.txt&#39;</span><span class="p">,</span> <span class="n">comments</span><span class="o">=</span><span class="s1">&#39;#&#39;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
-<span class="linenos">310</span>        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;r-&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;coin pos x&#39;</span><span class="p">)</span>
-<span class="linenos">311</span>        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="p">[:,</span><span class="mi">2</span><span class="p">],</span> <span class="s1">&#39;g-&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;coin pos y&#39;</span><span class="p">)</span>
-<span class="linenos">312</span>        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="p">[:,</span><span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;b-&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;coin pos z&#39;</span><span class="p">)</span>
-<span class="linenos">313</span>
-<span class="linenos">314</span>        <span class="n">ax</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span> <span class="c1"># get current axes</span>
-<span class="linenos">315</span>        <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="s1">&#39;both&#39;</span><span class="p">)</span>
-<span class="linenos">316</span>        <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">ticker</span><span class="o">.</span><span class="n">MaxNLocator</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span> <span class="c1">#use maximum of 8 ticks on y-axis</span>
-<span class="linenos">317</span>        <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">ticker</span><span class="o">.</span><span class="n">MaxNLocator</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span> <span class="c1">#use maximum of 8 ticks on y-axis</span>
-<span class="linenos">318</span>        <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-<span class="linenos">319</span>        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="linenos">320</span>        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="linenos">294</span>    <span class="k">if</span> <span class="kc">False</span><span class="p">:</span>
+<span class="linenos">295</span>        <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="linenos">296</span>        <span class="kn">import</span> <span class="nn">matplotlib.ticker</span> <span class="k">as</span> <span class="nn">ticker</span>
+<span class="linenos">297</span>
+<span class="linenos">298</span>        <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s1">&#39;solution/rollingDiscPos.txt&#39;</span><span class="p">,</span> <span class="n">comments</span><span class="o">=</span><span class="s1">&#39;#&#39;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+<span class="linenos">299</span>        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;r-&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;coin pos x&#39;</span><span class="p">)</span>
+<span class="linenos">300</span>        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="p">[:,</span><span class="mi">2</span><span class="p">],</span> <span class="s1">&#39;g-&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;coin pos y&#39;</span><span class="p">)</span>
+<span class="linenos">301</span>        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="p">[:,</span><span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;b-&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;coin pos z&#39;</span><span class="p">)</span>
+<span class="linenos">302</span>
+<span class="linenos">303</span>        <span class="n">ax</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span> <span class="c1"># get current axes</span>
+<span class="linenos">304</span>        <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="s1">&#39;both&#39;</span><span class="p">)</span>
+<span class="linenos">305</span>        <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">ticker</span><span class="o">.</span><span class="n">MaxNLocator</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span> <span class="c1">#use maximum of 8 ticks on y-axis</span>
+<span class="linenos">306</span>        <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">ticker</span><span class="o">.</span><span class="n">MaxNLocator</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span> <span class="c1">#use maximum of 8 ticks on y-axis</span>
+<span class="linenos">307</span>        <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="linenos">308</span>        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="linenos">309</span>        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </section>

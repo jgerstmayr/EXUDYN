@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Symbolic &mdash; Exudyn1.7.69.dev1 1.7.69.dev1 documentation</title>
+  <title>Symbolic &mdash; Exudyn1.7.104.dev1 1.7.104.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=280392df"></script>
+        <script src="../../../_static/documentation_options.js?v=74f3cfff"></script>
         <script src="../../../_static/doctools.js?v=888ff710"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -43,7 +43,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.7.69.dev1
+            Exudyn1.7.104.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -103,7 +103,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.7.69.dev1</a>
+          <a href="../../../index.html">Exudyn1.7.104.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -144,15 +144,21 @@
 <span class="linenos">14</span><span class="n">d</span> <span class="o">=</span> <span class="n">a</span><span class="o">+</span><span class="n">b</span><span class="o">*</span><span class="n">esym</span><span class="o">.</span><span class="nf">sin</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">+</span><span class="n">esym</span><span class="o">.</span><span class="nf">cos</span><span class="p">(</span><span class="n">SymReal</span><span class="p">(</span><span class="mi">7</span><span class="p">))</span>
 <span class="linenos">15</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;d: &#39;</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="s1">&#39; = &#39;</span><span class="p">,</span><span class="n">d</span><span class="o">.</span><span class="nf">Evaluate</span><span class="p">())</span>
 <span class="linenos">16</span>
-<span class="linenos">17</span><span class="c1">#compute derivatives (automatic differentiation):</span>
-<span class="linenos">18</span><span class="n">x</span> <span class="o">=</span> <span class="n">SymReal</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="linenos">19</span><span class="n">f</span> <span class="o">=</span> <span class="n">a</span><span class="o">+</span><span class="n">b</span><span class="o">*</span><span class="n">esym</span><span class="o">.</span><span class="nf">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">+</span><span class="n">esym</span><span class="o">.</span><span class="nf">cos</span><span class="p">(</span><span class="n">SymReal</span><span class="p">(</span><span class="mi">7</span><span class="p">))</span><span class="o">+</span><span class="n">x</span><span class="o">**</span><span class="mi">4</span>
-<span class="linenos">20</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;f=&#39;</span><span class="p">,</span><span class="n">f</span><span class="o">.</span><span class="nf">Evaluate</span><span class="p">(),</span> <span class="s1">&#39;, diff=&#39;</span><span class="p">,</span><span class="n">f</span><span class="o">.</span><span class="nf">Diff</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
-<span class="linenos">21</span>
-<span class="linenos">22</span><span class="c1">#turn off recording of trees (globally for all symbolic.Real!):</span>
-<span class="linenos">23</span><span class="n">esym</span><span class="o">.</span><span class="nf">SetRecording</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-<span class="linenos">24</span><span class="n">x</span> <span class="o">=</span> <span class="n">SymReal</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span> <span class="c1">#now, only represents a value</span>
-<span class="linenos">25</span><span class="n">y</span> <span class="o">=</span> <span class="n">x</span><span class="o">/</span><span class="mf">3.</span>       <span class="c1">#directly evaluates to 14</span>
+<span class="linenos">17</span><span class="n">a</span><span class="o">.</span><span class="nf">SetValue</span><span class="p">(</span><span class="mi">14</span><span class="p">)</span>          <span class="c1">#variable a set to new value; influences d</span>
+<span class="linenos">18</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;d: &#39;</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="s1">&#39; = &#39;</span><span class="p">,</span><span class="n">d</span><span class="o">.</span><span class="nf">Evaluate</span><span class="p">())</span>
+<span class="linenos">19</span>
+<span class="linenos">20</span><span class="n">a</span> <span class="o">=</span> <span class="n">SymReal</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>       <span class="c1">#a is now a new variable; not updated in d!</span>
+<span class="linenos">21</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;d: &#39;</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="s1">&#39; = &#39;</span><span class="p">,</span><span class="n">d</span><span class="o">.</span><span class="nf">Evaluate</span><span class="p">())</span>
+<span class="linenos">22</span>
+<span class="linenos">23</span><span class="c1">#compute derivatives (automatic differentiation):</span>
+<span class="linenos">24</span><span class="n">x</span> <span class="o">=</span> <span class="n">SymReal</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="linenos">25</span><span class="n">f</span> <span class="o">=</span> <span class="n">a</span><span class="o">+</span><span class="n">b</span><span class="o">*</span><span class="n">esym</span><span class="o">.</span><span class="nf">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">+</span><span class="n">esym</span><span class="o">.</span><span class="nf">cos</span><span class="p">(</span><span class="n">SymReal</span><span class="p">(</span><span class="mi">7</span><span class="p">))</span><span class="o">+</span><span class="n">x</span><span class="o">**</span><span class="mi">4</span>
+<span class="linenos">26</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;f=&#39;</span><span class="p">,</span><span class="n">f</span><span class="o">.</span><span class="nf">Evaluate</span><span class="p">(),</span> <span class="s1">&#39;, diff=&#39;</span><span class="p">,</span><span class="n">f</span><span class="o">.</span><span class="nf">Diff</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<span class="linenos">27</span>
+<span class="linenos">28</span><span class="c1">#turn off recording of trees (globally for all symbolic.Real!):</span>
+<span class="linenos">29</span><span class="n">esym</span><span class="o">.</span><span class="nf">SetRecording</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+<span class="linenos">30</span><span class="n">x</span> <span class="o">=</span> <span class="n">SymReal</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span> <span class="c1">#now, only represents a value</span>
+<span class="linenos">31</span><span class="n">y</span> <span class="o">=</span> <span class="n">x</span><span class="o">/</span><span class="mf">3.</span>       <span class="c1">#directly evaluates to 14</span>
 </pre></div>
 </div>
 <p>To create a symbolic Real, use <code class="docutils literal notranslate"><span class="pre">aa=symbolic.Real(1.23)</span></code> to build a Python object aa with value 1.23. In order to use a named value, use <code class="docutils literal notranslate"><span class="pre">pi=symbolic.Real('pi',3.14)</span></code>. Note that in the following, we use the abbreviation <code class="docutils literal notranslate"><span class="pre">SymReal=exudyn.symbolic.Real</span></code>. Member functions of <code class="docutils literal notranslate"><span class="pre">SymReal</span></code>, which are <strong>not recorded</strong>, are:</p>
@@ -174,7 +180,8 @@
 <div class="line"><em>Example</em>:</div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">b</span> <span class="o">=</span> <span class="n">SymReal</span><span class="p">(</span><span class="mi">13</span><span class="p">)</span>
-<span class="n">b</span><span class="o">.</span><span class="nf">SetValue</span><span class="p">(</span><span class="mi">14</span><span class="p">)</span> <span class="c1">#now b is 14\#b.SetValue(a+3.) #not possible!</span>
+<span class="n">b</span><span class="o">.</span><span class="nf">SetValue</span><span class="p">(</span><span class="mi">14</span><span class="p">)</span> <span class="c1">#now b is 14</span>
+<span class="c1">#b.SetValue(a+3.) #not possible!</span>
 </pre></div>
 </div>
 </li>
@@ -478,16 +485,6 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>data[index]= …</strong><em>i</em>:</div>
-<div class="line">bracket [] operator for setting a component of the vector. Only works, if SymVector contains no expression. (may lead to inconsistencies in recording)</div>
-<div class="line"><em>Example</em>:</div>
-</div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">v1</span> <span class="o">=</span> <span class="n">SymVector</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
-<span class="n">v1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">=</span><span class="mf">13.</span>
-</pre></div>
-</div>
-</li>
-<li><div class="line-block">
 <div class="line">operator <strong>__setitem__</strong>(index):</div>
 <div class="line">bracket [] operator for setting a component of the vector. Only works, if SymVector contains no expression. (may lead to inconsistencies in recording)</div>
 </div>
@@ -767,30 +764,32 @@
 <span class="linenos"> 3</span><span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="o">*</span> <span class="c1">#advancedUtilities with user function utilities included</span>
 <span class="linenos"> 4</span><span class="n">SymReal</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">symbolic</span><span class="o">.</span><span class="n">Real</span>
 <span class="linenos"> 5</span>
-<span class="linenos"> 6</span><span class="c1">#regular Python user function with esym math functions</span>
-<span class="linenos"> 7</span><span class="k">def</span> <span class="nf">UFload</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">load</span><span class="p">):</span>
-<span class="linenos"> 8</span>    <span class="k">return</span> <span class="n">load</span><span class="o">*</span><span class="n">esym</span><span class="o">.</span><span class="nf">sin</span><span class="p">(</span><span class="mi">10</span><span class="o">*</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">pi</span><span class="p">)</span><span class="o">*</span><span class="n">t</span><span class="p">)</span>
-<span class="linenos"> 9</span>
-<span class="linenos">10</span><span class="c1">#add ground and mass point:</span>
-<span class="linenos">11</span><span class="n">oGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateGround</span><span class="p">()</span>
-<span class="linenos">12</span><span class="n">oMassPoint</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateMassPoint</span><span class="p">(</span><span class="n">referencePosition</span><span class="o">=</span><span class="p">[</span><span class="mf">1.</span><span class="o">+</span><span class="mf">0.05</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">physicsMass</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="linenos">13</span>
-<span class="linenos">14</span><span class="c1">#add marker and load:</span>
-<span class="linenos">15</span><span class="n">mc</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerNodeCoordinate</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">GetObject</span><span class="p">[</span><span class="n">oMassPoint</span><span class="p">][</span><span class="s1">&#39;nodeNumber&#39;</span><span class="p">],</span> <span class="n">coordinate</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
-<span class="linenos">16</span><span class="n">load</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddLoad</span><span class="p">(</span><span class="nc">LoadCoordinate</span><span class="p">(</span><span class="n">markerNumber</span><span class="o">=</span><span class="n">mc</span><span class="p">,</span> <span class="n">load</span><span class="o">=</span><span class="mi">10</span><span class="p">))</span>
-<span class="linenos">17</span>
-<span class="linenos">18</span><span class="c1">#create symbolic user function from Python user function:</span>
-<span class="linenos">19</span><span class="n">symFuncLoad</span> <span class="o">=</span> <span class="nf">CreateSymbolicUserFunction</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">UFload</span><span class="p">,</span> <span class="n">load</span><span class="p">,</span> <span class="s1">&#39;loadUserFunction&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
-<span class="linenos">20</span><span class="c1">#set this user function to C++ object:</span>
-<span class="linenos">21</span><span class="n">c</span><span class="o">.</span><span class="nf">TransferUserFunction2Item</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">load</span><span class="p">,</span> <span class="s1">&#39;loadUserFunction&#39;</span><span class="p">)</span>
-<span class="linenos">22</span>
-<span class="linenos">23</span><span class="c1">#print string of symbolic expression of user function (to check if it looks ok):</span>
-<span class="linenos">24</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;load user function: &#39;</span><span class="p">,</span><span class="n">symFuncLoad</span><span class="p">)</span>
-<span class="linenos">25</span>
-<span class="linenos">26</span><span class="c1">#test evaluate user function; requires args of user function:</span>
-<span class="linenos">27</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;load user function: &#39;</span><span class="p">,</span><span class="n">symFuncLoad</span><span class="o">.</span><span class="nf">Evaluate</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="mf">0.025</span><span class="p">,</span> <span class="mf">10.</span><span class="p">))</span>
-<span class="linenos">28</span>
-<span class="linenos">29</span><span class="c1">#now you could add further items or simulate ...</span>
+<span class="linenos"> 6</span><span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
+<span class="linenos"> 7</span><span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span><span class="c1">#regular Python user function with esym math functions</span>
+<span class="linenos">10</span><span class="k">def</span> <span class="nf">UFload</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">load</span><span class="p">):</span>
+<span class="linenos">11</span>    <span class="k">return</span> <span class="n">load</span><span class="o">*</span><span class="n">esym</span><span class="o">.</span><span class="nf">sin</span><span class="p">(</span><span class="mi">10</span><span class="o">*</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">pi</span><span class="p">)</span><span class="o">*</span><span class="n">t</span><span class="p">)</span>
+<span class="linenos">12</span>
+<span class="linenos">13</span><span class="c1">#create symbolic user function from Python user function:</span>
+<span class="linenos">14</span><span class="n">symFuncLoad</span> <span class="o">=</span> <span class="nf">CreateSymbolicUserFunction</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">UFload</span><span class="p">,</span> <span class="n">load</span><span class="p">,</span> <span class="s1">&#39;loadUserFunction&#39;</span><span class="p">,</span><span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="linenos">15</span>
+<span class="linenos">16</span><span class="c1">#add ground and mass point:</span>
+<span class="linenos">17</span><span class="n">oGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateGround</span><span class="p">()</span>
+<span class="linenos">18</span><span class="n">oMassPoint</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateMassPoint</span><span class="p">(</span><span class="n">referencePosition</span><span class="o">=</span><span class="p">[</span><span class="mf">1.</span><span class="o">+</span><span class="mf">0.05</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">physicsMass</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="linenos">19</span>
+<span class="linenos">20</span><span class="c1">#add marker and load:</span>
+<span class="linenos">21</span><span class="n">mc</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerNodeCoordinate</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">GetObject</span><span class="p">(</span><span class="n">oMassPoint</span><span class="p">)[</span><span class="s1">&#39;nodeNumber&#39;</span><span class="p">],</span> <span class="n">coordinate</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+<span class="linenos">22</span><span class="n">load</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddLoad</span><span class="p">(</span><span class="nc">LoadCoordinate</span><span class="p">(</span><span class="n">markerNumber</span><span class="o">=</span><span class="n">mc</span><span class="p">,</span> <span class="n">load</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+<span class="linenos">23</span>                                  <span class="n">loadUserFunction</span><span class="o">=</span><span class="n">symFuncLoad</span><span class="p">))</span>
+<span class="linenos">24</span>
+<span class="linenos">25</span><span class="c1">#print string of symbolic expression of user function (to check if it looks ok):</span>
+<span class="linenos">26</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;load user function: &#39;</span><span class="p">,</span><span class="n">symFuncLoad</span><span class="p">)</span>
+<span class="linenos">27</span>
+<span class="linenos">28</span><span class="c1">#test evaluate user function; requires args of user function:</span>
+<span class="linenos">29</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;load user function: &#39;</span><span class="p">,</span><span class="n">symFuncLoad</span><span class="o">.</span><span class="nf">Evaluate</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="mf">0.025</span><span class="p">,</span> <span class="mf">10.</span><span class="p">))</span>
+<span class="linenos">30</span>
+<span class="linenos">31</span><span class="c1">#now you could add further items or simulate ...</span>
 </pre></div>
 </div>
 <p>The class <strong>symbolic.UserFunction</strong> has the following <strong>functions and structures</strong>:</p>
@@ -803,11 +802,6 @@
 <li><div class="line-block">
 <div class="line"><strong>SetUserFunctionFromDict</strong>(<em>mainSystem</em>, <em>fcnDict</em>, <em>itemIndex</em>, <em>userFunctionName</em>):</div>
 <div class="line">Create C++ std::function (as requested in C++ item) with symbolic user function as recorded in given dictionary, as created with ConvertFunctionToSymbolic(…).</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><strong>TransferUserFunction2Item</strong>(<em>mainSystem</em>, <em>itemIndex</em>, <em>userFunctionName</em>):</div>
-<div class="line">Transfer the std::function to a given object, load or other; this needs to be done purely in C++ to avoid Pybind overheads.</div>
 </div>
 </li>
 <li><div class="line-block">

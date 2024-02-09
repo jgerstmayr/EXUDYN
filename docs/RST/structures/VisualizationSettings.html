@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Visualization settings &mdash; Exudyn1.7.69.dev1 1.7.69.dev1 documentation</title>
+  <title>Visualization settings &mdash; Exudyn1.7.104.dev1 1.7.104.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=280392df"></script>
+        <script src="../../../_static/documentation_options.js?v=74f3cfff"></script>
         <script src="../../../_static/doctools.js?v=888ff710"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -43,7 +43,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.7.69.dev1
+            Exudyn1.7.104.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -116,7 +116,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.7.69.dev1</a>
+          <a href="../../../index.html">Exudyn1.7.104.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -424,7 +424,7 @@
 <li><div class="line-block">
 <div class="line"><strong>defaultColor</strong> [type = Float4, default = [0.2,0.2,1.,1.], size = 4]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.nodes.defaultColor</span></code></div>
-<div class="line">default cRGB color for nodes; 4th value is alpha-transparency</div>
+<div class="line">default RGBA color for nodes; 4th value is alpha-transparency</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -589,7 +589,7 @@
 <li><div class="line-block">
 <div class="line"><strong>defaultColor</strong> [type = Float4, default = [0.3,0.3,1.,1.], size = 4]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.bodies.defaultColor</span></code></div>
-<div class="line">default cRGB color for bodies; 4th value is</div>
+<div class="line">default RGBA color for bodies; 4th value is</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -632,7 +632,7 @@
 <li><div class="line-block">
 <div class="line"><strong>defaultColor</strong> [type = Float4, default = [0.2,0.2,1.,1.], size = 4]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.connectors.defaultColor</span></code></div>
-<div class="line">default cRGB color for connectors; 4th value is alpha-transparency</div>
+<div class="line">default RGBA color for connectors; 4th value is alpha-transparency</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -693,7 +693,7 @@
 <li><div class="line-block">
 <div class="line"><strong>defaultColor</strong> [type = Float4, default = [0.1,0.5,0.1,1.], size = 4]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.markers.defaultColor</span></code></div>
-<div class="line">default cRGB color for markers; 4th value is alpha-transparency</div>
+<div class="line">default RGBA color for markers; 4th value is alpha-transparency</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -730,7 +730,7 @@
 <li><div class="line-block">
 <div class="line"><strong>defaultColor</strong> [type = Float4, default = [0.7,0.1,0.1,1.], size = 4]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.loads.defaultColor</span></code></div>
-<div class="line">default cRGB color for loads; 4th value is alpha-transparency</div>
+<div class="line">default RGBA color for loads; 4th value is alpha-transparency</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -900,7 +900,7 @@
 <li><div class="line-block">
 <div class="line"><strong>defaultColor</strong> [type = Float4, default = [0.6,0.6,0.1,1.], size = 4]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensors.defaultColor</span></code></div>
-<div class="line">default cRGB color for sensors; 4th value is alpha-transparency</div>
+<div class="line">default RGBA color for sensors; 4th value is alpha-transparency</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -937,13 +937,25 @@
 <li><div class="line-block">
 <div class="line"><strong>colorBoundingBoxes</strong> [type = Float4, default = [0.9,0.1,0.1,1.], size = 4]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.contact.colorBoundingBoxes</span></code></div>
-<div class="line">cRGB color</div>
+<div class="line">RGBA color for boudnding boxes, see showBoundingBoxes</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>colorSearchTree</strong> [type = Float4, default = [0.1,0.1,0.9,1.], size = 4]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.contact.colorSearchTree</span></code></div>
-<div class="line">cRGB color</div>
+<div class="line">RGBA color for search tree, see showSearchTree</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>colorSpheres</strong> [type = Float4, default = [0.8,0.8,0.2,1.], size = 4]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.contact.colorSpheres</span></code></div>
+<div class="line">RGBA color for contact spheres, see showSpheres</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>colorTriangles</strong> [type = Float4, default = [0.5,0.5,0.5,1.], size = 4]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.contact.colorTriangles</span></code></div>
+<div class="line">RGBA color for contact triangles, see showTriangles</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -961,7 +973,7 @@
 <li><div class="line-block">
 <div class="line"><strong>showBoundingBoxes</strong> [type = bool, default = False]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.contact.showBoundingBoxes</span></code></div>
-<div class="line">show bounding boxes of all GeneralContacts</div>
+<div class="line">show computed bounding boxes of all GeneralContacts; Warning: avoid for large number of contact objects!</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -979,13 +991,31 @@
 <li><div class="line-block">
 <div class="line"><strong>showSearchTree</strong> [type = bool, default = False]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.contact.showSearchTree</span></code></div>
-<div class="line">show search tree of all GeneralContacts</div>
+<div class="line">show outer box of search tree for all GeneralContacts</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>showSearchTreeCells</strong> [type = bool, default = False]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.contact.showSearchTreeCells</span></code></div>
-<div class="line">show cells inside search tree</div>
+<div class="line">show all cells of search tree; empty cells have colorSearchTree, cells with contact objects have higher red value; Warning: avoid for large number of search tree cells!</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>showSpheres</strong> [type = bool, default = False]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.contact.showSpheres</span></code></div>
+<div class="line">show contact spheres (SpheresWithMarker, …)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>showTriangles</strong> [type = bool, default = False]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.contact.showTriangles</span></code></div>
+<div class="line">show contact triangles (TrianglesRigidBodyBased, …)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>tilingSpheres</strong> [type = PInt, default = 4]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.contact.tilingSpheres</span></code></div>
+<div class="line">tiling for spheres; higher values give smoother spheres, but may lead to lower frame rates</div>
 </div>
 </li>
 </ul>
@@ -1506,7 +1536,7 @@
 <li><div class="line-block">
 <div class="line"><strong>highlightColor</strong> [type = Float4, default = [0.8,0.05,0.05,0.75], size = 4]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.interactive.highlightColor</span></code></div>
-<div class="line">cRGB color for highlighted item; 4th value is alpha-transparency</div>
+<div class="line">RGBA color for highlighted item; 4th value is alpha-transparency</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -1530,7 +1560,7 @@
 <li><div class="line-block">
 <div class="line"><strong>highlightOtherColor</strong> [type = Float4, default = [0.5,0.5,0.5,0.4], size = 4]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.interactive.highlightOtherColor</span></code></div>
-<div class="line">cRGB color for other items (which are not highlighted); 4th value is alpha-transparency</div>
+<div class="line">RGBA color for other items (which are not highlighted); 4th value is alpha-transparency</div>
 </div>
 </li>
 <li><div class="line-block">

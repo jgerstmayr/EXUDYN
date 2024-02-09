@@ -42,7 +42,6 @@ You can view and download this file on Github: `contactCoordinateTest.py <https:
    SC = exu.SystemContainer()
    mbs = SC.AddSystem()
    
-   # exudynTestGlobals.useGraphics = True
    withUserFunction = False #compare to user function based test
    
    #define parameters of mass point

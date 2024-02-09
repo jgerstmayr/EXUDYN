@@ -190,6 +190,7 @@ You can view and download this file on Github: `serialRobotKinematicTree.py <htt
    
    jointList = [0]*robot.NumberOfLinks() #this list must be filled afterwards with the joint numbers in the mbs!
    
+   ## user function to compute static torque compensation (slows down simulation!)
    def ComputeMBSstaticRobotTorques(robot):
        
        if not useKinematicTree:
@@ -197,7 +198,7 @@ You can view and download this file on Github: `serialRobotKinematicTree.py <htt
            for joint in jointList:
                q += [mbs.GetObjectOutput(joint, exu.OutputVariableType.Rotation)[2]] #z-rotation
        else:
-           q = mbs.GetObjectOutput(oKT, exu.OutputVariableType.Coordinates)
+           q = mbs.GetObjectOutputBody(oKT, exu.OutputVariableType.Coordinates)
    
        HT=robot.JointHT(q)
        return robot.StaticTorques(HT)
@@ -228,27 +229,6 @@ You can view and download this file on Github: `serialRobotKinematicTree.py <htt
        oKT = robotDict['objectKinematicTree']
        
    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-   #control robot
-   # torsionalSDlist = []
-   
-   # for i in range(len(jointList)):
-   #     joint = jointList[i]
-   #     rot0 = mbs.GetObject(joint)['rotationMarker0']
-   #     rot1 = mbs.GetObject(joint)['rotationMarker1']
-   #     markers = mbs.GetObject(joint)['markerNumbers']
-   #     nGeneric=mbs.AddNode(NodeGenericData(initialCoordinates=[0], 
-   #                                          numberOfDataCoordinates=1)) #for infinite rotations
-   #     tsd = mbs.AddObject(TorsionalSpringDamper(markerNumbers=markers,
-   #                                         nodeNumber=nGeneric,
-   #                                         rotationMarker0=rot0,
-   #                                         rotationMarker1=rot1,                                            
-   #                                         stiffness=Pcontrol[i],
-   #                                         damping=Dcontrol[i],
-   #                                         visualization=VTorsionalSpringDamper(drawSize=0.1)
-   #                                         ))
-   #     torsionalSDlist += [tsd]
-       
-   
    #user function which is called only once per step, speeds up simulation drastically
    def PreStepUF(mbs, t):
        if compensateStaticTorques:
@@ -305,8 +285,6 @@ You can view and download this file on Github: `serialRobotKinematicTree.py <htt
    
        cnt = 0
        for iSD in robotDict['springDamperList']:
-           # sTorque = mbs.AddSensor(SensorLoad(loadNumber=load0, fileName="solution/jointTorque" + str(cnt) + ".txt", 
-           #                                    writeToFile = sensorWriteToFile))
            sTorque = mbs.AddSensor(SensorObject(objectNumber=iSD, storeInternal=True, 
                                                 fileName="solution/jointTorque" + str(cnt) + ".txt", 
                                                 outputVariableType=exu.OutputVariableType.TorqueLocal,
@@ -318,14 +296,15 @@ You can view and download this file on Github: `serialRobotKinematicTree.py <htt
        sJointRotComponents = list(np.arange(0,nJoints))
        sTorqueComponents = list(np.arange(0,nJoints))
    
-       sJointRot = mbs.AddSensor(SensorBody(objectNumber=oKT, storeInternal=True, 
-                                             outputVariableType=exu.OutputVariableType.Coordinates))
+       sJointRot = mbs.AddSensor(SensorBody(bodyNumber=oKT, 
+                                            storeInternal=True, 
+                                            outputVariableType=exu.OutputVariableType.Coordinates))
        sListJointAngles = [sJointRot]*6
    
        #exu.OutputVariableType.Force is not the joint torque!
-       # sTorques = mbs.AddSensor(SensorObject(objectNumber=oKT, storeInternal=True, 
-       #                                       outputVariableType=exu.OutputVariableType.Force))
-       # sListTorques = [sTorques]*6
+       sTorques = mbs.AddSensor(SensorBody(bodyNumber=oKT, storeInternal=True, 
+                                             outputVariableType=exu.OutputVariableType.Force))
+       sListTorques = [sTorques]*6
    
    
    mbs.Assemble()
@@ -359,13 +338,11 @@ You can view and download this file on Github: `serialRobotKinematicTree.py <htt
    # simulationSettings.timeIntegration.realtimeFactor = 0.25
    
    simulationSettings.timeIntegration.verboseMode = 1
-   simulationSettings.displayComputationTime = True
+   # simulationSettings.displayComputationTime = True
    simulationSettings.displayStatistics = True
-   #simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+   simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
    
    #simulationSettings.timeIntegration.newton.useModifiedNewton = True
-   simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
-   simulationSettings.timeIntegration.generalizedAlpha.useNewmark = simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints
    simulationSettings.timeIntegration.newton.useModifiedNewton = True
    
    simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations=True
@@ -379,7 +356,9 @@ You can view and download this file on Github: `serialRobotKinematicTree.py <htt
            SC.SetRenderState(exu.sys['renderState'])
        mbs.WaitForUserToContinue()
        
-   mbs.SolveDynamic(simulationSettings, showHints=True)
+   mbs.SolveDynamic(simulationSettings, 
+                    solverType=exu.DynamicSolverType.TrapezoidalIndex2, 
+                    showHints=True)
    #explicit integration also possible for KinematicTree:
    # mbs.SolveDynamic(simulationSettings, 
    #                  solverType=exu.DynamicSolverType.RK33,
@@ -407,16 +386,12 @@ You can view and download this file on Github: `serialRobotKinematicTree.py <htt
        exu.Print("rotations at tEnd=", VSum(measuredRot), ',', measuredRot)
    
    else:
-       q = mbs.GetObjectOutput(oKT, exu.OutputVariableType.Coordinates)
+       q = mbs.GetObjectOutputBody(oKT, exu.OutputVariableType.Coordinates)
        exu.Print("rotations at tEnd=", VSum(q), ',', q)
-       f = mbs.GetObjectOutput(oKT, exu.OutputVariableType.Force)
+       f = mbs.GetObjectOutputBody(oKT, exu.OutputVariableType.Force)
        exu.Print("torques at tEnd=", VSum(f), ',', f)
        
    
-   
-   #add larger test tolerance for 32/64bits difference
-   # exudynTestGlobals.testError = 1e-2*(VSum(measuredTorques) - 76.80031232091771 )  #old controller: 77.12176106978085) #OLDER results: up to 2021-06-28: 0.7712176106955341; 2020-08-25: 77.13193176752571 (32bits),   2020-08-24: (64bits)77.13193176846507
-   # exudynTestGlobals.testResult = 1e-2*VSum(measuredTorques)   
    
    
    #%%++++++++++++++++++++++++++++

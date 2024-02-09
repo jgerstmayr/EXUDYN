@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>serialRobotKinematicTree.py &mdash; Exudyn1.7.69.dev1 1.7.69.dev1 documentation</title>
+  <title>serialRobotKinematicTree.py &mdash; Exudyn1.7.104.dev1 1.7.104.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=280392df"></script>
+        <script src="../../../_static/documentation_options.js?v=74f3cfff"></script>
         <script src="../../../_static/doctools.js?v=888ff710"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -41,7 +41,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.7.69.dev1
+            Exudyn1.7.104.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -153,9 +153,12 @@
 <li class="toctree-l2"><a class="reference internal" href="particlesTest3D2.html">particlesTest3D2.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pendulum.html">pendulum.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pendulum2Dconstraint.html">pendulum2Dconstraint.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pendulumGeomExactBeam2D.html">pendulumGeomExactBeam2D.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pendulumGeomExactBeam2Dsimple.html">pendulumGeomExactBeam2Dsimple.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pendulumIftommBenchmark.html">pendulumIftommBenchmark.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pendulumVerify.html">pendulumVerify.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="performanceMultiThreadingNG.html">performanceMultiThreadingNG.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pistonEngine.html">pistonEngine.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plotSensorExamples.html">plotSensorExamples.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reevingSystem.html">reevingSystem.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reevingSystemOpen.html">reevingSystemOpen.py</a></li>
@@ -222,7 +225,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.7.69.dev1</a>
+          <a href="../../../index.html">Exudyn1.7.104.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -424,243 +427,218 @@
 <span class="linenos">178</span>
 <span class="linenos">179</span><span class="n">jointList</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">robot</span><span class="o">.</span><span class="nf">NumberOfLinks</span><span class="p">()</span> <span class="c1">#this list must be filled afterwards with the joint numbers in the mbs!</span>
 <span class="linenos">180</span>
-<span class="linenos">181</span><span class="k">def</span> <span class="nf">ComputeMBSstaticRobotTorques</span><span class="p">(</span><span class="n">robot</span><span class="p">):</span>
-<span class="linenos">182</span>
-<span class="linenos">183</span>    <span class="k">if</span> <span class="ow">not</span> <span class="n">useKinematicTree</span><span class="p">:</span>
-<span class="linenos">184</span>        <span class="n">q</span><span class="o">=</span><span class="p">[]</span>
-<span class="linenos">185</span>        <span class="k">for</span> <span class="n">joint</span> <span class="ow">in</span> <span class="n">jointList</span><span class="p">:</span>
-<span class="linenos">186</span>            <span class="n">q</span> <span class="o">+=</span> <span class="p">[</span><span class="n">mbs</span><span class="o">.</span><span class="nf">GetObjectOutput</span><span class="p">(</span><span class="n">joint</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Rotation</span><span class="p">)[</span><span class="mi">2</span><span class="p">]]</span> <span class="c1">#z-rotation</span>
-<span class="linenos">187</span>    <span class="k">else</span><span class="p">:</span>
-<span class="linenos">188</span>        <span class="n">q</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetObjectOutput</span><span class="p">(</span><span class="n">oKT</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Coordinates</span><span class="p">)</span>
-<span class="linenos">189</span>
-<span class="linenos">190</span>    <span class="n">HT</span><span class="o">=</span><span class="n">robot</span><span class="o">.</span><span class="nf">JointHT</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
-<span class="linenos">191</span>    <span class="k">return</span> <span class="n">robot</span><span class="o">.</span><span class="nf">StaticTorques</span><span class="p">(</span><span class="n">HT</span><span class="p">)</span>
-<span class="linenos">192</span>
-<span class="linenos">193</span><span class="c1">#++++++++++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos">194</span><span class="c1">#base, graphics, object and marker:</span>
-<span class="linenos">195</span>
-<span class="linenos">196</span><span class="n">objectGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectGround</span><span class="p">(</span><span class="n">referencePosition</span><span class="o">=</span><span class="nf">HT2translation</span><span class="p">(</span><span class="n">robot</span><span class="o">.</span><span class="nf">GetBaseHT</span><span class="p">()),</span>
-<span class="linenos">197</span>                                      <span class="c1">#visualization=VObjectGround(graphicsData=graphicsBaseList)</span>
-<span class="linenos">198</span>                                          <span class="p">))</span>
-<span class="linenos">199</span>
+<span class="linenos">181</span><span class="c1">## user function to compute static torque compensation (slows down simulation!)</span>
+<span class="linenos">182</span><span class="k">def</span> <span class="nf">ComputeMBSstaticRobotTorques</span><span class="p">(</span><span class="n">robot</span><span class="p">):</span>
+<span class="linenos">183</span>
+<span class="linenos">184</span>    <span class="k">if</span> <span class="ow">not</span> <span class="n">useKinematicTree</span><span class="p">:</span>
+<span class="linenos">185</span>        <span class="n">q</span><span class="o">=</span><span class="p">[]</span>
+<span class="linenos">186</span>        <span class="k">for</span> <span class="n">joint</span> <span class="ow">in</span> <span class="n">jointList</span><span class="p">:</span>
+<span class="linenos">187</span>            <span class="n">q</span> <span class="o">+=</span> <span class="p">[</span><span class="n">mbs</span><span class="o">.</span><span class="nf">GetObjectOutput</span><span class="p">(</span><span class="n">joint</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Rotation</span><span class="p">)[</span><span class="mi">2</span><span class="p">]]</span> <span class="c1">#z-rotation</span>
+<span class="linenos">188</span>    <span class="k">else</span><span class="p">:</span>
+<span class="linenos">189</span>        <span class="n">q</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetObjectOutputBody</span><span class="p">(</span><span class="n">oKT</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Coordinates</span><span class="p">)</span>
+<span class="linenos">190</span>
+<span class="linenos">191</span>    <span class="n">HT</span><span class="o">=</span><span class="n">robot</span><span class="o">.</span><span class="nf">JointHT</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+<span class="linenos">192</span>    <span class="k">return</span> <span class="n">robot</span><span class="o">.</span><span class="nf">StaticTorques</span><span class="p">(</span><span class="n">HT</span><span class="p">)</span>
+<span class="linenos">193</span>
+<span class="linenos">194</span><span class="c1">#++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">195</span><span class="c1">#base, graphics, object and marker:</span>
+<span class="linenos">196</span>
+<span class="linenos">197</span><span class="n">objectGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectGround</span><span class="p">(</span><span class="n">referencePosition</span><span class="o">=</span><span class="nf">HT2translation</span><span class="p">(</span><span class="n">robot</span><span class="o">.</span><span class="nf">GetBaseHT</span><span class="p">()),</span>
+<span class="linenos">198</span>                                      <span class="c1">#visualization=VObjectGround(graphicsData=graphicsBaseList)</span>
+<span class="linenos">199</span>                                          <span class="p">))</span>
 <span class="linenos">200</span>
-<span class="linenos">201</span><span class="c1">#baseMarker; could also be a moving base!</span>
-<span class="linenos">202</span><span class="n">baseMarker</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerBodyRigid</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">objectGround</span><span class="p">,</span> <span class="n">localPosition</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
-<span class="linenos">203</span>
+<span class="linenos">201</span>
+<span class="linenos">202</span><span class="c1">#baseMarker; could also be a moving base!</span>
+<span class="linenos">203</span><span class="n">baseMarker</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerBodyRigid</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">objectGround</span><span class="p">,</span> <span class="n">localPosition</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
 <span class="linenos">204</span>
 <span class="linenos">205</span>
-<span class="linenos">206</span><span class="c1">#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos">207</span><span class="c1">#build mbs robot model:</span>
-<span class="linenos">208</span><span class="k">if</span> <span class="ow">not</span> <span class="n">useKinematicTree</span><span class="p">:</span>
-<span class="linenos">209</span>    <span class="n">robotDict</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="nf">CreateRedundantCoordinateMBS</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">baseMarker</span><span class="o">=</span><span class="n">baseMarker</span><span class="p">,</span>
-<span class="linenos">210</span>                                                      <span class="n">createJointTorqueLoads</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-<span class="linenos">211</span>                                                      <span class="p">)</span>
-<span class="linenos">212</span>
-<span class="linenos">213</span>    <span class="n">jointList</span> <span class="o">=</span> <span class="n">robotDict</span><span class="p">[</span><span class="s1">&#39;jointList&#39;</span><span class="p">]</span> <span class="c1">#must be stored there for the load user function</span>
-<span class="linenos">214</span><span class="k">else</span><span class="p">:</span>
-<span class="linenos">215</span>    <span class="n">robotDict</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="nf">CreateKinematicTree</span><span class="p">(</span><span class="n">mbs</span><span class="p">)</span>
-<span class="linenos">216</span>    <span class="n">oKT</span> <span class="o">=</span> <span class="n">robotDict</span><span class="p">[</span><span class="s1">&#39;objectKinematicTree&#39;</span><span class="p">]</span>
-<span class="linenos">217</span>
-<span class="linenos">218</span><span class="c1">#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos">219</span><span class="c1">#control robot</span>
-<span class="linenos">220</span><span class="c1"># torsionalSDlist = []</span>
-<span class="linenos">221</span>
-<span class="linenos">222</span><span class="c1"># for i in range(len(jointList)):</span>
-<span class="linenos">223</span><span class="c1">#     joint = jointList[i]</span>
-<span class="linenos">224</span><span class="c1">#     rot0 = mbs.GetObject(joint)[&#39;rotationMarker0&#39;]</span>
-<span class="linenos">225</span><span class="c1">#     rot1 = mbs.GetObject(joint)[&#39;rotationMarker1&#39;]</span>
-<span class="linenos">226</span><span class="c1">#     markers = mbs.GetObject(joint)[&#39;markerNumbers&#39;]</span>
-<span class="linenos">227</span><span class="c1">#     nGeneric=mbs.AddNode(NodeGenericData(initialCoordinates=[0],</span>
-<span class="linenos">228</span><span class="c1">#                                          numberOfDataCoordinates=1)) #for infinite rotations</span>
-<span class="linenos">229</span><span class="c1">#     tsd = mbs.AddObject(TorsionalSpringDamper(markerNumbers=markers,</span>
-<span class="linenos">230</span><span class="c1">#                                         nodeNumber=nGeneric,</span>
-<span class="linenos">231</span><span class="c1">#                                         rotationMarker0=rot0,</span>
-<span class="linenos">232</span><span class="c1">#                                         rotationMarker1=rot1,</span>
-<span class="linenos">233</span><span class="c1">#                                         stiffness=Pcontrol[i],</span>
-<span class="linenos">234</span><span class="c1">#                                         damping=Dcontrol[i],</span>
-<span class="linenos">235</span><span class="c1">#                                         visualization=VTorsionalSpringDamper(drawSize=0.1)</span>
-<span class="linenos">236</span><span class="c1">#                                         ))</span>
-<span class="linenos">237</span><span class="c1">#     torsionalSDlist += [tsd]</span>
-<span class="linenos">238</span>
-<span class="linenos">239</span>
-<span class="linenos">240</span><span class="c1">#user function which is called only once per step, speeds up simulation drastically</span>
-<span class="linenos">241</span><span class="k">def</span> <span class="nf">PreStepUF</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
-<span class="linenos">242</span>    <span class="k">if</span> <span class="n">compensateStaticTorques</span><span class="p">:</span>
-<span class="linenos">243</span>        <span class="n">staticTorques</span> <span class="o">=</span> <span class="n">ComputeMBSstaticRobotTorques</span><span class="p">(</span><span class="n">robot</span><span class="p">)</span>
-<span class="linenos">244</span>        <span class="c1">#print(&quot;tau=&quot;, staticTorques)</span>
-<span class="linenos">245</span>    <span class="k">else</span><span class="p">:</span>
-<span class="linenos">246</span>        <span class="n">staticTorques</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">jointList</span><span class="p">))</span>
+<span class="linenos">206</span>
+<span class="linenos">207</span><span class="c1">#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">208</span><span class="c1">#build mbs robot model:</span>
+<span class="linenos">209</span><span class="k">if</span> <span class="ow">not</span> <span class="n">useKinematicTree</span><span class="p">:</span>
+<span class="linenos">210</span>    <span class="n">robotDict</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="nf">CreateRedundantCoordinateMBS</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">baseMarker</span><span class="o">=</span><span class="n">baseMarker</span><span class="p">,</span>
+<span class="linenos">211</span>                                                      <span class="n">createJointTorqueLoads</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="linenos">212</span>                                                      <span class="p">)</span>
+<span class="linenos">213</span>
+<span class="linenos">214</span>    <span class="n">jointList</span> <span class="o">=</span> <span class="n">robotDict</span><span class="p">[</span><span class="s1">&#39;jointList&#39;</span><span class="p">]</span> <span class="c1">#must be stored there for the load user function</span>
+<span class="linenos">215</span><span class="k">else</span><span class="p">:</span>
+<span class="linenos">216</span>    <span class="n">robotDict</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="nf">CreateKinematicTree</span><span class="p">(</span><span class="n">mbs</span><span class="p">)</span>
+<span class="linenos">217</span>    <span class="n">oKT</span> <span class="o">=</span> <span class="n">robotDict</span><span class="p">[</span><span class="s1">&#39;objectKinematicTree&#39;</span><span class="p">]</span>
+<span class="linenos">218</span>
+<span class="linenos">219</span><span class="c1">#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">220</span><span class="c1">#user function which is called only once per step, speeds up simulation drastically</span>
+<span class="linenos">221</span><span class="k">def</span> <span class="nf">PreStepUF</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+<span class="linenos">222</span>    <span class="k">if</span> <span class="n">compensateStaticTorques</span><span class="p">:</span>
+<span class="linenos">223</span>        <span class="n">staticTorques</span> <span class="o">=</span> <span class="n">ComputeMBSstaticRobotTorques</span><span class="p">(</span><span class="n">robot</span><span class="p">)</span>
+<span class="linenos">224</span>        <span class="c1">#print(&quot;tau=&quot;, staticTorques)</span>
+<span class="linenos">225</span>    <span class="k">else</span><span class="p">:</span>
+<span class="linenos">226</span>        <span class="n">staticTorques</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">jointList</span><span class="p">))</span>
+<span class="linenos">227</span>
+<span class="linenos">228</span>    <span class="p">[</span><span class="n">u</span><span class="p">,</span><span class="n">v</span><span class="p">,</span><span class="n">a</span><span class="p">]</span> <span class="o">=</span> <span class="n">trajectory</span><span class="o">.</span><span class="nf">Evaluate</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+<span class="linenos">229</span>
+<span class="linenos">230</span>    <span class="c1">#compute load for joint number</span>
+<span class="linenos">231</span>    <span class="k">if</span> <span class="ow">not</span> <span class="n">useKinematicTree</span><span class="p">:</span>
+<span class="linenos">232</span>        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">robot</span><span class="o">.</span><span class="n">links</span><span class="p">)):</span>
+<span class="linenos">233</span>            <span class="n">joint</span> <span class="o">=</span> <span class="n">jointList</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+<span class="linenos">234</span>            <span class="n">phi</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetObjectOutput</span><span class="p">(</span><span class="n">joint</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Rotation</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span> <span class="c1">#z-rotation</span>
+<span class="linenos">235</span>            <span class="n">omega</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetObjectOutput</span><span class="p">(</span><span class="n">joint</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">AngularVelocityLocal</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span> <span class="c1">#z-angular velocity</span>
+<span class="linenos">236</span>            <span class="n">tsd</span> <span class="o">=</span> <span class="n">torsionalSDlist</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+<span class="linenos">237</span>            <span class="n">mbs</span><span class="o">.</span><span class="nf">SetObjectParameter</span><span class="p">(</span><span class="n">tsd</span><span class="p">,</span> <span class="s1">&#39;offset&#39;</span><span class="p">,</span> <span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+<span class="linenos">238</span>            <span class="n">mbs</span><span class="o">.</span><span class="nf">SetObjectParameter</span><span class="p">(</span><span class="n">tsd</span><span class="p">,</span> <span class="s1">&#39;velocityOffset&#39;</span><span class="p">,</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+<span class="linenos">239</span>            <span class="n">mbs</span><span class="o">.</span><span class="nf">SetObjectParameter</span><span class="p">(</span><span class="n">tsd</span><span class="p">,</span> <span class="s1">&#39;torque&#39;</span><span class="p">,</span> <span class="n">staticTorques</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="c1">#additional torque from given velocity</span>
+<span class="linenos">240</span>    <span class="k">else</span><span class="p">:</span>
+<span class="linenos">241</span>        <span class="c1">#in case of kinematic tree, very simple operations!</span>
+<span class="linenos">242</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">SetObjectParameter</span><span class="p">(</span><span class="n">oKT</span><span class="p">,</span> <span class="s1">&#39;jointPositionOffsetVector&#39;</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span>
+<span class="linenos">243</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">SetObjectParameter</span><span class="p">(</span><span class="n">oKT</span><span class="p">,</span> <span class="s1">&#39;jointVelocityOffsetVector&#39;</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+<span class="linenos">244</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">SetObjectParameter</span><span class="p">(</span><span class="n">oKT</span><span class="p">,</span> <span class="s1">&#39;jointForceVector&#39;</span><span class="p">,</span> <span class="o">-</span><span class="n">staticTorques</span><span class="p">)</span> <span class="c1">#negative sign needed here!</span>
+<span class="linenos">245</span>
+<span class="linenos">246</span>    <span class="k">return</span> <span class="kc">True</span>
 <span class="linenos">247</span>
-<span class="linenos">248</span>    <span class="p">[</span><span class="n">u</span><span class="p">,</span><span class="n">v</span><span class="p">,</span><span class="n">a</span><span class="p">]</span> <span class="o">=</span> <span class="n">trajectory</span><span class="o">.</span><span class="nf">Evaluate</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+<span class="linenos">248</span><span class="n">mbs</span><span class="o">.</span><span class="nf">SetPreStepUserFunction</span><span class="p">(</span><span class="n">PreStepUF</span><span class="p">)</span>
 <span class="linenos">249</span>
-<span class="linenos">250</span>    <span class="c1">#compute load for joint number</span>
-<span class="linenos">251</span>    <span class="k">if</span> <span class="ow">not</span> <span class="n">useKinematicTree</span><span class="p">:</span>
-<span class="linenos">252</span>        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">robot</span><span class="o">.</span><span class="n">links</span><span class="p">)):</span>
-<span class="linenos">253</span>            <span class="n">joint</span> <span class="o">=</span> <span class="n">jointList</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-<span class="linenos">254</span>            <span class="n">phi</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetObjectOutput</span><span class="p">(</span><span class="n">joint</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Rotation</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span> <span class="c1">#z-rotation</span>
-<span class="linenos">255</span>            <span class="n">omega</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetObjectOutput</span><span class="p">(</span><span class="n">joint</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">AngularVelocityLocal</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span> <span class="c1">#z-angular velocity</span>
-<span class="linenos">256</span>            <span class="n">tsd</span> <span class="o">=</span> <span class="n">torsionalSDlist</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-<span class="linenos">257</span>            <span class="n">mbs</span><span class="o">.</span><span class="nf">SetObjectParameter</span><span class="p">(</span><span class="n">tsd</span><span class="p">,</span> <span class="s1">&#39;offset&#39;</span><span class="p">,</span> <span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-<span class="linenos">258</span>            <span class="n">mbs</span><span class="o">.</span><span class="nf">SetObjectParameter</span><span class="p">(</span><span class="n">tsd</span><span class="p">,</span> <span class="s1">&#39;velocityOffset&#39;</span><span class="p">,</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-<span class="linenos">259</span>            <span class="n">mbs</span><span class="o">.</span><span class="nf">SetObjectParameter</span><span class="p">(</span><span class="n">tsd</span><span class="p">,</span> <span class="s1">&#39;torque&#39;</span><span class="p">,</span> <span class="n">staticTorques</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="c1">#additional torque from given velocity</span>
-<span class="linenos">260</span>    <span class="k">else</span><span class="p">:</span>
-<span class="linenos">261</span>        <span class="c1">#in case of kinematic tree, very simple operations!</span>
-<span class="linenos">262</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">SetObjectParameter</span><span class="p">(</span><span class="n">oKT</span><span class="p">,</span> <span class="s1">&#39;jointPositionOffsetVector&#39;</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span>
-<span class="linenos">263</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">SetObjectParameter</span><span class="p">(</span><span class="n">oKT</span><span class="p">,</span> <span class="s1">&#39;jointVelocityOffsetVector&#39;</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
-<span class="linenos">264</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">SetObjectParameter</span><span class="p">(</span><span class="n">oKT</span><span class="p">,</span> <span class="s1">&#39;jointForceVector&#39;</span><span class="p">,</span> <span class="o">-</span><span class="n">staticTorques</span><span class="p">)</span> <span class="c1">#negative sign needed here!</span>
-<span class="linenos">265</span>
-<span class="linenos">266</span>    <span class="k">return</span> <span class="kc">True</span>
-<span class="linenos">267</span>
-<span class="linenos">268</span><span class="n">mbs</span><span class="o">.</span><span class="nf">SetPreStepUserFunction</span><span class="p">(</span><span class="n">PreStepUF</span><span class="p">)</span>
-<span class="linenos">269</span>
-<span class="linenos">270</span><span class="n">sListJointAngles</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="linenos">271</span><span class="n">sListTorques</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="linenos">272</span><span class="n">nJoints</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">jointList</span><span class="p">)</span>
-<span class="linenos">273</span><span class="k">if</span> <span class="ow">not</span> <span class="n">useKinematicTree</span><span class="p">:</span>
-<span class="linenos">274</span>    <span class="n">torsionalSDlist</span> <span class="o">=</span> <span class="n">robotDict</span><span class="p">[</span><span class="s1">&#39;springDamperList&#39;</span><span class="p">]</span>
-<span class="linenos">275</span>    <span class="n">sJointRotComponents</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">nJoints</span> <span class="c1">#only one component</span>
-<span class="linenos">276</span>    <span class="n">sTorqueComponents</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">nJoints</span>   <span class="c1">#only one component</span>
-<span class="linenos">277</span>
-<span class="linenos">278</span>    <span class="c1">#add sensors:</span>
-<span class="linenos">279</span>    <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="linenos">280</span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">jointList</span><span class="p">)):</span>
-<span class="linenos">281</span>        <span class="n">jointLink</span> <span class="o">=</span> <span class="n">jointList</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-<span class="linenos">282</span>        <span class="n">tsd</span> <span class="o">=</span> <span class="n">torsionalSDlist</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-<span class="linenos">283</span>        <span class="c1">#using TSD:</span>
-<span class="linenos">284</span>        <span class="n">sJointRot</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorObject</span><span class="p">(</span><span class="n">objectNumber</span><span class="o">=</span><span class="n">tsd</span><span class="p">,</span> <span class="n">storeInternal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<span class="linenos">285</span>                                   <span class="n">fileName</span><span class="o">=</span><span class="s2">&quot;solution/joint&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;Rot.txt&quot;</span><span class="p">,</span>
-<span class="linenos">286</span>                                   <span class="n">outputVariableType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Rotation</span><span class="p">,</span>
-<span class="linenos">287</span>                                   <span class="n">writeToFile</span> <span class="o">=</span> <span class="n">sensorWriteToFile</span><span class="p">))</span>
-<span class="linenos">288</span>        <span class="n">sListJointAngles</span> <span class="o">+=</span> <span class="p">[</span><span class="n">sJointRot</span><span class="p">]</span>
-<span class="linenos">289</span>        <span class="n">sJointAngVel</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorObject</span><span class="p">(</span><span class="n">objectNumber</span><span class="o">=</span><span class="n">jointLink</span><span class="p">,</span> <span class="n">storeInternal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<span class="linenos">290</span>                                                  <span class="n">fileName</span><span class="o">=</span><span class="s2">&quot;solution/joint&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;AngVel.txt&quot;</span><span class="p">,</span>
-<span class="linenos">291</span>                                                  <span class="n">outputVariableType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">AngularVelocityLocal</span><span class="p">,</span>
-<span class="linenos">292</span>                                                  <span class="n">writeToFile</span> <span class="o">=</span> <span class="n">sensorWriteToFile</span><span class="p">))</span>
-<span class="linenos">293</span>
-<span class="linenos">294</span>    <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="linenos">295</span>    <span class="k">for</span> <span class="n">iSD</span> <span class="ow">in</span> <span class="n">robotDict</span><span class="p">[</span><span class="s1">&#39;springDamperList&#39;</span><span class="p">]:</span>
-<span class="linenos">296</span>        <span class="c1"># sTorque = mbs.AddSensor(SensorLoad(loadNumber=load0, fileName=&quot;solution/jointTorque&quot; + str(cnt) + &quot;.txt&quot;,</span>
-<span class="linenos">297</span>        <span class="c1">#                                    writeToFile = sensorWriteToFile))</span>
-<span class="linenos">298</span>        <span class="n">sTorque</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorObject</span><span class="p">(</span><span class="n">objectNumber</span><span class="o">=</span><span class="n">iSD</span><span class="p">,</span> <span class="n">storeInternal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<span class="linenos">299</span>                                             <span class="n">fileName</span><span class="o">=</span><span class="s2">&quot;solution/jointTorque&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">cnt</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.txt&quot;</span><span class="p">,</span>
-<span class="linenos">300</span>                                             <span class="n">outputVariableType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">TorqueLocal</span><span class="p">,</span>
-<span class="linenos">301</span>                                             <span class="n">writeToFile</span> <span class="o">=</span> <span class="n">sensorWriteToFile</span><span class="p">))</span>
-<span class="linenos">302</span>        <span class="n">sListTorques</span> <span class="o">+=</span> <span class="p">[</span><span class="n">sTorque</span><span class="p">]</span>
-<span class="linenos">303</span>
-<span class="linenos">304</span>        <span class="n">cnt</span><span class="o">+=</span><span class="mi">1</span>
-<span class="linenos">305</span><span class="k">else</span><span class="p">:</span>
-<span class="linenos">306</span>    <span class="n">sJointRotComponents</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">nJoints</span><span class="p">))</span>
-<span class="linenos">307</span>    <span class="n">sTorqueComponents</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">nJoints</span><span class="p">))</span>
+<span class="linenos">250</span><span class="n">sListJointAngles</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos">251</span><span class="n">sListTorques</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos">252</span><span class="n">nJoints</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">jointList</span><span class="p">)</span>
+<span class="linenos">253</span><span class="k">if</span> <span class="ow">not</span> <span class="n">useKinematicTree</span><span class="p">:</span>
+<span class="linenos">254</span>    <span class="n">torsionalSDlist</span> <span class="o">=</span> <span class="n">robotDict</span><span class="p">[</span><span class="s1">&#39;springDamperList&#39;</span><span class="p">]</span>
+<span class="linenos">255</span>    <span class="n">sJointRotComponents</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">nJoints</span> <span class="c1">#only one component</span>
+<span class="linenos">256</span>    <span class="n">sTorqueComponents</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">nJoints</span>   <span class="c1">#only one component</span>
+<span class="linenos">257</span>
+<span class="linenos">258</span>    <span class="c1">#add sensors:</span>
+<span class="linenos">259</span>    <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">260</span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">jointList</span><span class="p">)):</span>
+<span class="linenos">261</span>        <span class="n">jointLink</span> <span class="o">=</span> <span class="n">jointList</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+<span class="linenos">262</span>        <span class="n">tsd</span> <span class="o">=</span> <span class="n">torsionalSDlist</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+<span class="linenos">263</span>        <span class="c1">#using TSD:</span>
+<span class="linenos">264</span>        <span class="n">sJointRot</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorObject</span><span class="p">(</span><span class="n">objectNumber</span><span class="o">=</span><span class="n">tsd</span><span class="p">,</span> <span class="n">storeInternal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">265</span>                                   <span class="n">fileName</span><span class="o">=</span><span class="s2">&quot;solution/joint&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;Rot.txt&quot;</span><span class="p">,</span>
+<span class="linenos">266</span>                                   <span class="n">outputVariableType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Rotation</span><span class="p">,</span>
+<span class="linenos">267</span>                                   <span class="n">writeToFile</span> <span class="o">=</span> <span class="n">sensorWriteToFile</span><span class="p">))</span>
+<span class="linenos">268</span>        <span class="n">sListJointAngles</span> <span class="o">+=</span> <span class="p">[</span><span class="n">sJointRot</span><span class="p">]</span>
+<span class="linenos">269</span>        <span class="n">sJointAngVel</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorObject</span><span class="p">(</span><span class="n">objectNumber</span><span class="o">=</span><span class="n">jointLink</span><span class="p">,</span> <span class="n">storeInternal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">270</span>                                                  <span class="n">fileName</span><span class="o">=</span><span class="s2">&quot;solution/joint&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;AngVel.txt&quot;</span><span class="p">,</span>
+<span class="linenos">271</span>                                                  <span class="n">outputVariableType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">AngularVelocityLocal</span><span class="p">,</span>
+<span class="linenos">272</span>                                                  <span class="n">writeToFile</span> <span class="o">=</span> <span class="n">sensorWriteToFile</span><span class="p">))</span>
+<span class="linenos">273</span>
+<span class="linenos">274</span>    <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">275</span>    <span class="k">for</span> <span class="n">iSD</span> <span class="ow">in</span> <span class="n">robotDict</span><span class="p">[</span><span class="s1">&#39;springDamperList&#39;</span><span class="p">]:</span>
+<span class="linenos">276</span>        <span class="n">sTorque</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorObject</span><span class="p">(</span><span class="n">objectNumber</span><span class="o">=</span><span class="n">iSD</span><span class="p">,</span> <span class="n">storeInternal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">277</span>                                             <span class="n">fileName</span><span class="o">=</span><span class="s2">&quot;solution/jointTorque&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">cnt</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.txt&quot;</span><span class="p">,</span>
+<span class="linenos">278</span>                                             <span class="n">outputVariableType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">TorqueLocal</span><span class="p">,</span>
+<span class="linenos">279</span>                                             <span class="n">writeToFile</span> <span class="o">=</span> <span class="n">sensorWriteToFile</span><span class="p">))</span>
+<span class="linenos">280</span>        <span class="n">sListTorques</span> <span class="o">+=</span> <span class="p">[</span><span class="n">sTorque</span><span class="p">]</span>
+<span class="linenos">281</span>
+<span class="linenos">282</span>        <span class="n">cnt</span><span class="o">+=</span><span class="mi">1</span>
+<span class="linenos">283</span><span class="k">else</span><span class="p">:</span>
+<span class="linenos">284</span>    <span class="n">sJointRotComponents</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">nJoints</span><span class="p">))</span>
+<span class="linenos">285</span>    <span class="n">sTorqueComponents</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">nJoints</span><span class="p">))</span>
+<span class="linenos">286</span>
+<span class="linenos">287</span>    <span class="n">sJointRot</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorBody</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">oKT</span><span class="p">,</span>
+<span class="linenos">288</span>                                         <span class="n">storeInternal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">289</span>                                         <span class="n">outputVariableType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Coordinates</span><span class="p">))</span>
+<span class="linenos">290</span>    <span class="n">sListJointAngles</span> <span class="o">=</span> <span class="p">[</span><span class="n">sJointRot</span><span class="p">]</span><span class="o">*</span><span class="mi">6</span>
+<span class="linenos">291</span>
+<span class="linenos">292</span>    <span class="c1">#exu.OutputVariableType.Force is not the joint torque!</span>
+<span class="linenos">293</span>    <span class="n">sTorques</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorBody</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">oKT</span><span class="p">,</span> <span class="n">storeInternal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">294</span>                                          <span class="n">outputVariableType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="nc">Force</span><span class="p">))</span>
+<span class="linenos">295</span>    <span class="n">sListTorques</span> <span class="o">=</span> <span class="p">[</span><span class="n">sTorques</span><span class="p">]</span><span class="o">*</span><span class="mi">6</span>
+<span class="linenos">296</span>
+<span class="linenos">297</span>
+<span class="linenos">298</span><span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
+<span class="linenos">299</span><span class="c1">#mbs.systemData.Info()</span>
+<span class="linenos">300</span>
+<span class="linenos">301</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">connectors</span><span class="o">.</span><span class="n">showJointAxes</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">302</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">connectors</span><span class="o">.</span><span class="n">jointAxesLength</span> <span class="o">=</span> <span class="mf">0.02</span>
+<span class="linenos">303</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">connectors</span><span class="o">.</span><span class="n">jointAxesRadius</span> <span class="o">=</span> <span class="mf">0.002</span>
+<span class="linenos">304</span>
+<span class="linenos">305</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">showBasis</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">306</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">basisSize</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="linenos">307</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">loads</span><span class="o">.</span><span class="n">show</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="linenos">308</span>
-<span class="linenos">309</span>    <span class="n">sJointRot</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorBody</span><span class="p">(</span><span class="n">objectNumber</span><span class="o">=</span><span class="n">oKT</span><span class="p">,</span> <span class="n">storeInternal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<span class="linenos">310</span>                                          <span class="n">outputVariableType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Coordinates</span><span class="p">))</span>
-<span class="linenos">311</span>    <span class="n">sListJointAngles</span> <span class="o">=</span> <span class="p">[</span><span class="n">sJointRot</span><span class="p">]</span><span class="o">*</span><span class="mi">6</span>
-<span class="linenos">312</span>
-<span class="linenos">313</span>    <span class="c1">#exu.OutputVariableType.Force is not the joint torque!</span>
-<span class="linenos">314</span>    <span class="c1"># sTorques = mbs.AddSensor(SensorObject(objectNumber=oKT, storeInternal=True,</span>
-<span class="linenos">315</span>    <span class="c1">#                                       outputVariableType=exu.OutputVariableType.Force))</span>
-<span class="linenos">316</span>    <span class="c1"># sListTorques = [sTorques]*6</span>
-<span class="linenos">317</span>
+<span class="linenos">309</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">multiSampling</span><span class="o">=</span><span class="mi">4</span>
+<span class="linenos">310</span>
+<span class="linenos">311</span><span class="c1"># tEnd = 1.25</span>
+<span class="linenos">312</span><span class="c1"># h = 0.002</span>
+<span class="linenos">313</span><span class="n">tEnd</span> <span class="o">=</span> <span class="mf">1.25</span>
+<span class="linenos">314</span><span class="n">h</span> <span class="o">=</span> <span class="mf">0.001</span><span class="c1">#*0.1*0.01</span>
+<span class="linenos">315</span>
+<span class="linenos">316</span><span class="c1">#mbs.WaitForUserToContinue()</span>
+<span class="linenos">317</span><span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">()</span> <span class="c1">#takes currently set values or default values</span>
 <span class="linenos">318</span>
-<span class="linenos">319</span><span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
-<span class="linenos">320</span><span class="c1">#mbs.systemData.Info()</span>
-<span class="linenos">321</span>
-<span class="linenos">322</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">connectors</span><span class="o">.</span><span class="n">showJointAxes</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="linenos">323</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">connectors</span><span class="o">.</span><span class="n">jointAxesLength</span> <span class="o">=</span> <span class="mf">0.02</span>
-<span class="linenos">324</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">connectors</span><span class="o">.</span><span class="n">jointAxesRadius</span> <span class="o">=</span> <span class="mf">0.002</span>
-<span class="linenos">325</span>
-<span class="linenos">326</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">showBasis</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="linenos">327</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">basisSize</span> <span class="o">=</span> <span class="mf">0.1</span>
-<span class="linenos">328</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">loads</span><span class="o">.</span><span class="n">show</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="linenos">329</span>
-<span class="linenos">330</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">multiSampling</span><span class="o">=</span><span class="mi">4</span>
-<span class="linenos">331</span>
-<span class="linenos">332</span><span class="c1"># tEnd = 1.25</span>
-<span class="linenos">333</span><span class="c1"># h = 0.002</span>
-<span class="linenos">334</span><span class="n">tEnd</span> <span class="o">=</span> <span class="mf">1.25</span>
-<span class="linenos">335</span><span class="n">h</span> <span class="o">=</span> <span class="mf">0.001</span><span class="c1">#*0.1*0.01</span>
-<span class="linenos">336</span>
-<span class="linenos">337</span><span class="c1">#mbs.WaitForUserToContinue()</span>
-<span class="linenos">338</span><span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">()</span> <span class="c1">#takes currently set values or default values</span>
-<span class="linenos">339</span>
-<span class="linenos">340</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tEnd</span><span class="o">/</span><span class="n">h</span><span class="p">)</span>
-<span class="linenos">341</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="n">tEnd</span>
-<span class="linenos">342</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">solutionWritePeriod</span> <span class="o">=</span> <span class="mf">0.005</span>
-<span class="linenos">343</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">sensorsWritePeriod</span> <span class="o">=</span> <span class="mf">0.005</span>
-<span class="linenos">344</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">binarySolutionFile</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="linenos">345</span><span class="c1">#simulationSettings.solutionSettings.writeSolutionToFile = False</span>
-<span class="linenos">346</span><span class="c1"># simulationSettings.timeIntegration.simulateInRealtime = True</span>
-<span class="linenos">347</span><span class="c1"># simulationSettings.timeIntegration.realtimeFactor = 0.25</span>
-<span class="linenos">348</span>
-<span class="linenos">349</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">verboseMode</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="linenos">350</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">displayComputationTime</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="linenos">351</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">displayStatistics</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="linenos">352</span><span class="c1">#simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse</span>
-<span class="linenos">353</span>
-<span class="linenos">354</span><span class="c1">#simulationSettings.timeIntegration.newton.useModifiedNewton = True</span>
-<span class="linenos">355</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">generalizedAlpha</span><span class="o">.</span><span class="n">useIndex2Constraints</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="linenos">356</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">generalizedAlpha</span><span class="o">.</span><span class="n">useNewmark</span> <span class="o">=</span> <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">generalizedAlpha</span><span class="o">.</span><span class="n">useIndex2Constraints</span>
-<span class="linenos">357</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">useModifiedNewton</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="linenos">358</span>
-<span class="linenos">359</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">generalizedAlpha</span><span class="o">.</span><span class="n">computeInitialAccelerations</span><span class="o">=</span><span class="kc">True</span>
-<span class="linenos">360</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">autoFitScene</span><span class="o">=</span><span class="kc">False</span>
-<span class="linenos">361</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">renderWindowSize</span><span class="o">=</span><span class="p">[</span><span class="mi">1920</span><span class="p">,</span><span class="mi">1200</span><span class="p">]</span>
-<span class="linenos">362</span><span class="n">useGraphics</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="linenos">319</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tEnd</span><span class="o">/</span><span class="n">h</span><span class="p">)</span>
+<span class="linenos">320</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="n">tEnd</span>
+<span class="linenos">321</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">solutionWritePeriod</span> <span class="o">=</span> <span class="mf">0.005</span>
+<span class="linenos">322</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">sensorsWritePeriod</span> <span class="o">=</span> <span class="mf">0.005</span>
+<span class="linenos">323</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">binarySolutionFile</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">324</span><span class="c1">#simulationSettings.solutionSettings.writeSolutionToFile = False</span>
+<span class="linenos">325</span><span class="c1"># simulationSettings.timeIntegration.simulateInRealtime = True</span>
+<span class="linenos">326</span><span class="c1"># simulationSettings.timeIntegration.realtimeFactor = 0.25</span>
+<span class="linenos">327</span>
+<span class="linenos">328</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">verboseMode</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="linenos">329</span><span class="c1"># simulationSettings.displayComputationTime = True</span>
+<span class="linenos">330</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">displayStatistics</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">331</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">linearSolverType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">LinearSolverType</span><span class="o">.</span><span class="n">EigenSparse</span>
+<span class="linenos">332</span>
+<span class="linenos">333</span><span class="c1">#simulationSettings.timeIntegration.newton.useModifiedNewton = True</span>
+<span class="linenos">334</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">useModifiedNewton</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">335</span>
+<span class="linenos">336</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">generalizedAlpha</span><span class="o">.</span><span class="n">computeInitialAccelerations</span><span class="o">=</span><span class="kc">True</span>
+<span class="linenos">337</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">autoFitScene</span><span class="o">=</span><span class="kc">False</span>
+<span class="linenos">338</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">renderWindowSize</span><span class="o">=</span><span class="p">[</span><span class="mi">1920</span><span class="p">,</span><span class="mi">1200</span><span class="p">]</span>
+<span class="linenos">339</span><span class="n">useGraphics</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="linenos">340</span>
+<span class="linenos">341</span><span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
+<span class="linenos">342</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StartRenderer</span><span class="p">()</span>
+<span class="linenos">343</span>    <span class="k">if</span> <span class="s1">&#39;renderState&#39;</span> <span class="ow">in</span> <span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">:</span>
+<span class="linenos">344</span>        <span class="n">SC</span><span class="o">.</span><span class="nf">SetRenderState</span><span class="p">(</span><span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span><span class="s1">&#39;renderState&#39;</span><span class="p">])</span>
+<span class="linenos">345</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">WaitForUserToContinue</span><span class="p">()</span>
+<span class="linenos">346</span>
+<span class="linenos">347</span><span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="p">,</span>
+<span class="linenos">348</span>                 <span class="n">solverType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">DynamicSolverType</span><span class="o">.</span><span class="n">TrapezoidalIndex2</span><span class="p">,</span>
+<span class="linenos">349</span>                 <span class="n">showHints</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">350</span><span class="c1">#explicit integration also possible for KinematicTree:</span>
+<span class="linenos">351</span><span class="c1"># mbs.SolveDynamic(simulationSettings,</span>
+<span class="linenos">352</span><span class="c1">#                  solverType=exu.DynamicSolverType.RK33,</span>
+<span class="linenos">353</span><span class="c1">#                  showHints=True)</span>
+<span class="linenos">354</span>
+<span class="linenos">355</span>
+<span class="linenos">356</span><span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
+<span class="linenos">357</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">autoFitScene</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="linenos">358</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StopRenderer</span><span class="p">()</span>
+<span class="linenos">359</span>
+<span class="linenos">360</span><span class="k">if</span> <span class="kc">False</span><span class="p">:</span>
+<span class="linenos">361</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">SolutionViewer</span><span class="p">()</span>
+<span class="linenos">362</span>
 <span class="linenos">363</span>
-<span class="linenos">364</span><span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
-<span class="linenos">365</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StartRenderer</span><span class="p">()</span>
-<span class="linenos">366</span>    <span class="k">if</span> <span class="s1">&#39;renderState&#39;</span> <span class="ow">in</span> <span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">:</span>
-<span class="linenos">367</span>        <span class="n">SC</span><span class="o">.</span><span class="nf">SetRenderState</span><span class="p">(</span><span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span><span class="s1">&#39;renderState&#39;</span><span class="p">])</span>
-<span class="linenos">368</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">WaitForUserToContinue</span><span class="p">()</span>
-<span class="linenos">369</span>
-<span class="linenos">370</span><span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="p">,</span> <span class="n">showHints</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="linenos">371</span><span class="c1">#explicit integration also possible for KinematicTree:</span>
-<span class="linenos">372</span><span class="c1"># mbs.SolveDynamic(simulationSettings,</span>
-<span class="linenos">373</span><span class="c1">#                  solverType=exu.DynamicSolverType.RK33,</span>
-<span class="linenos">374</span><span class="c1">#                  showHints=True)</span>
+<span class="linenos">364</span><span class="k">if</span> <span class="ow">not</span> <span class="n">useKinematicTree</span><span class="p">:</span>
+<span class="linenos">365</span>    <span class="c1">#compute final torques:</span>
+<span class="linenos">366</span>    <span class="n">measuredTorques</span><span class="o">=</span><span class="p">[]</span>
+<span class="linenos">367</span>    <span class="k">for</span> <span class="n">sensorNumber</span> <span class="ow">in</span> <span class="n">sListTorques</span><span class="p">:</span>
+<span class="linenos">368</span>        <span class="n">measuredTorques</span> <span class="o">+=</span> <span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="n">mbs</span><span class="o">.</span><span class="nf">GetSensorValues</span><span class="p">(</span><span class="n">sensorNumber</span><span class="p">))</span> <span class="p">]</span>
+<span class="linenos">369</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s2">&quot;torques at tEnd=&quot;</span><span class="p">,</span> <span class="nf">VSum</span><span class="p">(</span><span class="n">measuredTorques</span><span class="p">))</span>
+<span class="linenos">370</span>
+<span class="linenos">371</span>    <span class="n">measuredRot</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos">372</span>    <span class="k">for</span> <span class="n">sensorNumber</span> <span class="ow">in</span> <span class="n">sListJointAngles</span> <span class="p">:</span>
+<span class="linenos">373</span>        <span class="n">measuredRot</span> <span class="o">+=</span> <span class="p">[(</span><span class="n">mbs</span><span class="o">.</span><span class="nf">GetSensorValues</span><span class="p">(</span><span class="n">sensorNumber</span><span class="p">))</span> <span class="p">]</span>
+<span class="linenos">374</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s2">&quot;rotations at tEnd=&quot;</span><span class="p">,</span> <span class="nf">VSum</span><span class="p">(</span><span class="n">measuredRot</span><span class="p">),</span> <span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">measuredRot</span><span class="p">)</span>
 <span class="linenos">375</span>
-<span class="linenos">376</span>
-<span class="linenos">377</span><span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
-<span class="linenos">378</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">autoFitScene</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="linenos">379</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StopRenderer</span><span class="p">()</span>
-<span class="linenos">380</span>
-<span class="linenos">381</span><span class="k">if</span> <span class="kc">False</span><span class="p">:</span>
-<span class="linenos">382</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">SolutionViewer</span><span class="p">()</span>
+<span class="linenos">376</span><span class="k">else</span><span class="p">:</span>
+<span class="linenos">377</span>    <span class="n">q</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetObjectOutputBody</span><span class="p">(</span><span class="n">oKT</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Coordinates</span><span class="p">)</span>
+<span class="linenos">378</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s2">&quot;rotations at tEnd=&quot;</span><span class="p">,</span> <span class="nf">VSum</span><span class="p">(</span><span class="n">q</span><span class="p">),</span> <span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span>
+<span class="linenos">379</span>    <span class="n">f</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetObjectOutputBody</span><span class="p">(</span><span class="n">oKT</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="nc">Force</span><span class="p">)</span>
+<span class="linenos">380</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s2">&quot;torques at tEnd=&quot;</span><span class="p">,</span> <span class="nf">VSum</span><span class="p">(</span><span class="n">f</span><span class="p">),</span> <span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+<span class="linenos">381</span>
+<span class="linenos">382</span>
 <span class="linenos">383</span>
 <span class="linenos">384</span>
-<span class="linenos">385</span><span class="k">if</span> <span class="ow">not</span> <span class="n">useKinematicTree</span><span class="p">:</span>
-<span class="linenos">386</span>    <span class="c1">#compute final torques:</span>
-<span class="linenos">387</span>    <span class="n">measuredTorques</span><span class="o">=</span><span class="p">[]</span>
-<span class="linenos">388</span>    <span class="k">for</span> <span class="n">sensorNumber</span> <span class="ow">in</span> <span class="n">sListTorques</span><span class="p">:</span>
-<span class="linenos">389</span>        <span class="n">measuredTorques</span> <span class="o">+=</span> <span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="n">mbs</span><span class="o">.</span><span class="nf">GetSensorValues</span><span class="p">(</span><span class="n">sensorNumber</span><span class="p">))</span> <span class="p">]</span>
-<span class="linenos">390</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s2">&quot;torques at tEnd=&quot;</span><span class="p">,</span> <span class="nf">VSum</span><span class="p">(</span><span class="n">measuredTorques</span><span class="p">))</span>
-<span class="linenos">391</span>
-<span class="linenos">392</span>    <span class="n">measuredRot</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="linenos">393</span>    <span class="k">for</span> <span class="n">sensorNumber</span> <span class="ow">in</span> <span class="n">sListJointAngles</span> <span class="p">:</span>
-<span class="linenos">394</span>        <span class="n">measuredRot</span> <span class="o">+=</span> <span class="p">[(</span><span class="n">mbs</span><span class="o">.</span><span class="nf">GetSensorValues</span><span class="p">(</span><span class="n">sensorNumber</span><span class="p">))</span> <span class="p">]</span>
-<span class="linenos">395</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s2">&quot;rotations at tEnd=&quot;</span><span class="p">,</span> <span class="nf">VSum</span><span class="p">(</span><span class="n">measuredRot</span><span class="p">),</span> <span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">measuredRot</span><span class="p">)</span>
-<span class="linenos">396</span>
-<span class="linenos">397</span><span class="k">else</span><span class="p">:</span>
-<span class="linenos">398</span>    <span class="n">q</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetObjectOutput</span><span class="p">(</span><span class="n">oKT</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Coordinates</span><span class="p">)</span>
-<span class="linenos">399</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s2">&quot;rotations at tEnd=&quot;</span><span class="p">,</span> <span class="nf">VSum</span><span class="p">(</span><span class="n">q</span><span class="p">),</span> <span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span>
-<span class="linenos">400</span>    <span class="n">f</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetObjectOutput</span><span class="p">(</span><span class="n">oKT</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="nc">Force</span><span class="p">)</span>
-<span class="linenos">401</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s2">&quot;torques at tEnd=&quot;</span><span class="p">,</span> <span class="nf">VSum</span><span class="p">(</span><span class="n">f</span><span class="p">),</span> <span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
-<span class="linenos">402</span>
-<span class="linenos">403</span>
-<span class="linenos">404</span>
-<span class="linenos">405</span><span class="c1">#add larger test tolerance for 32/64bits difference</span>
-<span class="linenos">406</span><span class="c1"># exudynTestGlobals.testError = 1e-2*(VSum(measuredTorques) - 76.80031232091771 )  #old controller: 77.12176106978085) #OLDER results: up to 2021-06-28: 0.7712176106955341; 2020-08-25: 77.13193176752571 (32bits),   2020-08-24: (64bits)77.13193176846507</span>
-<span class="linenos">407</span><span class="c1"># exudynTestGlobals.testResult = 1e-2*VSum(measuredTorques)</span>
-<span class="linenos">408</span>
-<span class="linenos">409</span>
-<span class="linenos">410</span><span class="c1">#%%++++++++++++++++++++++++++++</span>
-<span class="linenos">411</span><span class="k">if</span> <span class="kc">True</span><span class="p">:</span>
-<span class="linenos">412</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sensorNumbers</span><span class="o">=</span><span class="n">sListJointAngles</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="n">sJointRotComponents</span><span class="p">,</span>
-<span class="linenos">413</span>                   <span class="n">title</span><span class="o">=</span><span class="s1">&#39;joint angles&#39;</span><span class="p">,</span> <span class="n">closeAll</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="linenos">414</span>    <span class="k">if</span> <span class="n">useKinematicTree</span><span class="p">:</span> <span class="c1">#otherwise not available</span>
-<span class="linenos">415</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sensorNumbers</span><span class="o">=</span><span class="n">sListTorques</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="n">sTorqueComponents</span><span class="p">,</span>
-<span class="linenos">416</span>                       <span class="n">title</span><span class="o">=</span><span class="s1">&#39;joint torques&#39;</span><span class="p">)</span>
-<span class="linenos">417</span>    <span class="c1">#sListJointAngles</span>
+<span class="linenos">385</span><span class="c1">#%%++++++++++++++++++++++++++++</span>
+<span class="linenos">386</span><span class="k">if</span> <span class="kc">True</span><span class="p">:</span>
+<span class="linenos">387</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sensorNumbers</span><span class="o">=</span><span class="n">sListJointAngles</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="n">sJointRotComponents</span><span class="p">,</span>
+<span class="linenos">388</span>                   <span class="n">title</span><span class="o">=</span><span class="s1">&#39;joint angles&#39;</span><span class="p">,</span> <span class="n">closeAll</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">389</span>    <span class="k">if</span> <span class="n">useKinematicTree</span><span class="p">:</span> <span class="c1">#otherwise not available</span>
+<span class="linenos">390</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sensorNumbers</span><span class="o">=</span><span class="n">sListTorques</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="n">sTorqueComponents</span><span class="p">,</span>
+<span class="linenos">391</span>                       <span class="n">title</span><span class="o">=</span><span class="s1">&#39;joint torques&#39;</span><span class="p">)</span>
+<span class="linenos">392</span>    <span class="c1">#sListJointAngles</span>
 </pre></div>
 </div>
 </section>

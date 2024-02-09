@@ -35,6 +35,12 @@ The symbolic Real type allows to replace Python's float by a symbolic quantity. 
    d = a+b*esym.sin(a)+esym.cos(SymReal(7))
    print('d: ',d,' = ',d.Evaluate())
    
+   a.SetValue(14)          #variable a set to new value; influences d
+   print('d: ',d,' = ',d.Evaluate())
+   
+   a = SymReal(1000)       #a is now a new variable; not updated in d!
+   print('d: ',d,' = ',d.Evaluate())
+   
    #compute derivatives (automatic differentiation):
    x = SymReal("x",0.5)
    f = a+b*esym.sin(x)+esym.cos(SymReal(7))+x**4
@@ -60,7 +66,8 @@ To create a symbolic Real, use \ ``aa=symbolic.Real(1.23)``\  to build a Python 
   .. code-block:: python
 
      b = SymReal(13)
-     b.SetValue(14) #now b is 14\#b.SetValue(a+3.) #not possible!
+     b.SetValue(14) #now b is 14
+     #b.SetValue(a+3.) #not possible!
 
 * | **Evaluate**\ (): 
   | return evaluated expression (prioritized) or stored Real value.
@@ -264,15 +271,6 @@ To create a symbolic Vector, use \ ``aa=symbolic.Vector([3,4.2,5]``\  to build a
   | Set stored vector or named vector expression to new given (non-symbolic) vector. Only works, if SymVector contains no expression. (may lead to inconsistencies in recording)
 * | **NumberOfItems**\ (): 
   | Get size of Vector (may require to evaluate expression; not recording)
-* | **data[index]= ...**\ \ *i*\ : 
-  | bracket [] operator for setting a component of the vector. Only works, if SymVector contains no expression. (may lead to inconsistencies in recording)
-  | *Example*:
-
-  .. code-block:: python
-
-     v1 = SymVector([1,3,2])
-     v1[2]=13.
-
 * | operator **\_\_setitem\_\_**\ (index):
   | bracket [] operator for setting a component of the vector. Only works, if SymVector contains no expression. (may lead to inconsistencies in recording)
 * | **NormL2**\ (): 
@@ -506,22 +504,24 @@ A class for creating and handling symbolic user functions in C++. Use these func
    from exudyn.utilities import * #advancedUtilities with user function utilities included
    SymReal = exu.symbolic.Real
    
+   SC = exu.SystemContainer()
+   mbs = SC.AddSystem()
+   
    #regular Python user function with esym math functions
    def UFload(mbs, t, load):
        return load*esym.sin(10*(2*pi)*t)
+   
+   #create symbolic user function from Python user function:
+   symFuncLoad = CreateSymbolicUserFunction(mbs, UFload, load, 'loadUserFunction',verbose=1)
    
    #add ground and mass point:
    oGround = mbs.CreateGround()
    oMassPoint = mbs.CreateMassPoint(referencePosition=[1.+0.05,0,0], physicsMass=1)
    
    #add marker and load:
-   mc = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=mbs.GetObject[oMassPoint]['nodeNumber'], coordinate=0))
-   load = mbs.AddLoad(LoadCoordinate(markerNumber=mc, load=10))
-   
-   #create symbolic user function from Python user function:
-   symFuncLoad = CreateSymbolicUserFunction(mbs, UFload, load, 'loadUserFunction',1)
-   #set this user function to C++ object:
-   c.TransferUserFunction2Item(mbs, load, 'loadUserFunction')    
+   mc = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=mbs.GetObject(oMassPoint)['nodeNumber'], coordinate=0))
+   load = mbs.AddLoad(LoadCoordinate(markerNumber=mc, load=10,
+                                     loadUserFunction=symFuncLoad))
    
    #print string of symbolic expression of user function (to check if it looks ok):
    print('load user function: ',symFuncLoad)
@@ -537,8 +537,6 @@ A class for creating and handling symbolic user functions in C++. Use these func
   | Evaluate symbolic function with test values; requires exactly same args as Python user functions; this is slow and only intended for testing
 * | **SetUserFunctionFromDict**\ (\ *mainSystem*\ , \ *fcnDict*\ , \ *itemIndex*\ , \ *userFunctionName*\ ): 
   | Create C++ std::function (as requested in C++ item) with symbolic user function as recorded in given dictionary, as created with ConvertFunctionToSymbolic(...).
-* | **TransferUserFunction2Item**\ (\ *mainSystem*\ , \ *itemIndex*\ , \ *userFunctionName*\ ): 
-  | Transfer the std::function to a given object, load or other; this needs to be done purely in C++ to avoid Pybind overheads.
 * | operator **\_\_repr\_\_**\ ():
   | Representation of Symbolic function
 * | operator **\_\_str\_\_**\ ():

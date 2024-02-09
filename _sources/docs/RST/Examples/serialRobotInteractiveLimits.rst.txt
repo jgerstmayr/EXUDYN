@@ -538,10 +538,6 @@ You can view and download this file on Github: `serialRobotInteractiveLimits.py 
            measuredTorques += [mbs.GetSensorValues(sensorNumber)[2]]
        exu.Print("torques at tEnd=", VSum(measuredTorques))
        
-       #add larger test tolerance for 32/64bits difference
-       # exudynTestGlobals.testError = 1e-2*(VSum(measuredTorques) - 76.80031232091771 )  #old controller: 77.12176106978085) #OLDER results: up to 2021-06-28: 0.7712176106955341; 2020-08-25: 77.13193176752571 (32bits),   2020-08-24: (64bits)77.13193176846507
-       # exudynTestGlobals.testResult = 1e-2*VSum(measuredTorques)   
-       
        
        
        if True:

@@ -170,7 +170,7 @@ Another error results from internal type and range checking, saying User ERROR, 
 
    mbs.AddObject('abc')
 
-Which results in a error message similar to:
+Which results in an error message similar to:
 
 .. code-block:: 
    :linenos:
@@ -188,6 +188,7 @@ Which results in a error message similar to:
        mbs.AddObject('abc')
    
    RuntimeError: Exudyn: parsing of Python file terminated due to Python (user) error
+   
 
 Finally, there may be system errors. They may be caused due to previous wrong input, but if there is no reason seen, it may be appropriate to report this error on `github.com/jgerstmayr/EXUDYN/ <https://github.com/jgerstmayr/EXUDYN>`_ .
 

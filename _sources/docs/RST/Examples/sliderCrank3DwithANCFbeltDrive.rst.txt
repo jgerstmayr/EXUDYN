@@ -11,18 +11,19 @@ You can view and download this file on Github: `sliderCrank3DwithANCFbeltDrive.p
    :linenos:
 
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-   #Description: Project in robotic and simulation 2020
-   #             University Innsbruck 
-   
-   #Author: Wibmer David  & Sponring Dominik 
-   #Date: Created on Thu May  19 12:22:52 2020
-   
-   #PYTHON version = 3.6.10
-   #EXUDYN version = 0.1.342
+   # This is an EXUDYN example
+   #
+   # Details:  Create slider-crank mechanism with belt drive modeled with ANCF cable elements
+   #
+   # Authors: David Wibmer and Dominik Sponring
+   # Date: Created on Thu May  19 12:22:52 2020
    #
    # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
    #
+   # Notes: PROJECT Exercise:  Drive System + Crank System; VU Industrielle Mechatronik 2 - Robotics and Simulation
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+   
+   #note: tested with PYTHON version = 3.6.10 and EXUDYN version = 0.1.342
    
    import exudyn as exu
    from exudyn.itemInterface import*

@@ -25,16 +25,11 @@ You can view and download this file on Github: `objectFFRFreducedOrderNetgen.py 
    #
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    
-   import sys
-   sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
-   
    import exudyn as exu
    from exudyn.itemInterface import *
    from exudyn.utilities import *
    from exudyn.FEM import *
    from exudyn.graphicsDataUtilities import *
-   
-   from modelUnitTests import ExudynTestStructure, exudynTestGlobals
    
    SC = exu.SystemContainer()
    mbs = SC.AddSystem()
@@ -58,9 +53,6 @@ You can view and download this file on Github: `objectFFRFreducedOrderNetgen.py 
    L = 1     #Length of beam
    
    if False: #needs netgen/ngsolve to be installed to compute mesh, see e.g.: https://github.com/NGSolve/ngsolve/releases
-       import sys
-       #adjust path to your ngsolve installation (if not added to global path)
-       sys.path.append('C:/ProgramData/ngsolve/lib/site-packages') 
    
        from ngsolve import *
        from netgen.geom2d import unit_square
@@ -198,8 +190,6 @@ You can view and download this file on Github: `objectFFRFreducedOrderNetgen.py 
        
        h=5e-4
        tEnd = 3
-       #if exudynTestGlobals.useGraphics:
-       #    tEnd = 0.1
        
        simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
        simulationSettings.timeIntegration.endTime = tEnd
@@ -236,13 +226,6 @@ You can view and download this file on Github: `objectFFRFreducedOrderNetgen.py 
                exu.StopRenderer() #safely close rendering window!
                lastRenderState = SC.GetRenderState() #store model view for next simulation
        
-   
-   
-   
-   
-   
-   
-   
    
 
 

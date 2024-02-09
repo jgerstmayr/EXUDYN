@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ObjectANCFThinPlate &mdash; Exudyn1.7.69.dev1 1.7.69.dev1 documentation</title>
+  <title>ObjectANCFThinPlate &mdash; Exudyn1.7.104.dev1 1.7.104.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=280392df"></script>
+        <script src="../../../_static/documentation_options.js?v=74f3cfff"></script>
         <script src="../../../_static/doctools.js?v=888ff710"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -43,7 +43,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.7.69.dev1
+            Exudyn1.7.104.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -107,7 +107,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.7.69.dev1</a>
+          <a href="../../../index.html">Exudyn1.7.104.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -149,8 +149,13 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>physicsHeight</strong> [<span class="math notranslate nohighlight">\(L\)</span>, type = UReal, default = 0.]:</div>
-<div class="line">[SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives <span class="math notranslate nohighlight">\(\rho A L\)</span>; must be positive</div>
+<div class="line"><strong>physicsThickness</strong> [<span class="math notranslate nohighlight">\(h\)</span>, type = UReal, default = 0.]:</div>
+<div class="line">[SI:m] thickness of plate</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>physicsDensity</strong> [<span class="math notranslate nohighlight">\(\rho\)</span>, type = UReal, default = 0.]:</div>
+<div class="line">[SI:kg/m<span class="math notranslate nohighlight">\(^3\)</span>] density of the plate, possibly averaged over thickness</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -164,7 +169,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>strainIsRelativeToReference</strong> [<span class="math notranslate nohighlight">\(f\cRef\)</span>, type = Real, default = 0.]:</div>
+<div class="line"><strong>strainIsRelativeToReference</strong> [<span class="math notranslate nohighlight">\(f\cRef\)</span>, type = Real, default = 1.]:</div>
 <div class="line">if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration serves as a reference geometry; allows also values between 0. and 1. to perform a transition during static computation</div>
 </div>
 </li>
@@ -175,7 +180,7 @@
 </li>
 <li><div class="line-block">
 <div class="line"><strong>useReducedOrderIntegration</strong> [type = Index, default = 0]:</div>
-<div class="line">0/false: use highest Gauss integration for virtual work of strains, order 5 for bending moments; 1/true: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments</div>
+<div class="line">0/false: use highest Gauss integration for virtual work of strains</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -251,32 +256,11 @@
 </section>
 <section id="mini-example-for-objectancfthinplate">
 <span id="miniexample-objectancfthinplate"></span><h2>MINI EXAMPLE for ObjectANCFThinPlate<a class="headerlink" href="#mini-example-for-objectancfthinplate" title="Link to this heading"></a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1">#NEEDS to be revised</span>
-<span class="linenos"> 2</span><span class="kn">from</span> <span class="nn">exudyn.beams</span> <span class="kn">import</span> <span class="nf">GenerateStraightLineANCFCable</span>
-<span class="linenos"> 3</span><span class="n">rhoA</span> <span class="o">=</span> <span class="mf">78.</span>
-<span class="linenos"> 4</span><span class="n">EA</span> <span class="o">=</span> <span class="mf">1000000.</span>
-<span class="linenos"> 5</span><span class="n">EI</span> <span class="o">=</span> <span class="mf">833.3333333333333</span>
-<span class="linenos"> 6</span><span class="n">cable</span> <span class="o">=</span> <span class="nc">Cable</span><span class="p">(</span><span class="n">physicsMassPerLength</span><span class="o">=</span><span class="n">rhoA</span><span class="p">,</span>
-<span class="linenos"> 7</span>              <span class="n">physicsBendingStiffness</span><span class="o">=</span><span class="n">EI</span><span class="p">,</span>
-<span class="linenos"> 8</span>              <span class="n">physicsAxialStiffness</span><span class="o">=</span><span class="n">EA</span><span class="p">,</span>
-<span class="linenos"> 9</span>              <span class="p">)</span>
-<span class="linenos">10</span>
-<span class="linenos">11</span><span class="n">ancf</span><span class="o">=</span><span class="nf">GenerateStraightLineANCFCable</span><span class="p">(</span><span class="n">mbs</span><span class="o">=</span><span class="n">mbs</span><span class="p">,</span>
-<span class="linenos">12</span>              <span class="n">positionOfNode0</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">positionOfNode1</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-<span class="linenos">13</span>              <span class="n">numberOfElements</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="c1">#converged to 4 digits</span>
-<span class="linenos">14</span>              <span class="n">cableTemplate</span><span class="o">=</span><span class="n">cable</span><span class="p">,</span> <span class="c1">#this defines the beam element properties</span>
-<span class="linenos">15</span>              <span class="n">massProportionalLoad</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">9.81</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-<span class="linenos">16</span>              <span class="n">fixedConstraintsNode0</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="c1">#add constraints for pos and rot (r&#39;_y,r&#39;_z)</span>
-<span class="linenos">17</span>              <span class="p">)</span>
-<span class="linenos">18</span><span class="n">lastNode</span> <span class="o">=</span> <span class="n">ancf</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-<span class="linenos">19</span>
-<span class="linenos">20</span><span class="c1">#assemble and solve system for default parameters</span>
-<span class="linenos">21</span><span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
-<span class="linenos">22</span><span class="n">mbs</span><span class="o">.</span><span class="nf">SolveStatic</span><span class="p">()</span>
-<span class="linenos">23</span>
-<span class="linenos">24</span><span class="c1">#check result</span>
-<span class="linenos">25</span><span class="n">exudynTestGlobals</span><span class="o">.</span><span class="n">testResult</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetNodeOutput</span><span class="p">(</span><span class="n">lastNode</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Displacement</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-<span class="linenos">26</span><span class="c1">#ux=-0.5013058140308901</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="c1">#to be done</span>
+<span class="linenos">2</span>
+<span class="linenos">3</span><span class="c1">#check result</span>
+<span class="linenos">4</span><span class="n">exudynTestGlobals</span><span class="o">.</span><span class="n">testResult</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">5</span><span class="c1">#ux=-0.5013058140308901</span>
 </pre></div>
 </div>
 <p><strong>The web version may not be complete. For details, consider also the Exudyn PDF documentation</strong> : <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf">theDoc.pdf</a></p>

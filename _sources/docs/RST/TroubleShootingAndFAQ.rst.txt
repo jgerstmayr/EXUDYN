@@ -84,9 +84,9 @@ to explicitly load the version without AVX2.
 
 .. code-block:: python
 
-  38  n1=mbs.AddNode(Point(referenceCoordinates = [L,0,0], 
-  39                       initialCoordinates = [u0,0,0], 
-  40                       initialVelocities= [v0,0,0])	
+  38  n1=mbs.AddNode(Point(referenceCoordinates = [L,0,0],
+  39                       initialCoordinates = [u0,0,0],
+  40                       initialVelocities= [v0,0,0])
   41  #ground node
   42  nGround=mbs.AddNode(NodePointGround(referenceCoordinates = [0,0,0]))
   43  
@@ -290,7 +290,7 @@ FAQ
 
 +  I do not understand the \ **Python errors**\  -- how can I find the reason of the error or crash?
 
-  |  →  Read trouble shooting section above!	
+  |  →  Read trouble shooting section above! 
   |  →  First, you should read all error messages and warnings: from the very first to the last message. Very often, there is a definite line number which shows the error. Note, that if you are executing a string (or module) as a Python code, the line numbers refer to the local line number inside the script or module.
   |  →  If everything fails, try to execute only part of the code to find out where the first error occurs. By omiting parts of the code, you should find the according source of the error.
   |  →  If you think, it is a bug: send an email with a representative code snippet, version, etc. to \ `` reply.exudyn@gmail.com``\ 

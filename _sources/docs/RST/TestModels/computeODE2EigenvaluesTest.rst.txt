@@ -30,6 +30,7 @@ You can view and download this file on Github: `computeODE2EigenvaluesTest.py <h
    #you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
    try: #only if called from test suite
        from modelUnitTests import exudynTestGlobals #for globally storing test results
+       useGraphics = exudynTestGlobals.useGraphics
    except:
        class ExudynTestGlobals:
            pass

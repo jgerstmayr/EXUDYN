@@ -19,15 +19,124 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.7.69.dev1, 
-+  last change =  2023-12-18, 
-+  Number of issues = 1739, 
-+  Number of resolved issues = 1539 (69 in current version), 
++  Exudyn version = 1.7.104.dev1, 
++  last change =  2024-02-08, 
++  Number of issues = 1782, 
++  Number of resolved issues = 1574 (104 in current version), 
 
 ***********
 Version 1.7
 ***********
 
+ * Version 1.7.104: resolved Issue 1781: GeneralContact (extension)
+    - description:  add function Get/SetTriangleRigidBodyBased, to get data or modify data of current contact triangle
+    - date resolved: **2024-02-08 20:38**\ , date raised: 2024-02-08 
+ * Version 1.7.103: resolved Issue 1780: GeneralContact (extension)
+    - description:  add function SetSphereMarkerBased to set data for spheres during simulation
+    - date resolved: **2024-02-08 20:38**\ , date raised: 2024-02-08 
+ * Version 1.7.102: resolved Issue 1779: GeneralContact (change)
+    - description:  GetMarkerBasedSphere: change to GetSphereMarkerBased; add flag to decide whether to add basic data or not
+    - date resolved: **2024-02-08 19:08**\ , date raised: 2024-02-08 
+ * Version 1.7.101: resolved Issue 1778: cRGB settings (change)
+    - description:  change cRGB consistently to RGBA in visualization settings
+    - date resolved: **2024-02-08 18:57**\ , date raised: 2024-02-08 
+ * Version 1.7.100: resolved Issue 1775: BodyGraphicsData (fix)
+    - description:  access with Get/SetObjectParameter is missing for graphicsData
+    - date resolved: **2024-02-04 22:01**\ , date raised: 2024-02-04 
+ * Version 1.7.99: resolved Issue 1774: CreateSymbolicUserFunction (change)
+    - description:  change order of args userFunctionName, itemIndex, and verbose; add additional itemTypeName
+    - date resolved: **2024-02-04 00:36**\ , date raised: 2024-02-04 
+ * Version 1.7.98: resolved Issue 1773: CreateSymbolicUserFunction (extension)
+    - description:  add option to directly pass itemTypeName instead of itemIndex in order to pre-compute user function
+    - date resolved: **2024-02-04 00:36**\ , date raised: 2024-02-04 
+ * Version 1.7.97: resolved Issue 1771: TransferUserFunction2Item (change)
+    - description:  add functionality to allow direct assignment of symbolic user functions to userFunction parameters in objects, loads, etc.; remove TransferUserFunction2Item as this function is then no longer needed
+    - date resolved: **2024-02-03 23:55**\ , date raised: 2024-02-03 
+ * Version 1.7.96: resolved Issue 1766: Python user functions (extension)
+    - description:  use PythonUserFunctionBase class for all Item user functions; add consistent Get/Set function for item access; should then automatically work with pickle
+    - date resolved: **2024-02-03 23:54**\ , date raised: 2024-02-02 
+ * Version 1.7.95: resolved Issue 1750: python user functions (extension)
+    - description:  add additional py::function to user functions in order to store original python function for pickling
+    - date resolved: **2024-02-03 23:54**\ , date raised: 2024-01-29 
+ * Version 1.7.94: resolved Issue 1759: Renderer (fix)
+    - description:  there is an issue when restarting the renderer, which displays previous (old) data; requires to add some function which erases stored graphics data on call of StartRenderer()
+    - date resolved: **2024-02-03 23:53**\ , date raised: 2024-01-31 
+ * Version 1.7.93: resolved Issue 1770: mainsystem extensions (extensions)
+    - description:  add user function to mbs.Create...() functions
+    - date resolved: **2024-02-03 22:50**\ , date raised: 2024-02-03 
+ * Version 1.7.92: resolved Issue 1763: Python user functions (extension)
+    - description:  add pickle functionality (requires issue 1752)
+    - date resolved: **2024-02-02 10:36**\ , date raised: 2024-01-31 
+ * Version 1.7.91: resolved Issue 1752: user functions types (extension)
+    - description:  create UserFunctionBase class and derived classes, containing std::function, and a py::object with metadata (Python function, Symbolic function, etc.); When settings user functions, they can be either initialized with 0 / Python function or with a UserFunction dict, which contains additional decorators; In particular, user functions will be rebuilt as symbolic; return values of user functions are then dictionaries
+    - date resolved: **2024-02-02 10:36**\ , date raised: 2024-01-29 
+ * Version 1.7.90: resolved Issue 1765: MainSystem user functions (extension)
+    - description:  test special class for MainSystem user functions such as preStepUserFunction; if requeste, convert to Dict, in particular for symbolic or other special user functions
+    - date resolved: **2024-02-02 10:33**\ , date raised: 2024-02-02 
+ * Version 1.7.89: resolved Issue 1762: SystemContainer (extension)
+    - description:  add pickle functionality
+    - date resolved: **2024-01-31 20:22**\ , date raised: 2024-01-31 
+ * Version 1.7.88: resolved Issue 1628: pickle MainSystem (extension)
+    - description:  consider a pickle method for certain objects; add consistent info in description; MainSystem, SimulationSettings, VisualizationSettings
+    - **notes:** consider with care, as not all things are copied (user functions, contact, ...)
+    - date resolved: **2024-01-31 20:22**\ , date raised: 2023-06-23 
+ * Version 1.7.87: resolved Issue 1761: pickle (extension)
+    - description:  add pickle to settings and structures
+    - date resolved: **2024-01-31 20:21**\ , date raised: 2024-01-31 
+ * Version 1.7.86: resolved Issue 1760: pickle (extension)
+    - description:  add pickle to ItemIndices
+    - date resolved: **2024-01-31 20:21**\ , date raised: 2024-01-31 
+ * Version 1.7.85: resolved Issue 1757: DictionariesGetSet (extension)
+    - description:  add C++ GetDictionary(...) function for read/write of system structures; add Get/SetDictionary to pybind interface
+    - date resolved: **2024-01-31 17:27**\ , date raised: 2024-01-30 
+ * Version 1.7.84: resolved Issue 1758: StartRenderer (fix)
+    - description:  add UpdateGraphicsDataNow() after start of renderer in order to avoid showing stored data for second run or renderer
+    - date resolved: **2024-01-31 12:52**\ , date raised: 2024-01-31 
+ * Version 1.7.83: resolved Issue 1755: CSystem in MainSystem (change)
+    - description:  change CSystem\* to CSystem in MainSystem, to make copying easier
+    - date resolved: **2024-01-30 16:43**\ , date raised: 2024-01-30 
+ * Version 1.7.82: resolved Issue 1756: SystemContainer (change)
+    - description:  remove SystemContainer and just keep MainSystemContainer, as it is not needed; simplifies copying
+    - date resolved: **2024-01-30 16:42**\ , date raised: 2024-01-30 
+ * Version 1.7.81: resolved Issue 1754: MainSystem (extension)
+    - description:  change creation of MainSystem; allow construction like exudyn.MainSystem(), add new function AppendSystem(MainSystem) to MainSystemContainer; this will allow pickling both of MainSystem and MainSystemContainer
+    - date resolved: **2024-01-30 14:34**\ , date raised: 2024-01-30 
+ * Version 1.7.80: resolved Issue 1753: postStepUserFunction (extension)
+    - description:  add user function to be called at end of time step, just before storing results to file; this allows to override results, etc.
+    - date resolved: **2024-01-30 08:01**\ , date raised: 2024-01-30 
+ * Version 1.7.79: resolved Issue 1748: user functions (fix)
+    - description:  check option to set them to 0; PreStepUserFunction as well as item user functions
+    - **notes:** Note that when reading user functions, mbs.GetObjectParameter(...) also consistently gives now 0 instead of previously None
+    - date resolved: **2024-01-29 14:41**\ , date raised: 2024-01-29 
+ * Version 1.7.78: resolved Issue 1749: User function (extension)
+    - description:  allow assignment to 0 for MainSystem user functions; SetPreStepUserFunction and SetPostNewtonUserFunction
+    - date resolved: **2024-01-29 14:34**\ , date raised: 2024-01-29 
+ * Version 1.7.77: resolved Issue 1746: GenerateStraightBeam (extension)
+    - description:  build generic function to create beams along straight line; add interface both for ANCF (old GenerateStraightLineANCFCable function) as well as for geometrically exact beam
+    - date resolved: **2024-01-28 19:46**\ , date raised: 2024-01-28 
+ * Version 1.7.76: resolved Issue 1747: GeometricallyExactBeam2D (extension)
+    - description:  finish interface for load mass proportional
+    - **notes:** also done for 3D version
+    - date resolved: **2024-01-28 18:17**\ , date raised: 2024-01-28 
+ * Version 1.7.75: resolved Issue 1745: geometrically exact beam 2D (change)
+    - description:  adjust implementation of reference strains to allow connection of several beams at one node in case that includeReferenceRotations=0
+    - date resolved: **2024-01-27 22:16**\ , date raised: 2024-01-27 
+ * Version 1.7.74: resolved Issue 1744: geometrically exact beam 2D (docu)
+    - description:  fix inconsistent documentation of reference strains
+    - date resolved: **2024-01-27 22:16**\ , date raised: 2024-01-27 
+ * Version 1.7.73: resolved Issue 1743: CreateRevoluteJoint (fix)
+    - description:  Description for local/global axis is wrong; behavior is switched by useGlobalFrame flag
+    - date resolved: **2024-01-06 11:20**\ , date raised: 2024-01-06 
+ * Version 1.7.72: resolved Issue 1742: CreatePrismaticJoint (fix)
+    - description:  Description for local/global axis is wrong; behavior is switched by useGlobalFrame flag
+    - date resolved: **2024-01-06 11:20**\ , date raised: 2024-01-06 
+ * Version 1.7.71: :textred:`resolved BUG 1741` : ObjectKinematicTree 
+    - description:  SensorObject does not work with OutputVariableType Coordinates; example does not work;
+    - **notes:** Coordinates, Force, etc. now available with GetObjectOutputBody and SensorBody
+    - date resolved: **2024-01-06 11:02**\ , date raised: 2024-01-06 
+ * Version 1.7.70: resolved Issue 1739: symbolic (fix)
+    - description:  SetValue should raise exception if called with symbolic expression
+    - date resolved: **2023-12-19 08:30**\ , date raised: 2023-12-19 
  * Version 1.7.69: resolved Issue 1737: symbolic (extension)
     - description:  add symbolic.pyi stub file for autocompletion of symbolic features
     - date resolved: **2023-12-18 19:48**\ , date raised: 2023-12-18 
@@ -4997,6 +5106,38 @@ Version 0.1
 Open issues
 ***********
 
+ * **open issue 1777:** GraphicsData Sphere 
+    - description:  add spheres to graphicsData interface; user AddSphere method; only use in case that full sphere is shown; add option to fall back to regular triangular representation
+    - date raised: 2024-02-07 
+
+ * **open issue 1776:** ComputeLinearizedSystem
+    - description:  consider paper of Agundez, Vallejo, Freire, Mikkola in International Journal of Mechanical Sciences, Vol 268, 2024 for computation of linearized system and eigenmodes. Test case with bicycle
+    - date raised: 2024-02-07 
+
+ * **open issue 1769:** C++ user functions  
+    - description:  Add cpp user functions fully to PythonUserFunctionBase capabilities
+    - date raised: 2024-02-02 
+
+ * **open issue 1768:** C++ user functions  
+    - description:  Add pybind object as container for Cpp user functions, similar to autogenerated SetUserFunction
+    - date raised: 2024-02-02 
+
+ * **open issue 1767:** C++ user functions  
+    - description:  add file for cpp user functions, registration mechanism like timers
+    - date raised: 2024-02-02 
+
+ * **open issue 1764:** GeneralContact      
+    - description:  add pickle functionality
+    - date raised: 2024-01-31 
+
+ * **open issue 1751:** C++ user functions  
+    - description:  check injection of user functions with special item-function method, and separate cpp file holding prototypes of those functions, which may be injected accordingly; use mechanism to record user functions in exudyn.functions.userCpp.SpringDamper
+    - date raised: 2024-01-29 
+
+ * **open issue 1740:** symbolic            
+    - description:  check examples in Docu for consistency
+    - date raised: 2023-12-19 
+
  * **open issue 1723:** Symbolic            
     - description:  SymbolicRealVector: add EvaluateItem(i) in operators wherever possible to efficiently evaluate single components instead of all vector components
     - date raised: 2023-12-09 
@@ -5099,10 +5240,6 @@ Open issues
 
  * **open issue 1629:** GetSystemState      
     - description:  extend behavior for returning a dictionary with all data incl. accelerations and possibly alg. accelerations for generalized-alpha solver; check also option to link coords, as in issue 1504
-    - date raised: 2023-06-23 
-
- * **open issue 1628:** pickle MainSystem   
-    - description:  consider a pickle method for certain objects; add consistent info in description; MainSystem, SimulationSettings, VisualizationSettings
     - date raised: 2023-06-23 
 
  * **open issue 1614:** static members      
@@ -5776,6 +5913,10 @@ Open issues
 **********
 Known bugs
 **********
+
+ * :textred:`open BUG 1772:` item.GetDictionary  
+    - description:  item.GetDictionary not working for new user function interface with symbolic user function
+    - date raised: 2024-02-04 
 
  * :textred:`open BUG 1639:` SolveDynamic FFRF   
     - description:  repeated call to mbs.SolveDynamic gives divergence; attributed to FFRFreducedOrder model; workaround uses repeated build of model before calling solver again; may be related to FFRF or MarkerSuperElement-internal variables

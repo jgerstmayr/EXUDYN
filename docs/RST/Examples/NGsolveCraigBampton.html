@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NGsolveCraigBampton.py &mdash; Exudyn1.7.69.dev1 1.7.69.dev1 documentation</title>
+  <title>NGsolveCraigBampton.py &mdash; Exudyn1.7.104.dev1 1.7.104.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=280392df"></script>
+        <script src="../../../_static/documentation_options.js?v=74f3cfff"></script>
         <script src="../../../_static/doctools.js?v=888ff710"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -41,7 +41,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.7.69.dev1
+            Exudyn1.7.104.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -153,9 +153,12 @@
 <li class="toctree-l2"><a class="reference internal" href="particlesTest3D2.html">particlesTest3D2.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pendulum.html">pendulum.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pendulum2Dconstraint.html">pendulum2Dconstraint.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pendulumGeomExactBeam2D.html">pendulumGeomExactBeam2D.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pendulumGeomExactBeam2Dsimple.html">pendulumGeomExactBeam2Dsimple.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pendulumIftommBenchmark.html">pendulumIftommBenchmark.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pendulumVerify.html">pendulumVerify.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="performanceMultiThreadingNG.html">performanceMultiThreadingNG.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pistonEngine.html">pistonEngine.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plotSensorExamples.html">plotSensorExamples.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reevingSystem.html">reevingSystem.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reevingSystemOpen.html">reevingSystemOpen.py</a></li>
@@ -222,7 +225,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.7.69.dev1</a>
+          <a href="../../../index.html">Exudyn1.7.104.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -503,85 +506,83 @@
 <span class="linenos">257</span>
 <span class="linenos">258</span>    <span class="n">h</span><span class="o">=</span><span class="mf">1e-3</span>
 <span class="linenos">259</span>    <span class="n">tEnd</span> <span class="o">=</span> <span class="mi">4</span>
-<span class="linenos">260</span>    <span class="c1">#if exudynTestGlobals.useGraphics:</span>
-<span class="linenos">261</span>    <span class="c1">#    tEnd = 0.1</span>
-<span class="linenos">262</span>
-<span class="linenos">263</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tEnd</span><span class="o">/</span><span class="n">h</span><span class="p">)</span>
-<span class="linenos">264</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="n">tEnd</span>
-<span class="linenos">265</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">writeSolutionToFile</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="linenos">266</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">verboseMode</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="linenos">267</span>    <span class="c1">#simulationSettings.timeIntegration.verboseModeFile = 3</span>
-<span class="linenos">268</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">useModifiedNewton</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">260</span>
+<span class="linenos">261</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tEnd</span><span class="o">/</span><span class="n">h</span><span class="p">)</span>
+<span class="linenos">262</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="n">tEnd</span>
+<span class="linenos">263</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">writeSolutionToFile</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="linenos">264</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">verboseMode</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="linenos">265</span>    <span class="c1">#simulationSettings.timeIntegration.verboseModeFile = 3</span>
+<span class="linenos">266</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">useModifiedNewton</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">267</span>
+<span class="linenos">268</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">sensorsWritePeriod</span> <span class="o">=</span> <span class="n">h</span>
 <span class="linenos">269</span>
-<span class="linenos">270</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">sensorsWritePeriod</span> <span class="o">=</span> <span class="n">h</span>
-<span class="linenos">271</span>
-<span class="linenos">272</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">generalizedAlpha</span><span class="o">.</span><span class="n">spectralRadius</span> <span class="o">=</span> <span class="mf">0.8</span>
-<span class="linenos">273</span>    <span class="c1">#simulationSettings.displayStatistics = True</span>
-<span class="linenos">274</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">displayComputationTime</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="linenos">275</span>
-<span class="linenos">276</span>    <span class="c1">#create animation:</span>
-<span class="linenos">277</span>    <span class="c1"># simulationSettings.solutionSettings.recordImagesInterval = 0.005</span>
-<span class="linenos">278</span>    <span class="c1"># SC.visualizationSettings.exportImages.saveImageFileName = &quot;animation/frame&quot;</span>
-<span class="linenos">279</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">renderWindowSize</span><span class="o">=</span><span class="p">[</span><span class="mi">1920</span><span class="p">,</span><span class="mi">1080</span><span class="p">]</span>
-<span class="linenos">280</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">multiSampling</span> <span class="o">=</span> <span class="mi">4</span>
-<span class="linenos">281</span>
-<span class="linenos">282</span>    <span class="n">useGraphics</span><span class="o">=</span><span class="kc">True</span>
-<span class="linenos">283</span>    <span class="k">if</span> <span class="kc">True</span><span class="p">:</span>
-<span class="linenos">284</span>        <span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
-<span class="linenos">285</span>            <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">autoFitScene</span><span class="o">=</span><span class="kc">False</span>
-<span class="linenos">286</span>
-<span class="linenos">287</span>            <span class="n">exu</span><span class="o">.</span><span class="nf">StartRenderer</span><span class="p">()</span>
-<span class="linenos">288</span>            <span class="k">if</span> <span class="s1">&#39;renderState&#39;</span> <span class="ow">in</span> <span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">:</span> <span class="n">SC</span><span class="o">.</span><span class="nf">SetRenderState</span><span class="p">(</span><span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span><span class="s1">&#39;renderState&#39;</span><span class="p">])</span> <span class="c1">#load last model view</span>
+<span class="linenos">270</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">generalizedAlpha</span><span class="o">.</span><span class="n">spectralRadius</span> <span class="o">=</span> <span class="mf">0.8</span>
+<span class="linenos">271</span>    <span class="c1">#simulationSettings.displayStatistics = True</span>
+<span class="linenos">272</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">displayComputationTime</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">273</span>
+<span class="linenos">274</span>    <span class="c1">#create animation:</span>
+<span class="linenos">275</span>    <span class="c1"># simulationSettings.solutionSettings.recordImagesInterval = 0.005</span>
+<span class="linenos">276</span>    <span class="c1"># SC.visualizationSettings.exportImages.saveImageFileName = &quot;animation/frame&quot;</span>
+<span class="linenos">277</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">renderWindowSize</span><span class="o">=</span><span class="p">[</span><span class="mi">1920</span><span class="p">,</span><span class="mi">1080</span><span class="p">]</span>
+<span class="linenos">278</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">multiSampling</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="linenos">279</span>
+<span class="linenos">280</span>    <span class="n">useGraphics</span><span class="o">=</span><span class="kc">True</span>
+<span class="linenos">281</span>    <span class="k">if</span> <span class="kc">True</span><span class="p">:</span>
+<span class="linenos">282</span>        <span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
+<span class="linenos">283</span>            <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">autoFitScene</span><span class="o">=</span><span class="kc">False</span>
+<span class="linenos">284</span>
+<span class="linenos">285</span>            <span class="n">exu</span><span class="o">.</span><span class="nf">StartRenderer</span><span class="p">()</span>
+<span class="linenos">286</span>            <span class="k">if</span> <span class="s1">&#39;renderState&#39;</span> <span class="ow">in</span> <span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">:</span> <span class="n">SC</span><span class="o">.</span><span class="nf">SetRenderState</span><span class="p">(</span><span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span><span class="s1">&#39;renderState&#39;</span><span class="p">])</span> <span class="c1">#load last model view</span>
+<span class="linenos">287</span>
+<span class="linenos">288</span>            <span class="n">mbs</span><span class="o">.</span><span class="nf">WaitForUserToContinue</span><span class="p">()</span> <span class="c1">#press space to continue</span>
 <span class="linenos">289</span>
-<span class="linenos">290</span>            <span class="n">mbs</span><span class="o">.</span><span class="nf">WaitForUserToContinue</span><span class="p">()</span> <span class="c1">#press space to continue</span>
-<span class="linenos">291</span>
-<span class="linenos">292</span>        <span class="k">if</span> <span class="kc">True</span><span class="p">:</span>
-<span class="linenos">293</span>            <span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="c1">#solverType=exu.DynamicSolverType.TrapezoidalIndex2,</span>
-<span class="linenos">294</span>                              <span class="n">simulationSettings</span><span class="o">=</span><span class="n">simulationSettings</span><span class="p">)</span>
-<span class="linenos">295</span>        <span class="k">else</span><span class="p">:</span>
-<span class="linenos">296</span>            <span class="n">mbs</span><span class="o">.</span><span class="nf">SolveStatic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="o">=</span><span class="n">simulationSettings</span><span class="p">)</span>
-<span class="linenos">297</span>
-<span class="linenos">298</span>        <span class="n">uTip</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetSensorValues</span><span class="p">(</span><span class="n">sensTipDispl</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
-<span class="linenos">299</span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;nModes=&quot;</span><span class="p">,</span> <span class="n">nModes</span><span class="p">,</span> <span class="s2">&quot;, tip displacement=&quot;</span><span class="p">,</span> <span class="n">uTip</span><span class="p">)</span>
-<span class="linenos">300</span>
-<span class="linenos">301</span>        <span class="k">if</span> <span class="kc">False</span><span class="p">:</span>
-<span class="linenos">302</span>            <span class="c1"># SC.visualizationSettings.exportImages.saveImageFileName = &quot;images/test&quot;</span>
-<span class="linenos">303</span>            <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">exportImages</span><span class="o">.</span><span class="n">saveImageFormat</span> <span class="o">=</span> <span class="s2">&quot;TXT&quot;</span>
-<span class="linenos">304</span>            <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">exportImages</span><span class="o">.</span><span class="n">saveImageAsTextTriangles</span><span class="o">=</span><span class="kc">True</span>
-<span class="linenos">305</span>            <span class="n">SC</span><span class="o">.</span><span class="nf">RedrawAndSaveImage</span><span class="p">()</span> <span class="c1">#uses default filename</span>
-<span class="linenos">306</span>
-<span class="linenos">307</span>            <span class="kn">from</span> <span class="nn">exudyn.plot</span> <span class="kn">import</span> <span class="nf">LoadImage</span><span class="p">,</span> <span class="nf">PlotImage</span>
-<span class="linenos">308</span>            <span class="n">data</span> <span class="o">=</span> <span class="nf">LoadImage</span><span class="p">(</span><span class="s1">&#39;images/frame00000.txt&#39;</span><span class="p">,</span> <span class="n">trianglesAsLines</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="linenos">309</span>            <span class="c1">#PlotImage(data)</span>
-<span class="linenos">310</span>            <span class="nf">PlotImage</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">HT</span><span class="o">=</span><span class="nf">HomogeneousTransformation</span><span class="p">(</span><span class="nf">RotationMatrixZ</span><span class="p">(</span><span class="mf">0.</span><span class="o">*</span><span class="n">pi</span><span class="p">)</span><span class="nd">@RotationMatrixX</span><span class="p">(</span><span class="mf">0.</span><span class="o">*</span><span class="n">pi</span><span class="p">),</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]),</span> <span class="n">lineWidths</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">lineStyles</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span>
-<span class="linenos">311</span>                      <span class="n">triangleEdgeColors</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">triangleEdgeWidths</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">closeAll</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">plot3D</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="linenos">312</span>            <span class="c1"># PlotImage(data, HT=HomogeneousTransformation(RotationMatrixZ(0.5*pi)@RotationMatrixX(0.5*pi), [0,0,0]), lineWidths=0.5, title=&#39;&#39;, closeAll=True, fileName=&#39;images/test.pdf&#39;)</span>
-<span class="linenos">313</span>
-<span class="linenos">314</span>
-<span class="linenos">315</span>        <span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
-<span class="linenos">316</span>            <span class="n">SC</span><span class="o">.</span><span class="nf">WaitForRenderEngineStopFlag</span><span class="p">()</span>
-<span class="linenos">317</span>            <span class="n">exu</span><span class="o">.</span><span class="nf">StopRenderer</span><span class="p">()</span> <span class="c1">#safely close rendering window!</span>
+<span class="linenos">290</span>        <span class="k">if</span> <span class="kc">True</span><span class="p">:</span>
+<span class="linenos">291</span>            <span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="c1">#solverType=exu.DynamicSolverType.TrapezoidalIndex2,</span>
+<span class="linenos">292</span>                              <span class="n">simulationSettings</span><span class="o">=</span><span class="n">simulationSettings</span><span class="p">)</span>
+<span class="linenos">293</span>        <span class="k">else</span><span class="p">:</span>
+<span class="linenos">294</span>            <span class="n">mbs</span><span class="o">.</span><span class="nf">SolveStatic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="o">=</span><span class="n">simulationSettings</span><span class="p">)</span>
+<span class="linenos">295</span>
+<span class="linenos">296</span>        <span class="n">uTip</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetSensorValues</span><span class="p">(</span><span class="n">sensTipDispl</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+<span class="linenos">297</span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;nModes=&quot;</span><span class="p">,</span> <span class="n">nModes</span><span class="p">,</span> <span class="s2">&quot;, tip displacement=&quot;</span><span class="p">,</span> <span class="n">uTip</span><span class="p">)</span>
+<span class="linenos">298</span>
+<span class="linenos">299</span>        <span class="k">if</span> <span class="kc">False</span><span class="p">:</span>
+<span class="linenos">300</span>            <span class="c1"># SC.visualizationSettings.exportImages.saveImageFileName = &quot;images/test&quot;</span>
+<span class="linenos">301</span>            <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">exportImages</span><span class="o">.</span><span class="n">saveImageFormat</span> <span class="o">=</span> <span class="s2">&quot;TXT&quot;</span>
+<span class="linenos">302</span>            <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">exportImages</span><span class="o">.</span><span class="n">saveImageAsTextTriangles</span><span class="o">=</span><span class="kc">True</span>
+<span class="linenos">303</span>            <span class="n">SC</span><span class="o">.</span><span class="nf">RedrawAndSaveImage</span><span class="p">()</span> <span class="c1">#uses default filename</span>
+<span class="linenos">304</span>
+<span class="linenos">305</span>            <span class="kn">from</span> <span class="nn">exudyn.plot</span> <span class="kn">import</span> <span class="nf">LoadImage</span><span class="p">,</span> <span class="nf">PlotImage</span>
+<span class="linenos">306</span>            <span class="n">data</span> <span class="o">=</span> <span class="nf">LoadImage</span><span class="p">(</span><span class="s1">&#39;images/frame00000.txt&#39;</span><span class="p">,</span> <span class="n">trianglesAsLines</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">307</span>            <span class="c1">#PlotImage(data)</span>
+<span class="linenos">308</span>            <span class="nf">PlotImage</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">HT</span><span class="o">=</span><span class="nf">HomogeneousTransformation</span><span class="p">(</span><span class="nf">RotationMatrixZ</span><span class="p">(</span><span class="mf">0.</span><span class="o">*</span><span class="n">pi</span><span class="p">)</span><span class="nd">@RotationMatrixX</span><span class="p">(</span><span class="mf">0.</span><span class="o">*</span><span class="n">pi</span><span class="p">),</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]),</span> <span class="n">lineWidths</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">lineStyles</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span>
+<span class="linenos">309</span>                      <span class="n">triangleEdgeColors</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">triangleEdgeWidths</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">closeAll</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">plot3D</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">310</span>            <span class="c1"># PlotImage(data, HT=HomogeneousTransformation(RotationMatrixZ(0.5*pi)@RotationMatrixX(0.5*pi), [0,0,0]), lineWidths=0.5, title=&#39;&#39;, closeAll=True, fileName=&#39;images/test.pdf&#39;)</span>
+<span class="linenos">311</span>
+<span class="linenos">312</span>
+<span class="linenos">313</span>        <span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
+<span class="linenos">314</span>            <span class="n">SC</span><span class="o">.</span><span class="nf">WaitForRenderEngineStopFlag</span><span class="p">()</span>
+<span class="linenos">315</span>            <span class="n">exu</span><span class="o">.</span><span class="nf">StopRenderer</span><span class="p">()</span> <span class="c1">#safely close rendering window!</span>
+<span class="linenos">316</span>
+<span class="linenos">317</span>
 <span class="linenos">318</span>
 <span class="linenos">319</span>
-<span class="linenos">320</span>
-<span class="linenos">321</span>
-<span class="linenos">322</span><span class="c1">#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos">323</span><span class="c1">#convergence of static tip-displacement with free-free eigenmodes:</span>
-<span class="linenos">324</span><span class="c1"># nModes= 2 , tip displacement= -0.020705764289813425</span>
-<span class="linenos">325</span><span class="c1"># nModes= 4 , tip displacement= -0.028232935031474123</span>
-<span class="linenos">326</span><span class="c1"># nModes= 8 , tip displacement= -0.03462347289851485</span>
-<span class="linenos">327</span><span class="c1"># nModes= 12 , tip displacement= -0.03744041447559639</span>
-<span class="linenos">328</span><span class="c1"># nModes= 20 , tip displacement= -0.0421200606030284</span>
-<span class="linenos">329</span><span class="c1"># nModes= 32 , tip displacement= -0.045122957364252446</span>
-<span class="linenos">330</span><span class="c1"># nModes= 50 , tip displacement= -0.04711202668188235</span>
-<span class="linenos">331</span><span class="c1"># nModes= 80 , tip displacement= -0.049164046183158706</span>
-<span class="linenos">332</span><span class="c1"># nModes= 120 , tip displacement= -0.050065649361566426</span>
-<span class="linenos">333</span><span class="c1"># nModes= 200 , tip displacement= -0.05054314003738750</span>
-<span class="linenos">334</span><span class="c1">#with correct boundary conditions:</span>
-<span class="linenos">335</span><span class="c1">#nModes= 20 , tip displacement= -0.05254089450183475</span>
-<span class="linenos">336</span><span class="c1">#with Hurty-Craig-Bampton RBE2 boundaries:</span>
-<span class="linenos">337</span><span class="c1">#nModes= 2 , tip displacement= -0.05254074496775043</span>
-<span class="linenos">338</span><span class="c1">#nModes= 8 , tip displacement= -0.05254074496762861</span>
+<span class="linenos">320</span><span class="c1">#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">321</span><span class="c1">#convergence of static tip-displacement with free-free eigenmodes:</span>
+<span class="linenos">322</span><span class="c1"># nModes= 2 , tip displacement= -0.020705764289813425</span>
+<span class="linenos">323</span><span class="c1"># nModes= 4 , tip displacement= -0.028232935031474123</span>
+<span class="linenos">324</span><span class="c1"># nModes= 8 , tip displacement= -0.03462347289851485</span>
+<span class="linenos">325</span><span class="c1"># nModes= 12 , tip displacement= -0.03744041447559639</span>
+<span class="linenos">326</span><span class="c1"># nModes= 20 , tip displacement= -0.0421200606030284</span>
+<span class="linenos">327</span><span class="c1"># nModes= 32 , tip displacement= -0.045122957364252446</span>
+<span class="linenos">328</span><span class="c1"># nModes= 50 , tip displacement= -0.04711202668188235</span>
+<span class="linenos">329</span><span class="c1"># nModes= 80 , tip displacement= -0.049164046183158706</span>
+<span class="linenos">330</span><span class="c1"># nModes= 120 , tip displacement= -0.050065649361566426</span>
+<span class="linenos">331</span><span class="c1"># nModes= 200 , tip displacement= -0.05054314003738750</span>
+<span class="linenos">332</span><span class="c1">#with correct boundary conditions:</span>
+<span class="linenos">333</span><span class="c1">#nModes= 20 , tip displacement= -0.05254089450183475</span>
+<span class="linenos">334</span><span class="c1">#with Hurty-Craig-Bampton RBE2 boundaries:</span>
+<span class="linenos">335</span><span class="c1">#nModes= 2 , tip displacement= -0.05254074496775043</span>
+<span class="linenos">336</span><span class="c1">#nModes= 8 , tip displacement= -0.05254074496762861</span>
 </pre></div>
 </div>
 </section>

@@ -8,7 +8,7 @@ Helper functions and classes for graphical interaction with Exudyn
 
 - Author:    Johannes Gerstmayr 
 - Date:      2020-01-25 
-- Notes: 	This is an internal library, which is only used inside Exudyn for modifying settings. 
+- Notes:     This is an internal library, which is only used inside Exudyn for modifying settings. 
 
 
 .. _sec-gui-gettkrootandnewwindow:

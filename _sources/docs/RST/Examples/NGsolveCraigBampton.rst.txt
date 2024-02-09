@@ -269,8 +269,6 @@ You can view and download this file on Github: `NGsolveCraigBampton.py <https://
        
        h=1e-3
        tEnd = 4
-       #if exudynTestGlobals.useGraphics:
-       #    tEnd = 0.1
        
        simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
        simulationSettings.timeIntegration.endTime = tEnd

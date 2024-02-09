@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>cartesianSpringDamper.py &mdash; Exudyn1.7.69.dev1 1.7.69.dev1 documentation</title>
+  <title>cartesianSpringDamper.py &mdash; Exudyn1.7.104.dev1 1.7.104.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=280392df"></script>
+        <script src="../../../_static/documentation_options.js?v=74f3cfff"></script>
         <script src="../../../_static/doctools.js?v=888ff710"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -41,7 +41,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.7.69.dev1
+            Exudyn1.7.104.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -153,9 +153,12 @@
 <li class="toctree-l2"><a class="reference internal" href="particlesTest3D2.html">particlesTest3D2.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pendulum.html">pendulum.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pendulum2Dconstraint.html">pendulum2Dconstraint.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pendulumGeomExactBeam2D.html">pendulumGeomExactBeam2D.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pendulumGeomExactBeam2Dsimple.html">pendulumGeomExactBeam2Dsimple.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pendulumIftommBenchmark.html">pendulumIftommBenchmark.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pendulumVerify.html">pendulumVerify.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="performanceMultiThreadingNG.html">performanceMultiThreadingNG.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pistonEngine.html">pistonEngine.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plotSensorExamples.html">plotSensorExamples.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reevingSystem.html">reevingSystem.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reevingSystemOpen.html">reevingSystemOpen.py</a></li>
@@ -222,7 +225,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.7.69.dev1</a>
+          <a href="../../../index.html">Exudyn1.7.104.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -244,111 +247,101 @@
   <section id="cartesianspringdamper-py">
 <span id="examples-cartesianspringdamper"></span><h1>cartesianSpringDamper.py<a class="headerlink" href="#cartesianspringdamper-py" title="Link to this heading"></a></h1>
 <p>You can view and download this file on Github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples/cartesianSpringDamper.py">cartesianSpringDamper.py</a></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">  1</span><span class="c1">#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos">  2</span><span class="c1"># This is an EXUDYN example</span>
-<span class="linenos">  3</span><span class="c1">#</span>
-<span class="linenos">  4</span><span class="c1"># Details:  Example with CartesianSpringDamper and reference solution</span>
-<span class="linenos">  5</span><span class="c1">#</span>
-<span class="linenos">  6</span><span class="c1"># Author:   Johannes Gerstmayr</span>
-<span class="linenos">  7</span><span class="c1"># Date:     2019-08-15</span>
-<span class="linenos">  8</span><span class="c1">#</span>
-<span class="linenos">  9</span><span class="c1"># Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See &#39;LICENSE.txt&#39; for more details.</span>
-<span class="linenos"> 10</span><span class="c1">#</span>
-<span class="linenos"> 11</span><span class="c1">#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos"> 12</span>
-<span class="linenos"> 13</span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
-<span class="linenos"> 14</span><span class="kn">from</span> <span class="nn">exudyn.itemInterface</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="linenos"> 15</span><span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="linenos"> 16</span>
-<span class="linenos"> 17</span><span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
-<span class="linenos"> 18</span><span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
-<span class="linenos"> 19</span>
-<span class="linenos"> 20</span>
-<span class="linenos"> 21</span><span class="c1">#linear spring-damper</span>
-<span class="linenos"> 22</span><span class="n">L</span><span class="o">=</span><span class="mf">0.5</span>
-<span class="linenos"> 23</span><span class="n">mass</span> <span class="o">=</span> <span class="mf">1.6</span>
-<span class="linenos"> 24</span><span class="n">k</span> <span class="o">=</span> <span class="mi">4000</span>
-<span class="linenos"> 25</span><span class="n">omega0</span> <span class="o">=</span> <span class="mi">50</span> <span class="c1"># sqrt(4000/1.6)</span>
-<span class="linenos"> 26</span><span class="n">dRel</span> <span class="o">=</span> <span class="mf">0.05</span>
-<span class="linenos"> 27</span><span class="n">d</span> <span class="o">=</span> <span class="n">dRel</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="mi">80</span> <span class="c1">#80=sqrt(1.6*4000)</span>
-<span class="linenos"> 28</span><span class="n">u0</span><span class="o">=-</span><span class="mf">0.08</span>
-<span class="linenos"> 29</span><span class="n">v0</span><span class="o">=</span><span class="mi">1</span>
-<span class="linenos"> 30</span><span class="n">f</span> <span class="o">=</span> <span class="mi">80</span>
-<span class="linenos"> 31</span><span class="c1">#static result = f/k = 0.01;</span>
-<span class="linenos"> 32</span><span class="n">x0</span> <span class="o">=</span> <span class="n">f</span><span class="o">/</span><span class="n">k</span>
-<span class="linenos"> 33</span><span class="c1">#(exact) dynamic result with u0 and v0: (see bottom of file)</span>
-<span class="linenos"> 34</span>
-<span class="linenos"> 35</span><span class="n">objectGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateGround</span><span class="p">(</span><span class="n">referencePosition</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
-<span class="linenos"> 36</span>
-<span class="linenos"> 37</span><span class="n">massPoint</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateMassPoint</span><span class="p">(</span><span class="n">referencePosition</span><span class="o">=</span><span class="p">[</span><span class="n">L</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-<span class="linenos"> 38</span>                    <span class="n">initialDisplacement</span><span class="o">=</span><span class="p">[</span><span class="n">u0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-<span class="linenos"> 39</span>                    <span class="n">initialVelocity</span><span class="o">=</span><span class="p">[</span><span class="n">v0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-<span class="linenos"> 40</span>                    <span class="n">physicsMass</span><span class="o">=</span><span class="n">mass</span><span class="p">)</span>
-<span class="linenos"> 41</span>
-<span class="linenos"> 42</span><span class="n">mbs</span><span class="o">.</span><span class="nf">CreateCartesianSpringDamper</span><span class="p">(</span><span class="n">bodyList</span><span class="o">=</span><span class="p">[</span><span class="n">objectGround</span><span class="p">,</span> <span class="n">massPoint</span><span class="p">],</span>
-<span class="linenos"> 43</span>                                <span class="n">stiffness</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span><span class="p">,</span><span class="n">k</span><span class="p">,</span><span class="n">k</span><span class="p">],</span>
-<span class="linenos"> 44</span>                                <span class="n">damping</span>   <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-<span class="linenos"> 45</span>                                <span class="n">offset</span>    <span class="o">=</span> <span class="p">[</span><span class="n">L</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
-<span class="linenos"> 46</span>
-<span class="linenos"> 47</span><span class="n">mbs</span><span class="o">.</span><span class="nf">CreateForce</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">massPoint</span><span class="p">,</span> <span class="n">loadVector</span><span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
-<span class="linenos"> 48</span>
-<span class="linenos"> 49</span><span class="nb">print</span><span class="p">(</span><span class="n">mbs</span><span class="p">)</span>
-<span class="linenos"> 50</span><span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
-<span class="linenos"> 51</span>
-<span class="linenos"> 52</span><span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">()</span>
-<span class="linenos"> 53</span>
-<span class="linenos"> 54</span><span class="n">tEnd</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="linenos"> 55</span><span class="n">steps</span> <span class="o">=</span> <span class="mi">1000000</span>
-<span class="linenos"> 56</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="n">steps</span>
-<span class="linenos"> 57</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="n">tEnd</span>
-<span class="linenos"> 58</span><span class="c1">#simulationSettings.solutionSettings.solutionWritePeriod = tEnd/steps</span>
-<span class="linenos"> 59</span>
-<span class="linenos"> 60</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">generalizedAlpha</span><span class="o">.</span><span class="n">spectralRadius</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1">#SHOULD work with 0.9 as well</span>
-<span class="linenos"> 61</span>
-<span class="linenos"> 62</span><span class="c1">#exu.StartRenderer()</span>
-<span class="linenos"> 63</span><span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="p">)</span>
-<span class="linenos"> 64</span><span class="c1">#SC.WaitForRenderEngineStopFlag()</span>
-<span class="linenos"> 65</span><span class="c1">#exu.StopRenderer() #safely close rendering window!</span>
-<span class="linenos"> 66</span>
-<span class="linenos"> 67</span><span class="n">n1</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetObject</span><span class="p">(</span><span class="n">massPoint</span><span class="p">)[</span><span class="s1">&#39;nodeNumber&#39;</span><span class="p">]</span>
-<span class="linenos"> 68</span><span class="n">u</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetNodeOutput</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Position</span><span class="p">)</span>
-<span class="linenos"> 69</span><span class="n">uCartesianSpringDamper</span><span class="o">=</span> <span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">L</span>
-<span class="linenos"> 70</span><span class="n">errorCartesianSpringDamper</span> <span class="o">=</span> <span class="n">uCartesianSpringDamper</span> <span class="o">-</span> <span class="mf">0.011834933407044113</span> <span class="c1">#for 1000 steps, endtime=1; accurate up to 3e-6 to exact solution (0.01183198678754692)</span>
-<span class="linenos"> 71</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;error cartesianSpringDamper=&#39;</span><span class="p">,</span><span class="n">errorCartesianSpringDamper</span><span class="p">)</span>
-<span class="linenos"> 72</span>
-<span class="linenos"> 73</span><span class="c1">#return abs(errorCartesianSpringDamper)</span>
-<span class="linenos"> 74</span>
-<span class="linenos"> 75</span><span class="c1">#+++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos"> 76</span><span class="c1">#exact solution:</span>
-<span class="linenos"> 77</span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="linenos"> 78</span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="linenos"> 79</span><span class="kn">import</span> <span class="nn">matplotlib.ticker</span> <span class="k">as</span> <span class="nn">ticker</span>
-<span class="linenos"> 80</span>
-<span class="linenos"> 81</span><span class="n">omega0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="nf">sqrt</span><span class="p">(</span><span class="n">k</span><span class="o">/</span><span class="n">mass</span><span class="p">)</span>     <span class="c1">#recompute for safety</span>
-<span class="linenos"> 82</span><span class="n">dRel</span> <span class="o">=</span> <span class="n">d</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="nf">sqrt</span><span class="p">(</span><span class="n">k</span><span class="o">*</span><span class="n">mass</span><span class="p">))</span> <span class="c1">#recompute for safety</span>
-<span class="linenos"> 83</span><span class="n">omega</span> <span class="o">=</span> <span class="n">omega0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="nf">sqrt</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">dRel</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-<span class="linenos"> 84</span><span class="n">C1</span> <span class="o">=</span> <span class="n">u0</span><span class="o">-</span><span class="n">x0</span> <span class="c1">#static solution needs to be considered!</span>
-<span class="linenos"> 85</span><span class="n">C2</span> <span class="o">=</span> <span class="p">(</span><span class="n">v0</span><span class="o">+</span><span class="n">omega0</span><span class="o">*</span><span class="n">dRel</span><span class="o">*</span><span class="n">C1</span><span class="p">)</span> <span class="o">/</span> <span class="n">omega</span> <span class="c1">#C1 used instead of classical solution with u0, because x0 != 0 !!!</span>
-<span class="linenos"> 86</span>
-<span class="linenos"> 87</span><span class="n">refSol</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">steps</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
-<span class="linenos"> 88</span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">steps</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
-<span class="linenos"> 89</span>    <span class="n">t</span> <span class="o">=</span> <span class="n">tEnd</span><span class="o">*</span><span class="n">i</span><span class="o">/</span><span class="n">steps</span>
-<span class="linenos"> 90</span>    <span class="n">refSol</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">t</span>
-<span class="linenos"> 91</span>    <span class="n">refSol</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="nf">exp</span><span class="p">(</span><span class="o">-</span><span class="n">omega0</span><span class="o">*</span><span class="n">dRel</span><span class="o">*</span><span class="n">t</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">C1</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="nf">cos</span><span class="p">(</span><span class="n">omega</span><span class="o">*</span><span class="n">t</span><span class="p">)</span> <span class="o">+</span> <span class="n">C2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="nf">sin</span><span class="p">(</span><span class="n">omega</span><span class="o">*</span><span class="n">t</span><span class="p">))</span><span class="o">+</span><span class="n">x0</span>
-<span class="linenos"> 92</span>
-<span class="linenos"> 93</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;refSol=&#39;</span><span class="p">,</span><span class="n">refSol</span><span class="p">[</span><span class="n">steps</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
-<span class="linenos"> 94</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;error exact-numerical=&#39;</span><span class="p">,</span><span class="n">refSol</span><span class="p">[</span><span class="n">steps</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">uCartesianSpringDamper</span><span class="p">)</span>
-<span class="linenos"> 95</span>
-<span class="linenos"> 96</span><span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s1">&#39;coordinatesSolution.txt&#39;</span><span class="p">,</span> <span class="n">comments</span><span class="o">=</span><span class="s1">&#39;#&#39;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
-<span class="linenos"> 97</span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;b-&#39;</span><span class="p">)</span> <span class="c1">#numerical solution</span>
-<span class="linenos"> 98</span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">refSol</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">refSol</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;r-&#39;</span><span class="p">)</span> <span class="c1">#exact solution</span>
-<span class="linenos"> 99</span>
-<span class="linenos">100</span><span class="n">ax</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span> <span class="c1"># get current axes</span>
-<span class="linenos">101</span><span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="s1">&#39;both&#39;</span><span class="p">)</span>
-<span class="linenos">102</span><span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">ticker</span><span class="o">.</span><span class="n">MaxNLocator</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span> <span class="c1">#use maximum of 8 ticks on y-axis</span>
-<span class="linenos">103</span><span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">ticker</span><span class="o">.</span><span class="n">MaxNLocator</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span> <span class="c1">#use maximum of 8 ticks on y-axis</span>
-<span class="linenos">104</span><span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-<span class="linenos">105</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1">#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos"> 2</span><span class="c1"># This is an EXUDYN example</span>
+<span class="linenos"> 3</span><span class="c1">#</span>
+<span class="linenos"> 4</span><span class="c1"># Details:  Example with CartesianSpringDamper and reference solution, to create simple system with mass point and spring-damper</span>
+<span class="linenos"> 5</span><span class="c1">#</span>
+<span class="linenos"> 6</span><span class="c1"># Model:    Linear oscillator with mass point and spring-damper</span>
+<span class="linenos"> 7</span><span class="c1">#</span>
+<span class="linenos"> 8</span><span class="c1"># Author:   Johannes Gerstmayr</span>
+<span class="linenos"> 9</span><span class="c1"># Date:     2019-08-15</span>
+<span class="linenos">10</span><span class="c1">#</span>
+<span class="linenos">11</span><span class="c1"># Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See &#39;LICENSE.txt&#39; for more details.</span>
+<span class="linenos">12</span><span class="c1">#</span>
+<span class="linenos">13</span><span class="c1"># *clean example*</span>
+<span class="linenos">14</span><span class="c1">#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">15</span>
+<span class="linenos">16</span><span class="c1">## import libaries</span>
+<span class="linenos">17</span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
+<span class="linenos">18</span><span class="kn">from</span> <span class="nn">exudyn.itemInterface</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="linenos">19</span><span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="linenos">20</span>
+<span class="linenos">21</span><span class="c1">## set up system &#39;mbs&#39;</span>
+<span class="linenos">22</span><span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
+<span class="linenos">23</span><span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
+<span class="linenos">24</span>
+<span class="linenos">25</span><span class="c1">## define overall parameters for linear spring-damper</span>
+<span class="linenos">26</span><span class="n">L</span><span class="o">=</span><span class="mf">0.5</span>
+<span class="linenos">27</span><span class="n">mass</span> <span class="o">=</span> <span class="mf">1.6</span>
+<span class="linenos">28</span><span class="n">k</span> <span class="o">=</span> <span class="mi">4000</span>
+<span class="linenos">29</span><span class="n">omega0</span> <span class="o">=</span> <span class="mi">50</span> <span class="c1"># sqrt(4000/1.6)</span>
+<span class="linenos">30</span><span class="n">dRel</span> <span class="o">=</span> <span class="mf">0.05</span>
+<span class="linenos">31</span><span class="n">d</span> <span class="o">=</span> <span class="n">dRel</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="mi">80</span> <span class="c1">#80=sqrt(1.6*4000)</span>
+<span class="linenos">32</span><span class="n">u0</span><span class="o">=-</span><span class="mf">0.08</span>
+<span class="linenos">33</span><span class="n">v0</span><span class="o">=</span><span class="mi">1</span>
+<span class="linenos">34</span><span class="n">f</span> <span class="o">=</span> <span class="mi">80</span>
+<span class="linenos">35</span><span class="c1">#static result = f/k = 0.01;</span>
+<span class="linenos">36</span><span class="n">x0</span> <span class="o">=</span> <span class="n">f</span><span class="o">/</span><span class="n">k</span>
+<span class="linenos">37</span>
+<span class="linenos">38</span><span class="c1">## create ground object</span>
+<span class="linenos">39</span><span class="n">objectGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateGround</span><span class="p">(</span><span class="n">referencePosition</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="linenos">40</span>
+<span class="linenos">41</span><span class="c1">## create mass point</span>
+<span class="linenos">42</span><span class="n">massPoint</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateMassPoint</span><span class="p">(</span><span class="n">referencePosition</span><span class="o">=</span><span class="p">[</span><span class="n">L</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos">43</span>                    <span class="n">initialDisplacement</span><span class="o">=</span><span class="p">[</span><span class="n">u0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos">44</span>                    <span class="n">initialVelocity</span><span class="o">=</span><span class="p">[</span><span class="n">v0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos">45</span>                    <span class="n">physicsMass</span><span class="o">=</span><span class="n">mass</span><span class="p">)</span>
+<span class="linenos">46</span>
+<span class="linenos">47</span><span class="c1">## create spring damper  between objectGround and massPoint</span>
+<span class="linenos">48</span><span class="n">mbs</span><span class="o">.</span><span class="nf">CreateCartesianSpringDamper</span><span class="p">(</span><span class="n">bodyList</span><span class="o">=</span><span class="p">[</span><span class="n">objectGround</span><span class="p">,</span> <span class="n">massPoint</span><span class="p">],</span>
+<span class="linenos">49</span>                                <span class="n">stiffness</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span><span class="p">,</span><span class="n">k</span><span class="p">,</span><span class="n">k</span><span class="p">],</span>
+<span class="linenos">50</span>                                <span class="n">damping</span>   <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos">51</span>                                <span class="n">offset</span>    <span class="o">=</span> <span class="p">[</span><span class="n">L</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="linenos">52</span>
+<span class="linenos">53</span><span class="c1">## create force vector [f,0,0]</span>
+<span class="linenos">54</span><span class="n">mbs</span><span class="o">.</span><span class="nf">CreateForce</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">massPoint</span><span class="p">,</span> <span class="n">loadVector</span><span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="linenos">55</span>
+<span class="linenos">56</span><span class="c1">## assemble and solve system</span>
+<span class="linenos">57</span><span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
+<span class="linenos">58</span>
+<span class="linenos">59</span><span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">()</span>
+<span class="linenos">60</span>
+<span class="linenos">61</span><span class="n">tEnd</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="linenos">62</span><span class="n">steps</span> <span class="o">=</span> <span class="mi">1000000</span>
+<span class="linenos">63</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="n">steps</span>
+<span class="linenos">64</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="n">tEnd</span>
+<span class="linenos">65</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">useModifiedNewton</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">66</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">generalizedAlpha</span><span class="o">.</span><span class="n">spectralRadius</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1">#SHOULD work with 0.9 as well</span>
+<span class="linenos">67</span>
+<span class="linenos">68</span><span class="c1">## solve and read displacement at end time</span>
+<span class="linenos">69</span><span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="p">)</span>
+<span class="linenos">70</span><span class="n">uCSD</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetObjectOutputBody</span><span class="p">(</span><span class="n">massPoint</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Displacement</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos">71</span>
+<span class="linenos">72</span><span class="c1">## compute exact (analytical) solution:</span>
+<span class="linenos">73</span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="linenos">74</span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="linenos">75</span>
+<span class="linenos">76</span><span class="c1"># omega0 = np.sqrt(k/mass)</span>
+<span class="linenos">77</span><span class="c1"># dRel = d/(2*np.sqrt(k*mass))</span>
+<span class="linenos">78</span>
+<span class="linenos">79</span><span class="n">omega</span> <span class="o">=</span> <span class="n">omega0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="nf">sqrt</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">dRel</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+<span class="linenos">80</span><span class="n">C1</span> <span class="o">=</span> <span class="n">u0</span><span class="o">-</span><span class="n">x0</span> <span class="c1">#static solution needs to be considered!</span>
+<span class="linenos">81</span><span class="n">C2</span> <span class="o">=</span> <span class="p">(</span><span class="n">v0</span><span class="o">+</span><span class="n">omega0</span><span class="o">*</span><span class="n">dRel</span><span class="o">*</span><span class="n">C1</span><span class="p">)</span> <span class="o">/</span> <span class="n">omega</span> <span class="c1">#C1 used instead of classical solution with u0, because x0 != 0 !!!</span>
+<span class="linenos">82</span>
+<span class="linenos">83</span><span class="n">refSol</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">steps</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+<span class="linenos">84</span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">steps</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+<span class="linenos">85</span>    <span class="n">t</span> <span class="o">=</span> <span class="n">tEnd</span><span class="o">*</span><span class="n">i</span><span class="o">/</span><span class="n">steps</span>
+<span class="linenos">86</span>    <span class="n">refSol</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">t</span>
+<span class="linenos">87</span>    <span class="n">refSol</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="nf">exp</span><span class="p">(</span><span class="o">-</span><span class="n">omega0</span><span class="o">*</span><span class="n">dRel</span><span class="o">*</span><span class="n">t</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">C1</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="nf">cos</span><span class="p">(</span><span class="n">omega</span><span class="o">*</span><span class="n">t</span><span class="p">)</span> <span class="o">+</span> <span class="n">C2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="nf">sin</span><span class="p">(</span><span class="n">omega</span><span class="o">*</span><span class="n">t</span><span class="p">))</span><span class="o">+</span><span class="n">x0</span>
+<span class="linenos">88</span>
+<span class="linenos">89</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;refSol=&#39;</span><span class="p">,</span><span class="n">refSol</span><span class="p">[</span><span class="n">steps</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="linenos">90</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;error exact-numerical=&#39;</span><span class="p">,</span><span class="n">refSol</span><span class="p">[</span><span class="n">steps</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">uCSD</span><span class="p">)</span>
+<span class="linenos">91</span>
+<span class="linenos">92</span><span class="c1">## compare Exudyn with analytical solution:</span>
+<span class="linenos">93</span><span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">([</span><span class="s1">&#39;coordinatesSolution.txt&#39;</span><span class="p">,</span> <span class="n">refSol</span><span class="p">],</span>
+<span class="linenos">94</span>                <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">yLabel</span><span class="o">=</span><span class="s1">&#39;displacement&#39;</span><span class="p">,</span>
+<span class="linenos">95</span>                <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Exudyn&#39;</span><span class="p">,</span><span class="s1">&#39;analytical&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
 </section>

@@ -17,18 +17,20 @@ The item \ **ObjectANCFThinPlate**\  with type = 'ANCFThinPlate' has the followi
 
 * | **name** [type = String, default = '']:
   | objects's unique name
-* | **physicsHeight** [\ :math:`L`\ , type = UReal, default = 0.]:
-  | [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives \ :math:`\rho A L`\ ; must be positive
+* | **physicsThickness** [\ :math:`h`\ , type = UReal, default = 0.]:
+  | [SI:m] thickness of plate
+* | **physicsDensity** [\ :math:`\rho`\ , type = UReal, default = 0.]:
+  | [SI:kg/m\ :math:`^3`\ ] density of the plate, possibly averaged over thickness
 * | **physicsStrainCoefficients** [\ :math:`{\mathbf{D}}_\varepsilon`\ , type = Matrix3D, default = [[1,0,0], [0,1,0], [0,0,1]]]:
   | [SI:N/m] stiffness coefficients related to inplane normal and shear strains, integrated over height of the plate
 * | **physicsCurvatureCoefficients** [\ :math:`{\mathbf{D}}_\kappa`\ , type = Matrix3D, default = [[1,0,0], [0,1,0], [0,0,1]]]:
   | [SI:Nm] stiffness coefficients related to curvatures, integrated over height of the plate
-* | **strainIsRelativeToReference** [\ :math:`f\cRef`\ , type = Real, default = 0.]:
+* | **strainIsRelativeToReference** [\ :math:`f\cRef`\ , type = Real, default = 1.]:
   | if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration serves as a reference geometry; allows also values between 0. and 1. to perform a transition during static computation
 * | **nodeNumbers** [type = NodeIndex4, default = [invalid [-1], invalid [-1], invalid [-1], invalid [-1]]]:
   | 4 NodePointSlope12 node numbers
 * | **useReducedOrderIntegration** [type = Index, default = 0]:
-  | 0/false: use highest Gauss integration for virtual work of strains, order 5 for bending moments; 1/true: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments
+  | 0/false: use highest Gauss integration for virtual work of strains
 * | **visualization** [type = VObjectANCFThinPlate]:
   | parameters for visualization of item
 
@@ -83,31 +85,10 @@ MINI EXAMPLE for ObjectANCFThinPlate
 .. code-block:: python
    :linenos:
 
-   #NEEDS to be revised
-   from exudyn.beams import GenerateStraightLineANCFCable
-   rhoA = 78.
-   EA = 1000000.
-   EI = 833.3333333333333
-   cable = Cable(physicsMassPerLength=rhoA, 
-                 physicsBendingStiffness=EI, 
-                 physicsAxialStiffness=EA, 
-                 )
-   
-   ancf=GenerateStraightLineANCFCable(mbs=mbs,
-                 positionOfNode0=[0,0,0], positionOfNode1=[2,0,0],
-                 numberOfElements=32, #converged to 4 digits
-                 cableTemplate=cable, #this defines the beam element properties
-                 massProportionalLoad = [0,-9.81,0],
-                 fixedConstraintsNode0 = [1,1,1, 0,1,1], #add constraints for pos and rot (r'_y,r'_z)
-                 )
-   lastNode = ancf[0][-1]
-   
-   #assemble and solve system for default parameters
-   mbs.Assemble()
-   mbs.SolveStatic()
+   #to be done
    
    #check result
-   exudynTestGlobals.testResult = mbs.GetNodeOutput(lastNode, exu.OutputVariableType.Displacement)[0]
+   exudynTestGlobals.testResult = 0
    #ux=-0.5013058140308901
 
 

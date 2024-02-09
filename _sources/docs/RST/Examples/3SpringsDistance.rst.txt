@@ -14,7 +14,6 @@ You can view and download this file on Github: `3SpringsDistance.py <https://git
    # This is an EXUDYN example
    #
    # Details:  File to test ConnectorDistance and ConnectorSpringDamper with point mass
-   #           Remark: check, why generalized alpha does work so badly for this example
    #           NOTE: this is a very old example, still using dictionaries! check other examples, which use itemInterface!
    #
    # Author:   Johannes Gerstmayr
@@ -22,6 +21,7 @@ You can view and download this file on Github: `3SpringsDistance.py <https://git
    #
    # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
    #
+   # Remark: check, why generalized alpha does work so badly for this example
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    
    import exudyn as exu
