@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.9']  #dpecify the Python versions to build for
+        python-version: ['3.9', '3.10']  #dpecify the Python versions to build for
 
     steps:
       - uses: actions/checkout@v2
