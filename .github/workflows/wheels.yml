@@ -27,10 +27,10 @@ jobs:
         working-directory: main  # Specify the directory where setup.py is located
         
       - name: Build wheels for manylinux
-        run: python -m cibuildwheel --output-dir wheelhouse
+        run: python -m cibuildwheel --output-dir .wheels
         env:
           CIBW_BUILD: "cp39-*"
-          CIBW_MANYLINUX_X86_64_IMAGE: manylinux2014
+          #CIBW_MANYLINUX_X86_64_IMAGE: manylinux2014
           #CIBW_MANYLINUX_I686_IMAGE: manylinux_i686
           CIBW_SKIP: "*-win32 *-win_amd64 *-macosx_*"
         working-directory: main  # Specify the directory where setup.py is located
@@ -38,7 +38,7 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: linux-wheels-python-${{ matrix.python-version }}
-          path: ./.wheels/*.whl
+          path: main/.wheels/*.whl
 
   build:
     name: Build wheels on ${{ matrix.os }}
@@ -63,7 +63,7 @@ jobs:
       working-directory: main  # Specify the directory where setup.py is located
 
     - name: Build wheels
-      run: python -m cibuildwheel --output-dir wheelhouse
+      run: python -m cibuildwheel --output-dir .wheels
       env:
         CIBW_BUILD: "cp39-*" #only the selected versions are built
         CIBW_SKIP: "*-win32"   #skip building 32-bit (win32) wheels
