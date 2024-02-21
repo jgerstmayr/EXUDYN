@@ -30,7 +30,7 @@ jobs:
         run: python -m cibuildwheel --output-dir wheelhouse
         env:
           CIBW_BUILD: "cp39-*"
-          CIBW_MANYLINUX_X86_64_IMAGE: manylinux_x86_64
+          CIBW_MANYLINUX_X86_64_IMAGE: manylinux2014
           #CIBW_MANYLINUX_I686_IMAGE: manylinux_i686
           CIBW_SKIP: "*-win32 *-win_amd64 *-macosx_*"
         working-directory: main  # Specify the directory where setup.py is located
@@ -38,7 +38,7 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: linux-wheels-python-${{ matrix.python-version }}
-          path: ./wheelhouse/*.whl
+          path: ./.wheels/*.whl
 
   build:
     name: Build wheels on ${{ matrix.os }}
@@ -72,4 +72,4 @@ jobs:
     - uses: actions/upload-artifact@v3
       with:
         name: wheels-${{ matrix.os }}
-        path: ./wheelhouse/*.whl
+        path: .wheels/*.whl
