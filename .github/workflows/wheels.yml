@@ -7,52 +7,6 @@ on:
   pull_request:
 
 jobs:
-  build-linux-wheels: #only linux
-    name: Build wheels for Linux (Python ${{ matrix.python-version }})
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ['3.9']  #specify the Python versions to build for
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v3
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Install GLFW OpenGL
-        run: |
-          sudo apt-get install libglfw3 libglfw3-dev
-          sudo apt-get install freeglut3 freeglut3-dev
-          sudo apt-get install mesa-common-dev
-          #sudo apt-get install libx11-dev xorg-dev libglu1-mesa libglu1-mesa-dev libgl1-mesa-glx libgl1-mesa-dev
-          #libglew1.5 libglew1.5-dev 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install setuptools wheel auditwheel
-      # - name: Install cibuildwheel setuptools
-        # run: python -m pip install cibuildwheel
-        # working-directory: main  # Specify the directory where setup.py is located
-
-      - name: Build wheels for manylinux
-        #run: python -m cibuildwheel --output-dir .wheels
-        run: | 
-          python setup.py bdist_wheel --parallel
-          auditwheel repair dist/exudyn-*.whl -w ./dist --plat manylinux2014_x86_64
-        # env:
-          # CIBW_BUILD: "cp39-*"
-          #CIBW_MANYLINUX_X86_64_IMAGE: manylinux2014
-          #CIBW_MANYLINUX_I686_IMAGE: manylinux_i686
-          # CIBW_SKIP: "*-win32 *-win_amd64 *-macosx_*"
-        working-directory: main  # Specify the directory where setup.py is located
-        
-      - uses: actions/upload-artifact@v4
-        with:
-          name: linux-wheels-python-${{ matrix.python-version }}
-          path: main/dist/*.whl
-
   # buildCIbuildUbuntu:
     # name: Build wheels on ${{ matrix.os }}
     # runs-on: ${{ matrix.os }}
@@ -101,6 +55,13 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
+      - name: Install GLFW OpenGL
+        run: |
+          sudo apt-get install libglfw3 libglfw3-dev
+          sudo apt-get install freeglut3 freeglut3-dev
+          sudo apt-get install mesa-common-dev
+          #sudo apt-get install libx11-dev xorg-dev libglu1-mesa libglu1-mesa-dev libgl1-mesa-glx libgl1-mesa-dev
+          #libglew1.5 libglew1.5-dev 
 
       - uses: RalfG/python-wheels-manylinux-build@v0.7.1-manylinux2014_x86_64
         with:
@@ -115,3 +76,4 @@ jobs:
         with:
           name: wheels-linux-python-${{ matrix.python-version }}
           path: main/dist/*.whl
+
