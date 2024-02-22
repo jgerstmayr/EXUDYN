@@ -26,7 +26,8 @@ jobs:
           sudo apt-get install libglfw3 libglfw3-dev
           sudo apt-get install freeglut3 freeglut3-dev
           sudo apt-get install mesa-common-dev
-          sudo apt-get install libx11-dev xorg-dev libglew1.5 libglew1.5-dev libglu1-mesa libglu1-mesa-dev libgl1-mesa-glx libgl1-mesa-dev
+          #sudo apt-get install libx11-dev xorg-dev libglu1-mesa libglu1-mesa-dev libgl1-mesa-glx libgl1-mesa-dev
+          #libglew1.5 libglew1.5-dev 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
