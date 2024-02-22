@@ -68,7 +68,7 @@ jobs:
         with:
           python-versions: 'cp310-cp310'
           build-requirements: 'numpy'
-          system-packages: 'libglfw3 libglfw3-dev libgl1-mesa-dev'
+          system-packages: 'mesa-libGL-devel mesa-libGLU-devel glfw'
           pre-build-command: ''
           package-path: 'main'
           pip-wheel-args: '-w ./main/dist --no-deps'
