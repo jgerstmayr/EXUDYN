@@ -38,19 +38,19 @@ jobs:
 
       - name: Build wheels for manylinux
         #run: python -m cibuildwheel --output-dir .wheels
-        run: python setup.py bdist_wheel #--parallel
-        env:
-          CIBW_BUILD: "cp39-*"
+        run: python setup.py bdist_wheel --parallel
+        # env:
+          # CIBW_BUILD: "cp39-*"
           #CIBW_MANYLINUX_X86_64_IMAGE: manylinux2014
           #CIBW_MANYLINUX_I686_IMAGE: manylinux_i686
-          CIBW_SKIP: "*-win32 *-win_amd64 *-macosx_*"
+          # CIBW_SKIP: "*-win32 *-win_amd64 *-macosx_*"
         working-directory: main  # Specify the directory where setup.py is located
         
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: linux-wheels-python-${{ matrix.python-version }}
           path: main/dist/*.whl
-  build:
+  buildMacOS:
     name: Build wheels on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
