@@ -8,6 +8,7 @@ import sys
 import platform
 import setuptools
 import time
+import json
 
 #from src.pythonGenerator.exudynVersion import exudynVersionString #does not run under MacOS
 file='src/pythonGenerator/exudynVersion.py'
@@ -30,6 +31,37 @@ except:
 startTime = time.time()
 #print('setup.py: START time:', startTime)
 
+
+#set default parameters
+config={}
+config['USEGLFW'] = True
+config['compileParallel'] = False
+config['quietCompile'] = False
+config['minimalCppFiles'] = False
+config['useOpenVR'] = False
+config['compileExudynFast'] = True    #not for all Python versions
+
+#load the configuration file, overriding default parameters
+try:
+    with open('setupPyConfig.json') as configFile:
+        try:
+            configJson = json.load(configFile)
+            for key, value in configJson.items():
+                if key not in config:
+                    print('\n*****WARNING: found illegal key "'+key+'" in setupPyConfig.json; IGNORED \n*****')
+                elif value != "True" and value != "False":
+                    print('\n*****WARNING: found illegal value "'+value+'" for "'+key+'" in setupPyConfig.json; IGNORED \n*****')
+                else:
+                    config[key] = ("True" == value)
+    
+        except json.JSONDecodeError as e:
+            print("\n********************************")
+            print(f"JSON Decode Error with setupPyConfig.json:\n {e.msg}")
+            print(f"Error at line {e.lineno}, column {e.colno}")
+            print("********************************\n")
+except:
+    print('\n*****WARNING: no setupPyConfig.json found or errors when loading; using default parameters\n*****')
+
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #add help
 if '-h' in sys.argv or '-help' in sys.argv: #also works for --h, --help
@@ -43,6 +75,7 @@ if '-h' in sys.argv or '-help' in sys.argv: #also works for --h, --help
     print("  --openvr    ... compile with openvr library")
     print("  --nofast    ... do not build fast CPP library, which requires an additional run")
     print("  --quiet     ... reduce output of compiler flags, just use counter")
+    print("  --minimal   ... only compile a minimal version - only for testing")
     print("  install     ... install exudyn library after compilation")
     print("  bdist_wheel ... build python wheel")
     print("  ")
@@ -53,35 +86,34 @@ if '-h' in sys.argv or '-help' in sys.argv: #also works for --h, --help
     
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #check GLFW and openVR
-useOpenVR = False
-USEGLFW = True
+
 if '--noglfw' in sys.argv:
-    USEGLFW = False
+    config['USEGLFW'] = False
     print("setup.py: *** compiling without graphics (OpenGL and GLFW) ***")
     sys.argv.remove('--noglfw')
 
-compileParallel = False
 if '--parallel' in sys.argv:
-    compileParallel = True
+    config['compileParallel'] = True
     print("setup.py: *** trying to compile in parallel ***")
     print("          in case that parallel compile fails, remove the --parallel option")
     sys.argv.remove('--parallel')
 
-quietCompile = False
 if '--quiet' in sys.argv:
-    quietCompile = True
+    config['quietCompile'] = True
     sys.argv.remove('--quiet')
 
+if '--minimal' in sys.argv:
+    config['minimalCppFiles'] = True
+    sys.argv.remove('--minimal')
 
 if '--openvr' in sys.argv:
-    useOpenVR = True
+    config['useOpenVR'] = True
     print("setup.py: *** compiling with OpenVR ***")
     sys.argv.remove('--openvr')
 
-compileExudynFast = True    #but only for selected Python versions
 useAVX = False              #this flag is used to create separate version without AVX
 if '--nofast' in sys.argv:
-    compileExudynFast = False
+    config['compileExudynFast'] = False
     print("setup.py: *** no exudynCPPfast created for this Python version ***")
     sys.argv.remove('--nofast')
 
@@ -111,7 +143,7 @@ if sys.platform == 'darwin':
     print("platform == MacOS")
     #platform.architecture() returns '64bit'
     #platform.processor() returns 'arm' in M1 mode and 'i386' under rosetta 2 (Intel mode)
-    compileExudynFast = False #try to reduce compilation time for MacOS
+    config['compileExudynFast'] = False #try to reduce compilation time for MacOS
 
 is64bits = False
 is32bits = False
@@ -129,7 +161,7 @@ if isWindows:
     if is32bits:
         addLibrary_dirs=['libs/libs32' ]
         print("architecture==32bits")
-        if useOpenVR:
+        if config['useOpenVR']:
             #remove this warning in future:
             print('**********************')
             print('WARNING: setup.py: openVR not tested for 32bits case; may work!')
@@ -142,7 +174,7 @@ if isWindows:
             addPackageData['']+=['openvr_api.dll'] #relative to exudyn, copied there; if this does not work on other platforms, copy .dll or .so file directly into exudyn directory
             print('add package data for openVR:', addPackageData)
     else:
-        if useOpenVR:
+        if config['useOpenVR']:
             #this does not work without wildcard *; but does not add the .dll
             #addPackageData['']+=['../../../libs/libs64/openvr*.dll'] #relative to exudyn; if this does not work on other platforms, copy .dll or .so file directly into exudyn directory
             import shutil
@@ -168,7 +200,7 @@ exudynPythonMacro = '__EXUDYN__PYTHON'+str(sys.version_info.major)+str(sys.versi
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #set some platform-specific linker and include options
-if USEGLFW:
+if config['USEGLFW']:
     msvcCppGLFWflag = [] #GLFW will be used
     unixCppGLFWflag = [] #GLFW will be used
 
@@ -185,7 +217,7 @@ if USEGLFW:
         #unix: for graphics; libs (*.so) need to be installed on your linux system -> see setupToolsHowTo.txt:
         unixGLFWlibs = ['-lglfw', #GLFW
                         '-lGL'] #OpenGL
-    if useOpenVR:
+    if config['useOpenVR']:
         msvcGLFWlibs += ['openvr_api.lib'] #openvr_api.dll needs to be in directory of exudynCPP.pyd
         unixGLFWlibs += ['-lopenvr_api']   #linux (openVR dev tools must be installed); MacOS (untested, library needs to be installed/placed in exudyn site-packages folder)
         
@@ -225,141 +257,145 @@ class get_pybind_include(object):
         import pybind11
         return pybind11.get_include()
 
-
 cppFiles = [
-                 'src/Autogenerated/versionCpp.cpp',
-                 'src/Graphics/GlfwClient.cpp',
-                 'src/Graphics/GlfwClientExtended.cpp',
-                 'src/Graphics/OpenVRinterface.cpp',
-                 'src/Graphics/PostProcessData.cpp',
-                 'src/Graphics/VisualizationPrimitives.cpp',
-                 'src/Graphics/VisualizationSystem.cpp',
-                 'src/Graphics/VisualizationSystemContainer.cpp',
-                 'src/Graphics/VisualizationSystemData.cpp',
-                 'src/Graphics/VisualizationUserFunctions.cpp',
-                 'src/Linalg/LinearSolver.cpp',
-                 'src/Linalg/Matrix.cpp',
-                 'src/Linalg/Symbolic.cpp',
-                 'src/Linalg/Vector.cpp',
-                 'src/Main/CSystem.cpp',
-                 'src/Main/MainObjectFactory.cpp',
-                 'src/Main/MainSystem.cpp',
-                 'src/Main/MainSystemContainer.cpp',
-                 'src/Main/rendererPythonInterface.cpp',
-                 'src/Main/Stdoutput.cpp',
-                 'src/Objects/checkPreAssembleConsistencies.cpp',
-                 'src/Objects/CMarkerBodyCable2DCoordinates.cpp',
-                 'src/Objects/CMarkerBodyCable2DShape.cpp',
-                 'src/Objects/CMarkerBodyMass.cpp',
-                 'src/Objects/CMarkerBodyPosition.cpp',
-                 'src/Objects/CMarkerBodyRigid.cpp',
-                 'src/Objects/CMarkerKinematicTreeRigid.cpp',
-                 'src/Objects/CMarkerNodeCoordinate.cpp',
-                 'src/Objects/CMarkerNodeCoordinates.cpp',
-                 'src/Objects/CMarkerNodeODE1Coordinate.cpp',
-                 'src/Objects/CMarkerNodePosition.cpp',
-                 'src/Objects/CMarkerNodeRigid.cpp',
-                 'src/Objects/CMarkerNodeRotationCoordinate.cpp',
-                 'src/Objects/CMarkerObjectODE2Coordinates.cpp',
-                 'src/Objects/CMarkerSuperElementPosition.cpp',
-                 'src/Objects/CMarkerSuperElementRigid.cpp',
-                 'src/Objects/CNode1D.cpp',
-                 'src/Objects/CNodeGenericAE.cpp',
-                 'src/Objects/CNodeGenericData.cpp',
-                 'src/Objects/CNodeGenericODE1.cpp',
-                 'src/Objects/CNodeGenericODE2.cpp',
-                 'src/Objects/CNodePoint.cpp',
-                 'src/Objects/CNodePoint2D.cpp',
-                 'src/Objects/CNodePoint2DSlope1.cpp',
-                 'src/Objects/CNodePointGround.cpp',
-                 'src/Objects/CNodePointSlope1.cpp',
-                 'src/Objects/CNodePointSlope12.cpp',
-                 'src/Objects/CNodePointSlope23.cpp',
-                 'src/Objects/CNodeRigidBody2D.cpp',
-                 'src/Objects/CNodeRigidBodyEP.cpp',
-                 'src/Objects/CNodeRigidBodyRotVecLG.cpp',
-                 'src/Objects/CNodeRigidBodyRxyz.cpp',
-                 'src/Objects/CObjectALEANCFCable2D.cpp',
-                 'src/Objects/CObjectANCFBeam.cpp',
-                 'src/Objects/CObjectANCFCable.cpp',
-                 'src/Objects/CObjectANCFCable2D.cpp',
-                 'src/Objects/CObjectANCFThinPlate.cpp',
-                 'src/Objects/CObjectBeamGeometricallyExact.cpp',
-                 'src/Objects/CObjectBeamGeometricallyExact2D.cpp',
-                 'src/Objects/CObjectConnectorCartesianSpringDamper.cpp',
-                 'src/Objects/CObjectConnectorCoordinate.cpp',
-                 'src/Objects/CObjectConnectorCoordinateSpringDamper.cpp',
-                 'src/Objects/CObjectConnectorCoordinateSpringDamperExt.cpp',
-                 'src/Objects/CObjectConnectorCoordinateVector.cpp',
-                 'src/Objects/CObjectConnectorDistance.cpp',
-                 'src/Objects/CObjectConnectorGravity.cpp',
-                 'src/Objects/CObjectConnectorHydraulicsActuatorSimple.cpp',
-                 'src/Objects/CObjectConnectorLinearSpringDamper.cpp',
-                 'src/Objects/CObjectConnectorReevingSystemSprings.cpp',
-                 'src/Objects/CObjectConnectorRigidBodySpringDamper.cpp',
-                 'src/Objects/CObjectConnectorRollingDiscPenalty.cpp',
-                 'src/Objects/CObjectConnectorSpringDamper.cpp',
-                 'src/Objects/CObjectConnectorTorsionalSpringDamper.cpp',
-                 'src/Objects/CObjectContactCircleCable2D.cpp',
-                 'src/Objects/CObjectContactConvexRoll.cpp',
-                 'src/Objects/CObjectContactCoordinate.cpp',
-                 'src/Objects/CObjectContactFrictionCircleCable2D.cpp',
-                 'src/Objects/CObjectContactFrictionCircleCable2DOld.cpp',
-                 'src/Objects/CObjectFFRF.cpp',
-                 'src/Objects/CObjectFFRFreducedOrder.cpp',
-                 'src/Objects/CObjectGenericODE1.cpp',
-                 'src/Objects/CObjectGenericODE2.cpp',
-                 'src/Objects/CObjectGround.cpp',
-                 'src/Objects/CObjectJointALEMoving2D.cpp',
-                 'src/Objects/CObjectJointGeneric.cpp',
-                 'src/Objects/CObjectJointPrismatic2D.cpp',
-                 'src/Objects/CObjectJointPrismaticX.cpp',
-                 'src/Objects/CObjectJointRevolute2D.cpp',
-                 'src/Objects/CObjectJointRevoluteZ.cpp',
-                 'src/Objects/CObjectJointRollingDisc.cpp',
-                 'src/Objects/CObjectJointSliding2D.cpp',
-                 'src/Objects/CObjectJointSpherical.cpp',
-                 'src/Objects/CObjectKinematicTree.cpp',
-                 'src/Objects/CObjectMass1D.cpp',
-                 'src/Objects/CObjectMassPoint.cpp',
-                 'src/Objects/CObjectMassPoint2D.cpp',
-                 'src/Objects/CObjectRigidBody.cpp',
-                 'src/Objects/CObjectRigidBody2D.cpp',
-                 'src/Objects/CObjectRotationalMass1D.cpp',
-                 'src/Objects/evaluateUserFunctions.cpp',
-                 'src/Objects/VisuNodePoint.cpp',
-                 'src/Pymodules/PybindModule.cpp',
-                 'src/Pymodules/Pybind_manual_classes.cpp',
-                 'src/Pymodules/Pybind_modules.cpp',
-                 'src/Pymodules/PyMatrixContainer.cpp',
-                 'src/Pymodules/pythonTests.cpp',
-                 'src/Solver/CSolver.cpp',
-                 'src/Solver/CSolverBase.cpp',
-                 'src/Solver/CSolverExplicit.cpp',
-                 'src/Solver/CSolverImplicitSecondOrder.cpp',
-                 'src/Solver/CSolverStatic.cpp',
-                 'src/Solver/MainSolver.cpp',
-                 'src/Solver/MainSolverBase.cpp',
-                 'src/System/CContact.cpp',
-                 'src/System/CLoad.cpp',
-                 'src/System/CNode.cpp',
-                 'src/System/CObjectBody.cpp',
-                 'src/System/CObjectConnector.cpp',
-                 'src/System/CSensor.cpp',
-                 'src/System/MainNode.cpp',
-                 'src/System/MainObject.cpp',
-                 'src/Tests/UnitTestBase.cpp',
-                 'src/Utilities/BasicFunctions.cpp',
-                 'src/Utilities/Threading.cpp',
-                 'include/ngs-core-master/bitarray.cpp',
-                 'include/ngs-core-master/exception.cpp',
-                 'include/ngs-core-master/localheap.cpp',
-                 'include/ngs-core-master/paje_interface.cpp',
-                 'include/ngs-core-master/profiler.cpp',
-                 'include/ngs-core-master/table.cpp',
-                 'include/ngs-core-master/taskmanager.cpp',
-
+            'src/Autogenerated/versionCpp.cpp',
+            'src/Graphics/GlfwClient.cpp',
+            'src/Graphics/GlfwClientExtended.cpp',
+            'src/Graphics/OpenVRinterface.cpp',
+            'src/Graphics/PostProcessData.cpp',
+            'src/Graphics/VisualizationPrimitives.cpp',
+            'src/Graphics/VisualizationSystem.cpp',
+            'src/Graphics/VisualizationSystemContainer.cpp',
+            'src/Graphics/VisualizationSystemData.cpp',
+            'src/Graphics/VisualizationUserFunctions.cpp',
+            'src/Linalg/LinearSolver.cpp',
+            'src/Linalg/Matrix.cpp',
+            'src/Linalg/Symbolic.cpp',
+            'src/Linalg/Vector.cpp',
+            'src/Main/CSystem.cpp',
+            'src/Main/MainObjectFactory.cpp',
+            'src/Main/MainSystem.cpp',
+            'src/Main/MainSystemContainer.cpp',
+            'src/Main/rendererPythonInterface.cpp',
+            'src/Main/Stdoutput.cpp',
+            'src/Objects/checkPreAssembleConsistencies.cpp',
+            'src/Objects/CMarkerBodyPosition.cpp',
+            'src/Objects/CNodePoint.cpp',
+            'src/Objects/CObjectANCFCable2D.cpp',
+            'src/Objects/CObjectConnectorSpringDamper.cpp',
+            'src/Objects/CObjectGround.cpp',
+            'src/Objects/CObjectMassPoint.cpp',
+            'src/Objects/evaluateUserFunctions.cpp',
+            'src/Objects/VisuNodePoint.cpp',
+            'src/Pymodules/PybindModule.cpp',
+            'src/Pymodules/Pybind_manual_classes.cpp',
+            'src/Pymodules/Pybind_modules.cpp',
+            'src/Pymodules/PyMatrixContainer.cpp',
+            'src/Pymodules/pythonTests.cpp',
+            'src/Solver/CSolver.cpp',
+            'src/Solver/CSolverBase.cpp',
+            'src/Solver/CSolverExplicit.cpp',
+            'src/Solver/CSolverImplicitSecondOrder.cpp',
+            'src/Solver/CSolverStatic.cpp',
+            'src/Solver/MainSolver.cpp',
+            'src/Solver/MainSolverBase.cpp',
+            'src/System/CContact.cpp',
+            'src/System/CLoad.cpp',
+            'src/System/CNode.cpp',
+            'src/System/CObjectBody.cpp',
+            'src/System/CObjectConnector.cpp',
+            'src/System/CSensor.cpp',
+            'src/System/MainNode.cpp',
+            'src/System/MainObject.cpp',
+            'src/Tests/UnitTestBase.cpp',
+            'src/Utilities/BasicFunctions.cpp',
+            'src/Utilities/Threading.cpp',
+            'include/ngs-core-master/bitarray.cpp',
+            'include/ngs-core-master/exception.cpp',
+            'include/ngs-core-master/localheap.cpp',
+            'include/ngs-core-master/paje_interface.cpp',
+            'include/ngs-core-master/profiler.cpp',
+            'include/ngs-core-master/table.cpp',
+            'include/ngs-core-master/taskmanager.cpp',
     ]
+
+if not config["minimalCppFiles"]:
+    cppFiles += [
+            'src/Objects/CMarkerBodyCable2DCoordinates.cpp',
+            'src/Objects/CMarkerBodyCable2DShape.cpp',
+            'src/Objects/CMarkerBodyMass.cpp',
+            'src/Objects/CMarkerBodyRigid.cpp',
+            'src/Objects/CMarkerKinematicTreeRigid.cpp',
+            'src/Objects/CMarkerNodeCoordinate.cpp',
+            'src/Objects/CMarkerNodeCoordinates.cpp',
+            'src/Objects/CMarkerNodeODE1Coordinate.cpp',
+            'src/Objects/CMarkerNodePosition.cpp',
+            'src/Objects/CMarkerNodeRigid.cpp',
+            'src/Objects/CMarkerNodeRotationCoordinate.cpp',
+            'src/Objects/CMarkerObjectODE2Coordinates.cpp',
+            'src/Objects/CMarkerSuperElementPosition.cpp',
+            'src/Objects/CMarkerSuperElementRigid.cpp',
+            'src/Objects/CNode1D.cpp',
+            'src/Objects/CNodeGenericAE.cpp',
+            'src/Objects/CNodeGenericData.cpp',
+            'src/Objects/CNodeGenericODE1.cpp',
+            'src/Objects/CNodeGenericODE2.cpp',
+            'src/Objects/CNodePoint2D.cpp',
+            'src/Objects/CNodePoint2DSlope1.cpp',
+            'src/Objects/CNodePointGround.cpp',
+            'src/Objects/CNodePointSlope1.cpp',
+            'src/Objects/CNodePointSlope12.cpp',
+            'src/Objects/CNodePointSlope23.cpp',
+            'src/Objects/CNodeRigidBody2D.cpp',
+            'src/Objects/CNodeRigidBodyEP.cpp',
+            'src/Objects/CNodeRigidBodyRotVecLG.cpp',
+            'src/Objects/CNodeRigidBodyRxyz.cpp',
+            'src/Objects/CObjectALEANCFCable2D.cpp',
+            'src/Objects/CObjectANCFBeam.cpp',
+            'src/Objects/CObjectANCFCable.cpp',
+            'src/Objects/CObjectANCFThinPlate.cpp',
+            'src/Objects/CObjectBeamGeometricallyExact.cpp',
+            'src/Objects/CObjectBeamGeometricallyExact2D.cpp',
+            'src/Objects/CObjectConnectorCartesianSpringDamper.cpp',
+            'src/Objects/CObjectConnectorCoordinate.cpp',
+            'src/Objects/CObjectConnectorCoordinateSpringDamper.cpp',
+            'src/Objects/CObjectConnectorCoordinateSpringDamperExt.cpp',
+            'src/Objects/CObjectConnectorCoordinateVector.cpp',
+            'src/Objects/CObjectConnectorDistance.cpp',
+            'src/Objects/CObjectConnectorGravity.cpp',
+            'src/Objects/CObjectConnectorHydraulicsActuatorSimple.cpp',
+            'src/Objects/CObjectConnectorLinearSpringDamper.cpp',
+            'src/Objects/CObjectConnectorReevingSystemSprings.cpp',
+            'src/Objects/CObjectConnectorRigidBodySpringDamper.cpp',
+            'src/Objects/CObjectConnectorRollingDiscPenalty.cpp',
+            'src/Objects/CObjectConnectorTorsionalSpringDamper.cpp',
+            'src/Objects/CObjectContactCircleCable2D.cpp',
+            'src/Objects/CObjectContactConvexRoll.cpp',
+            'src/Objects/CObjectContactCoordinate.cpp',
+            'src/Objects/CObjectContactFrictionCircleCable2D.cpp',
+            'src/Objects/CObjectContactFrictionCircleCable2DOld.cpp',
+            'src/Objects/CObjectFFRF.cpp',
+            'src/Objects/CObjectFFRFreducedOrder.cpp',
+            'src/Objects/CObjectGenericODE1.cpp',
+            'src/Objects/CObjectGenericODE2.cpp',
+            'src/Objects/CObjectJointALEMoving2D.cpp',
+            'src/Objects/CObjectJointGeneric.cpp',
+            'src/Objects/CObjectJointPrismatic2D.cpp',
+            'src/Objects/CObjectJointPrismaticX.cpp',
+            'src/Objects/CObjectJointRevolute2D.cpp',
+            'src/Objects/CObjectJointRevoluteZ.cpp',
+            'src/Objects/CObjectJointRollingDisc.cpp',
+            'src/Objects/CObjectJointSliding2D.cpp',
+            'src/Objects/CObjectJointSpherical.cpp',
+            'src/Objects/CObjectKinematicTree.cpp',
+            'src/Objects/CObjectMass1D.cpp',
+            'src/Objects/CObjectMassPoint2D.cpp',
+            'src/Objects/CObjectRigidBody.cpp',
+            'src/Objects/CObjectRigidBody2D.cpp',
+            'src/Objects/CObjectRotationalMass1D.cpp',
+    ]
+
+
 
 #some specific include directories for exudyn:
 myIncludeDirs += [
@@ -383,14 +419,14 @@ ext_modules = [
     ),
 ]
 
-if compileExudynFast:
+if config['compileExudynFast']:
     if not (#pyVersionString == '3.7' or
             #pyVersionString == '3.8' or
             #pyVersionString == '3.9' or
             pyVersionString == '3.10'
-       ) and isDevelopmentVersion: compileExudynFast = False
+       ) and isDevelopmentVersion: config['compileExudynFast'] = False
 
-if compileExudynFast:
+if config['compileExudynFast']:
     print('***  preparing C++ module also for __FAST_EXUDYN_LINALG  ***')
     ext_modules += [
         Extension(
@@ -461,8 +497,10 @@ class BuildExt(build_ext):
     #options used for all builds:
     allMacros = ['EXUDYN_RELEASE'] #exclude experimental parts    
     allMacros += [exudynPythonMacro] #Python version easily accessible
-    if useOpenVR:
+    if config['useOpenVR']:
         allMacros += ['__EXUDYN_USE_OPENVR'] #internally compiles functions for openVR; tested on windows and linux; needs openvr_api.lib, DLL for windows and installed dev kit for openVR on linux
+    if config['minimalCppFiles']:
+        allMacros += ['EXUDYN_MINIMAL_COMPILATION'] #for testing, only minimal number of items
     
     commonCopts = []
     for macroString in allMacros:
@@ -509,10 +547,6 @@ class BuildExt(build_ext):
  		 '-Wall',
          '-g0', #deactivate debug information (overrides default -g flags), decreases files size from 38MB to 2.6 MB in Python 3.6 version
          #'-std=c++17', #==>chosen automatic
-         #'-fpermissive', #because of exceptions ==> allows compilation
-         #'-fopenmp',
- 		 #'-shared',
- 		 #'-fPIC',
 
 #		#working:
 #		'-Wno-non-template-friend', #deactivate warning for several vector/array templates
@@ -591,7 +625,7 @@ class BuildExt(build_ext):
 # http://stackoverflow.com/a/13176803
 # monkey-patch for parallel compilation
 # reduces compile time on 4-core machine by factor >2
-if compileParallel:
+if config['compileParallel']:
     try:
         import multiprocessing
         import multiprocessing.pool
@@ -620,14 +654,14 @@ if compileParallel:
 
                     try: src, ext = build[obj]
                     except KeyError: return
-                    if quietCompile:
+                    if config['quietCompile']:
                         with open('setuppy.output.txt', 'w') as sys.stdout:
                             self._compile(obj, src, ext, cc_args, extra_postargs, pp_opts)
                         sys.stdout = sys.__stdout__
                     else:
                         self._compile(obj, src, ext, cc_args, extra_postargs, pp_opts)
 
-                    if quietCompile:
+                    if config['quietCompile']:
                         #reduced output just showing file name and counter:
                         cnt = 0
                         with exudynCompileCnt.get_lock():
@@ -705,7 +739,7 @@ if compileParallel:
             
                     try:
                         #reduced output just showing file name and counter:
-                        if quietCompile:
+                        if config['quietCompile']:
                             with exudynCompileCnt.get_lock():
                                 exudynCompileCnt.value += 1
                             sys.__stdout__.write('compile '+str(exudynCompileCnt.value).zfill(3)+'/'+str(nObjects)+ ': ')
@@ -718,7 +752,7 @@ if compileParallel:
                 N_cores = multiprocessing.cpu_count() #better to use all threads, not only cpus
                 # N_cores = 1
                 # convert to list, imap is evaluated on-demand
-                if quietCompile:
+                if config['quietCompile']:
                     with open('setuppy.output.txt', 'w') as sys.stdout:
                         list(multiprocessing.pool.ThreadPool(N_cores).imap(_single_compile,objects))
                     sys.stdout = sys.__stdout__
@@ -771,19 +805,10 @@ setup(
     description='EXUDYN flexible multibody dynamics simulation in C++ and Python',
     long_description = long_description,
     long_description_content_type='text/x-rst',
-    #long_description_content_type='text/markdown', #standard is already text/x-rst
 #
     package_dir={'':'pythonDev'},   #only add packages from that dir; must include a __init__.py file
     packages=find_namespace_packages(where='pythonDev', include=('exudyn', 'exudyn.robotics')),
-    #include_package_data=True, #do not use this argument, as it causes some changes in workflow of package_data 
-    #data_files = [('lib/site-packages', ['libs/libs64/openvr_api.dll'])], #includes list of files put into specific directory 'data', which does not work for .dll
     package_data=addPackageData,
-    #package_data={'tests': ['pythonDev/TestModels/*.py'],}, #could include additional data
-#
-    ##OLD, gives major deprecation warnings:
-    # package_dir={'':'pythonDev'},   #only add packages from that dir; must include a __init__.py file
-    # packages=['exudyn','exudyn/robotics'],            #adds all python files (=modules) in directories with __init__.py file; this is a subdirectory to the directory provided in package_dir
-    # include_package_data=True, #not sure, if this is necessary!
 #
     ext_modules=ext_modules,
     setup_requires=[setup_requires_pybind11], 
@@ -795,29 +820,27 @@ setup(
     classifiers=[
         developmentStatus,
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.6",
-        "Programming Language :: Python :: 3.7",
+        # "Programming Language :: Python :: 3.6",
+        # "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
         "Intended Audience :: Science/Research",
         "License :: OSI Approved :: BSD License",
-        #"Operating System :: Microsoft :: Windows :: Windows 10",
         "Operating System :: Microsoft :: Windows", #allow Windows 11
         "Operating System :: POSIX :: Linux",
         "Operating System :: MacOS",
         "Topic :: Scientific/Engineering",
     ],
     #OLD: '==' makes problems with pypi? python_requires='=='+pyVersionString+'.*', #'.*' required on UBUNTU/Windows in order to accept any Python minor Version (e.g. 3.6.x) during installation
-    #python_requires='>='+pyVersionString, #'.*' required on UBUNTU/Windows in order to accept any Python minor Version (e.g. 3.6.x) during installation
     python_requires='>=3.6', #for pypi.org, do only specify the minimum Python version which is needed for this exudyn version
 )
 
-if useOpenVR and isWindows: #delete copied file
+if config['useOpenVR'] and isWindows: #delete copied file
     import os
     os.remove('pythonDev/exudyn/openvr_api.dll')
 
-#print('*** setup.py: END time:', time.time())
 print('*** setup.py: DURATION =', round(time.time()-startTime,2), 'seconds')
 
