@@ -55,19 +55,20 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install GLFW OpenGL
-        run: |
-          sudo apt-get install libglfw3 libglfw3-dev
-          sudo apt-get install freeglut3 freeglut3-dev
-          sudo apt-get install mesa-common-dev
-          #sudo apt-get install libx11-dev xorg-dev libglu1-mesa libglu1-mesa-dev libgl1-mesa-glx libgl1-mesa-dev
-          #libglew1.5 libglew1.5-dev 
+      # - name: Install GLFW OpenGL
+        # run: |
+          # sudo apt-get install libglfw3 libglfw3-dev
+          # sudo apt-get install freeglut3 freeglut3-dev
+          # sudo apt-get install mesa-common-dev
+          # sudo apt-get install libx11-dev xorg-dev libglu1-mesa libglu1-mesa-dev libgl1-mesa-glx libgl1-mesa-dev
+          # libglew1.5 libglew1.5-dev 
 
+      #https://github.com/RalfG/python-wheels-manylinux-build/blob/master/full_workflow_example.yml
       - uses: RalfG/python-wheels-manylinux-build@v0.7.1-manylinux2014_x86_64
         with:
           python-versions: 'cp310-cp310'
           build-requirements: 'numpy'
-          system-packages: ''
+          system-packages: 'libglfw3 libglfw3-dev libgl1-mesa-dev'
           pre-build-command: ''
           package-path: 'main'
           pip-wheel-args: '-w ./main/dist --no-deps'
