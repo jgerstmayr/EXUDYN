@@ -31,14 +31,16 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install setuptools wheel
+          pip install setuptools wheel auditwheel
       # - name: Install cibuildwheel setuptools
         # run: python -m pip install cibuildwheel
         # working-directory: main  # Specify the directory where setup.py is located
 
       - name: Build wheels for manylinux
         #run: python -m cibuildwheel --output-dir .wheels
-        run: python setup.py bdist_wheel --parallel
+        run: | 
+          python setup.py bdist_wheel --parallel
+          auditwheel repair exudyn-*.whl -w ./dist --plat manylinux2014_x86_64
         # env:
           # CIBW_BUILD: "cp39-*"
           #CIBW_MANYLINUX_X86_64_IMAGE: manylinux2014
