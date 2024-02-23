@@ -43,7 +43,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        python-version: ['cp310-cp310']
+        python-version: ['cp38-cp38', 'cp39-cp39', 'cp310-cp310', 'cp311-cp311', 'cp312-cp312']
         #os: [ubuntu-latest, windows-latest, macos-latest]
         #python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
 
@@ -77,37 +77,37 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: wheels-linux-python-${{ matrix.python-version }}
-          path: ./main/dist/*.whl
+          path: ./main/dist/*manylinux2014_x86_64.whl
 
-  # buildWindows:
-    # name: Build wheels on ${{ matrix.os }}
-    # runs-on: ${{ matrix.os }}
-    # strategy:
-      # matrix:
-        # os: [windows-latest]
-        # python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
-        # #os: [ubuntu-latest, windows-latest, macos-latest]
+  buildWindows:
+    name: Build wheels on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest]
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
+        #os: [ubuntu-latest, windows-latest, macos-latest]
 
-    # steps:
-    # - uses: actions/checkout@v3
+    steps:
+    - uses: actions/checkout@v3
 
-    # - name: Set up Python ${{ matrix.python-version }}
-      # uses: actions/setup-python@v3
-      # with:
-        # python-version: ${{ matrix.python-version }}
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
 
-    # - name: Install cibuildwheel
-      # run: python -m pip install cibuildwheel
-      # #working-directory: main  # Specify the directory where setup.py is located
+    - name: Install cibuildwheel
+      run: python -m pip install cibuildwheel
+      #working-directory: main  # Specify the directory where setup.py is located
 
-    # - name: Build wheels
-      # run: python -m cibuildwheel --output-dir .wheels
-      # env:
-        # #CIBW_BUILD: "cp39-*" #only the selected versions are built
-        # CIBW_SKIP: "*-win32"   #skip building 32-bit (win32) wheels
-      # working-directory: main  #specify the local dir where setup.py is located
+    - name: Build wheels
+      run: python -m cibuildwheel --output-dir .wheels
+      env:
+        #CIBW_BUILD: "cp39-*" #only the selected versions are built
+        CIBW_SKIP: "*-win32"   #skip building 32-bit (win32) wheels
+      working-directory: main  #specify the local dir where setup.py is located
 
-    # - uses: actions/upload-artifact@v4
-      # with:
-        # name: wheels-x86-python-${{ matrix.python-version }}
-        # path: main/.wheels/*.whl
+    - uses: actions/upload-artifact@v4
+      with:
+        name: wheels-x86-python-${{ matrix.python-version }}
+        path: main/.wheels/*.whl
