@@ -43,7 +43,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        python-version: ['3.10']
+        python-version: ['cp310-cp310']
         #os: [ubuntu-latest, windows-latest, macos-latest]
         #python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
 
@@ -53,7 +53,8 @@ jobs:
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v3
         with:
-          python-version: ${{ matrix.python-version }}
+          #python-version: ${{ matrix.python-version }}
+          python-version: '3.10'
 
       # - name: Install GLFW OpenGL
         # run: |
@@ -66,17 +67,17 @@ jobs:
       #https://github.com/RalfG/python-wheels-manylinux-build/blob/master/full_workflow_example.yml
       - uses: RalfG/python-wheels-manylinux-build@v0.7.1-manylinux2014_x86_64
         with:
-          python-versions: 'cp310-cp310'
+          python-versions: ${{ matrix.python-version }} #'cp310-cp310'
           build-requirements: 'numpy'
           system-packages: 'mesa-libGL-devel mesa-libGLU-devel glfw glfw-devel'
           pre-build-command: ''
           package-path: 'main'
-          pip-wheel-args: '-w ./main/dist --no-deps'
+          pip-wheel-args: '-w ./dist --no-deps'
 
       - uses: actions/upload-artifact@v4
         with:
           name: wheels-linux-python-${{ matrix.python-version }}
-          path: main/dist/*.whl
+          path: ./main/dist/*.whl
 
   # buildWindows:
     # name: Build wheels on ${{ matrix.os }}
