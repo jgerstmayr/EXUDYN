@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Getting started &mdash; Exudyn1.7.104.dev1 1.7.104.dev1 documentation</title>
+  <title>Getting started &mdash; Exudyn1.7.116.dev1 1.7.116.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=74f3cfff"></script>
+        <script src="../../_static/documentation_options.js?v=8142d844"></script>
         <script src="../../_static/doctools.js?v=888ff710"></script>
         <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -41,7 +41,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.7.104.dev1
+            Exudyn1.7.116.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -95,7 +95,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.7.104.dev1</a>
+          <a href="../../index.html">Exudyn1.7.116.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -134,7 +134,7 @@ It is the follow up code of the previously developed multibody code HOTINT, whic
 It seemed that the previous code HOTINT reached limits of further (efficient) development and it seemed impossible to continue from this code as it was outdated regarding programming techniques and the numerical formulation at the time Exudyn was started.</p>
 <p>Exudyn is designed to easily set up complex multibody models, consisting of rigid and flexible bodies with joints, loads and other components. It shall enable automatized model setup and parameter variations, which are often necessary for system design but also for analysis of technical problems. The broad usability of Python allows to couple a multibody simulation with environments such as optimization, statistics, data analysis, machine learning and others.</p>
 <p>The multibody formulation is mainly based on redundant coordinates. This means that computational objects (rigid bodies, flexible bodies, …) are added as independent bodies to the system. Hereafter, connectors (e.g., springs or constraints) are used to interconnect the bodies. The connectors are using Markers on the bodies as interfaces, in order to transfer forces and displacements.
-For details on the interaction of nodes, objects, markers and loads see Section <a class="reference internal" href="ItemsNodesObjectsLoadsMarkersSensors.html#sec-overview-items"><span class="std std-ref">Items: Nodes, Objects, Loads, Markers, Sensors, …</span></a>. For a non-redundant formulation, see <code class="docutils literal notranslate"><span class="pre">ObjectKinematicTree</span></code> – this allows to create tree-structures with minimal coordinates in Exudyn .</p>
+For details on the interaction of nodes, objects, markers and loads see Section <a class="reference internal" href="ItemsNodesObjectsLoadsMarkersSensors.html#sec-overview-items"><span class="std std-ref">Items: Nodes, Objects, Loads, Markers, Sensors, …</span></a>. For a non-redundant formulation, see <code class="docutils literal notranslate"><span class="pre">ObjectKinematicTree</span></code> – this allows to create tree-structures with minimal coordinates in Exudyn.</p>
 <p>There are several journal papers of the developers which were using Exudyn (list may be incomplete):</p>
 <ul class="simple">
 <li><ol class="upperalpha simple" start="10">
@@ -199,15 +199,17 @@ For the interoperability between C++ and Python, we extensively use <strong>Pybi
 <ul class="simple">
 <li><p>Joachim Schöberl, TU Vienna (Providing specialized NGsolve  core library with <code class="docutils literal notranslate"><span class="pre">taskmanager</span></code> for <strong>multi-threaded parallelization</strong>; NGsolve mesh and FE-matrices import; highly efficient eigenvector computations)</p></li>
 <li><p>Stefan Holzinger, University of Innsbruck (Lie group module and solvers in Python, Lie group node; helped with Lie group solvers, geometrically exact beam; testing)</p></li>
+<li><p>Peter Manzl, University of Innsbruck (ConvexRoll Python and C++ implementation; revised artificialIntelligence, ParameterVariation, robotics and MPI parallelization; providing many figures for theDoc; pip install on linux, wsl with graphics)</p></li>
 <li><p>Andreas Zwölfer, Technical University Munich (theory and examples for FFRF, CMS formulation and ANCF 2D cable prototypes in MATLAB)</p></li>
-<li><p>Peter Manzl, University of Innsbruck (ConvexRoll Python and C++ implementation; improved artificialIntelligence, ParameterVariation, robotics and MPI parallelization; pip install on linux, wsl with graphics)</p></li>
 <li><p>Martin Sereinig, University of Innsbruck (special robotics functionality, mobile robots, manipulability measures, robot models)</p></li>
 <li><p>Michael Pieber, University of Innsbruck (helped in several Python libraries; ComputeODE2Eigenvalues with constraints, FEM and CMS testing; Abaqus import and test files; ANCFCable2D+ALE theory improvements and equations check)</p></li>
 <li><p>Grzegorz Orzechowski, Lappeenranta University of Technology (coupling with openAI gym and running machine learning algorithms)</p></li>
 <li><p>Aaron Bacher, University of Innsbruck (helped to integrated OpenVR, connection with Franka Emika Panda)</p></li>
 <li><p>Martin Arnold, Martin-Luther-University of Halle-Wittenberg (support for explicit and implicit Lie group solvers, especially to theory / jacobians and automatic step size)</p></li>
 <li><p>Konstantina Ntarladima, University of Innsbruck (ANCFCable2D+ALE theory improvements and equations check)</p></li>
-<li><p>Qasim Khadim, University of Oulu (suggestion for improved model of HydraulicsActuatorSimple with eff. bulk modulus)</p></li>
+<li><p>Alexander Humer, Johannes Kepler University Linz (initial discussions on structure and C++ code)</p></li>
+<li><p>Qasim Khadim, University of Oulu (suggestion for improved model of HydraulicsActuatorSimple with effective bulk modulus)</p></li>
+<li><p>Michael Gerbl, University of Innsbruck (figures in the documentation, taken from lecture notes)</p></li>
 <li><p>examples provided by: Manuel Schieferle, Martin Knapp, Lukas March, Dominik Sponring, David Wibmer, Simon Scheiber</p></li>
 </ul>
 <p>– thanks a lot! –</p>

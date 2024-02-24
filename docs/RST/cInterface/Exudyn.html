@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Exudyn &mdash; Exudyn1.7.104.dev1 1.7.104.dev1 documentation</title>
+  <title>Exudyn &mdash; Exudyn1.7.116.dev1 1.7.116.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=74f3cfff"></script>
+        <script src="../../../_static/documentation_options.js?v=8142d844"></script>
         <script src="../../../_static/doctools.js?v=888ff710"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -41,7 +41,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.7.104.dev1
+            Exudyn1.7.116.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -94,7 +94,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.7.104.dev1</a>
+          <a href="../../../index.html">Exudyn1.7.116.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -166,17 +166,17 @@
 </li>
 <li><div class="line-block">
 <div class="line"><strong>SolveStatic</strong>(<em>mbs</em>, <em>simulationSettings</em> = exudyn.SimulationSettings(), <em>updateInitialValues</em> = False, <em>storeSolver</em> = True):</div>
-<div class="line">Static solver function, mapped from module <code class="docutils literal notranslate"><span class="pre">solver</span></code>, to solve static equations (without inertia terms) of constrained rigid or flexible multibody system; for details on the Python interface see Section <span class="xref std std-ref">sec-solver-solvestatic</span>; for background on solvers, see Section <a class="reference internal" href="../Solvers.html#sec-solvers"><span class="std std-ref">Solvers</span></a></div>
+<div class="line">Static solver function, mapped from module <code class="docutils literal notranslate"><span class="pre">solver</span></code>, to solve static equations (without inertia terms) of constrained rigid or flexible multibody system; for details on the Python interface see Section <a class="reference internal" href="MainSystem.html#sec-mainsystemextensions-solvestatic"><span class="std std-ref">Function: SolveStatic</span></a>; for background on solvers, see Section <a class="reference internal" href="../Solvers.html#sec-solvers"><span class="std std-ref">Solvers</span></a></div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>SolveDynamic</strong>(<em>mbs</em>, <em>simulationSettings</em> = exudyn.SimulationSettings(), <em>solverType</em> = exudyn.DynamicSolverType.GeneralizedAlpha, <em>updateInitialValues</em> = False, <em>storeSolver</em> = True):</div>
-<div class="line">Dynamic solver function, mapped from module <code class="docutils literal notranslate"><span class="pre">solver</span></code>, to solve equations of motion of constrained rigid or flexible multibody system; for details on the Python interface see Section <span class="xref std std-ref">sec-solver-solvedynamic</span>; for background on solvers, see Section <a class="reference internal" href="../Solvers.html#sec-solvers"><span class="std std-ref">Solvers</span></a></div>
+<div class="line">Dynamic solver function, mapped from module <code class="docutils literal notranslate"><span class="pre">solver</span></code>, to solve equations of motion of constrained rigid or flexible multibody system; for details on the Python interface see Section <a class="reference internal" href="MainSystem.html#sec-mainsystemextensions-solvedynamic"><span class="std std-ref">Function: SolveDynamic</span></a>; for background on solvers, see Section <a class="reference internal" href="../Solvers.html#sec-solvers"><span class="std std-ref">Solvers</span></a></div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>ComputeODE2Eigenvalues</strong>(<em>mbs</em>, <em>simulationSettings</em> = exudyn.SimulationSettings(), <em>useSparseSolver</em> = False, <em>numberOfEigenvalues</em> = -1, <em>setInitialValues</em> = True, <em>convert2Frequencies</em> = False):</div>
-<div class="line">Simple interface to scipy eigenvalue solver for eigenvalue analysis of the second order differential equations part in mbs, mapped from module <code class="docutils literal notranslate"><span class="pre">solver</span></code>; for details on the Python interface see Section <span class="xref std std-ref">sec-solver-computeode2eigenvalues</span></div>
+<div class="line">Simple interface to scipy eigenvalue solver for eigenvalue analysis of the second order differential equations part in mbs, mapped from module <code class="docutils literal notranslate"><span class="pre">solver</span></code>; for details on the Python interface see Section <a class="reference internal" href="MainSystem.html#sec-mainsystemextensions-computeode2eigenvalues"><span class="std std-ref">Function: ComputeODE2Eigenvalues</span></a></div>
 </div>
 </li>
 <li><div class="line-block">

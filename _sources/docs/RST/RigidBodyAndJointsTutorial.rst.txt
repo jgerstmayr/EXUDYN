@@ -4,7 +4,7 @@
 Rigid body and joints tutorial
 ==============================
 
-The python source code of the first tutorial, based on the simple description of revolute joints, can be found in the file:
+The Python source code of the first tutorial, based on the simple description of revolute joints, can be found in the file:
 
    \ ``main/pythonDev/Examples/rigidBodyTutorial3.py``\ 
 
@@ -13,12 +13,14 @@ For alternative approaches, see
    \ ``main/pythonDev/Examples/rigidBodyTutorial3withMarkers.py``\ 
    \ ``main/pythonDev/Examples/rigidBodyTutorial2.py``\ 
 
-This tutorial will set up a multibody system containing a ground, two rigid bodies and two revolute joints driven by gravity, compare a 3D view of the example in  the figure above.
+This tutorial will set up a multibody system containing a ground, two rigid bodies and two revolute joints driven by gravity, compare a 3D view of the example in \ :numref:`fig-rigidbodytutorialview`\ .
 
 
-
-.. image:: ../theDoc/figures/TutorialRigidBody1desc.png
+.. _fig-rigidbodytutorialview:
+.. figure:: ../theDoc/figures/TutorialRigidBody1desc.png
    :width: 400
+
+   Render view of rigid body tutorial, showing objects, nodes (N0, N1), and loads.
 
 
 
@@ -339,13 +341,16 @@ A graphical representation of the internal structure of the model can be shown u
   mbs.DrawSystemGraph(useItemTypes=True) #draw nice graph of system
 
 
-For the output see the figure below. Note that obviously, markers are always needed to connect objects (or nodes) as well as loads. We can also see, that 2 markers MarkerBodyRigid1 and MarkerBodyRigid2 are unused, which is no further problem for the model and also does not require additional computational resources (except for some bytes of memory). Having isolated nodes or joints that are not connected (or having too many connections) may indicate that you did something wrong in setting up your model.
+For the output see \ :numref:`fig-drawsystemgraphexample`\ . 
+Note that obviously, markers are always needed to connect objects (or nodes) as well as loads. We can also see, that 2 markers MarkerBodyRigid1 and MarkerBodyRigid2 are unused, which is no further problem for the model and also does not require additional computational resources (except for some bytes of memory). Having isolated nodes or joints that are not connected (or having too many connections) may indicate that you did something wrong in setting up your model.
 Furthermore, it can be seen that the function \ ``CreateRigidBody``\  added a body \ ``ObjectRigidBody``\ , a node \ ``NodeRigidBodyEP``\ , a \ ``LoadMassProportional``\  for gravity load with a \ ``MarkerBodyMass``\ , and the function \ ``CreateRevoluteJoint``\  created two \ ``MarkerBodyRigid``\  and a \ ``ObjectJointRevoluteZ``\  which represents a revolute joint about a Z-axis in the joint coordinate system. For further information, consult the respective pages in the Items reference manual.
 
 
-
-.. image:: ../theDoc/figures/DrawSystemGraphExample.png
+.. _fig-drawsystemgraphexample:
+.. figure:: ../theDoc/figures/DrawSystemGraphExample.png
    :width: 600
+
+   System graph for rigid body tutorial (with option 3 for the first revolute joint). Numbers are always related to the node number, object number, etc.; note that colors are used to distinguish nodes, objects, markers, loads and sensors
 
 
 
@@ -457,7 +462,5 @@ Finally, we can plot our sensor, drawing the y-component of the sensor (check ou
 
 
 \ **Congratulations**\ ! You completed the rigid body tutorial, which gives you the ability to model multibody systems. Note that much more complicated models are possible, including feedback control or flexible bodies, see the Examples!
-
-
 
 

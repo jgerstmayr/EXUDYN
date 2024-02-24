@@ -5,4 +5,4 @@
 Solvers
 *******
 
-Note that the information on solvers is not as complete as the reference pages for items.
+This section provides and overview on most important solvers. Explicit and implicit dynamic solvers, as well as optimizers are described in more detail.

@@ -22,6 +22,12 @@ You can view and download this file on Github: `openAIgymInterfaceTest.py <https
    #
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    
+   #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+   #to run this example the following worked:
+   #conda create -n venvGym python=3.10 numpy matplotlib spyder-kernels=2.4 ipykernel -y
+   #pip install gym[spaces]
+   #pip install stable-baselines3==1.7.0
+   #pip install exudyn
    
    import exudyn as exu
    from exudyn.utilities import *
@@ -251,11 +257,11 @@ You can view and download this file on Github: `openAIgymInterfaceTest.py <https
        #main learning task; 1e7 steps take 2-3 hours
        ts = -time.time()
        model = A2C('MlpPolicy', env, verbose=1)
-       model.learn(total_timesteps=1e3) #1e7 works but 2e7 is more robust!
+       model.learn(total_timesteps=1e4) #1e6 may work, 2e7 is quite robust!
        print('*** learning time total =',ts+time.time(),'***')
    
        #save learned model
-       model.save("openAIgymDoublePendulum1e5")
+       model.save("openAIgymDoublePendulum1e4")
        del model
    
        #%%++++++++++++++++++++++++++++++++++++++++++++++++++

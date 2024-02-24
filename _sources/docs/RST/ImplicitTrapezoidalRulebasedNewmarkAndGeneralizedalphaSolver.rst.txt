@@ -96,6 +96,14 @@ and Newmarks's parameters,
 
 
 
+.. _fig-spectralradius:
+.. figure:: ../theDoc/figures/spectralRadiusZeta0.png
+   :width: 400
+
+   Spectral radius for generalized-\ :math:`\alpha`\  method depending on dimensionless step size \ :math:`\bar h=h/T`\ , in which \ :math:`T`\  is the period of an equivalent single DOF mass-spring-damper system.
+
+
+
 
 
 Newton iteration
@@ -111,7 +119,7 @@ Thus, the residuals at the end of the time step (\ :math:`T`\ ) read (put all te
    {\mathbf{r}}^\GA_\AE &=& {\mathbf{g}}({\mathbf{q}}_T, \dot {\mathbf{q}}_T, {\mathbf{y}}_T, \tlambda_T, t) = 0
 
 
-We consider two options for \SON: (A) solve for unknown accelerations \ :math:`{\mathbf{a}}u_T`\ ,  or (B) for unknown displacements \ :math:`{\mathbf{q}}_T`\ .
+We consider two options for \SON: (A) solve for unknown accelerations \ :math:`\acc_T`\ ,  or (B) for unknown displacements \ :math:`{\mathbf{q}}_T`\ .
 
 
 (A) Solve for unknown accelerations
@@ -122,7 +130,7 @@ The unknowns for the Newton method then are
 .. math::
    :label: eq-newton-unknowns1
 
-   \txi^\GA_{k+1} = \vr{{\mathbf{a}}u_T}{{\mathbf{y}}_T}{\tlambda_T}
+   \txi^\GA_{k+1} = \vr{\acc_T}{{\mathbf{y}}_T}{\tlambda_T}
 
 
 and at the beginning of the step, we have
@@ -130,7 +138,7 @@ and at the beginning of the step, we have
 .. math::
    :label: eq-newton-unknowns2
 
-   \txi^\GA_{k} = \vr{{\mathbf{a}}u_0}{{\mathbf{y}}_0}{\tlambda_0}
+   \txi^\GA_{k} = \vr{\acc_0}{{\mathbf{y}}_0}{\tlambda_0}
 
 
 For the Newton method, we need to compute an update for the unknowns of Eq. :eq:`eq-newton-unknowns1`\ , using the previous residual \ :math:`{\mathbf{r}}_{k}`\  and the inverse of the Jacobian \ :math:`{\mathbf{J}}_{k}`\  of Newton iteration \ :math:`k`\ ,
@@ -154,10 +162,10 @@ The remaining terms in the Jacobian are currently (or by default settings) evalu
 
 .. math::
 
-   {\mathbf{J}}_{\SO\SO}&=&\frac{\partial {\mathbf{r}}^\GA_\SO}{\partial {\mathbf{a}}u} = \frac{\partial {\mathbf{r}}^\GA_\SO}{\partial {\mathbf{q}}} \frac{\partial {\mathbf{q}}}{\partial {\mathbf{a}}u} + \frac{\partial {\mathbf{r}}^\GA_\SO}{\partial \dot {\mathbf{q}}} \frac{\partial \dot {\mathbf{q}}}{\partial {\mathbf{a}}u} = h^2 \beta {\mathbf{K}} + h \gamma {\mathbf{D}} \nonumber \\
+   {\mathbf{J}}_{\SO\SO}&=&\frac{\partial {\mathbf{r}}^\GA_\SO}{\partial \acc} = \frac{\partial {\mathbf{r}}^\GA_\SO}{\partial {\mathbf{q}}} \frac{\partial {\mathbf{q}}}{\partial \acc} + \frac{\partial {\mathbf{r}}^\GA_\SO}{\partial \dot {\mathbf{q}}} \frac{\partial \dot {\mathbf{q}}}{\partial \acc} = h^2 \beta {\mathbf{K}} + h \gamma {\mathbf{D}} \nonumber \\
    {\mathbf{J}}_{\SO\AE}&=&\frac{\partial {\mathbf{r}}^\GA_\SO}{\partial \tlambda} = \frac{\partial {\mathbf{g}}}{\partial {\mathbf{q}}} \quad (\mbox{or } \frac{\partial {\mathbf{g}}}{\partial \dot {\mathbf{q}}} \mbox{ for constraints at velocity level)} \nonumber \\
    {\mathbf{J}}_{\FO\FO}&=&\frac{\partial {\mathbf{r}}^\GA_\FO}{\partial {\mathbf{y}}} \nonumber \\
-   {\mathbf{J}}_{\AE\SO}&=&\frac{\partial {\mathbf{r}}^\GA_\AE}{\partial {\mathbf{a}}u} = \frac{\partial {\mathbf{g}}}{\partial {\mathbf{a}}u} = \frac{\partial {\mathbf{g}}}{\partial {\mathbf{q}}} \frac{\partial {\mathbf{q}}}{\partial {\mathbf{a}}u} + \frac{\partial {\mathbf{g}}}{\partial \dot {\mathbf{q}}} \frac{\partial \dot {\mathbf{q}}}{\partial {\mathbf{a}}u} = h^2 \beta \frac{\partial {\mathbf{g}}}{\partial {\mathbf{q}}} + h \gamma \frac{\partial {\mathbf{g}}}{\partial \dot {\mathbf{q}}} \nonumber \\
+   {\mathbf{J}}_{\AE\SO}&=&\frac{\partial {\mathbf{r}}^\GA_\AE}{\partial \acc} = \frac{\partial {\mathbf{g}}}{\partial \acc} = \frac{\partial {\mathbf{g}}}{\partial {\mathbf{q}}} \frac{\partial {\mathbf{q}}}{\partial \acc} + \frac{\partial {\mathbf{g}}}{\partial \dot {\mathbf{q}}} \frac{\partial \dot {\mathbf{q}}}{\partial \acc} = h^2 \beta \frac{\partial {\mathbf{g}}}{\partial {\mathbf{q}}} + h \gamma \frac{\partial {\mathbf{g}}}{\partial \dot {\mathbf{q}}} \nonumber \\
    {\mathbf{J}}_{\AE\FO}&=&\frac{\partial {\mathbf{r}}^\GA_\AE}{\partial {\mathbf{y}}} \nonumber \\
    {\mathbf{J}}_{\AE\AE}&=&\frac{\partial {\mathbf{r}}^\GA_\AE}{\partial \tlambda} = \frac{\partial {\mathbf{g}}}{\partial \tlambda}
 
@@ -198,7 +206,7 @@ Finally, the equations for the computation of the initial accelerations read for
 note that \ :math:`{\mathbf{y}}_{init}`\  are the nodal initial values for \ :math:`{\mathbf{y}}`\ ,
 
 .. math::
-   :label: eq-initialaccelerationsvel2
+   :label: eq-initialaccelerationsvelb
 
    \mr{{\mathbf{M}}}{\Null}{\frac{\partial {\mathbf{g}}}{\partial \dot {\mathbf{q}}^\mathrm{T}}} {\Null}{{\mathbf{I}}}{\Null} {\frac{\partial {\mathbf{g}}}{\partial \dot {\mathbf{q}}}}{\Null}{\Null} \vr{\ddot {\mathbf{q}}_0}{{\mathbf{y}}_0}{\tlambda_0} = \vr{{\mathbf{f}}_\SO({\mathbf{q}}_T, \dot {\mathbf{q}}_T, t)}{{\mathbf{y}}_{init}} {-\frac{\partial {\mathbf{g}}}{\partial {\mathbf{q}}} \dot {\mathbf{q}}_0-\frac{\partial {\mathbf{g}}}{\partial {\mathbf{y}}} \dot {\mathbf{y}}_0 - \frac{\partial {\mathbf{g}}}{\partial t}}  ,
 
@@ -223,14 +231,14 @@ For position level constraints, Eq. :eq:`eq-initialaccelerationspos`\  is used t
 Finally, the equations for the computation of the initial accelerations for position level constraints read
 
 .. math::
-   :label: eq-initialaccelerationspos2
+   :label: eq-initialaccelerationsposb
 
    \mr{{\mathbf{M}}}{\Null}{\frac{\partial {\mathbf{g}}}{\partial {\mathbf{q}}^\mathrm{T}}} {\Null}{{\mathbf{I}}}{\Null} {\frac{\partial {\mathbf{g}}}{\partial {\mathbf{q}}} }{\Null}{\Null} \vr{\ddot {\mathbf{q}}_0}{{\mathbf{y}}_0}{\tlambda_0} = \vr{{\mathbf{f}}_\SO({\mathbf{q}}_T, \dot {\mathbf{q}}_T, t)}{{\mathbf{y}}_{init}} {- 2 \frac{\partial^2 {\mathbf{g}}}{\partial {\mathbf{q}} \partial t} \dot {\mathbf{q}}_0 - \frac{\partial^2 {\mathbf{g}}}{\partial {\mathbf{q}}^2} \dot {\mathbf{q}}_0^2  - \frac{\partial^2 {\mathbf{g}}}{\partial t^2}}  ,
 
 
-The linear system of equations  :ref:`eq-initialaccelerationsvel2`\  or  :ref:`eq-initialaccelerationspos2`\  is solved prior to an implicit time integration if 
+The linear system of equations, either Eq. :eq:`eq-initialaccelerationsvelb`\  or Eq. :eq:`eq-initialaccelerationsposb`\ , is solved prior to an implicit time integration if 
 
-   \ ``simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations = True``\  
+   \ ``simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations = True``\ ,
 
 which is the default value.
 

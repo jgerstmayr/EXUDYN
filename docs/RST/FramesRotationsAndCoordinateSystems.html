@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Frames, rotations and coordinate systems &mdash; Exudyn1.7.116.dev1 1.7.116.dev1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=82a976d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=e11081fd" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=8142d844"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../_static/copybutton.js?v=f281be69"></script>
+        <script src="../../_static/js/rtd_search_config.js"></script>
+        <script src="../../_static/js/rtd_sphinx_search.min.js"></script>
+        <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "ps": "{p_\\mathrm{s}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "myoverline": ["\\overline{#1}", 1], "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "mfour": ["{\\left[ \\begin{array}{cccc} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vfour": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vrRow": ["{[#1,\\, #2,\\, #3]}", 3], "vsix": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} \\right]}", 6], "vsixb": ["{\\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "vsixs": ["{ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "omegaBDtilde": "{\\LU{b}{\\tilde \\tomega_\\mathrm{bd}}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}", "termA": ["{\\color{blue}{#1}}", 1], "termB": ["{\\color{red}{#1}}", 1], "termC": ["{\\color{green}{#1}}", 1], "acc": "{\\ddot \\mathbf{q}}", "GA": "{G\\alpha}", "aalg": "{\\mathbf{a}}", "vel": "{\\mathbf{v}}"}}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Integration Points" href="IntegrationPoints.html" />
+    <link rel="prev" title="Dynamics: Mechanical principles" href="DynamicsMechanicalPrinciples.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Exudyn1.7.116.dev1
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Exudyn.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="NotationIndex.html">Notation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="TheoryAndFormulationsIndex.html">Theory and formulations</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="TheoryAndFormulations.html">Theory and formulations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="IntroductionToMultibodySystems.html">Introduction to multibody systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DynamicsMechanicalPrinciples.html">Dynamics: Mechanical principles</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Frames, rotations and coordinate systems</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#reference-points-and-reference-frames">Reference points and reference frames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#coordinate-systems-of-frames">Coordinate systems of frames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#homogeneous-transformations">Homogeneous transformations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rotations">Rotations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rotation-tensor-axis-angle-representation">Rotation tensor: axis-angle representation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#euler-angles-tait-bryan-angles">Euler angles: Tait-Bryan angles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#euler-parameters-and-unit-quaternions">Euler parameters and unit quaternions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="IntegrationPoints.html">Integration Points</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="SolversIndex.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="pythonUtilities/index.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="structures/StructuresAndSettingsIndex.html">Structures and Settings</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Misc</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ExamplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TestModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Exudyn1.7.116.dev1</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="TheoryAndFormulationsIndex.html">Theory and formulations</a></li>
+      <li class="breadcrumb-item active">Frames, rotations and coordinate systems</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/docs/RST/FramesRotationsAndCoordinateSystems.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="frames-rotations-and-coordinate-systems">
+<h1>Frames, rotations and coordinate systems<a class="headerlink" href="#frames-rotations-and-coordinate-systems" title="Link to this heading"></a></h1>
+<p>In this section, we introduce frames, which provide reference points and rotations attached to the ground or to bodies, thus providing a bases for coordinate systems.</p>
+<section id="reference-points-and-reference-frames">
+<h2>Reference points and reference frames<a class="headerlink" href="#reference-points-and-reference-frames" title="Link to this heading"></a></h2>
+<p>In contrast to the reference coordinates (which may include reference position and rotations), the reference point of a body, marker or joint is available in any configuration (current, initial, etc.).
+The reference point and orientation (or reference frame) of a rigid body coincides with the position and orientation of the underlying node.
+The local position of a point of the body is expressed relative to the body’s reference frame, which may be different from the body’s center of mass.
+The reference frame is also used for <a class="reference internal" href="Abbreviations.html#ffrf"><span class="std std-ref">FFRF</span></a> objects. In most cases, reference points are denoted by <span class="math notranslate nohighlight">\(\pRef\)</span>.</p>
+</section>
+<section id="coordinate-systems-of-frames">
+<h2>Coordinate systems of frames<a class="headerlink" href="#coordinate-systems-of-frames" title="Link to this heading"></a></h2>
+<p>Many considerations and computations in kinematics can be formulated coordinate-free.
+However, ultimately local positions are given by the user in different coordinates from results given in global (world) coordinates.</p>
+<p>For this reason, we use left upper indices in symbols to indicate underlying frames of points or vectors, e.g.,
+<span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{u}}}\)</span> represents a displacement vector in the global (world) coordinate system <span class="math notranslate nohighlight">\(0\)</span>, while
+<span class="math notranslate nohighlight">\(\LU{m1}{{\mathbf{u}}}\)</span> represents the displacement vector in marker 1 (<span class="math notranslate nohighlight">\(m1\)</span>) coordinates.</p>
+<p>Typical coordinate systems (frames) are:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{u}}}\)</span> <span class="math notranslate nohighlight">\(\ldots\)</span> global or world coordinates</p></li>
+<li><p><span class="math notranslate nohighlight">\(\LU{b}{{\mathbf{u}}}\)</span> <span class="math notranslate nohighlight">\(\ldots\)</span> body-fixed, local coordinates</p></li>
+<li><p><span class="math notranslate nohighlight">\(\LU{m0}{{\mathbf{u}}}\)</span> <span class="math notranslate nohighlight">\(\ldots\)</span> local coordinates of (the body or node of) marker <span class="math notranslate nohighlight">\(m0\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\LU{m1}{{\mathbf{u}}}\)</span> <span class="math notranslate nohighlight">\(\ldots\)</span> local coordinates of (the body or node of) marker <span class="math notranslate nohighlight">\(m1\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\LU{J0}{{\mathbf{u}}}\)</span> <span class="math notranslate nohighlight">\(\ldots\)</span> local coordinates of joint <span class="math notranslate nohighlight">\(0\)</span>, related to marker <span class="math notranslate nohighlight">\(m0\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\LU{J1}{{\mathbf{u}}}\)</span> <span class="math notranslate nohighlight">\(\ldots\)</span> local coordinates of joint <span class="math notranslate nohighlight">\(1\)</span>, related to marker <span class="math notranslate nohighlight">\(m1\)</span></p></li>
+</ul>
+<p>To transform the local coordinates <span class="math notranslate nohighlight">\(\LU{m0}{{\mathbf{u}}}\)</span> of marker 0 into global coordinates <span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{x}}}\)</span>, we use the relation</p>
+<div class="math notranslate nohighlight" id="equation-eq-theory-coordinatesystems-rot">
+<span class="eqno">(13)<a class="headerlink" href="#equation-eq-theory-coordinatesystems-rot" title="Link to this equation"></a></span>\[\LU{0}{{\mathbf{u}}} = \LU{0,m0}{\Rot} \LU{m0}{{\mathbf{u}}}\]</div>
+<p>in which <span class="math notranslate nohighlight">\(\LU{0,m0}{\Rot}\)</span> is the transformation matrix of (the body or node of) the underlying marker 0.</p>
+<p>In particular, note that any transformation, e.g., of the angular velocity in body (b) and world coordinates,</p>
+<div class="math notranslate nohighlight">
+\[\LU{0}{\tomega} = \LU{0,b}{\Rot} \LU{b}{\tomega}\]</div>
+<p>only transforms the vector from one frame to the other, but does not change the vector <span class="math notranslate nohighlight">\(\tomega\)</span> itself.</p>
+</section>
+<section id="homogeneous-transformations">
+<h2>Homogeneous transformations<a class="headerlink" href="#homogeneous-transformations" title="Link to this heading"></a></h2>
+<p>In order to considere rotations and translations in frames, homogeneous transformations are used.
+An arbitrary vector <span class="math notranslate nohighlight">\(\LU{i}{{\mathbf{r}}}\)</span> in coordinates of frame <span class="math notranslate nohighlight">\(\mathcal{F}_i\)</span> can be expressed relative to <span class="math notranslate nohighlight">\(\mathcal{F}_j\)</span> with the vector <span class="math notranslate nohighlight">\(\LU{j}{{\mathbf{p}}_i}\)</span>, pointing from <span class="math notranslate nohighlight">\(O_j\)</span> to <span class="math notranslate nohighlight">\(O_i\)</span> and a rotation matrix according to Eq. <a class="reference internal" href="#equation-eq-theory-coordinatesystems-rot">(13)</a>:</p>
+<div class="math notranslate nohighlight" id="equation-eq-theory-ht-positionrelation">
+<span class="eqno">(14)<a class="headerlink" href="#equation-eq-theory-ht-positionrelation" title="Link to this equation"></a></span>\[\LU{j}{{\mathbf{r}}} = \LU{ji}{{\mathbf{R}}} \LU{i}{{\mathbf{r}}} + \LU{j}{{\mathbf{p}}_i}\]</div>
+<p>Eq. <a class="reference internal" href="#equation-eq-theory-ht-positionrelation">(14)</a> can be written as a linear mapping,</p>
+<div class="math notranslate nohighlight">
+\[\vp{\LU{j}{{\mathbf{r}}}}{1} = \mp{\LU{ji}{{\mathbf{R}}}}{\LU{j}{{\mathbf{p}}_i}}{\Null^T}{1} \vp{\LU{i}{{\mathbf{r}}}}{1}, \quad\]</div>
+<p>in which the matrix</p>
+<div class="math notranslate nohighlight">
+\[\LU{ji}{{\mathbf{T}}} = \mp{\LU{ji}{{\mathbf{R}}}}{\LU{j}{{\mathbf{p}}_i}}{\Null^T}{1}\]</div>
+<p>is referred to as the <strong>homogeneous transformation matrix</strong>, and <span class="math notranslate nohighlight">\(\LU{j}{\hat {\mathbf{r}}} = [\LU{j}{{\mathbf{r}}} \;\; 1]^T\)</span> is the homogeneous vector corresponding to <span class="math notranslate nohighlight">\(\LU{j}{{\mathbf{r}}}\)</span>.</p>
+<p>Analogous to the rotation matrix, <span class="math notranslate nohighlight">\(\LU{ji}{{\mathbf{T}}}\)</span> has an inverse, which follows as</p>
+<div class="math notranslate nohighlight">
+\[\LURU{ji}{{\mathbf{T}}}{}{-1} = \LU{ij}{{\mathbf{T}}} = \mp{\LURU{ji}{{\mathbf{R}}}{}{T}} {-\LURU{ji}{{\mathbf{R}}}{}{T} \LU{j}{{\mathbf{p}}_i}}{\Null^T}{1} \vp{\LU{j}{{\mathbf{r}}}}{1} .\]</div>
+<p>Sequential application of homogeneous transformations simplifies to</p>
+<div class="math notranslate nohighlight">
+\[\LU{ki}{{\mathbf{T}}} = \LU{kj}{{\mathbf{T}}} \LU{ji}{{\mathbf{T}}} .\]</div>
+<p>We could also actively move vectors, by assuming that the homogeneous transformation matrix <span class="math notranslate nohighlight">\(\LU{i0,i1}{{\mathbf{T}}}\)</span> transforms coordinates within the same frame <span class="math notranslate nohighlight">\(\mathcal{F}_i\)</span>, between two (time) steps 0 and 1,</p>
+<div class="math notranslate nohighlight">
+\[\LU{i1}{\hat {\mathbf{r}}} = \LU{i1,i0}{{\mathbf{T}}} \LU{i0}{\hat {\mathbf{r}}}\]</div>
+<p>which advances the vector <span class="math notranslate nohighlight">\(\LU{i0}{\hat {\mathbf{r}}}\)</span> in time.</p>
+<p>Note that an efficient implementation would only include <span class="math notranslate nohighlight">\({\mathbf{R}}\)</span> and <span class="math notranslate nohighlight">\({\mathbf{p}}\)</span>, without necessarily computing <span class="math notranslate nohighlight">\(4 \times 4\)</span> matrices.</p>
+<figure class="align-default" id="id1">
+<span id="fig-theory-ht-changeofframe"></span><a class="reference internal image-reference" href="../../_images/theoryRotationsHTchangeOfFrame.png"><img alt="../../_images/theoryRotationsHTchangeOfFrame.png" src="../../_images/theoryRotationsHTchangeOfFrame.png" style="width: 320px;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 17 </span><span class="caption-text">Homogeneous transformation from <span class="math notranslate nohighlight">\(\mathcal{F}_i\)</span> to <span class="math notranslate nohighlight">\(\mathcal{F}_j\)</span> using the relation <span class="math notranslate nohighlight">\(\LU{j}{\hat{\mathbf{r}} } = \LU{ji}{{\mathbf{T}}} \LU{i}{\hat{\mathbf{r}} }\)</span></span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>All homogeneous transformations form the <strong>Special Euclidean Group SE(3)</strong> – the motion group – for describing rigid body movements in 3D. Therefore, homogeneous transformations also meet the criteria for groups (closure, associativity, existence of neutral and inverse elements).</p>
+<p>Elementary rotations about the <span class="math notranslate nohighlight">\({\mathbf{e}}_z\)</span>-axis and translations along the <span class="math notranslate nohighlight">\({\mathbf{e}}_x\)</span>-axis, for example, are given by:</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{Rot}({\mathbf{e}}_z, \theta) = \vfour{\cos \theta ,\; -\sin \theta ,\; 0 ,\; 0}{\sin \theta ,\; \cos \theta ,\; 0 ,\; 0}{0 ,\; 0 ,\; 1 ,\; 0}{0 ,\; 0 ,\; 0 ,\; 1}, \quad \mathbf{Trans}({\mathbf{e}}_x, d) = \vfour{1 ,\; 0 ,\; 0 ,\; d}{0 ,\; 1 ,\; 0 ,\; 0}{0 ,\; 0 ,\; 1 ,\; 0}{0 ,\; 0 ,\; 0 ,\; 1}\]</div>
+<p>Arbitrary composite transformations can be constructed from elementary transformations. In general, the following applies:</p>
+<ul class="simple">
+<li><p>Pre-multiplication (<strong>Pre-Multiplication</strong>): Transformation in the global coordinate system</p></li>
+<li><p>Post-multiplication (<strong>Post-Multiplication</strong>): Transformation in the rotated coordinate system</p></li>
+</ul>
+<p>By exploiting the tools of so-called Lie groups, rigid body movements can be interpolated using matrix logarithm (<code class="docutils literal notranslate"><span class="pre">LogSE3(...)</span></code>) and matrix exponential function (<code class="docutils literal notranslate"><span class="pre">ExpSE3(...)</span></code>).</p>
+</section>
+<section id="rotations">
+<h2>Rotations<a class="headerlink" href="#rotations" title="Link to this heading"></a></h2>
+<p>In this section, we discuss in particular rotations, as already introduced for coordinate systems and homogeneous transformations.
+Rotations can be represented by transformation matrices, leading to a linear transformation</p>
+<div class="math notranslate nohighlight">
+\[\LU{0}{{\mathbf{r}}} = \LU{0,1}{\Rot} \LU{1}{{\mathbf{r}}}\]</div>
+<p>which transforms the vector <span class="math notranslate nohighlight">\(\LU{1}{{\mathbf{r}}}\)</span> accordingly.
+However, rotations are inherently nonlinear. First, rotation parametrizations – except for the components of the rotation matrix itself – are highly nonlinear functions of rotation parameters.
+Second, subsequent rotations couple in a multiplicative (i.e., nonlinear) way. Therefore rotations have to be treated differently from translations.</p>
+<section id="derivation-of-the-transformation-matrix-from-coordinate-transformations">
+<h3>Derivation of the transformation matrix from coordinate transformations<a class="headerlink" href="#derivation-of-the-transformation-matrix-from-coordinate-transformations" title="Link to this heading"></a></h3>
+<p>The vector <span class="math notranslate nohighlight">\({\mathbf{a}}\)</span> can be represented in coordinates of frame <span class="math notranslate nohighlight">\(\mathcal{F}_1\)</span> with basis vectors <span class="math notranslate nohighlight">\(({\mathbf{e}}_{x1},\,{\mathbf{e}}_{y1},\,{\mathbf{e}}_{z1})\)</span> and of frame <span class="math notranslate nohighlight">\(\mathcal{F}_2\)</span> with basis vectors <span class="math notranslate nohighlight">\(({\mathbf{e}}_{x2},\,{\mathbf{e}}_{y2},\,{\mathbf{e}}_{z2})\)</span>,</p>
+<div class="math notranslate nohighlight" id="equation-eq-theory-rotations-trans1">
+<span class="eqno">(15)<a class="headerlink" href="#equation-eq-theory-rotations-trans1" title="Link to this equation"></a></span>\[{\mathbf{a}} = \LUR{1}{a}{x} {\mathbf{e}}_{x1} + \LUR{1}{a}{y} {\mathbf{e}}_{y1} +\LUR{1}{a}{z} {\mathbf{e}}_{z1} = \LUR{2}{a}{x} {\mathbf{e}}_{x2} + \LUR{2}{a}{y} {\mathbf{e}}_{y2} +\LUR{2}{a}{z} {\mathbf{e}}_{z2} .\]</div>
+<p>Multiplying Eq. <a class="reference internal" href="#equation-eq-theory-rotations-trans1">(15)</a> with the basis vectors <span class="math notranslate nohighlight">\(({\mathbf{e}}_{x1},\,{\mathbf{e}}_{y1},\,{\mathbf{e}}_{z1})\)</span> consecutively, we obtain three relations,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\LUR{1}{a}{x} &amp;=&amp; \LUR{2}{a}{x} {\mathbf{e}}_{x1}^T{\mathbf{e}}_{x2} + \LUR{2}{a}{y} {\mathbf{e}}_{x1}^T{\mathbf{e}}_{y2} +\LUR{2}{a}{z} {\mathbf{e}}_{x1}^T{\mathbf{e}}_{z2} , \nonumber\\
+\LUR{1}{a}{y} &amp;=&amp; \LUR{2}{a}{x} {\mathbf{e}}_{y1}^T{\mathbf{e}}_{x2} + \LUR{2}{a}{y} {\mathbf{e}}_{y1}^T{\mathbf{e}}_{y2} +\LUR{2}{a}{z} {\mathbf{e}}_{y1}^T{\mathbf{e}}_{z2} , \nonumber\\
+\LUR{1}{a}{z} &amp;=&amp; \LUR{2}{a}{x} {\mathbf{e}}_{z1}^T{\mathbf{e}}_{x2} + \LUR{2}{a}{y} {\mathbf{e}}_{z1}^T{\mathbf{e}}_{y2} +\LUR{2}{a}{z} {\mathbf{e}}_{z1}^T{\mathbf{e}}_{z2} .\end{split}\]</div>
+<p>where we apply the orthonormality relationships <span class="math notranslate nohighlight">\({\mathbf{e}}^T_{x1} {\mathbf{e}}_{x1} = 1\)</span>, <span class="math notranslate nohighlight">\(\ldots\)</span> as well as <span class="math notranslate nohighlight">\({\mathbf{e}}^T_{x1} {\mathbf{e}}_{y1} = 0\)</span>, <span class="math notranslate nohighlight">\({\mathbf{e}}^T_{x1} {\mathbf{e}}_{z1} = 0\)</span>, <span class="math notranslate nohighlight">\(\ldots\)</span> througout.</p>
+<p>We can represent the result as linear transformation</p>
+<div class="math notranslate nohighlight">
+\[\vr{\LUR{1}{a}{x}}{\LUR{1}{a}{y}}{\LUR{1}{a}{z}} = \mr{{\mathbf{e}}_{x1}^T{\mathbf{e}}_{x2}}{{\mathbf{e}}_{x1}^T{\mathbf{e}}_{y2}}{{\mathbf{e}}_{x1}^T{\mathbf{e}}_{z2}} {{\mathbf{e}}_{y1}^T{\mathbf{e}}_{x2}}{{\mathbf{e}}_{y1}^T{\mathbf{e}}_{y2}}{{\mathbf{e}}_{y1}^T{\mathbf{e}}_{z2}} {{\mathbf{e}}_{z1}^T{\mathbf{e}}_{x2}}{{\mathbf{e}}_{z1}^T{\mathbf{e}}_{y2}}{{\mathbf{e}}_{z1}^T{\mathbf{e}}_{z2}} \vr{\LUR{2}{a}{x}}{\LUR{2}{a}{y}}{\LUR{2}{a}{z}}\]</div>
+<p>or in short</p>
+<div class="math notranslate nohighlight">
+\[\LU{1}{{\mathbf{a}}} = \LU{12}{\Rot} \LU{2}{{\mathbf{a}}} .\]</div>
+<p>The <strong>Transformationsmatrix</strong> <span class="math notranslate nohighlight">\(\LU{12}{\Rot}\)</span> transforms coordinates of vector <span class="math notranslate nohighlight">\({\mathbf{a}}\)</span> from <span class="math notranslate nohighlight">\(\mathcal{F}_2\)</span> into <span class="math notranslate nohighlight">\(\mathcal{F}_1\)</span>.
+We observe that the columns of <span class="math notranslate nohighlight">\(\LU{12}{\Rot}\)</span> contain unit vectors <span class="math notranslate nohighlight">\({\mathbf{e}}_{x2}\)</span>, <span class="math notranslate nohighlight">\({\mathbf{e}}_{y2}\)</span>, and <span class="math notranslate nohighlight">\({\mathbf{e}}_{z2}\)</span> represented in frame <span class="math notranslate nohighlight">\(\mathcal{F}_1\)</span>,
+and that the rows can be identified as the unit vectors <span class="math notranslate nohighlight">\({\mathbf{e}}_{x1}^T\)</span>, <span class="math notranslate nohighlight">\({\mathbf{e}}_{y1}^T\)</span>, and <span class="math notranslate nohighlight">\({\mathbf{e}}_{z1}^T\)</span> represented in frame <span class="math notranslate nohighlight">\(\mathcal{F}_2\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\LU{12}{\Rot} = \left[ \LUR{1}{{\mathbf{e}}}{x2} \quad \LUR{1}{{\mathbf{e}}}{y2} \quad \LUR{1}{{\mathbf{e}}}{z2}\right] = \vr{\LURU{2}{{\mathbf{e}}}{x1}{\mathrm{T}}}{\LURU{2}{{\mathbf{e}}}{y1}{\mathrm{T}}}{\LURU{2}{{\mathbf{e}}}{z1}{\mathrm{T}}} .\]</div>
+<p>Note that:</p>
+<ul class="simple">
+<li><p>Columns and rows of <span class="math notranslate nohighlight">\(\LU{12}{\Rot}\)</span> represent an orthonormal right-hand system.</p></li>
+<li><p>Because the determinant <span class="math notranslate nohighlight">\(\det(\LU{12}{\Rot})= + 1\)</span>, we call <span class="math notranslate nohighlight">\(\LU{12}{\Rot}\)</span> to be proper-orthogonal.</p></li>
+<li><p>Rotations conserve length, <span class="math notranslate nohighlight">\(|{\mathbf{A}} {\mathbf{x}}| = |{\mathbf{x}}|\)</span>.</p></li>
+<li><p>For the same reason, rotations conserve angles.</p></li>
+<li><p>During transformations, we observe that reading left upper indices from left to right, indices are changed only by transformation matrices (which are not transposed): <span class="math notranslate nohighlight">\(\LU{2}{{\mathbf{a}}} = \LU{21}{\Rot} \LU{1}{{\mathbf{a}}}\)</span></p></li>
+</ul>
+<p>We note the following rules:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\LU{21}{\Rot} &amp;=&amp; \LURU{12}{\Rot}{}{-1} ,\nonumber \\
+\LURU{12}{\Rot}{}{-1} &amp;=&amp; \LURU{12}{\Rot}{}{T} ,\nonumber \\
+\LU{12}{\Rot} \LURU{12}{\Rot}{}{T} &amp;=&amp; {\mathbf{I}} , \nonumber \\
+\LURU{12}{\Rot}{}{T} \LU{12}{\Rot} &amp;=&amp; {\mathbf{I}} .\end{split}\]</div>
+</section>
+<section id="elementary-rotations">
+<h3>Elementary rotations<a class="headerlink" href="#elementary-rotations" title="Link to this heading"></a></h3>
+<p>Elementary rotations are rotations about a single axis, using one of the orthogonal basis vectors.
+Consider basis <span class="math notranslate nohighlight">\(({\mathbf{e}}_{x1},\,{\mathbf{e}}_{y1},\,{\mathbf{e}}_{z1})\)</span> and a rotation around axis <span class="math notranslate nohighlight">\({\mathbf{e}}_{x1}\)</span> with angle <span class="math notranslate nohighlight">\(\varphi_1\)</span> in positive rotation sense, obtaining a rotated frame <span class="math notranslate nohighlight">\(({\mathbf{e}}_{x2},\,{\mathbf{e}}_{y2},\,{\mathbf{e}}_{z2})\)</span>, see <a class="reference internal" href="#fig-theory-rotations-elementaryx"><span class="std std-numref">Fig. 18</span></a>.
+The rotation matrix for this case reads:</p>
+<div class="math notranslate nohighlight">
+\[\LU{12}{\Rot} = \left[ \LUR{1}{{\mathbf{e}}}{x2} \;\; \LUR{1}{{\mathbf{e}}}{y2} \;\; \LUR{1}{{\mathbf{e}}}{z2} \right] = \mr{1}{0}{0}{0}{c \varphi_1}{-s \varphi_1}{0}{s \varphi_1}{c \varphi_1}.\]</div>
+<p>In this case, the coordinates of a vector <span class="math notranslate nohighlight">\({\mathbf{r}}\)</span> are transformed according to</p>
+<div class="math notranslate nohighlight">
+\[\LU{1}{{\mathbf{r}}} = \LU{12}{\Rot} \LU{2}{{\mathbf{r}}}\]</div>
+<figure class="align-default" id="id2">
+<span id="fig-theory-rotations-elementaryx"></span><a class="reference internal image-reference" href="../../_images/elementaryRotationX.png"><img alt="../../_images/elementaryRotationX.png" src="../../_images/elementaryRotationX.png" style="width: 320px;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 18 </span><span class="caption-text">Elementary rotation around axis <span class="math notranslate nohighlight">\(\mathbf x_1\)</span>.</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>In a second example, a rotation with angle <span class="math notranslate nohighlight">\(\varphi_2\)</span> around <span class="math notranslate nohighlight">\({\mathbf{e}}_{y2}\)</span> is performed to transform from basis <span class="math notranslate nohighlight">\(({\mathbf{e}}_{x2},\,{\mathbf{e}}_{y2},\,{\mathbf{e}}_{z2})\)</span> into <span class="math notranslate nohighlight">\(({\mathbf{e}}_{x3},\,{\mathbf{e}}_{y3},\,{\mathbf{e}}_{z3})\)</span>, see <a class="reference internal" href="#fig-theory-rotations-elementaryy"><span class="std std-numref">Fig. 19</span></a>.
+The rotation matrix for this case reads:</p>
+<div class="math notranslate nohighlight">
+\[\LU{23}{\Rot} = \left[ \LUR{2}{{\mathbf{e}}}{x3} \;\; \LUR{2}{{\mathbf{e}}}{y3} \;\; \LUR{2}{{\mathbf{e}}}{z3} \right] = \mr{c \varphi_2}{0}{s \varphi_2}{0}{1}{0}{-s \varphi_2}{0}{c \varphi_2}.\]</div>
+<figure class="align-default" id="id3">
+<span id="fig-theory-rotations-elementaryy"></span><a class="reference internal image-reference" href="../../_images/elementaryRotationY.png"><img alt="../../_images/elementaryRotationY.png" src="../../_images/elementaryRotationY.png" style="width: 320px;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 19 </span><span class="caption-text">Elementary rotation around axis <span class="math notranslate nohighlight">\(\mathbf y_2\)</span>.</span><a class="headerlink" href="#id3" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>Finally, a rotation around <span class="math notranslate nohighlight">\({\mathbf{e}}_{z3}\)</span> with angle <span class="math notranslate nohighlight">\(\varphi_3\)</span> would give similarly,</p>
+<div class="math notranslate nohighlight">
+\[\LU{34}{\Rot} = \left[ \LUR{3}{{\mathbf{e}}}{x4} \;\; \LUR{3}{{\mathbf{e}}}{y4} \;\; \LUR{3}{{\mathbf{e}}}{z4} \right] = \mr{c \varphi_3}{-s \varphi_3}{0} {s \varphi_3}{c \varphi_3}{0} {0}{0}{1} .\]</div>
+</section>
+<section id="linearized-rotations">
+<h3>Linearized rotations<a class="headerlink" href="#linearized-rotations" title="Link to this heading"></a></h3>
+<p>In this case we can interpret the small rotations as a constant angular velocity over small time <span class="math notranslate nohighlight">\(\Delta t\)</span>, <span class="math notranslate nohighlight">\({\mathbf{t}}arphi = \Delta t \cdot \tomega\)</span>, which results in</p>
+<div class="math notranslate nohighlight">
+\[{\mathbf{r}}_1^\prime= {\mathbf{r}}_1 + \Delta t \cdot (\tomega \times {\mathbf{r}}_1) = ({\mathbf{I}} + \tilde {\mathbf{t}}arphi) {\mathbf{r}}_1\]</div>
+<p>Leading to the linearized rotation matrix</p>
+<div class="math notranslate nohighlight">
+\[\Rot_\mathrm{lin} = {\mathbf{I}} - \tilde {\mathbf{t}}arphi\]</div>
+<p>Alternatively, using linearized rotations <span class="math notranslate nohighlight">\({\mathbf{t}}arphi = [\varphi_1,\;\varphi_2,\;\varphi_3]\tp\)</span>, with <span class="math notranslate nohighlight">\(|{\mathbf{t}}arphi| \ll 1\)</span>, we can approximate <span class="math notranslate nohighlight">\(\sin \varphi_1\)</span> as:</p>
+<div class="math notranslate nohighlight">
+\[\sin \varphi_1 = \varphi_1 - \frac{\varphi_1^3}{3!} + \frac{\varphi_1^5}{5!} - ... \approx \varphi_1\]</div>
+<p>Similarly, we can approximate <span class="math notranslate nohighlight">\(\cos \varphi_1 \approx 1\)</span>. This immediately gives a linearization for elementary rotations – where we observe that contributions for each axis can be added.</p>
+<p>The axis-angle representation (see later) leads to the same result by linearization of the Rodrigues formula,</p>
+<div class="math notranslate nohighlight">
+\[\Rot({\mathbf{u}}, \varphi) \approx {\mathbf{I}} + \tilde {\mathbf{u}} \varphi, \quad \Rot\tp \approx {\mathbf{I}} - \tilde {\mathbf{u}} \varphi\]</div>
+<p>in which <span class="math notranslate nohighlight">\(\varphi\)</span> represents the infinitesimal angle and <span class="math notranslate nohighlight">\({\mathbf{u}}\)</span> is the rotation axis.</p>
+<p><strong>Note</strong>: whenever you would like to work with linearized rotations, or if you do not know the sequence of small rotations, still do not use the linearized formula as it gives immediately rotation matrices without strict orthogonality and determinant of 1. In order to avoid computational problems, use for example <code class="docutils literal notranslate"><span class="pre">RotationVector2RotationMatrix(phi)</span></code> to compute a consistent rotation matrix based on the matrix exponential.</p>
+</section>
+<section id="active-and-passive-rotations">
+<h3>Active and passive rotations<a class="headerlink" href="#active-and-passive-rotations" title="Link to this heading"></a></h3>
+<p>It is important to distinguish two fundamentally different concepts of rotations.
+There is the <strong>active rotation</strong>, which can be represented by a coordinate-free relation,</p>
+<div class="math notranslate nohighlight" id="equation-eq-theory-rotations-active">
+<span class="eqno">(16)<a class="headerlink" href="#equation-eq-theory-rotations-active" title="Link to this equation"></a></span>\[{\mathbf{v}}^\prime = \Rot {\mathbf{v}}\]</div>
+<p>in which a vector <span class="math notranslate nohighlight">\({\mathbf{v}}\)</span> is actively rotated into a new configuration <span class="math notranslate nohighlight">\({\mathbf{v}}^\prime\)</span> using a rotation tensor <span class="math notranslate nohighlight">\(\Rot\)</span>.
+Eq. <a class="reference internal" href="#equation-eq-theory-rotations-active">(16)</a> can be represented in any coordinate system, but keeping it fixed.</p>
+<p>Furthermore, we denote a <strong>passive rotation</strong> as a coordinate transformation, as used many times before,</p>
+<div class="math notranslate nohighlight">
+\[\LU{1}{{\mathbf{v}}} = \LU{12}{\Rot} \LU{2}{{\mathbf{v}}}\]</div>
+<p>in which the vector <span class="math notranslate nohighlight">\({\mathbf{v}}\)</span> is not changed at all, but only its coordinates are represented in two different coordinate systems.</p>
+<p>While passive rotations (and homogeneous transformations) are used, e.g., to compute current positions of body-attached points through several relative coordinate systems, active rotations can represent the rotations from one time step to the next one.</p>
+</section>
+<section id="successive-rotations">
+<h3>Successive rotations<a class="headerlink" href="#successive-rotations" title="Link to this heading"></a></h3>
+<p>The successive application of rotation matrices is non-commutative. An exception is the planar case, i.e., all rotations occur around the same axis.
+Specifically, we see that for successive rotations, the following must be considered:</p>
+<div class="math notranslate nohighlight">
+\[{\mathbf{A}}_2 {\mathbf{A}}_1 {\mathbf{v}} \neq {\mathbf{A}}_1 {\mathbf{A}}_2 {\mathbf{v}} .\]</div>
+<p>As an example, we consider in Figure  <a class="reference internal" href="#fig-theory-rotations-successive"><span class="std std-ref">Successive rotations are not commutative.</span></a> the different order of rotations of a block.</p>
+<figure class="align-default" id="id4">
+<span id="fig-theory-rotations-successive"></span><a class="reference internal image-reference" href="../../_images/RotationsSequences.png"><img alt="../../_images/RotationsSequences.png" src="../../_images/RotationsSequences.png" style="width: 500px;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 20 </span><span class="caption-text">Successive rotations are not commutative.</span><a class="headerlink" href="#id4" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>In <a class="reference internal" href="#fig-theory-rotations-successive"><span class="std std-numref">Fig. 20</span></a>a, the block shown is first rotated 90° about the <span class="math notranslate nohighlight">\(\mathbf{e}_2\)</span> axis and then 90° about the <span class="math notranslate nohighlight">\(\mathbf{e}_3\)</span> axis. In Figure  <a class="reference internal" href="#fig-theory-rotations-successive"><span class="std std-ref">Successive rotations are not commutative.</span></a>b, the same rotations are applied in reverse order, i.e., the block is first rotated 90° about the <span class="math notranslate nohighlight">\(\mathbf{e}_3\)</span> axis and then 90° about the <span class="math notranslate nohighlight">\(\mathbf{e}_2\)</span> axis. It is immediately apparent that the resulting orientation of the block is different in both cases.</p>
+<p>Finally, it should be noted that there are two different types of successive rotations.
+In the first variant, also known as the <strong>single-frame method</strong>, the same reference frame is chosen for each rotation. This variant is best understood in the active rotation of vectors, where these rotations always take place, for example, in the global reference system.</p>
+<p>In the second variant, also known as the <strong>multi-frame method</strong>, a new reference frame created by the preceding rotation is used for each rotation. This variant can be illustrated by applications in robotics (e.g., articulated arm robots), where (passive) rotations of the reference systems of the robot’s respective arms occur, with each rotation taking place in the reference system of the preceding arm.</p>
+</section>
+</section>
+<section id="rotation-tensor-axis-angle-representation">
+<h2>Rotation tensor: axis-angle representation<a class="headerlink" href="#rotation-tensor-axis-angle-representation" title="Link to this heading"></a></h2>
+<p>In the following, we will elaborate the rotation tensor, inherently linked to the axis-angle representation.
+Note that the rotation axis times the angle is denoted as rotation vector throughout.</p>
+<p>Considering Euler’s theorem on rotations, we assume a transformation</p>
+<div class="math notranslate nohighlight">
+\[{\mathbf{r}}_0 \ra {\mathbf{r}}(t)\]</div>
+<p>which purely follows from a rotation. This transformation thus can be represented by a rotation axis <span class="math notranslate nohighlight">\({\mathbf{u}}\)</span> and an angle <span class="math notranslate nohighlight">\(\varphi(t)\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[({\mathbf{u}}(t), \, \varphi(t))\]</div>
+<p>both of them given in a coordinate-free manner.
+We may therefore conclude</p>
+<div class="math notranslate nohighlight">
+\[{\mathbf{r}}(t)=\Rot(t) \, {\mathbf{r}}_0 \qquad \text{with} \qquad \Rot(t)=\Rot({\mathbf{u}}(t),\varphi(t))\]</div>
+<figure class="align-default" id="id5">
+<span id="fig-theory-rotations-angleaxis"></span><a class="reference internal image-reference" href="../../_images/RotationAxisAngle.png"><img alt="../../_images/RotationAxisAngle.png" src="../../_images/RotationAxisAngle.png" style="width: 260px;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 21 </span><span class="caption-text">Rotation of a vector <span class="math notranslate nohighlight">\(\mathbf r_0\)</span> by means of the angle-axis tuple <span class="math notranslate nohighlight">\((\mathbf u(t), \, \varphi(t))\)</span>.</span><a class="headerlink" href="#id5" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>Using <a class="reference internal" href="#fig-theory-rotations-angleaxis"><span class="std std-numref">Fig. 21</span></a>, we may now consider relations of the two frames <span class="math notranslate nohighlight">\(({\mathbf{e}}_{x0},\,{\mathbf{e}}_{y0},\,{\mathbf{e}}_{z0})\)</span> and <span class="math notranslate nohighlight">\(({\mathbf{e}}_{x1},\,{\mathbf{e}}_{y1},\,{\mathbf{e}}_{z1})\)</span>, solely defined by the angle-axis <span class="math notranslate nohighlight">\(({\mathbf{u}}(t), \, \varphi(t))\)</span> relation.</p>
+<figure class="align-default" id="id6">
+<span id="fig-theory-rotations-axisanglederivation"></span><a class="reference internal image-reference" href="../../_images/RotationAxisAngleDerivation.png"><img alt="../../_images/RotationAxisAngleDerivation.png" src="../../_images/RotationAxisAngleDerivation.png" style="width: 320px;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 22 </span><span class="caption-text">Relations for derivation of rotation tensor and Rodrigues’ formula.</span><a class="headerlink" href="#id6" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>According to <a class="reference internal" href="#fig-theory-rotations-axisanglederivation"><span class="std std-numref">Fig. 22</span></a>, we may split the vector <span class="math notranslate nohighlight">\({\mathbf{r}}\)</span>, which has the length <span class="math notranslate nohighlight">\(r = \vert {\mathbf{r}} \vert\)</span>, into</p>
+<div class="math notranslate nohighlight">
+\[{\mathbf{r}}= c_1 {\mathbf{e}}_1 + c_2 {\mathbf{e}}_2 + c_3 {\mathbf{e}}_3\]</div>
+<p>with the unit vectors given as</p>
+<div class="math notranslate nohighlight">
+\[{\mathbf{e}}_1  =  \frac{{\mathbf{r}}_0 - {\mathbf{u}}({\mathbf{u}}^{\mathrm{T}} {\mathbf{r}}_0)}{r \sin \delta},  \quad {\mathbf{e}}_2  =  \frac{\tilde{{\mathbf{u}}} {\mathbf{r}}_0}{r \sin \delta}, \quad \mathrm{and} \quad {\mathbf{e}}_3  =   {\mathbf{u}} .\]</div>
+<p>The coefficients can be calculated as follows,</p>
+<div class="math notranslate nohighlight">
+\[c_1 = r \sin \delta \cos \varphi, \quad c_2 = r \sin \delta \sin \varphi, \quad \mathrm{and} \quad c_3 = r \cos \delta\]</div>
+<p>Putting everything together gives</p>
+<div class="math notranslate nohighlight">
+\[{\mathbf{r}} = \cos \varphi \, {\mathbf{r}}_0 + \sin \varphi \, \tilde{{\mathbf{u}}} \, {\mathbf{r}}_0 + (1 - \cos \varphi) \, {\mathbf{u}} \, ({\mathbf{u}}\tp \, {\mathbf{r}}_0)\]</div>
+<p>From the relation <span class="math notranslate nohighlight">\({\mathbf{r}} = \Rot({\mathbf{u}} ,\varphi) {\mathbf{r}}_0\)</span>, we can reinterpret the <strong>rotation tensor</strong> <span class="math notranslate nohighlight">\(\Rot\)</span></p>
+<div class="math notranslate nohighlight">
+\[\Rot({\mathbf{u}} ,\varphi) = \cos \varphi \, {\mathbf{I}} + \sin \varphi \, \tilde{{\mathbf{u}}} + (1-\cos \varphi) \, {\mathbf{u}} \, {\mathbf{u}}\tp\]</div>
+<p>With the additional relations</p>
+<div class="math notranslate nohighlight">
+\[{\mathbf{u}} \, {\mathbf{u}}\tp=\tilde{\mathbf{u}} \, \tilde{\mathbf{u}} +({\mathbf{u}}\tp {\mathbf{u}}) {\mathbf{I}} \quad \mathrm{and} \quad {\mathbf{u}}\tp {\mathbf{u}} = 1\]</div>
+<p>we finally obtain</p>
+<div class="math notranslate nohighlight">
+\[\Rot({\mathbf{u}} ,\varphi) =  {\mathbf{I}} + \sin \varphi \, \tilde{{\mathbf{u}}} + (1-\cos \varphi) \,  \tilde{{\mathbf{u}}} \, \tilde{{\mathbf{u}}}\]</div>
+<p>which is also known as the <strong>Rodrigues formula</strong> for rotations.
+While this formula is coordinate-free, it may be represented in any coordinate system, such as</p>
+<div class="math notranslate nohighlight">
+\[\LU{0}{{\mathbf{r}}}(t)=\LU{0}{\Rot}(t) \, \LUR{0}{{\mathbf{r}}}{0} \qquad \text{with} \qquad \LU{0}{\Rot}(t)=\Rot(\LU{0}{{\mathbf{u}}}(t),\varphi(t))\]</div>
+<section id="rotation-vector">
+<h3>Rotation vector<a class="headerlink" href="#rotation-vector" title="Link to this heading"></a></h3>
+<p>Using the rotation vector <span class="math notranslate nohighlight">\({\mathbf{v}}_\mathrm{rot} = \varphi\cdot {\mathbf{u}}\)</span> and <span class="math notranslate nohighlight">\(\varphi = |{\mathbf{v}}_\mathrm{rot}|\)</span>, another representation of the rotation tensor follows as</p>
+<div class="math notranslate nohighlight">
+\[\Rot({\mathbf{u}} ,\varphi) =  {\mathbf{I}} + \frac{\sin \varphi}{\varphi} \tilde{\mathbf{v}}_\mathrm{rot} + \frac{(1-\cos \varphi)}{\varphi^2} \,  \tilde{\mathbf{v}}_\mathrm{rot} \, \tilde{\mathbf{v}}_\mathrm{rot}\]</div>
+<p>Note, that we inherently assume that <span class="math notranslate nohighlight">\(\varphi \in [0,\pi]\)</span>.
+In Exudyn, there are the following <strong>functions and items related to the rotation vector</strong> and the axis-angle representation:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">NodeRigidBodyRotVecLG</span></code>: A 3D rigid body node based on rotation vector and Lie group methods; can be used for explicit integration methods, not leading to singularities when integrating with Lie-group methods</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RotationVector2RotationMatrix</span></code>: computes the rotation matrix from a given rotation vector <span class="math notranslate nohighlight">\({\mathbf{v}}_\mathrm{rot}\)</span></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RotationMatrix2RotationVector</span></code>: computes the rotation vector <span class="math notranslate nohighlight">\({\mathbf{v}}_\mathrm{rot}\)</span> from a given rotation matrix, based on a reconstruction of Euler parameters</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ComputeRotationAxisFromRotationVector</span></code>: computes the rotation axis <span class="math notranslate nohighlight">\({\mathbf{u}}\)</span> from the rotation vector by using <span class="math notranslate nohighlight">\(\varphi = |{\mathbf{v}}_\mathrm{rot}|\)</span></p></li>
+</ul>
+<p>Note the following <strong>properties of the rotation tensor</strong>:</p>
+<ul class="simple">
+<li><p>The axis-angle representations <span class="math notranslate nohighlight">\(({\mathbf{u}}, \varphi)\)</span> and <span class="math notranslate nohighlight">\((-{\mathbf{u}}, -\varphi)\)</span> represent the same tensor <span class="math notranslate nohighlight">\(\Rot({\mathbf{u}},\varphi)=\Rot(-{\mathbf{u}},-\varphi)\)</span></p></li>
+<li><p>The rotation tensor <span class="math notranslate nohighlight">\(\Rot\)</span> is orthogonal, i.e., <span class="math notranslate nohighlight">\(\Rot\tp \, \Rot = {\mathbf{E}}\)</span>.</p></li>
+<li><p>The inverse rotation tensor <span class="math notranslate nohighlight">\(\Rot^{-1} = \Rot\tp\)</span> is represented by the identical axis-angle tuples <span class="math notranslate nohighlight">\(({\mathbf{u}}, -\varphi)\)</span> and <span class="math notranslate nohighlight">\((-{\mathbf{u}}, \varphi)\)</span>, leading to <span class="math notranslate nohighlight">\({\mathbf{r}}_0=\Rot({\mathbf{u}}, -\varphi) {\mathbf{r}}\)</span>.</p></li>
+<li><p>We furthermore not the identities: <span class="math notranslate nohighlight">\(\Rot({\mathbf{u}}, -\varphi) \equiv \Rot(-{\mathbf{u}}, \varphi) \equiv \Rot\tp ({\mathbf{u}}, \varphi)\)</span></p></li>
+<li><p>The rotation axis is invariant to the rotation: <span class="math notranslate nohighlight">\(\Rot({\mathbf{u}}, \varphi) {\mathbf{u}} = {\mathbf{u}}\)</span></p></li>
+</ul>
+</section>
+</section>
+<section id="euler-angles-tait-bryan-angles">
+<h2>Euler angles: Tait-Bryan angles<a class="headerlink" href="#euler-angles-tait-bryan-angles" title="Link to this heading"></a></h2>
+<p>In the following section, we discuss rotation matrices built by Tait-Bryan angles, which are consecutive <span class="math notranslate nohighlight">\(xyz\)</span>-rotations.
+Note that there are many other representations of Euler angles, however, they are not implemented or used in Exudyn.
+The output variable <code class="docutils literal notranslate"><span class="pre">Rotation</span></code> gives Tait-Bryan angles, which is why it is important to define their properties.</p>
+<figure class="align-default" id="id7">
+<span id="fig-theory-rotations-taitbryanangles"></span><a class="reference internal image-reference" href="../../_images/theoryRotationsTaitBryanAngles.png"><img alt="../../_images/theoryRotationsTaitBryanAngles.png" src="../../_images/theoryRotationsTaitBryanAngles.png" style="width: 240px;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 23 </span><span class="caption-text">Definition of Tait-Bryan angles.</span><a class="headerlink" href="#id7" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>The transformation given by Tait-Bryan angles <span class="math notranslate nohighlight">\((\alpha,\beta,\gamma)\)</span> follows from three successive rotations,</p>
+<div class="math notranslate nohighlight">
+\[\LU{0}{{\mathbf{r}}} = \LU{01}{\Rot}(\alpha) \, \LU{12}{\Rot}(\beta) \, \LU{23}{\Rot}(\gamma) \, \LU{3}{{\mathbf{r}}} \quad \mathrm{and} \quad \LU{0}{{\mathbf{r}}} = \LU{03}{\Rot}(\alpha,\beta,\gamma) \, \LU{3}{{\mathbf{r}}}\]</div>
+<p>The <strong>Tait-Bryan rotation matrix</strong> is thus defined as</p>
+<div class="math notranslate nohighlight">
+\[\LU{03}{\Rot}(\alpha,\beta,\gamma) = \mr{\co\beta \,\co\gamma}{-\co\beta\,\si\gamma}{\si\beta} {\co \alpha \,\si \gamma + \si \alpha \,\si \beta \,\co \gamma}{\co \alpha \,\co\gamma-\si\alpha\,\si\beta\,\si\gamma}{-\si\alpha\,\co\beta} {\si\alpha\,\si\gamma-\co\alpha\,\si\beta\,\co\gamma}{\si\alpha\,\co\gamma+\co\alpha\,\si\beta\,\si\gamma}{\co\alpha\,\co\beta}\]</div>
+<p>While not fully obvious from the latter equations, we note that there is a singularity at <span class="math notranslate nohighlight">\(|\beta| = \frac{\pi}{2}\)</span>, which causes any computations to stall whenever getting close enough to this value.</p>
+<p>It is also possible to reconstruct Tait-Bryan angles from a given rotation matrix.
+Assume, we have the rotation matrix <span class="math notranslate nohighlight">\(\LU{03}{\Rot}=(A_{ij})\)</span>.
+There are two solutions for <span class="math notranslate nohighlight">\(\beta\)</span> which follow from</p>
+<div class="math notranslate nohighlight">
+\[\cos \beta = \pm \sqrt{1-A_{13}^2}, \quad \mathrm{and} \quad \sin \beta = A_{13}\]</div>
+<p>For beta fulfilling <span class="math notranslate nohighlight">\(|\beta| \ne \frac{\pi}{2}\)</span>, we can uniquely compute <span class="math notranslate nohighlight">\(\gamma\)</span> and <span class="math notranslate nohighlight">\(\alpha\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[\cos \gamma = \frac{A_{11}}{\cos \beta}, \quad \sin \gamma = - \frac{A_{12}}{\cos \beta}, \quad \cos \alpha = \frac{A_{33}}{\cos \beta}, \quad \mathrm{and} \quad \sin \alpha = - \frac{A_{23}}{\cos \beta} .\]</div>
+<p>Note that improvements are possible using the <span class="math notranslate nohighlight">\(\mathrm{atan2}()\)</span> function.
+We can finally resolve non-uniqueness by restricting <span class="math notranslate nohighlight">\(\beta\)</span> within the range <span class="math notranslate nohighlight">\(-\frac{\pi}{2} &lt; \beta &lt; \frac{\pi}{2}\)</span>.</p>
+<section id="tait-bryan-angles-angular-velocity-vector">
+<h3>Tait-Bryan angles: angular velocity vector<a class="headerlink" href="#tait-bryan-angles-angular-velocity-vector" title="Link to this heading"></a></h3>
+<p>Angular velocities are essential for the formulation of equations of motion of rigid bodies, for constraints and for evaluation.
+Therefore, basic relations are shown for Tait-Bryan angles, in particular the velocity transformation matrix <span class="math notranslate nohighlight">\({\mathbf{G}}_{TB}\)</span>.</p>
+<p>The angular velocity vector <span class="math notranslate nohighlight">\(\omega\)</span> can either be computed from the basic relation <span class="math notranslate nohighlight">\(\dot \Rot = \tilde \omega \Rot\)</span>, which however involves many trigonometric terms, or from partial angular velocities, being part of the co-rotated rotation axes.
+With the latter approach, we see that</p>
+<div class="math notranslate nohighlight">
+\[\tomega_{30}=\dot{\alpha} {\mathbf{e}}_{x0}+\dot{\beta} {\mathbf{e}}_{y1}+\dot{\gamma} {\mathbf{e}}_{z2} \quad \text{or} \quad \tomega_{30}=\underbrace{[{\mathbf{e}}_{x0} \quad {\mathbf{e}}_{y1} \quad {\mathbf{e}}_{z2}]}_{{\mathbf{G}}_{TB}} \vr{\dot{\alpha}}{\dot{\beta}}{\dot{\gamma}}\]</div>
+<p>We can now evaluate this equation in frame <span class="math notranslate nohighlight">\(\mathcal{F}_0\)</span> with <span class="math notranslate nohighlight">\(\tbeta=[\alpha\;\beta\;\gamma]\tp\)</span>, written as</p>
+<div class="math notranslate nohighlight">
+\[\LUR{0}{\tomega}{30}=\underbrace{[\LUR{0}{{\mathbf{e}}}{x0} \quad \LUR{0}{{\mathbf{e}}}{y1} \quad \LUR{0}{{\mathbf{e}}}{z2}]}_{\LUR{0}{{\mathbf{G}}}{TB}} \vr{\dot{\alpha}}{\dot{\beta}}{\dot{\gamma}} = \LUR{0}{{\mathbf{G}}}{TB}(\tbeta) \dot{\tbeta} .\]</div>
+<p>Evaluating the consecutive rotations, we find the respective unit vectors as</p>
+<div class="math notranslate nohighlight">
+\[\LUR{0}{{\mathbf{e}}}{x0} = \vr{1}{0}{0}, \quad \LUR{0}{{\mathbf{e}}}{y1} = \vr{0}{\text{c} \alpha}{\text{s} \alpha}, \quad \mathrm{and} \quad \LUR{0}{{\mathbf{e}}}{z2} = \vr{\text{s} \beta}{-\text{s} \alpha \text{c} \beta}{\text{c} \alpha \text{c} \beta} .\]</div>
+<p>which results in the relations for the (global) angular velocity vector</p>
+<div class="math notranslate nohighlight" id="equation-eq-theory-rotations-taitbryang">
+<span class="eqno">(17)<a class="headerlink" href="#equation-eq-theory-rotations-taitbryang" title="Link to this equation"></a></span>\[\vr{\LUR{0}{\omega}{30x}}{\LUR{0}{\omega}{30y}}{\LUR{0}{\omega}{30z}} = \mr{1}{0} {\text{s} \beta} {0}{\text{c} \alpha} {-\text{s} \alpha \text{c} \beta} {0}{\text{s} \alpha} {\text{c} \alpha \text{c} \beta} \vr{\dot{\alpha}}{\dot{\beta}}{\dot{\gamma}}\]</div>
+<p>The matrix <span class="math notranslate nohighlight">\(\LUR{0}{{\mathbf{G}}}{TB}\)</span> is used to compute partial derivatives of the angular velocity vector w.r.t. rotations.
+However, it is also used to project torques and angular velocities into a space given by <span class="math notranslate nohighlight">\({\mathbf{G}}_{TB}^\mathrm{T}\)</span> (which is indeed not equivalent to <span class="math notranslate nohighlight">\({\mathbf{G}}_{TB}^{-1}\)</span>, but gives a symmetric mass matrix – see the equations of motion for the rigid body).</p>
+<p>The inverse relation between <span class="math notranslate nohighlight">\(\dot \tbeta\)</span> and <span class="math notranslate nohighlight">\(\LUR{0}{\tomega}{30}\)</span> gives</p>
+<div class="math notranslate nohighlight" id="equation-eq-theory-rotations-taitbryanginv">
+<span class="eqno">(18)<a class="headerlink" href="#equation-eq-theory-rotations-taitbryanginv" title="Link to this equation"></a></span>\[\vr{\dot{\alpha}}{\dot{\beta}}{\dot{\gamma}} = \frac{1}{\text{c} \beta} \mr{\text{c} \beta}{\text{s} \alpha \, \text{s} \beta}{-\text{c} \alpha \, \text{s} \beta}{0}{\text{c} \alpha \, \text{c} \beta}{\text{s} \alpha \text{c} \beta}{0}{-\text{s} \alpha}{\text{c} \alpha}  \vr{\LUR{0}{\omega}{30x}}{\LUR{0}{\omega}{30y}}{\LUR{0}{\omega}{30z}}\]</div>
+<p>or in compact form</p>
+<div class="math notranslate nohighlight">
+\[\dot{\tbeta} = \LURU{0}{{\mathbf{G}}}{TB}{-1}(\tbeta)  \LUR{0}{\tomega}{30}\]</div>
+<p>We again see that for the case <span class="math notranslate nohighlight">\(\vert \beta \vert = \pi/2\)</span> the matrix<span class="math notranslate nohighlight">\(\LUR{0}{{\mathbf{G}}}{TB}\)</span> becomes singular, and Eq. <a class="reference internal" href="#equation-eq-theory-rotations-taitbryanginv">(18)</a> cannot be resolved for <span class="math notranslate nohighlight">\(\dot{\tbeta}\)</span>!</p>
+<p>Finally, we also provide the relations of <span class="math notranslate nohighlight">\(\tomega_{30}\)</span> in body-fixed (local) coordinates <span class="math notranslate nohighlight">\(\mathcal{F}_3\)</span>,
+which are frequently used in the implementation,</p>
+<div class="math notranslate nohighlight">
+\[\vr{\LUR{3}{\omega}{30x}}{\LUR{3}{\omega}{30y}}{\LUR{3}{\omega}{30z}} = \mr{\text{c} \beta \, \text{c} \gamma}{\text{s} \gamma}{0}{-\text{c} \beta \, \text{s} \gamma}{\text{c} \gamma}{0}{\text{s} \beta}{0}{1} \vr{\dot{\alpha}}{\dot{\beta}}{\dot{\gamma}} ,\]</div>
+<p>which reads in compact form (<span class="math notranslate nohighlight">\(\LUR{3}{{\mathbf{G}}}{TB} = \LUR{b}{{\mathbf{G}}}{TB}\)</span>),</p>
+<div class="math notranslate nohighlight">
+\[\LUR{3}{\tomega}{30} =  \LUR{3}{{\mathbf{G}}}{TB}(\tbeta) \dot{\tbeta}\]</div>
+<p>In Exudyn, there are the following <strong>functions and items related to Tait-Bryan angles</strong>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">NodeRigidBodyRxyz</span></code>: A 3D rigid body node based on Tait-Bryan angles</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RotXYZ2RotationMatrix</span></code>: computes the rotation matrix from given Tait-Bryan angles</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RotationMatrix2RotXYZ</span></code>: computes Tait-Bryan angles from a given rotation matrix</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RotXYZ2G</span></code>: computes the matrix <span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{G}}}\)</span> relating time derivatives of Tait-Bryan angles to the (global) angular velocity vector</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RotXYZ2Glocal</span></code>: computes the matrix <span class="math notranslate nohighlight">\(\LU{b}{{\mathbf{G}}}\)</span> relating time derivatives of Tait-Bryan angles to the (local, body-fixed) angular velocity vector</p></li>
+</ul>
+</section>
+</section>
+<section id="euler-parameters-and-unit-quaternions">
+<h2>Euler parameters and unit quaternions<a class="headerlink" href="#euler-parameters-and-unit-quaternions" title="Link to this heading"></a></h2>
+<p>As one of the most important forms of rotational parameters for multibody systems, the 4 Euler parameters are introduced.
+They can be mathematically represented as unit quaternions and provide particularly simple expressions and equations of motion, albeit at the expense of an additional constraint.</p>
+<p>The Euler parameters are defined as</p>
+<div class="math notranslate nohighlight" id="equation-eq-theory-rotations-eulerparametersdef">
+<span class="eqno">(19)<a class="headerlink" href="#equation-eq-theory-rotations-eulerparametersdef" title="Link to this equation"></a></span>\[\underline{{\mathbf{p}}}=\vp{p_{\mathrm{s}}}{{\mathbf{p}}}=\vp{\cos \frac \varphi 2}{{\mathbf{u}} \, \sin \frac\varphi 2} \quad \text{bzw.} \quad \underline{{\mathbf{p}}}=\vfour{p_{\mathrm{s}}}{p_x}{p_y}{p_z}=\vfour{\cos \frac\varphi 2}{u_x \, \sin \frac\varphi 2}{u_y \, \sin \frac\varphi 2}{u_z \, \sin \frac\varphi 2}\]</div>
+<p>Here, <span class="math notranslate nohighlight">\(p_s=\cos \frac\varphi 2\)</span> is the scalar part and <span class="math notranslate nohighlight">\({\mathbf{p}} = {\mathbf{u}} \, \sin \frac\varphi 2\)</span> is the vector part of the Euler parameters <span class="math notranslate nohighlight">\(\underline{{\mathbf{p}}}\)</span>.
+The four Euler parameters <span class="math notranslate nohighlight">\(\underline{{\mathbf{p}}}\)</span> are subject to the normalization condition</p>
+<div class="math notranslate nohighlight">
+\[\phi(\underline{{\mathbf{p}}}) \equiv p_s^2+p_x^2+p_y^2+p_z^2-1=0 \quad \mathrm{or} \quad  p_s^2 +{\mathbf{p}}\tp \, {\mathbf{p}} -1 = 0 .\]</div>
+<p>First, the following trigonometric transformations are introduced,</p>
+<div class="math notranslate nohighlight">
+\[\cos \varphi = 2 \cos^2\frac{\varphi}{2} -1, \quad \sin \varphi = 2 \sin \frac \varphi 2 \cos \frac \varphi 2, \quad 1-\cos \varphi = 2 \sin^2 \frac{\varphi}{2} .\]</div>
+<p>When these are substituted into the rotation tensor using Eq. <a class="reference internal" href="#equation-eq-theory-rotations-eulerparametersdef">(19)</a>, it follows</p>
+<div class="math notranslate nohighlight">
+\[\Rot(\underline{{\mathbf{p}}})=(2 p_{\mathrm{s}}^2-1) \, {\mathbf{E}} + 2 p_{\mathrm{s}} \, \tilde{{\mathbf{p}}} + 2 \, {\mathbf{p}} \, {\mathbf{p}}\tp .\]</div>
+<p>Euler parameters can initially be expressed in the global reference frame <span class="math notranslate nohighlight">\(\mathcal{F}_0\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[\LU{0}{\underline{{\mathbf{p}}}}=\vp{p_{\mathrm{s}}}{\LU{0}{{\mathbf{p}}}}=\vp{\cos \frac\varphi 2}{\LU{0}{{\mathbf{u}}} \, \sin \frac{\varphi} {2}} .\]</div>
+<p>Thus, the coordinate representation of the rotation tensor is given by</p>
+<div class="math notranslate nohighlight" id="equation-eq-theory-rotations-eulerparametersrot">
+<span class="eqno">(20)<a class="headerlink" href="#equation-eq-theory-rotations-eulerparametersrot" title="Link to this equation"></a></span>\[\Rot(\LU{0}{\underline{{\mathbf{p}}}}) = 2 \LU{0}{\mr{\ps^2+p_x^2-\frac 1 2}{p_x p_y-\ps p_z}{p_x p_z+\ps p_y} {p_x p_y+\ps p_z}{\ps^2+p_y^2-\frac 1 2}{p_y p_z-\ps p_x} {p_x p_z-\ps p_y}{p_y p_z+\ps p_x}{\ps^2+p_z^2-\frac{1}{2} }} = \LU{01}{\Rot}\]</div>
+<p>Note that the axis of rotation is invariant to the rotation, <span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{u}}} = \LU{1}{{\mathbf{u}}}\)</span>, thus <span class="math notranslate nohighlight">\(\LU{0}{\underline{{\mathbf{p}}}} = \LU{1}{\underline{{\mathbf{p}}}}\)</span>Due to the ambiguity <span class="math notranslate nohighlight">\(\Rot(\underline{{\mathbf{p}}}) = \Rot(-\underline{{\mathbf{p}}})\)</span>, the scalar part of the Euler parameters is usually normalized, i.e., <span class="math notranslate nohighlight">\(p_s \ge 0\)</span>.</p>
+<p>The careful reader may observe that matrix <span class="math notranslate nohighlight">\(\Rot\)</span> in Eq. <a class="reference internal" href="#equation-eq-theory-rotations-eulerparametersrot">(20)</a> is not identical to the implementation in Exudyn.
+This is true, because there is always an alternative formulation for the diagonal terms by adding the normalization condition times a factor.</p>
+<section id="quaternion-operations">
+<h3>Quaternion operations<a class="headerlink" href="#quaternion-operations" title="Link to this heading"></a></h3>
+<p>Calculations with Euler parameters are efficiently performed through the rules of quaternion algebra.
+Active perspective as vector rotation: The rotation of vector <span class="math notranslate nohighlight">\({\mathbf{r}}_0\)</span> into <span class="math notranslate nohighlight">\({\mathbf{r}}(t)\)</span>,</p>
+<div class="math notranslate nohighlight" id="equation-eq-theory-rotations-quaternionrotation">
+<span class="eqno">(21)<a class="headerlink" href="#equation-eq-theory-rotations-quaternionrotation" title="Link to this equation"></a></span>\[\LU{0}{{\mathbf{r}}}(t)=\LU{0}{\Rot}(t) \, \LUR{0}{{\mathbf{r}}}{0} \quad \text{mit} \quad \LU{0}{\Rot}(t)= \Rot(\LU{0}{{\mathbf{u}}}(t), \varphi (t))\]</div>
+<p>is formulated using the quaternion <span class="math notranslate nohighlight">\(\LU{0}{\underline{{\mathbf{p}}}}=\underline{{\mathbf{p}}}(\LU{0}{{\mathbf{u}}}, \varphi)\)</span> and its conjugate <span class="math notranslate nohighlight">\(\myoverline{\underline{{\mathbf{p}}}}\)</span> with the help of the double quaternion product (operator <span class="math notranslate nohighlight">\(\circ\)</span>),</p>
+<div class="math notranslate nohighlight">
+\[\LU{0}{\underline{{\mathbf{r}}}}(t) = \LU{0}{\underline{{\mathbf{p}}}}(t) \, \circ \, \LUR{0}{\underline{{\mathbf{r}}}}{0} \, \circ \, \LU{0}{\underline{\myoverline{{\mathbf{p}}}}}(t) ,\]</div>
+<p>or in short form,</p>
+<div class="math notranslate nohighlight">
+\[\vp{0}{\LU{0}{{\mathbf{r}}}(t)}=\vp{p_{\mathrm{s}}(t)}{\LU{0}{{\mathbf{p}}}(t)} \, \circ \, \vp{0}{\LUR{0}{{\mathbf{r}}}{0}} \, \circ \, \vp{p_{\mathrm{s}}(t)}{-\LU{0}{{\mathbf{p}}}(t)} .\]</div>
+<p>With the multiplication rule for quaternions, the scalar part yields <span class="math notranslate nohighlight">\(0=0\)</span> and the vector part the vector rotation eqrefeq:theory:rotations:quaternionRotation.
+For multiple rotations, we have</p>
+<div class="math notranslate nohighlight">
+\[\LUR{0}{\underline{{\mathbf{r}}}}{2}=\LUR{0}{\underline{{\mathbf{p}}}}{2} \circ \LUR{0}{\underline{{\mathbf{p}}}}{1} \circ \LUR{0}{\underline{{\mathbf{r}}}}{0} \circ  \LUR{0}{\myoverline{\underline{{\mathbf{p}}}}}{1} \circ \LUR{0}{\myoverline{\underline{{\mathbf{p}}}}}{2} .\]</div>
+<p>Given two quaternions</p>
+<div class="math notranslate nohighlight">
+\[\underline{{\mathbf{a}}} = a_\mathrm{s} + \mathrm{i}\, a_x + \mathrm{j}\, a_y + \mathrm{k}\, a_z, \quad \mathrm{and} \quad \underline{{\mathbf{b}}} = b_\mathrm{s} + \mathrm{i}\, b_x + \mathrm{j}\, b_y + \mathrm{k}\, b_z ,\]</div>
+<p>we provide two important <strong>rules of quaternion algebra</strong>, which is the sum,</p>
+<div class="math notranslate nohighlight">
+\[\underline{{\mathbf{c}}} = \underline{{\mathbf{a}}} + \underline{{\mathbf{b}}} \quad \ra \quad \vp{c_\mathrm{s}}{{\mathbf{c}}} = \vp{a_\mathrm{s}}{{\mathbf{a}}} + \vp{b_\mathrm{s}}{{\mathbf{b}}} = \vp{a_\mathrm{s} + b_\mathrm{s}}{{\mathbf{a}} + {\mathbf{b}}} ,\]</div>
+<p>and the multiplication</p>
+<div class="math notranslate nohighlight">
+\[\underline{{\mathbf{c}}} = \underline{{\mathbf{a}}} \circ \underline{{\mathbf{b}}} \neq \underline{{\mathbf{b}}} \circ \underline{{\mathbf{a}}} \quad \ra \quad \vp{c_\mathrm{s}}{{\mathbf{c}}} = \vp{a_\mathrm{s}}{{\mathbf{a}}} \circ \vp{b_\mathrm{s}}{{\mathbf{b}}} = \vp{a_\mathrm{s} b_\mathrm{s} - {\mathbf{a}}^\mathrm{T} {\mathbf{b}}}{a_\mathrm{s}{\mathbf{b}} + b_\mathrm{s}{\mathbf{a}} + \tilde {\mathbf{a}} {\mathbf{b}}} .\]</div>
+</section>
+<section id="angular-velocity-vector">
+<h3>Angular velocity vector<a class="headerlink" href="#angular-velocity-vector" title="Link to this heading"></a></h3>
+<p>To derive the angular velocity from Euler parameters, there are both the possibilities of deriving the rotation matrix with respect to time and directly deriving the angular velocity from Euler parameters.</p>
+<p>For an infinitesimal rotation <span class="math notranslate nohighlight">\(\dd \psi\)</span>, the quaternion follows</p>
+<div class="math notranslate nohighlight">
+\[\underline{{\mathbf{p}}}({\mathbf{e}}, \dd \psi) = \vp{\cos \frac{\dd \psi}{2}}{{\mathbf{e}} \sin \frac{\dd\psi}{2}} \approx \vp{1}{{\mathbf{e}} \frac{\dd\psi}{2}}\]</div>
+<p>from which we conclude that from <span class="math notranslate nohighlight">\(\underline{{\mathbf{p}}}({\mathbf{e}}, \dd \psi) \, \circ \, \underline{{\mathbf{p}}}(t) = \underline{{\mathbf{p}}}(t) + \dd\underline{{\mathbf{p}}}\)</span> and thus <span class="math notranslate nohighlight">\(\dd\underline{{\mathbf{p}}} = \vp{0}{{\mathbf{e}} \frac{\dd\psi}{2}}\)</span>.
+Dividing by <span class="math notranslate nohighlight">\(\dd t\)</span> and with the angular velocity <span class="math notranslate nohighlight">\(\tomega_{10} = {\mathbf{e}} \, \dot \psi\)</span>, it follows</p>
+<div class="math notranslate nohighlight">
+\[\vp{\dot \ps}{\LLdot{0}{{\mathbf{p}}}{}} = \frac{1}{2} \vp{0}{\tomega_{10} }  \circ \vp{\ps}{{\mathbf{p}}}\]</div>
+<p>or in short form</p>
+<div class="math notranslate nohighlight">
+\[\LU{0}{\underline{\dot {\mathbf{p}}}} = \frac{1}{2} \underline{\tomega}_{10}  \circ \underline{{\mathbf{p}}}\]</div>
+<p>With the quaternion product in matrix notation, it follows</p>
+<div class="math notranslate nohighlight">
+\[\vp{\dot \ps}{\LU{0}{\dot{\mathbf{p}}}{}} = \frac{1}{2} \mp{\ps}{-{\mathbf{p}}^\mathrm{T}}{{\mathbf{p}}}{\ps {\mathbf{E}} - \tilde {\mathbf{p}}} \vp{0}{\tomega_{10} }\]</div>
+<p>or with the matrix <span class="math notranslate nohighlight">\(\underline{{\mathbf{P}}}\)</span> it can be written as</p>
+<div class="math notranslate nohighlight">
+\[\LU{0}{\underline{\dot {\mathbf{p}}}}{} = \frac{1}{2} {\underline{{\mathbf{P}}}}({\mathbf{p}}) \underline{\tomega}_{10}\]</div>
+<p>This form can be represented in global coordinates due to <span class="math notranslate nohighlight">\({\underline{{\mathbf{P}}}}^{-1} = {\underline{{\mathbf{P}}}}\tp\)</span> as</p>
+<div class="math notranslate nohighlight">
+\[\vp{0}{\LU{0}{\tomega}_{10} } = 2 \mp{\ps}{\LU{0}{{\mathbf{p}}}^\mathrm{T}}{-\LU{0}{{\mathbf{p}}}}{\ps {\mathbf{E}} + \LU{0}{\tilde {\mathbf{p}}}} \, \vp{\dot \ps}{\LLdot{0}{{\mathbf{p}}}{}}\]</div>
+<p>Thus, the velocity transformation follows to</p>
+<div class="math notranslate nohighlight">
+\[\LUR{0}{{\mathbf{G}}}{EP} = \left[-2\LU{0}{{\mathbf{p}}}, \; 2\ps {\mathbf{E}} + 2\LU{0}{\tilde {\mathbf{p}}}\right]\]</div>
+<p>as a matrix with 3 rows and 4 columns. With <span class="math notranslate nohighlight">\(\LUR{0}{{\mathbf{G}}}{EP}\)</span>, the angular velocity vector can be conveniently calculated,</p>
+<div class="math notranslate nohighlight">
+\[\LU{0}{\tomega}_{10} = \left[-2\LU{0}{{\mathbf{p}}}, \; 2\ps {\mathbf{E}} + 2\LU{0}{\tilde {\mathbf{p}}}\right] \, \LU{0}{\underline{\dot {\mathbf{p}}}}\]</div>
+<p>In Exudyn, there are the following <strong>functions and items related to Euler parameters</strong>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">NodeRigidBodyEP</span></code>: A 3D rigid body node based on Euler parameters</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">EulerParameters2RotationMatrix</span></code>: computes the rotation matrix from given Euler parameters</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RotationMatrix2EulerParameters</span></code>: computes Euler parameters from a given rotation matrix</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">EulerParameters2G</span></code>: computes the matrix <span class="math notranslate nohighlight">\(\LUR{0}{{\mathbf{G}}}{EP}\)</span> relating time derivatives of Euler parameters to the (global) angular velocity vector</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">EulerParameters2Glocal</span></code>: computes the matrix <span class="math notranslate nohighlight">\(\LUR{b}{{\mathbf{G}}}{EP}\)</span> relating time derivatives of Euler parameters to the (local, body-fixed) angular velocity vector</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="DynamicsMechanicalPrinciples.html" class="btn btn-neutral float-left" title="Dynamics: Mechanical principles" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="IntegrationPoints.html" class="btn btn-neutral float-right" title="Integration Points" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

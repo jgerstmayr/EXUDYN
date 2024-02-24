@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Flexible beams tutorial &mdash; Exudyn1.7.116.dev1 1.7.116.dev1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=82a976d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=e11081fd" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=8142d844"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../_static/copybutton.js?v=f281be69"></script>
+        <script src="../../_static/js/rtd_search_config.js"></script>
+        <script src="../../_static/js/rtd_sphinx_search.min.js"></script>
+        <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "ps": "{p_\\mathrm{s}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "myoverline": ["\\overline{#1}", 1], "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "mfour": ["{\\left[ \\begin{array}{cccc} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vfour": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vrRow": ["{[#1,\\, #2,\\, #3]}", 3], "vsix": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} \\right]}", 6], "vsixb": ["{\\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "vsixs": ["{ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "omegaBDtilde": "{\\LU{b}{\\tilde \\tomega_\\mathrm{bd}}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}", "termA": ["{\\color{blue}{#1}}", 1], "termB": ["{\\color{red}{#1}}", 1], "termC": ["{\\color{green}{#1}}", 1], "acc": "{\\ddot \\mathbf{q}}", "GA": "{G\\alpha}", "aalg": "{\\mathbf{a}}", "vel": "{\\mathbf{v}}"}}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Graphics and visualization" href="GraphicsAndVisualizationIndex.html" />
+    <link rel="prev" title="Rigid body and joints tutorial" href="RigidBodyAndJointsTutorial.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Exudyn1.7.116.dev1
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Exudyn.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="TutorialIndex.html">Tutorial</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Tutorial.html">Tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MassSpringDamperTutorial.html">Mass-Spring-Damper tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="RigidBodyAndJointsTutorial.html">Rigid body and joints tutorial</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Flexible beams tutorial</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="NotationIndex.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TheoryAndFormulationsIndex.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="SolversIndex.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="pythonUtilities/index.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="structures/StructuresAndSettingsIndex.html">Structures and Settings</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Misc</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ExamplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TestModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Exudyn1.7.116.dev1</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="TutorialIndex.html">Tutorial</a></li>
+      <li class="breadcrumb-item active">Flexible beams tutorial</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/docs/RST/FlexibleBeamsTutorial.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="flexible-beams-tutorial">
+<h1>Flexible beams tutorial<a class="headerlink" href="#flexible-beams-tutorial" title="Link to this heading"></a></h1>
+<p>This tutorial briefly introduces two simple planar beams and how to work with them with utility functions.
+The python source code of the beam tutorial can be found at:</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">main/pythonDev/Examples/beamTutorial.py</span></code></p>
+</div></blockquote>
+<p>The tutorial uses the GeometricallyExactBeam2D, which is a shear deformable Reissner-Timoshenko beam, and a thin cable ANCFCable2D, which represents a large deformation Bernoulli-Euler beam.</p>
+<p>The model includes two highly flexible planar with length 2m, height 0.005m, width 0.01m,
+Young’s modulus 1e9N/m<span class="math notranslate nohighlight">\(^2\)</span> and density 2000kg/m<span class="math notranslate nohighlight">\(^3\)</span>.
+The shear deformable beam is rigidly attached to ground and the cable is rigidly attached to a moving ground.</p>
+<p>We first import necessary libraries and set up a mbs. Note that utilities also include pi, sin, cos and sqrt.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
+<span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
+<span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>We define a set of beam parameters, discretization and geometry for both beam models.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">numberOfElements</span> <span class="o">=</span> <span class="mi">16</span>
+<span class="n">L</span> <span class="o">=</span> <span class="mi">2</span>                     <span class="c1"># length of pendulum</span>
+<span class="n">E</span><span class="o">=</span><span class="mf">2e11</span>                    <span class="c1"># steel</span>
+<span class="n">rho</span><span class="o">=</span><span class="mi">7800</span>                  <span class="c1"># elastomer</span>
+<span class="n">h</span><span class="o">=</span><span class="mf">0.005</span>                   <span class="c1"># height of rectangular beam element in m</span>
+<span class="n">b</span><span class="o">=</span><span class="mf">0.01</span>                    <span class="c1"># width of rectangular beam element in m</span>
+<span class="n">A</span><span class="o">=</span><span class="n">b</span><span class="o">*</span><span class="n">h</span>                     <span class="c1"># cross sectional area of beam element in m^2</span>
+<span class="n">I</span><span class="o">=</span><span class="n">b</span><span class="o">*</span><span class="n">h</span><span class="o">**</span><span class="mi">3</span><span class="o">/</span><span class="mi">12</span>               <span class="c1"># second moment of area of beam element in m^4</span>
+<span class="n">nu</span> <span class="o">=</span> <span class="mf">0.3</span>                  <span class="c1"># Poisson&#39;s ratio</span>
+
+<span class="n">EI</span> <span class="o">=</span> <span class="n">E</span><span class="o">*</span><span class="n">I</span>
+<span class="n">EA</span> <span class="o">=</span> <span class="n">E</span><span class="o">*</span><span class="n">A</span>
+<span class="n">rhoA</span> <span class="o">=</span> <span class="n">rho</span><span class="o">*</span><span class="n">A</span>
+<span class="n">rhoI</span> <span class="o">=</span> <span class="n">rho</span><span class="o">*</span><span class="n">I</span>
+<span class="n">ks</span> <span class="o">=</span> <span class="mi">10</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">nu</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">12</span><span class="o">+</span><span class="mi">11</span><span class="o">*</span><span class="n">nu</span><span class="p">)</span> <span class="c1"># shear correction factor</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">E</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">nu</span><span class="p">))</span>          <span class="c1"># shear modulus</span>
+<span class="n">GA</span> <span class="o">=</span> <span class="n">ks</span><span class="o">*</span><span class="n">G</span><span class="o">*</span><span class="n">A</span>               <span class="c1"># shear stiffness of beam</span>
+
+<span class="n">g</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">9.81</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>           <span class="c1"># gravity vector</span>
+
+<span class="n">positionOfNode0</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># 3D vector</span>
+<span class="n">positionOfNode1</span> <span class="o">=</span> <span class="p">[</span><span class="n">L</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># 3D vector</span>
+</pre></div>
+</div>
+<p>Build geometrically exact 2D beam template (Timoshenko-Reissner), which includes all parameters
+In order to create beams, we usually need to create 2D rigid body nodes,
+create beam elements, add constraints and loads.</p>
+<p>However, there is a utility function <code class="docutils literal notranslate"><span class="pre">GenerateStraightBeam(...)</span></code>,
+which conveniently does this for straight beams, including discretization, constraints and gravity.
+First, we create a beam template, which includes all beam parameters (this could also be another beam type):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">beamTemplate</span> <span class="o">=</span> <span class="nc">Beam2D</span><span class="p">(</span><span class="n">nodeNumbers</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="c1">#added later</span>
+                      <span class="n">physicsMassPerLength</span><span class="o">=</span><span class="n">rhoA</span><span class="p">,</span>
+                      <span class="n">physicsCrossSectionInertia</span><span class="o">=</span><span class="n">rhoI</span><span class="p">,</span>
+                      <span class="n">physicsBendingStiffness</span><span class="o">=</span><span class="n">EI</span><span class="p">,</span>
+                      <span class="n">physicsAxialStiffness</span><span class="o">=</span><span class="n">EA</span><span class="p">,</span>
+                      <span class="n">physicsShearStiffness</span><span class="o">=</span><span class="n">GA</span><span class="p">,</span>
+                      <span class="n">physicsBendingDamping</span><span class="o">=</span><span class="mf">0.02</span><span class="o">*</span><span class="n">EI</span><span class="p">,</span>
+                      <span class="n">visualization</span><span class="o">=</span><span class="nc">VObjectBeamGeometricallyExact2D</span><span class="p">(</span><span class="n">drawHeight</span> <span class="o">=</span> <span class="n">h</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Now we use this template and call <code class="docutils literal notranslate"><span class="pre">GenerateStraightBeam</span></code>, which takes the nodal positions,
+calculates according beam element lengths from discretization and could add constraints,
+if <code class="docutils literal notranslate"><span class="pre">fixedConstraintsNode0</span></code> or <code class="docutils literal notranslate"><span class="pre">fixedConstraintsNode1</span></code> are not <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">beamData</span> <span class="o">=</span> <span class="nf">GenerateStraightBeam</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">positionOfNode0</span><span class="p">,</span> <span class="n">positionOfNode1</span><span class="p">,</span>
+                                <span class="n">numberOfElements</span><span class="p">,</span> <span class="n">beamTemplate</span><span class="p">,</span> <span class="n">gravity</span><span class="o">=</span> <span class="n">g</span><span class="p">,</span>
+                                <span class="n">fixedConstraintsNode0</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span>
+                                <span class="n">fixedConstraintsNode1</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We perform the same operations for ANCF cable elemente (Bernoulli-Euler),
+but in this case, we do not add constraints:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">beamTemplate</span> <span class="o">=</span> <span class="nc">Cable2D</span><span class="p">(</span><span class="n">nodeNumbers</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="c1">#added later</span>
+                       <span class="n">physicsMassPerLength</span><span class="o">=</span><span class="n">rhoA</span><span class="p">,</span>
+                       <span class="n">physicsBendingStiffness</span><span class="o">=</span><span class="n">EI</span><span class="p">,</span>
+                       <span class="n">physicsAxialStiffness</span><span class="o">=</span><span class="n">EA</span><span class="p">,</span>
+                       <span class="n">physicsBendingDamping</span><span class="o">=</span><span class="mf">0.02</span><span class="o">*</span><span class="n">EI</span><span class="p">,</span>
+                       <span class="n">visualization</span><span class="o">=</span><span class="nc">VCable2D</span><span class="p">(</span><span class="n">drawHeight</span> <span class="o">=</span> <span class="n">h</span><span class="p">))</span>
+
+<span class="n">cableData</span> <span class="o">=</span> <span class="nf">GenerateStraightBeam</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">positionOfNode0</span><span class="p">,</span> <span class="n">positionOfNode1</span><span class="p">,</span>
+                                 <span class="n">numberOfElements</span><span class="p">,</span> <span class="n">beamTemplate</span><span class="p">,</span> <span class="n">gravity</span><span class="o">=</span> <span class="n">g</span><span class="p">,</span>
+                                 <span class="n">fixedConstraintsNode0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                 <span class="n">fixedConstraintsNode1</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now, we create a ground object and markers to attach cable with generic joint</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">oGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateGround</span><span class="p">(</span><span class="n">referencePosition</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">mGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerBodyRigid</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">oGround</span><span class="p">,</span> <span class="n">localPosition</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+
+<span class="n">mCable</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerNodeRigid</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">cableData</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]))</span>
+</pre></div>
+</div>
+<p>As we like to move the cable relative to ground, we employ a simple
+user function which prescribes relative rotation and (corotated) translation in the joint:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">UFoffset</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">itemNumber</span><span class="p">,</span> <span class="n">offsetUserFunctionParameters</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="nf">SmoothStep</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>   <span class="c1">#translate in local joint coordinates</span>
+    <span class="n">phi</span> <span class="o">=</span> <span class="nf">SmoothStep</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">pi</span><span class="p">)</span> <span class="c1">#rotates frame of mGround</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">phi</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Finally, we add the rigid joint (2D displacements and rotation around Z fixed) as GenericJoint.
+Note that for 2D objects, we may only fix <span class="math notranslate nohighlight">\(X\)</span>- and <span class="math notranslate nohighlight">\(Y\)</span>-translations, as well as the <span class="math notranslate nohighlight">\(Z\)</span>-rotation</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">GenericJoint</span><span class="p">(</span><span class="n">markerNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">mGround</span><span class="p">,</span> <span class="n">mCable</span><span class="p">],</span>
+                           <span class="n">constrainedAxes</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span>
+                           <span class="n">offsetUserFunction</span><span class="o">=</span><span class="n">UFoffset</span><span class="p">,</span>
+                           <span class="n">visualization</span><span class="o">=</span><span class="nc">VGenericJoint</span><span class="p">(</span><span class="n">axesRadius</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+                                                       <span class="n">axesLength</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)))</span>
+</pre></div>
+</div>
+<p>As in the previous example, we just need to assemble and set up simulation parameters:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
+
+<span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">()</span>
+
+<span class="n">tEnd</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">stepSize</span> <span class="o">=</span> <span class="mf">0.005</span>
+<span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tEnd</span><span class="o">/</span><span class="n">stepSize</span><span class="p">)</span>
+<span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="n">tEnd</span>
+<span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">verboseMode</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">solutionWritePeriod</span> <span class="o">=</span> <span class="mf">0.005</span>
+<span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">writeSolutionToFile</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="n">simulationSettings</span><span class="o">.</span><span class="n">linearSolverType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">LinearSolverType</span><span class="o">.</span><span class="n">EigenSparse</span>
+<span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">useModifiedNewton</span> <span class="o">=</span> <span class="kc">True</span> <span class="c1">#for faster simulation</span>
+
+<span class="c1">## add some visualization settings</span>
+<span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">defaultSize</span> <span class="o">=</span> <span class="mf">0.01</span>
+<span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">drawNodesAsPoint</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1">#show beam nodes</span>
+<span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">bodies</span><span class="o">.</span><span class="n">beams</span><span class="o">.</span><span class="n">crossSectionFilled</span> <span class="o">=</span> <span class="kc">True</span>
+</pre></div>
+</div>
+<p>Now start the solver with visualization and run the solution viewer afterwards,
+because simulation may be faster than you can follow:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">exu</span><span class="o">.</span><span class="nf">StartRenderer</span><span class="p">()</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="p">)</span>
+<span class="n">exu</span><span class="o">.</span><span class="nf">StopRenderer</span><span class="p">()</span>
+
+<span class="c1">## visualize computed solution:</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">SolutionViewer</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The visualization window for the solution drawn at 6.5s is shown in <a class="reference internal" href="#fig-tutorial-beams"><span class="std std-numref">Fig. 11</span></a>.</p>
+<figure class="align-default" id="id1">
+<span id="fig-tutorial-beams"></span><a class="reference internal image-reference" href="../../_images/TutorialBeams.png"><img alt="../../_images/TutorialBeams.png" src="../../_images/TutorialBeams.png" style="width: 500px;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 11 </span><span class="caption-text">Render window showing the deformed state of the two beams at 6.5s. The lower beam is fixed at the left end, while the upper beam’s support is translated and rotated.</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>This example should give you a good starting point to create beam models.
+See further examples, and more advanced functions, e.g., to create curved beam or reeving systems.
+There are also a sliding joint as well as axially moving beams and contact between beams and sheaves.</p>
+<p>3D beams are still under development and include less functionality. In case, send a request at the GitHub discussion or issues.</p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="RigidBodyAndJointsTutorial.html" class="btn btn-neutral float-left" title="Rigid body and joints tutorial" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="GraphicsAndVisualizationIndex.html" class="btn btn-neutral float-right" title="Graphics and visualization" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

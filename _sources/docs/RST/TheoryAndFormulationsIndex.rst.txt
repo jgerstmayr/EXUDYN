@@ -6,4 +6,8 @@ Theory and formulations
    :maxdepth: 2
 
    TheoryAndFormulations
+   IntroductionToMultibodySystems
+   DynamicsMechanicalPrinciples
+   FramesRotationsAndCoordinateSystems
+   IntegrationPoints
 

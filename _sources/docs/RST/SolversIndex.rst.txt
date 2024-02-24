@@ -7,6 +7,7 @@ Solvers
 
    Solvers
    SolversInExudyn
+   GeneralSolverStructure
    ExplicitSolvers
    ImplicitTrapezoidalRulebasedNewmarkAndGeneralizedalphaSolver
    OptimizationAndParameterVariation

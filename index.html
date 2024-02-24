@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Exudyn documentation &mdash; Exudyn1.7.104.dev1 1.7.104.dev1 documentation</title>
+  <title>Exudyn documentation &mdash; Exudyn1.7.116.dev1 1.7.116.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=74f3cfff"></script>
+        <script src="_static/documentation_options.js?v=8142d844"></script>
         <script src="_static/doctools.js?v=888ff710"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="_static/clipboard.min.js?v=a7894cd8"></script>
@@ -40,7 +40,7 @@
           
           
           <a href="#" class="icon icon-home">
-            Exudyn1.7.104.dev1
+            Exudyn1.7.116.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -82,7 +82,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="#">Exudyn1.7.104.dev1</a>
+          <a href="#">Exudyn1.7.116.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -196,6 +196,7 @@
 <li class="toctree-l2"><a class="reference internal" href="docs/RST/Tutorial.html">Tutorial</a></li>
 <li class="toctree-l2"><a class="reference internal" href="docs/RST/MassSpringDamperTutorial.html">Mass-Spring-Damper tutorial</a></li>
 <li class="toctree-l2"><a class="reference internal" href="docs/RST/RigidBodyAndJointsTutorial.html">Rigid body and joints tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs/RST/FlexibleBeamsTutorial.html">Flexible beams tutorial</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="docs/RST/GraphicsAndVisualizationIndex.html">Graphics and visualization</a><ul>
@@ -231,13 +232,42 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="docs/RST/TheoryAndFormulationsIndex.html">Theory and formulations</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="docs/RST/TheoryAndFormulations.html">Theory and formulations</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/TheoryAndFormulations.html#reference-and-current-coordinates">Reference and current coordinates</a></li>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/TheoryAndFormulations.html#reference-point">Reference point</a></li>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/TheoryAndFormulations.html#coordinate-systems">Coordinate Systems</a></li>
-<li class="toctree-l3"><a class="reference internal" href="docs/RST/TheoryAndFormulations.html#integration-points">Integration Points</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs/RST/TheoryAndFormulations.html">Theory and formulations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs/RST/IntroductionToMultibodySystems.html">Introduction to multibody systems</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/IntroductionToMultibodySystems.html#historical-development">Historical development</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/IntroductionToMultibodySystems.html#simulation-tools-in-computational-engineering">Simulation tools in computational engineering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/IntroductionToMultibodySystems.html#components-of-a-multibody-system">Components of a multibody system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/IntroductionToMultibodySystems.html#kinematics-basics">Kinematics basics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/IntroductionToMultibodySystems.html#euler-s-and-chasles-s-theorems">Euler’s and Chasles’s Theorems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/IntroductionToMultibodySystems.html#degree-of-freedom-dof">Degree of freedom – <span class="xref std std-ref">DOF</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/IntroductionToMultibodySystems.html#non-holonomic-constraints">Non-holonomic constraints</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/IntroductionToMultibodySystems.html#dependent-and-independent-coordinates">Dependent and independent coordinates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/IntroductionToMultibodySystems.html#chebychev-grubler-kutzbach-criterion">Chebychev-Grübler-Kutzbach criterion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/IntroductionToMultibodySystems.html#generalized-coordinates">Generalized coordinates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/IntroductionToMultibodySystems.html#reference-and-current-coordinates">Reference and current coordinates</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="docs/RST/DynamicsMechanicalPrinciples.html">Dynamics: Mechanical principles</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/DynamicsMechanicalPrinciples.html#newton-s-basic-principles">Newton’s basic principles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/DynamicsMechanicalPrinciples.html#the-lagrange-d-alembert-principle">The Lagrange-d’Alembert principle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/DynamicsMechanicalPrinciples.html#generalized-principle-of-virtual-work">Generalized Principle of Virtual Work</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/DynamicsMechanicalPrinciples.html#virtual-displacements">Virtual displacements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/DynamicsMechanicalPrinciples.html#generalized-forces">Generalized Forces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/DynamicsMechanicalPrinciples.html#lagrange-s-equations-of-motion">Lagrange’s Equations of Motion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/DynamicsMechanicalPrinciples.html#multibody-formulations-redundant-and-minimal-coordinates">Multibody formulations: redundant and minimal coordinates</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="docs/RST/FramesRotationsAndCoordinateSystems.html">Frames, rotations and coordinate systems</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/FramesRotationsAndCoordinateSystems.html#reference-points-and-reference-frames">Reference points and reference frames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/FramesRotationsAndCoordinateSystems.html#coordinate-systems-of-frames">Coordinate systems of frames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/FramesRotationsAndCoordinateSystems.html#homogeneous-transformations">Homogeneous transformations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/FramesRotationsAndCoordinateSystems.html#rotations">Rotations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/FramesRotationsAndCoordinateSystems.html#rotation-tensor-axis-angle-representation">Rotation tensor: axis-angle representation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/FramesRotationsAndCoordinateSystems.html#euler-angles-tait-bryan-angles">Euler angles: Tait-Bryan angles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs/RST/FramesRotationsAndCoordinateSystems.html#euler-parameters-and-unit-quaternions">Euler parameters and unit quaternions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="docs/RST/IntegrationPoints.html">Integration Points</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="docs/RST/SolversIndex.html">Solvers</a><ul>
@@ -246,6 +276,7 @@
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/SolversInExudyn.html#system-equations-of-motion">System equations of motion</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="docs/RST/GeneralSolverStructure.html">General solver structure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="docs/RST/ExplicitSolvers.html">Explicit solvers</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/ExplicitSolvers.html#explicit-runge-kutta-method">Explicit Runge-Kutta method</a></li>
 <li class="toctree-l3"><a class="reference internal" href="docs/RST/ExplicitSolvers.html#automatic-step-size-control">Automatic step size control</a></li>
@@ -1508,6 +1539,8 @@
 <li class="toctree-l2"><a class="reference internal" href="docs/RST/Examples/ANCFswitchingSlidingJoint2D.html">ANCFswitchingSlidingJoint2D.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="docs/RST/Examples/ANCFtestHalfcircle.html">ANCFtestHalfcircle.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="docs/RST/Examples/ANCFtests2.html">ANCFtests2.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs/RST/Examples/basicTutorial2024.html">basicTutorial2024.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs/RST/Examples/beamTutorial.html">beamTutorial.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="docs/RST/Examples/beltDriveALE.html">beltDriveALE.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="docs/RST/Examples/beltDriveReevingSystem.html">beltDriveReevingSystem.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="docs/RST/Examples/beltDrivesComparison.html">beltDrivesComparison.py</a></li>
@@ -1561,6 +1594,7 @@
 <li class="toctree-l2"><a class="reference internal" href="docs/RST/Examples/ObjectFFRFconvergenceTestHinge.html">ObjectFFRFconvergenceTestHinge.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="docs/RST/Examples/objectFFRFreducedOrderNetgen.html">objectFFRFreducedOrderNetgen.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="docs/RST/Examples/openAIgymInterfaceTest.html">openAIgymInterfaceTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs/RST/Examples/openAIgymNLinkContinuous.html">openAIgymNLinkContinuous.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="docs/RST/Examples/openAIgymTriplePendulum.html">openAIgymTriplePendulum.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="docs/RST/Examples/openVRengine.html">openVRengine.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="docs/RST/Examples/parameterVariationExample.html">parameterVariationExample.py</a></li>
@@ -1630,6 +1664,7 @@
 <li class="toctree-l2"><a class="reference internal" href="docs/RST/Examples/testGymDoublePendulum.html">testGymDoublePendulum.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="docs/RST/Examples/testGymDoublePendulumEnv.html">testGymDoublePendulumEnv.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="docs/RST/Examples/tippeTop.html">tippeTop.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs/RST/Examples/tutorialNeuralNetwork.html">tutorialNeuralNetwork.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="docs/RST/Examples/universalJoint.html">universalJoint.py</a></li>
 </ul>
 </li>
@@ -1735,14 +1770,6 @@
 </section>
 <section id="theory-contact">
 <span id="seccontacttheory"></span><h2>Theory: Contact<a class="headerlink" href="#theory-contact" title="Link to this heading"></a></h2>
-<p>See according section in <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf">theDoc.pdf</a></p>
-</section>
-<section id="solvers-static">
-<span id="sec-solver-solverstatic"></span><h2>Solvers: Static<a class="headerlink" href="#solvers-static" title="Link to this heading"></a></h2>
-<p>See according section in <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf">theDoc.pdf</a></p>
-</section>
-<section id="solvers-dynamic">
-<span id="sec-solver-solverdynamic"></span><h2>Solvers: Dynamic<a class="headerlink" href="#solvers-dynamic" title="Link to this heading"></a></h2>
 <p>See according section in <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf">theDoc.pdf</a></p>
 </section>
 <section id="theory-component-mode-synthesis">

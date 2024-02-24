@@ -23,7 +23,7 @@ The SystemContainer is the top level of structures in Exudyn. The container hold
   | delete all multibody systems and reset SystemContainer (including graphics); this also releases SystemContainer from the renderer, which requires SC.AttachToRenderEngine() to be called in order to reconnect to rendering; a safer way is to delete the current SystemContainer and create a new one (SC=SystemContainer() )
 * | **AddSystem**\ (): 
   | add a new computational system
-* | **AppendSystem**\ (\ *mainSystem*\ ): 
+* | **Append**\ (\ *mainSystem*\ ): 
   | append an exsiting computational system to the system container; returns the number of MainSystem in system container
 * | **NumberOfSystems**\ (): 
   | obtain number of multibody systems available in system container

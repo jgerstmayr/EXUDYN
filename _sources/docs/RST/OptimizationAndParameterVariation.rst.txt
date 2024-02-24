@@ -49,6 +49,16 @@ As an alternative stochastic methods can be use to compute only the objective fu
 
 \ **Genetic algorithms**\  can significantly reduce the necessary amount of objective function evaluations in order to perform the optimization. Genetic identification algorithms have been already successfully applied to multibody system dynamics. 
 
+The general structure of a (canonical) genetic algorithm is depicted in \ :numref:`fig-geneticoptimization`\ .
+
+
+.. _fig-geneticOptimization:
+.. figure:: ../theDoc/figures/geneticOptimization.png
+   :width: 400
+
+   Basic solver flow chart genetic algorithm / optimization.
+
+
 
 For details, see the cited literature. Here, we focus on the implementation of the function 
 \ ``GeneticOptimization(...)``\ , see Section :ref:`sec-processing-geneticoptimization`\ .

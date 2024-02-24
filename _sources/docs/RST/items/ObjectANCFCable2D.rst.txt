@@ -225,10 +225,10 @@ which is approximated using
 
 .. math::
 
-   {\mathbf{M}} = \sum_{ip = 0}^{n_{ip}-1} \frac{L}{2} \rho A {\mathbf{S}}(x_{ip})^T {\mathbf{S}}(x_{ip})
+   {\mathbf{M}} = \sum_{ip = 0}^{n_{ip}-1} w(x_{ip}) \frac{L}{2} \rho A {\mathbf{S}}(x_{ip})^T {\mathbf{S}}(x_{ip})
 
 
-with \ :math:`x_{ip}`\  evaluated at the integration points,
+with integration weights \ :math:`w(x_{ip})`\ , \ :math:`\sum w(x_{ip})=2`\ , and integration points \ :math:`x_{ip}`\ , given as,
 
 .. math::
    :label: eq-ancfcable-iptransform

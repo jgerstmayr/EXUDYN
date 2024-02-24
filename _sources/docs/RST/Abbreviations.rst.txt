@@ -36,6 +36,10 @@ see also :ref:`Section Notation <sec-generalnotation>`\ .
 
 \ **COM**\ : center of mass
 
+.. _DOF:
+
+\ **DOF**\ : degree of freedom
+
 .. _EOM:
 
 \ **EOM**\ : equations of motion
@@ -118,5 +122,5 @@ see also :ref:`Section Notation <sec-generalnotation>`\ .
 
 .. _trig:
 
-\ **trig**\ : triangle (in graphics)
+\ **trig**\ : triangle
 

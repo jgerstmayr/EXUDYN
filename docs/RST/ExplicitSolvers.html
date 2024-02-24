@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Explicit solvers &mdash; Exudyn1.7.104.dev1 1.7.104.dev1 documentation</title>
+  <title>Explicit solvers &mdash; Exudyn1.7.116.dev1 1.7.116.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -18,20 +18,20 @@
   
         <script src="../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=74f3cfff"></script>
+        <script src="../../_static/documentation_options.js?v=8142d844"></script>
         <script src="../../_static/doctools.js?v=888ff710"></script>
         <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
         <script src="../../_static/copybutton.js?v=f281be69"></script>
         <script src="../../_static/js/rtd_search_config.js"></script>
         <script src="../../_static/js/rtd_sphinx_search.min.js"></script>
-        <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "vrRow": ["{[#1,\\, #2,\\, #3]}", 3], "vsix": ["{\\left[\\!\\! \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} \\!\\!\\right]}", 6], "vsixb": ["{\\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "vsixs": ["{ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "omegaBDtilde": "{\\LU{b}{\\tilde \\tomega_\\mathrm{bd}}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}", "termA": ["{\\color{blue}{#1}}", 1], "termB": ["{\\color{red}{#1}}", 1], "termC": ["{\\color{green}{#1}}", 1], "avu": "{\\ddot \\mathbf{q}}", "GA": "{G\\alpha}", "aalg": "{\\mathbf{a}}", "vel": "{\\mathbf{v}}"}}}</script>
+        <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "ps": "{p_\\mathrm{s}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "myoverline": ["\\overline{#1}", 1], "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "mfour": ["{\\left[ \\begin{array}{cccc} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vfour": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vrRow": ["{[#1,\\, #2,\\, #3]}", 3], "vsix": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} \\right]}", 6], "vsixb": ["{\\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "vsixs": ["{ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "omegaBDtilde": "{\\LU{b}{\\tilde \\tomega_\\mathrm{bd}}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}", "termA": ["{\\color{blue}{#1}}", 1], "termB": ["{\\color{red}{#1}}", 1], "termC": ["{\\color{green}{#1}}", 1], "acc": "{\\ddot \\mathbf{q}}", "GA": "{G\\alpha}", "aalg": "{\\mathbf{a}}", "vel": "{\\mathbf{v}}"}}}</script>
         <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Implicit trapezoidal rule-based, Newmark and Generalized-alpha solver" href="ImplicitTrapezoidalRulebasedNewmarkAndGeneralizedalphaSolver.html" />
-    <link rel="prev" title="Solvers in Exudyn" href="SolversInExudyn.html" /> 
+    <link rel="prev" title="General solver structure" href="GeneralSolverStructure.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -43,7 +43,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.7.104.dev1
+            Exudyn1.7.116.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -65,6 +65,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="SolversIndex.html">Solvers</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="Solvers.html">Solvers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="SolversInExudyn.html">Solvers in Exudyn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GeneralSolverStructure.html">General solver structure</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Explicit solvers</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#explicit-runge-kutta-method">Explicit Runge-Kutta method</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#automatic-step-size-control">Automatic step size control</a></li>
@@ -99,7 +100,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.7.104.dev1</a>
+          <a href="../../index.html">Exudyn1.7.116.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -127,10 +128,10 @@ A list of explicit solvers is available, see Section <a class="reference interna
 <div class="math notranslate nohighlight">
 \[\txi = [{\mathbf{q}}\tp \;\; \dot {\mathbf{q}}\tp \;\; {\mathbf{y}}\tp ]\tp\]</div>
 <p>and which includes <a class="reference internal" href="Abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> coordinates and velocities and <a class="reference internal" href="Abbreviations.html#ode1"><span class="std std-ref">ODE1</span></a> coordinates. All coordinates are computed without reference values.</p>
-<p>The <a class="reference internal" href="Abbreviations.html#ode1"><span class="std std-ref">ODE1</span></a> and <a class="reference internal" href="Abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> equations of Eq. <a class="reference internal" href="#equation-eq-systemeom">(3)</a>, with <span class="math notranslate nohighlight">\(\tlambda=0\)</span>, are written in explicit form and converted to first order equations,</p>
+<p>The <a class="reference internal" href="Abbreviations.html#ode1"><span class="std std-ref">ODE1</span></a> and <a class="reference internal" href="Abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> equations of Eq. <a class="reference internal" href="#equation-eq-systemeom">(23)</a>, with <span class="math notranslate nohighlight">\(\tlambda=0\)</span>, are written in explicit form and converted to first order equations,</p>
 <div class="math notranslate nohighlight" id="equation-eq-systemeom">
-<span class="eqno">(3)<a class="headerlink" href="#equation-eq-systemeom" title="Link to this equation"></a></span>\[\begin{split}\dot {\mathbf{q}} &amp;=&amp; \vel \nonumber \\
-\ddot \vel &amp; = &amp;{\mathbf{M}}^{-1} {\mathbf{f}}_\SO({\mathbf{q}}, \vel, t) \nonumber \\
+<span class="eqno">(23)<a class="headerlink" href="#equation-eq-systemeom" title="Link to this equation"></a></span>\[\begin{split}\dot {\mathbf{q}} &amp;=&amp; \vel \nonumber \\
+\dot \vel &amp; = &amp;{\mathbf{M}}^{-1} {\mathbf{f}}_\SO({\mathbf{q}}, \vel, t) \nonumber \\
 \dot {\mathbf{y}} &amp; = &amp;{\mathbf{f}}_\FO({\mathbf{y}}, t) \\\end{split}\]</div>
 <p>The system first order differential equations for explicit solvers thus read</p>
 <div class="math notranslate nohighlight">
@@ -142,7 +143,7 @@ A list of explicit solvers is available, see Section <a class="reference interna
 \[\txi_{t+h} = \txi_{t} + \Delta \txi.\]</div>
 <p>For any given Runge-Kutta method, the integration of one step with step size <span class="math notranslate nohighlight">\(h\)</span> is performed by an approximation</p>
 <div class="math notranslate nohighlight" id="equation-s-stage-quadrature">
-<span class="eqno">(4)<a class="headerlink" href="#equation-s-stage-quadrature" title="Link to this equation"></a></span>\[\Delta \txi = \int _{t}^{t+h}{\mathbf{f}}_e(\tau ,\txi(\tau ))d\tau \approx h\left[b_{1} {\mathbf{f}}_e(t,\txi(t))+b_{2} {\mathbf{f}}_e(t+c_{2} h,\txi(t+c_{2} h))+ \ldots +b_{s} {\mathbf{f}}_e(t+\txi_{s} h,u(t+\txi_{s} h))\right]\]</div>
+<span class="eqno">(24)<a class="headerlink" href="#equation-s-stage-quadrature" title="Link to this equation"></a></span>\[\Delta \txi = \int _{t}^{t+h}{\mathbf{f}}_e(\tau ,\txi(\tau ))d\tau \approx h\left[b_{1} {\mathbf{f}}_e(t,\txi(t))+b_{2} {\mathbf{f}}_e(t+c_{2} h,\txi(t+c_{2} h))+ \ldots +b_{s} {\mathbf{f}}_e(t+\txi_{s} h,u(t+\txi_{s} h))\right]\]</div>
 <p>in which <span class="math notranslate nohighlight">\(t + c_{i}h\)</span> is the time for stage <span class="math notranslate nohighlight">\(i\)</span> and <span class="math notranslate nohighlight">\(b_i\)</span> the according weight given in the integration formula.
 Stages are within one step (therefor called one-step-methods), where <span class="math notranslate nohighlight">\(c_i=0\)</span> represents the beginning of the step and <span class="math notranslate nohighlight">\(c_i=1\)</span> the end.
 Note that <span class="math notranslate nohighlight">\(c_{1}= 0\)</span> for explicit integration formulas.</p>
@@ -151,15 +152,16 @@ Note that <span class="math notranslate nohighlight">\(c_{1}= 0\)</span> for exp
 \[{\mathbf{g}}_{i} \approx \txi(t+c_{i} h)\]</div>
 <p>and computed by explicit integration (quadrature) formulas of lower order (<span class="math notranslate nohighlight">\(g_i\)</span> not to be mixed up with algebraic equations!),</p>
 <div class="math notranslate nohighlight" id="equation-eq-expl-rk-stages">
-<span class="eqno">(5)<a class="headerlink" href="#equation-eq-expl-rk-stages" title="Link to this equation"></a></span>\[\begin{split}\begin{array}{l} {{\mathbf{g}}_{1} =\txi_t} \\ {{\mathbf{g}}_{2} =\txi_t+ha_{21} {\mathbf{f}}_e(t,{\mathbf{g}}_{1} )} \\ {{\mathbf{g}}_{3} =\txi_t+h\left[a_{31} {\mathbf{f}}_e(t,{\mathbf{g}}_{1} )+a_{32} {\mathbf{f}}_e(t+c_{2} h,{\mathbf{g}}_{2} )\right]} \\ {{\rm \; \; \; \; \; \; }\vdots } \\ {{\mathbf{g}}_{s} =\txi_t+h\left[a_{s1} {\mathbf{f}}_e(t,{\mathbf{g}}_{1} )+a_{s2} {\mathbf{f}}_e(t+c_{2} h,{\mathbf{g}}_{2} )+ \ldots +a_{s,s-1} {\mathbf{f}}_e(t+c_{s-1} h,{\mathbf{g}}_{s-1} )\right]} \end{array}\end{split}\]</div>
-<p>After all vectors <span class="math notranslate nohighlight">\({\mathbf{g}}_i\)</span> have been consecutively evaluated, the step is updated by Eq. <a class="reference internal" href="#equation-s-stage-quadrature">(4)</a>.</p>
+<span class="eqno">(25)<a class="headerlink" href="#equation-eq-expl-rk-stages" title="Link to this equation"></a></span>\[\begin{split}\begin{array}{l} {{\mathbf{g}}_{1} =\txi_t} \\ {{\mathbf{g}}_{2} =\txi_t+ha_{21} {\mathbf{f}}_e(t,{\mathbf{g}}_{1} )} \\ {{\mathbf{g}}_{3} =\txi_t+h\left[a_{31} {\mathbf{f}}_e(t,{\mathbf{g}}_{1} )+a_{32} {\mathbf{f}}_e(t+c_{2} h,{\mathbf{g}}_{2} )\right]} \\ {{\rm \; \; \; \; \; \; }\vdots } \\ {{\mathbf{g}}_{s} =\txi_t+h\left[a_{s1} {\mathbf{f}}_e(t,{\mathbf{g}}_{1} )+a_{s2} {\mathbf{f}}_e(t+c_{2} h,{\mathbf{g}}_{2} )+ \ldots +a_{s,s-1} {\mathbf{f}}_e(t+c_{s-1} h,{\mathbf{g}}_{s-1} )\right]} \end{array}\end{split}\]</div>
+<p>After all vectors <span class="math notranslate nohighlight">\({\mathbf{g}}_i\)</span> have been consecutively evaluated, the step is updated by Eq. <a class="reference internal" href="#equation-s-stage-quadrature">(24)</a>.</p>
+<p>For some exemplary tableaus of explicit and impliciti Runge-Kutta methods, see theDoc.pdf!</p>
 </section>
 <section id="automatic-step-size-control">
 <h2>Automatic step size control<a class="headerlink" href="#automatic-step-size-control" title="Link to this heading"></a></h2>
 <p>Advanced solvers, such as <code class="docutils literal notranslate"><span class="pre">ODE23</span></code> and <code class="docutils literal notranslate"><span class="pre">DOPRI5</span></code>, include automatic step size control(activated with
 <code class="docutils literal notranslate"><span class="pre">timeIntegration.automaticStepSize</span> <span class="pre">=</span> <span class="pre">True</span></code> in simulationSettings).</p>
 <p>We estimate the error of a time step with current step size <span class="math notranslate nohighlight">\(h\)</span> by
-using an embedded Runge-Kutta formula, which includes two approximations <a class="reference internal" href="#equation-s-stage-quadrature">(4)</a> of order <span class="math notranslate nohighlight">\(p\)</span> and <span class="math notranslate nohighlight">\(\hat p = p-1\)</span>, which is obtained by using two different integration formulas with common coefficients <span class="math notranslate nohighlight">\(c_i\)</span>, but two sets of weights <span class="math notranslate nohighlight">\(b_i\)</span> and <span class="math notranslate nohighlight">\(\hat b_i\)</span>, leading to two approximations <span class="math notranslate nohighlight">\(\txi\)</span> and <span class="math notranslate nohighlight">\(\hat \txi\)</span>. These so-called embedded Runge-Kutta formulas are widely used, for details see Hairer et al. .</p>
+using an embedded Runge-Kutta formula, which includes two approximations <a class="reference internal" href="#equation-s-stage-quadrature">(24)</a> of order <span class="math notranslate nohighlight">\(p\)</span> and <span class="math notranslate nohighlight">\(\hat p = p-1\)</span>, which is obtained by using two different integration formulas with common coefficients <span class="math notranslate nohighlight">\(c_i\)</span>, but two sets of weights <span class="math notranslate nohighlight">\(b_i\)</span> and <span class="math notranslate nohighlight">\(\hat b_i\)</span>, leading to two approximations <span class="math notranslate nohighlight">\(\txi\)</span> and <span class="math notranslate nohighlight">\(\hat \txi\)</span>. These so-called embedded Runge-Kutta formulas are widely used, for details see Hairer et al. .</p>
 <p>The according apporximations <span class="math notranslate nohighlight">\(\txi\)</span> and <span class="math notranslate nohighlight">\(\hat \txi\)</span> are used to estimate an error</p>
 <div class="math notranslate nohighlight">
 \[e_j=|\xi_j- \hat \xi_j|\]</div>
@@ -192,7 +194,7 @@ For more details, see Hairer et al. .</p>
 Lie group integration is currently only available for <code class="docutils literal notranslate"><span class="pre">NodeRigidBodyRotVecLG</span></code> used in <code class="docutils literal notranslate"><span class="pre">ObjectRigidBody</span></code> (3D rigid body).
 <code class="docutils literal notranslate"><span class="pre">FFRFreducedOrder</span></code> will be extended to such nodes in the near future.
 To get Lie group integrators running with rigid body models, all 3D node types need to be set to <code class="docutils literal notranslate"><span class="pre">NodeRigidBodyRotVecLG</span></code> and
-set <code class="docutils literal notranslate"><span class="pre">explicitIntegration.useLieGroupIntegration</span> <span class="pre">==</span> <span class="pre">True</span></code>.</p>
+set <code class="docutils literal notranslate"><span class="pre">explicitIntegration.useLieGroupIntegration</span> <span class="pre">=</span> <span class="pre">True</span></code>.</p>
 </section>
 <section id="constraints-with-explicit-solvers">
 <h2>Constraints with explicit solvers<a class="headerlink" href="#constraints-with-explicit-solvers" title="Link to this heading"></a></h2>
@@ -214,7 +216,7 @@ A <code class="docutils literal notranslate"><span class="pre">CoordinateConstra
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="SolversInExudyn.html" class="btn btn-neutral float-left" title="Solvers in Exudyn" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="GeneralSolverStructure.html" class="btn btn-neutral float-left" title="General solver structure" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="ImplicitTrapezoidalRulebasedNewmarkAndGeneralizedalphaSolver.html" class="btn btn-neutral float-right" title="Implicit trapezoidal rule-based, Newmark and Generalized-alpha solver" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

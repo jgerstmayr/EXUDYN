@@ -8,4 +8,5 @@ Tutorial
    Tutorial
    MassSpringDamperTutorial
    RigidBodyAndJointsTutorial
+   FlexibleBeamsTutorial
 

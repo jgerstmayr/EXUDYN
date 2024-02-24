@@ -14,7 +14,7 @@ models and parameters; for rigid body inertia, see rigidBodyUtilities
 
 Function: StribeckFunction
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
-`StribeckFunction <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/physics.py\#L29>`__\ (\ ``vel``\ , \ ``muDynamic``\ , \ ``muStaticOffset``\ , \ ``muViscous = 0``\ , \ ``expVel = 1e-3``\ , \ ``regVel = 1e-3``\ )
+`StribeckFunction <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/physics.py\#L30>`__\ (\ ``vel``\ , \ ``muDynamic``\ , \ ``muStaticOffset``\ , \ ``muViscous = 0``\ , \ ``expVel = 1e-3``\ , \ ``regVel = 1e-3``\ )
 
 - | \ *function description*\ :
   | describes regularized Stribeck function with optial viscous part for given velocity,
@@ -28,6 +28,8 @@ Function: StribeckFunction
   | \ ``expVel``\ : \ :math:`v_{exp}`\ ,  velocity (relative to regVel, at which the muStaticOffset decreases exponentially, at vel=expVel, the factor to muStaticOffset is exp(-1) = 36.8\%)
 - | \ *output*\ :
   | returns velocity dependent friction coefficient (if muDynamic and muStaticOffset are friction coefficients) or friction force (if muDynamic and muStaticOffset are on force level)
+- | \ *notes*\ :
+  | see Isermann (2008) and Armstrong-Helouvry (1991)
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
@@ -42,7 +44,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: RegularizedFrictionStep
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`RegularizedFrictionStep <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/physics.py\#L38>`__\ (\ ``x``\ , \ ``x0``\ , \ ``h0``\ , \ ``x1``\ , \ ``h1``\ )
+`RegularizedFrictionStep <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/physics.py\#L39>`__\ (\ ``x``\ , \ ``x0``\ , \ ``h0``\ , \ ``x1``\ , \ ``h1``\ )
 
 - | \ *function description*\ :
   | helper function for RegularizedFriction(...)
@@ -56,7 +58,7 @@ Function: RegularizedFrictionStep
 
 Function: RegularizedFriction
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`RegularizedFriction <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/physics.py\#L59>`__\ (\ ``vel``\ , \ ``muDynamic``\ , \ ``muStaticOffset``\ , \ ``velStatic``\ , \ ``velDynamic``\ , \ ``muViscous = 0``\ )
+`RegularizedFriction <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/physics.py\#L60>`__\ (\ ``vel``\ , \ ``muDynamic``\ , \ ``muStaticOffset``\ , \ ``velStatic``\ , \ ``velDynamic``\ , \ ``muViscous = 0``\ )
 
 - | \ *function description*\ :
   | describes regularized friction function, with increased static friction, dynamic friction and optional viscous part
@@ -85,7 +87,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: VonMisesStress
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`VonMisesStress <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/physics.py\#L77>`__\ (\ ``stress6D``\ )
+`VonMisesStress <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/physics.py\#L78>`__\ (\ ``stress6D``\ )
 
 - | \ *function description*\ :
   | compute equivalent von-Mises stress given 6 stress components or list of stress6D (or stress6D in rows of np.array)
@@ -103,7 +105,7 @@ Function: VonMisesStress
 
 Function: UFvonMisesStress
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
-`UFvonMisesStress <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/physics.py\#L100>`__\ (\ ``mbs``\ , \ ``t``\ , \ ``sensorNumbers``\ , \ ``factors``\ , \ ``configuration``\ )
+`UFvonMisesStress <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/physics.py\#L101>`__\ (\ ``mbs``\ , \ ``t``\ , \ ``sensorNumbers``\ , \ ``factors``\ , \ ``configuration``\ )
 
 - | \ *function description*\ :
   | Sensor user function to compute equivalent von-Mises stress from sensor with Stress or StressLocal OutputVariableType; if more than 1 sensor is given in sensorNumbers, then the maximum stress is computed

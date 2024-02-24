@@ -42,7 +42,7 @@ You can view and download this file on Github: `testGymCartpoleEnv.py <https://g
        #metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 50}
        metadata = {"render_modes": ["human"], "render_fps": 50}
    
-       def __init__(self, thresholdFactor = 1.):
+       def __init__(self, thresholdFactor = 1., forceFactor = 1.):
        
            self.SC = exu.SystemContainer()
            self.mbs = self.SC.AddSystem()
@@ -58,7 +58,7 @@ You can view and download this file on Github: `testGymCartpoleEnv.py <https://g
            self.lengthHalf = 0.5  # actually half the pole's self.length
            self.length = self.lengthHalf*2
            self.polemass_length = self.masspole * self.length
-           self.force_mag = 10.0
+           self.force_mag = 10.0*forceFactor
            self.stepUpdateTime = 0.02  # seconds between state updates
            self.kinematics_integrator = "euler"
            

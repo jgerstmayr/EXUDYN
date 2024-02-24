@@ -43,22 +43,25 @@ Python parts, see \ :numref:`fig-exudyn-candpython`\ .
     loads can added to the system, see Section :ref:`sec-item-reference-manual`\ ;
  -  \ ``mbs.systemData``\ : contains the initial, current, visualization, ... states of the system and holds the items, see \ :numref:`fig-system-overview`\ 
   
-+  \ **Python parts**\  (this list is continuously extended, see Section :ref:`sec-pythonutilityfunctions`\ ), sorted by importance:
++  \ **Python parts**\  (this list is continuously extended, see Section :ref:`sec-pythonutilityfunctions`\ ):
   
- -  \ ``exudyn.utilities``\ : constains helper classes in Python and includes Exudyn modules \ ``basicUtilities``\ , \ ``rigidBodyUtilities``\ , \ ``graphicsDataUtilities``\ , and \ ``itemInterface``\ , which is recommended to be loaded at beginning of your model file
- -  \ ``exudyn.itemInterface``\ : contains the interface, which transfers Python classes (e.g., of a NodePoint) to dictionaries that can be understood by the C++ module
+ -  \ ``exudyn.artificialIntelligence``\ : interface to stablebaselines, interface to pytorch training (coming soon)
  -  \ ``exudyn.basicUtilities``\ : contains basic helper classes, without importing numpy
- -  \ ``exudyn.rigidBodyUtilities``\ : contains important helper classes for creation of rigid body inertia, rigid bodies, and rigid body joints; includes helper functions for rotation parameterization, rotation matrices, homogeneous transformations, etc.
+ -  \ ``exudyn.beams``\ : helper functions for creation of beams along straight lines and curves, sliding joints, etc.
  -  \ ``exudyn.graphicsDataUtilities``\ : provides some basic drawing utilities, definition of colors and basic drawing objects (including \ :ref:`STL <STL>`\  import); rotation/translation of graphicsData objects
+ -  \ ``exudyn.interactive``\ : helper classes to create interactive models (e.g. for teaching or demos)
+ -  \ ``exudyn.itemInterface``\ : contains the interface, which transfers Python classes (e.g., of a NodePoint) to dictionaries that can be understood by the C++ module
+ -  \ ``exudyn.FEM``\ : everything related to finite element import and creation of model order reduction flexible bodies
+ -  \ ``exudyn.lieGroupBasics``\ : a collection of Python functions for Lie group methods (SO3, SE3, log, exp, Texp, ...)
+ -  \ ``exudyn.mainSystemExtensions``\ : mapping of some functions to MainSystem (mbs)
+ -  \ ``exudyn.physics``\ : containing helper functions, which are physics related such as friction
  -  \ ``exudyn.plot``\ : contains PlotSensor(...), a very versatile interface to matplotlib and other valuable helper functions
  -  \ ``exudyn.processing``\ : methods for optimization, parameter variation, sensitivity analysis, etc.
- -  \ ``exudyn.FEM``\ : everything related to finite element import and creation of model order reduction flexible bodies
+ -  \ ``exudyn.rigidBodyUtilities``\ : contains important helper classes for creation of rigid body inertia, rigid bodies, and rigid body joints; includes helper functions for rotation parameterization, rotation matrices, homogeneous transformations, etc.
  -  \ ``exudyn.robotics``\ : submodule containing several helper modules related to manipulators (\ ``robotics``\ , \ ``robotics.models``\ ), mobile robots (\ ``robotics.mobile``\ ), trajectory generation (\ ``robotics.motion``\ ), etc.
- -  \ ``exudyn.beams``\ : helper functions for creation of beams along straight lines and curves, sliding joints, etc.
- -  \ ``exudyn.interactive``\ : helper classes to create interactive models (e.g. for teaching or demos)
- -  \ ``exudyn.physics``\ : containing helper functions, which are physics related such as friction
  -  \ ``exudyn.signalProcessing``\ : filters, FFT, etc.; interfaces to scipy and numpy methods
  -  \ ``exudyn.solver``\ : functions imported when loading \ ``exudyn``\ , containing main solvers
+ -  \ ``exudyn.utilities``\ : constains helper classes in Python and includes Exudyn modules \ ``basicUtilities``\ , \ ``rigidBodyUtilities``\ , \ ``graphicsDataUtilities``\ , and \ ``itemInterface``\ , which is recommended to be loaded at beginning of your model file
   
 
 

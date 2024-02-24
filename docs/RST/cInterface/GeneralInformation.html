@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>General information on Python-C++ interface &mdash; Exudyn1.7.104.dev1 1.7.104.dev1 documentation</title>
+  <title>General information on Python-C++ interface &mdash; Exudyn1.7.116.dev1 1.7.116.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=74f3cfff"></script>
+        <script src="../../../_static/documentation_options.js?v=8142d844"></script>
         <script src="../../../_static/doctools.js?v=888ff710"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -41,7 +41,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.7.104.dev1
+            Exudyn1.7.116.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -99,7 +99,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.7.104.dev1</a>
+          <a href="../../../index.html">Exudyn1.7.116.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -208,19 +208,27 @@ There are only a few very important cases where data is referenced in Exudyn , t
 <code class="docutils literal notranslate"><span class="pre">VisualizationSettings</span></code>, and
 <code class="docutils literal notranslate"><span class="pre">SimulationSettings</span></code> which are always references to internal C++ classes.
 The following code snippets and comments should explain this behavior:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1">#create system container, referenced from SC:</span>
-<span class="linenos"> 2</span><span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
-<span class="linenos"> 3</span><span class="n">SC2</span> <span class="o">=</span> <span class="n">SC</span>                           <span class="c1">#this will only put a reference to SC</span>
-<span class="linenos"> 4</span>                                   <span class="c1">#SC2 and SC represent the SAME C++ object</span>
-<span class="linenos"> 5</span><span class="c1">#add a MainSystem (multibody system):</span>
-<span class="linenos"> 6</span><span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>               <span class="c1">#get reference mbs to C++ system</span>
-<span class="linenos"> 7</span><span class="n">mbs2</span><span class="o">=</span><span class="n">mbs</span>                           <span class="c1">#again, mbs2 and mbs refer to the same C++ object</span>
-<span class="linenos"> 8</span><span class="n">og</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectGround</span><span class="p">())</span> <span class="c1">#copy data of ObjectGround() into C++</span>
-<span class="linenos"> 9</span><span class="n">o0</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetObject</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>              <span class="c1">#get copy of internal data as dictionary</span>
-<span class="linenos">10</span><span class="k">del</span> <span class="n">o0</span>                             <span class="c1">#delete the local dictionary; C++ data not affected</span>
-<span class="linenos">11</span><span class="k">del</span> <span class="n">mbs</span><span class="p">,</span> <span class="n">mbs2</span>                      <span class="c1">#references to mbs deleted (C++ data still available)</span>
-<span class="linenos">12</span><span class="k">del</span> <span class="n">SC</span>                             <span class="c1">#references to SystemContainer deleted</span>
-<span class="linenos">13</span><span class="c1">#at this point, mbs and SC are not available any more (data may be cleaned up by Python)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">copy</span>                        <span class="c1">#for real copying</span>
+<span class="linenos"> 2</span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
+<span class="linenos"> 3</span><span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="linenos"> 4</span><span class="c1">#create system container, referenced from SC:</span>
+<span class="linenos"> 5</span><span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
+<span class="linenos"> 6</span><span class="n">SC2</span> <span class="o">=</span> <span class="n">SC</span>                           <span class="c1">#this will only put a reference to SC</span>
+<span class="linenos"> 7</span>                                   <span class="c1">#SC2 and SC represent the SAME C++ object</span>
+<span class="linenos"> 8</span><span class="c1">#add a MainSystem (multibody system):</span>
+<span class="linenos"> 9</span><span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>               <span class="c1">#get reference mbs to C++ system</span>
+<span class="linenos">10</span><span class="n">mbs2</span><span class="o">=</span><span class="n">mbs</span>                           <span class="c1">#again, mbs2 and mbs refer to the same C++ object</span>
+<span class="linenos">11</span><span class="n">og</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectGround</span><span class="p">())</span> <span class="c1">#copy data of ObjectGround() into C++</span>
+<span class="linenos">12</span><span class="n">o0</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetObject</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>              <span class="c1">#get copy of internal data as dictionary</span>
+<span class="linenos">13</span>
+<span class="linenos">14</span><span class="n">mbsCopy</span><span class="o">=</span><span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">mbs</span><span class="p">)</span>             <span class="c1">#mbsCopy is now a real copy of mbs; uses pickle; experimental!</span>
+<span class="linenos">15</span><span class="n">SC</span><span class="o">.</span><span class="nf">Append</span><span class="p">(</span><span class="n">mbsCopy</span><span class="p">)</span>                 <span class="c1">#this is needed to work with mbsCopy</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span><span class="k">del</span> <span class="n">o0</span>                             <span class="c1">#delete the local dictionary; C++ data not affected</span>
+<span class="linenos">18</span><span class="k">del</span> <span class="n">mbs</span><span class="p">,</span> <span class="n">mbs2</span>                      <span class="c1">#references to mbs deleted (C++ data still available)</span>
+<span class="linenos">19</span><span class="k">del</span> <span class="n">mbsCopy</span>                        <span class="c1">#now also copy of mbs destroyed</span>
+<span class="linenos">20</span><span class="k">del</span> <span class="n">SC</span>                             <span class="c1">#references to SystemContainer deleted</span>
+<span class="linenos">21</span><span class="c1">#at this point, mbs and SC are not available any more (data will be cleaned up by Python)</span>
 </pre></div>
 </div>
 </section>

@@ -1,12 +1,21 @@
 Solvers in Exudyn 
 ==================
 
-The user has a couple of basic solvers available in Exudyn :
+The user has a couple of basic solvers available in Exudyn , see \ :numref:`fig-available-solvers`\ :
 
-+  \ ``exudyn.SolveStatic(...)``\ : compute static solution for given problem (may also be used to compute kinematic behaviour by prescribing joint motion)
++  \ ``exudyn.SolveStatic(...)``\ : compute static solution for given problem (may also be used to compute kinematic behavior by prescribing joint motion)
 +  \ ``exudyn.SolveDynamic(...)``\ : time integration of equations of motion
 +  \ ``exudyn.ComputeLinearizedSystem(...)``\ : computes the linearized system of equations and returns mass, stiffness, damping matrices
 +  \ ``exudyn.ComputeODE2Eigenvalues(...)``\ : computes the eigenvalues of the linearized system of equations; only possible if no algebraic constraints in system; uses scipy to compute eigenvalues
+
+
+
+.. _fig-available-solvers:
+.. figure:: ../theDoc/figures/solversAvailableSolvers.png
+   :width: 500
+
+   Basic and advanced solvers in Exudyn ; advanced solvers build upon any basic solver to perform more sophisticated operations
+
 
 
 There are advanced solvers, like in \ ``exudyn.processing``\ :
@@ -62,5 +71,4 @@ It is important to note, that for linear mechanical the term \ :math:`{\mathbf{f
 
 
 in which \ :math:`{\mathbf{f}}^a`\  represents applied forces and stiffness matrix \ :math:`{\mathbf{K}}`\  and damping matrix \ :math:`{\mathbf{D}}`\  become part of the system Jacobian for time integration.
-
 

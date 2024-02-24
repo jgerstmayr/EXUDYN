@@ -125,6 +125,9 @@ The following code snippets and comments should explain this behavior:
 .. code-block:: python
    :linenos:
    
+   import copy                        #for real copying
+   import exudyn as exu
+   from exudyn.utilities import *
    #create system container, referenced from SC:
    SC = exu.SystemContainer()
    SC2 = SC                           #this will only put a reference to SC
@@ -134,10 +137,15 @@ The following code snippets and comments should explain this behavior:
    mbs2=mbs                           #again, mbs2 and mbs refer to the same C++ object
    og = mbs.AddObject(ObjectGround()) #copy data of ObjectGround() into C++
    o0 = mbs.GetObject(0)              #get copy of internal data as dictionary
+   
+   mbsCopy=copy.copy(mbs)             #mbsCopy is now a real copy of mbs; uses pickle; experimental!
+   SC.Append(mbsCopy)                 #this is needed to work with mbsCopy
+   
    del o0                             #delete the local dictionary; C++ data not affected
    del mbs, mbs2                      #references to mbs deleted (C++ data still available)
+   del mbsCopy                        #now also copy of mbs destroyed
    del SC                             #references to SystemContainer deleted
-   #at this point, mbs and SC are not available any more (data may be cleaned up by Python)
+   #at this point, mbs and SC are not available any more (data will be cleaned up by Python)
 
 
 .. _sec-cinterface-exceptions:

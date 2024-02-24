@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Introduction to multibody systems &mdash; Exudyn1.7.116.dev1 1.7.116.dev1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=82a976d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=e11081fd" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=8142d844"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../_static/copybutton.js?v=f281be69"></script>
+        <script src="../../_static/js/rtd_search_config.js"></script>
+        <script src="../../_static/js/rtd_sphinx_search.min.js"></script>
+        <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "ps": "{p_\\mathrm{s}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "myoverline": ["\\overline{#1}", 1], "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "mfour": ["{\\left[ \\begin{array}{cccc} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vfour": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vrRow": ["{[#1,\\, #2,\\, #3]}", 3], "vsix": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} \\right]}", 6], "vsixb": ["{\\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "vsixs": ["{ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "omegaBDtilde": "{\\LU{b}{\\tilde \\tomega_\\mathrm{bd}}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}", "termA": ["{\\color{blue}{#1}}", 1], "termB": ["{\\color{red}{#1}}", 1], "termC": ["{\\color{green}{#1}}", 1], "acc": "{\\ddot \\mathbf{q}}", "GA": "{G\\alpha}", "aalg": "{\\mathbf{a}}", "vel": "{\\mathbf{v}}"}}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Dynamics: Mechanical principles" href="DynamicsMechanicalPrinciples.html" />
+    <link rel="prev" title="Theory and formulations" href="TheoryAndFormulations.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Exudyn1.7.116.dev1
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Exudyn.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="NotationIndex.html">Notation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="TheoryAndFormulationsIndex.html">Theory and formulations</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="TheoryAndFormulations.html">Theory and formulations</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Introduction to multibody systems</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#historical-development">Historical development</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#simulation-tools-in-computational-engineering">Simulation tools in computational engineering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#components-of-a-multibody-system">Components of a multibody system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kinematics-basics">Kinematics basics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#euler-s-and-chasles-s-theorems">Euler’s and Chasles’s Theorems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#degree-of-freedom-dof">Degree of freedom – <span class="xref std std-ref">DOF</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#non-holonomic-constraints">Non-holonomic constraints</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dependent-and-independent-coordinates">Dependent and independent coordinates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#chebychev-grubler-kutzbach-criterion">Chebychev-Grübler-Kutzbach criterion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#generalized-coordinates">Generalized coordinates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reference-and-current-coordinates">Reference and current coordinates</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="DynamicsMechanicalPrinciples.html">Dynamics: Mechanical principles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FramesRotationsAndCoordinateSystems.html">Frames, rotations and coordinate systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="IntegrationPoints.html">Integration Points</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="SolversIndex.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="pythonUtilities/index.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="structures/StructuresAndSettingsIndex.html">Structures and Settings</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Misc</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ExamplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TestModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Exudyn1.7.116.dev1</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="TheoryAndFormulationsIndex.html">Theory and formulations</a></li>
+      <li class="breadcrumb-item active">Introduction to multibody systems</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/docs/RST/IntroductionToMultibodySystems.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="introduction-to-multibody-systems">
+<h1>Introduction to multibody systems<a class="headerlink" href="#introduction-to-multibody-systems" title="Link to this heading"></a></h1>
+<p>The intention of the subsequent sections is to give brief introductions into subjects which are essential for working with multibody systems.
+Some of the contents may not go deep enough, which is why we refer to the according literature.
+In particular, the contents follow the books of</p>
+<ul class="simple">
+<li><ol class="upperalpha simple" start="3">
+<li><p>Woernle , Multibody Systems, 2024</p></li>
+</ol>
+</li>
+<li><p>A.A. Shabana , Dynamics of Multibody Systems, 2014</p></li>
+<li><p>P.E. Nikravesh , Computer-Aided Analysis of Mechanical Systems, 1988</p></li>
+</ul>
+<p>Multibody systems are mechanical systems of bodies (sometimes only one body), which are interconnected.
+Multibody systems may include linear dynamical systems as used in vibration analysis and rotordynamics.
+However, multibody systems are often characterized by nonlinear and differential-algebraic equations, and they typically cover arbitrary rigid body motions.
+In a broader sense, multibody systems represent the mechanical part of mechatronics systems.
+The range of multibody systems might vary from simple one or two-mass oscillators, or single or double pendulums, up to complex full-scale vehicles or aerospace systems.</p>
+<p>Multibody systems (MBS) are characterized by rigid or flexible bodies that are interconnected by means of joints, contacts, springs and dampers and usually driven by electrical, hydraulic or pneumatic actuators, and possibly subject to external forces.
+Sophisticated models of joints include the deformation of the joint surface and consider contact and friction models.</p>
+<section id="historical-development">
+<h2>Historical development<a class="headerlink" href="#historical-development" title="Link to this heading"></a></h2>
+<p>The roots of analysis tools for multibody systems trace back to Newton’s laws and Euler’s contributions to the motion of rigid bodies.
+Lagrange introduced a formalism to derive the equations of motions for complex rigid or flexible multibody systems, which is still state of the art.
+Multibody system dynamics attracted the attention of engineers as soon as computer power was large enough to simulate the nonlinear dynamic behavior of such systems numerically, however only using ordinary differential equations for modeling in the beginning.
+Since the 1960s, flexibility of structures has been introduced, e.g., in order to understand the instability of a satellite with flexible antennas or a helicopter’s rotor blades.
+Since the 1990s flexible multibody system methods have been applied in vehicle and aerospace industry, in particular because model order reduction became available and real life components could be simulated.
+Models where mainly made out of kinematic trees, using minimum coordinate models in the beginning. For long time, algebraic constraints could only be approximated, such as with Baumgarte’s stabilization introduced in the 1970.
+Major advances on differential-algebraic solvers have been made in the 1990s, introducing Raudau-5 of Hairer and Wanner, as well as BDF solvers of Linda Petzold. Because both approaches had drawbacks, the implicit generalized-alpha solver (Chung, Hubert; Arnold, Brüls)  has become a quasi-standard in the 2000s, as it allows to solve almost any index 3 (position level) constraint problem with high efficiency.</p>
+</section>
+<section id="simulation-tools-in-computational-engineering">
+<h2>Simulation tools in computational engineering<a class="headerlink" href="#simulation-tools-in-computational-engineering" title="Link to this heading"></a></h2>
+<p>As in Exudyn, the main intention is to create computer models for mechanical systems.
+The further analysis of the system is left to the users’ needs. In particular, engineers are interested in</p>
+<p><strong>(Forward) dynamic analysis</strong>:</p>
+<ul class="simple">
+<li><p>Dynamic simulation, by setting initial conditions and using time integration for the equations of motion of the model</p></li>
+<li><p>Outputs may be displacements, rotations, velocities, angular velocities, accelerations, stresses, joint or support forces, etc.</p></li>
+</ul>
+<p><strong>(Forward) static analysis</strong>:</p>
+<ul class="simple">
+<li><p>(Nonlinear) static computation, by solving the equations of motion without inertia forces and without time-dependency (usually settings accelerations and velocities to zero, but possibly also computing quasi-static or stationary solutions)</p></li>
+<li><p>Outputs may be displacements, rotations, stresses, joint or support forces, etc.</p></li>
+</ul>
+<p><strong>Kinematic analysis</strong>:</p>
+<ul class="simple">
+<li><p>Similar to a static analysis, inertia forces are neglected, and in addition forces are neglected as well.</p></li>
+<li><p>Inputs may be prescribed translations or rotations to specific bodies or joints.</p></li>
+<li><p>Outputs may be ratios of angular velocities, or the motion of bodies due to prescribed motion in specific joints</p></li>
+</ul>
+<p><strong>Analysis</strong> of a multibody system</p>
+<ul class="simple">
+<li><p>Kinematic analysis regarding system degree of freedom (<a class="reference internal" href="Abbreviations.html#dof"><span class="std std-ref">DOF</span></a>), redundant constraints, jacobians (e.g., how joint velocities affect velocities of a particular body)</p></li>
+<li><p>Critical loads (buckling and bifurcation)</p></li>
+<li><p>Eigenfrequency and eigenmode analysis</p></li>
+<li><p>Instability analysis (e.g. critical velocity of trains, fluids, etc.)</p></li>
+</ul>
+<p><strong>Inverse static and dynamic analysis</strong></p>
+<ul class="simple">
+<li><p>Computation of required loads in order to reach certain displacements</p></li>
+<li><p>Inverse kinematics: computation of joint angles of robots in order to obtain a certain tool-center position</p></li>
+<li><p>Inverse dynamics: computation of joint forces to compensate weight and inertia forces of robot mechanism under motion</p></li>
+</ul>
+<p><strong>Optimization</strong></p>
+<ul class="simple">
+<li><p>Minimization of maximum stress within bodies, or of stress to yield-stress ratio</p></li>
+<li><p>Optimizing kinematic behavior</p></li>
+<li><p>Minimization of energy</p></li>
+<li><p>Minimization of damage and wear</p></li>
+</ul>
+<p><strong>Sensitivity analysis</strong></p>
+<ul class="simple">
+<li><p>Investigate the influence of small variations of the parameters (dimensions, material, etc.) on the measured values, such as displacements, forces, etc.</p></li>
+</ul>
+<p><strong>Realtime simulation</strong></p>
+<ul class="simple">
+<li><p>Hardware-in-the-loop simulation: e.g. in virtual reality, the user acts in reality, while the machine input and feedback is simulated in realtime.</p></li>
+<li><p>Software-in-the-loop simulation: while the real machine, or parts of it, are considered, other hardware, controllers or humans are emulated by software.</p></li>
+</ul>
+</section>
+<section id="components-of-a-multibody-system">
+<h2>Components of a multibody system<a class="headerlink" href="#components-of-a-multibody-system" title="Link to this heading"></a></h2>
+<p>Any multibody system basically consists of a set of components, each of which with specific properties and dependencies. Main components are:</p>
+<p><strong>Bodies</strong>:</p>
+<ul class="simple">
+<li><p>mass points</p></li>
+<li><p>rigid bodies</p></li>
+<li><p>flexible bodies (in general)</p></li>
+<li><p>finite elements (often representing flexible bodies)</p></li>
+</ul>
+<p><strong>Connectors</strong>:</p>
+<ul class="simple">
+<li><p>spring-dampers (bushings)</p></li>
+<li><p>joints (represented by algebraic equations)</p></li>
+<li><p>general constraints (such as on coordinates)</p></li>
+</ul>
+<p>Further components are:</p>
+<ul class="simple">
+<li><p><strong>Loads</strong>: forces, moments, body loads, gravity, applied to bodies; loads are usually not coupled to the motion of bodies, as compared to springs; however, follower loads may depend on body rotation. Loads may be time-dependent, which can be realized by defining a load together with a user function, or prescribing a load in each time step.</p></li>
+<li><p><strong>Sensors</strong>: measure displacements, velocities, stresses, strains, bending moments, loads, etc., and the do not affect the system behavior, as long as the are not used in controllers or control units.</p></li>
+<li><p><strong>graphical representation</strong> for bodies and system components</p></li>
+<li><p><strong>Joint control</strong>: certain feed-back control laws (e.g., PID) for each joint axis, in order to prescribe joint rotation, velocity, etc., which may in particular result in coupling of system equations.</p></li>
+<li><p><strong>Motion control, path planning</strong>: prescribing a desired path for one or several joints, using a feed-forward control</p></li>
+<li><p><strong>Control units</strong>: controlling the behavior of the system (such as a sequence of tasks, feeding a list of motion control tasks for several joint axes); often realized as scripts</p></li>
+</ul>
+</section>
+<section id="kinematics-basics">
+<h2>Kinematics basics<a class="headerlink" href="#kinematics-basics" title="Link to this heading"></a></h2>
+<p>Kinematics, also referred to as the <strong>geometry of motion</strong>, is a fundamental aspect of multibody systems that focuses on the description of <strong>motion without considering the forces that cause it</strong>. It involves the study of the positions, velocities, and accelerations of body parts in a system and how these quantities change over time. For rigid bodies or bodies that employ frames, it also includes rotations, angular velocities and angular accelerations. This branch of mechanics provides the essential framework for understanding how individual components of a multibody system move relative to one another, laying the groundwork for the subsequent analysis of dynamics where forces are taken into account.</p>
+<p>Kinematics is also related to to <strong>trajectories</strong> (including frames co-moving along trajectories), <strong>curve length</strong>, motion of <strong>frames</strong>, and <strong>homogeneous transformations</strong>. <strong>Kinematic constraints</strong> are used to define joints, basically by constraining specific relative motion, such as the distance between two particles, the relative rotation or the relative translation along axis. For <strong>non-holonomic constraints</strong>, the constraint equations have to be defined at velocity level, such as the idealized rolling (wheel) or slipping conditions (sled skid).</p>
+<p><strong>Kinematic synthesis</strong> involves designing a mechanism’s geometry, including its links and joints, to achieve specific motions. In contrast, <strong>kinematic analysis</strong> focuses on determining the kinematic quantities, such as positions, velocities, and accelerations, of certain points or components within a mechanism that is performing a prescribed motion.</p>
+<section id="links-joints-kinematic-chains-and-trees">
+<h3>Links, joints, kinematic chains and trees<a class="headerlink" href="#links-joints-kinematic-chains-and-trees" title="Link to this heading"></a></h3>
+<p>Kinematics has been studied much earlier than the development of multibody system dynamics. Traditionally in kinematics, joints were the essential part to define specific (relative) motion. The various joints in a system were linked by “<strong>links</strong>“, which had no further role in the geometry of motion, without consideration for forces or inertia.
+However, with advancements in the field of rigid and flexible multibody dynamics, the significance of links has been elevated, and they are more commonly referred to as bodies, considering their dynamic properties.</p>
+<p>A series of interconnected links forms a kinematic chain. In most mechanisms, except for those designed for flight, at least one link is stationary, serving as a reference point or frame for the system. This stationary link is typically referred to as the ground or frame. Mechanisms can be classified based on the motion of their links: if all links move within a single plane, the mechanism is called a planar mechanism; otherwise, it is known as a spatial mechanism.</p>
+<p>It is also crucial to differentiate between open-loop and closed-loop mechanisms. An open-loop mechanism is characterized by a configuration where traversing through the links in sequence does not lead back to the starting point. In the general case, such an open-loop system is represented by a kinematic tree, which has a root link, and every link can have arbitrary many joints – as long as it leads to no single closed loop.
+Conversely, a closed-loop mechanism features a configuration where at least one path forms a loop, including the ground link, allowing for the possibility of returning to the starting link through the sequence of connections.</p>
+<p><a class="reference internal" href="#fig-open-closed-loop"><span class="std std-numref">Fig. 13</span></a>a shows a double pendulum, which is an example of an open-loop mechanism.
+A closed-loop mechanism is shown in <a class="reference internal" href="#fig-open-closed-loop"><span class="std std-numref">Fig. 13</span></a>b, which is a four-bar linkage.
+As mentioned before, the fourth link is the ground link.</p>
+<figure class="align-default" id="id1">
+<span id="fig-open-closed-loop"></span><a class="reference internal image-reference" href="../../_images/open_closed_loop.png"><img alt="../../_images/open_closed_loop.png" src="../../_images/open_closed_loop.png" style="width: 400px;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 13 </span><span class="caption-text">a.) Open loop mechanism (double pendulum), b.) Closed loops mechanism (four-bar linkage).</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="kinematic-pairs">
+<h3>Kinematic pairs<a class="headerlink" href="#kinematic-pairs" title="Link to this heading"></a></h3>
+<p>During early achievements in kinematics, joints have been denoted as kinematic pairs, where the pair represents two bodies where joint constraints are imposed at. There are joints denoted as <strong>lower pairs</strong>, which are defined by the idealized contact of two rigid surfaces, each of which attached to one of the two bodies. The most prominent types, with mention of the respective object names in Exudyn, are:</p>
+<ul class="simple">
+<li><p>spherical joint (S), ball and socket joint; three constraints on relative translation of body-fixed points; <code class="docutils literal notranslate"><span class="pre">ObjectJointSpherical</span></code></p></li>
+<li><p>revolute (R) joint, hinged joint; three spherical joint constraints plus two on tilting around axes normal to the joint axis; <code class="docutils literal notranslate"><span class="pre">ObjectJointRevolute</span></code></p></li>
+<li><p>prismatic (P) joint; tree constraints on relative rotation; <code class="docutils literal notranslate"><span class="pre">ObjectJointPrismatic</span></code></p></li>
+<li><p>screw (helical, H) joint; <code class="docutils literal notranslate"><span class="pre">not</span> <span class="pre">yet</span> <span class="pre">available</span></code></p></li>
+<li><p>cylindrical (C) joint; <code class="docutils literal notranslate"><span class="pre">ObjectJointGeneric</span></code></p></li>
+<li><p>planar joint; restricts motion to plane, thus adding one relative translation and two rotation constraints; <code class="docutils literal notranslate"><span class="pre">ObjectJointGeneric</span></code></p></li>
+</ul>
+<p>A very practical joint, which has no relevance for kinematics, is the rigid joint (6 constraints, <code class="docutils literal notranslate"><span class="pre">ObjectJointGeneric</span></code>). It simply constrains the rigid body motion of two bodies, making the two bodies identical from the rigid body kinematics viewpoint.</p>
+<p><strong>Higher pairs</strong> involve changing surfaces or curves of contact, such as in a cam and follower or gears.</p>
+<p>Indeed, some cases in constraints may not be represented by a set of kinematic pairs, such as several mass points arranged along an inextensible string. Therefore, codeName usually employs kinematic pairs, but also allows an arbitrary number of bodies to be coupled.</p>
+</section>
+</section>
+<section id="euler-s-and-chasles-s-theorems">
+<h2>Euler’s and Chasles’s Theorems<a class="headerlink" href="#euler-s-and-chasles-s-theorems" title="Link to this heading"></a></h2>
+<p>In the following, we consider so-called active rotations of bodies. Consider a body rotating with an angular velocity <span class="math notranslate nohighlight">\(\tomega\)</span>. Thereing, the orientation of the body can be given with respect a previous orientation using a transformation matrix (rotation matrix).
+Here, the components of the transformation matrix are given as a function of time. When reconsidering the <a class="reference internal" href="Abbreviations.html#dof"><span class="std std-ref">DOF</span></a> of a mechanism, it is thus the question, how many independent coordinates are required to describe a spatial rotation?</p>
+<p>The answer to this question is given by Euler’s theorem:</p>
+<ul class="simple">
+<li><p><strong>Euler’s theorem</strong>: The general displacement of a body with one point fixed is a rotation about some axis.</p></li>
+</ul>
+<p>The latter theorem states that at any current time <span class="math notranslate nohighlight">\(t\)</span> and after any rotations, the orientation of the body can be described by a rotation axis and a single rotation angle. Note that this rotation axis is used to describe the rotation of the body from the initial to the current time at once, although, the rotation might have been performed by means of many different successive rotations. This rotation axis is different from the so-called <strong>instantaneous axis of rotation</strong> of the body. As a consequence, points lying at the rotation axis are not affected by this rotation.</p>
+<p>In addition to Euler’s theorem, we mention <strong>Chasles’s theorem</strong>, which reads as follows:</p>
+<ul class="simple">
+<li><p><strong>Chasles’s theorem</strong>: The most general displacement of a body is a translation plus a rotation.</p></li>
+</ul>
+<p>Therefore, the general motion of the rigid body follows from Euler’s theorem plus a translation of the point which was originally fixed.</p>
+</section>
+<section id="degree-of-freedom-dof">
+<h2>Degree of freedom – <a class="reference internal" href="Abbreviations.html#dof"><span class="std std-ref">DOF</span></a><a class="headerlink" href="#degree-of-freedom-dof" title="Link to this heading"></a></h2>
+<p>According to Nikravesh, “The minimum number of coordinates required to fully describe the configuration of a system
+is called the number of degrees of freedom of the system”.
+We may consider two examples given in <a class="reference internal" href="#fig-degrees-of-freedom"><span class="std std-numref">Fig. 14</span></a>, to understand the <a class="reference internal" href="Abbreviations.html#dof"><span class="std std-ref">DOF</span></a>.
+A double pendulum is shown, which can be described with no less than two independent angles <span class="math notranslate nohighlight">\(\phi_1\)</span> and <span class="math notranslate nohighlight">\(\phi_2\)</span>, thus the system has two degrees of freedom.</p>
+<p>As a second example, a four-bar mechanism is shown, see <a class="reference internal" href="#fig-degrees-of-freedom"><span class="std std-numref">Fig. 14</span></a>b.
+There are three angles <span class="math notranslate nohighlight">\(\phi_a\)</span>, <span class="math notranslate nohighlight">\(\phi_b\)</span> and <span class="math notranslate nohighlight">\(\phi_c\)</span> related with the current configuration of the system.
+However, there are two algebraic relations (constraint conditions) between these three angles, given as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}{l_a\sin(\phi_a) + l_b\sin(\phi_b) - l_c\sin(\phi_c) - d_1 = 0} \nonumber \\
+{l_a\cos(\phi_a) - l_b\cos(\phi_b) - l_c\cos(\phi_c) + h_1 = 0}\end{split}\]</div>
+<p>In the latter two equations, the angles <span class="math notranslate nohighlight">\(\phi_a\)</span> and <span class="math notranslate nohighlight">\(\phi_b\)</span> can be expressed in terms of <span class="math notranslate nohighlight">\(\phi_c\)</span>.
+Thus, <span class="math notranslate nohighlight">\(\phi_c\)</span> is the only remaining independent (minimum) coordinate of the system, and as a consequence, the system has only one degree of freedom.
+Regarding the four-bar mechanism, there exist some configurations, which can lead to bifurcation and a change in the degrees of freedom – but this is usually avoided in practical cases.</p>
+<figure class="align-default" id="id2">
+<span id="fig-degrees-of-freedom"></span><a class="reference internal image-reference" href="../../_images/degrees_of_freedom.png"><img alt="../../_images/degrees_of_freedom.png" src="../../_images/degrees_of_freedom.png" style="width: 500px;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 14 </span><span class="caption-text">Examples of mechanisms with different degrees of freedom.</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="non-holonomic-constraints">
+<h2>Non-holonomic constraints<a class="headerlink" href="#non-holonomic-constraints" title="Link to this heading"></a></h2>
+<p>It should be noted, that the above given definition works well with holonomic constraints. In case of non-holonomic systems, the non-holonomic constraints, which may only be given at velocity level, lead to different degrees of freedom on position and velocity level.
+Due to the fact that time integration integrates velocities and accelerations, and constraints may be formulated on position or velocity in Exudyn, non-holonomic constraints are not largely influencing the structure of the system of equations. However, in view of the constraint jacobian, it usually reflects the constraints on velocity level, as this is the matrix which the incremental solver uses to update coordinates.</p>
+</section>
+<section id="dependent-and-independent-coordinates">
+<h2>Dependent and independent coordinates<a class="headerlink" href="#dependent-and-independent-coordinates" title="Link to this heading"></a></h2>
+<p>Assuming a holonomic mechanical system with <span class="math notranslate nohighlight">\(k\)</span> degrees of freedom, one can find <span class="math notranslate nohighlight">\(k\)</span> <strong>independent</strong> <strong>coordinates</strong> (<strong>minimum coordinates</strong>) to completely describe the system configuration. Note that these coordinates do not necessarily have the meaning of displacement, length or angle, but they may be more general (generalized coordinates).</p>
+<p>In addition to the independent coordinates, there may be <strong>dependent coordinates</strong>, similar to the angles <span class="math notranslate nohighlight">\(\phi_a\)</span> and <span class="math notranslate nohighlight">\(\phi_b\)</span> which are dependent on <span class="math notranslate nohighlight">\(\phi_c\)</span> in the example of the four-bar mechanism. It is left to the engineer, whether to find the minimum coordinates of a system and to write all equations in terms of these, or to work with a larger set of independent and dependent coordinates together with algebraic constraint conditions.</p>
+</section>
+<section id="chebychev-grubler-kutzbach-criterion">
+<h2>Chebychev-Grübler-Kutzbach criterion<a class="headerlink" href="#chebychev-grubler-kutzbach-criterion" title="Link to this heading"></a></h2>
+<p>A <strong>rigid body in space has six degrees of freedom</strong>, and thus, six independent coordinates can be used to describe its configuration.
+Thus for a system with <span class="math notranslate nohighlight">\(n_b\)</span> bodies, there are <span class="math notranslate nohighlight">\(6 \cdot n_b\)</span> coordinates, to describe the bodies.
+Assuming that there are a set of spheric, revolute, prismatic and other joints, which reduce the degrees of freedom, we denote the number of <strong>independent constraints</strong> to be of size <span class="math notranslate nohighlight">\(n_c\)</span>.
+It is important, that the constraint equations are (linearly) independent, because in kinematics it is possible to restrict the motion with redundant constraints, see later.</p>
+<p>Finally, having <span class="math notranslate nohighlight">\(n_b\)</span> rigid bodies <span class="math notranslate nohighlight">\(n_c\)</span> scalar, independent constraint equations, the degrees of freedom are given as</p>
+<div class="math notranslate nohighlight" id="equation-eq-chebychev-grubler-kutzbach">
+<span class="eqno">(2)<a class="headerlink" href="#equation-eq-chebychev-grubler-kutzbach" title="Link to this equation"></a></span>\[n_\mathrm{DOF} = 6 \cdot n_b - n_c\]</div>
+<p>which is denoted sometimes as the <strong>Kutzbach</strong>, or <strong>Chebychev-Grübler-Kutzbach criterion</strong>.</p>
+<p>In the case of planar mechanisms, a body obtains only three degrees of freedom. Therefore the Chebychev-Grübler-Kutzbach criterion reads</p>
+<div class="math notranslate nohighlight">
+\[DOF_\mathrm{planar} = 3 \cdot n_b - n_c\]</div>
+<p>As a spatial example, consider again the double pendulum <a class="reference internal" href="#fig-degrees-of-freedom"><span class="std std-numref">Fig. 14</span></a>a as a spatial mechanism.
+In this case, there are two bodies, <span class="math notranslate nohighlight">\(n_b=2\)</span> and two revolute joints with 5 constraints each, giving <span class="math notranslate nohighlight">\(n_c=10\)</span>. Thus, the Chebychev-Grübler-Kutzbach criterion gives <span class="math notranslate nohighlight">\(n_\mathrm{DOF} = 12 - 10 = 2\)</span>, which we expect.</p>
+<p>As another example, consider a spatial four-bar mechanism according to <a class="reference internal" href="#fig-degrees-of-freedom"><span class="std std-numref">Fig. 14</span></a>b.
+In this case, there are four bodies, <span class="math notranslate nohighlight">\(n_b=4\)</span>, four revolute joints with 5 constraints each and a ground joints with 6 constraints, totalling at <span class="math notranslate nohighlight">\(n_c=4\cdot 5 + 6 = 26\)</span>. Thus, Eq. <a class="reference internal" href="#equation-eq-chebychev-grubler-kutzbach">(2)</a> gives</p>
+<div class="math notranslate nohighlight">
+\[n_\mathrm{DOF} = 24 - 26 = -2.\]</div>
+<p>This is certainly not what we expect, as we know that the mechanism can move and has <span class="math notranslate nohighlight">\(n_\mathrm{DOF} = 1\)</span>. The reason for this number lies in redundant constraints, which may not be counted for the Chebychev-Grübler-Kutzbach criterion.
+A solution to this problem is to replace one revolute joint by a planar revolute joint (2 constraints), which then gives</p>
+<div class="math notranslate nohighlight">
+\[n_c=3\cdot 5 + 2 + 6 = 23 \quad \mathrm{and} \quad n_\mathrm{DOF} = 1.\]</div>
+<p>Therefore, Exudyn uses an <strong>extended Chebychev-Grübler-Kutzbach criterion</strong> for redundant constraints,</p>
+<div class="math notranslate nohighlight" id="equation-eq-chebychev-grubler-kutzbach-ext">
+<span class="eqno">(3)<a class="headerlink" href="#equation-eq-chebychev-grubler-kutzbach-ext" title="Link to this equation"></a></span>\[n_\mathrm{DOF}^* = n_\mathrm{ODE2} - (n_c - n_{ca} - n_r)\]</div>
+<p>where <span class="math notranslate nohighlight">\(n_r\)</span> is the number of redundant constraints and <span class="math notranslate nohighlight">\(n_\mathrm{ODE2}\)</span> is the number of <a class="reference internal" href="Abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> coordinates, which may be <span class="math notranslate nohighlight">\(6 \cdot n_b\)</span> for purely spatial rigid bodies, <span class="math notranslate nohighlight">\(n_{ca}\)</span> are pure algebraic constraints and <span class="math notranslate nohighlight">\(n_r\)</span> are redundant constraints.</p>
+<p>In Exudyn, there is a function <code class="docutils literal notranslate"><span class="pre">ComputeSystemDegreeOfFreedom</span></code> in the <code class="docutils literal notranslate"><span class="pre">solver</span></code> module, available as</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">mbs.ComputeSystemDegreeOfFreedom(verbose=True)</span></code></p>
+</div></blockquote>
+<p>which allows to compute <a class="reference internal" href="Abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> coordinates (<span class="math notranslate nohighlight">\(=n_\mathrm{ODE2}\)</span>), total constraints (<span class="math notranslate nohighlight">\(=n_c\)</span>), redundant constraints (<span class="math notranslate nohighlight">\(=n_r\)</span>), and the degree of freedom (<span class="math notranslate nohighlight">\(=n_\mathrm{DOF}^*\)</span>). In addition, the function also computes the number of pure algebraic constraints (<span class="math notranslate nohighlight">\(=n_{ca}\)</span>), which are internal constraints, which only act on the algebraic quantities but do not affect <a class="reference internal" href="Abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> coordinates.
+As an example for pure algebraic constraints, in a <code class="docutils literal notranslate"><span class="pre">GenericJoint</span></code> inactive constraints are replaced by <span class="math notranslate nohighlight">\(\lambda_i=0\)</span> (<span class="math notranslate nohighlight">\(\lambda\)</span> being the Lagrange multiplier), thus reducing the number of effective constraints in the system.</p>
+</section>
+<section id="generalized-coordinates">
+<span id="sec-theory-generalized-coordinates"></span><h2>Generalized coordinates<a class="headerlink" href="#generalized-coordinates" title="Link to this heading"></a></h2>
+<p>In <strong>Cartesian coordinates</strong>, three parameters (denoted as coordinates) are used to uniquely define the position of any point with respect to a Cartesian coordinate system.
+The position and orientation of a rigid body can be uniquely defined by means of three position and three rotation parameters (rigid body coordinates).</p>
+<p>The position and orientation as well as the deformation in deformable bodies can be defined by a <strong>set of coordinates</strong>. We require that any set of coordinates uniquely defines the position of all points of the bodies.
+As the bodies move, the coordinates vary with time.
+The set of <span class="math notranslate nohighlight">\(n\)</span> generalized coordinates is commonly represented by a (column) vector</p>
+<div class="math notranslate nohighlight">
+\[{\mathbf{q}} = [q_0, q_1, \ldots, q_{n-1}]\tp,\]</div>
+<p>in which <span class="math notranslate nohighlight">\(n\)</span> represents the total number of coordinates that are used.
+In Exudyn, position, orientation and deformation coordinates (of bodies) are denoted as <a class="reference internal" href="Abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> coordinates, as they are related to second order differential equations, the main criterion to distinguish computational coordinates in the system.</p>
+<p>The <strong>generalized (Lagrangian) coordinates</strong>, which are employed in Lagrange’s equations of motion, are another set of well known coordinates used for mechanisms. As known from Lagrange’s formalism, coordinates may be defined relative to each other.</p>
+</section>
+<section id="reference-and-current-coordinates">
+<h2>Reference and current coordinates<a class="headerlink" href="#reference-and-current-coordinates" title="Link to this heading"></a></h2>
+<p>An important fact on the coordinates used in Exudyn is upon the <strong>additive</strong>(This additive splitting is also used for rotations: therefore, only the sum of reference and current (or visualization) coordinates has a geometrical meaning, while the parts are only used within the solver for incrementing.) splitting of quantities (e.g. position, rotation parameters, etc.) into <strong>reference</strong> and <strong>current</strong> (initial/visualization/…) coordinates.
+The current position vector of a point node is computed from the reference position plus the current displacement, reading</p>
+<div class="math notranslate nohighlight">
+\[{\mathbf{p}}\cCur = {\mathbf{p}}\cRef + {\mathbf{u}}\cCur\]</div>
+<p>In the same way rotation parameters are computed from,</p>
+<div class="math notranslate nohighlight">
+\[\ttheta\cCur = \ttheta\cRef + \tpsi\cCur\]</div>
+<p>which are based on reference quantities plus displacements or changes. Note that these changes are additive, even for rotation parameters. Needless to say, <span class="math notranslate nohighlight">\(\tpsi\cCur\)</span> do not represent rotation parameters, while <span class="math notranslate nohighlight">\(\ttheta\cRef\)</span> should be chosen such that they represent the orientation of a node in reference configuration.
+The necessity for reference coordinates originates from finite elements, which usually split nodal position into displacements and reference position.
+However, we also use the reference position here in order to define joints, e.g., using the utility function <code class="docutils literal notranslate"><span class="pre">CreateRevoluteJoint(...)</span></code>.</p>
+<p>Note that this splitting is only employed for position coordinates, but not for displacements or velocities!</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="TheoryAndFormulations.html" class="btn btn-neutral float-left" title="Theory and formulations" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="DynamicsMechanicalPrinciples.html" class="btn btn-neutral float-right" title="Dynamics: Mechanical principles" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

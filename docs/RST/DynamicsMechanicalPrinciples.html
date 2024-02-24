@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dynamics: Mechanical principles &mdash; Exudyn1.7.116.dev1 1.7.116.dev1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=82a976d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=e11081fd" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=8142d844"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../_static/copybutton.js?v=f281be69"></script>
+        <script src="../../_static/js/rtd_search_config.js"></script>
+        <script src="../../_static/js/rtd_sphinx_search.min.js"></script>
+        <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "ps": "{p_\\mathrm{s}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "myoverline": ["\\overline{#1}", 1], "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "mfour": ["{\\left[ \\begin{array}{cccc} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vfour": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vrRow": ["{[#1,\\, #2,\\, #3]}", 3], "vsix": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} \\right]}", 6], "vsixb": ["{\\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "vsixs": ["{ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "omegaBDtilde": "{\\LU{b}{\\tilde \\tomega_\\mathrm{bd}}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}", "termA": ["{\\color{blue}{#1}}", 1], "termB": ["{\\color{red}{#1}}", 1], "termC": ["{\\color{green}{#1}}", 1], "acc": "{\\ddot \\mathbf{q}}", "GA": "{G\\alpha}", "aalg": "{\\mathbf{a}}", "vel": "{\\mathbf{v}}"}}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Frames, rotations and coordinate systems" href="FramesRotationsAndCoordinateSystems.html" />
+    <link rel="prev" title="Introduction to multibody systems" href="IntroductionToMultibodySystems.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Exudyn1.7.116.dev1
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Exudyn.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="NotationIndex.html">Notation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="TheoryAndFormulationsIndex.html">Theory and formulations</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="TheoryAndFormulations.html">Theory and formulations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="IntroductionToMultibodySystems.html">Introduction to multibody systems</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Dynamics: Mechanical principles</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#newton-s-basic-principles">Newton’s basic principles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-lagrange-d-alembert-principle">The Lagrange-d’Alembert principle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#generalized-principle-of-virtual-work">Generalized Principle of Virtual Work</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#virtual-displacements">Virtual displacements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#generalized-forces">Generalized Forces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lagrange-s-equations-of-motion">Lagrange’s Equations of Motion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#multibody-formulations-redundant-and-minimal-coordinates">Multibody formulations: redundant and minimal coordinates</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="FramesRotationsAndCoordinateSystems.html">Frames, rotations and coordinate systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="IntegrationPoints.html">Integration Points</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="SolversIndex.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="pythonUtilities/index.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="structures/StructuresAndSettingsIndex.html">Structures and Settings</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Misc</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ExamplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TestModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Exudyn1.7.116.dev1</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="TheoryAndFormulationsIndex.html">Theory and formulations</a></li>
+      <li class="breadcrumb-item active">Dynamics: Mechanical principles</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/docs/RST/DynamicsMechanicalPrinciples.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="dynamics-mechanical-principles">
+<h1>Dynamics: Mechanical principles<a class="headerlink" href="#dynamics-mechanical-principles" title="Link to this heading"></a></h1>
+<p>Following kinematics, dynamics comes into play, which involves the study of the forces and torques that cause the motion, bridging the gap between the motion observed and the reasons behind it.
+In this section, we shortly recap mechanical principles, which are used throughout for the simulation of multibody systems.</p>
+<section id="newton-s-basic-principles">
+<h2>Newton’s basic principles<a class="headerlink" href="#newton-s-basic-principles" title="Link to this heading"></a></h2>
+<p>In the study of multibody systems, Newton’s basic principles lay the foundational framework. At the heart of these principles are three laws that govern the motion of bodies:</p>
+<p><strong>1. Newton’s first law (law of inertia)</strong>: A body remains at rest, or in uniform motion in a straight line, unless acted upon by a force <span class="math notranslate nohighlight">\({\mathbf{f}}\)</span>, expressed as:</p>
+<div class="math notranslate nohighlight">
+\[{\mathbf{f}} = 0 \implies \frac{\dd {\mathbf{v}}}{\dd t} = 0\]</div>
+<p>where <span class="math notranslate nohighlight">\({\mathbf{f}}\)</span> is the net force applied to the body, and <span class="math notranslate nohighlight">\(\frac{d{\mathbf{v}}}{dt}\)</span> is the acceleration of the body.</p>
+<p><strong>2. Newton’s second law (law of motion)</strong>: The sum of the forces F acting on a point mass equals the change in momentum of this mass,</p>
+<div class="math notranslate nohighlight">
+\[{\mathbf{f}}= \frac{\dd\,{\mathbf{J}}}{\dd t} = \dot {\mathbf{J}}\]</div>
+<p>where <span class="math notranslate nohighlight">\({\mathbf{J}}\)</span> is the (linear, translational) momentum of the mass <span class="math notranslate nohighlight">\(m\)</span>. Assuming a constant mass of the body (which is not true for some cases such as rockets), we find that the acceleration <span class="math notranslate nohighlight">\({\mathbf{a}}\)</span> of an object is directly proportional to the net force <span class="math notranslate nohighlight">\({\mathbf{f}}\)</span> acting upon it and inversely proportional to its mass, given by the equation:</p>
+<div class="math notranslate nohighlight" id="equation-eq-theory-newton-fma">
+<span class="eqno">(4)<a class="headerlink" href="#equation-eq-theory-newton-fma" title="Link to this equation"></a></span>\[{\mathbf{f}}= m {\mathbf{a}}\]</div>
+<p>where <span class="math notranslate nohighlight">\(m\)</span> is the mass of the object.</p>
+<p><strong>3. Newton’s third law (action and reaction)</strong>: For every action, there is an equal and opposite reaction. This principle is fundamental in analyzing the interactions within multibody systems and can be summarized as:</p>
+<div class="math notranslate nohighlight">
+\[{\mathbf{f}}_{12} = -{\mathbf{f}}_{21}\]</div>
+<p>in which we observe <span class="math notranslate nohighlight">\({\mathbf{f}}_{12}\)</span> as the force exerted by body 1 on body 2, and <span class="math notranslate nohighlight">\({\mathbf{f}}_{21}\)</span> as the force exerted by body 2 on body 1.</p>
+<p>These principles are pivotal in understanding and modeling the dynamics of multibody systems, providing the basis for further exploration and analysis in this field.
+Newton’s principles represent linear (translational) motion, but may be transformed to rotations by using angular momentum, as well. This leads to Euler’s equations, see the description of the <code class="docutils literal notranslate"><span class="pre">ObjectRigidBody</span></code>.</p>
+</section>
+<section id="the-lagrange-d-alembert-principle">
+<h2>The Lagrange-d’Alembert principle<a class="headerlink" href="#the-lagrange-d-alembert-principle" title="Link to this heading"></a></h2>
+<p>For a constant mass <span class="math notranslate nohighlight">\(m\)</span>, it follows from Newton’s second law that</p>
+<div class="math notranslate nohighlight" id="equation-eq-newton-dalembert">
+<span class="eqno">(5)<a class="headerlink" href="#equation-eq-newton-dalembert" title="Link to this equation"></a></span>\[\sum {\mathbf{f}}  = m {\mathbf{a}} ,\]</div>
+<p>Eq. <a class="reference internal" href="#equation-eq-newton-dalembert">(5)</a> can also be written in the form</p>
+<div class="math notranslate nohighlight">
+\[\sum {\mathbf{f}} - m {\mathbf{a}} = \Null\]</div>
+<p>The vector <span class="math notranslate nohighlight">\((- m {\mathbf{a}} )\)</span> is referred to as the inertia force, since it can apparently be balanced to zero in the sense of a generalized equilibrium. This equilibrium is called dynamic equilibrium, in analogy to statics.</p>
+<p>In <strong>D’Alembert’s Principle</strong>, the inertia force <span class="math notranslate nohighlight">\({\mathbf{f}}_i = -m {\mathbf{a}}\)</span> is introduced, and the sum of the forces is written as</p>
+<div class="math notranslate nohighlight">
+\[{\mathbf{f}}_e + {\mathbf{f}}_c + {\mathbf{f}}_i = \mathbf{0}\]</div>
+<p>where applied forces <span class="math notranslate nohighlight">\({\mathbf{f}}_e\)</span> and constraint forces <span class="math notranslate nohighlight">\({\mathbf{f}}_c\)</span> are distinguished.</p>
+<p>A key property of the constraint forces is that the virtual work done by constraint forces always vanishes,</p>
+<div class="math notranslate nohighlight" id="equation-eq-virt-arb-zwangskraefte">
+<span class="eqno">(6)<a class="headerlink" href="#equation-eq-virt-arb-zwangskraefte" title="Link to this equation"></a></span>\[{\mathbf{f}}_c \cdot \delta {\mathbf{r}} = 0 .\]</div>
+<p>where here <span class="math notranslate nohighlight">\(\delta {\mathbf{r}}\)</span> is the virtual displacement associated with the constraint force.</p>
+</section>
+<section id="generalized-principle-of-virtual-work">
+<h2>Generalized Principle of Virtual Work<a class="headerlink" href="#generalized-principle-of-virtual-work" title="Link to this heading"></a></h2>
+<p>With the generalized principle of virtual work, it follows</p>
+<div class="math notranslate nohighlight">
+\[\left({\mathbf{f}}_e + {\mathbf{f}}_i \right) \cdot \delta {\mathbf{r}} = 0 \quad \text{or} \quad\]</div>
+<p>Thus, we obtain the <strong>Lagrange-d’Alembert</strong> principle as</p>
+<div class="math notranslate nohighlight">
+\[\delta W_e + \delta W_T = 0 \quad \text{or} \quad\]</div>
+<p>with the virtual work <span class="math notranslate nohighlight">\(W_e\)</span> of applied forces and <span class="math notranslate nohighlight">\(W_i\)</span> of inertia forces,</p>
+<div class="math notranslate nohighlight">
+\[\delta W_e = {\mathbf{f}}_e \cdot \delta {\mathbf{r}} \quad \mathrm{and} \quad \delta W_T = {\mathbf{f}}_i \cdot \delta {\mathbf{r}} .\]</div>
+<p>For a system of <span class="math notranslate nohighlight">\(n\)</span> mass points, it follows</p>
+<div class="math notranslate nohighlight">
+\[\sum_{i=0}^{n-1} \left({\mathbf{f}}_{e,i} \cdot \delta {\mathbf{r}}_i -  m_i {\mathbf{a}}_i \cdot \delta {\mathbf{r}}_i \right) = 0\]</div>
+<p>It is ultimately characterized by the fact that, in comparison to D’Alembert’s principle, constraint forces do not appear.</p>
+<p>Note that this principle is used in Exudyn at many places to derive equations for rigid and flexible bodies, as well as for connectors, such as spring-dampers.</p>
+</section>
+<section id="virtual-displacements">
+<h2>Virtual displacements<a class="headerlink" href="#virtual-displacements" title="Link to this heading"></a></h2>
+<p>The virtual displacement <span class="math notranslate nohighlight">\(\delta {\mathbf{r}}_j\)</span> or the variation of any quantity can be written in terms of variation of the underlying coordinates, see Section <a class="reference internal" href="IntroductionToMultibodySystems.html#sec-theory-generalized-coordinates"><span class="std std-ref">Generalized coordinates</span></a>,</p>
+<div class="math notranslate nohighlight" id="equation-eq-theory-virtual-displacement">
+<span class="eqno">(7)<a class="headerlink" href="#equation-eq-theory-virtual-displacement" title="Link to this equation"></a></span>\[\delta {\mathbf{r}}_j = \sum_{i=1}^n \frac{\partial {\mathbf{r}}_j}{\partial  q_i} \delta q_i .\]</div>
+</section>
+<section id="generalized-forces">
+<h2>Generalized Forces<a class="headerlink" href="#generalized-forces" title="Link to this heading"></a></h2>
+<p>To derive the Lagrangian equations, we first consider the virtual work done by <span class="math notranslate nohighlight">\(N\)</span> forces on <span class="math notranslate nohighlight">\(N\)</span> mass points</p>
+<div class="math notranslate nohighlight">
+\[\delta W = \sum_{j=1}^N {\mathbf{f}}_j \cdot \delta {\mathbf{r}}_j .\]</div>
+<p>Here, <span class="math notranslate nohighlight">\({\mathbf{f}}_j\)</span> represents the force on, and <span class="math notranslate nohighlight">\(\delta {\mathbf{r}}_j\)</span> represents the displacement of, the <span class="math notranslate nohighlight">\(j\)</span>th mass point.</p>
+<p>Using Eq. <a class="reference internal" href="#equation-eq-theory-virtual-displacement">(7)</a>, the virtual work can be expressed as</p>
+<div class="math notranslate nohighlight">
+\[\delta W = \sum_{j=1}^N {\mathbf{f}}_j \cdot \sum_{i=1}^n \frac{\partial {\mathbf{r}}_j}{\partial  q_i} \delta q_i = \sum_{i=1}^n \left(\sum_{j=1}^N {\mathbf{f}}_j \cdot \frac{\partial {\mathbf{r}}_j}{\partial  q_i} \right) \delta q_i .\]</div>
+<p>In the process of translating the virtual work of forces or moments, we identify what are called generalized forces <span class="math notranslate nohighlight">\(Q_i\)</span>,</p>
+<div class="math notranslate nohighlight" id="equation-eq-theory-generalized-forces">
+<span class="eqno">(8)<a class="headerlink" href="#equation-eq-theory-generalized-forces" title="Link to this equation"></a></span>\[Q_i = \sum_{j=1}^N {\mathbf{f}}_j \cdot \frac{\partial {\mathbf{r}}_j}{\partial  q_i} .\]</div>
+<p>Consequently, the virtual work can also be written as,</p>
+<div class="math notranslate nohighlight">
+\[\delta W = \sum_{i=1}^n Q_i \, \delta q_i .\]</div>
+</section>
+<section id="lagrange-s-equations-of-motion">
+<h2>Lagrange’s Equations of Motion<a class="headerlink" href="#lagrange-s-equations-of-motion" title="Link to this heading"></a></h2>
+<p>We define the kinetic energy as <span class="math notranslate nohighlight">\(T\)</span>, which for <span class="math notranslate nohighlight">\(N\)</span> mass points is given by</p>
+<div class="math notranslate nohighlight">
+\[T = \frac{1}{2} \sum_{j=1}^N  m_j {\mathbf{v}}_j^2\]</div>
+<p>Using the kinetic energy <span class="math notranslate nohighlight">\(T\)</span>, the following <strong>Lagrangian equations</strong> can be written,</p>
+<div class="math notranslate nohighlight">
+\[\frac{\mathrm{d}}{\mathrm{d}t} \frac{\partial T}{\partial \dot q_i} - \frac{\partial T}{\partial q_i} = Q_i, \quad i=1,2,\ldots,n .\]</div>
+<p>These are valid under the assumption of minimal coordinates with holonomic constraints, resulting in the fact that all virtual displacements <span class="math notranslate nohighlight">\(\delta q_i\)</span> are independent of each other.</p>
+<p>For forces that possess a potential <span class="math notranslate nohighlight">\(V\)</span>, i.e. the variation of the potential reads</p>
+<div class="math notranslate nohighlight">
+\[\delta V = \sum_{i=1}^n \frac{\partial V}{\partial q_i}\delta q_i = - \sum_{i=1}^n Q_i^{(V)} \delta q_i ,\]</div>
+<p>and assuming that <span class="math notranslate nohighlight">\(Q_i\)</span> now only includes forces <strong>without a potential</strong>, the Lagrange equations can be rewritten as follows,</p>
+<div class="math notranslate nohighlight">
+\[\frac{\mathrm{d}}{\mathrm{d}t} \frac{\partial T}{\partial \dot q_i} - \frac{\partial T}{\partial q_i} = Q_i + Q_i^{(V)}= Q_i - \frac{\partial V}{\partial q_i}, \quad i=1,2,\ldots,n .\]</div>
+<p>With the <strong>definition</strong> <span class="math notranslate nohighlight">\(L=T-V\)</span> and the relationship <span class="math notranslate nohighlight">\(\frac{\partial V}{\partial \dot q_i} = 0\)</span>, a common form of Lagrange’s equations is obtained:</p>
+<div class="math notranslate nohighlight">
+\[\frac{\mathrm{d}}{\mathrm{d}t} \frac{\partial L}{\partial \dot q_i} - \frac{\partial L}{\partial q_i} = Q_i, \quad i=1,2,\ldots,n .\]</div>
+<p>This equation is also used sometimes to derive equations of motion for rigid or flexible bodies in Exudyn.</p>
+</section>
+<section id="multibody-formulations-redundant-and-minimal-coordinates">
+<h2>Multibody formulations: redundant and minimal coordinates<a class="headerlink" href="#multibody-formulations-redundant-and-minimal-coordinates" title="Link to this heading"></a></h2>
+<p>In multibody system dynamics, we primarily distinguish between two formulations:</p>
+<ul class="simple">
+<li><p><strong>redundant coordinates</strong></p></li>
+<li><p><strong>minimal coordinates</strong></p></li>
+</ul>
+<p>Formulations based on minimal coordinates appeared naturally and early, in principle every model in dynamics,
+such as a 1D motion of a mass point according to Newton’s laws, see Eq. <a class="reference internal" href="#equation-eq-theory-newton-fma">(4)</a>, Euler’s equations, or a single DOF mass-spring-damper model.
+The <strong>advantages of a minimal-coordinates</strong> formulation are:</p>
+<ul class="simple">
+<li><p>coordinates represent the degrees of freedom</p></li>
+<li><p>direct access to relevant coordinates</p></li>
+<li><p>direct application of forces to the coordinates</p></li>
+<li><p>application of any class of solvers, as long as equations are non-stiff</p></li>
+</ul>
+<p>The <strong>disadvantages</strong> are related to the <strong>additional efforts to derive the equations of motion</strong>, which has to be done for every different system,
+and the general restriction to open-loop systems, making it difficult to be applied to closed-loop systems (but not always impossible).
+There are many modifications, which allow closed-loop systems, e.g., via augmented Lagrangians or similar approaches.</p>
+<p>A <strong>redundant-coordinates</strong> formulation has the following <strong>advantages</strong>:</p>
+<ul class="simple">
+<li><p>being <strong>extremely versatile</strong> and allowing practically any combination of (closed-loop) constraints</p></li>
+<li><p>easy extension to flexible bodies, sliding constraints, etc.</p></li>
+<li><p>multibody systems can be created easily by <strong>combining a set of bodies and constraints</strong> (<span class="math notranslate nohighlight">\(\ra\)</span> user friendly)</p></li>
+</ul>
+<p><strong>Disadvantages</strong> are clearly the <strong>resulting index 3</strong> (position-level) constraints,
+for which only very few implicit solvers (time integration) exist, and it requires always matrix factorization during solving.
+A further problem is that this formulation may potentially lead to redundant constraints, which need to be treated specially with solvers,
+and that the degrees of freedom are less obvious and that relevant <strong>(e.g., joint) coordinates are not directly accessible</strong> on the equations level.</p>
+<p>It is left to the user, which formulation to chose when working with multibody systems.
+In Exudyn, there is the option to create tree-like rigid body systems
+using the <code class="docutils literal notranslate"><span class="pre">ObjectKinematicTree</span></code>, which allows to use minimal coordinates for open-loop systems. In general, Exudyn is a redundant
+multibody dynamics formulation for reasons of simpler assembly of equations of motion.</p>
+<p>As an example, we investigate the equations of motion for a <strong>mathematical pendulum</strong> with mass <span class="math notranslate nohighlight">\(m\)</span>, distance <span class="math notranslate nohighlight">\(L\)</span> between support and mass,
+under gravity <span class="math notranslate nohighlight">\(g\)</span>.</p>
+<p>In the minimal coordinates formulation, see <a class="reference internal" href="#fig-theory-formulations-pendulum"><span class="std std-numref">Fig. 15</span></a>, we define the angle <span class="math notranslate nohighlight">\(\varphi\)</span>, being zero in the horizontal configuration,</p>
+<div class="math notranslate nohighlight">
+\[m L \ddot \varphi = m g \cos \varphi\]</div>
+<p>leading to one <span class="math notranslate nohighlight">\(2^\mathrm{nd}\)</span> order ordinary differential equation (ODE2), using the minimal coordinate <span class="math notranslate nohighlight">\(\varphi\)</span>.</p>
+<figure class="align-default" id="id1">
+<span id="fig-theory-formulations-pendulum"></span><a class="reference internal image-reference" href="../../_images/pendulum.png"><img alt="../../_images/pendulum.png" src="../../_images/pendulum.png" style="width: 200px;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 15 </span><span class="caption-text">Mathematical pendulum with minimal coordinate <span class="math notranslate nohighlight">\(\varphi\)</span>.</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>With redundant coordinates, see <a class="reference internal" href="#fig-theory-formulations-pendulumconstraint"><span class="std std-numref">Fig. 16</span></a>, we may introduce two Cartesian coordinates (<span class="math notranslate nohighlight">\(x\)</span>, <span class="math notranslate nohighlight">\(y\)</span>), to define the location of the mass in
+the plane, leading to two differential equations for the mass point,</p>
+<div class="math notranslate nohighlight" id="equation-eq-theory-pendulum-redundantcoords">
+<span class="eqno">(9)<a class="headerlink" href="#equation-eq-theory-pendulum-redundantcoords" title="Link to this equation"></a></span>\[m \ddot x = f_x, \quad m \ddot y = f_y\]</div>
+<p>together with a constraint equation</p>
+<div class="math notranslate nohighlight" id="equation-eq-theory-pendulum-redundantconstraint">
+<span class="eqno">(10)<a class="headerlink" href="#equation-eq-theory-pendulum-redundantconstraint" title="Link to this equation"></a></span>\[c(x,y) = \sqrt{x^2 + y^2} - L = 0\]</div>
+<figure class="align-default" id="id2">
+<span id="fig-theory-formulations-pendulumconstraint"></span><a class="reference internal image-reference" href="../../_images/pendulumConstraint.png"><img alt="../../_images/pendulumConstraint.png" src="../../_images/pendulumConstraint.png" style="width: 200px;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 16 </span><span class="caption-text">Mathematical pendulum with redundant coordinates (<span class="math notranslate nohighlight">\(x\)</span>, <span class="math notranslate nohighlight">\(y\)</span>).</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>Note that Eq. <a class="reference internal" href="#equation-eq-theory-pendulum-redundantcoords">(9)</a> and Eq. <a class="reference internal" href="#equation-eq-theory-pendulum-redundantconstraint">(10)</a> include 3 equations for only two unknowns (<span class="math notranslate nohighlight">\(x\)</span>, <span class="math notranslate nohighlight">\(y\)</span>).
+Therefore, we need to introduce an additional unknown Lagrange multiplier <span class="math notranslate nohighlight">\(\lambda\)</span> for the redundant multibody formulation,
+which represents a force in direction of the pendulum’s string, exactly such that the length <span class="math notranslate nohighlight">\(L\)</span> is preserved.
+The factor <span class="math notranslate nohighlight">\(\lambda\)</span> has to be projected with the constraint derivatives (Jacobian) onto the coordinates (<span class="math notranslate nohighlight">\(x\)</span>, <span class="math notranslate nohighlight">\(y\)</span>), giving the forces</p>
+<div class="math notranslate nohighlight">
+\[f_x = -\frac{\partial c}{\partial x} \lambda, \quad f_y = m g - \frac{\partial c}{\partial y} \lambda .\]</div>
+<p>Therefore, we can rewrite Eq. <a class="reference internal" href="#equation-eq-theory-pendulum-redundantcoords">(9)</a> as</p>
+<div class="math notranslate nohighlight" id="equation-eq-theory-pendulum-redundantfinal">
+<span class="eqno">(11)<a class="headerlink" href="#equation-eq-theory-pendulum-redundantfinal" title="Link to this equation"></a></span>\[m \ddot x + \frac{\partial c}{\partial x} \lambda = 0, \quad m \ddot y + \frac{\partial c}{\partial y} \lambda = m g\]</div>
+<p>with the algebraic constraint, written in a computationally more efficient form,</p>
+<div class="math notranslate nohighlight" id="equation-eq-theory-pendulum-redundantconstraintfinal">
+<span class="eqno">(12)<a class="headerlink" href="#equation-eq-theory-pendulum-redundantconstraintfinal" title="Link to this equation"></a></span>\[c(x,y) = x^2 + y^2 - L^2 = 0\]</div>
+<p>The equations of motion are formed by both Eq. <a class="reference internal" href="#equation-eq-theory-pendulum-redundantfinal">(11)</a> and Eq. <a class="reference internal" href="#equation-eq-theory-pendulum-redundantconstraintfinal">(12)</a>,
+which are <strong>differential-algebraic equations (DAEs) of index 3</strong> and therefore much harder to solve than ordinary differential equations
+in case of minimal coordinates.</p>
+<p>In Exudyn, we therefore use either the generalized-<span class="math notranslate nohighlight">\(\alpha\)</span> solver, or an implicit trapezoidal rule in combination with an index 2
+reduction, see the section on solvers for more details.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="IntroductionToMultibodySystems.html" class="btn btn-neutral float-left" title="Introduction to multibody systems" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="FramesRotationsAndCoordinateSystems.html" class="btn btn-neutral float-right" title="Frames, rotations and coordinate systems" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
