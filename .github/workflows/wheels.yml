@@ -7,7 +7,7 @@ on:
   pull_request:
 
 jobs:
-  # buildCIbuildUbuntu:
+  # buildUbuntu:
     # name: Build wheels on ${{ matrix.os }}
     # runs-on: ${{ matrix.os }}
     # strategy:
@@ -47,7 +47,7 @@ jobs:
 
       # - uses: actions/upload-artifact@v4
         # with:
-          # name: wheels-linux-python-${{ matrix.python-version }}
+          # name: dest-wheels--linux-python-${{ matrix.python-version }}
           # path: ./main/dist/*manylinux2014_x86_64.whl
 
   buildWindowsMacOS:
@@ -56,7 +56,7 @@ jobs:
     strategy:
       matrix:
         os: [windows-latest, macos-latest]
-        python-version: ['10'] 
+        python-version: ['10', '11'] 
         #python-version: ['8', '9', '10', '11', '12'] 
         #os: [ubuntu-latest, windows-latest, macos-latest]
 
@@ -87,6 +87,7 @@ jobs:
 
   mergeArtifacts: #merge artifacts into one directory and zip it
     needs: buildWindowsMacOS
+    #needs: [buildWindowsMacOS, buildUbuntu]
     runs-on: ubuntu-latest
     steps:
     - name: Merge All Artifacts
@@ -98,3 +99,9 @@ jobs:
 
     - name: Zip Merged Artifacts
       run: zip -r merged-wheels.zip merged-artifacts
+
+    - name: Upload Merged ZIP Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: merged-wheels
+        path: merged-wheels.zip
