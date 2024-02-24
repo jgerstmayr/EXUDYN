@@ -50,7 +50,7 @@ jobs:
           # name: wheels-linux-python-${{ matrix.python-version }}
           # path: ./main/dist/*manylinux2014_x86_64.whl
 
-  buildWindows:
+  buildWindowsMacOS:
     name: Build wheels on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
@@ -86,7 +86,7 @@ jobs:
         path: main/.wheels/*.whl
 
   mergeArtifacts: #merge artifacts into one directory and zip it
-    needs: buildWheels
+    needs: buildWindowsMacOS
     runs-on: ubuntu-latest
     steps:
     - name: Merge All Artifacts
