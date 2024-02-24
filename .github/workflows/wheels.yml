@@ -80,7 +80,21 @@ jobs:
         CIBW_SKIP: "*-win32"   #skip building 32-bit (win32) wheels
       working-directory: main  #specify the local dir where setup.py is located
 
-    - uses: actions/upload-artifact@v4
+    - uses: actions/upload-artifact@v4 #artifacts are stored locally!
       with:
-        name: wheels-{{ matrix.os }}-python-3${{ matrix.python-version }}
+        name: dest-wheels-${{ matrix.os }}-python-3${{ matrix.python-version }}
         path: main/.wheels/*.whl
+
+  mergeArtifacts: #merge artifacts into one directory and zip it
+    needs: buildWheels
+    runs-on: ubuntu-latest
+    steps:
+    - name: Merge All Artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: merged-artifacts
+        pattern: 'dest-wheels-*'
+        merge-multiple: true
+
+    - name: Zip Merged Artifacts
+      run: zip -r merged-wheels.zip merged-artifacts
