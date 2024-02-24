@@ -1,0 +1,41 @@
+#this file contains useful steps for VScode to work with Python and C++
+#created: 2023-10-01
+
+#++++++++++++++++++++++++++++++
+#install Python extensions
+Python (Microsoft)
+Python Extension Pack (Don Jayamanne)
+
+VScode detected WSL and suggested to install (what I did then):
+WSL (Microsoft)
+
+#interactive Python:
+Install Jupyter v2023.8.1002501831 (Microsoft)
+
+
+
+#++++++++++++++++++++++++++++++
+#install C++ extensions
+
+#install 
+C/C++ (53M) of Microsoft
+C/C++ Extension Pack (Microsoft); suggested by VScode
+
+#recommended:
+https://code.visualstudio.com/docs/cpp/config-mingw
+
+#==> restart computer
+
+
+#++++++++++++++++++++++++++++++
+#alternative: use MSVC compiler, but requires to run VScode from MS developer 
+this extension should use cl.exe from MSVC, which has to be installed, see:
+https://code.visualstudio.com/docs/cpp/config-msvc
+
+
+
+
+
+
+
+

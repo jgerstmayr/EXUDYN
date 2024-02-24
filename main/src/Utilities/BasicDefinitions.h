@@ -184,8 +184,8 @@ typedef std::string STDstring;	//!< decouple std::string for future extensions, 
 	#endif
 #endif
 
-//not needed any more, as all structures are dynamic: constexpr Index MAX_NUMBER_OF_THREADS = 16;   //!< maximum number of threads, e.g., for predefined structures with fixed size
-
+//this is usually defined in setup.py:
+//#define EXUDYN_MINIMAL_COMPILATION
 
 #include "Main/Stdoutput.h"		//for pout and error/warning messages
 

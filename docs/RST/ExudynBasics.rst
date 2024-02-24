@@ -166,7 +166,7 @@ Visualization settings are used for user interaction with the model. E.g., the n
 Details on visualization settings and its substructures are provided in Section :ref:`sec-visualizationsettingsmain`\ . These settings may also be edited by pressing 'V' in the active render window (does not work, if there is no active render loop using, e.g., \ ``SC.WaitForRenderEngineStopFlag()``\  or 
 \ ``mbs.WaitForUserToContinue()``\  ).
 The visualization settings dialog is shown exemplarily in \ :numref:`fig-visualizationsettings`\ .
-Note that this dialog is automatically created and uses Python's \ ``tkinter``\ , which is lightweight, but not very well suited if display scalings are large (e.g., on high resolution laptop screens). If working with Spyder, it is recommended to restart Spyder, if display scaling is changed, in order to adjust scaling not only for Spyder but also for Exudyn .
+Note that this dialog is automatically created and uses Python's \ ``tkinter``\ , which is lightweight, but not very well suited if display scalings are large (e.g., on high resolution laptop screens). If working with Spyder, it is recommended to restart Spyder, if display scaling is changed, in order to adjust scaling not only for Spyder but also for Exudyn.
 
 The appearance of visualization settings dialogs may be adjusted by directly modifying \ ``exudyn.GUI``\  variables (this may change in the future). For example write in your code before opening the render window\ (treeEdit and treeview both mean the settings dialog currently used for visualization settings and partially for right-mouse-click):
 

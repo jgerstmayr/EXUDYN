@@ -5,7 +5,7 @@
 
 %++++++++++++++++++++++++++++++++++++++++++
 %OLD: \newcommand{\codeName}{\textsc{Exudyn}}
-\newcommand{\codeName}{\texttt{Exudyn}}
+\newcommand{\codeName}{\texttt{Exudyn}\xspace}
 
 \newcommand{\eqDot}{\; .} %dot at end of equations
 \newcommand{\eqComma}{\; ,} %comma at end of equations
@@ -37,6 +37,9 @@
 
 \newcommand{\bn}{\begin{enumerate} \itemsep -2pt}
 \newcommand{\en}{\end{enumerate}}
+
+%because of problems with \ov => \mathbf{o}
+\newcommand{\myoverline}[1]{\overline{#1}} 
 
 %vector/matrix: (3D)
 \newcommand{\vr}[3]{\left[\!\! \begin{array}{c} { #1}\vspace{0.1cm} \\ { #2}\vspace{0.1cm} \\ { #3} \end{array} \!\!\right]}
@@ -135,6 +138,9 @@
 \newcommand{\co}{\mathrm{c}}
 \newcommand{\si}{\mathrm{s}}
 
+%theory, quaternions
+\newcommand{\ps}{p_\mathrm{s}} %transpose
+
 \newcommand{\tp}{^\mathrm{T}} %transpose
 
 \newcommand{\diag}{\mathrm{diag}} %transpose
@@ -155,6 +161,7 @@
 \newcommand{\tkappa}{\mbox{\boldmath $\kappa$ \unboldmath}\!\!}
 \newcommand{\tkappaDot}{\mbox{\boldmath $\dot \kappa$ \unboldmath}\!\!}
 \newcommand{\tphi}{\mbox{\boldmath $\phi$ \unboldmath}\!\!}
+\newcommand{\tvarphi}{\mbox{\boldmath $\varphi$ \unboldmath}\!\!}
 \newcommand{\tPhi}{\mbox{\boldmath $\Phi$ \unboldmath}\!\!}
 \newcommand{\ttheta}{\mbox{\boldmath $\theta$ \unboldmath}\!\!}
 \newcommand{\tTheta}{\mbox{\boldmath $\Theta$ \unboldmath}\!\!}
@@ -190,7 +197,6 @@
 \renewcommand{\mp}[4]{\left[\!\! \begin{array}{cc} #1 & #2 \vspace{0.04cm}\\ #3 & #4 \end{array} \!\!\right]}
 
 \newcommand{\vfour}[4]{\left[\!\! \begin{array}{c} { #1}\vspace{0.04cm} \\ { #2}\vspace{0.04cm} \\ { #3}\vspace{0.04cm} \\ { #4} \end{array} \!\!\right]}
-
 \newcommand{\mfour}[4]{\left[\!\! \begin{array}{cccc} #1 \vspace{0.04cm}\\ #2 \vspace{0.04cm}\\ #3 \vspace{0.04cm}\\ #4 \end{array} \!\!\right]}
 
 \newcommand{\mysection}[1]{\chapter{#1}}
@@ -267,6 +273,18 @@
 	\end{center}
 	\caption{Example of #1}
 	\label{fig:#1}
+\end{figure}
+}
+
+%++++++++++++++++++++++++++++++++++
+%\LatexRSTfigure{figures/open_closed_loop}{fig_open_closed_loop}{8cm}{320}{a.) Open loop mechanism (double pendulum), b.) Closed loops mechanism (four-bar linkage).}
+\newcommand{\LatexRSTfigure}[5]{
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=#3]{#1}
+\caption{#5}
+\label{#2}
+\end{center}
 \end{figure}
 }
 

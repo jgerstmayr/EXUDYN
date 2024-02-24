@@ -46,20 +46,6 @@ Theory: Contact
 
 See according section in `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
-.. _sec-solver-solverstatic:
-
-Solvers: Static
-===============
-
-See according section in `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
-
-.. _sec-solver-solverdynamic:
-
-Solvers: Dynamic
-================
-
-See according section in `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
-
 .. _sec-theory-cms:
 
 Theory: Component Mode Synthesis

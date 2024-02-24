@@ -56,8 +56,8 @@ template <typename UFT>
 class PythonUserFunctionBase
 {
 private:
-	UserFunctionType ufType;
 	pybind11::object* pyObject;
+	UserFunctionType ufType;
 public:
 	UFT userFunction;
 

@@ -1,7 +1,7 @@
 Mass-Spring-Damper tutorial
 ===========================
 
-The python source code of the first tutorial can be found in the file:
+The Python source code of the first tutorial can be found in the file:
 
    \ ``main/pythonDev/Examples/springDamperTutorial.py``\ 
 
@@ -243,7 +243,7 @@ The following code generates a reference (exact) solution for our example:
 
 
 Now we can load our results from the default solution file \ ``coordinatesSolution.txt``\ , which is in the same
-directory as your python tutorial file. 
+directory as your Python tutorial file. 
 \ **Note**\  that the visualization of results can be simplified considerably using the \ ``PlotSensor(...)``\  utility function as shown in the \ **Rigid body and joints tutorial**\ !
 
 For reading the file containing commented lines (this does not work in binary mode!), we use a numpy feature and finally plot the displacement of coordinate 0 or our mass point\ (\ ``data[:,0]``\  contains the simulation time, \ ``data[:,1]``\  contains displacement of (global) coordinate 0, \ ``data[:,2]``\  contains displacement of (global) coordinate 1, ...)):
@@ -276,12 +276,14 @@ In order to get a nice plot within Spyder, the following options can be used\ (n
   plt.show() 
 
 
-The matplotlib output should look like this:
+The matplotlib output should look as shown in \ :numref:`fig-tutorial-springdamper`\ .
 
 
-
-.. image:: ../theDoc/figures/plotSpringDamper.png
+.. _fig-tutorial-springdamper:
+.. figure:: ../theDoc/figures/plotSpringDamper.png
    :width: 400
+
+   Output of spring-damper tutorial.
 
 
 

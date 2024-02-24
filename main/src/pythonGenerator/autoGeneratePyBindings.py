@@ -198,6 +198,9 @@ The following code snippets and comments should explain this behavior:
 """, section='Copying and referencing C++ objects', sectionLevel=2, sectionLabel='sec:generalPythonInterface:copyref')
 
 plrmain.AddDocuCodeBlock(code="""
+import copy                        #for real copying
+import exudyn as exu
+from exudyn.utilities import *
 #create system container, referenced from SC:
 SC = exu.SystemContainer()
 SC2 = SC                           #this will only put a reference to SC
@@ -207,10 +210,15 @@ mbs = SC.AddSystem()               #get reference mbs to C++ system
 mbs2=mbs                           #again, mbs2 and mbs refer to the same C++ object
 og = mbs.AddObject(ObjectGround()) #copy data of ObjectGround() into C++
 o0 = mbs.GetObject(0)              #get copy of internal data as dictionary
+
+mbsCopy=copy.copy(mbs)             #mbsCopy is now a real copy of mbs; uses pickle; experimental!
+SC.Append(mbsCopy)                 #this is needed to work with mbsCopy
+
 del o0                             #delete the local dictionary; C++ data not affected
 del mbs, mbs2                      #references to mbs deleted (C++ data still available)
+del mbsCopy                        #now also copy of mbs destroyed
 del SC                             #references to SystemContainer deleted
-#at this point, mbs and SC are not available any more (data may be cleaned up by Python)
+#at this point, mbs and SC are not available any more (data will be cleaned up by Python)
 """)
 
 #+++++++++++++++++++++++++++++++++++
@@ -665,7 +673,7 @@ plr.DefPyFunctionAccess(cClass='', pyName='DoRendererIdleTasks', cName='PyDoRend
 
 sOld = plr.PyStr()
 plr.DefPyFunctionAccess(cClass='', pyName='SolveStatic', cName='SolveDynamic', 
-                               description='Static solver function, mapped from module \\texttt{solver}, to solve static equations (without inertia terms) of constrained rigid or flexible multibody system; for details on the Python interface see \\refSection{sec:solver:SolveStatic}; for background on solvers, see \\refSection{sec:solvers}',
+                               description='Static solver function, mapped from module \\texttt{solver}, to solve static equations (without inertia terms) of constrained rigid or flexible multibody system; for details on the Python interface see \\refSection{sec:mainsystemextensions:SolveStatic}; for background on solvers, see \\refSection{sec:solvers}',
                                argList=['mbs', 'simulationSettings', 'updateInitialValues', 'storeSolver'],
                                defaultArgs=['','exudyn.SimulationSettings()','False','True'],
                                argTypes=['MainSystem','SimulationSettings', '', ''],
@@ -673,7 +681,7 @@ plr.DefPyFunctionAccess(cClass='', pyName='SolveStatic', cName='SolveDynamic',
                                )
                 
 plr.DefPyFunctionAccess(cClass='', pyName='SolveDynamic', cName='SolveDynamic', 
-                               description='Dynamic solver function, mapped from module \\texttt{solver}, to solve equations of motion of constrained rigid or flexible multibody system; for details on the Python interface see \\refSection{sec:solver:SolveDynamic}; for background on solvers, see \\refSection{sec:solvers}',
+                               description='Dynamic solver function, mapped from module \\texttt{solver}, to solve equations of motion of constrained rigid or flexible multibody system; for details on the Python interface see \\refSection{sec:mainsystemextensions:SolveDynamic}; for background on solvers, see \\refSection{sec:solvers}',
                                argList=['mbs', 'simulationSettings', 'solverType', 'updateInitialValues', 'storeSolver'],
                                defaultArgs=['','exudyn.SimulationSettings()','exudyn.DynamicSolverType.GeneralizedAlpha','False','True'],
                                argTypes=['MainSystem','SimulationSettings', 'DynamicSolverType', '', ''],
@@ -681,7 +689,7 @@ plr.DefPyFunctionAccess(cClass='', pyName='SolveDynamic', cName='SolveDynamic',
                                )
                 
 plr.DefPyFunctionAccess(cClass='', pyName='ComputeODE2Eigenvalues', cName='ComputeODE2Eigenvalues', 
-                               description='Simple interface to scipy eigenvalue solver for eigenvalue analysis of the second order differential equations part in mbs, mapped from module \\texttt{solver}; for details on the Python interface see \\refSection{sec:solver:ComputeODE2Eigenvalues}',
+                               description='Simple interface to scipy eigenvalue solver for eigenvalue analysis of the second order differential equations part in mbs, mapped from module \\texttt{solver}; for details on the Python interface see \\refSection{sec:mainsystemextensions:ComputeODE2Eigenvalues}',
                                argList=['mbs', 'simulationSettings', 'useSparseSolver', 'numberOfEigenvalues', 'setInitialValues', 'convert2Frequencies'],
                                defaultArgs=['','exudyn.SimulationSettings()','False','-1','True','False'],
                                #argTypes=['MainSystem','SimulationSettings', 'bool', 'int', 'bool', 'bool'],
@@ -859,7 +867,7 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='AddSystem', cName='AddMainSyste
                         returnType='MainSystem',
                         )
 
-plr.DefPyFunctionAccess(cClass=classStr, pyName='AppendSystem', cName='AppendMainSystem', 
+plr.DefPyFunctionAccess(cClass=classStr, pyName='Append', cName='AppendMainSystem', 
                         description="append an exsiting computational system to the system container; returns the number of MainSystem in system container", options='py::return_value_policy::reference',
                         argList=['mainSystem'],
                         argTypes=['MainSystem'],
@@ -965,7 +973,7 @@ classStr = 'MainSystem'
 plr.DefPyStartClass(classStr, classStr, '', forbidPythonConstructor=False)
 
 plr.AddDocu("This is the class which defines a (multibody) system. "+
-            "The MainSystem shall only be created by \\texttt{SC.AddSystem()}, not with \\texttt{exu.MainSystem()}, as the latter one would not be linked to a SystemContainer. In some cases, you may use SC.AppendSystem(mbs). "+
+            "The MainSystem shall only be created by \\texttt{SC.AddSystem()}, not with \\texttt{exu.MainSystem()}, as the latter one would not be linked to a SystemContainer. In some cases, you may use SC.Append(mbs). "+
             "In C++, there is a MainSystem (the part which links to Python) and a System (computational part). "+
             "For that reason, the name is MainSystem on the Python side, but it is often just called 'system'. "+
             "For compatibility, it is recommended to denote the variable holding this system as mbs, the multibody dynamics system. "+
@@ -1081,7 +1089,7 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='GetPostStepUserFunction', cName
                         )
                                                       
 plr.DefPyFunctionAccess(cClass=classStr, pyName='SetPostNewtonUserFunction', cName='PySetPostNewtonUserFunction', 
-                        description="Sets a user function PostNewtonUserFunction(mbs, t) executed after successful Newton iteration in implicit or static solvers and after step update of explicit solvers, but BEFORE PostNewton functions are called by the solver; function returns list [discontinuousError, recommendedStepSize], containing a error of the PostNewtonStep, which is compared to [solver].discontinuous.iterationTolerance. The recommendedStepSize shall be negative, if no recommendation is given, 0 in order to enforce minimum step size or a specific value to which the current step size will be reduced and the step will be repeated; use this function, e.g., to reduce step size after impact or change of data variables; set to 0 (integer) in order to erase user function.",
+                        description="Sets a user function PostNewtonUserFunction(mbs, t) executed after successful Newton iteration in implicit or static solvers and after step update of explicit solvers, but BEFORE PostNewton functions are called by the solver; function returns list [discontinuousError, recommendedStepSize], containing a error of the PostNewtonStep, which is compared to [solver].discontinuous.iterationTolerance. The recommendedStepSize shall be negative, if no recommendation is given, 0 in order to enforce minimum step size or a specific value to which the current step size will be reduced and the step will be repeated; use this function, e.g., to reduce step size after impact or change of data variables; set to 0 (integer) in order to erase user function. Similar described by Flores and Ambrosio, https://doi.org/10.1007/s11044-010-9209-8",
                         example = 'def PostNewtonUserFunction(mbs, t):\\\\ \\TAB if(t>1): \\\\ \\TAB  \\TAB return [0, 1e-6] \\\\ \\TAB return [0,0] \\\\mbs.SetPostNewtonUserFunction(PostNewtonUserFunction)',
                         argList=['value'],
                         argTypes=['Callable[[MainSystem, float],[float,float]]'],
@@ -3085,6 +3093,11 @@ plr.DefLatexDataAccess('excludeDuplicatedTrigSphereContactPoints','(default=Fals
                        dataType='bool',
                        )
 
+plr.sPy +=  '        .def_property("computeContactForces", &PyGeneralContact::GetComputeContactForces, &PyGeneralContact::SetComputeContactForces)\n' 
+plr.DefLatexDataAccess('computeContactForces','(default=False) if True, additional system vector is computed which contains all contact force and torque contributions. In order to recover forces on a single rigid body, the respective LTG-vector has to be used and forces need to be extracted from this system vector; may slow down computations.',
+                       dataType='bool',
+                       )
+
 plr.sPy +=  '        .def_property("ancfCableUseExactMethod", &PyGeneralContact::GetAncfCableUseExactMethod, &PyGeneralContact::SetAncfCableUseExactMethod)\n' 
 plr.DefLatexDataAccess('ancfCableUseExactMethod','(default=True) if True, uses exact computation of intersection of 3rd order polynomials and contacting circles ',
                        dataType='bool',
@@ -3227,6 +3240,11 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='GetActiveContacts', cName='PyGe
                         description="Get list of global item numbers which are in contact with itemIndex of type typeIndex in case that the global itemIndex is smaller than the abs value of the contact pair index; a negative sign indicates that the contacting (spheres) is in Coloumb friction, a positive sign indicates a regularized friction region; for interpretation of global contact indices, see gContact.GetPythonObject() and documentation; requires either implicit contact computation or UpdateContacts(...) needs to be called prior to this function",
                         argTypes=['ContactTypeIndex','int'],
                         returnType='List[int]',
+                        )
+
+plr.DefPyFunctionAccess(cClass=classStr, pyName='GetSystemODE2RhsContactForces', cName='PyGetSystemODE2RhsContactForces', 
+                        description="Get numpy array of system vector, containing contribution of contact forces to system ODE2 Rhs vector; contributions to single objects may be extracted by checking the according LTG-array of according objects (such as rigid bodies); the contact forces vector is computed in each contact iteration;",
+                        returnType='List[float]',
                         )
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

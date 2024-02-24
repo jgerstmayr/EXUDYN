@@ -40,11 +40,11 @@
 %
 \noindent For examples on CreateGround see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 \bi
- \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/cartesianSpringDamper.py}{\texttt{cartesianSpringDamper.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/cartesianSpringDamperUserFunction.py}{\texttt{cartesianSpringDamperUserFunction.py}} (Ex), 
+ \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/basicTutorial2024.py}{\texttt{basicTutorial2024.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beamTutorial.py}{\texttt{beamTutorial.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/cartesianSpringDamper.py}{\texttt{cartesianSpringDamper.py}} (Ex), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/cartesianSpringDamperUserFunction.py}{\texttt{cartesianSpringDamperUserFunction.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chatGPTupdate.py}{\texttt{chatGPTupdate.py}} (Ex), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chatGPTupdate2.py}{\texttt{chatGPTupdate2.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/pendulumGeomExactBeam2D.py}{\texttt{pendulumGeomExactBeam2D.py}} (Ex), 
  ...
 , 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ConvexContactTest.py}{\texttt{ConvexContactTest.py}} (TM), 
@@ -109,11 +109,11 @@
 %
 \noindent For examples on CreateMassPoint see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 \bi
- \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/cartesianSpringDamper.py}{\texttt{cartesianSpringDamper.py}} (Ex), 
+ \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/basicTutorial2024.py}{\texttt{basicTutorial2024.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/cartesianSpringDamper.py}{\texttt{cartesianSpringDamper.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/cartesianSpringDamperUserFunction.py}{\texttt{cartesianSpringDamperUserFunction.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chatGPTupdate.py}{\texttt{chatGPTupdate.py}} (Ex), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/springDamperTutorialNew.py}{\texttt{springDamperTutorialNew.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/symbolicUserFunctionMasses.py}{\texttt{symbolicUserFunctionMasses.py}} (Ex), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chatGPTupdate.py}{\texttt{chatGPTupdate.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/springDamperTutorialNew.py}{\texttt{springDamperTutorialNew.py}} (Ex), 
  ...
 , 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mainSystemExtensionsTests.py}{\texttt{mainSystemExtensionsTests.py}} (TM), 
@@ -224,7 +224,7 @@
 \item[]{\it damping}: scalar damping coefficient
 \item[]{\it force}: scalar additional force applied
 \item[]{\it velocityOffset}: scalar offset: if referenceLength is changed over time, the velocityOffset may be changed accordingly to emulate a reference motion
-\item[]{\it springForceUserFunction}: a user function springForceUserFunction(mbs, t, itemNumber, deltaL, deltaL_t, stiffness, damping, force)->float ; this function replaces the internal connector force compuation
+\item[]{\it springForceUserFunction}: a user function springForceUserFunction(mbs, t, itemNumber, deltaL, deltaL\_t, stiffness, damping, force)->float ; this function replaces the internal connector force compuation
 \item[]{\it bodyOrNodeList}: alternative to bodyList; a list of object numbers (with specific localPosition0/1) or node numbers; may also be of mixed types; to use this case, set bodyList = [None,None]
 \item[]{\it show}: if True, connector visualization is drawn
 \item[]{\it drawSize}: general drawing size of connector
@@ -262,11 +262,15 @@
 %
 \noindent For examples on CreateSpringDamper see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 \bi
- \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chatGPTupdate.py}{\texttt{chatGPTupdate.py}} (Ex), 
+ \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/basicTutorial2024.py}{\texttt{basicTutorial2024.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chatGPTupdate.py}{\texttt{chatGPTupdate.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/springDamperTutorialNew.py}{\texttt{springDamperTutorialNew.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/symbolicUserFunctionMasses.py}{\texttt{symbolicUserFunctionMasses.py}} (Ex), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mainSystemExtensionsTests.py}{\texttt{mainSystemExtensionsTests.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/symbolicUserFunctionTest.py}{\texttt{symbolicUserFunctionTest.py}} (TM)
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/symbolicUserFunctionMasses.py}{\texttt{symbolicUserFunctionMasses.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/tutorialNeuralNetwork.py}{\texttt{tutorialNeuralNetwork.py}} (Ex), 
+ ...
+, 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mainSystemExtensionsTests.py}{\texttt{mainSystemExtensionsTests.py}} (TM), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/symbolicUserFunctionTest.py}{\texttt{symbolicUserFunctionTest.py}} (TM)
 \ei
 
 %
@@ -609,7 +613,7 @@
 \item[]{\it constrainedAxes}: flag, which determines which translation (0,1,2) and rotation (3,4,5) axes are constrained; each entry may only be 0 (=free) axis or 1 (=constrained axis); ALL constrained Axes are defined relative to reference rotation of body0 times rotation0
 \item[]{\it useGlobalFrame}: if False, the position is defined in the local coordinate system of body0, otherwise it is defined in global coordinates
 \item[]{\it offsetUserFunction}: a user function offsetUserFunction(mbs, t, itemNumber, offsetUserFunctionParameters)->float ; this function replaces the internal (constant) by a user-defined offset. This allows to realize rheonomic joints and allows kinematic simulation
-\item[]{\it offsetUserFunction_t}: a user function offsetUserFunction\_t(mbs, t, itemNumber, offsetUserFunctionParameters)->float ; this function replaces the internal (constant) by a user-defined offset velocity; this function is used instead of offsetUserFunction, if velocityLevel (index2) time integration
+\item[]{\it offsetUserFunction\_t}: a user function offsetUserFunction\_t(mbs, t, itemNumber, offsetUserFunctionParameters)->float ; this function replaces the internal (constant) by a user-defined offset velocity; this function is used instead of offsetUserFunction, if velocityLevel (index2) time integration
 \item[]{\it show}: if True, connector visualization is drawn
 \item[]{\it axesRadius}: radius of axes for connector graphical representation
 \item[]{\it axesLength}: length of axes for connector graphical representation

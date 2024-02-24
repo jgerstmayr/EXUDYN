@@ -124,6 +124,9 @@ The following code snippets and comments should explain this behavior:
 \pythonstyle
 \begin{lstlisting}[language=Python, firstnumber=1]
 
+import copy                        #for real copying
+import exudyn as exu
+from exudyn.utilities import *
 #create system container, referenced from SC:
 SC = exu.SystemContainer()
 SC2 = SC                           #this will only put a reference to SC
@@ -133,10 +136,15 @@ mbs = SC.AddSystem()               #get reference mbs to C++ system
 mbs2=mbs                           #again, mbs2 and mbs refer to the same C++ object
 og = mbs.AddObject(ObjectGround()) #copy data of ObjectGround() into C++
 o0 = mbs.GetObject(0)              #get copy of internal data as dictionary
+
+mbsCopy=copy.copy(mbs)             #mbsCopy is now a real copy of mbs; uses pickle; experimental!
+SC.Append(mbsCopy)                 #this is needed to work with mbsCopy
+
 del o0                             #delete the local dictionary; C++ data not affected
 del mbs, mbs2                      #references to mbs deleted (C++ data still available)
+del mbsCopy                        #now also copy of mbs destroyed
 del SC                             #references to SystemContainer deleted
-#at this point, mbs and SC are not available any more (data may be cleaned up by Python)
+#at this point, mbs and SC are not available any more (data will be cleaned up by Python)
 \end{lstlisting}
 
 
@@ -224,9 +232,9 @@ mbs = SC.AddSystem()
   StopRenderer() & Stop OpenGL rendering engine\\ \hline 
   IsRendererActive() & returns True if GLFW renderer is available and running; otherwise False\\ \hline 
   DoRendererIdleTasks(waitSeconds = 0) & Call this function in order to interact with Renderer window; use waitSeconds in order to run this idle tasks while animating a model (e.g. waitSeconds=0.04), use waitSeconds=0 without waiting, or use waitSeconds=-1 to wait until window is closed\\ \hline 
-  SolveStatic(mbs, simulationSettings = exudyn.SimulationSettings(), updateInitialValues = False, storeSolver = True) & Static solver function, mapped from module \texttt{solver}, to solve static equations (without inertia terms) of constrained rigid or flexible multibody system; for details on the Python interface see \refSection{sec:solver:SolveStatic}; for background on solvers, see \refSection{sec:solvers}\\ \hline 
-  SolveDynamic(mbs, simulationSettings = exudyn.SimulationSettings(), solverType = exudyn.DynamicSolverType.GeneralizedAlpha, updateInitialValues = False, storeSolver = True) & Dynamic solver function, mapped from module \texttt{solver}, to solve equations of motion of constrained rigid or flexible multibody system; for details on the Python interface see \refSection{sec:solver:SolveDynamic}; for background on solvers, see \refSection{sec:solvers}\\ \hline 
-  ComputeODE2Eigenvalues(mbs, simulationSettings = exudyn.SimulationSettings(), useSparseSolver = False, numberOfEigenvalues = -1, setInitialValues = True, convert2Frequencies = False) & Simple interface to scipy eigenvalue solver for eigenvalue analysis of the second order differential equations part in mbs, mapped from module \texttt{solver}; for details on the Python interface see \refSection{sec:solver:ComputeODE2Eigenvalues}\\ \hline 
+  SolveStatic(mbs, simulationSettings = exudyn.SimulationSettings(), updateInitialValues = False, storeSolver = True) & Static solver function, mapped from module \texttt{solver}, to solve static equations (without inertia terms) of constrained rigid or flexible multibody system; for details on the Python interface see \refSection{sec:mainsystemextensions:SolveStatic}; for background on solvers, see \refSection{sec:solvers}\\ \hline 
+  SolveDynamic(mbs, simulationSettings = exudyn.SimulationSettings(), solverType = exudyn.DynamicSolverType.GeneralizedAlpha, updateInitialValues = False, storeSolver = True) & Dynamic solver function, mapped from module \texttt{solver}, to solve equations of motion of constrained rigid or flexible multibody system; for details on the Python interface see \refSection{sec:mainsystemextensions:SolveDynamic}; for background on solvers, see \refSection{sec:solvers}\\ \hline 
+  ComputeODE2Eigenvalues(mbs, simulationSettings = exudyn.SimulationSettings(), useSparseSolver = False, numberOfEigenvalues = -1, setInitialValues = True, convert2Frequencies = False) & Simple interface to scipy eigenvalue solver for eigenvalue analysis of the second order differential equations part in mbs, mapped from module \texttt{solver}; for details on the Python interface see \refSection{sec:mainsystemextensions:ComputeODE2Eigenvalues}\\ \hline 
   SetOutputPrecision(numberOfDigits) & Set the precision (integer) for floating point numbers written to console (reset when simulation is started!); NOTE: this affects only floats converted to strings inside C++ exudyn; if you print a float from Python, it is usually printed with 16 digits; if printing numpy arrays, 8 digits are used as standard, to be changed with numpy.set\_printoptions(precision=16); alternatively convert into a list\\ \hline 
   SetLinalgOutputFormatPython(flagPythonFormat) & True: use Python format for output of vectors and matrices; False: use matlab format\\ \hline 
   SetWriteToConsole(flag) & set flag to write (True) or not write to console; default = True\\ \hline 
@@ -278,7 +286,7 @@ mbs = SC.AddSystem()
 {\bf function/structure name} & {\bf description}\\ \hline
   Reset() & delete all multibody systems and reset SystemContainer (including graphics); this also releases SystemContainer from the renderer, which requires SC.AttachToRenderEngine() to be called in order to reconnect to rendering; a safer way is to delete the current SystemContainer and create a new one (SC=SystemContainer() )\\ \hline 
   AddSystem() & add a new computational system\\ \hline 
-  AppendSystem(mainSystem) & append an exsiting computational system to the system container; returns the number of MainSystem in system container\\ \hline 
+  Append(mainSystem) & append an exsiting computational system to the system container; returns the number of MainSystem in system container\\ \hline 
   NumberOfSystems() & obtain number of multibody systems available in system container\\ \hline 
   GetSystem(systemNumber) & obtain multibody systems with index from system container\\ \hline 
   visualizationSettings & this structure is read/writeable and contains visualization settings, which are immediately applied to the rendering window. \tabnewline
@@ -311,7 +319,7 @@ mbs = SC.AddSystem()
 
 
 
-This is the class which defines a (multibody) system. The MainSystem shall only be created by \texttt{SC.AddSystem()}, not with \texttt{exu.MainSystem()}, as the latter one would not be linked to a SystemContainer. In some cases, you may use SC.AppendSystem(mbs). In C++, there is a MainSystem (the part which links to Python) and a System (computational part). For that reason, the name is MainSystem on the Python side, but it is often just called 'system'. For compatibility, it is recommended to denote the variable holding this system as mbs, the multibody dynamics system. It can be created, visualized and computed. Use the following functions for system manipulation.
+This is the class which defines a (multibody) system. The MainSystem shall only be created by \texttt{SC.AddSystem()}, not with \texttt{exu.MainSystem()}, as the latter one would not be linked to a SystemContainer. In some cases, you may use SC.Append(mbs). In C++, there is a MainSystem (the part which links to Python) and a System (computational part). For that reason, the name is MainSystem on the Python side, but it is often just called 'system'. For compatibility, it is recommended to denote the variable holding this system as mbs, the multibody dynamics system. It can be created, visualized and computed. Use the following functions for system manipulation.
 \pythonstyle
 \begin{lstlisting}[language=Python, firstnumber=1]
 
@@ -355,7 +363,7 @@ mbs = SC.AddSystem()
      \phantom{XXXX} return True \tabnewline
     mbs.SetPostStepUserFunction(PostStepUserFunction)}}\\ \hline 
   GetPostStepUserFunction(asDict = False) & Returns the postStepUserFunction.\\ \hline 
-  SetPostNewtonUserFunction(value) & Sets a user function PostNewtonUserFunction(mbs, t) executed after successful Newton iteration in implicit or static solvers and after step update of explicit solvers, but BEFORE PostNewton functions are called by the solver; function returns list [discontinuousError, recommendedStepSize], containing a error of the PostNewtonStep, which is compared to [solver].discontinuous.iterationTolerance. The recommendedStepSize shall be negative, if no recommendation is given, 0 in order to enforce minimum step size or a specific value to which the current step size will be reduced and the step will be repeated; use this function, e.g., to reduce step size after impact or change of data variables; set to 0 (integer) in order to erase user function.\tabnewline 
+  SetPostNewtonUserFunction(value) & Sets a user function PostNewtonUserFunction(mbs, t) executed after successful Newton iteration in implicit or static solvers and after step update of explicit solvers, but BEFORE PostNewton functions are called by the solver; function returns list [discontinuousError, recommendedStepSize], containing a error of the PostNewtonStep, which is compared to [solver].discontinuous.iterationTolerance. The recommendedStepSize shall be negative, if no recommendation is given, 0 in order to enforce minimum step size or a specific value to which the current step size will be reduced and the step will be repeated; use this function, e.g., to reduce step size after impact or change of data variables; set to 0 (integer) in order to erase user function. Similar described by Flores and Ambrosio, https://doi.org/10.1007/s11044-010-9209-8\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{def PostNewtonUserFunction(mbs, t):\tabnewline
      \phantom{XXXX} if(t>1): \tabnewline
@@ -1404,6 +1412,7 @@ gContact.SetFrictionPairings(...) #set friction pairings and adjust searchTree i
   frictionVelocityPenalty & (default=1e3) regularization factor for friction [N/(m$^2 \cdot$m/s) ];$k\_\{\mu,reg\}$, multiplied with tangential velocity to compute friciton force as long as it is smaller than $\mu$ times contact force; large values cause oscillations in friction force \\ \hline  
   excludeOverlappingTrigSphereContacts & (default=True) for consistent, closed meshes, we can exclude overlapping contact triangles (which would cause holes if mesh is overlapping and not consistent!!!) \\ \hline  
   excludeDuplicatedTrigSphereContactPoints & (default=False) run additional checks for double contacts at edges or vertices, being more accurate but can cause additional costs if many contacts \\ \hline  
+  computeContactForces & (default=False) if True, additional system vector is computed which contains all contact force and torque contributions. In order to recover forces on a single rigid body, the respective LTG-vector has to be used and forces need to be extracted from this system vector; may slow down computations.\\ \hline  
   ancfCableUseExactMethod & (default=True) if True, uses exact computation of intersection of 3rd order polynomials and contacting circles \\ \hline  
   ancfCableNumberOfContactSegments & (default=1) number of segments to be used in case that ancfCableUseExactMethod=False; maximum number of segments=3 \\ \hline  
   ancfCableMeasuringSegments & (default=20) number of segments used to approximate geometry for ANCFCable2D elements for measuring with ShortestDistanceAlongLine; with 20 segments the relative error due to approximation as compared to 10 segments usually stays below 1e-8 \\ \hline  
@@ -1440,6 +1449,7 @@ gContact.SetFrictionPairings(...) #set friction pairings and adjust searchTree i
     gContact.UpdateContacts(mbs)\tabnewline
     \#obtain active contacts of marker based sphere 42:\tabnewline
     gList = gContact.GetActiveContacts(exu.ContactTypeIndex.IndexSpheresMarkerBased, 42)}}\\ \hline 
+  GetSystemODE2RhsContactForces() & Get numpy array of system vector, containing contribution of contact forces to system ODE2 Rhs vector; contributions to single objects may be extracted by checking the according LTG-array of according objects (such as rigid bodies); the contact forces vector is computed in each contact iteration;\\ \hline 
   \_\_repr\_\_() & return the string representation of the GeneralContact, containing basic information and statistics\\ \hline 
 \end{longtable}
 \end{center}

@@ -433,7 +433,9 @@ void CObjectRigidBody::GetAccessFunctionBody(AccessFunctionType accessType, cons
 
 		if (parameters.physicsCenterOfMass == 0.)
 		{
-			value.SetScalarMatrix(3, m); //no action on rotation parameters, not needed in CSystem.cpp implementation
+			value.SetNumberOfRowsAndColumns(nDim3D, GetODE2Size());
+			value.SetAll(0.);
+			value(0, 0) = m; value(1, 1) = m; value(2, 2) = m;
 		}
 		else
 		{

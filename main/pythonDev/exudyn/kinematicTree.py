@@ -209,7 +209,7 @@ class KinematicTree33:
     #**classFunction: compute forward dynamics using composite rigid body algorithm
     #**input:
     #  q: joint space coordinates for the model at which the forward dynamics is evaluated
-    #  q\_t: joint space velocity coordinates for the model at which the forward dynamics is evaluated
+    #  q_t: joint space velocity coordinates for the model at which the forward dynamics is evaluated
     #  torques: a vector of torques applied at joint coordinates or list/array with zero length
     #  forces: forces acting on the bodies using special format
     #**output: returns acceleration vector q\_tt of joint coordinates
@@ -231,7 +231,7 @@ class KinematicTree33:
     #            contain Coriolis and gravity if given in the kinematicTree.
     #**input:
     #  q: current joint coordinates
-    #  q\_t: current joint velocities
+    #  q_t: current joint velocities
     #  externalForces: list of torque/forces in global (world) frame per joint; may be empty list, containing 6D vectors or matrices with 6D vectors in columns that are summed up for each link
     #**output: mass matrix $\Mm$ and RHS vector $\fv_{RHS}$ for equations of motion $M(q) \cdot q_{tt} + f(q,q_t,externalForces) = \tau$; RHS is $\fv_{RHS}=\tau - f(q,q_t,externalForces)$; $\tau$ can be added outside of \texttt{ComputeMassMatrixAndForceTerms}
     def ComputeMassMatrixAndForceTerms(self, q, q_t, externalForces=[]):
@@ -477,7 +477,7 @@ class KinematicTree66:
     #**classFunction: compute forward dynamics using composite rigid body algorithm
     #**input:
     #  q: joint space coordinates for the model at which the forward dynamics is evaluated
-    #  q\_t: joint space velocity coordinates for the model at which the forward dynamics is evaluated
+    #  q_t: joint space velocity coordinates for the model at which the forward dynamics is evaluated
     #  torques: a vector of torques applied at joint coordinates or list/array with zero length
     #  forces: forces acting on the bodies using special format
     #**output: returns acceleration vector q\_tt of joint coordinates
@@ -499,7 +499,7 @@ class KinematicTree66:
     #            contain Coriolis and gravity if given in the kinematicTree.
     #**input:
     #  q: current joint coordinates
-    #  q\_t: current joint velocities
+    #  q_t: current joint velocities
     #  externalForces: list of torque/forces in global (world) frame per joint; may be empty list, containing 6D vectors or matrices with 6D vectors in columns that are summed up for each link
     #**output: mass matrix $\Mm$ and RHS vector $\fv_{RHS}$ for equations of motion $M(q) \cdot q_{tt} + f(q,q_t,externalForces) = \tau$; RHS is $\fv_{RHS}=\tau - f(q,q_t,externalForces)$; $\tau$ can be added outside of \texttt{ComputeMassMatrixAndForceTerms}
     def ComputeMassMatrixAndForceTerms(self, q, q_t, externalForces=[]):

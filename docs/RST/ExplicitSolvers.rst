@@ -23,7 +23,7 @@ The \ :ref:`ODE1 <ODE1>`\  and \ :ref:`ODE2 <ODE2>`\  equations of Eq. :eq:`eq-s
    :label: eq-systemeom
 
    \dot {\mathbf{q}} &=& \vel \nonumber \\
-   \ddot \vel & = &{\mathbf{M}}^{-1} {\mathbf{f}}_\SO({\mathbf{q}}, \vel, t) \nonumber \\
+   \dot \vel & = &{\mathbf{M}}^{-1} {\mathbf{f}}_\SO({\mathbf{q}}, \vel, t) \nonumber \\
    \dot {\mathbf{y}} & = &{\mathbf{f}}_\FO({\mathbf{y}}, t) \\
 
 
@@ -77,6 +77,9 @@ and computed by explicit integration (quadrature) formulas of lower order (\ :ma
 
 
 After all vectors \ :math:`{\mathbf{g}}_i`\  have been consecutively evaluated, the step is updated by Eq. :eq:`s-stage-quadrature`\ .
+
+
+For some exemplary tableaus of explicit and impliciti Runge-Kutta methods, see theDoc.pdf!
 
 
 
@@ -147,7 +150,7 @@ Basically, the integration formulas, see Section :ref:`sec-rungekuttamethod`\  a
 Lie group integration is currently only available for \ ``NodeRigidBodyRotVecLG``\  used in \ ``ObjectRigidBody``\  (3D rigid body). 
 \ ``FFRFreducedOrder``\  will be extended to such nodes in the near future.
 To get Lie group integrators running with rigid body models, all 3D node types need to be set to \ ``NodeRigidBodyRotVecLG``\  and 
-set \ ``explicitIntegration.useLieGroupIntegration == True``\ .
+set \ ``explicitIntegration.useLieGroupIntegration = True``\ .
 
 
 Constraints with explicit solvers

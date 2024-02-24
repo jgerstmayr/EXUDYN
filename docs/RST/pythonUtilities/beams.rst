@@ -133,7 +133,7 @@ Function: GenerateStraightBeam
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `pendulumGeomExactBeam2Dsimple.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/pendulumGeomExactBeam2Dsimple.py>`_\  (Ex)
+    \ `beamTutorial.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beamTutorial.py>`_\  (Ex), \ `pendulumGeomExactBeam2Dsimple.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/pendulumGeomExactBeam2Dsimple.py>`_\  (Ex)
 
 
 

@@ -107,13 +107,7 @@ void CSensorSuperElement::GetSensorValues(const CSystemData& cSystemData, Vector
 }
 
 //! main function to generate sensor output values
-void CSensorKinematicTree::GetSensorValues(const CSystemData& cSystemData, Vector& values, ConfigurationType configuration) const
-{
-	const CObjectKinematicTree* cObject = (const CObjectKinematicTree*)(cSystemData.GetCObjects()[parameters.objectNumber]);
-	cObject->GetOutputVariableKinematicTree(parameters.outputVariableType, parameters.localPosition, 
-		parameters.linkNumber, configuration, values);
-}
-
+//void CSensorKinematicTree::GetSensorValues(...) => moved to CObjectKinematicTree for compilation with minimal files
 
 //! main function to generate sensor output values
 void CSensorLoad::GetSensorValues(const CSystemData& cSystemData, Vector& values, ConfigurationType configuration) const

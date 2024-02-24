@@ -83,6 +83,10 @@ public:
 	bool GetExcludeDuplicatedTrigSphereContactPoints() const { return settings.excludeDuplicatedTrigSphereContactPoints; }
 	void SetExcludeDuplicatedTrigSphereContactPoints(bool value) { settings.excludeDuplicatedTrigSphereContactPoints = value; }
 
+	//!< compute contribution of contact forces to systemODE2Rhs
+	bool GetComputeContactForces() const { return settings.computeContactForces; }
+	void SetComputeContactForces(bool value) { settings.computeContactForces = value; }
+
 	//! if true, uses exact computation of intersection of 3rd order polynomials and contacting circles
 	bool GetAncfCableUseExactMethod() const { return settings.ancfCableUseExactMethod; }
 	void SetAncfCableUseExactMethod(bool value) { settings.ancfCableUseExactMethod = value; }
@@ -312,6 +316,12 @@ public:
 
         return EPyUtils::ArrayIndex2NumPy(*activeContacts);
     }
+
+	//! get items in box; returns false if no items in box, otherwise dictionaries with local indices
+	py::array_t<Real> PyGetSystemODE2RhsContactForces()
+	{
+		return EPyUtils::Vector2NumPy(systemODE2RhsContactForces);
+	}
 
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     //!convert internal data of GeneralContact to 

@@ -26,6 +26,7 @@ from math import exp
 #  regVel: $v_{reg}$,  small regularization velocity in which the friction is linear around zero velocity (e.g., to get Newton converged)
 #  expVel: $v_{exp}$,  velocity (relative to regVel, at which the muStaticOffset decreases exponentially, at vel=expVel, the factor to muStaticOffset is exp(-1) = 36.8\%)
 #**output: returns velocity dependent friction coefficient (if muDynamic and muStaticOffset are friction coefficients) or friction force (if muDynamic and muStaticOffset are on force level)
+#**notes: see Isermann (2008) and Armstrong-Helouvry (1991)
 def StribeckFunction(vel, muDynamic, muStaticOffset, muViscous=0, expVel=1e-3, regVel=1e-3):
     if abs(vel) <= regVel and regVel != 0:
         return (muDynamic + muStaticOffset)*vel/regVel

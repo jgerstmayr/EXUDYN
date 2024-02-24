@@ -46,8 +46,8 @@ undefLabelList = [
     ##('GraphicsData','sec-graphicsdata'),
     #('Solvers','sec-solvers'),
     #('Items Reference Manual','sec-item-reference-manual'),
-    ('Solvers: Static','sec-solver-solverstatic'),
-    ('Solvers: Dynamic','sec-solver-solverdynamic'),
+    #('Solvers: Static','sec-solver-solverstatic'),
+    #('Solvers: Dynamic','sec-solver-solverdynamic'),
     #('Solvers: Eigenvalues','sec-solver-computeode2eigenvalues'),
     ('Theory: Component Mode Synthesis','sec-theory-cms'),
     #'sec-mainsolverstatic',
@@ -593,6 +593,7 @@ abbrvDict={
     'CMS':'component mode synthesis',
     'coeffs':'coefficients',
     'COM':'center of mass',
+    'DOF':'degree of freedom',
     'EOM':'equations of motion',
     'EP':'Euler parameters',
     'FFRF':'floating frame of reference formulation',
@@ -613,7 +614,7 @@ abbrvDict={
     'Rxyz':'rotation parameterization: consecutive rotations around x, y and z-axis (Tait-Bryan)',
     'STL':'STereoLithography',
     'T66':'Pl\\"ucker transformation',
-    'trig':'triangle (in graphics)',
+    'trig':'triangle',
 }
 
 abbrvTex = ''

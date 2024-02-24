@@ -1674,7 +1674,7 @@ void GlfwRenderer::InitCreateWindow()
 
 		//+++++++++++++++++++++++++++++++++
 		//joystick
-		state->joystickAvailable = invalidIndex; //this causes to search for new joystick and, if fourn, initialize stateMachine!
+		state->joystickAvailable = invalidIndex; //this causes to search for new joystick and, if found, initialize stateMachine!
 		ResetStateMachine();
 
 #ifdef __EXUDYN_USE_OPENVR

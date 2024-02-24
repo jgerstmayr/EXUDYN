@@ -50,6 +50,8 @@ Structure to define general and highly efficient contact functionality in multib
   | (default=True) for consistent, closed meshes, we can exclude overlapping contact triangles (which would cause holes if mesh is overlapping and not consistent!!!) 
 * | **excludeDuplicatedTrigSphereContactPoints**:
   | (default=False) run additional checks for double contacts at edges or vertices, being more accurate but can cause additional costs if many contacts 
+* | **computeContactForces**:
+  | (default=False) if True, additional system vector is computed which contains all contact force and torque contributions. In order to recover forces on a single rigid body, the respective LTG-vector has to be used and forces need to be extracted from this system vector; may slow down computations.
 * | **ancfCableUseExactMethod**:
   | (default=True) if True, uses exact computation of intersection of 3rd order polynomials and contacting circles 
 * | **ancfCableNumberOfContactSegments**:
@@ -128,6 +130,8 @@ Structure to define general and highly efficient contact functionality in multib
      #obtain active contacts of marker based sphere 42:
      gList = gContact.GetActiveContacts(exu.ContactTypeIndex.IndexSpheresMarkerBased, 42)
 
+* | **GetSystemODE2RhsContactForces**\ (): 
+  | Get numpy array of system vector, containing contribution of contact forces to system ODE2 Rhs vector; contributions to single objects may be extracted by checking the according LTG-array of according objects (such as rigid bodies); the contact forces vector is computed in each contact iteration;
 * | **\_\_repr\_\_()**\ : 
   | return the string representation of the GeneralContact, containing basic information and statistics
 

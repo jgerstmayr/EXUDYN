@@ -65,4 +65,71 @@ public:
 
 };
 
+
+//! new way of registrating objects
+template <class TItem>
+class ClassFactoryItemsSystemData {
+public:
+	bool RegisterClass(const std::string& className, std::function<TItem* (CSystemData*)> creator) {
+		// Avoid duplicate registration
+		if (creators.find(className) != creators.end())
+		{
+			CHECKandTHROWstring((STDstring("ClassFactoryObjects: received duplicate: ") + className).c_str());
+			return false;
+		}
+		creators[className] = creator;
+		return true;
+	}
+
+	TItem* CreateInstance(const std::string& className, CSystemData* cSystemData) {
+		auto it = creators.find(className);
+		if (it != creators.end()) {
+			return it->second(cSystemData); // Call the create function
+		}
+		CHECKandTHROWstring((STDstring("ClassFactoryItemsSystemData: CreateInstance received unkown object: ") + className).c_str());
+		return nullptr;
+	}
+
+	static ClassFactoryItemsSystemData& Get() {
+		static ClassFactoryItemsSystemData<TItem> instance;
+		return instance;
+	}
+
+private:
+	std::map<std::string, std::function<TItem*(CSystemData*)>> creators;
+};
+
+//! registration of any other item
+template <class TItem>
+class ClassFactoryItem {
+public:
+	bool RegisterClass(const std::string& className, std::function<TItem*()> creator) {
+		// Avoid duplicate registration
+		if (creators.find(className) != creators.end())
+		{
+			CHECKandTHROWstring((STDstring("ClassFactoryItem: received duplicate: ") + className).c_str());
+			return false;
+		}
+		creators[className] = creator;
+		return true;
+	}
+
+	TItem* CreateInstance(const std::string& className) {
+		auto it = creators.find(className);
+		if (it != creators.end()) {
+			return it->second(); // Call the create function
+		}
+		CHECKandTHROWstring((STDstring("ClassFactoryItem: CreateInstance received unkown object: ") + className).c_str());
+		return nullptr;
+	}
+
+	static ClassFactoryItem& Get() {
+		static ClassFactoryItem<TItem> instance;
+		return instance;
+	}
+
+private:
+	std::map<std::string, std::function<TItem*()>> creators;
+};
+
 #endif

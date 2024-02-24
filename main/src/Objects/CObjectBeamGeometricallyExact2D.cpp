@@ -384,7 +384,7 @@ Vector3D CObjectBeamGeometricallyExact2D::GetVelocity(const Vector3D& localPosit
 //! return configuration dependent rotation matrix of node; returns always a 3D Matrix, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect
 Matrix3D CObjectBeamGeometricallyExact2D::GetRotationMatrix(const Vector3D& localPosition, ConfigurationType configuration) const
 {
-	Real x = localPosition[0]; //only x-coordinate
+	//Real x = localPosition[0]; //only x-coordinate
 
 	//Vector2D SV = ComputeShapeFunctions(x);
 	//Vector3D u = MapCoordinates(SV, ((CNodeODE2*)GetCNode(0))->GetCoordinateVector(configuration), ((CNodeODE2*)GetCNode(1))->GetCoordinateVector(configuration));

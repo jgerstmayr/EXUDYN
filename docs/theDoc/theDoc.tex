@@ -38,7 +38,10 @@
 %\input{docincludes}
 %\usepackage[nohyperlinks]{acronym} %used for abbreviations, does not work with hyperref anymore!
 \usepackage{acronym} %used for abbreviations, does not work with hyperref anymore!
+\usepackage{float} %removes warnings combined with tikzpicture and hyperref
 \usepackage{hyperref} %for pdf bookmarks, \url, \href...; must be included before docincludes
+
+\usepackage{xspace} %preseve spaces after Exudyn (\codeName)
 
 \usepackage{docincludes} %exudyn definitions
 \usepackage{xcolor}
@@ -65,6 +68,26 @@
 %environment for flowcharts:
 %\usepackage[latin1]{inputenc}
 \usepackage{tikz}
+%++++++++++++++++++++++++++++++++++
+%for drawings of vectors
+\usepackage{tikz-3dplot} %for coordinate systems
+\tdplotsetmaincoords{70}{110}
+\newcommand{\angA}{60}
+\newcommand{\angB}{30}
+\newcommand{\angC}{10}
+\tikzset{>=latex}
+
+\newcommand{\sphToCart}[3]
+      {
+        \def\rpar{#1}
+        \def\thetapar{#2}
+        \def\phipar{#3}
+
+        \pgfmathsetmacro{\x}{\rpar*sin(\phipar)*cos(\thetapar)}
+        \pgfmathsetmacro{\y}{\rpar*sin(\phipar)*sin(\thetapar)}
+        \pgfmathsetmacro{\z}{\rpar*cos(\phipar)}
+      }
+%++++++++++++++++++++++++++++++++++
 \usetikzlibrary{shapes,arrows}
 % Define block styles
 \tikzstyle{decision} = [diamond, aspect=2, draw, fill=orange!30, 
@@ -229,7 +252,7 @@ columns=flexible, %do not add Phantom spaces at "'"
 \newcommand{\diffmOIt}[1]{\frac{\partial #1}{\partial \dot \qv_{m0,m1}}}
 
 %solver:
-\newcommand{\avu}{\mathbf{\ddot q}} %unknown acceleration
+\newcommand{\acc}{\mathbf{\ddot q}} %unknown acceleration
 \newcommand{\GA}{{G\alpha}} %abbreviation to mark equations, residuals, etc.
 \newcommand{\aalg}{\mathbf{a}} 
 \newcommand{\vel}{\mathbf{v}} %use this for transformation of \hac{ODE2} into first order equations
@@ -284,6 +307,7 @@ columns=flexible, %do not add Phantom spaces at "'"
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \begin{document}
+%\hypersetup{pageanchor=false}
 \pagenumbering{roman} 
 \setcounter{page}{0}
 \pagestyle{empty}
@@ -321,6 +345,8 @@ Johannes Gerstmayr\vspace{1cm}
 
 %add additional entry for bookmarks in pdfs
 \clearpage\phantomsection\pdfbookmark{\contentsname}{toc} 
+
+%\hypersetup{pageanchor=true}
 %\setcounter{tocdepth}{3} %to add \mysubsubsubsection names
 \tableofcontents
 
@@ -336,34 +362,6 @@ This section shows typical abbreviations. For further symbols in notation, see S
 \begin{acronym}[coeffs] %put here longest acronym for list of acronyms
 %unused: acro{ODE2t}[ODE2\_t]{velocities (or velocity terms) for second order ordinary differential equations}
 \input{abbreviations.tex}
-% \acro{2D}{two dimensions or planar}
-% \acro{3D}{three dimensions or spatial}
-% \acro{abs}{absolute (e.g., absolute error), absolute value}
-% \acro{AE}{algebraic equations}
-% \acro{CMS}{component mode synthesis}
-% \acro{coeffs}{coefficients}
-% \acro{COM}{center of mass}
-% \acro{EOM}{equations of motion}
-% \acro{EP}{Euler parameters}
-% \acro{FFRF}{floating frame of reference formulation}
-% \acro{HT}{homogeneous transformation}
-% \acro{LHS}{Left-Hand-Side (of equation)}
-% \acro{LTG}{local-to-global}% 
-% \acro{mbs}{multibody system}
-% \acro{min}{minimum}
-% \acro{max}{maximum}
-% \acro{ODE}{ordinary differential equation}
-% \acro{ODE1}{first order ordinary differential equations}
-% \acro{ODE2}{second order ordinary differential equations}
-% \acro{pos}{position}
-% \acro{quad}{quadrangle, polygon with 4 vertices}
-% \acro{rel}{relative (e.g., relative error)}
-% \acro{RHS}{Right-Hand-Side (of equation)}
-% \acro{Rot}{rotation}
-% \acro{Rxyz}{rotation parameterization: consecutive rotations around x, y and z-axis (Tait-Bryan)}
-% \acro{STL}{STereoLithography}
-% \acro{T66}{Pl\"ucker transformation}
-% \acro{trig}{triangle (in graphics)}
 \end{acronym}
 %use as: \ac{ODE2} %singular, or \acp for plural, \acf for repeated full name.
 

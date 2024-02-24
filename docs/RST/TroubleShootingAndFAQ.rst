@@ -344,7 +344,7 @@ FAQ
 
   |  →  The pre-checks, which are performed to enable a crash-free simulation are insufficient for your model
   |  →  As a first try, \ **restart the IPython console**\  in order to get all error messages, which may be blocked due to a previous run of Exudyn.
-  |  →  Very likely, you are using Python user functions inside Exudyn : They lead to an internal Python error, which is not always catched by Exudyn ; e.g., a load user function UFload(mbs,~t,~load), which tries to access component load[3] of a load vector with 3 components will fail internally;
+  |  →  Very likely, you are using Python user functions inside Exudyn: They lead to an internal Python error, which is not always catched by Exudyn; e.g., a load user function UFload(mbs,~t,~load), which tries to access component load[3] of a load vector with 3 components will fail internally;
   |  →  Use the print(...) command in Python at many places to find a possible error in user functions (e.g., put \ ``print("Start user function XYZ")``\  at the beginning of every user function; test user functions from iPython console
   |  →  It is also possible, that you are using inconsistent data, which leads to the crash. In that case, you should try to change your model: omit parts and find out which part is causing your error
   |  →  see also \ **I do not understand the Python errors -- how can I find the cause?**\ 

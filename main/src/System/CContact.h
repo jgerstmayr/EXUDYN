@@ -236,6 +236,8 @@ public:
 	bool excludeOverlappingTrigSphereContacts;		//!< for consistent, closed meshes, we can exclude duplicate contacts
 	bool excludeDuplicatedTrigSphereContactPoints;  //!< run additional checks for double contacts at edges or vertices, being more accurate but can cause additional costs if many contacts
 
+	bool computeContactForces;						//!< if true, contribution of contact forces to system vector is evaluated
+
 	Real tolEquivalentPoints;						//!< tolerance distance of projected points that are considered to be equivalent; 
 	Real tolEquivalentPointsSquared;				//!< squared tolerance distance of projected points, considered to be equivalent;
 
@@ -262,6 +264,9 @@ public:
 		minRelDistanceSpheresTriangles = 1e-10;
 		excludeOverlappingTrigSphereContacts = true;
 		excludeDuplicatedTrigSphereContactPoints = false; //cheaper method using reduction of stiffness preferred
+
+		computeContactForces = false;
+
 		tolEquivalentPoints = 1e-13;
 		tolEquivalentPointsSquared = EXUstd::Square(tolEquivalentPoints);
 
@@ -357,7 +362,9 @@ protected:
 	//
 
     //used by functions called directly via Python interface
-    TemporaryComputationDataArray externFunctionsTempArray; //will be moved to CSystem or Solver
+    TemporaryComputationDataArray externFunctionsTempArray;			//!< will be moved to CSystem or Solver
+
+	ResizableVector systemODE2RhsContactForces;						//!< vector contains contribution of contact forces in system ODE2Rhs vector after contact computation
 
 public:
 	GeneralContact()

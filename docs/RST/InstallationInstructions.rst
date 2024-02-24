@@ -215,7 +215,7 @@ If you would like to compile from source, just use a bash terminal on your Mac, 
 +  remove the \ ``build``\  directory if you would like to re-compile without changes
 +  to perform compilation from source, write:\ (the \ ``--parallel``\  option performs parallel compilation on multithreaded CPUs and can speedup by 2x - 8x)
 +  \ ``python setup.py bdist_wheel --parallel``\ 
-+  which takes 75 seconds on Apple M1 in parallel mode, otherwise 5 minutes. To install Exudyn , run
++  which takes 75 seconds on Apple M1 in parallel mode, otherwise 5 minutes. To install Exudyn, run
    \ ``python setup.py install``\ 
    \ :math:`\ra`\  this will only install, but not re-compile. Otherwise, just use pip install from the created wheel in the dist folder
    \ **NOTE**\  that conda environments are highly recommended
@@ -349,8 +349,8 @@ You can also create a Ubuntu wheel which can be easily installed on the same mac
 .. _sec-install-installinstructions-uninstall:
 
 
-Uninstall Exudyn 
------------------
+Uninstall Exudyn
+----------------
 
 
 To uninstall exudyn under Windows, run (may require admin rights):

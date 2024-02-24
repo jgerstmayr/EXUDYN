@@ -18,7 +18,7 @@ A large number of examples, some of them quite advanced, can be found in:
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \mysubsection{Mass-Spring-Damper tutorial}
-The python source code of the first tutorial can be found in the file:
+The Python source code of the first tutorial can be found in the file:
 \bi
   \item[] \texttt{main/pythonDev/Examples/springDamperTutorial.py}
 \ei
@@ -212,7 +212,7 @@ The following code generates a reference (exact) solution for our example:
 \end{lstlisting}
 %
 Now we can load our results from the default solution file \texttt{coordinatesSolution.txt}, which is in the same
-directory as your python tutorial file. 
+directory as your Python tutorial file. 
 \mybold{Note} that the visualization of results can be simplified considerably using the \texttt{PlotSensor(...)} utility function as shown in the \mybold{Rigid body and joints tutorial}!
 
 For reading the file containing commented lines (this does not work in binary mode!), we use a numpy feature and finally plot the displacement of coordinate 0 or our mass point\footnote{\texttt{data[:,0]} contains the simulation time, \texttt{data[:,1]} contains displacement of (global) coordinate 0, \texttt{data[:,2]} contains displacement of (global) coordinate 1, ...)}:
@@ -238,23 +238,20 @@ In order to get a nice plot within Spyder, the following options can be used\foo
   plt.show() 
 \end{lstlisting}
 %
-The matplotlib output should look like this:
-\ignoreRST{\begin{center}
-  \includegraphics[height=6cm]{../demo/screenshots/plotSpringDamper}
-\end{center}}
-\onlyRST{
-
-.. image:: docs/theDoc/figures/plotSpringDamper.png
-   :width: 400
-
-}
+The matplotlib output should look as shown in \fig{fig_tutorial_springDamper}.
 %
-%\vspace{24pt}
-%Further examples can be found in your copy of exudyn: 
-%\bi
-  %\item[] \texttt{main/pythonDev/Examples}
-  %\item[] \texttt{main/pythonDev/TestModels}
-%\ei
+\LatexRSTfigure{figures/plotSpringDamper}{fig_tutorial_springDamper}{12cm}{400}{Output of spring-damper tutorial.}
+%
+%
+%\ignoreRST{\begin{center}
+  %\includegraphics[height=6cm]{../demo/screenshots/plotSpringDamper}
+%\end{center}}
+%\onlyRST{
+%
+%.. image:: docs/theDoc/figures/plotSpringDamper.png
+   %:width: 400
+%
+%}
 
 
 
@@ -263,7 +260,7 @@ The matplotlib output should look like this:
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \newpage
 \mysubsectionlabel{Rigid body and joints tutorial}{sec:tutorial:rigidBodyJoints}
-The python source code of the first tutorial, based on the simple description of revolute joints, can be found in the file:
+The Python source code of the first tutorial, based on the simple description of revolute joints, can be found in the file:
 \bi
   \item[] \texttt{main/pythonDev/Examples/rigidBodyTutorial3.py}
 \ei
@@ -272,20 +269,24 @@ For alternative approaches, see
   \item[] \texttt{main/pythonDev/Examples/rigidBodyTutorial3withMarkers.py}
   \item[] \texttt{main/pythonDev/Examples/rigidBodyTutorial2.py}
 \ei
-This tutorial will set up a multibody system containing a ground, two rigid bodies and two revolute joints driven by gravity, compare a 3D view of the example in \ignoreRST{\fig{fig_RigidBodyTutorialView}.} \onlyRST{the figure above.}
-\ignoreRST{\begin{figure}[tbph]
-  \begin{center}
-    \includegraphics[width=0.9\textwidth]{figures/TutorialRigidBody1desc}
-  \end{center}
-  \caption{Render view of rigid body tutorial, showing objects, nodes (N0, N1), and loads.}
-  \label{fig_RigidBodyTutorialView}
-\end{figure}}
-\onlyRST{
-
-.. image:: docs/theDoc/figures/TutorialRigidBody1desc.png
-   :width: 400
-
-}
+This tutorial will set up a multibody system containing a ground, two rigid bodies and two revolute joints driven by gravity, compare a 3D view of the example in \fig{fig_RigidBodyTutorialView}.
+%
+\LatexRSTfigure{figures/TutorialRigidBody1desc}{fig_RigidBodyTutorialView}{14cm}{400}{Render view of rigid body tutorial, showing objects, nodes (N0, N1), and loads.}
+%
+%\ignoreRST{\fig{fig_RigidBodyTutorialView}.} \onlyRST{the figure above.}
+%\ignoreRST{\begin{figure}[tbph]
+  %\begin{center}
+    %\includegraphics[width=0.9\textwidth]{figures/TutorialRigidBody1desc}
+  %\end{center}
+  %\caption{Render view of rigid body tutorial, showing objects, nodes (N0, N1), and loads.}
+  %\label{fig_RigidBodyTutorialView}
+%\end{figure}}
+%\onlyRST{
+%
+%.. image:: docs/theDoc/figures/TutorialRigidBody1desc.png
+%   :width: 400
+%
+%}
 \horizontalRuler\\
 \noindent We first import the exudyn library and the interface for all nodes, objects, markers, loads and sensors:
 \pythonstyle\begin{lstlisting}
@@ -528,22 +529,26 @@ which clearly shows the 5 redundant constraints, which will lead to a solver fai
 \pythonstyle\begin{lstlisting}
   mbs.DrawSystemGraph(useItemTypes=True) #draw nice graph of system
 \end{lstlisting}
-For the output see \ignoreRST{\fig{fig_DrawSystemGraphExample}}\onlyRST{the figure below}. Note that obviously, markers are always needed to connect objects (or nodes) as well as loads. We can also see, that 2 markers MarkerBodyRigid1 and MarkerBodyRigid2 are unused, which is no further problem for the model and also does not require additional computational resources (except for some bytes of memory). Having isolated nodes or joints that are not connected (or having too many connections) may indicate that you did something wrong in setting up your model.
+%For the output see \ignoreRST{\fig{fig_DrawSystemGraphExample}}\onlyRST{the figure below}. 
+For the output see \fig{fig_DrawSystemGraphExample}. 
+Note that obviously, markers are always needed to connect objects (or nodes) as well as loads. We can also see, that 2 markers MarkerBodyRigid1 and MarkerBodyRigid2 are unused, which is no further problem for the model and also does not require additional computational resources (except for some bytes of memory). Having isolated nodes or joints that are not connected (or having too many connections) may indicate that you did something wrong in setting up your model.
 Furthermore, it can be seen that the function \texttt{CreateRigidBody} added a body \texttt{ObjectRigidBody}, a node \texttt{NodeRigidBodyEP}, a \texttt{LoadMassProportional} for gravity load with a \texttt{MarkerBodyMass}, and the function \texttt{CreateRevoluteJoint} created two \texttt{MarkerBodyRigid} and a \texttt{ObjectJointRevoluteZ} which represents a revolute joint about a Z-axis in the joint coordinate system. For further information, consult the respective pages in the Items reference manual.
 %
-\ignoreRST{\begin{figure}[tbph]
-  \begin{center}
-    \includegraphics[width=0.9\textwidth]{figures/DrawSystemGraphExample}
-  \end{center}
-  \caption{System graph for rigid body tutorial (with option 3 for the first revolute joint). Numbers are always related to the node number, object number, etc.; note that colors are used to distinguish nodes, objects, markers, loads and sensors}
-  \label{fig_DrawSystemGraphExample}
-\end{figure}}
-\onlyRST{
-
-.. image:: docs/theDoc/figures/DrawSystemGraphExample.png
-   :width: 600
-
-}
+\LatexRSTfigure{figures/DrawSystemGraphExample}{fig_DrawSystemGraphExample}{14cm}{600}{System graph for rigid body tutorial (with option 3 for the first revolute joint). Numbers are always related to the node number, object number, etc.; note that colors are used to distinguish nodes, objects, markers, loads and sensors}
+%
+%\ignoreRST{\begin{figure}[tbph]
+  %\begin{center}
+    %\includegraphics[width=0.9\textwidth]{figures/DrawSystemGraphExample}
+  %\end{center}
+  %\caption{System graph for rigid body tutorial (with option 3 for the first revolute joint). Numbers are always related to the node number, object number, etc.; note that colors are used to distinguish nodes, objects, markers, loads and sensors}
+  %\label{fig_DrawSystemGraphExample}
+%\end{figure}}
+%\onlyRST{
+%
+%.. image:: docs/theDoc/figures/DrawSystemGraphExample.png
+   %:width: 600
+%
+%}
 
 \horizontalRuler\\
 \noindent Before starting our simulation, we should adjust the solver parameters, especially the end time and the step size (no automatic step size for implicit solvers available!):
@@ -627,5 +632,170 @@ If we do not stop the renderer (\texttt{StopRenderer()}), it will stay open for 
 \noindent \mybold{Congratulations}! You completed the rigid body tutorial, which gives you the ability to model multibody systems. Note that much more complicated models are possible, including feedback control or flexible bodies, see the Examples!
 
 
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\mysubsection{Flexible beams tutorial}
+This tutorial briefly introduces two simple planar beams and how to work with them with utility functions.
+The python source code of the beam tutorial can be found at:
+\bi
+  \item[] \texttt{main/pythonDev/Examples/beamTutorial.py}
+\ei
+The tutorial uses the GeometricallyExactBeam2D, which is a shear deformable Reissner-Timoshenko beam, and a thin cable ANCFCable2D, which represents a large deformation Bernoulli-Euler beam.
 
+\noindent The model includes two highly flexible planar with length 2m, height 0.005m, width 0.01m, 
+Young's modulus 1e9N/m$^2$ and density 2000kg/m$^3$.
+The shear deformable beam is rigidly attached to ground and the cable is rigidly attached to a moving ground.
+
+\noindent We first import necessary libraries and set up a mbs. Note that utilities also include pi, sin, cos and sqrt.
+\pythonstyle\begin{lstlisting}
+  import exudyn as exu
+  from exudyn.utilities import *
+  import numpy as np
+
+  SC = exu.SystemContainer()
+  mbs = SC.AddSystem()
+\end{lstlisting}
+
+\noindent We define a set of beam parameters, discretization and geometry for both beam models.
+\pythonstyle\begin{lstlisting}
+  numberOfElements = 16
+  L = 2                     # length of pendulum 
+  E=2e11                    # steel
+  rho=7800                  # elastomer
+  h=0.005                   # height of rectangular beam element in m
+  b=0.01                    # width of rectangular beam element in m
+  A=b*h                     # cross sectional area of beam element in m^2
+  I=b*h**3/12               # second moment of area of beam element in m^4
+  nu = 0.3                  # Poisson's ratio
+      
+  EI = E*I
+  EA = E*A
+  rhoA = rho*A
+  rhoI = rho*I
+  ks = 10*(1+nu)/(12+11*nu) # shear correction factor
+  G = E/(2*(1+nu))          # shear modulus
+  GA = ks*G*A               # shear stiffness of beam
+
+  g = [0,-9.81,0]           # gravity vector
+
+  positionOfNode0 = [0,0,0] # 3D vector
+  positionOfNode1 = [L,0,0] # 3D vector
+\end{lstlisting}
+
+\noindent Build geometrically exact 2D beam template (Timoshenko-Reissner), which includes all parameters
+In order to create beams, we usually need to create 2D rigid body nodes, 
+create beam elements, add constraints and loads.
+
+\noindent However, there is a utility function \texttt{GenerateStraightBeam(...)}, 
+which conveniently does this for straight beams, including discretization, constraints and gravity.
+First, we create a beam template, which includes all beam parameters (this could also be another beam type):
+\pythonstyle\begin{lstlisting}
+  beamTemplate = Beam2D(nodeNumbers = [-1,-1], #added later
+                        physicsMassPerLength=rhoA,
+                        physicsCrossSectionInertia=rhoI,
+                        physicsBendingStiffness=EI,
+                        physicsAxialStiffness=EA,
+                        physicsShearStiffness=GA,
+                        physicsBendingDamping=0.02*EI,
+                        visualization=VObjectBeamGeometricallyExact2D(drawHeight = h))
+\end{lstlisting}
+
+\noindent Now we use this template and call \texttt{GenerateStraightBeam}, which takes the nodal positions,
+calculates according beam element lengths from discretization and could add constraints,
+if \texttt{fixedConstraintsNode0} or \texttt{fixedConstraintsNode1} are not \texttt{None}.
+\pythonstyle\begin{lstlisting}
+  beamData = GenerateStraightBeam(mbs, positionOfNode0, positionOfNode1, 
+                                  numberOfElements, beamTemplate, gravity= g, 
+                                  fixedConstraintsNode0=[1,1,1], 
+                                  fixedConstraintsNode1=None)
+\end{lstlisting}
+
+\noindent We perform the same operations for ANCF cable elemente (Bernoulli-Euler),
+but in this case, we do not add constraints:
+\pythonstyle\begin{lstlisting}
+  beamTemplate = Cable2D(nodeNumbers = [-1,-1], #added later
+                         physicsMassPerLength=rhoA,
+                         physicsBendingStiffness=EI,
+                         physicsAxialStiffness=EA,
+                         physicsBendingDamping=0.02*EI,
+                         visualization=VCable2D(drawHeight = h))
+
+  cableData = GenerateStraightBeam(mbs, positionOfNode0, positionOfNode1, 
+                                   numberOfElements, beamTemplate, gravity= g, 
+                                   fixedConstraintsNode0=None, 
+                                   fixedConstraintsNode1=None)
+\end{lstlisting}
+
+\noindent Now, we create a ground object and markers to attach cable with generic joint
+\pythonstyle\begin{lstlisting}
+  oGround = mbs.CreateGround(referencePosition=[0,0,0])
+  mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
+
+  mCable = mbs.AddMarker(MarkerNodeRigid(nodeNumber=cableData[0][0]))
+\end{lstlisting}
+
+\noindent As we like to move the cable relative to ground, we employ a simple 
+user function which prescribes relative rotation and (corotated) translation in the joint:
+\pythonstyle\begin{lstlisting}
+  def UFoffset(mbs, t, itemNumber, offsetUserFunctionParameters):
+      x = SmoothStep(t, 2, 4, 0, 0.5)   #translate in local joint coordinates
+      phi = SmoothStep(t, 5, 10, 0, pi) #rotates frame of mGround
+      return [x, 0,0,0,0,phi]
+
+\end{lstlisting}
+
+\noindent Finally, we add the rigid joint (2D displacements and rotation around Z fixed) as GenericJoint.
+Note that for 2D objects, we may only fix $X$- and $Y$-translations, as well as the $Z$-rotation
+\pythonstyle\begin{lstlisting}
+  mbs.AddObject(GenericJoint(markerNumbers=[mGround, mCable],
+                             constrainedAxes=[1,1,0, 0,0,1],
+                             offsetUserFunction=UFoffset,
+                             visualization=VGenericJoint(axesRadius=0.01,
+                                                         axesLength=0.02)))
+\end{lstlisting}
+
+\noindent As in the previous example, we just need to assemble and set up simulation parameters:
+\pythonstyle\begin{lstlisting}
+  mbs.Assemble()
+
+  simulationSettings = exu.SimulationSettings()
+      
+  tEnd = 10
+  stepSize = 0.005
+  simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
+  simulationSettings.timeIntegration.endTime = tEnd
+  simulationSettings.timeIntegration.verboseMode = 1
+  simulationSettings.solutionSettings.solutionWritePeriod = 0.005
+  simulationSettings.solutionSettings.writeSolutionToFile = True
+
+  simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+  simulationSettings.timeIntegration.newton.useModifiedNewton = True #for faster simulation
+
+  ## add some visualization settings
+  SC.visualizationSettings.nodes.defaultSize = 0.01
+  SC.visualizationSettings.nodes.drawNodesAsPoint = False #show beam nodes
+  SC.visualizationSettings.bodies.beams.crossSectionFilled = True
+\end{lstlisting}
+
+\noindent Now start the solver with visualization and run the solution viewer afterwards,
+because simulation may be faster than you can follow:
+\pythonstyle\begin{lstlisting}
+  exu.StartRenderer()
+  mbs.SolveDynamic(simulationSettings)
+  exu.StopRenderer()
+
+  ## visualize computed solution:
+  mbs.SolutionViewer()
+\end{lstlisting}
+
+\noindent The visualization window for the solution drawn at 6.5s is shown in \fig{fig_tutorial_beams}.
+%
+\LatexRSTfigure{figures/TutorialBeams}{fig_tutorial_beams}{15cm}{500}{Render window showing the deformed state of the two beams at 6.5s. The lower beam is fixed at the left end, while the upper beam's support is translated and rotated.}
+%
+
+\noindent This example should give you a good starting point to create beam models.
+See further examples, and more advanced functions, e.g., to create curved beam or reeving systems.
+There are also a sliding joint as well as axially moving beams and contact between beams and sheaves.
+
+\noindent 3D beams are still under development and include less functionality. In case, send a request at the GitHub discussion or issues.
 

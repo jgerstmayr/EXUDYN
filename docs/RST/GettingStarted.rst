@@ -25,7 +25,7 @@ It seemed that the previous code HOTINT reached limits of further (efficient) de
 Exudyn is designed to easily set up complex multibody models, consisting of rigid and flexible bodies with joints, loads and other components. It shall enable automatized model setup and parameter variations, which are often necessary for system design but also for analysis of technical problems. The broad usability of Python allows to couple a multibody simulation with environments such as optimization, statistics, data analysis, machine learning and others.
 
 The multibody formulation is mainly based on redundant coordinates. This means that computational objects (rigid bodies, flexible bodies, ...) are added as independent bodies to the system. Hereafter, connectors (e.g., springs or constraints) are used to interconnect the bodies. The connectors are using Markers on the bodies as interfaces, in order to transfer forces and displacements.
-For details on the interaction of nodes, objects, markers and loads see Section :ref:`sec-overview-items`\ . For a non-redundant formulation, see \ ``ObjectKinematicTree``\  -- this allows to create tree-structures with minimal coordinates in Exudyn .
+For details on the interaction of nodes, objects, markers and loads see Section :ref:`sec-overview-items`\ . For a non-redundant formulation, see \ ``ObjectKinematicTree``\  -- this allows to create tree-structures with minimal coordinates in Exudyn.
 
 There are several journal papers of the developers which were using Exudyn (list may be incomplete):
 
@@ -61,15 +61,17 @@ The following people have contributed to Python and C++ library implementations,
 
 +  Joachim Schöberl, TU Vienna (Providing specialized NGsolve  core library with \ ``taskmanager``\  for \ **multi-threaded parallelization**\ ; NGsolve mesh and FE-matrices import; highly efficient eigenvector computations)
 +  Stefan Holzinger, University of Innsbruck (Lie group module and solvers in Python, Lie group node; helped with Lie group solvers, geometrically exact beam; testing)
++  Peter Manzl, University of Innsbruck (ConvexRoll Python and C++ implementation; revised artificialIntelligence, ParameterVariation, robotics and MPI parallelization; providing many figures for theDoc; pip install on linux, wsl with graphics)
 +  Andreas Zwölfer, Technical University Munich (theory and examples for FFRF, CMS formulation and ANCF 2D cable prototypes in MATLAB)
-+  Peter Manzl, University of Innsbruck (ConvexRoll Python and C++ implementation; improved artificialIntelligence, ParameterVariation, robotics and MPI parallelization; pip install on linux, wsl with graphics)
 +  Martin Sereinig, University of Innsbruck (special robotics functionality, mobile robots, manipulability measures, robot models)
 +  Michael Pieber, University of Innsbruck (helped in several Python libraries; ComputeODE2Eigenvalues with constraints, FEM and CMS testing; Abaqus import and test files; ANCFCable2D+ALE theory improvements and equations check)
 +  Grzegorz Orzechowski, Lappeenranta University of Technology (coupling with openAI gym and running machine learning algorithms)
 +  Aaron Bacher, University of Innsbruck (helped to integrated OpenVR, connection with Franka Emika Panda)
 +  Martin Arnold, Martin-Luther-University of Halle-Wittenberg (support for explicit and implicit Lie group solvers, especially to theory / jacobians and automatic step size)
 +  Konstantina Ntarladima, University of Innsbruck (ANCFCable2D+ALE theory improvements and equations check)
-+  Qasim Khadim, University of Oulu (suggestion for improved model of HydraulicsActuatorSimple with eff. bulk modulus)
++  Alexander Humer, Johannes Kepler University Linz (initial discussions on structure and C++ code)
++  Qasim Khadim, University of Oulu (suggestion for improved model of HydraulicsActuatorSimple with effective bulk modulus)
++  Michael Gerbl, University of Innsbruck (figures in the documentation, taken from lecture notes)
 +  examples provided by: Manuel Schieferle, Martin Knapp, Lukas March, Dominik Sponring, David Wibmer, Simon Scheiber
 
 -- thanks a lot! --

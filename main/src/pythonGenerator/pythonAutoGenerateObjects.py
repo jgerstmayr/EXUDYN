@@ -678,7 +678,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
         #only in PDF:
         if len(symbolList) != 0: #automatically generated import parameter symbol list 
             #plrAdd.sLatex += "\\vspace{6pt}\\\\ \n"
-            plrAdd.sLatex += "\paragraph{Information on input parameters:} \n"
+            plrAdd.sLatex += "\\paragraph{Information on input parameters:} \n"
             plrAdd.sLatex += "\\startTable{input parameter}{symbol}{description see tables above}\n"
             plrAdd.sLatex += symbolList
             plrAdd.sLatex += "\\finishTable\n"
@@ -744,7 +744,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
         if len(plrAdd.sLatex) != 0:
             #plrAdd.sLatex += "\\vspace{6pt}\\par\\noindent\\rule{\\textwidth}{0.4pt}\n"
             plr.sLatex += "\\par\\noindent\\rule{\\textwidth}{0.4pt}\n"
-            plr.sLatex += '\mysubsubsubsection{DESCRIPTION of ' + parseInfo['class'] + ':}\n' #\\vspace{6pt} \\\\ \n'
+            plr.sLatex += '\\mysubsubsubsection{DESCRIPTION of ' + parseInfo['class'] + ':}\n' #\\vspace{6pt} \\\\ \n'
             plr.sLatex +='\\label{description_'+parseInfo['class']+'}\n'
 
             plr.sLatex += plrAdd.sLatex #add this information at the end
@@ -1816,7 +1816,12 @@ try: #still close file if crashes
                                     'userFunctionName': 'postNewtonFunction', 
                                     'pyUserFunctionType': 'PyFunctionVector2DMbsScalar'})
     
+    #create dictionaries for storing item information (in particular for auto-registration)
+    globalItemsDict = {}
+    for item in sPythonGlobalNames:
+        globalItemsDict[item] = {}
     
+    #other lists for documentation:
     for oi, oClass in enumerate(sLatexObjectClass):
         sLatexGlobalNames += ['Objects ('+oClass+')']
         objectClassDict[oClass] = oi
@@ -1925,6 +1930,17 @@ try: #still close file if crashes
                                 fileStr = WriteFile(parseInfo, parameterList, typeConversion)
                                 sLatexItemList += fileStr[4]
                                 
+                                #+++++++++++++++++++++++++++++++
+                                className = parseInfo['class']
+                                classType = parseInfo['classType']
+                                classNamePure = 'Invalid'
+                                for key, value in globalItemsDict.items():
+                                    if className.startswith(key):
+                                        classNamePure = className[len(classType):]
+                                        
+                                globalItemsDict[classType][classNamePure] = {} #add new dictionary for class
+                                #+++++++++++++++++++++++++++++++
+
                                 #find index of python objects
                                 typeInd = -1
                                 it = 0
@@ -2285,6 +2301,78 @@ Reference manual for: objects, nodes, markers, loads and sensors
     with open(exuDir+'confHelperItems.py', 'w') as f:
         f.write(sConfHelper)
 
+    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #files and structures for autoregistration of items
+    from autoGenerateHelper import minimalItemsList
+    excludeItemsList=['ObjectANCFThinPlate']
+    
+    templateItemSDAutoReg="""
+bool MainObject{classNamePure}IsRegistered = ClassFactoryItemsSystemData<Main{itemType}>::Get().RegisterClass("{classNamePure}", [](CSystemData* cSystemData)
+	{ //AUTO: 
+		C{itemType}* c{itemType} = new C{itemType}{classNamePure}();
+		c{itemType}->SetCSystemData(cSystemData);
+		MainObject* object = new MainObject{classNamePure}(); //new main object
+		object->SetC{itemType}(c{itemType});
+		VisualizationObject{classNamePure}* vObject = new VisualizationObject{classNamePure}();
+		object->SetVisualizationObject(vObject);
+		return object;
+	});
+"""
+    templateItemAutoReg="""
+bool Main{itemType}{classNamePure}IsRegistered = ClassFactoryItem<Main{itemType}>::Get().RegisterClass("{classNamePure}", []
+	{ //AUTO: 
+		C{itemType}{classNamePure}* cItem = new C{itemType}{classNamePure}();							//new point {itemType}
+		Main{itemType}* item = new Main{itemType}{classNamePure}(); //new main item
+		item->SetC{itemType}(cItem);
+		Visualization{itemType}{classNamePure}* vItem = new Visualization{itemType}{classNamePure}();
+		item->SetVisualization{itemType}(vItem);
+		return item;
+	});
+"""
+    templateNodeAutoReg="""
+bool Main{itemType}{classNamePure}IsRegistered = ClassFactoryItemsSystemData<Main{itemType}>::Get().RegisterClass("{classNamePure}", [](CSystemData* cSystemData)
+	{ //AUTO: 
+		C{itemType}{classNamePure}* cItem = new C{itemType}{classNamePure}();							//new point {itemType}
+		cItem->GetCData() = &(cSystemData->GetCData()); //add CData reference to CNode
+		Main{itemType}* item = new Main{itemType}{classNamePure}(); //new main item
+		item->SetC{itemType}(cItem);
+		Visualization{itemType}{classNamePure}* vItem = new Visualization{itemType}{classNamePure}();
+		item->SetVisualization{itemType}(vItem);
+		return item;
+	});
+"""
+    sAutoRegMinimal = ''
+    sAutoReg = ''
+    for key, value in globalItemsDict.items():
+        for key1, value1 in value.items():
+            fullName = key+key1
+            if fullName in excludeItemsList:
+                continue
+            if key == 'Object':
+                code = templateItemSDAutoReg.replace('{classNamePure}',key1).replace('{itemType}',key)
+            elif key == 'Node':
+                code = templateNodeAutoReg.replace('{classNamePure}',key1).replace('{itemType}',key)
+            else:
+                code = templateItemAutoReg.replace('{classNamePure}',key1).replace('{itemType}',key)
+            if fullName in minimalItemsList:
+                sAutoRegMinimal += code
+            else:
+                sAutoReg += code
+            
+
+    fileAutoReg = '../Autogenerated/objectFactoryAutoReg.h'
+    with open(fileAutoReg,'w') as f:
+        f.write('/** **************************************\n')
+        f.write('* @brief        autogenerated registration variables for items\n')
+        f.write('* @author       Gerstmayr Johannes\n')
+        f.write('* @date         2024-02-21 (first created)\n')
+        f.write('****************************************** */\n')
+        f.write('//AUTO: do not modify\n\n')
+        f.write(sAutoRegMinimal+'\n')
+        f.write('#ifndef EXUDYN_MINIMAL_COMPILATION\n')
+        f.write(sAutoReg+'\n')
+        f.write('#endif //EXUDYN_MINIMAL_COMPILATION\n\n')
 
 #%%
 finally:    

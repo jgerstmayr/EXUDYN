@@ -9,15 +9,77 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi \small
-  \item Exudyn version = 1.7.104.dev1, 
-  \item last change =  2024-02-08, 
-  \item Number of issues = 1782, 
-  \item Number of resolved issues = 1574 (104 in current version), 
+  \item Exudyn version = 1.7.113.dev1, 
+  \item last change =  2024-02-24, 
+  \item Number of issues = 1792, 
+  \item Number of resolved issues = 1583 (113 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.7.113}: {\bf \color{warningRed}  resolved BUG 1791}: {\bf Autoregistration items}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: node does not initialize CData}
+    \item   date resolved: {\bf 2024-02-24 17:45},
+date raised: 2024-02-24 
+  \ei
+  \item[] {\bf Version 1.7.112}:  resolved Issue 1788: {\bf items auto-registration}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add a simple way to automatically register items; use C++ map to create item in object-factory}
+    \item   date resolved: {\bf 2024-02-21 19:17},
+date raised: 2024-02-21 
+  \ei
+  \item[] {\bf Version 1.7.111}:  resolved Issue 1790: {\bf exudyn minimal}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add flag EXUDYN\_MINIMAL\_ITEMS to achieve fast compilation for testing}
+    \item   date resolved: {\bf 2024-02-21 18:53},
+date raised: 2024-02-21 
+  \ei
+  \item[] {\bf Version 1.7.110}: {\bf \color{warningRed}  resolved BUG 1786}: {\bf ComputeODE2singleLoad}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: raises error in static computation "inconsistent jacobian"; workaround settings computeLoadsJacobian=False or using sparse solver}
+    \item {\bf notes: exception due to inconsistent computation of mass proportional load jacobian with rigid body}
+    \item   date resolved: {\bf 2024-02-16 11:42},
+date raised: 2024-02-16 
+  \ei
+  \item[] {\bf Version 1.7.109}:  resolved Issue 1785: {\bf beam tutorial}
+(docu)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add beam tutorial example and tutorial in theDoc}
+    \item   date resolved: {\bf 2024-02-13 22:08},
+date raised: 2024-02-13 
+  \ei
+  \item[] {\bf Version 1.7.108}:  resolved Issue 1784: {\bf theory theDoc}
+(docu)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add introduction to multibody dynamics, kinematics, dynamics, rotations}
+    \item   date resolved: {\bf 2024-02-13 16:10},
+date raised: 2024-02-13 
+  \ei
+  \item[] {\bf Version 1.7.107}:  resolved Issue 1783: {\bf RST graphics}
+(docu)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add graphics for readthedocs representation, in solvers; fix references}
+    \item   date resolved: {\bf 2024-02-13 16:10},
+date raised: 2024-02-13 
+  \ei
+  \item[] {\bf Version 1.7.106}:  resolved Issue 1782: {\bf GeneralContact}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add flag computeContactForces to settings, which computes contribution of contact forces to system vector (may slow down computations!); similar to issue 936}
+    \item   date resolved: {\bf 2024-02-12 09:07},
+date raised: 2024-02-12 
+  \ei
+  \item[] {\bf Version 1.7.105}:  resolved Issue 0936: {\bf GeneralContact}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add interface function to get contact forces}
+    \item   date resolved: {\bf 2024-02-12 09:07},
+date raised: 2022-02-10 
+  \ei
   \item[] {\bf Version 1.7.104}:  resolved Issue 1781: {\bf GeneralContact}
 (extension)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
@@ -183,7 +245,7 @@ date raised: 2024-01-30
   \item[] {\bf Version 1.7.81}:  resolved Issue 1754: {\bf MainSystem}
 (extension)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
-    \item {description: change creation of MainSystem; allow construction like exudyn.MainSystem(), add new function AppendSystem(MainSystem) to MainSystemContainer; this will allow pickling both of MainSystem and MainSystemContainer}
+    \item {description: change creation of MainSystem; allow construction like exudyn.MainSystem(), add new function Append(MainSystem) to MainSystemContainer; this will allow pickling both of MainSystem and MainSystemContainer}
     \item   date resolved: {\bf 2024-01-30 14:34},
 date raised: 2024-01-30 
   \ei

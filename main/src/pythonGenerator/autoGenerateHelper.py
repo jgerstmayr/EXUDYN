@@ -19,6 +19,17 @@ localListEnumNames = []
 #empty default argument
 ArgNotSet = 'ArgNotSet'
 
+#this is the list of items which will be compiled for EXUDYN_MINIMAL_COMPILATION
+minimalItemsList=[
+    'NodePoint',
+    'ObjectGround',
+    'ObjectMassPoint',
+    'ObjectConnectorSpringDamper',
+    'ObjectANCFCable2D', #added because needed in CContact
+    'MarkerBodyPosition',
+    'LoadForceVector',
+    'SensorNode',
+    ]
 
 #******************************************************************************************************
 def GetDateStr():
@@ -366,6 +377,7 @@ convLatexCommands={#(precommand,'_USE'/'',postcommand)
     '\\onlyRST':('','_USE',''),
     '\\userFunctionExample':('\n--------\n\n\\ **User function example**\\ :\n\n','',''),
     '\\userFunction':('\n--------\n\n\\ **Userfunction**\\ : ``','_USE','`` \n\n'),
+    '\\LatexRSTfigure':('','_USE','','*2nd','*3rd','*4th','*5th'),
 
     #for tables:
     '\\startGenericTable':('\n.. list-table:: \\ \n   :widths: auto\n   :header-rows: 1\n','',''), 
@@ -802,7 +814,14 @@ def ReplaceLatexCommands(s, conversionDict, sectionMarkerText=''): #replace stri
                         #print('table = \n'+text)
                     else:
                         print('PROBLEM with rowTable: ',innerString2)
-
+                elif '\\LatexRSTfigure' in key:
+                    # print(innerString2)
+                    text =  '\n\n.. _'+Latex2RSTlabel(innerString2[1])+':\n'
+                    text += '.. figure:: docs/theDoc/'+innerString2[0]+'.png\n'
+                    text += '   :width: '+innerString2[3]+'\n'
+                    text += '\n'+'   '+LatexString2RST(innerString2[4]) + '\n\n'
+                    s += text
+                    # print('figure:\n'+text)
                 elif key == '\\mysection' or key == '\\mysectionlabel':
                     if sectionMarkerText != '':
                         s += sectionMarkerText+'[0]'+'[' + innerString + ']'+'\n'

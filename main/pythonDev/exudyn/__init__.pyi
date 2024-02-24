@@ -1235,6 +1235,7 @@ class GeneralContact:
     frictionVelocityPenalty:float
     excludeOverlappingTrigSphereContacts:bool
     excludeDuplicatedTrigSphereContactPoints:bool
+    computeContactForces:bool
     ancfCableUseExactMethod:bool
     ancfCableNumberOfContactSegments:int
     ancfCableMeasuringSegments:int
@@ -1268,6 +1269,8 @@ class GeneralContact:
     def UpdateContacts(self, mainSystem: MainSystem) -> None: ...
     @overload
     def GetActiveContacts(self, typeIndex: ContactTypeIndex, itemIndex: int) -> List[int]: ...
+    @overload
+    def GetSystemODE2RhsContactForces(self) -> List[float]: ...
 
 
 class SystemData:
@@ -1575,7 +1578,7 @@ class SystemContainer:
     @overload
     def AddSystem(self) -> MainSystem: ...
     @overload
-    def AppendSystem(self, mainSystem: MainSystem) -> int: ...
+    def Append(self, mainSystem: MainSystem) -> int: ...
     @overload
     def NumberOfSystems(self) -> int: ...
     @overload

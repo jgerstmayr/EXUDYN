@@ -2,17 +2,27 @@
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \mysectionlabel{Solvers}{sec:solvers}
-Note that the information on solvers is not as complete as the reference pages for items.
+This section provides and overview on most important solvers. Explicit and implicit dynamic solvers, as well as optimizers are described in more detail.
+%
 %general functionality
 \mysubsection{Solvers in \codeName\ }
-The user has a couple of basic solvers available in \codeName\ \ignoreRST{, see \fig{fig_available_solvers}}:
+The user has a couple of basic solvers available in \codeName\ , see \fig{fig_available_solvers}:
 \bi
-  \item \texttt{exudyn.SolveStatic(...)}: compute static solution for given problem (may also be used to compute kinematic behaviour by prescribing joint motion)
+  \item \texttt{exudyn.SolveStatic(...)}: compute static solution for given problem (may also be used to compute kinematic behavior by prescribing joint motion)
   \item \texttt{exudyn.SolveDynamic(...)}: time integration of equations of motion
   \item \texttt{exudyn.ComputeLinearizedSystem(...)}: computes the linearized system of equations and returns mass, stiffness, damping matrices
   \item \texttt{exudyn.ComputeODE2Eigenvalues(...)}: computes the eigenvalues of the linearized system of equations; only possible if no algebraic constraints in system; uses scipy to compute eigenvalues
 \ei
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\onlyRST{
+
+.. _fig-available-solvers:
+.. figure:: docs/theDoc/figures/solversAvailableSolvers.png
+   :width: 500
+
+   Basic and advanced solvers in \codeName\ ; advanced solvers build upon any basic solver to perform more sophisticated operations
+
+}
 \ignoreRST{
 \begin{figure}[hb]
   \centering
@@ -84,7 +94,6 @@ It is important to note, that for linear mechanical the term $\fv_\SO$ becomes
 \ee
 in which $\fv^a$ represents applied forces and stiffness matrix $\Km$ and damping matrix $\Dm$ become part of the system Jacobian for time integration.
 
-\ignoreRST{
 \mysubsection{General solver structure}
 %theory
 The description of solvers in this section follows the nomenclature given in \refChapter{sec:generalnotation}.
@@ -97,6 +106,16 @@ Settings for the solver substructures, like timer, output, iterations, etc.\, ar
 The description of interfaces for solvers starts in \refSection{sec:MainSolverStatic}.
 %
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\onlyRST{
+
+.. _fig-solver-time-integration:
+.. figure:: docs/theDoc/figures/solverTimeIntegration.png
+   :width: 400
+
+   Basic solver flow chart for SolveSystem(). This flow chart is the same for static solver and for time integration.
+
+}
+\ignoreRST{
 \begin{figure}[hb]
   \centering
   \begin{tikzpicture}[node distance = 2cm, auto, thick,scale=0.7, every node/.style={scale=0.7}]
@@ -117,8 +136,18 @@ The description of interfaces for solvers starts in \refSection{sec:MainSolverSt
   \caption{Basic solver flow chart for SolveSystem(). This flow chart is the same for static solver and for time integration.}
   \label{fig_solver_time_integration}
 \end{figure}
-
+}
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\onlyRST{
+
+.. _fig-solver-initialize-solver:
+.. figure:: docs/theDoc/figures/solverInitializeSolver.png
+   :width: 400
+
+   Basic solver flow chart for function InitializeSolver().
+
+}
+\ignoreRST{
 \begin{figure}[tbp]
   \centering
   \begin{tikzpicture}[node distance = 2cm, auto, thick,scale=0.6, every node/.style={scale=0.6}]
@@ -146,8 +175,18 @@ The description of interfaces for solvers starts in \refSection{sec:MainSolverSt
   \caption{Basic solver flow chart for function InitializeSolver().}
   \label{fig_solver_initialize_solver}
 \end{figure}
-
+}
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\onlyRST{
+
+.. _fig-solver-solve-steps:
+.. figure:: docs/theDoc/figures/solverSolveSteps.png
+   :width: 400
+
+   Flow chart for SolveSteps(), which is the inner loop of the solver.
+
+}
+\ignoreRST{
 \begin{figure}[tbp]
   \centering
   \begin{tikzpicture}[node distance = 2cm, auto, thick,scale=0.6, every node/.style={scale=0.6}]
@@ -179,11 +218,21 @@ The description of interfaces for solvers starts in \refSection{sec:MainSolverSt
       \path [arrow] (discontinuousIterationFailed) |- (stepReduction);
       \path [arrow] (finishDiscIt) -| (finishStep);
   \end{tikzpicture}
-  \caption{Solver flow chart for SolveSteps(), which is the inner loop of the solver.}
+  \caption{Flow chart for SolveSteps(), which is the inner loop of the solver.}
   \label{fig_solver_solve_steps}
 \end{figure}
-
+}
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\onlyRST{
+
+.. _fig-solver-discontinuous-iteration:
+.. figure:: docs/theDoc/figures/solverDiscontinuousIteration.png
+   :width: 400
+
+   Solver flow chart for DiscontinuousIteration(), which is run for every solved step inside the static/dynamic solvers. If the DiscontinuousIteration() returns False, SolveSteps() will try to reduce the step size.
+
+}
+\ignoreRST{
 \begin{figure}[tbp]
   \centering
   \begin{tikzpicture}[node distance = 2cm, auto, thick,scale=0.7, every node/.style={scale=0.7}]
@@ -191,9 +240,7 @@ The description of interfaces for solvers starts in \refSection{sec:MainSolverSt
       \node [cloud] (discontinuousIteration) {DiscontinuousIteration()};
       \node [decision, aspect=4, text width=5cm, below of=discontinuousIteration] (discontinuousIterationLoop) {disc.\ it.\ converged or disc.it.>=max it.};
       \node [wideblock, left of=discontinuousIterationLoop, node distance=6cm, xshift=-1cm] (discItTerminate) {return True if successful; False if max it.\ reached};
-      
-      %\node [wideblock, text width=4cm, right of=discontinuousIterationLoop, node distance=7cm] (discontinuousIterationLoopFinished) {return True if converged, else return False};
-      
+     
       \node [decision, below of=discontinuousIterationLoop, yshift = -0.5cm] (newtonLoop) {Newton() ?};
       \node [wideblock, left of=newtonLoop, node distance=6cm] (newtonFailed) {return False};
       \node [wideblock, below of=newtonLoop, yshift = -0.5cm] (postNewtonStep) {disc.it.++\\PostNewtonStep()};
@@ -201,13 +248,6 @@ The description of interfaces for solvers starts in \refSection{sec:MainSolverSt
       \node [decision, below of=postNewtonStep] (postNewtonStepError) {disc.\ iter.\ error\\ <= tol ?};
       \node [wideblock, right of=postNewtonStepError, node distance=6cm] (resetDiscIt) {state.current = state.startOfStep};
       \node [wideblock, below of=postNewtonStepError, yshift = -0.5cm] (discItSuccessful) {disc.\ iter.\ successful; return True};
-      
-      %compute Residual
-      %check Residual
-      %compute jacobian
-      %steepest decent
-      %check convergence
-      %... end of Newton: set state back to start of step (except for data variables)
       
       \path [arrow] (discontinuousIteration) -- (discontinuousIterationLoop);
       \path [arrow] (discontinuousIterationLoop) -- node [near start] {no}(newtonLoop);
@@ -222,20 +262,23 @@ The description of interfaces for solvers starts in \refSection{sec:MainSolverSt
       \path [arrow] (postNewtonStepError) -- node [near start] {yes}(discItSuccessful);
 
       \path [arrow] (resetDiscIt) |- (discontinuousIterationLoop);
-      %\path [arrow] (finishStep) |- (solveStepsLoop);
-      %
-      %\path [arrow] (initializeStep) -- (discontinuousIteration);
-      %\path [arrow] (discontinuousIteration) -- node [near start] {False}(discontinuousIterationFailed);
-      %\path [arrow] (discontinuousIteration) -- node [near start] {True}(finishDiscIt);
-      %\path [arrow] (solveSteps) -- (solveStepsLoop);
-      %\path [arrow] (discontinuousIterationFailed) |- (stepReduction);
   \end{tikzpicture}
   \caption{Solver flow chart for DiscontinuousIteration(), which is run for every solved step inside the static/dynamic solvers. If the DiscontinuousIteration() returns False, 
   SolveSteps() will try to reduce the step size.}
   \label{fig_solver_discontinuous_iteration}
 \end{figure}
-
+}
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\onlyRST{
+
+.. _fig-solver-newton-iteration:
+.. figure:: docs/theDoc/figures/solverNewton.png
+   :width: 320
+
+   Solver flow chart for Newton(), which is run inside the DiscontinuousIteration(). The shown case is valid for newtonResidualMode = 0.
+
+}
+\ignoreRST{
 \begin{figure}[tbp]
   \centering
   \begin{tikzpicture}[node distance = 2cm, auto, thick,scale=0.6, every node/.style={scale=0.6}]
@@ -268,19 +311,6 @@ The description of interfaces for solvers starts in \refSection{sec:MainSolverSt
       \node [decision, text width=4.5cm, below of=checkContractivity, yshift=-0.5cm] (restartNewton) {check contractivity, diverged/restart flags};
       
       \node [wideblock, below of=restartNewton, yshift=-1.25cm] (restartNewtonIteration) {state.current = state.startOfStep\\ state.AEcoords = 0\\ComputeResidual()};
-
-      %adapt initial residual
-      %!converged: 
-      %  - check divergence
-      %  if modNewton:
-      %    - check max mod newton its reached? yes: compute Jac
-      %    - check contractivity ==> compute Jac / switch to full newton
-
-
-      %\node [decision, below of=postNewtonStep] (postNewtonStepError) {disc.\ iter.\ error\\ <= tol ?};
-      %\node [wideblock, right of=postNewtonStepError, node distance=6cm] (resetDiscIt) {state.current = state.startOfStep};
-      %\node [wideblock, below of=postNewtonStepError, yshift = -0.5cm] (discItSuccessful) {disc.\ iter.\ successful; return True};
-      
   
       \path [arrow] (newtonIteration) -- (initNewton);
       \path [arrow] (initNewton) -- (residual);
@@ -334,7 +364,7 @@ and which includes \hac{ODE2} coordinates and velocities and \hac{ODE1} coordina
 The \hac{ODE1} and \hac{ODE2} equations of \eq{eq_systemEOM}, with $\tlambda=0$, are written in explicit form and converted to first order equations,
 \bea \label{eq_systemEOM}
   \dot \qv &=& \vel \nonumber \\
-  \ddot \vel & = &\Mm^{-1} \fv_\SO(\qv, \vel, t) \nonumber \\
+  \dot \vel & = &\Mm^{-1} \fv_\SO(\qv, \vel, t) \nonumber \\
   \dot \yv & = &\fv_\FO(\yv, t) \\
 \eea
 The system first order differential equations for explicit solvers thus read
@@ -371,6 +401,9 @@ and computed by explicit integration (quadrature) formulas of lower order ($g_i$
 \ee
 After all vectors $\gv_i$ have been consecutively evaluated, the step is updated by \eq{s_stage_quadrature}.
 
+\onlyRST{
+For some exemplary tableaus of explicit and impliciti Runge-Kutta methods, see theDoc.pdf!
+}
 \ignoreRST{
 Conventional explicit Runge-Kutta solvers, such as \texttt{ExplicitMidPoint}, \texttt{RK44} or \texttt{RK67} are based on 
 fixed step size and users must control the error by choosing an appropriate global step size. The tableaus for some lower order methods
@@ -480,7 +513,7 @@ Basically, the integration formulas, see \refSection{sec:rungekuttamethod} are e
 Lie group integration is currently only available for \texttt{NodeRigidBodyRotVecLG} used in \texttt{ObjectRigidBody} (3D rigid body). 
 \texttt{FFRFreducedOrder} will be extended to such nodes in the near future.
 To get Lie group integrators running with rigid body models, all 3D node types need to be set to \texttt{NodeRigidBodyRotVecLG} and 
-set \texttt{explicitIntegration.useLieGroupIntegration == True}.
+set \texttt{explicitIntegration.useLieGroupIntegration = True}.
 
 \mysubsubsection{Constraints with explicit solvers}
 Explicit solvers generally do not solve for algebraic constraints, except for very simple \texttt{CoordinateConstraint}. 
@@ -568,14 +601,15 @@ and Newmarks's parameters,
   \beta = \frac{1}{4}(1- \alpha_m + \alpha_f)^2
 \ee
 
-\begin{figure}[tbh]%
-\begin{center}
-\includegraphics[width=0.6\columnwidth]{figures/spectralRadiusZeta0}%
-\end{center}
-\caption{Spectral radius for generalized-$\alpha$ method depending on dimensionless step size $\bar h=h/T$, in which
-$T$ is the period of an equivalent single DOF mass-spring-damper system.}%
-\label{fig:spectralRadius}%
-\end{figure}
+\LatexRSTfigure{figures/spectralRadiusZeta0}{fig:spectralRadius}{9cm}{400}{Spectral radius for generalized-$\alpha$ method depending on dimensionless step size $\bar h=h/T$, in which $T$ is the period of an equivalent single DOF mass-spring-damper system.}
+%\begin{figure}[tbh]%
+%\begin{center}
+%\includegraphics[width=0.6\columnwidth]{figures/spectralRadiusZeta0}%
+%\end{center}
+%\caption{Spectral radius for generalized-$\alpha$ method depending on dimensionless step size $\bar h=h/T$, in which
+%$T$ is the period of an equivalent single DOF mass-spring-damper system.}%
+%\label{fig:spectralRadius}%
+%\end{figure}
 
 
 % ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -589,17 +623,17 @@ Thus, the residuals at the end of the time step ($T$) read (put all terms to \ha
   \rv^\GA_\AE &=& \gv(\qv_T, \dot \qv_T, \yv_T, \tlambda_T, t) = 0
 \eea
 %
-We consider two options for \SON: (A) solve for unknown accelerations $\avu_T$,  or (B) for unknown displacements $\qv_T$.
+We consider two options for \SON: (A) solve for unknown accelerations $\acc_T$,  or (B) for unknown displacements $\qv_T$.
 
 \mysubsubsubsection{(A) Solve for unknown accelerations}
 %
 The unknowns for the Newton method then are
 \be \label{eq_Newton_unknowns1}
-  \txi^\GA_{k+1} = \vr{\avu_T}{\yv_T}{\tlambda_T}
+  \txi^\GA_{k+1} = \vr{\acc_T}{\yv_T}{\tlambda_T}
 \ee
 and at the beginning of the step, we have
 \be \label{eq_Newton_unknowns2}
-  \txi^\GA_{k} = \vr{\avu_0}{\yv_0}{\tlambda_0}
+  \txi^\GA_{k} = \vr{\acc_0}{\yv_0}{\tlambda_0}
 \ee
 For the Newton method, we need to compute an update for the unknowns of \eq{eq_Newton_unknowns1}, using the previous residual $\rv_{k}$ and the inverse of the Jacobian $\Jm_{k}$ of Newton iteration $k$,
 \be
@@ -621,18 +655,18 @@ in which we consider $\Jm_{\FO\SO}$ and $\Jm_{\SO\FO}$ to vanish in the current 
 
 The remaining terms in the Jacobian are currently (or by default settings) evaluated as:
 \bea
-  \Jm_{\SO\SO}&=&\frac{\partial \rv^\GA_\SO}{\partial \avu} 
-               = \frac{\partial \rv^\GA_\SO}{\partial \qv} \frac{\partial \qv}{\partial \avu} 
-                 + \frac{\partial \rv^\GA_\SO}{\partial \dot \qv} \frac{\partial \dot \qv}{\partial \avu} 
+  \Jm_{\SO\SO}&=&\frac{\partial \rv^\GA_\SO}{\partial \acc} 
+               = \frac{\partial \rv^\GA_\SO}{\partial \qv} \frac{\partial \qv}{\partial \acc} 
+                 + \frac{\partial \rv^\GA_\SO}{\partial \dot \qv} \frac{\partial \dot \qv}{\partial \acc} 
                = h^2 \beta \Km + h \gamma \Dm
                \nonumber \\
   \Jm_{\SO\AE}&=&\frac{\partial \rv^\GA_\SO}{\partial \tlambda} 
                = \frac{\partial \gv}{\partial \qv} \quad (\mbox{or } \frac{\partial \gv}{\partial \dot \qv} \mbox{ for constraints at velocity level)} \nonumber \\
   \Jm_{\FO\FO}&=&\frac{\partial \rv^\GA_\FO}{\partial \yv} \nonumber \\
-  \Jm_{\AE\SO}&=&\frac{\partial \rv^\GA_\AE}{\partial \avu}
-               = \frac{\partial \gv}{\partial \avu}
-               = \frac{\partial \gv}{\partial \qv} \frac{\partial \qv}{\partial \avu} + 
-                 \frac{\partial \gv}{\partial \dot \qv} \frac{\partial \dot \qv}{\partial \avu}
+  \Jm_{\AE\SO}&=&\frac{\partial \rv^\GA_\AE}{\partial \acc}
+               = \frac{\partial \gv}{\partial \acc}
+               = \frac{\partial \gv}{\partial \qv} \frac{\partial \qv}{\partial \acc} + 
+                 \frac{\partial \gv}{\partial \dot \qv} \frac{\partial \dot \qv}{\partial \acc}
                = h^2 \beta \frac{\partial \gv}{\partial \qv} 
                  + h \gamma \frac{\partial \gv}{\partial \dot \qv}
               \nonumber \\
@@ -674,7 +708,7 @@ For velocity level constraints, \eq{eq_initialAccelerationsVel} is used to extra
 %
 Finally, the equations for the computation of the initial accelerations read for velocity level constraints,
 note that $\yv_{init}$ are the nodal initial values for $\yv$,
-\be \label{eq_initialAccelerationsVel2}
+\be \label{eq_initialAccelerationsVelB}
   \mr{\Mm}{\Null}{\frac{\partial \gv}{\partial \dot \qv^\mathrm{T}}} 
      {\Null}{\Im}{\Null}
      {\frac{\partial \gv}{\partial \dot \qv}}{\Null}{\Null}
@@ -705,7 +739,7 @@ For position level constraints, \eq{eq_initialAccelerationsPos} is used to extra
   - \frac{\partial^2 \gv}{\partial t^2} \eqDot
 \ee
 Finally, the equations for the computation of the initial accelerations for position level constraints read
-\be \label{eq_initialAccelerationsPos2}
+\be \label{eq_initialAccelerationsPosB}
   \mr{\Mm}{\Null}{\frac{\partial \gv}{\partial \qv^\mathrm{T}}} 
      {\Null}{\Im}{\Null}
      {\frac{\partial \gv}{\partial \qv} }{\Null}{\Null}
@@ -714,20 +748,20 @@ Finally, the equations for the computation of the initial accelerations for posi
         {- 2 \frac{\partial^2 \gv}{\partial \qv \partial t} \dot \qv_0 - \frac{\partial^2 \gv}{\partial \qv^2} \dot \qv_0^2  - \frac{\partial^2 \gv}{\partial t^2}}  \eqComma
 \ee
 %in which $\gv_{ia}$ and $\Gm_{ia}$ are placeholder for either $\gv_{ia-pos}$ and $\Gm_{ia-pos}$ for position level constraints and $\gv_{ia-vel}$ resp.\ $\Gm_{ia-vel}$ for velocity level constraints.
-The linear system of equations \ref{eq_initialAccelerationsVel2} or \ref{eq_initialAccelerationsPos2} is solved prior to an implicit time integration if 
+The linear system of equations, either \eq{eq_initialAccelerationsVelB} or \eq{eq_initialAccelerationsPosB}, is solved prior to an implicit time integration if 
 \bi
-  \item[] \texttt{simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations = True} 
+  \item[] \texttt{simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations = True},
 \ei
 which is the default value.
 %
 %The unknowns for the Newton method are
 %\be \label{eq_Newton_unknowns}
-  %\qv^\mathrm{Newton} = \vr{\avu^T_\SO}{\vel^T_\FO}{\qv^T_\AE}
+  %\qv^\mathrm{Newton} = \vr{\acc^T_\SO}{\vel^T_\FO}{\qv^T_\AE}
 %\ee
 %For the Newton method, we need to compute an update for the unknowns \eq{eq_Newton_unknowns}, using the known residual $\rv_{i-1}$ and the inverse of the Jacobian $\Jm_{i-1}$ of step $i-1$,
 %\be
   %\qv^\mathrm{Newton}_{i} = \qv^\mathrm{Newton}_{i-1} - \Jm^{-1}\left( \qv^\mathrm{Newton}_{i-1}\right) \rv\left( \qv^\mathrm{Newton}_{i-1}\right)
-%%  \qv^\mathrm{Newton}_{i} = \qv^\mathrm{Newton}_{i-1} - \Jm^{-1}_{i-1} \Rm\left(\avu^T_{\SO,i-1},\,\vel^T_{\FO,i-1},\,\qv^T_{\AE,i-1} \right)
+%%  \qv^\mathrm{Newton}_{i} = \qv^\mathrm{Newton}_{i-1} - \Jm^{-1}_{i-1} \Rm\left(\acc^T_{\SO,i-1},\,\vel^T_{\FO,i-1},\,\qv^T_{\AE,i-1} \right)
 %\ee
 %
 %% +++++++++++++++++++++
@@ -743,23 +777,23 @@ which is the default value.
 %
 %The available Jacobians need to be rewritten in terms of the Newton unkowns \eqref{eq_Newton_unknowns}, and thus read
 %\bea
-  %\Jm_{\SO\SO}&=&\frac{\partial \fv^\mathrm{Newmark}_\SO}{\partial \avu_\SO^\mathrm{T}} 
-               %= \frac{\partial \fv^\mathrm{Newmark}_\SO}{\partial \qv_\SO^\mathrm{T}} \frac{\qv_\SO}{\avu_\SO^\mathrm{T}} 
-                 %+ \frac{\partial \fv^\mathrm{Newmark}_\SO}{\partial \dot \qv_\SO^\mathrm{T}} \frac{\dot \qv_\SO}{\avu_\SO^\mathrm{T}} 
+  %\Jm_{\SO\SO}&=&\frac{\partial \fv^\mathrm{Newmark}_\SO}{\partial \acc_\SO^\mathrm{T}} 
+               %= \frac{\partial \fv^\mathrm{Newmark}_\SO}{\partial \qv_\SO^\mathrm{T}} \frac{\qv_\SO}{\acc_\SO^\mathrm{T}} 
+                 %+ \frac{\partial \fv^\mathrm{Newmark}_\SO}{\partial \dot \qv_\SO^\mathrm{T}} \frac{\dot \qv_\SO}{\acc_\SO^\mathrm{T}} 
                %= h^2 \beta \Km + h \gamma \Dm
                %\nonumber \\
   %\Jm_{\SO\AE}&=&\frac{\partial \fv^\mathrm{Newmark}_\SO}{\partial \qv_\AE^\mathrm{T}} 
                %= \frac{\partial \gv}{\partial \qv_\SO^\mathrm{T}} \nonumber \\
-  %\Jm_{\AE\SO}&=&\frac{\partial \fv^\mathrm{Newmark}_\AE}{\partial \avu_\SO^\mathrm{T}} 
-               %= \frac{\partial \gv}{\partial \avu_\SO^\mathrm{T}}
-               %= \frac{\partial \gv}{\partial \qv_\SO^\mathrm{T}} \frac{\qv_\SO}{\avu_\SO^\mathrm{T}} + \frac{\partial \gv}{\partial \dot \qv_\SO^\mathrm{T}} \frac{\dot \qv_\SO}{\avu_\SO^\mathrm{T}}
+  %\Jm_{\AE\SO}&=&\frac{\partial \fv^\mathrm{Newmark}_\AE}{\partial \acc_\SO^\mathrm{T}} 
+               %= \frac{\partial \gv}{\partial \acc_\SO^\mathrm{T}}
+               %= \frac{\partial \gv}{\partial \qv_\SO^\mathrm{T}} \frac{\qv_\SO}{\acc_\SO^\mathrm{T}} + \frac{\partial \gv}{\partial \dot \qv_\SO^\mathrm{T}} \frac{\dot \qv_\SO}{\acc_\SO^\mathrm{T}}
                %= h^2 \beta \frac{\partial \gv}{\partial \qv_\SO^\mathrm{T}} 
                  %+ h \gamma \frac{\partial \gv}{\partial \dot \qv_\SO^\mathrm{T}}
               %\nonumber \\
   %\Jm_{\AE\AE}&=&\frac{\partial \fv^\mathrm{Newmark}_\AE}{\partial \qv_\AE^\mathrm{T}}
                %= \frac{\partial \gv}{\partial \qv_\AE^\mathrm{T}}
 %\eea
-%Note that the derivative $\frac{\qv_\SO}{\avu_\SO^\mathrm{T}}$ follows from the Newmark interpolation \eqref{eq_Newmark_interpolation} using the relation between $\qv^T_\SO$ and $\avu^T_\SO$. The tangent stiffness matrix $\Km$ must also include derivatives of applied forces $\fv^a$, which is currently not implemented.
+%Note that the derivative $\frac{\qv_\SO}{\acc_\SO^\mathrm{T}}$ follows from the Newmark interpolation \eqref{eq_Newmark_interpolation} using the relation between $\qv^T_\SO$ and $\acc^T_\SO$. The tangent stiffness matrix $\Km$ must also include derivatives of applied forces $\fv^a$, which is currently not implemented.
 %Furthermore, the Jacobian is not symmetric, which could be obtained by according scaling.
 
 %
@@ -857,9 +891,18 @@ As an alternative stochastic methods can be use to compute only the objective fu
 
 \mybold{Genetic algorithms}\cite{Goldberg1989, Whitley1994} can significantly reduce the necessary amount of objective function evaluations in order to perform the optimization. Genetic identification algorithms have been already successfully applied to multibody system dynamics\cite{Eder2014}. 
 
-\ignoreRST{
 The general structure of a (canonical) genetic algorithm is depicted in \fig{fig_geneticOptimization}.
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\onlyRST{
+
+.. _fig-geneticOptimization:
+.. figure:: docs/theDoc/figures/geneticOptimization.png
+   :width: 400
+
+   Basic solver flow chart genetic algorithm / optimization.
+
+}
+\ignoreRST{
 \begin{figure}[hb]
   \centering
   \begin{tikzpicture}[node distance = 2cm, auto, thick,scale=0.7, every node/.style={scale=0.7}]
@@ -889,16 +932,6 @@ The general structure of a (canonical) genetic algorithm is depicted in \fig{fig
 \end{figure}
 }
 %
-%\bn\setlength{\itemindent}{0.5cm}
-  %\item START
-  %\item create initial population $n_{pi}$
-  %\item evaluate fitness for population\footnote{This is usually the time consuming part, which requires a single simulation run for every fitness evaluation}
-  %\item select (surviving) individuals $S_s$
-  %\item crossover $S_c$
-  %\item mutation $S_m$
-  %\item if fitness goal or number of generations $n_g$ not reached, continue with step
-  %\item END
-%\en
 For details, see the cited literature. Here, we focus on the implementation of the function 
 \texttt{GeneticOptimization(...)}, see \refSection{sec:processing:GeneticOptimization}.
 The initial population (step 1) is created with \texttt{initialPopulationSize} individuals with uniformly distributed random design variables $[\xv_0, \ldots, \xv_{n_{pi}-1}]$\footnote{$\xv_i=[x_{i0}, x_{i1}, \ldots]$ being a set of genes, with single genes $x_{i0}$, $x_{i1}$, ... } in the search space, which is given in the dictionary \texttt{parameters}. Herafter (steps 2-6), we iteratively process a population for a certain \text{numberOfGenerations} generations.

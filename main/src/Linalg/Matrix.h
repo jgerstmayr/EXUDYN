@@ -626,6 +626,40 @@ public:
 		return result;
 	}
 
+	//! conversion of Matrix into std::array<std::array<...>> (needed e.g. in pybind)
+	operator std::array <std::array<T, 3>, 3>() const
+	{
+		std::array <std::array<T, 3>, 3> matrix;
+		CHECKandTHROW((numberOfRows == 3 && numberOfColumns == 3),
+			"MatrixBase::operator std::array <std::array<T, 3>, 3>: invalid number of rows/columns");
+
+		for (Index rows = 0; rows < 3; rows++)
+		{
+			for (Index cols = 0; cols < 3; cols++)
+			{
+				matrix[rows][cols] = GetUnsafe(rows, cols);
+			}
+		}
+
+		return matrix;
+	}
+	//! conversion of Matrix into std::array<std::array<...>> (needed e.g. in pybind)
+	operator std::array <std::array<T, 6>, 6>() const
+	{
+		std::array <std::array<T, 6>, 6> matrix;
+		CHECKandTHROW((numberOfRows == 6 && numberOfColumns == 6),
+			"MatrixBase::operator std::array <std::array<T, 6>, 6>: invalid number of rows/columns");
+
+		for (Index rows = 0; rows < 6; rows++)
+		{
+			for (Index cols = 0; cols < 6; cols++)
+			{
+				matrix[rows][cols] = GetUnsafe(rows, cols);
+			}
+		}
+
+		return matrix;
+	}
 
 	//! @brief Output operator << generates ostream "[m[0][0] m[0][1] ... m[0][m]; ... m[n][m]]" for a matrix m;
 	//! the FORMAT IS DIFFERENT TO HOTINT1

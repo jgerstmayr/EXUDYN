@@ -27,6 +27,8 @@ This section includes all Examples for Exudyn.They can also be found and downloa
    Examples/ANCFswitchingSlidingJoint2D
    Examples/ANCFtestHalfcircle
    Examples/ANCFtests2
+   Examples/basicTutorial2024
+   Examples/beamTutorial
    Examples/beltDriveALE
    Examples/beltDriveReevingSystem
    Examples/beltDrivesComparison
@@ -80,6 +82,8 @@ This section includes all Examples for Exudyn.They can also be found and downloa
    Examples/ObjectFFRFconvergenceTestHinge
    Examples/objectFFRFreducedOrderNetgen
    Examples/openAIgymInterfaceTest
+   Examples/openAIgymNLinkContinuous
+   Examples/openAIgymQuadruplePendulumKT
    Examples/openAIgymTriplePendulum
    Examples/openVRengine
    Examples/parameterVariationExample
@@ -149,5 +153,6 @@ This section includes all Examples for Exudyn.They can also be found and downloa
    Examples/testGymDoublePendulum
    Examples/testGymDoublePendulumEnv
    Examples/tippeTop
+   Examples/tutorialNeuralNetwork
    Examples/universalJoint
 

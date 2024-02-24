@@ -490,7 +490,7 @@ def DictToItemsText(functionDict, tagList, addStr, eraseInput=''):
                         if s.find(':') != -1 and (' ' not in s[:s.find(':')]): #first occurance = argument; may not have spaces
                             n=s.find(':')
                             sr = RSTmarkup(s[:n].replace('\\_','_'),'``') + LatexString2RSTspecial(s[n:], replaceMarkups = replaceMarkups) #in this string, there should be no markup ...
-                            s = '{\\it '+s[:n]+'}'+ s[n:]
+                            s = '{\\it '+s[:n].replace('_','\\_')+'}'+ s[n:]
                         else:
                             sr = LatexString2RSTspecial(s, replaceMarkups = replaceMarkups)
                         sLatex += sSpaces*2+'\item[]'+s+'\n'

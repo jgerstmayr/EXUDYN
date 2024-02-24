@@ -53,9 +53,8 @@ You can view and download this file on Github: `symbolicUserFunctionTest.py <htt
    if useSymbolicUF:
        def springForceUserFunction(mbs, t, itemNumber, deltaL, deltaL_t, stiffness, damping, force):
            #f0 = damping*deltaL_t + stiffness*deltaL + force #linear
-           # fact = esym.variables.Get('flag')
-           fact = 1
-           f0 = fact*10*damping*deltaL_t + stiffness*esym.sign(deltaL) * (esym.abs(deltaL))**1.2 + force
+           #fact = esym.variables.Get('flag') #potential way to couple behaviour to external triggers
+           f0 = 10*damping*deltaL_t + stiffness*esym.sign(deltaL) * (esym.abs(deltaL))**1.2 + force
            return f0
        
        def UFload(mbs, t, load):
@@ -87,12 +86,9 @@ You can view and download this file on Github: `symbolicUserFunctionTest.py <htt
    
    if useSymbolicUF:
        symbolicFunc = CreateSymbolicUserFunction(mbs, springForceUserFunction, 'springForceUserFunction', co)
-       # symbolicFunc.TransferUserFunction2Item(mbs, co, 'springForceUserFunction')    
        mbs.SetObjectParameter(co, 'springForceUserFunction', symbolicFunc)
        
-   
        symFuncLoad = CreateSymbolicUserFunction(mbs, UFload, 'loadUserFunction', load)
-       # symFuncLoad.TransferUserFunction2Item(mbs, load, 'loadUserFunction')    
        mbs.SetLoadParameter(load, 'loadUserFunction', symFuncLoad)
        
        #check function:

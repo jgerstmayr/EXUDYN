@@ -77,7 +77,7 @@ void MainSystem::Reset()
 
 void MainSystem::SystemHasChanged()
 {
-	if (!HasMainSystemContainer()) { PyWarning("MainSystem has not been yet linked to a system container. Having a MainSystem mbs, you should do first:\nSC=exudyn.SystemContainer()\nSC.AppendSystem(mbs)\n"); }
+	if (!HasMainSystemContainer()) { PyWarning("MainSystem has not been yet linked to a system container. Having a MainSystem mbs, you should do first:\nSC=exudyn.SystemContainer()\nSC.Append(mbs)\n"); }
 	GetCSystem().SystemHasChanged();
 	GetVisualizationSystem().SetSystemHasChanged(true);
 }
@@ -170,8 +170,8 @@ void MainSystem::SetDictionary(const py::dict& d)
 			", but loaded dictionary has been built with version " + py::cast<STDstring>(d["__version__"])+"; you can disable this exception in exudyn.special.exceptions");
 	}
 
-	const MainSystemData& msd = GetMainSystemData();
-	const CSystemData& csd = GetCSystem().GetSystemData();
+	//const MainSystemData& msd = GetMainSystemData();
+	//const CSystemData& csd = GetCSystem().GetSystemData();
 
 	py::list nodeList   = py::cast<py::list>(d["nodeList"]);
 	py::list objectList = py::cast<py::list>(d["objectList"]);

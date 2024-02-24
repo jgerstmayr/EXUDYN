@@ -3635,9 +3635,9 @@ equations =
     \ee
     which is approximated using
     \be
-       \Mm = \sum_{ip = 0}^{n_{ip}-1} \frac{L}{2} \rho A \Sm(x_{ip})^T \Sm(x_{ip})
+       \Mm = \sum_{ip = 0}^{n_{ip}-1} w(x_{ip}) \frac{L}{2} \rho A \Sm(x_{ip})^T \Sm(x_{ip})
     \ee
-    with $x_{ip}$ evaluated at the integration points,
+    with integration weights $w(x_{ip})$, $\sum w(x_{ip})=2$, and integration points $x_{ip}$, given as,
     \be \label{eq_ANCFCable_ipTransform}
       x_{ip} = \frac{L}{2}\xi_{ip} + \frac{L}{2} \eqDot
     \ee

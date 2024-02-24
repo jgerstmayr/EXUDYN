@@ -526,7 +526,7 @@ def MainSystemCreateRigidBody(mbs,
 #  damping: scalar damping coefficient
 #  force: scalar additional force applied
 #  velocityOffset: scalar offset: if referenceLength is changed over time, the velocityOffset may be changed accordingly to emulate a reference motion
-#  springForceUserFunction: a user function springForceUserFunction(mbs, t, itemNumber, deltaL, deltaL_t, stiffness, damping, force)->float ; this function replaces the internal connector force compuation
+#  springForceUserFunction: a user function springForceUserFunction(mbs, t, itemNumber, deltaL, deltaL\_t, stiffness, damping, force)->float ; this function replaces the internal connector force compuation
 #  bodyOrNodeList: alternative to bodyList; a list of object numbers (with specific localPosition0/1) or node numbers; may also be of mixed types; to use this case, set bodyList = [None,None]
 #  show: if True, connector visualization is drawn
 #  drawSize: general drawing size of connector

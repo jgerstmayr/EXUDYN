@@ -162,6 +162,7 @@ mathjax3_config = {
 #rotation, sin, cos
             'Rot': r'{\mathbf{A}}',
             'dd': r'{\mathrm{d}}',
+            'ps': r'{p_\mathrm{s}}', #Euler parameters scalar
 
             'co': r'{\mathrm{c}}',
             'si': r'{\mathrm{s}}',
@@ -202,6 +203,9 @@ mathjax3_config = {
 
             'vareps': r'{\varepsilon}',
 
+#because \ov is replaced ..
+            'myoverline': [r'\overline{#1}',1],
+
 #vectors/matrices
             #'LU': [r'{\,^{#1}}',1],
             'pluseq': r'\mathrel{+}=',
@@ -216,8 +220,12 @@ mathjax3_config = {
             'vp': [r'{\left[ \begin{array}{c} { #1} \vspace{0.04cm}\\ { #2} \end{array} \right]}', 2],
             'mp': [r'{\left[ \begin{array}{cc} #1 & #2 \vspace{0.04cm}\\ #3 & #4 \end{array} \right]}', 4],
 
+            #mfour does not work ("misplaced &"):
+            'mfour': [r'{\left[ \begin{array}{cccc} { #1} \\ { #2} \\ { #3} \\ { #4} \end{array} \right]}', 4], 
+            'vfour': [r'{\left[ \begin{array}{c} { #1} \\ { #2} \\ { #3} \\ { #4} \end{array} \right]}', 4], 
+
             'vrRow': [r'{[#1,\, #2,\, #3]}', 3], 
-            'vsix': [r'{\left[\!\! \begin{array}{c} { #1} \\ { #2} \\ { #3} \\ { #4} \\ { #5} \\ { #6} \end{array} \!\!\right]}', 6], 
+            'vsix': [r'{\left[ \begin{array}{c} { #1} \\ { #2} \\ { #3} \\ { #4} \\ { #5} \\ { #6} \end{array} \right]}', 6], 
             'vsixb': [r'{\begin{array}{c} { #1} \\ { #2} \\ { #3} \\ { #4} \\ { #5} \\ { #6} \end{array} }', 6], 
             'vsixs': [r'{ \begin{array}{c} { #1} \\ { #2} \\ { #3} \\ { #4} \\ { #5} \\ { #6} \end{array} }', 6], 
 
@@ -272,7 +280,7 @@ mathjax3_config = {
             'termB': [r'{\color{red}{#1}}',1],
             'termC': [r'{\color{green}{#1}}',1],
 #solver:
-            'avu': r'{\ddot \mathbf{q}}',
+            'acc': r'{\ddot \mathbf{q}}',
             'GA': r'{G\alpha}',
             'aalg': r'{\mathbf{a}}',
             'vel': r'{\mathbf{v}}',

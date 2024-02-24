@@ -1,6 +1,6 @@
 \mysectionlabel{Overview on \codeName }{sec:overview}
 %
-This section provides a general overview on important parts of \codeName\ . It is recommended to read these parts as it alleviates your life in creating models, understanding the behavior of the system and resolving errors.
+This section provides a general overview on important parts of \codeName. It is recommended to read these parts as it alleviates your life in creating models, understanding the behavior of the system and resolving errors.
 %
 \mysubsectionlabel{Module structure}{sec:overview:modulestructure}
 This section will show:
@@ -23,7 +23,7 @@ For an introduction to the solvers, see \refSection{sec:solvers}.
 
 \begin{figure}
   \centering
-  \begin{tikzpicture}[node distance = 2cm, auto]
+  \begin{tikzpicture}[node distance = 2cm, auto,scale=0.7,every node/.style={scale=0.7}]
       % Place nodes
       \node [cloud] (exu) {exudyn};
       \node [wideblock, above of=exu, xshift = 1cm] (exudynCPP) {\mybold{exudynCPP}: C++ module};
@@ -43,7 +43,7 @@ For an introduction to the solvers, see \refSection{sec:solvers}.
 
       \path [line] (exudynPython) |- (itemInterface);
       \path [line] (exudynPython) |- (solvers);
-      \path [line] (exudynPython) |- (utilities);
+      \path [line] (exudynPython) -- (utilities);
       \path [line] (exudynPython) |- (FEM);
       \path [line] (exudynPython) |- (plot);
       \path [line] (exudynPython) |- (processing);
@@ -55,7 +55,7 @@ For an introduction to the solvers, see \refSection{sec:solvers}.
 \end{figure}
 
 \mysubsubsectionlabel{Overview of modules}{sec:overview:overviewmodules}
-Currently, the \codeName\ module structure is split into a C++ core part and a set of 
+Currently, the \codeName module structure is split into a C++ core part and a set of 
 Python parts, see \fig{fig_exudyn_CandPython}.
 \bi
   \item \mybold{C++ parts}, see \fig{fig_exudyn_CPP} and \fig{fig_system_overview}:
@@ -67,22 +67,25 @@ Python parts, see \fig{fig_exudyn_CandPython}.
     loads can added to the system, see \refSection{sec:item:reference:manual};
     \item[--] \texttt{mbs.systemData}: contains the initial, current, visualization, ... states of the system and holds the items, see \fig{fig_system_overview}
   \ei
-  \item \mybold{Python parts} (this list is continuously extended, see \refSection{sec:pythonUtilityFunctions}), sorted by importance:
+  \item \mybold{Python parts} (this list is continuously extended, see \refSection{sec:pythonUtilityFunctions}):
   \bi
-    \item[--] \texttt{exudyn.utilities}: constains helper classes in Python and includes \codeName\ modules \texttt{basicUtilities}, \texttt{rigidBodyUtilities}, \texttt{graphicsDataUtilities}, and \texttt{itemInterface}, which is recommended to be loaded at beginning of your model file
-    \item[--] \texttt{exudyn.itemInterface}: contains the interface, which transfers Python classes (e.g., of a NodePoint) to dictionaries that can be understood by the C++ module
+    \item[--] \texttt{exudyn.artificialIntelligence}: interface to stablebaselines, interface to pytorch training (coming soon)
     \item[--] \texttt{exudyn.basicUtilities}: contains basic helper classes, without importing numpy
-    \item[--] \texttt{exudyn.rigidBodyUtilities}: contains important helper classes for creation of rigid body inertia, rigid bodies, and rigid body joints; includes helper functions for rotation parameterization, rotation matrices, homogeneous transformations, etc.
+    \item[--] \texttt{exudyn.beams}: helper functions for creation of beams along straight lines and curves, sliding joints, etc.
     \item[--] \texttt{exudyn.graphicsDataUtilities}: provides some basic drawing utilities, definition of colors and basic drawing objects (including \acs{STL} import); rotation/translation of graphicsData objects
+    \item[--] \texttt{exudyn.interactive}: helper classes to create interactive models (e.g. for teaching or demos)
+    \item[--] \texttt{exudyn.itemInterface}: contains the interface, which transfers Python classes (e.g., of a NodePoint) to dictionaries that can be understood by the C++ module
+    \item[--] \texttt{exudyn.FEM}: everything related to finite element import and creation of model order reduction flexible bodies
+    \item[--] \texttt{exudyn.lieGroupBasics}: a collection of Python functions for Lie group methods (SO3, SE3, log, exp, Texp, ...)
+    \item[--] \texttt{exudyn.mainSystemExtensions}: mapping of some functions to MainSystem (mbs)
+    \item[--] \texttt{exudyn.physics}: containing helper functions, which are physics related such as friction
     \item[--] \texttt{exudyn.plot}: contains PlotSensor(...), a very versatile interface to matplotlib and other valuable helper functions
     \item[--] \texttt{exudyn.processing}: methods for optimization, parameter variation, sensitivity analysis, etc.
-    \item[--] \texttt{exudyn.FEM}: everything related to finite element import and creation of model order reduction flexible bodies
+    \item[--] \texttt{exudyn.rigidBodyUtilities}: contains important helper classes for creation of rigid body inertia, rigid bodies, and rigid body joints; includes helper functions for rotation parameterization, rotation matrices, homogeneous transformations, etc.
     \item[--] \texttt{exudyn.robotics}: submodule containing several helper modules related to manipulators (\texttt{robotics}, \texttt{robotics.models}), mobile robots (\texttt{robotics.mobile}), trajectory generation (\texttt{robotics.motion}), etc.
-    \item[--] \texttt{exudyn.beams}: helper functions for creation of beams along straight lines and curves, sliding joints, etc.
-    \item[--] \texttt{exudyn.interactive}: helper classes to create interactive models (e.g. for teaching or demos)
-    \item[--] \texttt{exudyn.physics}: containing helper functions, which are physics related such as friction
     \item[--] \texttt{exudyn.signalProcessing}: filters, FFT, etc.; interfaces to scipy and numpy methods
     \item[--] \texttt{exudyn.solver}: functions imported when loading \texttt{exudyn}, containing main solvers
+    \item[--] \texttt{exudyn.utilities}: constains helper classes in Python and includes \codeName modules \texttt{basicUtilities}, \texttt{rigidBodyUtilities}, \texttt{graphicsDataUtilities}, and \texttt{itemInterface}, which is recommended to be loaded at beginning of your model file
   \ei
 \ei
 %
@@ -204,7 +207,7 @@ As known from Python, all \mybold{indexes} of arrays, vectors, matrices, ...\ ar
 \mybold{Dimensionality of objects and vectors:} \ignoreRST{\vspace{6pt}}\\ 
 \ac{2D} vs.\ \ac{3D}
 \ignoreRST{\vspace{6pt}\\}
-As a convention, quantities in \codeName\ are 3D, such as nodes, objects, markers, loads, measured quantities, etc. 
+As a convention, quantities in \codeName are 3D, such as nodes, objects, markers, loads, measured quantities, etc. 
 For that reason, we denote planar nodes, objects, etc.\ with the suffix 2D, but 3D objects do not get this suffix\footnote{There are some rare exceptions, such as Beam3D as the pure beam may easily lead to name space conflicts in Python}.
 
 Output and input to objects, markers, loads, etc.\ is usually given by 3D vectors (or matrices), such as (local) position, force, torque, rotation, etc. However, initial and reference values for nodes depend on their dimensionality.
@@ -218,7 +221,7 @@ Furthermore, the local position in 2D objects is provided by a 3D vector. Usuall
 
 \mysubsectionlabel{Items: Nodes, Objects, Loads, Markers, Sensors, ...}{sec:overview:items}
 %
-In this section, the most important part of \codeName\ are provided. An overview of the interaction of the items is given in \fig{fig_items_interaction}
+In this section, the most important part of \codeName are provided. An overview of the interaction of the items is given in \fig{fig_items_interaction}
 
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \onlyRST{
@@ -344,7 +347,7 @@ The \ac{LTG}-index-mappings\footnote{local-to-global coordinate index mappings c
 \mysubsectionlabel{Exudyn Basics}{sec:overview:basics}
 This section will show:
 \bi
-  \item Interaction with the \codeName\ module
+  \item Interaction with the \codeName module
   \item Simulation settings
   \item Visualization settings
   \item Generating output and results
@@ -352,8 +355,8 @@ This section will show:
   \item Generating animations
 \ei
 
-\mysubsubsectionlabel{Interaction with the \codeName\ module}{sec:overview:basics:interactionmodule}
-It is important that the \codeName\ module is basically a state machine, where you create items on the C++ side using the Python interface. This helps you to easily set up models using many other Python modules (numpy, sympy, matplotlib, ...) while the computation will be performed in the end on the C++ side in a very efficient manner. 
+\mysubsubsectionlabel{Interaction with the \codeName module}{sec:overview:basics:interactionmodule}
+It is important that the \codeName module is basically a state machine, where you create items on the C++ side using the Python interface. This helps you to easily set up models using many other Python modules (numpy, sympy, matplotlib, ...) while the computation will be performed in the end on the C++ side in a very efficient manner. 
 \vspace{12pt}\\
 \mybold{Where do objects live?}\vspace{6pt}\\
 %(where do objects live? state machine; graphics interaction)
@@ -472,7 +475,7 @@ Visualization settings are used for user interaction with the model. E.g., the n
 Details on visualization settings and its substructures are provided in \refSection{sec:VisualizationSettingsMain}. These settings may also be edited by pressing 'V' in the active render window (does not work, if there is no active render loop using, e.g., \texttt{SC.WaitForRenderEngineStopFlag()} or 
 \texttt{mbs.WaitForUserToContinue()} ).
 The visualization settings dialog is shown exemplarily in \fig{fig_visualizationSettings}.
-Note that this dialog is automatically created and uses Python's \texttt{tkinter}, which is lightweight, but not very well suited if display scalings are large (e.g., on high resolution laptop screens). If working with Spyder, it is recommended to restart Spyder, if display scaling is changed, in order to adjust scaling not only for Spyder but also for \codeName\ .
+Note that this dialog is automatically created and uses Python's \texttt{tkinter}, which is lightweight, but not very well suited if display scalings are large (e.g., on high resolution laptop screens). If working with Spyder, it is recommended to restart Spyder, if display scaling is changed, in order to adjust scaling not only for Spyder but also for \codeName.
 
 The appearance of visualization settings dialogs may be adjusted by directly modifying \texttt{exudyn.GUI} variables (this may change in the future). For example write in your code before opening the render window\footnote{treeEdit and treeview both mean the settings dialog currently used for visualization settings and partially for right-mouse-click}:
 \pythonstyle\begin{lstlisting}
@@ -504,7 +507,7 @@ Note: Press 'V' in render window to open dialog.
 \begin{center}
 \includegraphics[width=0.8\columnwidth]{figures/visualizationSettings}
 \end{center}
-\caption{View of visualization settings (as of \codeName\ 1.5.51.dev1) (press 'V' in render window to open dialog)}%
+\caption{View of visualization settings (as of \codeName 1.5.51.dev1) (press 'V' in render window to open dialog)}%
 \label{fig_visualizationSettings}%
 \end{figure}
 }
@@ -644,7 +647,7 @@ Now copy the output and set this with \texttt{SC.SetRenderState} in your Python 
   SC.SetRenderState(renderState)
   #.... further code for simulation here
 \end{lstlisting}
-Note that in the current version of \codeName\ there is more data stored in render state, which is not used in \texttt{SC.SetRenderState},
+Note that in the current version of \codeName there is more data stored in render state, which is not used in \texttt{SC.SetRenderState},
 see also \refSection{sec:renderState}.
 \horizontalRuler
 %
@@ -669,7 +672,7 @@ Many functions and objects include color information. In order to allow alpha-tr
 E.g., red color with no transparency is obtained by the color=[1,0,0,1]. Color predefinitions are found in \texttt{exudynGraphicsDataUtilities.py}, e.g., \texttt{color4red} or \texttt{color4steelblue} as well a list of 16 colors \texttt{color4list}, which is convenient to be used in a loop creating objects.
 
 \mysubsubsectionlabel{Solution viewer}{sec:overview:basics:solutionviewer}
-\codeName\ offers a convenient WYSIWYS -- 'What you See is What you Simulate' interface, showing you the computation results during simulation in the render window.
+\codeName offers a convenient WYSIWYS -- 'What you See is What you Simulate' interface, showing you the computation results during simulation in the render window.
 If you are running large models, it may be more convenient to watch results after simulation has been finished.
 For this, you can use
 \bi
@@ -683,7 +686,7 @@ shown exemplary in \fig{fig_solutionViewer}.
 .. figure:: docs/theDoc/figures/solutionViewer.png
    :width: 800
 
-   View of \texttt{SolutionViewer} (as of \codeName\ 1.5.42.dev1)
+   View of \texttt{SolutionViewer} (as of \codeName 1.5.42.dev1)
 
 }
 \ignoreRST{
@@ -691,7 +694,7 @@ shown exemplary in \fig{fig_solutionViewer}.
 \begin{center}
 \includegraphics[width=0.98\columnwidth]{figures/solutionViewer}
 \end{center}
-\caption{View of \texttt{SolutionViewer} (as of \codeName\ 1.5.42.dev1)}%
+\caption{View of \texttt{SolutionViewer} (as of \codeName 1.5.42.dev1)}%
 \label{fig_solutionViewer}%
 \end{figure}
 }
@@ -772,9 +775,9 @@ mechanical values and these models may not be converged in space or time
 
 Finally, note that the \texttt{main/pythonDev/TestModels} are often only intended to preserve functionality
 in the Python and C++ code (e.g., if global methods are changed), but they should not be misinterpreted as validation of the 
-implemented methods. The \texttt{TestModels} are used in the \codeName\ \mybold{TestSuite} \texttt{TestModels/runTestSuite.py}
+implemented methods. The \texttt{TestModels} are used in the \codeName \mybold{TestSuite} \texttt{TestModels/runTestSuite.py}
 which is run after a full build of Python versions. Output for very version is written
-to \texttt{main/pythonDev/TestSuiteLogs} containing the \codeName\ version and Python version. At the end of these
+to \texttt{main/pythonDev/TestSuiteLogs} containing the \codeName version and Python version. At the end of these
 files, a summary is included to show if all models completed successfully (which means that a certain error level is achieved, which is rather small and different for the models).
 There are also performance tests (e.g., if a certain implementation leads to a significant drop of performance).
 However, the output of the performance tests is not stored on github.
@@ -828,7 +831,7 @@ which is by default rather low (1e-10) -- in order to achieve accurate results f
   \item[$\ra$] \texttt{simulationSettings.linearSolverSettings.ignoreSingularJacobian=True} ;
   \item[$\ra$] however, check your results as they may be erroneous, because the solver tries to find an optimal solution / compromise which may not be what you intend to get!
   \ei
-  \item if you see further problems, please post them (including relevant example) at the \codeName\ github page!
+  \item if you see further problems, please post them (including relevant example) at the \codeName github page!
 \ei
 
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -840,7 +843,7 @@ However, in some cases there is a significant possibility for speeding up comput
 The following examples refer to \texttt{simulationSettings = exu.SimulationSettings()}.
 In general, to see where CPU time is lost, use the option turn on \texttt{simulationSettings.displayComputationTime = True} to see which parts of the solver need most of the time (deactivated in exudynFast versions!).
 
-To activate the \codeName\ C++ versions without range checks, which may be approx.\ 30 percent faster in some situations, use the following code snippet before first import of \texttt{exudyn}:
+To activate the \codeName C++ versions without range checks, which may be approx.\ 30 percent faster in some situations, use the following code snippet before first import of \texttt{exudyn}:
 \pythonstyle\begin{lstlisting}
   import sys
   sys.exudynFast = True #this variable is used to signal to load the fast exudyn module
@@ -848,17 +851,17 @@ To activate the \codeName\ C++ versions without range checks, which may be appro
 \end{lstlisting}
 The faster versions are available for all release versions, but only for some \texttt{.dev1} development versions (Python 3.10), which can be determined by trying \texttt{import exudyn.exudynCPPfast}.
 
-\noindent However, there are many \mybold{ways to speed up \codeName\ in general}:
+\noindent However, there are many \mybold{ways to speed up \codeName in general}:
 \bi
   \item for models with more than 50 coordinates, switching to sparse solvers might greatly improve speed: \texttt{simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse}
   \item when preferring dense direct solvers, switching to Eigen's PartialPivLU solver might greatly improve speed: \texttt{simulationSettings.linearSolverType = exu.LinearSolverType.EigenDense}; however, the flag \texttt{simulationSettings.linearSolverSettings.ignoreSingularJacobian=True} will switch to the much slower (but more robust) Eigen's FullPivLU
   \item try to avoid Python functions or try to speed up Python functions; if this is not possible, see solutions below
   \item instead of user functions in objects or loads (computed in every iteration), some problems would also work if these parameters are only updated in \texttt{mbs.SetPreStepUserFunction(...)}
-  \item Python user functions can be speed up (since \codeName\ V1.7.40) by converting conventional Python functions into \codeName\ (internal) symbolic user functions, which have similar performance as C++ functions with the ability to parallelize; see \refSection{sec:cinterface:symbolic}
+  \item Python user functions can be speed up (since \codeName V1.7.40) by converting conventional Python functions into \codeName (internal) symbolic user functions, which have similar performance as C++ functions with the ability to parallelize; see \refSection{sec:cinterface:symbolic}
   \item Alternatively, Python user functions can be speed up using the Python numba package, using \texttt{@jit} in front of functions (for more options, see \exuUrl{https://numba.pydata.org/numba-doc/dev/user/index.html}{https://numba.pydata.org/numba-doc/dev/user/index.html}); Example given in \texttt{Examples/springDamperUserFunctionNumbaJIT.py} showing speedups of factor 4; more complicated Python functions may see speedups of 10 - 50
   %
   \item for \mybold{discontinuous problems}, try to adjust solver parameters; especially the discontinuous.iterationTolerance which may be too tight and cause many iterations; iterations may be limited by discontinuous.maxIterations, which at larger values solely multiplies the computation time with a factor if all iterations are performed
-  \item For multiple computations / multiple runs of Exudyn (parameter variation, optimization, compute sensitivities), you can use the processing sub module of \codeName\ to parallelize computations and achieve speedups proporional to the number of cores/threads of your computer; specifically using the \texttt{multiThreading} option or even using a cluster (using \texttt{dispy}, see \texttt{ParameterVariation(...)} function)
+  \item For multiple computations / multiple runs of Exudyn (parameter variation, optimization, compute sensitivities), you can use the processing sub module of \codeName to parallelize computations and achieve speedups proporional to the number of cores/threads of your computer; specifically using the \texttt{multiThreading} option or even using a cluster (using \texttt{dispy}, see \texttt{ParameterVariation(...)} function)
   \item In case of multiprocessing and cluster computing, you may see a very high CPU usage of "Antimalware Service Executable", which is the Microsoft Defender Antivirus; you can turn off such problems by excluding \texttt{python.exe} from the defender (on your own risk!) in your settings:\\
   %
   Settings $\ra$ Update \& Security $\ra$ Windows Security $\ra$ Virus \& threat protection settings $\ra$ Manage settings $\ra$ Exclusions $\ra$ Add or remove exclusions 
@@ -897,7 +900,7 @@ Functionality may be extended but also removed in future
 \mysubsubsectionlabel{Camera following objects and interacting with model view}{sec:overview:advanced:camerafollowing}
 %
 For some models, it may be advantageous to track the translation and/or rotation of certain bodies, e.g., for cars, (wheeled) robots or bicycles. 
-Since \codeName\ 1.4.18 you can attach view to a marker, using the visualization setting
+Since \codeName 1.4.18 you can attach view to a marker, using the visualization setting
 \pythonstyle\begin{lstlisting}
   SC.visualizationSettings.interactive.trackMarker = nMarker
 \end{lstlisting}
@@ -990,7 +993,7 @@ The general open source libraries from Valve, see
 \bi
 \item[] https://github.com/ValveSoftware/openvr
 \ei
-have been linked to \codeName\ . In order to get OpenVR fully integrated, you need to run \texttt{setup.py} \codeName\ with the \texttt{--openvr} flag. For general installation instructions, see \refSection{sec:install:installinstructions}.
+have been linked to \codeName. In order to get OpenVR fully integrated, you need to run \texttt{setup.py} \codeName with the \texttt{--openvr} flag. For general installation instructions, see \refSection{sec:install:installinstructions}.
 
 Running OpenVR either requires an according head mounted display (HMD) or a virtualization using, e.g., Riftcat 2 to use a mobile phone with an according adapter. Visualization settings are available in \texttt{interactive.openVR}, but need to be considered with care.
 An example is provided in \texttt{openVRengine.py}, showing some optimal flags like locking the model rotation, zoom or translation.
@@ -1011,7 +1014,7 @@ in \mybold{julia}:
   Pkg.add("PyCall")
 \end{lstlisting}
 %
-Ideally, you have a certain Python installation where \codeName\ is already installed (and for the following examples, you also need \texttt{matplotlib}). Find the according Python path in any \mybold{Python} console:
+Ideally, you have a certain Python installation where \codeName is already installed (and for the following examples, you also need \texttt{matplotlib}). Find the according Python path in any \mybold{Python} console:
 \pythonstyle\begin{lstlisting}
   import sys
   print(sys.executable)
@@ -1033,7 +1036,7 @@ Now we can interact with Python, using Python objects in \mybold{julia} almost n
   Demo1()
   """
 \end{lstlisting}
-This will run the very simple \codeName\ \texttt{Demo1}.
+This will run the very simple \codeName \texttt{Demo1}.
 As \texttt{exudyn} is now imported into this Python session, you can access it, e.g., \texttt{py"exudyn".Help()} 
 will write the help message.
 
@@ -1122,7 +1125,7 @@ Basically, data can be transmitted in both directions, e.g., within a preStepUse
 \mysubsubsectionlabel{ROS}{sec:overview:advanced:ros}
 %
 Basic interaction with ROS has been tested. However, make sure to use Python 3, as there is no (and will never be any) Python 2
-support for \codeName\ .
+support for \codeName.
 
 
 
