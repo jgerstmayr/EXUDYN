@@ -83,7 +83,6 @@ This section includes all Examples for Exudyn.They can also be found and downloa
    Examples/objectFFRFreducedOrderNetgen
    Examples/openAIgymInterfaceTest
    Examples/openAIgymNLinkContinuous
-   Examples/openAIgymQuadruplePendulumKT
    Examples/openAIgymTriplePendulum
    Examples/openVRengine
    Examples/parameterVariationExample

@@ -19,15 +19,24 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.7.113.dev1, 
++  Exudyn version = 1.7.116.dev1, 
 +  last change =  2024-02-24, 
-+  Number of issues = 1792, 
-+  Number of resolved issues = 1583 (113 in current version), 
++  Number of issues = 1794, 
++  Number of resolved issues = 1586 (116 in current version), 
 
 ***********
 Version 1.7
 ***********
 
+ * Version 1.7.116: resolved Issue 1793: manylinux2014 (extension)
+    - description:  build highly compatible manylinux2014 and manylinux2_17 wheels with github actions docker, to run on CentOS and Rocky Linux as well as ubuntu
+    - date resolved: **2024-02-24 23:28**\ , date raised: 2024-02-24 
+ * Version 1.7.115: resolved Issue 1792: Github actions CI (extension)
+    - description:  add github actions to create automatically Windows, Ubunut and MacOS wheels
+    - date resolved: **2024-02-24 23:28**\ , date raised: 2024-02-24 
+ * Version 1.7.114: resolved Issue 1787: Python 3.12 (extension)
+    - description:  include Python 3.12 wheels into build process
+    - date resolved: **2024-02-24 23:25**\ , date raised: 2024-02-21 
  * Version 1.7.113: :textred:`resolved BUG 1791` : Autoregistration items 
     - description:  node does not initialize CData
     - date resolved: **2024-02-24 17:45**\ , date raised: 2024-02-24 
@@ -5136,10 +5145,6 @@ Open issues
 
  * **open issue 1789:** AvailableItems      
     - description:  add exudyn.special function to retrieve available items as dictionary with lists
-    - date raised: 2024-02-21 
-
- * **open issue 1787:** Python 3.12         
-    - description:  include Python 3.12 wheels into build process
     - date raised: 2024-02-21 
 
  * **open issue 1777:** GraphicsData Sphere 
