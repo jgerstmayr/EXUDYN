@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>General solver structure &mdash; Exudyn1.7.116.dev1 1.7.116.dev1 documentation</title>
+  <title>General solver structure &mdash; Exudyn1.7.118.dev1 1.7.118.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=8142d844"></script>
+        <script src="../../_static/documentation_options.js?v=551d1ecc"></script>
         <script src="../../_static/doctools.js?v=888ff710"></script>
         <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -41,7 +41,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.7.116.dev1
+            Exudyn1.7.118.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -91,7 +91,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.7.116.dev1</a>
+          <a href="../../index.html">Exudyn1.7.118.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -112,7 +112,7 @@
              
   <section id="general-solver-structure">
 <h1>General solver structure<a class="headerlink" href="#general-solver-structure" title="Link to this heading"></a></h1>
-<p>The description of solvers in this section follows the nomenclature given in refChaptersec:generalnotation.
+<p>The description of solvers in this section follows the nomenclature given in Section <span class="xref std std-ref">sec:generalnotation</span>.
 Both in the static as well as in the dynamic case, the solvers run in a loop to solve a nonlinear system of (differential and/or algebraic) equations over a given time or load interval. Explicit solvers only perform a factorization of the mass matrix, but the <code class="docutils literal notranslate"><span class="pre">Newton</span></code> loop, see <a class="reference internal" href="#fig-solver-newton-iteration"><span class="std std-numref">Fig. 29</span></a>, is replaced by an explicit computation of the time step according to a given Runge-Kutta tableau.</p>
 <p>In case of an implicit time integration, <a class="reference internal" href="#fig-solver-time-integration"><span class="std std-numref">Fig. 25</span></a> shows the basic loops for the solution process. The inner loops are shown in <a class="reference internal" href="#fig-solver-solve-steps"><span class="std std-numref">Fig. 27</span></a> and<a class="reference internal" href="#fig-solver-discontinuous-iteration"><span class="std std-numref">Fig. 28</span></a>.
 The static solver behaves very similar, while no velocities or accelerations need to be solved and time is replaced by load steps.</p>

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Exudyn Basics &mdash; Exudyn1.7.116.dev1 1.7.116.dev1 documentation</title>
+  <title>Exudyn Basics &mdash; Exudyn1.7.118.dev1 1.7.118.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=8142d844"></script>
+        <script src="../../_static/documentation_options.js?v=551d1ecc"></script>
         <script src="../../_static/doctools.js?v=888ff710"></script>
         <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -43,7 +43,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.7.116.dev1
+            Exudyn1.7.118.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -111,7 +111,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.7.116.dev1</a>
+          <a href="../../index.html">Exudyn1.7.118.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -326,8 +326,8 @@ To print values, always use <code class="docutils literal notranslate"><span cla
 </pre></div>
 </div>
 <p>Note that you could also change <code class="docutils literal notranslate"><span class="pre">visualizationSettings</span></code> in this way, but the Visualization settings dialog is much more convenient.
-Changing <code class="docutils literal notranslate"><span class="pre">simulationSettings</span></code> is dangerous and must be treated with care.
-Some parameters, such as <code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.endTime</span></code> are copied into the internal solver’s textmbs.sys[‘dynamicSolver’].it structure.</p>
+Changing <code class="docutils literal notranslate"><span class="pre">simulationSettings</span></code> within the execute command is dangerous and must be treated with care.
+Some parameters, such as <code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.endTime</span></code> are copied into the internal solver’s <code class="docutils literal notranslate"><span class="pre">mbs.sys['dynamicSolver'].it</span></code> structure.</p>
 <p>Thus, changing <code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.endTime</span></code> has no effect during simulation.
 As a rule of thumb, all variables that are not stored inside the solvers structures may be adjusted by the <code class="docutils literal notranslate"><span class="pre">simulationSettings</span></code> passed to the solver (which are then not copied internally); see the C++ code for details. However, behavior may change in future and unexpected behavior or and changing <code class="docutils literal notranslate"><span class="pre">simulationSettings</span></code> will likely cause crashes if you do not know exactly the behavior, e.g., changing output format from text to binary … !
 Specifically, <code class="docutils literal notranslate"><span class="pre">newton</span></code> and <code class="docutils literal notranslate"><span class="pre">discontinuous</span></code> settings cannot be changed on the fly as they are copied internally.</p>
@@ -375,20 +375,20 @@ note that <code class="docutils literal notranslate"><span class="pre">visualiza
 <p>Alternatively, you can obtain the current model view from the console after a simulation, e.g.,</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">:</span> <span class="n">SC</span><span class="o">.</span><span class="nf">GetRenderState</span><span class="p">()</span>
 <span class="n">Out</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
-<span class="s1">&#39;centerPoint&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+<span class="p">{</span><span class="s1">&#39;centerPoint&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
  <span class="s1">&#39;maxSceneSize&#39;</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">,</span>
  <span class="s1">&#39;zoom&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
  <span class="s1">&#39;currentWindowSize&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1024</span><span class="p">,</span> <span class="mi">768</span><span class="p">],</span>
  <span class="s1">&#39;modelRotation&#39;</span><span class="p">:</span> <span class="p">[[</span> <span class="mf">0.34202015</span><span class="p">,</span>  <span class="mf">0.</span>        <span class="p">,</span> <span class="mf">0.9396926</span> <span class="p">],</span>
                    <span class="p">[</span><span class="o">-</span><span class="mf">0.60402274</span><span class="p">,</span>  <span class="mf">0.76604444</span><span class="p">,</span> <span class="mf">0.21984631</span><span class="p">],</span>
-                   <span class="p">[</span><span class="o">-</span><span class="mf">0.7198463</span> <span class="p">,</span> <span class="o">-</span><span class="mf">0.6427876</span> <span class="p">,</span> <span class="mf">0.26200265</span><span class="p">]])</span>
+                   <span class="p">[</span><span class="o">-</span><span class="mf">0.7198463</span> <span class="p">,</span> <span class="o">-</span><span class="mf">0.6427876</span> <span class="p">,</span> <span class="mf">0.26200265</span><span class="p">]])}</span>
 </pre></div>
 </div>
 <p>which contains the last state of the renderer.
 Now copy the output and set this with <code class="docutils literal notranslate"><span class="pre">SC.SetRenderState</span></code> in your Python code to have a fixed model view in every simulation (<code class="docutils literal notranslate"><span class="pre">SC.SetRenderState</span></code> AFTER <code class="docutils literal notranslate"><span class="pre">exu.StartRenderer()</span></code>):</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">autoFitScene</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1">#prevent from autozoom</span>
 <span class="n">exu</span><span class="o">.</span><span class="nf">StartRenderer</span><span class="p">()</span>
-<span class="n">renderState</span><span class="o">=</span><span class="s1">&#39;centerPoint&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+<span class="n">renderState</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;centerPoint&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
              <span class="s1">&#39;maxSceneSize&#39;</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">,</span>
              <span class="s1">&#39;zoom&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
              <span class="s1">&#39;currentWindowSize&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1024</span><span class="p">,</span> <span class="mi">768</span><span class="p">],</span>

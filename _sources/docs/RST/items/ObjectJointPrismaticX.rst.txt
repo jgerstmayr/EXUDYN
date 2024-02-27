@@ -5,7 +5,7 @@
 ObjectJointPrismaticX
 =====================
 
-A prismatic joint in 3D; constrains the relative rotation of two rigid body markers and relative motion w.r.t. the joint \ :math:`y`\  and \ :math:`z`\  axes, allowing a relative motion along the joint \ :math:`x`\  axis (defined in local coordinates of marker 0 / joint J0 coordinates). An additional local rotation (rotationMarker) can be used to transform the markers' coordinate systems into the joint coordinate system. For easier definition of the joint, use the exudyn.rigidbodyUtilities function AddPrismaticJoint(...), Section :ref:`sec-rigidbodyutilities-addprismaticjoint`\ , for two rigid bodies (or ground). \addExampleImagePrismaticJointX
+A prismatic joint in 3D; constrains the relative rotation of two rigid body markers and relative motion w.r.t. the joint \ :math:`y`\  and \ :math:`z`\  axes, allowing a relative motion along the joint \ :math:`x`\  axis (defined in local coordinates of marker 0 / joint J0 coordinates). An additional local rotation (rotationMarker) can be used to transform the markers' coordinate systems into the joint coordinate system. For easier definition of the joint, use the exudyn.rigidbodyUtilities function AddPrismaticJoint(...), Section :ref:`sec-rigidbodyutilities-addprismaticjoint`\ , for two rigid bodies (or ground). \addExampleImage{PrismaticJointX}
 
 \ **Additional information for ObjectJointPrismaticX**\ :
 

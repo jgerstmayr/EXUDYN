@@ -5,7 +5,7 @@
 ObjectRigidBody
 ===============
 
-A 3D rigid body which is attached to a 3D rigid body node. The rotation parametrization of the rigid body follows the rotation parametrization of the node. Use Euler parameters in the general case (no singularities) in combination with implicit solvers (GeneralizedAlpha or TrapezoidalIndex2), Tait-Bryan angles for special cases, e.g., rotors where no singularities occur if you rotate about \ :math:`x`\  or \ :math:`z`\  axis, or use Lie-group formulation with rotation vector together with explicit solvers. REMARK: Use the class \ ``RigidBodyInertia``\ , see Section :ref:`sec-rigidbodyutilities-rigidbodyinertia---init--`\  and \ ``AddRigidBody(...)``\ , see Section :ref:`sec-rigidbodyutilities-addrigidbody`\ , of \ ``exudyn.rigidBodyUtilities``\  to handle inertia, \ :ref:`COM <COM>`\  and mass. \addExampleImageObjectRigidBody
+A 3D rigid body which is attached to a 3D rigid body node. The rotation parametrization of the rigid body follows the rotation parametrization of the node. Use Euler parameters in the general case (no singularities) in combination with implicit solvers (GeneralizedAlpha or TrapezoidalIndex2), Tait-Bryan angles for special cases, e.g., rotors where no singularities occur if you rotate about \ :math:`x`\  or \ :math:`z`\  axis, or use Lie-group formulation with rotation vector together with explicit solvers. REMARK: Use the class \ ``RigidBodyInertia``\ , see Section :ref:`sec-rigidbodyutilities-rigidbodyinertia---init--`\  and \ ``AddRigidBody(...)``\ , see Section :ref:`sec-rigidbodyutilities-addrigidbody`\ , of \ ``exudyn.rigidBodyUtilities``\  to handle inertia, \ :ref:`COM <COM>`\  and mass. \addExampleImage{ObjectRigidBody}
 
 \ **Additional information for ObjectRigidBody**\ :
 
@@ -289,7 +289,7 @@ and for the index 2 case
    \dot g_\theta(\ttheta) = 2 \theta_0 \dot \theta_0 + 2 \theta_1 \dot \theta_1 + 2 \theta_2 \dot \theta_2 + 2 \theta_3 \dot \theta_3 = 0
 
 
-Given a Lagrange parameter (algebraic variable) \ :math:`\lambda_\theta`\  related to the Euler parameter constraint \eqrefeq:ObjectRigidBody:eulerParameters, the constraint reaction forces in Eq. :eq:`eq-objectrigidbody-eom`\  then read
+Given a Lagrange parameter (algebraic variable) \ :math:`\lambda_\theta`\  related to the Euler parameter constraint \ :eq:`eq-objectrigidbody-eulerparameters`\ , the constraint reaction forces in Eq. :eq:`eq-objectrigidbody-eom`\  then read
 
 .. math::
 

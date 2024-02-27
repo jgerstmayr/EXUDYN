@@ -320,7 +320,7 @@ For an example for \ ``graphicsDataUserFunction``\  see ObjectGround, Section :r
                                             meshNodeNumber = 0, #get first node's position 
                                             configuration = exu.ConfigurationType.Visualization)
         graphics1=GraphicsDataSphere(point=p,radius=0.1, color=color4red)
-            graphics2 = 'type':'Line', 'data': list(p)+[0,0,0], 'color':color4blue
+            graphics2 = {'type':'Line', 'data': list(p)+[0,0,0], 'color':color4blue}
         return [graphics1, graphics2] 
 
     #now add object instead of object in mini-example:

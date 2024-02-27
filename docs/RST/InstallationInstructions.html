@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Installation instructions &mdash; Exudyn1.7.116.dev1 1.7.116.dev1 documentation</title>
+  <title>Installation instructions &mdash; Exudyn1.7.118.dev1 1.7.118.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=8142d844"></script>
+        <script src="../../_static/documentation_options.js?v=551d1ecc"></script>
         <script src="../../_static/doctools.js?v=888ff710"></script>
         <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -43,7 +43,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.7.116.dev1
+            Exudyn1.7.118.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -103,7 +103,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.7.116.dev1</a>
+          <a href="../../index.html">Exudyn1.7.118.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -131,7 +131,7 @@ So far (2021-07), we tested</p>
 <ul class="simple">
 <li><p><strong>Anaconda 2023-07, 64bit, Python 3.11</strong> with Spyder 5.4</p></li>
 <li><p><strong>Anaconda 2021-11, 64bit, Python 3.9</strong>(older Anaconda3 versions can be downloaded via the repository archive <code class="docutils literal notranslate"><span class="pre">https://repo.anaconda.com/archive/</span></code>)</p></li>
-<li><p>Currently, we support Python 3.8 - Python 3.11 <strong>conda environments</strong> on Windows, Linux and MacOS (with restrictions to some older and exotic operating systems).</p></li>
+<li><p>Currently, we support Python 3.8 - Python 3.12 <strong>conda environments</strong> on Windows, Linux and MacOS (please report configurations that do not work on GitHub/issues).</p></li>
 <li><p><strong>Spyder 5.1.5</strong> (with Python 3.9.7, 64bit) and <strong>Spyder 4.1.3</strong> (with Python 3.7.7, 64bit), which is included in the Anaconda installation(Note that it is important that Spyder, Python and Exudyn  are <strong>either</strong> 32bit <strong>or</strong> 64bit and are compiled up to the same minor version, i.e., 3.7.x. There will be a strange .DLL error, if you mix up 32/64bit. It is possible to install both, Anaconda 32bit and Anaconda 64bit – then you should follow the recommendations of paths as suggested by Anaconda installer.); Spyder works with all virtual environments</p></li>
 </ul>
 <p>Many alternative options exist:</p>
@@ -189,7 +189,7 @@ NOTE: as there is only <code class="docutils literal notranslate"><span class="p
 <section id="troubleshooting-pip-install">
 <h3>Troubleshooting pip install<a class="headerlink" href="#troubleshooting-pip-install" title="Link to this heading"></a></h3>
 <p>Pip install may fail, if your linux version does not support the current manylinux version.
-This is known for CentOS or simlilar systems which usually support manylinux2014. In this case, you have to build Exudyn from source, see Section <a class="reference internal" href="#sec-install-installinstructions-buildubuntu"><span class="std std-ref">Build and install Exudyn under Ubuntu?</span></a>.</p>
+This was known for Red Hat, CentOS, Rocky Linux or simlilar systems which usually support manylinux2014. In this case, you had to build Exudyn from source, see Section <a class="reference internal" href="#sec-install-installinstructions-buildubuntu"><span class="std std-ref">Build and install Exudyn under Ubuntu?</span></a>. Since version 1.7.116, the manylinux2014 version is supported and according problems should be solved.</p>
 <p>Sometimes, you install exudyn, but when running python, the <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">exudyn</span></code> fails.
 In case of several environments, check where your installation goes. To guarantee that the pip install goes to the python call, use:</p>
 <blockquote>
@@ -223,7 +223,7 @@ If the wheel installation does not work on Ubuntu, it is highly recommended to b
 <ul>
 <li><p>EITHER calling: START-&gt;Anaconda-&gt;… OR go to anaconda/Scripts folder and call activate.bat</p></li>
 <li><p>You can check your Python version then, by running <code class="docutils literal notranslate"><span class="pre">python</span></code>(<code class="docutils literal notranslate"><span class="pre">python3</span></code> under Ubuntu 18.04), the output reads like:</p>
-<p><code class="docutils literal notranslate"><span class="pre">Python</span> <span class="pre">3.6.5</span> <span class="pre">\</span> <span class="pre">:math:`|`\</span> <span class="pre">Anaconda,</span> <span class="pre">Inc.\</span> <span class="pre">:math:`|`\</span>&#160; <span class="pre">(default,</span> <span class="pre">Mar</span> <span class="pre">29</span> <span class="pre">2018,</span> <span class="pre">13:32:41)</span> <span class="pre">\</span> <span class="pre">:math:`[`\</span> <span class="pre">MSC</span> <span class="pre">v.1900</span> <span class="pre">64</span> <span class="pre">bit</span> <span class="pre">(AMD64)\</span> <span class="pre">:math:`]`\</span>&#160; <span class="pre">on</span> <span class="pre">win32</span></code>…</p>
+<p><code class="docutils literal notranslate"><span class="pre">Python</span> <span class="pre">3.6.5</span> <span class="pre">|</span> <span class="pre">Anaconda,</span> <span class="pre">Inc.|</span> <span class="pre">(default,</span> <span class="pre">Mar</span> <span class="pre">29</span> <span class="pre">2018,</span> <span class="pre">13:32:41)</span> <span class="pre">[</span> <span class="pre">MSC</span> <span class="pre">v.1900</span> <span class="pre">64</span> <span class="pre">bit</span> <span class="pre">(AMD64)]</span> <span class="pre">on</span> <span class="pre">win32</span></code>…</p>
 </li>
 <li><p>type <code class="docutils literal notranslate"><span class="pre">exit()</span></code> to close Python</p></li>
 </ul>
@@ -247,7 +247,8 @@ If the wheel installation does not work on Ubuntu, it is highly recommended to b
 <li><p>go to your Scripts folder inside the Anaconda folder (e.g. <code class="docutils literal notranslate"><span class="pre">C:\ProgramData\Anaconda\Scripts</span></code>) [may not be necessary]</p></li>
 <li><p>run ‘activate.bat’ [may not be necessary]</p></li>
 <li><p>go to ‘main’ of your cloned github folder of Exudyn</p></li>
-<li><p>run:(the <code class="docutils literal notranslate"><span class="pre">--parallel</span></code> option performs parallel compilation on multithreaded CPUs and can speedup by 2x - 8x) <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">install</span> <span class="pre">--parallel</span></code></p></li>
+<li><p>run:(Since version 1.7.116 a PEP518 compatible build is available. This should work with Windows, MacOS and linux. The <code class="docutils literal notranslate"><span class="pre">setupPyConfig.json</span></code> file includes some flags such as the parallel compilation, GLFW, etc.; the <code class="docutils literal notranslate"><span class="pre">-v</span></code> flag adds verbosity.) <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">wheel</span> <span class="pre">.</span> <span class="pre">-v</span> <span class="pre">-w</span> <span class="pre">dist</span> <span class="pre">--no-deps</span></code></p></li>
+<li><p>Before version 1.7.116: run:(the <code class="docutils literal notranslate"><span class="pre">--parallel</span></code> option performs parallel compilation on multithreaded CPUs and can speedup by 2x - 8x) <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">install</span> <span class="pre">--parallel</span></code></p></li>
 <li><p>read the output; if there are errors, try to solve them by installing appropriate modules</p></li>
 </ul>
 <p>You can also create your own wheels, doing the above steps to activate the according Python version and then calling:</p>
@@ -269,9 +270,11 @@ Requirements are an according Anaconda (or Miniconda) installation.</p>
 </ul>
 <p><strong>NOTE</strong>:</p>
 <ul class="simple">
-<li><p>Multi-threading is not fully supported, but may work in some applications</p></li>
+<li><p>New <code class="docutils literal notranslate"><span class="pre">universal2</span></code> wheels should support x86 (APPLE Intel and Python/Rosetta on APPLE Silicon)</p></li>
+<li><p>Multi-threading is not fully supported on MacOS, but may work in some applications</p></li>
 <li><p>On Apple M1 processors the newest Anaconda supports now all required features; environments with Python 3.8-3.11 have been successfully tested;</p></li>
 <li><p>The Rosetta (x86 emulation) mode on Apple M1 also works now without much restrictions; these files should also work on older Macs</p></li>
+<li><p>If you have a MacOS version<span class="math notranslate nohighlight">\(&lt;11\)</span>, it worked to download wheels from PyPI, change wheel names, e.g., from <code class="docutils literal notranslate"><span class="pre">exudyn-1.7.116.dev1-cp311-cp311-macosx_11_0_x86_64.whl</span></code> to <code class="docutils literal notranslate"><span class="pre">exudyn-1.7.116.dev1-cp311-cp311-macosx_10_9_x86_64.whl</span></code>. This also works for universal2 files. Installation worked and wheels were running smoothly.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">tkinter</span></code> has been adapted (some workarounds needed on MacOS!), available since Exudyn 1.5.15.dev1</p></li>
 <li><p>Some optimization and processing functions do not run (especially multiprocessing and tqdm);</p></li>
 </ul>
@@ -285,7 +288,8 @@ Requirements are an according Anaconda (or Miniconda) installation.</p>
 <li><p>uninstall if old version exists (may need to repeat this!): <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">uninstall</span> <span class="pre">exudyn</span></code></p></li>
 <li><p>remove the <code class="docutils literal notranslate"><span class="pre">build</span></code> directory if you would like to re-compile without changes</p></li>
 <li><p>to perform compilation from source, write:(the <code class="docutils literal notranslate"><span class="pre">--parallel</span></code> option performs parallel compilation on multithreaded CPUs and can speedup by 2x - 8x)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">bdist_wheel</span> <span class="pre">--parallel</span></code></p></li>
+<li><p>Since version 1.7.116: <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">wheel</span> <span class="pre">.</span> <span class="pre">-v</span> <span class="pre">-w</span> <span class="pre">dist</span> <span class="pre">--no-deps</span></code></p></li>
+<li><p>Until version 1.7.116: <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">bdist_wheel</span> <span class="pre">--parallel</span></code></p></li>
 <li><p>which takes 75 seconds on Apple M1 in parallel mode, otherwise 5 minutes. To install Exudyn, run
 <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">install</span></code><span class="math notranslate nohighlight">\(\ra\)</span> this will only install, but not re-compile. Otherwise, just use pip install from the created wheel in the dist folder
 <strong>NOTE</strong> that conda environments are highly recommended</p></li>
@@ -340,6 +344,10 @@ Requirements are an according Anaconda (or Miniconda) installation.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">python3</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span> <span class="o">--</span><span class="n">user</span> <span class="o">--</span><span class="n">parallel</span>
 </pre></div>
 </div>
+<p>Since version 1.7.116, a PEP518 compatible way to compile sources and install the current repository has been added (the <code class="docutils literal notranslate"><span class="pre">-v</span></code> flag activates a verbose mode):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">.</span> <span class="o">-</span><span class="n">v</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">deps</span>
+</pre></div>
+</div>
 <p>Congratulation! <strong>Now, run a test example</strong> (will also open an OpenGL window if successful):</p>
 <blockquote>
 <div><p><code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">pythonDev/Examples/rigid3Dexample.py</span></code></p>
@@ -347,6 +355,10 @@ Requirements are an according Anaconda (or Miniconda) installation.</p>
 <p>You can also create a Ubuntu wheel which can be easily installed on the same machine (x64), same operating system (Ubuntu 18.04) and with same Python version (e.g., 3.6):</p>
 <blockquote>
 <div><p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">pip3</span> <span class="pre">install</span> <span class="pre">wheel</span></code><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">python3</span> <span class="pre">setup.py</span> <span class="pre">bdist_wheel</span> <span class="pre">--parallel</span></code></p>
+</div></blockquote>
+<p>Since version 1.7.116, the PEP518 compatible way which puts wheels into the <code class="docutils literal notranslate"><span class="pre">dist</span></code> folder reads:</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">wheel</span> <span class="pre">.</span> <span class="pre">-v</span> <span class="pre">-w</span> <span class="pre">dist</span> <span class="pre">--no-deps</span></code></p>
 </div></blockquote>
 <p><strong>Exudyn under Ubuntu / WSL</strong>:</p>
 <ul class="simple">

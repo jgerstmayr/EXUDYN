@@ -132,7 +132,7 @@ Class function: \_\_init\_\_
   | \ ``mbs``\ : a multibody system to be simulated
   | \ ``simulationSettings``\ : exudyn.SimulationSettings() according to user settings
   | \ ``simulationFunction``\ : a user function(mbs, self) which is called before a simulation for the short period is started (e.g, assign special values, etc.); the arguments are the MainSystem mbs and the InteractiveDialog (self)
-  | \ ``dialogItems``\ : a list of dictionaries, which describe the contents of the interactive items, where every dict has the structure 'type':[label, entry, button, slider, check] ... according to tkinter widgets, 'callFunction': a function to be called, if item is changed/button pressed, 'grid': (row,col) of item to be placed, 'rowSpan': number of rows to be used, 'columnSpan': number of columns to be used; for special item options see notes
+  | \ ``dialogItems``\ : a list of dictionaries, which describe the contents of the interactive items, where every dict has the structure {'type':[label, entry, button, slider, check] ... according to tkinter widgets, 'callFunction': a function to be called, if item is changed/button pressed, 'grid': (row,col) of item to be placed, 'rowSpan': number of rows to be used, 'columnSpan': number of columns to be used; for special item options see notes}
   | \ ``plots``\ : list of dictionaries to specify a sensor to be plotted live, see example; otherwise use default None
   | \ ``period``\ : a simulation time span in seconds which is simulated with the simulationFunction in every iteration
   | \ ``realtimeFactor``\ : if 1, the simulation is nearly performed in realtime (except for computation time); if > 1, it runs faster than realtime, if < 1, than it is slower

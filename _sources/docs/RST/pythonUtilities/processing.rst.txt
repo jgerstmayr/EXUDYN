@@ -97,7 +97,7 @@ Function: ParameterVariation
   | \ ``useDispyWebMonitor``\ : if given in \*\*kwargs, a web browser is started in case of cluster computation to manage the cluster during computation
   | \ ``useMPI``\ : if given in \*\*kwargs and set True, and if Python package mpi4py is installed, mpi parallelization is used; for hints see parameterVariationExample.py
 - | \ *output*\ :
-  | returns [parameterList, values], containing, e.g., parameterList=\'mass':[1,1,1,2,2,2,3,3,3], 'stiffness':[4,5,6, 4,5,6, 4,5,6]\ and the result values of the parameter variation accoring to the parameterList,
+  | returns [parameterList, values], containing, e.g., parameterList=\{'mass':[1,1,1,2,2,2,3,3,3], 'stiffness':[4,5,6, 4,5,6, 4,5,6]\} and the result values of the parameter variation accoring to the parameterList,
   | values=[7,8,9 ,3,4,5, 6,7,8] (depends on solution of problem ..., can also contain tuples, etc.)
 - | \ *example*\ :
 

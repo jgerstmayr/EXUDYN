@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Optimization and parameter variation &mdash; Exudyn1.7.116.dev1 1.7.116.dev1 documentation</title>
+  <title>Optimization and parameter variation &mdash; Exudyn1.7.118.dev1 1.7.118.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=8142d844"></script>
+        <script src="../../_static/documentation_options.js?v=551d1ecc"></script>
         <script src="../../_static/doctools.js?v=888ff710"></script>
         <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -43,7 +43,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.7.116.dev1
+            Exudyn1.7.118.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -97,7 +97,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.7.116.dev1</a>
+          <a href="../../index.html">Exudyn1.7.118.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -133,7 +133,7 @@ The according function <code class="docutils literal notranslate"><span class="p
 <p>Optimization problems are written in general in the form</p>
 <div class="math notranslate nohighlight">
 \[\min\limits_{{\mathbf{x}}} f({\mathbf{x}}), \quad {\mathbf{x}} \in \Rcal^n ,\]</div>
-<p>where <span class="math notranslate nohighlight">\(f({\mathbf{x}})\)</span> denotes the objective function (=fitness function). If we would like to maximize a function <span class="math notranslate nohighlight">\(\bar f({\mathbf{x}})\)</span>, simply set <span class="math notranslate nohighlight">\(f({\mathbf{x}})=-\bar f({\mathbf{x}})\)</span>.</p>
+<p>where <span class="math notranslate nohighlight">\(f({\mathbf{x}})\)</span> denotes the <em>objective function</em> (=<em>fitness function</em>). If we would like to maximize a function <span class="math notranslate nohighlight">\(\bar f({\mathbf{x}})\)</span>, simply set <span class="math notranslate nohighlight">\(f({\mathbf{x}})=-\bar f({\mathbf{x}})\)</span>.</p>
 <p>In engineering, the optimization problem could seek model parameters, e.g., the geometric dimensions and inertia parameters of a slider crank mechanism, in order to achieve smallest possible forces at the supports.
 Another example is the identification of unknown physical parameters, such as stiffness, damping of friction. This can be achieved by comparing measurement and simulation data (e.g., accelerations measured at relevant parts of a machine). Lets assume that <span class="math notranslate nohighlight">\(\epsilon(t)\)</span> is an error computed in every time step of a computation, then we can set the objective (=fitness) function, e.g., as</p>
 <div class="math notranslate nohighlight">
@@ -151,7 +151,7 @@ In general, a parameter variation would be sufficient to compute sufficient comp
 </figure>
 <p>For details, see the cited literature. Here, we focus on the implementation of the function
 <code class="docutils literal notranslate"><span class="pre">GeneticOptimization(...)</span></code>, see Section <a class="reference internal" href="pythonUtilities/processing.html#sec-processing-geneticoptimization"><span class="std std-ref">Function: GeneticOptimization</span></a>.
-The initial population (step 1) is created with <code class="docutils literal notranslate"><span class="pre">initialPopulationSize</span></code> individuals with uniformly distributed random design variables <span class="math notranslate nohighlight">\([{\mathbf{x}}_0, \ldots, {\mathbf{x}}_{n_{pi}-1}]\)</span>(<span class="math notranslate nohighlight">\({\mathbf{x}}_i=[x_{i0}, x_{i1}, \ldots]\)</span> being a set of genes, with single genes <span class="math notranslate nohighlight">\(x_{i0}\)</span>, <span class="math notranslate nohighlight">\(x_{i1}\)</span>, … ) in the search space, which is given in the dictionary <code class="docutils literal notranslate"><span class="pre">parameters</span></code>. Herafter (steps 2-6), we iteratively process a population for a certain textnumberOfGenerations generations.</p>
+The initial population (step 1) is created with <code class="docutils literal notranslate"><span class="pre">initialPopulationSize</span></code> individuals with uniformly distributed random design variables <span class="math notranslate nohighlight">\([{\mathbf{x}}_0, \ldots, {\mathbf{x}}_{n_{pi}-1}]\)</span> (<span class="math notranslate nohighlight">\({\mathbf{x}}_i=[x_{i0}, x_{i1}, \ldots]\)</span> being a set of genes, with single genes <span class="math notranslate nohighlight">\(x_{i0}\)</span>, <span class="math notranslate nohighlight">\(x_{i1}\)</span>, … ) in the search space, which is given in the dictionary <code class="docutils literal notranslate"><span class="pre">parameters</span></code>. Herafter (steps 2-6), we iteratively process a population for a certain <code class="docutils literal notranslate"><span class="pre">numberOfGenerations</span></code> generations.</p>
 <p>In step 3, the surviving individuals <span class="math notranslate nohighlight">\(S_s\)</span> with best fitness (smallest value from evaluation of <code class="docutils literal notranslate"><span class="pre">objectiveFunction</span></code>) are selected and considered further in the optimization. If the <code class="docutils literal notranslate"><span class="pre">distanceFactor</span></code> is used, the surviving individuals must be located within a certain distance (measured relative to the range of the search space) to all other surviving individuals. This option guarantees the search within several local minima, while a conventional search often converges to one single minimum.
 Crossover (step 4)  is performed using a crossover of all available parameters of two randomly selected parents when generating children from the surviving individuals. The crossover of genes is performed only for a part of the new population, defined by <code class="docutils literal notranslate"><span class="pre">crossoverAmount</span></code>.</p>
 <p>Finally, in step 5, we apply mutation to all genes, which extends the search to the surrounding design space of the individuals created by crossover. The mutation could be performed by means of certain distribution functions in order to focus on the currently best search regions. However, in the current implementation of <code class="docutils literal notranslate"><span class="pre">GeneticOptimization(...)</span></code> we simply use a uniform random variable to distribute the genes over a certain percentage of the design space, which is reduced in every generation defined by the <code class="docutils literal notranslate"><span class="pre">rangeReductionFactor</span></code> <span class="math notranslate nohighlight">\(r_r\)</span>. This allows us to restrict further search to a smaller subregion of the design space and in general allows a reduction of search space by means of <span class="math notranslate nohighlight">\(r_r^{n_g}\)</span>. In the ideal case, using sufficiently large population sizes and being lucky with the found random values, a range reduction factor <span class="math notranslate nohighlight">\(r_r=0.7\)</span> reduces the search space by a factor of <span class="math notranslate nohighlight">\(100\)</span> after every 13 generations, allowing to obtain 4 digits of accuracy for design variables after 26 generations for suitable optimization problems.</p>

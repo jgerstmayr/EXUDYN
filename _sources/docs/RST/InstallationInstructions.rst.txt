@@ -17,7 +17,7 @@ So far (2021-07), we tested
 
 +  \ **Anaconda 2023-07, 64bit, Python 3.11**\  with Spyder 5.4
 +  \ **Anaconda 2021-11, 64bit, Python 3.9**\ \ (older Anaconda3 versions can be downloaded via the repository archive \ ``https://repo.anaconda.com/archive/``\ )
-+  Currently, we support Python 3.8 - Python 3.11 \ **conda environments**\  on Windows, Linux and MacOS (with restrictions to some older and exotic operating systems).
++  Currently, we support Python 3.8 - Python 3.12 \ **conda environments**\  on Windows, Linux and MacOS (please report configurations that do not work on GitHub/issues).
 +  \ **Spyder 5.1.5**\  (with Python 3.9.7, 64bit) and \ **Spyder 4.1.3**\  (with Python 3.7.7, 64bit), which is included in the Anaconda installation\ (Note that it is important that Spyder, Python and Exudyn  are \ **either**\  32bit \ **or**\  64bit and are compiled up to the same minor version, i.e., 3.7.x. There will be a strange .DLL error, if you mix up 32/64bit. It is possible to install both, Anaconda 32bit and Anaconda 64bit -- then you should follow the recommendations of paths as suggested by Anaconda installer.); Spyder works with all virtual environments
 
 Many alternative options exist:
@@ -86,7 +86,7 @@ Troubleshooting pip install
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Pip install may fail, if your linux version does not support the current manylinux version.
-This is known for CentOS or simlilar systems which usually support manylinux2014. In this case, you have to build Exudyn from source, see Section :ref:`sec-install-installinstructions-buildubuntu`\ .
+This was known for Red Hat, CentOS, Rocky Linux or simlilar systems which usually support manylinux2014. In this case, you had to build Exudyn from source, see Section :ref:`sec-install-installinstructions-buildubuntu`\ . Since version 1.7.116, the manylinux2014 version is supported and according problems should be solved.
 
 Sometimes, you install exudyn, but when running python, the \ ``import exudyn``\  fails.
 In case of several environments, check where your installation goes. To guarantee that the pip install goes to the python call, use:
@@ -133,7 +133,7 @@ First, open an Anaconda prompt:
 +  EITHER calling: START->Anaconda->... OR go to anaconda/Scripts folder and call activate.bat
 +  You can check your Python version then, by running \ ``python``\ \ (\ ``python3``\  under Ubuntu 18.04), the output reads like:
   
-   \ ``Python 3.6.5 \ :math:`|`\ Anaconda, Inc.\ :math:`|`\  (default, Mar 29 2018, 13:32:41) \ :math:`[`\ MSC v.1900 64 bit (AMD64)\ :math:`]`\  on win32``\ 
+   \ ``Python 3.6.5 | Anaconda, Inc.| (default, Mar 29 2018, 13:32:41) [ MSC v.1900 64 bit (AMD64)] on win32``\ 
    ...
   
 +  type \ ``exit()``\  to close Python
@@ -167,7 +167,8 @@ Note that there are a couple of pre-requisites, depending on your system and ins
 +  run 'activate.bat' [may not be necessary]
   
 +  go to 'main' of your cloned github folder of Exudyn 
-+  run:\ (the \ ``--parallel``\  option performs parallel compilation on multithreaded CPUs and can speedup by 2x - 8x) \ ``python setup.py install --parallel``\ 
++  run:\ (Since version 1.7.116 a PEP518 compatible build is available. This should work with Windows, MacOS and linux. The \ ``setupPyConfig.json``\  file includes some flags such as the parallel compilation, GLFW, etc.; the \ ``-v``\  flag adds verbosity.) \ ``pip wheel . -v -w dist --no-deps``\ 
++  Before version 1.7.116: run:\ (the \ ``--parallel``\  option performs parallel compilation on multithreaded CPUs and can speedup by 2x - 8x) \ ``python setup.py install --parallel``\ 
 +  read the output; if there are errors, try to solve them by installing appropriate modules
 
 You can also create your own wheels, doing the above steps to activate the according Python version and then calling:
@@ -195,9 +196,11 @@ Requirements are an according Anaconda (or Miniconda) installation.
 
 \ **NOTE**\ :
 
-+  Multi-threading is not fully supported, but may work in some applications
++  New \ ``universal2``\  wheels should support x86 (APPLE Intel and Python/Rosetta on APPLE Silicon)
++  Multi-threading is not fully supported on MacOS, but may work in some applications
 +  On Apple M1 processors the newest Anaconda supports now all required features; environments with Python 3.8-3.11 have been successfully tested;
 +  The Rosetta (x86 emulation) mode on Apple M1 also works now without much restrictions; these files should also work on older Macs
++  If you have a MacOS version\ :math:`<11`\ , it worked to download wheels from PyPI, change wheel names, e.g., from \ ``exudyn-1.7.116.dev1-cp311-cp311-macosx_11_0_x86_64.whl``\  to \ ``exudyn-1.7.116.dev1-cp311-cp311-macosx_10_9_x86_64.whl``\ . This also works for universal2 files. Installation worked and wheels were running smoothly.
 +  \ ``tkinter``\  has been adapted (some workarounds needed on MacOS!), available since Exudyn 1.5.15.dev1
 +  Some optimization and processing functions do not run (especially multiprocessing and tqdm); 
 
@@ -214,7 +217,8 @@ If you would like to compile from source, just use a bash terminal on your Mac, 
 +  uninstall if old version exists (may need to repeat this!): \ ``pip uninstall exudyn``\ 
 +  remove the \ ``build``\  directory if you would like to re-compile without changes
 +  to perform compilation from source, write:\ (the \ ``--parallel``\  option performs parallel compilation on multithreaded CPUs and can speedup by 2x - 8x)
-+  \ ``python setup.py bdist_wheel --parallel``\ 
++  Since version 1.7.116: \ ``pip wheel . -v -w dist --no-deps``\ 
++  Until version 1.7.116: \ ``python setup.py bdist_wheel --parallel``\ 
 +  which takes 75 seconds on Apple M1 in parallel mode, otherwise 5 minutes. To install Exudyn, run
    \ ``python setup.py install``\ 
    \ :math:`\ra`\  this will only install, but not re-compile. Otherwise, just use pip install from the created wheel in the dist folder
@@ -311,6 +315,13 @@ With all of these libs, you can run the setup.py installer (go to \ ``Exudyn_git
   sudo python3 setup.py install --user --parallel
 
 
+Since version 1.7.116, a PEP518 compatible way to compile sources and install the current repository has been added (the \ ``-v``\  flag activates a verbose mode):
+
+.. code-block:: 
+
+  pip install . -v --no-deps
+
+
 
 
 Congratulation! \ **Now, run a test example**\  (will also open an OpenGL window if successful):
@@ -322,6 +333,12 @@ You can also create a Ubuntu wheel which can be easily installed on the same mac
 
    \ ``sudo pip3 install wheel``\ 
    \ ``sudo python3 setup.py bdist_wheel --parallel``\ 
+
+
+Since version 1.7.116, the PEP518 compatible way which puts wheels into the \ ``dist``\  folder reads:
+
+   \ ``pip wheel . -v -w dist --no-deps``\ 
+
 
 
 \ **Exudyn under Ubuntu / WSL**\ :

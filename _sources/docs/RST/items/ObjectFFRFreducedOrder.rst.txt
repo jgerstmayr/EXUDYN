@@ -229,7 +229,7 @@ by means of a reduction or mode basis \ :math:`\LU{b}{\tPsi}`\  (\ ``modeBasis``
 
 
 The mode basis \ :math:`\LU{b}{\tPsi}`\  contains so-called mode shape vectors in its columns, which may be computed from eigen analysis, static computation or more advanced techniques, 
-see the helper functions in module \ ``exudyn.FEM``\ , within the class \textFEMinterface.
+see the helper functions in module \ ``exudyn.FEM``\ , within the class \text{FEMinterface}.
 To compute eigen modes, use \ ``FEMinterface.ComputeEigenmodes(...)``\  or
 \ ``FEMinterface.ComputeHurtyCraigBamptonModes(...)``\ . For details on model order reduction and component mode synthesis, see Section :ref:`sec-theory-cms`\ .
 In many applications, \ :math:`n_m`\  typically ranges between 10 and 50, but also beyond -- depending on the desired accuracy of the model.

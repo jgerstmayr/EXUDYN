@@ -252,7 +252,7 @@ In this case, the coordinates of a vector \ :math:`{\mathbf{r}}`\  are transform
 .. figure:: ../theDoc/figures/elementaryRotationX.png
    :width: 320
 
-   Elementary rotation around axis \ :math:`\mathbf x_1`\ .
+   Elementary rotation around axis \ :math:`\mathbf{ x}_1`\ .
 
 
 In a second example, a rotation with angle \ :math:`\varphi_2`\  around \ :math:`{\mathbf{e}}_{y2}`\  is performed to transform from basis \ :math:`({\mathbf{e}}_{x2},\,{\mathbf{e}}_{y2},\,{\mathbf{e}}_{z2})`\  into \ :math:`({\mathbf{e}}_{x3},\,{\mathbf{e}}_{y3},\,{\mathbf{e}}_{z3})`\ , see \ :numref:`fig-theory-rotations-elementaryy`\ .
@@ -269,7 +269,7 @@ The rotation matrix for this case reads:
 .. figure:: ../theDoc/figures/elementaryRotationY.png
    :width: 320
 
-   Elementary rotation around axis \ :math:`\mathbf y_2`\ .
+   Elementary rotation around axis \ :math:`\mathbf{ y}_2`\ .
 
 
 Finally, a rotation around \ :math:`{\mathbf{e}}_{z3}`\  with angle \ :math:`\varphi_3`\  would give similarly,
@@ -416,7 +416,7 @@ We may therefore conclude
 .. figure:: ../theDoc/figures/RotationAxisAngle.png
    :width: 260
 
-   Rotation of a vector \ :math:`\mathbf r_0`\  by means of the angle-axis tuple \ :math:`(\mathbf u(t), \, \varphi(t))`\ .
+   Rotation of a vector \ :math:`\mathbf{ r}_0`\  by means of the angle-axis tuple \ :math:`(\mathbf{ u}(t), \, \varphi(t))`\ .
 
 
 
@@ -742,7 +742,7 @@ or in short form,
    \vp{0}{\LU{0}{{\mathbf{r}}}(t)}=\vp{p_{\mathrm{s}}(t)}{\LU{0}{{\mathbf{p}}}(t)} \, \circ \, \vp{0}{\LUR{0}{{\mathbf{r}}}{0}} \, \circ \, \vp{p_{\mathrm{s}}(t)}{-\LU{0}{{\mathbf{p}}}(t)} .
 
 
-With the multiplication rule for quaternions, the scalar part yields \ :math:`0=0`\  and the vector part the vector rotation \eqrefeq:theory:rotations:quaternionRotation. 
+With the multiplication rule for quaternions, the scalar part yields \ :math:`0=0`\  and the vector part the vector rotation \ :eq:`eq-theory-rotations-quaternionrotation`\ . 
 For multiple rotations, we have
 
 .. math::

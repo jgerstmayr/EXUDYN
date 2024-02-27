@@ -100,7 +100,7 @@ This section provides general coding rules and conventions, partly applicable to
 +  write readable code (e.g., variables and functions with names that represent the content or functionality; AVOID abbreviations)
 +  put a header in every file, according to Doxygen format
 +  put a comment to every (global) function, member function, data member, template parameter
-+  ALWAYS USE curly brackets for single statements in 'if', 'for', etc.; example: if (i<n) \i += 1;\
++  ALWAYS USE curly brackets for single statements in 'if', 'for', etc.; example: if (i<n) \{i += 1;\}
 +  use Doxygen-style comments (use '//!' Qt style and '@ date' with '@' instead of '\' for commands)
 +  use Doxygen (with preceeding '@') 'test' for tests, 'todo' for todos and 'bug' for bugs
 +  USE 4-spaces-tab
@@ -149,7 +149,7 @@ No-abbreviations-rule
 The code uses a \ **minimum set of abbreviations**\ ; however, the following abbreviation rules are used throughout:
 In general: DO NOT ABBREVIATE function, class or variable names: GetDataPointer() instead of GetPtr(); exception: cnt, i, j, k, x or v in cases where it is really clear (short, 5-line member functions).
 
-\ **Exceptions**\  to the NO-ABBREVIATIONS-RULE, see also \hyperref[sec:listOfAbbreviations]\underlineList of Abbreviations: 
+\ **Exceptions**\  to the NO-ABBREVIATIONS-RULE, see also \hyperref[sec:listOfAbbreviations]{\underline{List of Abbreviations}}: 
 
 +  \ :ref:`ODE <ODE>`\ 
 +  \ :ref:`ODE2 <ODE2>`\ : marks parts related to second order differential equations (SOS2, EvalF2 in HOTINT)

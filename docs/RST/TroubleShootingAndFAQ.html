@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Trouble shooting and FAQ &mdash; Exudyn1.7.116.dev1 1.7.116.dev1 documentation</title>
+  <title>Trouble shooting and FAQ &mdash; Exudyn1.7.118.dev1 1.7.118.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=8142d844"></script>
+        <script src="../../_static/documentation_options.js?v=551d1ecc"></script>
         <script src="../../_static/doctools.js?v=888ff710"></script>
         <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -43,7 +43,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.7.116.dev1
+            Exudyn1.7.118.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -97,7 +97,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.7.116.dev1</a>
+          <a href="../../index.html">Exudyn1.7.118.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -440,10 +440,8 @@ Solver stopped! use showHints=True to show helpful information
 </ul>
 <blockquote>
 <div><div class="line-block">
-<div class="line">→  UPDATE 2023-05-11 (V1.6.103): type completion now also works for functions, types and structures: tested in Spyder 5.2.2 and Visual Studio Code 1.78.1); with an added stub file (.pyi) the standard type completion fetches information about structures or functions; this even works for <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.bodies.kinematicTree.showJointFrames</span></code>. If you still have problems, try to restart your environment / computer or switch to a different version</div>
-<div class="line">→  UPDATE 2020-06-01: with Spyder 4, using Python 3.7, type auto completion works much better, but may find too many completions.</div>
-<div class="line">→  most Python environments (e.g., with Spyder 3) only have information up to the first sub-structure, e.g., <code class="docutils literal notranslate"><span class="pre">SC=exu.SystemContainer()</span></code> provides full access to SC in the type completion, but <code class="docutils literal notranslate"><span class="pre">mbs=SC.AddSystem()</span></code> is at the second sub-structure of the module and is not accessible.</div>
-<div class="line">→  WORKAROUND: type <code class="docutils literal notranslate"><span class="pre">mbs=MainSystem()</span></code> <strong>before</strong> the <code class="docutils literal notranslate"><span class="pre">mbs=SC.AddSystem()</span></code> command and the interpreter will know what type mbs is. This also works for settings, e.g., simulation settings ‘Newton’.</div>
+<div class="line">→  in earlier versions of Exudyn type completion did not work properly for more complex structures</div>
+<div class="line">→  since version 1.6.103 type completion works for most functions, types and structures: tested in Spyder 5.2.2 and Visual Studio Code 1.78.1); with an added stub file (.pyi) the standard type completion fetches information about structures or functions; this even works for example with <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.bodies.kinematicTree.showJointFrames</span></code>. If you still have problems, try to restart your environment / computer or switch to a different version, and create an issue on GitHub.</div>
 </div>
 </div></blockquote>
 <ul class="simple">

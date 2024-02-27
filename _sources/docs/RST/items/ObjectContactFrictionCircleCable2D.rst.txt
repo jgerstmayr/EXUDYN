@@ -236,8 +236,8 @@ In a similar, the tangential velocity reads
 
 
 In case of \ ``frictionStiffness != 0``\ , we continuously track the sticking position at which the cable element (or segment) and the circle 
-previously sticked together, similar as proposed by Lugr\'is et al.~. 
-The difference here to the latter reference, is that we explicitly exclude switching from Newton's method and that Lugr\'is et al.~used
+previously sticked together, similar as proposed by Lugr{\'i}s et al.~. 
+The difference here to the latter reference, is that we explicitly exclude switching from Newton's method and that Lugr{\'i}s et al.~used
 contact points, while we use linear segments.
 For a simple 1D example using this position based approach for friction, see \ ``Examples/lugreFrictionText.py``\ , 
 which compares the traditional LuGre friction model  with the position based model with tangential stiffness. 

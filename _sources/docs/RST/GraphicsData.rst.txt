@@ -67,13 +67,13 @@ GraphicsData \ ``'type' = 'Line'``\  draws a polygonal line between all specifie
 .. code-block:: python
 
   #rectangle with side length 1:
-  graphicsData = 'type':'Line', 
+  graphicsData = {'type':'Line', 
                   'color': [1,0,0,1], #red
                   'data': data=[0,0,0, 
                                 1,0,0, 
                                 1,1,0, 
                                 0,1,0, 
-                                0,0,0] 
+                                0,0,0]} 
 
   vGround=VObjectGround(graphicsData=[graphicsData])
   oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0], 
@@ -137,10 +137,10 @@ GraphicsData \ ``'type' = 'Circle'``\  draws a polygonal line between all specif
 
 .. code-block:: python
 
-  graphicsData = 'type':'Circle', 
+  graphicsData = {'type':'Circle', 
                   'color': [0,0,1,1],  #blue
                   'radius': 0.5, 
-                  'position':[2,3,0]
+                  'position':[2,3,0]}
 
 
 

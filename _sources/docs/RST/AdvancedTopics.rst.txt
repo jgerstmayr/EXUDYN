@@ -57,7 +57,7 @@ Contact problems
 ----------------
 
 Since Q4 2021 a contact module is available in Exudyn. 
-This separate module \ ``GeneralContact``\  \ :math:`[`\ \ **still under development, consider with care!**\ \ :math:`]`\  is highly optimized and implemented with parallelization (multi-threaded) for certain types of contact elements.
+This separate module \ ``GeneralContact``\  [\ **still under development, consider with care!**\ ] is highly optimized and implemented with parallelization (multi-threaded) for certain types of contact elements.
 
 
 .. _fig-contactexamples:
@@ -75,7 +75,7 @@ This separate module \ ``GeneralContact``\  \ :math:`[`\ \ **still under develop
 
 \ **Note**\ :
 
-+  \ ``GeneralContact``\  is (in most cases) restricted to dynamic simulation (explicit or implicit \ :math:`[`\ \ **still under development, consider with care!**\ \ :math:`]`\ ) if friction is used; without friction, it also works in the static case
++  \ ``GeneralContact``\  is (in most cases) restricted to dynamic simulation (explicit or implicit [\ **still under development, consider with care!**\ ] ) if friction is used; without friction, it also works in the static case
 +  in addition to \ ``GeneralContact``\  there are special objects, in particular for rolling and simple 1D contacts, that are available as single objects, cf. \ ``ObjectConnectorRollingDiscPenalty``\ 
 +  \ ``GeneralContact``\  is recommended to be used for large numbers of contacts, while the single objects are integrated more directly into mbs.
 

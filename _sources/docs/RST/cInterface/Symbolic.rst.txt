@@ -14,7 +14,7 @@ symbolic.Real
 
 
 
-The symbolic Real type allows to replace Python's float by a symbolic quantity. The \ ``symbolic.Real``\  may be directly set to a float and be evaluated as float. However, turing on recording by using 	extttexudyn.symbolic.SetRecording(True) (on by default), results are stored as expression trees, which may be evaluated in C++ or Python, in particular in user functions, see the following example:
+The symbolic Real type allows to replace Python's float by a symbolic quantity. The \ ``symbolic.Real``\  may be directly set to a float and be evaluated as float. However, turing on recording by using 	exttt{exudyn.symbolic.SetRecording(True)} (on by default), results are stored as expression trees, which may be evaluated in C++ or Python, in particular in user functions, see the following example:
 
 .. code-block:: python
    :linenos:
@@ -223,7 +223,7 @@ symbolic.Vector
 
 
 
-A symbolic Vector type to replace Python's (1D) numpy array in symbolic expressions. The \ ``symbolic.Vector``\  may be directly set to a list of floats or (1D) numpy array and be evaluated as array. However, turing on recording by using 	extttexudyn.symbolic.SetRecording(True) (on by default), results are stored as expression trees, which may be evaluated in C++ or Python, in particular in user functions, see the following example:
+A symbolic Vector type to replace Python's (1D) numpy array in symbolic expressions. The \ ``symbolic.Vector``\  may be directly set to a list of floats or (1D) numpy array and be evaluated as array. However, turing on recording by using 	exttt{exudyn.symbolic.SetRecording(True)} (on by default), results are stored as expression trees, which may be evaluated in C++ or Python, in particular in user functions, see the following example:
 
 .. code-block:: python
    :linenos:
@@ -328,7 +328,7 @@ symbolic.Matrix
 
 
 
-A symbolic Matrix type to replace Python's (2D) numpy array in symbolic expressions. The \ ``symbolic.Matrix``\  may be directly set to a list of list of floats or (2D) numpy array and be evaluated as array. However, turing on recording by using 	extttexudyn.symbolic.SetRecording(True) (on by default), results are stored as expression trees, which may be evaluated in C++ or Python, in particular in user functions, see the following example:
+A symbolic Matrix type to replace Python's (2D) numpy array in symbolic expressions. The \ ``symbolic.Matrix``\  may be directly set to a list of list of floats or (2D) numpy array and be evaluated as array. However, turing on recording by using 	exttt{exudyn.symbolic.SetRecording(True)} (on by default), results are stored as expression trees, which may be evaluated in C++ or Python, in particular in user functions, see the following example:
 
 .. code-block:: python
    :linenos:

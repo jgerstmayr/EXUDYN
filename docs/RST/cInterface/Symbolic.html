@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Symbolic &mdash; Exudyn1.7.116.dev1 1.7.116.dev1 documentation</title>
+  <title>Symbolic &mdash; Exudyn1.7.118.dev1 1.7.118.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=8142d844"></script>
+        <script src="../../../_static/documentation_options.js?v=551d1ecc"></script>
         <script src="../../../_static/doctools.js?v=888ff710"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -43,7 +43,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.7.116.dev1
+            Exudyn1.7.118.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -103,7 +103,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.7.116.dev1</a>
+          <a href="../../../index.html">Exudyn1.7.118.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -127,7 +127,7 @@
 <p>The Symbolic sub-module in <code class="docutils literal notranslate"><span class="pre">exudyn.symbolic</span></code> allows limited symbolic manipulations in Exudyn and is currently under development In particular, symbolic user functions can be created, which allow significant speedup of Python user functions. However, <strong>always veryfy your symbolic expressions or user functions</strong>, as behavior may be unexpected in some cases.</p>
 <section id="symbolic-real">
 <h2>symbolic.Real<a class="headerlink" href="#symbolic-real" title="Link to this heading"></a></h2>
-<p>The symbolic Real type allows to replace Python’s float by a symbolic quantity. The <code class="docutils literal notranslate"><span class="pre">symbolic.Real</span></code> may be directly set to a float and be evaluated as float. However, turing on recording by using       extttexudyn.symbolic.SetRecording(True) (on by default), results are stored as expression trees, which may be evaluated in C++ or Python, in particular in user functions, see the following example:</p>
+<p>The symbolic Real type allows to replace Python’s float by a symbolic quantity. The <code class="docutils literal notranslate"><span class="pre">symbolic.Real</span></code> may be directly set to a float and be evaluated as float. However, turing on recording by using       exttt{exudyn.symbolic.SetRecording(True)} (on by default), results are stored as expression trees, which may be evaluated in C++ or Python, in particular in user functions, see the following example:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
 <span class="linenos"> 2</span><span class="n">esym</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">symbolic</span>     <span class="c1">#abbreviation</span>
 <span class="linenos"> 3</span><span class="n">SymReal</span> <span class="o">=</span> <span class="n">esym</span><span class="o">.</span><span class="n">Real</span>     <span class="c1">#abbreviation</span>
@@ -425,7 +425,7 @@
 </section>
 <section id="symbolic-vector">
 <h2>symbolic.Vector<a class="headerlink" href="#symbolic-vector" title="Link to this heading"></a></h2>
-<p>A symbolic Vector type to replace Python’s (1D) numpy array in symbolic expressions. The <code class="docutils literal notranslate"><span class="pre">symbolic.Vector</span></code> may be directly set to a list of floats or (1D) numpy array and be evaluated as array. However, turing on recording by using   extttexudyn.symbolic.SetRecording(True) (on by default), results are stored as expression trees, which may be evaluated in C++ or Python, in particular in user functions, see the following example:</p>
+<p>A symbolic Vector type to replace Python’s (1D) numpy array in symbolic expressions. The <code class="docutils literal notranslate"><span class="pre">symbolic.Vector</span></code> may be directly set to a list of floats or (1D) numpy array and be evaluated as array. However, turing on recording by using   exttt{exudyn.symbolic.SetRecording(True)} (on by default), results are stored as expression trees, which may be evaluated in C++ or Python, in particular in user functions, see the following example:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
 <span class="linenos"> 2</span><span class="n">esym</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">symbolic</span>
 <span class="linenos"> 3</span>
@@ -547,7 +547,7 @@
 </section>
 <section id="symbolic-matrix">
 <h2>symbolic.Matrix<a class="headerlink" href="#symbolic-matrix" title="Link to this heading"></a></h2>
-<p>A symbolic Matrix type to replace Python’s (2D) numpy array in symbolic expressions. The <code class="docutils literal notranslate"><span class="pre">symbolic.Matrix</span></code> may be directly set to a list of list of floats or (2D) numpy array and be evaluated as array. However, turing on recording by using   extttexudyn.symbolic.SetRecording(True) (on by default), results are stored as expression trees, which may be evaluated in C++ or Python, in particular in user functions, see the following example:</p>
+<p>A symbolic Matrix type to replace Python’s (2D) numpy array in symbolic expressions. The <code class="docutils literal notranslate"><span class="pre">symbolic.Matrix</span></code> may be directly set to a list of list of floats or (2D) numpy array and be evaluated as array. However, turing on recording by using   exttt{exudyn.symbolic.SetRecording(True)} (on by default), results are stored as expression trees, which may be evaluated in C++ or Python, in particular in user functions, see the following example:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
 <span class="linenos"> 2</span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="linenos"> 3</span><span class="n">esym</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">symbolic</span>

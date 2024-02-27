@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ObjectRigidBody &mdash; Exudyn1.7.116.dev1 1.7.116.dev1 documentation</title>
+  <title>ObjectRigidBody &mdash; Exudyn1.7.118.dev1 1.7.118.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=8142d844"></script>
+        <script src="../../../_static/documentation_options.js?v=551d1ecc"></script>
         <script src="../../../_static/doctools.js?v=888ff710"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -43,7 +43,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.7.116.dev1
+            Exudyn1.7.118.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -107,7 +107,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.7.116.dev1</a>
+          <a href="../../../index.html">Exudyn1.7.118.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -129,7 +129,7 @@
              
   <section id="objectrigidbody">
 <span id="sec-item-objectrigidbody"></span><h1>ObjectRigidBody<a class="headerlink" href="#objectrigidbody" title="Link to this heading"></a></h1>
-<p>A 3D rigid body which is attached to a 3D rigid body node. The rotation parametrization of the rigid body follows the rotation parametrization of the node. Use Euler parameters in the general case (no singularities) in combination with implicit solvers (GeneralizedAlpha or TrapezoidalIndex2), Tait-Bryan angles for special cases, e.g., rotors where no singularities occur if you rotate about <span class="math notranslate nohighlight">\(x\)</span> or <span class="math notranslate nohighlight">\(z\)</span> axis, or use Lie-group formulation with rotation vector together with explicit solvers. REMARK: Use the class <code class="docutils literal notranslate"><span class="pre">RigidBodyInertia</span></code>, see Section <a class="reference internal" href="../pythonUtilities/rigidBodyUtilities.html#sec-rigidbodyutilities-rigidbodyinertia-init"><span class="std std-ref">Class function: __init__</span></a> and <code class="docutils literal notranslate"><span class="pre">AddRigidBody(...)</span></code>, see Section <a class="reference internal" href="../pythonUtilities/rigidBodyUtilities.html#sec-rigidbodyutilities-addrigidbody"><span class="std std-ref">Function: AddRigidBody</span></a>, of <code class="docutils literal notranslate"><span class="pre">exudyn.rigidBodyUtilities</span></code> to handle inertia, <a class="reference internal" href="../Abbreviations.html#com"><span class="std std-ref">COM</span></a> and mass. addExampleImageObjectRigidBody</p>
+<p>A 3D rigid body which is attached to a 3D rigid body node. The rotation parametrization of the rigid body follows the rotation parametrization of the node. Use Euler parameters in the general case (no singularities) in combination with implicit solvers (GeneralizedAlpha or TrapezoidalIndex2), Tait-Bryan angles for special cases, e.g., rotors where no singularities occur if you rotate about <span class="math notranslate nohighlight">\(x\)</span> or <span class="math notranslate nohighlight">\(z\)</span> axis, or use Lie-group formulation with rotation vector together with explicit solvers. REMARK: Use the class <code class="docutils literal notranslate"><span class="pre">RigidBodyInertia</span></code>, see Section <a class="reference internal" href="../pythonUtilities/rigidBodyUtilities.html#sec-rigidbodyutilities-rigidbodyinertia-init"><span class="std std-ref">Class function: __init__</span></a> and <code class="docutils literal notranslate"><span class="pre">AddRigidBody(...)</span></code>, see Section <a class="reference internal" href="../pythonUtilities/rigidBodyUtilities.html#sec-rigidbodyutilities-addrigidbody"><span class="std std-ref">Function: AddRigidBody</span></a>, of <code class="docutils literal notranslate"><span class="pre">exudyn.rigidBodyUtilities</span></code> to handle inertia, <a class="reference internal" href="../Abbreviations.html#com"><span class="std std-ref">COM</span></a> and mass. addExampleImage{ObjectRigidBody}</p>
 <p><strong>Additional information for ObjectRigidBody</strong>:</p>
 <ul>
 <li><div class="line-block">
@@ -622,7 +622,7 @@ the last line has been pre-multiplied with <span class="math notranslate nohighl
 <p>and for the index 2 case</p>
 <div class="math notranslate nohighlight" id="equation-eq-objectrigidbody-eulerparametersvel">
 <span class="eqno">(43)<a class="headerlink" href="#equation-eq-objectrigidbody-eulerparametersvel" title="Link to this equation"></a></span>\[\dot g_\theta(\ttheta) = 2 \theta_0 \dot \theta_0 + 2 \theta_1 \dot \theta_1 + 2 \theta_2 \dot \theta_2 + 2 \theta_3 \dot \theta_3 = 0\]</div>
-<p>Given a Lagrange parameter (algebraic variable) <span class="math notranslate nohighlight">\(\lambda_\theta\)</span> related to the Euler parameter constraint eqrefeq:ObjectRigidBody:eulerParameters, the constraint reaction forces in Eq. <a class="reference internal" href="#equation-eq-objectrigidbody-eom">(41)</a> then read</p>
+<p>Given a Lagrange parameter (algebraic variable) <span class="math notranslate nohighlight">\(\lambda_\theta\)</span> related to the Euler parameter constraint <a class="reference internal" href="#equation-eq-objectrigidbody-eulerparameters">(42)</a>, the constraint reaction forces in Eq. <a class="reference internal" href="#equation-eq-objectrigidbody-eom">(41)</a> then read</p>
 <div class="math notranslate nohighlight">
 \[{\mathbf{f}}_{\theta,\lambda} = \frac{\partial g_\theta}{\ttheta\tp} \lambda_\theta = [2\theta_0,\; 2\theta_1,\; 2\theta_2,\; 2\theta_3]\tp\]</div>
 <hr class="docutils" />

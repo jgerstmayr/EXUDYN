@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Further notes &mdash; Exudyn1.7.116.dev1 1.7.116.dev1 documentation</title>
+  <title>Further notes &mdash; Exudyn1.7.118.dev1 1.7.118.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=8142d844"></script>
+        <script src="../../_static/documentation_options.js?v=551d1ecc"></script>
         <script src="../../_static/doctools.js?v=888ff710"></script>
         <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -43,7 +43,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.7.116.dev1
+            Exudyn1.7.118.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -96,7 +96,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.7.116.dev1</a>
+          <a href="../../index.html">Exudyn1.7.118.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -119,28 +119,29 @@
 <h1>Further notes<a class="headerlink" href="#further-notes" title="Link to this heading"></a></h1>
 <section id="goals-of-exudyn">
 <span id="sec-install-notes-goals"></span><h2>Goals of Exudyn<a class="headerlink" href="#goals-of-exudyn" title="Link to this heading"></a></h2>
-<p>After the first development phase (2019-2021), it</p>
+<p>After the first development phase (2019-2023), it</p>
 <ul class="simple">
-<li><p>is a moderately large (2MB on windows!) multibody library, which can be easily linked to other projects,</p></li>
+<li><p>is a moderately large (wheels have only sizes of 2MB on Windows and 4MB on Linux, without fast Exudyn options) multibody library, which can be easily linked to other projects,</p></li>
 <li><p>contains basic multibody rigid bodies, flexible bodies, joints, contact, etc.,</p></li>
 <li><p>includes a large Python utility library for convenient building and post processing of models,</p></li>
 <li><p>allows to efficiently simulate small scale systems (compute <span class="math notranslate nohighlight">\(100\,000\)</span>s of time steps per second for systems with <span class="math notranslate nohighlight">\(n_{DOF}&lt;10\)</span>),</p></li>
 <li><p>allows to efficiently simulate medium scaled systems for problems with <span class="math notranslate nohighlight">\(n_{DOF} &lt; 1\,000\,000\)</span>,</p></li>
 <li><p>is a safe and widely accessible module for Python,</p></li>
 <li><p>allows to add user defined objects and solvers in C++,</p></li>
-<li><p>allows to add user defined objects and solvers in Python.</p></li>
+<li><p>allows to add user defined objects and solvers in Python,</p></li>
+<li><p>allows multi-threaded parallel computing,</p></li>
+<li><p>includes Lie group integration,</p></li>
+<li><p>includes interfaces for robotics and ROS,</p></li>
+<li><p>includes interfaces for reinforcement learning (stable-baselines3), pytorch and artificial intelligence,</p></li>
+<li><p>includes kinematical trees with minimal coordinates.</p></li>
 </ul>
-<p>Future goals (2022-2024) are:</p>
+<p>Future goals (2024-2026) are:</p>
 <ul class="simple">
-<li><p>add more multi-threaded parallel computing techniques (DONE, Q2 2022),</p></li>
-<li><p>add vectorization,</p></li>
 <li><p>add specific and advanced connectors/constraints (extended wheels, contact, control connector)</p></li>
-<li><p>kinematical trees with minimal coordinates (DONE, Q1 2022),</p></li>
-<li><p>automatic step size selection for second order solvers (planned, 2023),</p></li>
-<li><p>deeper integration of Lie groups (Q3 2022),</p></li>
-<li><p>more interfaces for robotics (DONE, Q1 2022),</p></li>
-<li><p>add 3D beams (first attempts exist; planned, Q1 2023),</p></li>
-<li><p>export equations (planned, 2024)</p></li>
+<li><p>automatic step size selection for second order solvers (planned 2025),</p></li>
+<li><p>add 3D beams and plates (first attempts exist; planned 2024),</p></li>
+<li><p>export equations (planned, 2025),</p></li>
+<li><p>add GPU support (planned, 2025).</p></li>
 </ul>
 <p>For solved issues (and new features), see section ‘Issues and Bugs’, Section <a class="reference internal" href="trackerlog.html#sec-issuetracker"><span class="std std-ref">Issue tracker</span></a>.
 For specific open issues, see <code class="docutils literal notranslate"><span class="pre">trackerlog.html</span></code> – a document only intended for developers!</p>
