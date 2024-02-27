@@ -45,9 +45,16 @@ jobs:
     name: Build wheels on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
+      # matrix:
+        # os: [macos-latest]
+        # python-version: ['10', '11']
       matrix:
-        os: [macos-latest]
+        os: [macos-latest, windows-latest]
         python-version: ['10', '11']
+        architecture: ['x64','arm64']
+        exclude:
+          - os: windows-latest
+            architecture: 'arm64'
     steps:
     - uses: actions/checkout@v4
 
@@ -65,7 +72,9 @@ jobs:
       env:
         CIBW_BUILD: "cp3${{ matrix.python-version }}-*"
         CIBW_SKIP: "*-win32"   #skip building 32-bit (win32) wheels
-        CIBW_ARCHS_MACOS: "arm64"
+        #CIBW_ARCHS_MACOS: "arm64"
+        # MACOSX_DEPLOYMENT_TARGET: "10.9"  # Target macOS 10.9
+        # CIBW_ENVIRONMENT_MACOS: "MACOSX_DEPLOYMENT_TARGET=10.9"  # environment for macOS builds
       working-directory: main  #specify the local dir where setup.py is located
 
     - uses: actions/upload-artifact@v4
