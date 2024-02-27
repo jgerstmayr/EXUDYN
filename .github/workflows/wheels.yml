@@ -47,15 +47,8 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: windows-latest
-            python-version: ['10', '11']
-            architecture: x86_64
           - os: macos-latest
             python-version: ['10', '11']
-            architecture: x86_64
-          - os: macos-latest
-            python-version: ['10', '11']
-            architecture: arm64
     steps:
     - uses: actions/checkout@v4
 
@@ -63,7 +56,7 @@ jobs:
       uses: actions/setup-python@v4
       with:
         python-version: 3.${{ matrix.python-version }}
-        architecture: ${{ matrix.architecture }}
+        architecture: "arm64"
 
     - name: Install cibuildwheel
       run: python -m pip install cibuildwheel
@@ -73,7 +66,7 @@ jobs:
       env:
         CIBW_BUILD: "cp3${{ matrix.python-version }}-*"
         CIBW_SKIP: "*-win32"   #skip building 32-bit (win32) wheels
-        CIBW_ARCHS_MACOS: ${{ matrix.architecture }}
+        CIBW_ARCHS_MACOS: "arm64"
       working-directory: main  #specify the local dir where setup.py is located
 
     - uses: actions/upload-artifact@v4
