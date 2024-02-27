@@ -78,7 +78,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-latest, macos-10] #'macos-10.9']
+        os: [windows-latest, macos-latest]
         python-version: ['10', '11'] 
         # python-version: ['8', '9', '10', '11', '12'] 
         exclude:
@@ -103,7 +103,7 @@ jobs:
       env:
         CIBW_BUILD: "cp3${{ matrix.python-version }}-*"
         CIBW_SKIP: "*-win32"   #skip building 32-bit (win32) wheels
-        MACOSX_DEPLOYMENT_TARGET: "10.9"  # Target macOS 10.9
+        CIBW_ARCHS_MACOS: "universal2"
         CIBW_ENVIRONMENT_MACOS: "MACOSX_DEPLOYMENT_TARGET=10.9"  # environment for macOS builds
       working-directory: main  #specify the local dir where setup.py is located
 
