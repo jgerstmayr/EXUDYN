@@ -42,11 +42,11 @@ jobs:
           # path: ./main/dist/*manylinux2014_x86_64.whl
 
   buildWindowsMacOS:
-    name: Build wheels on ${{ matrix.os }} ${{ matrix.architecture }}
+    name: Build wheels on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: macos-latest
+        os: [macos-latest]
         python-version: ['10', '11']
     steps:
     - uses: actions/checkout@v4
