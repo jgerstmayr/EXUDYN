@@ -116,7 +116,7 @@ jobs:
 
   mergeArtifacts: #merge artifacts into one directory and zip it
     # needs: buildWindowsMacOS
-    needs: [buildWindowsMacOS, buildUbuntu]
+    needs: [buildWindowsMacOS] #, buildUbuntu]
     runs-on: ubuntu-latest
     steps:
     - name: Merge All Artifacts
