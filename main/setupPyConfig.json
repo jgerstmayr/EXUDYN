@@ -4,5 +4,5 @@
 	"quietCompile": "True",
 	"minimalCppFiles": "False",
 	"useOpenVR": "False",
-	"compileExudynFast": "False"
+	"compileExudynFast": "True"
 }

@@ -16,7 +16,7 @@ This section will show:
 What is Exudyn ?
 ----------------
 
-Exudyn --  (fl\ **EX**\ ible m\ **U**\ ltibody \ **DYN**\ amics  -- \ **EX**\ tend yo\ **U**\ r \ **DYN**\ amics)
+Exudyn -- (fl\ **EX**\ ible m\ **U**\ ltibody \ **DYN**\ amics  -- \ **EX**\ tend yo\ **U**\ r \ **DYN**\ amics) 
 
 Exudyn is a C++ based Python library for efficient simulation of flexible multibody dynamics systems.
 It is the follow up code of the previously developed multibody code HOTINT, which Johannes Gerstmayr started during his PhD-thesis.

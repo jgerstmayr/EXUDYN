@@ -172,7 +172,7 @@ The remaining terms in the Jacobian are currently (or by default settings) evalu
 
 Note that some parts of the Jacobian are \ **neglected**\ , such as mass matrix and constraint Jacobian terms in \ :math:`{\mathbf{J}}_{\SO\SO}`\ , which are usually of minor influence. Furthermore, Jacobians for state-dependent loads are neglected except for system-wide numerical Jacobians.
 
-Once an update \ :math:`{\mathbf{q}}^\mathrm{Newton}_{k+1}`\  has been computed, the interpolation formulas \eqrefeq_Newmark_interpolation need to be evaluated before the next residual and Jacobian can be computed.
+Once an update \ :math:`{\mathbf{q}}^\mathrm{Newton}_{k+1}`\  has been computed, the interpolation formulas \ :eq:`eq-newmark-interpolation`\  need to be evaluated before the next residual and Jacobian can be computed.
 
 (B) Solve for unknown displacements
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

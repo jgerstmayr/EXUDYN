@@ -269,8 +269,8 @@ You can also do quite fancy things during simulation, e.g., to deactivate joints
 
 
 Note that you could also change \ ``visualizationSettings``\  in this way, but the Visualization settings dialog is much more convenient.
-Changing \ ``simulationSettings``\  is dangerous and must be treated with care.
-Some parameters, such as \ ``simulationSettings.timeIntegration.endTime``\  are copied into the internal solver's \textmbs.sys['dynamicSolver'].it structure.
+Changing \ ``simulationSettings``\  within the execute command is dangerous and must be treated with care.
+Some parameters, such as \ ``simulationSettings.timeIntegration.endTime``\  are copied into the internal solver's \ ``mbs.sys['dynamicSolver'].it``\  structure.
 
 Thus, changing \ ``simulationSettings.timeIntegration.endTime``\  has no effect during simulation. 
 As a rule of thumb, all variables that are not stored inside the solvers structures may be adjusted by the \ ``simulationSettings``\  passed to the solver (which are then not copied internally); see the C++ code for details. However, behavior may change in future and unexpected behavior or and changing \ ``simulationSettings``\  will likely cause crashes if you do not know exactly the behavior, e.g., changing output format from text to binary ... !
@@ -337,13 +337,13 @@ Alternatively, you can obtain the current model view from the console after a si
 
   In[1] : SC.GetRenderState()
   Out[1]: 
-  'centerPoint': [1.0, 0.0, 0.0],
+  {'centerPoint': [1.0, 0.0, 0.0],
    'maxSceneSize': 2.0,
    'zoom': 1.0,
    'currentWindowSize': [1024, 768],
    'modelRotation': [[ 0.34202015,  0.        , 0.9396926 ],
                      [-0.60402274,  0.76604444, 0.21984631],
-                     [-0.7198463 , -0.6427876 , 0.26200265]])
+                     [-0.7198463 , -0.6427876 , 0.26200265]])}
 
 
 which contains the last state of the renderer.
@@ -353,7 +353,7 @@ Now copy the output and set this with \ ``SC.SetRenderState``\  in your Python c
 
   SC.visualizationSettings.general.autoFitScene = False #prevent from autozoom
   exu.StartRenderer()
-  renderState='centerPoint': [1.0, 0.0, 0.0],
+  renderState={'centerPoint': [1.0, 0.0, 0.0],
                'maxSceneSize': 2.0,
                'zoom': 1.0,
                'currentWindowSize': [1024, 768],

@@ -32,7 +32,7 @@ Optimization problems are written in general in the form
    \min\limits_{{\mathbf{x}}} f({\mathbf{x}}), \quad {\mathbf{x}} \in \Rcal^n ,
 
 
-where \ :math:`f({\mathbf{x}})`\  denotes the objective function (=fitness function). If we would like to maximize a function \ :math:`\bar f({\mathbf{x}})`\ , simply set \ :math:`f({\mathbf{x}})=-\bar f({\mathbf{x}})`\ .
+where \ :math:`f({\mathbf{x}})`\  denotes the \ *objective function*\  (=\ *fitness function*\ ). If we would like to maximize a function \ :math:`\bar f({\mathbf{x}})`\ , simply set \ :math:`f({\mathbf{x}})=-\bar f({\mathbf{x}})`\ .
 
 In engineering, the optimization problem could seek model parameters, e.g., the geometric dimensions and inertia parameters of a slider crank mechanism, in order to achieve smallest possible forces at the supports.
 Another example is the identification of unknown physical parameters, such as stiffness, damping of friction. This can be achieved by comparing measurement and simulation data (e.g., accelerations measured at relevant parts of a machine). Lets assume that \ :math:`\epsilon(t)`\  is an error computed in every time step of a computation, then we can set the objective (=fitness) function, e.g., as 
@@ -62,7 +62,7 @@ The general structure of a (canonical) genetic algorithm is depicted in \ :numre
 
 For details, see the cited literature. Here, we focus on the implementation of the function 
 \ ``GeneticOptimization(...)``\ , see Section :ref:`sec-processing-geneticoptimization`\ .
-The initial population (step 1) is created with \ ``initialPopulationSize``\  individuals with uniformly distributed random design variables \ :math:`[{\mathbf{x}}_0, \ldots, {\mathbf{x}}_{n_{pi}-1}]`\ \ (\ :math:`{\mathbf{x}}_i=[x_{i0}, x_{i1}, \ldots]`\  being a set of genes, with single genes \ :math:`x_{i0}`\ , \ :math:`x_{i1}`\ , ... ) in the search space, which is given in the dictionary \ ``parameters``\ . Herafter (steps 2-6), we iteratively process a population for a certain \textnumberOfGenerations generations.
+The initial population (step 1) is created with \ ``initialPopulationSize``\  individuals with uniformly distributed random design variables \ :math:`[{\mathbf{x}}_0, \ldots, {\mathbf{x}}_{n_{pi}-1}]`\  \ (\ :math:`{\mathbf{x}}_i=[x_{i0}, x_{i1}, \ldots]`\  being a set of genes, with single genes \ :math:`x_{i0}`\ , \ :math:`x_{i1}`\ , ... ) in the search space, which is given in the dictionary \ ``parameters``\ . Herafter (steps 2-6), we iteratively process a population for a certain \ ``numberOfGenerations``\  generations.
 
 In step 3, the surviving individuals \ :math:`S_s`\  with best fitness (smallest value from evaluation of \ ``objectiveFunction``\ ) are selected and considered further in the optimization. If the \ ``distanceFactor``\  is used, the surviving individuals must be located within a certain distance (measured relative to the range of the search space) to all other surviving individuals. This option guarantees the search within several local minima, while a conventional search often converges to one single minimum.
 Crossover (step 4)  is performed using a crossover of all available parameters of two randomly selected parents when generating children from the surviving individuals. The crossover of genes is performed only for a part of the new population, defined by \ ``crossoverAmount``\ .

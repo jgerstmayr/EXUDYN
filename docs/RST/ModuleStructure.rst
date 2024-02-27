@@ -97,7 +97,7 @@ Conventions: items, indexes, coordinates
 
 In this documentation, we will use the term \ **item**\  to identify nodes, objects, markers, loads and sensors: 
 
-  item \ :math:`\in`\  \node, object, marker, load, sensor\ 
+  item \ :math:`\in`\  \{node, object, marker, load, sensor\} 
 
 \ **Indexes: arrays and vectors starting with 0:**\  
 

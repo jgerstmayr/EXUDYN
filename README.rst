@@ -37,7 +37,7 @@ Exudyn
 
 **A flexible multibody dynamics systems simulation code with Python and C++**
 
-Exudyn version = 1.7.116.dev1 (Hall)
+Exudyn version = 1.7.118.dev1 (Hall)
 
 +  **University of Innsbruck**, Department of Mechatronics, Innsbruck, Austria
 
@@ -46,7 +46,7 @@ If you like using Exudyn, please add a *star* on github and follow us on
 
 +  **NOTE**: for pure installation, use **pip install exudyn** (see further description below)
 +  *free, open source* and with plenty of *documentation* and *examples*
-+  **pre-built** for Python 3.6 - 3.11 under **Windows** and **Linux**, Python 3.8 - 3.11 under **MacOS** available; build wheels yourself, see `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ )
++  **pre-built** for Python 3.8 - 3.12 under **Windows** , **Linux** and **MacOS** available ( **NEW** : now with manylinux2014 compatibility and PEP518 build); build wheels yourself, see `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ )
 +  Exudyn can be linked to any other Python package, but we explicitly mention: `NGsolve <https://github.com/NGSolve/ngsolve>`_, `OpenAI <https://github.com/openai>`_, `OpenAI gym <https://github.com/openai/gym>`_, `Robotics Toolbox (Peter Corke) <https://github.com/petercorke/robotics-toolbox-python>`_, `Pybind11 <https://github.com/pybind/pybind11>`_
 
 .. |pic1| image:: docs/demo/screenshots/pistonEngine.gif
@@ -71,11 +71,13 @@ If you like using Exudyn, please add a *star* on github and follow us on
 
 Johannes Gerstmayr. Exudyn -- A C++ based Python package for flexible multibody systems. Multibody System Dynamics, 2023. `https://doi.org/10.1007/s11044-023-09937-1 <https://doi.org/10.1007/s11044-023-09937-1>`_
 
-Due to limitations for complex formulas, images and references in .rst files, some details are only available in theDoc.pdf, see the `github page of Exudyn <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_! There may also be some conversion errors in the auto-generated html pages.
+Due to limitations for complex formulas, images and references in .rst files, some (small) details are only available in theDoc.pdf, see the `github page of Exudyn <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_! There may also be some conversion errors in the auto-generated html pages.
 
 For license, see LICENSE.txt in the root github folder on github!
 
 In addition to the tutorial in the documentation, many ( **250+** ) examples can be downloaded on github under main/pythonDev/Examples and main/pythonDev/TestModels . They are also on ReadTheDocs.
+
+Note that **ChatGPT** and other large language models know Exudyn quite well. They are able to build parts of your code or even full models, see `https://doi.org/10.1007/s11044-023-09962-0 <https://doi.org/10.1007/s11044-023-09962-0>`_
 
 Tutorial videos ( **new Feb 2024** )can be found in the `youtube channel of Exudyn <https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg_jtl6fx>`_ !
 

@@ -294,12 +294,15 @@ convLatexWords={'(\\the\\month-\\the\\year)':'',
            '\\item[--]':' - ',  #one additional whitespace at beginning for alignment of sub-lists!
            '\\item':'+ ',
            '\\finishTable':'',
-           '\\small':'',
+           # '\\small':'', #replaced to \mysmall
            '\\noindent ':'',
            '\\noindent':'',
            '\\nonumber':'', 
            '\\phantom{XXXX}':'    ',
            '$\\ra$':'→',
+           '\\textbar':'|',
+           '\\lbrack':'[',
+           '\\rbrack':']',
            '\\newpage':'',
            '\\tabnewline':'',
            #'\\TAB':'  ', #done in example conversion
@@ -329,11 +332,12 @@ convLatexWords={'(\\the\\month-\\the\\year)':'',
            '\\ei':'',
            '\\bn':'', 
            '\\en':'',
-           '\\it ':'',
+           #'\\it ':'', #replaced to \myitalics
            #specials:
            '\\ge':'>=',
            '\\_':'_',
            '\\textdegree':'°',
+           '-{}-':'--',
            #
            '{\\"a}':'ä',
            '{\\"o}':'ö',
@@ -372,6 +376,7 @@ convLatexCommands={#(precommand,'_USE'/'',postcommand)
     '\\footnote':('\\ (','_USE',')'), #rst footnotes may be used instead: https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html#footnotes
     '\\mybold':('\\ **','_USE','**\\ '),
     '\\myitalics':('\\ *','_USE','*\\ '),
+    '\\mysmall':('','_USE',''), #no change of fonts for now
     #'\\mathrm':('','_USE',''),
     '\\cite':('','',''),
     '\\onlyRST':('','_USE',''),
@@ -391,6 +396,7 @@ convLatexCommands={#(precommand,'_USE'/'',postcommand)
     
     '\\refSectionA':(' :ref:`Section <','_USE','>`\\ '), #anonymous -> if no header given
     '\\refSection':('Section :ref:`','_USE','`\\ '), #anonymous -> if no header given
+    '\\refChapter':('Section :ref:`','_USE','`\\ '), #anonymous -> if no header given
     '\\exuUrl':('`','_USE','`_','2nd'),
     '\\url':('\\ `','_USE','`_\\ '),
     '\\ref':(' :ref:`','_USE','`\\ '),
@@ -403,6 +409,7 @@ convLatexCommands={#(precommand,'_USE'/'',postcommand)
     '\\acp':('\\ :ref:`_USE <','_USE','>`\\ '),
     '\\acf':('\\ :ref:`_USE <','_USE','>`\\ '),
     '\\ac':('\\ :ref:`_USE <','_USE','>`\\ '),
+    '\\eqref':('\\ :eq:`','_USE','`\\ '),
     '\\eqs':('Eqs. :eq:`','_USE','`\\ '),
     '\\eqq':('\\ :eq:`','_USE','`\\ '),
     '\\eq':('Eq. :eq:`','_USE','`\\ '),
@@ -411,9 +418,9 @@ convLatexCommands={#(precommand,'_USE'/'',postcommand)
 #replace all occurances of conversionDict in string and return modified string
 def ReplaceWords(s, conversionDict, replaceBraces=True, replaceDoubleBS=False): #replace strings provided in conversion dict
 
-    if replaceBraces:
-        s = s.replace('{', '')
-        s = s.replace('}', '')
+    # if replaceBraces:
+        # s = s.replace('{', '')
+        # s = s.replace('}', '')
 
     for (key,value) in conversionDict.items():
         s = s.replace(key, value)
@@ -757,8 +764,10 @@ def ReplaceLatexCommands(s, conversionDict, sectionMarkerText=''): #replace stri
         s+=line+'\n'
     s = s[:-1]
 
-    #remove commands        
+    #remove commands
     s = s.replace('{\\bf ','\\mybold{') #this is then further converted into rst code ...
+    s = s.replace('{\\it ','\\myitalics{') #this is then further converted into rst code ...
+    s = s.replace('{\\it ','\\mysmall{') #this is then further converted into rst code ...
     for (key,value) in conversionDict.items():
         found = 0
         while (found != -1):
@@ -781,7 +790,7 @@ def ReplaceLatexCommands(s, conversionDict, sectionMarkerText=''): #replace stri
                 [preString, innerString, innerString2, postString] = found
                 s = preString
                 if ('\\refSection' in key or key == '\\label' or key == '\\fig' or key == '\\ref'
-                    or key == '\\eq' or key == '\\eqs' or key == '\\eqq'):
+                    or key == '\\eq' or key == '\\eqref' or key == '\\eqs' or key == '\\eqq'):
                     innerString=Latex2RSTlabel(innerString)
                 elif (value[1] == '_USE' and key != '\\exuUrl' and key != '\\url' 
                       and ('\\ac' not in key) 

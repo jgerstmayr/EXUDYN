@@ -570,8 +570,8 @@ To print values, always use \texttt{print(...)} to see the string representation
 
 
 Note that you could also change \texttt{visualizationSettings} in this way, but the Visualization settings dialog is much more convenient.
-Changing \texttt{simulationSettings} is dangerous and must be treated with care.
-Some parameters, such as \texttt{simulationSettings.timeIntegration.endTime} are copied into the internal solver's \text{mbs.sys['dynamicSolver'].it} structure.
+Changing \texttt{simulationSettings} within the execute command is dangerous and must be treated with care.
+Some parameters, such as \texttt{simulationSettings.timeIntegration.endTime} are copied into the internal solver's \texttt{mbs.sys['dynamicSolver'].it} structure.
 
 Thus, changing \texttt{simulationSettings.timeIntegration.endTime} has no effect during simulation. 
 As a rule of thumb, all variables that are not stored inside the solvers structures may be adjusted by the \texttt{simulationSettings} passed to the solver (which are then not copied internally); see the C++ code for details. However, behavior may change in future and unexpected behavior or and changing \texttt{simulationSettings} will likely cause crashes if you do not know exactly the behavior, e.g., changing output format from text to binary ... !
@@ -936,7 +936,7 @@ NOTE that this approach is slower and it may lead to a (usually silient) crash a
 \mysubsubsectionlabel{Contact problems}{sec:overview:advanced:contact}
 %
 Since Q4 2021 a contact module is available in \codeName. 
-This separate module \texttt{GeneralContact} $[$\mybold{still under development, consider with care!}$]$ is highly optimized and implemented with parallelization (multi-threaded) for certain types of contact elements.
+This separate module \texttt{GeneralContact} \lbrack\mybold{still under development, consider with care!}\rbrack\ is highly optimized and implemented with parallelization (multi-threaded) for certain types of contact elements.
 \onlyRST{
 
 .. _fig-contactexamples:
@@ -972,7 +972,7 @@ This separate module \texttt{GeneralContact} $[$\mybold{still under development,
 
 \noindent \mybold{Note}:
 \bi
-\item \texttt{GeneralContact} is (in most cases) restricted to dynamic simulation (explicit or implicit $[$\mybold{still under development, consider with care!}$]$) if friction is used; without friction, it also works in the static case
+\item \texttt{GeneralContact} is (in most cases) restricted to dynamic simulation (explicit or implicit \lbrack\mybold{still under development, consider with care!}\rbrack ) if friction is used; without friction, it also works in the static case
 \item in addition to \texttt{GeneralContact} there are special objects, in particular for rolling and simple 1D contacts, that are available as single objects, cf.\ \texttt{ObjectConnectorRollingDiscPenalty}
 \item \texttt{GeneralContact} is recommended to be used for large numbers of contacts, while the single objects are integrated more directly into mbs.
 \ei

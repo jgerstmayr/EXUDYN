@@ -877,7 +877,7 @@ Optimization problems are written in general in the form
 \be
   \min\limits_{\xv} f(\xv), \quad \xv \in \Rcal^n \eqComma
 \ee
-where $f(\xv)$ denotes the {\it objective function} (={\it fitness function}). If we would like to maximize a function $\bar f(\xv)$, simply set $f(\xv)=-\bar f(\xv)$.
+where $f(\xv)$ denotes the \myitalics{objective function} (=\myitalics{fitness function}). If we would like to maximize a function $\bar f(\xv)$, simply set $f(\xv)=-\bar f(\xv)$.
 
 In engineering, the optimization problem could seek model parameters, e.g., the geometric dimensions and inertia parameters of a slider crank mechanism, in order to achieve smallest possible forces at the supports.
 Another example is the identification of unknown physical parameters, such as stiffness, damping of friction. This can be achieved by comparing measurement and simulation data (e.g., accelerations measured at relevant parts of a machine). Lets assume that $\epsilon(t)$ is an error computed in every time step of a computation, then we can set the objective (=fitness) function, e.g., as 
@@ -934,7 +934,7 @@ The general structure of a (canonical) genetic algorithm is depicted in \fig{fig
 %
 For details, see the cited literature. Here, we focus on the implementation of the function 
 \texttt{GeneticOptimization(...)}, see \refSection{sec:processing:GeneticOptimization}.
-The initial population (step 1) is created with \texttt{initialPopulationSize} individuals with uniformly distributed random design variables $[\xv_0, \ldots, \xv_{n_{pi}-1}]$\footnote{$\xv_i=[x_{i0}, x_{i1}, \ldots]$ being a set of genes, with single genes $x_{i0}$, $x_{i1}$, ... } in the search space, which is given in the dictionary \texttt{parameters}. Herafter (steps 2-6), we iteratively process a population for a certain \text{numberOfGenerations} generations.
+The initial population (step 1) is created with \texttt{initialPopulationSize} individuals with uniformly distributed random design variables $[\xv_0, \ldots, \xv_{n_{pi}-1}]$ \footnote{$\xv_i=[x_{i0}, x_{i1}, \ldots]$ being a set of genes, with single genes $x_{i0}$, $x_{i1}$, ... } in the search space, which is given in the dictionary \texttt{parameters}. Herafter (steps 2-6), we iteratively process a population for a certain \texttt{numberOfGenerations} generations.
 
 In step 3, the surviving individuals $S_s$ with best fitness (smallest value from evaluation of \texttt{objectiveFunction}) are selected and considered further in the optimization. If the \texttt{distanceFactor} is used, the surviving individuals must be located within a certain distance (measured relative to the range of the search space) to all other surviving individuals. This option guarantees the search within several local minima, while a conventional search often converges to one single minimum.
 Crossover (step 4)  is performed using a crossover of all available parameters of two randomly selected parents when generating children from the surviving individuals. The crossover of genes is performed only for a part of the new population, defined by \texttt{crossoverAmount}.

@@ -71,7 +71,7 @@ jobs:
         # name: dest-wheels-${{ matrix.os }}-arm64-python-3${{ matrix.python-version }}
         # path: main/.wheels/*.whl
 
-  buildWindowsMacOSx86:
+  buildWindowsMacOS:
     name: Build wheels on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
@@ -101,8 +101,8 @@ jobs:
       env:
         CIBW_BUILD: "cp3${{ matrix.python-version }}-*"
         CIBW_SKIP: "*-win32"   #skip building 32-bit (win32) wheels
-        CIBW_ARCHS_MACOS: "universal2"
-        CIBW_ENVIRONMENT_MACOS: "MACOSX_DEPLOYMENT_TARGET=10.9"  # environment for macOS builds
+        CIBW_ARCHS_MACOS: "universal2" #for arm64 and x86
+        CIBW_ENVIRONMENT_MACOS: "MACOSX_DEPLOYMENT_TARGET=10.9"  # does not change version
       working-directory: main  #specify the local dir where setup.py is located
 
     - uses: actions/upload-artifact@v4 #artifacts are stored locally!
@@ -111,8 +111,7 @@ jobs:
         path: main/.wheels/*.whl
 
   mergeArtifacts: #merge artifacts into one directory and zip it
-    # needs: buildWindowsMacOS
-    needs: [buildWindowsMacOSx86, buildUbuntu] #buildMacOSarm64, 
+    needs: [buildWindowsMacOS, buildUbuntu] #buildMacOSarm64, 
     runs-on: ubuntu-latest
     steps:
     - name: Merge All Artifacts

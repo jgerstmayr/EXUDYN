@@ -18,16 +18,23 @@ The extension \ ``.dev1``\  is not added in the issues list (e.g., 1.2.2.dev1==1
 BUG numbers refer to the according issue numbers.
 
 General information on current version:
- 
-+  Exudyn version = 1.7.116.dev1, 
-+  last change =  2024-02-24, 
-+  Number of issues = 1794, 
-+  Number of resolved issues = 1586 (116 in current version), 
+ \small
++  Exudyn version = 1.7.118.dev1, 
++  last change =  2024-02-27, 
++  Number of issues = 1798, 
++  Number of resolved issues = 1588 (118 in current version), 
 
 ***********
 Version 1.7
 ***********
 
+ * Version 1.7.118: resolved Issue 1796: MacOSX universal2 (extension)
+    - description:  add build option for macos universal files on GH actions to have both arm and x86 on board
+    - **notes:** NOTE that pip 20.3 is required to install these wheels!
+    - date resolved: **2024-02-27 15:06**\ , date raised: 2024-02-27 
+ * Version 1.7.117: resolved Issue 1794: fix curly brackets (docu)
+    - description:  fix curly brackets {} in RST files
+    - date resolved: **2024-02-25 20:43**\ , date raised: 2024-02-25 
  * Version 1.7.116: resolved Issue 1793: manylinux2014 (extension)
     - description:  build highly compatible manylinux2014 and manylinux2_17 wheels with github actions docker, to run on CentOS and Rocky Linux as well as ubuntu
     - date resolved: **2024-02-24 23:28**\ , date raised: 2024-02-24 
@@ -512,7 +519,7 @@ Version 1.6
     - description:  add experimental class, which can be accessed in Python by exudyn.Experimental(); inside C++, just needs to be imported; allows simple testing without interference with main features
     - date resolved: **2023-06-11 19:56**\ , date raised: 2023-06-11 
  * Version 1.6.155: resolved Issue 1536: mutable arguments (fix)
-    - description:  check and fix Python functions with mutable arguments such as [] or , with potential risk of changing internally in function, leading to unexpected behavior in second call
+    - description:  check and fix Python functions with mutable arguments such as [] or {}, with potential risk of changing internally in function, leading to unexpected behavior in second call
     - **notes:** checked all default list and dict args
     - date resolved: **2023-06-11 00:24**\ , date raised: 2023-04-27 
  * Version 1.6.154: resolved Issue 1612: mutable arguments (fix)
@@ -2910,7 +2917,7 @@ Version 1.1
     - **notes:** use SC.visualizationSettings.contact to adjust the various options to visualize the contact search tree
     - date resolved: **2021-11-26 23:20**\ , date raised: 2021-11-26 
  * Version 1.1.50: resolved Issue 0809: ParameterVariation (extension)
-    - description:  Added a additional argument parameterFunctionData= to function ParameterVariation(). The argument parameterFunctionData can be used to make global data available inside the parameterFunction.
+    - description:  Added a additional argument parameterFunctionData={} to function ParameterVariation(). The argument parameterFunctionData can be used to make global data available inside the parameterFunction.
     - date resolved: **2021-11-26 12:57**\ , date raised: 2021-11-26 
     - resolved by: S. Holzinger
  * Version 1.1.49: resolved Issue 0808: Performance test for GeneralContact (testint)
@@ -3374,10 +3381,10 @@ Version 1.0
     - description:  create Python3.8 windows wheels automatically
     - date resolved: **2021-05-03 18:51**\ , date raised: 2021-04-26 
  * Version 1.0.203: resolved Issue 0661: add C++ unit tests (extension)
-    - description:  add C++ unit tests to Python3.6 64bits version and to testSuite. Changed initialization of all vector types to avoid errors of Vector(5), now allowing only Vector(4.) in constructors
+    - description:  add C++ unit tests to Python3.6 64bits version and to testSuite. Changed initialization of all vector types to avoid errors of Vector({5}), now allowing only Vector({4.}) in constructors
     - date resolved: **2021-05-03 18:50**\ , date raised: 2021-05-03 
  * Version 1.0.202: resolved Issue 0660: initializerList (check)
-    - description:  check if Vector is used with initializer list with one item - Vector(10), converting to std::vector or Vector(10)
+    - description:  check if Vector is used with initializer list with one item - Vector({10}), converting to std::vector or Vector(10)
     - date resolved: **2021-05-03 18:50**\ , date raised: 2021-05-03 
  * Version 1.0.201: resolved Issue 0659: Troubleshooting (docu)
     - description:  Add Trouble shooting section, treating common Python and solver errors to theDoc.pdf
@@ -4885,10 +4892,10 @@ Version 0.1
     - **notes:** restart of VS2017 solved problem
     - date resolved: **2019-05-12**\ , date raised: 2019-05-12 
  * Version 0.1.84: resolved Issue 0103: dict access (new feature)
-    - description:  Lateron: Add dict access to functions (NodeAccessFunction('name':node_name, 'function':'Stress','position':[0,1,2,0.5],'option':'Cauchy')    
+    - description:  Lateron: Add dict access to functions (NodeAccessFunction({'name':node_name, 'function':'Stress','position':[0,1,2,0.5],'option':'Cauchy'})    
     - date resolved: **2019-05-12**\ , date raised: 2019-04-01 
  * Version 0.1.83: resolved Issue 0102: dict access (new feature)
-    - description:  Lateron: Add dict access to functions (NodeAccessFunction('index':ind, 'function':'CurrentPosition')    
+    - description:  Lateron: Add dict access to functions (NodeAccessFunction({'index':ind, 'function':'CurrentPosition'})    
     - date resolved: **2019-05-12**\ , date raised: 2019-04-01 
  * Version 0.1.82: resolved Issue 0101: Add (new feature)
     - description:  Add representation and mainobject.help()") # add latex description ... for Reference manual    
@@ -5106,7 +5113,7 @@ Version 0.1
     - description:  Access to all objects (nodes, markers, etc) independent of class hierarchy: with a Dictionary() access    
     - date raised: 2019-02-01 
  * Version 0.1.11: resolved Issue 0016: change (new feature)
-    - description:  change pythonAutoGenerator Setter/Getter functions to Pybind default: Set...(const Value& value) ...    
+    - description:  change pythonAutoGenerator Setter/Getter functions to Pybind default: Set...(const Value& value) {...}    
     - date raised: 2019-02-01 
  * Version 0.1.10: resolved Issue 0015: extend (new feature)
     - description:  extend pythonAutoGenerationInterfaces for python+Main-interface classes (flag p?)    
@@ -5142,6 +5149,14 @@ Version 0.1
 ***********
 Open issues
 ***********
+
+ * **open issue 1797:** Github actions      
+    - description:  create single line output for testsuite with specific mode; add test suite for github actions and merge outputs into single file
+    - date raised: 2024-02-27 
+
+ * **open issue 1795:** joint constraints   
+    - description:  theory: add description for formulation of joint constraints
+    - date raised: 2024-02-25 
 
  * **open issue 1789:** AvailableItems      
     - description:  add exudyn.special function to retrieve available items as dictionary with lists

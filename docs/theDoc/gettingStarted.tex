@@ -7,7 +7,7 @@ If you like using Exudyn, please add a *star* on github and follow us on
 
 +  **NOTE**: for pure installation, use **pip install exudyn** (see further description below)
 +  *free, open source* and with plenty of *documentation* and *examples*
-+  **pre-built** for Python 3.6 - 3.11 under **Windows** and **Linux**, Python 3.8 - 3.11 under **MacOS** available; build wheels yourself, see `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ )
++  **pre-built** for Python 3.8 - 3.12 under **Windows**\ , **Linux** and **MacOS** available ( **NEW**\ : now with manylinux2014 compatibility and PEP518 build); build wheels yourself, see `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ )
 +  Exudyn can be linked to any other Python package, but we explicitly mention: `NGsolve <https://github.com/NGSolve/ngsolve>`_, `OpenAI <https://github.com/openai>`_, `OpenAI gym <https://github.com/openai/gym>`_, `Robotics Toolbox (Peter Corke) <https://github.com/petercorke/robotics-toolbox-python>`_, `Pybind11 <https://github.com/pybind/pybind11>`_
 
 .. |pic1| image:: docs/demo/screenshots/pistonEngine.gif
@@ -32,11 +32,13 @@ If you like using Exudyn, please add a *star* on github and follow us on
 
 Johannes Gerstmayr. Exudyn -- A C++ based Python package for flexible multibody systems. Multibody System Dynamics, 2023. `https://doi.org/10.1007/s11044-023-09937-1 <https://doi.org/10.1007/s11044-023-09937-1>`_
 
-Due to limitations for complex formulas, images and references in .rst files, some details are only available in theDoc.pdf, see the `github page of Exudyn <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_! There may also be some conversion errors in the auto-generated html pages.
+Due to limitations for complex formulas, images and references in .rst files, some (small) details are only available in theDoc.pdf, see the `github page of Exudyn <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_! There may also be some conversion errors in the auto-generated html pages.
 
 For license, see LICENSE.txt in the root github folder on github!
 
 In addition to the tutorial in the documentation, many ( **250+** ) examples can be downloaded on github under main/pythonDev/Examples and main/pythonDev/TestModels . They are also on ReadTheDocs.
+
+Note that **ChatGPT** and other large language models know Exudyn quite well. They are able to build parts of your code or even full models, see `https://doi.org/10.1007/s11044-023-09962-0 <https://doi.org/10.1007/s11044-023-09962-0>`_
 
 Tutorial videos (\ **new Feb 2024**\ )can be found in the `youtube channel of Exudyn <https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg_jtl6fx>`_ !
 
@@ -93,7 +95,7 @@ This section will show:
 \en
 
 \mysubsubsection{What is \codeName ?}
-\codeName -- {\small (fl\mybold{EX}ible m\mybold{U}ltibody \mybold{DYN}amics  -- \mybold{EX}tend yo\mybold{U}r \mybold{DYN}amics)}\vspace{6pt}\\
+\codeName -- (fl\mybold{EX}ible m\mybold{U}ltibody \mybold{DYN}amics  -- \mybold{EX}tend yo\mybold{U}r \mybold{DYN}amics) \vspace{6pt}\\
 \noindent \codeName is a C++ based Python library for efficient simulation of flexible multibody dynamics systems.
 It is the follow up code of the previously developed multibody code HOTINT, which Johannes Gerstmayr started during his PhD-thesis.
 It seemed that the previous code HOTINT reached limits of further (efficient) development and it seemed impossible to continue from this code as it was outdated regarding programming techniques and the numerical formulation at the time \codeName was started.
@@ -163,7 +165,7 @@ So far (2021-07), we tested
 \bi
   \item \mybold{Anaconda 2023-07, 64bit, Python 3.11} with Spyder 5.4
   \item \mybold{Anaconda 2021-11, 64bit, Python 3.9}\footnote{older Anaconda3 versions can be downloaded via the repository archive \texttt{https://repo.anaconda.com/archive/}}
-  \item Currently, we support Python 3.8 - Python 3.11 \mybold{conda environments} on Windows, Linux and MacOS (with restrictions to some older and exotic operating systems).
+  \item Currently, we support Python 3.8 - Python 3.12 \mybold{conda environments} on Windows, Linux and MacOS (please report configurations that do not work on GitHub/issues).
   \item \mybold{Spyder 5.1.5} (with Python 3.9.7, 64bit) and \mybold{Spyder 4.1.3} (with Python 3.7.7, 64bit), which is included in the Anaconda installation\footnote{Note that it is important that Spyder, Python and \codeName  are \mybold{either} 32bit \mybold{or} 64bit and are compiled up to the same minor version, i.e., 3.7.x. There will be a strange .DLL error, if you mix up 32/64bit. It is possible to install both, Anaconda 32bit and Anaconda 64bit -- then you should follow the recommendations of paths as suggested by Anaconda installer.}; Spyder works with all virtual environments
 \ei
 Many alternative options exist:
@@ -226,7 +228,7 @@ In some cases (e.g. for AppleM1 or special Linux versions), your pre-built binar
 
 \mysubsubsubsection{Troubleshooting pip install}
 Pip install may fail, if your linux version does not support the current manylinux version.
-This is known for CentOS or simlilar systems which usually support manylinux2014. In this case, you have to build \codeName from source, see \refSection{sec:install:installinstructions:buildubuntu}.
+This was known for Red Hat, CentOS, Rocky Linux or simlilar systems which usually support manylinux2014. In this case, you had to build \codeName from source, see \refSection{sec:install:installinstructions:buildubuntu}. Since version 1.7.116, the manylinux2014 version is supported and according problems should be solved.
 
 Sometimes, you install exudyn, but when running python, the \texttt{import exudyn} fails.
 In case of several environments, check where your installation goes. To guarantee that the pip install goes to the python call, use:
@@ -265,7 +267,7 @@ First, open an Anaconda prompt:
   \item EITHER calling: START->Anaconda->... OR go to anaconda/Scripts folder and call activate.bat
   \item You can check your Python version then, by running \texttt{python}\footnote{\texttt{python3} under Ubuntu 18.04}, the output reads like:
   \bi
-    \item[] \texttt{Python 3.6.5 $|$Anaconda, Inc.$|$ (default, Mar 29 2018, 13:32:41) $[$MSC v.1900 64 bit (AMD64)$]$ on win32}
+    \item[] \texttt{Python 3.6.5 \textbar Anaconda, Inc.\textbar\ (default, Mar 29 2018, 13:32:41) \lbrack MSC v.1900 64 bit (AMD64)\rbrack\ on win32}
     \item[] ...
   \ei
   \item type \texttt{exit()} to close Python
@@ -310,7 +312,8 @@ Note that there are a couple of pre-requisites, depending on your system and ins
     \item run 'activate.bat' [may not be necessary]
   \ei
   \item go to 'main' of your cloned github folder of \codeName 
-  \item run:\footnote{the \texttt{--parallel} option performs parallel compilation on multithreaded CPUs and can speedup by 2x - 8x} \texttt{python setup.py install --parallel}
+  \item run:\footnote{Since version 1.7.116 a PEP518 compatible build is available. This should work with Windows, MacOS and linux. The \texttt{setupPyConfig.json} file includes some flags such as the parallel compilation, GLFW, etc.; the \texttt{-v} flag adds verbosity.} \texttt{pip wheel . -v -w dist --no-deps}
+  \item Before version 1.7.116: run:\footnote{the \texttt{--parallel} option performs parallel compilation on multithreaded CPUs and can speedup by 2x - 8x} \texttt{python setup.py install --parallel}
   \item read the output; if there are errors, try to solve them by installing appropriate modules
 \ei
 You can also create your own wheels, doing the above steps to activate the according Python version and then calling:
@@ -335,9 +338,11 @@ Requirements are an according Anaconda (or Miniconda) installation.
 \ei
 \noindent \mybold{NOTE}:
 \bi
-  \item Multi-threading is not fully supported, but may work in some applications
+  \item New \texttt{universal2} wheels should support x86 (APPLE Intel and Python/Rosetta on APPLE Silicon)
+  \item Multi-threading is not fully supported on MacOS, but may work in some applications
   \item On Apple M1 processors the newest Anaconda supports now all required features; environments with Python 3.8-3.11 have been successfully tested;
   \item The Rosetta (x86 emulation) mode on Apple M1 also works now without much restrictions; these files should also work on older Macs
+  \item If you have a MacOS version$<11$, it worked to download wheels from PyPI, change wheel names, e.g., from \texttt{exudyn-1.7.116.dev1-cp311-cp311-macosx\_11\_0\_x86\_64.whl} to \texttt{exudyn-1.7.116.dev1-cp311-cp311-macosx\_10\_9\_x86\_64.whl}. This also works for universal2 files. Installation worked and wheels were running smoothly.
   \item \texttt{tkinter} has been adapted (some workarounds needed on MacOS!), available since \codeName 1.5.15.dev1
   \item Some optimization and processing functions do not run (especially multiprocessing and tqdm); 
 \ei
@@ -346,14 +351,6 @@ Alternatively, we tested on:
 \bi
   \item Mac OS X 10.11.6 'El Capitan', Mac Pro (2010), 3.33GHz 6-Core Intel Xeon, 4GB Memory, Anaconda Navigator 1.9.7, Python 3.7.0, Spyder 3.3.6
 \ei
-%Note, that in all cases tkinter does not run properly on MacOS (help appreciated), while otherwise we produced a stable version. 
-%The AppleM1 native version is in some cases superior to the Windows version and also to the Rosetta version on Apple!
-%
-%For a compatible Mac OS X system some pre-built wheels will be available via pypi.org. Note that these my be built on an emulated AppleM1, thus being much slower than the Windows or Linux compliant.
-%Go to the \texttt{main/dist} directory in your back terminal and type, e.g.,
-%\bi
-%\item[] \texttt{pip install exudyn-1.0.218-cp37-cp37m-macosx\_10\_9\_x86\_64.whl} %\vspace{9pt}\\
-%\ei
 %
 \vspace{9pt}
 \mybold{Compile from source}:\vspace{3pt}\\
@@ -362,7 +359,8 @@ If you would like to compile from source, just use a bash terminal on your Mac, 
   \item uninstall if old version exists (may need to repeat this!): \texttt{pip uninstall exudyn}
   \item remove the \texttt{build} directory if you would like to re-compile without changes
   \item to perform compilation from source, write:\footnote{the \texttt{--parallel} option performs parallel compilation on multithreaded CPUs and can speedup by 2x - 8x}
-  \item \texttt{python setup.py bdist\_wheel --parallel}
+  \item Since version 1.7.116: \texttt{pip wheel . -v -w dist --no-deps}
+  \item Until version 1.7.116: \texttt{python setup.py bdist\_wheel --parallel}
   \item which takes 75 seconds on Apple M1 in parallel mode, otherwise 5 minutes. To install \codeName, run
   \item[] \texttt{python setup.py install}
   \item[] $\ra$ this will only install, but not re-compile. Otherwise, just use pip install from the created wheel in the dist folder
@@ -437,6 +435,10 @@ With all of these libs, you can run the setup.py installer (go to \texttt{Exudyn
 \begin{lstlisting}
   sudo python3 setup.py install --user --parallel
 \end{lstlisting}
+Since version 1.7.116, a PEP518 compatible way to compile sources and install the current repository has been added (the \texttt{-v} flag activates a verbose mode):
+\begin{lstlisting}
+  pip install . -v --no-deps
+\end{lstlisting}
 
 \noindent 
 Congratulation! \mybold{Now, run a test example} (will also open an OpenGL window if successful):
@@ -449,6 +451,12 @@ Congratulation! \mybold{Now, run a test example} (will also open an OpenGL windo
   \item[] \texttt{sudo pip3 install wheel}
   \item[] \texttt{sudo python3 setup.py bdist\_wheel --parallel}
 \ei
+
+\noindent Since version 1.7.116, the PEP518 compatible way which puts wheels into the \texttt{dist} folder reads:
+\bi
+  \item[] \texttt{pip wheel . -v -w dist --no-deps}
+\ei
+
 
 \noindent \mybold{Exudyn under Ubuntu / WSL}:
 \bi
@@ -512,28 +520,29 @@ In order to make full usage of the C++ code and extending it, you can use:
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \mysubsection{Further notes}
 \mysubsubsectionlabel{Goals of \codeName}{sec:install:notes:goals}
-After the first development phase (2019-2021), it
+After the first development phase (2019-2023), it
 \bi
-  \item is a moderately large (2MB on windows!) multibody library, which can be easily linked to other projects,
+  \item is a moderately large \footnote{wheels have only sizes of 2MB on Windows and 4MB on Linux, without fast Exudyn options} multibody library, which can be easily linked to other projects,
   \item contains basic multibody rigid bodies, flexible bodies, joints, contact, etc.,
   \item includes a large Python utility library for convenient building and post processing of models,
   \item allows to efficiently simulate small scale systems (compute $100\,000$s of time steps per second for systems with $n_{DOF}<10$),
   \item allows to efficiently simulate medium scaled systems for problems with $n_{DOF} < 1\,000\,000$,
   \item is a safe and widely accessible module for Python,
   \item allows to add user defined objects and solvers in C++,
-  \item allows to add user defined objects and solvers in Python.
+  \item allows to add user defined objects and solvers in Python,
+  \item allows multi-threaded parallel computing,
+  \item includes Lie group integration,
+  \item includes interfaces for robotics and ROS,
+  \item includes interfaces for reinforcement learning (stable-baselines3), pytorch and artificial intelligence,
+  \item includes kinematical trees with minimal coordinates.
 \ei
-Future goals (2022-2024) are:
+Future goals (2024-2026) are:
 \bi
-  \item add more multi-threaded parallel computing techniques (DONE, Q2 2022),
-  \item add vectorization,
   \item add specific and advanced connectors/constraints (extended wheels, contact, control connector)
-  \item kinematical trees with minimal coordinates (DONE, Q1 2022),
-  \item automatic step size selection for second order solvers (planned, 2023),
-  \item deeper integration of Lie groups (Q3 2022),
-  \item more interfaces for robotics (DONE, Q1 2022),
-  \item add 3D beams (first attempts exist; planned, Q1 2023),
-  \item export equations (planned, 2024)
+  \item automatic step size selection for second order solvers (planned 2025),
+  \item add 3D beams and plates (first attempts exist; planned 2024),
+  \item export equations (planned, 2025),
+  \item add GPU support (planned, 2025).
 \ei
 For solved issues (and new features), see section 'Issues and Bugs', \refSection{sec:issueTracker}.
 For specific open issues, see \texttt{trackerlog.html} -- a document only intended for developers!
@@ -904,10 +913,8 @@ which draws the according object in red and others gray/transparent (but sometim
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \item Why does \mybold{type auto completion} / intellisense not work for mbs (MainSystem)?
 \bi
-\item[$\ra$] UPDATE 2023-05-11 (V1.6.103): type completion now also works for functions\, types and structures: tested in Spyder 5.2.2 and Visual Studio Code 1.78.1); with an added stub file (.pyi) the standard type completion fetches information about structures or functions; this even works for \texttt{SC.visualizationSettings.bodies.kinematicTree.showJointFrames}. If you still have problems, try to restart your environment / computer or switch to a different version
-\item[$\ra$] UPDATE 2020-06-01: with Spyder 4, using Python 3.7, type auto completion works much better, but may find too many completions.
-\item[$\ra$] most Python environments (e.g., with Spyder 3) only have information up to the first sub-structure, e.g., \texttt{SC=exu.SystemContainer()} provides full access to SC in the type completion, but \texttt{mbs=SC.AddSystem()} is at the second sub-structure of the module and is not accessible.
-\item[$\ra$] WORKAROUND: type \texttt{mbs=MainSystem()} \mybold{before} the \texttt{mbs=SC.AddSystem()} command and the interpreter will know what type mbs is. This also works for settings, e.g., simulation settings 'Newton'.
+\item[$\ra$] in earlier versions of \codeName type completion did not work properly for more complex structures
+\item[$\ra$] since version 1.6.103 type completion works for most functions\, types and structures: tested in Spyder 5.2.2 and Visual Studio Code 1.78.1); with an added stub file (.pyi) the standard type completion fetches information about structures or functions; this even works for example with \texttt{SC.visualizationSettings.bodies.kinematicTree.showJointFrames}. If you still have problems, try to restart your environment / computer or switch to a different version, and create an issue on GitHub.
 \ei
  %
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

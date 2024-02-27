@@ -21,7 +21,7 @@ Let us for now assume that
 
 
 
-Now we add another \ ``ObjectMass1D``\  object with object index \ :math:`o2`\ , having mass \ :math:`m_2`\ , but letting the object again use node \ :math:`n0`\  with coordinate \ :math:`c0`\ .
+Now we add another \ ``ObjectMass1D``\  object with object index \ :math:`o2`\ , having mass \ :math:`m_2`\ , but letting the object \ * again*\  use node \ :math:`n0`\  with coordinate \ :math:`c0`\ .
 In this case, the total object residuals read
 
 .. math::

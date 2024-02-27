@@ -23,7 +23,7 @@ Function: FilterSensorOutput
   | \ ``signal``\ : numpy array (2D array with column-wise storage of signals, as exported by EXUDYN position, displacement, etc. sensors); first column = time, other columns = signals to operate on; note that it is assumed, that time devided in almost constant steps!
   | \ ``derivative``\ : 0=no derivative, 1=first derivative, 2=second derivative, etc. (>2 only possible with filter)
   | \ ``polyOrder``\ : order of polynomial for interpolation filtering
-  | \ ``filterWindow``\ : if zero: produces unfiltered derivative; if positive, must be ODD integer 1,3,5,... and > polyOrder; filterWindow determines the length of the filter window (e.g., to get rid of noise)
+  | \ ``filterWindow``\ : if zero: produces unfiltered derivative; if positive, must be ODD integer {1,3,5,...} and > polyOrder; filterWindow determines the length of the filter window (e.g., to get rid of noise)
   | \ ``centralDifferentiate``\ : if True, it uses a central differentiation for first order, unfiltered derivatives; leads to less phase shift of signal!
 - | \ *output*\ :
   | numpy array containing same columns, but with filtered signal and according derivatives
@@ -50,7 +50,7 @@ Function: FilterSignal
   | \ ``samplingRate``\ : (time increment) of signal values, needed for derivatives
   | \ ``derivative``\ : 0=no derivative, 1=first derivative, 2=second derivative, etc. (>2 only possible with filter)
   | \ ``polyOrder``\ : order of polynomial for interpolation filtering
-  | \ ``filterWindow``\ : if zero: produces unfiltered derivative; if positive, must be ODD integer 1,3,5,... and > polyOrder; filterWindow determines the length of the filter window (e.g., to get rid of noise)
+  | \ ``filterWindow``\ : if zero: produces unfiltered derivative; if positive, must be ODD integer {1,3,5,...} and > polyOrder; filterWindow determines the length of the filter window (e.g., to get rid of noise)
   | \ ``centralDifferentiate``\ : if True, it uses a central differentiation for first order, unfiltered derivatives; leads to less phase shift of signal!
 - | \ *output*\ :
   | numpy array containing same columns, but with filtered signal and according derivatives

@@ -803,7 +803,7 @@ We note the following rules:
 
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \mysubsubsubsection{Elementary rotations}
-{
+
 Elementary rotations are rotations about a single axis, using one of the orthogonal basis vectors.
 Consider basis $(\ev_{x1},\,\ev_{y1},\,\ev_{z1})$ and a rotation around axis $\ev_{x1}$ with angle $\varphi_1$ in positive rotation sense, obtaining a rotated frame $(\ev_{x2},\,\ev_{y2},\,\ev_{z2})$, see \fig{fig:theory:rotations:elementaryX}.
 The rotation matrix for this case reads:
@@ -1039,7 +1039,7 @@ Note the following \mybold{properties of the rotation tensor}:
   \item The rotation axis is invariant to the rotation: $\Rot(\uv, \varphi) \uv = \uv$
   %
 \ei
-}
+
 
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1536,7 +1536,7 @@ The disadvantage of \eq{theory:eigenmodes:HCB} is evident by the fact that there
 \mysubsubsubsection{Definition of RBE2 / RBE3 interfaces}
 A powerful extension, which is available in many finite element as well as flexible multibody codes, is the definition of special boundary/interface conditions, based on pure rigid body motion.
 The so-called RBE2 boundaries are defined such that they are firmly connected to a rigid frame, thus the boundary or interface can only undergo rigid body motion.
-The advantage of this procedure is that, in comparison to \eq{theory:eigenmodes:HCB}, the number of boundary/interface modes is given by 6 {\it rigid body} modes, which allow simple integration into standard joints of multibody systems, e.g., the \texttt{GenericJoint}.
+The advantage of this procedure is that, in comparison to \eq{theory:eigenmodes:HCB}, the number of boundary/interface modes is given by 6 \myitalics{rigid body} modes, which allow simple integration into standard joints of multibody systems, e.g., the \texttt{GenericJoint}.
 The disadvantage is that such modes usually lead to artificial stiffening and stresses close to the boundary.
 
 For so-called RBE3 boundaries, the kinematics is significantly different. The displacement of RBE3 boundaries is the (weighted) average displacement of all boundary nodes. The resulting forces at the RBE3 boundary are equally distributed, again using node-weighting.
@@ -2531,7 +2531,7 @@ For the calculation of the jacobian, the derivatives of the following terms are 
     \diffANCFmI{ \ANCFdkO } = \diffANCFmI{\frac{1}{L_k} \ANCFdk } = 
     - \frac{1}{L_k^2}\ANCFdk \otimes \left(\ANCFdkOtp \diffANCFdk \right) 
     + \frac{1}{L_k} \diffANCFdk = \frac{1}{L_k} \left(\Im - \ANCFdkO \otimes \ANCFdkO \right) \diffANCFdk
-  \ee
+    \ee
   %\be
     %\diffmI{ \ANCFdkO } = \diffmI{\frac{1}{L_k} \ANCFdk } = 
       %\frac{1}{2\cdot L_k^3}\left(\LU{0}{\dv_k\tp} \LU{0}{\Jm_{pos,m1}} \right) \ANCFdk
