@@ -69,47 +69,47 @@ jobs:
 
     - uses: actions/upload-artifact@v4
       with:
-        name: wheels-${{ matrix.os }}-arm64-python-3${{ matrix.python-version }}
+        name: dest-wheels-${{ matrix.os }}-arm64-python-3${{ matrix.python-version }}
         path: main/.wheels/*.whl
 
-  # buildWindowsMacOS:
-    # name: Build wheels on ${{ matrix.os }}
-    # runs-on: ${{ matrix.os }}
-    # strategy:
-      # matrix:
-        # os: [windows-latest, macos-latest]
-        # python-version: ['10', '11'] 
-        # #python-version: ['8', '9', '10', '11', '12'] 
-        # #os: [ubuntu-latest, windows-latest, macos-latest]
+  buildWindowsMacOS:
+    name: Build wheels on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest]
+        python-version: ['10', '11'] 
+        #python-version: ['8', '9', '10', '11', '12'] 
+        #os: [ubuntu-latest, windows-latest, macos-latest]
 
-    # steps:
-    # - uses: actions/checkout@v4
+    steps:
+    - uses: actions/checkout@v4
 
-    # - name: Set up Python 3.${{ matrix.python-version }}
-      # uses: actions/setup-python@v4
-      # with:
-        # python-version: 3.${{ matrix.python-version }}
+    - name: Set up Python 3.${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.${{ matrix.python-version }}
 
-    # - name: Install cibuildwheel
-      # run: python -m pip install cibuildwheel
+    - name: Install cibuildwheel
+      run: python -m pip install cibuildwheel
 
-    # - name: Build wheels
-      # run: python -m cibuildwheel --output-dir .wheels
-      # env:
-        # CIBW_BUILD: "cp3${{ matrix.python-version }}-*"
-        # CIBW_SKIP: "*-win32"   #skip building 32-bit (win32) wheels
-        # MACOSX_DEPLOYMENT_TARGET: "10.9"  # Target macOS 10.9
-        # CIBW_ENVIRONMENT_MACOS: "MACOSX_DEPLOYMENT_TARGET=10.9"  # environment for macOS builds
-      # working-directory: main  #specify the local dir where setup.py is located
+    - name: Build wheels
+      run: python -m cibuildwheel --output-dir .wheels
+      env:
+        CIBW_BUILD: "cp3${{ matrix.python-version }}-*"
+        CIBW_SKIP: "*-win32"   #skip building 32-bit (win32) wheels
+        MACOSX_DEPLOYMENT_TARGET: "10.9"  # Target macOS 10.9
+        CIBW_ENVIRONMENT_MACOS: "MACOSX_DEPLOYMENT_TARGET=10.9"  # environment for macOS builds
+      working-directory: main  #specify the local dir where setup.py is located
 
-    # - uses: actions/upload-artifact@v4 #artifacts are stored locally!
-      # with:
-        # name: dest-wheels-${{ matrix.os }}-python-3${{ matrix.python-version }}
-        # path: main/.wheels/*.whl
+    - uses: actions/upload-artifact@v4 #artifacts are stored locally!
+      with:
+        name: dest-wheels-${{ matrix.os }}-python-3${{ matrix.python-version }}
+        path: main/.wheels/*.whl
 
   mergeArtifacts: #merge artifacts into one directory and zip it
     # needs: buildWindowsMacOS
-    needs: [buildMacOSarm64] #,buildWindowsMacOS, buildUbuntu]
+    needs: [buildMacOSarm64, buildWindowsMacOS] #, buildUbuntu]
     runs-on: ubuntu-latest
     steps:
     - name: Merge All Artifacts
