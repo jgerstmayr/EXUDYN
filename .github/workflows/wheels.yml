@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        python-version: ['10'] #, 'cp39-cp39', 'cp310-cp310', 'cp311-cp311', 'cp312-cp312']
+        python-version: ['8','9','10','11','12']
 
     steps:
       - uses: actions/checkout@v4
@@ -95,7 +95,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-latest] #, macos-latest, ubuntu-latest]
+        os: [windows-latest, macos-latest, ubuntu-latest]
         # python-version: ['10', '11'] 
         python-version: ['8', '9'] #, '10', '11', '12'] 
         # exclude:
@@ -124,9 +124,9 @@ jobs:
         CIBW_ARCHS_LINUX: "aarch64"    #for raspberry pi, etc.
         CIBW_MANYLINUX_AARCH64_IMAGE: manylinux2014 #quay.io/pypa/manylinux2014_aarch64:latest
         CIBW_ENVIRONMENT_MACOS: "MACOSX_DEPLOYMENT_TARGET=10.9"  # does not change version
-        #CIBW_TEST_COMMAND: "cd /d {project}/pythonDev/TestModels && python runTestSuite.py -quiet -local"
-        #CIBW_TEST_COMMAND: "cd {project}/pythonDev/TestModels && python runTestSuite.py -quiet -local"
-        CIBW_TEST_COMMAND_WINDOWS: "cd /d {project}/pythonDev/TestModels && dir && python runTestSuite.py -quiet -local && dir"
+        CIBW_TEST_COMMAND_WINDOWS: "cd /d {project}/pythonDev/TestModels && dir && python runTestSuite.py -quiet -local"
+        CIBW_TEST_COMMAND_LINUX: "cd {project}/pythonDev/TestModels && ls && python runTestSuite.py -quiet -local"
+        CIBW_TEST_COMMAND_MACOS: "cd {project}/pythonDev/TestModels && ls && python runTestSuite.py -quiet -local"
         CIBW_TEST_REQUIRES: matplotlib #scipy
       working-directory: main  #specify the local dir where setup.py is located
 
