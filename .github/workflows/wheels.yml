@@ -8,12 +8,19 @@ on:
 
 jobs:
   buildUbuntu:
-    name: Build wheels on ${{ matrix.os }}
+    # name: Build wheels on ${{ matrix.os }}
+    # runs-on: ${{ matrix.os }}
+    # strategy:
+      # matrix:
+        # os: [ubuntu-latest]
+        # python-version: ['cp38-cp38', 'cp39-cp39', 'cp310-cp310', 'cp311-cp311', 'cp312-cp312']
+    name: Build wheels on ${{ matrix.os }} for ${{ matrix.architecture }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest]
-        python-version: ['cp38-cp38', 'cp39-cp39', 'cp310-cp310', 'cp311-cp311', 'cp312-cp312']
+        python-version: ['cp38-cp38', 'cp39-cp39'] #, 'cp310-cp310', 'cp311-cp311', 'cp312-cp312']
+        architecture: ['x86_64', 'aarch64']  # Add ARM architecture here
 
     steps:
       - uses: actions/checkout@v4
@@ -24,11 +31,33 @@ jobs:
           python-version: '3.10'
 
       #https://github.com/RalfG/python-wheels-manylinux-build/blob/master/full_workflow_example.yml
-      - uses: RalfG/python-wheels-manylinux-build@v0.7.1-manylinux2014_x86_64
+      # - uses: RalfG/python-wheels-manylinux-build@v0.7.1-manylinux2014_x86_64
+        # with:
+          # python-versions: ${{ matrix.python-version }} #'cp310-cp310'
+          # build-requirements: 'numpy'
+          # #not required: freeglut-devel libX11-devel
+          # system-packages: 'mesa-libGL-devel mesa-libGLU-devel glfw glfw-devel freeglut-devel libX11-devel'
+          # pre-build-command: ''
+          # package-path: 'main'
+          # pip-wheel-args: '-w ./dist --no-deps'
+
+      - name: Build wheels for x86_64
+        if: matrix.architecture == 'x86_64'
+        uses: RalfG/python-wheels-manylinux-build@v0.7.1-manylinux2014_x86_64
         with:
-          python-versions: ${{ matrix.python-version }} #'cp310-cp310'
+          python-versions: ${{ matrix.python-version }}
           build-requirements: 'numpy'
-          #not required: freeglut-devel libX11-devel
+          system-packages: 'mesa-libGL-devel mesa-libGLU-devel glfw glfw-devel freeglut-devel libX11-devel'
+          pre-build-command: ''
+          package-path: 'main'
+          pip-wheel-args: '-w ./dist --no-deps'
+
+      - name: Build wheels for aarch64
+        if: matrix.architecture == 'aarch64'
+        uses: RalfG/python-wheels-manylinux-build@v0.7.1-manylinux2014_aarch64  # Use an action or Docker image that supports ARM
+        with:
+          python-versions: ${{ matrix.python-version }}
+          build-requirements: 'numpy'
           system-packages: 'mesa-libGL-devel mesa-libGLU-devel glfw glfw-devel freeglut-devel libX11-devel'
           pre-build-command: ''
           package-path: 'main'
@@ -36,17 +65,25 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: dest-wheels-ubuntu-python-${{ matrix.python-version }}
+          name: dest-wheels-ubuntu-python-${{ matrix.architecture }}-${{ matrix.python-version }}
+          #name: dest-wheels-ubuntu-python-${{ matrix.python-version }}
           path: ./main/dist/*manylinux2014_x86_64.whl
 
-  # buildMacOSarm64: #not needed with universal2 files for macos
+
+  # buildWindowsMacOS:
     # name: Build wheels on ${{ matrix.os }}
     # runs-on: ${{ matrix.os }}
     # strategy:
       # matrix:
-        # os: [macos-latest]
-        # python-version: ['10', '11']
-        # # python-version: ['8', '9', '10', '11', '12'] 
+        # os: [windows-latest, macos-latest]
+        # # python-version: ['10', '11'] 
+        # python-version: ['8', '9', '10', '11', '12'] 
+        # # exclude:
+          # # - os: macos-latest
+            # # python-version: "3.8"
+          # # - os: macos-latest
+            # # python-version: "3.9"
+
     # steps:
     # - uses: actions/checkout@v4
 
@@ -54,7 +91,6 @@ jobs:
       # uses: actions/setup-python@v4
       # with:
         # python-version: 3.${{ matrix.python-version }}
-        # architecture: "arm64"
 
     # - name: Install cibuildwheel
       # run: python -m pip install cibuildwheel
@@ -63,69 +99,32 @@ jobs:
       # run: python -m cibuildwheel --output-dir .wheels
       # env:
         # CIBW_BUILD: "cp3${{ matrix.python-version }}-*"
-        # CIBW_ARCHS_MACOS: "arm64"
+        # CIBW_SKIP: "*-win32"   #skip building 32-bit (win32) wheels
+        # CIBW_ARCHS_MACOS: "universal2" #for arm64 and x86
+        # CIBW_ENVIRONMENT_MACOS: "MACOSX_DEPLOYMENT_TARGET=10.9"  # does not change version
       # working-directory: main  #specify the local dir where setup.py is located
 
-    # - uses: actions/upload-artifact@v4
+    # - uses: actions/upload-artifact@v4 #artifacts are stored locally!
       # with:
-        # name: dest-wheels-${{ matrix.os }}-arm64-python-3${{ matrix.python-version }}
+        # name: dest-wheels-${{ matrix.os }}-python-3${{ matrix.python-version }}
         # path: main/.wheels/*.whl
 
-  buildWindowsMacOS:
-    name: Build wheels on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [windows-latest, macos-latest]
-        # python-version: ['10', '11'] 
-        python-version: ['8', '9', '10', '11', '12'] 
-        # exclude:
-          # - os: macos-latest
-            # python-version: "3.8"
-          # - os: macos-latest
-            # python-version: "3.9"
+  # mergeArtifacts: #merge artifacts into one directory and zip it
+    # needs: [buildWindowsMacOS, buildUbuntu] #buildMacOSarm64, 
+    # runs-on: ubuntu-latest
+    # steps:
+    # - name: Merge All Artifacts
+      # uses: actions/download-artifact@v4
+      # with:
+        # path: merged-artifacts
+        # pattern: 'dest-wheels-*'
+        # merge-multiple: true
 
-    steps:
-    - uses: actions/checkout@v4
+    # - name: Zip Merged Artifacts
+      # run: zip -r merged-wheels.zip merged-artifacts
 
-    - name: Set up Python 3.${{ matrix.python-version }}
-      uses: actions/setup-python@v4
-      with:
-        python-version: 3.${{ matrix.python-version }}
-
-    - name: Install cibuildwheel
-      run: python -m pip install cibuildwheel
-
-    - name: Build wheels
-      run: python -m cibuildwheel --output-dir .wheels
-      env:
-        CIBW_BUILD: "cp3${{ matrix.python-version }}-*"
-        CIBW_SKIP: "*-win32"   #skip building 32-bit (win32) wheels
-        CIBW_ARCHS_MACOS: "universal2" #for arm64 and x86
-        CIBW_ENVIRONMENT_MACOS: "MACOSX_DEPLOYMENT_TARGET=10.9"  # does not change version
-      working-directory: main  #specify the local dir where setup.py is located
-
-    - uses: actions/upload-artifact@v4 #artifacts are stored locally!
-      with:
-        name: dest-wheels-${{ matrix.os }}-python-3${{ matrix.python-version }}
-        path: main/.wheels/*.whl
-
-  mergeArtifacts: #merge artifacts into one directory and zip it
-    needs: [buildWindowsMacOS, buildUbuntu] #buildMacOSarm64, 
-    runs-on: ubuntu-latest
-    steps:
-    - name: Merge All Artifacts
-      uses: actions/download-artifact@v4
-      with:
-        path: merged-artifacts
-        pattern: 'dest-wheels-*'
-        merge-multiple: true
-
-    - name: Zip Merged Artifacts
-      run: zip -r merged-wheels.zip merged-artifacts
-
-    - name: Upload Merged ZIP Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: merged-wheels
-        path: merged-wheels.zip
+    # - name: Upload Merged ZIP Artifact
+      # uses: actions/upload-artifact@v4
+      # with:
+        # name: merged-wheels
+        # path: merged-wheels.zip
