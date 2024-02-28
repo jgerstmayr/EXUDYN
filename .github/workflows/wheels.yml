@@ -13,8 +13,8 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        #python-version: ['10']
-        python-version: ['8','9','10','11','12']
+        python-version: ['10']
+        # python-version: ['8','9','10','11','12']
 
     steps:
       - uses: actions/checkout@v4
@@ -97,9 +97,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-latest, macos-latest] #, ubuntu-latest] #ubuntu with aarch64 seems to need emulation: see QEMU / setup-qemu-action
-        # python-version: ['10', '11'] 
-        python-version: ['8', '9', '10', '11', '12'] 
+        os: [ubuntu-latest] #ubuntu with aarch64 seems to need emulation: see QEMU / setup-qemu-action
+        #os: [windows-latest, macos-latest, ubuntu-latest] #ubuntu with aarch64 seems to need emulation: see QEMU / setup-qemu-action
+        python-version: ['10', '11'] 
+        # python-version: ['8', '9', '10', '11', '12'] 
         exclude:
           - os: macos-latest
             python-version: "8" #this version fails during testing / installation of exudyn universal2 wheel
@@ -113,6 +114,10 @@ jobs:
       uses: actions/setup-python@v4
       with:
         python-version: 3.${{ matrix.python-version }}
+
+    - name: Check if QEMU is needed for Linux
+      if: runner.os == 'Linux'
+      uses: docker/setup-qemu-action@v1
 
     - name: Install cibuildwheel
       run: python -m pip install cibuildwheel
