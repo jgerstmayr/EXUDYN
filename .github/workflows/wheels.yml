@@ -119,9 +119,9 @@ jobs:
     - name: Check if QEMU is needed for Linux
       if: runner.os == 'Linux'
       uses: docker/setup-qemu-action@v3
-      working-directory: main
-      # with:
-        # platforms: all
+      with:
+        platforms: all
+      #working-directory: main
 
     - name: Install cibuildwheel
       run: |
