@@ -40,7 +40,7 @@ jobs:
           path: ./main/dist/*manylinux2014_x86_64.whl
 
       - name: Install built wheels
-        run: python -m pip install main/.wheels/*.whl
+        run: python -m pip install main/dist/*.whl
         shell: bash
 
       - name: Change directory and run test suite
@@ -95,7 +95,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-latest, macos-latest, ubuntu-latest]
+        os: [windows-latest] #, macos-latest, ubuntu-latest]
         # python-version: ['10', '11'] 
         python-version: ['8', '9'] #, '10', '11', '12'] 
         # exclude:
