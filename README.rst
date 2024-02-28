@@ -28,7 +28,7 @@
 .. |Github last commit| image:: https://img.shields.io/github/last-commit/jgerstmayr/exudyn
    :target: https://jgerstmayr.github.io/EXUDYN/
 
-
+![example workflow](https://github.com/jgerstmayr/EXUDYN/actions/workflows/wheels.yml/badge.svg)
 
 ******
 Exudyn
