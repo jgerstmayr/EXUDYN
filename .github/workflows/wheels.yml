@@ -8,11 +8,12 @@ on:
 
 jobs:
   buildUbuntu:
-    name: Build wheels on ${{ matrix.os }}
+    name: Build ${{ matrix.os }} manylinux wheels
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest]
+        #python-version: ['10']
         python-version: ['8','9','10','11','12']
 
     steps:
@@ -27,7 +28,7 @@ jobs:
       - uses: RalfG/python-wheels-manylinux-build@v0.7.1-manylinux2014_x86_64
         with:
           python-versions: cp3${{ matrix.python-version }}-cp3${{ matrix.python-version }}
-          build-requirements: 'numpy matplotlib'
+          build-requirements: 'numpy matplotlib scipy' #only test requires matplotlib scipy
           #not required: freeglut-devel libX11-devel
           system-packages: 'mesa-libGL-devel mesa-libGLU-devel glfw glfw-devel freeglut-devel libX11-devel'
           pre-build-command: ''
@@ -91,13 +92,14 @@ jobs:
   #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
   buildWindowsMacOS:
-    name: Build wheels on ${{ matrix.os }}
+    name: Build ${{ matrix.os }} wheels
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-latest, macos-latest, ubuntu-latest]
-        # python-version: ['10', '11'] 
-        python-version: ['8', '9'] #, '10', '11', '12'] 
+        #os: [windows-latest, macos-latest, ubuntu-latest]
+        os: [macos-latest, ubuntu-latest]
+        python-version: ['10', '11'] 
+        # python-version: ['8', '9', '10', '11', '12'] 
         # exclude:
           # - os: macos-latest
             # python-version: "3.8"
@@ -122,7 +124,7 @@ jobs:
         CIBW_SKIP: "*-win32"   #skip building 32-bit (win32) wheels
         CIBW_ARCHS_MACOS: "universal2" #for arm64 and x86
         CIBW_ARCHS_LINUX: "aarch64"    #for raspberry pi, etc.
-        CIBW_MANYLINUX_AARCH64_IMAGE: manylinux2014 #quay.io/pypa/manylinux2014_aarch64:latest
+        # CIBW_MANYLINUX_AARCH64_IMAGE: manylinux2014 #quay.io/pypa/manylinux2014_aarch64:latest
         CIBW_ENVIRONMENT_MACOS: "MACOSX_DEPLOYMENT_TARGET=10.9"  # does not change version
         CIBW_TEST_COMMAND_WINDOWS: "cd /d {project}/pythonDev/TestModels && dir && python runTestSuite.py -quiet -local"
         CIBW_TEST_COMMAND_LINUX: "cd {project}/pythonDev/TestModels && ls && python runTestSuite.py -quiet -local"
