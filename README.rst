@@ -1,5 +1,5 @@
 |RTD documentation| |PyPI version exudyn| |PyPI pyversions| |PyPI download month| |Github release date| 
-|Github issues| |Github stars| |Github commits| |Github last commit|
+|Github issues| |Github stars| |Github commits| |Github last commit| |CI build|
 
 .. |PyPI version exudyn| image:: https://badge.fury.io/py/exudyn.svg
    :target: https://pypi.python.org/pypi/exudyn/
@@ -28,7 +28,8 @@
 .. |Github last commit| image:: https://img.shields.io/github/last-commit/jgerstmayr/exudyn
    :target: https://jgerstmayr.github.io/EXUDYN/
 
-![example workflow](https://github.com/jgerstmayr/EXUDYN/actions/workflows/wheels.yml/badge.svg)
+.. |CI build| image:: https://github.com/jgerstmayr/EXUDYN/actions/workflows/wheels.yml/badge.svg
+
 
 ******
 Exudyn
