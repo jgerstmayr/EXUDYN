@@ -13,8 +13,8 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        python-version: ['10']
-        # python-version: ['8','9','10','11','12']
+        # python-version: ['10']
+        python-version: ['8','9','10','11','12']
 
     steps:
       - uses: actions/checkout@v4
@@ -98,9 +98,9 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest] #ubuntu with aarch64 seems to need emulation: see QEMU / setup-qemu-action
-        #os: [windows-latest, macos-latest, ubuntu-latest] #ubuntu with aarch64 seems to need emulation: see QEMU / setup-qemu-action
-        python-version: ['10', '11'] 
-        # python-version: ['8', '9', '10', '11', '12'] 
+        os: [windows-latest, macos-latest, ubuntu-latest] #ubuntu with aarch64 seems to need emulation: see QEMU / setup-qemu-action
+        # python-version: ['10', '11'] 
+        python-version: ['8', '9', '10', '11', '12'] 
         exclude:
           - os: macos-latest
             python-version: "8" #this version fails during testing / installation of exudyn universal2 wheel
@@ -115,18 +115,17 @@ jobs:
       with:
         python-version: 3.${{ matrix.python-version }}
 
-    - name: Check if QEMU is needed for Linux
-      if: runner.os == 'Linux'
-      uses: docker/setup-qemu-action@v3
-      with:
-        platforms: all
+    # - name: Check if QEMU is needed for Linux
+      # if: runner.os == 'Linux'
+      # uses: docker/setup-qemu-action@v3
+      # with:
+        # platforms: all
 
-    # - name: Install cibuildwheel
-      # run: python -m pip install cibuildwheel
+    - name: Install cibuildwheel
+      run: python -m pip install cibuildwheel
 
     - name: Build wheels
-      uses: pypa/cibuildwheel --output-dir .wheels
-      # run: python -m cibuildwheel --output-dir .wheels
+      run: python -m cibuildwheel --output-dir .wheels
       env:
         CIBW_BUILD: "cp3${{ matrix.python-version }}-*"
         CIBW_SKIP: "*-win32"   #skip building 32-bit (win32) wheels
