@@ -127,6 +127,7 @@ jobs:
         #CIBW_TEST_COMMAND: "cd /d {project}/pythonDev/TestModels && python runTestSuite.py -quiet -local"
         #CIBW_TEST_COMMAND: "cd {project}/pythonDev/TestModels && python runTestSuite.py -quiet -local"
         CIBW_TEST_COMMAND_WINDOWS: "cd /d {project}/pythonDev/TestModels && dir && echo 'Test suite done' && python runTestSuite.py -quiet -local"
+        CIBW_TEST_REQUIRES: matplotlib #scipy
       working-directory: main  #specify the local dir where setup.py is located
 
     - uses: actions/upload-artifact@v4 #artifacts are stored locally!
