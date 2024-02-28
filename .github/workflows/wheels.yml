@@ -39,8 +39,8 @@ jobs:
           name: uploaddata-wheels-ubuntu-python-${{ matrix.python-version }}
           path: ./main/dist/*manylinux2014_x86_64.whl
 
-      - name: Install built wheels
-        run: python -m pip install main/dist/*.whl
+      - name: Install built wheels for test suite
+        run: python -m pip install main/dist/*manylinux2014_x86_64.whl
         shell: bash
 
       - name: Change directory and run test suite
@@ -125,7 +125,7 @@ jobs:
         CIBW_MANYLINUX_AARCH64_IMAGE: manylinux2014 #quay.io/pypa/manylinux2014_aarch64:latest
         CIBW_ENVIRONMENT_MACOS: "MACOSX_DEPLOYMENT_TARGET=10.9"  # does not change version
         #CIBW_TEST_COMMAND: "cd /d {project}/pythonDev/TestModels && python runTestSuite.py -quiet -local"
-        CIBW_TEST_COMMAND: "cd {project}/pythonDev/TestModels && echo 'Test suite done'"
+        CIBW_TEST_COMMAND: "cd pythonDev/TestModels && echo 'Test suite done' && python runTestSuite.py -quiet -local"
       working-directory: main  #specify the local dir where setup.py is located
 
     - uses: actions/upload-artifact@v4 #artifacts are stored locally!
