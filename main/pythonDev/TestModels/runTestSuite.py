@@ -30,8 +30,11 @@ import exudyn as exu
 from modelUnitTests import RunAllModelUnitTests, TestInterface, ExudynTestStructure, exudynTestGlobals
 import time
 
-import matplotlib 
-matplotlib.use('Agg') #do not show figures... in test examples
+try:
+    import matplotlib 
+    matplotlib.use('Agg') #do not show figures... in test examples
+except:
+    exu.Print('import matplotlib failed ... using standard plot engine')
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -40,6 +43,8 @@ mbs = SC.AddSystem()
 #parse command line arguments:
 # -quiet
 writeToConsole = True  #do not output to console / shell
+outputLocal = False
+quietMode = False
 #copyLog = False         #copy log to final TestSuiteLogs
 # if sys.version_info.major == 3 and sys.version_info.minor == 7:
 #     copyLog = True #for P3.7 tests always copy log to WorkingRelease
@@ -47,15 +52,20 @@ if len(sys.argv) > 1:
     for i in range(len(sys.argv)-1):
         #print("arg", i+1, "=", sys.argv[i+1])
         if sys.argv[i+1] == '-quiet':
-            writeToConsole = False
+            quietMode = True
+        elif sys.argv[i+1] == '-local':
+            outputLocal = True
         # elif sys.argv[i+1] == '-copylog': #not needed any more
         #     copyLog = True
         else:
             print("ERROR in runTestSuite: unknown command line argument '"+sys.argv[i+1]+"'")
 
+if quietMode:
+    writeToConsole = False
+
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #choose which tests to run:
-runUnitTests = False
+runUnitTests = False #skipped at least since V1.6
 runTestExamples = True
 runMiniExamples = True
 runCppUnitTests = True
@@ -114,15 +124,25 @@ else:
 
 if isMacOS:
     platformString += 'macOS'
-    platformString += '_'+processorString
+    platformString += '-'+processorString
 elif not isWindows:
     platformString += sys.platform #usually linux
     if isARM:
-        platformString += '_'+processorString
+        platformString += '-'+processorString
 
-logFileName = '../TestSuiteLogs/testSuiteLog_V'+exu.GetVersionString()+'_'+platformString+'.txt'
+pythonVersion = str(sys.version_info.major)+'.'+str(sys.version_info.minor)+'.'+str(sys.version_info.micro)
+
+# localFileName = 'Test for EXUDYN V'+exu.GetVersionString()+' (built:'+exuDateStr+'),'\
+#          +sys.platform+'-'+processorString+'-'+platform.architecture()[0]+',Python'\
+#          +pythonVersion+',date:'+dateStr+': '
+platformString = sys.platform+'-'+processorString+'-'+platform.architecture()[0]+'-P'+pythonVersion
+localFileName = 'testSuiteLog_V'+exu.GetVersionString()+'_'+platformString
+
+#logFileName = '../TestSuiteLogs/testSuiteLog_V'+exu.GetVersionString()+'_'+platformString+'.txt'
+logFileName = '../TestSuiteLogs/'+localFileName+'.txt'
 exu.SetWriteToFile(filename=logFileName, flagWriteToFile=True, flagAppend=False) #write all testSuite logs to files
-#exu.SetWriteToFile(filename='testOutput.log', flagWriteToFile=True, flagAppend=False)
+
+
 
 exu.Print('\n+++++++++++++++++++++++++++++++++++++++++++')
 exu.Print('+++++        EXUDYN TEST SUITE        +++++')
@@ -132,12 +152,12 @@ exu.Print('EXUDYN build date   = '+exuDateStr)
 exu.Print('architecture        = '+platform.architecture()[0])
 exu.Print('processor           = '+processorString)
 exu.Print('platform            = '+sys.platform)
-exu.Print('python version      = '+str(sys.version_info.major)+'.'+str(sys.version_info.minor)+'.'+str(sys.version_info.micro))
+exu.Print('python version      = '+pythonVersion)
 exu.Print('test tolerance      =',testTolerance)
 exu.Print('testsuite date (now)= '+dateStr)
 exu.Print('+++++++++++++++++++++++++++++++++++++++++++')
-exu.SetWriteToConsole(writeToConsole) #stop output from now on
 
+exu.SetWriteToConsole(writeToConsole) #stop output from now on
 
 #testFileList = ['Examples/fourBarMechanism.py']
 testsFailed = [] #list of numbers containing the test numbers of failed tests
@@ -151,15 +171,14 @@ timeStart= -time.time()
 testInterface = TestInterface(exudyn = exu, systemContainer = SC, useGraphics=False)
                               # useCorrectedAccGenAlpha = exudynTestGlobals.useCorrectedAccGenAlpha,
                               # useNewGenAlphaSolver = exudynTestGlobals.useNewGenAlphaSolver)
-rvModelUnitTests = False
+rvModelUnitTests = True
+unitTestsFailed = []
 if runUnitTests:
     exu.Print('\n***********************')
     exu.Print('  RUN MODEL UNIT TESTS ')
     exu.Print('***********************\n')
-    rvModelUnitTests = RunAllModelUnitTests(mbs, testInterface)
+    [rvModelUnitTests, unitTestsFailed] = RunAllModelUnitTests(mbs, testInterface)
 SC.Reset()
-
-#sys.exit()
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #run general test examples
@@ -312,23 +331,29 @@ exu.Print('time elapsed =',round(timeStart,3),'seconds')
 #10+29+12tests: 2020-09-10: 17.001 seconds on Surface Pro
 #10+36+13tests: 2021-01-04: 23.54 seconds on i9
 
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+totalFails = 0
 if runUnitTests:
     if rvModelUnitTests:
         exu.Print('ALL UNIT TESTS SUCCESSFUL')
     else:
-        exu.Print('UNIT TESTS FAILED: see above section UNIT TESTS for detailed information')
+        exu.Print('UNIT TESTS FAILED: '+str(unitTestsFailed))
+    # localFileName += '-unittests'+str(len(unitTestsFailed))
+    totalFails+=len(unitTestsFailed)
 else:
     exu.Print('UNIT TESTS SKIPPED')
     
 if runTestExamples:
     if len(testsFailed) == 0:
-        exu.Print('ALL ' + str(totalTests) + ' EXAMPLE TESTS SUCCESSFUL')
+        exu.Print('ALL ' + str(totalTests) + ' TestModel TESTS SUCCESSFUL')
     else:
-        exu.Print(str(len(testsFailed)) + ' EXAMPLE TEST(S) OUT OF '+ str(totalTests) + ' FAILED: ')
+        exu.Print(str(len(testsFailed)) + ' TestModel TEST(S) OUT OF '+ str(totalTests) + ' FAILED: ')
         for i in testsFailed:
-            exu.Print('  EXAMPLE ' + str(i) + ' (' + testFileList[i] + ') FAILED')
+            exu.Print('  TestModel ' + str(i) + ' (' + testFileList[i] + ') FAILED')
+    # localFileName += '-models'+str(len(testsFailed))
+    totalFails+=len(testsFailed)
 else:
-    exu.Print('EXAMPLE TESTS SKIPPED')
+    exu.Print(', EXAMPLE TESTS SKIPPED')
     
 if runMiniExamples:
     if len(miniExamplesFailed) == 0:
@@ -339,6 +364,8 @@ if runMiniExamples:
             exu.Print('  MINI EXAMPLE ' + str(i) + ' (' + miniExamplesFileList[i] + ') FAILED')
         
     exu.Print('******************************************\n')
+    # localFileName += '-mini'+str(len(miniExamplesFailed))
+    totalFails+=len(miniExamplesFailed)
 else:
     exu.Print('MINI EXAMPLE TESTS SKIPPED')
 
@@ -347,10 +374,26 @@ if runCppUnitTests:
         exu.Print('ALL CPP UNIT TESTS SUCCESSFUL')
     else:
         exu.Print(str(numberOfCppUnitTestsFailed) + ' CPP UNIT TESTS FAILED: see above section for detailed information')
+    # localFileName += '-cpp'+str(numberOfCppUnitTestsFailed)
+    totalFails+=len(numberOfCppUnitTestsFailed)
 else:
     exu.Print('CPP UNIT TESTS SKIPPED')
+    # localFileName += '-nocpp'
 
-    
+#create a filename which indicates the number of fails
+localFileName = localFileName+'-'+'F'+str(totalFails).zfill(2)+'.txt'
+# exu.Print('\n'+localFileName)
+
 exu.SetWriteToFile(filename='', flagWriteToFile=False, flagAppend=False) #stop writing to file, close file
+
+#write summary for github actions
+if outputLocal:
+    # testSummaryFileName = 'test-exudyn.txt'
+    allText = ''
+    with open(logFileName, 'r') as f:
+        allText = f.read()
+        
+    with open(localFileName, 'w') as f:
+        f.write(allText)
 
 

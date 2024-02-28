@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        python-version: ['8'] #, 'cp39-cp39', 'cp310-cp310', 'cp311-cp311', 'cp312-cp312']
+        python-version: ['10'] #, 'cp39-cp39', 'cp310-cp310', 'cp311-cp311', 'cp312-cp312']
 
     steps:
       - uses: actions/checkout@v4
@@ -26,8 +26,8 @@ jobs:
       #https://github.com/RalfG/python-wheels-manylinux-build/blob/master/full_workflow_example.yml
       - uses: RalfG/python-wheels-manylinux-build@v0.7.1-manylinux2014_x86_64
         with:
-          python-versions: 3.${{ matrix.python-version }}
-          build-requirements: 'numpy'
+          python-versions: cp3${{ matrix.python-version }}-cp3${{ matrix.python-version }}
+          build-requirements: 'numpy matplotlib'
           #not required: freeglut-devel libX11-devel
           system-packages: 'mesa-libGL-devel mesa-libGLU-devel glfw glfw-devel freeglut-devel libX11-devel'
           pre-build-command: ''
@@ -46,7 +46,7 @@ jobs:
       - name: Change directory and run test suite
         run: |
           cd main/pythonDev/TestModels
-          python runTestSuite.py
+          python runTestSuite.py -quiet -local
         shell: bash
 
       - name: Upload tests
@@ -126,7 +126,7 @@ jobs:
         CIBW_ENVIRONMENT_MACOS: "MACOSX_DEPLOYMENT_TARGET=10.9"  # does not change version
         #CIBW_TEST_COMMAND: "cd /d {project}/pythonDev/TestModels && python runTestSuite.py -quiet -local"
         #CIBW_TEST_COMMAND: "cd {project}/pythonDev/TestModels && python runTestSuite.py -quiet -local"
-        CIBW_TEST_COMMAND_WINDOWS: "cd /d {project}/pythonDev/TestModels && dir && echo 'Test suite done' && python runTestSuite.py -quiet -local"
+        CIBW_TEST_COMMAND_WINDOWS: "cd /d {project}/pythonDev/TestModels && dir && python runTestSuite.py -quiet -local && dir"
         CIBW_TEST_REQUIRES: matplotlib #scipy
       working-directory: main  #specify the local dir where setup.py is located
 
