@@ -116,7 +116,8 @@ jobs:
         name: uploaddata-wheels-${{ matrix.os }}-python-3${{ matrix.python-version }}
         path: main/.wheels/*.whl
 
-      uses: actions/upload-artifact@v4
+    - name: Upload tests
+    - uses: actions/upload-artifact@v4 #artifacts are stored locally!
       with:
         name: uploaddata-tests-${{ matrix.os }}-python-3${{ matrix.python-version }}
         path: main/pythonDev/TestModels/testSuiteLog_V*.txt
