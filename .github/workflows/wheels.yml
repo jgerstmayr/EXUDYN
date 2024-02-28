@@ -118,8 +118,8 @@ jobs:
     - name: Check if QEMU is needed for Linux
       if: runner.os == 'Linux'
       uses: docker/setup-qemu-action@v3
-        with:
-          context: ./main
+      with:
+        context: ./main
 
     - name: Install cibuildwheel
       run: python -m pip install cibuildwheel
