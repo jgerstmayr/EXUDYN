@@ -19,15 +19,18 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  \small
-+  Exudyn version = 1.7.118.dev1, 
-+  last change =  2024-02-27, 
++  Exudyn version = 1.7.119.dev1, 
++  last change =  2024-02-28, 
 +  Number of issues = 1798, 
-+  Number of resolved issues = 1588 (118 in current version), 
++  Number of resolved issues = 1589 (119 in current version), 
 
 ***********
 Version 1.7
 ***********
 
+ * Version 1.7.119: resolved Issue 1797: Github actions (extension)
+    - description:  create single line output for testsuite with specific mode; add test suite for github actions and merge outputs into single file
+    - date resolved: **2024-02-28 21:34**\ , date raised: 2024-02-27 
  * Version 1.7.118: resolved Issue 1796: MacOSX universal2 (extension)
     - description:  add build option for macos universal files on GH actions to have both arm and x86 on board
     - **notes:** NOTE that pip 20.3 is required to install these wheels!
@@ -5149,10 +5152,6 @@ Version 0.1
 ***********
 Open issues
 ***********
-
- * **open issue 1797:** Github actions      
-    - description:  create single line output for testsuite with specific mode; add test suite for github actions and merge outputs into single file
-    - date raised: 2024-02-27 
 
  * **open issue 1795:** joint constraints   
     - description:  theory: add description for formulation of joint constraints
