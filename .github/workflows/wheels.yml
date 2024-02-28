@@ -123,13 +123,14 @@ jobs:
       #working-directory: main
 
     - name: Install cibuildwheel
-      run: |
-        ls -la
-        python -m pip install cibuildwheel
-      working-directory: main
+      run: python -m pip install cibuildwheel
+      # working-directory: main
 
     - name: Build wheels
-      run: python -m cibuildwheel --output-dir .wheels
+      run: |
+        cd ./main
+        ls -la
+        python -m cibuildwheel --output-dir .wheels
       env:
         CIBW_BUILD: "cp3${{ matrix.python-version }}-*"
         CIBW_SKIP: "*-win32"   #skip building 32-bit (win32) wheels
@@ -141,7 +142,7 @@ jobs:
         CIBW_TEST_COMMAND_LINUX: "cd {project}/pythonDev/TestModels && python runTestSuite.py -quiet -local"
         CIBW_TEST_COMMAND_MACOS: "cd {project}/pythonDev/TestModels && python runTestSuite.py -quiet -local"
         CIBW_TEST_REQUIRES: matplotlib scipy
-      working-directory: main  #specify the local dir where setup.py is located
+      #working-directory: main  #specify the local dir where setup.py is located
 
     - uses: actions/upload-artifact@v4 #artifacts are stored locally!
       with:
