@@ -127,10 +127,7 @@ jobs:
       # working-directory: main
 
     - name: Build wheels
-      run: |
-        cd ./main
-        ls -la
-        python -m cibuildwheel --output-dir .wheels
+      run: python -m cibuildwheel --output-dir .wheels main
       env:
         CIBW_BUILD: "cp3${{ matrix.python-version }}-*"
         CIBW_SKIP: "*-win32"   #skip building 32-bit (win32) wheels
@@ -139,7 +136,7 @@ jobs:
         #CIBW_MANYLINUX_AARCH64_IMAGE: quay.io/pypa/manylinux2014_aarch64 #:latest
         #CIBW_ENVIRONMENT_MACOS: "MACOSX_DEPLOYMENT_TARGET=10.9"  # does not change version
         CIBW_TEST_COMMAND_WINDOWS: "cd /d {project}/pythonDev/TestModels && python runTestSuite.py -quiet -local"
-        CIBW_TEST_COMMAND_LINUX: "cd {project}/pythonDev/TestModels && python runTestSuite.py -quiet -local"
+        CIBW_TEST_COMMAND_LINUX: "dir && cd {project}/pythonDev/TestModels && python runTestSuite.py -quiet -local"
         CIBW_TEST_COMMAND_MACOS: "cd {project}/pythonDev/TestModels && python runTestSuite.py -quiet -local"
         CIBW_TEST_REQUIRES: matplotlib scipy
       #working-directory: main  #specify the local dir where setup.py is located
