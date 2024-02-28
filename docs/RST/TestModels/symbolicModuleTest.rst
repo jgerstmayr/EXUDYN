@@ -421,7 +421,7 @@ You can view and download this file on Github: `symbolicModuleTest.py <https://g
                #if (res[0] != res[1]).any():  #problem with 1e-16 errors
                wrong = False
                if np.linalg.norm(res[0] - res[1]) > 1e-15: 
-                   s = '\diff:\n'
+                   s = '\\diff:\n'
                    s += str(res[0]-res[1])
                    cntWrong+=1
                    wrong=True

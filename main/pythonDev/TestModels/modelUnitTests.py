@@ -1023,7 +1023,7 @@ def RunAllModelUnitTests(mbs, testInterface):
     testInterface.exu.Print('********************************')
     testInterface.exu.Print('********************************\n')
 
-    return rv
+    return [rv, testsFailed]
 
 
 
