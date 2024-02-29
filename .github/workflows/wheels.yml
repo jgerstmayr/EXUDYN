@@ -10,6 +10,7 @@ jobs:
   buildUbuntu:
     name: Build ${{ matrix.os }} manylinux wheels
     runs-on: ${{ matrix.os }}
+    continue-on-error: true #will continue, such that other wheels are built
     strategy:
       matrix:
         os: [ubuntu-latest]
@@ -95,6 +96,7 @@ jobs:
   buildWindowsMacOS:
     name: Build ${{ matrix.os }} wheels
     runs-on: ${{ matrix.os }}
+    continue-on-error: true #will continue, such that other wheels are built
     strategy:
       matrix:
         os: [ubuntu-latest] #ubuntu with aarch64 seems to need emulation: see QEMU / setup-qemu-action
