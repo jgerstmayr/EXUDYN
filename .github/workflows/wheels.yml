@@ -127,8 +127,8 @@ jobs:
     - name: Build wheels
       run: python -m cibuildwheel --output-dir .wheels main #main is the project folder; works on all platforms
       env:
-        CIBW_BEFORE_BUILD_LINUX: "yum install -y glfw-devel libX11-devel"
-        # CIBW_BEFORE_BUILD_LINUX: "apt-get update && apt-get install -y libgl1-mesa-dev libglu1-mesa-dev libglfw3 libglfw3-dev freeglut3-dev libx11-dev"
+        #CIBW_BEFORE_BUILD_LINUX: "yum install -y glfw-devel libX11-devel"
+        CIBW_BEFORE_BUILD_LINUX: "sudo apt-get install -y libglfw3-dev libglfw3 libx11-dev"
         CIBW_BUILD: "cp3${{ matrix.python-version }}-*"
         CIBW_SKIP: "*-win32"   #skip building 32-bit (win32) wheels
         CIBW_ARCHS_MACOS: "universal2" #for arm64 and x86
