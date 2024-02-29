@@ -19,18 +19,28 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  \small
-+  Exudyn version = 1.7.119.dev1, 
-+  last change =  2024-02-28, 
-+  Number of issues = 1798, 
-+  Number of resolved issues = 1589 (119 in current version), 
++  Exudyn version = 1.7.122.dev1, 
++  last change =  2024-02-29, 
++  Number of issues = 1801, 
++  Number of resolved issues = 1592 (122 in current version), 
 
 ***********
 Version 1.7
 ***********
 
- * Version 1.7.119: resolved Issue 1797: Github actions (extension)
+ * Version 1.7.122: resolved Issue 1800: GeneralContact (extension)
+    - description:  add option for GetActiveContacts to return number of contacts per contact type in case that itemIndex=-1
+    - date resolved: **2024-02-29 15:50**\ , date raised: 2024-02-29 
+ * Version 1.7.121: resolved Issue 1799: exudyn __init__.py (change)
+    - description:  remove NoAVX option for linux, as linux does not (yet) have a AVX2 option; crashed on linux arm/aarch architecture
+    - date resolved: **2024-02-29 14:34**\ , date raised: 2024-02-29 
+ * Version 1.7.120: resolved Issue 1797: Github actions (extension)
     - description:  create single line output for testsuite with specific mode; add test suite for github actions and merge outputs into single file
-    - date resolved: **2024-02-28 21:34**\ , date raised: 2024-02-27 
+    - **notes:** put information into filename of text tilde with output of testsuite
+    - date resolved: **2024-02-29 14:32**\ , date raised: 2024-02-27 
+ * Version 1.7.119: resolved Issue 1798: linux arm (extension)
+    - description:  add multilinux aarch64 wheels to GH build actions
+    - date resolved: **2024-02-29 14:31**\ , date raised: 2024-02-29 
  * Version 1.7.118: resolved Issue 1796: MacOSX universal2 (extension)
     - description:  add build option for macos universal files on GH actions to have both arm and x86 on board
     - **notes:** NOTE that pip 20.3 is required to install these wheels!

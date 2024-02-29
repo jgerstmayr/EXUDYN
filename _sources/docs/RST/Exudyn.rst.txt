@@ -1,5 +1,5 @@
 |RTD documentation| |PyPI version exudyn| |PyPI pyversions| |PyPI download month| |Github release date| 
-|Github issues| |Github stars| |Github commits| |Github last commit|
+|Github issues| |Github stars| |Github commits| |Github last commit| |CI build|
 
 .. |PyPI version exudyn| image:: https://badge.fury.io/py/exudyn.svg
    :target: https://pypi.python.org/pypi/exudyn/
@@ -28,6 +28,8 @@
 .. |Github last commit| image:: https://img.shields.io/github/last-commit/jgerstmayr/exudyn
    :target: https://jgerstmayr.github.io/EXUDYN/
 
+.. |CI build| image:: https://github.com/jgerstmayr/EXUDYN/actions/workflows/wheels.yml/badge.svg
+
 
 
 ******
@@ -37,7 +39,7 @@ Exudyn
 
 **A flexible multibody dynamics systems simulation code with Python and C++**
 
-Exudyn version = 1.7.119.dev1 (Hall)
+Exudyn version = 1.7.121.dev1 (Hall)
 
 +  **University of Innsbruck**, Department of Mechatronics, Innsbruck, Austria
 
