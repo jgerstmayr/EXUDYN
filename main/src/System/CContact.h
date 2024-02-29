@@ -541,8 +541,8 @@ public:
     void UpdateContacts(const CSystem& cSystem);
 
     //! get contact interactions of itemIndex of type selectedTypeIndex, e.g. IndexSpheresMarkerBased with index 2
-    //! returns list of contacts, with global indices!
-    ArrayIndex* GetActiveContacts(Contact::TypeIndex selectedTypeIndex, Index itemIndex);
+	//! returns list of contacts, with global indices OR in case of itemIndex == -1, it will return all items with active contacts of the contact type (0=first contact type item)
+    void GetActiveContacts(Contact::TypeIndex selectedTypeIndex, Index itemIndex, ArrayIndex*& foundContacts);
 
 };
 #endif //USE_GENERAL_CONTACT

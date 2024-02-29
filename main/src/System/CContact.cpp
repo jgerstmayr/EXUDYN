@@ -2754,18 +2754,34 @@ void GeneralContact::UpdateContacts(const CSystem& cSystem)
 }
 
 //! get contact interactions of itemIndex of type selectedTypeIndex, e.g. IndexSpheresMarkerBased with index 2
-//! returns list of contacts, with global indices!
-ArrayIndex* GeneralContact::GetActiveContacts(Contact::TypeIndex selectedTypeIndex, Index itemIndex)
+//! returns list of contacts, with global indices OR in case of itemIndex == -1, it will return all items with active contacts of the contact type (0=first contact type item)
+void GeneralContact::GetActiveContacts(Contact::TypeIndex selectedTypeIndex, Index itemIndex, ArrayIndex*& foundContacts)
 {
     CHECKandTHROW(selectedTypeIndex < Contact::IndexEndOfEnumList && selectedTypeIndex >= 0, "GetContactInteractions: selectedTypeIndex must be within available types");
     Index nItemsAvailable = globalContactIndexOffsets[selectedTypeIndex+1] - globalContactIndexOffsets[selectedTypeIndex];
 
-    CHECKandTHROW(itemIndex < nItemsAvailable, "GetContactInteractions: itemIndex is out of available range");
-    __UNUSED(nItemsAvailable); //avoid unused variable warnings
-    
-    Index globalIndex = itemIndex + globalContactIndexOffsets[selectedTypeIndex]; 
+	if (itemIndex == -1)
+	{
+		//in this case, foundContacts is a default array, which we can fill
+		Index nItems = globalContactIndexOffsets[selectedTypeIndex + 1] - globalContactIndexOffsets[selectedTypeIndex];
+		foundContacts->SetMaxNumberOfItems(nItems);
+		Index offset = globalContactIndexOffsets[selectedTypeIndex];
+		for (Index i = 0; i < nItems; i++)
+		{
+			foundContacts->Append(allActiveContacts[offset + i]->NumberOfItems());
+		}
+	}
+	else
+	{
+		//in this case, foundContacts will be set to destination array
+		CHECKandTHROW(itemIndex < nItemsAvailable, "GetContactInteractions: itemIndex is out of available range");
+		__UNUSED(nItemsAvailable); //avoid unused variable warnings
 
-    return allActiveContacts[globalIndex];
+		Index globalIndex = itemIndex + globalContactIndexOffsets[selectedTypeIndex];
+
+		foundContacts = allActiveContacts[globalIndex];
+
+	}
 }
 
 

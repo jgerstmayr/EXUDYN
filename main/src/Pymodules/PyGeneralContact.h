@@ -309,10 +309,12 @@ public:
     }
 
     //! get contact interactions of itemIndex of type selectedTypeIndex, e.g. IndexSpheresMarkerBased with index 2
-    //! returns list of contacts, with global indices!
+	//! returns list of contacts, with global indices OR in case of itemIndex == -1, it will return all items with active contacts of the contact type (0=first contact type item)
     py::object PyGetActiveContacts(Contact::TypeIndex selectedTypeIndex, Index itemIndex)
     {
-        ArrayIndex* activeContacts = GetActiveContacts(selectedTypeIndex, itemIndex);
+		ResizableArray<Index> arrayIndexLocal;
+		ArrayIndex* activeContacts = &arrayIndexLocal;
+		GetActiveContacts(selectedTypeIndex, itemIndex, activeContacts);
 
         return EPyUtils::ArrayIndex2NumPy(*activeContacts);
     }

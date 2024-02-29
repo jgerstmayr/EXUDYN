@@ -55,7 +55,7 @@ try:
         elif __cpuHasAVX2:
             print('WARNING: user activated AVX2 support, but no AVX2 support has been detected on current CPU; may crash')
     else:
-        __cpuHasAVX2 = True
+        __cpuHasAVX2 = True #for MacOS and Linux, this means that there is no exudynCPPnoAVX version!
 except:
     print('Warning: during import of exudyn, it was detected that either numpy or the numpy.core module "_multiarray_umath" is missing')
 
