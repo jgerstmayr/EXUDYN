@@ -125,7 +125,7 @@ jobs:
       run: python -m pip install cibuildwheel
 
     - name: Build wheels
-      run: python -m cibuildwheel --output-dir .wheels main #main is the project folder; works on all platforms
+      run: python -m cibuildwheel --output-dir main/.wheels main #main is the project folder; works on all platforms
       env:
         CIBW_BEFORE_BUILD_LINUX: "yum install -y epel-release && yum update -y && yum install -y glfw-devel libX11-devel"
         CIBW_BUILD: "cp3${{ matrix.python-version }}-*"
