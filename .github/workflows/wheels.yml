@@ -127,12 +127,12 @@ jobs:
     - name: Build wheels
       run: python -m cibuildwheel --output-dir .wheels main #main is the project folder; works on all platforms
       env:
-        #CIBW_BEFORE_BUILD_LINUX: "yum install -y glfw-devel libX11-devel"
-        CIBW_BEFORE_BUILD_LINUX: "apt-get install -y libglfw3-dev libglfw3 libx11-dev"
+        CIBW_BEFORE_BUILD_LINUX: "dnf install -y glfw-devel libX11-devel"
+        # CIBW_BEFORE_BUILD_LINUX: "apt-get install -y libglfw3-dev libglfw3 libx11-dev"
         CIBW_BUILD: "cp3${{ matrix.python-version }}-*"
         CIBW_SKIP: "*-win32"   #skip building 32-bit (win32) wheels
         CIBW_ARCHS_MACOS: "universal2" #for arm64 and x86
-        #CIBW_ARCHS_LINUX: "aarch64"    #for raspberry pi, etc.
+        CIBW_ARCHS_LINUX: "aarch64"    #for raspberry pi, etc.
 
         #CIBW_ENVIRONMENT_MACOS: "MACOSX_DEPLOYMENT_TARGET=10.9"  # does not change version
         CIBW_TEST_COMMAND_WINDOWS: "cd /d {project}/pythonDev/TestModels && python runTestSuite.py -quiet -local"
