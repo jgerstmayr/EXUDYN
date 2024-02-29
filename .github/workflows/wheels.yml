@@ -97,10 +97,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        # os: [ubuntu-latest] #ubuntu with aarch64 seems to need emulation: see QEMU / setup-qemu-action
-        os: [windows-latest, macos-latest] #, ubuntu-latest] #ubuntu with aarch64 seems to need emulation: see QEMU / setup-qemu-action
-        python-version: ['10'] 
-        # python-version: ['8', '9', '10', '11', '12'] 
+        os: [ubuntu-latest] #ubuntu with aarch64 seems to need emulation: see QEMU / setup-qemu-action
+        #os: [windows-latest, macos-latest, ubuntu-latest] #ubuntu with aarch64 seems to need emulation: see QEMU / setup-qemu-action
+        #python-version: ['10','11']
+        python-version: ['8', '9', '10', '11', '12'] 
         exclude:
           - os: macos-latest
             python-version: "8" #this version fails during testing / installation of exudyn universal2 wheel
@@ -134,10 +134,11 @@ jobs:
         CIBW_ARCHS_LINUX: "aarch64"    #for raspberry pi, etc.
 
         #CIBW_ENVIRONMENT_MACOS: "MACOSX_DEPLOYMENT_TARGET=10.9"  # does not change version
-        CIBW_TEST_COMMAND_WINDOWS: "dir && cd /d {project}/main/pythonDev/TestModels && python runTestSuite.py -quiet -local"
+        #{project} folder is in Exudyn root, not in main!
+        CIBW_TEST_COMMAND_WINDOWS: "cd /d {project}/main/pythonDev/TestModels && python runTestSuite.py -quiet -local"
         CIBW_TEST_COMMAND_LINUX: "cd {project}/main/pythonDev/TestModels && python runTestSuite.py -quiet -local"
         CIBW_TEST_COMMAND_MACOS: "cd {project}/main/pythonDev/TestModels && python runTestSuite.py -quiet -local"
-        CIBW_TEST_REQUIRES: matplotlib #scipy
+        CIBW_TEST_REQUIRES: matplotlib scipy
       #working-directory: main  #specify the local dir where setup.py is located; does not work with linux
 
     - uses: actions/upload-artifact@v4 #artifacts are stored locally!
