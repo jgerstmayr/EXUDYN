@@ -44,7 +44,7 @@ if __cpuHasAVX2:
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #use numpy.core to find if AVX+AVX2 is available ...
 try:
-    if sys.platform != 'darwin': #MacOS does not support AVX2, therefore there are not non-AVX modules compiled ...
+    if sys.platform != 'darwin' and sys.platform != 'linux': #MacOS does not support AVX2; no AVX2 for linux right now; therefore there are not non-AVX modules compiled ...
         from numpy.core._multiarray_umath import __cpu_features__
         if (('AVX' in __cpu_features__) and ('AVX2' in __cpu_features__) and
             (__cpu_features__['AVX'] == True) and (__cpu_features__['AVX2'] == True)):
@@ -82,7 +82,7 @@ try:
                 from .exudynCPPnoAVX import *
             except:
                 raise ImportError('Import of exudyn C++ module (without AVX2) failed; non-AVX2 versions are only available in release versions (without .dev1 appendix); check your installation, Python version, conda environment and site-packages for exudyn; try re-installation')
-            
+
 except:
     #for run inside Visual Studio (exudynCPP lies in Release or Debug folders); no exudynFast! :
     try:
