@@ -141,8 +141,7 @@ jobs:
     - name: Build wheels
       run: python -m cibuildwheel --output-dir main/.wheels main #main is the project folder; works on all platforms
       env:
-        CIBW_BEFORE_BUILD_LINUX: "cd {project}/main/pythonDev/TestModels && echo "Hello, GitHub Actions!" > testSuiteLog_V123.txt &&
-        cp {project}/main/pythonDev/TestModels/testSuiteLog_V* {package}/pythonDev/TestModels/"
+        CIBW_BEFORE_BUILD_LINUX: "cd {project}/main/pythonDev/TestModels && echo "Hello, GitHub Actions!" > testSuiteLog_V123.txt && cp {project}/main/pythonDev/TestModels/testSuiteLog_V* {package}/pythonDev/TestModels/"
         # CIBW_BEFORE_BUILD_LINUX: "yum install -y epel-release && yum update -y && yum install -y glfw-devel libX11-devel"
         CIBW_BUILD: "cp3${{ matrix.python-version }}-*"
         CIBW_SKIP: "*-win32 *musllinux* *manylinux*"   #skip building 32-bit (win32) wheels
