@@ -141,7 +141,6 @@ jobs:
         CIBW_TEST_COMMAND_LINUX: "cd {project}/main/pythonDev/TestModels && python runTestSuite.py -quiet -local && ls -la"
         CIBW_TEST_COMMAND_MACOS: "cd {project}/main/pythonDev/TestModels && python runTestSuite.py -quiet -local"
         CIBW_TEST_REQUIRES: matplotlib scipy
-      #working-directory: main  #specify the local dir where setup.py is located; does not work with linux
 
       uses: actions/upload-artifact@v4 #artifacts are stored locally!
       with:
