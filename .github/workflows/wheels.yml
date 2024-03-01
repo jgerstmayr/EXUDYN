@@ -38,7 +38,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: uploaddata-wheels-ubuntu-python-cp3${{ matrix.python-version }}-cp3${{ matrix.python-version }}
+          name: uploaddata-wheels-manylinux-x86-cp3${{ matrix.python-version }}-cp3${{ matrix.python-version }}
           path: ./main/dist/*manylinux2014_x86_64.whl
 
       - name: Install built wheels for test suite
@@ -55,7 +55,7 @@ jobs:
       - name: Upload tests
         uses: actions/upload-artifact@v4 #artifacts are stored locally!
         with:
-          name: uploaddata-tests-${{ matrix.os }}-ubuntu-python-3${{ matrix.python-version }}
+          name: uploaddata-tests-${{ matrix.os }}-manylinux-x86--3${{ matrix.python-version }}
           path: main/pythonDev/TestModels/testSuiteLog_V*.txt
 
   #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -143,16 +143,17 @@ jobs:
         CIBW_TEST_REQUIRES: matplotlib scipy
       #working-directory: main  #specify the local dir where setup.py is located; does not work with linux
 
+      uses: actions/upload-artifact@v4 #artifacts are stored locally!
+      with:
+        name: uploaddata-tests-${{ matrix.os }}-python-3${{ matrix.python-version }}
+        path: main/pythonDev/TestModels/testSuiteLog_V*.txt
+
+    - name: Upload tests
     - uses: actions/upload-artifact@v4 #artifacts are stored locally!
       with:
         name: uploaddata-wheels-${{ matrix.os }}-python-3${{ matrix.python-version }}
         path: main/.wheels/*.whl
 
-    - name: Upload tests
-      uses: actions/upload-artifact@v4 #artifacts are stored locally!
-      with:
-        name: uploaddata-tests-${{ matrix.os }}-python-3${{ matrix.python-version }}
-        path: main/pythonDev/TestModels/testSuiteLog_V*.txt
 
   mergeArtifacts: #merge artifacts into one directory and zip it
     needs: [buildWindowsMacOS, buildUbuntu] #buildMacOSarm64, 
