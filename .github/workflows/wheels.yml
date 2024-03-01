@@ -138,7 +138,7 @@ jobs:
         #CIBW_ENVIRONMENT_MACOS: "MACOSX_DEPLOYMENT_TARGET=10.9"  # does not change version
         #{project} folder is in Exudyn root, not in main!
         CIBW_TEST_COMMAND_WINDOWS: "cd /d {project}/main/pythonDev/TestModels && python runTestSuite.py -quiet -local"
-        CIBW_TEST_COMMAND_LINUX: "cd {project}/main/pythonDev/TestModels && python runTestSuite.py -quiet -local && ls -la"
+        CIBW_TEST_COMMAND_LINUX: "cd {project}/main/pythonDev/TestModels && python runTestSuite.py -quiet -local && cp {project}/main/pythonDev/TestModels/testSuiteLog_V* {package}/main"
         CIBW_TEST_COMMAND_MACOS: "cd {project}/main/pythonDev/TestModels && python runTestSuite.py -quiet -local"
         CIBW_TEST_REQUIRES: matplotlib scipy
 
@@ -148,6 +148,7 @@ jobs:
         path: |
           main/.wheels/*.whl
           main/pythonDev/TestModels/testSuiteLog_V*.txt
+          main/testSuiteLog_V*.txt
 
     # - uses: actions/upload-artifact@v4 #artifacts are stored locally!
       # with:
