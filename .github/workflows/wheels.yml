@@ -144,14 +144,32 @@ jobs:
 
     - uses: actions/upload-artifact@v4 #artifacts are stored locally!
       with:
-        name: uploaddata-tests-${{ matrix.os }}-python-3${{ matrix.python-version }}
-        path: main/pythonDev/TestModels/testSuiteLog_V*.txt
+        name: uploaddata-wheelsAndTests-${{ matrix.os }}-python-3${{ matrix.python-version }}
+        path: |
+          main/.wheels/*.whl
+          main/pythonDev/TestModels/testSuiteLog_V*.txt
 
-    - name: Upload tests
-      uses: actions/upload-artifact@v4 #artifacts are stored locally!
-      with:
-        name: uploaddata-wheels-${{ matrix.os }}-python-3${{ matrix.python-version }}
-        path: main/.wheels/*.whl
+    # - uses: actions/upload-artifact@v4 #artifacts are stored locally!
+      # with:
+        # name: uploaddata-tests-${{ matrix.os }}-python-3${{ matrix.python-version }}
+        # path: main/pythonDev/TestModels/testSuiteLog_V*.txt
+
+    # - name: Upload tests
+      # uses: actions/upload-artifact@v4 #artifacts are stored locally!
+      # with:
+        # name: uploaddata-wheels-${{ matrix.os }}-python-3${{ matrix.python-version }}
+        # path: main/.wheels/*.whl
+
+    # - uses: actions/upload-artifact@v4 #artifacts are stored locally!
+      # with:
+        # name: uploaddata-wheels-${{ matrix.os }}-python-3${{ matrix.python-version }}
+        # path: main/.wheels/*.whl
+
+    # - name: Upload tests
+      # uses: actions/upload-artifact@v4 #artifacts are stored locally!
+      # with:
+        # name: uploaddata-tests-${{ matrix.os }}-python-3${{ matrix.python-version }}
+        # path: main/pythonDev/TestModels/testSuiteLog_V*.txt
 
 
   mergeArtifacts: #merge artifacts into one directory and zip it
