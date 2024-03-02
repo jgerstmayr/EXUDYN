@@ -129,8 +129,8 @@ jobs:
     - name: Build wheels
       run: python -m cibuildwheel --output-dir ${{ github.workspace }}/wheelstore main #main is the project folder; works on all platforms
       env:
-        CIBW_BEFORE_BUILD_LINUX: "ls -la ${{ github.workspace }} && yum install -y epel-release && yum update -y && yum install -y glfw-devel libX11-devel"
-        # CIBW_BEFORE_BUILD_LINUX: "yum install -y epel-release && yum update -y && yum install -y glfw-devel libX11-devel"
+        # CIBW_BEFORE_BUILD_LINUX: "ls -la ${{ github.workspace }} && yum install -y epel-release && yum update -y && yum install -y glfw-devel libX11-devel"
+        CIBW_BEFORE_BUILD_LINUX: "ls -la {output_dir} && yum install -y epel-release && yum update -y && yum install -y glfw-devel libX11-devel"
         CIBW_BUILD: "cp3${{ matrix.python-version }}-*"
         CIBW_SKIP: "*-win32 *musllinux*"   #skip building 32-bit (win32) wheels
         CIBW_ARCHS_MACOS: "universal2" #for arm64 and x86
@@ -139,8 +139,8 @@ jobs:
         #CIBW_ENVIRONMENT_MACOS: "MACOSX_DEPLOYMENT_TARGET=10.9"  # does not change version
         #{project} folder is in Exudyn root, not in main!
         CIBW_TEST_COMMAND_WINDOWS: "cd /d {project}/main/pythonDev/TestModels && python runTestSuite.py -quiet -local"
-        CIBW_TEST_COMMAND_LINUX: "cd {project}/main/pythonDev/TestModels && python runTestSuite.py -quiet -local && cp {project}/main/pythonDev/TestModels/testSuiteLog_V* ${{ github.workspace }}/"
-        # cp {project}/main/pythonDev/TestModels/testSuiteLog_V* {package}/
+        CIBW_TEST_COMMAND_LINUX: "cd {project}/main/pythonDev/TestModels && python runTestSuite.py -quiet -local && cp {project}/main/pythonDev/TestModels/testSuiteLog_V* {output_dir}/"
+        # cp {project}/main/pythonDev/TestModels/testSuiteLog_V* ${{ github.workspace }}/"
         CIBW_TEST_COMMAND_MACOS: "cd {project}/main/pythonDev/TestModels && python runTestSuite.py -quiet -local"
         CIBW_TEST_REQUIRES: matplotlib scipy
 
