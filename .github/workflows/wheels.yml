@@ -81,7 +81,7 @@ jobs:
       # run: python -m pip install cibuildwheel
 
     # - name: Build wheels
-      # run: python -m cibuildwheel --output-dir .wheels
+      # run: python -m cibuildwheel --output-dir wheelstore
       # env:
         # CIBW_BUILD: "cp3${{ matrix.python-version }}-*"
         # CIBW_ARCHS_MACOS: "arm64"
@@ -90,7 +90,7 @@ jobs:
     # - uses: actions/upload-artifact@v4
       # with:
         # name: uploaddata-wheels-${{ matrix.os }}-arm64-python-3${{ matrix.python-version }}
-        # path: main/.wheels/*.whl
+        # path: main/wheelstore/*.whl
   #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
   buildWindowsMacOS:
@@ -127,7 +127,7 @@ jobs:
       run: python -m pip install cibuildwheel
 
     - name: Build wheels
-      run: python -m cibuildwheel --output-dir main/.wheels main #main is the project folder; works on all platforms
+      run: python -m cibuildwheel --output-dir main/wheelstore main #main is the project folder; works on all platforms
       env:
         CIBW_BEFORE_BUILD_LINUX: "echo Hello > ${{ github.workspace }}/testSuiteLog_V123.txt && ls -la ${{ github.workspace }}"
         CIBW_BEFORE_BUILD_LINUX: "yum install -y epel-release && yum update -y && yum install -y glfw-devel libX11-devel"
@@ -152,13 +152,13 @@ jobs:
         echo "*** Workspace"
         ls -la ${{ github.workspace }}
         
-    - uses: actions/upload-artifact@v4 #artifacts are stored locally!
-      with:
-        name: uploaddata-wheelsAndTests-${{ matrix.os }}-python-3${{ matrix.python-version }}
-        path: | #upload wheels and test suite logs from different places (merged into 1 artifact)
-          main/.wheels/*.whl
-          main/pythonDev/TestModels/testSuiteLog_V*.txt
-          ${{ github.workspace }}/testSuiteLog_V*.txt
+    # - uses: actions/upload-artifact@v4 #artifacts are stored locally!
+      # with:
+        # name: uploaddata-wheelsAndTests-${{ matrix.os }}-python-3${{ matrix.python-version }}
+        # path: | #upload wheels and test suite logs from different places (merged into 1 artifact)
+          # main/wheelstore/*.whl
+          # main/pythonDev/TestModels/testSuiteLog_V*.txt
+          # ${{ github.workspace }}/testSuiteLog_V*.txt
 
     # - uses: actions/upload-artifact@v4 #artifacts are stored locally!
       # with:
@@ -169,17 +169,20 @@ jobs:
       # uses: actions/upload-artifact@v4 #artifacts are stored locally!
       # with:
         # name: uploaddata-wheels-${{ matrix.os }}-python-3${{ matrix.python-version }}
-        # path: main/.wheels/*.whl
+        # path: main/wheelstore/*.whl
 
-    # - uses: actions/upload-artifact@v4 #artifacts are stored locally!
-      # with:
-        # name: uploaddata-wheels-${{ matrix.os }}-python-3${{ matrix.python-version }}
-        # path: main/.wheels/*.whl
+    - uses: actions/upload-artifact@v4 #artifacts are stored locally!
+      with:
+        name: uploaddata-wheels-${{ matrix.os }}-python-3${{ matrix.python-version }}
+        path: main/wheelstore/*.whl
 
-    # - name: Upload tests
-      # uses: actions/upload-artifact@v4 #artifacts are stored locally!
-      # with:
-        # name: uploaddata-tests-${{ matrix.os }}-python-3${{ matrix.python-version }}
+    - name: Upload tests
+      uses: actions/upload-artifact@v4 #artifacts are stored locally!
+      with:
+        name: uploaddata-tests-${{ matrix.os }}-3${{ matrix.python-version }}
+        path: | #upload wheels and test suite logs from different places (merged into 1 artifact)
+          main/pythonDev/TestModels/testSuiteLog_V*.txt
+          ${{ github.workspace }}/testSuiteLog_V*.txt
         # path: main/pythonDev/TestModels/testSuiteLog_V*.txt
 
 
