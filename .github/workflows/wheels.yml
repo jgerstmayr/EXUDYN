@@ -141,7 +141,7 @@ jobs:
         CIBW_TEST_COMMAND_LINUX: >
           cd {project}/main/pythonDev/TestModels && 
           python runTestSuite.py -quiet -local && 
-          cp testSuiteLoc_V* {project}/main/wheelstore && 
+          cp testSuiteLog_V* {project}/main/wheelstore && 
           cd {project}/main/wheelstore && 
           for f in testSuiteLoc_V*.txt; do mv -- "$f" "${f%.txt}.whl"; done
         CIBW_TEST_COMMAND_MACOS: "cd {project}/main/pythonDev/TestModels && python runTestSuite.py -quiet -local"
