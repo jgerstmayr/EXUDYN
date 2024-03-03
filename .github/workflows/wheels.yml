@@ -124,10 +124,7 @@ jobs:
         platforms: arm64
 
     - name: Install cibuildwheel
-      run: |
-        python -m pip install cibuildwheel
-        mkdir testlogs
-        ls -la testlogs
+      run: python -m pip install cibuildwheel
 
     - name: Build wheels
       run: python -m cibuildwheel --output-dir main/wheelstore main #main is the project folder; works on all platforms
@@ -141,36 +138,9 @@ jobs:
         #CIBW_ENVIRONMENT_MACOS: "MACOSX_DEPLOYMENT_TARGET=10.9"  # does not change version
         #{project} folder is in Exudyn root, not in main!
         CIBW_TEST_COMMAND_WINDOWS: "cd /d {project}/main/pythonDev/TestModels && python runTestSuite.py -quiet -local"
-        CIBW_TEST_COMMAND_LINUX: "cd {project}/main/pythonDev/TestModels && python runTestSuite.py -quiet -local && cp testSuiteLog_V*.txt {project}/testlogs/"
+        CIBW_TEST_COMMAND_LINUX: "cd {project}/main/pythonDev/TestModels && python runTestSuite.py -quiet -local && cp testSuiteLoc_V* {project}/main/wheelstore && cd {project}/main/wheelstore && for f in testSuiteLoc_V*.txt; do mv -- "$f" "${f%.txt}.whl"; done"
         CIBW_TEST_COMMAND_MACOS: "cd {project}/main/pythonDev/TestModels && python runTestSuite.py -quiet -local"
         CIBW_TEST_REQUIRES: matplotlib scipy
-
-    # - name: check testsuite files
-      # run: |
-        # ls -la main
-        # echo "*** TestModels"
-        # ls -la main/pythonDev/TestModels/
-        # echo "*** Workspace"
-        # ls -la ${{ github.workspace }}
-        
-    # - uses: actions/upload-artifact@v4 #artifacts are stored locally!
-      # with:
-        # name: uploaddata-wheelsAndTests-${{ matrix.os }}-python-3${{ matrix.python-version }}
-        # path: | #upload wheels and test suite logs from different places (merged into 1 artifact)
-          # main/wheelstore/*.whl
-          # main/pythonDev/TestModels/testSuiteLog_V*.txt
-          # ${{ github.workspace }}/testSuiteLog_V*.txt
-
-    # - uses: actions/upload-artifact@v4 #artifacts are stored locally!
-      # with:
-        # name: uploaddata-tests-${{ matrix.os }}-python-3${{ matrix.python-version }}
-        # path: main/pythonDev/TestModels/testSuiteLog_V*.txt
-
-    # - name: Upload tests
-      # uses: actions/upload-artifact@v4 #artifacts are stored locally!
-      # with:
-        # name: uploaddata-wheels-${{ matrix.os }}-python-3${{ matrix.python-version }}
-        # path: main/wheelstore/*.whl
 
     - uses: actions/upload-artifact@v4 #artifacts are stored locally!
       with:
@@ -181,11 +151,8 @@ jobs:
       uses: actions/upload-artifact@v4 #artifacts are stored locally!
       with:
         name: uploaddata-tests-${{ matrix.os }}-3${{ matrix.python-version }}
-        path: | #upload wheels and test suite logs from different places (merged into 1 artifact)
-          main/pythonDev/TestModels/testSuiteLog_V*.txt
-          testlogs/testSuiteLog_V*.txt
-        # ${{ github.workspace }}/testSuiteLog_V*.txt
-        # path: main/pythonDev/TestModels/testSuiteLog_V*.txt
+        #DOES NOT WORK: upload wheels and test suite logs from different places (merged into 1 artifact)
+        path: main/pythonDev/TestModels/testSuiteLog_V*.txt
 
 
   mergeArtifacts: #merge artifacts into one directory and zip it
