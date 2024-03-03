@@ -138,11 +138,13 @@ jobs:
         #CIBW_ENVIRONMENT_MACOS: "MACOSX_DEPLOYMENT_TARGET=10.9"  # does not change version
         #{project} folder is in Exudyn root, not in main!
         CIBW_TEST_COMMAND_WINDOWS: "cd /d {project}/main/pythonDev/TestModels && python runTestSuite.py -quiet -local"
+        # perform a test and rename it into a wheel to be copied by cibuild ...
         CIBW_TEST_COMMAND_LINUX: >
           cd {project}/main/pythonDev/TestModels && 
           python runTestSuite.py -quiet -local && 
-          cp testSuiteLog_V* {wheel} && 
-          cd {wheel} && 
+          DIR="$(dirname {wheel})" && 
+          cp testSuiteLog_V* $DIR/
+          cd $DIR && 
           for f in testSuiteLog_V*.txt; do mv -- "$f" "${f%.txt}.whl"; done
         CIBW_TEST_COMMAND_MACOS: "cd {project}/main/pythonDev/TestModels && python runTestSuite.py -quiet -local"
         CIBW_TEST_REQUIRES: matplotlib scipy
@@ -152,11 +154,10 @@ jobs:
         name: uploaddata-wheels-${{ matrix.os }}-python-3${{ matrix.python-version }}
         path: wheelhouse/*.whl
 
-    - name: Upload tests
+    - name: Upload tests #for windows and macos
       uses: actions/upload-artifact@v4 #artifacts are stored locally!
       with:
         name: uploaddata-tests-${{ matrix.os }}-3${{ matrix.python-version }}
-        #DOES NOT WORK: upload wheels and test suite logs from different places (merged into 1 artifact)
         path: main/pythonDev/TestModels/testSuiteLog_V*.txt
 
 
