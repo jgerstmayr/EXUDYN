@@ -140,6 +140,9 @@ jobs:
         CIBW_TEST_COMMAND_WINDOWS: "cd /d {project}/main/pythonDev/TestModels && python runTestSuite.py -quiet -local"
         # perform a test and rename it into a wheel to be copied by cibuild ...
         CIBW_TEST_COMMAND_LINUX: >
+          ls -la /tmp/cibuildwheel/
+          ls -la /tmp/cibuildwheel/repaired_wheel/
+          cd /tmp/cibuildwheel/repaired_wheel/
           cd {project}/main/pythonDev/TestModels && 
           python runTestSuite.py -quiet -local && 
           DIR="$(dirname {wheel})" && 
