@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>symbolicUserFunctionMasses.py &mdash; Exudyn1.7.122.dev1 1.7.122.dev1 documentation</title>
+  <title>symbolicUserFunctionMasses.py &mdash; Exudyn1.8.0 1.8.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=a114c9bd"></script>
+        <script src="../../../_static/documentation_options.js?v=b51e6972"></script>
         <script src="../../../_static/doctools.js?v=888ff710"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -41,7 +41,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.7.122.dev1
+            Exudyn1.8.0
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -229,7 +229,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.7.122.dev1</a>
+          <a href="../../../index.html">Exudyn1.8.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -366,72 +366,73 @@
 <span class="linenos">113</span>
 <span class="linenos">114</span><span class="n">listUF</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="linenos">115</span><span class="k">if</span> <span class="kc">True</span><span class="p">:</span>
-<span class="linenos">116</span>    <span class="k">for</span> <span class="n">cc</span> <span class="ow">in</span> <span class="n">cList</span><span class="p">:</span>
-<span class="linenos">117</span>        <span class="k">if</span> <span class="n">useSymbolicUF</span><span class="p">:</span>
-<span class="linenos">118</span>            <span class="c1">#create separate user function for each spring-damper!</span>
-<span class="linenos">119</span>            <span class="n">symbolicFunc</span> <span class="o">=</span> <span class="nf">CreateSymbolicUserFunction</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">springForceUserFunction</span><span class="p">,</span> <span class="s1">&#39;springForceUserFunction&#39;</span><span class="p">,</span> <span class="n">cList</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-<span class="linenos">120</span>            <span class="n">symbolicFunc</span><span class="o">.</span><span class="n">TransferUserFunction2Item</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">cc</span><span class="p">,</span> <span class="s1">&#39;springForceUserFunction&#39;</span><span class="p">)</span>
-<span class="linenos">121</span>            <span class="n">listUF</span> <span class="o">+=</span> <span class="p">[</span><span class="n">symbolicFunc</span><span class="p">]</span> <span class="c1">#store, such that they are not deleted!!!</span>
-<span class="linenos">122</span>        <span class="k">else</span><span class="p">:</span>
-<span class="linenos">123</span>            <span class="n">mbs</span><span class="o">.</span><span class="nf">SetObjectParameter</span><span class="p">(</span><span class="n">cc</span><span class="p">,</span> <span class="s1">&#39;springForceUserFunction&#39;</span><span class="p">,</span> <span class="n">springForceUserFunction</span><span class="p">)</span>
-<span class="linenos">124</span>
+<span class="linenos">116</span>    <span class="n">isNew</span><span class="o">=</span><span class="mi">1</span>
+<span class="linenos">117</span>    <span class="k">for</span> <span class="n">cc</span> <span class="ow">in</span> <span class="n">cList</span><span class="p">:</span>
+<span class="linenos">118</span>        <span class="k">if</span> <span class="n">useSymbolicUF</span><span class="p">:</span>
+<span class="linenos">119</span>            <span class="c1">#create separate user function for each spring-damper (multithreading)!</span>
+<span class="linenos">120</span>            <span class="n">symbolicFunc</span> <span class="o">=</span> <span class="nf">CreateSymbolicUserFunction</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">springForceUserFunction</span><span class="p">,</span> <span class="s1">&#39;springForceUserFunction&#39;</span><span class="p">,</span> <span class="n">cc</span><span class="p">)</span>
+<span class="linenos">121</span>            <span class="n">mbs</span><span class="o">.</span><span class="nf">SetObjectParameter</span><span class="p">(</span><span class="n">cc</span><span class="p">,</span> <span class="s1">&#39;springForceUserFunction&#39;</span><span class="p">,</span> <span class="n">symbolicFunc</span><span class="p">)</span>
+<span class="linenos">122</span>            <span class="n">listUF</span> <span class="o">+=</span> <span class="p">[</span><span class="n">symbolicFunc</span><span class="p">]</span> <span class="c1">#store, such that they are not deleted!!!</span>
+<span class="linenos">123</span>        <span class="k">else</span><span class="p">:</span>
+<span class="linenos">124</span>            <span class="n">mbs</span><span class="o">.</span><span class="nf">SetObjectParameter</span><span class="p">(</span><span class="n">cc</span><span class="p">,</span> <span class="s1">&#39;springForceUserFunction&#39;</span><span class="p">,</span> <span class="n">springForceUserFunction</span><span class="p">)</span>
 <span class="linenos">125</span>
-<span class="linenos">126</span><span class="c1">#assemble and solve system for default parameters</span>
-<span class="linenos">127</span><span class="k">if</span> <span class="ow">not</span> <span class="n">useSymbolicUF</span><span class="p">:</span> <span class="c1">#do assemble before adding user functions =&gt; then, they will be parallelized</span>
-<span class="linenos">128</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
-<span class="linenos">129</span>
-<span class="linenos">130</span><span class="n">endTime</span> <span class="o">=</span> <span class="mi">10</span>
-<span class="linenos">131</span><span class="n">stepSize</span> <span class="o">=</span> <span class="mf">1e-4</span>
-<span class="linenos">132</span><span class="k">if</span> <span class="n">ff</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span> <span class="n">stepSize</span> <span class="o">=</span> <span class="mf">5e-4</span>
-<span class="linenos">133</span><span class="k">if</span> <span class="n">ff</span><span class="o">&gt;</span><span class="mi">2</span><span class="p">:</span> <span class="n">stepSize</span> <span class="o">=</span> <span class="mf">0.5e-5</span>
-<span class="linenos">134</span>
-<span class="linenos">135</span><span class="c1"># endTime = 0.01</span>
-<span class="linenos">136</span><span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">()</span>
-<span class="linenos">137</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">solutionWritePeriod</span> <span class="o">=</span> <span class="mf">0.01</span>
-<span class="linenos">138</span><span class="c1"># simulationSettings.solutionSettings.writeSolutionToFile = False</span>
-<span class="linenos">139</span>
-<span class="linenos">140</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">endTime</span><span class="o">/</span><span class="n">stepSize</span><span class="p">)</span>
-<span class="linenos">141</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="n">endTime</span>
-<span class="linenos">142</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">useModifiedNewton</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="linenos">143</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">parallel</span><span class="o">.</span><span class="n">numberOfThreads</span> <span class="o">=</span> <span class="mi">8</span>
-<span class="linenos">144</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">verboseMode</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="linenos">145</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">linearSolverType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">LinearSolverType</span><span class="o">.</span><span class="n">EigenSparse</span>
-<span class="linenos">146</span><span class="c1">#simulationSettings.displayComputationTime = True</span>
-<span class="linenos">147</span>
-<span class="linenos">148</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">drawNodesAsPoint</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="linenos">149</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">tiling</span> <span class="o">=</span> <span class="mi">6</span>
-<span class="linenos">150</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">loads</span><span class="o">.</span><span class="n">show</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="linenos">151</span>
-<span class="linenos">152</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">contour</span><span class="o">.</span><span class="n">outputVariableComponent</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
-<span class="linenos">153</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">contour</span><span class="o">.</span><span class="n">outputVariable</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Displacement</span>
-<span class="linenos">154</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">renderWindowSize</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2000</span><span class="p">,</span><span class="mi">1600</span><span class="p">]</span>
-<span class="linenos">155</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">multiSampling</span> <span class="o">=</span> <span class="mi">4</span>
-<span class="linenos">156</span>
-<span class="linenos">157</span><span class="kn">import</span> <span class="nn">time</span>
-<span class="linenos">158</span><span class="n">exu</span><span class="o">.</span><span class="nf">StartRenderer</span><span class="p">()</span>
-<span class="linenos">159</span><span class="n">ts</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-<span class="linenos">160</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;start simulation&#39;</span><span class="p">)</span>
-<span class="linenos">161</span><span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="p">,</span> <span class="n">solverType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">DynamicSolverType</span><span class="o">.</span><span class="n">RK44</span><span class="p">)</span>
-<span class="linenos">162</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;finished: &#39;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="o">-</span><span class="n">ts</span><span class="p">,</span> <span class="s1">&#39;seconds&#39;</span><span class="p">)</span>
-<span class="linenos">163</span><span class="n">mbs</span><span class="o">.</span><span class="nf">WaitForUserToContinue</span><span class="p">()</span>
-<span class="linenos">164</span><span class="n">exu</span><span class="o">.</span><span class="nf">StopRenderer</span><span class="p">()</span>
-<span class="linenos">165</span><span class="c1"># mbs.SolutionViewer()</span>
-<span class="linenos">166</span><span class="c1">#i7-1390, boost</span>
-<span class="linenos">167</span><span class="c1">#results for ExplicitMidpoint, 100 steps, 6272 nodes, RK44, exudynFast=True:</span>
-<span class="linenos">168</span><span class="c1">#8 threads:</span>
-<span class="linenos">169</span><span class="c1">#C++:                   2.62s</span>
-<span class="linenos">170</span><span class="c1">#Symbolic user function:4.74s</span>
-<span class="linenos">171</span><span class="c1">#1 thread:</span>
-<span class="linenos">172</span><span class="c1">#C++:                   9.83s</span>
-<span class="linenos">173</span><span class="c1">#Symbolic user function:11.04s</span>
-<span class="linenos">174</span><span class="c1">#Python user function:  81.8s =&gt; speedup = 38</span>
-<span class="linenos">175</span>
-<span class="linenos">176</span><span class="c1">#i9:</span>
-<span class="linenos">177</span><span class="c1">#results for ExplicitMidpoint, 100 steps, 6272 nodes, RK44, exudynFast=True:</span>
-<span class="linenos">178</span><span class="c1">#8 threads:</span>
-<span class="linenos">179</span><span class="c1">#C++:                   3.27s</span>
-<span class="linenos">180</span><span class="c1">#Symbolic user function:6.16s</span>
-<span class="linenos">181</span><span class="c1">#Python user function:  62.72s =&gt; speedup = 20.57</span>
+<span class="linenos">126</span>
+<span class="linenos">127</span><span class="c1">#assemble and solve system for default parameters</span>
+<span class="linenos">128</span><span class="k">if</span> <span class="ow">not</span> <span class="n">useSymbolicUF</span><span class="p">:</span> <span class="c1">#do assemble before adding user functions =&gt; then, they will be parallelized</span>
+<span class="linenos">129</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
+<span class="linenos">130</span>
+<span class="linenos">131</span><span class="n">endTime</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="linenos">132</span><span class="n">stepSize</span> <span class="o">=</span> <span class="mf">1e-4</span>
+<span class="linenos">133</span><span class="k">if</span> <span class="n">ff</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span> <span class="n">stepSize</span> <span class="o">=</span> <span class="mf">5e-4</span>
+<span class="linenos">134</span><span class="k">if</span> <span class="n">ff</span><span class="o">&gt;</span><span class="mi">2</span><span class="p">:</span> <span class="n">stepSize</span> <span class="o">=</span> <span class="mf">0.5e-5</span>
+<span class="linenos">135</span>
+<span class="linenos">136</span><span class="c1"># endTime = 0.01</span>
+<span class="linenos">137</span><span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">()</span>
+<span class="linenos">138</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">solutionWritePeriod</span> <span class="o">=</span> <span class="mf">0.01</span>
+<span class="linenos">139</span><span class="c1"># simulationSettings.solutionSettings.writeSolutionToFile = False</span>
+<span class="linenos">140</span>
+<span class="linenos">141</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">endTime</span><span class="o">/</span><span class="n">stepSize</span><span class="p">)</span>
+<span class="linenos">142</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="n">endTime</span>
+<span class="linenos">143</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">useModifiedNewton</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">144</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">parallel</span><span class="o">.</span><span class="n">numberOfThreads</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="linenos">145</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">verboseMode</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="linenos">146</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">linearSolverType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">LinearSolverType</span><span class="o">.</span><span class="n">EigenSparse</span>
+<span class="linenos">147</span><span class="c1">#simulationSettings.displayComputationTime = True</span>
+<span class="linenos">148</span>
+<span class="linenos">149</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">drawNodesAsPoint</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="linenos">150</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">tiling</span> <span class="o">=</span> <span class="mi">6</span>
+<span class="linenos">151</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">loads</span><span class="o">.</span><span class="n">show</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="linenos">152</span>
+<span class="linenos">153</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">contour</span><span class="o">.</span><span class="n">outputVariableComponent</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+<span class="linenos">154</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">contour</span><span class="o">.</span><span class="n">outputVariable</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Displacement</span>
+<span class="linenos">155</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">renderWindowSize</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2000</span><span class="p">,</span><span class="mi">1600</span><span class="p">]</span>
+<span class="linenos">156</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">multiSampling</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="linenos">157</span>
+<span class="linenos">158</span><span class="kn">import</span> <span class="nn">time</span>
+<span class="linenos">159</span><span class="n">exu</span><span class="o">.</span><span class="nf">StartRenderer</span><span class="p">()</span>
+<span class="linenos">160</span><span class="n">ts</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="linenos">161</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;start simulation&#39;</span><span class="p">)</span>
+<span class="linenos">162</span><span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="p">,</span> <span class="n">solverType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">DynamicSolverType</span><span class="o">.</span><span class="n">RK44</span><span class="p">)</span>
+<span class="linenos">163</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;finished: &#39;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="o">-</span><span class="n">ts</span><span class="p">,</span> <span class="s1">&#39;seconds&#39;</span><span class="p">)</span>
+<span class="linenos">164</span><span class="n">mbs</span><span class="o">.</span><span class="nf">WaitForUserToContinue</span><span class="p">()</span>
+<span class="linenos">165</span><span class="n">exu</span><span class="o">.</span><span class="nf">StopRenderer</span><span class="p">()</span>
+<span class="linenos">166</span><span class="c1"># mbs.SolutionViewer()</span>
+<span class="linenos">167</span><span class="c1">#i7-1390, boost</span>
+<span class="linenos">168</span><span class="c1">#results for ExplicitMidpoint, 100 steps, 6272 nodes, RK44, exudynFast=True:</span>
+<span class="linenos">169</span><span class="c1">#8 threads:</span>
+<span class="linenos">170</span><span class="c1">#C++:                   2.62s</span>
+<span class="linenos">171</span><span class="c1">#Symbolic user function:4.74s</span>
+<span class="linenos">172</span><span class="c1">#1 thread:</span>
+<span class="linenos">173</span><span class="c1">#C++:                   9.83s</span>
+<span class="linenos">174</span><span class="c1">#Symbolic user function:11.04s</span>
+<span class="linenos">175</span><span class="c1">#Python user function:  81.8s =&gt; speedup = 38</span>
+<span class="linenos">176</span>
+<span class="linenos">177</span><span class="c1">#i9:</span>
+<span class="linenos">178</span><span class="c1">#results for ExplicitMidpoint, 100 steps, 6272 nodes, RK44, exudynFast=True:</span>
+<span class="linenos">179</span><span class="c1">#8 threads:</span>
+<span class="linenos">180</span><span class="c1">#C++:                   3.27s</span>
+<span class="linenos">181</span><span class="c1">#Symbolic user function:6.16s</span>
+<span class="linenos">182</span><span class="c1">#Python user function:  62.72s =&gt; speedup = 20.57</span>
 </pre></div>
 </div>
 </section>

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MarkerBodyPosition &mdash; Exudyn1.7.122.dev1 1.7.122.dev1 documentation</title>
+  <title>MarkerBodyPosition &mdash; Exudyn1.8.0 1.8.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=a114c9bd"></script>
+        <script src="../../../_static/documentation_options.js?v=b51e6972"></script>
         <script src="../../../_static/doctools.js?v=888ff710"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -43,7 +43,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.7.122.dev1
+            Exudyn1.8.0
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -115,7 +115,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.7.122.dev1</a>
+          <a href="../../../index.html">Exudyn1.8.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -179,6 +179,26 @@
 <hr class="docutils" />
 <section id="description-of-markerbodyposition">
 <span id="description-markerbodyposition"></span><h2>DESCRIPTION of MarkerBodyPosition<a class="headerlink" href="#description-of-markerbodyposition" title="Link to this heading"></a></h2>
+<p>The body position marker provides an interface to a object of type body
+(<code class="docutils literal notranslate"><span class="pre">ObjectGround</span></code>, <code class="docutils literal notranslate"><span class="pre">ObjectMassPoint</span></code>, <code class="docutils literal notranslate"><span class="pre">ObjectRigidBody</span></code>, …)
+and provides access to kinematic quantities such as <strong>position</strong> and <strong>velocity</strong>and to the <strong>position jacobian</strong>, using a <code class="docutils literal notranslate"><span class="pre">localPosition</span></code> <span class="math notranslate nohighlight">\(\pLocB\)</span> which is defined within the
+local coordinates of the body (<span class="math notranslate nohighlight">\(b\)</span>).
+The kinematic quantities are computed according to the definition of output variables in the respective bodies.</p>
+<p>The position jacobian represents the derivative of the node position <span class="math notranslate nohighlight">\({\mathbf{p}}_\mathrm{n}\)</span> with all nodal coordinates,</p>
+<div class="math notranslate nohighlight">
+\[\LU{0}{{\mathbf{J}}_\mathrm{pos}} = \frac{\partial \LU{0}{{\mathbf{p}}_\mathrm{n}}}{\partial {\mathbf{q}}_\mathrm{n}}\]</div>
+<p>and it is usually computed as the derivative of the (global) translational velocity w.r.t.velocity coordinates,</p>
+<div class="math notranslate nohighlight">
+\[\LU{0}{{\mathbf{J}}_\mathrm{pos}} = \frac{\partial \LU{0}{{\mathbf{v}}_\mathrm{n}}}{\partial \dot {\mathbf{q}}_\mathrm{n}}\]</div>
+<p>As an example of the <code class="docutils literal notranslate"><span class="pre">ObjectRigidBody2D</span></code>, see Section <a class="reference internal" href="ObjectRigidBody2D.html#sec-item-objectrigidbody2d"><span class="std std-ref">ObjectRigidBody2D</span></a>, the position and velocity are computed as</p>
+<div class="math notranslate nohighlight">
+\[\LU{0}{{\mathbf{p}}}\cConfig(\pLocB) = \LU{0}{\pRef}\cConfig + \LU{0}{\pRef}\cRef + \LU{0b}{\Rot}\pLocB ,\]</div>
+<div class="math notranslate nohighlight">
+\[\LU{0}{{\mathbf{v}}}\cConfig(\pLocB) = \LU{0}{\dot{\mathbf{u}}}\cConfig + \LU{0b}{\Rot}(\LU{b}{\tomega} \times \pLocB\cConfig) .\]</div>
+<p>Thus, the position jacobian for <code class="docutils literal notranslate"><span class="pre">ObjectRigidBody2D</span></code> reads</p>
+<div class="math notranslate nohighlight">
+\[\LU{0}{{\mathbf{J}}_\mathrm{pos}^{\mathrm{NodeRigidBody2D}}} = \mr{1}{0}{-\sin\theta_0 \LU{b}{b_0} - \cos\theta_0 \LU{b}{b_1}} {0}{1}{\cos\theta_0 \LU{b}{b_0} - \sin\theta_0 \LU{b}{b_1}} {0}{0}{0}\]</div>
+<p>For details, see the respective definition of the body and the C++ implementation.</p>
 <p>Relevant Examples and TestModels with weblink:</p>
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle.py">ANCFcontactCircle.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle2.py">ANCFcontactCircle2.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFmovingRigidbody.py">ANCFmovingRigidbody.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFslidingJoint2D.py">ANCFslidingJoint2D.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFslidingJoint2Drigid.py">ANCFslidingJoint2Drigid.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFswitchingSlidingJoint2D.py">ANCFswitchingSlidingJoint2D.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDrivesComparison.py">beltDrivesComparison.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/coordinateSpringDamper.py">coordinateSpringDamper.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/finiteSegmentMethod.py">finiteSegmentMethod.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/flexibleRotor3Dtest.py">flexibleRotor3Dtest.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/geneticOptimizationSliderCrank.py">geneticOptimizationSliderCrank.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/HydraulicActuator2Arms.py">HydraulicActuator2Arms.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py">ANCFcontactCircleTest.py</a> (TestModels/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactFrictionTest.py">ANCFcontactFrictionTest.py</a> (TestModels/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFmovingRigidBodyTest.py">ANCFmovingRigidBodyTest.py</a> (TestModels/)</p>

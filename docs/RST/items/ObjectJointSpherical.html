@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ObjectJointSpherical &mdash; Exudyn1.7.122.dev1 1.7.122.dev1 documentation</title>
+  <title>ObjectJointSpherical &mdash; Exudyn1.8.0 1.8.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=a114c9bd"></script>
+        <script src="../../../_static/documentation_options.js?v=b51e6972"></script>
         <script src="../../../_static/doctools.js?v=888ff710"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -43,7 +43,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.7.122.dev1
+            Exudyn1.8.0
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -109,7 +109,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.7.122.dev1</a>
+          <a href="../../../index.html">Exudyn1.8.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -347,6 +347,20 @@ the translational index 3 constraints read for every component <span class="math
 <p><strong>``activeConnector = False``:</strong></p>
 <div class="math notranslate nohighlight">
 \[{\mathbf{z}} = \Null\]</div>
+</section>
+<section id="example-for-body-position-marker">
+<h2>Example for body position marker<a class="headerlink" href="#example-for-body-position-marker" title="Link to this heading"></a></h2>
+<p>In this example, we study the constraint equations for two body position marker, see Section <a class="reference internal" href="MarkerBodyPosition.html#sec-item-markerbodyposition"><span class="std std-ref">MarkerBodyPosition</span></a>,
+based on rigid bodies, see Section <a class="reference internal" href="ObjectRigidBody.html#sec-item-objectrigidbody"><span class="std std-ref">ObjectRigidBody</span></a>.
+The markers <span class="math notranslate nohighlight">\(m_0\)</span> and <span class="math notranslate nohighlight">\(m_1\)</span> have the positions</p>
+<div class="math notranslate nohighlight">
+\[\LU{0}{{\mathbf{p}}_0}(\pLocB_0) = \LU{0}{{\mathbf{r}}_{\mathrm{ref},0}} + \LU{0}{{\mathbf{u}}_{0}} + \LU{0b}{\Rot_0}\pLocB_0, \quad \LU{0}{{\mathbf{p}}_1}(\pLocB_1) = \LU{0}{{\mathbf{r}}_{\mathrm{ref},1}} + \LU{0}{{\mathbf{u}}_{1}} + \LU{0b}{\Rot_1}\pLocB_1 .\]</div>
+<p>From there, we can derive the 3 constraint equation</p>
+<div class="math notranslate nohighlight">
+\[\LU{0}{{\mathbf{r}}_{\mathrm{ref},1}} + \LU{0}{{\mathbf{u}}_{1}} + \LU{0b}{\Rot_1}\pLocB_1 - \left(\LU{0}{{\mathbf{r}}_{\mathrm{ref},0}} + \LU{0}{{\mathbf{u}}_{0}} + \LU{0b}{\Rot_0}\pLocB_0 \right) = \Null .\]</div>
+<p>The constraint jacobians simply follow from the position jacobians of the respective markers <span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{J}}_\mathrm{pos,0}}\)</span>and  <span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{J}}_\mathrm{pos,1}}\)</span>.
+The position jacobians are added to the system jacobian at rows according to the global indices of the constraint equations
+and the columns are determined by the coordinate indices of the bodies’ coordinates.</p>
 <p>Relevant Examples and TestModels with weblink:</p>
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveLinearFEM.py">NGsolveLinearFEM.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py">humanRobotInteraction.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePostProcessingStresses.py">NGsolvePostProcessingStresses.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/objectFFRFreducedOrderNetgen.py">objectFFRFreducedOrderNetgen.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/sliderCrank3DwithANCFbeltDrive.py">sliderCrank3DwithANCFbeltDrive.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py">ACFtest.py</a> (TestModels/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/driveTrainTest.py">driveTrainTest.py</a> (TestModels/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/genericJointUserFunctionTest.py">genericJointUserFunctionTest.py</a> (TestModels/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeConstraintTest.py">kinematicTreeConstraintTest.py</a> (TestModels/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderAccelerations.py">objectFFRFreducedOrderAccelerations.py</a> (TestModels/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderStressModesTest.py">objectFFRFreducedOrderStressModesTest.py</a> (TestModels/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderTest.py">objectFFRFreducedOrderTest.py</a> (TestModels/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest.py">objectFFRFTest.py</a> (TestModels/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest2.py">objectFFRFTest2.py</a> (TestModels/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/perfObjectFFRFreducedOrder.py">perfObjectFFRFreducedOrder.py</a> (TestModels/)</p>

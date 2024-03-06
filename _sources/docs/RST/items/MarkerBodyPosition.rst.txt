@@ -37,6 +37,50 @@ The item VMarkerBodyPosition has the following parameters:
 
 DESCRIPTION of MarkerBodyPosition
 ---------------------------------
+The body position marker provides an interface to a object of type body 
+(\ ``ObjectGround``\ , \ ``ObjectMassPoint``\ , \ ``ObjectRigidBody``\ , ...)
+and provides access to kinematic quantities such as \ **position**\  and \ **velocity**\  
+and to the \ **position jacobian**\ , using a \ ``localPosition``\  \ :math:`\pLocB`\  which is defined within the 
+local coordinates of the body (\ :math:`b`\ ).
+The kinematic quantities are computed according to the definition of output variables in the respective bodies.
+
+The position jacobian represents the derivative of the node position \ :math:`{\mathbf{p}}_\mathrm{n}`\  with all nodal coordinates,
+
+.. math::
+
+   \LU{0}{{\mathbf{J}}_\mathrm{pos}} = \frac{\partial \LU{0}{{\mathbf{p}}_\mathrm{n}}}{\partial {\mathbf{q}}_\mathrm{n}}
+
+
+and it is usually computed as the derivative of the (global) translational velocity w.r.t.\ velocity coordinates,
+
+.. math::
+
+   \LU{0}{{\mathbf{J}}_\mathrm{pos}} = \frac{\partial \LU{0}{{\mathbf{v}}_\mathrm{n}}}{\partial \dot {\mathbf{q}}_\mathrm{n}}
+
+
+
+As an example of the \ ``ObjectRigidBody2D``\ , see Section :ref:`sec-item-objectrigidbody2d`\ , the position and velocity are computed as
+
+.. math::
+
+   \LU{0}{{\mathbf{p}}}\cConfig(\pLocB) = \LU{0}{\pRef}\cConfig + \LU{0}{\pRef}\cRef + \LU{0b}{\Rot}\pLocB ,
+
+
+
+.. math::
+
+   \LU{0}{{\mathbf{v}}}\cConfig(\pLocB) = \LU{0}{\dot{\mathbf{u}}}\cConfig + \LU{0b}{\Rot}(\LU{b}{\tomega} \times \pLocB\cConfig) .
+
+
+Thus, the position jacobian for \ ``ObjectRigidBody2D``\  reads
+
+.. math::
+
+   \LU{0}{{\mathbf{J}}_\mathrm{pos}^{\mathrm{NodeRigidBody2D}}} = \mr{1}{0}{-\sin\theta_0 \LU{b}{b_0} - \cos\theta_0 \LU{b}{b_1}} {0}{1}{\cos\theta_0 \LU{b}{b_0} - \sin\theta_0 \LU{b}{b_1}} {0}{0}{0}
+
+
+For details, see the respective definition of the body and the C++ implementation.
+
 
 Relevant Examples and TestModels with weblink:
 

@@ -2,10 +2,10 @@
 .. _testmodels-revolutejointprismaticjointtest:
 
 **********************************
-revoluteJointprismaticJointTest.py
+revoluteJointPrismaticJointTest.py
 **********************************
 
-You can view and download this file on Github: `revoluteJointprismaticJointTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/revoluteJointprismaticJointTest.py>`_
+You can view and download this file on Github: `revoluteJointPrismaticJointTest.py <https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels/revoluteJointPrismaticJointTest.py>`_
 
 .. code-block:: python
    :linenos:
