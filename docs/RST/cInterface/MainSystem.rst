@@ -98,6 +98,8 @@ This is the class which defines a (multibody) system. The MainSystem shall only 
   | delete GeneralContact with index generalContactNumber in mbs; other general contacts are resorted (index changes!)
 * | **NumberOfGeneralContacts**\ (): 
   | Return number of GeneralContact objects in mbs
+* | **GetAvailableFactoryItems**\ (): 
+  | get all available items to be added (nodes, objects, etc.); this is useful in particular in case of additional user elements to check if they are available; the available items are returned as dictionary, containing lists of strings for Node, Object, etc.
 * | **GetDictionary**\ (): 
   | [UNDER DEVELOPMENT]: return the dictionary of the system data (todo: and state), e.g., to copy the system or for pickling
 * | **SetDictionary**\ (\ *systemDict*\ ): 

@@ -1132,6 +1132,13 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='NumberOfGeneralContacts', cName
                         description="Return number of GeneralContact objects in mbs", 
                         returnType='int',
                         )
+
+plr.DefPyFunctionAccess(cClass=classStr, pyName='GetAvailableFactoryItems', cName='GetAvailableFactoryItems', 
+                                description="get all available items to be added (nodes, objects, etc.); this is useful in particular in case of additional user elements to check if they are available; the available items are returned as dictionary, containing lists of strings for Node, Object, etc.",
+                                returnType='dict',
+                                )
+
+
 #++++++++++++++++++++++++++++++++++++++++++++++++++
 #see: https://pybind11.readthedocs.io/en/stable/upgrade.html
 plr.DefPyFunctionAccess(cClass=classStr, pyName='GetDictionary', cName='GetDictionary', 

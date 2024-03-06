@@ -75,7 +75,7 @@ public:
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//   MEMBER VARIABLE ACCESS
-
+	
 	//! function for getting all data and state; for pickling
 	py::dict GetDictionary() const;
 	//! function for setting all data from dict; for pickling
@@ -104,6 +104,10 @@ public:
 	VisualizationSystem& GetVisualizationSystem() { return visualizationSystem; }
 	const VisualizationSystem& GetVisualizationSystem() const { return visualizationSystem; }
 
+	//! get all available items
+	py::dict GetAvailableFactoryItems();
+
+	//! get object factory (interface to functions)
 	MainObjectFactory& GetMainObjectFactory() { return mainObjectFactory; }
 
 	//!create a new general contact and add to system

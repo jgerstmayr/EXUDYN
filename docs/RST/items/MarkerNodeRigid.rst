@@ -35,6 +35,36 @@ The item VMarkerNodeRigid has the following parameters:
 
 DESCRIPTION of MarkerNodeRigid
 ------------------------------
+The node rigid body marker provides an interface to a node which contains a position and an orientation
+(\ ``NodeRigidBodyEP``\ , \ ``NodeRigidBody2D``\ , ...)
+and provides access to kinematic quantities such as \ **position**\ , \ **velocity**\ , \ **orientation**\  (rotation matrix),
+\ **angular velocity**\ . It also provides the \ **position jacobian**\  and the \ **rotation jacobian**\ .
+The kinematic quantities are computed according to the definition of output variables in the respective nodes.
+
+The position jacobian represents the derivative of the node position \ :math:`{\mathbf{p}}_\mathrm{n}`\  with all nodal coordinates,
+
+.. math::
+
+   \LU{0}{{\mathbf{J}}_\mathrm{pos}} = \frac{\partial \LU{0}{{\mathbf{p}}_\mathrm{n}}}{\partial {\mathbf{q}}_\mathrm{n}}
+
+
+and it is usually computed as the derivative of the (global) translational velocity w.r.t.\ velocity coordinates,
+
+.. math::
+
+   \LU{0}{{\mathbf{J}}_\mathrm{pos}} = \frac{\partial \LU{0}{{\mathbf{v}}_\mathrm{n}}}{\partial \dot {\mathbf{q}}_\mathrm{n}}
+
+
+The rotation jacobian is computed as the derivative of the (global) angular velocity w.r.t.\ velocity coordinates,
+
+.. math::
+
+   \LU{0}{{\mathbf{J}}_\mathrm{rot}} = \frac{\partial \LU{0}{\tomega_\mathrm{n}}}{\partial \dot {\mathbf{q}}_\mathrm{n}}
+
+
+This usually results in the velocity transformation matrix.
+For details, see the respective definition of the node and the C++ implementation.
+
 
 Relevant Examples and TestModels with weblink:
 

@@ -5744,6 +5744,25 @@ Force & $\LU{0}{\fv}$ & joint force in global coordinates\\ \hline
     \be
       \zv = \Null
     \ee
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \mysubsubsubsection{Example for body position marker}
+    %
+    In this example, we study the constraint equations for two body position marker, see \refSection{sec:item:MarkerBodyPosition},
+    based on rigid bodies, see \refSection{sec:item:ObjectRigidBody}. 
+    The markers $m_0$ and $m_1$ have the positions
+    \be
+      \LU{0}{\pv_0}(\pLocB_0) = \LU{0}{\rv_{\mathrm{ref},0}} + \LU{0}{\uv_{0}} + \LU{0b}{\Rot_0}\pLocB_0, \quad
+      \LU{0}{\pv_1}(\pLocB_1) = \LU{0}{\rv_{\mathrm{ref},1}} + \LU{0}{\uv_{1}} + \LU{0b}{\Rot_1}\pLocB_1 \eqDot
+    \ee
+    From there, we can derive the 3 constraint equation
+    \be
+            \LU{0}{\rv_{\mathrm{ref},1}} + \LU{0}{\uv_{1}} + \LU{0b}{\Rot_1}\pLocB_1 - 
+      \left(\LU{0}{\rv_{\mathrm{ref},0}} + \LU{0}{\uv_{0}} + \LU{0b}{\Rot_0}\pLocB_0 \right) = \Null \eqDot
+    \ee
+    The constraint jacobians simply follow from the position jacobians of the respective markers $\LU{0}{\Jm_\mathrm{pos,0}}$
+    and  $\LU{0}{\Jm_\mathrm{pos,1}}$. 
+    The position jacobians are added to the system jacobian at rows according to the global indices of the constraint equations
+    and the columns are determined by the coordinate indices of the bodies' coordinates.
     %%RSTCOMPATIBLE
 \vspace{6pt}\par\noindent\rule{\textwidth}{0.4pt}
 %
@@ -10678,6 +10697,39 @@ The item \mybold{MarkerBodyPosition} with type = 'BodyPosition' has the followin
 \startTable{input parameter}{symbol}{description see tables above}
 \rowTable{localPosition}{$\pLocB$}{}
 \finishTable
+ \noindent
+    The body position marker provides an interface to a object of type body 
+    (\texttt{ObjectGround}, \texttt{ObjectMassPoint}, \texttt{ObjectRigidBody}, ...)
+    and provides access to kinematic quantities such as \mybold{position} and \mybold{velocity} 
+    and to the \mybold{position jacobian}, using a \texttt{localPosition} $\pLocB$ which is defined within the 
+    local coordinates of the body ($b$).
+    The kinematic quantities are computed according to the definition of output variables in the respective bodies.
+    
+    The position jacobian represents the derivative of the node position $\pv_\mathrm{n}$ with all nodal coordinates,
+    \be
+      \LU{0}{\Jm_\mathrm{pos}} = \frac{\partial \LU{0}{\pv_\mathrm{n}}}{\partial \qv_\mathrm{n}}
+    \ee
+    and it is usually computed as the derivative of the (global) translational velocity w.r.t.\ velocity coordinates,
+    \be
+      \LU{0}{\Jm_\mathrm{pos}} = \frac{\partial \LU{0}{\vv_\mathrm{n}}}{\partial \dot \qv_\mathrm{n}}
+    \ee
+
+    As an example of the \texttt{ObjectRigidBody2D}, see \refSection{sec:item:ObjectRigidBody2D}, the position and velocity are computed as
+    \be
+      \LU{0}{\pv}\cConfig(\pLocB) = \LU{0}{\pRef}\cConfig + \LU{0}{\pRef}\cRef + \LU{0b}{\Rot}\pLocB \eqComma
+    \ee
+    \be
+      \LU{0}{\vv}\cConfig(\pLocB) = \LU{0}{\dot\uv}\cConfig + \LU{0b}{\Rot}(\LU{b}{\tomega} \times \pLocB\cConfig) \eqDot
+    \ee
+    Thus, the position jacobian for \texttt{ObjectRigidBody2D} reads
+    \be
+      \LU{0}{\Jm_\mathrm{pos}^{\mathrm{NodeRigidBody2D}}} = \mr{1}{0}{-\sin\theta_0 \LU{b}{b_0} - \cos\theta_0 \LU{b}{b_1}} 
+      {0}{1}{\cos\theta_0 \LU{b}{b_0} - \sin\theta_0 \LU{b}{b_1}} 
+      {0}{0}{0} 
+    \ee
+    %
+    For details, see the respective definition of the body and the C++ implementation.
+    %%RSTCOMPATIBLE
 \vspace{6pt}\par\noindent\rule{\textwidth}{0.4pt}
 %
 \noindent For examples on MarkerBodyPosition see Relevant Examples and TestModels with weblink:
@@ -10819,6 +10871,25 @@ The item \mybold{MarkerNodePosition} with type = 'NodePosition' has the followin
 \par\noindent\rule{\textwidth}{0.4pt}
 \mysubsubsubsection{DESCRIPTION of MarkerNodePosition:}
 \label{description_MarkerNodePosition}
+ \noindent
+    The node position marker provides an interface to a node which contains a position
+    (\texttt{NodePoint}, \texttt{NodePoint2D}, \texttt{NodeRigidBodyEP}, \texttt{NodePointSlope}, ...)
+    and accesses \mybold{position}, \mybold{velocity} and the \mybold{position jacobian}.
+    The position and velocity are computed according to the definition of output variables in the respective nodes.
+    
+    The position jacobian represents the derivative of the node position $\pv_\mathrm{n}$ with all nodal coordinates,
+    \be
+      \LU{0}{\Jm_\mathrm{pos}} = \frac{\partial \LU{0}{\pv_\mathrm{n}}}{\partial \qv_\mathrm{n}}
+    \ee
+    For details, see the respective definition of the node and the C++ implementation.
+    
+    In examplary case of a \texttt{NodeRigidBody2D},  see \refSection{sec:item:NodeRigidBody2D}, its coordinates are 
+    $\qv_\mathrm{n}=[q_0,\;q_1,\;\psi_0,\;]\tp$, where $q_0$ represents the $x$-displacement 
+    and $q_1$ represents the $y$-displacement, such that the jacobian for the 3D position vector reads
+    \be
+      \LU{0}{\Jm_\mathrm{pos}^{\mathrm{NodeRigidBody2D}}} = \mr{1}{0}{0} {0}{1}{0} {0}{0}{0} 
+    \ee
+    %%RSTCOMPATIBLE
 \vspace{6pt}\par\noindent\rule{\textwidth}{0.4pt}
 %
 \noindent For examples on MarkerNodePosition see Relevant Examples and TestModels with weblink:
@@ -10887,6 +10958,28 @@ The item \mybold{MarkerNodeRigid} with type = 'NodeRigid' has the following para
 \par\noindent\rule{\textwidth}{0.4pt}
 \mysubsubsubsection{DESCRIPTION of MarkerNodeRigid:}
 \label{description_MarkerNodeRigid}
+ \noindent
+    The node rigid body marker provides an interface to a node which contains a position and an orientation
+    (\texttt{NodeRigidBodyEP}, \texttt{NodeRigidBody2D}, ...)
+    and provides access to kinematic quantities such as \mybold{position}, \mybold{velocity}, \mybold{orientation} (rotation matrix),
+    \mybold{angular velocity}. It also provides the \mybold{position jacobian} and the \mybold{rotation jacobian}.
+    The kinematic quantities are computed according to the definition of output variables in the respective nodes.
+    
+    The position jacobian represents the derivative of the node position $\pv_\mathrm{n}$ with all nodal coordinates,
+    \be
+      \LU{0}{\Jm_\mathrm{pos}} = \frac{\partial \LU{0}{\pv_\mathrm{n}}}{\partial \qv_\mathrm{n}}
+    \ee
+    and it is usually computed as the derivative of the (global) translational velocity w.r.t.\ velocity coordinates,
+    \be
+      \LU{0}{\Jm_\mathrm{pos}} = \frac{\partial \LU{0}{\vv_\mathrm{n}}}{\partial \dot \qv_\mathrm{n}}
+    \ee
+    The rotation jacobian is computed as the derivative of the (global) angular velocity w.r.t.\ velocity coordinates,
+    \be
+      \LU{0}{\Jm_\mathrm{rot}} = \frac{\partial \LU{0}{\tomega_\mathrm{n}}}{\partial \dot \qv_\mathrm{n}}
+    \ee
+    This usually results in the velocity transformation matrix.
+    For details, see the respective definition of the node and the C++ implementation.
+    %%RSTCOMPATIBLE
 \vspace{6pt}\par\noindent\rule{\textwidth}{0.4pt}
 %
 \noindent For examples on MarkerNodeRigid see Relevant Examples and TestModels with weblink:

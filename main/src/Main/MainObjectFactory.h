@@ -36,6 +36,9 @@ private:
 	bool DictHasValidName(const MainSystem& mainSystem, const py::dict& d, Index currentNumber, const STDstring& baseItem, bool& errorFound);
 
 public:
+	//! Get available items in object factory; returns a map, which can be implicitly converted to a py::dict
+	py::dict GetAvailableFactoryItems();
+
 	//*********************************************************************
 	//object factory functions
 	//! Create a specific node with nodeType; returns node=Null if no success
@@ -94,6 +97,7 @@ public:
 		static ClassFactoryItemsSystemData<TItem> instance;
 		return instance;
 	}
+	static const std::map<std::string, std::function<TItem* (CSystemData*)>>& GetCreators() { return Get().creators; }
 
 private:
 	std::map<std::string, std::function<TItem*(CSystemData*)>> creators;
@@ -127,6 +131,8 @@ public:
 		static ClassFactoryItem<TItem> instance;
 		return instance;
 	}
+
+	static const std::map<std::string, std::function<TItem* ()>>& GetCreators() { return Get().creators; }
 
 private:
 	std::map<std::string, std::function<TItem*()>> creators;

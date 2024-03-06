@@ -347,6 +347,11 @@ bool MainSystem::UnlinkVisualizationSystem()
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+py::dict MainSystem::GetAvailableFactoryItems()
+{
+	return GetMainObjectFactory().GetAvailableFactoryItems();
+}
+
 //! this is the hook to the object factory, handling all kinds of objects, nodes, ...
 Index MainSystem::AddMainNode(const py::dict& d)
 {

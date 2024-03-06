@@ -377,6 +377,7 @@ mbs = SC.AddSystem()
     \texttt{gc=mbs.GetGeneralContact(mbs.NumberOfGeneralContacts()-1)}}\\ \hline 
   DeleteGeneralContact(generalContactNumber) & delete GeneralContact with index generalContactNumber in mbs; other general contacts are resorted (index changes!)\\ \hline 
   NumberOfGeneralContacts() & Return number of GeneralContact objects in mbs\\ \hline 
+  GetAvailableFactoryItems() & get all available items to be added (nodes, objects, etc.); this is useful in particular in case of additional user elements to check if they are available; the available items are returned as dictionary, containing lists of strings for Node, Object, etc.\\ \hline 
   GetDictionary() & [UNDER DEVELOPMENT]: return the dictionary of the system data (todo: and state), e.g., to copy the system or for pickling\\ \hline 
   SetDictionary(systemDict) & [UNDER DEVELOPMENT]: set system data (todo: and state) from given dictionary; used for pickling\\ \hline 
   \_\_repr\_\_() & return the representation of the system, which can be, e.g., printed\tabnewline 
@@ -1443,7 +1444,7 @@ gContact.SetFrictionPairings(...) #set friction pairings and adjust searchTree i
   UpdateContacts(mainSystem) & Update contact sets, e.g. if no contact is simulated (isActive=False) but user functions need up-to-date contact states for GetItemsInBox(...) or for GetActiveContacts(...)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{gContact.UpdateContacts(mbs)}}\\ \hline 
-  GetActiveContacts(typeIndex, itemIndex) & Get list of global item numbers which are in contact with itemIndex of type typeIndex in case that the global itemIndex is smaller than the abs value of the contact pair index; a negative sign indicates that the contacting (spheres) is in Coloumb friction, a positive sign indicates a regularized friction region; for interpretation of global contact indices, see gContact.GetPythonObject() and documentation; requires either implicit contact computation or UpdateContacts(...) needs to be called prior to this function\tabnewline 
+  GetActiveContacts(typeIndex, itemIndex) & Get list of global item numbers which are in contact with itemIndex of type typeIndex in case that the global itemIndex is smaller than the abs value of the contact pair index; a negative sign indicates that the contacting (spheres) is in Coloumb friction, a positive sign indicates a regularized friction region; in case of itemIndex==-1, it will return the list of numbers of active contacts per item for the contact type; for interpretation of global contact indices, see gContact.GetPythonObject() and documentation; requires either implicit contact computation or UpdateContacts(...) needs to be called prior to this function\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{\#if explicit solver is used, we first need to update contacts:\tabnewline
     gContact.UpdateContacts(mbs)\tabnewline

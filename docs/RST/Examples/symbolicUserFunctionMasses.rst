@@ -125,11 +125,12 @@ You can view and download this file on Github: `symbolicUserFunctionMasses.py <h
    
    listUF = []
    if True:
+       isNew=1
        for cc in cList:
            if useSymbolicUF:
-               #create separate user function for each spring-damper!
-               symbolicFunc = CreateSymbolicUserFunction(mbs, springForceUserFunction, 'springForceUserFunction', cList[0])
-               symbolicFunc.TransferUserFunction2Item(mbs, cc, 'springForceUserFunction')    
+               #create separate user function for each spring-damper (multithreading)!
+               symbolicFunc = CreateSymbolicUserFunction(mbs, springForceUserFunction, 'springForceUserFunction', cc)
+               mbs.SetObjectParameter(cc, 'springForceUserFunction', symbolicFunc)
                listUF += [symbolicFunc] #store, such that they are not deleted!!!
            else:
                mbs.SetObjectParameter(cc, 'springForceUserFunction', springForceUserFunction)

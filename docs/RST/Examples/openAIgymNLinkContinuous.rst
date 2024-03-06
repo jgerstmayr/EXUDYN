@@ -357,7 +357,7 @@ You can view and download this file on Github: `openAIgymNLinkContinuous.py <htt
            model.save("solution/" + modelName)
        else:
            import torch #stable-baselines3 is based on pytorch
-           n_cores= os.cpu_count()-1 #should be number of real cores (not threads)
+           n_cores= max(1,int(os.cpu_count()/2-1)) #should be number of real cores (not threads)
            torch.set_num_threads(n_cores) #seems to be ideal to match the size of subprocVecEnv
            
            print('using',n_cores,'cores')
@@ -373,7 +373,7 @@ You can view and download this file on Github: `openAIgymNLinkContinuous.py <htt
            ts = -time.time()
            print('start learning of agent with {}'.format(str(model.policy).split('(')[0]))
            # model.learn(total_timesteps=50000) 
-           model.learn(total_timesteps=int(1e6))
+           model.learn(total_timesteps=int(1_000_000))
            print('*** learning time total =',ts+time.time(),'***')
        
            #save learned model

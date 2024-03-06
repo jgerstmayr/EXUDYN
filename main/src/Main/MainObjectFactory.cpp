@@ -141,6 +141,43 @@
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+//! Get available items in object factory
+py::dict MainObjectFactory::GetAvailableFactoryItems()
+{
+	auto d = py::dict();
+	auto  lNode   = py::list();
+	auto  lObject = py::list();
+	auto  lMarker = py::list();
+	auto  lLoad   = py::list();
+	auto  lSensor = py::list();
+	for (const auto& creator : ClassFactoryItemsSystemData<MainNode>::GetCreators())
+	{
+		lNode.append(STDstring("Node") + creator.first);
+	}
+	for (const auto& creator : ClassFactoryItemsSystemData<MainObject>::GetCreators())
+	{
+		lObject.append(STDstring("Object") + creator.first);
+	}
+	for (const auto& creator : ClassFactoryItem<MainMarker>::GetCreators())
+	{
+		lMarker.append(STDstring("Marker") + creator.first);
+	}
+	for (const auto& creator : ClassFactoryItem<MainLoad>::GetCreators())
+	{
+		lLoad.append(STDstring("Load") + creator.first);
+	}
+	for (const auto& creator : ClassFactoryItem<MainSensor>::GetCreators())
+	{
+		lSensor.append(STDstring("Sensor") + creator.first);
+	}
+	d["Node"]   = lNode;
+	d["Object"] = lObject;
+	d["Marker"] = lMarker;
+	d["Load"]   = lLoad;
+	d["Sensor"] = lSensor;
+	return d;
+}
+
 
 
 //! Create a specific node with nodeType; returns node=Null if no success

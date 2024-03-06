@@ -139,6 +139,30 @@ and the translational index 2 constraints read for every component \ :math:`k \i
 
 
 
+Example for body position marker
+--------------------------------
+
+In this example, we study the constraint equations for two body position marker, see Section :ref:`sec-item-markerbodyposition`\ ,
+based on rigid bodies, see Section :ref:`sec-item-objectrigidbody`\ . 
+The markers \ :math:`m_0`\  and \ :math:`m_1`\  have the positions
+
+.. math::
+
+   \LU{0}{{\mathbf{p}}_0}(\pLocB_0) = \LU{0}{{\mathbf{r}}_{\mathrm{ref},0}} + \LU{0}{{\mathbf{u}}_{0}} + \LU{0b}{\Rot_0}\pLocB_0, \quad \LU{0}{{\mathbf{p}}_1}(\pLocB_1) = \LU{0}{{\mathbf{r}}_{\mathrm{ref},1}} + \LU{0}{{\mathbf{u}}_{1}} + \LU{0b}{\Rot_1}\pLocB_1 .
+
+
+From there, we can derive the 3 constraint equation
+
+.. math::
+
+   \LU{0}{{\mathbf{r}}_{\mathrm{ref},1}} + \LU{0}{{\mathbf{u}}_{1}} + \LU{0b}{\Rot_1}\pLocB_1 - \left(\LU{0}{{\mathbf{r}}_{\mathrm{ref},0}} + \LU{0}{{\mathbf{u}}_{0}} + \LU{0b}{\Rot_0}\pLocB_0 \right) = \Null .
+
+
+The constraint jacobians simply follow from the position jacobians of the respective markers \ :math:`\LU{0}{{\mathbf{J}}_\mathrm{pos,0}}`\ 
+and  \ :math:`\LU{0}{{\mathbf{J}}_\mathrm{pos,1}}`\ . 
+The position jacobians are added to the system jacobian at rows according to the global indices of the constraint equations
+and the columns are determined by the coordinate indices of the bodies' coordinates.
+
 
 Relevant Examples and TestModels with weblink:
 

@@ -64,7 +64,7 @@ This section includes all TestModels for Exudyn.They can also be found and downl
    TestModels/plotSensorTest
    TestModels/postNewtonStepContactTest
    TestModels/reevingSystemSpringsTest
-   TestModels/revoluteJointprismaticJointTest
+   TestModels/revoluteJointPrismaticJointTest
    TestModels/rigidBodyAsUserFunctionTest
    TestModels/rigidBodyCOMtest
    TestModels/rigidBodySpringDamperIntrinsic

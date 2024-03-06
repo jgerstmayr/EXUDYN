@@ -139,8 +139,6 @@ public:
 
 };
 
-
-
 //!class with according structure in PybindModule.cpp which can be accessed from Python and inside C++
 //!used for special features and global settings
 class PySpecial

@@ -19,15 +19,27 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  \small
-+  Exudyn version = 1.7.122.dev1, 
-+  last change =  2024-02-29, 
-+  Number of issues = 1801, 
-+  Number of resolved issues = 1592 (122 in current version), 
++  Exudyn version = 1.8.0, 
++  last change =  2024-03-06, 
++  Number of issues = 1802, 
++  Number of resolved issues = 1594 (0 in current version), 
+
+***********
+Version 1.8
+***********
+
+ * Version 1.8.0: resolved Issue 1789: AvailableItems (extension)
+    - description:  add exudyn.special function to retrieve available items as dictionary with lists
+    - date resolved: **2024-03-06 09:02**\ , date raised: 2024-02-21 
 
 ***********
 Version 1.7
 ***********
 
+ * Version 1.7.123: resolved Issue 1795: joint constraints (docu)
+    - description:  theory: add description for formulation of joint constraints
+    - **notes:** added equations to position markers and JointSpherical
+    - date resolved: **2024-03-03 22:04**\ , date raised: 2024-02-25 
  * Version 1.7.122: resolved Issue 1800: GeneralContact (extension)
     - description:  add option for GetActiveContacts to return number of contacts per contact type in case that itemIndex=-1
     - date resolved: **2024-02-29 15:50**\ , date raised: 2024-02-29 
@@ -5163,13 +5175,9 @@ Version 0.1
 Open issues
 ***********
 
- * **open issue 1795:** joint constraints   
-    - description:  theory: add description for formulation of joint constraints
-    - date raised: 2024-02-25 
-
- * **open issue 1789:** AvailableItems      
-    - description:  add exudyn.special function to retrieve available items as dictionary with lists
-    - date raised: 2024-02-21 
+ * **open issue 1801:** joint constraints   
+    - description:  add description of position jacobian for rigid bodies (in particular 3D rigid); add reference in description for MarkerBodyPosition
+    - date raised: 2024-03-03 
 
  * **open issue 1777:** GraphicsData Sphere 
     - description:  add spheres to graphicsData interface; user AddSphere method; only use in case that full sphere is shown; add option to fall back to regular triangular representation

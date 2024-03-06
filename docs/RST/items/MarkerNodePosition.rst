@@ -35,6 +35,30 @@ The item VMarkerNodePosition has the following parameters:
 
 DESCRIPTION of MarkerNodePosition
 ---------------------------------
+The node position marker provides an interface to a node which contains a position
+(\ ``NodePoint``\ , \ ``NodePoint2D``\ , \ ``NodeRigidBodyEP``\ , \ ``NodePointSlope``\ , ...)
+and accesses \ **position**\ , \ **velocity**\  and the \ **position jacobian**\ .
+The position and velocity are computed according to the definition of output variables in the respective nodes.
+
+The position jacobian represents the derivative of the node position \ :math:`{\mathbf{p}}_\mathrm{n}`\  with all nodal coordinates,
+
+.. math::
+
+   \LU{0}{{\mathbf{J}}_\mathrm{pos}} = \frac{\partial \LU{0}{{\mathbf{p}}_\mathrm{n}}}{\partial {\mathbf{q}}_\mathrm{n}}
+
+
+For details, see the respective definition of the node and the C++ implementation.
+
+In examplary case of a \ ``NodeRigidBody2D``\ ,  see Section :ref:`sec-item-noderigidbody2d`\ , its coordinates are 
+\ :math:`{\mathbf{q}}_\mathrm{n}=[q_0,\;q_1,\;\psi_0,\;]\tp`\ , where \ :math:`q_0`\  represents the \ :math:`x`\ -displacement 
+and \ :math:`q_1`\  represents the \ :math:`y`\ -displacement, such that the jacobian for the 3D position vector reads
+
+.. math::
+
+   \LU{0}{{\mathbf{J}}_\mathrm{pos}^{\mathrm{NodeRigidBody2D}}} = \mr{1}{0}{0} {0}{1}{0} {0}{0}{0}
+
+
+
 
 Relevant Examples and TestModels with weblink:
 
