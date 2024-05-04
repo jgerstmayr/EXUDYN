@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Issue tracker &mdash; Exudyn1.8.0 1.8.0 documentation</title>
+  <title>Issue tracker &mdash; Exudyn1.8.28.dev1 1.8.28.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -18,8 +18,8 @@
   
         <script src="../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=b51e6972"></script>
-        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/documentation_options.js?v=027cc127"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
         <script src="../../_static/copybutton.js?v=f281be69"></script>
@@ -42,7 +42,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.8.0
+            Exudyn1.8.28.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -98,7 +98,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.8.0</a>
+          <a href="../../index.html">Exudyn1.8.28.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -121,20 +121,255 @@
 <p>This section contains resolved issues per release and known bugs. Use this information to understand changes compared to previous versions. The author field is omitted if it was Johannes Gerstmayr (JG).
 The extension <code class="docutils literal notranslate"><span class="pre">.dev1</span></code> is not added in the issues list (e.g., 1.2.2.dev1==1.2.2), as it only marks versions that will not be available in pypi with standard pip install, but only with the <code class="docutils literal notranslate"><span class="pre">-</span></code><code class="docutils literal notranslate"><span class="pre">-pre</span></code> option or by specifying the exact version name, see versions on <a class="reference external" href="https://pypi.org/project/exudyn/">https://pypi.org/project/exudyn/</a>.
 BUG numbers refer to the according issue numbers.</p>
-<dl class="simple">
-<dt>General information on current version:</dt><dd><p>small</p>
-</dd>
-</dl>
+<p>General information on current version:</p>
 <ul class="simple">
-<li><p>Exudyn version = 1.8.0,</p></li>
-<li><p>last change =  2024-03-06,</p></li>
-<li><p>Number of issues = 1802,</p></li>
-<li><p>Number of resolved issues = 1594 (0 in current version),</p></li>
+<li><p>Exudyn version = 1.8.28.dev1,</p></li>
+<li><p>last change =  2024-05-04,</p></li>
+<li><p>Number of issues = 1834,</p></li>
+<li><p>Number of resolved issues = 1622 (28 in current version),</p></li>
 </ul>
 <section id="version-1-8">
 <h2>Version 1.8<a class="headerlink" href="#version-1-8" title="Link to this heading"></a></h2>
 <blockquote>
 <div><ul class="simple">
+<li><dl class="simple">
+<dt>Version 1.8.28: resolved Issue 1833: ComputeODE2EigenValues (extension)</dt><dd><ul>
+<li><p>description:  extend to complex eigenvalues</p></li>
+<li><p><strong>notes:</strong> added TestModel complexEigenvaluesTest.py</p></li>
+<li><p>date resolved: <strong>2024-05-04 18:12</strong>, date raised: 2024-05-03</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.8.27: resolved Issue 1831: ObjectJointRollingDisc (change)</dt><dd><ul>
+<li><p>description:  change computation of constraints into local joint frame, enabling lateral and forward constraint independently; see old comment on constrainedAxes</p></li>
+<li><p>date resolved: <strong>2024-04-29 08:03</strong>, date raised: 2024-04-29</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.8.26: resolved Issue 1830: AddLidar (fix)</dt><dd><ul>
+<li><p>description:  angles of sensors should be equally arranged between angleStart and angleEnd using numberOfSensors and having a sensor both at start and end angle</p></li>
+<li><p>date resolved: <strong>2024-04-27 17:06</strong>, date raised: 2024-04-27</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.8.25: resolved Issue 1829: AddLidar (fix)</dt><dd><ul>
+<li><p>description:  several arguments are not passed to CreateDistanceSensor; add all arguments to interface, which may cause some change in behavior!</p></li>
+<li><p>date resolved: <strong>2024-04-27 16:48</strong>, date raised: 2024-04-27</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.8.24: resolved Issue 1828: Examples (example)</dt><dd><ul>
+<li><p>description:  add example mobileMecanumWheelRobotWithLidar.py for a mecanum wheeled robot with lidar and mapping</p></li>
+<li><p>date resolved: <strong>2024-04-27 11:11</strong>, date raised: 2024-04-27</p></li>
+<li><p>resolved by: P. Manzl</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.8.23: resolved Issue 1827: AddLidar (fix)</dt><dd><ul>
+<li><p>description:  argument rotation is not used</p></li>
+<li><p>date resolved: <strong>2024-04-27 11:08</strong>, date raised: 2024-04-27</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.8.22: resolved Issue 1826: AddLidar (change)</dt><dd><ul>
+<li><p>description:  angles of sensor directions are not defined and erronously with respect to Y-axis; angleStart and angleEnde shall be measured w.r.t. the X-axis (angle=0) and in positive rotation sense about local Z-axis</p></li>
+<li><p>date resolved: <strong>2024-04-27 11:08</strong>, date raised: 2024-04-27</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.8.21: resolved Issue 1824: ObjectConnectorCoordinateVector (docu)</dt><dd><ul>
+<li><p>description:  fix docu and remove inexisting parameters</p></li>
+<li><p>date resolved: <strong>2024-04-21 19:34</strong>, date raised: 2024-04-21</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.8.20: resolved Issue 1820: item type info (change)</dt><dd><ul>
+<li><p>description:  change py::dict to py:object in functions such as AddMarker according to github issue #64, otherwise giving typing errors in PyLance and similar</p></li>
+<li><p>date resolved: <strong>2024-04-21 19:17</strong>, date raised: 2024-04-19</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.8.19: resolved Issue 1823: stub files (change)</dt><dd><ul>
+<li><p>description:  change type in AddObject, AddMarker, AddSensor, AddLoad, AddNode from pyObject: dict to pyObject: Any in order to resolve typing errors</p></li>
+<li><p>date resolved: <strong>2024-04-21 19:16</strong>, date raised: 2024-04-19</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.8.18: resolved Issue 1819: KinematicTreePendulum.py (example)</dt><dd><ul>
+<li><p>description:  Version 1.7.71 broke example „kinematicTreePendulum“ with transition from SensorObject to SensorBody</p></li>
+<li><p><strong>notes:</strong> changed SensorObject(objectNumber=oKT into SensorBody(bodyNumber=oKT</p></li>
+<li><p>date resolved: <strong>2024-04-17 16:13</strong>, date raised: 2024-04-17</p></li>
+<li><p>resolved by: P. Manzl</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.8.17: resolved Issue 1818: stub files (fix)</dt><dd><ul>
+<li><p>description:  add types for mainsystem extensions (e.g. SolutionViewer)</p></li>
+<li><p><strong>notes:</strong> not resolved, because mainSystemExtension functions do not contain argument types</p></li>
+<li><p>date resolved: <strong>2024-04-14 17:54</strong>, date raised: 2024-04-14</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.8.16: resolved Issue 1817: stub files (fix)</dt><dd><ul>
+<li><p>description:  add types for system structures (mainly solver functions)</p></li>
+<li><p><strong>notes:</strong> not resolved, because this information is not available in the structures for solver methods</p></li>
+<li><p>date resolved: <strong>2024-04-14 17:53</strong>, date raised: 2024-04-14</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.8.15: resolved Issue 1816: stub files (fix)</dt><dd><ul>
+<li><p>description:  fix a couple of wrong return types and similar wrong typings (in particular return types in SetODE2Coordinates, etc.</p></li>
+<li><p>date resolved: <strong>2024-04-14 16:15</strong>, date raised: 2024-04-14</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.8.14: resolved Issue 1814: stub files (fix)</dt><dd><ul>
+<li><p>description:  .pyi files do not contain correct default args for C++ interfaces</p></li>
+<li><p>date resolved: <strong>2024-04-14 16:15</strong>, date raised: 2024-04-14</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.8.13: resolved Issue 1815: stub files (fix)</dt><dd><ul>
+<li><p>description:  .pyi files contain _ instead of _ from latex documentation</p></li>
+<li><p>date resolved: <strong>2024-04-14 15:15</strong>, date raised: 2024-04-14</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.8.12: resolved Issue 1812: GetMarkerOutput (fix)</dt><dd><ul>
+<li><p>description:  not working for MarkerKinematicTreeRigid in case of Reference configuration; adjustments done in CObjectKinematicTree::ComputeTreeTransformations to avoid the need for velocities in the retrieval of positions</p></li>
+<li><p>date resolved: <strong>2024-04-03 19:38</strong>, date raised: 2024-04-03</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.8.11: resolved Issue 1811: Sensitivity Analysis for functions with single outputs (fix)</dt><dd><ul>
+<li><p>issue author: PM</p></li>
+<li><p>description:  ComputeSensitivities and PlotSensitivityResults does not work for functions with a single output</p></li>
+<li><p>date resolved: <strong>2024-03-26 19:24</strong>, date raised: 2024-03-26</p></li>
+<li><p>resolved by: P. Manzl</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.8.10: resolved Issue 1810: GeneralContact (change)</dt><dd><ul>
+<li><p>description:  unify computation of contact forces and jacobians for sphere-sphere and trig-sphere contact</p></li>
+<li><p>date resolved: <strong>2024-03-25 08:21</strong>, date raised: 2024-03-25</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.8.9: resolved Issue 1809: GeneralContact (fix)</dt><dd><ul>
+<li><p>description:  apply changes in sphere-sphere contact to Jacobian and to docu</p></li>
+<li><p>date resolved: <strong>2024-03-17 19:05</strong>, date raised: 2024-03-17</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.8.8: <span class="textred">resolved BUG 1807</span><span class="classifier">GeneralContact</span></dt><dd><ul>
+<li><p>description:  sphere-shpere contact causes spurious internal torque</p></li>
+<li><p><strong>notes:</strong> fixed by adding 0.5*penetration in lever arm; adjusted also documentation; gives new test suite results</p></li>
+<li><p>date resolved: <strong>2024-03-17 10:56</strong>, date raised: 2024-03-17</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.8.7: <span class="textred">resolved BUG 1805</span><span class="classifier">CreateRigidBody</span></dt><dd><ul>
+<li><p>description:  raises exception in case that initialRotationMatrix is not None; SOLUTION: replace == None for ALL cases (check other functions) with is None or is not Note!</p></li>
+<li><p><strong>notes:</strong> fixed with 1808</p></li>
+<li><p>date resolved: <strong>2024-03-17 10:55</strong>, date raised: 2024-03-16</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.8.6: <span class="textred">resolved BUG 1806</span><span class="classifier">CreateRigidBody</span></dt><dd><ul>
+<li><p>description:  initialRotationMatrix has no effect at least in explicit integration</p></li>
+<li><p><strong>notes:</strong> wrong operator* used for multiplication of reference rotation matrix and initial rotation matrix; FIXED</p></li>
+<li><p>date resolved: <strong>2024-03-17 10:54</strong>, date raised: 2024-03-16</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.8.5: resolved Issue 1808: advanced utilities (extension)</dt><dd><ul>
+<li><p>description:  added function to check for None and not None: IsNone(x), IsNotNone(x)</p></li>
+<li><p>date resolved: <strong>2024-03-17 10:29</strong>, date raised: 2024-03-17</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.8.4: resolved Issue 1804: GeneralContact (check)</dt><dd><ul>
+<li><p>description:  check triangle-sphere contact: torque for triangle computed with “((-sphereI.radius)*deltaP0).CrossProduct(fVec)” lever arm should be -(trigPP - rigid.position) ?</p></li>
+<li><p><strong>notes:</strong> changed term for torque on rigid body according to added documentation in theory section</p></li>
+<li><p>date resolved: <strong>2024-03-17 10:15</strong>, date raised: 2024-03-16</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.8.3: resolved Issue 1802: RigidBodySpringDamper (check)</dt><dd><ul>
+<li><p>description:  check intrinsic joint formulation</p></li>
+<li><p><strong>notes:</strong> no inconsistencies found or detected in examples</p></li>
+<li><p>date resolved: <strong>2024-03-13 13:10</strong>, date raised: 2024-03-07</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.8.2: resolved Issue 1803: MarkerSuperElementRigid (extension)</dt><dd><ul>
+<li><p>description:  add option for tangent operator in alternativeFormulation</p></li>
+<li><p>date resolved: <strong>2024-03-13 13:09</strong>, date raised: 2024-03-13</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.8.1: resolved Issue 0734: continuous integration (coding)</dt><dd><ul>
+<li><p>description:  test CI capabilities with GitHub and MacOS compilation</p></li>
+<li><p><strong>notes:</strong> resolved with issue 1792</p></li>
+<li><p>date resolved: <strong>2024-03-09 16:04</strong>, date raised: 2021-08-12</p></li>
+</ul>
+</dd>
+</dl>
+</li>
 <li><dl class="simple">
 <dt>Version 1.8.0: resolved Issue 1789: AvailableItems (extension)</dt><dd><ul>
 <li><p>description:  add exudyn.special function to retrieve available items as dictionary with lists</p></li>
@@ -13238,6 +13473,46 @@ BUG numbers refer to the according issue numbers.</p>
 <blockquote>
 <div><ul class="simple">
 <li><dl class="simple">
+<dt><strong>open issue 1832:</strong> theory docu</dt><dd><ul>
+<li><p>description:  add description of computation of stresses for FFRFreducedOrder</p></li>
+<li><p>date raised: 2024-05-03</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>open issue 1825:</strong> GraphicsDataCube</dt><dd><ul>
+<li><p>description:  rename to GraphicsDataBrick… functions; use assignment to keep previous functionality</p></li>
+<li><p>date raised: 2024-04-25</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>open issue 1822:</strong> inverse dynamics</dt><dd><ul>
+<li><p>description:  consider an inverse dynamics solver for constrained systems; this requires decouple constraints from Lagrange multipliers; add separate LTG list for Lagrange multipliers and objectLTGAE; separate CObject::GetAlgebraicEquationsSize from LagrangeMultiplier size; check markerDataStructure.GetLagrangeMultipliers; see CSystemData::ComputeMarkerDataStructure</p></li>
+<li><p>date raised: 2024-04-19</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>open issue 1821:</strong> kinematics solver</dt><dd><ul>
+<li><p>description:  consider functionality of a kinematic solver; this could be based on a quasi-static solver which utilizes the velocity constraint level and computes unknown velocities for a given configuration; first attempt could be based on finite differences for prescribed incremental motion and resulting incremental coordinates; only possible for systems with DOF=0; alternatively, we could compute velocity coordinates only from the constrained system, which however would only work if all coordinates are constrained</p></li>
+<li><p>date raised: 2024-04-19</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>open issue 1813:</strong> Marker positions</dt><dd><ul>
+<li><p>description:  wrong representation of marker positions in AnimateModes for deformation scaling=0</p></li>
+<li><p>date raised: 2024-04-08</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
 <dt><strong>open issue 1801:</strong> joint constraints</dt><dd><ul>
 <li><p>description:  add description of position jacobian for rigid bodies (in particular 3D rigid); add reference in description for MarkerBodyPosition</p></li>
 <li><p>date raised: 2024-03-03</p></li>
@@ -14368,14 +14643,6 @@ BUG numbers refer to the according issue numbers.</p>
 <li><dl class="simple">
 <dt><strong>open issue 0736:</strong> include GeomExactBeam3D</dt><dd><ul>
 <li><p>description:  as provided by Jan Tomec</p></li>
-<li><p>date raised: 2021-08-12</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt><strong>open issue 0734:</strong> continuous integration</dt><dd><ul>
-<li><p>description:  test CI capabilities with GitHub and MacOS compilation</p></li>
 <li><p>date raised: 2021-08-12</p></li>
 </ul>
 </dd>

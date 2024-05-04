@@ -134,7 +134,7 @@ This is the data structure of a system which contains Objects (bodies/constraint
      mbs.systemData.SetTime(10., exu.ConfigurationType.Initial)
 
 * | **AddODE2LoadDependencies**\ (\ *loadNumber*\ , \ *globalODE2coordinates*\ ): 
-  | advanced function for adding special dependencies of loads onto ODE2 coordinates, taking a list / numpy array of global ODE2 coordinates; this function needs to be called after Assemble() and needs to contain ODE2 coordinate indices; this list only affects implicit or static solvers if numericalDifferentiation.loadsJacobian=True; in this case, it may greatly improve convergence if loads with user functions depend on some system states, such as in a load with feedback control loop; the additional dependencies are not required, if doSystemWideDifferentiation=True, however the latter option being much less efficient!
+  | advanced function for adding special dependencies of loads onto ODE2 coordinates, taking a list / numpy array of global ODE2 coordinates; this function needs to be called after Assemble() and needs to contain ODE2 coordinate indices; this list only affects implicit or static solvers if numericalDifferentiation.loadsJacobian=True; in this case, it may greatly improve convergence if loads with user functions depend on some system states, such as in a load with feedback control loop; the additional dependencies are not required, if doSystemWideDifferentiation=True, however the latter option being much less efficient. For more details, consider the file doublePendulum2DControl.py in the examples directory.
   | *Example*:
 
   .. code-block:: python
@@ -342,7 +342,7 @@ This section provides access functions the \ :ref:`LTG <LTG>`\ -lists for every 
 
   .. code-block:: python
 
-     ltgObject4 = mbs.systemData.GetObjectLTGODE2(4)
+     ltgObject4 = mbs.systemData.GetObjectLTGAE(4)
 
 * | **GetObjectLTGData**\ (\ *objectNumber*\ ): 
   | get object local-to-global coordinate mapping (list of global coordinate indices) for data coordinates; only available after Assemble()

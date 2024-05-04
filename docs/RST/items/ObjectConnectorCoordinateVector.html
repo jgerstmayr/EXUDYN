@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ObjectConnectorCoordinateVector &mdash; Exudyn1.8.0 1.8.0 documentation</title>
+  <title>ObjectConnectorCoordinateVector &mdash; Exudyn1.8.28.dev1 1.8.28.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -18,8 +18,8 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=b51e6972"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/documentation_options.js?v=027cc127"></script>
+        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
         <script src="../../../_static/copybutton.js?v=f281be69"></script>
@@ -43,7 +43,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.8.0
+            Exudyn1.8.28.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -103,7 +103,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.8.0</a>
+          <a href="../../../index.html">Exudyn1.8.28.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -374,27 +374,21 @@ If one marker <span class="math notranslate nohighlight">\(k\)</span> is a groun
 </section>
 <section id="connector-constraint-equations">
 <h2>Connector constraint equations<a class="headerlink" href="#connector-constraint-equations" title="Link to this heading"></a></h2>
-<p>If <code class="docutils literal notranslate"><span class="pre">activeConnector</span> <span class="pre">=</span> <span class="pre">True</span></code>, the index 3 algebraic equations</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">activeConnector</span> <span class="pre">=</span> <span class="pre">True</span></code> and no <code class="docutils literal notranslate"><span class="pre">constraintUserFunction</span></code> is defined, the index 3 algebraic equations</p>
 <div class="math notranslate nohighlight">
-\[{\mathbf{c}}({\mathbf{q}}_{m0}, {\mathbf{q}}_{m1}) = {\mathbf{X}}_{m1} \cdot {\mathbf{q}}_{m1} + {\mathbf{Y}}_{m1} \cdot {\mathbf{q}}^2_{m1} - {\mathbf{X}}_{m0} \cdot{\mathbf{q}}_{m0} -{\mathbf{Y}}_{m0} \cdot{\mathbf{q}}^2_{m0} - {\mathbf{v}}_\mathrm{off} = 0\]</div>
+\[{\mathbf{c}}({\mathbf{q}}_{m0}, {\mathbf{q}}_{m1}) = {\mathbf{X}}_{m1} \cdot {\mathbf{q}}_{m1} + {\mathbf{Y}}_{m1} \cdot {\mathbf{q}}^2_{m1} - {\mathbf{X}}_{m0} \cdot{\mathbf{q}}_{m0} - {\mathbf{Y}}_{m0} \cdot{\mathbf{q}}^2_{m0} - {\mathbf{v}}_\mathrm{off} = 0\]</div>
 <p>Note that the squared coordinates are understood as <span class="math notranslate nohighlight">\({\mathbf{q}}^2_{m0} = [q^2_{0,m0}, \; q^2_{1,m0}, \; \ldots]\tp\)</span>, same for <span class="math notranslate nohighlight">\({\mathbf{q}}^2_{m1}\)</span>.</p>
-<p>If the offsetUserFunction <span class="math notranslate nohighlight">\(\mathrm{UF}\)</span> is defined, <span class="math notranslate nohighlight">\({\mathbf{c}}\)</span> instead becomes (<span class="math notranslate nohighlight">\(t\)</span> is current time)</p>
+<p>The index 2 (velocity level) algebraic equation accordingly reads</p>
 <div class="math notranslate nohighlight">
-\[{\mathbf{c}}({\mathbf{q}}_{m0}, {\mathbf{q}}_{m1}) = {\mathbf{X}}_{m1} \cdot {\mathbf{q}}_{m1} + {\mathbf{Y}}_{m1} \cdot {\mathbf{q}}^2_{m1} - {\mathbf{X}}_{m0} \cdot{\mathbf{q}}_{m0} -{\mathbf{Y}}_{m0} \cdot{\mathbf{q}}^2_{m0} -  \mathrm{UF}(mbs, t,{\mathbf{v}}_\mathrm{off}) = 0\]</div>
-<p>The <code class="docutils literal notranslate"><span class="pre">activeConnector</span> <span class="pre">=</span> <span class="pre">True</span></code>, index 2 (velocity level) algebraic equation reads</p>
-<div class="math notranslate nohighlight">
-\[\dot {\mathbf{c}}(\dot {\mathbf{q}}_{m0}, \dot {\mathbf{q}}_{m1}) = {\mathbf{X}}_{m1} \cdot \dot {\mathbf{q}}_{m1} + {\mathbf{Y}}_{m1} \cdot \dot {\mathbf{q}}^2_{m1} -{\mathbf{X}}_{m0} \cdot \dot {\mathbf{q}}_{m0} - {\mathbf{Y}}_{m0} \cdot \dot {\mathbf{q}}^2_{m0} - {\mathbf{d}}_\mathrm{off} = 0\]</div>
-<p>The vector <span class="math notranslate nohighlight">\(dv\)</span> in velocity level equations is zero, except if parameters.velocityLevel = True, then <span class="math notranslate nohighlight">\({\mathbf{d}}={\mathbf{v}}_\mathrm{off}\)</span>.</p>
-<p>If velocity level constraints are active and the velocity level <code class="docutils literal notranslate"><span class="pre">offsetUserFunction_t</span></code> <span class="math notranslate nohighlight">\(\mathrm{UF}_t\)</span> is defined,
-<span class="math notranslate nohighlight">\(\dot {\mathbf{c}}\)</span> instead becomes (<span class="math notranslate nohighlight">\(t\)</span> is current time)</p>
-<div class="math notranslate nohighlight">
-\[\dot {\mathbf{c}}(\dot {\mathbf{q}}_{m0}, \dot {\mathbf{q}}_{m1}) = {\mathbf{X}}_{m1} \cdot \dot {\mathbf{q}}_{m1} + {\mathbf{Y}}_{m1} \cdot \dot {\mathbf{q}}^2_{m1} -{\mathbf{X}}_{m0} \cdot \dot {\mathbf{q}}_{m0} - {\mathbf{Y}}_{m0} \cdot \dot {\mathbf{q}}^2_{m0} - \mathrm{UF}_t(mbs, t,{\mathbf{v}}_\mathrm{off}) = 0\]</div>
-<p>Note that the index 2 equations are used, if the solver uses index 2 formulation OR if the flag parameters.velocityLevel = True (or both).
-The user functions include dependency on time <span class="math notranslate nohighlight">\(t\)</span>, but this time dependency is not respected in the computation of initial accelerations. Therefore,
-it is recommended that <span class="math notranslate nohighlight">\(\mathrm{UF}\)</span> and <span class="math notranslate nohighlight">\(\mathrm{UF}_t\)</span> does not include initial accelerations.</p>
+\[\dot {\mathbf{c}}(\dot {\mathbf{q}}_{m0}, \dot {\mathbf{q}}_{m1}) = {\mathbf{X}}_{m1} \cdot \dot {\mathbf{q}}_{m1} + {\mathbf{Y}}_{m1} \cdot \dot {\mathbf{q}}^2_{m1} - {\mathbf{X}}_{m0} \cdot \dot {\mathbf{q}}_{m0} - {\mathbf{Y}}_{m0} \cdot \dot {\mathbf{q}}^2_{m0} - {\mathbf{d}}_\mathrm{off} = 0\]</div>
+<p>The vector <span class="math notranslate nohighlight">\({\mathbf{d}}\)</span> in velocity level equations is zero, except if <code class="docutils literal notranslate"><span class="pre">parameters.velocityLevel</span> <span class="pre">=</span> <span class="pre">True</span></code>, then <span class="math notranslate nohighlight">\({\mathbf{d}}={\mathbf{v}}_\mathrm{off}\)</span>.</p>
+<p>Note that the index 2 equations are used, if the solver uses index 2 formulation OR if the flag <code class="docutils literal notranslate"><span class="pre">parameters.velocityLevel</span> <span class="pre">=</span> <span class="pre">True</span></code> (or both).
+However, the <code class="docutils literal notranslate"><span class="pre">constraintUserFunction</span></code> has to be chosen accordingly by the user, either as position or as velocity level.
+The user functions include dependency on time <span class="math notranslate nohighlight">\(t\)</span>, but this time dependency is not respected in the computation of initial accelerations. Therefore,</p>
 <p>If <code class="docutils literal notranslate"><span class="pre">activeConnector</span> <span class="pre">=</span> <span class="pre">False</span></code>, the (index 1) algebraic equation reads for ALL cases:</p>
 <div class="math notranslate nohighlight">
 \[{\mathbf{c}}(\tlambda) = \tlambda = 0\]</div>
+<p>If a <code class="docutils literal notranslate"><span class="pre">constraintUserFunction</span></code> is defined, it also requires an according <code class="docutils literal notranslate"><span class="pre">jacobianUserFunction</span></code> (and vice versa).</p>
 <hr class="docutils" />
 <p><strong>Userfunction</strong>: <code class="docutils literal notranslate"><span class="pre">constraintUserFunction(mbs,</span> <span class="pre">t,</span> <span class="pre">itemNumber,</span> <span class="pre">q,</span> <span class="pre">q_t,</span> <span class="pre">velocityLevel)</span></code></p>
 <p>A user function, which computes algebraic equations for the connector based on the marker coordinates stored in <code class="docutils literal notranslate"><span class="pre">q</span></code> and <code class="docutils literal notranslate"><span class="pre">q_t</span></code>.

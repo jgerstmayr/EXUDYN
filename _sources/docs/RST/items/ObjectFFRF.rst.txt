@@ -5,7 +5,7 @@
 ObjectFFRF
 ==========
 
-This object is used to represent equations modelled by the \ :ref:`FFRF <FFRF>`\ . It contains a RigidBodyNode (always node 0) and a list of other nodes representing the finite element nodes used in the \ :ref:`FFRF <FFRF>`\ . Note that temporary matrices and vectors are subject of change in future.
+This object is used to represent equations modelled by the \ :ref:`FFRF <FFRF>`\ . It contains a RigidBodyNode (always node 0) and a list of other nodes representing the finite element nodes used in the \ :ref:`FFRF <FFRF>`\ . Note that temporary matrices and vectors are subject of change in future. Usually you SHOULD NOT USE THIS OBJECT - use the much more efficient ObjectFFRFreducedOrder object with modal reduction instead.
 
 Authors: Gerstmayr Johannes, Zwölfer Andreas
 

@@ -33,6 +33,7 @@ This section includes all Examples for Exudyn.They can also be found and downloa
    Examples/beltDriveReevingSystem
    Examples/beltDrivesComparison
    Examples/bicycleIftommBenchmark
+   Examples/bungeeJump
    Examples/cartesianSpringDamper
    Examples/cartesianSpringDamperUserFunction
    Examples/chatGPTupdate
@@ -64,6 +65,7 @@ This section includes all Examples for Exudyn.They can also be found and downloa
    Examples/lugreFrictionTest
    Examples/massSpringFrictionInteractive
    Examples/minimizeExample
+   Examples/mobileMecanumWheelRobotWithLidar
    Examples/mouseInteractionExample
    Examples/mpi4pyExample
    Examples/multiMbsTest
@@ -72,6 +74,7 @@ This section includes all Examples for Exudyn.They can also be found and downloa
    Examples/netgenSTLtest
    Examples/NGsolveCMStutorial
    Examples/NGsolveCraigBampton
+   Examples/NGsolveGeometry
    Examples/NGsolveLinearFEM
    Examples/NGsolvePistonEngine
    Examples/NGsolvePostProcessingStresses
@@ -102,6 +105,7 @@ This section includes all Examples for Exudyn.They can also be found and downloa
    Examples/plotSensorExamples
    Examples/reevingSystem
    Examples/reevingSystemOpen
+   Examples/reinforcementLearningRobot
    Examples/rigid3Dexample
    Examples/rigidBodyIMUtest
    Examples/rigidBodyTutorial

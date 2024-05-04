@@ -123,42 +123,27 @@ If one marker \ :math:`k`\  is a ground marker (node/object), the length of \ :m
 Connector constraint equations
 ------------------------------
 
-If \ ``activeConnector = True``\ , the index 3 algebraic equations
+If \ ``activeConnector = True``\  and no \ ``constraintUserFunction``\  is defined, the index 3 algebraic equations
 
 .. math::
 
-   {\mathbf{c}}({\mathbf{q}}_{m0}, {\mathbf{q}}_{m1}) = {\mathbf{X}}_{m1} \cdot {\mathbf{q}}_{m1} + {\mathbf{Y}}_{m1} \cdot {\mathbf{q}}^2_{m1} - {\mathbf{X}}_{m0} \cdot{\mathbf{q}}_{m0} -{\mathbf{Y}}_{m0} \cdot{\mathbf{q}}^2_{m0} - {\mathbf{v}}_\mathrm{off} = 0
+   {\mathbf{c}}({\mathbf{q}}_{m0}, {\mathbf{q}}_{m1}) = {\mathbf{X}}_{m1} \cdot {\mathbf{q}}_{m1} + {\mathbf{Y}}_{m1} \cdot {\mathbf{q}}^2_{m1} - {\mathbf{X}}_{m0} \cdot{\mathbf{q}}_{m0} - {\mathbf{Y}}_{m0} \cdot{\mathbf{q}}^2_{m0} - {\mathbf{v}}_\mathrm{off} = 0
 
 
 Note that the squared coordinates are understood as \ :math:`{\mathbf{q}}^2_{m0} = [q^2_{0,m0}, \; q^2_{1,m0}, \; \ldots]\tp`\ , same for \ :math:`{\mathbf{q}}^2_{m1}`\ .
 
-If the offsetUserFunction \ :math:`\mathrm{UF}`\  is defined, \ :math:`{\mathbf{c}}`\  instead becomes (\ :math:`t`\  is current time)
+The index 2 (velocity level) algebraic equation accordingly reads
 
 .. math::
 
-   {\mathbf{c}}({\mathbf{q}}_{m0}, {\mathbf{q}}_{m1}) = {\mathbf{X}}_{m1} \cdot {\mathbf{q}}_{m1} + {\mathbf{Y}}_{m1} \cdot {\mathbf{q}}^2_{m1} - {\mathbf{X}}_{m0} \cdot{\mathbf{q}}_{m0} -{\mathbf{Y}}_{m0} \cdot{\mathbf{q}}^2_{m0} -  \mathrm{UF}(mbs, t,{\mathbf{v}}_\mathrm{off}) = 0
+   \dot {\mathbf{c}}(\dot {\mathbf{q}}_{m0}, \dot {\mathbf{q}}_{m1}) = {\mathbf{X}}_{m1} \cdot \dot {\mathbf{q}}_{m1} + {\mathbf{Y}}_{m1} \cdot \dot {\mathbf{q}}^2_{m1} - {\mathbf{X}}_{m0} \cdot \dot {\mathbf{q}}_{m0} - {\mathbf{Y}}_{m0} \cdot \dot {\mathbf{q}}^2_{m0} - {\mathbf{d}}_\mathrm{off} = 0
 
 
-The \ ``activeConnector = True``\ , index 2 (velocity level) algebraic equation reads
+The vector \ :math:`{\mathbf{d}}`\  in velocity level equations is zero, except if \ ``parameters.velocityLevel = True``\ , then \ :math:`{\mathbf{d}}={\mathbf{v}}_\mathrm{off}`\ .
 
-.. math::
-
-   \dot {\mathbf{c}}(\dot {\mathbf{q}}_{m0}, \dot {\mathbf{q}}_{m1}) = {\mathbf{X}}_{m1} \cdot \dot {\mathbf{q}}_{m1} + {\mathbf{Y}}_{m1} \cdot \dot {\mathbf{q}}^2_{m1} -{\mathbf{X}}_{m0} \cdot \dot {\mathbf{q}}_{m0} - {\mathbf{Y}}_{m0} \cdot \dot {\mathbf{q}}^2_{m0} - {\mathbf{d}}_\mathrm{off} = 0
-
-
-The vector \ :math:`dv`\  in velocity level equations is zero, except if parameters.velocityLevel = True, then \ :math:`{\mathbf{d}}={\mathbf{v}}_\mathrm{off}`\ .
-
-If velocity level constraints are active and the velocity level \ ``offsetUserFunction_t``\  \ :math:`\mathrm{UF}_t`\  is defined, 
-\ :math:`\dot {\mathbf{c}}`\  instead becomes (\ :math:`t`\  is current time)
-
-.. math::
-
-   \dot {\mathbf{c}}(\dot {\mathbf{q}}_{m0}, \dot {\mathbf{q}}_{m1}) = {\mathbf{X}}_{m1} \cdot \dot {\mathbf{q}}_{m1} + {\mathbf{Y}}_{m1} \cdot \dot {\mathbf{q}}^2_{m1} -{\mathbf{X}}_{m0} \cdot \dot {\mathbf{q}}_{m0} - {\mathbf{Y}}_{m0} \cdot \dot {\mathbf{q}}^2_{m0} - \mathrm{UF}_t(mbs, t,{\mathbf{v}}_\mathrm{off}) = 0
-
-
-Note that the index 2 equations are used, if the solver uses index 2 formulation OR if the flag parameters.velocityLevel = True (or both).
+Note that the index 2 equations are used, if the solver uses index 2 formulation OR if the flag \ ``parameters.velocityLevel = True``\  (or both).
+However, the \ ``constraintUserFunction``\  has to be chosen accordingly by the user, either as position or as velocity level.
 The user functions include dependency on time \ :math:`t`\ , but this time dependency is not respected in the computation of initial accelerations. Therefore,
-it is recommended that \ :math:`\mathrm{UF}`\  and \ :math:`\mathrm{UF}_t`\  does not include initial accelerations.
 
 If \ ``activeConnector = False``\ , the (index 1) algebraic equation reads for ALL cases:
 
@@ -169,6 +154,7 @@ If \ ``activeConnector = False``\ , the (index 1) algebraic equation reads for A
 
 
 
+If a \ ``constraintUserFunction``\  is defined, it also requires an according \ ``jacobianUserFunction``\  (and vice versa).
 
 --------
 

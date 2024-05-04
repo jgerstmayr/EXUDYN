@@ -352,9 +352,9 @@ Eq. :eq:`objectcontactfrictioncirclecable2d-curstick`\ , and
 
 The basic algorithm in the \ ``PostNewtonStep``\ , with all operations given for any segment \ :math:`s_i`\ , can be summarized as follows:
 
-+  [I.] Evaluate gap per segment \ :math:`g`\  using Eq. :eq:`objectcontactfrictioncirclecable2d-gap`\  and store in data variable: 
++ [I.] Evaluate gap per segment \ :math:`g`\  using Eq. :eq:`objectcontactfrictioncirclecable2d-gap`\  and store in data variable: 
         \ :math:`x_{gap} = g`\ 
-+  [II.] If \ :math:`x_{gap} < 0`\  and (\ :math:`\mu_v \neq 0`\  or  \ :math:`\mu_k \neq 0`\ ):
++ [II.] If \ :math:`x_{gap} < 0`\  and (\ :math:`\mu_v \neq 0`\  or  \ :math:`\mu_k \neq 0`\ ):
   
 +  Compute contact force \ :math:`f_n`\  according to Eq. :eq:`objectcontactfrictioncirclecable2d-contactforce`\ 
 +  Compute current sticking position \ :math:`x_{curStick}`\  according to Eq. :eq:`objectcontactfrictioncirclecable2d-lastcurstick`\ \ (terms are only evaluated if \ :math:`\mu_k \neq 0`\ )
@@ -392,8 +392,8 @@ The basic algorithm in the \ ``PostNewtonStep``\ , with all operations given for
 +  In the case of sticking, given by \ :math:`|f_t^{(lin)}| \le \mu \cdot |f_n|`\ : Set \ :math:`x_{isSlipStick} = 0`\  and, 
     if \ :math:`x^{startOfStep}_{isSlipStick} = -2`\  (undefined), we update \ :math:`x_{lastStick} = x_{curStick}`\ , while otherwise, \ :math:`x_{lastStick}`\  is unchanged.
   
-+  [III. ] If \ :math:`x_{gap} > 0`\  or (\ :math:`\mu_v == 0`\  and \ :math:`\mu_k == 0`\ ), we set \ :math:`x_{isSlipStick} = -2`\  (undefined); this means that in the next step (if this step is accepted), there is no stored sticking position.
-+  [IV.] Compute an error \ :math:`\varepsilon_{PNS} = \varepsilon^n_{PNS}+\varepsilon^t_{PNS}`\ ,
++ [III. ] If \ :math:`x_{gap} > 0`\  or (\ :math:`\mu_v == 0`\  and \ :math:`\mu_k == 0`\ ), we set \ :math:`x_{isSlipStick} = -2`\  (undefined); this means that in the next step (if this step is accepted), there is no stored sticking position.
++ [IV.] Compute an error \ :math:`\varepsilon_{PNS} = \varepsilon^n_{PNS}+\varepsilon^t_{PNS}`\ ,
               with physical units forces (per segment point), for \ ``PostNewtonStep``\ :
   
 +  if gap \ :math:`x_{gap,lastPNS}`\  of previous \ ``PostNewtonStep``\  had different sign to current gap, set
@@ -430,15 +430,15 @@ The operations are similar to the \ ``PostNewtonStep``\ , but without switching.
 + [I.] Compute contact force \ :math:`f_n`\ , Eq. :eq:`objectcontactfrictioncirclecable2d-contactforce`\ .
 + [II.] In case of sticking (\ :math:`|x_{isSlipStick}|\neq 1`\ ):
   
-+  [II.1] the current sticking position \ :math:`x_{curStick}`\  is computed from Eq. :eq:`objectcontactfrictioncirclecable2d-lastcurstick`\ , and the difference of current and last sticking position reads\ (see the difference to the \ ``PostNewtonStep``\ : we use \ :math:`x_{lastStick}`\  here, not the \ ``startOfStep``\  variant.):
++ [II.1] the current sticking position \ :math:`x_{curStick}`\  is computed from Eq. :eq:`objectcontactfrictioncirclecable2d-lastcurstick`\ , and the difference of current and last sticking position reads\ (see the difference to the \ ``PostNewtonStep``\ : we use \ :math:`x_{lastStick}`\  here, not the \ ``startOfStep``\  variant.):
     
 .. math::
 
    \Delta x^*_{stick} = x_{curStick} - x_{lastStick}, \quad \Delta x_{stick} = x^*_{stick} - \mathrm{floor}\left(\frac{\Delta x^*_{stick} }{2 \pi \cdot r} + \frac{1}{2}\right) \cdot 2 \pi \cdot r
 
 
-+  [II.2] if the friction stiffness is \ :math:`\mu_k==0`\  or if \ :math:`x_{isSlipStick} == -2`\ , we set \ :math:`\Delta x_{stick}=0`\ 
-+  [II.3] using the tangential velocity from Eq. :eq:`objectcontactfrictioncirclecable2d-vtangent`\ , the tangent force follows as (even if it is larger than the sticking limit)
++ [II.2] if the friction stiffness is \ :math:`\mu_k==0`\  or if \ :math:`x_{isSlipStick} == -2`\ , we set \ :math:`\Delta x_{stick}=0`\ 
++ [II.3] using the tangential velocity from Eq. :eq:`objectcontactfrictioncirclecable2d-vtangent`\ , the tangent force follows as (even if it is larger than the sticking limit)
     
 .. math::
 
@@ -446,7 +446,7 @@ The operations are similar to the \ ``PostNewtonStep``\ , but without switching.
 
 
 
-+  [III.] In case of slipping (\ :math:`|x_{isSlipStick}|=1`\ ), the tangential firction force is set  as\ (see again difference to \ ``PostNewtonStep``\ !),
++ [III.] In case of slipping (\ :math:`|x_{isSlipStick}|=1`\ ), the tangential firction force is set  as\ (see again difference to \ ``PostNewtonStep``\ !),
   
 .. math::
 

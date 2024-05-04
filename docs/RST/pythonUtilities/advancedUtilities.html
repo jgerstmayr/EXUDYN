@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Module: advancedUtilities &mdash; Exudyn1.8.0 1.8.0 documentation</title>
+  <title>Module: advancedUtilities &mdash; Exudyn1.8.28.dev1 1.8.28.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -18,8 +18,8 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=b51e6972"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/documentation_options.js?v=027cc127"></script>
+        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
         <script src="../../../_static/copybutton.js?v=f281be69"></script>
@@ -41,7 +41,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.8.0
+            Exudyn1.8.28.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -73,6 +73,8 @@
 <li class="toctree-l3"><a class="reference internal" href="#function-findnodeindex">Function: FindNodeIndex</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-islistorarray">Function: IsListOrArray</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-raisetypeerror">Function: RaiseTypeError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-isnone">Function: IsNone</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-isnotnone">Function: IsNotNone</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-isvalidbool">Function: IsValidBool</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-isvalidrealint">Function: IsValidRealInt</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-isvalidprealint">Function: IsValidPRealInt</a></li>
@@ -142,7 +144,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.8.0</a>
+          <a href="../../../index.html">Exudyn1.8.28.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -280,9 +282,33 @@ Here, we gather special functions, which are depending on other modules and do n
 </ul>
 <hr class="docutils" />
 </section>
+<section id="function-isnone">
+<span id="sec-advancedutilities-isnone"></span><h2>Function: IsNone<a class="headerlink" href="#function-isnone" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L145">IsNone</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">return True, if x is None; works also for numpy arrays or structures</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+</section>
+<section id="function-isnotnone">
+<span id="sec-advancedutilities-isnotnone"></span><h2>Function: IsNotNone<a class="headerlink" href="#function-isnotnone" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L149">IsNotNone</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">return True, if x is not None; works also for numpy arrays or structures</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+</section>
 <section id="function-isvalidbool">
 <span id="sec-advancedutilities-isvalidbool"></span><h2>Function: IsValidBool<a class="headerlink" href="#function-isvalidbool" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L145">IsValidBool</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L153">IsValidBool</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -294,7 +320,7 @@ Here, we gather special functions, which are depending on other modules and do n
 </section>
 <section id="function-isvalidrealint">
 <span id="sec-advancedutilities-isvalidrealint"></span><h2>Function: IsValidRealInt<a class="headerlink" href="#function-isvalidrealint" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L154">IsValidRealInt</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L162">IsValidRealInt</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -306,7 +332,7 @@ Here, we gather special functions, which are depending on other modules and do n
 </section>
 <section id="function-isvalidprealint">
 <span id="sec-advancedutilities-isvalidprealint"></span><h2>Function: IsValidPRealInt<a class="headerlink" href="#function-isvalidprealint" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L164">IsValidPRealInt</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L172">IsValidPRealInt</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -318,7 +344,7 @@ Here, we gather special functions, which are depending on other modules and do n
 </section>
 <section id="function-isvalidurealint">
 <span id="sec-advancedutilities-isvalidurealint"></span><h2>Function: IsValidURealInt<a class="headerlink" href="#function-isvalidurealint" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L170">IsValidURealInt</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L178">IsValidURealInt</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -330,7 +356,7 @@ Here, we gather special functions, which are depending on other modules and do n
 </section>
 <section id="function-isreal">
 <span id="sec-advancedutilities-isreal"></span><h2>Function: IsReal<a class="headerlink" href="#function-isreal" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L176">IsReal</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L184">IsReal</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -342,7 +368,7 @@ Here, we gather special functions, which are depending on other modules and do n
 </section>
 <section id="function-isinteger">
 <span id="sec-advancedutilities-isinteger"></span><h2>Function: IsInteger<a class="headerlink" href="#function-isinteger" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L183">IsInteger</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L191">IsInteger</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -354,7 +380,7 @@ Here, we gather special functions, which are depending on other modules and do n
 </section>
 <section id="function-isvector">
 <span id="sec-advancedutilities-isvector"></span><h2>Function: IsVector<a class="headerlink" href="#function-isvector" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L190">IsVector</a>(<code class="docutils literal notranslate"><span class="pre">v</span></code>, <code class="docutils literal notranslate"><span class="pre">expectedSize</span> <span class="pre">=</span> <span class="pre">None</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L198">IsVector</a>(<code class="docutils literal notranslate"><span class="pre">v</span></code>, <code class="docutils literal notranslate"><span class="pre">expectedSize</span> <span class="pre">=</span> <span class="pre">None</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -366,7 +392,7 @@ Here, we gather special functions, which are depending on other modules and do n
 </section>
 <section id="function-isintvector">
 <span id="sec-advancedutilities-isintvector"></span><h2>Function: IsIntVector<a class="headerlink" href="#function-isintvector" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L204">IsIntVector</a>(<code class="docutils literal notranslate"><span class="pre">v</span></code>, <code class="docutils literal notranslate"><span class="pre">expectedSize</span> <span class="pre">=</span> <span class="pre">None</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L212">IsIntVector</a>(<code class="docutils literal notranslate"><span class="pre">v</span></code>, <code class="docutils literal notranslate"><span class="pre">expectedSize</span> <span class="pre">=</span> <span class="pre">None</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -378,7 +404,7 @@ Here, we gather special functions, which are depending on other modules and do n
 </section>
 <section id="function-issquarematrix">
 <span id="sec-advancedutilities-issquarematrix"></span><h2>Function: IsSquareMatrix<a class="headerlink" href="#function-issquarematrix" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L219">IsSquareMatrix</a>(<code class="docutils literal notranslate"><span class="pre">m</span></code>, <code class="docutils literal notranslate"><span class="pre">expectedSize</span> <span class="pre">=</span> <span class="pre">None</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L227">IsSquareMatrix</a>(<code class="docutils literal notranslate"><span class="pre">m</span></code>, <code class="docutils literal notranslate"><span class="pre">expectedSize</span> <span class="pre">=</span> <span class="pre">None</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -390,7 +416,7 @@ Here, we gather special functions, which are depending on other modules and do n
 </section>
 <section id="function-isvalidobjectindex">
 <span id="sec-advancedutilities-isvalidobjectindex"></span><h2>Function: IsValidObjectIndex<a class="headerlink" href="#function-isvalidobjectindex" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L236">IsValidObjectIndex</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L244">IsValidObjectIndex</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -402,7 +428,7 @@ Here, we gather special functions, which are depending on other modules and do n
 </section>
 <section id="function-isvalidnodeindex">
 <span id="sec-advancedutilities-isvalidnodeindex"></span><h2>Function: IsValidNodeIndex<a class="headerlink" href="#function-isvalidnodeindex" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L242">IsValidNodeIndex</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L250">IsValidNodeIndex</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -414,7 +440,7 @@ Here, we gather special functions, which are depending on other modules and do n
 </section>
 <section id="function-isvalidmarkerindex">
 <span id="sec-advancedutilities-isvalidmarkerindex"></span><h2>Function: IsValidMarkerIndex<a class="headerlink" href="#function-isvalidmarkerindex" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L248">IsValidMarkerIndex</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L256">IsValidMarkerIndex</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -426,7 +452,7 @@ Here, we gather special functions, which are depending on other modules and do n
 </section>
 <section id="function-fillinsubmatrix">
 <span id="sec-advancedutilities-fillinsubmatrix"></span><h2>Function: FillInSubMatrix<a class="headerlink" href="#function-fillinsubmatrix" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L263">FillInSubMatrix</a>(<code class="docutils literal notranslate"><span class="pre">subMatrix</span></code>, <code class="docutils literal notranslate"><span class="pre">destinationMatrix</span></code>, <code class="docutils literal notranslate"><span class="pre">destRow</span></code>, <code class="docutils literal notranslate"><span class="pre">destColumn</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L271">FillInSubMatrix</a>(<code class="docutils literal notranslate"><span class="pre">subMatrix</span></code>, <code class="docutils literal notranslate"><span class="pre">destinationMatrix</span></code>, <code class="docutils literal notranslate"><span class="pre">destRow</span></code>, <code class="docutils literal notranslate"><span class="pre">destColumn</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -460,7 +486,7 @@ Here, we gather special functions, which are depending on other modules and do n
 </section>
 <section id="function-sweepsin">
 <span id="sec-advancedutilities-sweepsin"></span><h2>Function: SweepSin<a class="headerlink" href="#function-sweepsin" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L282">SweepSin</a>(<code class="docutils literal notranslate"><span class="pre">t</span></code>, <code class="docutils literal notranslate"><span class="pre">t1</span></code>, <code class="docutils literal notranslate"><span class="pre">f0</span></code>, <code class="docutils literal notranslate"><span class="pre">f1</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L290">SweepSin</a>(<code class="docutils literal notranslate"><span class="pre">t</span></code>, <code class="docutils literal notranslate"><span class="pre">t1</span></code>, <code class="docutils literal notranslate"><span class="pre">f0</span></code>, <code class="docutils literal notranslate"><span class="pre">f1</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -489,7 +515,7 @@ Here, we gather special functions, which are depending on other modules and do n
 </section>
 <section id="function-sweepcos">
 <span id="sec-advancedutilities-sweepcos"></span><h2>Function: SweepCos<a class="headerlink" href="#function-sweepcos" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L293">SweepCos</a>(<code class="docutils literal notranslate"><span class="pre">t</span></code>, <code class="docutils literal notranslate"><span class="pre">t1</span></code>, <code class="docutils literal notranslate"><span class="pre">f0</span></code>, <code class="docutils literal notranslate"><span class="pre">f1</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L301">SweepCos</a>(<code class="docutils literal notranslate"><span class="pre">t</span></code>, <code class="docutils literal notranslate"><span class="pre">t1</span></code>, <code class="docutils literal notranslate"><span class="pre">f0</span></code>, <code class="docutils literal notranslate"><span class="pre">f1</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -518,7 +544,7 @@ Here, we gather special functions, which are depending on other modules and do n
 </section>
 <section id="function-frequencysweep">
 <span id="sec-advancedutilities-frequencysweep"></span><h2>Function: FrequencySweep<a class="headerlink" href="#function-frequencysweep" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L304">FrequencySweep</a>(<code class="docutils literal notranslate"><span class="pre">t</span></code>, <code class="docutils literal notranslate"><span class="pre">t1</span></code>, <code class="docutils literal notranslate"><span class="pre">f0</span></code>, <code class="docutils literal notranslate"><span class="pre">f1</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L312">FrequencySweep</a>(<code class="docutils literal notranslate"><span class="pre">t</span></code>, <code class="docutils literal notranslate"><span class="pre">t1</span></code>, <code class="docutils literal notranslate"><span class="pre">f0</span></code>, <code class="docutils literal notranslate"><span class="pre">f1</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -547,7 +573,7 @@ Here, we gather special functions, which are depending on other modules and do n
 </section>
 <section id="function-smoothstep">
 <span id="sec-advancedutilities-smoothstep"></span><h2>Function: SmoothStep<a class="headerlink" href="#function-smoothstep" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L315">SmoothStep</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">x0</span></code>, <code class="docutils literal notranslate"><span class="pre">x1</span></code>, <code class="docutils literal notranslate"><span class="pre">value0</span></code>, <code class="docutils literal notranslate"><span class="pre">value1</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L323">SmoothStep</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">x0</span></code>, <code class="docutils literal notranslate"><span class="pre">x1</span></code>, <code class="docutils literal notranslate"><span class="pre">value0</span></code>, <code class="docutils literal notranslate"><span class="pre">value1</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -577,7 +603,7 @@ Here, we gather special functions, which are depending on other modules and do n
 </section>
 <section id="function-smoothstepderivative">
 <span id="sec-advancedutilities-smoothstepderivative"></span><h2>Function: SmoothStepDerivative<a class="headerlink" href="#function-smoothstepderivative" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L334">SmoothStepDerivative</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">x0</span></code>, <code class="docutils literal notranslate"><span class="pre">x1</span></code>, <code class="docutils literal notranslate"><span class="pre">value0</span></code>, <code class="docutils literal notranslate"><span class="pre">value1</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L342">SmoothStepDerivative</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">x0</span></code>, <code class="docutils literal notranslate"><span class="pre">x1</span></code>, <code class="docutils literal notranslate"><span class="pre">value0</span></code>, <code class="docutils literal notranslate"><span class="pre">value1</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -607,7 +633,7 @@ Here, we gather special functions, which are depending on other modules and do n
 </section>
 <section id="function-indexfromvalue">
 <span id="sec-advancedutilities-indexfromvalue"></span><h2>Function: IndexFromValue<a class="headerlink" href="#function-indexfromvalue" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L350">IndexFromValue</a>(<code class="docutils literal notranslate"><span class="pre">data</span></code>, <code class="docutils literal notranslate"><span class="pre">value</span></code>, <code class="docutils literal notranslate"><span class="pre">tolerance</span> <span class="pre">=</span> <span class="pre">1e-7</span></code>, <code class="docutils literal notranslate"><span class="pre">assumeConstantSampleRate</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">rangeWarning</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L358">IndexFromValue</a>(<code class="docutils literal notranslate"><span class="pre">data</span></code>, <code class="docutils literal notranslate"><span class="pre">value</span></code>, <code class="docutils literal notranslate"><span class="pre">tolerance</span> <span class="pre">=</span> <span class="pre">1e-7</span></code>, <code class="docutils literal notranslate"><span class="pre">assumeConstantSampleRate</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">rangeWarning</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -637,7 +663,7 @@ Here, we gather special functions, which are depending on other modules and do n
 </section>
 <section id="function-roundmatrix">
 <span id="sec-advancedutilities-roundmatrix"></span><h2>Function: RoundMatrix<a class="headerlink" href="#function-roundmatrix" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L382">RoundMatrix</a>(<code class="docutils literal notranslate"><span class="pre">matrix</span></code>, <code class="docutils literal notranslate"><span class="pre">treshold</span> <span class="pre">=</span> <span class="pre">1e-14</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L390">RoundMatrix</a>(<code class="docutils literal notranslate"><span class="pre">matrix</span></code>, <code class="docutils literal notranslate"><span class="pre">treshold</span> <span class="pre">=</span> <span class="pre">1e-14</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -659,7 +685,7 @@ Here, we gather special functions, which are depending on other modules and do n
 </section>
 <section id="function-convertfunctiontosymbolic">
 <span id="sec-advancedutilities-convertfunctiontosymbolic"></span><h2>Function: ConvertFunctionToSymbolic<a class="headerlink" href="#function-convertfunctiontosymbolic" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L402">ConvertFunctionToSymbolic</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">function</span></code>, <code class="docutils literal notranslate"><span class="pre">userFunctionName</span></code>, <code class="docutils literal notranslate"><span class="pre">itemIndex</span> <span class="pre">=</span> <span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">itemTypeName</span> <span class="pre">=</span> <span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">0</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L410">ConvertFunctionToSymbolic</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">function</span></code>, <code class="docutils literal notranslate"><span class="pre">userFunctionName</span></code>, <code class="docutils literal notranslate"><span class="pre">itemIndex</span> <span class="pre">=</span> <span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">itemTypeName</span> <span class="pre">=</span> <span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">0</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -688,7 +714,7 @@ Here, we gather special functions, which are depending on other modules and do n
 </section>
 <section id="function-createsymbolicuserfunction">
 <span id="sec-advancedutilities-createsymbolicuserfunction"></span><h2>Function: CreateSymbolicUserFunction<a class="headerlink" href="#function-createsymbolicuserfunction" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L542">CreateSymbolicUserFunction</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">function</span></code>, <code class="docutils literal notranslate"><span class="pre">userFunctionName</span></code>, <code class="docutils literal notranslate"><span class="pre">itemIndex</span> <span class="pre">=</span> <span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">itemTypeName</span> <span class="pre">=</span> <span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">0</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py#L550">CreateSymbolicUserFunction</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">function</span></code>, <code class="docutils literal notranslate"><span class="pre">userFunctionName</span></code>, <code class="docutils literal notranslate"><span class="pre">itemIndex</span> <span class="pre">=</span> <span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">itemTypeName</span> <span class="pre">=</span> <span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">0</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>

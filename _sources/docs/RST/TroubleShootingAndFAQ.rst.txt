@@ -171,6 +171,11 @@ to explicitly load the version without AVX2.
 
   |  →  it seems clear that you should read this error from top as it indicates that you just forgot to call \ ``mbs.Assemble()``\ 
 
++  WSL/Ubuntu: render window crashes after left or right mouse click:
+
+  |  →  This happens, in some (all?) Linux installations during mouse selection
+  |  →  workaround: setting \ ``SC.visualizationSettings.interactive.selectionLeftMouse = False``\  and \ ``SC.visualizationSettings.interactive.selectionRightMouse = False``\  removes the option to select with mouse, but avoids crashes
+
 +  \ ``SolveDynamic``\  or \ ``SolveStatic``\  \ **terminated due to errors**\ :
 
   |  →  use flag \ ``showHints = True``\  in \ ``SolveDynamic``\  or \ ``SolveStatic``\ 
