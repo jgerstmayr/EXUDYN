@@ -26,6 +26,7 @@ You can view and download this file on Github: `generalContactSpheresTest.py <ht
    from exudyn.utilities import *
    
    import numpy as np
+   import time
    
    useGraphics = True #without test
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

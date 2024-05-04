@@ -22,19 +22,20 @@
 //#include <pybind11/numpy.h> //accept numpy arrays: numpy array automatically converted to std::vector<Real,...> ==> accepts np.array([1,0,0]) and [1,0,0] as return value!
 
 //const Vector3D localDiscAxis({ 1,0,0 });
+#define COBJECTJOINTROLLINGDISC_LOCALCONSTRAINTS
 
 //helper function for ComputeAlgebraicEquations and for GetOutputVariableConnector
 //returns contact position and velocity
 void ComputeContactPoint(const Vector3D& p0, const Matrix3D& A0, const Vector3D& v0, const Vector3D& omega0,
 						 const Vector3D& p1, const Matrix3D& A1, const Vector3D& v1, const Vector3D& omega1,
-	const Vector3D& planeNormal, const Vector3D& discAxis, Real discRadius, Vector3D& pC, Vector3D& vCm0, Vector3D& vCm1, Vector3D& w2, Vector3D& w3) //outputs
+	const Vector3D& planeNormal, const Vector3D& discAxis, Real discRadius, Vector3D& pC, Vector3D& vCm0, Vector3D& vCm1, Vector3D& wForward, Vector3D& w3) //outputs
 {
 	//Vector3D pB({ p1[0], p1[1], 0 }); //disc center point projected to ground
 
 	Vector3D w1 = discAxis;
-	w2 = w1.CrossProduct(planeNormal); //longitudinal direction; cross product has length != 1
-	w2.Normalize();
-	w3 = w1.CrossProduct(w2); //w1 and w2 are perpendicular ==> w3 already normalized
+	wForward = w1.CrossProduct(planeNormal); //longitudinal direction; cross product has length != 1
+	wForward.Normalize();
+	w3 = w1.CrossProduct(wForward); //w1 and wForward are perpendicular ==> w3 already normalized
 
 	//compute contact point position and velocity for marker 1:
 	pC = p1 + discRadius*w3;
@@ -68,21 +69,25 @@ void CObjectJointRollingDisc::ComputeAlgebraicEquations(Vector& algebraicEquatio
 		const Matrix3D& A0 = markerData.GetMarkerData(0).orientation;
 		const Vector3D& v0 = markerData.GetMarkerData(0).velocity;
 		Vector3D omega0 = A0 * markerData.GetMarkerData(0).angularVelocityLocal;
+		Vector3D n0 = A0 * parameters.planeNormal;
+		Vector3D w1 = A1 * parameters.discAxis;
 
 		Vector3D constraintVec; //will contain constraint violation in the end
 
-		Vector3D pC, vCm0, vCm1, w2, w3; //all vectors in global coordinates; therefore, lambda is also in global coordinates for now
-		ComputeContactPoint(p0, A0, v0, omega0, p1, A1, v1, omega1, A0*parameters.planeNormal, A1 * parameters.discAxis, 
-			parameters.discRadius, pC, vCm0, vCm1, w2, w3);
+		Vector3D pC, vCm0, vCm1, wForward, w3; //all vectors in global coordinates; therefore, lambda is also in global coordinates for now
+		ComputeContactPoint(p0, A0, v0, omega0, p1, A1, v1, omega1, n0, w1, parameters.discRadius, pC, vCm0, vCm1, wForward, w3);
+		Vector3D wLateral = n0.CrossProduct(wForward);
 		//pout << "++++++++++++++\n";
 		//pout << " p1=" << p1 << "\n";
 		//pout << " v1=" << v1 << "\n";
 		//pout << " pC=" << pC << "\n";
 		//pout << " vC=" << vC << "\n";
-		//pout << " w2=" << w2 << "\n";
+		//pout << " wForward=" << wForward << "\n";
 		//pout << " w3=" << w3 << "\n";
 
 		constraintVec = vCm1- vCm0;
+
+		Vector3D constraintVecLocal({ constraintVec * wLateral, constraintVec * wForward, constraintVec * n0 }); //project constraint into local coordinates
 
 		//++++++++++++++++++++++++++++++++
 		//activate single constraints
@@ -90,7 +95,11 @@ void CObjectJointRollingDisc::ComputeAlgebraicEquations(Vector& algebraicEquatio
 		{
 			if (parameters.constrainedAxes[i] == 1)
 			{
-				algebraicEquations[i] = constraintVec[i]; //these are the local constraints
+#ifdef COBJECTJOINTROLLINGDISC_LOCALCONSTRAINTS
+				algebraicEquations[i] = constraintVecLocal[i]; //these are the local constraints
+#else
+				algebraicEquations[i] = constraintVec[i]; //OLD: until version 1.8.26
+#endif
 			}
 			else
 			{
@@ -135,21 +144,31 @@ void CObjectJointRollingDisc::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, 
 		const Matrix3D& A0 = markerData.GetMarkerData(0).orientation;
 		const Vector3D& v0 = markerData.GetMarkerData(0).velocity;
 		Vector3D omega0 = A0 * markerData.GetMarkerData(0).angularVelocityLocal;
+		Vector3D n0 = A0 * parameters.planeNormal;
+		Vector3D w1 = A1 * parameters.discAxis;
 
-		Vector3D pC, vCm0, vCm1, w2, w3; //all vectors in global coordinates; therefore, lambda is also in global coordinates for now
-		ComputeContactPoint(p0, A0, v0, omega0, p1, A1, v1, omega1, A0*parameters.planeNormal, A1 * parameters.discAxis, 
-			parameters.discRadius, pC, vCm0, vCm1, w2, w3);
+		Vector3D pC, vCm0, vCm1, wForward, w3; //all vectors in global coordinates; therefore, lambda is also in global coordinates for now
+		ComputeContactPoint(p0, A0, v0, omega0, p1, A1, v1, omega1, n0, w1, 
+			parameters.discRadius, pC, vCm0, vCm1, wForward, w3);
+
+		Vector3D wLateral = n0.CrossProduct(wForward);
+		Matrix3D AJ10(3, 3, {
+			wLateral[0], wLateral[1], wLateral[2], 
+			wForward[0], wForward[1], wForward[2],
+			n0[0], n0[1], n0[2] });
 
 		Vector3D w3radius = parameters.discRadius * w3;
 		Vector3D pCm0 = (pC - p0); //position relative to body m0 reference point
 
-		//global equations ==> for ground joint nColumnsJac0 should be zero ...
+		//global/local equations ==> for ground joint nColumnsJac0 is zero ...
 		for (Index i = 0; i < nColumnsJac0; i++)
 		{
 			Vector3D vJacPosI = markerData.GetMarkerData(0).positionJacobian.GetColumnVector<3>(i);
 			Vector3D vJacRotI = markerData.GetMarkerData(0).rotationJacobian.GetColumnVector<3>(i);
 			vJacPosI += vJacRotI.CrossProduct(pCm0);
-
+#ifdef COBJECTJOINTROLLINGDISC_LOCALCONSTRAINTS
+			vJacPosI = AJ10 * vJacPosI;
+#endif
 			for (Index j = 0; j < nConstraints; j++)
 			{
 				if (parameters.constrainedAxes[j] == 1)
@@ -173,6 +192,9 @@ void CObjectJointRollingDisc::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, 
 			Vector3D vJacPosI = markerData.GetMarkerData(1).positionJacobian.GetColumnVector<3>(i);
 			Vector3D vJacRotI = markerData.GetMarkerData(1).rotationJacobian.GetColumnVector<3>(i);
 			vJacPosI += vJacRotI.CrossProduct(w3radius); 
+#ifdef COBJECTJOINTROLLINGDISC_LOCALCONSTRAINTS
+			vJacPosI = AJ10 * vJacPosI;
+#endif
 			for (Index j = 0; j < nConstraints; j++)
 			{
 				if (parameters.constrainedAxes[j] == 1)
@@ -225,57 +247,33 @@ void CObjectJointRollingDisc::GetOutputVariableConnector(OutputVariableType vari
 	Vector3D w1 = A1 * parameters.discAxis;
 	//Vector3D constraintVec; //will contain constraint violation in the end
 
-	//Vector3D pC, vC, w2, w3;
-	//ComputeContactPoint(p1, A1, v1, omega1, parameters.planeNormal, parameters.discRadius, pC, vC, w2, w3);
-	Vector3D pC, vCm0, vCm1, w2, w3; //all vectors in global coordinates; therefore, lambda is also in global coordinates for now
-	ComputeContactPoint(p0, A0, v0, omega0, p1, A1, v1, omega1, n0, w1, parameters.discRadius, pC, vCm0, vCm1, w2, w3);
+	//Vector3D pC, vC, wForward, w3;
+	//ComputeContactPoint(p1, A1, v1, omega1, parameters.planeNormal, parameters.discRadius, pC, vC, wForward, w3);
+	Vector3D pC, vCm0, vCm1, wForward, w3; //all vectors in global coordinates
+	ComputeContactPoint(p0, A0, v0, omega0, p1, A1, v1, omega1, n0, w1, parameters.discRadius, pC, vCm0, vCm1, wForward, w3);
 
-	Vector3D wLateral = n0.CrossProduct(w2);
+	Vector3D wLateral = n0.CrossProduct(wForward);
 
 	Vector3D vTrail; //velocity of the trail, in joint coordinates; computed by neglegting the rotation of the wheel for the contact point
 	Real r = parameters.discRadius;
 
-	if (false) //old computation, not considering arbitrary normal, axis and rotating normal
+	//compute time derivative of pC computed from pC = p1 + r*w3;
+	Vector3D w1_t = omega1.CrossProduct(w1);
+	Vector3D n0_t = omega0.CrossProduct(n0);
+	Vector3D f = w1.CrossProduct(n0);
+	Real g = f.GetL2Norm();
+	Vector3D f_t = w1_t.CrossProduct(n0) + w1.CrossProduct(n0_t); //MISSING n0_t term
+
+	Vector3D w3_t(0.);
+	if (g != 0.)
 	{
-		//compute trail velocity: point projected from pC to wheel axis:
-		//Real cosAlpha = p1[2] / r;
-		//REWRITE IN TERMS OF SIN(...) !!! more stable
-		Real cosAlpha = -w3 * n0; //alternative, without using z-coordinate; more accurate because z-drift
-		Real sign = 1.;
-		if (w3*wLateral > 0) { sign = -1.; }
-		//Real lP = r / cosAlpha; //=r^2/p1[2]
-		if (cosAlpha*cosAlpha > 1) { cosAlpha = EXUstd::Sgn(cosAlpha); }
-		Real axisOffsetX = sign*r * sqrt(1. - cosAlpha * cosAlpha) / cosAlpha;
-		Real cosAlpha_t = v1[2] / r;
-		Real axisOffsetX_t = 0;
-		if (1. - cosAlpha * cosAlpha>1e-15 && fabs(cosAlpha_t) > 1e-8)
-		{
-			axisOffsetX_t = sign * r * cosAlpha_t / EXUstd::Square(cosAlpha) *(-1. / sqrt(1. - cosAlpha * cosAlpha) * cosAlpha * cosAlpha - sqrt(1. - cosAlpha * cosAlpha));
-		}
+		Real g_t = 1 / g * (f*f_t);
 
-		vTrail = v1 - omega1.CrossProduct(A1*Vector3D({ axisOffsetX,0,0 })) - A1*Vector3D({ axisOffsetX_t,0,0 });
-		vTrail -= (vTrail*n0)*n0; //remove velocity in direction of plane
+		Vector3D wForward_t = (f_t * g - f * g_t) * (1. / (g*g));
+		w3_t = w1_t.CrossProduct(wForward) + w1.CrossProduct(wForward_t);
+
 	}
-	else //new, based on fact that wheel rotation does not account for trail
-	{
-		//compute time derivative of pC computed from pC = p1 + r*w3;
-		Vector3D w1_t = omega1.CrossProduct(w1);
-		Vector3D n0_t = omega0.CrossProduct(n0);
-		Vector3D f = w1.CrossProduct(n0);
-		Real g = f.GetL2Norm();
-		Vector3D f_t = w1_t.CrossProduct(n0) + w1.CrossProduct(n0_t); //MISSING n0_t term
-
-		Vector3D w3_t(0.);
-		if (g != 0.)
-		{
-			Real g_t = 1 / g * (f*f_t);
-
-			Vector3D w2_t = (f_t * g - f * g_t) * (1. / (g*g));
-			w3_t = w1_t.CrossProduct(w2) + w1.CrossProduct(w2_t);
-
-		}
-		vTrail = v1 + r * w3_t - (v0 + omega0.CrossProduct(pC));
-	}
+	vTrail = v1 + r * w3_t - (v0 + omega0.CrossProduct(pC));
 
 	switch (variableType)
 	{
@@ -283,17 +281,22 @@ void CObjectJointRollingDisc::GetOutputVariableConnector(OutputVariableType vari
 	case OutputVariableType::Velocity: value.CopyFrom(vTrail); break;
 	case OutputVariableType::ForceLocal:
 	{
-		Vector3D lambda3D({ -lambda[0], -lambda[1], -lambda[2]}); //negative sign, because of algebraic equations definition; lambda should be force acting on disc (marker1)
-		Vector3D forceLocal({ lambda3D*wLateral, lambda3D*w2, lambda3D*n0 }); //project forces into local coordinates
+		Vector3D lambda3D({ -lambda[0], -lambda[1], -lambda[2] }); //negative sign, because of algebraic equations definition; lambda should be force acting on disc (marker1)
+#ifdef COBJECTJOINTROLLINGDISC_LOCALCONSTRAINTS
+		value.CopyFrom(lambda3D);
+#else
+		//until 1.8.26:
+		Vector3D forceLocal({ lambda3D * wLateral, lambda3D * wForward, lambda3D * n0 }); //project forces into local coordinates
 		value.CopyFrom(forceLocal);
+#endif
 		break;
 	}
 	case OutputVariableType::RotationMatrix: {
 		//special joint transformation matrix
 		Matrix3D AJ1(3, 3, {
-			wLateral[0], w2[0], n0[0],
-			wLateral[1], w2[1], n0[1],
-			wLateral[2], w2[2], n0[2] });
+			wLateral[0], wForward[0], n0[0],
+			wLateral[1], wForward[1], n0[1],
+			wLateral[2], wForward[2], n0[2] });
 		value.SetVector(9, AJ1.GetDataPointer());
 		break;
 	}

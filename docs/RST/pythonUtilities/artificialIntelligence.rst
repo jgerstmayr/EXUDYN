@@ -26,9 +26,9 @@ CLASS OpenAIGymInterfaceEnv(Env) (in module artificialIntelligence)
 
 .. _sec-artificialintelligence-openaigyminterfaceenv(env)---init--:
 
-Class function: \_\_init\_\_
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py\#L36>`__\ (\ ``self``\ , \ ``**kwargs``\ )
+Class function: __init__
+^^^^^^^^^^^^^^^^^^^^^^^^
+`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py\#L36>`__\ (\ ``self``\ , \ ``**kwargs``\ )
 
 - | \ *classFunction*\ :
   | internal function to initialize model; store self.mbs and self.simulationSettings; special arguments \*\*kwargs are passed to CreateMBS

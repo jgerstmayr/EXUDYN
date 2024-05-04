@@ -149,9 +149,9 @@ CLASS MobileKinematics (in module robotics.mobile)
 
 .. _sec-mobile-mobilekinematics---init--:
 
-Class function: \_\_init\_\_
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/mobile.py\#L315>`__\ (\ ``self``\ , \ ``R``\ , \ ``lx``\ , \ ``ly``\ , \ ``flagAdjusted = False``\ , \ ``lcx = 0``\ , \ ``lcy = 0``\ , \ ``wheeltype = 0``\ )
+Class function: __init__
+^^^^^^^^^^^^^^^^^^^^^^^^
+`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/mobile.py\#L315>`__\ (\ ``self``\ , \ ``R``\ , \ ``lx``\ , \ ``ly``\ , \ ``flagAdjusted = False``\ , \ ``lcx = 0``\ , \ ``lcy = 0``\ , \ ``wheeltype = 0``\ )
 
 - | \ *classFunction*\ :
   | initialize mobileKinematics class

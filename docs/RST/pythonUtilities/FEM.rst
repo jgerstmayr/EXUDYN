@@ -471,9 +471,9 @@ CLASS ObjectFFRFinterface (in module FEM)
 
 .. _sec-fem-objectffrfinterface---init--:
 
-Class function: \_\_init\_\_
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L752>`__\ (\ ``self``\ , \ ``femInterface``\ )
+Class function: __init__
+^^^^^^^^^^^^^^^^^^^^^^^^
+`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L752>`__\ (\ ``self``\ , \ ``femInterface``\ )
 
 - | \ *classFunction*\ :
   | initialize ObjectFFRFinterface with FEMinterface class
@@ -542,9 +542,9 @@ CLASS ObjectFFRFreducedOrderInterface (in module FEM)
 
 .. _sec-fem-objectffrfreducedorderinterface---init--:
 
-Class function: \_\_init\_\_
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1033>`__\ (\ ``self``\ , \ ``femInterface = None``\ , \ ``rigidBodyNodeType = 'NodeType.RotationEulerParameters'``\ , \ ``roundMassMatrix = 1e-13``\ , \ ``roundStiffnessMatrix = 1e-13``\ )
+Class function: __init__
+^^^^^^^^^^^^^^^^^^^^^^^^
+`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1033>`__\ (\ ``self``\ , \ ``femInterface = None``\ , \ ``rigidBodyNodeType = 'NodeType.RotationEulerParameters'``\ , \ ``roundMassMatrix = 1e-13``\ , \ ``roundStiffnessMatrix = 1e-13``\ )
 
 - | \ *classFunction*\ :
   | initialize ObjectFFRFreducedOrderInterface with FEMinterface class
@@ -705,9 +705,9 @@ CLASS FEMinterface (in module FEM)
 
 .. _sec-fem-feminterface---init--:
 
-Class function: \_\_init\_\_
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1564>`__\ (\ ``self``\ )
+Class function: __init__
+^^^^^^^^^^^^^^^^^^^^^^^^
+`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1564>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | initalize all data of the FEMinterface by, e.g., \ ``fem = FEMinterface()``\
@@ -1371,5 +1371,5 @@ Class function: ReadElementsFromAnsys
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `CMSexampleCourse.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/CMSexampleCourse.py>`_\  (Ex), \ `netgenSTLtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/netgenSTLtest.py>`_\  (Ex), \ `NGsolveCMStutorial.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCMStutorial.py>`_\  (Ex), \ `NGsolveCraigBampton.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCraigBampton.py>`_\  (Ex), \ `NGsolveLinearFEM.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveLinearFEM.py>`_\  (Ex), \ `abaqusImportTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/abaqusImportTest.py>`_\  (TM), \ `ACFtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py>`_\  (TM), \ `compareAbaqusAnsysRotorEigenfrequencies.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/compareAbaqusAnsysRotorEigenfrequencies.py>`_\  (TM)
+    \ `CMSexampleCourse.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/CMSexampleCourse.py>`_\  (Ex), \ `netgenSTLtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/netgenSTLtest.py>`_\  (Ex), \ `NGsolveCMStutorial.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCMStutorial.py>`_\  (Ex), \ `NGsolveCraigBampton.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCraigBampton.py>`_\  (Ex), \ `NGsolveGeometry.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveGeometry.py>`_\  (Ex), \ `abaqusImportTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/abaqusImportTest.py>`_\  (TM), \ `ACFtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py>`_\  (TM), \ `compareAbaqusAnsysRotorEigenfrequencies.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/compareAbaqusAnsysRotorEigenfrequencies.py>`_\  (TM)
 

@@ -171,7 +171,7 @@ So far (2021-07), we tested
 Many alternative options exist:
 \bi
   %\item In case that you have an older CPU, which does not support AVX2, use: \codeName with Python 3.6.5, or compile without AVX flags for your machine.\footnote{e.g.\ Anaconda 32bit with Python3.6 can be downloaded via the repository archive \texttt{https://repo.anaconda.com/archive/} choosing \texttt{Anaconda3-5.2.0-Windows-x86.exe}.}
-  %\item Spyder 3.2.8 with Python 3.6.5 32 bit (alternatively 64bit), which is included in the Anaconda installation\footnote{It is important that Spyder, Python and exudyn are \mybold{either} 32bit \mybold{or} 64bit. 
+  %\item Spyder 3.2.8 with Python 3.6.5 32 bit (alternatively 64bit), which is included in the Anaconda installation\footnote{It is important that Spyder, Python and exudyn are \mybold{either} 32bit \mybold{or} 64bit}. 
   \item Users report successful use of \codeName with \mybold{Visual Studio Code}. \mybold{Jupyter} has been tested with some examples; both environments should work with default settings.
   \item Anaconda 2020-11 with \mybold{Python 3.8} and Spyder 4.1.5: no problems except some regular crashes of Spyder, TestSuite runs without problems since \codeName version 1.0.182.
   %\item Anaconda 2021-11 with \mybold{Python 3.9} and Spyder 5.1.5: Tested with current version (1.1.99), TestSuite runs without problems.
@@ -765,6 +765,12 @@ to explicitly load the version without AVX2.
 \onlyRST{\rstStartNewLine}
 \bi
 \item[$\ra$] it seems clear that you should read this error from top as it indicates that you just forgot to call \texttt{mbs.Assemble()}
+\ei
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\item WSL/Ubuntu: render window crashes after left or right mouse click:
+\bi
+\item[$\ra$] This happens, in some (all?) Linux installations during mouse selection
+\item[$\ra$] workaround: setting \texttt{SC.visualizationSettings.interactive.selectionLeftMouse = False} and \texttt{SC.visualizationSettings.interactive.selectionRightMouse = False} removes the option to select with mouse, but avoids crashes
 \ei
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \item \texttt{SolveDynamic} or \texttt{SolveStatic} \mybold{terminated due to errors}:

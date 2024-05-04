@@ -1940,7 +1940,7 @@ which defines inside/outside of a triangluar mesh.
 Within a regularized friction law, similar to a well known law attributed to Haff-Werner, the friction force $\fv_f$ is computed from static (dry) friction coefficient $\mu_s$ and the friction regularization velocity\footnote{global regularization coefficient stored in \texttt{GeneralContact.frictionProportionalZone}} $v_{\mu,reg}$
 \bea \label{eq_GeneralContactRegularizedFriction}
   v_t &=& |\LU{0}{\vv_t}|, \nonumber \\
-  \fv_f &=& 
+  \fv_f(v_t, |f_c|, \mu_s, v_{\mu,reg}, v_t, \LU{0}{\vv_t} ) &=& 
   \begin{cases}
     \frac{\mu_s \cdot |f_c|}{v_{\mu,reg}}\LU{0}{\vv_t}, \quad \mathrm{if} \quad v_t < v_{\mu,reg} \\
 %    
@@ -1955,6 +1955,8 @@ Within a regularized friction law, similar to a well known law attributed to Haf
 %
 \mysubsubsectionlabel{Sphere-sphere contact: Equations}{secContactSphereSphere}
 %
+The contact model between two spheres follows a penalty formulation, using a spring and optional damper to model the contact.
+Currently, only linear springs are utilized, however, the user is free to modify the equations in the code to model any nonlinear case as well.
 The equations for sphere-sphere contact in contact normal direction are very similar to the \texttt{ObjectConnectorSpringDamper}, see \refSection{sec:item:ObjectConnectorSpringDamper}.
 %
 Every sphere is attached to a position-based marker \footnote{which can be attached itself to position nodes, rigid body nodes, point masses, rigid bodies as well as flexible bodies. NOTE, that in case of implicit integration, flexible bodies are not fully implemented!}.
@@ -2011,9 +2013,9 @@ In case of rigid bodies and non-zero friction, we also compute angular velocitie
 Note that quantities $^*$ are only computed if contact is active.
 
 \mysubsubsubsection{Contact relations for sphere $g_i$ (marker $m0$) and sphere $g_j$ (marker $m1$)}
-\noindent If contact is active, we compute the global position of the contact point\footnote{considering also penetration, a more consistent contact point would be $\LU{0}{\pv_{c}^*} = \LU{0}{\pv_{m0}} + (r_i - \frac{p}{2}) \cdot \nv_0$, subtracting the half penetration.}, see \fig{fig_GeneralContactSpheres}
+\noindent If contact is active, we compute the global position of the contact point\footnote{considering also penetration, a more consistent contact point would be $\LU{0}{\pv_{c}^*} = \LU{0}{\pv_{m0}} + (r_i - \frac{p}{2}) \cdot \nv_0$, subtracting the half penetration.}, see \fig{fig_GeneralContactSpheres},\footnote{note that we have to consider the penetration when computing the contact points, attributing penetration equally to both sides; we introduce therefore the modified radii $r_i^* = r_i-\frac{p}{2}$ and $r_j^* = r_j-\frac{p}{2}$.}
 \be
-  \LU{0}{\pv_{c}} = \LU{0}{\pv_{m0}} + r_i \cdot \nv_0 \eqComma
+  \LU{0}{\pv_{c}} = \LU{0}{\pv_{m0}} + r_i^* \cdot \nv_0 \eqComma
 \ee
 %++++++++++++++++++++++++
 \begin{figure}[tbp]
@@ -2028,10 +2030,10 @@ the velocities of the spheres at the contact point\footnote{In case of no fricti
 \bea
   \LU{0}{\vv_{c,i}} &=& \LU{0}{\vv_i} + \left( \LU{0,m0}{\Am} \LU{m0}{\tomega}_{i} \right) \times 
                \left( \LU{0}{\pv_c} - \LU{0}{\pv_i} \right)
-              = \LU{0}{\vv_i} + r_i \cdot \left( \LU{0,m0}{\Am} \LU{m0}{\tomega}_{i} \right) \times \LU{0}{\nv_0},\nonumber \\
+              = \LU{0}{\vv_i} + r_i^* \cdot \left( \LU{0,m0}{\Am} \LU{m0}{\tomega}_{i} \right) \times \LU{0}{\nv_0},\nonumber \\
   \LU{0}{\vv_{c,j}} &=& \LU{0}{\vv_j} + \left( \LU{0,m1}{\Am} \LU{m1}{\tomega}_{j} \right) \times 
                \left( \LU{0}{\pv_c} - \LU{0}{\pv_j} \right)
-              = \LU{0}{\vv_j} - r_j \cdot \left( \LU{0,m1}{\Am} \LU{m1}{\tomega}_{j} \right) \times \LU{0}{\nv_0},
+              = \LU{0}{\vv_j} - r_j^* \cdot \left( \LU{0,m1}{\Am} \LU{m1}{\tomega}_{j} \right) \times \LU{0}{\nv_0},
 \eea
 the velocity in contact normal direction, which can be computed from sphere's center points, 
 \be
@@ -2044,11 +2046,11 @@ the velocity in tangential direction, considering the tangential velocities,
   \LU{0}{\vv_t} &=& \LU{0}{\vv_{c,j}} - \LU{0}{\vv_{c,i}} - v_n \cdot \LU{0}{\nv_0} 
   = \left( \Im - \LU{0}{\nv_0} \otimes \LU{0}{\nv_0}\right) \left(\LU{0}{\vv_{c,j}} - \LU{0}{\vv_{c,i}} \right), \nonumber \\
   &=& \left( \Im - \LU{0}{\nv_0} \otimes \LU{0}{\nv_0}\right) 
-  \left( \LU{0}{\vv_j} + r_j \cdot \LU{0}{\tilde \nv_0} \LU{0,m1}{\Am} \LU{m1}{\tomega}_{j} 
-        -\LU{0}{\vv_i} + r_i \cdot \LU{0}{\tilde \nv_0} \LU{0,m0}{\Am} \LU{m0}{\tomega}_{i} \right) \nonumber \\
+  \left( \LU{0}{\vv_j} + r_j^* \cdot \LU{0}{\tilde \nv_0} \LU{0,m1}{\Am} \LU{m1}{\tomega}_{j} 
+        -\LU{0}{\vv_i} + r_i^* \cdot \LU{0}{\tilde \nv_0} \LU{0,m0}{\Am} \LU{m0}{\tomega}_{i} \right) \nonumber \\
   &=& \left( \Im - \LU{0}{\nv_0} \otimes \LU{0}{\nv_0}\right) 
-  \left( \LU{0}{\vv_j} + r_j \cdot \LU{0}{\tilde \nv_0} \LU{0}{\tomega}_{j} 
-        -\LU{0}{\vv_i} + r_i \cdot \LU{0}{\tilde \nv_0} \LU{0}{\tomega}_{i} \right)
+  \left( \LU{0}{\vv_j} + r_j^* \cdot \LU{0}{\tilde \nv_0} \LU{0}{\tomega}_{j} 
+        -\LU{0}{\vv_i} + r_i^* \cdot \LU{0}{\tilde \nv_0} \LU{0}{\tomega}_{i} \right)
   \eqComma
 \eea
 the effective contact stiffness coefficient based on the stiffness $k_i$ of sphere $i$ and stiffness $k_j$ of sphere $j$,
@@ -2063,15 +2065,15 @@ The contact force (negative contact pressure) is computed from gap $g$ and norma
 \be
   f_c = k_c \cdot g + d_c \cdot v_n \eqComma
 \ee
-and the total vectorial contact force is computed with the help of \eq{eq_GeneralContactRegularizedFriction}, defining the friction force $\fv_f$,
+and the total vectorial contact force is computed with the help of \eq{eq_GeneralContactRegularizedFriction}, defining the friction force $\fv_f(v_t, |f_c|, \mu_s, v_{\mu,reg}, v_t, \LU{0}{\vv_t} )$,
 \be
   \LU{0}{\fv_c} = f_c \cdot \nv_0 + \fv_f
   \eqDot
 \ee
 The torque due to friction for sphere $i$ and sphere $j$ results into\footnote{note that both signs are the same and that $\LU{0}{\fv_f}$ could be replaced by $\fv_c$}
 \be
-  \LU{0}{\ttau_{f,i}} = (-r_i \cdot \nv_0) \times \LU{0}{\fv_f}, \quad
-  \LU{0}{\ttau_{f,j}} = (-r_j \cdot \nv_0) \times \LU{0}{\fv_f}
+  \LU{0}{\ttau_{f,i}} = (-r_i^* \cdot \nv_0) \times \LU{0}{\fv_f}, \quad
+  \LU{0}{\ttau_{f,j}} = (-r_j^* \cdot \nv_0) \times \LU{0}{\fv_f}
   \eqDot
 \ee
 %+++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -2206,8 +2208,8 @@ $\frac{\partial }{\partial \qv_{m0}}$ and $\LU{0}{\Jm_{pos,m1}}$ in case of $\fr
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \item $\LU{0}{\vv_t} = \LU{0}{\vv_{c,j}} - \LU{0}{\vv_{c,i}} - v_n \cdot \LU{0}{\nv_0}=
 \left( \Im - \LU{0}{\nv_0} \otimes \LU{0}{\nv_0}\right) \left( \LU{0}{\vv_j} -\LU{0}{\vv_i} \right) 
-        + r_j \cdot \LU{0}{\tilde \nv_0} \LU{0}{\tomega}_{j} 
-        + r_i \cdot \LU{0}{\tilde \nv_0} \LU{0}{\tomega}_{i}$:
+        + r_j^* \cdot \LU{0}{\tilde \nv_0} \LU{0}{\tomega}_{j} 
+        + r_i^* \cdot \LU{0}{\tilde \nv_0} \LU{0}{\tomega}_{i}$:
 %\item $\LU{0}{\vv_t} = \LU{0}{\vv_{c,j}} - \LU{0}{\vv_{c,i}} - v_n \cdot \LU{0}{\nv_0}=
 %\left( \Im - \LU{0}{\nv_0} \otimes \LU{0}{\nv_0}\right) \left( \LU{0}{\vv_j} + r_j \cdot \LU{0}{\tilde \nv_0} \LU{0}{\tomega}_{j} 
         %-\LU{0}{\vv_i} + r_i \cdot \LU{0}{\tilde \nv_0} \LU{0}{\tomega}_{i} \right)$:
@@ -2238,13 +2240,13 @@ $\frac{\partial }{\partial \qv_{m0}}$ and $\LU{0}{\Jm_{pos,m1}}$ in case of $\fr
   \bea
     \termC{\frac{\partial \LU{0}{\vv_t}}{\partial \dot \qv_{m0}} } &=& \termC{ 
     \left( \Im - \LU{0}{\nv_0} \otimes \LU{0}{\nv_0}\right) \left(-\LU{0}{\Jm_{pos,m0}} \right)
-    + r_i \cdot \LU{0}{\tilde \nv_0} \LU{0}{\Jm_{rot,m0}}
+    + r_i^* \cdot \LU{0}{\tilde \nv_0} \LU{0}{\Jm_{rot,m0}}
     } \eqComma
     \\
     %
     \termC{\frac{\partial \LU{0}{\vv_t}}{\partial \dot \qv_{m1}} } &=& \termC{
     \left( \Im - \LU{0}{\nv_0} \otimes \LU{0}{\nv_0}\right) \left(\LU{0}{\Jm_{pos,m1}} \right)
-    + r_j \cdot \LU{0}{\tilde \nv_0} \LU{0}{\Jm_{rot,m1}} }
+    + r_j^* \cdot \LU{0}{\tilde \nv_0} \LU{0}{\Jm_{rot,m1}} }
   \eea
 \ei
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -2300,7 +2302,7 @@ The jacobian for the contact force $\LU{0}{\fv_c}$ w.r.t.\ velocity marker coord
   &&
   \termC{ f_c \cdot \delta_f \frac{\mu_s}{v_{\mu,reg}} 
   \left( -\left( \Im - \LU{0}{\nv_0} \otimes \LU{0}{\nv_0} \right) 
-  \LU{0}{\Jm_{pos,m0}} + r_i \cdot \LU{0}{\tilde \nv_0} \LU{0}{\Jm_{rot,m0}} \right)
+  \LU{0}{\Jm_{pos,m0}} + r_i^* \cdot \LU{0}{\tilde \nv_0} \LU{0}{\Jm_{rot,m0}} \right)
   } 
   \nonumber \\
   \termC{ \frac{\partial \LU{0}{\fv_c}}{\partial \dot \qv_{m1}} }
@@ -2309,7 +2311,7 @@ The jacobian for the contact force $\LU{0}{\fv_c}$ w.r.t.\ velocity marker coord
   &&
   \termC{ f_c \cdot \delta_f \frac{\mu_s}{v_{\mu,reg}} 
   \left( \left( \Im - \LU{0}{\nv_0} \otimes \LU{0}{\nv_0} \right) 
-  \LU{0}{\Jm_{pos,m1}} + r_j \cdot \LU{0}{\tilde \nv_0} \LU{0}{\Jm_{rot,m1}} \right)
+  \LU{0}{\Jm_{pos,m1}} + r_j^* \cdot \LU{0}{\tilde \nv_0} \LU{0}{\Jm_{rot,m1}} \right)
   } 
 \eea
 
@@ -2331,8 +2333,8 @@ The jacobian for the contact force $\LU{0}{\fv_c}$ w.r.t.\ velocity marker coord
 %\ee
 \noindent The jacobians for torques are computed for the case that friction is in the regularized small velocity state ($\delta_f=1$), while otherwise derivatives of $\LU{0}{\ttau_{f,(i,j)}}$ are zero, 
 \be
-  \LU{0}{\ttau_{f,i}} = (-r_i \cdot \LU{0}{\nv_0}) \times \left( -f_c \cdot\delta_f \frac{\mu_s}{v_{\mu,reg}}\LU{0}{\vv_t} \right), \quad
-  \LU{0}{\ttau_{f,j}} = (-r_j \cdot \LU{0}{\nv_0}) \times \left( -f_c \cdot\delta_f \frac{\mu_s}{v_{\mu,reg}}\LU{0}{\vv_t} \right)
+  \LU{0}{\ttau_{f,i}} = (-r_i^* \cdot \LU{0}{\nv_0}) \times \left( -f_c \cdot\delta_f \frac{\mu_s}{v_{\mu,reg}}\LU{0}{\vv_t} \right), \quad
+  \LU{0}{\ttau_{f,j}} = (-r_j^* \cdot \LU{0}{\nv_0}) \times \left( -f_c \cdot\delta_f \frac{\mu_s}{v_{\mu,reg}}\LU{0}{\vv_t} \right)
 \ee
 in case of no friction or constant friction forces, $\delta_f=0$.
 The jacobians follow from (accordingly for $\ttau_{f,i}$, $\ttau_{f,j}$ and derivatives w.r.t\ $\qv_{m0,1}$):
@@ -2352,7 +2354,7 @@ and (note that $\LU{0}{\tilde \nv_0} \LU{0}{\nv_0} = \Null$),
    &=&\termC{ \left(r_ {(i,j)} \cdot \LU{0}{\tilde \nv_0} \right) \left( f_c \cdot \delta_f \frac{\mu_s}{v_{\mu,reg}} 
     \left( - \LU{0}{\Jm_{pos,m0}} 
     %\left( -\left( \Im - \LU{0}{\nv_0} \otimes \LU{0}{\nv_0} \right) \LU{0}{\Jm_{pos,m0}} 
-    + r_i \cdot \LU{0}{\tilde \nv_0} \LU{0}{\Jm_{rot,m0}} \right)  - d_c\delta_f \frac{\mu_s}{v_{\mu,reg}} \cdot \LU{0}{\vv_t} \otimes (\LU{0}{\nv_0} \LU{0}{\Jm_{pos,m0}} ) \right)
+    + r_i^* \cdot \LU{0}{\tilde \nv_0} \LU{0}{\Jm_{rot,m0}} \right)  - d_c\delta_f \frac{\mu_s}{v_{\mu,reg}} \cdot \LU{0}{\vv_t} \otimes (\LU{0}{\nv_0} \LU{0}{\Jm_{pos,m0}} ) \right)
     }
 \eea
 \bea
@@ -2361,9 +2363,108 @@ and (note that $\LU{0}{\tilde \nv_0} \LU{0}{\nv_0} = \Null$),
    &=&\termC{ \left(r_ {(i,j)} \cdot \tilde \nv_0 \right) \left(f_c \cdot \delta_f \frac{\mu_s}{v_{\mu,reg}} 
     \left( \LU{0}{\Jm_{pos,m1}} 
     %\left( \left( \Im - \LU{0}{\nv_0} \otimes \LU{0}{\nv_0} \right) \LU{0}{\Jm_{pos,m1}} 
-    + r_j \cdot \LU{0}{\tilde \nv_0} \LU{0}{\Jm_{rot,m1}} \right) + d_c\delta_f \frac{\mu_s}{v_{\mu,reg}} \cdot \LU{0}{\vv_t} \otimes (\LU{0}{\nv_0} \LU{0}{\Jm_{pos,m1}} ) \right)
+    + r_j^* \cdot \LU{0}{\tilde \nv_0} \LU{0}{\Jm_{rot,m1}} \right) + d_c\delta_f \frac{\mu_s}{v_{\mu,reg}} \cdot \LU{0}{\vv_t} \otimes (\LU{0}{\nv_0} \LU{0}{\Jm_{pos,m1}} ) \right)
     }
 \eea
+
+
+
+
+
+
+
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%
+\mysubsubsectionlabel{Sphere-triangle contact: Equations}{secContactSphereTriangle}
+%
+The sphere-triangle contact model follows a penalty formulation, using a spring and optional damper to model the unilateral contact behavior. Note that the model can be used for for planar (2D) contact between circles and lineas accordingly, where triangles are placed perpendicular to the $X-Y$ plane, representing lines for the contact with circles.
+Currently, only linear springs are utilized, however, the user is free to modify the equations in the code to model any nonlinear 
+
+The spheres are attached to a position-based marker, as they are the same spheres as in the sphere-sphere contact.
+The triangles currently may only be attached to a rigid body (but may be attached to three position-based markers in the future).
+%
+In C++, the sphere attached to marker 0 is denoted as \texttt{sphereI} with index $i$ and the triangle attached to a rigid body is denoted as \texttt{trigJ} and becomes contact object with index $j$.
+
+Input parameters for this contact model are
+\startTable{intermediate variables}{symbol}{description}
+\rowTable{sphere $i$ position}{$\LU{0}{\pv_{s,i}}$}{global position of sphere $i$}
+\rowTable{sphere $i$ radius}{$r_i$}{radius of sphere $i$, attached to marker 0}
+\rowTable{sphere $i$ contact stiffness}{$k_i$}{N/m}
+\rowTable{sphere $i$ contact damping}{$d_i$}{N/m}
+\rowTable{triangle $j$ points}{$\LU{0}{\pv_{t,j,k}}$}{global position of vertex $k$ of triangle $j$}
+\rowTable{triangle $j$ contact stiffness}{$k_j$}{N/m}
+\rowTable{triangle $j$ contact damping}{$d_j$}{N/m}
+\rowTable{friction pairing coefficient}{$\mu_{ij}$}{the friction coefficient stored in the the friction pairings matrix, resulting from the friction indices of spheres $i$ and $j$}
+\finishTable
+\vspace{6pt}
+The main geometrical contact parameters are computed from a function, which computes the projected point on the triangle $j$ with the minimal distance to the sphere's position $\LU{0}{\pv_{s,i}}$. The triangle $j$ is given by the vertices ($\LU{0}{\pv_{t,j,0}}$, $\LU{0}{\pv_{t,j,1}}$, $\LU{0}{\pv_{t,j,2}}$).
+As a result, we obtain the closest (projected) point on the triangle $\LU{0}{\pv_{p}}$, which is either inside the triangle or on one of the (closest) edges, potentially also at a vertex. If the projected point is inside the triangle, the flag \texttt{inside} becomes true and the closest distance is the normal distance to the plane, otherwise the flag is false.
+The function for the minimal distance reads
+\bi
+  \item[] \texttt{[pp, inside] = MinDistTP(pt0, pt1, pt2, ps)}
+\ei
+We compute the vector between the two points,
+\be
+  \LU{0}{\tdelta_p} = \LU{0}{\pv_{p}} - \LU{0}{\pv_{s,i}}
+\ee
+and the distance 
+\be
+  d = |\LU{0}{\tdelta_p}|
+\ee
+Contact is only considered, if $d < r$.
+
+In case of contact, we compute the normalized vector
+\be
+  \LU{0}{\tdelta_{p0}} = \frac{1}{d} \LU{0}{\tdelta_{p}}
+\ee
+as well as the penetration
+\be
+  \Delta = r_i - d
+\ee
+In the case of a linear model, the normal contact force results as
+\be
+  f_n = -k \cdot \Delta^p - d \cdot \dot \Delta
+\ee
+in which $p$ is the exponent of the penetration, which is set to $1$ by default, but could have different values according to the geometry (however, this has to be adjusted in the C++ part).
+
+For tangential contact and damping, the relative velocity has to be computed.
+The velocity of the sphere at the contact point reads
+\be
+  \LU{0}{\pv_{sp}} = \left( \LU{0s}{\Am} \LU{s}{\tomega_s} \right) \times \left( \LU{0}{\pv_{p}} - \LU{0}{\pv_{s,i}}  \right) 
+  + \LU{0}{\vv_{s,i}}
+\ee
+Here, $\LU{0}{\vv_{s,i}}$ is the sphere's velocity at the midpoint.
+The velocity of the rigid body (at which the triangle is attached) at the contact point reads
+\be
+  \LU{0}{\pv_{tp}} = \left( \LU{0r}{\Am} \LU{r}{\tomega_r} \right) \times \left( \LU{0}{\pv_{p}} - \LU{0}{\pv_r}  \right) 
+  + \LU{0}{\vv_{r}}
+\ee
+in which $\LU{0}{\vv_{r}}$ is the rigid body's velocity at the reference point and $\LU{0}{\pv_r}$ is the rigid body's reference point.
+
+From the latter two quantities, we are able to compute the penetration velocity
+\be
+  \dot \Delta = \LU{0}{\tdelta_{p0}\tp} \left( \LU{0}{\pv_{sp}} - \LU{0}{\pv_{tp}} \right)
+\ee
+The tangent velocity vector is then computed as 
+\be
+  \LU{0}{\tdelta_{vt}} = \left( \LU{0}{\pv_{sp}} - \LU{0}{\pv_{tp}} \right) - \dot \Delta \LU{0}{\tdelta_{p0}}
+\ee
+
+The friction model follows again \eq{eq_GeneralContactRegularizedFriction}, defining the friction force $\LU{0}{\fv_f}(v_t, |f_c|, \mu_s, v_{\mu,reg}, v_t, \LU{0}{\vv_t} )$, and resulting in the contact force
+\be
+  \LU{0}{\fv_c} = f_c \cdot \LU{0}{\tdelta_{p0}} + \LU{0}{\fv_f}
+  \eqDot
+\ee
+The torque due to friction for sphere marker $i$ and for triangle $j$ rigid body results into\footnote{note that both signs are the same and that $\LU{0}{\fv_f}$ could be replaced by $\LU{0}{\fv_c}$}
+\be
+  %implemented: \LU{0}{\ttau_{f,i}} = (-r_i \cdot LU{0}{\tdelta_{p0}}) \times \LU{0}{\fv_f}, \quad
+  \LU{0}{\ttau_{f,i}} = \LU{0}{\tdelta_p} \times \LU{0}{\fv_f}, \quad
+  \LU{0}{\ttau_{f,j}} = \left(  \LU{0}{\pv_{p}} - \LU{0}{\pv_r} \right) \times \LU{0}{\fv_f}
+  \eqDot
+\ee
+Jacobians for the derivative of contact forces w.r.t.\ marker positions and rotations only include the main dependencies of normal and tangential forces.
+
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %

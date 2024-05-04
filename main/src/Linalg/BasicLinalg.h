@@ -658,8 +658,8 @@ namespace EXUmath {
 	class Triplet
 	{
 	public:
-		//Triplet() : m_row(0), m_col(0), m_value(0) {}
-		Triplet() {}
+		Triplet() : m_row(0), m_col(0), m_value(0) {} //2024-03-17 as it raised warnings
+		//Triplet() {} 
 
 		Triplet(const Index& row, const Index& col, const Real& value = 0) : m_row(row), m_col(col), m_value(value) {}
 
@@ -718,7 +718,7 @@ namespace EXUmath {
 		Index numberOfColumns;
 	public:
 		SparseTripletMatrix() : numberOfRows(0), numberOfColumns(0) {}
-		SparseTripletMatrix(Index numberOfRowsInit, Index numberOfColumnsInit, const ResizableArray<Triplet>& sparseTripletsInit)
+		SparseTripletMatrix(Index numberOfRowsInit, Index numberOfColumnsInit, const ResizableArray<Triplet>& sparseTripletsInit) : numberOfRows(0), numberOfColumns(0)
 		{
 			for (const Triplet& triplet : sparseTripletsInit)
 			{
@@ -937,7 +937,7 @@ namespace EXUmath {
 	class IndexValue
 	{
 	public:
-		IndexValue() {}
+		IndexValue() : m_index(0), m_value(0) {}
 
 		IndexValue(const Index& index, const Real& value = 0.) : m_index(index), m_value(value) {}
 

@@ -14,6 +14,7 @@ import exudyn as exu
 from exudyn.utilities import *
 
 import numpy as np
+import time
 
 useGraphics = True #without test
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

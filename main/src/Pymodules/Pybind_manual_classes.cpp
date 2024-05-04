@@ -306,6 +306,7 @@ void Init_Pybind_manual_classes(py::module& m) {
 		//+++++++++++++++++++++++++++++++++++++++++++
 		//.def_readwrite("useEigenFullPivotLUsolver", &Experimental::useEigenFullPivotLUsolver)//, "switch to special solver")
 		.def_readwrite("eigenFullPivotLUsolverDebugLevel", &PyExperimental::eigenFullPivotLUsolverDebugLevel)//, "debug level for solver")
+		.def_readwrite("markerSuperElementRigidTexpSO3", &PyExperimental::markerSuperElementRigidTexpSO3)//, "debug level for solver")
 
 		//representation:
 		.def("__repr__", [](const PyExperimental& item) {

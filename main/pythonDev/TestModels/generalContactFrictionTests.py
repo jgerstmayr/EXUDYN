@@ -55,7 +55,7 @@ t = 0.25*a #thickness
 mu = 0.8      #dry friction
 m = 0.025     #mass
 k = 1e3       #(linear) normal contact stiffness
-d = 1e-4*k  #(linear) contact damping
+d = 2*1e-4*k  #(linear) contact damping
 gFact = 10
 g = [0,0,-gFact]
 

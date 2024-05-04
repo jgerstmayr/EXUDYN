@@ -16,7 +16,6 @@
 
 import exudyn as exu
 from exudyn.utilities import *
-# from exudyn.signalProcessing import GetInterpolatedSignalValue
 
 import sys
 import numpy as np
@@ -31,6 +30,7 @@ doTraining = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #create an Exudyn model of a rigid body on two strings
+#this is a simple model for a 2D cable-driven robot
     
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -61,11 +61,12 @@ localPosMass1=[ 0.5*w,w,0]
 #center location of rigid body
 #pRigidMid = np.array([0.5*L, 0.5*H,0])
 pRigidMid = np.array([0.5*L, 0.5*H,0])
-# pInit = [1.2,0.78,0]
+
+# pInit = [1.2,0.78,0] #for testing
 pInit = pRigidMid
 
-k = 500     #string stiffness
-d = 0.01*k    #string damping for dynamic simulation
+k = 500         #string stiffness
+d = 0.01*k      #string damping for dynamic simulation
 tEnd = 1
 stepSize = 0.01
 
@@ -120,7 +121,8 @@ simulationSettings.staticSolver.stabilizerODE2term = 20       #add virtual stiff
 simulationSettings.staticSolver.computeLoadsJacobian = False #due to bug in loadsJacobian
 simulationSettings.staticSolver.verboseMode = 0
 
-if False:
+
+if False: #set to true to perform static/dynamic analysis and visualize results
     tEnd = 20 #for visualization of dynamic case
     simulationSettings.solutionSettings.sensorsWritePeriod = stepSize
     # simulationSettings.timeIntegration.simulateInRealtime = True
@@ -175,11 +177,14 @@ def ComputePositionFromStringLengths(p):
         return [None]
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++
-#now create data for desired positions
-gridX = 20*2
+#now create data: mapping of 2D position of object to difference of 
+#  ideal lengths to real lengths (which gives the necessary correction 
+#  for positioning)
+
+gridX = 20*2 # gridX * gridY is the number of samples for training
 gridY = 20*2
 nExamples = gridX*gridY
-nExamplesTest = int(nExamples*0.1)
+nExamplesTest = int(nExamples*0.1) # additional samples for testing
 pRangeX = 2.4
 pRangeY = 2.4
 positionList = []
@@ -224,9 +229,6 @@ while i < nExamples+nExamplesTest:
             print('lengths  =',L0,L1)
         
         i += 1    
-            
-    #else: do not increment and retry ...
-
     
 inputsExudynList = inputList[0:nExamples]
 targetsExudynList = targetList[0:nExamples]
@@ -235,7 +237,9 @@ targetsExudynTestList = targetList[nExamples:]
 
 print('created',nExamples+nExamplesTest,'samples')
 
-#%%
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++
+#function to 3D-plot errors and corrections
 def PlotGridFunction(data, name='error', closeAll=False):
     import numpy as np
     import matplotlib.pyplot as plt
@@ -265,8 +269,8 @@ def PlotGridFunction(data, name='error', closeAll=False):
     # Display the plot
     plt.show()
 
-PlotGridFunction(gridValues[:, :, 0], name='error X', closeAll=True)
-PlotGridFunction(gridValues[:, :, 1], name='error Y')
+PlotGridFunction(gridValues[:, :, 0], name='positioning error X', closeAll=True)
+PlotGridFunction(gridValues[:, :, 1], name='positioning error Y')
 
 
 if not doTraining:
@@ -277,6 +281,7 @@ if not doTraining:
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# MACHINE LEARNING: Model and training
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #now train
@@ -285,11 +290,11 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader, TensorDataset
 
-hiddenLayerSize = 8*4 # Example size, adjust as needed
+hiddenLayerSize = 8*4       #example size, adjust as needed
 batchSize = 16*8
 learningRate = 0.002
-nTrainingEpochs = 1000*10
-lossThreshold = 0.0002
+nTrainingEpochs = 10000     #max epochs
+lossThreshold = 0.0002      #desired max. loss
 
 # torch.set_num_threads(1)
 #prepare data:
@@ -309,43 +314,21 @@ test_dataset = TensorDataset(inputsExudynTest, targetsExudynTest)
 trainLoader = DataLoader(train_dataset, batch_size=batchSize, shuffle=True)
 testLoader = DataLoader(test_dataset, batch_size=batchSize, shuffle=False)
 
-class MultiplicativeLayer(nn.Module):
-    def __init__(self):
-        super(MultiplicativeLayer, self).__init__()
-        # You can also include parameters or learnable weights here if necessary
-
-    def forward(self, x):
-        # Assuming x is of shape [batch_size, num_features]
-        # We'll create new features by multiplying pairs of features
-        new_features = []
-        for i in range(x.size(1)):
-            for j in range(i + 1, x.size(1)):
-                new_features.append(x[:, i] * x[:, j])
-        
-        # Concatenate the original features with the new, multiplied features
-        if new_features:
-            new_features = torch.stack(new_features, dim=1)
-            x = torch.cat((x, new_features), dim=1)
-        return x
 
 class ModelNN(nn.Module):
     def __init__(self, input_size, hiddenLayerSize, output_size):
         super(ModelNN, self).__init__()
-        self.multiplicativeLayer = MultiplicativeLayer() 
-        # self.fc1 = nn.Linear(input_size + (input_size * (input_size - 1) // 2), 
-        #                       hiddenLayerSize,dtype=dtype)  # Adjusted input size
         self.fc1 = nn.Linear(input_size, hiddenLayerSize,dtype=dtype)
         self.relu = nn.ReLU()
         self.leakyRelu= nn.LeakyReLU()
         self.elu = nn.ELU()
-        # self.relu = nn.Sigmoid()
+        # self.relu = nn.Sigmoid() #alternatives
         # self.relu = nn.Tanh()
         self.fc2 = nn.Linear(hiddenLayerSize, hiddenLayerSize,dtype=dtype)
         self.fc3 = nn.Linear(hiddenLayerSize, hiddenLayerSize,dtype=dtype)
         self.lastLayer = nn.Linear(hiddenLayerSize, output_size,dtype=dtype)
 
     def forward(self, x):
-        # x = self.multiplicativeLayer(x) #not a great help
         x = self.fc1(x)
         x = self.relu(x)
         x = self.fc2(x)
@@ -365,7 +348,8 @@ lossFunction = nn.MSELoss()  # Mean Squared Error Loss for regression, adjust fo
 optimizer = optim.Adam(model.parameters(), lr=learningRate,)
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++
-#set up training
+#perform training and store loss over epochs
+#stop when lossThreshold reached
 
 lossHistory = []
 minLoss = 1e10
@@ -396,7 +380,7 @@ for epoch in range(nTrainingEpochs):  # 100 epochs
 print('min loss=',minLoss)
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#evaluate:
+#evaluate model using test data:
 model.eval()  # Set the model to evaluation mode
 totalLoss = 0
 count = 0
@@ -429,6 +413,8 @@ for test in range(10):
     #                labels=['reference'], yLabel='displacement (m)',
     #                colorCodeOffset=test,lineStyles=[':'])
 
+
+#compute 2D grid with error
 testErrorGrid = np.zeros((gridX, gridY))
 maxError = 0
 for iy in range(gridY):
@@ -450,15 +436,15 @@ for iy in range(gridY):
         testErrorGrid[ix,iy] = err[0]
 
 print('maxError', maxError)
-PlotGridFunction(testErrorGrid, name='test error X', closeAll=True)
-#PlotGridFunction(gridValues[:, :, 0], name='error X', closeAll=True)
+PlotGridFunction(testErrorGrid, name='test error X', closeAll=False)
 
 #%%+++++++++++++++    
-if False:
+if True: #plot loss history
     lossData = np.array(lossHistory)
     import matplotlib.pyplot as plt
     from exudyn.plot import PlotSensor
-    PlotSensor(None,lossData,components=[0], closeAll=True, logScaleY=True)
+    PlotSensor(None,lossData,components=[0], closeAll=False, logScaleY=True,
+               labels=['loss'])
 
 
 

@@ -27,6 +27,7 @@ def TestExamplesReferenceSolution():
         'carRollingDiscTest.py':-0.23940048717113782,
         'compareAbaqusAnsysRotorEigenfrequencies.py':0.0004185480476228555,
         'compareFullModifiedNewton.py':0.00020079676000188396,
+        'complexEigenvaluesTest.py':0.42816392078752413,            #new 2024-05-04 testing ComputeODE2Eigenvalues2 for complex case
         'computeODE2AEeigenvaluesTest.py': 0.38811732950413347,
         'computeODE2EigenvaluesTest.py':-2.749026293713541e-11,
         'connectorGravityTest.py': 1014867.2330320379,
@@ -42,7 +43,9 @@ def TestExamplesReferenceSolution():
         'explicitLieGroupIntegratorTest.py':0.16164013319819065,
         'fourBarMechanismTest.py':-2.376335780518213,
         'fourBarMechanismIftomm.py':0.1721665271840173,
-        'generalContactFrictionTests.py':12.464092000879125,        #new 2022-07-11 (CState Parallel); #before 2022-01-25 (changed some velocity computation in GeneralContact): 10.133183086232139, #changed GeneralContact and implicit solver; before 2022-01-18: 10.132106712933348 , 
+        'generalContactCylinderTest.py':12.246626442545603,         #new 2024-03-17 (spurious trig-sphere contact forces)
+        'generalContactCylinderTrigsTest.py':5.486908430912642,     #new 2024-03-17 (internal sphere-sphere contact)
+        'generalContactFrictionTests.py':12.027740342293988,        #new 2024-03-17 (doubled damping; fixed sphere-sphere and trig-sphere contact); old: 12.464092000879125,        #new 2022-07-11 (CState Parallel); #before 2022-01-25 (changed some velocity computation in GeneralContact): 10.133183086232139, #changed GeneralContact and implicit solver; before 2022-01-18: 10.132106712933348 , 
         'generalContactSpheresTest.py':-1.1138547720263323,         #new 2022-07-22 (parallel Lie group updates); new 2022-07-11 (CState Parallel); #before 2022-01-25(minor diff, due to round off errors in multithreading; now changed to 1 thread):-1.113854772026123, #changed GeneralContact and implicit solver; before 2022-01-18: -1.0947542400425323, #before 2021-12-02: -1.0947542400427703,
         'genericJointUserFunctionTest.py':1.1922383967562884,
         'genericODE2test.py':0.036045463499024655,                  #new 2022-07-11 (CState Parallel); #changed to some analytic Connector jacobians (CartSpringDamper), implicit solver(modified Newton restart, etc.); before 2022-01-18: 0.036045463498793825,
@@ -55,6 +58,7 @@ def TestExamplesReferenceSolution():
         'kinematicTreeAndMBStest.py':2.6388120463802767e-05,        #original but too sensitive to disturbances: 263.88120463802767,
         'kinematicTreeConstraintTest.py':1.8135975384620484 ,
         'kinematicTreeTest.py':-1.309383960216414,
+        'laserScannerTest.py':2.695064443768281 ,                   #new 2024-04-29
         'LShapeGeomExactBeam2D.py':-0.9181474511543884,             #new 2024-01-28
         'mainSystemExtensionsTests.py': 57.64639446941554,          #updated 2023-11-16; updated 2023-06-09; old: new 2023-05-19
         'manualExplicitIntegrator.py':2.059698629692295,
@@ -73,9 +77,10 @@ def TestExamplesReferenceSolution():
         'rigidBodyAsUserFunctionTest.py':8.950865271552148,
         'rigidBodyCOMtest.py':3.409431467726291,
         'rigidBodySpringDamperIntrinsic.py':0.5472368463500464,     #new 2023-11-30 (intrinsic formulation for rigid body spring damper)
-        'rollingCoinTest.py':0.0020040999273379673,
+        'rollingCoinTest.py':1.063438118935288,                     #until 2024-04-29 (without force): 0.0020040999273379673
+        'rollingDiscTangentialForces.py':1.0342017388721547,        #new 2024-05-04: RollingDiscPenalty: switch to local computation of tangential forces
         'rollingCoinPenaltyTest.py':0.03489603106689881,
-        'rotatingTableTest.py':7.838680371309492 ,
+        'rotatingTableTest.py':7.838680375029869,                   #until 2024-05-04 (before slight change in RollingDiscPenalty): 7.838680371309492
         'scissorPrismaticRevolute2D.py':27.20255648904422,          #new 2022-07-11 (CState Parallel); #added JacobianODE2, but example computed with numDiff forODE2connectors, 2022-01-18: 27.202556489044145,
         'sensorUserFunctionTest.py':45.0,            
         'serialRobotTest.py':0.7681856909852399,                    #until 2022-04-21: 0.7680031232063571 wrong static torque compensation

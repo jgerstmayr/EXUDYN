@@ -1174,7 +1174,11 @@ def ComputeSensitivities(parameterFunction, parameters, scaledByReference=False,
     values = ProcessParameterList(parameterFunction, parameterList, useMultiProcessing, 
                                   showProgress = showProgress, numberOfThreads=numberOfThreads,
                                   resultsFile = resultsFile, parameters=parameters)
-
+   
+    if not(hasattr(values[0], '__iter__')): 
+        # if sensitivity is only calculated regarding to one output, reshape
+        # calculated values in 2D array to support same indexing
+        values = np.reshape(values, [-1,1])
 
     # calculate sensitivity of the parameter by forward/central difference
     sensitivity = np.zeros([len(nVar), len(values[0])])
@@ -1273,18 +1277,20 @@ def PlotSensitivityResults(valRef, valuesSorted, sensitivity, fVar=None, strYAxi
     import matplotlib.pyplot as plt
     if strYAxis == None: 
         strYAxis = ['']*sensitivity.shape[1]
-    if fVar ==None: 
+    if fVar == None: 
         fVar = [1e-3] * sensitivity.shape[1]
     if type(fVar) != list: # if one scalar varaible is passed it is assumed it is the same for each parameter
         fVar = [fVar]*sensitivity.shape[1]
     # the rows of the sensitivity are the different outputparameters, while the columns are the input parameters
     n = []
     fig, axs = plt.subplots(sensitivity.shape[1]) 
+    if sensitivity.shape[1] == 1: 
+        axs = [axs] # enable indexing for loop also for a single value
     for i in range(sensitivity.shape[1]): # each type of values gets a subplot 
         for j in range(len(list(valuesSorted.keys()))): # iterate over the variated parameters/keys
             iKey = list(valuesSorted.keys())[j]
             n += [int(len(valuesSorted[iKey])/2)] # there are +- n variations = 2*2 in the list
-            iVar = np.linspace(-n[j]*fVar[j]*100, n[j]*fVar[j]*100, 2*n[j]+1) # variations 
+            iVar = np.linspace(-n[j]*fVar[i]*100, n[j]*fVar[i]*100, 2*n[j]+1) # variations 
             if len(iVar) != 1: 
                 iPlt = iVar # 2*n+1, contains the reference value
                 

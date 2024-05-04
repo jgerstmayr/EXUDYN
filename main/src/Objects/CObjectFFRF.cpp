@@ -636,9 +636,10 @@ Vector3D CObjectFFRF::GetAngularVelocityLocal(const Vector3D& localPosition, Con
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //! for definition see CObjectSuperElement
-void CObjectFFRF::GetAccessFunctionSuperElement(AccessFunctionType accessType, const Matrix& weightingMatrix, const ArrayIndex& meshNodeNumbers, const Vector3D& localOffset, Matrix& value) const
+void CObjectFFRF::GetAccessFunctionSuperElement(AccessFunctionType accessType, const Matrix& weightingMatrix, const ArrayIndex& meshNodeNumbers, 
+	const Vector3D& localOffset, Matrix& value, const Matrix3D& rotTangentCorrection) const
 {
-	CObjectSuperElement::GetAccessFunctionSuperElement(accessType, weightingMatrix, meshNodeNumbers, localOffset, value);
+	CObjectSuperElement::GetAccessFunctionSuperElement(accessType, weightingMatrix, meshNodeNumbers, localOffset, value, rotTangentCorrection);
 }
 
 //! get extended output variable types for multi-nodal objects with mesh nodes

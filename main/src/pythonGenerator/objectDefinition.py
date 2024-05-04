@@ -2067,7 +2067,7 @@ Fv,     C,      GetMeshNodeLocalPosition,       ,               ,       Vector3D
 Fv,     C,      GetMeshNodeLocalVelocity,       ,               ,       Vector3D,   ,                           "Index meshNodeNumber, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (local) velocity of a mesh node according to configuration type; meshNodeNumber is the local node number of the (underlying) mesh" 
 Fv,     C,      GetMeshNodePosition,            ,               ,       Vector3D,   ,                           "Index meshNodeNumber, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) position of a mesh node according to configuration type; this is the node position transformed by the motion of the reference frame; meshNodeNumber is the local node number of the (underlying) mesh"
 Fv,     C,      GetMeshNodeVelocity,            ,               ,       Vector3D,   ,                           "Index meshNodeNumber, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) velocity of a mesh node according to configuration type; this is the node position transformed by the motion of the reference frame; meshNodeNumber is the local node number of the (underlying) mesh" 
-Fv,     C,      GetAccessFunctionSuperElement,  ,               ,       void,       ,                           "AccessFunctionType accessType, const Matrix& weightingMatrix, const ArrayIndex& meshNodeNumbers, const Vector3D& localOffset, Matrix& value",          DC, "compute Jacobian with weightingMatrix (WM) and/or meshNodeNumbers, which define how the SuperElement mesh nodes or coordinates are transformed to a global position; for details see CObjectSuperElement header file" 
+Fv,     C,      GetAccessFunctionSuperElement,  ,               ,       void,       ,                           "AccessFunctionType accessType, const Matrix& weightingMatrix, const ArrayIndex& meshNodeNumbers, const Vector3D& localOffset, Matrix& value, const Matrix3D& rotTangentCorrection",          DC, "compute Jacobian with weightingMatrix (WM) and/or meshNodeNumbers, which define how the SuperElement mesh nodes or coordinates are transformed to a global position; for details see CObjectSuperElement header file" 
 Fv,     C,      GetOutputVariableTypesSuperElement,  ,          ,       OutputVariableType,       ,             "Index meshNodeNumber",          DC, "get extended output variable types for multi-nodal objects with mesh nodes; some objects have meshNode-dependent OutputVariableTypes" 
 Fv,     C,      GetOutputVariableSuperElement,  ,               ,       void,       ,                           "OutputVariableType variableType, Index meshNodeNumber, ConfigurationType configuration, Vector& value",          DC, "get extended output variables for multi-nodal objects with mesh nodes"
 #VISUALIZATION:
@@ -2230,7 +2230,7 @@ F,      C,      EvaluateUserFunctionRHS,        ,               ,       void,   
 # Fv,     C,      GetMeshNodeLocalVelocity,       ,               ,       Vector3D,   ,                           "Index meshNodeNumber, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (local) velocity of a mesh node according to configuration type; meshNodeNumber is the local node number of the (underlying) mesh" 
 # Fv,     C,      GetMeshNodePosition,            ,               ,       Vector3D,   ,                           "Index meshNodeNumber, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) position of a mesh node according to configuration type; this is the node position transformed by the motion of the reference frame; meshNodeNumber is the local node number of the (underlying) mesh"
 # Fv,     C,      GetMeshNodeVelocity,            ,               ,       Vector3D,   ,                           "Index meshNodeNumber, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) velocity of a mesh node according to configuration type; this is the node position transformed by the motion of the reference frame; meshNodeNumber is the local node number of the (underlying) mesh" 
-# Fv,     C,      GetAccessFunctionSuperElement,  ,               ,       void,       ,                           "AccessFunctionType accessType, const Matrix& weightingMatrix, const ArrayIndex& meshNodeNumbers, const Vector3D& localOffset, Matrix& value",          DC, "compute Jacobian with weightingMatrix (WM) and/or meshNodeNumbers, which define how the SuperElement mesh nodes or coordinates are transformed to a global position; for details see CObjectSuperElement header file" 
+# Fv,     C,      GetAccessFunctionSuperElement,  ,               ,       void,       ,                           "AccessFunctionType accessType, const Matrix& weightingMatrix, const ArrayIndex& meshNodeNumbers, const Vector3D& localOffset, Matrix& value, const Matrix3D& rotTangentCorrection",          DC, "compute Jacobian with weightingMatrix (WM) and/or meshNodeNumbers, which define how the SuperElement mesh nodes or coordinates are transformed to a global position; for details see CObjectSuperElement header file" 
 # Fv,     C,      GetOutputVariableTypesSuperElement,  ,          ,       OutputVariableType,       ,             "Index meshNodeNumber",          DC, "get extended output variable types for multi-nodal objects with mesh nodes; some objects have meshNode-dependent OutputVariableTypes" 
 # Fv,     C,      GetOutputVariableSuperElement,  ,               ,       void,       ,                           "OutputVariableType variableType, Index meshNodeNumber, ConfigurationType configuration, Vector& value",          DC, "get extended output variables for multi-nodal objects with mesh nodes"
 #VISUALIZATION:
@@ -2634,7 +2634,7 @@ Fv,     C,      GetNumberOfMeshNodes,           ,               ,       Index,  
 Fv,     C,      GetMeshNodePosition,            ,               ,       Vector3D,   ,                           "Index meshNodeNumber, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) position of a mesh node according to configuration type; this is the node position transformed by the motion of the reference frame; meshNodeNumber is the local node number of the (underlying) mesh"
 Fv,     C,      GetMeshNodeVelocity,            ,               ,       Vector3D,   ,                           "Index meshNodeNumber, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) velocity of a mesh node according to configuration type; this is the node position transformed by the motion of the reference frame; meshNodeNumber is the local node number of the (underlying) mesh" 
 #used, but throws:
-Fv,     C,      GetAccessFunctionSuperElement,  ,               ,       void,       ,                           "AccessFunctionType accessType, const Matrix& weightingMatrix, const ArrayIndex& meshNodeNumbers, const Vector3D& localOffset, Matrix& value",          DC, "compute Jacobian with weightingMatrix (WM) and/or meshNodeNumbers, which define how the SuperElement mesh nodes or coordinates are transformed to a global position; for details see CObjectSuperElement header file" 
+Fv,     C,      GetAccessFunctionSuperElement,  ,               ,       void,       ,                           "AccessFunctionType accessType, const Matrix& weightingMatrix, const ArrayIndex& meshNodeNumbers, const Vector3D& localOffset, Matrix& value, const Matrix3D& rotTangentCorrection",          DC, "compute Jacobian with weightingMatrix (WM) and/or meshNodeNumbers, which define how the SuperElement mesh nodes or coordinates are transformed to a global position; for details see CObjectSuperElement header file" 
 #used for KinematicTree instead
 Fv,     C,      GetOutputVariableTypesSuperElement,  ,          ,       OutputVariableType,       ,             "Index meshNodeNumber",          DC, "get extended output variable types for multi-nodal objects with mesh nodes; some objects have meshNode-dependent OutputVariableTypes" 
 #Fv,     C,      GetOutputVariableSuperElement,  ,               ,       void,       ,                           "OutputVariableType variableType, Index meshNodeNumber, ConfigurationType configuration, Vector& value",          DC, "get extended output variables for multi-nodal objects with mesh nodes"
@@ -2663,7 +2663,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = ObjectFFRF
-classDescription = "This object is used to represent equations modelled by the \hac{FFRF}. It contains a RigidBodyNode (always node 0) and a list of other nodes representing the finite element nodes used in the \hac{FFRF}. Note that temporary matrices and vectors are subject of change in future."
+classDescription = "This object is used to represent equations modelled by the \hac{FFRF}. It contains a RigidBodyNode (always node 0) and a list of other nodes representing the finite element nodes used in the \hac{FFRF}. Note that temporary matrices and vectors are subject of change in future. Usually you SHOULD NOT USE THIS OBJECT - use the much more efficient ObjectFFRFreducedOrder object with modal reduction instead."
 cParentClass = CObjectSuperElement
 mainParentClass = MainObjectBody
 visuParentClass = VisualizationObjectSuperElement
@@ -2975,7 +2975,7 @@ Fv,     C,      GetMeshNodeLocalAcceleration,   ,               ,       Vector3D
 Fv,     C,      GetMeshNodePosition,            ,               ,       Vector3D,   ,                           "Index meshNodeNumber, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) position of a mesh node according to configuration type; this is the node position transformed by the motion of the reference frame; meshNodeNumber is the local node number of the (underlying) mesh"
 Fv,     C,      GetMeshNodeVelocity,            ,               ,       Vector3D,   ,                           "Index meshNodeNumber, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) velocity of a mesh node according to configuration type; this is the node position transformed by the motion of the reference frame; meshNodeNumber is the local node number of the (underlying) mesh" 
 Fv,     C,      GetMeshNodeAcceleration,        ,               ,       Vector3D,   ,                           "Index meshNodeNumber, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) acceleration of a mesh node according to configuration type; this is the node position transformed by the motion of the reference frame; meshNodeNumber is the local node number of the (underlying) mesh" 
-Fv,     C,      GetAccessFunctionSuperElement,  ,               ,       void,       ,                           "AccessFunctionType accessType, const Matrix& weightingMatrix, const ArrayIndex& meshNodeNumbers, const Vector3D& localOffset, Matrix& value",          DC, "compute Jacobian with weightingMatrix (WM) and/or meshNodeNumbers, which define how the SuperElement mesh nodes or coordinates are transformed to a global position; for details see CObjectSuperElement header file" 
+Fv,     C,      GetAccessFunctionSuperElement,  ,               ,       void,       ,                           "AccessFunctionType accessType, const Matrix& weightingMatrix, const ArrayIndex& meshNodeNumbers, const Vector3D& localOffset, Matrix& value, const Matrix3D& rotTangentCorrection",          DC, "compute Jacobian with weightingMatrix (WM) and/or meshNodeNumbers, which define how the SuperElement mesh nodes or coordinates are transformed to a global position; for details see CObjectSuperElement header file" 
 Fv,     C,      GetOutputVariableTypesSuperElement,  ,          ,       OutputVariableType,       ,             "Index meshNodeNumber",          DC, "get extended output variable types for multi-nodal objects with mesh nodes; some objects have meshNode-dependent OutputVariableTypes" 
 Fv,     C,      GetOutputVariableSuperElement,  ,               ,       void,       ,                           "OutputVariableType variableType, Index meshNodeNumber, ConfigurationType configuration, Vector& value",          DC, "get extended output variables for multi-nodal objects with mesh nodes"
 #??decide, whether GenericMarker or Object computes special jacobian
@@ -3391,7 +3391,7 @@ Fv,     C,      GetMeshNodeLocalAcceleration,   ,               ,       Vector3D
 Fv,     C,      GetMeshNodePosition,            ,               ,       Vector3D,   ,                           "Index meshNodeNumber, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) position of a mesh node according to configuration type; this is the node position transformed by the motion of the reference frame; meshNodeNumber is the local node number of the (underlying) mesh"
 Fv,     C,      GetMeshNodeVelocity,            ,               ,       Vector3D,   ,                           "Index meshNodeNumber, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) velocity of a mesh node according to configuration type; this is the node position transformed by the motion of the reference frame; meshNodeNumber is the local node number of the (underlying) mesh" 
 Fv,     C,      GetMeshNodeAcceleration,        ,               ,       Vector3D,   ,                           "Index meshNodeNumber, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) acceleration of a mesh node according to configuration type; this is the node position transformed by the motion of the reference frame; meshNodeNumber is the local node number of the (underlying) mesh" 
-Fv,     C,      GetAccessFunctionSuperElement,  ,               ,       void,       ,                           "AccessFunctionType accessType, const Matrix& weightingMatrix, const ArrayIndex& meshNodeNumbers, const Vector3D& localOffset, Matrix& value",          DC, "compute Jacobian with weightingMatrix (WM) and/or meshNodeNumbers, which define how the SuperElement mesh nodes or coordinates are transformed to a global position; for details see CObjectSuperElement header file" 
+Fv,     C,      GetAccessFunctionSuperElement,  ,               ,       void,       ,                           "AccessFunctionType accessType, const Matrix& weightingMatrix, const ArrayIndex& meshNodeNumbers, const Vector3D& localOffset, Matrix& value, const Matrix3D& rotTangentCorrection",          DC, "compute Jacobian with weightingMatrix (WM) and/or meshNodeNumbers, which define how the SuperElement mesh nodes or coordinates are transformed to a global position; for details see CObjectSuperElement header file" 
 Fv,     C,      GetOutputVariableTypesSuperElement,  ,          ,       OutputVariableType,       ,             "Index meshNodeNumber",          DC, "get extended output variable types for multi-nodal objects with mesh nodes; some objects have meshNode-dependent OutputVariableTypes" 
 Fv,     C,      GetOutputVariableSuperElement,  ,               ,       void,       ,                           "OutputVariableType variableType, Index meshNodeNumber, ConfigurationType configuration, Vector& value",          DC, "get extended output variables for multi-nodal objects with mesh nodes"
 #??decide, whether GenericMarker or Object computes special jacobian
@@ -6583,68 +6583,43 @@ equations =
     $\qv_{m1}$, if these matrices are not empty matrices. 
     If one marker $k$ is a ground marker (node/object), the length of $\qv_{m,k}$ is zero and also the according matrices
     $\Xm_{m,k}$, $\Ym_{m,k}$  have zero size and will not be considered in the computation of the constraint equations.
-    
+
     %If the number of rows of $\Xm_{m0}$ plus the number of rows of $\Xm_{m1}$ is
     %larger than the total number of coordinates ( $\qv_{m0}$ and  $\qv_{m1}$), the algebraic equations are 
     %underdetermined and probably not solvable.
-    
+
     \mysubsubsubsection{Connector constraint equations}
-    If \texttt{activeConnector = True}, the index 3 algebraic equations
+    If \texttt{activeConnector = True} and no \texttt{constraintUserFunction} is defined, the index 3 algebraic equations
     \be
       \cv(\qv_{m0}, \qv_{m1}) = \Xm_{m1} \cdot \qv_{m1} 
       + \Ym_{m1} \cdot \qv^2_{m1} %quadratic terms have been excluded, as it could not be used for Euler Parameter constraints!
       - \Xm_{m0} \cdot\qv_{m0} 
-      -\Ym_{m0} \cdot\qv^2_{m0} 
+      - \Ym_{m0} \cdot\qv^2_{m0} 
       - \vv_\mathrm{off} = 0
     \ee
     Note that the squared coordinates are understood as $\qv^2_{m0} = [q^2_{0,m0}, \; q^2_{1,m0}, \; \ldots]\tp$, same for $\qv^2_{m1}$.
 
-    If the offsetUserFunction $\mathrm{UF}$ is defined, $\cv$ instead becomes ($t$ is current time)
-    \be
-      \cv(\qv_{m0}, \qv_{m1}) = \Xm_{m1} \cdot \qv_{m1} 
-      + \Ym_{m1} \cdot \qv^2_{m1} 
-      - \Xm_{m0} \cdot\qv_{m0} 
-      -\Ym_{m0} \cdot\qv^2_{m0} 
-      -  \mathrm{UF}(mbs, t,\vv_\mathrm{off}) = 0
-    \ee
-    The \texttt{activeConnector = True}, index 2 (velocity level) algebraic equation reads
+    The index 2 (velocity level) algebraic equation accordingly reads
     \be
       \dot \cv(\dot \qv_{m0}, \dot \qv_{m1}) = \Xm_{m1} \cdot \dot \qv_{m1} 
       + \Ym_{m1} \cdot \dot \qv^2_{m1} 
-        -\Xm_{m0} \cdot \dot \qv_{m0} 
+      - \Xm_{m0} \cdot \dot \qv_{m0} 
       - \Ym_{m0} \cdot \dot \qv^2_{m0} 
-        - \dv_\mathrm{off} = 0
+      - \dv_\mathrm{off} = 0
     \ee
-    The vector $dv$ in velocity level equations is zero, except if parameters.velocityLevel = True, then $\dv=\vv_\mathrm{off}$.
+    The vector $\dv$ in velocity level equations is zero, except if \texttt{parameters.velocityLevel = True}, then $\dv=\vv_\mathrm{off}$.
 
-    If velocity level constraints are active and the velocity level \texttt{offsetUserFunction\_t} $\mathrm{UF}_t$ is defined, 
-    $\dot \cv$ instead becomes ($t$ is current time)
-    \be
-      \dot \cv(\dot \qv_{m0}, \dot \qv_{m1}) = \Xm_{m1} \cdot \dot \qv_{m1} 
-      + \Ym_{m1} \cdot \dot \qv^2_{m1} 
-        -\Xm_{m0} \cdot \dot \qv_{m0} 
-      - \Ym_{m0} \cdot \dot \qv^2_{m0} 
-      - \mathrm{UF}_t(mbs, t,\vv_\mathrm{off}) = 0
-    \ee
-    Note that the index 2 equations are used, if the solver uses index 2 formulation OR if the flag parameters.velocityLevel = True (or both).
+    Note that the index 2 equations are used, if the solver uses index 2 formulation OR if the flag \texttt{parameters.velocityLevel = True} (or both).
+    However, the \texttt{constraintUserFunction} has to be chosen accordingly by the user, either as position or as velocity level.
     The user functions include dependency on time $t$, but this time dependency is not respected in the computation of initial accelerations. Therefore,
-    it is recommended that $\mathrm{UF}$ and $\mathrm{UF}_t$ does not include initial accelerations.
 
     If \texttt{activeConnector = False}, the (index 1) algebraic equation reads for ALL cases:
     \be
       \cv(\tlambda) = \tlambda = 0
     \ee
 
-    %The (internal) Jacobian $\Jm$ of \eq{eq_ObjectGenericODE2_EOM} (assuming $\fv$ to be constant!) reads
-    %\be
-    %  \Jm = f_{ODE2}   \left(\Km - \frac{\partial \fv_{user}(mbs, t, i_N,\qv,\dot \qv)}{\partial \qv}\right) + 
-    %        f_{ODE2_t} \left(\Dm - \frac{\partial \fv_{user}(mbs, t, i_N,\qv,\dot \qv)}{\partial \dot \qv} \right) + 
-    %\ee
-    %Chosing $f_{ODE2} = 1$ and $f_{ODE2_t}=0$ would immediately give the jacobian of position quantities.
-    
-    %If no \texttt{jacobianUserFunction} is specified, the jacobian is -- as with many objects in \codeName\ -- computed 
-    %by means of numerical differentiation.
-    %In case that a \texttt{jacobianUserFunction} is specified, it must represent the jacobian of the \ac{LHS} of \eq{eq_ObjectGenericODE2_EOM} 
+
+    If a \texttt{constraintUserFunction} is defined, it also requires an according \texttt{jacobianUserFunction} (and vice versa).
     %without $\Km$ and $\Dm$ (these matrices are added internally),
     %\be \label{eq_ObjectGenericODE2_Jac}
     %  \Jm_{user}(mbs, t, i_N, \qv, \dot \qv, f_{ODE2}, f_{ODE2_t}) =
@@ -6662,11 +6637,9 @@ equations =
     is called with \texttt{velocityLevel=False}.
     To define the number of algebraic equations, set \texttt{scalingMarker0} as a \texttt{numpy.zeros((nAE,1))} array with \texttt{nAE} being the number algebraic equations. 
     The returned vector of \texttt{constraintUserFunction} must have size \texttt{nAE}.
-    
+
     Note that itemNumber represents the index of the ObjectGenericODE2 object in mbs, which can be used to retrieve additional data from the object through
     \texttt{mbs.GetObjectParameter(itemNumber, ...)}, see the according description of \texttt{GetObjectParameter}.
-    %
-    %The function takes the time, coordinates q (without reference values) and coordinate velocities q\_t
     \startTable{arguments /  return}{type or size}{description}
       \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs to which object belongs to}
       \rowTable{\texttt{t}}{Real}{current time in mbs}
@@ -7015,7 +6988,7 @@ equations =
     \ee
     with the coefficients of the hull $a_i$. As a pre-Check for the contact two spheres are put into both ends of the object with the maximum radius and only if one of these is in contact. The contact point $^{\mathrm{b}}\pv_{\mathrm{m1,C}} $ is calculated relative to the bodies marker \texttt{m1} in the bodies local frame and transformed accordingly. 
     The contact point C can for be calculated convex bodies by matching the derivative of the polynomial $r(^bx)$ with the gradient of the contact plane, shown in \fig{fig:ObjectContactConvexRoll:sketch}, explained in detail in \cite{ManzlGerstmayr2021}. 
-    At the contact point a normal force $\fv_{\mathrm{N}} = \begin{bmatrix} 0 & 0 & \mathrm{f}_{\mathrm{N}} \end{bmatrix}^T$  with 
+    At the contact point a normal force $\fv_{\mathrm{N}} = [ 0 \; 0 \; \mathrm{f}_{\mathrm{N}} ]\tp$  with 
     \be
     \mathrm{f}_{\mathrm{N}} = \begin{cases}
     - (k_c \, z_{\mathrm{pen}} + d_c \,  \dot{z}_{\mathrm{pen}})  &\text{$z_{\mathrm{pen}}>0$} \\ % darstellen dämpfung 
@@ -7487,9 +7460,9 @@ equations =
     
     The basic algorithm in the \texttt{PostNewtonStep}, with all operations given for any segment $s_i$, can be summarized as follows:
     \bi
-      \item [I.] Evaluate gap per segment $g$ using \eq{ObjectContactFrictionCircleCable2D:gap} and store in data variable: 
+      \item[I.] Evaluate gap per segment $g$ using \eq{ObjectContactFrictionCircleCable2D:gap} and store in data variable: 
             $x_{gap} = g$
-      \item [II.] If $x_{gap} < 0$ and ($\mu_v \neq 0$ or  $\mu_k \neq 0$):
+      \item[II.] If $x_{gap} < 0$ and ($\mu_v \neq 0$ or  $\mu_k \neq 0$):
       \bn
         \item Compute contact force $f_n$ according to \eq{ObjectContactFrictionCircleCable2D:contactForce}
         \item Compute current sticking position $x_{curStick}$ according to \eq{ObjectContactFrictionCircleCable2D:lastCurStick}\footnote{terms are only evaluated if $\mu_k \neq 0$}
@@ -7521,8 +7494,8 @@ equations =
         \item In the case of sticking, given by $|f_t^{(lin)}| \le \mu \cdot |f_n|$: Set $x_{isSlipStick} = 0$ and, 
         if $x^{startOfStep}_{isSlipStick} = -2$ (undefined), we update $x_{lastStick} = x_{curStick}$, while otherwise, $x_{lastStick}$ is unchanged.
       \en
-      \item [III. ] If $x_{gap} > 0$ or ($\mu_v == 0$ and $\mu_k == 0$), we set $x_{isSlipStick} = -2$ (undefined); this means that in the next step (if this step is accepted), there is no stored sticking position.
-      \item [IV.] Compute an error $\varepsilon_{PNS} = \varepsilon^n_{PNS}+\varepsilon^t_{PNS}$,
+      \item[III. ] If $x_{gap} > 0$ or ($\mu_v == 0$ and $\mu_k == 0$), we set $x_{isSlipStick} = -2$ (undefined); this means that in the next step (if this step is accepted), there is no stored sticking position.
+      \item[IV.] Compute an error $\varepsilon_{PNS} = \varepsilon^n_{PNS}+\varepsilon^t_{PNS}$,
                   with physical units forces (per segment point), for \texttt{PostNewtonStep}:
       \bn
         \item if gap $x_{gap,lastPNS}$ of previous \texttt{PostNewtonStep} had different sign to current gap, set
@@ -7551,18 +7524,18 @@ equations =
       \item[I.] Compute contact force $f_n$, \eq{ObjectContactFrictionCircleCable2D:contactForce}.
       \item[II.] In case of sticking ($|x_{isSlipStick}|\neq 1$):
       \bi
-        \item [II.1] the current sticking position $x_{curStick}$ is computed from \eq{ObjectContactFrictionCircleCable2D:lastCurStick}, and the difference of current and last sticking position reads\footnote{see the difference to the \texttt{PostNewtonStep}: we use $x_{lastStick}$ here, not the \texttt{startOfStep} variant.}:
+        \item[II.1] the current sticking position $x_{curStick}$ is computed from \eq{ObjectContactFrictionCircleCable2D:lastCurStick}, and the difference of current and last sticking position reads\footnote{see the difference to the \texttt{PostNewtonStep}: we use $x_{lastStick}$ here, not the \texttt{startOfStep} variant.}:
         \be
           \Delta x^*_{stick} = x_{curStick} - x_{lastStick}, \quad
           \Delta x_{stick} = x^*_{stick} - \mathrm{floor}\left(\frac{\Delta x^*_{stick} }{2 \pi \cdot r} + \frac{1}{2}\right) \cdot 2 \pi \cdot r
         \ee
-        \item [II.2] if the friction stiffness is $\mu_k==0$ or if $x_{isSlipStick} == -2$, we set $\Delta x_{stick}=0$
-        \item [II.3] using the tangential velocity from \eq{ObjectContactFrictionCircleCable2D:vTangent}, the tangent force follows as (even if it is larger than the sticking limit)
+        \item[II.2] if the friction stiffness is $\mu_k==0$ or if $x_{isSlipStick} == -2$, we set $\Delta x_{stick}=0$
+        \item[II.3] using the tangential velocity from \eq{ObjectContactFrictionCircleCable2D:vTangent}, the tangent force follows as (even if it is larger than the sticking limit)
         \be
           f_t = \mu_v \cdot v_t + \mu_k \Delta x_{stick}
         \ee
     \ei
-      \item [III.] In case of slipping ($|x_{isSlipStick}|=1$), the tangential firction force is set  as\footnote{see again difference to \texttt{PostNewtonStep}!},
+      \item[III.] In case of slipping ($|x_{isSlipStick}|=1$), the tangential firction force is set  as\footnote{see again difference to \texttt{PostNewtonStep}!},
       \be
       f_t = \mu \cdot |f_n| \cdot x_{isSlipStick}, \quad \mathrm{else}
       \ee 
@@ -8292,7 +8265,7 @@ equations =
     \rowTable{lateral vector}{$\LU{0}{\wv_{lat}} = \LU{0}{\vv_{PN}} \times \LU{0}{\wv}_2$}{vector in lateral direction, parallel to ground plane}
     \rowTable{contact point vector}{$\LU{0}{\wv_3}$}{normalized vector from disc center point in direction of contact point C}
     \rowTable{$D1$ transformation matrix}{$\LU{0,D1}{\Am} = [\LU{0}{\wv_1},\, \LU{0}{\wv_2},\, \LU{0}{\wv_3}]$}{transformation of special disc coordinates $D1$ to global coordinates}
-    %\rowTable{$J1$ transformation matrix}{$\LU{0,J1}{\Am} = [\LU{0}{\wv_{lat}},\, \LU{0}{\wv}_2,\, \LU{0}{\vv_{PN}}]$}{transformation of special joint $J1$ coordinates to global coordinates}
+    \rowTable{$J1$ transformation matrix}{$\LU{0,J1}{\Am} = [\LU{0}{\wv_{lat}},\, \LU{0}{\wv}_2,\, \LU{0}{\vv_{PN}}]$}{transformation of special joint $J1$ coordinates to global coordinates}
     %
     \rowTable{algebraic variables}{$\zv=[\lambda_0,\,\lambda_1,\,\lambda_2]\tp$}{vector of algebraic variables (Lagrange multipliers) according to the algebraic equations}
     \finishTable
@@ -8337,20 +8310,18 @@ equations =
     \ee
     %
     \mysubsubsubsection{Connector constraint equations}
-    \noindent \texttt{activeConnector = True}:\\
+    \noindent Constraints for \texttt{activeConnector = True}:\\
     %
     The non-holonomic, index 2 constraints for the tangential and normal contact follow from (an index 3 formulation would be possible, but is not implemented yet because of mixing different jacobians)
     \be
-      \vr{\LU{0}{\vv}_{Cm1,x}}{\LU{0}{\vv}_{Cm1,y}}{\LU{0}{\vv}_{Cm1,z}} - \vr{\LU{0}{\vv}_{Cm0,x}}{\LU{0}{\vv}_{Cm0,y}}{\LU{0}{\vv}_{Cm0,z}}= \Null
+      \LU{J1,0}{\Am} \left(\vr{\LU{0}{\vv}_{Cm1,x}}{\LU{0}{\vv}_{Cm1,y}}{\LU{0}{\vv}_{Cm1,z}} - \vr{\LU{0}{\vv}_{Cm0,x}}{\LU{0}{\vv}_{Cm0,y}}{\LU{0}{\vv}_{Cm0,z}} \right) = \Null
     \ee
-    %In the index 2 (velocity level) case, the constraint for the normal direction reads
-    %\be
-    %  \LU{0}{\vv}_{C,z} = 0
-    %\ee
-    \noindent \texttt{activeConnector = False}:\\
+    \noindent In case that \texttt{activeConnector = False}, the Lagrange multipliers are set to zero:
     \be
       \zv = \Null
     \ee
+    Note that since version 1.8.27 the constraints can be turned on/off separately with \texttt{constrainedAxes=[b0,b1,b2]}, in which
+    \texttt{b0} represents the flag for lateral motion, \texttt{b1} switches the constraint for forward motion and \texttt{b2} for motion in plane normal direction.
     %%RSTCOMPATIBLE
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -8358,7 +8329,7 @@ equations =
 #CObjectMarkerBodyPosition* automatically inserted!
 Vp,     M,      name,                           ,               ,       String,     "",                         ,       I,      "constraints's unique name"
 V,      CP,     markerNumbers,                  ,               2,      ArrayMarkerIndex, "ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex })", ,       I,      "$[m0,m1]\tp$list of markers used in connector; $m0$ represents the ground and $m1$ represents the rolling body, which has its reference point (=local position [0,0,0]) at the disc center point"
-V,      CP,     constrainedAxes,                ,               3,      ArrayIndex, "ArrayIndex({1,1,1})",      ,       IO,     "$\jv=[j_0,\,\ldots,\,j_2]$flag, which determines which constraints are active, in which $j_0,j_1$ represent the tangential motion and $j_2$ represents the normal (contact) direction; currently the constraints are given in global coordinates, but will be changed into local $J1$ coordinates in future"
+V,      CP,     constrainedAxes,                ,               3,      ArrayIndex, "ArrayIndex({1,1,1})",      ,       IO,     "$\jv=[j_0,\,\ldots,\,j_2]$flag, which determines which constraints are active, in which $j_0,j_1$ represent the tangential motion and $j_2$ represents the normal (contact) direction"
 V,      CP,     activeConnector,                ,               ,       Bool,       "true",                     ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint"
 V,      CP,     discRadius,                     ,               ,       PReal,      "0",                        ,       I,      "defines the disc radius"
 V,      CP,     discAxis,                       ,               ,       Vector3D,   "Vector3D({1,0,0})",        ,       IO,     "$\LU{m1}{\wv_{1}}, \;\; |\LU{m1}{\wv_{1}}| = 1$axis of disc defined in marker $m1$ frame"

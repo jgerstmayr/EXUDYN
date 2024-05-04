@@ -210,8 +210,13 @@ void CObjectKinematicTree::ComputeTreeTransformations(ConfigurationType configur
 	//GetNegativeGravity6D(negGravity6D);
 
 	LinkedDataVector q(GetCNode(0)->GetCoordinateVector(configuration));
-	LinkedDataVector q_t(((CNodeODE2*)GetCNode(0))->GetCoordinateVector_t(configuration));
-	LinkedDataVector q_tt(((CNodeODE2*)GetCNode(0))->GetCoordinateVector_tt(configuration));
+	LinkedDataVector q_t;
+	LinkedDataVector q_tt;
+	if (computeVelocitiesAccelerations)
+	{
+		q_t.LinkDataTo(((CNodeODE2*)GetCNode(0))->GetCoordinateVector_t(configuration));
+		q_tt.LinkDataTo(((CNodeODE2*)GetCNode(0))->GetCoordinateVector_tt(configuration));
+	}
 	LinkedDataVector qRef(GetCNode(0)->GetReferenceCoordinateVector());
 
 	Vector6D MS; //motion subspace
@@ -716,7 +721,8 @@ void CObjectKinematicTree::GetAccessFunctionBody(AccessFunctionType accessType, 
 
 
 //! just make sure that this overwritten function is not called!
-void CObjectKinematicTree::GetAccessFunctionSuperElement(AccessFunctionType accessType, const Matrix& weightingMatrix, const ArrayIndex& meshNodeNumbers, const Vector3D& localOffset, Matrix& value) const
+void CObjectKinematicTree::GetAccessFunctionSuperElement(AccessFunctionType accessType, const Matrix& weightingMatrix, const ArrayIndex& meshNodeNumbers, 
+	const Vector3D& localOffset, Matrix& value, const Matrix3D& rotTangentCorrection) const
 {
 	CHECKandTHROWstring("CObjectKinematicTree::GetAccessFunctionSuperElement: Function called without intention; use MarkerKinematicTree instead of MarkerSuperElement");
 }

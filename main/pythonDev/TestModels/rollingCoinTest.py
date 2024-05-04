@@ -77,6 +77,10 @@ oRolling=mbs.AddObject(ObjectJointRollingDisc(markerNumbers=[markerGround, marke
                                               constrainedAxes=[1,1,1], discRadius=r,
                                               visualization=VObjectJointRollingDisc(discWidth=w,color=color4blue)))
 
+sForce=mbs.AddSensor(SensorObject(objectNumber=oRolling, storeInternal=True,#fileName='solution/rollingDiscTrail.txt', 
+                                  outputVariableType = exu.OutputVariableType.ForceLocal))
+
+
 
 #sensor for trace of contact point:
 if useGraphics:
@@ -102,8 +106,9 @@ simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
 #simulationSettings.solutionSettings.solutionWritePeriod = 0.01
 simulationSettings.solutionSettings.sensorsWritePeriod = 0.0005
-#simulationSettings.timeIntegration.verboseMode = 1
 simulationSettings.solutionSettings.writeSolutionToFile = False
+simulationSettings.timeIntegration.verboseMode = 1
+# simulationSettings.displayStatistics = True
 
 simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
 simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
@@ -123,10 +128,14 @@ if useGraphics:
 mbs.SolveDynamic(simulationSettings)
 
 p0=mbs.GetObjectOutput(oRolling, exu.OutputVariableType.Position)
-exu.Print('solution of rollingCoinTest=',p0[0]) #use x-coordinate
+force=mbs.GetSensorValues(sForce)
+exu.Print('force in rollingCoinTest=',force) #use x-coordinate
 
-exudynTestGlobals.testError = p0[0] - (0.002004099927340136) #2020-06-20: 0.002004099927340136; 2020-06-19: 0.002004099760845168 #4s looks visually similar to Rill, but not exactly ...
-exudynTestGlobals.testResult = p0[0]
+u = p0[0] + 0.1*(force[0]+force[1]+force[2])
+exu.Print('solution of rollingCoinTest=',u) #use x-coordinate
+
+exudynTestGlobals.testError = u - (1.0634381189385853) #2024-04-29: added force #2020-06-20: 0.002004099927340136; 2020-06-19: 0.002004099760845168 #4s looks visually similar to Rill, but not exactly ...
+exudynTestGlobals.testResult = u
 
 
 if useGraphics:

@@ -29,7 +29,7 @@ except:
         pass
     exudynTestGlobals = ExudynTestGlobals()
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-useGraphics=True
+#useGraphics=False
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -147,29 +147,31 @@ ngc = mbs.CreateDistanceSensorGeometry(meshPoints, meshTrigs, rigidBodyMarkerInd
 
 maxDistance = 100 #max. distance of sensors; just large enough to reach everything; take care, in zoom all it will show this large area
 
-AddLidar(mbs, generalContactIndex=ngc, positionOrMarker=markerCar2, minDistance=0, maxDistance=maxDistance, 
-          numberOfSensors=100,angleStart=0, angleEnd=1.5*pi, inclination=0,
+#note that lidar sensors seem to be drawn wrong in the initialization; however, this is because the initial distance
+#  is zero which means that the sensor is drawn into the negative direction during initialization!!!
+sLidar = AddLidar(mbs, generalContactIndex=ngc, positionOrMarker=markerCar2, minDistance=0, maxDistance=maxDistance, 
+          numberOfSensors=100,angleStart=1.*pi, angleEnd=2.5*pi, inclination=0,
           lineLength=1, storeInternal=True, color=color4lawngreen )
 
 AddLidar(mbs, generalContactIndex=ngc, positionOrMarker=markerCar2, minDistance=0, maxDistance=maxDistance, 
-          numberOfSensors=100,angleStart=0, angleEnd=1.5*pi, inclination=-4/180*pi,
+          numberOfSensors=100,angleStart=1.*pi, angleEnd=2.5*pi, inclination=-4/180*pi,
+          lineLength=1, storeInternal=True, color=color4grey )
+
+sLidarInc = AddLidar(mbs, generalContactIndex=ngc, positionOrMarker=markerCar2, minDistance=0, maxDistance=maxDistance, 
+          numberOfSensors=100,angleStart=1.*pi, angleEnd=2.5*pi, inclination= 4/180*pi,
           lineLength=1, storeInternal=True, color=color4grey )
 
 AddLidar(mbs, generalContactIndex=ngc, positionOrMarker=markerCar2, minDistance=0, maxDistance=maxDistance, 
-          numberOfSensors=100,angleStart=0, angleEnd=1.5*pi, inclination= 4/180*pi,
+          numberOfSensors=100,angleStart=1.*pi, angleEnd=2.5*pi, inclination= 8/180*pi,
           lineLength=1, storeInternal=True, color=color4grey )
 
 AddLidar(mbs, generalContactIndex=ngc, positionOrMarker=markerCar2, minDistance=0, maxDistance=maxDistance, 
-          numberOfSensors=100,angleStart=0, angleEnd=1.5*pi, inclination= 8/180*pi,
-          lineLength=1, storeInternal=True, color=color4grey )
-
-AddLidar(mbs, generalContactIndex=ngc, positionOrMarker=markerCar2, minDistance=0, maxDistance=maxDistance, 
-          numberOfSensors=100,angleStart=0, angleEnd=1.5*pi, inclination=12/180*pi,
+          numberOfSensors=100,angleStart=1.*pi, angleEnd=2.5*pi, inclination=12/180*pi,
           lineLength=1, storeInternal=True, color=color4grey )
 
 AddLidar(mbs, generalContactIndex=ngc, positionOrMarker=markerCar1, minDistance=0, maxDistance=maxDistance, 
-          numberOfSensors=100,angleStart=-pi, angleEnd=1.5*pi-pi,
-          lineLength=1, storeInternal=True, color=color4red )
+          numberOfSensors=100,angleStart=0*pi, angleEnd=1.5*pi,
+          lineLength=1, storeInternal=True, color=color4red) #, rotation=RotationMatrixX(2/180*pi))
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -385,7 +387,7 @@ SC.visualizationSettings.openGL.lineWidth = 2
 SC.visualizationSettings.openGL.shadow = 0.3
 SC.visualizationSettings.openGL.multiSampling = 4
 SC.visualizationSettings.openGL.perspective = 0.7
-
+# useGraphics=True
 #create animation:
 if useGraphics:
     SC.visualizationSettings.window.renderWindowSize=[1920,1080]
@@ -403,10 +405,16 @@ if useGraphics:
 mbs.SolveDynamic(simulationSettings)
 
 p0=mbs.GetObjectOutputBody(bCar, exu.OutputVariableType.Position, localPosition=[0,0,0])
-exu.Print('solution of mecanumWheelRollingDiscTest=',p0[0]) #use x-coordinate
 
-exudynTestGlobals.testError = p0[0] - (0.2714267238324345) #2020-06-20: 0.2714267238324345
-exudynTestGlobals.testResult = p0[0]
+u = 0+p0[0]
+for s in sLidar+sLidarInc: 
+    u += mbs.GetSensorValues(s)
+
+u/=len(sLidar+sLidarInc)*10
+
+exu.Print('solution of mecanumWheelRollingDiscTest=',u)
+exudynTestGlobals.testError = u - (0.27142672383243405) #2020-06-20: 0.2714267238324345
+exudynTestGlobals.testResult = u
 
 
 if useGraphics:

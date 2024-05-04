@@ -23,6 +23,13 @@ You can view and download this file on Github: `openAIgymNLinkContinuous.py <htt
    #
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    
+   #NOTE: this model is using the stable-baselines3 version 1.7.0, which requires:
+   #pip install exudyn
+   #pip install pip install wheel==0.38.4 setuptools==66.0.0
+   #      => this downgrades setuptools to be able to install gym==0.21
+   #pip install stable-baselines3==1.7.0
+   #tested within a virtual environment: conda create -n venvP311 python=3.11 scipy matplotlib tqdm spyder-kernels=2.5 ipykernel psutil -y
+   
    # import sys
    # sys.exudynFast = True #this variable is used to signal to load the fast exudyn module
    
@@ -357,7 +364,8 @@ You can view and download this file on Github: `openAIgymNLinkContinuous.py <htt
            model.save("solution/" + modelName)
        else:
            import torch #stable-baselines3 is based on pytorch
-           n_cores= max(1,int(os.cpu_count()/2-1)) #should be number of real cores (not threads)
+           n_cores= max(1,int(os.cpu_count()/2)) #n_cores should be number of real cores (not threads)
+           n_cores = 14
            torch.set_num_threads(n_cores) #seems to be ideal to match the size of subprocVecEnv
            
            print('using',n_cores,'cores')

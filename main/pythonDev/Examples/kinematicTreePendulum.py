@@ -68,8 +68,8 @@ newRobot.referenceConfiguration[0] = -(2*pi/360) * 90 #-0.5*pi
 dKT = newRobot.CreateKinematicTree(mbs)
 oKT = dKT['objectKinematicTree']
 
-sCoords=mbs.AddSensor(SensorObject(objectNumber=oKT, storeInternal=True,
-                                 outputVariableType=exu.OutputVariableType.Coordinates))
+sCoords=mbs.AddSensor(SensorBody(bodyNumber=oKT, storeInternal=True,
+                    outputVariableType=exu.OutputVariableType.Coordinates))
 
 mbs.Assemble()
 

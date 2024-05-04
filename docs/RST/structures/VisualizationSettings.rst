@@ -571,7 +571,7 @@ VSettingsWindow has the following items:
   | True: ignore keyboard input except escape and 'F2' keys; used for interactive mode, e.g., to perform kinematic analysis; This flag can be switched with key 'F2'
 * | **keyPressUserFunction** [type = KeyPressUserFunction, default = 0]:
   | \ ``SC.visualizationSettings.window.keyPressUserFunction``\ 
-  | add a Python function f(key, action, mods) here, which is called every time a key is pressed; function shall return true, if key has been processed; Example:  def f(key, action, mods): \phantomXXX print('key=',key); use chr(key) to convert key codes [32 ...96] to ascii; special key codes (>256) are provided in the exudyn.KeyCode enumeration type; key action needs to be checked (0=released, 1=pressed, 2=repeated); mods provide information (binary) for SHIFT (1), CTRL (2), ALT (4), Super keys (8), CAPSLOCK (16)
+  | add a Python function f(key, action, mods) here, which is called every time a key is pressed; function shall return true, if key has been processed; Example:  def f(key, action, mods): \phantom{XXX} print('key=',key); use chr(key) to convert key codes [32 ...96] to ascii; special key codes (>256) are provided in the exudyn.KeyCode enumeration type; key action needs to be checked (0=released, 1=pressed, 2=repeated); mods provide information (binary) for SHIFT (1), CTRL (2), ALT (4), Super keys (8), CAPSLOCK (16)
 * | **limitWindowToScreenSize** [type = bool, default = True]:
   | \ ``SC.visualizationSettings.window.limitWindowToScreenSize``\ 
   | True: render window size is limited to screen size; False: larger window sizes (e.g. for rendering) allowed according to renderWindowSize

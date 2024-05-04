@@ -22,6 +22,7 @@ This section includes all TestModels for Exudyn.They can also be found and downl
    TestModels/carRollingDiscTest
    TestModels/compareAbaqusAnsysRotorEigenfrequencies
    TestModels/compareFullModifiedNewton
+   TestModels/complexEigenvaluesTest
    TestModels/computeODE2AEeigenvaluesTest
    TestModels/computeODE2EigenvaluesTest
    TestModels/connectorGravityTest
@@ -37,6 +38,8 @@ This section includes all TestModels for Exudyn.They can also be found and downl
    TestModels/explicitLieGroupIntegratorTest
    TestModels/fourBarMechanismTest
    TestModels/fourBarMechanismIftomm
+   TestModels/generalContactCylinderTest
+   TestModels/generalContactCylinderTrigsTest
    TestModels/generalContactFrictionTests
    TestModels/generalContactSpheresTest
    TestModels/genericJointUserFunctionTest
@@ -50,6 +53,7 @@ This section includes all TestModels for Exudyn.They can also be found and downl
    TestModels/kinematicTreeAndMBStest
    TestModels/kinematicTreeConstraintTest
    TestModels/kinematicTreeTest
+   TestModels/laserScannerTest
    TestModels/LShapeGeomExactBeam2D
    TestModels/mainSystemExtensionsTests
    TestModels/manualExplicitIntegrator
@@ -69,6 +73,7 @@ This section includes all TestModels for Exudyn.They can also be found and downl
    TestModels/rigidBodyCOMtest
    TestModels/rigidBodySpringDamperIntrinsic
    TestModels/rollingCoinTest
+   TestModels/rollingDiscTangentialForces
    TestModels/rollingCoinPenaltyTest
    TestModels/rotatingTableTest
    TestModels/scissorPrismaticRevolute2D

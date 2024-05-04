@@ -531,7 +531,9 @@ def WriteFunctionDescription2LatexRST(functionDict, moduleNamePython, pythonFile
     #github link:
     url = 'https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/'+pythonFileName +lineNumberStr
 
-    #if not createPyiFile:
+
+    functionNameClean = functionName.replace('\\_','_')
+
     if True:
         sLatex += '\\begin{flushleft}\n'
         sLatex += '\\noindent '+addStr+'{def {\\bf \exuUrl{'+url
@@ -547,7 +549,7 @@ def WriteFunctionDescription2LatexRST(functionDict, moduleNamePython, pythonFile
             sLabel += moduleNamePython 
         else:
             sLabel += 'mainsystemextensions'
-        sLabel += ':' + classLabelStr + functionName.replace('\\_','_')
+        sLabel += ':' + classLabelStr + functionNameClean
         
         if not redirectBelongsTo:
             sLatex += '\\label{'+sLabel+'}\n'
@@ -556,21 +558,21 @@ def WriteFunctionDescription2LatexRST(functionDict, moduleNamePython, pythonFile
 
     #see also https://github.com/sphinx-doc/sphinx/issues/3921
     if isClassFunction:
-        title = 'Class function: '+functionName
+        title = 'Class function: '+functionNameClean
         sRST += title + '\n'
         sRST += '^'*len(title) + '\n'        
     else:
-        title = 'Function: '+functionName
+        title = 'Function: '+functionNameClean
         sRST += title + '\n'
         sRST += '^'*len(title) + '\n'    
     if True: #not createPyiFile:
-        sRST += RSTurl(functionName, url, False) + '_\\ (' #add another _ to make url anonymous (otherwise warning, as function name my be duplicated)
+        sRST += RSTurl(functionNameClean, url, False) + '_\\ (' #add another _ to make url anonymous (otherwise warning, as function name my be duplicated)
     else:
-        sRST += '\\ **'+functionName+'**\\ ('
+        sRST += '\\ **'+functionNameClean+'**\\ ('
 
     if createPyiFile:
         sPyi += ' '*4+'@overload\n'
-        sPyi += ' '*4+'def '+functionName+'('
+        sPyi += ' '*4+'def '+functionNameClean+'('
 
 
     sLatex += '('
@@ -593,7 +595,7 @@ def WriteFunctionDescription2LatexRST(functionDict, moduleNamePython, pythonFile
                 modArg = argList[i]
                 for key, value in argListMBSconvert.items():
                     modArg = modArg.replace(key,value)
-                sAdd = sepPyi + modArg
+                sAdd = sepPyi + modArg.replace('\\_','_')
                 if len(argDefault[i]) != 0:
                     sAdd += '='+argDefault[i]
                 sepPyi = ', '

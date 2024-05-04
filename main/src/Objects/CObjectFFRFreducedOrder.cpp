@@ -740,7 +740,7 @@ Vector3D CObjectFFRFreducedOrder::GetMeshNodeCoordinates(Index nodeNumber, const
 
 //! for definition see CObjectSuperElement
 void CObjectFFRFreducedOrder::GetAccessFunctionSuperElement(AccessFunctionType accessType, const Matrix& weightingMatrix, 
-	const ArrayIndex& meshNodeNumbers, const Vector3D& localOffset, Matrix& value) const
+	const ArrayIndex& meshNodeNumbers, const Vector3D& localOffset, Matrix& value, const Matrix3D& rotTangentCorrection) const
 { 
 	bool useAlternativeApproach = false;
 	if (EXUstd::IsOfType(accessType, AccessFunctionType::SuperElementAlternativeRotationMode)) 
@@ -856,7 +856,7 @@ void CObjectFFRFreducedOrder::GetAccessFunctionSuperElement(AccessFunctionType a
 
 		if (useAlternativeApproach)
 		{
-			factorMatrix = factorMatrix.GetInverse();
+			factorMatrix = rotTangentCorrection * factorMatrix.GetInverse();
 		}
 		else
 		{

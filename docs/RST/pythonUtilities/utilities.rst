@@ -53,9 +53,9 @@ Function: HighlightItem
 
 .. _sec-utilities---ufsensordistance:
 
-Function: \_\_UFsensorDistance
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`\_\_UFsensorDistance <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L103>`__\ (\ ``mbs``\ , \ ``t``\ , \ ``sensorNumbers``\ , \ ``factors``\ , \ ``configuration``\ )
+Function: __UFsensorDistance
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`__UFsensorDistance <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L103>`__\ (\ ``mbs``\ , \ ``t``\ , \ ``sensorNumbers``\ , \ ``factors``\ , \ ``configuration``\ )
 
 - | \ *function description*\ :
   | internal function used for CreateDistanceSensor

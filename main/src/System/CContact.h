@@ -249,6 +249,7 @@ public:
 	Matrix frictionPairings;						//!< contains pairing coefficients between two materials; if rows=columns=1, it only uses one pairing for all materials
 
 public:
+	GeneralContactSettings() { Reset(); }
 	void Reset()
 	{
 		searchTreeSizeInit = Index3({ 10, 10, 10 }); //surely not optimal, but better than {1,1,1}
@@ -460,6 +461,13 @@ public:
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//FUNCTIONS FOR CONTACT COMPUTATION:
+	
+	//! unified function to compute contact forces, in particular for unification to compute derivatives for jacobians
+	template<Index opMode, typename TReal>
+	TReal ComputeContactForces(TReal gap, const SlimVectorBase<TReal, 3>& deltaP0,
+		TReal deltaVnormal, const SlimVectorBase<TReal, 3>& deltaVji,
+		TReal kContact, TReal dContact, TReal dryFriction, bool frictionRegularizedRegion, const SlimVectorBase<TReal, 3>& storedFFriction,
+		SlimVectorBase<TReal, 3>& fVec, SlimVectorBase<TReal, 3>& fFriction);
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//bounding boxes:

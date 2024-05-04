@@ -334,7 +334,7 @@ convLatexWords={'(\\the\\month-\\the\\year)':'',
            '\\en':'',
            #'\\it ':'', #replaced to \myitalics
            #specials:
-           '\\ge':'>=',
+           #'\\ge':'>=', #needed?
            '\\_':'_',
            '\\textdegree':'°',
            '-{}-':'--',
@@ -370,7 +370,7 @@ convLatexCommands={#(precommand,'_USE'/'',postcommand)
     'pytlisting':('\n.. code-block:: python\n','_USE','\n'),
     'lstlisting':('\n.. code-block:: \n','_USE','\n'),
     '\\paragraph':('\n\\ **','_USE','** '),
-    '\\myListing':('','',''),
+    # '\\myListing':('','',''),
     '\\setlength':('','',''),
     '\\vspace':('','',''),
     '\\footnote':('\\ (','_USE',')'), #rst footnotes may be used instead: https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html#footnotes
@@ -767,7 +767,7 @@ def ReplaceLatexCommands(s, conversionDict, sectionMarkerText=''): #replace stri
     #remove commands
     s = s.replace('{\\bf ','\\mybold{') #this is then further converted into rst code ...
     s = s.replace('{\\it ','\\myitalics{') #this is then further converted into rst code ...
-    s = s.replace('{\\it ','\\mysmall{') #this is then further converted into rst code ...
+    s = s.replace('{\\small ','\\mysmall{') #this is then further converted into rst code ...
     for (key,value) in conversionDict.items():
         found = 0
         while (found != -1):
@@ -1290,12 +1290,16 @@ class PyLatexRST:
                     argString += sepArg + argList[i]
                     if hasTypes and argTypes[i]!='':
                         argString += ': '+argTypes[i]
-                    elif i < len(defaultArgs):
-                        argString += '='+ReplaceDefaultArgsLatex(defaultArgs[i].replace('exu.',''))
+                    if i < len(defaultArgs):
+                        defaultArgClean = defaultArgs[i].replace('exu.','')
+                        if defaultArgClean != '':
+                            argString += '='+ReplaceDefaultArgsLatex(defaultArgClean)
                     sepArg = ', '
+            # if pyName=='ODE1Size': #*** check if this works! check .pyi file!
+            #     print(pyName+':'+argString+'; ',defaultArgs[i])
 
             self.sPyi += pyiIndent+'@overload\n'
-            self.sPyi += pyiIndent+'def ' + pyName + '(' + argString + ') -> '+returnType+': ...\n'
+            self.sPyi += pyiIndent+'def ' + pyName + '(' + argString.replace('\\_','_') + ') -> '+returnType+': ...\n'
 
 
     #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

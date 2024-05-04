@@ -131,11 +131,12 @@ elif not isWindows:
         platformString += '-'+processorString
 
 pythonVersion = str(sys.version_info.major)+'.'+str(sys.version_info.minor)+'.'+str(sys.version_info.micro)
+pythonVersionMain = str(sys.version_info.major)+'.'+str(sys.version_info.minor)
 
 # localFileName = 'Test for EXUDYN V'+exu.GetVersionString()+' (built:'+exuDateStr+'),'\
 #          +sys.platform+'-'+processorString+'-'+platform.architecture()[0]+',Python'\
 #          +pythonVersion+',date:'+dateStr+': '
-platformString = sys.platform+'-'+processorString+'-'+platform.architecture()[0]+'-P'+pythonVersion
+platformString = sys.platform+'-'+processorString+'-'+platform.architecture()[0]+'-P'+pythonVersionMain
 localFileName = 'testSuiteLog_V'+exu.GetVersionString()+'_'+platformString
 
 #logFileName = '../TestSuiteLogs/testSuiteLog_V'+exu.GetVersionString()+'_'+platformString+'.txt'

@@ -22,7 +22,7 @@ The item \ **ObjectJointRollingDisc**\  with type = 'JointRollingDisc' has the f
 * | **markerNumbers** [\ :math:`[m0,m1]\tp`\ , type = ArrayMarkerIndex, size =  2, default = [ invalid [-1], invalid [-1] ]]:
   | list of markers used in connector; \ :math:`m0`\  represents the ground and \ :math:`m1`\  represents the rolling body, which has its reference point (=local position [0,0,0]) at the disc center point
 * | **constrainedAxes** [\ :math:`{\mathbf{j}}=[j_0,\,\ldots,\,j_2]`\ , type = ArrayIndex, size = 3, default = [1,1,1]]:
-  | flag, which determines which constraints are active, in which \ :math:`j_0,j_1`\  represent the tangential motion and \ :math:`j_2`\  represents the normal (contact) direction; currently the constraints are given in global coordinates, but will be changed into local \ :math:`J1`\  coordinates in future
+  | flag, which determines which constraints are active, in which \ :math:`j_0,j_1`\  represent the tangential motion and \ :math:`j_2`\  represents the normal (contact) direction
 * | **activeConnector** [type = Bool, default = True]:
   | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
 * | **discRadius** [type = PReal, default = 0]:
@@ -131,6 +131,9 @@ Definition of quantities
    * - | \ :math:`D1`\  transformation matrix
      - | \ :math:`\LU{0,D1}{{\mathbf{A}}} = [\LU{0}{{\mathbf{w}}_1},\, \LU{0}{{\mathbf{w}}_2},\, \LU{0}{{\mathbf{w}}_3}]`\ 
      - | transformation of special disc coordinates \ :math:`D1`\  to global coordinates
+   * - | \ :math:`J1`\  transformation matrix
+     - | \ :math:`\LU{0,J1}{{\mathbf{A}}} = [\LU{0}{{\mathbf{w}}_{lat}},\, \LU{0}{{\mathbf{w}}}_2,\, \LU{0}{{\mathbf{v}}_{PN}}]`\ 
+     - | transformation of special joint \ :math:`J1`\  coordinates to global coordinates
    * - | algebraic variables
      - | \ :math:`{\mathbf{z}}=[\lambda_0,\,\lambda_1,\,\lambda_2]\tp`\ 
      - | vector of algebraic variables (Lagrange multipliers) according to the algebraic equations
@@ -196,28 +199,29 @@ The velocity of the contact point at the marker 0 body reads
 Connector constraint equations
 ------------------------------
 
-\ ``activeConnector = True``\ :
+Constraints for \ ``activeConnector = True``\ :
 
 The non-holonomic, index 2 constraints for the tangential and normal contact follow from (an index 3 formulation would be possible, but is not implemented yet because of mixing different jacobians)
 
 .. math::
 
-   \vr{\LU{0}{{\mathbf{v}}}_{Cm1,x}}{\LU{0}{{\mathbf{v}}}_{Cm1,y}}{\LU{0}{{\mathbf{v}}}_{Cm1,z}} - \vr{\LU{0}{{\mathbf{v}}}_{Cm0,x}}{\LU{0}{{\mathbf{v}}}_{Cm0,y}}{\LU{0}{{\mathbf{v}}}_{Cm0,z}}= \Null
+   \LU{J1,0}{{\mathbf{A}}} \left(\vr{\LU{0}{{\mathbf{v}}}_{Cm1,x}}{\LU{0}{{\mathbf{v}}}_{Cm1,y}}{\LU{0}{{\mathbf{v}}}_{Cm1,z}} - \vr{\LU{0}{{\mathbf{v}}}_{Cm0,x}}{\LU{0}{{\mathbf{v}}}_{Cm0,y}}{\LU{0}{{\mathbf{v}}}_{Cm0,z}} \right) = \Null
 
 
-\ ``activeConnector = False``\ :
-
+In case that \ ``activeConnector = False``\ , the Lagrange multipliers are set to zero:
 
 .. math::
 
    {\mathbf{z}} = \Null
 
 
+Note that since version 1.8.27 the constraints can be turned on/off separately with \ ``constrainedAxes=[b0,b1,b2]``\ , in which
+\ ``b0``\  represents the flag for lateral motion, \ ``b1``\  switches the constraint for forward motion and \ ``b2``\  for motion in plane normal direction.
 
 
 Relevant Examples and TestModels with weblink:
 
-    \ `bicycleIftommBenchmark.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py>`_\  (Examples/), \ `rollingCoinTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rollingCoinTest.py>`_\  (TestModels/), \ `rotatingTableTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rotatingTableTest.py>`_\  (TestModels/)
+    \ `bicycleIftommBenchmark.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py>`_\  (Examples/), \ `reinforcementLearningRobot.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/reinforcementLearningRobot.py>`_\  (Examples/), \ `rollingCoinTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rollingCoinTest.py>`_\  (TestModels/), \ `rollingDiscTangentialForces.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rollingDiscTangentialForces.py>`_\  (TestModels/), \ `rotatingTableTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rotatingTableTest.py>`_\  (TestModels/)
 
 
 

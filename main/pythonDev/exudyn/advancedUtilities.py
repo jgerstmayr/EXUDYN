@@ -141,6 +141,14 @@ def RaiseTypeError(where='', argumentName='', received = None, expectedType = No
 
     raise ValueError(errStr)
 
+#**function: return True, if x is None; works also for numpy arrays or structures
+def IsNone(x):
+    return (x is None)
+
+#**function: return True, if x is not None; works also for numpy arrays or structures
+def IsNotNone(x):
+    return (x is not None)
+
 #**function: return True, if x is int, float, np.double, np.integer or similar types that can be automatically casted to pybind11
 def IsValidBool(x):
     if (isinstance(x, bool)

@@ -71,7 +71,7 @@ void CMarkerSuperElementPosition::ComputeMarkerData(const CSystemData& cSystemDa
 		LinkedDataMatrix weightingMatrix(parameters.weightingFactors.GetDataPointer(), nw, 1);
 
 		cObject.GetAccessFunctionSuperElement((AccessFunctionType)((Index)AccessFunctionType::TranslationalVelocity_qt + (Index)AccessFunctionType::SuperElement),
-			weightingMatrix, parameters.meshNodeNumbers, Vector3D(0.), markerData.positionJacobian);
+			weightingMatrix, parameters.meshNodeNumbers, Vector3D(0.), markerData.positionJacobian, EXUmath::unitMatrix3D);
 	}
 }
 

@@ -47,9 +47,9 @@ namespace ContactHelper
 	//! return true, if friction is in frictionProportionalZone; otherwise false
 	//! if forceFrictionMode==true, regularized friction is always used if frictionRegularizedRegion=true, otherwise dry friction is always used 
 	//! also returns scalar tangent velocity in relVel
-	template<class TVector, bool forceFrictionMode = false>
-	bool ComputeFrictionForce(TVector& forceVector, const TVector& deltaVtangent, Real contactPressure,
-		Real dryFriction, Real frictionProportionalZone, Real& relVel, bool frictionRegularizedRegion=true)
+	template<class TVector, class TReal, bool forceFrictionMode = false>
+	bool ComputeFrictionForce(TVector& forceVector, const TVector& deltaVtangent, TReal contactPressure,
+		TReal dryFriction, TReal frictionProportionalZone, TReal& relVel, bool frictionRegularizedRegion=true)
 	{
 		relVel = deltaVtangent.GetL2Norm();
 
@@ -529,12 +529,12 @@ namespace ContactHelper
 #else
 					if (forceFrictionMode)
 					{
-						ComputeFrictionForce<Vector2D, true>(frictionAdd, deltaVtangent, -contactForce, dryFriction,
+						ComputeFrictionForce<Vector2D, Real, true>(frictionAdd, deltaVtangent, -contactForce, dryFriction,
 						settings.frictionProportionalZone, relVel, maxRelFrictionVels[segCnt] < 1.);
 					}
 					else //compute friction from relative velocity
 					{
-						ComputeFrictionForce<Vector2D, false>(frictionAdd, deltaVtangent, -contactForce, dryFriction,
+						ComputeFrictionForce<Vector2D, Real, false>(frictionAdd, deltaVtangent, -contactForce, dryFriction,
 							settings.frictionProportionalZone, relVel, maxRelFrictionVels[segCnt] < 1.);
 
 						//store maximum; if it exceeds the dry friction, this is the way to go

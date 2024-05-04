@@ -405,9 +405,10 @@ def ComputeLinearizedSystem(mbs,
 #   simulationSettings: specific simulation settings used for computation of jacobian (e.g., sparse mode in static solver enables sparse computation)
 #   useSparseSolver: if False (only for small systems), all eigenvalues are computed in dense mode (slow for large systems!); if True, only the numberOfEigenvalues are computed (numberOfEigenvalues must be set!); Currently, the matrices are exported only in DENSE MODE from mbs! NOTE that the sparsesolver accuracy is much less than the dense solver
 #   numberOfEigenvalues: number of eigenvalues and eivenvectors to be computed; if numberOfEigenvalues==0, all eigenvalues will be computed (may be impossible for larger or sparse problems!)
-#   constrainedCoordinates: if this list is non-empty (and there are no algebraic equations of ignoreAlgebraicEquations=True), the integer indices represent constrained coordinates of the system, which are fixed during eigenvalue/vector computation; according rows/columns of mass and stiffness matrices are erased; in this case, algebraic equations of the system are ignored
+#   constrainedCoordinates: if this list is non-empty (and there are no algebraic equations or ignoreAlgebraicEquations=True), the integer indices represent constrained coordinates of the system, which are fixed during eigenvalue/vector computation; according rows/columns of mass and stiffness matrices are erased; in this case, algebraic equations of the system are ignored
 #   convert2Frequencies: if True, the eigen values are converted into frequencies (Hz) and the output is [eigenFrequencies, eigenVectors]
 #   useAbsoluteValues: if True, abs(eigenvalues) is used, which avoids problems for small (close to zero) eigenvalues; needed, when converting to frequencies
+#   computeComplexEigenvalues: if True, the system is converted into a system of first order differential equations, including damping; only implemented for dense solver!
 #   ignoreAlgebraicEquations: if True, algebraic equations (and constraint jacobian) are not considered for eigenvalue computation; otherwise, the solver tries to automatically project the system into the nullspace kernel of the constraint jacobian using a SVD; this gives eigenvalues of the constrained system; eigenvectors are not computed
 #   singularValuesTolerance: tolerance used to distinguish between zero and nonzero singular values for algebraic constraints projection
 #**output: [ArrayLike, ArrayLike]; [eigenValues, eigenVectors]; eigenValues being a numpy array of eigen values ($\omega_i^2$, being the squared eigen frequencies in ($\omega_i$ in rad/s)!), eigenVectors a numpy array containing the eigenvectors in every column
@@ -443,12 +444,13 @@ def ComputeODE2Eigenvalues(mbs,
                            simulationSettings = exudyn.SimulationSettings(),
                            useSparseSolver = False, numberOfEigenvalues = 0, constrainedCoordinates=[],
                            convert2Frequencies = False, useAbsoluteValues = True, 
+                           computeComplexEigenvalues = False,
                            ignoreAlgebraicEquations=False, singularValuesTolerance=1e-12):
 
     store = DeactivateWritingOfSolvers(simulationSettings)
 
     try:
-        from scipy.linalg import eigh, svd  #eigh for symmetric matrices, positive definite; eig for standard eigen value problems
+        from scipy.linalg import eigh, eig, svd  #eigh for symmetric matrices, positive definite; eig for standard eigen value problems
         from scipy.sparse.linalg import eigsh #eigh for symmetric matrices, positive definite
         from scipy.sparse import csr_matrix
     except:
@@ -480,25 +482,48 @@ def ComputeODE2Eigenvalues(mbs,
                                        velocityLevel=False)          
     
     jacobian = staticSolver.GetSystemJacobian() #read out stored jacobian; includes ODE2, ODE1 and nAE part
-    
-    staticSolver.FinalizeSolver(mbs, simulationSettings) #close files, etc.
-    RestoreSimulationSettings(simulationSettings, store)
 
     #obtain ODE2 part from jacobian == stiffness matrix
     Kode2 = jacobian[0:nODE2,0:nODE2]
+
+    if computeComplexEigenvalues:
+        #compute damping matrix
+        staticSolver.ComputeJacobianODE2RHS(mbs,scalarFactor_ODE2=0,
+                                                scalarFactor_ODE2_t=-1, 
+                                                scalarFactor_ODE1=0)    #could be 1 to include ODE1 part
+        jacobianD = staticSolver.GetSystemJacobian() #read out stored jacobian; includes ODE2, ODE1 and nAE part
+        Dode2 = jacobianD[0:nODE2,0:nODE2]
 
     remappingIndices = np.arange(nODE2) #maps new coordinates to original (full) ones
     if constrainedCoordinates != []:
         Mode2 = np.delete(np.delete(Mode2, constrainedCoordinates, 0), constrainedCoordinates, 1)
         Kode2 = np.delete(np.delete(Kode2, constrainedCoordinates, 0), constrainedCoordinates, 1)
+        if computeComplexEigenvalues:
+            Dode2 = np.delete(np.delete(Dode2, constrainedCoordinates, 0), constrainedCoordinates, 1)
+        
         remappingIndices = np.delete(remappingIndices, constrainedCoordinates)
+
+    staticSolver.FinalizeSolver(mbs, simulationSettings) #close files, etc.
+    RestoreSimulationSettings(simulationSettings, store)
 
     if nAE != 0 and not ignoreAlgebraicEquations and constrainedCoordinates != []:
         raise ValueError('ComputeODE2Eigenvalues: in case of algebraic equations, either ignoreAlgebraicEquations=True or constrainedCoordinates=[]')
 
-    if constrainedCoordinates != [] or nAE == 0:
+
+    if constrainedCoordinates != [] or nAE == 0 or ignoreAlgebraicEquations:
         if not useSparseSolver:
-            [eigenValuesUnsorted, eigenVectors] = eigh(Kode2, Mode2) #this gives omega^2 ... squared eigen frequencies (rad/s)
+            if not computeComplexEigenvalues:
+                [eigenValuesUnsorted, eigenVectors] = eigh(Kode2, Mode2) #this gives omega^2 ... squared eigen frequencies (rad/s)
+            else:
+                #complex eigenvalues
+                B = np.block([[                  Kode2, Dode2     ],
+                              [np.zeros((nODE2,nODE2)),-Mode2     ]])
+            
+                A = np.block([[np.zeros((nODE2,nODE2)), Mode2                    ],
+                              [                  Mode2, np.zeros((nODE2,nODE2))]])                
+                Amod = -np.dot(np.linalg.inv(A),B)
+                [eigenValuesUnsorted, eigenVectors] = eig(Amod)
+            
             if useAbsoluteValues:
                 sortIndices = np.argsort(abs(eigenValuesUnsorted)) #get resorting index
                 eigenValues = np.sort(a=abs(eigenValuesUnsorted)) #eigh returns unsorted eigenvalues...
@@ -510,6 +535,8 @@ def ComputeODE2Eigenvalues(mbs,
                 sortIndices = sortIndices[0:numberOfEigenvalues]
             eigenVectors = eigenVectors[:,sortIndices] #eigenvectors are given in columns!
         else:
+            if computeComplexEigenvalues:
+                raise ValueError('ComputeODE2Eigenvalues: computeComplexEigenvalues must be False with sparse solvers')
             if numberOfEigenvalues == 0: #compute all eigenvalues
                 numberOfEigenvalues = nODE2
     
@@ -536,7 +563,8 @@ def ComputeODE2Eigenvalues(mbs,
             for i in range(numberOfEigenvalues):
                 eigenVectorsNew[remappingIndices,i] = eigenVectors[:,i]
             eigenVectors = eigenVectorsNew
-    else:
+    else: #this includes general constraints and requires different solvers
+                             
         if useSparseSolver:
             raise ValueError('ComputeODE2Eigenvalues: in case of algebraic equations and ignoreAlgebraicEquations=False, useSparseSolver must be False')
         #use SVD to project equations into nullspace
@@ -551,18 +579,25 @@ def ComputeODE2Eigenvalues(mbs,
         nullspace = U[:,nnz:].T #U[nnz:]
         Knullspace = nullspace@Kode2@nullspace.T
         Mnullspace = nullspace@Mode2@nullspace.T
-
-        # print('nODE2=',nODE2)
-        # print('nAE=',nAE)
-        # print('nnz=',nnz)
-        # print('C=',C.shape)
-        # print('U=',U.shape)
-        # print('sing.val.=',D.round(5))
-        # print('Knullspace=',Knullspace.round(5))
-        # print('Mnullspace=',Mnullspace.round(5))
-        # print('nullspace=',nullspace.round(3))
-
-        [eigenValuesUnsorted, eigenVectorsReduced] = eigh(Knullspace,Mnullspace)
+        nODE2ns = Knullspace.shape[0]
+            
+        if computeComplexEigenvalues:
+            Dnullspace = nullspace@Dode2@nullspace.T
+            #A*q_t + B*q=0 => q=[x,v]
+            #[0  M] [x_t]   [K  D] [x]
+            #[    ]*[   ] + [    ]*[ ] = 0
+            #[I  0] [v_t]   [0 -I] [v]
+            #complex eigenvalues
+            B = np.block([[                 Knullspace,  Dnullspace                   ],
+                          [np.zeros((nODE2ns,nODE2ns)), -Mnullspace                   ]])
+        
+            A = np.block([[np.zeros((nODE2ns,nODE2ns)), Mnullspace                 ],
+                          [                 Mnullspace, np.zeros((nODE2ns,nODE2ns))]])                
+            Amod = -np.dot(np.linalg.inv(A),B)
+            [eigenValuesUnsorted, eigenVectorsReduced] = eig(Amod)
+        else:
+            [eigenValuesUnsorted, eigenVectorsReduced] = eigh(Knullspace,Mnullspace)
+            
         if useAbsoluteValues:
             sortIndices = np.argsort(abs(eigenValuesUnsorted)) #get resorting index
             eigenValues = np.sort(a=abs(eigenValuesUnsorted)) #eigh returns unsorted eigenvalues...
@@ -575,7 +610,10 @@ def ComputeODE2Eigenvalues(mbs,
             sortIndices = sortIndices[0:numberOfEigenvalues]
         eigenVectorsReduced = eigenVectorsReduced[:,sortIndices] #eigenvectors are given in columns!
 
-        eigenVectors = nullspace.T @ eigenVectorsReduced
+        if computeComplexEigenvalues:
+            eigenVectors = np.block([nullspace.T, nullspace.T]) @ eigenVectorsReduced
+        else:
+            eigenVectors = nullspace.T @ eigenVectorsReduced
 
 
 
@@ -584,6 +622,7 @@ def ComputeODE2Eigenvalues(mbs,
         return [eigenFrequencies, eigenVectors]
     else:
         return [eigenValues, eigenVectors]
+
     
 
 #**function: compute system DOF numerically, considering Gr{\"u}bler-Kutzbach formula as well as redundant constraints; uses numpy matrix rank or singular value decomposition of scipy (useSVD=True)

@@ -196,7 +196,9 @@ public:
 	//! CASE 2:
 	//!   For reducedOrder elements, meshNodeNumbers.NumberOfItems()==0, the weightingMatrix acts on reduced coordinates (WM = WMfull * modalBasis), 
 	//!   and must have size (nReducedCoordinates x 3): pLoc = WM * qReduced, pGlob = pRef + A * pLoc == > Jac = d(pGlob) / d([q0, q])
-	virtual void GetAccessFunctionSuperElement(AccessFunctionType accessType, const Matrix& weightingMatrix, const ArrayIndex& meshNodeNumbers, const Vector3D& localOffset, Matrix& value) const;
+	//! rotationCorrection contains a small correction (tangent operator TexpSO3) in case that a Lie group approach is used for computation of rotation matrix
+	virtual void GetAccessFunctionSuperElement(AccessFunctionType accessType, const Matrix& weightingMatrix, const ArrayIndex& meshNodeNumbers, 
+		const Vector3D& localOffset, Matrix& value, const Matrix3D& rotTangentCorrection) const;
 
 	//! get extended output variable types for multi-nodal objects with mesh nodes
 	virtual OutputVariableType GetOutputVariableTypesSuperElement(Index meshNodeNumber) const

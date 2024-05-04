@@ -22,8 +22,8 @@ There are advanced solvers, like in \ ``exudyn.processing``\ :
 
 +  \ **Optimization**\ :
   
-    \ ``GeneticOptimization(...)``\ : find optimum for given set of parameter ranges using genetic optimization; works in parallel
-    \ ``Minimize(...)``\ : find optimum with \ ``scipy.optimize.minimize(...)``\ 
++  \ ``GeneticOptimization(...)``\ : find optimum for given set of parameter ranges using genetic optimization; works in parallel
++  \ ``Minimize(...)``\ : find optimum with \ ``scipy.optimize.minimize(...)``\ 
   
 
 

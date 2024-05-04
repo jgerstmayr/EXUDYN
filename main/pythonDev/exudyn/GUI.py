@@ -806,7 +806,7 @@ class TkinterEditDictionary(tk.Frame):
                     valueList = value.tolist()
                     valueListStr = str(valueList)
                     self.longestColumn = max(self.longestColumn,len(valueListStr))
-                    valueStr = valueListStr.replace(' ','\ ').replace(',','\,')
+                    valueStr = valueListStr.replace(' ','\\ ').replace(',','\\,')
                     self.tree.item(id, values=(valueStr))
                 else:
                     self.tree.item(id, values=('<unavailable>'))
@@ -814,13 +814,13 @@ class TkinterEditDictionary(tk.Frame):
                 if np.array(value).size < 5000:
                     valueListStr = str(value)
                     self.longestColumn = max(self.longestColumn,len(valueListStr))
-                    valueStr = valueListStr.replace(' ','\ ').replace(',','\,')
+                    valueStr = valueListStr.replace(' ','\\ ').replace(',','\\,')
                     self.tree.item(id, values=(valueStr))
                 else:
                     self.tree.item(id, values=('<unavailable>'))
             elif isinstance(value, str) and value!='Get graphics data to be implemented':
                 self.longestColumn = max(self.longestColumn,len(value))
-                self.tree.item(id, values=(value.replace(' ','\ ')))
+                self.tree.item(id, values=(value.replace(' ','\\ ')))
             elif self.IsItemIndex(value):
                 self.tree.item(id, values=(int(value)))
             else:
@@ -880,7 +880,7 @@ class TkinterEditDictionary(tk.Frame):
             #print('edit')
             if self.dictionaryIsEditable:
                 valueStr = self.editItemVar.get()
-                valueStr = str(valueStr).replace(' ','\ ')
+                valueStr = str(valueStr).replace(' ','\\ ')
                 #print(valueStr)
                 self.tree.item(self.selectedItem, values=(valueStr))
                 currentItem = self.selectedItem
@@ -909,7 +909,7 @@ class TkinterEditDictionary(tk.Frame):
         if self.selectedItem != '':
             valueStr = self.tree.item(self.selectedItem,'values')[0]
             #print(valueStr)
-            valueStr = str(valueStr).replace(' ','\ ')
+            valueStr = str(valueStr).replace(' ','\\ ')
             self.editItemVar.set(valueStr)
             self.selectedItem = '' #now item can be modified
 #            self.editItemVar.set('')

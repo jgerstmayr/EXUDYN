@@ -142,7 +142,7 @@ The geometrical setup is shown in \ :numref:`fig-objectcontactconvexroll-sketch`
 
 with the coefficients of the hull \ :math:`a_i`\ . As a pre-Check for the contact two spheres are put into both ends of the object with the maximum radius and only if one of these is in contact. The contact point \ :math:`^{\mathrm{b}}{\mathbf{p}}_{\mathrm{m1,C}}`\  is calculated relative to the bodies marker \ ``m1``\  in the bodies local frame and transformed accordingly. 
 The contact point C can for be calculated convex bodies by matching the derivative of the polynomial \ :math:`r(^bx)`\  with the gradient of the contact plane, shown in \ :numref:`fig-objectcontactconvexroll-sketch`\ , explained in detail in . 
-At the contact point a normal force \ :math:`{\mathbf{f}}_{\mathrm{N}} = \begin{bmatrix} 0 & 0 & \mathrm{f}_{\mathrm{N}} \end{bmatrix}^T`\   with 
+At the contact point a normal force \ :math:`{\mathbf{f}}_{\mathrm{N}} = [ 0 \; 0 \; \mathrm{f}_{\mathrm{N}} ]\tp`\   with 
 
 .. math::
    :label: eq-fpencontact

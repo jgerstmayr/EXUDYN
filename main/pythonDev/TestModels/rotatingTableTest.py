@@ -31,6 +31,7 @@ except:
         pass
     exudynTestGlobals = ExudynTestGlobals()
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+useGraphics = False #without test
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -182,7 +183,8 @@ for mode in range(2):
     #simulationSettings.solutionSettings.solutionWritePeriod = 0.01
     #simulationSettings.solutionSettings.sensorsWritePeriod = 0.01
     simulationSettings.timeIntegration.verboseMode = 1
-    
+    simulationSettings.displayStatistics = True
+
     # simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5
     simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations=True
     simulationSettings.timeIntegration.newton.useModifiedNewton = True
@@ -229,7 +231,7 @@ exudynTestGlobals.testResult = uTest
 if useGraphics:
     
     mbs.PlotSensor(closeAll=True) 
-    mbs.PlotSensor(sensorNumbers=[sForce], components=[2]) 
+    mbs.PlotSensor(sensorNumbers=[sForce], components=[0,1,2]) 
     mbs.PlotSensor(sensorNumbers=sAngVel, components=[0,1,2]) 
     mbs.PlotSensor(sensorNumbers=sAngVelLocal, components=[0,1,2]) 
     mbs.PlotSensor(sensorNumbers=sAngAcc, components=[0,1,2]) 

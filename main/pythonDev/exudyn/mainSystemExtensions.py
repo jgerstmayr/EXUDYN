@@ -31,7 +31,7 @@ from exudyn.rigidBodyUtilities import GetRigidBodyNode, ComputeOrthonormalBasis,
 import exudyn.itemInterface as eii 
 from exudyn.advancedUtilities import RaiseTypeError, IsVector, ExpectedType, IsValidObjectIndex, IsValidNodeIndex, \
                                     IsValidRealInt, IsValidPRealInt, IsValidURealInt, IsIntVector, \
-                                    IsValidBool, IsSquareMatrix
+                                    IsValidBool, IsSquareMatrix, IsNone, IsNotNone
 
 from exudyn.graphicsDataUtilities import color4default, color4red
 import numpy as np
@@ -86,11 +86,9 @@ def ProcessBodyNodeLists(bodyList, bodyOrNodeList, localPosition0, localPosition
             RaiseTypeError(where=where, argumentName='bodyList', received = bodyList, expectedType = 'list of 2 body or node numbers')
 
     causingArgName = 'bodyOrNodeList'
-    if bodyList[0] != None or bodyList[1] != None:
+    if IsNotNone(bodyList[0]) or IsNotNone(bodyList[1]):
         bodyOrNodeList = [bodyList[0],bodyList[1]] #flat copy, but otherwise would lead to change of args (mutable args!)
         causingArgName = 'bodyList'
-        # if bodyList[0] == None or bodyList[1] == None:
-        #     raise ValueError(where+': bodyList contained None in one of the list items')
         
     if not exudyn.__useExudynFast:
         if not isinstance(bodyOrNodeList, list) or len(bodyOrNodeList) != 2:
@@ -365,9 +363,9 @@ def MainSystemCreateRigidBody(mbs,
             RaiseTypeError(where=where, argumentName='initialVelocity', received = initialVelocity, expectedType = ExpectedType.Vector, dim=3)
         if not IsVector(initialAngularVelocity, 3):
             RaiseTypeError(where=where, argumentName='initialAngularVelocity', received = initialAngularVelocity, expectedType = ExpectedType.Vector, dim=3)
-        if initialDisplacement != None and not IsVector(initialDisplacement, 3):
+        if IsNotNone(initialDisplacement) and not IsVector(initialDisplacement, 3):
             RaiseTypeError(where=where, argumentName='initialDisplacement', received = initialDisplacement, expectedType = ExpectedType.Vector, dim=3)
-        if initialRotationMatrix != None and not IsSquareMatrix(initialRotationMatrix, 3):
+        if IsNotNone(initialRotationMatrix) and not IsSquareMatrix(initialRotationMatrix, 3):
             RaiseTypeError(where=where, argumentName='initialRotationMatrix', received = initialRotationMatrix, expectedType = ExpectedType.Matrix, dim=3)
 
         if not IsVector(gravity, 3):
@@ -428,13 +426,13 @@ def MainSystemCreateRigidBody(mbs,
             rot0_t = AngularVelocity2parameters_t(initialAngularVelocity, referenceRotationMatrix)
     
         initCoordinates = [0] * (3+len(referenceRot))
-        if initialDisplacement != None or initialRotationMatrix != None:
-            if initialDisplacement == None:
+        if IsNotNone(initialDisplacement) or IsNotNone(initialRotationMatrix):
+            if IsNone(initialDisplacement):
                 initialDisplacement = [0.,0.,0.]
-            if initialRotationMatrix == None:
+            if IsNone(initialRotationMatrix):
                 initialRotationMatrix = np.eye(3)
             
-            rotInit = RotationMatrix2parameters(referenceRotationMatrix*initialRotationMatrix) - referenceRot #relative to reference!
+            rotInit = RotationMatrix2parameters(referenceRotationMatrix @ initialRotationMatrix) - referenceRot #relative to reference!
             initCoordinates  = list(initialDisplacement)+list(rotInit)
             
     
@@ -469,13 +467,13 @@ def MainSystemCreateRigidBody(mbs,
         referenceRot = np.arctan2(A[1,0],A[0,0])
     
         initCoordinates = [0.,0.,0.]
-        if initialDisplacement != None or initialRotationMatrix != None:
-            if initialDisplacement != None:
+        if IsNotNone(initialDisplacement) or IsNotNone(initialRotationMatrix):
+            if IsNotNone(initialDisplacement):
                 if abs(initialDisplacement[2]) > 1e-14:
                     raise ValueError('MainSystem.CreateRigidBody(...): in case of 2D rigid body, initialDisplacement may not have a Z-component')
                 initCoordinates[0] = initialDisplacement[0]
                 initCoordinates[1] = initialDisplacement[1]
-            if initialRotationMatrix != None:
+            if IsNotNone(initialRotationMatrix):
                 A0 = np.array(initialRotationMatrix)
                 if (abs(A0[2,0]) + abs(A0[2,1]) + abs(A0[0,2]) + abs(A0[1,2]) + abs(A0[2,2]-1)) > 1e-13:
                     raise ValueError('MainSystem.CreateRigidBody(...): in case of 2D rigid body, initialRotationMatrix must only have a rotation around Z-axis')
@@ -583,7 +581,7 @@ def MainSystemCreateSpringDamper(mbs,
         if not IsVector(localPosition1, 3):
             RaiseTypeError(where=where, argumentName='localPosition1', received = localPosition1, expectedType = ExpectedType.Vector, dim=3)
     
-        if referenceLength != None and not IsValidURealInt(referenceLength):
+        if IsNotNone(referenceLength) and not IsValidURealInt(referenceLength):
             RaiseTypeError(where=where, argumentName='referenceLength', received = referenceLength, expectedType = ExpectedType.PReal)
         if not IsValidRealInt(stiffness):
             RaiseTypeError(where=where, argumentName='stiffness', received = stiffness, expectedType = ExpectedType.Real)
@@ -618,7 +616,7 @@ def MainSystemCreateSpringDamper(mbs,
     else:
         mBody1 = mbs.AddMarker(eii.MarkerNodePosition(name=mName1,nodeNumber=internBodyNodeList[1]))
         
-    if referenceLength == None: #automatically compute reference length
+    if IsNone(referenceLength): #automatically compute reference length
         
         if isinstance(internBodyNodeList[0], exudyn.ObjectIndex):
             p0 = mbs.GetObjectOutputBody(internBodyNodeList[0],exudyn.OutputVariableType.Position,
@@ -1344,7 +1342,7 @@ def MainSystemCreateDistanceConstraint(mbs, name='',
         if not IsVector(localPosition1, 3):
             RaiseTypeError(where=where, argumentName='localPosition1', received = localPosition1, expectedType = ExpectedType.Vector, dim=3)
     
-        if distance != None and not IsValidURealInt(distance):
+        if IsNotNone(distance) and not IsValidURealInt(distance):
             RaiseTypeError(where=where, argumentName='distance', received = distance, expectedType = ExpectedType.PReal)
 
         if not IsValidBool(show):
@@ -1371,7 +1369,7 @@ def MainSystemCreateDistanceConstraint(mbs, name='',
     else:
         mBody1 = mbs.AddMarker(eii.MarkerNodePosition(name=mName1,nodeNumber=internBodyNodeList[1]))
         
-    if distance == None: #automatically compute distance
+    if IsNone(distance): #automatically compute distance
         
         if isinstance(internBodyNodeList[0], exudyn.ObjectIndex):
             p0 = mbs.GetObjectOutputBody(internBodyNodeList[0],exudyn.OutputVariableType.Position,

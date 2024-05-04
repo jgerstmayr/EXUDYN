@@ -30,6 +30,7 @@ class PyExperimental
 {
 public: 
     Index eigenFullPivotLUsolverDebugLevel; //!< debug: 0=off, 1=print rank and info, 2=print matrices
+    Index markerSuperElementRigidTexpSO3; //!< True: use additional TexpSO3 for FFRF
 
     PyExperimental()
     {
@@ -39,6 +40,7 @@ public:
     void Initialize()
     {
         eigenFullPivotLUsolverDebugLevel = 0;
+        markerSuperElementRigidTexpSO3 = true;
     }
 
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -46,6 +48,7 @@ public:
     virtual void Print(std::ostream& os) const
     {
         os << "  eigenFullPivotLUsolverDebugLevel = " << eigenFullPivotLUsolverDebugLevel << "\n";
+        os << "  markerSuperElementRigidTexpSO3 = " << markerSuperElementRigidTexpSO3 << "\n";
         os << "\n";
     }
 

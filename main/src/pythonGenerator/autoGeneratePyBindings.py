@@ -29,7 +29,8 @@ localListFunctionNames.clear()
 localListClassNames.clear()
 localListEnumNames.clear()
 
-itemDict = 'dict'               #stub type for item classes (in fact convertable to dict)
+#itemDict = 'dict'               #stub type for item classes (in fact convertable to dict)
+itemDict = 'Any'                #stub type for item classes (in fact convertable to dict)
 returnedArray = 'List[float]'   #stub type for for returned numpy array
 listOrArray = 'List[float]'     #stub type for input as list or numpy array
 vector2D = '[float,float]'#stub type for Vector3D
@@ -952,6 +953,7 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='SendRedrawSignal', cName='SendR
 plr.DefPyFunctionAccess(cClass=classStr, pyName='GetCurrentMouseCoordinates', cName='PyGetCurrentMouseCoordinates', 
                         description="Get current mouse coordinates as list [x, y]; x and y being floats, as returned by GLFW, measured from top left corner of window; use GetCurrentMouseCoordinates(useOpenGLcoordinates=True) to obtain OpenGLcoordinates of projected plane",
                         argList=['useOpenGLcoordinates'],
+                        argTypes=['bool'],
                         defaultArgs=['False'],
                         returnType='[float,float]',
                         )
@@ -1052,6 +1054,7 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='SetRenderEngineStopFlag', cName
 plr.DefPyFunctionAccess(cClass=classStr, pyName='ActivateRendering', cName='ActivateRendering', 
                         description="activate (flag=True) or deactivate (flag=False) rendering for this system",
                         argList=['flag'],
+                        argTypes=['bool'],
                         defaultArgs=['True'],
                         returnType='None',
                         )
@@ -1423,67 +1426,67 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='GetObjectNumber', cName='PyGetO
 plr.DefPyFunctionAccess(cClass=classStr, pyName='GetObject', cName='PyGetObject', 
                                 description="get object's dictionary by object number (type ObjectIndex); NOTE: visualization parameters have a prefix 'V'; in order to also get graphicsData written, use addGraphicsData=True (which is by default False, as it would spoil the information)",
                                 argList=['objectNumber','addGraphicsData'],
+                                argTypes=['ObjectIndex','bool'],
                                 defaultArgs=['','False'],
                                 example = "objectDict = mbs.GetObject(0)",
-                                argTypes=['ObjectIndex',''],
                                 returnType='dict',
                                 )
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='ModifyObject', cName='PyModifyObject', 
                                 description="modify object's dictionary by object number (type ObjectIndex); NOTE: visualization parameters have a prefix 'V'",
                                 argList=['objectNumber','objectDict'],
-                                example = "mbs.ModifyObject(objectNumber, objectDict)",
                                 argTypes=['ObjectIndex','dict'],
+                                example = "mbs.ModifyObject(objectNumber, objectDict)",
                                 returnType='None',
                                 )
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='GetObjectDefaults', cName='PyGetObjectDefaults', 
                                 description="get object's default values for a certain objectType as (dictionary)",
                                 argList=['typeName'],
-                                example = "objectType = 'MassPoint'\\\\objectDict = mbs.GetObjectDefaults(objectType)",
                                 argTypes=['str'],
+                                example = "objectType = 'MassPoint'\\\\objectDict = mbs.GetObjectDefaults(objectType)",
                                 returnType='dict',
                                 )
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='GetObjectOutput', cName='PyGetObjectOutputVariable', 
                                 description="get object's current output variable from object number (type ObjectIndex) and OutputVariableType; for connectors, it can only be computed for exu.ConfigurationType.Current configuration!",
                                 argList=['objectNumber', 'variableType', 'configuration'],
-                                defaultArgs=['','','exu.ConfigurationType::Current'],
                                 argTypes=['ObjectIndex','OutputVariableType','ConfigurationType'],
+                                defaultArgs=['','','exu.ConfigurationType::Current'],
                                 returnType=returnedArray,
                                 )
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='GetObjectOutputBody', cName='PyGetObjectOutputVariableBody', 
                                 description="get body's output variable from object number (type ObjectIndex) and OutputVariableType, using the localPosition as defined in the body, and as used in MarkerBody and SensorBody",
                                 argList=['objectNumber', 'variableType', 'localPosition', 'configuration'],
+                                argTypes=['ObjectIndex','OutputVariableType',vector3D,'ConfigurationType'],
                                 defaultArgs=['','','(std::vector<Real>)Vector3D({0,0,0})','exu.ConfigurationType::Current'],
                                 example = "u = mbs.GetObjectOutputBody(objectNumber = 1, variableType = exu.OutputVariableType.Position, localPosition=[1,0,0], configuration = exu.ConfigurationType.Initial)",
-                                argTypes=['ObjectIndex','OutputVariableType',vector3D,'ConfigurationType'],
                                 returnType=returnedArray,
                                 )
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='GetObjectOutputSuperElement', cName='PyGetObjectOutputVariableSuperElement', 
                                 description="get output variable from mesh node number of object with type SuperElement (GenericODE2, FFRF, FFRFreduced - CMS) with specific OutputVariableType; the meshNodeNumber is the object's local node number, not the global node number!",
                                 argList=['objectNumber', 'variableType', 'meshNodeNumber', 'configuration'],
+                                argTypes=['ObjectIndex','OutputVariableType','int','ConfigurationType'],
                                 defaultArgs=['','','','exu.ConfigurationType::Current'],
                                 example = "u = mbs.GetObjectOutputSuperElement(objectNumber = 1, variableType = exu.OutputVariableType.Position, meshNodeNumber = 12, configuration = exu.ConfigurationType.Initial)",
-                                argTypes=['ObjectIndex','OutputVariableType','int','ConfigurationType'],
                                 returnType=returnedArray,
                                 )
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='GetObjectParameter', cName='PyGetObjectParameter', 
                                 description="get objects's parameter from object number (type ObjectIndex) and parameterName; parameter names can be found for the specific items in the reference manual; for visualization parameters, use a 'V' as a prefix; NOTE that BodyGraphicsData cannot be get or set, use dictionary access instead",
                                 argList=['objectNumber', 'parameterName'],
-                                example = "mbs.GetObjectParameter(objectNumber = 0, parameterName = 'nodeNumber')",
                                 argTypes=['ObjectIndex','str'],
+                                example = "mbs.GetObjectParameter(objectNumber = 0, parameterName = 'nodeNumber')",
                                 returnType='Any',
                                 )
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='SetObjectParameter', cName='PySetObjectParameter', 
                                 description="set parameter 'parameterName' of object with object number (type ObjectIndex) to value;; parameter names can be found for the specific items in the reference manual; for visualization parameters, use a 'V' as a prefix; NOTE that BodyGraphicsData cannot be get or set, use dictionary access instead",
                                 argList=['objectNumber', 'parameterName', 'value'],
-                                example = "mbs.SetObjectParameter(objectNumber = 0, parameterName = 'Vshow', value=True)",
                                 argTypes=['ObjectIndex','str','Any'],
+                                example = "mbs.SetObjectParameter(objectNumber = 0, parameterName = 'Vshow', value=True)",
                                 returnType='None',
                                 )
 
@@ -1851,15 +1854,16 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='NumberOfSensors', cName='[](con
 plr.DefPyFunctionAccess(cClass=classStr, pyName='ODE2Size', cName='PyODE2Size', 
                                 description="get size of ODE2 coordinate vector for given configuration (only works correctly after mbs.Assemble() )",
                                 argList=['configurationType'],
+                                argTypes=['ConfigurationType'],
                                 defaultArgs=['exu.ConfigurationType::Current'], #exu will be removed for binding
                                 example = "print('ODE2 size=',mbs.systemData.ODE2Size())",
-                                argTypes=['ConfigurationType'],
                                 returnType='int',
                                 )
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='ODE1Size', cName='PyODE1Size', 
                                 description="get size of ODE1 coordinate vector for given configuration (only works correctly after mbs.Assemble() )",
                                 argList=['configurationType'],
+                                argTypes=['ConfigurationType'],
                                 defaultArgs=['exu.ConfigurationType::Current'], #exu will be removed for binding
                                 example = "print('ODE1 size=',mbs.systemData.ODE1Size())",
                                 returnType='int',
@@ -1868,6 +1872,7 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='ODE1Size', cName='PyODE1Size',
 plr.DefPyFunctionAccess(cClass=classStr, pyName='AEsize', cName='PyAEsize', 
                                 description="get size of AE coordinate vector for given configuration (only works correctly after mbs.Assemble() )",
                                 argList=['configurationType'],
+                                argTypes=['ConfigurationType'],
                                 defaultArgs=['exu.ConfigurationType::Current'], #exu will be removed for binding
                                 example = "print('AE size=',mbs.systemData.AEsize())",
                                 returnType='int',
@@ -1876,6 +1881,7 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='AEsize', cName='PyAEsize',
 plr.DefPyFunctionAccess(cClass=classStr, pyName='DataSize', cName='PyDataSize', 
                                 description="get size of Data coordinate vector for given configuration (only works correctly after mbs.Assemble() )",
                                 argList=['configurationType'],
+                                argTypes=['ConfigurationType'],
                                 defaultArgs=['exu.ConfigurationType::Current'], #exu will be removed for binding
                                 example = "print('Data size=',mbs.systemData.DataSize())",
                                 returnType='int',
@@ -1884,6 +1890,7 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='DataSize', cName='PyDataSize',
 plr.DefPyFunctionAccess(cClass=classStr, pyName='SystemSize', cName='PySystemSize', 
                                 description="get size of System coordinate vector for given configuration (only works correctly after mbs.Assemble() )",
                                 argList=['configurationType'],
+                                argTypes=['ConfigurationType'],
                                 defaultArgs=['exu.ConfigurationType::Current'], #exu will be removed for binding
                                 example = "print('System size=',mbs.systemData.SystemSize())",
                                 returnType='int',
@@ -1892,6 +1899,7 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='SystemSize', cName='PySystemSiz
 plr.DefPyFunctionAccess(cClass=classStr, pyName='GetTime', cName='PyGetStateTime', 
                                 description="get configuration dependent time.",
                                 argList=['configurationType'],
+                                argTypes=['ConfigurationType'],
                                 defaultArgs=['exu.ConfigurationType::Current'], #exu will be removed for binding
                                 example = "mbs.systemData.GetTime(exu.ConfigurationType.Initial)",
                                 returnType='float',
@@ -1900,14 +1908,14 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='GetTime', cName='PyGetStateTime
 plr.DefPyFunctionAccess(cClass=classStr, pyName='SetTime', cName='PySetStateTime', 
                                 description="set configuration dependent time; use this access with care, e.g. in user-defined solvers.",
                                 argList=['newTime','configurationType'],
+                                argTypes=['float','ConfigurationType'],
                                 defaultArgs=['', 'exu.ConfigurationType::Current'], #exu will be removed for binding
                                 example = "mbs.systemData.SetTime(10., exu.ConfigurationType.Initial)",
-                                argTypes=['float','ConfigurationType'],
                                 returnType='None',
                                 )
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='AddODE2LoadDependencies', cName='PyAddODE2LoadDependencies', 
-                                description="advanced function for adding special dependencies of loads onto ODE2 coordinates, taking a list / numpy array of global ODE2 coordinates; this function needs to be called after Assemble() and needs to contain ODE2 coordinate indices; this list only affects implicit or static solvers if numericalDifferentiation.loadsJacobian=True; in this case, it may greatly improve convergence if loads with user functions depend on some system states, such as in a load with feedback control loop; the additional dependencies are not required, if doSystemWideDifferentiation=True, however the latter option being much less efficient!",
+                                description="advanced function for adding special dependencies of loads onto ODE2 coordinates, taking a list / numpy array of global ODE2 coordinates; this function needs to be called after Assemble() and needs to contain ODE2 coordinate indices; this list only affects implicit or static solvers if numericalDifferentiation.loadsJacobian=True; in this case, it may greatly improve convergence if loads with user functions depend on some system states, such as in a load with feedback control loop; the additional dependencies are not required, if doSystemWideDifferentiation=True, however the latter option being much less efficient. For more details, consider the file doublePendulum2DControl.py in the examples directory.",
                                 argList=['loadNumber','globalODE2coordinates'],
                                 defaultArgs=['',''],
                                 example = "mbs.systemData.AddODE2LoadDependencies(0,[0,1,2])\\\\#add dependency of load 5 onto node 2 coordinates:\\\\nodeLTG2 = mbs.systemData.GetNodeLTGODE2(2)\\\\mbs.systemData.AddODE2LoadDependencies(5,nodeLTG2)",
@@ -1948,145 +1956,145 @@ plr.DefLatexStartTable(classStr+':coordinate access')
 plr.DefPyFunctionAccess(cClass=classStr, pyName='GetODE2Coordinates', cName='GetODE2Coords', 
                                 description="get ODE2 system coordinates (displacements) for given configuration (default: exu.Configuration.Current)",
                                 argList=['configuration'],
+                                argTypes=['ConfigurationType'],
                                 defaultArgs=['exu.ConfigurationType::Current'],
                                 example = "uCurrent = mbs.systemData.GetODE2Coordinates()",
-                                argTypes=['ConfigurationType'],
                                 returnType=returnedArray,
                                 )
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='SetODE2Coordinates', cName='SetODE2Coords', 
                                 description="set ODE2 system coordinates (displacements) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!",
                                 argList=['coordinates','configuration'],
+                                argTypes=[listOrArray,'ConfigurationType'],
                                 defaultArgs=['','exu.ConfigurationType::Current'],
                                 example = "mbs.systemData.SetODE2Coordinates(uCurrent)",
-                                argTypes=[listOrArray,'ConfigurationType'],
-                                returnType=returnedArray,
+                                returnType='None',
                                 )
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='GetODE2Coordinates_t', cName='GetODE2Coords_t', 
                                 description="get ODE2 system coordinates (velocities) for given configuration (default: exu.Configuration.Current)",
                                 argList=['configuration'],
+                                argTypes=['ConfigurationType'],
                                 defaultArgs=['exu.ConfigurationType::Current'],
                                 example = "vCurrent = mbs.systemData.GetODE2Coordinates_t()",
-                                argTypes=['ConfigurationType'],
                                 returnType=returnedArray,
                                 )
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='SetODE2Coordinates_t', cName='SetODE2Coords_t', 
                                 description="set ODE2 system coordinates (velocities) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!",
                                 argList=['coordinates','configuration'],
+                                argTypes=[listOrArray,'ConfigurationType'],
                                 defaultArgs=['','exu.ConfigurationType::Current'],
                                 example = "mbs.systemData.SetODE2Coordinates_t(vCurrent)",
-                                argTypes=[listOrArray,'ConfigurationType'],
-                                returnType=returnedArray,
+                                returnType='None',
                                 )
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='GetODE2Coordinates_tt', cName='GetODE2Coords_tt', 
                                 description="get ODE2 system coordinates (accelerations) for given configuration (default: exu.Configuration.Current)",
                                 argList=['configuration'],
+                                argTypes=['ConfigurationType'],
                                 defaultArgs=['exu.ConfigurationType::Current'],
                                 example = "vCurrent = mbs.systemData.GetODE2Coordinates_tt()",
-                                argTypes=['ConfigurationType'],
                                 returnType=returnedArray,
                                 )
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='SetODE2Coordinates_tt', cName='SetODE2Coords_tt', 
                                 description="set ODE2 system coordinates (accelerations) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!",
                                 argList=['coordinates','configuration'],
+                                argTypes=[listOrArray,'ConfigurationType'],
                                 defaultArgs=['','exu.ConfigurationType::Current'],
                                 example = "mbs.systemData.SetODE2Coordinates_tt(aCurrent)",
-                                argTypes=[listOrArray,'ConfigurationType'],
-                                returnType=returnedArray,
+                                returnType='None',
                                 )
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='GetODE1Coordinates', cName='GetODE1Coords', 
                                 description="get ODE1 system coordinates (displacements) for given configuration (default: exu.Configuration.Current)",
                                 argList=['configuration'],
+                                argTypes=['ConfigurationType'],
                                 defaultArgs=['exu.ConfigurationType::Current'],
                                 example = "qCurrent = mbs.systemData.GetODE1Coordinates()",
-                                argTypes=['ConfigurationType'],
                                 returnType=returnedArray,
                                 )
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='SetODE1Coordinates', cName='SetODE1Coords', 
                                 description="set ODE1 system coordinates (velocities) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!",
                                 argList=['coordinates','configuration'],
+                                argTypes=[listOrArray,'ConfigurationType'],
                                 defaultArgs=['','exu.ConfigurationType::Current'],
                                 example = "mbs.systemData.SetODE1Coordinates_t(qCurrent)",
-                                argTypes=[listOrArray,'ConfigurationType'],
-                                returnType=returnedArray,
+                                returnType='None',
                                 )
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='GetODE1Coordinates_t', cName='GetODE1Coords_t', 
                                 description="get ODE1 system coordinates (velocities) for given configuration (default: exu.Configuration.Current)",
                                 argList=['configuration'],
+                                argTypes=['ConfigurationType'],
                                 defaultArgs=['exu.ConfigurationType::Current'],
                                 example = "qCurrent = mbs.systemData.GetODE1Coordinates_t()",
-                                argTypes=['ConfigurationType'],
                                 returnType=returnedArray,
                                 )
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='SetODE1Coordinates_t', cName='SetODE1Coords_t', 
                                 description="set ODE1 system coordinates (displacements) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!",
                                 argList=['coordinates','configuration'],
+                                argTypes=[listOrArray,'ConfigurationType'],
                                 defaultArgs=['','exu.ConfigurationType::Current'],
                                 example = "mbs.systemData.SetODE1Coordinates(qCurrent)",
-                                argTypes=[listOrArray,'ConfigurationType'],
-                                returnType=returnedArray,
+                                returnType='None',
                                 )
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='GetAECoordinates', cName='GetAECoords', 
                                 description="get algebraic equations (AE) system coordinates for given configuration (default: exu.Configuration.Current)",
                                 argList=['configuration'],
+                                argTypes=['ConfigurationType'],
                                 defaultArgs=['exu.ConfigurationType::Current'],
                                 example = "lambdaCurrent = mbs.systemData.GetAECoordinates()",
-                                argTypes=['ConfigurationType'],
                                 returnType=returnedArray,
                                 )
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='SetAECoordinates', cName='SetAECoords', 
                                 description="set algebraic equations (AE) system coordinates for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!",
                                 argList=['coordinates','configuration'],
+                                argTypes=[listOrArray,'ConfigurationType'],
                                 defaultArgs=['','exu.ConfigurationType::Current'],
                                 example = "mbs.systemData.SetAECoordinates(lambdaCurrent)",
-                                argTypes=[listOrArray,'ConfigurationType'],
-                                returnType=returnedArray,
+                                returnType='None',
                                 )
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='GetDataCoordinates', cName='GetDataCoords', 
                                 description="get system data coordinates for given configuration (default: exu.Configuration.Current)",
                                 argList=['configuration'],
+                                argTypes=['ConfigurationType'],
                                 defaultArgs=['exu.ConfigurationType::Current'],
                                 example = "dataCurrent = mbs.systemData.GetDataCoordinates()",
-                                argTypes=['ConfigurationType'],
                                 returnType=returnedArray,
                                 )
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='SetDataCoordinates', cName='SetDataCoords', 
                                 description="set system data coordinates for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!",
                                 argList=['coordinates','configuration'],
+                                argTypes=[listOrArray,'ConfigurationType'],
                                 defaultArgs=['','exu.ConfigurationType::Current'],
                                 example = "mbs.systemData.SetDataCoordinates(dataCurrent)",
-                                argTypes=[listOrArray,'ConfigurationType'],
-                                returnType=returnedArray,
+                                returnType='None',
                                 )
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='GetSystemState', cName='PyGetSystemState', 
                                 description="get system state for given configuration (default: exu.Configuration.Current); state vectors do not include the non-state derivatives ODE1_t and ODE2_tt and the time; function is copying data - not highly efficient; format of pyList: [ODE2Coords, ODE2Coords_t, ODE1Coords, AEcoords, dataCoords]",
                                 argList=['configuration'],
+                                argTypes=['ConfigurationType'],
                                 defaultArgs=['exu.ConfigurationType::Current'], #exu will be removed for binding
                                 example = "sysStateList = mbs.systemData.GetSystemState()",
-                                argTypes=['ConfigurationType'],
                                 returnType='List[List[float]]',
                                 )
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='SetSystemState', cName='PySetSystemState', 
                                 description="set system data coordinates for given configuration (default: exu.Configuration.Current); invalid list of vectors / vector size may lead to system crash; write access to state vectors (but not the non-state derivatives ODE1_t and ODE2_tt and the time); function is copying data - not highly efficient; format of pyList: [ODE2Coords, ODE2Coords_t, ODE1Coords, AEcoords, dataCoords]",
                                 argList=['systemStateList','configuration'],
+                                argTypes=['List[List[float]]','ConfigurationType'],
                                 defaultArgs=['','exu.ConfigurationType::Current'], #exu will be removed for binding
                                 example = "mbs.systemData.SetSystemState(sysStateList, configuration = exu.ConfigurationType.Initial)",
-                                argTypes=['List[List[float]]','ConfigurationType'],
-                                returnType=returnedArray,
+                                returnType='None',
                                 )
 
 
@@ -2121,7 +2129,7 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='GetObjectLTGODE1', cName='PyGet
 plr.DefPyFunctionAccess(cClass=classStr, pyName='GetObjectLTGAE', cName='PyGetObjectLocalToGlobalAE', 
                                 description="get object local-to-global coordinate mapping (list of global coordinate indices) for algebraic equations (AE) coordinates; only available after Assemble()",
                                 argList=['objectNumber'],
-                                example = "ltgObject4 = mbs.systemData.GetObjectLTGODE2(4)",
+                                example = "ltgObject4 = mbs.systemData.GetObjectLTGAE(4)",
                                 argTypes=['int'],
                                 returnType='List[int]',
                                 )

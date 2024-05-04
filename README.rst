@@ -39,7 +39,7 @@ Exudyn
 
 **A flexible multibody dynamics systems simulation code with Python and C++**
 
-Exudyn version = 1.8.0 (Jones)
+Exudyn version = 1.8.28.dev1 (Jones)
 
 +  **University of Innsbruck**, Department of Mechatronics, Innsbruck, Austria
 

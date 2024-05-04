@@ -151,9 +151,9 @@ CLASS KinematicTree33 (in module kinematicTree)
 
 .. _sec-kinematictree-kinematictree33---init--:
 
-Class function: \_\_init\_\_
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L158>`__\ (\ ``self``\ , \ ``listOfJointTypes``\ , \ ``listOfRotations``\ , \ ``listOfOffsets``\ , \ ``listOfInertia3D``\ , \ ``listOfCOM``\ , \ ``listOfMass``\ , \ ``listOfParents = []``\ , \ ``gravity = [0,0,-9.81]``\ )
+Class function: __init__
+^^^^^^^^^^^^^^^^^^^^^^^^
+`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L158>`__\ (\ ``self``\ , \ ``listOfJointTypes``\ , \ ``listOfRotations``\ , \ ``listOfOffsets``\ , \ ``listOfInertia3D``\ , \ ``listOfCOM``\ , \ ``listOfMass``\ , \ ``listOfParents = []``\ , \ ``gravity = [0,0,-9.81]``\ )
 
 - | \ *classFunction*\ :
   | initialize kinematic tree
@@ -247,9 +247,9 @@ CLASS KinematicTree66 (in module kinematicTree)
 
 .. _sec-kinematictree-kinematictree66---init--:
 
-Class function: \_\_init\_\_
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L440>`__\ (\ ``self``\ , \ ``listOfJointTypes``\ , \ ``listOfTransformations``\ , \ ``listOfInertias``\ , \ ``listOfParents = []``\ , \ ``gravity = [0,0,-9.81]``\ )
+Class function: __init__
+^^^^^^^^^^^^^^^^^^^^^^^^
+`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L440>`__\ (\ ``self``\ , \ ``listOfJointTypes``\ , \ ``listOfTransformations``\ , \ ``listOfInertias``\ , \ ``listOfParents = []``\ , \ ``gravity = [0,0,-9.81]``\ )
 
 - | \ *classFunction*\ :
   | initialize kinematic tree
