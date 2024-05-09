@@ -49,7 +49,7 @@ undefLabelList = [
     #('Solvers: Static','sec-solver-solverstatic'),
     #('Solvers: Dynamic','sec-solver-solverdynamic'),
     #('Solvers: Eigenvalues','sec-solver-computeode2eigenvalues'),
-    ('Theory: Component Mode Synthesis','sec-theory-cms'),
+    #('Theory: Component Mode Synthesis','sec-theory-cms'),
     #'sec-mainsolverstatic',
     ##('Graphics: UTF-8','sec-utf8'),
     #('Solver: Explicit','sec-explicitsolver'),

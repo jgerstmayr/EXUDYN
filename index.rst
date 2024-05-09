@@ -46,13 +46,6 @@ Theory: Contact
 
 See according section in `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
-.. _sec-theory-cms:
-
-Theory: Component Mode Synthesis
-================================
-
-See according section in `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
-
 Further information
 ===================
 

@@ -9,15 +9,43 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.8.28.dev1, 
-  \item last change =  2024-05-04, 
-  \item Number of issues = 1834, 
-  \item Number of resolved issues = 1622 (28 in current version), 
+  \item Exudyn version = 1.8.32.dev1, 
+  \item last change =  2024-05-09, 
+  \item Number of issues = 1837, 
+  \item Number of resolved issues = 1626 (32 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.8.32}:  resolved Issue 1832: {\bf theory docu}
+(docu)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add description of computation of stresses for FFRFreducedOrder}
+    \item   date resolved: {\bf 2024-05-09 17:12},
+date raised: 2024-05-03 
+  \ei
+  \item[] {\bf Version 1.8.31}:  resolved Issue 1836: {\bf ComputeLinearizedSystem}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: output constraint and nullspace matrices for constrained systems}
+    \item   date resolved: {\bf 2024-05-05 16:18},
+date raised: 2024-05-05 
+  \ei
+  \item[] {\bf Version 1.8.30}:  resolved Issue 1835: {\bf ComputeLinearizedSystem}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add option to compute linearized system of constrained system}
+    \item   date resolved: {\bf 2024-05-05 16:18},
+date raised: 2024-05-05 
+  \ei
+  \item[] {\bf Version 1.8.29}:  resolved Issue 1834: {\bf ComputeLinearizedSystem}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: remove sparse solver option useSparseSolver, as it is not implemented}
+    \item   date resolved: {\bf 2024-05-05 16:17},
+date raised: 2024-05-05 
+  \ei
   \item[] {\bf Version 1.8.28}:  resolved Issue 1833: {\bf ComputeODE2EigenValues}
 (extension)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
@@ -92,7 +120,7 @@ date raised: 2024-04-19
   \item[] {\bf Version 1.8.18}:  resolved Issue 1819: {\bf KinematicTreePendulum.py}
 (example)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
-    \item {description: Version 1.7.71 broke example „kinematicTreePendulum“ with transition from SensorObject to SensorBody}
+    \item {description: Version 1.7.71 broke example kinematicTreePendulum with transition from SensorObject to SensorBody}
     \item {\bf notes: changed SensorObject(objectNumber=oKT into SensorBody(bodyNumber=oKT}
     \item   date resolved: {\bf 2024-04-17 16:13},
 date raised: 2024-04-17 (resolved by: P. Manzl)
@@ -130,7 +158,7 @@ date raised: 2024-04-14
   \item[] {\bf Version 1.8.13}:  resolved Issue 1815: {\bf stub files}
 (fix)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
-    \item {description: .pyi files contain \\_ instead of \_ from latex documentation}
+    \item {description: .pyi are missing backslash before underscore (for latex) documentation}
     \item   date resolved: {\bf 2024-04-14 15:15},
 date raised: 2024-04-14 
   \ei

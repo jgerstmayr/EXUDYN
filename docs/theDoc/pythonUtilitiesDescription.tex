@@ -9742,7 +9742,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L366}{ComputeLinearizedSystem}{}}}({\it mbs}, {\it simulationSettings}= exudyn.SimulationSettings(), {\it useSparseSolver}= False)
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L369}{ComputeLinearizedSystem}{}}}({\it mbs}, {\it simulationSettings}= exudyn.SimulationSettings(), {\it projectIntoConstraintNullspace}= False, {\it singularValuesTolerance}= 1e-12, {\it returnConstraintJacobian}= False, {\it returnConstraintNullspace}= False)
 \end{flushleft}
 \bi
   \item \mybold{NOTE}: this function is directly available in MainSystem (mbs); it should be directly called as mbs.ComputeLinearizedSystem(...). For description of the interface, see the MainSystem Python extensions, \refSection{sec:mainsystemextensions:ComputeLinearizedSystem}.
@@ -9750,7 +9750,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 \ei
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L443}{ComputeODE2Eigenvalues}{}}}({\it mbs}, {\it simulationSettings}= exudyn.SimulationSettings(), {\it useSparseSolver}= False, {\it numberOfEigenvalues}= 0, {\it constrainedCoordinates}= [], {\it convert2Frequencies}= False, {\it useAbsoluteValues}= True, {\it computeComplexEigenvalues}= False, {\it ignoreAlgebraicEquations}= False, {\it singularValuesTolerance}= 1e-12)
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L502}{ComputeODE2Eigenvalues}{}}}({\it mbs}, {\it simulationSettings}= exudyn.SimulationSettings(), {\it useSparseSolver}= False, {\it numberOfEigenvalues}= 0, {\it constrainedCoordinates}= [], {\it convert2Frequencies}= False, {\it useAbsoluteValues}= True, {\it computeComplexEigenvalues}= False, {\it ignoreAlgebraicEquations}= False, {\it singularValuesTolerance}= 1e-12)
 \end{flushleft}
 \bi
   \item \mybold{NOTE}: this function is directly available in MainSystem (mbs); it should be directly called as mbs.ComputeODE2Eigenvalues(...). For description of the interface, see the MainSystem Python extensions, \refSection{sec:mainsystemextensions:ComputeODE2Eigenvalues}.
@@ -9758,7 +9758,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 \ei
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L660}{ComputeSystemDegreeOfFreedom}{}}}({\it mbs}, {\it simulationSettings}= exudyn.SimulationSettings(), {\it threshold}= 1e-12, {\it verbose}= False, {\it useSVD}= False)
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L719}{ComputeSystemDegreeOfFreedom}{}}}({\it mbs}, {\it simulationSettings}= exudyn.SimulationSettings(), {\it threshold}= 1e-12, {\it verbose}= False, {\it useSVD}= False)
 \end{flushleft}
 \bi
   \item \mybold{NOTE}: this function is directly available in MainSystem (mbs); it should be directly called as mbs.ComputeSystemDegreeOfFreedom(...). For description of the interface, see the MainSystem Python extensions, \refSection{sec:mainsystemextensions:ComputeSystemDegreeOfFreedom}.
@@ -9766,7 +9766,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 \ei
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L747}{CheckSolverInfoStatistics}{}}}\label{sec:solver:CheckSolverInfoStatistics}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L806}{CheckSolverInfoStatistics}{}}}\label{sec:solver:CheckSolverInfoStatistics}
 ({\it solverName}, {\it infoStat}, {\it numberOfEvaluations})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}

@@ -19,15 +19,27 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.8.28.dev1, 
-+  last change =  2024-05-04, 
-+  Number of issues = 1834, 
-+  Number of resolved issues = 1622 (28 in current version), 
++  Exudyn version = 1.8.32.dev1, 
++  last change =  2024-05-09, 
++  Number of issues = 1837, 
++  Number of resolved issues = 1626 (32 in current version), 
 
 ***********
 Version 1.8
 ***********
 
+ * Version 1.8.32: resolved Issue 1832: theory docu (docu)
+    - description:  add description of computation of stresses for FFRFreducedOrder
+    - date resolved: **2024-05-09 17:12**\ , date raised: 2024-05-03 
+ * Version 1.8.31: resolved Issue 1836: ComputeLinearizedSystem (extension)
+    - description:  output constraint and nullspace matrices for constrained systems
+    - date resolved: **2024-05-05 16:18**\ , date raised: 2024-05-05 
+ * Version 1.8.30: resolved Issue 1835: ComputeLinearizedSystem (extension)
+    - description:  add option to compute linearized system of constrained system
+    - date resolved: **2024-05-05 16:18**\ , date raised: 2024-05-05 
+ * Version 1.8.29: resolved Issue 1834: ComputeLinearizedSystem (change)
+    - description:  remove sparse solver option useSparseSolver, as it is not implemented
+    - date resolved: **2024-05-05 16:17**\ , date raised: 2024-05-05 
  * Version 1.8.28: resolved Issue 1833: ComputeODE2EigenValues (extension)
     - description:  extend to complex eigenvalues
     - **notes:** added TestModel complexEigenvaluesTest.py
@@ -61,7 +73,7 @@ Version 1.8
     - description:  change type in AddObject, AddMarker, AddSensor, AddLoad, AddNode from pyObject: dict to pyObject: Any in order to resolve typing errors
     - date resolved: **2024-04-21 19:16**\ , date raised: 2024-04-19 
  * Version 1.8.18: resolved Issue 1819: KinematicTreePendulum.py (example)
-    - description:  Version 1.7.71 broke example „kinematicTreePendulum“ with transition from SensorObject to SensorBody
+    - description:  Version 1.7.71 broke example kinematicTreePendulum with transition from SensorObject to SensorBody
     - **notes:** changed SensorObject(objectNumber=oKT into SensorBody(bodyNumber=oKT
     - date resolved: **2024-04-17 16:13**\ , date raised: 2024-04-17 
     - resolved by: P. Manzl
@@ -80,7 +92,7 @@ Version 1.8
     - description:  .pyi files do not contain correct default args for C++ interfaces
     - date resolved: **2024-04-14 16:15**\ , date raised: 2024-04-14 
  * Version 1.8.13: resolved Issue 1815: stub files (fix)
-    - description:  .pyi files contain _ instead of _ from latex documentation
+    - description:  .pyi are missing backslash before underscore (for latex) documentation
     - date resolved: **2024-04-14 15:15**\ , date raised: 2024-04-14 
  * Version 1.8.12: resolved Issue 1812: GetMarkerOutput (fix)
     - description:  not working for MarkerKinematicTreeRigid in case of Reference configuration; adjustments done in CObjectKinematicTree::ComputeTreeTransformations to avoid the need for velocities in the retrieval of positions
@@ -5272,10 +5284,6 @@ Version 0.1
 ***********
 Open issues
 ***********
-
- * **open issue 1832:** theory docu         
-    - description:  add description of computation of stresses for FFRFreducedOrder
-    - date raised: 2024-05-03 
 
  * **open issue 1825:** GraphicsDataCube    
     - description:  rename to GraphicsDataBrick... functions; use assignment to keep previous functionality

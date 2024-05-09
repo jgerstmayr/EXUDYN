@@ -1324,9 +1324,6 @@ Further integration rules can be found in the C++ code of \codeName, see file \t
 
 
 
-%RST files only considered up to here
-%%RSTCOMPATIBLE
-
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \newpage
 \mysubsectionlabel{Model order reduction and component mode synthesis}{sec:theory:CMS}
@@ -1392,13 +1389,14 @@ are required.
 Finally, \texttt{elements} need to be included for visualization, and a surface needs to be reconstructed from the element connectivity, which is available for tetrahedral and hexahedral elements for most import functions.
 
 %++++++++++++++++++++++++
-\begin{figure}[tbph]
-  \begin{center}
-  \includegraphics[width=10cm]{figures/modesHinge/HCBhingeMesh.jpg}
-  \end{center}
-  \caption{Test model and mesh for hinge created with Netgen (linear tetrahedral elements).}
-  \label{fig_hingePartMesh}
-\end{figure}
+\LatexRSTfigure{figures/modesHinge/HCBhingeMesh}{fig_hingePartMesh}{10cm}{400}{Test model and mesh for hinge created with Netgen (linear tetrahedral elements).}
+%\begin{figure}[tbph]
+  %\begin{center}
+  %\includegraphics[width=10cm]{figures/modesHinge/HCBhingeMesh.jpg}
+  %\end{center}
+  %\caption{Test model and mesh for hinge created with Netgen (linear tetrahedral elements).}
+  %\label{fig_hingePartMesh}
+%\end{figure}
 %++++++++++++++++++++++++
 As an example, we consider a part denoted as 'hinge' in the following, see \fig{fig_hingePartMesh}. The test example can be found in \texttt{Examples/NGsolveCMStutorial.py} with lots of additional features.
 
@@ -1432,8 +1430,12 @@ The function \texttt{fem.ComputeEigenmodes(...)} uses \texttt{eigh(...)} from \t
 and in the sparse mode \texttt{eigsh(...)} from \texttt{scipy.sparse.linalg}, the latter being restricted to pure symmetric matrices.
 Using special shift-inverted techniques in \texttt{eigsh(...)}, it performs much better than standard settings. However, you may tune your specific eigenvalue problem by modifying the solver procedure (just copy that function and adjust to your needs).
 As an output, we obtain the smallest \texttt{nModes} eigenvectors (=eigenmodes)\footnote{Eigenvectors are the result of the eigenvalue algorithm, such as the QR algorithm. The mechanical interpretation of eigenvectors are eigenmodes, that can be visualized as shown in the figures of this section.} of the system.
-Here, we will also use synonymously the terms `eigenmodes' and `normal modes', which result from an eigenvalue/eigenvector computation using certain (or even no) boundary conditions.
+Here, we will also use synonymously the terms 'eigenmodes' and 'normal modes', which result from an eigenvalue/eigenvector computation using certain (or even no) boundary conditions.
 %++++++++++++++++++++++++
+\onlyRST{
+\LatexRSTfigure{figures/freeFreeModesStress}{fig_hingePartFreeFreeModes}{16cm}{800}{Lowest 8 free-free modes for hinge finite element model, contour plot for $xx$-stress component.}
+}
+\ignoreRST{
 \begin{figure}[tbph]
   \begin{center}
   \includegraphics[width=4cm]{figures/modesHinge/freeFreeModeStress1}
@@ -1448,9 +1450,10 @@ Here, we will also use synonymously the terms `eigenmodes' and `normal modes', w
   \caption{Lowest 8 free-free modes for hinge finite element model, contour plot for $xx$-stress component.}
   \label{fig_hingePartFreeFreeModes}
 \end{figure}
+}
 %++++++++++++++++++++++++
 
-Clearly, if there are no supports included in the stiffness matrix, the resulting eigenmodes will contain 6 rigid body modes and we will also call this case for the computation of eigenmodes the `free-free' case, in analogy to a simply supported beam.
+Clearly, if there are no supports included in the stiffness matrix, the resulting eigenmodes will contain 6 rigid body modes and we will also call this case for the computation of eigenmodes the free-free case, in analogy to a simply supported beam.
 This rigid body modes, which are usually not needed (=unwanted) in the succeeding computation, can be excluded with an according option in \vspace{6pt}\\
 \texttt{fem.ComputeEigenFrequencies(excludeRigidBodyModes = ...)}
 \vspace{12pt}\\
@@ -1501,7 +1504,7 @@ or, equivalently,
   \Mm_{bb} \ddot{\qv}_b + \Mm_{bi} \ddot{\qv}_i +\Km_{bb}  {\qv}_b + \Km_{bi}  {\qv}_i  = {\fv}_b \label{eq_Guyan_bb}\\
   \Mm_{ib} \ddot{\qv}_b + \Mm_{ii} \ddot{\qv}_i +\Km_{ib}  {\qv}_b + \Km_{ii}  {\qv}_i  = \Null \eqDot \label{eq_Guyan_ii}
 \eea
-A pure static condensation follows from \eq{eq_Guyan_ii} with the assumption that inertia terms are neglected,
+A pure static condensation follows from \eq{eq_GuyanIrons} with the assumption that inertia terms are neglected,
 leading to the static result for internal nodes,
 \be 
   {\qv}_{i,stat}=-\Km_{ii}^{-1} \Km_{ib} {\qv}_{b} \eqDot 
@@ -1522,7 +1525,7 @@ Hereafter, we will only keep the lowest (or other appropriate) $m$ eigenmodes in
 \be
   \tPsi^{(red)}_{ii} = \left[\tPsi_{ii,0}, \ldots, \tPsi_{ii,m-1} \right]
 \ee
-Combining these `fixed-fixed' eigenvectors with the Guyan-Irons reduction \eqref{eq_guans_red}, we obtain the 
+Combining these 'fixed-fixed' eigenvectors with the Guyan-Irons reduction \eqref{eq_guans_red}, we obtain the 
 Hurty-Craig-Bampton modes as
 \be
   \vp{\qv_b}{\qv_i} \approx \vp{\Im}{-\Km_{ii}^{-1} \Km_{ib}}  \qv_b  +  \vp{\Null}{\tPsi_{r,i}}  \pv_{r} \eqComma
@@ -1638,6 +1641,12 @@ The eigenfrequencies for this case now are significantly higher than in the free
  %freq(Hz)=[1277.35052832 1469.86514681 3336.91168906 3584.28464361 5079.65220372
  %6035.58805197 6049.99829894 6568.47108075]
 %++++++++++++++++++++++++
+\onlyRST{
+\LatexRSTfigure{figures/HCBmodesHingeStaticA}{fig_hingePartStaticModesA}{15cm}{800}{Static modes for bolt rigid body interface, using Hurty-Craig-Bampton method; top three images show (x,y,z)-translation modes, bottom three images show (x,y,z)-rotation modes; contour color represents norm of displacements.}
+\LatexRSTfigure{figures/HCBmodesHingeStaticB}{fig_hingePartStaticModesB}{15cm}{800}{Static modes for bushing rigid body interface, using Hurty-Craig-Bampton method; top three images show (x,y,z)-translation modes, bottom three images show (x,y,z)-rotation modes; contour color represents norm of displacements.}
+\LatexRSTfigure{figures/HCBmodesHingeEigenmode}{fig_hingePartFixedFixedModes}{16cm}{800}{Eigenmodes for fixed-fixed case, resulting from Hurty-Craig-Bampton method; contour color represents norm of displacements.}
+}
+\ignoreRST{
 \begin{figure}[tbph]
   \begin{center}
   \includegraphics[width=5cm]{figures/modesHinge/HCBmodesHingeStaticAx}
@@ -1683,7 +1692,9 @@ The eigenfrequencies for this case now are significantly higher than in the free
   \label{fig_hingePartFixedFixedModes}
 \end{figure}
 %++++++++++++++++++++++++
-
+}
+\mysubsubsubsection{Computation of Hurty-Craig-Bampton modes with RBE3 interfaces}
+we are currently finishing a paper, after which this section will be completed!
 
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1792,6 +1803,50 @@ The eigenfrequencies for this case now are significantly higher than in the free
 
 
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\mysubsubsectionlabel{Computation of stresses and strains for CMS modes}{sec:theory:CMS:stresses}
+%
+The computation of stresses and strains is not directly possible if only knowing nodal displacements, stiffness matrix and mass matrix.
+In the following, we assume that we have a vector of nodal displacements $\qv$, reduced coordinates $\pv^{R}$, as well as a reduction matrix $\tPsi^{R}$, compare \eq{theory:eigenmodes:HCB},
+\be \label{theory:eigenmodes:HCB2}
+  \qv \approx \tPsi^{R} \pv^{R} \eqDot
+\ee
+Knowing all nodal displacements of a finite element allows to compute displacement, stress, and strain field within the element. This procedure is usually done within the finite element codes.
+In particular, one should know that stress and strain quantities are having a lower order of accuracy than displacements and they may be more accurate in certain points, e.g., integration points. Furthermore, stress and strain quantities may have jumps along element boundaries, which is why they are usually post-processed in order to at least look smoother but in general also are more accurate.
+
+In \codeName, we have the option to pre-compute stress or strain components at finite element nodes, see the options below.
+Due to the fact that the FFRF / CMS formulation is assuming small (linearized) strains only, we are able to superimpose stress and strain for each mode. Independently of the quantity we intend to compute (stress, strain or similar), we use post-processing modes, which allow to represent special output variables.
+
+Having a modal coordinate $\pv^{R}_k$, we define a post-processing mode (pm) such that
+\be
+  \sv_k^{\mathrm{pm}} = \tPsi^{\mathrm{pm}}_k \pv^{R}_k \eqComma
+\ee
+in which $\sv_k^{\mathrm{pm}}$ represents for example the stress component $\sigma_\mathrm{xx}$ for the mode $k$.
+Putting together all stress modes for $\sigma_\mathrm{xx}$, $\sigma_\mathrm{yy}$, $\sigma_\mathrm{zz}$, $\sigma_\mathrm{yz}$, $\sigma_\mathrm{xz}$, and $\sigma_\mathrm{xy}$, 
+\be
+  \tPsi^{\sigma_\mathrm{xx}} = \left[\tPsi^{\sigma_\mathrm{xx}}_0, \tPsi^{\sigma_\mathrm{xx}}_1, \ldots,
+               \tPsi^{\sigma_\mathrm{xx}}_{m-1}\right] \eqComma
+\ee
+we are able to compute $\sigma_\mathrm{xx}$ for all nodes from the relation
+\be
+  \sv^{\sigma_\mathrm{xx}} = \tPsi^{\sigma_\mathrm{xx}} \pv^{R}
+\ee
+Using the \texttt{FEMinterface} member \texttt{postProcessingModes}, the \texttt{FEM} module, we can define the \texttt{matrix} as $\tPsi^{\sigma_\mathrm{ij}}$ for every node of the finite element mesh. In particular, one has to store all stress (or strain) components consecutively for each mode, which means that for mode $k$, $\tPsi$ contains the columns
+\be
+  \tPsi^{\sigma}_k = \left[\tPsi^{\sigma_\mathrm{xx}}_k, \tPsi^{\sigma_\mathrm{yy}}_k, 
+                           \tPsi^{\sigma_\mathrm{zz}}_k, \tPsi^{\sigma_\mathrm{yz}}_k, 
+                           \tPsi^{\sigma_\mathrm{xz}}_k, \tPsi^{\sigma_\mathrm{xy}}_k\right] \eqComma
+\ee
+For more details, see the \texttt{FEM} module in \refSection{sec:FEM:FEMinterface:__init__}, either for function \texttt{ComputePostProcessingModes} or \texttt{ComputePostProcessingModesNGsolve}.
+
+In order to retrieve modes, we currently have three options:
+\bi
+  \item Re-compute stress or strain quantities for given material parameters from nodal displacements for linear tetrahedral elements (Tet4), using the function \texttt{ComputePostProcessingModes} within the \texttt{FEM} module. This function is implemented in Python and therefore comparatively slow.
+  \item For NGsolve models, you can use the \texttt{ComputePostProcessingModesNGsolve}, which takes the finite element space and material to compute post-processing modes directly in NGsolve, which is comparatively fast, if you do not have an excessive amount of modes and nodes.
+  \item You can compute the post-processing modes within your finite element tool, such as Ansys or Simulia(ABAQUS) and import them manually. There exists no functionality in \codeName to do so.
+\ei
+In general, one should know that the size of postprocessing modes may be huge. If you have $200\,000$ nodes and 100 modes, the matrix $\tPsi^{\sigma}$ would have the size $200\,000 \times (6 \cdot 100)$, thus leading to $120\,000\,000$ components, close to 1GB of memory. In other words, it could make sense to consider computation of stresses in a post-computing phase.
+
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \mysubsubsectionlabel{Interfaces and boundaries}{sec:theory:CMS:interfaces}
 Being able to model a sole flexible body is not sufficient for the modeling of industrial problems.
 An important part of component mode synthesis is the appropriate definition of boundaries or interfaces.
@@ -1863,6 +1918,9 @@ It should be noted that regarding efficiency or highest accuracy, better referen
 
 
 
+
+%RST files only considered up to here
+%%RSTCOMPATIBLE
 
 
 \clearpage
