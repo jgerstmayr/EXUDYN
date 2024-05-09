@@ -10,4 +10,5 @@ Theory and formulations
    DynamicsMechanicalPrinciples
    FramesRotationsAndCoordinateSystems
    IntegrationPoints
+   ModelOrderReductionAndComponentModeSynthesis
 

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ObjectConnectorReevingSystemSprings &mdash; Exudyn1.8.28.dev1 1.8.28.dev1 documentation</title>
+  <title>ObjectConnectorReevingSystemSprings &mdash; Exudyn1.8.32.dev1 1.8.32.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=027cc127"></script>
+        <script src="../../../_static/documentation_options.js?v=d6ff67ca"></script>
         <script src="../../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -43,7 +43,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.8.28.dev1
+            Exudyn1.8.32.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -115,7 +115,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.8.28.dev1</a>
+          <a href="../../../index.html">Exudyn1.8.32.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -280,14 +280,14 @@ simple reeving systems in 3D.</p>
 <figure class="align-default" id="id1">
 <span id="fig-reevingsystemsprings-tangents"></span><a class="reference internal image-reference" href="../../../_images/CommonTangents3D.png"><img alt="../../../_images/CommonTangents3D.png" src="../../../_images/CommonTangents3D.png" style="width: 500px;" /></a>
 <figcaption>
-<p><span class="caption-number">Fig. 35 </span><span class="caption-text">Geometry of common tangent for two spatial circles defined by radii <span class="math notranslate nohighlight">\(R_A\)</span> and <span class="math notranslate nohighlight">\(R_B\)</span> as well as by the normalized axis vectors <span class="math notranslate nohighlight">\({\mathbf{a}}_A\)</span> and <span class="math notranslate nohighlight">\({\mathbf{a}}_B\)</span>. The tangent is undefined, if one of the axis vectors is parallel to the vector <span class="math notranslate nohighlight">\({\mathbf{c}}\)</span>, which connects the two center points. The positive rotation sense is indicated by means of the angular velocities <span class="math notranslate nohighlight">\(\omega_A\)</span> and <span class="math notranslate nohighlight">\(\omega_B\)</span>.</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
+<p><span class="caption-number">Fig. 40 </span><span class="caption-text">Geometry of common tangent for two spatial circles defined by radii <span class="math notranslate nohighlight">\(R_A\)</span> and <span class="math notranslate nohighlight">\(R_B\)</span> as well as by the normalized axis vectors <span class="math notranslate nohighlight">\({\mathbf{a}}_A\)</span> and <span class="math notranslate nohighlight">\({\mathbf{a}}_B\)</span>. The tangent is undefined, if one of the axis vectors is parallel to the vector <span class="math notranslate nohighlight">\({\mathbf{c}}\)</span>, which connects the two center points. The positive rotation sense is indicated by means of the angular velocities <span class="math notranslate nohighlight">\(\omega_A\)</span> and <span class="math notranslate nohighlight">\(\omega_B\)</span>.</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
 </figcaption>
 </figure>
 </section>
 <section id="common-tangent-of-two-circles-in-3d">
 <h2>Common tangent of two circles in 3D<a class="headerlink" href="#common-tangent-of-two-circles-in-3d" title="Link to this heading"></a></h2>
 <p>In order to compute the total length of the rope of the reeving system, the tangent of two arbitrary circles in space needs to be computed.
-Considering <a class="reference internal" href="#fig-reevingsystemsprings-tangents"><span class="std std-numref">Fig. 35</span></a>, the relations are based on the
+Considering <a class="reference internal" href="#fig-reevingsystemsprings-tangents"><span class="std std-numref">Fig. 40</span></a>, the relations are based on the
 center points of the circles <span class="math notranslate nohighlight">\({\mathbf{p}}_A\)</span> and <span class="math notranslate nohighlight">\({\mathbf{p}}_B\)</span>, the radii <span class="math notranslate nohighlight">\(R_A\)</span> and <span class="math notranslate nohighlight">\(R_B\)</span> as well as
 the axis vectors <span class="math notranslate nohighlight">\({\mathbf{a}}_A\)</span> and <span class="math notranslate nohighlight">\({\mathbf{a}}_B\)</span>, the latter vectors also defining the side at which the tangent contacts.
 For the definition of the tangent, the vectors <span class="math notranslate nohighlight">\({\mathbf{r}}_A\)</span> and <span class="math notranslate nohighlight">\({\mathbf{r}}_B\)</span> need to be computed.</p>
@@ -318,9 +318,9 @@ The unknown tangent vector is given as</p>
 \[{\mathbf{r}}_A\tp ({\mathbf{c}} + {\mathbf{r}}_B - {\mathbf{r}}_A) = 0, \quad \mathrm{and} \quad {\mathbf{r}}_B\tp ({\mathbf{c}} + {\mathbf{r}}_B - {\mathbf{r}}_A) = 0,\]</div>
 <p>or</p>
 <div class="math notranslate nohighlight" id="equation-eq-reevingsystemsprings-newton">
-<span class="eqno">(64)<a class="headerlink" href="#equation-eq-reevingsystemsprings-newton" title="Link to this equation"></a></span>\[{\mathbf{r}}_A\tp {\mathbf{c}} + {\mathbf{r}}_A\tp {\mathbf{r}}_B - R_A^2 = 0, \quad \mathrm{and} \quad {\mathbf{r}}_B\tp {\mathbf{c}} - {\mathbf{r}}_B\tp{\mathbf{r}}_A + R_B^2 = 0 .\]</div>
-<p>The relations Eq. <a class="reference internal" href="#equation-eq-reevingsystemsprings-newton">(64)</a> reduce to only one equation, if either <span class="math notranslate nohighlight">\(R_A=0\)</span> or <span class="math notranslate nohighlight">\(R_B = 0\)</span>.
-The equations can be solved by Newton’s method by computing the jacobian of <span class="math notranslate nohighlight">\({\mathbf{J}}_{CT}\)</span> of Eq. <a class="reference internal" href="#equation-eq-reevingsystemsprings-newton">(64)</a> w.r.t.the
+<span class="eqno">(75)<a class="headerlink" href="#equation-eq-reevingsystemsprings-newton" title="Link to this equation"></a></span>\[{\mathbf{r}}_A\tp {\mathbf{c}} + {\mathbf{r}}_A\tp {\mathbf{r}}_B - R_A^2 = 0, \quad \mathrm{and} \quad {\mathbf{r}}_B\tp {\mathbf{c}} - {\mathbf{r}}_B\tp{\mathbf{r}}_A + R_B^2 = 0 .\]</div>
+<p>The relations Eq. <a class="reference internal" href="#equation-eq-reevingsystemsprings-newton">(75)</a> reduce to only one equation, if either <span class="math notranslate nohighlight">\(R_A=0\)</span> or <span class="math notranslate nohighlight">\(R_B = 0\)</span>.
+The equations can be solved by Newton’s method by computing the jacobian of <span class="math notranslate nohighlight">\({\mathbf{J}}_{CT}\)</span> of Eq. <a class="reference internal" href="#equation-eq-reevingsystemsprings-newton">(75)</a> w.r.t.the
 unknown angles <span class="math notranslate nohighlight">\(\varphi_A\)</span> and <span class="math notranslate nohighlight">\(\varphi_B\)</span>. The iterations are started with</p>
 <div class="math notranslate nohighlight">
 \[\varphi_A = \pi \quad \mathrm{and} \quad \varphi_B = \pi,\]</div>

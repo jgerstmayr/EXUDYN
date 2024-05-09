@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Explicit solvers &mdash; Exudyn1.8.28.dev1 1.8.28.dev1 documentation</title>
+  <title>Explicit solvers &mdash; Exudyn1.8.32.dev1 1.8.32.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=027cc127"></script>
+        <script src="../../_static/documentation_options.js?v=d6ff67ca"></script>
         <script src="../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -43,7 +43,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.8.28.dev1
+            Exudyn1.8.32.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -100,7 +100,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.8.28.dev1</a>
+          <a href="../../index.html">Exudyn1.8.32.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -128,9 +128,9 @@ A list of explicit solvers is available, see Section <a class="reference interna
 <div class="math notranslate nohighlight">
 \[\txi = [{\mathbf{q}}\tp \;\; \dot {\mathbf{q}}\tp \;\; {\mathbf{y}}\tp ]\tp\]</div>
 <p>and which includes <a class="reference internal" href="Abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> coordinates and velocities and <a class="reference internal" href="Abbreviations.html#ode1"><span class="std std-ref">ODE1</span></a> coordinates. All coordinates are computed without reference values.</p>
-<p>The <a class="reference internal" href="Abbreviations.html#ode1"><span class="std std-ref">ODE1</span></a> and <a class="reference internal" href="Abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> equations of Eq. <a class="reference internal" href="#equation-eq-systemeom">(23)</a>, with <span class="math notranslate nohighlight">\(\tlambda=0\)</span>, are written in explicit form and converted to first order equations,</p>
+<p>The <a class="reference internal" href="Abbreviations.html#ode1"><span class="std std-ref">ODE1</span></a> and <a class="reference internal" href="Abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> equations of Eq. <a class="reference internal" href="#equation-eq-systemeom">(34)</a>, with <span class="math notranslate nohighlight">\(\tlambda=0\)</span>, are written in explicit form and converted to first order equations,</p>
 <div class="math notranslate nohighlight" id="equation-eq-systemeom">
-<span class="eqno">(23)<a class="headerlink" href="#equation-eq-systemeom" title="Link to this equation"></a></span>\[\begin{split}\dot {\mathbf{q}} &amp;=&amp; \vel \nonumber \\
+<span class="eqno">(34)<a class="headerlink" href="#equation-eq-systemeom" title="Link to this equation"></a></span>\[\begin{split}\dot {\mathbf{q}} &amp;=&amp; \vel \nonumber \\
 \dot \vel &amp; = &amp;{\mathbf{M}}^{-1} {\mathbf{f}}_\SO({\mathbf{q}}, \vel, t) \nonumber \\
 \dot {\mathbf{y}} &amp; = &amp;{\mathbf{f}}_\FO({\mathbf{y}}, t) \\\end{split}\]</div>
 <p>The system first order differential equations for explicit solvers thus read</p>
@@ -143,7 +143,7 @@ A list of explicit solvers is available, see Section <a class="reference interna
 \[\txi_{t+h} = \txi_{t} + \Delta \txi.\]</div>
 <p>For any given Runge-Kutta method, the integration of one step with step size <span class="math notranslate nohighlight">\(h\)</span> is performed by an approximation</p>
 <div class="math notranslate nohighlight" id="equation-s-stage-quadrature">
-<span class="eqno">(24)<a class="headerlink" href="#equation-s-stage-quadrature" title="Link to this equation"></a></span>\[\Delta \txi = \int _{t}^{t+h}{\mathbf{f}}_e(\tau ,\txi(\tau ))d\tau \approx h\left[b_{1} {\mathbf{f}}_e(t,\txi(t))+b_{2} {\mathbf{f}}_e(t+c_{2} h,\txi(t+c_{2} h))+ \ldots +b_{s} {\mathbf{f}}_e(t+\txi_{s} h,u(t+\txi_{s} h))\right]\]</div>
+<span class="eqno">(35)<a class="headerlink" href="#equation-s-stage-quadrature" title="Link to this equation"></a></span>\[\Delta \txi = \int _{t}^{t+h}{\mathbf{f}}_e(\tau ,\txi(\tau ))d\tau \approx h\left[b_{1} {\mathbf{f}}_e(t,\txi(t))+b_{2} {\mathbf{f}}_e(t+c_{2} h,\txi(t+c_{2} h))+ \ldots +b_{s} {\mathbf{f}}_e(t+\txi_{s} h,u(t+\txi_{s} h))\right]\]</div>
 <p>in which <span class="math notranslate nohighlight">\(t + c_{i}h\)</span> is the time for stage <span class="math notranslate nohighlight">\(i\)</span> and <span class="math notranslate nohighlight">\(b_i\)</span> the according weight given in the integration formula.
 Stages are within one step (therefor called one-step-methods), where <span class="math notranslate nohighlight">\(c_i=0\)</span> represents the beginning of the step and <span class="math notranslate nohighlight">\(c_i=1\)</span> the end.
 Note that <span class="math notranslate nohighlight">\(c_{1}= 0\)</span> for explicit integration formulas.</p>
@@ -152,8 +152,8 @@ Note that <span class="math notranslate nohighlight">\(c_{1}= 0\)</span> for exp
 \[{\mathbf{g}}_{i} \approx \txi(t+c_{i} h)\]</div>
 <p>and computed by explicit integration (quadrature) formulas of lower order (<span class="math notranslate nohighlight">\(g_i\)</span> not to be mixed up with algebraic equations!),</p>
 <div class="math notranslate nohighlight" id="equation-eq-expl-rk-stages">
-<span class="eqno">(25)<a class="headerlink" href="#equation-eq-expl-rk-stages" title="Link to this equation"></a></span>\[\begin{split}\begin{array}{l} {{\mathbf{g}}_{1} =\txi_t} \\ {{\mathbf{g}}_{2} =\txi_t+ha_{21} {\mathbf{f}}_e(t,{\mathbf{g}}_{1} )} \\ {{\mathbf{g}}_{3} =\txi_t+h\left[a_{31} {\mathbf{f}}_e(t,{\mathbf{g}}_{1} )+a_{32} {\mathbf{f}}_e(t+c_{2} h,{\mathbf{g}}_{2} )\right]} \\ {{\rm \; \; \; \; \; \; }\vdots } \\ {{\mathbf{g}}_{s} =\txi_t+h\left[a_{s1} {\mathbf{f}}_e(t,{\mathbf{g}}_{1} )+a_{s2} {\mathbf{f}}_e(t+c_{2} h,{\mathbf{g}}_{2} )+ \ldots +a_{s,s-1} {\mathbf{f}}_e(t+c_{s-1} h,{\mathbf{g}}_{s-1} )\right]} \end{array}\end{split}\]</div>
-<p>After all vectors <span class="math notranslate nohighlight">\({\mathbf{g}}_i\)</span> have been consecutively evaluated, the step is updated by Eq. <a class="reference internal" href="#equation-s-stage-quadrature">(24)</a>.</p>
+<span class="eqno">(36)<a class="headerlink" href="#equation-eq-expl-rk-stages" title="Link to this equation"></a></span>\[\begin{split}\begin{array}{l} {{\mathbf{g}}_{1} =\txi_t} \\ {{\mathbf{g}}_{2} =\txi_t+ha_{21} {\mathbf{f}}_e(t,{\mathbf{g}}_{1} )} \\ {{\mathbf{g}}_{3} =\txi_t+h\left[a_{31} {\mathbf{f}}_e(t,{\mathbf{g}}_{1} )+a_{32} {\mathbf{f}}_e(t+c_{2} h,{\mathbf{g}}_{2} )\right]} \\ {{\rm \; \; \; \; \; \; }\vdots } \\ {{\mathbf{g}}_{s} =\txi_t+h\left[a_{s1} {\mathbf{f}}_e(t,{\mathbf{g}}_{1} )+a_{s2} {\mathbf{f}}_e(t+c_{2} h,{\mathbf{g}}_{2} )+ \ldots +a_{s,s-1} {\mathbf{f}}_e(t+c_{s-1} h,{\mathbf{g}}_{s-1} )\right]} \end{array}\end{split}\]</div>
+<p>After all vectors <span class="math notranslate nohighlight">\({\mathbf{g}}_i\)</span> have been consecutively evaluated, the step is updated by Eq. <a class="reference internal" href="#equation-s-stage-quadrature">(35)</a>.</p>
 <p>For some exemplary tableaus of explicit and impliciti Runge-Kutta methods, see theDoc.pdf!</p>
 </section>
 <section id="automatic-step-size-control">
@@ -161,7 +161,7 @@ Note that <span class="math notranslate nohighlight">\(c_{1}= 0\)</span> for exp
 <p>Advanced solvers, such as <code class="docutils literal notranslate"><span class="pre">ODE23</span></code> and <code class="docutils literal notranslate"><span class="pre">DOPRI5</span></code>, include automatic step size control(activated with
 <code class="docutils literal notranslate"><span class="pre">timeIntegration.automaticStepSize</span> <span class="pre">=</span> <span class="pre">True</span></code> in simulationSettings).</p>
 <p>We estimate the error of a time step with current step size <span class="math notranslate nohighlight">\(h\)</span> by
-using an embedded Runge-Kutta formula, which includes two approximations <a class="reference internal" href="#equation-s-stage-quadrature">(24)</a> of order <span class="math notranslate nohighlight">\(p\)</span> and <span class="math notranslate nohighlight">\(\hat p = p-1\)</span>, which is obtained by using two different integration formulas with common coefficients <span class="math notranslate nohighlight">\(c_i\)</span>, but two sets of weights <span class="math notranslate nohighlight">\(b_i\)</span> and <span class="math notranslate nohighlight">\(\hat b_i\)</span>, leading to two approximations <span class="math notranslate nohighlight">\(\txi\)</span> and <span class="math notranslate nohighlight">\(\hat \txi\)</span>. These so-called embedded Runge-Kutta formulas are widely used, for details see Hairer et al. .</p>
+using an embedded Runge-Kutta formula, which includes two approximations <a class="reference internal" href="#equation-s-stage-quadrature">(35)</a> of order <span class="math notranslate nohighlight">\(p\)</span> and <span class="math notranslate nohighlight">\(\hat p = p-1\)</span>, which is obtained by using two different integration formulas with common coefficients <span class="math notranslate nohighlight">\(c_i\)</span>, but two sets of weights <span class="math notranslate nohighlight">\(b_i\)</span> and <span class="math notranslate nohighlight">\(\hat b_i\)</span>, leading to two approximations <span class="math notranslate nohighlight">\(\txi\)</span> and <span class="math notranslate nohighlight">\(\hat \txi\)</span>. These so-called embedded Runge-Kutta formulas are widely used, for details see Hairer et al. .</p>
 <p>The according apporximations <span class="math notranslate nohighlight">\(\txi\)</span> and <span class="math notranslate nohighlight">\(\hat \txi\)</span> are used to estimate an error</p>
 <div class="math notranslate nohighlight">
 \[e_j=|\xi_j- \hat \xi_j|\]</div>

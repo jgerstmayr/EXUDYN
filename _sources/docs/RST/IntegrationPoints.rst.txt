@@ -128,4 +128,4 @@ Further integration rules can be found in the C++ code of Exudyn, see file \ ``B
 
 
 
-\ **For further information on this topic read**\ : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_
+

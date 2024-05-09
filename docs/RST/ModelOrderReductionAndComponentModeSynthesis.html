@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Model order reduction and component mode synthesis &mdash; Exudyn1.8.32.dev1 1.8.32.dev1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=82a976d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=e11081fd" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=d6ff67ca"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../_static/copybutton.js?v=f281be69"></script>
+        <script src="../../_static/js/rtd_search_config.js"></script>
+        <script src="../../_static/js/rtd_sphinx_search.min.js"></script>
+        <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "ps": "{p_\\mathrm{s}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "myoverline": ["\\overline{#1}", 1], "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "mfour": ["{\\left[ \\begin{array}{cccc} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vfour": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vrRow": ["{[#1,\\, #2,\\, #3]}", 3], "vsix": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} \\right]}", 6], "vsixb": ["{\\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "vsixs": ["{ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "omegaBDtilde": "{\\LU{b}{\\tilde \\tomega_\\mathrm{bd}}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}", "termA": ["{\\color{blue}{#1}}", 1], "termB": ["{\\color{red}{#1}}", 1], "termC": ["{\\color{green}{#1}}", 1], "acc": "{\\ddot \\mathbf{q}}", "GA": "{G\\alpha}", "aalg": "{\\mathbf{a}}", "vel": "{\\mathbf{v}}"}}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Solvers" href="SolversIndex.html" />
+    <link rel="prev" title="Integration Points" href="IntegrationPoints.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Exudyn1.8.32.dev1
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Exudyn.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="NotationIndex.html">Notation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="TheoryAndFormulationsIndex.html">Theory and formulations</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="TheoryAndFormulations.html">Theory and formulations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="IntroductionToMultibodySystems.html">Introduction to multibody systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DynamicsMechanicalPrinciples.html">Dynamics: Mechanical principles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FramesRotationsAndCoordinateSystems.html">Frames, rotations and coordinate systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="IntegrationPoints.html">Integration Points</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Model order reduction and component mode synthesis</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#import-of-flexible-bodies">Import of flexible bodies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eigenmodes">Eigenmodes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hurty-craig-bampton-modes">Hurty-Craig-Bampton modes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#computation-of-stresses-and-strains-for-cms-modes">Computation of stresses and strains for CMS modes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#interfaces-and-boundaries">Interfaces and boundaries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#node-weighting">Node weighting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reference-conditions">Reference conditions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="SolversIndex.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="pythonUtilities/index.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="structures/StructuresAndSettingsIndex.html">Structures and Settings</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Misc</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ExamplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TestModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Exudyn1.8.32.dev1</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="TheoryAndFormulationsIndex.html">Theory and formulations</a></li>
+      <li class="breadcrumb-item active">Model order reduction and component mode synthesis</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/docs/RST/ModelOrderReductionAndComponentModeSynthesis.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="model-order-reduction-and-component-mode-synthesis">
+<span id="sec-theory-cms"></span><h1>Model order reduction and component mode synthesis<a class="headerlink" href="#model-order-reduction-and-component-mode-synthesis" title="Link to this heading"></a></h1>
+<p>This section describes the process how to create general flexible multibody system models using the floating frame of reference formulation with model order reduction (here also denoted as <a class="reference internal" href="Abbreviations.html#cms"><span class="std std-ref">CMS</span></a>). The according object <code class="docutils literal notranslate"><span class="pre">ObjectFFRFreducedOrder</span></code> is described in Section <a class="reference internal" href="items/ObjectFFRFreducedOrder.html#sec-item-objectffrfreducedorder"><span class="std std-ref">ObjectFFRFreducedOrder</span></a>.</p>
+<section id="import-of-flexible-bodies">
+<h2>Import of flexible bodies<a class="headerlink" href="#import-of-flexible-bodies" title="Link to this heading"></a></h2>
+<p>For flexible bodies in multibody systems, specifically for model order reduction, a standard input data (SID) has been defined in the past .
+A recent formulation for <a class="reference internal" href="Abbreviations.html#ffrf"><span class="std std-ref">FFRF</span></a>  showed that significantly less information is required for the computation of the dynamics of displacement-based solid finite elements:</p>
+<ul class="simple">
+<li><p>nodal reference positions (given in <code class="docutils literal notranslate"><span class="pre">FEMinterface</span></code> member variable <code class="docutils literal notranslate"><span class="pre">nodes['Position']</span></code>)</p></li>
+<li><p>stiffness matrix (given in <code class="docutils literal notranslate"><span class="pre">FEMinterface</span></code> member variable <code class="docutils literal notranslate"><span class="pre">stiffnessMatrix</span></code>)</p></li>
+<li><p>mass matrix (given in <code class="docutils literal notranslate"><span class="pre">FEMinterface</span></code> member variable <code class="docutils literal notranslate"><span class="pre">massMatrix</span></code>)</p></li>
+<li><p>(given in <code class="docutils literal notranslate"><span class="pre">FEMinterface</span></code> member variable <code class="docutils literal notranslate"><span class="pre">nodes['Position']</span></code>)</p></li>
+</ul>
+<p>In addition, the following data may be needed:</p>
+<ul class="simple">
+<li><p>element connectivity: needed for visualization, surface reconstruction and stress computation</p></li>
+<li><p>list of surface elements: if not computed internally in Exudyn (stored in <code class="docutils literal notranslate"><span class="pre">FEMinterface</span></code> member variable <code class="docutils literal notranslate"><span class="pre">surface</span></code>)</p></li>
+<li><p>information on how to obtain stresses from the set of (reduced) coordinates:  if not computed internally in Exudyn (stored in <code class="docutils literal notranslate"><span class="pre">FEMinterface</span></code> member variable <code class="docutils literal notranslate"><span class="pre">postProcessingModes</span></code> for stresses at nodal positions)</p></li>
+</ul>
+<p>This data can be generated by an appropriate interface to NGsolve:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">FEMinterface.ImportMeshFromNGsolve(...)</span></code>,</p></li>
+</ul>
+<p>or imported from ABAQUS with <code class="docutils literal notranslate"><span class="pre">FEMinterface</span></code> functions</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ReadMassMatrixFromAbaqus(...)</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ReadStiffnessMatrixFromAbaqus(...)</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ImportFromAbaqusInputFile(...)</span></code> )</p></li>
+</ul>
+<p>and similar functionality exists for ANSYS.
+Importing data may be time consuming, which is why all FEMinterface data, including computed modes, can be saved and loaded via
+<code class="docutils literal notranslate"><span class="pre">SaveToFile</span></code> and <code class="docutils literal notranslate"><span class="pre">LoadFromFile</span></code>.</p>
+<p>It is assumed that there exists an underlying solid finite element mesh, given by e.g., tetrahedral or hexahedral finite elements. However, this mesh is not needed for computations. If the surface or any part of the flexible body shall be visualized, surface elements (triangles or quads) need to be provided with indices of the mesh nodes. The computation of surface elements is done by <code class="docutils literal notranslate"><span class="pre">FEMinterface</span></code> function `` VolumeToSurfaceElements``, making use of solid finite elements stored in <code class="docutils literal notranslate"><span class="pre">FEMinterface.elements</span></code>.</p>
+<p>A major advantage of the <code class="docutils literal notranslate"><span class="pre">FEMinterface</span></code> data is that it is widely independent of underlying finite element technologies, specifically finite element order, reduced integration, etc., however, stress or strain can not be computed as well.
+A conventional way is to store computed body deformations and perform post processing in the original finite element code, which gives highest quality of stress, strain, and other quantities.
+A second way is, due to linearity of the small deformation assumptions, to use post-processing modes, such as modes to represent stress components.
+Post processing modes may be defined in the <code class="docutils literal notranslate"><span class="pre">FEMinterface</span></code> member <code class="docutils literal notranslate"><span class="pre">postProcessingModes</span></code>, which is a dictionary containing the modes stored in columns of the <code class="docutils literal notranslate"><span class="pre">matrix</span></code>, cyclic for every (stress / strain) component and for all modes, and an extra field <code class="docutils literal notranslate"><span class="pre">outputVariableType</span></code> which denotes the type of modes.
+The post processing modes may be directly computed in NGsolve with <code class="docutils literal notranslate"><span class="pre">ComputePostProcessingModesNGsolve</span></code>, using efficient and accurate internal functionality, or calculated with a much slower and very basic Python function <code class="docutils literal notranslate"><span class="pre">ComputePostProcessingModes</span></code>, which can compute simplified stresses or strains for 4-noded tetrahedral elements.</p>
+</section>
+<section id="eigenmodes">
+<h2>Eigenmodes<a class="headerlink" href="#eigenmodes" title="Link to this heading"></a></h2>
+<p>This section will describe the computation of eigenmodes using FEMinterface.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">FEMinterface</span></code> in the module <code class="docutils literal notranslate"><span class="pre">FEM</span></code> has various functionality to import finite element meshes from finite element software.
+We create a <code class="docutils literal notranslate"><span class="pre">FEMinterface</span></code> by means of</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">fem</span> <span class="pre">=</span> <span class="pre">FEMinterface()</span></code></p>
+</div></blockquote>
+<p>which allows us to use the variable <code class="docutils literal notranslate"><span class="pre">fem</span></code> from now.</p>
+<p>Meshes can be imported from NETGEN/NGsolve (Section <a class="reference internal" href="pythonUtilities/FEM.html#sec-fem-feminterface-importmeshfromngsolve"><span class="std std-ref">Class function: ImportMeshFromNGsolve</span></a>), Abaqus (see Section <a class="reference internal" href="pythonUtilities/FEM.html#sec-fem-feminterface-importfromabaqusinputfile"><span class="std std-ref">Class function: ImportFromAbaqusInputFile</span></a> and other sections related to ABAQUS), ANSYS (see Section <a class="reference internal" href="pythonUtilities/FEM.html#sec-fem-feminterface-readelementsfromansys"><span class="std std-ref">Class function: ReadElementsFromAnsys</span></a> and other sections related to ANSYS).
+The import procedure, which can also be done manually, needs to include <code class="docutils literal notranslate"><span class="pre">massMatrix</span></code> <span class="math notranslate nohighlight">\({\mathbf{M}}\)</span> and <code class="docutils literal notranslate"><span class="pre">stiffnessMatrix</span></code> <span class="math notranslate nohighlight">\({\mathbf{K}}\)</span> from any finite element model.
+Note that many functions are based on the requirement that nodes are 3D displacement-based nodes, without rotation or other coordinates.</p>
+<p>For any functionality with <code class="docutils literal notranslate"><span class="pre">ObjectFFRFreducedOrder</span></code> and for the computation of Hurty-Craig-Bampton modes as described in the next section, <code class="docutils literal notranslate"><span class="pre">nodes</span></code>are required.
+Finally, <code class="docutils literal notranslate"><span class="pre">elements</span></code> need to be included for visualization, and a surface needs to be reconstructed from the element connectivity, which is available for tetrahedral and hexahedral elements for most import functions.</p>
+<figure class="align-default" id="id1">
+<span id="fig-hingepartmesh"></span><a class="reference internal image-reference" href="../../_images/HCBhingeMesh.png"><img alt="../../_images/HCBhingeMesh.png" src="../../_images/HCBhingeMesh.png" style="width: 400px;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 24 </span><span class="caption-text">Test model and mesh for hinge created with Netgen (linear tetrahedral elements).</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>As an example, we consider a part denoted as ‘hinge’ in the following, see <a class="reference internal" href="#fig-hingepartmesh"><span class="std std-numref">Fig. 24</span></a>. The test example can be found in <code class="docutils literal notranslate"><span class="pre">Examples/NGsolveCMStutorial.py</span></code> with lots of additional features.</p>
+<p>After import of mass and stiffness matrix, eigenmodes and eigenfrequencies can be computed using <code class="docutils literal notranslate"><span class="pre">fem.ComputeEigenFrequencies(...)</span></code>,
+which computes the quantities <code class="docutils literal notranslate"><span class="pre">fem.modeBasis</span></code> and <code class="docutils literal notranslate"><span class="pre">fem.eigenValues</span></code>.
+The eigenvalues in Hz can be retrieved also with the function <code class="docutils literal notranslate"><span class="pre">fem.GetEigenFrequenciesHz()</span></code>.
+The function <code class="docutils literal notranslate"><span class="pre">fem.ComputeEigenFrequencies(...)</span></code> is available for dense and sparse matrices, and uses <code class="docutils literal notranslate"><span class="pre">scipy.linalg</span></code> to compute eigenvalues of the linear, undamped mechanical system</p>
+<div class="math notranslate nohighlight" id="equation-theory-eigenmodes-eom">
+<span class="eqno">(22)<a class="headerlink" href="#equation-theory-eigenmodes-eom" title="Link to this equation"></a></span>\[{\mathbf{M}} \ddot {\mathbf{q}}(t) + {\mathbf{K}} {\mathbf{q}}(t) = {\mathbf{f}}(t) .\]</div>
+<p>Here, the total number of coordinates of the system is <span class="math notranslate nohighlight">\(n\)</span>,
+thus having the vector of system coordinates <span class="math notranslate nohighlight">\({\mathbf{q}} \in \Rcal^n\)</span>,
+vector of applied forces <span class="math notranslate nohighlight">\({\mathbf{f}} \in \Rcal^n\)</span>,
+mass matrix <span class="math notranslate nohighlight">\({\mathbf{M}} \in \Rcal^{n \times n}\)</span> and stiffness matrix <span class="math notranslate nohighlight">\({\mathbf{K}} \in \Rcal^{n \times n}\)</span>.
+If we are interested in free vibrations of the system, without any boundary conditions or interconnections to other bodies, Eq. <a class="reference internal" href="#equation-theory-eigenmodes-eom">(22)</a> can be converted to a generalized eigenvalue problem. Using the approach
+<span class="math notranslate nohighlight">\({\mathbf{q}}(t) = {\mathbf{v}} \mathrm{e}^{\mathrm{i} \omega t}\)</span> in Eq. <a class="reference internal" href="#equation-theory-eigenmodes-eom">(22)</a>, and thus <span class="math notranslate nohighlight">\(\ddot {\mathbf{q}}(t) = -\omega^2 {\mathbf{q}}(t)\)</span>, we obtain</p>
+<div class="math notranslate nohighlight" id="equation-theory-eigenmodes-harmonicequation">
+<span class="eqno">(23)<a class="headerlink" href="#equation-theory-eigenmodes-harmonicequation" title="Link to this equation"></a></span>\[\left[ \left(-\omega^2 {\mathbf{M}} + {\mathbf{K}} \right) {\mathbf{v}} \right] \mathrm{e}^{i\omega t} = \Null .\]</div>
+<p>Assuming that Eq. <a class="reference internal" href="#equation-theory-eigenmodes-harmonicequation">(23)</a> is valid for all times, the <strong>generalized eigenvalue problem</strong> follows that</p>
+<div class="math notranslate nohighlight" id="equation-theory-eigenmodes-gep">
+<span class="eqno">(24)<a class="headerlink" href="#equation-theory-eigenmodes-gep" title="Link to this equation"></a></span>\[\left(-\omega^2 {\mathbf{M}} + {\mathbf{K}} \right) {\mathbf{v}} = \Null ,\]</div>
+<p>which can be rewritten as</p>
+<div class="math notranslate nohighlight" id="equation-theory-eigenmodes-gep2">
+<span class="eqno">(25)<a class="headerlink" href="#equation-theory-eigenmodes-gep2" title="Link to this equation"></a></span>\[\det \left(-\omega^2 {\mathbf{M}} + {\mathbf{K}} \right) = 0 ,\]</div>
+<p>and which defines the eigenvalues <span class="math notranslate nohighlight">\(\omega_i^2\)</span> of the linear system, where <span class="math notranslate nohighlight">\(i \in \{0, \ldots, n-1\}\)</span>. Note that in this case, the eigenvalues are the squared eigenfrequencies (in rad/s).
+We can use eigenvalue algorithms to compute the eigenvalues <span class="math notranslate nohighlight">\(\omega_i^2\)</span> and according eigenvectors <span class="math notranslate nohighlight">\({\mathbf{v}}_i\)</span> from Python.
+The function <code class="docutils literal notranslate"><span class="pre">fem.ComputeEigenmodes(...)</span></code> uses <code class="docutils literal notranslate"><span class="pre">eigh(...)</span></code> from <code class="docutils literal notranslate"><span class="pre">scipy.linalg</span></code> in the dense matrix mode,
+and in the sparse mode <code class="docutils literal notranslate"><span class="pre">eigsh(...)</span></code> from <code class="docutils literal notranslate"><span class="pre">scipy.sparse.linalg</span></code>, the latter being restricted to pure symmetric matrices.
+Using special shift-inverted techniques in <code class="docutils literal notranslate"><span class="pre">eigsh(...)</span></code>, it performs much better than standard settings. However, you may tune your specific eigenvalue problem by modifying the solver procedure (just copy that function and adjust to your needs).
+As an output, we obtain the smallest <code class="docutils literal notranslate"><span class="pre">nModes</span></code> eigenvectors (=eigenmodes)(Eigenvectors are the result of the eigenvalue algorithm, such as the QR algorithm. The mechanical interpretation of eigenvectors are eigenmodes, that can be visualized as shown in the figures of this section.) of the system.
+Here, we will also use synonymously the terms ‘eigenmodes’ and ‘normal modes’, which result from an eigenvalue/eigenvector computation using certain (or even no) boundary conditions.</p>
+<figure class="align-default" id="id2">
+<span id="fig-hingepartfreefreemodes"></span><a class="reference internal image-reference" href="../../_images/freeFreeModesStress.png"><img alt="../../_images/freeFreeModesStress.png" src="../../_images/freeFreeModesStress.png" style="width: 800px;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 25 </span><span class="caption-text">Lowest 8 free-free modes for hinge finite element model, contour plot for <span class="math notranslate nohighlight">\(xx\)</span>-stress component.</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>Clearly, if there are no supports included in the stiffness matrix, the resulting eigenmodes will contain 6 rigid body modes and we will also call this case for the computation of eigenmodes the free-free case, in analogy to a simply supported beam.
+This rigid body modes, which are usually not needed (=unwanted) in the succeeding computation, can be excluded with an according option in</p>
+<p><code class="docutils literal notranslate"><span class="pre">fem.ComputeEigenFrequencies(excludeRigidBodyModes</span> <span class="pre">=</span> <span class="pre">...)</span></code></p>
+<p>For our test example, 8 eigenmodes are shown in <a class="reference internal" href="#fig-hingepartfreefreemodes"><span class="std std-numref">Fig. 25</span></a>, where the 6 rigid body modes have been excluded (so in total, 14 eigenvectors were computed).
+The 8 eigenfrequencies for the chosen coarse mesh with mesh size <span class="math notranslate nohighlight">\(h=0.01\)</span> and 1216 nodes result as</p>
+<div class="math notranslate nohighlight">
+\[f_{0..7} = [ 671.59, 707.17, 1298.50, 1929.97, 1971.76, 3141.47, 3595.34, 4317.51] Hz\]</div>
+<p>Note, that a computation with a finer mesh, using mesh size <span class="math notranslate nohighlight">\(h=0.002\)</span> and 100224 nodes, leads to significantly different eigenfrequencies, starting with <span class="math notranslate nohighlight">\(f_0=371.50\,\)</span>Hz. This shows that quadratic finite elements would be more appropriate for this case.</p>
+<p>After the computation of modes, it is always a good idea to visualize and/or animate these modes. We can do this, using the function <code class="docutils literal notranslate"><span class="pre">AnimateModes(...)</span></code> available in <code class="docutils literal notranslate"><span class="pre">exudyn.interactive</span></code>, which allows us to inspect and animate modes and to create animations for these modes, see the mentioned example.</p>
+<p>Clearly, the free-free modes in <a class="reference internal" href="#fig-hingepartfreefreemodes"><span class="std std-numref">Fig. 25</span></a> are not well suited for the modeling of the deformations within the hinge, if the bolt and the bushing shall be fixed to ground or to another part.
+Therefore, we can use modes based on ideas of Hurty  and Craig-Bampton , as shown in the following.</p>
+</section>
+<section id="hurty-craig-bampton-modes">
+<span id="sec-hurty-craig-bampton-modes"></span><h2>Hurty-Craig-Bampton modes<a class="headerlink" href="#hurty-craig-bampton-modes" title="Link to this heading"></a></h2>
+<p>This section will describe the computation of static and eigen (normal) modes using FEMinterface.
+The theory is based on Hurty  and Craig-Bampton , but often only attributed to Craig-Bampton.
+Furthermore, boundaries are also called interfaces(Here, and in the description of various Python functions, we will use boundary and interface often synonymously, as flexible bodies can be either connected to ground in the sense of a classical ‘support-type’ boundary condition, or they can represent the boundary of the flexible body as an interface to joints (via markers).), as they either represent surface sections of our finite element model which are connected to the ground or they represent interfaces to joints and are connected to other bodies.</p>
+<p>The computation of so-called static and normal modes follows a simple concept based on finite element mass and stiffness matrices.
+The final goal of the computation of modes is to approximate the solution <span class="math notranslate nohighlight">\({\mathbf{q}} \in \Rcal^n\)</span>by means of a reduction basis <span class="math notranslate nohighlight">\(\tPsi \in \Rcal^{n \times m}\)</span>and a reduced set of coordinates <span class="math notranslate nohighlight">\({\mathbf{p}} \in \Rcal^m\)</span>, for which we assume <span class="math notranslate nohighlight">\(m \ll n\)</span>.</p>
+<p>In order to include boundary/interface effects, we separate our nodes and the nodal coordinates into</p>
+<blockquote>
+<div><ol class="loweralpha simple">
+<li><p>boundary nodes <span class="math notranslate nohighlight">\({\mathbf{q}}_b \in \Rcal^{n_b}\)</span> and</p></li>
+<li><p>internal or inner nodes <span class="math notranslate nohighlight">\({\mathbf{q}}_i \in \Rcal^{n_i}\)</span>.</p></li>
+</ol>
+</div></blockquote>
+<p>We assume that internal nodes are not exposed to boundary/interface conditions or to forces.</p>
+<p>Therefore, we may rewrite Eq. <a class="reference internal" href="#equation-theory-eigenmodes-eom">(22)</a> as follows</p>
+<div class="math notranslate nohighlight" id="equation-eq-guyanirons">
+<span class="eqno">(26)<a class="headerlink" href="#equation-eq-guyanirons" title="Link to this equation"></a></span>\[\mp{{\mathbf{M}}_{bb}}{{\mathbf{M}}_{bi}}{{\mathbf{M}}_{ib}}{{\mathbf{M}}_{ii}} \vp{\ddot{{\mathbf{q}}}_b}{\ddot{{\mathbf{q}}}_i} + \mp{{\mathbf{K}}_{bb}}{{\mathbf{K}}_{bi}}{{\mathbf{K}}_{ib}}{{\mathbf{K}}_{ii}} \vp{{\mathbf{q}}_b}{{\mathbf{q}}_i} =   \vp{{\mathbf{f}}_b}{\Null}\]</div>
+<p>or, equivalently,</p>
+<div class="math notranslate nohighlight" id="equation-eq-guyan-bb">
+<span class="eqno">(27)<a class="headerlink" href="#equation-eq-guyan-bb" title="Link to this equation"></a></span>\[\begin{split}{\mathbf{M}}_{bb} \ddot{{\mathbf{q}}}_b + {\mathbf{M}}_{bi} \ddot{{\mathbf{q}}}_i +{\mathbf{K}}_{bb}  {{\mathbf{q}}}_b + {\mathbf{K}}_{bi}  {{\mathbf{q}}}_i  = {{\mathbf{f}}}_b \\
+{\mathbf{M}}_{ib} \ddot{{\mathbf{q}}}_b + {\mathbf{M}}_{ii} \ddot{{\mathbf{q}}}_i +{\mathbf{K}}_{ib}  {{\mathbf{q}}}_b + {\mathbf{K}}_{ii}  {{\mathbf{q}}}_i  = \Null . \label{eq_Guyan_ii}\end{split}\]</div>
+<p>A pure static condensation follows from Eq. <a class="reference internal" href="#equation-eq-guyanirons">(26)</a> with the assumption that inertia terms are neglected,
+leading to the static result for internal nodes,</p>
+<div class="math notranslate nohighlight">
+\[{{\mathbf{q}}}_{i,stat}=-{\mathbf{K}}_{ii}^{-1} {\mathbf{K}}_{ib} {{\mathbf{q}}}_{b} .\]</div>
+<p>A pure static condensation, also denoted as Guyan-Irons method, keeps boundary coordinates but removes all internal modes, using the approximation</p>
+<div class="math notranslate nohighlight" id="equation-eq-guans-red">
+<span class="eqno">(28)<a class="headerlink" href="#equation-eq-guans-red" title="Link to this equation"></a></span>\[\vp{{\mathbf{q}}_b}{{\mathbf{q}}_i} \approx \vp{{\mathbf{I}}}{-{\mathbf{K}}_{ii}^{-1} {\mathbf{K}}_{ib}}  {\mathbf{q}}_b = \tPsi^{GI} {\mathbf{q}}_b ,\]</div>
+<p>which leads to no approximations (‘exact’) results for the static case, but poor performance in highly dynamic problems.</p>
+<p>Significant improvement result from the Hurty-Craig-Bampton method, which adds eigenmodes of the internal coordinates (internal nodes).
+We assume that <span class="math notranslate nohighlight">\(\tPsi_{ii}\)</span> is the matrix of eigenvectors as a solution to the eigenvalue problem</p>
+<div class="math notranslate nohighlight" id="equation-theory-eigenmodes-gepii">
+<span class="eqno">(29)<a class="headerlink" href="#equation-theory-eigenmodes-gepii" title="Link to this equation"></a></span>\[\left(-\omega^2 {\mathbf{M}}_{ii} + {\mathbf{K}}_{ii} \right) {\mathbf{v}} = \Null ,\]</div>
+<p>Hereafter, we will only keep the lowest (or other appropriate) <span class="math notranslate nohighlight">\(m\)</span> eigenmodes in a reduced eigenmode matrix,</p>
+<div class="math notranslate nohighlight">
+\[\tPsi^{(red)}_{ii} = \left[\tPsi_{ii,0}, \ldots, \tPsi_{ii,m-1} \right]\]</div>
+<p>Combining these ‘fixed-fixed’ eigenvectors with the Guyan-Irons reduction <a class="reference internal" href="#equation-eq-guans-red">(28)</a>, we obtain the
+Hurty-Craig-Bampton modes as</p>
+<div class="math notranslate nohighlight">
+\[\vp{{\mathbf{q}}_b}{{\mathbf{q}}_i} \approx \vp{{\mathbf{I}}}{-{\mathbf{K}}_{ii}^{-1} {\mathbf{K}}_{ib}}  {\mathbf{q}}_b  +  \vp{\Null}{\tPsi_{r,i}}  {\mathbf{p}}_{r} ,\]</div>
+<p>or in matrix form</p>
+<div class="math notranslate nohighlight" id="equation-theory-eigenmodes-hcb">
+<span class="eqno">(30)<a class="headerlink" href="#equation-theory-eigenmodes-hcb" title="Link to this equation"></a></span>\[\vp{{\mathbf{q}}_b}{{\mathbf{q}}_i} \approx \mp{{\mathbf{I}}}{\Null}{-{\mathbf{K}}_{ii}^{-1} {\mathbf{K}}_{ib}}{\tPsi_{r,i}}   \vp{{\mathbf{q}}_b}{{\mathbf{p}}_r} = \tPsi^{HCB} {\mathbf{p}}^{HCB} .\]</div>
+<p>The disadvantage of Eq. <a class="reference internal" href="#equation-theory-eigenmodes-hcb">(30)</a> is evident by the fact that there may be a large number of boundary/interface nodes, leading to a huge number of static modes (100s or 1000s) and thus making the model reduction inefficient. Therefore, we can switch to other interfaces, as described in the following.</p>
+<section id="definition-of-rbe2-rbe3-interfaces">
+<h3>Definition of RBE2 / RBE3 interfaces<a class="headerlink" href="#definition-of-rbe2-rbe3-interfaces" title="Link to this heading"></a></h3>
+<p>A powerful extension, which is available in many finite element as well as flexible multibody codes, is the definition of special boundary/interface conditions, based on pure rigid body motion.
+The so-called RBE2 boundaries are defined such that they are firmly connected to a rigid frame, thus the boundary or interface can only undergo rigid body motion.
+The advantage of this procedure is that, in comparison to Eq. <a class="reference internal" href="#equation-theory-eigenmodes-hcb">(30)</a>, the number of boundary/interface modes is given by 6 <em>rigid body</em> modes, which allow simple integration into standard joints of multibody systems, e.g., the <code class="docutils literal notranslate"><span class="pre">GenericJoint</span></code>.
+The disadvantage is that such modes usually lead to artificial stiffening and stresses close to the boundary.</p>
+<p>For so-called RBE3 boundaries, the kinematics is significantly different. The displacement of RBE3 boundaries is the (weighted) average displacement of all boundary nodes. The resulting forces at the RBE3 boundary are equally distributed, again using node-weighting.
+The (linearized) rotation of RBE3 boundaries is computed as the weighted displacements of the boundaries and including the distance to the rotation axes.
+Forces due to torques at RBE3 boundaries are computed according to the weighting, again considering the distance to the rotation axes, see the according formulas later on. The computation of RBE3 boundaries widely follows the formulation of the <code class="docutils literal notranslate"><span class="pre">MarkerSuperElementRigid</span></code>, see Section <a class="reference internal" href="items/MarkerSuperElementRigid.html#sec-item-markersuperelementrigid"><span class="std std-ref">MarkerSuperElementRigid</span></a>.</p>
+</section>
+<section id="computation-of-hurty-craig-bampton-modes-with-rbe2-interfaces">
+<h3>Computation of Hurty-Craig-Bampton modes with RBE2 interfaces<a class="headerlink" href="#computation-of-hurty-craig-bampton-modes-with-rbe2-interfaces" title="Link to this heading"></a></h3>
+<p>In the following section, we show the procedure for the computation of static modes for the RBE2 rigid-body interfaces.
+Note that eigenmodes directly follow from matrices <span class="math notranslate nohighlight">\({\mathbf{M}}_{ii}\)</span> and <span class="math notranslate nohighlight">\({\mathbf{K}}_{ii}\)</span> as described in Section <a class="reference internal" href="#sec-hurty-craig-bampton-modes"><span class="std std-ref">Hurty-Craig-Bampton modes</span></a>.
+The implementation is given in <code class="docutils literal notranslate"><span class="pre">fem.ComputeHurtyCraigBamptonModes(...)</span></code>, see Section <a class="reference internal" href="pythonUtilities/FEM.html#sec-fem-feminterface-computehurtycraigbamptonmodes"><span class="std std-ref">Class function: ComputeHurtyCraigBamptonModes</span></a>.</p>
+<p>First, we use the index <span class="math notranslate nohighlight">\(j\)</span> here as a node index, having the clear correspondence to the coordinate index <span class="math notranslate nohighlight">\(i\)</span>, that node <span class="math notranslate nohighlight">\(j\)</span> has coordinates
+<span class="math notranslate nohighlight">\([3\cdot j,\; 3\cdot j+1,\; 3\cdot j+2]\)</span>.
+Furthermore, nodes are split into boundary and internal nodes, which then leads to according internal and boundary coordinates.
+We shall note that this sorting is never done in the finite element model or matrices, but just some indexing (referencing) lists are generated and used throughout, using valuable features of <code class="docutils literal notranslate"><span class="pre">numpy.linalg</span></code> and <code class="docutils literal notranslate"><span class="pre">scipy.sparse</span></code>.</p>
+<p>For a certain boundary node set <span class="math notranslate nohighlight">\(B=[j_0, \; j_1, \; j_2, \; ...] \in \Ncal^{n_b}\)</span> with certain <span class="math notranslate nohighlight">\(n_b\)</span> node indices <span class="math notranslate nohighlight">\(j_0, ...\)</span>, we define one boundary set. The following transformations need to be performed for every set of boundary node lists. We also assume that weighting of all boundary nodes is equal, which may not be appropriate in all cases.</p>
+<p>If we assume that there may only occur rigid body translation and rotation for the whole boundary node set, which is according to the idea of so-called RBE2 boundary conditions, it follows that the translation of all boundary nodes is given by</p>
+<div class="math notranslate nohighlight">
+\[{\mathbf{T}}_t = \vr{ {\mathbf{I}} }{ \vdots}{ {\mathbf{I}}} \in \Rcal^{3 n_b \times 3}\]</div>
+<p>with <span class="math notranslate nohighlight">\({\mathbf{I}} \in \Rcal^{3\times 3}\)</span> identity matrices.
+The nodal translation coordinates on boundary <span class="math notranslate nohighlight">\(B\)</span> are denoted as <span class="math notranslate nohighlight">\({\mathbf{q}}_{B,t} \in \Rcal^3\)</span>. The translation of the boundary/interface is mapped to the boundary coordinates as follows (assuming only one boundary <span class="math notranslate nohighlight">\(B\)</span>),</p>
+<div class="math notranslate nohighlight">
+\[{\mathbf{q}}_{b,t} = {\mathbf{T}}_t \, {\mathbf{q}}_{B,t}\]</div>
+<p>The nodal rotation coordinates on boundary <span class="math notranslate nohighlight">\(B\)</span> are denoted as <span class="math notranslate nohighlight">\({\mathbf{q}}_{B,r} \in \Rcal^3\)</span>. The rotation of the boundary/interface is mapped to the boundary coordinates as follows (assuming only one boundary <span class="math notranslate nohighlight">\(B\)</span>),</p>
+<div class="math notranslate nohighlight">
+\[{\mathbf{q}}_{b,r} = {\mathbf{T}}_r \, {\mathbf{q}}_{B,r}\]</div>
+<p>The computation of matrix <span class="math notranslate nohighlight">\({\mathbf{T}}_r\)</span> is more involved. It is based on nodal (reference) position vectors <span class="math notranslate nohighlight">\({\mathbf{r}}^{(0)}_j\)</span>, <span class="math notranslate nohighlight">\(j \in B\)</span>,
+the midpoint of all boundary nodes,</p>
+<div class="math notranslate nohighlight">
+\[{\mathbf{r}}^{(m)} = \frac{1}{n_b} \sum_{j=0}^{n_b-1} {\mathbf{r}}^{(0)}_j\]</div>
+<p>and the position relative to the midpoint, denoted as</p>
+<div class="math notranslate nohighlight">
+\[{\mathbf{r}}_j = {\mathbf{r}}^{(0)}_j - {\mathbf{r}}^{(m)} .\]</div>
+<p>Note that the coordinate system refers to the system used in the underlying finite element mesh.
+The transformation for rotation follows from</p>
+<div class="math notranslate nohighlight">
+\[{\mathbf{T}}_r = \vr{ \tilde {\mathbf{r}}_0 }{ \vdots}{ \tilde {\mathbf{r}}_{n_b-1}} \in \Rcal^{3 n_b \times 3} .\]</div>
+<p>The total nodal coordinates at the boundary, representing translations and rotations, follow as</p>
+<div class="math notranslate nohighlight">
+\[{\mathbf{q}}_{B} = \vp{{\mathbf{q}}_{B,t}}{{\mathbf{q}}_{B,r}} ,\]</div>
+<p>and the transformation matrix for the translation and rotation simply reads</p>
+<div class="math notranslate nohighlight">
+\[{\mathbf{T}} = [{\mathbf{T}}_t \;\; {\mathbf{T}}_r] \in \Rcal^{3n_b \times 6} ,\]</div>
+<p>which provides the total mapping of boundary rigid body motion</p>
+<div class="math notranslate nohighlight">
+\[{\mathbf{q}}_{b} = {\mathbf{T}} \, {\mathbf{q}}_{B} ,\]</div>
+<p>which is the sum of translation and rotation.</p>
+<p>As an example, having the boundary nodes sorted for two boundary node set <span class="math notranslate nohighlight">\(B_0\)</span> and <span class="math notranslate nohighlight">\(B_1\)</span>, we obtain the following transformation for the Hurty-Craig-Bampton method with only 6 modes per boundary node set,</p>
+<div class="math notranslate nohighlight" id="equation-theory-eigenmodes-hcbrbe2">
+<span class="eqno">(31)<a class="headerlink" href="#equation-theory-eigenmodes-hcbrbe2" title="Link to this equation"></a></span>\[\vp{{\mathbf{q}}_b}{{\mathbf{q}}_i} \approx \mr{ {\mathbf{T}}_0}{\Null}{\Null} {\Null}{{\mathbf{T}}_1}{\Null} {-{\mathbf{K}}_{ii}^{-1} {\mathbf{K}}_{ib}\vp{{\mathbf{T}}_0}{\Null} }{-{\mathbf{K}}_{ii}^{-1} {\mathbf{K}}_{ib}\vp{\Null}{{\mathbf{T}}_1} }{\tPsi_{r,i}} \vr{{\mathbf{q}}_{B_0}}{{\mathbf{q}}_{B_1}}{{\mathbf{p}}_r} .\]</div>
+<p>with the new boundary node vector <span class="math notranslate nohighlight">\({\mathbf{q}}_b = [{\mathbf{q}}_{B_0}\tp \;\; {\mathbf{q}}_{B_1}\tp]\tp\)</span>.</p>
+<p><strong>Notes</strong>:</p>
+<ul class="simple">
+<li><p>The inverse <span class="math notranslate nohighlight">\({\mathbf{K}}_{ii}^{-1}\)</span> is not computed, but this matrix is LU-factorized using sparse techniques.</p></li>
+<li><p>The factorization only needs to be applied to six vectors for every relevant boundary node set.</p></li>
+<li><p>One set of boundary nodes can be omitted from the final static modes in Eq. <a class="reference internal" href="#equation-theory-eigenmodes-hcbrbe2">(31)</a>, because keeping all boundary modes, would introduce six rigid body motions to our mode basis, what is usually not wanted nor needed.</p></li>
+</ul>
+<p>Using again the examples given in <a class="reference internal" href="#fig-hingepartmesh"><span class="std std-numref">Fig. 24</span></a>, we now obtain a set of modified modes using the function <code class="docutils literal notranslate"><span class="pre">fem.ComputeHurtyCraigBamptonModes(...)</span></code>.
+<a class="reference internal" href="#fig-hingepartstaticmodesa"><span class="std std-numref">Fig. 26</span></a> shows the first 6 rigid body modes. Note that these modes are automatically removed in the function <code class="docutils literal notranslate"><span class="pre">fem.ComputeHurtyCraigBamptonModes(...)</span></code> with default settings.
+<a class="reference internal" href="#fig-hingepartstaticmodesb"><span class="std std-numref">Fig. 27</span></a> shows the second set of 6 rigid body modes.
+Finally, 8 eigenmodes have been computed for the fixed-fixed case (where all boundary/interfaces nodes are fixed),
+see <a class="reference internal" href="#fig-hingepartfixedfixedmodes"><span class="std std-numref">Fig. 28</span></a>.
+The eigenfrequencies for this case now are significantly higher than in the free-free case, reading</p>
+<div class="math notranslate nohighlight">
+\[f_{0..7} = [1277.35, 1469.86, 3336.91, 3584.28, ...]\]</div>
+<figure class="align-default" id="id3">
+<span id="fig-hingepartstaticmodesa"></span><a class="reference internal image-reference" href="../../_images/HCBmodesHingeStaticA.png"><img alt="../../_images/HCBmodesHingeStaticA.png" src="../../_images/HCBmodesHingeStaticA.png" style="width: 800px;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 26 </span><span class="caption-text">Static modes for bolt rigid body interface, using Hurty-Craig-Bampton method; top three images show (x,y,z)-translation modes, bottom three images show (x,y,z)-rotation modes; contour color represents norm of displacements.</span><a class="headerlink" href="#id3" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-default" id="id4">
+<span id="fig-hingepartstaticmodesb"></span><a class="reference internal image-reference" href="../../_images/HCBmodesHingeStaticB.png"><img alt="../../_images/HCBmodesHingeStaticB.png" src="../../_images/HCBmodesHingeStaticB.png" style="width: 800px;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 27 </span><span class="caption-text">Static modes for bushing rigid body interface, using Hurty-Craig-Bampton method; top three images show (x,y,z)-translation modes, bottom three images show (x,y,z)-rotation modes; contour color represents norm of displacements.</span><a class="headerlink" href="#id4" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-default" id="id5">
+<span id="fig-hingepartfixedfixedmodes"></span><a class="reference internal image-reference" href="../../_images/HCBmodesHingeEigenmode.png"><img alt="../../_images/HCBmodesHingeEigenmode.png" src="../../_images/HCBmodesHingeEigenmode.png" style="width: 800px;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 28 </span><span class="caption-text">Eigenmodes for fixed-fixed case, resulting from Hurty-Craig-Bampton method; contour color represents norm of displacements.</span><a class="headerlink" href="#id5" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="computation-of-hurty-craig-bampton-modes-with-rbe3-interfaces">
+<h3>Computation of Hurty-Craig-Bampton modes with RBE3 interfaces<a class="headerlink" href="#computation-of-hurty-craig-bampton-modes-with-rbe3-interfaces" title="Link to this heading"></a></h3>
+<p>we are currently finishing a paper, after which this section will be completed!</p>
+</section>
+</section>
+<section id="computation-of-stresses-and-strains-for-cms-modes">
+<span id="sec-theory-cms-stresses"></span><h2>Computation of stresses and strains for CMS modes<a class="headerlink" href="#computation-of-stresses-and-strains-for-cms-modes" title="Link to this heading"></a></h2>
+<p>The computation of stresses and strains is not directly possible if only knowing nodal displacements, stiffness matrix and mass matrix.
+In the following, we assume that we have a vector of nodal displacements <span class="math notranslate nohighlight">\({\mathbf{q}}\)</span>, reduced coordinates <span class="math notranslate nohighlight">\({\mathbf{p}}^{R}\)</span>, as well as a reduction matrix <span class="math notranslate nohighlight">\(\tPsi^{R}\)</span>, compare Eq. <a class="reference internal" href="#equation-theory-eigenmodes-hcb">(30)</a>,</p>
+<div class="math notranslate nohighlight" id="equation-theory-eigenmodes-hcb2">
+<span class="eqno">(32)<a class="headerlink" href="#equation-theory-eigenmodes-hcb2" title="Link to this equation"></a></span>\[{\mathbf{q}} \approx \tPsi^{R} {\mathbf{p}}^{R} .\]</div>
+<p>Knowing all nodal displacements of a finite element allows to compute displacement, stress, and strain field within the element. This procedure is usually done within the finite element codes.
+In particular, one should know that stress and strain quantities are having a lower order of accuracy than displacements and they may be more accurate in certain points, e.g., integration points. Furthermore, stress and strain quantities may have jumps along element boundaries, which is why they are usually post-processed in order to at least look smoother but in general also are more accurate.</p>
+<p>In Exudyn, we have the option to pre-compute stress or strain components at finite element nodes, see the options below.
+Due to the fact that the FFRF / CMS formulation is assuming small (linearized) strains only, we are able to superimpose stress and strain for each mode. Independently of the quantity we intend to compute (stress, strain or similar), we use post-processing modes, which allow to represent special output variables.</p>
+<p>Having a modal coordinate <span class="math notranslate nohighlight">\({\mathbf{p}}^{R}_k\)</span>, we define a post-processing mode (pm) such that</p>
+<div class="math notranslate nohighlight">
+\[{\mathbf{s}}_k^{\mathrm{pm}} = \tPsi^{\mathrm{pm}}_k {\mathbf{p}}^{R}_k ,\]</div>
+<p>in which <span class="math notranslate nohighlight">\({\mathbf{s}}_k^{\mathrm{pm}}\)</span> represents for example the stress component <span class="math notranslate nohighlight">\(\sigma_\mathrm{xx}\)</span> for the mode <span class="math notranslate nohighlight">\(k\)</span>.
+Putting together all stress modes for <span class="math notranslate nohighlight">\(\sigma_\mathrm{xx}\)</span>, <span class="math notranslate nohighlight">\(\sigma_\mathrm{yy}\)</span>, <span class="math notranslate nohighlight">\(\sigma_\mathrm{zz}\)</span>, <span class="math notranslate nohighlight">\(\sigma_\mathrm{yz}\)</span>, <span class="math notranslate nohighlight">\(\sigma_\mathrm{xz}\)</span>, and <span class="math notranslate nohighlight">\(\sigma_\mathrm{xy}\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[\tPsi^{\sigma_\mathrm{xx}} = \left[\tPsi^{\sigma_\mathrm{xx}}_0, \tPsi^{\sigma_\mathrm{xx}}_1, \ldots, \tPsi^{\sigma_\mathrm{xx}}_{m-1}\right] ,\]</div>
+<p>we are able to compute <span class="math notranslate nohighlight">\(\sigma_\mathrm{xx}\)</span> for all nodes from the relation</p>
+<div class="math notranslate nohighlight">
+\[{\mathbf{s}}^{\sigma_\mathrm{xx}} = \tPsi^{\sigma_\mathrm{xx}} {\mathbf{p}}^{R}\]</div>
+<p>Using the <code class="docutils literal notranslate"><span class="pre">FEMinterface</span></code> member <code class="docutils literal notranslate"><span class="pre">postProcessingModes</span></code>, the <code class="docutils literal notranslate"><span class="pre">FEM</span></code> module, we can define the <code class="docutils literal notranslate"><span class="pre">matrix</span></code> as <span class="math notranslate nohighlight">\(\tPsi^{\sigma_\mathrm{ij}}\)</span> for every node of the finite element mesh. In particular, one has to store all stress (or strain) components consecutively for each mode, which means that for mode <span class="math notranslate nohighlight">\(k\)</span>, <span class="math notranslate nohighlight">\(\tPsi\)</span> contains the columns</p>
+<div class="math notranslate nohighlight">
+\[\tPsi^{\sigma}_k = \left[\tPsi^{\sigma_\mathrm{xx}}_k, \tPsi^{\sigma_\mathrm{yy}}_k, \tPsi^{\sigma_\mathrm{zz}}_k, \tPsi^{\sigma_\mathrm{yz}}_k, \tPsi^{\sigma_\mathrm{xz}}_k, \tPsi^{\sigma_\mathrm{xy}}_k\right] ,\]</div>
+<p>For more details, see the <code class="docutils literal notranslate"><span class="pre">FEM</span></code> module in Section <a class="reference internal" href="pythonUtilities/FEM.html#sec-fem-feminterface-init"><span class="std std-ref">Class function: __init__</span></a>, either for function <code class="docutils literal notranslate"><span class="pre">ComputePostProcessingModes</span></code> or <code class="docutils literal notranslate"><span class="pre">ComputePostProcessingModesNGsolve</span></code>.</p>
+<p>In order to retrieve modes, we currently have three options:</p>
+<ul class="simple">
+<li><p>Re-compute stress or strain quantities for given material parameters from nodal displacements for linear tetrahedral elements (Tet4), using the function <code class="docutils literal notranslate"><span class="pre">ComputePostProcessingModes</span></code> within the <code class="docutils literal notranslate"><span class="pre">FEM</span></code> module. This function is implemented in Python and therefore comparatively slow.</p></li>
+<li><p>For NGsolve models, you can use the <code class="docutils literal notranslate"><span class="pre">ComputePostProcessingModesNGsolve</span></code>, which takes the finite element space and material to compute post-processing modes directly in NGsolve, which is comparatively fast, if you do not have an excessive amount of modes and nodes.</p></li>
+<li><p>You can compute the post-processing modes within your finite element tool, such as Ansys or Simulia(ABAQUS) and import them manually. There exists no functionality in Exudyn to do so.</p></li>
+</ul>
+<p>In general, one should know that the size of postprocessing modes may be huge. If you have <span class="math notranslate nohighlight">\(200\,000\)</span> nodes and 100 modes, the matrix <span class="math notranslate nohighlight">\(\tPsi^{\sigma}\)</span> would have the size <span class="math notranslate nohighlight">\(200\,000 \times (6 \cdot 100)\)</span>, thus leading to <span class="math notranslate nohighlight">\(120\,000\,000\)</span> components, close to 1GB of memory. In other words, it could make sense to consider computation of stresses in a post-computing phase.</p>
+</section>
+<section id="interfaces-and-boundaries">
+<span id="sec-theory-cms-interfaces"></span><h2>Interfaces and boundaries<a class="headerlink" href="#interfaces-and-boundaries" title="Link to this heading"></a></h2>
+<p>Being able to model a sole flexible body is not sufficient for the modeling of industrial problems.
+An important part of component mode synthesis is the appropriate definition of boundaries or interfaces.
+The term interface is widely used and may be more appropriate when connecting two bodies via such interfaces.
+However, in some cases the flexible body may be fixed to ground via such a boundary. In order to distinguish boundary/interface (b) and internal nodes (i), boundary seems to be appropriate and boundary/interface will be used synonymously in the context of flexible bodies.</p>
+<p>An boundary/interface is represented by a certain surface area of a body, usually defined by surface elements and underlying nodes.
+For simplicity, it may just be defined by means of a node set.
+This is sufficient, in order for most of the previously described algorithms to work.
+If node sets are not imported from the underlying finite element codes, practical functions exist for the definition of
+node sets from geometrical operations, specifically(Note that these functions perform a linear search in the whole mesh, which is computationally inefficient if it is called many times.):</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">GetNodeAtPoint</span></code>: returns node number of a single node (if found) at given spatial position, with certain tolerance</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GetNodesInPlane</span></code>: returns all nodes lying on a defined plane with certain tolerance</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GetNodesInCube</span></code>: returns all nodes lying in a axis-parallel cube</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GetNodesOnLine</span></code>: returns all nodes lying on a line defined by two points, with certain tolerance</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GetNodesOnCylinder</span></code>: returns all nodes lying on a cylinder defined by two points and radius, with certain tolerance</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GetNodesOnCircle</span></code>: returns all nodes lying on a circle defined by point, normal and radius, with certain tolerance</p></li>
+</ul>
+<p>In order to compute according weighting factors, surface elements need to exist, either importing them the finite element code, or by using the <code class="docutils literal notranslate"><span class="pre">FEMinterface</span></code> member <code class="docutils literal notranslate"><span class="pre">surface</span></code>.
+The surface of tetrahedral or hexahedral meshes, which follow a standard node numbering, can be computed using
+the <code class="docutils literal notranslate"><span class="pre">FEMinterface</span></code> function <code class="docutils literal notranslate"><span class="pre">VolumeToSurfaceElements</span></code>.</p>
+</section>
+<section id="node-weighting">
+<span id="sec-theory-cms-nodeweighting"></span><h2>Node weighting<a class="headerlink" href="#node-weighting" title="Link to this heading"></a></h2>
+<p>As mentioned in the literature , there are certain advantages to use regular meshes on boundaries/interfaces.
+However, industrial relevant geometries often cannot be meshed by regular hexahedral meshes which leads to unstructured tetrahedral elements with (nearly) arbitrary triangular surfaces.
+While being a more general approach, an according nodal weighting is inevitable for unstructured surface meshes.
+As a drawback, accurate nodal weighting for application of forces or for computation of average displacements or rotations requires the information of underlying finite element interpolation functions, which are avoided in the present approach.
+A simplified, first order accurate functionality is provided by <code class="docutils literal notranslate"><span class="pre">GetNodeWeightsFromSurfaceAreas</span></code>, which reconstructs nodal weights for a set of node numbers from a given triangulated surface in <code class="docutils literal notranslate"><span class="pre">FEMinterface</span></code>.
+After identification of surface triangles and computation of according triangle areas, the weight <span class="math notranslate nohighlight">\(w_i\)</span> of every node <span class="math notranslate nohighlight">\(i\)</span> is built upon the according area of all connected triangles <span class="math notranslate nohighlight">\(j\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[w_i = \frac{1}{3 A_B} \sum_{j} A_j  , \quad \mathrm{and} \quad \sum_i w_i = 1\]</div>
+<p>using the total area <span class="math notranslate nohighlight">\(A_B\)</span> of the boundary.
+This weighting leads to nearly constant strain distribution along the cross section of a fixed bar with equally distributed axial forces.</p>
+</section>
+<section id="reference-conditions">
+<span id="sec-theory-cms-referenceconditions"></span><h2>Reference conditions<a class="headerlink" href="#reference-conditions" title="Link to this heading"></a></h2>
+<p>Currently, there is no specific functionality to define reference conditions for <a class="reference internal" href="Abbreviations.html#ffrf"><span class="std std-ref">FFRF</span></a> objects in Exudyn.
+In the <code class="docutils literal notranslate"><span class="pre">ObjectFFRF</span></code>, a <code class="docutils literal notranslate"><span class="pre">ObjectConnectorCoordinateVector</span></code> needs to be used to define constraints of a so-called Tisserand frame.</p>
+<p>In the <code class="docutils literal notranslate"><span class="pre">ObjectFFRFreducedOrder</span></code>, there are in general two approaches:</p>
+<ul class="simple">
+<li><p>The computed modes do not include rigid body motions, by using the appropriate flag<code class="docutils literal notranslate"><span class="pre">excludeRigidBodyModes</span> <span class="pre">=</span> <span class="pre">True</span></code>for most of such functions; in this case, the reference conditions are defined such that the reference node positions of the mesh are rigidly attached to the reference frame. In case of Hurty-Craig-Bampton modes, one boundary set (the first one) is attached to the reference frame.</p></li>
+<li><dl class="simple">
+<dt>Alternatively, <code class="docutils literal notranslate"><span class="pre">excludeRigidBodyModes</span></code> can be set False, or arbitrary modes can be imported from elsewhere.</dt><dd><p>In this case, rigid body motion must be excluded by appropriate constraints, e.g., a <code class="docutils literal notranslate"><span class="pre">ObjectConnectorCoordinateVector</span></code> applied to the <code class="docutils literal notranslate"><span class="pre">NodeGenericODE2</span></code> of <code class="docutils literal notranslate"><span class="pre">ObjectFFRFreducedOrder</span></code>. This task is completely left to the user.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>It should be noted that regarding efficiency or highest accuracy, better reference conditions may exists, which are not fully supported in the current code and may only be applied with user functions.</p>
+<p><strong>For further information on this topic read</strong>: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf">theDoc.pdf</a></p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="IntegrationPoints.html" class="btn btn-neutral float-left" title="Integration Points" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="SolversIndex.html" class="btn btn-neutral float-right" title="Solvers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

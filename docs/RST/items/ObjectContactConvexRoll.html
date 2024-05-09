@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ObjectContactConvexRoll &mdash; Exudyn1.8.28.dev1 1.8.28.dev1 documentation</title>
+  <title>ObjectContactConvexRoll &mdash; Exudyn1.8.32.dev1 1.8.32.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=027cc127"></script>
+        <script src="../../../_static/documentation_options.js?v=d6ff67ca"></script>
         <script src="../../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -43,7 +43,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.8.28.dev1
+            Exudyn1.8.32.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -115,7 +115,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.8.28.dev1</a>
+          <a href="../../../index.html">Exudyn1.8.32.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -442,19 +442,19 @@
 </section>
 <section id="geometric-relations">
 <h2>Geometric relations<a class="headerlink" href="#geometric-relations" title="Link to this heading"></a></h2>
-<p>The geometrical setup is shown in <a class="reference internal" href="#fig-objectcontactconvexroll-sketch"><span class="std std-numref">Fig. 36</span></a>. To calculate the contact point of the convex body of revolution the contact (ground) plane is rotated into the local frame of the body. In this local frame in which the generatrix of the body of revolution is described by the polynomial function</p>
+<p>The geometrical setup is shown in <a class="reference internal" href="#fig-objectcontactconvexroll-sketch"><span class="std std-numref">Fig. 41</span></a>. To calculate the contact point of the convex body of revolution the contact (ground) plane is rotated into the local frame of the body. In this local frame in which the generatrix of the body of revolution is described by the polynomial function</p>
 <div class="math notranslate nohighlight" id="equation-eq-connectorconvexrolling-polynomial">
-<span class="eqno">(66)<a class="headerlink" href="#equation-eq-connectorconvexrolling-polynomial" title="Link to this equation"></a></span>\[\mathrm{r}(^bx) = \sum_{i=0}^n k_i \; x^{n-i}\]</div>
+<span class="eqno">(77)<a class="headerlink" href="#equation-eq-connectorconvexrolling-polynomial" title="Link to this equation"></a></span>\[\mathrm{r}(^bx) = \sum_{i=0}^n k_i \; x^{n-i}\]</div>
 <p>with the coefficients of the hull <span class="math notranslate nohighlight">\(a_i\)</span>. As a pre-Check for the contact two spheres are put into both ends of the object with the maximum radius and only if one of these is in contact. The contact point <span class="math notranslate nohighlight">\(^{\mathrm{b}}{\mathbf{p}}_{\mathrm{m1,C}}\)</span> is calculated relative to the bodies marker <code class="docutils literal notranslate"><span class="pre">m1</span></code> in the bodies local frame and transformed accordingly.
-The contact point C can for be calculated convex bodies by matching the derivative of the polynomial <span class="math notranslate nohighlight">\(r(^bx)\)</span> with the gradient of the contact plane, shown in <a class="reference internal" href="#fig-objectcontactconvexroll-sketch"><span class="std std-numref">Fig. 36</span></a>, explained in detail in .
+The contact point C can for be calculated convex bodies by matching the derivative of the polynomial <span class="math notranslate nohighlight">\(r(^bx)\)</span> with the gradient of the contact plane, shown in <a class="reference internal" href="#fig-objectcontactconvexroll-sketch"><span class="std std-numref">Fig. 41</span></a>, explained in detail in .
 At the contact point a normal force <span class="math notranslate nohighlight">\({\mathbf{f}}_{\mathrm{N}} = [ 0 \; 0 \; \mathrm{f}_{\mathrm{N}} ]\tp\)</span>  with</p>
 <div class="math notranslate nohighlight" id="equation-eq-fpencontact">
-<span class="eqno">(67)<a class="headerlink" href="#equation-eq-fpencontact" title="Link to this equation"></a></span>\[\begin{split}\mathrm{f}_{\mathrm{N}} = \begin{cases} - (k_c \, z_{\mathrm{pen}} + d_c \,  \dot{z}_{\mathrm{pen}})  &amp;\text{$z_{\mathrm{pen}}&gt;0$} \\ 0 &amp;\text{else} \end{cases}\end{split}\]</div>
+<span class="eqno">(78)<a class="headerlink" href="#equation-eq-fpencontact" title="Link to this equation"></a></span>\[\begin{split}\mathrm{f}_{\mathrm{N}} = \begin{cases} - (k_c \, z_{\mathrm{pen}} + d_c \,  \dot{z}_{\mathrm{pen}})  &amp;\text{$z_{\mathrm{pen}}&gt;0$} \\ 0 &amp;\text{else} \end{cases}\end{split}\]</div>
 <p>acts against the penetration of the ground. The penetration depth <span class="math notranslate nohighlight">\(z_{\mathrm{pen}}\)</span> is the z-component of the position vector of the contact point relative to the ground frame <span class="math notranslate nohighlight">\({^0{\mathbf{p}}_{\mathrm{C}}}\)</span>.</p>
 <figure class="align-default" id="id2">
 <span id="fig-objectcontactconvexroll-sketch"></span><a class="reference internal image-reference" href="../../../_images/ConvexRolling.png"><img alt="../../../_images/ConvexRolling.png" src="../../../_images/ConvexRolling.png" style="width: 600px;" /></a>
 <figcaption>
-<p><span class="caption-number">Fig. 36 </span><span class="caption-text">Sketch of the roller Dimensions. The rollers radius <span class="math notranslate nohighlight">\(r({^bx})\)</span> is described by the polynomial <code class="docutils literal notranslate"><span class="pre">coefficientsHull</span></code>.</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
+<p><span class="caption-number">Fig. 41 </span><span class="caption-text">Sketch of the roller Dimensions. The rollers radius <span class="math notranslate nohighlight">\(r({^bx})\)</span> is described by the polynomial <code class="docutils literal notranslate"><span class="pre">coefficientsHull</span></code>.</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
 </figcaption>
 </figure>
 <p>The revolution results in a velocity of</p>

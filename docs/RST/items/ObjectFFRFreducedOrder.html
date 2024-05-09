@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ObjectFFRFreducedOrder &mdash; Exudyn1.8.28.dev1 1.8.28.dev1 documentation</title>
+  <title>ObjectFFRFreducedOrder &mdash; Exudyn1.8.32.dev1 1.8.32.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=027cc127"></script>
+        <script src="../../../_static/documentation_options.js?v=d6ff67ca"></script>
         <script src="../../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -43,7 +43,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.8.28.dev1
+            Exudyn1.8.32.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -104,7 +104,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.8.28.dev1</a>
+          <a href="../../../index.html">Exudyn1.8.32.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -663,11 +663,11 @@ node <span class="math notranslate nohighlight">\(n_i\)</span> including rigid b
 <p>The formulation is based on the EOM of <code class="docutils literal notranslate"><span class="pre">ObjectFFRF</span></code>, <strong>also regarding parts of notation</strong>and some input parameters, Section <a class="reference internal" href="ObjectFFRF.html#sec-item-objectffrf"><span class="std std-ref">ObjectFFRF</span></a>, and
 can be found in Zwölfer and Gerstmayr  with only small modifications in the notation.
 The notation of kinematics quantities follows the floating frame of reference idea with
-quantities given in the tables above and sketched in <a class="reference internal" href="#fig-objectffrfreducedorder-mesh"><span class="std std-numref">Fig. 34</span></a>.</p>
+quantities given in the tables above and sketched in <a class="reference internal" href="#fig-objectffrfreducedorder-mesh"><span class="std std-numref">Fig. 39</span></a>.</p>
 <figure class="align-default" id="id3">
 <span id="fig-objectffrfreducedorder-mesh"></span><a class="reference internal image-reference" href="../../../_images/ObjectFFRFsketch.png"><img alt="../../../_images/ObjectFFRFsketch.png" src="../../../_images/ObjectFFRFsketch.png" style="width: 400px;" /></a>
 <figcaption>
-<p><span class="caption-number">Fig. 34 </span><span class="caption-text">Floating frame of reference with exemplary position of a mesh node <em>i</em></span><a class="headerlink" href="#id3" title="Link to this image"></a></p>
+<p><span class="caption-number">Fig. 39 </span><span class="caption-text">Floating frame of reference with exemplary position of a mesh node <em>i</em></span><a class="headerlink" href="#id3" title="Link to this image"></a></p>
 </figcaption>
 </figure>
 <p>The reduced order <a class="reference internal" href="../Abbreviations.html#ffrf"><span class="std std-ref">FFRF</span></a> formulation is based on an approximation of flexible coordinates <span class="math notranslate nohighlight">\(\LU{b}{{\mathbf{q}}\indf}\)</span>by means of a reduction or mode basis <span class="math notranslate nohighlight">\(\LU{b}{\tPsi}\)</span> (<code class="docutils literal notranslate"><span class="pre">modeBasis</span></code>) and the the modal coordinates <span class="math notranslate nohighlight">\(\tzeta\)</span>,</p>
@@ -676,27 +676,27 @@ quantities given in the tables above and sketched in <a class="reference interna
 <p>The mode basis <span class="math notranslate nohighlight">\(\LU{b}{\tPsi}\)</span> contains so-called mode shape vectors in its columns, which may be computed from eigen analysis, static computation or more advanced techniques,
 see the helper functions in module <code class="docutils literal notranslate"><span class="pre">exudyn.FEM</span></code>, within the class text{FEMinterface}.
 To compute eigen modes, use <code class="docutils literal notranslate"><span class="pre">FEMinterface.ComputeEigenmodes(...)</span></code> or
-<code class="docutils literal notranslate"><span class="pre">FEMinterface.ComputeHurtyCraigBamptonModes(...)</span></code>. For details on model order reduction and component mode synthesis, see Section <a class="reference internal" href="../../../index.html#sec-theory-cms"><span class="std std-ref">Theory: Component Mode Synthesis</span></a>.
+<code class="docutils literal notranslate"><span class="pre">FEMinterface.ComputeHurtyCraigBamptonModes(...)</span></code>. For details on model order reduction and component mode synthesis, see Section <a class="reference internal" href="../ModelOrderReductionAndComponentModeSynthesis.html#sec-theory-cms"><span class="std std-ref">Model order reduction and component mode synthesis</span></a>.
 In many applications, <span class="math notranslate nohighlight">\(n_m\)</span> typically ranges between 10 and 50, but also beyond – depending on the desired accuracy of the model.</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">ObjectFFRF</span></code> coordinates and Eqs. <a class="reference internal" href="ObjectFFRF.html#equation-eq-objectffrf-eom">(51)</a>(this is not done for user functions and <code class="docutils literal notranslate"><span class="pre">forceVector</span></code>) can be reduced by the matrix <span class="math notranslate nohighlight">\({\mathbf{H}} \in \Rcal^{(n\indf+n\indrigid) \times n_{ODE2}}\)</span>,</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">ObjectFFRF</span></code> coordinates and Eqs. <a class="reference internal" href="ObjectFFRF.html#equation-eq-objectffrf-eom">(62)</a>(this is not done for user functions and <code class="docutils literal notranslate"><span class="pre">forceVector</span></code>) can be reduced by the matrix <span class="math notranslate nohighlight">\({\mathbf{H}} \in \Rcal^{(n\indf+n\indrigid) \times n_{ODE2}}\)</span>,</p>
 <div class="math notranslate nohighlight">
 \[{\mathbf{q}}_{FFRF} = \vr{{\mathbf{q}}\indt}{\ttheta}{\LU{b}{{\mathbf{q}}\indf}} = \mr{\mathbf{I}_{3 \times 3}}{\Null}{\Null} {\Null}{{\mathbf{I}}\indr}{\Null} {\Null}{\Null}{\LU{b}{\tPsi}} \vr{{\mathbf{q}}\indt}{\ttheta}{\tzeta} = {\mathbf{H}} \, {\mathbf{q}}\]</div>
 <p>with the <span class="math notranslate nohighlight">\(4\times 4\)</span> identity matrix <span class="math notranslate nohighlight">\({\mathbf{I}}\indr\)</span> in case of Euler parameters and the reduced coordinates <span class="math notranslate nohighlight">\({\mathbf{q}}\)</span>.</p>
-<p>The reduced equations follow from the reduction of system matrices in Eqs. <a class="reference internal" href="ObjectFFRF.html#equation-eq-objectffrf-eom">(51)</a>,</p>
+<p>The reduced equations follow from the reduction of system matrices in Eqs. <a class="reference internal" href="ObjectFFRF.html#equation-eq-objectffrf-eom">(62)</a>,</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}{\mathbf{K}}\indred &amp;=&amp; \LU{b}{\tPsi}\tp \LU{b}{{\mathbf{K}}} \LU{b}{\tPsi} , \\
 {\mathbf{M}}\indred &amp;=&amp; \LU{b}{\tPsi}\tp \LU{b}{{\mathbf{M}}} \LU{b}{\tPsi} , \\\end{split}\]</div>
 <p>the computation of rigid body inertia</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\LU{b}{\tTheta}\indu &amp;=&amp; \LUX{b}{\tilde {\mathbf{x}}}{\cRef\tp} \LU{b}{{\mathbf{M}}} \LU{b}{\tilde {\mathbf{x}}\cRef}\\\end{split}\]</div>
-<p>the center of mass (and according tilde matrix), using <span class="math notranslate nohighlight">\(\tPhi\indt\)</span> from Eq. <a class="reference internal" href="ObjectFFRF.html#equation-eq-objectffrf-phit">(48)</a>,</p>
+<p>the center of mass (and according tilde matrix), using <span class="math notranslate nohighlight">\(\tPhi\indt\)</span> from Eq. <a class="reference internal" href="ObjectFFRF.html#equation-eq-objectffrf-phit">(59)</a>,</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\LU{b}{\tchi}\indu &amp;=&amp; \frac{1}{m} \tPhi\tp\indt \LU{b}{{\mathbf{M}}} \LU{b}{{\mathbf{x}}\cRef}\\
 \LU{b}{\tilde \tchi\indu} &amp;=&amp; \frac{1}{m} \tPhi\tp\indt \LU{b}{{\mathbf{M}}} \LU{b}{\tilde {\mathbf{x}}\cRef}\\\end{split}\]</div>
 <p>and seven inertia-like matrices ,</p>
 <div class="math notranslate nohighlight">
 \[{\mathbf{M}}_{AB} = {\mathbf{A}}\tp \LU{b}{{\mathbf{M}}} {\mathbf{B}}, \quad \mathrm{using} \quad {\mathbf{A}}{\mathbf{B}} \in \left[\tPsi\tPsi ,\; \widetilde{\tPsi}\tPsi,\; \widetilde{\tPsi}\widetilde{\tPsi},\; \tPhi\indt\tPsi,\; \tPhi\indt\widetilde{\tPsi},\; \tilde{\mathbf{x}}\cRef\tPsi,\; \tilde{\mathbf{x}}\cRef\widetilde{\tPsi}\right]\]</div>
-<p>Note that the special tilde operator for vectors <span class="math notranslate nohighlight">\({\mathbf{p}} \in \Rcal^{n_f}\)</span> of Eq. <a class="reference internal" href="ObjectFFRF.html#equation-eq-objectffrf-specialtilde">(49)</a> is frequently used.</p>
+<p>Note that the special tilde operator for vectors <span class="math notranslate nohighlight">\({\mathbf{p}} \in \Rcal^{n_f}\)</span> of Eq. <a class="reference internal" href="ObjectFFRF.html#equation-eq-objectffrf-specialtilde">(60)</a> is frequently used.</p>
 </section>
 <section id="equations-of-motion">
 <h2>Equations of motion<a class="headerlink" href="#equations-of-motion" title="Link to this heading"></a></h2>

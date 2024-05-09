@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ObjectConnectorHydraulicActuatorSimple &mdash; Exudyn1.8.28.dev1 1.8.28.dev1 documentation</title>
+  <title>ObjectConnectorHydraulicActuatorSimple &mdash; Exudyn1.8.32.dev1 1.8.32.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=027cc127"></script>
+        <script src="../../../_static/documentation_options.js?v=d6ff67ca"></script>
         <script src="../../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -43,7 +43,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.8.28.dev1
+            Exudyn1.8.32.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -115,7 +115,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.8.28.dev1</a>
+          <a href="../../../index.html">Exudyn1.8.32.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -537,9 +537,9 @@ The cylinder volumes in chambers 0 and 1 are then</p>
 \[V_{0,cur} = V_{h,0} + A_0 \cdot s, \quad V_{1,cur} = V_{h,1} + A_1 \cdot (L_s - s)\]</div>
 <p>The effective bulk modulus for chamber <span class="math notranslate nohighlight">\(k \in {0,1}\)</span> is computed as follows,</p>
 <div class="math notranslate nohighlight" id="equation-eq-hydraulicactuator-effbulkmodulus">
-<span class="eqno">(63)<a class="headerlink" href="#equation-eq-hydraulicactuator-effbulkmodulus" title="Link to this equation"></a></span>\[K_{k,eff} = \frac{1}{ \frac{1}{K_{oil}} + \frac{V_{k,cur} - V_{h,k}}{V_{k,cur} \cdot K_{cyl}} + \frac{V_{h,k}}{V_{k,cur} \cdot K_{hose}} },\]</div>
+<span class="eqno">(74)<a class="headerlink" href="#equation-eq-hydraulicactuator-effbulkmodulus" title="Link to this equation"></a></span>\[K_{k,eff} = \frac{1}{ \frac{1}{K_{oil}} + \frac{V_{k,cur} - V_{h,k}}{V_{k,cur} \cdot K_{cyl}} + \frac{V_{h,k}}{V_{k,cur} \cdot K_{hose}} },\]</div>
 <p>where we use a slightly different approach from  when computing the volume for the cylinder bulk modulus term for <span class="math notranslate nohighlight">\(k=1\)</span>.</p>
-<p>Note that in case of <span class="math notranslate nohighlight">\(K_{cyl}=0\)</span> and/or <span class="math notranslate nohighlight">\(K_{hose}=0\)</span>, the according fractions in Eq. <a class="reference internal" href="#equation-eq-hydraulicactuator-effbulkmodulus">(63)</a>are set to zero (which other wise would give infinity).</p>
+<p>Note that in case of <span class="math notranslate nohighlight">\(K_{cyl}=0\)</span> and/or <span class="math notranslate nohighlight">\(K_{hose}=0\)</span>, the according fractions in Eq. <a class="reference internal" href="#equation-eq-hydraulicactuator-effbulkmodulus">(74)</a>are set to zero (which other wise would give infinity).</p>
 <p>Otherwise, if <code class="docutils literal notranslate"><span class="pre">useChamberVolumeChange</span> <span class="pre">==</span> <span class="pre">False</span></code>, <span class="math notranslate nohighlight">\(V_{0,cur}=V_{h,0}\)</span>, <span class="math notranslate nohighlight">\(V_{1,cur}=V_{h,1}\)</span> and <span class="math notranslate nohighlight">\(K_{k,eff} = K_{oil}\)</span> for chambers <span class="math notranslate nohighlight">\(k \in {0,1}\)</span>.</p>
 <p>The pressure equations (explicit <a class="reference internal" href="../Abbreviations.html#ode1"><span class="std std-ref">ODE1</span></a>) have the structure</p>
 <div class="math notranslate nohighlight">

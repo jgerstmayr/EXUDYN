@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Solvers in Exudyn &mdash; Exudyn1.8.28.dev1 1.8.28.dev1 documentation</title>
+  <title>Solvers in Exudyn &mdash; Exudyn1.8.32.dev1 1.8.32.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=027cc127"></script>
+        <script src="../../_static/documentation_options.js?v=d6ff67ca"></script>
         <script src="../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -43,7 +43,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.8.28.dev1
+            Exudyn1.8.32.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -96,7 +96,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.8.28.dev1</a>
+          <a href="../../index.html">Exudyn1.8.32.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -117,7 +117,7 @@
              
   <section id="solvers-in-exudyn">
 <h1>Solvers in Exudyn<a class="headerlink" href="#solvers-in-exudyn" title="Link to this heading"></a></h1>
-<p>The user has a couple of basic solvers available in Exudyn , see <a class="reference internal" href="#fig-available-solvers"><span class="std std-numref">Fig. 24</span></a>:</p>
+<p>The user has a couple of basic solvers available in Exudyn , see <a class="reference internal" href="#fig-available-solvers"><span class="std std-numref">Fig. 29</span></a>:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">exudyn.SolveStatic(...)</span></code>: compute static solution for given problem (may also be used to compute kinematic behavior by prescribing joint motion)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">exudyn.SolveDynamic(...)</span></code>: time integration of equations of motion</p></li>
@@ -127,7 +127,7 @@
 <figure class="align-default" id="id1">
 <span id="fig-available-solvers"></span><a class="reference internal image-reference" href="../../_images/solversAvailableSolvers.png"><img alt="../../_images/solversAvailableSolvers.png" src="../../_images/solversAvailableSolvers.png" style="width: 500px;" /></a>
 <figcaption>
-<p><span class="caption-number">Fig. 24 </span><span class="caption-text">Basic and advanced solvers in Exudyn ; advanced solvers build upon any basic solver to perform more sophisticated operations</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
+<p><span class="caption-number">Fig. 29 </span><span class="caption-text">Basic and advanced solvers in Exudyn ; advanced solvers build upon any basic solver to perform more sophisticated operations</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
 </figcaption>
 </figure>
 <p>There are advanced solvers, like in <code class="docutils literal notranslate"><span class="pre">exudyn.processing</span></code>:</p>
@@ -157,7 +157,7 @@
 <h2>System equations of motion<a class="headerlink" href="#system-equations-of-motion" title="Link to this heading"></a></h2>
 <p>The system equations of motion in Exudyn follow the notations of Section <a class="reference internal" href="NomenclatureForSystemEquationsOfMotionAndSolvers.html#sec-nomenclatureeom"><span class="std std-ref">Nomenclature for system equations of motion and solvers</span></a> and are represented as</p>
 <div class="math notranslate nohighlight" id="equation-eq-system-eom">
-<span class="eqno">(22)<a class="headerlink" href="#equation-eq-system-eom" title="Link to this equation"></a></span>\[\begin{split}{\mathbf{M}} \ddot {\mathbf{q}} + \frac{\partial {\mathbf{g}}}{\partial {\mathbf{q}}^\mathrm{T}} \tlambda &amp; = &amp;{\mathbf{f}}_\SO({\mathbf{q}}, \dot {\mathbf{q}}, t) \\
+<span class="eqno">(33)<a class="headerlink" href="#equation-eq-system-eom" title="Link to this equation"></a></span>\[\begin{split}{\mathbf{M}} \ddot {\mathbf{q}} + \frac{\partial {\mathbf{g}}}{\partial {\mathbf{q}}^\mathrm{T}} \tlambda &amp; = &amp;{\mathbf{f}}_\SO({\mathbf{q}}, \dot {\mathbf{q}}, t) \\
 \dot {\mathbf{y}} + \frac{\partial {\mathbf{g}}}{\partial {\mathbf{y}}^\mathrm{T}} \tlambda &amp; = &amp;{\mathbf{f}}_\FO({\mathbf{y}}, t) \\
 {\mathbf{g}}({\mathbf{q}}, \dot {\mathbf{q}}, {\mathbf{y}}, \tlambda, t) &amp;=&amp; 0\end{split}\]</div>
 <p>It is important to note, that for linear mechanical the term <span class="math notranslate nohighlight">\({\mathbf{f}}_\SO\)</span> becomes</p>

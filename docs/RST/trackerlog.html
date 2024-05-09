@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Issue tracker &mdash; Exudyn1.8.28.dev1 1.8.28.dev1 documentation</title>
+  <title>Issue tracker &mdash; Exudyn1.8.32.dev1 1.8.32.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=027cc127"></script>
+        <script src="../../_static/documentation_options.js?v=d6ff67ca"></script>
         <script src="../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -42,7 +42,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.8.28.dev1
+            Exudyn1.8.32.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -98,7 +98,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.8.28.dev1</a>
+          <a href="../../index.html">Exudyn1.8.32.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -123,15 +123,47 @@ The extension <code class="docutils literal notranslate"><span class="pre">.dev1
 BUG numbers refer to the according issue numbers.</p>
 <p>General information on current version:</p>
 <ul class="simple">
-<li><p>Exudyn version = 1.8.28.dev1,</p></li>
-<li><p>last change =  2024-05-04,</p></li>
-<li><p>Number of issues = 1834,</p></li>
-<li><p>Number of resolved issues = 1622 (28 in current version),</p></li>
+<li><p>Exudyn version = 1.8.32.dev1,</p></li>
+<li><p>last change =  2024-05-09,</p></li>
+<li><p>Number of issues = 1837,</p></li>
+<li><p>Number of resolved issues = 1626 (32 in current version),</p></li>
 </ul>
 <section id="version-1-8">
 <h2>Version 1.8<a class="headerlink" href="#version-1-8" title="Link to this heading"></a></h2>
 <blockquote>
 <div><ul class="simple">
+<li><dl class="simple">
+<dt>Version 1.8.32: resolved Issue 1832: theory docu (docu)</dt><dd><ul>
+<li><p>description:  add description of computation of stresses for FFRFreducedOrder</p></li>
+<li><p>date resolved: <strong>2024-05-09 17:12</strong>, date raised: 2024-05-03</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.8.31: resolved Issue 1836: ComputeLinearizedSystem (extension)</dt><dd><ul>
+<li><p>description:  output constraint and nullspace matrices for constrained systems</p></li>
+<li><p>date resolved: <strong>2024-05-05 16:18</strong>, date raised: 2024-05-05</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.8.30: resolved Issue 1835: ComputeLinearizedSystem (extension)</dt><dd><ul>
+<li><p>description:  add option to compute linearized system of constrained system</p></li>
+<li><p>date resolved: <strong>2024-05-05 16:18</strong>, date raised: 2024-05-05</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.8.29: resolved Issue 1834: ComputeLinearizedSystem (change)</dt><dd><ul>
+<li><p>description:  remove sparse solver option useSparseSolver, as it is not implemented</p></li>
+<li><p>date resolved: <strong>2024-05-05 16:17</strong>, date raised: 2024-05-05</p></li>
+</ul>
+</dd>
+</dl>
+</li>
 <li><dl class="simple">
 <dt>Version 1.8.28: resolved Issue 1833: ComputeODE2EigenValues (extension)</dt><dd><ul>
 <li><p>description:  extend to complex eigenvalues</p></li>
@@ -216,7 +248,7 @@ BUG numbers refer to the according issue numbers.</p>
 </li>
 <li><dl class="simple">
 <dt>Version 1.8.18: resolved Issue 1819: KinematicTreePendulum.py (example)</dt><dd><ul>
-<li><p>description:  Version 1.7.71 broke example „kinematicTreePendulum“ with transition from SensorObject to SensorBody</p></li>
+<li><p>description:  Version 1.7.71 broke example kinematicTreePendulum with transition from SensorObject to SensorBody</p></li>
 <li><p><strong>notes:</strong> changed SensorObject(objectNumber=oKT into SensorBody(bodyNumber=oKT</p></li>
 <li><p>date resolved: <strong>2024-04-17 16:13</strong>, date raised: 2024-04-17</p></li>
 <li><p>resolved by: P. Manzl</p></li>
@@ -260,7 +292,7 @@ BUG numbers refer to the according issue numbers.</p>
 </li>
 <li><dl class="simple">
 <dt>Version 1.8.13: resolved Issue 1815: stub files (fix)</dt><dd><ul>
-<li><p>description:  .pyi files contain _ instead of _ from latex documentation</p></li>
+<li><p>description:  .pyi are missing backslash before underscore (for latex) documentation</p></li>
 <li><p>date resolved: <strong>2024-04-14 15:15</strong>, date raised: 2024-04-14</p></li>
 </ul>
 </dd>
@@ -13472,14 +13504,6 @@ BUG numbers refer to the according issue numbers.</p>
 <h2>Open issues<a class="headerlink" href="#open-issues" title="Link to this heading"></a></h2>
 <blockquote>
 <div><ul class="simple">
-<li><dl class="simple">
-<dt><strong>open issue 1832:</strong> theory docu</dt><dd><ul>
-<li><p>description:  add description of computation of stresses for FFRFreducedOrder</p></li>
-<li><p>date raised: 2024-05-03</p></li>
-</ul>
-</dd>
-</dl>
-</li>
 <li><dl class="simple">
 <dt><strong>open issue 1825:</strong> GraphicsDataCube</dt><dd><ul>
 <li><p>description:  rename to GraphicsDataBrick… functions; use assignment to keep previous functionality</p></li>
