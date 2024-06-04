@@ -575,7 +575,7 @@ class BuildExt(build_ext):
     if sys.platform == 'darwin':
         # darwin_opts = ['-stdlib=libc++', '-mmacosx-version-min=10.7']  #without c++17 support
         # darwin_opts += ['-Wno-unused-variable','-Wno-missing-braces','-Wno-return-stack-address']
-        darwin_opts = ['-stdlib=libc++', '-mmacosx-version-min=10.9'] #for c++17 support (not working on older MacOSX)
+        darwin_opts = ['-stdlib=libc++', '-mmacosx-version-min=11.0'] #for c++17 support (not working on older MacOSX)
         c_opts['unix'] += darwin_opts + ['-Wno-inconsistent-missing-override', 
         '-Wno-overloaded-virtual', #avoid too many warnings
         '-Wno-deprecated-declarations', #avoid too many OpenGL warnings on Big Sur
