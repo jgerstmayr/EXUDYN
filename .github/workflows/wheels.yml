@@ -100,7 +100,8 @@ jobs:
     strategy:
       matrix:
         # os: [ubuntu-latest] #ubuntu with aarch64 seems to need emulation: see QEMU / setup-qemu-action
-        os: [windows-latest, macos-latest, ubuntu-latest] #ubuntu with aarch64 seems to need emulation: see QEMU / setup-qemu-action
+        # os: [windows-latest, macos-14.4, ubuntu-latest] #ubuntu with aarch64 seems to need emulation: see QEMU / setup-qemu-action
+        os: [macos-14.4] #ubuntu with aarch64 seems to need emulation: see QEMU / setup-qemu-action
         # python-version: ['10']
         python-version: ['8', '9', '10', '11', '12'] 
         exclude:
