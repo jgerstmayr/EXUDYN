@@ -36,7 +36,8 @@ You can view and download this file on Github: `reinforcementLearningRobot.py <h
    sys.exudynFast = True
    
    import exudyn as exu
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    from exudyn.robotics import *
    from exudyn.artificialIntelligence import *
    import math
@@ -45,6 +46,9 @@ You can view and download this file on Github: `reinforcementLearningRobot.py <h
    import os
    os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
    import torch 
+   
+   import stable_baselines3
+   useOldGym = tuple(map(int, stable_baselines3.__version__.split('.'))) <= tuple(map(int, '1.8.0'.split('.')))
    
    ##%% here the number of links can be changed. Note that for n < 3 the actuator 
    
@@ -82,7 +86,7 @@ You can view and download this file on Github: `reinforcementLearningRobot.py <h
    
        #+++++++++++++++++++++++++++++++++++++++++++
        #create contact (if not provided)
-       ddr.gGround = GraphicsDataCheckerBoard(normal= [0,0,1], 
+       ddr.gGround = graphics.CheckerBoard(normal= [0,0,1], 
                                               size=dimGroundX, size2=dimGroundY, nTiles=8)
        
        ddr.oGround= mbs.AddObject(ObjectGround(referencePosition= [0,0,0],
@@ -106,7 +110,7 @@ You can view and download this file on Github: `reinforcementLearningRobot.py <h
            ddr.gContact.SetSearchTreeCellSize(numberOfCells=[4,4,1]) #just a few contact cells
    
            #add ground to contact
-           [meshPoints, meshTrigs] = GraphicsData2PointsAndTrigs(ddr.gGround) #could also use only 1 quad ...
+           [meshPoints, meshTrigs] = graphics.ToPointsAndTrigs(ddr.gGround) #could also use only 1 quad ...
    
            ddr.gContact.AddTrianglesRigidBodyBased( rigidBodyMarkerIndex = ddr.mGround, 
                                                contactStiffness = ddr.stiffnessGround, contactDamping = ddr.dampingGround, 
@@ -131,12 +135,12 @@ You can view and download this file on Github: `reinforcementLearningRobot.py <h
        
        #+++++++++++++++++++++++++++++++++++++++++++
        #create kinematic tree for wheeled robot    
-       ddr.gPlatform = [GraphicsDataCylinder([0,0,platformGroundOffset], [0,0,platformHeight], platformRadius, color=color4steelblue, nTiles=64, addEdges=True, addFaces=False)]
-       ddr.gPlatform += [GraphicsDataCylinder([0,platformRadius*0.8,platformGroundOffset*1.5], [0,0,platformHeight], platformRadius*0.2, color=color4grey)]
-       ddr.gPlatform += [GraphicsDataBasis(length=0.1)]
-       ddr.gWheel = [GraphicsDataCylinder([-wheelThickness*0.5,0,0], [wheelThickness,0,0], wheelRadius, color=color4red, nTiles=32)]
-       ddr.gWheel += [GraphicsDataOrthoCubePoint([0,0,0],[wheelThickness*1.1,wheelRadius*1.3,wheelRadius*1.3], color=color4grey)]
-       ddr.gWheel += [GraphicsDataBasis(length=0.075)]
+       ddr.gPlatform = [graphics.Cylinder([0,0,platformGroundOffset], [0,0,platformHeight], platformRadius, color=graphics.color.steelblue, nTiles=64, addEdges=True, addFaces=False)]
+       ddr.gPlatform += [graphics.Cylinder([0,platformRadius*0.8,platformGroundOffset*1.5], [0,0,platformHeight], platformRadius*0.2, color=graphics.color.grey)]
+       ddr.gPlatform += [graphics.Basis(length=0.1)]
+       ddr.gWheel = [graphics.Cylinder([-wheelThickness*0.5,0,0], [wheelThickness,0,0], wheelRadius, color=graphics.color.red, nTiles=32)]
+       ddr.gWheel += [graphics.Brick([0,0,0],[wheelThickness*1.1,wheelRadius*1.3,wheelRadius*1.3], color=graphics.color.grey)]
+       ddr.gWheel += [graphics.Basis(length=0.075)]
    
        #create node for unknowns of KinematicTree
        ddr.nJoints = 3+3+2 - 3*planarPlatform #6 (3 in planar case) for the platform and 2 for the wheels;
@@ -268,7 +272,7 @@ You can view and download this file on Github: `reinforcementLearningRobot.py <h
                if not usePenalty:
                    ddr.oRollingDisc = mbs.AddObject(ObjectJointRollingDisc(markerNumbers=[ddr.mGround , mWheel], 
                                                         constrainedAxes=[i,1,1-planarPlatform], discRadius=wheelRadius,
-                                                        visualization=VObjectJointRollingDisc(discWidth=wheelThickness,color=color4blue)))
+                                                        visualization=VObjectJointRollingDisc(discWidth=wheelThickness,color=graphics.color.blue)))
                else:
                    nGeneric = mbs.AddNode(NodeGenericData(initialCoordinates=[0,0,0], numberOfDataCoordinates=3))
                    ddr.oRollingDisc = mbs.AddObject(ObjectConnectorRollingDiscPenalty(markerNumbers=[ddr.mGround , mWheel], 
@@ -279,7 +283,7 @@ You can view and download this file on Github: `reinforcementLearningRobot.py <h
                                                    contactStiffness=ddr.stiffnessGround, 
                                                    contactDamping=ddr.dampingGround, 
                                                    dryFriction=[ddr.frictionCoeff]*2,
-                                                   visualization=VObjectConnectorRollingDiscPenalty(discWidth=wheelThickness,color=color4blue)))
+                                                   visualization=VObjectConnectorRollingDiscPenalty(discWidth=wheelThickness,color=graphics.color.blue)))
                
    
    
@@ -442,7 +446,7 @@ You can view and download this file on Github: `reinforcementLearningRobot.py <h
            self.nKT = ddr.nKT
    
            #add graphics for desination
-           gDestination = GraphicsDataSphere(point=[0,0,0.05],radius = 0.02, color=color4red, nTiles=16)
+           gDestination = graphics.Sphere(point=[0,0,0.05],radius = 0.02, color=graphics.color.red, nTiles=16)
            self.oDestination = mbs.CreateGround(graphicsDataList=[gDestination])
    
            mbs.Assemble()
@@ -678,7 +682,12 @@ You can view and download this file on Github: `reinforcementLearningRobot.py <h
                self.steps_beyond_done += 1
                reward = 0.0
    
-           return np.array(self.state, dtype=np.float32), reward, done, {}
+           info = {}
+           terminated, truncated = done, False # since stable-baselines3 > 1.8.0 implementations terminated and truncated 
+           if useOldGym:
+               return np.array(self.state, dtype=np.float32), reward, terminated, info
+           else:
+               return np.array(self.state, dtype=np.float32), reward, terminated, truncated, info
    
    
    
@@ -722,7 +731,7 @@ You can view and download this file on Github: `reinforcementLearningRobot.py <h
        #create model and do reinforcement learning
        modelType='A2C'
        modelName = 'openAIgymDDrobot_'+modelType
-       if False: #'scalar' environment:
+       if True: #'scalar' environment:
            env = RobotEnv()
            #check if model runs:
            #env.SetSolver(exu.DynamicSolverType.ExplicitMidpoint)
@@ -731,7 +740,7 @@ You can view and download this file on Github: `reinforcementLearningRobot.py <h
            model = GetModel(env, modelType=modelType)
            env.useRenderer = True
            # env.render()
-           exu.StartRenderer()
+           # exu.StartRenderer()
    
            ts = -time.time()
            model.learn(total_timesteps=200000) 
@@ -744,9 +753,9 @@ You can view and download this file on Github: `reinforcementLearningRobot.py <h
        else:
            import torch #stable-baselines3 is based on pytorch
            n_cores= max(1,int(os.cpu_count()/2)) #n_cores should be number of real cores (not threads)
-           n_cores = 26 #16 #vecEnv can handle number of threads, while torch should rather use real cores
+           #n_cores = 8 #vecEnv can handle number of threads, while torch should rather use real cores
            #torch.set_num_threads(n_cores) #seems to be ideal to match the size of subprocVecEnv
-           torch.set_num_threads(14) #seems to be ideal to match the size of subprocVecEnv
+           torch.set_num_threads(n_cores) #seems to be ideal to match the size of subprocVecEnv
            
            print('using',n_cores,'cores')
    

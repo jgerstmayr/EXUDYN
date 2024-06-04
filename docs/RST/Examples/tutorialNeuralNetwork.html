@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>tutorialNeuralNetwork.py &mdash; Exudyn1.8.32.dev1 1.8.32.dev1 documentation</title>
+  <title>tutorialNeuralNetwork.py &mdash; Exudyn1.8.52.dev1 1.8.52.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=d6ff67ca"></script>
+        <script src="../../../_static/documentation_options.js?v=b761f56e"></script>
         <script src="../../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -41,7 +41,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.8.32.dev1
+            Exudyn1.8.52.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -233,7 +233,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.8.32.dev1</a>
+          <a href="../../../index.html">Exudyn1.8.52.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -272,436 +272,437 @@
 <span class="linenos"> 15</span><span class="c1">#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
 <span class="linenos"> 16</span>
 <span class="linenos"> 17</span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
-<span class="linenos"> 18</span><span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="linenos"> 19</span>
-<span class="linenos"> 20</span><span class="kn">import</span> <span class="nn">sys</span>
-<span class="linenos"> 21</span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="linenos"> 22</span><span class="c1"># #from math import sin, cos, sqrt,pi</span>
-<span class="linenos"> 23</span><span class="kn">import</span> <span class="nn">os</span>
-<span class="linenos"> 24</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;KMP_DUPLICATE_LIB_OK&quot;</span><span class="p">]</span><span class="o">=</span><span class="s2">&quot;TRUE&quot;</span> <span class="c1">#for multiprocessing problems with pytorch</span>
-<span class="linenos"> 25</span>
-<span class="linenos"> 26</span><span class="kn">from</span> <span class="nn">numpy.random</span> <span class="kn">import</span> <span class="n">rand</span>
-<span class="linenos"> 27</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="linenos"> 28</span>
-<span class="linenos"> 29</span><span class="n">doTraining</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="linenos"> 30</span>
-<span class="linenos"> 31</span><span class="c1">#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos"> 32</span><span class="c1">#create an Exudyn model of a rigid body on two strings</span>
-<span class="linenos"> 33</span><span class="c1">#this is a simple model for a 2D cable-driven robot</span>
-<span class="linenos"> 34</span>
-<span class="linenos"> 35</span><span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
-<span class="linenos"> 36</span><span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
-<span class="linenos"> 37</span>
+<span class="linenos"> 18</span><span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="o">*</span> <span class="c1">#includes itemInterface and rigidBodyUtilities</span>
+<span class="linenos"> 19</span><span class="kn">import</span> <span class="nn">exudyn.graphics</span> <span class="k">as</span> <span class="nn">graphics</span> <span class="c1">#only import if it does not conflict</span>
+<span class="linenos"> 20</span>
+<span class="linenos"> 21</span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="linenos"> 22</span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="linenos"> 23</span><span class="c1"># #from math import sin, cos, sqrt,pi</span>
+<span class="linenos"> 24</span><span class="kn">import</span> <span class="nn">os</span>
+<span class="linenos"> 25</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;KMP_DUPLICATE_LIB_OK&quot;</span><span class="p">]</span><span class="o">=</span><span class="s2">&quot;TRUE&quot;</span> <span class="c1">#for multiprocessing problems with pytorch</span>
+<span class="linenos"> 26</span>
+<span class="linenos"> 27</span><span class="kn">from</span> <span class="nn">numpy.random</span> <span class="kn">import</span> <span class="n">rand</span>
+<span class="linenos"> 28</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="linenos"> 29</span>
+<span class="linenos"> 30</span><span class="n">doTraining</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos"> 31</span>
+<span class="linenos"> 32</span><span class="c1">#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos"> 33</span><span class="c1">#create an Exudyn model of a rigid body on two strings</span>
+<span class="linenos"> 34</span><span class="c1">#this is a simple model for a 2D cable-driven robot</span>
+<span class="linenos"> 35</span>
+<span class="linenos"> 36</span><span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
+<span class="linenos"> 37</span><span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
 <span class="linenos"> 38</span>
-<span class="linenos"> 39</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="linenos"> 40</span>
-<span class="linenos"> 41</span><span class="c1">#Geometry:</span>
-<span class="linenos"> 42</span><span class="c1">#[0,0,0] is at bottom of left tower</span>
-<span class="linenos"> 43</span><span class="c1">#[L,0,0] is at bottom of right tower</span>
-<span class="linenos"> 44</span><span class="c1">#[L,H,0] is at top of left tower</span>
-<span class="linenos"> 45</span>
-<span class="linenos"> 46</span><span class="n">L</span> <span class="o">=</span> <span class="mi">4</span>       <span class="c1">#m; distance of columns</span>
-<span class="linenos"> 47</span><span class="n">H</span> <span class="o">=</span> <span class="mi">3</span>       <span class="c1">#m; height of columns</span>
-<span class="linenos"> 48</span><span class="n">w</span> <span class="o">=</span> <span class="mf">0.2</span>     <span class="c1">#m; size of rigid body</span>
-<span class="linenos"> 49</span><span class="n">m</span> <span class="o">=</span> <span class="mi">1</span>       <span class="c1">#kg; weight of mass</span>
-<span class="linenos"> 50</span><span class="n">g</span> <span class="o">=</span> <span class="mf">9.81</span>    <span class="c1">#m/s^2; gravity</span>
-<span class="linenos"> 51</span>
-<span class="linenos"> 52</span><span class="n">sideLengths</span> <span class="o">=</span> <span class="p">[</span><span class="n">w</span><span class="p">,</span><span class="n">w</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span><span class="n">w</span><span class="p">]</span>
-<span class="linenos"> 53</span><span class="n">density</span> <span class="o">=</span> <span class="n">m</span><span class="o">/</span><span class="n">w</span><span class="o">**</span><span class="mi">3</span> <span class="c1">#average density of rigid body with dimensions</span>
-<span class="linenos"> 54</span>
-<span class="linenos"> 55</span><span class="c1">#left and right tower</span>
-<span class="linenos"> 56</span><span class="n">pTower0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="n">H</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
-<span class="linenos"> 57</span><span class="n">pTower1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">L</span><span class="p">,</span><span class="n">H</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
-<span class="linenos"> 58</span><span class="c1">#local attachment points at mass</span>
-<span class="linenos"> 59</span><span class="n">localPosMass0</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">w</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
-<span class="linenos"> 60</span><span class="n">localPosMass1</span><span class="o">=</span><span class="p">[</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">w</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
-<span class="linenos"> 61</span><span class="c1">#center location of rigid body</span>
-<span class="linenos"> 62</span><span class="c1">#pRigidMid = np.array([0.5*L, 0.5*H,0])</span>
-<span class="linenos"> 63</span><span class="n">pRigidMid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.5</span><span class="o">*</span><span class="n">L</span><span class="p">,</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">H</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
-<span class="linenos"> 64</span>
-<span class="linenos"> 65</span><span class="c1"># pInit = [1.2,0.78,0] #for testing</span>
-<span class="linenos"> 66</span><span class="n">pInit</span> <span class="o">=</span> <span class="n">pRigidMid</span>
-<span class="linenos"> 67</span>
-<span class="linenos"> 68</span><span class="n">k</span> <span class="o">=</span> <span class="mi">500</span>         <span class="c1">#string stiffness</span>
-<span class="linenos"> 69</span><span class="n">d</span> <span class="o">=</span> <span class="mf">0.01</span><span class="o">*</span><span class="n">k</span>      <span class="c1">#string damping for dynamic simulation</span>
-<span class="linenos"> 70</span><span class="n">tEnd</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="linenos"> 71</span><span class="n">stepSize</span> <span class="o">=</span> <span class="mf">0.01</span>
-<span class="linenos"> 72</span>
-<span class="linenos"> 73</span><span class="n">gGround</span> <span class="o">=</span> <span class="p">[</span><span class="nf">GraphicsDataOrthoCubePoint</span><span class="p">(</span><span class="n">centerPoint</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.5</span><span class="o">*</span><span class="n">H</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="o">*</span><span class="n">w</span><span class="p">,</span><span class="n">H</span><span class="p">,</span><span class="n">w</span><span class="p">],</span><span class="n">color</span><span class="o">=</span><span class="n">color4grey</span><span class="p">)]</span>
-<span class="linenos"> 74</span><span class="n">gGround</span> <span class="o">+=</span> <span class="p">[</span><span class="nf">GraphicsDataOrthoCubePoint</span><span class="p">(</span><span class="n">centerPoint</span><span class="o">=</span><span class="p">[</span><span class="n">L</span><span class="p">,</span><span class="mf">0.5</span><span class="o">*</span><span class="n">H</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="o">*</span><span class="n">w</span><span class="p">,</span><span class="n">H</span><span class="p">,</span><span class="n">w</span><span class="p">],</span><span class="n">color</span><span class="o">=</span><span class="n">color4grey</span><span class="p">)]</span>
-<span class="linenos"> 75</span><span class="n">gGround</span> <span class="o">+=</span> <span class="p">[</span><span class="nf">GraphicsDataOrthoCubePoint</span><span class="p">(</span><span class="n">centerPoint</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="o">*</span><span class="n">L</span><span class="p">,</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">w</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="n">L</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="n">w</span><span class="p">],</span><span class="n">color</span><span class="o">=</span><span class="n">color4grey</span><span class="p">)]</span>
-<span class="linenos"> 76</span><span class="n">oGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateGround</span><span class="p">(</span><span class="n">graphicsDataList</span><span class="o">=</span><span class="n">gGround</span><span class="p">)</span>
-<span class="linenos"> 77</span>
-<span class="linenos"> 78</span><span class="n">gRigid</span> <span class="o">=</span> <span class="p">[</span><span class="nf">GraphicsDataOrthoCubePoint</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">sideLengths</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color4dodgerblue</span><span class="p">)]</span>
-<span class="linenos"> 79</span><span class="n">oRigid</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateRigidBody</span><span class="p">(</span><span class="n">referencePosition</span><span class="o">=</span><span class="n">pInit</span><span class="p">,</span>
-<span class="linenos"> 80</span>                             <span class="n">inertia</span> <span class="o">=</span> <span class="nc">InertiaCuboid</span><span class="p">(</span><span class="n">density</span><span class="p">,</span> <span class="n">sideLengths</span><span class="p">),</span>
-<span class="linenos"> 81</span>                             <span class="n">gravity</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="n">g</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-<span class="linenos"> 82</span>                             <span class="n">graphicsDataList</span><span class="o">=</span><span class="n">gRigid</span><span class="p">)</span>
-<span class="linenos"> 83</span><span class="n">nRigid</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetObject</span><span class="p">(</span><span class="n">oRigid</span><span class="p">)[</span><span class="s1">&#39;nodeNumber&#39;</span><span class="p">]</span> <span class="c1">#used later</span>
-<span class="linenos"> 84</span>
-<span class="linenos"> 85</span><span class="n">oString0</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateSpringDamper</span><span class="p">(</span><span class="n">bodyList</span><span class="o">=</span><span class="p">[</span><span class="n">oGround</span><span class="p">,</span> <span class="n">oRigid</span><span class="p">],</span>
-<span class="linenos"> 86</span>                                  <span class="n">localPosition0</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="n">H</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-<span class="linenos"> 87</span>                                  <span class="n">localPosition1</span><span class="o">=</span><span class="n">localPosMass0</span><span class="p">,</span>
-<span class="linenos"> 88</span>                                  <span class="n">stiffness</span> <span class="o">=</span> <span class="n">k</span><span class="p">,</span>
-<span class="linenos"> 89</span>                                  <span class="n">damping</span> <span class="o">=</span> <span class="n">d</span><span class="p">,</span>
-<span class="linenos"> 90</span>                                  <span class="n">drawSize</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="c1">#draw as line</span>
-<span class="linenos"> 91</span>                                  <span class="p">)</span>
-<span class="linenos"> 92</span><span class="n">oString1</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateSpringDamper</span><span class="p">(</span><span class="n">bodyList</span><span class="o">=</span><span class="p">[</span><span class="n">oGround</span><span class="p">,</span> <span class="n">oRigid</span><span class="p">],</span>
-<span class="linenos"> 93</span>                                  <span class="n">localPosition0</span><span class="o">=</span><span class="p">[</span><span class="n">L</span><span class="p">,</span><span class="n">H</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-<span class="linenos"> 94</span>                                  <span class="n">localPosition1</span><span class="o">=</span><span class="n">localPosMass1</span><span class="p">,</span>
-<span class="linenos"> 95</span>                                  <span class="n">stiffness</span> <span class="o">=</span> <span class="n">k</span><span class="p">,</span>
-<span class="linenos"> 96</span>                                  <span class="n">damping</span> <span class="o">=</span> <span class="n">d</span><span class="p">,</span>
-<span class="linenos"> 97</span>                                  <span class="n">drawSize</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="c1">#draw as line</span>
-<span class="linenos"> 98</span>                                  <span class="p">)</span>
-<span class="linenos"> 99</span><span class="n">sRigid</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorBody</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">oRigid</span><span class="p">,</span> <span class="n">storeInternal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<span class="linenos">100</span>                                <span class="n">outputVariableType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Position</span><span class="p">))</span>
-<span class="linenos">101</span>
-<span class="linenos">102</span><span class="c1"># compute string lengths for given rigid body center position in straight configuration</span>
-<span class="linenos">103</span><span class="c1"># used for initialization of static computation</span>
-<span class="linenos">104</span><span class="k">def</span> <span class="nf">ComputeStringLengths</span><span class="p">(</span><span class="n">pRigid</span><span class="p">):</span>
-<span class="linenos">105</span>    <span class="n">L0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pRigid</span><span class="p">)</span><span class="o">+</span><span class="n">localPosMass0</span><span class="o">-</span><span class="n">pTower0</span>
-<span class="linenos">106</span>    <span class="n">L1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pRigid</span><span class="p">)</span><span class="o">+</span><span class="n">localPosMass1</span><span class="o">-</span><span class="n">pTower1</span>
-<span class="linenos">107</span>
-<span class="linenos">108</span>    <span class="k">return</span> <span class="p">[</span><span class="nf">NormL2</span><span class="p">(</span><span class="n">L0</span><span class="p">),</span> <span class="nf">NormL2</span><span class="p">(</span><span class="n">L1</span><span class="p">)]</span>
-<span class="linenos">109</span>
+<span class="linenos"> 39</span>
+<span class="linenos"> 40</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="linenos"> 41</span>
+<span class="linenos"> 42</span><span class="c1">#Geometry:</span>
+<span class="linenos"> 43</span><span class="c1">#[0,0,0] is at bottom of left tower</span>
+<span class="linenos"> 44</span><span class="c1">#[L,0,0] is at bottom of right tower</span>
+<span class="linenos"> 45</span><span class="c1">#[L,H,0] is at top of left tower</span>
+<span class="linenos"> 46</span>
+<span class="linenos"> 47</span><span class="n">L</span> <span class="o">=</span> <span class="mi">4</span>       <span class="c1">#m; distance of columns</span>
+<span class="linenos"> 48</span><span class="n">H</span> <span class="o">=</span> <span class="mi">3</span>       <span class="c1">#m; height of columns</span>
+<span class="linenos"> 49</span><span class="n">w</span> <span class="o">=</span> <span class="mf">0.2</span>     <span class="c1">#m; size of rigid body</span>
+<span class="linenos"> 50</span><span class="n">m</span> <span class="o">=</span> <span class="mi">1</span>       <span class="c1">#kg; weight of mass</span>
+<span class="linenos"> 51</span><span class="n">g</span> <span class="o">=</span> <span class="mf">9.81</span>    <span class="c1">#m/s^2; gravity</span>
+<span class="linenos"> 52</span>
+<span class="linenos"> 53</span><span class="n">sideLengths</span> <span class="o">=</span> <span class="p">[</span><span class="n">w</span><span class="p">,</span><span class="n">w</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span><span class="n">w</span><span class="p">]</span>
+<span class="linenos"> 54</span><span class="n">density</span> <span class="o">=</span> <span class="n">m</span><span class="o">/</span><span class="n">w</span><span class="o">**</span><span class="mi">3</span> <span class="c1">#average density of rigid body with dimensions</span>
+<span class="linenos"> 55</span>
+<span class="linenos"> 56</span><span class="c1">#left and right tower</span>
+<span class="linenos"> 57</span><span class="n">pTower0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="n">H</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="linenos"> 58</span><span class="n">pTower1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">L</span><span class="p">,</span><span class="n">H</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="linenos"> 59</span><span class="c1">#local attachment points at mass</span>
+<span class="linenos"> 60</span><span class="n">localPosMass0</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">w</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos"> 61</span><span class="n">localPosMass1</span><span class="o">=</span><span class="p">[</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">w</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos"> 62</span><span class="c1">#center location of rigid body</span>
+<span class="linenos"> 63</span><span class="c1">#pRigidMid = np.array([0.5*L, 0.5*H,0])</span>
+<span class="linenos"> 64</span><span class="n">pRigidMid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.5</span><span class="o">*</span><span class="n">L</span><span class="p">,</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">H</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="linenos"> 65</span>
+<span class="linenos"> 66</span><span class="c1"># pInit = [1.2,0.78,0] #for testing</span>
+<span class="linenos"> 67</span><span class="n">pInit</span> <span class="o">=</span> <span class="n">pRigidMid</span>
+<span class="linenos"> 68</span>
+<span class="linenos"> 69</span><span class="n">k</span> <span class="o">=</span> <span class="mi">500</span>         <span class="c1">#string stiffness</span>
+<span class="linenos"> 70</span><span class="n">d</span> <span class="o">=</span> <span class="mf">0.01</span><span class="o">*</span><span class="n">k</span>      <span class="c1">#string damping for dynamic simulation</span>
+<span class="linenos"> 71</span><span class="n">tEnd</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="linenos"> 72</span><span class="n">stepSize</span> <span class="o">=</span> <span class="mf">0.01</span>
+<span class="linenos"> 73</span>
+<span class="linenos"> 74</span><span class="n">gGround</span> <span class="o">=</span> <span class="p">[</span><span class="n">graphics</span><span class="o">.</span><span class="nf">Brick</span><span class="p">(</span><span class="n">centerPoint</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.5</span><span class="o">*</span><span class="n">H</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="o">*</span><span class="n">w</span><span class="p">,</span><span class="n">H</span><span class="p">,</span><span class="n">w</span><span class="p">],</span><span class="n">color</span><span class="o">=</span><span class="n">graphics</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">grey</span><span class="p">)]</span>
+<span class="linenos"> 75</span><span class="n">gGround</span> <span class="o">+=</span> <span class="p">[</span><span class="n">graphics</span><span class="o">.</span><span class="nf">Brick</span><span class="p">(</span><span class="n">centerPoint</span><span class="o">=</span><span class="p">[</span><span class="n">L</span><span class="p">,</span><span class="mf">0.5</span><span class="o">*</span><span class="n">H</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="o">*</span><span class="n">w</span><span class="p">,</span><span class="n">H</span><span class="p">,</span><span class="n">w</span><span class="p">],</span><span class="n">color</span><span class="o">=</span><span class="n">graphics</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">grey</span><span class="p">)]</span>
+<span class="linenos"> 76</span><span class="n">gGround</span> <span class="o">+=</span> <span class="p">[</span><span class="n">graphics</span><span class="o">.</span><span class="nf">Brick</span><span class="p">(</span><span class="n">centerPoint</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="o">*</span><span class="n">L</span><span class="p">,</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">w</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="n">L</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="n">w</span><span class="p">],</span><span class="n">color</span><span class="o">=</span><span class="n">graphics</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">grey</span><span class="p">)]</span>
+<span class="linenos"> 77</span><span class="n">oGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateGround</span><span class="p">(</span><span class="n">graphicsDataList</span><span class="o">=</span><span class="n">gGround</span><span class="p">)</span>
+<span class="linenos"> 78</span>
+<span class="linenos"> 79</span><span class="n">gRigid</span> <span class="o">=</span> <span class="p">[</span><span class="n">graphics</span><span class="o">.</span><span class="nf">Brick</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">sideLengths</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">graphics</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">dodgerblue</span><span class="p">)]</span>
+<span class="linenos"> 80</span><span class="n">oRigid</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateRigidBody</span><span class="p">(</span><span class="n">referencePosition</span><span class="o">=</span><span class="n">pInit</span><span class="p">,</span>
+<span class="linenos"> 81</span>                             <span class="n">inertia</span> <span class="o">=</span> <span class="nc">InertiaCuboid</span><span class="p">(</span><span class="n">density</span><span class="p">,</span> <span class="n">sideLengths</span><span class="p">),</span>
+<span class="linenos"> 82</span>                             <span class="n">gravity</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="n">g</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos"> 83</span>                             <span class="n">graphicsDataList</span><span class="o">=</span><span class="n">gRigid</span><span class="p">)</span>
+<span class="linenos"> 84</span><span class="n">nRigid</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetObject</span><span class="p">(</span><span class="n">oRigid</span><span class="p">)[</span><span class="s1">&#39;nodeNumber&#39;</span><span class="p">]</span> <span class="c1">#used later</span>
+<span class="linenos"> 85</span>
+<span class="linenos"> 86</span><span class="n">oString0</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateSpringDamper</span><span class="p">(</span><span class="n">bodyList</span><span class="o">=</span><span class="p">[</span><span class="n">oGround</span><span class="p">,</span> <span class="n">oRigid</span><span class="p">],</span>
+<span class="linenos"> 87</span>                                  <span class="n">localPosition0</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="n">H</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos"> 88</span>                                  <span class="n">localPosition1</span><span class="o">=</span><span class="n">localPosMass0</span><span class="p">,</span>
+<span class="linenos"> 89</span>                                  <span class="n">stiffness</span> <span class="o">=</span> <span class="n">k</span><span class="p">,</span>
+<span class="linenos"> 90</span>                                  <span class="n">damping</span> <span class="o">=</span> <span class="n">d</span><span class="p">,</span>
+<span class="linenos"> 91</span>                                  <span class="n">drawSize</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="c1">#draw as line</span>
+<span class="linenos"> 92</span>                                  <span class="p">)</span>
+<span class="linenos"> 93</span><span class="n">oString1</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateSpringDamper</span><span class="p">(</span><span class="n">bodyList</span><span class="o">=</span><span class="p">[</span><span class="n">oGround</span><span class="p">,</span> <span class="n">oRigid</span><span class="p">],</span>
+<span class="linenos"> 94</span>                                  <span class="n">localPosition0</span><span class="o">=</span><span class="p">[</span><span class="n">L</span><span class="p">,</span><span class="n">H</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos"> 95</span>                                  <span class="n">localPosition1</span><span class="o">=</span><span class="n">localPosMass1</span><span class="p">,</span>
+<span class="linenos"> 96</span>                                  <span class="n">stiffness</span> <span class="o">=</span> <span class="n">k</span><span class="p">,</span>
+<span class="linenos"> 97</span>                                  <span class="n">damping</span> <span class="o">=</span> <span class="n">d</span><span class="p">,</span>
+<span class="linenos"> 98</span>                                  <span class="n">drawSize</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="c1">#draw as line</span>
+<span class="linenos"> 99</span>                                  <span class="p">)</span>
+<span class="linenos">100</span><span class="n">sRigid</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorBody</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">oRigid</span><span class="p">,</span> <span class="n">storeInternal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">101</span>                                <span class="n">outputVariableType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Position</span><span class="p">))</span>
+<span class="linenos">102</span>
+<span class="linenos">103</span><span class="c1"># compute string lengths for given rigid body center position in straight configuration</span>
+<span class="linenos">104</span><span class="c1"># used for initialization of static computation</span>
+<span class="linenos">105</span><span class="k">def</span> <span class="nf">ComputeStringLengths</span><span class="p">(</span><span class="n">pRigid</span><span class="p">):</span>
+<span class="linenos">106</span>    <span class="n">L0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pRigid</span><span class="p">)</span><span class="o">+</span><span class="n">localPosMass0</span><span class="o">-</span><span class="n">pTower0</span>
+<span class="linenos">107</span>    <span class="n">L1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pRigid</span><span class="p">)</span><span class="o">+</span><span class="n">localPosMass1</span><span class="o">-</span><span class="n">pTower1</span>
+<span class="linenos">108</span>
+<span class="linenos">109</span>    <span class="k">return</span> <span class="p">[</span><span class="nf">NormL2</span><span class="p">(</span><span class="n">L0</span><span class="p">),</span> <span class="nf">NormL2</span><span class="p">(</span><span class="n">L1</span><span class="p">)]</span>
 <span class="linenos">110</span>
-<span class="linenos">111</span><span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
-<span class="linenos">112</span><span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">()</span> <span class="c1">#takes currently set values or default values</span>
-<span class="linenos">113</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">writeSolutionToFile</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">doTraining</span>
-<span class="linenos">114</span>
-<span class="linenos">115</span><span class="c1"># # this leads to flipped results =&gt; good example !</span>
-<span class="linenos">116</span><span class="c1"># simulationSettings.staticSolver.numberOfLoadSteps = 10</span>
-<span class="linenos">117</span><span class="c1"># simulationSettings.staticSolver.stabilizerODE2term = 2        #add virtual stiffness due to mass; helps static solver to converge for such cases</span>
-<span class="linenos">118</span>
-<span class="linenos">119</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">numberOfLoadSteps</span> <span class="o">=</span> <span class="mi">2</span>
-<span class="linenos">120</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">stabilizerODE2term</span> <span class="o">=</span> <span class="mi">20</span>       <span class="c1">#add virtual stiffness due to mass; helps static solver to converge for such cases</span>
-<span class="linenos">121</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">computeLoadsJacobian</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1">#due to bug in loadsJacobian</span>
-<span class="linenos">122</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">verboseMode</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="linenos">123</span>
+<span class="linenos">111</span>
+<span class="linenos">112</span><span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
+<span class="linenos">113</span><span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">()</span> <span class="c1">#takes currently set values or default values</span>
+<span class="linenos">114</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">writeSolutionToFile</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">doTraining</span>
+<span class="linenos">115</span>
+<span class="linenos">116</span><span class="c1"># # this leads to flipped results =&gt; good example !</span>
+<span class="linenos">117</span><span class="c1"># simulationSettings.staticSolver.numberOfLoadSteps = 10</span>
+<span class="linenos">118</span><span class="c1"># simulationSettings.staticSolver.stabilizerODE2term = 2        #add virtual stiffness due to mass; helps static solver to converge for such cases</span>
+<span class="linenos">119</span>
+<span class="linenos">120</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">numberOfLoadSteps</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="linenos">121</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">stabilizerODE2term</span> <span class="o">=</span> <span class="mi">20</span>       <span class="c1">#add virtual stiffness due to mass; helps static solver to converge for such cases</span>
+<span class="linenos">122</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">computeLoadsJacobian</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1">#due to bug in loadsJacobian</span>
+<span class="linenos">123</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">verboseMode</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="linenos">124</span>
-<span class="linenos">125</span><span class="k">if</span> <span class="kc">False</span><span class="p">:</span> <span class="c1">#set to true to perform static/dynamic analysis and visualize results</span>
-<span class="linenos">126</span>    <span class="n">tEnd</span> <span class="o">=</span> <span class="mi">20</span> <span class="c1">#for visualization of dynamic case</span>
-<span class="linenos">127</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">sensorsWritePeriod</span> <span class="o">=</span> <span class="n">stepSize</span>
-<span class="linenos">128</span>    <span class="c1"># simulationSettings.timeIntegration.simulateInRealtime = True</span>
-<span class="linenos">129</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="n">tEnd</span>
-<span class="linenos">130</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tEnd</span><span class="o">/</span><span class="n">stepSize</span><span class="p">)</span>
-<span class="linenos">131</span>
-<span class="linenos">132</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StartRenderer</span><span class="p">()</span>
-<span class="linenos">133</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">WaitForUserToContinue</span><span class="p">()</span>
-<span class="linenos">134</span>
-<span class="linenos">135</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">SolveStatic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="p">)</span>
-<span class="linenos">136</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">WaitForRenderEngineStopFlag</span><span class="p">()</span>
-<span class="linenos">137</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="p">)</span>
-<span class="linenos">138</span>
-<span class="linenos">139</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">WaitForRenderEngineStopFlag</span><span class="p">()</span>
-<span class="linenos">140</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StopRenderer</span><span class="p">()</span>
-<span class="linenos">141</span>
-<span class="linenos">142</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sRigid</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span> <span class="c1">#plot vertical displacement</span>
-<span class="linenos">143</span>
-<span class="linenos">144</span>    <span class="c1">#this shows the deviation due to string stiffness and rotation of rigid body</span>
-<span class="linenos">145</span>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;final pos=&#39;</span><span class="p">,</span><span class="n">mbs</span><span class="o">.</span><span class="nf">GetSensorValues</span><span class="p">(</span><span class="n">sRigid</span><span class="p">))</span>
-<span class="linenos">146</span>
-<span class="linenos">147</span>    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
-<span class="linenos">148</span>
-<span class="linenos">149</span><span class="c1">#this function is called to compute real position from ideal position p</span>
-<span class="linenos">150</span><span class="k">def</span> <span class="nf">ComputePositionFromStringLengths</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
-<span class="linenos">151</span>    <span class="p">[</span><span class="n">L0</span><span class="p">,</span><span class="n">L1</span><span class="p">]</span> <span class="o">=</span> <span class="n">ComputeStringLengths</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
-<span class="linenos">152</span>    <span class="n">refCoordsRigid</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span> <span class="c1">#override position</span>
-<span class="linenos">153</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">SetNodeParameter</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">nRigid</span><span class="p">,</span>
-<span class="linenos">154</span>                         <span class="n">parameterName</span><span class="o">=</span><span class="s1">&#39;referenceCoordinates&#39;</span><span class="p">,</span>
-<span class="linenos">155</span>                         <span class="n">value</span><span class="o">=</span><span class="n">refCoordsRigid</span><span class="p">)</span>
-<span class="linenos">156</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">SetObjectParameter</span><span class="p">(</span><span class="n">objectNumber</span><span class="o">=</span><span class="n">oString0</span><span class="p">,</span>
-<span class="linenos">157</span>                           <span class="n">parameterName</span><span class="o">=</span><span class="s1">&#39;referenceLength&#39;</span><span class="p">,</span>
-<span class="linenos">158</span>                           <span class="n">value</span><span class="o">=</span><span class="n">L0</span><span class="p">)</span>
-<span class="linenos">159</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">SetObjectParameter</span><span class="p">(</span><span class="n">objectNumber</span><span class="o">=</span><span class="n">oString1</span><span class="p">,</span>
-<span class="linenos">160</span>                           <span class="n">parameterName</span><span class="o">=</span><span class="s1">&#39;referenceLength&#39;</span><span class="p">,</span>
-<span class="linenos">161</span>                           <span class="n">value</span><span class="o">=</span><span class="n">L1</span><span class="p">)</span>
-<span class="linenos">162</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
-<span class="linenos">163</span>
-<span class="linenos">164</span>    <span class="k">try</span><span class="p">:</span>
-<span class="linenos">165</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">SolveStatic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="p">)</span>
-<span class="linenos">166</span>        <span class="n">positionList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="c1">#this is the ideal position; used to calculate deviation</span>
-<span class="linenos">167</span>        <span class="c1">#we map targeted (real) positions to original lengths</span>
-<span class="linenos">168</span>        <span class="n">realPos</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetSensorValues</span><span class="p">(</span><span class="n">sRigid</span><span class="p">)</span>
-<span class="linenos">169</span>        <span class="c1">#compute original lengths to realPos</span>
-<span class="linenos">170</span>        <span class="p">[</span><span class="n">L0orig</span><span class="p">,</span><span class="n">L1orig</span><span class="p">]</span> <span class="o">=</span> <span class="n">ComputeStringLengths</span><span class="p">(</span><span class="n">realPos</span><span class="p">)</span>
-<span class="linenos">171</span>
-<span class="linenos">172</span>        <span class="c1">#targetList.append([L0,L1]) #we only need to store the deviation</span>
-<span class="linenos">173</span>        <span class="n">diff</span> <span class="o">=</span> <span class="p">[</span><span class="n">L0</span><span class="o">-</span><span class="n">L0orig</span><span class="p">,</span><span class="n">L1</span><span class="o">-</span><span class="n">L1orig</span><span class="p">]</span>
-<span class="linenos">174</span>        <span class="k">return</span> <span class="p">[</span><span class="n">realPos</span><span class="p">,</span> <span class="n">diff</span><span class="p">,</span> <span class="p">[</span><span class="n">L0</span><span class="p">,</span> <span class="n">L1</span><span class="p">]]</span>
-<span class="linenos">175</span>    <span class="k">except</span><span class="p">:</span>
-<span class="linenos">176</span>        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;solver failed for:&#39;</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="s1">&#39;,Ls=&#39;</span><span class="p">,[</span><span class="n">L0</span><span class="p">,</span><span class="n">L1</span><span class="p">])</span>
-<span class="linenos">177</span>        <span class="k">return</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span>
-<span class="linenos">178</span>
-<span class="linenos">179</span><span class="c1">#%%+++++++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos">180</span><span class="c1">#now create data: mapping of 2D position of object to difference of</span>
-<span class="linenos">181</span><span class="c1">#  ideal lengths to real lengths (which gives the necessary correction</span>
-<span class="linenos">182</span><span class="c1">#  for positioning)</span>
-<span class="linenos">183</span>
-<span class="linenos">184</span><span class="n">gridX</span> <span class="o">=</span> <span class="mi">20</span><span class="o">*</span><span class="mi">2</span> <span class="c1"># gridX * gridY is the number of samples for training</span>
-<span class="linenos">185</span><span class="n">gridY</span> <span class="o">=</span> <span class="mi">20</span><span class="o">*</span><span class="mi">2</span>
-<span class="linenos">186</span><span class="n">nExamples</span> <span class="o">=</span> <span class="n">gridX</span><span class="o">*</span><span class="n">gridY</span>
-<span class="linenos">187</span><span class="n">nExamplesTest</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">nExamples</span><span class="o">*</span><span class="mf">0.1</span><span class="p">)</span> <span class="c1"># additional samples for testing</span>
-<span class="linenos">188</span><span class="n">pRangeX</span> <span class="o">=</span> <span class="mf">2.4</span>
-<span class="linenos">189</span><span class="n">pRangeY</span> <span class="o">=</span> <span class="mf">2.4</span>
-<span class="linenos">190</span><span class="n">positionList</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="linenos">191</span><span class="n">inputList</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="linenos">192</span><span class="n">targetList</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="linenos">193</span><span class="c1">#store reference coordinates for rotations</span>
-<span class="linenos">194</span><span class="n">refCoordsRigid</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetNodeParameter</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">nRigid</span><span class="p">,</span> <span class="n">parameterName</span><span class="o">=</span><span class="s1">&#39;referenceCoordinates&#39;</span><span class="p">)</span>
-<span class="linenos">195</span>
-<span class="linenos">196</span><span class="n">gridValues</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">gridX</span><span class="p">,</span><span class="n">gridY</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
-<span class="linenos">197</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span>
-<span class="linenos">198</span><span class="n">ix</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="linenos">199</span><span class="n">iy</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="linenos">200</span><span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nExamples</span><span class="o">+</span><span class="n">nExamplesTest</span><span class="p">:</span>
-<span class="linenos">201</span>    <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nExamples</span><span class="p">:</span>
-<span class="linenos">202</span>        <span class="n">ix</span> <span class="o">=</span> <span class="n">i</span><span class="o">%</span><span class="n">gridX</span>
-<span class="linenos">203</span>        <span class="n">iy</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="o">/</span><span class="n">gridX</span><span class="p">)</span>
-<span class="linenos">204</span>        <span class="n">x0</span> <span class="o">=</span> <span class="n">pRangeX</span><span class="o">*</span><span class="p">(</span><span class="n">ix</span><span class="o">/</span><span class="n">gridX</span><span class="o">-</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="linenos">205</span>        <span class="n">y0</span> <span class="o">=</span> <span class="n">pRangeY</span><span class="o">*</span><span class="p">(</span><span class="n">iy</span><span class="o">/</span><span class="n">gridY</span><span class="o">-</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="linenos">206</span>    <span class="k">else</span><span class="p">:</span>
-<span class="linenos">207</span>        <span class="n">x0</span> <span class="o">=</span> <span class="n">pRangeX</span><span class="o">*</span><span class="p">(</span><span class="n">rand</span><span class="p">()</span><span class="o">-</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="linenos">208</span>        <span class="n">y0</span> <span class="o">=</span> <span class="n">pRangeY</span><span class="o">*</span><span class="p">(</span><span class="n">rand</span><span class="p">()</span><span class="o">-</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="linenos">209</span>
-<span class="linenos">210</span>    <span class="n">p</span> <span class="o">=</span> <span class="n">pRigidMid</span> <span class="o">+</span> <span class="p">[</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
-<span class="linenos">211</span>
-<span class="linenos">212</span>    <span class="n">rv</span> <span class="o">=</span> <span class="n">ComputePositionFromStringLengths</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
-<span class="linenos">213</span>
-<span class="linenos">214</span>    <span class="k">if</span> <span class="n">rv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<span class="linenos">215</span>        <span class="n">realPos</span> <span class="o">=</span> <span class="n">rv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="linenos">216</span>        <span class="n">diff</span> <span class="o">=</span> <span class="n">rv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-<span class="linenos">217</span>        <span class="p">[</span><span class="n">L0</span><span class="p">,</span><span class="n">L1</span><span class="p">]</span> <span class="o">=</span> <span class="n">rv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
-<span class="linenos">218</span>        <span class="n">targetList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">diff</span><span class="p">)</span>
-<span class="linenos">219</span>        <span class="n">inputList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">realPos</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">])</span> <span class="c1">#correction on position</span>
-<span class="linenos">220</span>
-<span class="linenos">221</span>        <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nExamples</span><span class="p">:</span>
-<span class="linenos">222</span>            <span class="n">gridValues</span><span class="p">[</span><span class="n">ix</span><span class="p">,</span><span class="n">iy</span><span class="p">,</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">diff</span>
-<span class="linenos">223</span>            <span class="n">gridValues</span><span class="p">[</span><span class="n">ix</span><span class="p">,</span><span class="n">iy</span><span class="p">,</span><span class="mi">2</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">realPos</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
-<span class="linenos">224</span>
-<span class="linenos">225</span>        <span class="k">if</span> <span class="nb">max</span><span class="p">(</span><span class="n">diff</span><span class="p">)</span><span class="o">&gt;</span><span class="mf">0.5</span><span class="p">:</span>
-<span class="linenos">226</span>            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;++++++++++++++++++++++++++&#39;</span><span class="p">)</span>
-<span class="linenos">227</span>            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ideal pos=&#39;</span><span class="p">,</span><span class="n">p</span><span class="p">)</span>
-<span class="linenos">228</span>            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;realPos  =&#39;</span><span class="p">,</span><span class="n">realPos</span><span class="p">)</span>
-<span class="linenos">229</span>            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;lengths  =&#39;</span><span class="p">,</span><span class="n">L0</span><span class="p">,</span><span class="n">L1</span><span class="p">)</span>
-<span class="linenos">230</span>
-<span class="linenos">231</span>        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
-<span class="linenos">232</span>
-<span class="linenos">233</span><span class="n">inputsExudynList</span> <span class="o">=</span> <span class="n">inputList</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">nExamples</span><span class="p">]</span>
-<span class="linenos">234</span><span class="n">targetsExudynList</span> <span class="o">=</span> <span class="n">targetList</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">nExamples</span><span class="p">]</span>
-<span class="linenos">235</span><span class="n">inputsExudynTestList</span> <span class="o">=</span> <span class="n">inputList</span><span class="p">[</span><span class="n">nExamples</span><span class="p">:]</span>
-<span class="linenos">236</span><span class="n">targetsExudynTestList</span> <span class="o">=</span> <span class="n">targetList</span><span class="p">[</span><span class="n">nExamples</span><span class="p">:]</span>
-<span class="linenos">237</span>
-<span class="linenos">238</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;created&#39;</span><span class="p">,</span><span class="n">nExamples</span><span class="o">+</span><span class="n">nExamplesTest</span><span class="p">,</span><span class="s1">&#39;samples&#39;</span><span class="p">)</span>
-<span class="linenos">239</span>
+<span class="linenos">125</span>
+<span class="linenos">126</span><span class="k">if</span> <span class="kc">False</span><span class="p">:</span> <span class="c1">#set to true to perform static/dynamic analysis and visualize results</span>
+<span class="linenos">127</span>    <span class="n">tEnd</span> <span class="o">=</span> <span class="mi">20</span> <span class="c1">#for visualization of dynamic case</span>
+<span class="linenos">128</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">sensorsWritePeriod</span> <span class="o">=</span> <span class="n">stepSize</span>
+<span class="linenos">129</span>    <span class="c1"># simulationSettings.timeIntegration.simulateInRealtime = True</span>
+<span class="linenos">130</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="n">tEnd</span>
+<span class="linenos">131</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tEnd</span><span class="o">/</span><span class="n">stepSize</span><span class="p">)</span>
+<span class="linenos">132</span>
+<span class="linenos">133</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StartRenderer</span><span class="p">()</span>
+<span class="linenos">134</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">WaitForUserToContinue</span><span class="p">()</span>
+<span class="linenos">135</span>
+<span class="linenos">136</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">SolveStatic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="p">)</span>
+<span class="linenos">137</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">WaitForRenderEngineStopFlag</span><span class="p">()</span>
+<span class="linenos">138</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="p">)</span>
+<span class="linenos">139</span>
+<span class="linenos">140</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">WaitForRenderEngineStopFlag</span><span class="p">()</span>
+<span class="linenos">141</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StopRenderer</span><span class="p">()</span>
+<span class="linenos">142</span>
+<span class="linenos">143</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sRigid</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span> <span class="c1">#plot vertical displacement</span>
+<span class="linenos">144</span>
+<span class="linenos">145</span>    <span class="c1">#this shows the deviation due to string stiffness and rotation of rigid body</span>
+<span class="linenos">146</span>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;final pos=&#39;</span><span class="p">,</span><span class="n">mbs</span><span class="o">.</span><span class="nf">GetSensorValues</span><span class="p">(</span><span class="n">sRigid</span><span class="p">))</span>
+<span class="linenos">147</span>
+<span class="linenos">148</span>    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+<span class="linenos">149</span>
+<span class="linenos">150</span><span class="c1">#this function is called to compute real position from ideal position p</span>
+<span class="linenos">151</span><span class="k">def</span> <span class="nf">ComputePositionFromStringLengths</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+<span class="linenos">152</span>    <span class="p">[</span><span class="n">L0</span><span class="p">,</span><span class="n">L1</span><span class="p">]</span> <span class="o">=</span> <span class="n">ComputeStringLengths</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="linenos">153</span>    <span class="n">refCoordsRigid</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span> <span class="c1">#override position</span>
+<span class="linenos">154</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">SetNodeParameter</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">nRigid</span><span class="p">,</span>
+<span class="linenos">155</span>                         <span class="n">parameterName</span><span class="o">=</span><span class="s1">&#39;referenceCoordinates&#39;</span><span class="p">,</span>
+<span class="linenos">156</span>                         <span class="n">value</span><span class="o">=</span><span class="n">refCoordsRigid</span><span class="p">)</span>
+<span class="linenos">157</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">SetObjectParameter</span><span class="p">(</span><span class="n">objectNumber</span><span class="o">=</span><span class="n">oString0</span><span class="p">,</span>
+<span class="linenos">158</span>                           <span class="n">parameterName</span><span class="o">=</span><span class="s1">&#39;referenceLength&#39;</span><span class="p">,</span>
+<span class="linenos">159</span>                           <span class="n">value</span><span class="o">=</span><span class="n">L0</span><span class="p">)</span>
+<span class="linenos">160</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">SetObjectParameter</span><span class="p">(</span><span class="n">objectNumber</span><span class="o">=</span><span class="n">oString1</span><span class="p">,</span>
+<span class="linenos">161</span>                           <span class="n">parameterName</span><span class="o">=</span><span class="s1">&#39;referenceLength&#39;</span><span class="p">,</span>
+<span class="linenos">162</span>                           <span class="n">value</span><span class="o">=</span><span class="n">L1</span><span class="p">)</span>
+<span class="linenos">163</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
+<span class="linenos">164</span>
+<span class="linenos">165</span>    <span class="k">try</span><span class="p">:</span>
+<span class="linenos">166</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">SolveStatic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="p">)</span>
+<span class="linenos">167</span>        <span class="n">positionList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="c1">#this is the ideal position; used to calculate deviation</span>
+<span class="linenos">168</span>        <span class="c1">#we map targeted (real) positions to original lengths</span>
+<span class="linenos">169</span>        <span class="n">realPos</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetSensorValues</span><span class="p">(</span><span class="n">sRigid</span><span class="p">)</span>
+<span class="linenos">170</span>        <span class="c1">#compute original lengths to realPos</span>
+<span class="linenos">171</span>        <span class="p">[</span><span class="n">L0orig</span><span class="p">,</span><span class="n">L1orig</span><span class="p">]</span> <span class="o">=</span> <span class="n">ComputeStringLengths</span><span class="p">(</span><span class="n">realPos</span><span class="p">)</span>
+<span class="linenos">172</span>
+<span class="linenos">173</span>        <span class="c1">#targetList.append([L0,L1]) #we only need to store the deviation</span>
+<span class="linenos">174</span>        <span class="n">diff</span> <span class="o">=</span> <span class="p">[</span><span class="n">L0</span><span class="o">-</span><span class="n">L0orig</span><span class="p">,</span><span class="n">L1</span><span class="o">-</span><span class="n">L1orig</span><span class="p">]</span>
+<span class="linenos">175</span>        <span class="k">return</span> <span class="p">[</span><span class="n">realPos</span><span class="p">,</span> <span class="n">diff</span><span class="p">,</span> <span class="p">[</span><span class="n">L0</span><span class="p">,</span> <span class="n">L1</span><span class="p">]]</span>
+<span class="linenos">176</span>    <span class="k">except</span><span class="p">:</span>
+<span class="linenos">177</span>        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;solver failed for:&#39;</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="s1">&#39;,Ls=&#39;</span><span class="p">,[</span><span class="n">L0</span><span class="p">,</span><span class="n">L1</span><span class="p">])</span>
+<span class="linenos">178</span>        <span class="k">return</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span>
+<span class="linenos">179</span>
+<span class="linenos">180</span><span class="c1">#%%+++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">181</span><span class="c1">#now create data: mapping of 2D position of object to difference of</span>
+<span class="linenos">182</span><span class="c1">#  ideal lengths to real lengths (which gives the necessary correction</span>
+<span class="linenos">183</span><span class="c1">#  for positioning)</span>
+<span class="linenos">184</span>
+<span class="linenos">185</span><span class="n">gridX</span> <span class="o">=</span> <span class="mi">20</span><span class="o">*</span><span class="mi">2</span> <span class="c1"># gridX * gridY is the number of samples for training</span>
+<span class="linenos">186</span><span class="n">gridY</span> <span class="o">=</span> <span class="mi">20</span><span class="o">*</span><span class="mi">2</span>
+<span class="linenos">187</span><span class="n">nExamples</span> <span class="o">=</span> <span class="n">gridX</span><span class="o">*</span><span class="n">gridY</span>
+<span class="linenos">188</span><span class="n">nExamplesTest</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">nExamples</span><span class="o">*</span><span class="mf">0.1</span><span class="p">)</span> <span class="c1"># additional samples for testing</span>
+<span class="linenos">189</span><span class="n">pRangeX</span> <span class="o">=</span> <span class="mf">2.4</span>
+<span class="linenos">190</span><span class="n">pRangeY</span> <span class="o">=</span> <span class="mf">2.4</span>
+<span class="linenos">191</span><span class="n">positionList</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos">192</span><span class="n">inputList</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos">193</span><span class="n">targetList</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos">194</span><span class="c1">#store reference coordinates for rotations</span>
+<span class="linenos">195</span><span class="n">refCoordsRigid</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetNodeParameter</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">nRigid</span><span class="p">,</span> <span class="n">parameterName</span><span class="o">=</span><span class="s1">&#39;referenceCoordinates&#39;</span><span class="p">)</span>
+<span class="linenos">196</span>
+<span class="linenos">197</span><span class="n">gridValues</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">gridX</span><span class="p">,</span><span class="n">gridY</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="linenos">198</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span>
+<span class="linenos">199</span><span class="n">ix</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">200</span><span class="n">iy</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">201</span><span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nExamples</span><span class="o">+</span><span class="n">nExamplesTest</span><span class="p">:</span>
+<span class="linenos">202</span>    <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nExamples</span><span class="p">:</span>
+<span class="linenos">203</span>        <span class="n">ix</span> <span class="o">=</span> <span class="n">i</span><span class="o">%</span><span class="n">gridX</span>
+<span class="linenos">204</span>        <span class="n">iy</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="o">/</span><span class="n">gridX</span><span class="p">)</span>
+<span class="linenos">205</span>        <span class="n">x0</span> <span class="o">=</span> <span class="n">pRangeX</span><span class="o">*</span><span class="p">(</span><span class="n">ix</span><span class="o">/</span><span class="n">gridX</span><span class="o">-</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="linenos">206</span>        <span class="n">y0</span> <span class="o">=</span> <span class="n">pRangeY</span><span class="o">*</span><span class="p">(</span><span class="n">iy</span><span class="o">/</span><span class="n">gridY</span><span class="o">-</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="linenos">207</span>    <span class="k">else</span><span class="p">:</span>
+<span class="linenos">208</span>        <span class="n">x0</span> <span class="o">=</span> <span class="n">pRangeX</span><span class="o">*</span><span class="p">(</span><span class="n">rand</span><span class="p">()</span><span class="o">-</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="linenos">209</span>        <span class="n">y0</span> <span class="o">=</span> <span class="n">pRangeY</span><span class="o">*</span><span class="p">(</span><span class="n">rand</span><span class="p">()</span><span class="o">-</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="linenos">210</span>
+<span class="linenos">211</span>    <span class="n">p</span> <span class="o">=</span> <span class="n">pRigidMid</span> <span class="o">+</span> <span class="p">[</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="linenos">212</span>
+<span class="linenos">213</span>    <span class="n">rv</span> <span class="o">=</span> <span class="n">ComputePositionFromStringLengths</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="linenos">214</span>
+<span class="linenos">215</span>    <span class="k">if</span> <span class="n">rv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">216</span>        <span class="n">realPos</span> <span class="o">=</span> <span class="n">rv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos">217</span>        <span class="n">diff</span> <span class="o">=</span> <span class="n">rv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="linenos">218</span>        <span class="p">[</span><span class="n">L0</span><span class="p">,</span><span class="n">L1</span><span class="p">]</span> <span class="o">=</span> <span class="n">rv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+<span class="linenos">219</span>        <span class="n">targetList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">diff</span><span class="p">)</span>
+<span class="linenos">220</span>        <span class="n">inputList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">realPos</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">])</span> <span class="c1">#correction on position</span>
+<span class="linenos">221</span>
+<span class="linenos">222</span>        <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nExamples</span><span class="p">:</span>
+<span class="linenos">223</span>            <span class="n">gridValues</span><span class="p">[</span><span class="n">ix</span><span class="p">,</span><span class="n">iy</span><span class="p">,</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">diff</span>
+<span class="linenos">224</span>            <span class="n">gridValues</span><span class="p">[</span><span class="n">ix</span><span class="p">,</span><span class="n">iy</span><span class="p">,</span><span class="mi">2</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">realPos</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+<span class="linenos">225</span>
+<span class="linenos">226</span>        <span class="k">if</span> <span class="nb">max</span><span class="p">(</span><span class="n">diff</span><span class="p">)</span><span class="o">&gt;</span><span class="mf">0.5</span><span class="p">:</span>
+<span class="linenos">227</span>            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;++++++++++++++++++++++++++&#39;</span><span class="p">)</span>
+<span class="linenos">228</span>            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ideal pos=&#39;</span><span class="p">,</span><span class="n">p</span><span class="p">)</span>
+<span class="linenos">229</span>            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;realPos  =&#39;</span><span class="p">,</span><span class="n">realPos</span><span class="p">)</span>
+<span class="linenos">230</span>            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;lengths  =&#39;</span><span class="p">,</span><span class="n">L0</span><span class="p">,</span><span class="n">L1</span><span class="p">)</span>
+<span class="linenos">231</span>
+<span class="linenos">232</span>        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="linenos">233</span>
+<span class="linenos">234</span><span class="n">inputsExudynList</span> <span class="o">=</span> <span class="n">inputList</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">nExamples</span><span class="p">]</span>
+<span class="linenos">235</span><span class="n">targetsExudynList</span> <span class="o">=</span> <span class="n">targetList</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">nExamples</span><span class="p">]</span>
+<span class="linenos">236</span><span class="n">inputsExudynTestList</span> <span class="o">=</span> <span class="n">inputList</span><span class="p">[</span><span class="n">nExamples</span><span class="p">:]</span>
+<span class="linenos">237</span><span class="n">targetsExudynTestList</span> <span class="o">=</span> <span class="n">targetList</span><span class="p">[</span><span class="n">nExamples</span><span class="p">:]</span>
+<span class="linenos">238</span>
+<span class="linenos">239</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;created&#39;</span><span class="p">,</span><span class="n">nExamples</span><span class="o">+</span><span class="n">nExamplesTest</span><span class="p">,</span><span class="s1">&#39;samples&#39;</span><span class="p">)</span>
 <span class="linenos">240</span>
-<span class="linenos">241</span><span class="c1">#%%++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos">242</span><span class="c1">#function to 3D-plot errors and corrections</span>
-<span class="linenos">243</span><span class="k">def</span> <span class="nf">PlotGridFunction</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="n">closeAll</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="linenos">244</span>    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="linenos">245</span>    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="linenos">246</span>    <span class="kn">from</span> <span class="nn">mpl_toolkits.mplot3d</span> <span class="kn">import</span> <span class="n">Axes3D</span>
-<span class="linenos">247</span>
-<span class="linenos">248</span>    <span class="k">if</span> <span class="n">closeAll</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="nf">close</span><span class="p">(</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
-<span class="linenos">249</span>
-<span class="linenos">250</span>    <span class="c1"># Generate grid coordinates (if not already generated)</span>
-<span class="linenos">251</span>    <span class="c1"># For example, if gridX and gridY are the dimensions of your grid</span>
-<span class="linenos">252</span>    <span class="n">gridX</span><span class="p">,</span> <span class="n">gridY</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span>
-<span class="linenos">253</span>    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span> <span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">pRangeX</span><span class="p">,</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">pRangeX</span><span class="p">,</span> <span class="n">gridX</span><span class="p">)</span>
-<span class="linenos">254</span>    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">pRangeY</span><span class="p">,</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">pRangeY</span><span class="p">,</span> <span class="n">gridY</span><span class="p">)</span>
-<span class="linenos">255</span>    <span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="linenos">256</span>
-<span class="linenos">257</span>    <span class="c1"># Create the contour plot</span>
-<span class="linenos">258</span>    <span class="n">fig</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
-<span class="linenos">259</span>    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
-<span class="linenos">260</span>
-<span class="linenos">261</span>    <span class="c1"># contour = plt.contourf(X, Y, dataX, cmap=&#39;hot&#39;, levels=100)</span>
-<span class="linenos">262</span>    <span class="n">contour</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">)</span>
-<span class="linenos">263</span>
-<span class="linenos">264</span>    <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">contour</span><span class="p">)</span>
-<span class="linenos">265</span>    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-<span class="linenos">266</span>    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;X-axis&#39;</span><span class="p">)</span>
-<span class="linenos">267</span>    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Y-axis&#39;</span><span class="p">)</span>
-<span class="linenos">268</span>
-<span class="linenos">269</span>    <span class="c1"># Display the plot</span>
-<span class="linenos">270</span>    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-<span class="linenos">271</span>
-<span class="linenos">272</span><span class="n">PlotGridFunction</span><span class="p">(</span><span class="n">gridValues</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;positioning error X&#39;</span><span class="p">,</span> <span class="n">closeAll</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="linenos">273</span><span class="n">PlotGridFunction</span><span class="p">(</span><span class="n">gridValues</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;positioning error Y&#39;</span><span class="p">)</span>
-<span class="linenos">274</span>
+<span class="linenos">241</span>
+<span class="linenos">242</span><span class="c1">#%%++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">243</span><span class="c1">#function to 3D-plot errors and corrections</span>
+<span class="linenos">244</span><span class="k">def</span> <span class="nf">PlotGridFunction</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="n">closeAll</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="linenos">245</span>    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="linenos">246</span>    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="linenos">247</span>    <span class="kn">from</span> <span class="nn">mpl_toolkits.mplot3d</span> <span class="kn">import</span> <span class="n">Axes3D</span>
+<span class="linenos">248</span>
+<span class="linenos">249</span>    <span class="k">if</span> <span class="n">closeAll</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="nf">close</span><span class="p">(</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
+<span class="linenos">250</span>
+<span class="linenos">251</span>    <span class="c1"># Generate grid coordinates (if not already generated)</span>
+<span class="linenos">252</span>    <span class="c1"># For example, if gridX and gridY are the dimensions of your grid</span>
+<span class="linenos">253</span>    <span class="n">gridX</span><span class="p">,</span> <span class="n">gridY</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span>
+<span class="linenos">254</span>    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span> <span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">pRangeX</span><span class="p">,</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">pRangeX</span><span class="p">,</span> <span class="n">gridX</span><span class="p">)</span>
+<span class="linenos">255</span>    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">pRangeY</span><span class="p">,</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">pRangeY</span><span class="p">,</span> <span class="n">gridY</span><span class="p">)</span>
+<span class="linenos">256</span>    <span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="linenos">257</span>
+<span class="linenos">258</span>    <span class="c1"># Create the contour plot</span>
+<span class="linenos">259</span>    <span class="n">fig</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="linenos">260</span>    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
+<span class="linenos">261</span>
+<span class="linenos">262</span>    <span class="c1"># contour = plt.contourf(X, Y, dataX, cmap=&#39;hot&#39;, levels=100)</span>
+<span class="linenos">263</span>    <span class="n">contour</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">)</span>
+<span class="linenos">264</span>
+<span class="linenos">265</span>    <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">contour</span><span class="p">)</span>
+<span class="linenos">266</span>    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+<span class="linenos">267</span>    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;X-axis&#39;</span><span class="p">)</span>
+<span class="linenos">268</span>    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Y-axis&#39;</span><span class="p">)</span>
+<span class="linenos">269</span>
+<span class="linenos">270</span>    <span class="c1"># Display the plot</span>
+<span class="linenos">271</span>    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="linenos">272</span>
+<span class="linenos">273</span><span class="n">PlotGridFunction</span><span class="p">(</span><span class="n">gridValues</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;positioning error X&#39;</span><span class="p">,</span> <span class="n">closeAll</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">274</span><span class="n">PlotGridFunction</span><span class="p">(</span><span class="n">gridValues</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;positioning error Y&#39;</span><span class="p">)</span>
 <span class="linenos">275</span>
-<span class="linenos">276</span><span class="k">if</span> <span class="ow">not</span> <span class="n">doTraining</span><span class="p">:</span>
-<span class="linenos">277</span>    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
-<span class="linenos">278</span>
+<span class="linenos">276</span>
+<span class="linenos">277</span><span class="k">if</span> <span class="ow">not</span> <span class="n">doTraining</span><span class="p">:</span>
+<span class="linenos">278</span>    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
 <span class="linenos">279</span>
 <span class="linenos">280</span>
 <span class="linenos">281</span>
 <span class="linenos">282</span>
-<span class="linenos">283</span><span class="c1">#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos">284</span><span class="c1"># MACHINE LEARNING: Model and training</span>
-<span class="linenos">285</span><span class="c1">#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos">286</span>
-<span class="linenos">287</span><span class="c1">#now train</span>
-<span class="linenos">288</span><span class="kn">import</span> <span class="nn">torch</span>
-<span class="linenos">289</span><span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
-<span class="linenos">290</span><span class="kn">import</span> <span class="nn">torch.optim</span> <span class="k">as</span> <span class="nn">optim</span>
-<span class="linenos">291</span><span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">DataLoader</span><span class="p">,</span> <span class="n">TensorDataset</span>
-<span class="linenos">292</span>
-<span class="linenos">293</span><span class="n">hiddenLayerSize</span> <span class="o">=</span> <span class="mi">8</span><span class="o">*</span><span class="mi">4</span>       <span class="c1">#example size, adjust as needed</span>
-<span class="linenos">294</span><span class="n">batchSize</span> <span class="o">=</span> <span class="mi">16</span><span class="o">*</span><span class="mi">8</span>
-<span class="linenos">295</span><span class="n">learningRate</span> <span class="o">=</span> <span class="mf">0.002</span>
-<span class="linenos">296</span><span class="n">nTrainingEpochs</span> <span class="o">=</span> <span class="mi">10000</span>     <span class="c1">#max epochs</span>
-<span class="linenos">297</span><span class="n">lossThreshold</span> <span class="o">=</span> <span class="mf">0.0002</span>      <span class="c1">#desired max. loss</span>
-<span class="linenos">298</span>
-<span class="linenos">299</span><span class="c1"># torch.set_num_threads(1)</span>
-<span class="linenos">300</span><span class="c1">#prepare data:</span>
-<span class="linenos">301</span>
-<span class="linenos">302</span><span class="c1"># Convert lists to PyTorch tensors</span>
-<span class="linenos">303</span><span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span>
-<span class="linenos">304</span><span class="n">inputsExudyn</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">inputsExudynList</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
-<span class="linenos">305</span><span class="n">targetsExudyn</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">targetsExudynList</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
-<span class="linenos">306</span><span class="n">inputsExudynTest</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">inputsExudynTestList</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
-<span class="linenos">307</span><span class="n">targetsExudynTest</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">targetsExudynTestList</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
-<span class="linenos">308</span>
-<span class="linenos">309</span><span class="c1"># Create TensorDatasets</span>
-<span class="linenos">310</span><span class="n">train_dataset</span> <span class="o">=</span> <span class="n">TensorDataset</span><span class="p">(</span><span class="n">inputsExudyn</span><span class="p">,</span> <span class="n">targetsExudyn</span><span class="p">)</span>
-<span class="linenos">311</span><span class="n">test_dataset</span> <span class="o">=</span> <span class="n">TensorDataset</span><span class="p">(</span><span class="n">inputsExudynTest</span><span class="p">,</span> <span class="n">targetsExudynTest</span><span class="p">)</span>
-<span class="linenos">312</span>
-<span class="linenos">313</span><span class="c1"># Create DataLoaders</span>
-<span class="linenos">314</span><span class="n">trainLoader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">train_dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batchSize</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="linenos">315</span><span class="n">testLoader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">test_dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batchSize</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="linenos">316</span>
+<span class="linenos">283</span>
+<span class="linenos">284</span><span class="c1">#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">285</span><span class="c1"># MACHINE LEARNING: Model and training</span>
+<span class="linenos">286</span><span class="c1">#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">287</span>
+<span class="linenos">288</span><span class="c1">#now train</span>
+<span class="linenos">289</span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="linenos">290</span><span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+<span class="linenos">291</span><span class="kn">import</span> <span class="nn">torch.optim</span> <span class="k">as</span> <span class="nn">optim</span>
+<span class="linenos">292</span><span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">DataLoader</span><span class="p">,</span> <span class="n">TensorDataset</span>
+<span class="linenos">293</span>
+<span class="linenos">294</span><span class="n">hiddenLayerSize</span> <span class="o">=</span> <span class="mi">8</span><span class="o">*</span><span class="mi">4</span>       <span class="c1">#example size, adjust as needed</span>
+<span class="linenos">295</span><span class="n">batchSize</span> <span class="o">=</span> <span class="mi">16</span><span class="o">*</span><span class="mi">8</span>
+<span class="linenos">296</span><span class="n">learningRate</span> <span class="o">=</span> <span class="mf">0.002</span>
+<span class="linenos">297</span><span class="n">nTrainingEpochs</span> <span class="o">=</span> <span class="mi">10000</span>     <span class="c1">#max epochs</span>
+<span class="linenos">298</span><span class="n">lossThreshold</span> <span class="o">=</span> <span class="mf">0.0002</span>      <span class="c1">#desired max. loss</span>
+<span class="linenos">299</span>
+<span class="linenos">300</span><span class="c1"># torch.set_num_threads(1)</span>
+<span class="linenos">301</span><span class="c1">#prepare data:</span>
+<span class="linenos">302</span>
+<span class="linenos">303</span><span class="c1"># Convert lists to PyTorch tensors</span>
+<span class="linenos">304</span><span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span>
+<span class="linenos">305</span><span class="n">inputsExudyn</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">inputsExudynList</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+<span class="linenos">306</span><span class="n">targetsExudyn</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">targetsExudynList</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+<span class="linenos">307</span><span class="n">inputsExudynTest</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">inputsExudynTestList</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+<span class="linenos">308</span><span class="n">targetsExudynTest</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">targetsExudynTestList</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+<span class="linenos">309</span>
+<span class="linenos">310</span><span class="c1"># Create TensorDatasets</span>
+<span class="linenos">311</span><span class="n">train_dataset</span> <span class="o">=</span> <span class="n">TensorDataset</span><span class="p">(</span><span class="n">inputsExudyn</span><span class="p">,</span> <span class="n">targetsExudyn</span><span class="p">)</span>
+<span class="linenos">312</span><span class="n">test_dataset</span> <span class="o">=</span> <span class="n">TensorDataset</span><span class="p">(</span><span class="n">inputsExudynTest</span><span class="p">,</span> <span class="n">targetsExudynTest</span><span class="p">)</span>
+<span class="linenos">313</span>
+<span class="linenos">314</span><span class="c1"># Create DataLoaders</span>
+<span class="linenos">315</span><span class="n">trainLoader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">train_dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batchSize</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">316</span><span class="n">testLoader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">test_dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batchSize</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="linenos">317</span>
-<span class="linenos">318</span><span class="k">class</span> <span class="nc">ModelNN</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="linenos">319</span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_size</span><span class="p">,</span> <span class="n">hiddenLayerSize</span><span class="p">,</span> <span class="n">output_size</span><span class="p">):</span>
-<span class="linenos">320</span>        <span class="nb">super</span><span class="p">(</span><span class="n">ModelNN</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-<span class="linenos">321</span>        <span class="bp">self</span><span class="o">.</span><span class="n">fc1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">input_size</span><span class="p">,</span> <span class="n">hiddenLayerSize</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
-<span class="linenos">322</span>        <span class="bp">self</span><span class="o">.</span><span class="n">relu</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">()</span>
-<span class="linenos">323</span>        <span class="bp">self</span><span class="o">.</span><span class="n">leakyRelu</span><span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">()</span>
-<span class="linenos">324</span>        <span class="bp">self</span><span class="o">.</span><span class="n">elu</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ELU</span><span class="p">()</span>
-<span class="linenos">325</span>        <span class="c1"># self.relu = nn.Sigmoid() #alternatives</span>
-<span class="linenos">326</span>        <span class="c1"># self.relu = nn.Tanh()</span>
-<span class="linenos">327</span>        <span class="bp">self</span><span class="o">.</span><span class="n">fc2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hiddenLayerSize</span><span class="p">,</span> <span class="n">hiddenLayerSize</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
-<span class="linenos">328</span>        <span class="bp">self</span><span class="o">.</span><span class="n">fc3</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hiddenLayerSize</span><span class="p">,</span> <span class="n">hiddenLayerSize</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
-<span class="linenos">329</span>        <span class="bp">self</span><span class="o">.</span><span class="n">lastLayer</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hiddenLayerSize</span><span class="p">,</span> <span class="n">output_size</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
-<span class="linenos">330</span>
-<span class="linenos">331</span>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-<span class="linenos">332</span>        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-<span class="linenos">333</span>        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-<span class="linenos">334</span>        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-<span class="linenos">335</span>        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">leakyRelu</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-<span class="linenos">336</span>        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc3</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-<span class="linenos">337</span>        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">elu</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-<span class="linenos">338</span>        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lastLayer</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-<span class="linenos">339</span>        <span class="k">return</span> <span class="n">x</span>
-<span class="linenos">340</span>
+<span class="linenos">318</span>
+<span class="linenos">319</span><span class="k">class</span> <span class="nc">ModelNN</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="linenos">320</span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_size</span><span class="p">,</span> <span class="n">hiddenLayerSize</span><span class="p">,</span> <span class="n">output_size</span><span class="p">):</span>
+<span class="linenos">321</span>        <span class="nb">super</span><span class="p">(</span><span class="n">ModelNN</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+<span class="linenos">322</span>        <span class="bp">self</span><span class="o">.</span><span class="n">fc1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">input_size</span><span class="p">,</span> <span class="n">hiddenLayerSize</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+<span class="linenos">323</span>        <span class="bp">self</span><span class="o">.</span><span class="n">relu</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">()</span>
+<span class="linenos">324</span>        <span class="bp">self</span><span class="o">.</span><span class="n">leakyRelu</span><span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">()</span>
+<span class="linenos">325</span>        <span class="bp">self</span><span class="o">.</span><span class="n">elu</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ELU</span><span class="p">()</span>
+<span class="linenos">326</span>        <span class="c1"># self.relu = nn.Sigmoid() #alternatives</span>
+<span class="linenos">327</span>        <span class="c1"># self.relu = nn.Tanh()</span>
+<span class="linenos">328</span>        <span class="bp">self</span><span class="o">.</span><span class="n">fc2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hiddenLayerSize</span><span class="p">,</span> <span class="n">hiddenLayerSize</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+<span class="linenos">329</span>        <span class="bp">self</span><span class="o">.</span><span class="n">fc3</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hiddenLayerSize</span><span class="p">,</span> <span class="n">hiddenLayerSize</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+<span class="linenos">330</span>        <span class="bp">self</span><span class="o">.</span><span class="n">lastLayer</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hiddenLayerSize</span><span class="p">,</span> <span class="n">output_size</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+<span class="linenos">331</span>
+<span class="linenos">332</span>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="linenos">333</span>        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="linenos">334</span>        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="linenos">335</span>        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="linenos">336</span>        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">leakyRelu</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="linenos">337</span>        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc3</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="linenos">338</span>        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">elu</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="linenos">339</span>        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lastLayer</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="linenos">340</span>        <span class="k">return</span> <span class="n">x</span>
 <span class="linenos">341</span>
 <span class="linenos">342</span>
-<span class="linenos">343</span><span class="n">input_size</span> <span class="o">=</span> <span class="n">inputsExudyn</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># Number of input features</span>
-<span class="linenos">344</span><span class="n">output_size</span> <span class="o">=</span> <span class="n">targetsExudyn</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># Assuming regression task, adjust for classification</span>
-<span class="linenos">345</span>
-<span class="linenos">346</span><span class="n">model</span> <span class="o">=</span> <span class="n">ModelNN</span><span class="p">(</span><span class="n">input_size</span><span class="p">,</span> <span class="n">hiddenLayerSize</span><span class="p">,</span> <span class="n">output_size</span><span class="p">)</span>
-<span class="linenos">347</span><span class="n">lossFunction</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">()</span>  <span class="c1"># Mean Squared Error Loss for regression, adjust for classification</span>
-<span class="linenos">348</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="n">learningRate</span><span class="p">,)</span>
-<span class="linenos">349</span>
-<span class="linenos">350</span><span class="c1">#++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos">351</span><span class="c1">#perform training and store loss over epochs</span>
-<span class="linenos">352</span><span class="c1">#stop when lossThreshold reached</span>
-<span class="linenos">353</span>
-<span class="linenos">354</span><span class="n">lossHistory</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="linenos">355</span><span class="n">minLoss</span> <span class="o">=</span> <span class="mf">1e10</span>
-<span class="linenos">356</span><span class="c1"># Train the network</span>
-<span class="linenos">357</span><span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nTrainingEpochs</span><span class="p">):</span>  <span class="c1"># 100 epochs</span>
-<span class="linenos">358</span>    <span class="k">for</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">targets</span> <span class="ow">in</span> <span class="n">trainLoader</span><span class="p">:</span>
-<span class="linenos">359</span>        <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
-<span class="linenos">360</span>
-<span class="linenos">361</span>        <span class="c1"># Forward pass</span>
-<span class="linenos">362</span>        <span class="n">outputs</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
-<span class="linenos">363</span>        <span class="n">loss</span> <span class="o">=</span> <span class="n">lossFunction</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">targets</span><span class="p">)</span>
-<span class="linenos">364</span>
-<span class="linenos">365</span>        <span class="c1"># Backward pass and optimization</span>
-<span class="linenos">366</span>        <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
-<span class="linenos">367</span>        <span class="n">optimizer</span><span class="o">.</span><span class="nf">step</span><span class="p">()</span>
-<span class="linenos">368</span>
-<span class="linenos">369</span>    <span class="n">lossHistory</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">epoch</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="nf">sqrt</span><span class="p">(</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">())])</span>
-<span class="linenos">370</span>    <span class="n">minLoss</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">minLoss</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="nf">sqrt</span><span class="p">(</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()))</span>
-<span class="linenos">371</span>    <span class="n">lossVal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="nf">sqrt</span><span class="p">(</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
-<span class="linenos">372</span>
-<span class="linenos">373</span>    <span class="k">if</span> <span class="n">lossVal</span> <span class="o">&lt;</span> <span class="n">lossThreshold</span><span class="p">:</span>
-<span class="linenos">374</span>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;loss threshold reached at: epoch </span><span class="si">{</span><span class="n">epoch</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">nTrainingEpochs</span><span class="si">}</span><span class="s1">, Loss: </span><span class="si">{</span><span class="n">lossVal</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="linenos">375</span>        <span class="k">break</span>
-<span class="linenos">376</span>
-<span class="linenos">377</span>    <span class="k">if</span> <span class="p">(</span><span class="n">epoch</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">50</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-<span class="linenos">378</span>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Epoch </span><span class="si">{</span><span class="n">epoch</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">nTrainingEpochs</span><span class="si">}</span><span class="s1">, Loss: </span><span class="si">{</span><span class="n">lossVal</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="linenos">379</span>
-<span class="linenos">380</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;min loss=&#39;</span><span class="p">,</span><span class="n">minLoss</span><span class="p">)</span>
-<span class="linenos">381</span>
-<span class="linenos">382</span><span class="c1">#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos">383</span><span class="c1">#evaluate model using test data:</span>
-<span class="linenos">384</span><span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>  <span class="c1"># Set the model to evaluation mode</span>
-<span class="linenos">385</span><span class="n">totalLoss</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="linenos">386</span><span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="linenos">387</span>
-<span class="linenos">388</span><span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>  <span class="c1"># No need to track gradients for evaluation</span>
-<span class="linenos">389</span>    <span class="k">for</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">targets</span> <span class="ow">in</span> <span class="n">testLoader</span><span class="p">:</span>
-<span class="linenos">390</span>        <span class="n">outputs</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
-<span class="linenos">391</span>        <span class="n">loss</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="nf">sqrt</span><span class="p">(((</span><span class="n">outputs</span> <span class="o">-</span> <span class="n">targets</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>  <span class="c1"># Calculating RMSE for each batch</span>
-<span class="linenos">392</span>        <span class="n">totalLoss</span> <span class="o">+=</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
-<span class="linenos">393</span>        <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
-<span class="linenos">394</span>
-<span class="linenos">395</span><span class="n">averageRMSE</span> <span class="o">=</span> <span class="n">totalLoss</span> <span class="o">/</span> <span class="n">count</span>
-<span class="linenos">396</span>
-<span class="linenos">397</span><span class="c1"># Call the evaluate_model function with the test_loader and your model</span>
-<span class="linenos">398</span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Test RMSE: </span><span class="si">{</span><span class="n">averageRMSE</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="linenos">399</span>
-<span class="linenos">400</span><span class="k">for</span> <span class="n">test</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
-<span class="linenos">401</span>    <span class="n">x</span> <span class="o">=</span> <span class="n">inputsExudynTest</span><span class="p">[</span><span class="n">test</span><span class="p">:</span><span class="n">test</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
-<span class="linenos">402</span>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;x=&#39;</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="s1">&#39;, shape&#39;</span><span class="p">,</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-<span class="linenos">403</span>    <span class="n">y</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="c1">#convert output to list</span>
-<span class="linenos">404</span>
-<span class="linenos">405</span>    <span class="n">yRef</span> <span class="o">=</span> <span class="n">targetsExudynTest</span><span class="p">[</span><span class="n">test</span><span class="p">:</span><span class="n">test</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
-<span class="linenos">406</span>
-<span class="linenos">407</span>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;++++++++++++++++++++&#39;</span><span class="p">)</span>
-<span class="linenos">408</span>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;input:  &#39;</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">target: &#39;</span><span class="p">,</span><span class="n">yRef</span><span class="p">,</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">predict:&#39;</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
-<span class="linenos">409</span>    <span class="c1"># mbs.PlotSensor(result, components=[0], closeAll=test==0, newFigure=False,</span>
-<span class="linenos">410</span>    <span class="c1">#                labels=[&#39;RNN&#39;], yLabel=&#39;displacement (m)&#39;,</span>
-<span class="linenos">411</span>    <span class="c1">#                colorCodeOffset=test)</span>
-<span class="linenos">412</span>    <span class="c1"># mbs.PlotSensor(result, components=[1], newFigure=False,</span>
-<span class="linenos">413</span>    <span class="c1">#                labels=[&#39;reference&#39;], yLabel=&#39;displacement (m)&#39;,</span>
-<span class="linenos">414</span>    <span class="c1">#                colorCodeOffset=test,lineStyles=[&#39;:&#39;])</span>
-<span class="linenos">415</span>
+<span class="linenos">343</span>
+<span class="linenos">344</span><span class="n">input_size</span> <span class="o">=</span> <span class="n">inputsExudyn</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># Number of input features</span>
+<span class="linenos">345</span><span class="n">output_size</span> <span class="o">=</span> <span class="n">targetsExudyn</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># Assuming regression task, adjust for classification</span>
+<span class="linenos">346</span>
+<span class="linenos">347</span><span class="n">model</span> <span class="o">=</span> <span class="n">ModelNN</span><span class="p">(</span><span class="n">input_size</span><span class="p">,</span> <span class="n">hiddenLayerSize</span><span class="p">,</span> <span class="n">output_size</span><span class="p">)</span>
+<span class="linenos">348</span><span class="n">lossFunction</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">()</span>  <span class="c1"># Mean Squared Error Loss for regression, adjust for classification</span>
+<span class="linenos">349</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="n">learningRate</span><span class="p">,)</span>
+<span class="linenos">350</span>
+<span class="linenos">351</span><span class="c1">#++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">352</span><span class="c1">#perform training and store loss over epochs</span>
+<span class="linenos">353</span><span class="c1">#stop when lossThreshold reached</span>
+<span class="linenos">354</span>
+<span class="linenos">355</span><span class="n">lossHistory</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos">356</span><span class="n">minLoss</span> <span class="o">=</span> <span class="mf">1e10</span>
+<span class="linenos">357</span><span class="c1"># Train the network</span>
+<span class="linenos">358</span><span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nTrainingEpochs</span><span class="p">):</span>  <span class="c1"># 100 epochs</span>
+<span class="linenos">359</span>    <span class="k">for</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">targets</span> <span class="ow">in</span> <span class="n">trainLoader</span><span class="p">:</span>
+<span class="linenos">360</span>        <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+<span class="linenos">361</span>
+<span class="linenos">362</span>        <span class="c1"># Forward pass</span>
+<span class="linenos">363</span>        <span class="n">outputs</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+<span class="linenos">364</span>        <span class="n">loss</span> <span class="o">=</span> <span class="n">lossFunction</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">targets</span><span class="p">)</span>
+<span class="linenos">365</span>
+<span class="linenos">366</span>        <span class="c1"># Backward pass and optimization</span>
+<span class="linenos">367</span>        <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+<span class="linenos">368</span>        <span class="n">optimizer</span><span class="o">.</span><span class="nf">step</span><span class="p">()</span>
+<span class="linenos">369</span>
+<span class="linenos">370</span>    <span class="n">lossHistory</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">epoch</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="nf">sqrt</span><span class="p">(</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">())])</span>
+<span class="linenos">371</span>    <span class="n">minLoss</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">minLoss</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="nf">sqrt</span><span class="p">(</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()))</span>
+<span class="linenos">372</span>    <span class="n">lossVal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="nf">sqrt</span><span class="p">(</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+<span class="linenos">373</span>
+<span class="linenos">374</span>    <span class="k">if</span> <span class="n">lossVal</span> <span class="o">&lt;</span> <span class="n">lossThreshold</span><span class="p">:</span>
+<span class="linenos">375</span>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;loss threshold reached at: epoch </span><span class="si">{</span><span class="n">epoch</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">nTrainingEpochs</span><span class="si">}</span><span class="s1">, Loss: </span><span class="si">{</span><span class="n">lossVal</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="linenos">376</span>        <span class="k">break</span>
+<span class="linenos">377</span>
+<span class="linenos">378</span>    <span class="k">if</span> <span class="p">(</span><span class="n">epoch</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">50</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+<span class="linenos">379</span>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Epoch </span><span class="si">{</span><span class="n">epoch</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">nTrainingEpochs</span><span class="si">}</span><span class="s1">, Loss: </span><span class="si">{</span><span class="n">lossVal</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="linenos">380</span>
+<span class="linenos">381</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;min loss=&#39;</span><span class="p">,</span><span class="n">minLoss</span><span class="p">)</span>
+<span class="linenos">382</span>
+<span class="linenos">383</span><span class="c1">#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">384</span><span class="c1">#evaluate model using test data:</span>
+<span class="linenos">385</span><span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>  <span class="c1"># Set the model to evaluation mode</span>
+<span class="linenos">386</span><span class="n">totalLoss</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">387</span><span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">388</span>
+<span class="linenos">389</span><span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>  <span class="c1"># No need to track gradients for evaluation</span>
+<span class="linenos">390</span>    <span class="k">for</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">targets</span> <span class="ow">in</span> <span class="n">testLoader</span><span class="p">:</span>
+<span class="linenos">391</span>        <span class="n">outputs</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+<span class="linenos">392</span>        <span class="n">loss</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="nf">sqrt</span><span class="p">(((</span><span class="n">outputs</span> <span class="o">-</span> <span class="n">targets</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>  <span class="c1"># Calculating RMSE for each batch</span>
+<span class="linenos">393</span>        <span class="n">totalLoss</span> <span class="o">+=</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+<span class="linenos">394</span>        <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="linenos">395</span>
+<span class="linenos">396</span><span class="n">averageRMSE</span> <span class="o">=</span> <span class="n">totalLoss</span> <span class="o">/</span> <span class="n">count</span>
+<span class="linenos">397</span>
+<span class="linenos">398</span><span class="c1"># Call the evaluate_model function with the test_loader and your model</span>
+<span class="linenos">399</span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Test RMSE: </span><span class="si">{</span><span class="n">averageRMSE</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="linenos">400</span>
+<span class="linenos">401</span><span class="k">for</span> <span class="n">test</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+<span class="linenos">402</span>    <span class="n">x</span> <span class="o">=</span> <span class="n">inputsExudynTest</span><span class="p">[</span><span class="n">test</span><span class="p">:</span><span class="n">test</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+<span class="linenos">403</span>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;x=&#39;</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="s1">&#39;, shape&#39;</span><span class="p">,</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="linenos">404</span>    <span class="n">y</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="c1">#convert output to list</span>
+<span class="linenos">405</span>
+<span class="linenos">406</span>    <span class="n">yRef</span> <span class="o">=</span> <span class="n">targetsExudynTest</span><span class="p">[</span><span class="n">test</span><span class="p">:</span><span class="n">test</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+<span class="linenos">407</span>
+<span class="linenos">408</span>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;++++++++++++++++++++&#39;</span><span class="p">)</span>
+<span class="linenos">409</span>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;input:  &#39;</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">target: &#39;</span><span class="p">,</span><span class="n">yRef</span><span class="p">,</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">predict:&#39;</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+<span class="linenos">410</span>    <span class="c1"># mbs.PlotSensor(result, components=[0], closeAll=test==0, newFigure=False,</span>
+<span class="linenos">411</span>    <span class="c1">#                labels=[&#39;RNN&#39;], yLabel=&#39;displacement (m)&#39;,</span>
+<span class="linenos">412</span>    <span class="c1">#                colorCodeOffset=test)</span>
+<span class="linenos">413</span>    <span class="c1"># mbs.PlotSensor(result, components=[1], newFigure=False,</span>
+<span class="linenos">414</span>    <span class="c1">#                labels=[&#39;reference&#39;], yLabel=&#39;displacement (m)&#39;,</span>
+<span class="linenos">415</span>    <span class="c1">#                colorCodeOffset=test,lineStyles=[&#39;:&#39;])</span>
 <span class="linenos">416</span>
-<span class="linenos">417</span><span class="c1">#compute 2D grid with error</span>
-<span class="linenos">418</span><span class="n">testErrorGrid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">gridX</span><span class="p">,</span> <span class="n">gridY</span><span class="p">))</span>
-<span class="linenos">419</span><span class="n">maxError</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="linenos">420</span><span class="k">for</span> <span class="n">iy</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">gridY</span><span class="p">):</span>
-<span class="linenos">421</span>    <span class="k">for</span> <span class="n">ix</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">gridX</span><span class="p">):</span>
-<span class="linenos">422</span>        <span class="n">x0</span> <span class="o">=</span> <span class="n">pRangeX</span><span class="o">*</span><span class="p">((</span><span class="n">ix</span><span class="o">+</span><span class="mf">0.5</span><span class="p">)</span><span class="o">/</span><span class="n">gridX</span><span class="o">-</span><span class="mf">0.5</span><span class="p">)</span><span class="o">*</span><span class="mf">0.5</span>
-<span class="linenos">423</span>        <span class="n">y0</span> <span class="o">=</span> <span class="n">pRangeY</span><span class="o">*</span><span class="p">((</span><span class="n">iy</span><span class="o">+</span><span class="mf">0.5</span><span class="p">)</span><span class="o">/</span><span class="n">gridY</span><span class="o">-</span><span class="mf">0.5</span><span class="p">)</span><span class="o">*</span><span class="mf">0.5</span>
-<span class="linenos">424</span>
-<span class="linenos">425</span>        <span class="n">p</span> <span class="o">=</span> <span class="n">pRigidMid</span> <span class="o">+</span> <span class="p">[</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
-<span class="linenos">426</span>
-<span class="linenos">427</span>        <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="nb">list</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">])],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
-<span class="linenos">428</span>        <span class="n">y</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
-<span class="linenos">429</span>
-<span class="linenos">430</span>        <span class="n">rv</span> <span class="o">=</span> <span class="n">ComputePositionFromStringLengths</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
-<span class="linenos">431</span>
-<span class="linenos">432</span>        <span class="n">diff</span> <span class="o">=</span> <span class="n">rv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-<span class="linenos">433</span>        <span class="n">err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">diff</span><span class="p">)</span> <span class="o">-</span> <span class="n">y</span>
-<span class="linenos">434</span>        <span class="n">maxError</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxError</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">err</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
-<span class="linenos">435</span>
-<span class="linenos">436</span>        <span class="n">testErrorGrid</span><span class="p">[</span><span class="n">ix</span><span class="p">,</span><span class="n">iy</span><span class="p">]</span> <span class="o">=</span> <span class="n">err</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="linenos">437</span>
-<span class="linenos">438</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;maxError&#39;</span><span class="p">,</span> <span class="n">maxError</span><span class="p">)</span>
-<span class="linenos">439</span><span class="n">PlotGridFunction</span><span class="p">(</span><span class="n">testErrorGrid</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;test error X&#39;</span><span class="p">,</span> <span class="n">closeAll</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="linenos">440</span>
-<span class="linenos">441</span><span class="c1">#%%+++++++++++++++</span>
-<span class="linenos">442</span><span class="k">if</span> <span class="kc">True</span><span class="p">:</span> <span class="c1">#plot loss history</span>
-<span class="linenos">443</span>    <span class="n">lossData</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">lossHistory</span><span class="p">)</span>
-<span class="linenos">444</span>    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="linenos">445</span>    <span class="kn">from</span> <span class="nn">exudyn.plot</span> <span class="kn">import</span> <span class="nf">PlotSensor</span>
-<span class="linenos">446</span>    <span class="nf">PlotSensor</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span><span class="n">lossData</span><span class="p">,</span><span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">closeAll</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">logScaleY</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<span class="linenos">447</span>               <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;loss&#39;</span><span class="p">])</span>
+<span class="linenos">417</span>
+<span class="linenos">418</span><span class="c1">#compute 2D grid with error</span>
+<span class="linenos">419</span><span class="n">testErrorGrid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">gridX</span><span class="p">,</span> <span class="n">gridY</span><span class="p">))</span>
+<span class="linenos">420</span><span class="n">maxError</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">421</span><span class="k">for</span> <span class="n">iy</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">gridY</span><span class="p">):</span>
+<span class="linenos">422</span>    <span class="k">for</span> <span class="n">ix</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">gridX</span><span class="p">):</span>
+<span class="linenos">423</span>        <span class="n">x0</span> <span class="o">=</span> <span class="n">pRangeX</span><span class="o">*</span><span class="p">((</span><span class="n">ix</span><span class="o">+</span><span class="mf">0.5</span><span class="p">)</span><span class="o">/</span><span class="n">gridX</span><span class="o">-</span><span class="mf">0.5</span><span class="p">)</span><span class="o">*</span><span class="mf">0.5</span>
+<span class="linenos">424</span>        <span class="n">y0</span> <span class="o">=</span> <span class="n">pRangeY</span><span class="o">*</span><span class="p">((</span><span class="n">iy</span><span class="o">+</span><span class="mf">0.5</span><span class="p">)</span><span class="o">/</span><span class="n">gridY</span><span class="o">-</span><span class="mf">0.5</span><span class="p">)</span><span class="o">*</span><span class="mf">0.5</span>
+<span class="linenos">425</span>
+<span class="linenos">426</span>        <span class="n">p</span> <span class="o">=</span> <span class="n">pRigidMid</span> <span class="o">+</span> <span class="p">[</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="linenos">427</span>
+<span class="linenos">428</span>        <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="nb">list</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">])],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+<span class="linenos">429</span>        <span class="n">y</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos">430</span>
+<span class="linenos">431</span>        <span class="n">rv</span> <span class="o">=</span> <span class="n">ComputePositionFromStringLengths</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="linenos">432</span>
+<span class="linenos">433</span>        <span class="n">diff</span> <span class="o">=</span> <span class="n">rv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="linenos">434</span>        <span class="n">err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">diff</span><span class="p">)</span> <span class="o">-</span> <span class="n">y</span>
+<span class="linenos">435</span>        <span class="n">maxError</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxError</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">err</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+<span class="linenos">436</span>
+<span class="linenos">437</span>        <span class="n">testErrorGrid</span><span class="p">[</span><span class="n">ix</span><span class="p">,</span><span class="n">iy</span><span class="p">]</span> <span class="o">=</span> <span class="n">err</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos">438</span>
+<span class="linenos">439</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;maxError&#39;</span><span class="p">,</span> <span class="n">maxError</span><span class="p">)</span>
+<span class="linenos">440</span><span class="n">PlotGridFunction</span><span class="p">(</span><span class="n">testErrorGrid</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;test error X&#39;</span><span class="p">,</span> <span class="n">closeAll</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="linenos">441</span>
+<span class="linenos">442</span><span class="c1">#%%+++++++++++++++</span>
+<span class="linenos">443</span><span class="k">if</span> <span class="kc">True</span><span class="p">:</span> <span class="c1">#plot loss history</span>
+<span class="linenos">444</span>    <span class="n">lossData</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">lossHistory</span><span class="p">)</span>
+<span class="linenos">445</span>    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="linenos">446</span>    <span class="kn">from</span> <span class="nn">exudyn.plot</span> <span class="kn">import</span> <span class="nf">PlotSensor</span>
+<span class="linenos">447</span>    <span class="nf">PlotSensor</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span><span class="n">lossData</span><span class="p">,</span><span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">closeAll</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">logScaleY</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="linenos">448</span>               <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;loss&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
 </section>

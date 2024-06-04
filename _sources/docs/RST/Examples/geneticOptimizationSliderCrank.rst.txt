@@ -28,7 +28,8 @@ You can view and download this file on Github: `geneticOptimizationSliderCrank.p
    
    import exudyn as exu
    from exudyn.itemInterface import *
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    from exudyn.processing import GeneticOptimization, ParameterVariation, PlotOptimizationResults2D
    
    import numpy as np #for postprocessing
@@ -77,7 +78,7 @@ You can view and download this file on Github: `geneticOptimizationSliderCrank.p
        constrainGroundBody = (testCases == 0) #use this flag to fix ground body
        
        #graphics for floating frame:
-       gFloating = GraphicsDataOrthoCube(-0.25, -0.25, -0.1, 0.8, 0.25, -0.05, color=[0.3,0.3,0.3,1.]) 
+       gFloating = graphics.BrickXYZ(-0.25, -0.25, -0.1, 0.8, 0.25, -0.05, color=[0.3,0.3,0.3,1.]) 
        
        if constrainGroundBody:
            floatingRB = mbs.AddObject(ObjectGround(referencePosition=[0,0,0], visualization=VObjectGround(graphicsData=[gFloating])))    
@@ -117,13 +118,13 @@ You can view and download this file on Github: `geneticOptimizationSliderCrank.p
        ty = 0.05    #thickness
        tz = 0.05    #thickness
    
-       graphics1 = GraphicsDataRigidLink(p0=[s1L,0,-0.5*tz],p1=[s1R,0,-0.5*tz], 
+       graphics1 = graphics.RigidLink(p0=[s1L,0,-0.5*tz],p1=[s1R,0,-0.5*tz], 
                                          axis0=[0,0,1], axis1=[0,0,1],radius=[0.5*ty,0.5*ty],
-                                         thickness=0.8*ty, width=[tz,tz], color=color4steelblue,nTiles=16)
+                                         thickness=0.8*ty, width=[tz,tz], color=graphics.color.steelblue,nTiles=16)
        
-       graphics2 = GraphicsDataRigidLink(p0=[s2L,0,0.5*tz],p1=[s2R,0,0.5*tz], 
+       graphics2 = graphics.RigidLink(p0=[s2L,0,0.5*tz],p1=[s2R,0,0.5*tz], 
                                          axis0=[0,0,1], axis1=[0,0,1],radius=[0.5*ty,0.5*ty],
-                                         thickness=0.8*ty, width=[tz,tz], color=color4lightred,nTiles=16)
+                                         thickness=0.8*ty, width=[tz,tz], color=graphics.color.lightred,nTiles=16)
        
        #crank:
        nRigid1 = mbs.AddNode(Rigid2D(referenceCoordinates=[P.s1,0,0], 
@@ -145,7 +146,7 @@ You can view and download this file on Github: `geneticOptimizationSliderCrank.p
        #++++++++++++++++++++++++++++++++
        #slider:
        c=0.025 #dimension of mass
-       graphics3 = GraphicsDataOrthoCube(-c,-c,-c*2,c,c,0,color4grey)
+       graphics3 = graphics.BrickXYZ(-c,-c,-c*2,c,c,0,graphics.color.grey)
        
        #nMass = mbs.AddNode(Point2D(referenceCoordinates=[L1+L2,0]))
        #oMass = mbs.AddObject(MassPoint2D(physicsMass=m3, nodeNumber=nMass,visualization=VObjectMassPoint2D(graphicsData= [graphics3])))

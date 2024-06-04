@@ -54,13 +54,14 @@ You can view and download this file on Github: `chatGPTupdate2.py <https://githu
    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++
    #create rigid bodies and mass points with distance constraint and joints
    import exudyn as exu
-   from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    import numpy as np
    SC = exu.SystemContainer()
    mbs = SC.AddSystem() #create a MainSystem 'mbs' to work with
    
    #graphics data for checkerboard background (not required):
-   gGround0 = GraphicsDataCheckerBoard(point=[3,0,-2], normal=[0,0,1], size=10)
+   gGround0 = graphics.CheckerBoard(point=[3,0,-2], normal=[0,0,1], size=10)
    #add ground object and background graphics; visualization is optional
    oGround = mbs.CreateGround(graphicsDataList=[gGround0])
    
@@ -69,8 +70,8 @@ You can view and download this file on Github: `chatGPTupdate2.py <https://githu
    H=0.2
    W=0.1
    #for visualization of the cube, we define a graphics object in the following
-   graphicsCube = GraphicsDataOrthoCubePoint(centerPoint = [0,0,0], #note that centerPoint is in the local coordinate system; IN MOST CASES THIS MUST BE AT [0,0,0]
-                                             size=[L,H,W], color=color4orange)
+   graphicsCube = graphics.Brick(centerPoint = [0,0,0], #note that centerPoint is in the local coordinate system; IN MOST CASES THIS MUST BE AT [0,0,0]
+                                             size=[L,H,W], color=graphics.color.orange)
    #SUMMARIZING: graphicsCube usually should have centerPoint=[0,0,0] if used in the CreateRigidBody
    #define the inertia of this cube using InertiaCuboid with density and cube dimensions; computes internally mass, COM, and inertia tensor:
    inertiaCube = InertiaCuboid(density=5000, sideLengths=[L,H,W])
@@ -116,8 +117,8 @@ You can view and download this file on Github: `chatGPTupdate2.py <https://githu
    yOff =-0.5 #offset in y-direction of first body
    
    #create a second graphics object
-   graphicsCube2 = GraphicsDataOrthoCubePoint(centerPoint = [0,0,0], 
-                                             size=[a,b,0.1], color=color4blue)
+   graphicsCube2 = graphics.Brick(centerPoint = [0,0,0], 
+                                             size=[a,b,0.1], color=graphics.color.blue)
    inertiaCube2 = InertiaCuboid(density=5000, sideLengths=[a,b,0.1])
    
    #create another rigid body with other dimensions

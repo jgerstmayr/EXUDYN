@@ -24,7 +24,8 @@ You can view and download this file on Github: `doublePendulum2D.py <https://git
    
    
    import exudyn as exu
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    from math import sin, cos, pi
    
    SC = exu.SystemContainer()
@@ -36,9 +37,9 @@ You can view and download this file on Github: `doublePendulum2D.py <https://git
    
    # create bodies:
    b0=mbs.AddObject(RigidBody2D(physicsMass=1, physicsInertia=1,nodeNumber=n0,
-          visualization=VRigidBody2D(graphicsData=[GraphicsDataLine([[-0.5,0,0],[0.5,0,0]])])))
+          visualization=VRigidBody2D(graphicsData=[graphics.Lines([[-0.5,0,0],[0.5,0,0]])])))
    b1=mbs.AddObject(RigidBody2D(physicsMass=1, physicsInertia=1,nodeNumber=n1,
-                    visualization=VRigidBody2D(graphicsData=[GraphicsDataLine([[-0.5,0,0],[0.5,0,0]])])))
+                    visualization=VRigidBody2D(graphicsData=[graphics.Lines([[-0.5,0,0],[0.5,0,0]])])))
    
    # add markers and loads:
    oGround = mbs.AddObject(ObjectGround())

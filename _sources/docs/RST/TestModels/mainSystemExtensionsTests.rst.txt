@@ -25,7 +25,8 @@ You can view and download this file on Github: `mainSystemExtensionsTests.py <ht
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    
    import exudyn as exu
-   from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    import numpy as np
    
    useGraphics = True #without test
@@ -45,7 +46,8 @@ You can view and download this file on Github: `mainSystemExtensionsTests.py <ht
    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++
    #create single mass point:
    import exudyn as exu
-   from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    import numpy as np
    SC = exu.SystemContainer()
    mbs = SC.AddSystem()
@@ -53,7 +55,7 @@ You can view and download this file on Github: `mainSystemExtensionsTests.py <ht
    b0=mbs.CreateMassPoint(referencePosition = [0,0,0],
                           initialVelocity = [2,5,0],
                           physicsMass = 1, gravity = [0,-9.81,0],
-                          drawSize = 0.5, color=color4blue)
+                          drawSize = 0.5, color=graphics.color.blue)
    
    mbs.Assemble()
    simulationSettings = exu.SimulationSettings() #takes currently set values or default values
@@ -69,7 +71,8 @@ You can view and download this file on Github: `mainSystemExtensionsTests.py <ht
    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++
    #create single rigid body:
    import exudyn as exu
-   from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    import numpy as np
    SC = exu.SystemContainer()
    mbs = SC.AddSystem()
@@ -80,8 +83,8 @@ You can view and download this file on Github: `mainSystemExtensionsTests.py <ht
                             initialVelocity = [2,5,0],
                             initialAngularVelocity = [5,0.5,0.7],
                             gravity = [0,-9.81,0],
-                            graphicsDataList = [GraphicsDataOrthoCubePoint(size=[1,0.1,0.1], 
-                                                                         color=color4red)])
+                            graphicsDataList = [graphics.Brick(size=[1,0.1,0.1], 
+                                                                         color=graphics.color.red)])
    
    mbs.Assemble()
    simulationSettings = exu.SimulationSettings() #takes currently set values or default values
@@ -97,7 +100,8 @@ You can view and download this file on Github: `mainSystemExtensionsTests.py <ht
    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++
    #create spring-damper:
    import exudyn as exu
-   from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    import numpy as np
    SC = exu.SystemContainer()
    mbs = SC.AddSystem()
@@ -105,7 +109,7 @@ You can view and download this file on Github: `mainSystemExtensionsTests.py <ht
    b0 = mbs.CreateMassPoint(referencePosition = [2,0,0],
                             initialVelocity = [2,5,0],
                             physicsMass = 1, gravity = [0,-9.81,0],
-                            drawSize = 0.5, color=color4blue)
+                            drawSize = 0.5, color=graphics.color.blue)
    
    oGround = mbs.AddObject(ObjectGround())
    #add vertical spring
@@ -131,14 +135,15 @@ You can view and download this file on Github: `mainSystemExtensionsTests.py <ht
    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++
    #create mass point with cartesian spring damper:
    import exudyn as exu
-   from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    import numpy as np
    SC = exu.SystemContainer()
    mbs = SC.AddSystem()
    
    b0 = mbs.CreateMassPoint(referencePosition = [7,0,0],
                              physicsMass = 1, gravity = [0,-9.81,0],
-                             drawSize = 0.5, color=color4blue)
+                             drawSize = 0.5, color=graphics.color.blue)
    
    oGround = mbs.AddObject(ObjectGround())
    
@@ -164,7 +169,8 @@ You can view and download this file on Github: `mainSystemExtensionsTests.py <ht
    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++
    #create rigid body with revolute joint:
    import exudyn as exu
-   from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    import numpy as np
    SC = exu.SystemContainer()
    mbs = SC.AddSystem()
@@ -173,8 +179,8 @@ You can view and download this file on Github: `mainSystemExtensionsTests.py <ht
                                                     sideLengths=[1,0.1,0.1]),
                             referencePosition = [3,0,0],
                             gravity = [0,-9.81,0],
-                            graphicsDataList = [GraphicsDataOrthoCubePoint(size=[1,0.1,0.1], 
-                                                                         color=color4steelblue)])
+                            graphicsDataList = [graphics.Brick(size=[1,0.1,0.1], 
+                                                                         color=graphics.color.steelblue)])
    oGround = mbs.AddObject(ObjectGround())
    mbs.CreateRevoluteJoint(bodyNumbers=[oGround, b0], position=[2.5,0,0], axis=[0,0,1],
                            useGlobalFrame=True, axisRadius=0.02, axisLength=0.14)
@@ -193,7 +199,8 @@ You can view and download this file on Github: `mainSystemExtensionsTests.py <ht
    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++
    #create rigid body with prismatic joint:
    import exudyn as exu
-   from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    import numpy as np
    SC = exu.SystemContainer()
    mbs = SC.AddSystem()
@@ -203,8 +210,8 @@ You can view and download this file on Github: `mainSystemExtensionsTests.py <ht
                             referencePosition = [4,0,0],
                             initialVelocity = [0,4,0],
                             gravity = [0,-9.81,0],
-                            graphicsDataList = [GraphicsDataOrthoCubePoint(size=[1,0.1,0.1], 
-                                                                         color=color4steelblue)])
+                            graphicsDataList = [graphics.Brick(size=[1,0.1,0.1], 
+                                                                         color=graphics.color.steelblue)])
    
    oGround = mbs.AddObject(ObjectGround())
    mbs.CreatePrismaticJoint(bodyNumbers=[oGround, b0], position=[3.5,0,0], axis=[0,1,0], 
@@ -225,7 +232,8 @@ You can view and download this file on Github: `mainSystemExtensionsTests.py <ht
    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++
    #create rigid body with spherical joint:
    import exudyn as exu
-   from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    import numpy as np
    SC = exu.SystemContainer()
    mbs = SC.AddSystem()
@@ -235,8 +243,8 @@ You can view and download this file on Github: `mainSystemExtensionsTests.py <ht
                             referencePosition = [5,0,0],
                             initialAngularVelocity = [5,0,0],
                             gravity = [0,-9.81,0],
-                            graphicsDataList = [GraphicsDataOrthoCubePoint(size=[1,0.1,0.1], 
-                                                                         color=color4orange)])
+                            graphicsDataList = [graphics.Brick(size=[1,0.1,0.1], 
+                                                                         color=graphics.color.orange)])
    oGround = mbs.AddObject(ObjectGround())
    mbs.CreateSphericalJoint(bodyNumbers=[oGround, b0], position=[5.5,0,0], 
                             useGlobalFrame=True, jointRadius=0.06)
@@ -255,7 +263,8 @@ You can view and download this file on Github: `mainSystemExtensionsTests.py <ht
    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++
    #create rigid body with generic joint, universal joint case with axes tilted by 0.125*pi around X:
    import exudyn as exu
-   from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    import numpy as np
    SC = exu.SystemContainer()
    mbs = SC.AddSystem()
@@ -265,8 +274,8 @@ You can view and download this file on Github: `mainSystemExtensionsTests.py <ht
                             referencePosition = [6,0,0],
                             initialAngularVelocity = [0,8,0],
                             gravity = [0,-9.81,0],
-                            graphicsDataList = [GraphicsDataOrthoCubePoint(size=[1,0.1,0.1], 
-                                                                         color=color4orange)])
+                            graphicsDataList = [graphics.Brick(size=[1,0.1,0.1], 
+                                                                         color=graphics.color.orange)])
    oGround = mbs.AddObject(ObjectGround())
    mbs.CreateGenericJoint(bodyNumbers=[oGround, b0], position=[5.5,0,0],
                           constrainedAxes=[1,1,1, 1,0,0],
@@ -304,7 +313,8 @@ You can view and download this file on Github: `mainSystemExtensionsTests.py <ht
    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++
    #create single mass point and compute linearized system and eigenvalues:
    import exudyn as exu
-   from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    import numpy as np
    SC = exu.SystemContainer()
    mbs = SC.AddSystem()
@@ -312,7 +322,7 @@ You can view and download this file on Github: `mainSystemExtensionsTests.py <ht
    b0 = mbs.CreateMassPoint(referencePosition = [2,0,0],
                             initialVelocity = [2*0,5,0],
                             physicsMass = 1, gravity = [0,-9.81,0],
-                            drawSize = 0.5, color=color4blue)
+                            drawSize = 0.5, color=graphics.color.blue)
    
    oGround = mbs.AddObject(ObjectGround())
    #add vertical spring
@@ -337,7 +347,8 @@ You can view and download this file on Github: `mainSystemExtensionsTests.py <ht
    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++
    #create rigid body with generic joint: compute system DOF
    import exudyn as exu
-   from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    import numpy as np
    SC = exu.SystemContainer()
    mbs = SC.AddSystem()
@@ -347,8 +358,8 @@ You can view and download this file on Github: `mainSystemExtensionsTests.py <ht
                             referencePosition = [6,0,0],
                             initialAngularVelocity = [0,8,0],
                             gravity = [0,-9.81,0],
-                            graphicsDataList = [GraphicsDataOrthoCubePoint(size=[1,0.1,0.1], 
-                                                                         color=color4orange)])
+                            graphicsDataList = [graphics.Brick(size=[1,0.1,0.1], 
+                                                                         color=graphics.color.orange)])
    oGround = mbs.AddObject(ObjectGround())
    mbs.CreateGenericJoint(bodyNumbers=[oGround, b0], position=[5.5,0,0],
                           constrainedAxes=[1,1,1, 1,0,0],
@@ -383,7 +394,8 @@ You can view and download this file on Github: `mainSystemExtensionsTests.py <ht
    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++
    #create rigid body and mass point with distance constraint
    import exudyn as exu
-   from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    import numpy as np
    SC = exu.SystemContainer()
    mbs = SC.AddSystem()
@@ -392,8 +404,8 @@ You can view and download this file on Github: `mainSystemExtensionsTests.py <ht
                                                      sideLengths=[1,0.1,0.1]),
                              referencePosition = [6,0,0],
                              gravity = [0,-9.81,0],
-                             graphicsDataList = [GraphicsDataOrthoCubePoint(size=[1,0.1,0.1], 
-                                                                         color=color4orange)])
+                             graphicsDataList = [graphics.Brick(size=[1,0.1,0.1], 
+                                                                         color=graphics.color.orange)])
    m1 = mbs.CreateMassPoint(referencePosition=[5.5,-1,0],
                             physicsMass=1, drawSize = 0.2)
    n1 = mbs.GetObject(m1)['nodeNumber']

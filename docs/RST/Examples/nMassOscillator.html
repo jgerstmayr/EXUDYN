@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nMassOscillator.py &mdash; Exudyn1.8.32.dev1 1.8.32.dev1 documentation</title>
+  <title>nMassOscillator.py &mdash; Exudyn1.8.52.dev1 1.8.52.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=d6ff67ca"></script>
+        <script src="../../../_static/documentation_options.js?v=b761f56e"></script>
         <script src="../../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -41,7 +41,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.8.32.dev1
+            Exudyn1.8.52.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -233,7 +233,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.8.32.dev1</a>
+          <a href="../../../index.html">Exudyn1.8.52.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -269,285 +269,287 @@
 <span class="linenos"> 12</span>
 <span class="linenos"> 13</span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
 <span class="linenos"> 14</span><span class="kn">from</span> <span class="nn">exudyn.itemInterface</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="linenos"> 15</span><span class="kn">from</span> <span class="nn">exudyn.graphicsDataUtilities</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="linenos"> 16</span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="linenos"> 17</span><span class="kn">from</span> <span class="nn">exudyn.interactive</span> <span class="kn">import</span> <span class="nc">InteractiveDialog</span>
-<span class="linenos"> 18</span>
-<span class="linenos"> 19</span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="linenos"> 20</span><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="nf">sin</span><span class="p">,</span> <span class="nf">cos</span><span class="p">,</span> <span class="n">pi</span><span class="p">,</span> <span class="nf">sqrt</span>
-<span class="linenos"> 21</span>
-<span class="linenos"> 22</span><span class="kn">import</span> <span class="nn">time</span> <span class="c1">#for sleep()</span>
-<span class="linenos"> 23</span><span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
-<span class="linenos"> 24</span><span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
-<span class="linenos"> 25</span>
-<span class="linenos"> 26</span><span class="c1">#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos"> 27</span><span class="c1">#</span>
-<span class="linenos"> 28</span><span class="n">N</span> <span class="o">=</span> <span class="mi">12</span><span class="p">;</span>                     <span class="c1">#number of masses</span>
-<span class="linenos"> 29</span><span class="n">spring</span> <span class="o">=</span> <span class="mi">800</span><span class="p">;</span>               <span class="c1">#stiffness [800]</span>
-<span class="linenos"> 30</span><span class="n">mass</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>                   <span class="c1">#mass</span>
-<span class="linenos"> 31</span><span class="n">damper</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>               <span class="c1">#old:0.1; damping parameter</span>
-<span class="linenos"> 32</span><span class="n">force</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>                 <span class="c1">#force amplitude</span>
-<span class="linenos"> 33</span>
-<span class="linenos"> 34</span><span class="n">d0</span> <span class="o">=</span> <span class="n">damper</span><span class="o">*</span><span class="n">spring</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="nf">sqrt</span><span class="p">(</span><span class="n">mass</span><span class="o">*</span><span class="n">spring</span><span class="p">))</span>  <span class="c1">#dimensionless damping for single mass</span>
+<span class="linenos"> 15</span><span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="o">*</span> <span class="c1">#includes itemInterface and rigidBodyUtilities</span>
+<span class="linenos"> 16</span><span class="kn">import</span> <span class="nn">exudyn.graphics</span> <span class="k">as</span> <span class="nn">graphics</span> <span class="c1">#only import if it does not conflict</span>
+<span class="linenos"> 17</span>
+<span class="linenos"> 18</span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="linenos"> 19</span><span class="kn">from</span> <span class="nn">exudyn.interactive</span> <span class="kn">import</span> <span class="nc">InteractiveDialog</span>
+<span class="linenos"> 20</span>
+<span class="linenos"> 21</span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="linenos"> 22</span><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="nf">sin</span><span class="p">,</span> <span class="nf">cos</span><span class="p">,</span> <span class="n">pi</span><span class="p">,</span> <span class="nf">sqrt</span>
+<span class="linenos"> 23</span>
+<span class="linenos"> 24</span><span class="kn">import</span> <span class="nn">time</span> <span class="c1">#for sleep()</span>
+<span class="linenos"> 25</span><span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
+<span class="linenos"> 26</span><span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
+<span class="linenos"> 27</span>
+<span class="linenos"> 28</span><span class="c1">#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos"> 29</span><span class="c1">#</span>
+<span class="linenos"> 30</span><span class="n">N</span> <span class="o">=</span> <span class="mi">12</span><span class="p">;</span>                     <span class="c1">#number of masses</span>
+<span class="linenos"> 31</span><span class="n">spring</span> <span class="o">=</span> <span class="mi">800</span><span class="p">;</span>               <span class="c1">#stiffness [800]</span>
+<span class="linenos"> 32</span><span class="n">mass</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>                   <span class="c1">#mass</span>
+<span class="linenos"> 33</span><span class="n">damper</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>               <span class="c1">#old:0.1; damping parameter</span>
+<span class="linenos"> 34</span><span class="n">force</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>                 <span class="c1">#force amplitude</span>
 <span class="linenos"> 35</span>
-<span class="linenos"> 36</span>
-<span class="linenos"> 37</span><span class="n">caseHarmonic</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="linenos"> 38</span><span class="c1">#damper=2</span>
-<span class="linenos"> 39</span><span class="c1">#mode1:force=0.52</span>
-<span class="linenos"> 40</span><span class="c1">#mode2:force=2</span>
-<span class="linenos"> 41</span><span class="c1">#mode3:force=4</span>
-<span class="linenos"> 42</span><span class="c1">#mode12: force=100, damping=0.05, period=0.005</span>
-<span class="linenos"> 43</span>
-<span class="linenos"> 44</span><span class="n">caseStep</span> <span class="o">=</span> <span class="mi">2</span>
-<span class="linenos"> 45</span><span class="c1">#damper=1</span>
-<span class="linenos"> 46</span><span class="c1">#force=20</span>
-<span class="linenos"> 47</span>
-<span class="linenos"> 48</span>
-<span class="linenos"> 49</span><span class="n">mbs</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;loadCase&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">caseHarmonic</span>
-<span class="linenos"> 50</span><span class="n">mbs</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;resetMotion&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#run</span>
-<span class="linenos"> 51</span><span class="n">mbs</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;forceAmplitude&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">force</span>
-<span class="linenos"> 52</span><span class="n">eigenMode</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="linenos"> 53</span>
-<span class="linenos"> 54</span><span class="n">h</span> <span class="o">=</span> <span class="mf">0.002</span>            <span class="c1">#step size</span>
-<span class="linenos"> 55</span><span class="n">deltaT</span> <span class="o">=</span> <span class="mf">0.01</span> <span class="c1">#time period to be simulated between every update</span>
-<span class="linenos"> 56</span>
-<span class="linenos"> 57</span>
+<span class="linenos"> 36</span><span class="n">d0</span> <span class="o">=</span> <span class="n">damper</span><span class="o">*</span><span class="n">spring</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="nf">sqrt</span><span class="p">(</span><span class="n">mass</span><span class="o">*</span><span class="n">spring</span><span class="p">))</span>  <span class="c1">#dimensionless damping for single mass</span>
+<span class="linenos"> 37</span>
+<span class="linenos"> 38</span>
+<span class="linenos"> 39</span><span class="n">caseHarmonic</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="linenos"> 40</span><span class="c1">#damper=2</span>
+<span class="linenos"> 41</span><span class="c1">#mode1:force=0.52</span>
+<span class="linenos"> 42</span><span class="c1">#mode2:force=2</span>
+<span class="linenos"> 43</span><span class="c1">#mode3:force=4</span>
+<span class="linenos"> 44</span><span class="c1">#mode12: force=100, damping=0.05, period=0.005</span>
+<span class="linenos"> 45</span>
+<span class="linenos"> 46</span><span class="n">caseStep</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="linenos"> 47</span><span class="c1">#damper=1</span>
+<span class="linenos"> 48</span><span class="c1">#force=20</span>
+<span class="linenos"> 49</span>
+<span class="linenos"> 50</span>
+<span class="linenos"> 51</span><span class="n">mbs</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;loadCase&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">caseHarmonic</span>
+<span class="linenos"> 52</span><span class="n">mbs</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;resetMotion&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#run</span>
+<span class="linenos"> 53</span><span class="n">mbs</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;forceAmplitude&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">force</span>
+<span class="linenos"> 54</span><span class="n">eigenMode</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="linenos"> 55</span>
+<span class="linenos"> 56</span><span class="n">h</span> <span class="o">=</span> <span class="mf">0.002</span>            <span class="c1">#step size</span>
+<span class="linenos"> 57</span><span class="n">deltaT</span> <span class="o">=</span> <span class="mf">0.01</span> <span class="c1">#time period to be simulated between every update</span>
 <span class="linenos"> 58</span>
-<span class="linenos"> 59</span><span class="c1"># if (mode &lt; 2) h=h*2; F=0.4*F; end</span>
-<span class="linenos"> 60</span><span class="c1"># if (mode &lt; 5) h=h*2; F=0.4*F; end</span>
-<span class="linenos"> 61</span><span class="c1"># if (mode &lt; 6) h=h*2.5; end</span>
-<span class="linenos"> 62</span><span class="c1"># if (mode == 6) F=F*2; end</span>
-<span class="linenos"> 63</span><span class="c1"># if (mode == 3) h=h*0.5; end</span>
-<span class="linenos"> 64</span>
-<span class="linenos"> 65</span><span class="c1"># if (mode &gt; 16) F=2*F; end</span>
-<span class="linenos"> 66</span><span class="c1"># if (mode &gt; 10) F=2*F; end</span>
-<span class="linenos"> 67</span><span class="c1"># if (N &lt; 11) h=h/2; l_mass = 2*l_mass; r_mass=2*r_mass; F=0.5*F; end</span>
-<span class="linenos"> 68</span><span class="c1"># if (N &lt; 6) h=h/2; l_mass = 2*l_mass; r_mass=2*r_mass; end</span>
-<span class="linenos"> 69</span>
-<span class="linenos"> 70</span><span class="c1"># om=sqrt(diag(ew))</span>
+<span class="linenos"> 59</span>
+<span class="linenos"> 60</span>
+<span class="linenos"> 61</span><span class="c1"># if (mode &lt; 2) h=h*2; F=0.4*F; end</span>
+<span class="linenos"> 62</span><span class="c1"># if (mode &lt; 5) h=h*2; F=0.4*F; end</span>
+<span class="linenos"> 63</span><span class="c1"># if (mode &lt; 6) h=h*2.5; end</span>
+<span class="linenos"> 64</span><span class="c1"># if (mode == 6) F=F*2; end</span>
+<span class="linenos"> 65</span><span class="c1"># if (mode == 3) h=h*0.5; end</span>
+<span class="linenos"> 66</span>
+<span class="linenos"> 67</span><span class="c1"># if (mode &gt; 16) F=2*F; end</span>
+<span class="linenos"> 68</span><span class="c1"># if (mode &gt; 10) F=2*F; end</span>
+<span class="linenos"> 69</span><span class="c1"># if (N &lt; 11) h=h/2; l_mass = 2*l_mass; r_mass=2*r_mass; F=0.5*F; end</span>
+<span class="linenos"> 70</span><span class="c1"># if (N &lt; 6) h=h/2; l_mass = 2*l_mass; r_mass=2*r_mass; end</span>
 <span class="linenos"> 71</span>
-<span class="linenos"> 72</span>
+<span class="linenos"> 72</span><span class="c1"># om=sqrt(diag(ew))</span>
 <span class="linenos"> 73</span>
 <span class="linenos"> 74</span>
 <span class="linenos"> 75</span>
-<span class="linenos"> 76</span><span class="c1">#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos"> 77</span><span class="c1">#create model for linear and nonlinear oscillator:</span>
-<span class="linenos"> 78</span><span class="c1"># L=0.5</span>
-<span class="linenos"> 79</span><span class="c1"># load0 = 80</span>
-<span class="linenos"> 80</span>
-<span class="linenos"> 81</span><span class="c1"># omega0=np.sqrt(spring/mass)</span>
-<span class="linenos"> 82</span><span class="c1"># f0 = 0.*omega0/(2*np.pi)</span>
-<span class="linenos"> 83</span><span class="c1"># f1 = 1.*omega0/(2*np.pi)</span>
-<span class="linenos"> 84</span>
-<span class="linenos"> 85</span><span class="c1"># tEnd = 200     #end time of simulation</span>
-<span class="linenos"> 86</span><span class="c1"># steps = 20000  #number of steps</span>
-<span class="linenos"> 87</span>
-<span class="linenos"> 88</span><span class="n">omegaInit</span> <span class="o">=</span> <span class="mf">3.55</span>
-<span class="linenos"> 89</span><span class="n">omegaMax</span> <span class="o">=</span> <span class="mi">40</span> <span class="c1">#for plots</span>
-<span class="linenos"> 90</span><span class="n">mbs</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;mode&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>           <span class="c1">#0=linear, 1=cubic nonlinear</span>
-<span class="linenos"> 91</span><span class="n">mbs</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;omega&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">omegaInit</span>  <span class="c1">#excitation frequency changed by user</span>
-<span class="linenos"> 92</span><span class="c1">#mbs.variables[&#39;omega&#39;] = omegaInit #excitation, changed in simFunction</span>
-<span class="linenos"> 93</span><span class="n">mbs</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;phi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>            <span class="c1">#excitation phase, used to get smooth excitations</span>
-<span class="linenos"> 94</span><span class="n">mbs</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;stiffness&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">spring</span>
-<span class="linenos"> 95</span><span class="n">mbs</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;damping&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">damper</span>
-<span class="linenos"> 96</span><span class="n">mbs</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;dampingPrev&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">damper</span>
-<span class="linenos"> 97</span>
-<span class="linenos"> 98</span>
-<span class="linenos"> 99</span><span class="c1"># #user function for spring force</span>
-<span class="linenos">100</span><span class="c1"># def springForce(mbs, t, itemIndex, u, v, k, d, offset, mu, muPropZone):</span>
-<span class="linenos">101</span><span class="c1">#     k=mbs.variables[&#39;stiffness&#39;]</span>
-<span class="linenos">102</span><span class="c1">#     d=mbs.variables[&#39;damping&#39;]</span>
-<span class="linenos">103</span><span class="c1">#     if mbs.variables[&#39;mode&#39;] == 0:</span>
-<span class="linenos">104</span><span class="c1">#         return k*u + v*d</span>
-<span class="linenos">105</span><span class="c1">#     else:</span>
-<span class="linenos">106</span><span class="c1">#         #return 0.1*k*u+k*u**3+v*d</span>
-<span class="linenos">107</span><span class="c1">#         return k*u+1000*k*u**3+v*d #breaks down at 13.40Hz</span>
-<span class="linenos">108</span>
-<span class="linenos">109</span><span class="c1"># mode = 0 #0...forward, 1...backward</span>
+<span class="linenos"> 76</span>
+<span class="linenos"> 77</span>
+<span class="linenos"> 78</span><span class="c1">#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos"> 79</span><span class="c1">#create model for linear and nonlinear oscillator:</span>
+<span class="linenos"> 80</span><span class="c1"># L=0.5</span>
+<span class="linenos"> 81</span><span class="c1"># load0 = 80</span>
+<span class="linenos"> 82</span>
+<span class="linenos"> 83</span><span class="c1"># omega0=np.sqrt(spring/mass)</span>
+<span class="linenos"> 84</span><span class="c1"># f0 = 0.*omega0/(2*np.pi)</span>
+<span class="linenos"> 85</span><span class="c1"># f1 = 1.*omega0/(2*np.pi)</span>
+<span class="linenos"> 86</span>
+<span class="linenos"> 87</span><span class="c1"># tEnd = 200     #end time of simulation</span>
+<span class="linenos"> 88</span><span class="c1"># steps = 20000  #number of steps</span>
+<span class="linenos"> 89</span>
+<span class="linenos"> 90</span><span class="n">omegaInit</span> <span class="o">=</span> <span class="mf">3.55</span>
+<span class="linenos"> 91</span><span class="n">omegaMax</span> <span class="o">=</span> <span class="mi">40</span> <span class="c1">#for plots</span>
+<span class="linenos"> 92</span><span class="n">mbs</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;mode&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>           <span class="c1">#0=linear, 1=cubic nonlinear</span>
+<span class="linenos"> 93</span><span class="n">mbs</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;omega&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">omegaInit</span>  <span class="c1">#excitation frequency changed by user</span>
+<span class="linenos"> 94</span><span class="c1">#mbs.variables[&#39;omega&#39;] = omegaInit #excitation, changed in simFunction</span>
+<span class="linenos"> 95</span><span class="n">mbs</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;phi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>            <span class="c1">#excitation phase, used to get smooth excitations</span>
+<span class="linenos"> 96</span><span class="n">mbs</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;stiffness&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">spring</span>
+<span class="linenos"> 97</span><span class="n">mbs</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;damping&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">damper</span>
+<span class="linenos"> 98</span><span class="n">mbs</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;dampingPrev&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">damper</span>
+<span class="linenos"> 99</span>
+<span class="linenos">100</span>
+<span class="linenos">101</span><span class="c1"># #user function for spring force</span>
+<span class="linenos">102</span><span class="c1"># def springForce(mbs, t, itemIndex, u, v, k, d, offset, mu, muPropZone):</span>
+<span class="linenos">103</span><span class="c1">#     k=mbs.variables[&#39;stiffness&#39;]</span>
+<span class="linenos">104</span><span class="c1">#     d=mbs.variables[&#39;damping&#39;]</span>
+<span class="linenos">105</span><span class="c1">#     if mbs.variables[&#39;mode&#39;] == 0:</span>
+<span class="linenos">106</span><span class="c1">#         return k*u + v*d</span>
+<span class="linenos">107</span><span class="c1">#     else:</span>
+<span class="linenos">108</span><span class="c1">#         #return 0.1*k*u+k*u**3+v*d</span>
+<span class="linenos">109</span><span class="c1">#         return k*u+1000*k*u**3+v*d #breaks down at 13.40Hz</span>
 <span class="linenos">110</span>
-<span class="linenos">111</span><span class="c1">#user function for load</span>
-<span class="linenos">112</span><span class="k">def</span> <span class="nf">userLoad</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">load</span><span class="p">):</span>
-<span class="linenos">113</span>    <span class="n">f</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;forceAmplitude&#39;</span><span class="p">]</span>
-<span class="linenos">114</span>    <span class="n">fact</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="linenos">115</span>    <span class="k">if</span> <span class="n">mbs</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;loadCase&#39;</span><span class="p">]</span><span class="o">==</span><span class="n">caseHarmonic</span><span class="p">:</span>
-<span class="linenos">116</span>        <span class="n">fact</span> <span class="o">=</span> <span class="nf">sin</span><span class="p">(</span><span class="n">mbs</span><span class="o">.</span><span class="nf">GetSensorValues</span><span class="p">(</span><span class="n">mbs</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;sensorPhi&#39;</span><span class="p">]))</span>
-<span class="linenos">117</span>    <span class="k">return</span> <span class="n">f</span><span class="o">*</span><span class="n">fact</span>
-<span class="linenos">118</span>
-<span class="linenos">119</span><span class="k">def</span> <span class="nf">userLoad3D</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span><span class="n">t</span><span class="p">,</span> <span class="n">load</span><span class="p">):</span>
-<span class="linenos">120</span>    <span class="n">f</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;forceAmplitude&#39;</span><span class="p">]</span>
-<span class="linenos">121</span>    <span class="n">fact</span> <span class="o">=</span> <span class="mi">10</span>
-<span class="linenos">122</span>    <span class="c1"># if mbs.variables[&#39;loadCase&#39;]==caseHarmonic:</span>
-<span class="linenos">123</span>    <span class="c1">#     fact = sin(mbs.GetSensorValues(mbs.variables[&#39;sensorPhi&#39;]))</span>
-<span class="linenos">124</span>    <span class="c1"># mbs.SetLoadParameter(0,&#39;loadVector&#39;,[fact,0,0])</span>
-<span class="linenos">125</span>    <span class="k">return</span> <span class="p">[</span><span class="n">f</span><span class="o">*</span><span class="n">fact</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
-<span class="linenos">126</span>
-<span class="linenos">127</span><span class="c1">#dummy user function for frequency</span>
-<span class="linenos">128</span><span class="k">def</span> <span class="nf">userFrequency</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">load</span><span class="p">):</span>
-<span class="linenos">129</span>    <span class="k">return</span> <span class="n">mbs</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;omega&#39;</span><span class="p">]</span>
-<span class="linenos">130</span>
-<span class="linenos">131</span><span class="c1">#user function used in GenericODE2 to integrate current omega</span>
-<span class="linenos">132</span><span class="k">def</span> <span class="nf">UFintegrateOmega</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">itemIndex</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">q_t</span><span class="p">):</span>
-<span class="linenos">133</span>    <span class="k">return</span> <span class="p">[</span><span class="n">mbs</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;omega&#39;</span><span class="p">]]</span> <span class="c1">#current frequency*2*pi is integrated into phi, return vector!</span>
-<span class="linenos">134</span>
-<span class="linenos">135</span><span class="c1">#ground node</span>
-<span class="linenos">136</span><span class="n">nGround</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">NodePointGround</span><span class="p">(</span><span class="n">referenceCoordinates</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
-<span class="linenos">137</span>
-<span class="linenos">138</span><span class="c1">#drawing parameters:</span>
-<span class="linenos">139</span><span class="n">l_mass</span> <span class="o">=</span> <span class="mf">0.2</span>          <span class="c1">#spring length</span>
-<span class="linenos">140</span><span class="n">r_mass</span> <span class="o">=</span> <span class="mf">0.030</span><span class="o">*</span><span class="mi">2</span>       <span class="c1">#radius of mass</span>
-<span class="linenos">141</span><span class="n">r_spring</span> <span class="o">=</span> <span class="n">r_mass</span><span class="o">*</span><span class="mf">1.2</span>
-<span class="linenos">142</span><span class="n">L0</span> <span class="o">=</span> <span class="n">l_mass</span><span class="o">*</span><span class="mi">1</span>
-<span class="linenos">143</span><span class="n">L</span> <span class="o">=</span> <span class="n">N</span> <span class="o">*</span> <span class="n">l_mass</span> <span class="o">+</span> <span class="mi">4</span><span class="o">*</span><span class="n">l_mass</span>
-<span class="linenos">144</span><span class="n">z</span><span class="o">=-</span><span class="n">r_mass</span><span class="o">-</span><span class="mf">0.1</span>
-<span class="linenos">145</span><span class="n">hy</span><span class="o">=</span><span class="mf">0.25</span><span class="o">*</span><span class="n">L</span>
-<span class="linenos">146</span><span class="n">hy1</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">hy</span> <span class="o">-</span> <span class="mi">4</span><span class="o">*</span><span class="n">r_mass</span>
-<span class="linenos">147</span><span class="n">hy0</span><span class="o">=-</span><span class="mi">4</span><span class="o">*</span><span class="n">r_mass</span>
-<span class="linenos">148</span><span class="n">maxAmp0</span> <span class="o">=</span> <span class="mf">0.1</span>
-<span class="linenos">149</span><span class="n">maxAmpN</span> <span class="o">=</span> <span class="mf">0.1</span><span class="o">*</span><span class="n">N</span>
-<span class="linenos">150</span>
-<span class="linenos">151</span><span class="n">background</span> <span class="o">=</span> <span class="p">[</span><span class="nf">GraphicsDataQuad</span><span class="p">([[</span><span class="o">-</span><span class="n">L0</span><span class="p">,</span><span class="n">hy0</span><span class="p">,</span><span class="n">z</span><span class="p">],[</span> <span class="n">L</span><span class="p">,</span><span class="n">hy0</span><span class="p">,</span><span class="n">z</span><span class="p">],[</span> <span class="n">L</span><span class="p">,</span><span class="n">hy1</span><span class="p">,</span><span class="n">z</span><span class="p">],[</span><span class="o">-</span><span class="n">L0</span><span class="p">,</span><span class="n">hy1</span><span class="p">,</span><span class="n">z</span><span class="p">]],</span>
-<span class="linenos">152</span>                              <span class="n">color</span><span class="o">=</span><span class="n">color4lightgrey</span><span class="p">)]</span>
-<span class="linenos">153</span><span class="n">offCircleY</span> <span class="o">=</span> <span class="mi">1</span><span class="o">*</span><span class="n">hy</span>
-<span class="linenos">154</span><span class="c1"># for i in range(N):</span>
-<span class="linenos">155</span><span class="c1">#     t=r_mass*0.5</span>
-<span class="linenos">156</span><span class="c1">#     ox = l_mass*(i+1)</span>
-<span class="linenos">157</span><span class="c1">#     oy = offCircleY</span>
-<span class="linenos">158</span><span class="c1">#     line0 = {&#39;type&#39;:&#39;Line&#39;, &#39;data&#39;:[ox-t,oy+0,0, ox+t,oy+0,0], &#39;color&#39;:color4grey}</span>
-<span class="linenos">159</span><span class="c1">#     line1 = {&#39;type&#39;:&#39;Line&#39;, &#39;data&#39;:[ox+0,oy-t,0, ox+0,oy+t,0], &#39;color&#39;:color4grey}</span>
-<span class="linenos">160</span><span class="c1">#     background += [line0, line1]</span>
-<span class="linenos">161</span>
-<span class="linenos">162</span><span class="n">oGround</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectGround</span><span class="p">(</span><span class="n">visualization</span><span class="o">=</span><span class="nc">VObjectGround</span><span class="p">(</span><span class="n">graphicsData</span><span class="o">=</span><span class="n">background</span><span class="p">)))</span>
-<span class="linenos">163</span><span class="c1">#marker for ground (=fixed):</span>
-<span class="linenos">164</span><span class="n">groundMarker</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerNodeCoordinate</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span> <span class="n">nGround</span><span class="p">,</span> <span class="n">coordinate</span> <span class="o">=</span> <span class="mi">0</span><span class="p">))</span>
-<span class="linenos">165</span><span class="n">prevMarker</span> <span class="o">=</span> <span class="n">groundMarker</span>
-<span class="linenos">166</span><span class="n">nMass</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="linenos">167</span><span class="n">mbs</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;springDamperList&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="linenos">168</span>
-<span class="linenos">169</span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
-<span class="linenos">170</span>    <span class="c1">#node for 3D mass point:</span>
-<span class="linenos">171</span>    <span class="n">col</span> <span class="o">=</span> <span class="n">color4steelblue</span>
-<span class="linenos">172</span>    <span class="k">if</span> <span class="n">i</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
-<span class="linenos">173</span>        <span class="n">col</span> <span class="o">=</span> <span class="n">color4green</span>
-<span class="linenos">174</span>    <span class="k">elif</span> <span class="n">i</span><span class="o">==</span><span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span>
-<span class="linenos">175</span>        <span class="n">col</span> <span class="o">=</span> <span class="n">color4lightred</span>
-<span class="linenos">176</span>
-<span class="linenos">177</span>    <span class="n">gSphere</span> <span class="o">=</span> <span class="nf">GraphicsDataSphere</span><span class="p">(</span><span class="n">point</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">radius</span><span class="o">=</span><span class="n">r_mass</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">col</span><span class="p">,</span> <span class="n">nTiles</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
-<span class="linenos">178</span>    <span class="n">node</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">Node1D</span><span class="p">(</span><span class="n">referenceCoordinates</span> <span class="o">=</span> <span class="p">[</span><span class="n">l_mass</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">nMass</span><span class="p">))],</span>
-<span class="linenos">179</span>                              <span class="n">initialCoordinates</span><span class="o">=</span><span class="p">[</span><span class="mf">0.</span><span class="p">],</span>
-<span class="linenos">180</span>                              <span class="n">initialVelocities</span><span class="o">=</span><span class="p">[</span><span class="mf">0.</span><span class="p">]))</span>
-<span class="linenos">181</span>    <span class="n">massPoint</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">Mass1D</span><span class="p">(</span><span class="n">nodeNumber</span> <span class="o">=</span> <span class="n">node</span><span class="p">,</span> <span class="n">physicsMass</span><span class="o">=</span><span class="n">mass</span><span class="p">,</span>
-<span class="linenos">182</span>                                     <span class="n">referencePosition</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-<span class="linenos">183</span>                                     <span class="n">visualization</span><span class="o">=</span><span class="nc">VMass1D</span><span class="p">(</span><span class="n">graphicsData</span><span class="o">=</span><span class="p">[</span><span class="n">gSphere</span><span class="p">])))</span>
-<span class="linenos">184</span>
-<span class="linenos">185</span>    <span class="c1"># gCircle = {&#39;type&#39;:&#39;Circle&#39;,&#39;position&#39;:[0,0,0],&#39;radius&#39;:0.5*r_mass, &#39;color&#39;:col}</span>
-<span class="linenos">186</span>    <span class="c1"># massPoint2 = mbs.AddObject(Mass1D(nodeNumber = node, physicsMass=0,</span>
-<span class="linenos">187</span>    <span class="c1">#                                  referencePosition=[l_mass*(len(nMass)+1),offCircleY-l_mass*(len(nMass)+1),0],</span>
-<span class="linenos">188</span>    <span class="c1">#                                  referenceRotation=[[0,1,0],[1,0,0],[0,0,1]],</span>
-<span class="linenos">189</span>    <span class="c1">#                                  visualization=VMass1D(graphicsData=[gCircle])))</span>
-<span class="linenos">190</span>
-<span class="linenos">191</span>
-<span class="linenos">192</span>    <span class="c1"># node = mbs.AddNode(Point(referenceCoordinates = [l_mass*(1+len(nMass)),0,0]))</span>
+<span class="linenos">111</span><span class="c1"># mode = 0 #0...forward, 1...backward</span>
+<span class="linenos">112</span>
+<span class="linenos">113</span><span class="c1">#user function for load</span>
+<span class="linenos">114</span><span class="k">def</span> <span class="nf">userLoad</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">load</span><span class="p">):</span>
+<span class="linenos">115</span>    <span class="n">f</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;forceAmplitude&#39;</span><span class="p">]</span>
+<span class="linenos">116</span>    <span class="n">fact</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="linenos">117</span>    <span class="k">if</span> <span class="n">mbs</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;loadCase&#39;</span><span class="p">]</span><span class="o">==</span><span class="n">caseHarmonic</span><span class="p">:</span>
+<span class="linenos">118</span>        <span class="n">fact</span> <span class="o">=</span> <span class="nf">sin</span><span class="p">(</span><span class="n">mbs</span><span class="o">.</span><span class="nf">GetSensorValues</span><span class="p">(</span><span class="n">mbs</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;sensorPhi&#39;</span><span class="p">]))</span>
+<span class="linenos">119</span>    <span class="k">return</span> <span class="n">f</span><span class="o">*</span><span class="n">fact</span>
+<span class="linenos">120</span>
+<span class="linenos">121</span><span class="k">def</span> <span class="nf">userLoad3D</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span><span class="n">t</span><span class="p">,</span> <span class="n">load</span><span class="p">):</span>
+<span class="linenos">122</span>    <span class="n">f</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;forceAmplitude&#39;</span><span class="p">]</span>
+<span class="linenos">123</span>    <span class="n">fact</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="linenos">124</span>    <span class="c1"># if mbs.variables[&#39;loadCase&#39;]==caseHarmonic:</span>
+<span class="linenos">125</span>    <span class="c1">#     fact = sin(mbs.GetSensorValues(mbs.variables[&#39;sensorPhi&#39;]))</span>
+<span class="linenos">126</span>    <span class="c1"># mbs.SetLoadParameter(0,&#39;loadVector&#39;,[fact,0,0])</span>
+<span class="linenos">127</span>    <span class="k">return</span> <span class="p">[</span><span class="n">f</span><span class="o">*</span><span class="n">fact</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos">128</span>
+<span class="linenos">129</span><span class="c1">#dummy user function for frequency</span>
+<span class="linenos">130</span><span class="k">def</span> <span class="nf">userFrequency</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">load</span><span class="p">):</span>
+<span class="linenos">131</span>    <span class="k">return</span> <span class="n">mbs</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;omega&#39;</span><span class="p">]</span>
+<span class="linenos">132</span>
+<span class="linenos">133</span><span class="c1">#user function used in GenericODE2 to integrate current omega</span>
+<span class="linenos">134</span><span class="k">def</span> <span class="nf">UFintegrateOmega</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">itemIndex</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">q_t</span><span class="p">):</span>
+<span class="linenos">135</span>    <span class="k">return</span> <span class="p">[</span><span class="n">mbs</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;omega&#39;</span><span class="p">]]</span> <span class="c1">#current frequency*2*pi is integrated into phi, return vector!</span>
+<span class="linenos">136</span>
+<span class="linenos">137</span><span class="c1">#ground node</span>
+<span class="linenos">138</span><span class="n">nGround</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">NodePointGround</span><span class="p">(</span><span class="n">referenceCoordinates</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+<span class="linenos">139</span>
+<span class="linenos">140</span><span class="c1">#drawing parameters:</span>
+<span class="linenos">141</span><span class="n">l_mass</span> <span class="o">=</span> <span class="mf">0.2</span>          <span class="c1">#spring length</span>
+<span class="linenos">142</span><span class="n">r_mass</span> <span class="o">=</span> <span class="mf">0.030</span><span class="o">*</span><span class="mi">2</span>       <span class="c1">#radius of mass</span>
+<span class="linenos">143</span><span class="n">r_spring</span> <span class="o">=</span> <span class="n">r_mass</span><span class="o">*</span><span class="mf">1.2</span>
+<span class="linenos">144</span><span class="n">L0</span> <span class="o">=</span> <span class="n">l_mass</span><span class="o">*</span><span class="mi">1</span>
+<span class="linenos">145</span><span class="n">L</span> <span class="o">=</span> <span class="n">N</span> <span class="o">*</span> <span class="n">l_mass</span> <span class="o">+</span> <span class="mi">4</span><span class="o">*</span><span class="n">l_mass</span>
+<span class="linenos">146</span><span class="n">z</span><span class="o">=-</span><span class="n">r_mass</span><span class="o">-</span><span class="mf">0.1</span>
+<span class="linenos">147</span><span class="n">hy</span><span class="o">=</span><span class="mf">0.25</span><span class="o">*</span><span class="n">L</span>
+<span class="linenos">148</span><span class="n">hy1</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">hy</span> <span class="o">-</span> <span class="mi">4</span><span class="o">*</span><span class="n">r_mass</span>
+<span class="linenos">149</span><span class="n">hy0</span><span class="o">=-</span><span class="mi">4</span><span class="o">*</span><span class="n">r_mass</span>
+<span class="linenos">150</span><span class="n">maxAmp0</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="linenos">151</span><span class="n">maxAmpN</span> <span class="o">=</span> <span class="mf">0.1</span><span class="o">*</span><span class="n">N</span>
+<span class="linenos">152</span>
+<span class="linenos">153</span><span class="n">background</span> <span class="o">=</span> <span class="p">[</span><span class="n">graphics</span><span class="o">.</span><span class="nf">Quad</span><span class="p">([[</span><span class="o">-</span><span class="n">L0</span><span class="p">,</span><span class="n">hy0</span><span class="p">,</span><span class="n">z</span><span class="p">],[</span> <span class="n">L</span><span class="p">,</span><span class="n">hy0</span><span class="p">,</span><span class="n">z</span><span class="p">],[</span> <span class="n">L</span><span class="p">,</span><span class="n">hy1</span><span class="p">,</span><span class="n">z</span><span class="p">],[</span><span class="o">-</span><span class="n">L0</span><span class="p">,</span><span class="n">hy1</span><span class="p">,</span><span class="n">z</span><span class="p">]],</span>
+<span class="linenos">154</span>                              <span class="n">color</span><span class="o">=</span><span class="n">graphics</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">lightgrey</span><span class="p">)]</span>
+<span class="linenos">155</span><span class="n">offCircleY</span> <span class="o">=</span> <span class="mi">1</span><span class="o">*</span><span class="n">hy</span>
+<span class="linenos">156</span><span class="c1"># for i in range(N):</span>
+<span class="linenos">157</span><span class="c1">#     t=r_mass*0.5</span>
+<span class="linenos">158</span><span class="c1">#     ox = l_mass*(i+1)</span>
+<span class="linenos">159</span><span class="c1">#     oy = offCircleY</span>
+<span class="linenos">160</span><span class="c1">#     line0 = {&#39;type&#39;:&#39;Line&#39;, &#39;data&#39;:[ox-t,oy+0,0, ox+t,oy+0,0], &#39;color&#39;:graphics.color.grey}</span>
+<span class="linenos">161</span><span class="c1">#     line1 = {&#39;type&#39;:&#39;Line&#39;, &#39;data&#39;:[ox+0,oy-t,0, ox+0,oy+t,0], &#39;color&#39;:graphics.color.grey}</span>
+<span class="linenos">162</span><span class="c1">#     background += [line0, line1]</span>
+<span class="linenos">163</span>
+<span class="linenos">164</span><span class="n">oGround</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectGround</span><span class="p">(</span><span class="n">visualization</span><span class="o">=</span><span class="nc">VObjectGround</span><span class="p">(</span><span class="n">graphicsData</span><span class="o">=</span><span class="n">background</span><span class="p">)))</span>
+<span class="linenos">165</span><span class="c1">#marker for ground (=fixed):</span>
+<span class="linenos">166</span><span class="n">groundMarker</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerNodeCoordinate</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span> <span class="n">nGround</span><span class="p">,</span> <span class="n">coordinate</span> <span class="o">=</span> <span class="mi">0</span><span class="p">))</span>
+<span class="linenos">167</span><span class="n">prevMarker</span> <span class="o">=</span> <span class="n">groundMarker</span>
+<span class="linenos">168</span><span class="n">nMass</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos">169</span><span class="n">mbs</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;springDamperList&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos">170</span>
+<span class="linenos">171</span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+<span class="linenos">172</span>    <span class="c1">#node for 3D mass point:</span>
+<span class="linenos">173</span>    <span class="n">col</span> <span class="o">=</span> <span class="n">graphics</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">steelblue</span>
+<span class="linenos">174</span>    <span class="k">if</span> <span class="n">i</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+<span class="linenos">175</span>        <span class="n">col</span> <span class="o">=</span> <span class="n">graphics</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">green</span>
+<span class="linenos">176</span>    <span class="k">elif</span> <span class="n">i</span><span class="o">==</span><span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+<span class="linenos">177</span>        <span class="n">col</span> <span class="o">=</span> <span class="n">graphics</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">lightred</span>
+<span class="linenos">178</span>
+<span class="linenos">179</span>    <span class="n">gSphere</span> <span class="o">=</span> <span class="n">graphics</span><span class="o">.</span><span class="nf">Sphere</span><span class="p">(</span><span class="n">point</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">radius</span><span class="o">=</span><span class="n">r_mass</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">col</span><span class="p">,</span> <span class="n">nTiles</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="linenos">180</span>    <span class="n">node</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">Node1D</span><span class="p">(</span><span class="n">referenceCoordinates</span> <span class="o">=</span> <span class="p">[</span><span class="n">l_mass</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">nMass</span><span class="p">))],</span>
+<span class="linenos">181</span>                              <span class="n">initialCoordinates</span><span class="o">=</span><span class="p">[</span><span class="mf">0.</span><span class="p">],</span>
+<span class="linenos">182</span>                              <span class="n">initialVelocities</span><span class="o">=</span><span class="p">[</span><span class="mf">0.</span><span class="p">]))</span>
+<span class="linenos">183</span>    <span class="n">massPoint</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">Mass1D</span><span class="p">(</span><span class="n">nodeNumber</span> <span class="o">=</span> <span class="n">node</span><span class="p">,</span> <span class="n">physicsMass</span><span class="o">=</span><span class="n">mass</span><span class="p">,</span>
+<span class="linenos">184</span>                                     <span class="n">referencePosition</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos">185</span>                                     <span class="n">visualization</span><span class="o">=</span><span class="nc">VMass1D</span><span class="p">(</span><span class="n">graphicsData</span><span class="o">=</span><span class="p">[</span><span class="n">gSphere</span><span class="p">])))</span>
+<span class="linenos">186</span>
+<span class="linenos">187</span>    <span class="c1"># gCircle = {&#39;type&#39;:&#39;Circle&#39;,&#39;position&#39;:[0,0,0],&#39;radius&#39;:0.5*r_mass, &#39;color&#39;:col}</span>
+<span class="linenos">188</span>    <span class="c1"># massPoint2 = mbs.AddObject(Mass1D(nodeNumber = node, physicsMass=0,</span>
+<span class="linenos">189</span>    <span class="c1">#                                  referencePosition=[l_mass*(len(nMass)+1),offCircleY-l_mass*(len(nMass)+1),0],</span>
+<span class="linenos">190</span>    <span class="c1">#                                  referenceRotation=[[0,1,0],[1,0,0],[0,0,1]],</span>
+<span class="linenos">191</span>    <span class="c1">#                                  visualization=VMass1D(graphicsData=[gCircle])))</span>
+<span class="linenos">192</span>
 <span class="linenos">193</span>
-<span class="linenos">194</span>    <span class="c1"># massPoint = mbs.AddObject(MassPoint(physicsMass = mass, nodeNumber = node,</span>
-<span class="linenos">195</span>    <span class="c1">#                                     visualization=VMassPoint(graphicsData=[gSphere])))</span>
-<span class="linenos">196</span>
-<span class="linenos">197</span>    <span class="n">nMass</span> <span class="o">+=</span> <span class="p">[</span><span class="n">node</span><span class="p">]</span>
-<span class="linenos">198</span>    <span class="c1">#marker for springDamper for first (x-)coordinate:</span>
-<span class="linenos">199</span>    <span class="n">nodeMarker</span> <span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerNodeCoordinate</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span> <span class="n">node</span><span class="p">,</span> <span class="n">coordinate</span> <span class="o">=</span> <span class="mi">0</span><span class="p">))</span>
-<span class="linenos">200</span>
-<span class="linenos">201</span>    <span class="c1">#Spring-Damper between two marker coordinates</span>
-<span class="linenos">202</span>    <span class="n">sd</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">CoordinateSpringDamper</span><span class="p">(</span><span class="n">markerNumbers</span> <span class="o">=</span> <span class="p">[</span><span class="n">prevMarker</span><span class="p">,</span> <span class="n">nodeMarker</span><span class="p">],</span>
-<span class="linenos">203</span>                                          <span class="n">stiffness</span> <span class="o">=</span> <span class="n">spring</span><span class="p">,</span> <span class="n">damping</span> <span class="o">=</span> <span class="n">damper</span><span class="p">,</span>
-<span class="linenos">204</span>                                          <span class="c1">#springForceUserFunction = springForce,</span>
-<span class="linenos">205</span>                                          <span class="n">visualization</span><span class="o">=</span><span class="nc">VCoordinateSpringDamper</span><span class="p">(</span><span class="n">drawSize</span><span class="o">=</span><span class="n">r_spring</span><span class="p">)))</span>
-<span class="linenos">206</span>    <span class="n">mbs</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;springDamperList&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="p">[</span><span class="n">sd</span><span class="p">]</span>
-<span class="linenos">207</span>    <span class="n">prevMarker</span> <span class="o">=</span> <span class="n">nodeMarker</span>
-<span class="linenos">208</span>
-<span class="linenos">209</span><span class="c1">#add load to last mass:</span>
-<span class="linenos">210</span><span class="k">if</span> <span class="kc">False</span><span class="p">:</span> <span class="c1">#scalar load</span>
-<span class="linenos">211</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">AddLoad</span><span class="p">(</span><span class="nc">LoadCoordinate</span><span class="p">(</span><span class="n">markerNumber</span> <span class="o">=</span> <span class="n">nodeMarker</span><span class="p">,</span>
-<span class="linenos">212</span>                               <span class="n">load</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">loadUserFunction</span><span class="o">=</span><span class="n">userLoad</span><span class="p">))</span> <span class="c1">#load set in user function</span>
-<span class="linenos">213</span><span class="k">else</span><span class="p">:</span>
-<span class="linenos">214</span>    <span class="n">mMassN</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerBodyPosition</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span> <span class="n">massPoint</span><span class="p">,</span> <span class="n">localPosition</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
-<span class="linenos">215</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">AddLoad</span><span class="p">(</span><span class="nc">Force</span><span class="p">(</span><span class="n">markerNumber</span><span class="o">=</span><span class="n">mMassN</span><span class="p">,</span> <span class="n">loadVector</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-<span class="linenos">216</span>                      <span class="n">loadVectorUserFunction</span><span class="o">=</span><span class="n">userLoad3D</span><span class="p">))</span>
-<span class="linenos">217</span>
-<span class="linenos">218</span><span class="c1"># #dummy load applied to ground marker, just to record/integrate frequency</span>
-<span class="linenos">219</span><span class="n">lFreq</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddLoad</span><span class="p">(</span><span class="nc">LoadCoordinate</span><span class="p">(</span><span class="n">markerNumber</span> <span class="o">=</span> <span class="n">groundMarker</span><span class="p">,</span>
-<span class="linenos">220</span>                                   <span class="n">load</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">loadUserFunction</span><span class="o">=</span><span class="n">userFrequency</span><span class="p">))</span>
-<span class="linenos">221</span>
-<span class="linenos">222</span><span class="n">sensPos0</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorNode</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">nMass</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">fileName</span><span class="o">=</span><span class="s1">&#39;solution/nMassPos0.txt&#39;</span><span class="p">,</span>
-<span class="linenos">223</span>                                    <span class="n">outputVariableType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Coordinates</span><span class="p">))</span>
-<span class="linenos">224</span><span class="n">sensPosN</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorNode</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">nMass</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">fileName</span><span class="o">=</span><span class="s1">&#39;solution/nMassPosN.txt&#39;</span><span class="p">,</span>
+<span class="linenos">194</span>    <span class="c1"># node = mbs.AddNode(Point(referenceCoordinates = [l_mass*(1+len(nMass)),0,0]))</span>
+<span class="linenos">195</span>
+<span class="linenos">196</span>    <span class="c1"># massPoint = mbs.AddObject(MassPoint(physicsMass = mass, nodeNumber = node,</span>
+<span class="linenos">197</span>    <span class="c1">#                                     visualization=VMassPoint(graphicsData=[gSphere])))</span>
+<span class="linenos">198</span>
+<span class="linenos">199</span>    <span class="n">nMass</span> <span class="o">+=</span> <span class="p">[</span><span class="n">node</span><span class="p">]</span>
+<span class="linenos">200</span>    <span class="c1">#marker for springDamper for first (x-)coordinate:</span>
+<span class="linenos">201</span>    <span class="n">nodeMarker</span> <span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerNodeCoordinate</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span> <span class="n">node</span><span class="p">,</span> <span class="n">coordinate</span> <span class="o">=</span> <span class="mi">0</span><span class="p">))</span>
+<span class="linenos">202</span>
+<span class="linenos">203</span>    <span class="c1">#Spring-Damper between two marker coordinates</span>
+<span class="linenos">204</span>    <span class="n">sd</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">CoordinateSpringDamper</span><span class="p">(</span><span class="n">markerNumbers</span> <span class="o">=</span> <span class="p">[</span><span class="n">prevMarker</span><span class="p">,</span> <span class="n">nodeMarker</span><span class="p">],</span>
+<span class="linenos">205</span>                                          <span class="n">stiffness</span> <span class="o">=</span> <span class="n">spring</span><span class="p">,</span> <span class="n">damping</span> <span class="o">=</span> <span class="n">damper</span><span class="p">,</span>
+<span class="linenos">206</span>                                          <span class="c1">#springForceUserFunction = springForce,</span>
+<span class="linenos">207</span>                                          <span class="n">visualization</span><span class="o">=</span><span class="nc">VCoordinateSpringDamper</span><span class="p">(</span><span class="n">drawSize</span><span class="o">=</span><span class="n">r_spring</span><span class="p">)))</span>
+<span class="linenos">208</span>    <span class="n">mbs</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;springDamperList&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="p">[</span><span class="n">sd</span><span class="p">]</span>
+<span class="linenos">209</span>    <span class="n">prevMarker</span> <span class="o">=</span> <span class="n">nodeMarker</span>
+<span class="linenos">210</span>
+<span class="linenos">211</span><span class="c1">#add load to last mass:</span>
+<span class="linenos">212</span><span class="k">if</span> <span class="kc">False</span><span class="p">:</span> <span class="c1">#scalar load</span>
+<span class="linenos">213</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">AddLoad</span><span class="p">(</span><span class="nc">LoadCoordinate</span><span class="p">(</span><span class="n">markerNumber</span> <span class="o">=</span> <span class="n">nodeMarker</span><span class="p">,</span>
+<span class="linenos">214</span>                               <span class="n">load</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">loadUserFunction</span><span class="o">=</span><span class="n">userLoad</span><span class="p">))</span> <span class="c1">#load set in user function</span>
+<span class="linenos">215</span><span class="k">else</span><span class="p">:</span>
+<span class="linenos">216</span>    <span class="n">mMassN</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerBodyPosition</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span> <span class="n">massPoint</span><span class="p">,</span> <span class="n">localPosition</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+<span class="linenos">217</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">AddLoad</span><span class="p">(</span><span class="nc">Force</span><span class="p">(</span><span class="n">markerNumber</span><span class="o">=</span><span class="n">mMassN</span><span class="p">,</span> <span class="n">loadVector</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos">218</span>                      <span class="n">loadVectorUserFunction</span><span class="o">=</span><span class="n">userLoad3D</span><span class="p">))</span>
+<span class="linenos">219</span>
+<span class="linenos">220</span><span class="c1"># #dummy load applied to ground marker, just to record/integrate frequency</span>
+<span class="linenos">221</span><span class="n">lFreq</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddLoad</span><span class="p">(</span><span class="nc">LoadCoordinate</span><span class="p">(</span><span class="n">markerNumber</span> <span class="o">=</span> <span class="n">groundMarker</span><span class="p">,</span>
+<span class="linenos">222</span>                                   <span class="n">load</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">loadUserFunction</span><span class="o">=</span><span class="n">userFrequency</span><span class="p">))</span>
+<span class="linenos">223</span>
+<span class="linenos">224</span><span class="n">sensPos0</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorNode</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">nMass</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">fileName</span><span class="o">=</span><span class="s1">&#39;solution/nMassPos0.txt&#39;</span><span class="p">,</span>
 <span class="linenos">225</span>                                    <span class="n">outputVariableType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Coordinates</span><span class="p">))</span>
-<span class="linenos">226</span><span class="n">sensFreq</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorLoad</span><span class="p">(</span><span class="n">loadNumber</span><span class="o">=</span><span class="n">lFreq</span><span class="p">,</span> <span class="n">fileName</span><span class="o">=</span><span class="s1">&#39;solution/nMassFreq.txt&#39;</span><span class="p">,</span>
-<span class="linenos">227</span>                                    <span class="n">visualization</span><span class="o">=</span><span class="nc">VSensorLoad</span><span class="p">(</span><span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">)))</span>
-<span class="linenos">228</span>
-<span class="linenos">229</span><span class="c1">#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos">230</span><span class="c1">#compute eigenvalues</span>
-<span class="linenos">231</span><span class="kn">from</span> <span class="nn">exudyn.solver</span> <span class="kn">import</span> <span class="nf">ComputeODE2Eigenvalues</span>
-<span class="linenos">232</span><span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
-<span class="linenos">233</span><span class="p">[</span><span class="n">values</span><span class="p">,</span> <span class="n">vectors</span><span class="p">]</span> <span class="o">=</span> <span class="nf">ComputeODE2Eigenvalues</span><span class="p">(</span><span class="n">mbs</span><span class="p">)</span>
-<span class="linenos">234</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;omegas (rad/s)=&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="nf">sqrt</span><span class="p">(</span><span class="n">values</span><span class="p">))</span>
-<span class="linenos">235</span>
-<span class="linenos">236</span><span class="c1">#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos">237</span><span class="c1">#integrate omega: node used to integrate omega into phi for excitation function</span>
-<span class="linenos">238</span><span class="n">nODE2</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">NodeGenericODE2</span><span class="p">(</span><span class="n">referenceCoordinates</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">initialCoordinates</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">initialCoordinates_t</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-<span class="linenos">239</span>                                  <span class="n">numberOfODE2Coordinates</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
-<span class="linenos">240</span>
-<span class="linenos">241</span><span class="n">oODE2</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectGenericODE2</span><span class="p">(</span><span class="n">nodeNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">nODE2</span><span class="p">],</span><span class="n">massMatrix</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
-<span class="linenos">242</span>                                      <span class="n">forceUserFunction</span><span class="o">=</span><span class="n">UFintegrateOmega</span><span class="p">,</span>
-<span class="linenos">243</span>                                      <span class="n">visualization</span><span class="o">=</span><span class="nc">VObjectGenericODE2</span><span class="p">(</span><span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">)))</span>
-<span class="linenos">244</span><span class="c1">#improved version, using integration of omega:</span>
-<span class="linenos">245</span><span class="n">mbs</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;sensorPhi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorNode</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">nODE2</span><span class="p">,</span> <span class="n">fileName</span><span class="o">=</span><span class="s1">&#39;solution/nonlinearPhi.txt&#39;</span><span class="p">,</span>
-<span class="linenos">246</span>                                    <span class="n">outputVariableType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Coordinates_t</span><span class="p">,</span>
-<span class="linenos">247</span>                                    <span class="n">visualization</span><span class="o">=</span><span class="nc">VSensorNode</span><span class="p">(</span><span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">)))</span>
-<span class="linenos">248</span><span class="c1">#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos">249</span><span class="c1">#finalize model and settings</span>
-<span class="linenos">250</span><span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
-<span class="linenos">251</span>
-<span class="linenos">252</span>
-<span class="linenos">253</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">textSize</span> <span class="o">=</span> <span class="mi">12</span>
-<span class="linenos">254</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">lineWidth</span> <span class="o">=</span> <span class="mi">2</span>
-<span class="linenos">255</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">multiSampling</span> <span class="o">=</span> <span class="mi">4</span>
-<span class="linenos">256</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">graphicsUpdateInterval</span> <span class="o">=</span> <span class="mf">0.005</span>
-<span class="linenos">257</span><span class="c1">#SC.visualizationSettings.window.renderWindowSize=[1024,900]</span>
-<span class="linenos">258</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">renderWindowSize</span><span class="o">=</span><span class="p">[</span><span class="mi">1600</span><span class="p">,</span><span class="mi">1000</span><span class="p">]</span>
-<span class="linenos">259</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">showSolverInformation</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="linenos">260</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">drawCoordinateSystem</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="linenos">261</span>
-<span class="linenos">262</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">loads</span><span class="o">.</span><span class="n">fixedLoadSize</span><span class="o">=</span><span class="mi">0</span>
-<span class="linenos">263</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">loads</span><span class="o">.</span><span class="n">loadSizeFactor</span><span class="o">=</span><span class="mf">0.5</span>
-<span class="linenos">264</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">loads</span><span class="o">.</span><span class="n">drawSimplified</span><span class="o">=</span><span class="kc">False</span>
-<span class="linenos">265</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">loads</span><span class="o">.</span><span class="n">defaultSize</span><span class="o">=</span><span class="mi">1</span>
-<span class="linenos">266</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">loads</span><span class="o">.</span><span class="n">defaultRadius</span><span class="o">=</span><span class="mf">0.01</span>
-<span class="linenos">267</span>
-<span class="linenos">268</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">autoFitScene</span> <span class="o">=</span> <span class="kc">True</span> <span class="c1">#otherwise, renderState not accepted for zoom</span>
+<span class="linenos">226</span><span class="n">sensPosN</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorNode</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">nMass</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">fileName</span><span class="o">=</span><span class="s1">&#39;solution/nMassPosN.txt&#39;</span><span class="p">,</span>
+<span class="linenos">227</span>                                    <span class="n">outputVariableType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Coordinates</span><span class="p">))</span>
+<span class="linenos">228</span><span class="n">sensFreq</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorLoad</span><span class="p">(</span><span class="n">loadNumber</span><span class="o">=</span><span class="n">lFreq</span><span class="p">,</span> <span class="n">fileName</span><span class="o">=</span><span class="s1">&#39;solution/nMassFreq.txt&#39;</span><span class="p">,</span>
+<span class="linenos">229</span>                                    <span class="n">visualization</span><span class="o">=</span><span class="nc">VSensorLoad</span><span class="p">(</span><span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">)))</span>
+<span class="linenos">230</span>
+<span class="linenos">231</span><span class="c1">#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">232</span><span class="c1">#compute eigenvalues</span>
+<span class="linenos">233</span><span class="kn">from</span> <span class="nn">exudyn.solver</span> <span class="kn">import</span> <span class="nf">ComputeODE2Eigenvalues</span>
+<span class="linenos">234</span><span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
+<span class="linenos">235</span><span class="p">[</span><span class="n">values</span><span class="p">,</span> <span class="n">vectors</span><span class="p">]</span> <span class="o">=</span> <span class="nf">ComputeODE2Eigenvalues</span><span class="p">(</span><span class="n">mbs</span><span class="p">)</span>
+<span class="linenos">236</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;omegas (rad/s)=&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="nf">sqrt</span><span class="p">(</span><span class="n">values</span><span class="p">))</span>
+<span class="linenos">237</span>
+<span class="linenos">238</span><span class="c1">#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">239</span><span class="c1">#integrate omega: node used to integrate omega into phi for excitation function</span>
+<span class="linenos">240</span><span class="n">nODE2</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">NodeGenericODE2</span><span class="p">(</span><span class="n">referenceCoordinates</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">initialCoordinates</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">initialCoordinates_t</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos">241</span>                                  <span class="n">numberOfODE2Coordinates</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+<span class="linenos">242</span>
+<span class="linenos">243</span><span class="n">oODE2</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectGenericODE2</span><span class="p">(</span><span class="n">nodeNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">nODE2</span><span class="p">],</span><span class="n">massMatrix</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+<span class="linenos">244</span>                                      <span class="n">forceUserFunction</span><span class="o">=</span><span class="n">UFintegrateOmega</span><span class="p">,</span>
+<span class="linenos">245</span>                                      <span class="n">visualization</span><span class="o">=</span><span class="nc">VObjectGenericODE2</span><span class="p">(</span><span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">)))</span>
+<span class="linenos">246</span><span class="c1">#improved version, using integration of omega:</span>
+<span class="linenos">247</span><span class="n">mbs</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;sensorPhi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorNode</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">nODE2</span><span class="p">,</span> <span class="n">fileName</span><span class="o">=</span><span class="s1">&#39;solution/nonlinearPhi.txt&#39;</span><span class="p">,</span>
+<span class="linenos">248</span>                                    <span class="n">outputVariableType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Coordinates_t</span><span class="p">,</span>
+<span class="linenos">249</span>                                    <span class="n">visualization</span><span class="o">=</span><span class="nc">VSensorNode</span><span class="p">(</span><span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">)))</span>
+<span class="linenos">250</span><span class="c1">#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">251</span><span class="c1">#finalize model and settings</span>
+<span class="linenos">252</span><span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
+<span class="linenos">253</span>
+<span class="linenos">254</span>
+<span class="linenos">255</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">textSize</span> <span class="o">=</span> <span class="mi">12</span>
+<span class="linenos">256</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">lineWidth</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="linenos">257</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">multiSampling</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="linenos">258</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">graphicsUpdateInterval</span> <span class="o">=</span> <span class="mf">0.005</span>
+<span class="linenos">259</span><span class="c1">#SC.visualizationSettings.window.renderWindowSize=[1024,900]</span>
+<span class="linenos">260</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">renderWindowSize</span><span class="o">=</span><span class="p">[</span><span class="mi">1600</span><span class="p">,</span><span class="mi">1000</span><span class="p">]</span>
+<span class="linenos">261</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">showSolverInformation</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="linenos">262</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">drawCoordinateSystem</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="linenos">263</span>
+<span class="linenos">264</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">loads</span><span class="o">.</span><span class="n">fixedLoadSize</span><span class="o">=</span><span class="mi">0</span>
+<span class="linenos">265</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">loads</span><span class="o">.</span><span class="n">loadSizeFactor</span><span class="o">=</span><span class="mf">0.5</span>
+<span class="linenos">266</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">loads</span><span class="o">.</span><span class="n">drawSimplified</span><span class="o">=</span><span class="kc">False</span>
+<span class="linenos">267</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">loads</span><span class="o">.</span><span class="n">defaultSize</span><span class="o">=</span><span class="mi">1</span>
+<span class="linenos">268</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">loads</span><span class="o">.</span><span class="n">defaultRadius</span><span class="o">=</span><span class="mf">0.01</span>
 <span class="linenos">269</span>
-<span class="linenos">270</span><span class="c1">#++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos">271</span><span class="c1">#setup simulation settings and run interactive dialog:</span>
-<span class="linenos">272</span><span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">()</span>
-<span class="linenos">273</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">generalizedAlpha</span><span class="o">.</span><span class="n">spectralRadius</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="linenos">274</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">writeSolutionToFile</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="linenos">275</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">solutionWritePeriod</span> <span class="o">=</span> <span class="mf">0.05</span> <span class="c1">#data not used</span>
-<span class="linenos">276</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">sensorsWritePeriod</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="c1">#data not used</span>
-<span class="linenos">277</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">solutionInformation</span> <span class="o">=</span> <span class="s1">&#39;n-mass-oscillatior&#39;</span>
-<span class="linenos">278</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">verboseMode</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1">#turn off, because of lots of output</span>
-<span class="linenos">279</span>
-<span class="linenos">280</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
-<span class="linenos">281</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="mi">5</span>
-<span class="linenos">282</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">useModifiedNewton</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="linenos">283</span>
-<span class="linenos">284</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">displayComputationTime</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="linenos">285</span><span class="c1"># simulationSettings.numberOfThreads = 1</span>
-<span class="linenos">286</span>
-<span class="linenos">287</span><span class="c1">#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos">288</span><span class="c1">#set up interactive window</span>
-<span class="linenos">289</span>
-<span class="linenos">290</span>
-<span class="linenos">291</span><span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="o">=</span><span class="n">simulationSettings</span><span class="p">)</span>
+<span class="linenos">270</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">autoFitScene</span> <span class="o">=</span> <span class="kc">True</span> <span class="c1">#otherwise, renderState not accepted for zoom</span>
+<span class="linenos">271</span>
+<span class="linenos">272</span><span class="c1">#++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">273</span><span class="c1">#setup simulation settings and run interactive dialog:</span>
+<span class="linenos">274</span><span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">()</span>
+<span class="linenos">275</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">generalizedAlpha</span><span class="o">.</span><span class="n">spectralRadius</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="linenos">276</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">writeSolutionToFile</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">277</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">solutionWritePeriod</span> <span class="o">=</span> <span class="mf">0.05</span> <span class="c1">#data not used</span>
+<span class="linenos">278</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">sensorsWritePeriod</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="c1">#data not used</span>
+<span class="linenos">279</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">solutionInformation</span> <span class="o">=</span> <span class="s1">&#39;n-mass-oscillatior&#39;</span>
+<span class="linenos">280</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">verboseMode</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1">#turn off, because of lots of output</span>
+<span class="linenos">281</span>
+<span class="linenos">282</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+<span class="linenos">283</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="linenos">284</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">useModifiedNewton</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">285</span>
+<span class="linenos">286</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">displayComputationTime</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">287</span><span class="c1"># simulationSettings.numberOfThreads = 1</span>
+<span class="linenos">288</span>
+<span class="linenos">289</span><span class="c1">#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">290</span><span class="c1">#set up interactive window</span>
+<span class="linenos">291</span>
 <span class="linenos">292</span>
-<span class="linenos">293</span><span class="n">mbs</span><span class="o">.</span><span class="nf">SolutionViewer</span><span class="p">()</span>
+<span class="linenos">293</span><span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="o">=</span><span class="n">simulationSettings</span><span class="p">)</span>
+<span class="linenos">294</span>
+<span class="linenos">295</span><span class="n">mbs</span><span class="o">.</span><span class="nf">SolutionViewer</span><span class="p">()</span>
 </pre></div>
 </div>
 </section>

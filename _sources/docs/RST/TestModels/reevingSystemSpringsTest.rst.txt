@@ -23,7 +23,8 @@ You can view and download this file on Github: `reevingSystemSpringsTest.py <htt
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    
    import exudyn as exu
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    
    useGraphics = True #without test
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -43,7 +44,7 @@ You can view and download this file on Github: `reevingSystemSpringsTest.py <htt
    SC = exu.SystemContainer()
    mbs = SC.AddSystem()
    
-   gGround = GraphicsDataCheckerBoard(point=[8,-8,-2], size=32, nTiles=10)
+   gGround = graphics.CheckerBoard(point=[8,-8,-2], size=32, nTiles=10)
    oGround = mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=[gGround])))
    
    t = 0.1
@@ -78,7 +79,7 @@ You can view and download this file on Github: `reevingSystemSpringsTest.py <htt
    for i, pos in enumerate(posList):
        r = rList[i]
    
-       graphicsRoll = GraphicsDataCylinder(pAxis=[0,0,-0.5*t], vAxis=[0,0,t], nTiles=64, radius=r, color=color4dodgerblue, alternatingColor=color4darkgrey)
+       graphicsRoll = graphics.Cylinder(pAxis=[0,0,-0.5*t], vAxis=[0,0,t], nTiles=64, radius=r, color=graphics.color.dodgerblue, alternatingColor=graphics.color.darkgrey)
        
        inertiaRoll = InertiaCylinder(density=1000,length=t,outerRadius=r, axis=2)
        #if i==1 or i==3: inertiaRoll.mass *= 2
@@ -89,7 +90,7 @@ You can view and download this file on Github: `reevingSystemSpringsTest.py <htt
                             nodeType = exu.NodeType.RotationEulerParameters, 
                             position = pos,
                             gravity = g, 
-                            graphicsDataList = [graphicsRoll, GraphicsDataBasis(inertiaRoll.COM(), length=0.5) ])
+                            graphicsDataList = [graphicsRoll, graphics.Basis(inertiaRoll.COM(), length=0.5) ])
        mR = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nR))
        nodeList += [nR]
        bodyList += [bR]
@@ -140,7 +141,7 @@ You can view and download this file on Github: `reevingSystemSpringsTest.py <htt
                                       dampingTorsional = 0.01*damping, dampingShear = 0.1*damping,
                                       sheavesAxes=sheavesAxes, sheavesRadii=sheavesRadii,
                                       #regularizationForce = -1, #purely linear system
-                                      visualization=VReevingSystemSprings(ropeRadius=0.05, color=color4dodgerblue)))
+                                      visualization=VReevingSystemSprings(ropeRadius=0.05, color=graphics.color.dodgerblue)))
    
    #%%++++++++++++++++++++++++++++++++++++++++++++++++
    #add sensors 

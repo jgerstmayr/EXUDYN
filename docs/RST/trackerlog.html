@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Issue tracker &mdash; Exudyn1.8.32.dev1 1.8.32.dev1 documentation</title>
+  <title>Issue tracker &mdash; Exudyn1.8.52.dev1 1.8.52.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=d6ff67ca"></script>
+        <script src="../../_static/documentation_options.js?v=b761f56e"></script>
         <script src="../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -42,7 +42,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.8.32.dev1
+            Exudyn1.8.52.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -98,7 +98,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.8.32.dev1</a>
+          <a href="../../index.html">Exudyn1.8.52.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -123,15 +123,186 @@ The extension <code class="docutils literal notranslate"><span class="pre">.dev1
 BUG numbers refer to the according issue numbers.</p>
 <p>General information on current version:</p>
 <ul class="simple">
-<li><p>Exudyn version = 1.8.32.dev1,</p></li>
-<li><p>last change =  2024-05-09,</p></li>
-<li><p>Number of issues = 1837,</p></li>
-<li><p>Number of resolved issues = 1626 (32 in current version),</p></li>
+<li><p>Exudyn version = 1.8.52.dev1,</p></li>
+<li><p>last change =  2024-06-04,</p></li>
+<li><p>Number of issues = 1854,</p></li>
+<li><p>Number of resolved issues = 1646 (52 in current version),</p></li>
 </ul>
 <section id="version-1-8">
 <h2>Version 1.8<a class="headerlink" href="#version-1-8" title="Link to this heading"></a></h2>
 <blockquote>
 <div><ul class="simple">
+<li><dl class="simple">
+<dt>Version 1.8.52: resolved Issue 1852: tutorials (docu)</dt><dd><ul>
+<li><p>description:  adapt tutorials to new exudyn.graphics structure</p></li>
+<li><p>date resolved: <strong>2024-06-04 21:48</strong>, date raised: 2024-06-04</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.8.51: resolved Issue 1853: exudyn.graphics (docu)</dt><dd><ul>
+<li><p>description:  add documentation in python utilities for these functions</p></li>
+<li><p>date resolved: <strong>2024-06-04 21:06</strong>, date raised: 2024-06-04</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.8.50: resolved Issue 1851: artificialIntelligence (change)</dt><dd><ul>
+<li><p>description:  adapt examples to new stable-baselines version</p></li>
+<li><p><strong>notes:</strong> tested with stable-baselines3 V1.7.0 and V2.3.2</p></li>
+<li><p>date resolved: <strong>2024-06-04 17:24</strong>, date raised: 2024-06-04</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.8.49: resolved Issue 1850: artificialIntelligence (change)</dt><dd><ul>
+<li><p>description:  adapt to stable-baselines3 2.3; add old mode with gym and new mode with gymnasium</p></li>
+<li><p><strong>notes:</strong> kept old mode available if gym is installed with stable-baselines without gymnasium</p></li>
+<li><p>date resolved: <strong>2024-06-04 14:59</strong>, date raised: 2024-06-04</p></li>
+<li><p>resolved by: P. Manzl</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.8.48: resolved Issue 0406: add NGsolve test (extension)</dt><dd><ul>
+<li><p>description:  with FEMinterface, only for Python37 version</p></li>
+<li><p><strong>notes:</strong> outdated and removed (see new issue 1849)</p></li>
+<li><p>date resolved: <strong>2024-06-02 13:30</strong>, date raised: 2020-05-22</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.8.47: resolved Issue 0837: GeneralContact jacobian (extension)</dt><dd><ul>
+<li><p>description:  add jacobian and PostNewton for Triangle-Sphere contact</p></li>
+<li><p>date resolved: <strong>2024-06-02 10:58</strong>, date raised: 2021-12-19</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.8.46: resolved Issue 1847: GeneralContact (fix)</dt><dd><ul>
+<li><p>description:  change several for-break commands to continue to improve contact behavior</p></li>
+<li><p>date resolved: <strong>2024-06-01 20:13</strong>, date raised: 2024-06-01</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.8.45: resolved Issue 1475: tutorial videos (docu)</dt><dd><ul>
+<li><p>description:  add new tutorial, replace old ones</p></li>
+<li><p><strong>notes:</strong> already completed on Feb 15 2024</p></li>
+<li><p>date resolved: <strong>2024-05-20 19:13</strong>, date raised: 2023-03-27</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.8.44: resolved Issue 1474: tutorial videos (fix)</dt><dd><ul>
+<li><p>description:  fix gettings started video</p></li>
+<li><p><strong>notes:</strong> already completed on Feb 15 2024</p></li>
+<li><p>date resolved: <strong>2024-05-20 19:13</strong>, date raised: 2023-03-27</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.8.43: resolved Issue 1842: add FurtherExampels folder for further examples, especially useful for training of LLMs (extension)</dt><dd><ul>
+<li><p>description:  EXTENSION</p></li>
+<li><p>date resolved: <strong>2024-05-20 19:08</strong>, date raised: 2024-05-17</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.8.42: resolved Issue 1843: simulationSettings (docu)</dt><dd><ul>
+<li><p>description:  correct path of simulationSettings.staticSolverSettings to simulationSettings.staticSolver in RTD description</p></li>
+<li><p>date resolved: <strong>2024-05-17 18:36</strong>, date raised: 2024-05-17</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.8.41: resolved Issue 1841: AddODE2LoadDependencies (fix)</dt><dd><ul>
+<li><p>description:  description is wrong</p></li>
+<li><p>date resolved: <strong>2024-05-17 18:29</strong>, date raised: 2024-05-17</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.8.40: resolved Issue 1840: std::isalpha (fix)</dt><dd><ul>
+<li><p>description:  remove std::isalpha and std::isalnum, as it does not compile on certain older compilers</p></li>
+<li><p>date resolved: <strong>2024-05-13 17:08</strong>, date raised: 2024-05-13</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.8.39: resolved Issue 1838: Examples check (extension)</dt><dd><ul>
+<li><p>description:  add test to check whether examples basically run; use timeout and special setting to turn off all key-press waiting; exclude large examples</p></li>
+<li><p>date resolved: <strong>2024-05-12 10:19</strong>, date raised: 2024-05-11</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.8.38: <span class="textred">resolved BUG 1839</span><span class="classifier">ALEANCFCable2D</span></dt><dd><ul>
+<li><p>description:  raises error ‘ANCFCable2d:ComputeAxialStrain_t not implemented’ if ForceLocal is evaluated</p></li>
+<li><p><strong>notes:</strong> results have to be verified</p></li>
+<li><p>date resolved: <strong>2024-05-11 19:18</strong>, date raised: 2024-05-11</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.8.37: resolved Issue 1187: ALEANCFCable2D (extension)</dt><dd><ul>
+<li><p>description:  add missing terms related to damping terms coupled with delta qALE</p></li>
+<li><p><strong>notes:</strong> already implemented and checked with paper up to come</p></li>
+<li><p>date resolved: <strong>2024-05-11 19:00</strong>, date raised: 2022-07-06</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.8.36: resolved Issue 1692: exudyn.graphics (fix)</dt><dd><ul>
+<li><p>description:  change GraphicsData functions in examples to exudyn.graphics</p></li>
+<li><p><strong>notes:</strong> CHECK your files, if there are any issues due to this change; in general, the previous functionality should be maintained</p></li>
+<li><p>date resolved: <strong>2024-05-11 01:18</strong>, date raised: 2023-11-19</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.8.35: resolved Issue 1825: GraphicsDataCube (change)</dt><dd><ul>
+<li><p>description:  rename to GraphicsDataBrick… functions; use assignment to keep previous functionality</p></li>
+<li><p><strong>notes:</strong> not changed, but introduced exudyn.graphics submodule for graphics functions. OrthoCube now available as exudyn.graphics.Brick</p></li>
+<li><p>date resolved: <strong>2024-05-11 01:16</strong>, date raised: 2024-04-25</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.8.34: resolved Issue 1691: exudyn.graphics (extension)</dt><dd><ul>
+<li><p>description:  map graphicsDataUtilities functions to exudyn.graphics for better readability</p></li>
+<li><p><strong>notes:</strong> NOTE that previous GraphicsData functions still work; however, it may be necessary to import exudyn.utilities if you imported exudyn.graphicsDataUtilities directly; examples and test models are adjusted to new functions; it is recommended that users switch to new exudyn.graphics functionality!</p></li>
+<li><p>date resolved: <strong>2024-05-10 19:45</strong>, date raised: 2023-11-19</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Version 1.8.33: resolved Issue 1837: graphics (check)</dt><dd><ul>
+<li><p>description:  test graphics submodule for future replacement of graphicsDataUtilities</p></li>
+<li><p>date resolved: <strong>2024-05-10 10:09</strong>, date raised: 2024-05-10</p></li>
+</ul>
+</dd>
+</dl>
+</li>
 <li><dl class="simple">
 <dt>Version 1.8.32: resolved Issue 1832: theory docu (docu)</dt><dd><ul>
 <li><p>description:  add description of computation of stresses for FFRFreducedOrder</p></li>
@@ -13505,9 +13676,41 @@ BUG numbers refer to the according issue numbers.</p>
 <blockquote>
 <div><ul class="simple">
 <li><dl class="simple">
-<dt><strong>open issue 1825:</strong> GraphicsDataCube</dt><dd><ul>
-<li><p>description:  rename to GraphicsDataBrick… functions; use assignment to keep previous functionality</p></li>
-<li><p>date raised: 2024-04-25</p></li>
+<dt><strong>open issue 1849:</strong> tutorial</dt><dd><ul>
+<li><p>description:  add FFRFreducedOrder with NGsolve tutorial</p></li>
+<li><p>date raised: 2024-06-02</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>open issue 1848:</strong> GeneralContact</dt><dd><ul>
+<li><p>description:  Test and improve implicit SPHERE-TRIG contact</p></li>
+<li><p>date raised: 2024-06-02</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>open issue 1846:</strong> ComputePostProcessingModes</dt><dd><ul>
+<li><p>description:  numberOfThreads&gt; 1 not working: no modes computed</p></li>
+<li><p>date raised: 2024-05-29</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>open issue 1845:</strong> ComputePostProcessingModes</dt><dd><ul>
+<li><p>description:  numberOfThreads&gt; 1 not working: conversion of vectorInput to np.array makes problems</p></li>
+<li><p>date raised: 2024-05-29</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>open issue 1844:</strong> AddRigidBody</dt><dd><ul>
+<li><p>description:  add warning to this and related functions for deprecation</p></li>
+<li><p>date raised: 2024-05-28</p></li>
 </ul>
 </dd>
 </dl>
@@ -13667,22 +13870,6 @@ BUG numbers refer to the according issue numbers.</p>
 <li><dl class="simple">
 <dt><strong>open issue 1695:</strong> taskmanager</dt><dd><ul>
 <li><p>description:  extend microthreading for taskmanager-based load management; remove taskmanager from repo and create pure BSD license</p></li>
-<li><p>date raised: 2023-11-19</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt><strong>open issue 1692:</strong> exudyn.graphics</dt><dd><ul>
-<li><p>description:  change GraphicsData functions in examples to exudyn.graphics</p></li>
-<li><p>date raised: 2023-11-19</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt><strong>open issue 1691:</strong> exudyn.graphics</dt><dd><ul>
-<li><p>description:  map graphicsDataUtilities functions to exudyn.graphics for better readability</p></li>
 <li><p>date raised: 2023-11-19</p></li>
 </ul>
 </dd>
@@ -13961,22 +14148,6 @@ BUG numbers refer to the according issue numbers.</p>
 </dl>
 </li>
 <li><dl class="simple">
-<dt><span class="textorange">open issue 1475:</span> tutorial videos</dt><dd><ul>
-<li><p>description:  add new tutorial, replace old ones</p></li>
-<li><p>date raised: 2023-03-27</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt><span class="textred">open issue 1474:</span> tutorial videos</dt><dd><ul>
-<li><p>description:  fix gettings started video</p></li>
-<li><p>date raised: 2023-03-27</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
 <dt><strong>open issue 1455:</strong> MarkerSuperElementRigidBody</dt><dd><ul>
 <li><p>description:  fix derivative of exponential map for velocity level</p></li>
 <li><p>date raised: 2023-03-05</p></li>
@@ -14140,14 +14311,6 @@ BUG numbers refer to the according issue numbers.</p>
 <dt><strong>open issue 1189:</strong> ContactFrictionCircleCable2D</dt><dd><ul>
 <li><p>description:  add velocity offset to MarkerCable2DShape</p></li>
 <li><p>date raised: 2022-07-08</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt><strong>open issue 1187:</strong> ALEANCFCable2D</dt><dd><ul>
-<li><p>description:  add missing terms related to damping terms coupled with delta qALE</p></li>
-<li><p>date raised: 2022-07-06</p></li>
 </ul>
 </dd>
 </dl>
@@ -14569,14 +14732,6 @@ BUG numbers refer to the according issue numbers.</p>
 </dl>
 </li>
 <li><dl class="simple">
-<dt><strong>open issue 0837:</strong> GeneralContact jacobian</dt><dd><ul>
-<li><p>description:  add jacobian and PostNewton for Triangle-Sphere contact</p></li>
-<li><p>date raised: 2021-12-19</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
 <dt><strong>open issue 0836:</strong> GeneralContact add cone</dt><dd><ul>
 <li><p>description:  for 3D cables add cone (including cylinder) to contact with 3D cables</p></li>
 <li><p>date raised: 2021-12-19</p></li>
@@ -14892,14 +15047,6 @@ BUG numbers refer to the according issue numbers.</p>
 <dt><strong>open issue 0410:</strong> drawing information</dt><dd><ul>
 <li><p>description:  add consistent drawing information in show field of every item</p></li>
 <li><p>date raised: 2020-05-24</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt><strong>open issue 0406:</strong> add NGsolve test</dt><dd><ul>
-<li><p>description:  with FEMinterface, only for Python37 version</p></li>
-<li><p>date raised: 2020-05-22</p></li>
 </ul>
 </dd>
 </dl>

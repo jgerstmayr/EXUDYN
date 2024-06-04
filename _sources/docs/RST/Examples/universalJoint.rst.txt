@@ -24,8 +24,8 @@ You can view and download this file on Github: `universalJoint.py <https://githu
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    
    import exudyn as exu
-   from exudyn.itemInterface import *
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    
    import numpy as np
    
@@ -84,21 +84,21 @@ You can view and download this file on Github: `universalJoint.py <https://githu
    
    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    #graphics for body
-   graphicsCrossShaft = GraphicsDataOrthoCubePoint(size=[0.2*r]*3, color=color4grey)
+   graphicsCrossShaft = graphics.Brick(size=[0.2*r]*3, color=graphics.color.grey)
    
-   graphicsBodyLeft = [GraphicsDataCylinder(pAxis=[0,0,-l/2], vAxis=[0,0,2*l/2-r], 
-                                            radius=r/8, color=color4steelblue, nTiles=32, alternatingColor=color4blue)]
-   graphicsBodyLeft += [GraphicsDataOrthoCubePoint(centerPoint=[0,0,l/2-r], size=[2*r,0.25*r,0.25*r], color=color4steelblue)]
-   graphicsBodyLeft += [GraphicsDataOrthoCubePoint(centerPoint=[r*0.875,0,l/2-0.5*r], size=[0.25*r,0.25*r,r*1.25], color=color4steelblue)]
-   graphicsBodyLeft += [GraphicsDataOrthoCubePoint(centerPoint=[-r*0.875,0,l/2-0.5*r], size=[0.25*r,0.25*r,r*1.25], color=color4steelblue)]
+   graphicsBodyLeft = [graphics.Cylinder(pAxis=[0,0,-l/2], vAxis=[0,0,2*l/2-r], 
+                                            radius=r/8, color=graphics.color.steelblue, nTiles=32, alternatingColor=graphics.color.blue)]
+   graphicsBodyLeft += [graphics.Brick(centerPoint=[0,0,l/2-r], size=[2*r,0.25*r,0.25*r], color=graphics.color.steelblue)]
+   graphicsBodyLeft += [graphics.Brick(centerPoint=[r*0.875,0,l/2-0.5*r], size=[0.25*r,0.25*r,r*1.25], color=graphics.color.steelblue)]
+   graphicsBodyLeft += [graphics.Brick(centerPoint=[-r*0.875,0,l/2-0.5*r], size=[0.25*r,0.25*r,r*1.25], color=graphics.color.steelblue)]
    
    d2 = r*1.5
    r2 = r*0.75
-   graphicsBodyRight = [GraphicsDataCylinder(pAxis=[0,0,-l/2+d2], vAxis=[0,0,2*l/2-d2], 
-                                             radius=r/8, color=color4lawngreen, nTiles=32, alternatingColor=color4green)]
-   graphicsBodyRight += [GraphicsDataOrthoCubePoint(centerPoint=[0,0,-l/2+d2], size=[0.25*r,2*r2,0.25*r], color=color4lawngreen)]
-   graphicsBodyRight += [GraphicsDataOrthoCubePoint(centerPoint=[0,r2*0.875,-l/2+0.5*d2], size=[0.25*r,0.25*r,d2+r*0.25], color=color4lawngreen)]
-   graphicsBodyRight += [GraphicsDataOrthoCubePoint(centerPoint=[0,-r2*0.875,-l/2+0.5*d2], size=[0.25*r,0.25*r,d2+r*0.25], color=color4lawngreen)]
+   graphicsBodyRight = [graphics.Cylinder(pAxis=[0,0,-l/2+d2], vAxis=[0,0,2*l/2-d2], 
+                                             radius=r/8, color=graphics.color.lawngreen, nTiles=32, alternatingColor=graphics.color.green)]
+   graphicsBodyRight += [graphics.Brick(centerPoint=[0,0,-l/2+d2], size=[0.25*r,2*r2,0.25*r], color=graphics.color.lawngreen)]
+   graphicsBodyRight += [graphics.Brick(centerPoint=[0,r2*0.875,-l/2+0.5*d2], size=[0.25*r,0.25*r,d2+r*0.25], color=graphics.color.lawngreen)]
+   graphicsBodyRight += [graphics.Brick(centerPoint=[0,-r2*0.875,-l/2+0.5*d2], size=[0.25*r,0.25*r,d2+r*0.25], color=graphics.color.lawngreen)]
    
    
    # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -138,7 +138,7 @@ You can view and download this file on Github: `universalJoint.py <https://githu
    
    # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    #ground body and marker
-   gGround = [GraphicsDataCheckerBoard(point=[-1.5*r,0,0], normal=[1,0,0], size = 4)]
+   gGround = [graphics.CheckerBoard(point=[-1.5*r,0,0], normal=[1,0,0], size = 4)]
    oGround = mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=gGround)))
    
    
@@ -198,11 +198,11 @@ You can view and download this file on Github: `universalJoint.py <https://githu
    #add graphics for rotations of shafts:
    pShow = np.array([0.2,0.,-l/2])
    rShow = 0.15
-   gGround0 = [GraphicsDataCylinder(pAxis = [0,0,-0.02], vAxis = [0,0,0.02], radius=rShow, nTiles = 32, color=color4lightgrey)]
-   gGround0 += [GraphicsDataArrow(pAxis = [0,0,0.02], vAxis=[rShow*1.2,0,0], radius=0.01, color=color4steelblue)]
+   gGround0 = [graphics.Cylinder(pAxis = [0,0,-0.02], vAxis = [0,0,0.02], radius=rShow, nTiles = 32, color=graphics.color.lightgrey)]
+   gGround0 += [graphics.Arrow(pAxis = [0,0,0.02], vAxis=[rShow*1.2,0,0], radius=0.01, color=graphics.color.steelblue)]
    oGroundBody0 = mbs.AddObject(ObjectGround(referencePosition=pShow, visualization=VObjectGround(graphicsData=gGround0)))
    
-   gGround1 = [GraphicsDataArrow(pAxis = [0,0,0.02], vAxis=[rShow*1.2,0,0], radius=0.01, color=color4lawngreen)]
+   gGround1 = [graphics.Arrow(pAxis = [0,0,0.02], vAxis=[rShow*1.2,0,0], radius=0.01, color=graphics.color.lawngreen)]
    oGroundBody1 = mbs.AddObject(ObjectGround(referencePosition=pShow, visualization=VObjectGround(graphicsData=gGround1)))
    
    
@@ -299,7 +299,7 @@ You can view and download this file on Github: `universalJoint.py <https://githu
            plt.figure('Angular velocity')
            
            time=mbs.GetSensorStoredData(sRotationLeft)[:,0] 
-           plt.plot(time,omega2,'r--',label=r'analytical solution')
+           plt.plot(time,omega2,'r--',label='analytical solution')
            plt.legend()
            plt.grid('on')
            plt.show()                    

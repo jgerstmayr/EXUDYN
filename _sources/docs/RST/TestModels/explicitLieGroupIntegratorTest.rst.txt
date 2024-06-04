@@ -24,7 +24,8 @@ You can view and download this file on Github: `explicitLieGroupIntegratorTest.p
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    
    import exudyn as exu
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    
    import numpy as np
    
@@ -51,7 +52,7 @@ You can view and download this file on Github: `explicitLieGroupIntegratorTest.p
    L = 1   #length
    
    
-   background0 =[GraphicsDataCheckerBoard([0,0,-1], size=5),GraphicsDataBasis()]
+   background0 =[graphics.CheckerBoard([0,0,-1], size=5),graphics.Basis()]
    oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0], visualization=VObjectGround(graphicsData= background0)))
    
    #heavy top is fixed at [0,0,0] (COM of simulated body), but force is applied at [0,1,0] (COM of real top)
@@ -97,7 +98,7 @@ You can view and download this file on Github: `explicitLieGroupIntegratorTest.p
        nRB = mbs.AddNode(NodeRigidBodyRotVecLG(referenceCoordinates=p0+rot0, initialVelocities=v0+list(rot_t0)))
    
    
-   oGraphics = [GraphicsDataBasis(), GraphicsDataOrthoCube(-r/2,-L/2,-r/2, r/2,L/2,r/2, [0.1,0.1,0.8,0.3])]
+   oGraphics = [graphics.Basis(), graphics.BrickXYZ(-r/2,-L/2,-r/2, r/2,L/2,r/2, [0.1,0.1,0.8,0.3])]
    oRB = mbs.AddObject(ObjectRigidBody(physicsMass=m, physicsInertia=[JFP[0][0], JFP[1][1], JFP[2][2], JFP[1][2], JFP[0][2], JFP[0][1]], 
                                        nodeNumber=nRB, visualization=VObjectRigidBody(graphicsData=oGraphics)))
    

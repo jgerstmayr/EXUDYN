@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NGsolveLinearFEM.py &mdash; Exudyn1.8.32.dev1 1.8.32.dev1 documentation</title>
+  <title>NGsolveLinearFEM.py &mdash; Exudyn1.8.52.dev1 1.8.52.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=d6ff67ca"></script>
+        <script src="../../../_static/documentation_options.js?v=b761f56e"></script>
         <script src="../../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -41,7 +41,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.8.32.dev1
+            Exudyn1.8.52.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -233,7 +233,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.8.32.dev1</a>
+          <a href="../../../index.html">Exudyn1.8.52.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -270,194 +270,195 @@
 <span class="linenos"> 13</span>
 <span class="linenos"> 14</span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
 <span class="linenos"> 15</span><span class="kn">from</span> <span class="nn">exudyn.itemInterface</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="linenos"> 16</span><span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="linenos"> 17</span><span class="kn">from</span> <span class="nn">exudyn.FEM</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="linenos"> 18</span><span class="kn">from</span> <span class="nn">exudyn.graphicsDataUtilities</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="linenos"> 19</span>
-<span class="linenos"> 20</span><span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
-<span class="linenos"> 21</span><span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
-<span class="linenos"> 22</span>
-<span class="linenos"> 23</span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="linenos"> 24</span><span class="kn">import</span> <span class="nn">sys</span>
-<span class="linenos"> 25</span><span class="kn">import</span> <span class="nn">time</span>
-<span class="linenos"> 26</span>
+<span class="linenos"> 16</span><span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="o">*</span> <span class="c1">#includes itemInterface and rigidBodyUtilities</span>
+<span class="linenos"> 17</span><span class="kn">import</span> <span class="nn">exudyn.graphics</span> <span class="k">as</span> <span class="nn">graphics</span> <span class="c1">#only import if it does not conflict</span>
+<span class="linenos"> 18</span><span class="kn">from</span> <span class="nn">exudyn.FEM</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="linenos"> 19</span><span class="kn">from</span> <span class="nn">exudyn.graphicsDataUtilities</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="linenos"> 20</span>
+<span class="linenos"> 21</span><span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
+<span class="linenos"> 22</span><span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
+<span class="linenos"> 23</span>
+<span class="linenos"> 24</span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="linenos"> 25</span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="linenos"> 26</span><span class="kn">import</span> <span class="nn">time</span>
 <span class="linenos"> 27</span>
-<span class="linenos"> 28</span><span class="c1">#import netgen.geom2d as geom2d</span>
-<span class="linenos"> 29</span><span class="kn">from</span> <span class="nn">netgen.occ</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="linenos"> 30</span><span class="kn">import</span> <span class="nn">ngsolve</span> <span class="k">as</span> <span class="nn">ngs</span>
-<span class="linenos"> 31</span>
-<span class="linenos"> 32</span><span class="c1"># from ngsolve.webgui import Draw</span>
-<span class="linenos"> 33</span><span class="c1"># from netgen.webgui import Draw as DrawGeo</span>
-<span class="linenos"> 34</span>
-<span class="linenos"> 35</span><span class="c1">#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos"> 36</span><span class="c1"># define geometry and mesh</span>
-<span class="linenos"> 37</span><span class="n">L</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="linenos"> 38</span><span class="n">wy</span> <span class="o">=</span> <span class="mf">0.1</span>
-<span class="linenos"> 39</span><span class="n">wz</span> <span class="o">=</span> <span class="mf">0.12</span>
-<span class="linenos"> 40</span><span class="n">body</span> <span class="o">=</span> <span class="n">Box</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="n">L</span><span class="p">,</span><span class="n">wy</span><span class="p">,</span> <span class="n">wz</span><span class="p">))</span>
-<span class="linenos"> 41</span><span class="c1">#body.bc(&quot;all&quot;)</span>
-<span class="linenos"> 42</span>
-<span class="linenos"> 43</span><span class="n">faces</span> <span class="o">=</span> <span class="n">body</span><span class="o">.</span><span class="n">SubShapes</span><span class="p">(</span><span class="n">FACE</span><span class="p">)</span>
-<span class="linenos"> 44</span><span class="n">faces</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">bc</span><span class="p">(</span><span class="s2">&quot;left&quot;</span><span class="p">)</span>
-<span class="linenos"> 45</span><span class="n">faces</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">col</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
-<span class="linenos"> 46</span>
-<span class="linenos"> 47</span><span class="n">geo</span> <span class="o">=</span> <span class="n">OCCGeometry</span><span class="p">(</span><span class="n">body</span><span class="p">)</span>
-<span class="linenos"> 48</span><span class="n">mesh</span> <span class="o">=</span> <span class="n">ngs</span><span class="o">.</span><span class="n">Mesh</span><span class="p">(</span><span class="n">geo</span><span class="o">.</span><span class="n">GenerateMesh</span><span class="p">(</span><span class="n">maxh</span><span class="o">=</span><span class="mf">0.05</span><span class="o">*</span><span class="mi">1</span><span class="p">))</span> <span class="c1">#0.05*0.25 gives quite fine mesh (13GB)</span>
-<span class="linenos"> 49</span><span class="c1">#DrawGeo(geo.shape)</span>
-<span class="linenos"> 50</span><span class="c1">#Draw(mesh)</span>
-<span class="linenos"> 51</span><span class="c1">#print(mesh.dim)</span>
-<span class="linenos"> 52</span>
-<span class="linenos"> 53</span><span class="c1">#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos"> 54</span><span class="c1"># define material parameters and energy</span>
-<span class="linenos"> 55</span><span class="n">meshOrder</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="linenos"> 56</span><span class="n">youngsModulus</span> <span class="o">=</span> <span class="mi">210</span>
-<span class="linenos"> 57</span><span class="n">nu</span> <span class="o">=</span> <span class="mf">0.2</span>
-<span class="linenos"> 58</span><span class="n">mu</span>  <span class="o">=</span> <span class="n">youngsModulus</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">nu</span><span class="p">)</span>
-<span class="linenos"> 59</span><span class="n">lam</span> <span class="o">=</span> <span class="n">youngsModulus</span> <span class="o">*</span> <span class="n">nu</span> <span class="o">/</span> <span class="p">((</span><span class="mi">1</span><span class="o">+</span><span class="n">nu</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">nu</span><span class="p">))</span>
-<span class="linenos"> 60</span><span class="n">density</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="linenos"> 61</span>
+<span class="linenos"> 28</span>
+<span class="linenos"> 29</span><span class="c1">#import netgen.geom2d as geom2d</span>
+<span class="linenos"> 30</span><span class="kn">from</span> <span class="nn">netgen.occ</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="linenos"> 31</span><span class="kn">import</span> <span class="nn">ngsolve</span> <span class="k">as</span> <span class="nn">ngs</span>
+<span class="linenos"> 32</span>
+<span class="linenos"> 33</span><span class="c1"># from ngsolve.webgui import Draw</span>
+<span class="linenos"> 34</span><span class="c1"># from netgen.webgui import Draw as DrawGeo</span>
+<span class="linenos"> 35</span>
+<span class="linenos"> 36</span><span class="c1">#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos"> 37</span><span class="c1"># define geometry and mesh</span>
+<span class="linenos"> 38</span><span class="n">L</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="linenos"> 39</span><span class="n">wy</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="linenos"> 40</span><span class="n">wz</span> <span class="o">=</span> <span class="mf">0.12</span>
+<span class="linenos"> 41</span><span class="n">body</span> <span class="o">=</span> <span class="n">Box</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="n">L</span><span class="p">,</span><span class="n">wy</span><span class="p">,</span> <span class="n">wz</span><span class="p">))</span>
+<span class="linenos"> 42</span><span class="c1">#body.bc(&quot;all&quot;)</span>
+<span class="linenos"> 43</span>
+<span class="linenos"> 44</span><span class="n">faces</span> <span class="o">=</span> <span class="n">body</span><span class="o">.</span><span class="n">SubShapes</span><span class="p">(</span><span class="n">FACE</span><span class="p">)</span>
+<span class="linenos"> 45</span><span class="n">faces</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">bc</span><span class="p">(</span><span class="s2">&quot;left&quot;</span><span class="p">)</span>
+<span class="linenos"> 46</span><span class="n">faces</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">col</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+<span class="linenos"> 47</span>
+<span class="linenos"> 48</span><span class="n">geo</span> <span class="o">=</span> <span class="n">OCCGeometry</span><span class="p">(</span><span class="n">body</span><span class="p">)</span>
+<span class="linenos"> 49</span><span class="n">mesh</span> <span class="o">=</span> <span class="n">ngs</span><span class="o">.</span><span class="n">Mesh</span><span class="p">(</span><span class="n">geo</span><span class="o">.</span><span class="n">GenerateMesh</span><span class="p">(</span><span class="n">maxh</span><span class="o">=</span><span class="mf">0.05</span><span class="o">*</span><span class="mi">1</span><span class="p">))</span> <span class="c1">#0.05*0.25 gives quite fine mesh (13GB)</span>
+<span class="linenos"> 50</span><span class="c1">#DrawGeo(geo.shape)</span>
+<span class="linenos"> 51</span><span class="c1">#Draw(mesh)</span>
+<span class="linenos"> 52</span><span class="c1">#print(mesh.dim)</span>
+<span class="linenos"> 53</span>
+<span class="linenos"> 54</span><span class="c1">#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos"> 55</span><span class="c1"># define material parameters and energy</span>
+<span class="linenos"> 56</span><span class="n">meshOrder</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="linenos"> 57</span><span class="n">youngsModulus</span> <span class="o">=</span> <span class="mi">210</span>
+<span class="linenos"> 58</span><span class="n">nu</span> <span class="o">=</span> <span class="mf">0.2</span>
+<span class="linenos"> 59</span><span class="n">mu</span>  <span class="o">=</span> <span class="n">youngsModulus</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">nu</span><span class="p">)</span>
+<span class="linenos"> 60</span><span class="n">lam</span> <span class="o">=</span> <span class="n">youngsModulus</span> <span class="o">*</span> <span class="n">nu</span> <span class="o">/</span> <span class="p">((</span><span class="mi">1</span><span class="o">+</span><span class="n">nu</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">nu</span><span class="p">))</span>
+<span class="linenos"> 61</span><span class="n">density</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="linenos"> 62</span>
-<span class="linenos"> 63</span><span class="n">fem</span><span class="o">=</span><span class="nc">FEMinterface</span><span class="p">()</span>
-<span class="linenos"> 64</span><span class="n">fem</span><span class="o">.</span><span class="nf">ImportMeshFromNGsolve</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">density</span><span class="p">,</span> <span class="n">youngsModulus</span><span class="p">,</span> <span class="n">nu</span><span class="p">,</span> <span class="n">meshOrder</span><span class="o">=</span><span class="n">meshOrder</span><span class="p">)</span>
-<span class="linenos"> 65</span>
-<span class="linenos"> 66</span><span class="c1">#%%++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos"> 67</span><span class="p">[</span><span class="n">oGenericODE2</span><span class="p">,</span> <span class="n">allNodeList</span><span class="p">]</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="nf">CreateLinearFEMObjectGenericODE2</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color4dodgerblue</span><span class="p">)</span>
-<span class="linenos"> 68</span>
-<span class="linenos"> 69</span><span class="c1">#%%++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos"> 70</span><span class="c1">#add forces on right side and fix on left side:</span>
-<span class="linenos"> 71</span><span class="n">nLists</span> <span class="o">=</span> <span class="mi">2</span>
-<span class="linenos"> 72</span><span class="n">nodeLists</span> <span class="o">=</span> <span class="p">[[]]</span><span class="o">*</span><span class="n">nLists</span>
-<span class="linenos"> 73</span><span class="n">nNodes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">nLists</span>
-<span class="linenos"> 74</span>
-<span class="linenos"> 75</span><span class="n">nodeLists</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="nf">GetNodesInPlane</span><span class="p">(</span><span class="n">point</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">normal</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
-<span class="linenos"> 76</span><span class="n">nodeLists</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="nf">GetNodesInPlane</span><span class="p">(</span><span class="n">point</span><span class="o">=</span><span class="p">[</span><span class="n">L</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">normal</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
-<span class="linenos"> 77</span>
-<span class="linenos"> 78</span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nLists</span><span class="p">):</span>
-<span class="linenos"> 79</span>    <span class="n">nNodes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">nodeLists</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-<span class="linenos"> 80</span>
-<span class="linenos"> 81</span><span class="c1">#apply force to right end:</span>
-<span class="linenos"> 82</span><span class="n">fLoad</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="n">nNodes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">1e-3</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
-<span class="linenos"> 83</span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">nodeLists</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
-<span class="linenos"> 84</span>    <span class="n">mNode</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerNodePosition</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">i</span><span class="p">))</span>
-<span class="linenos"> 85</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">AddLoad</span><span class="p">(</span><span class="nc">Force</span><span class="p">(</span><span class="n">markerNumber</span><span class="o">=</span><span class="n">mNode</span><span class="p">,</span> <span class="n">loadVector</span><span class="o">=</span><span class="n">fLoad</span><span class="p">))</span>
-<span class="linenos"> 86</span>
-<span class="linenos"> 87</span><span class="n">oGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectGround</span><span class="p">())</span>
-<span class="linenos"> 88</span>
-<span class="linenos"> 89</span><span class="k">if</span> <span class="kc">False</span><span class="p">:</span>
-<span class="linenos"> 90</span>    <span class="c1">#apply single sphereical constraints to left end:</span>
-<span class="linenos"> 91</span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">nodeLists</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-<span class="linenos"> 92</span>        <span class="n">mNode</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerNodePosition</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">i</span><span class="p">))</span>
-<span class="linenos"> 93</span>        <span class="n">mGroundI</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerBodyPosition</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">oGround</span><span class="p">,</span>
-<span class="linenos"> 94</span>                                                    <span class="n">localPosition</span><span class="o">=</span><span class="n">fem</span><span class="o">.</span><span class="nf">GetNodePositionsAsArray</span><span class="p">()[</span><span class="n">i</span><span class="p">]))</span>
-<span class="linenos"> 95</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectJointSpherical</span><span class="p">(</span><span class="n">markerNumbers</span> <span class="o">=</span> <span class="p">[</span><span class="n">mNode</span><span class="p">,</span> <span class="n">mGroundI</span><span class="p">],</span>
-<span class="linenos"> 96</span>                                           <span class="c1"># constrainedAxes=[0,0,0],</span>
-<span class="linenos"> 97</span>                                           <span class="n">visualization</span><span class="o">=</span><span class="nc">VSphericalJoint</span><span class="p">(</span><span class="n">jointRadius</span><span class="o">=</span><span class="mf">0.015</span><span class="p">)))</span>
-<span class="linenos"> 98</span><span class="k">else</span><span class="p">:</span> <span class="c1">#use superelement marker</span>
-<span class="linenos"> 99</span>    <span class="c1">#pMid = [0,wy*0.5,wz*0.5]</span>
-<span class="linenos">100</span>    <span class="n">pMid</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="nf">GetNodePositionsMean</span><span class="p">(</span><span class="n">nodeLists</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-<span class="linenos">101</span>    <span class="n">mGroundI</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerBodyRigid</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">oGround</span><span class="p">,</span>
-<span class="linenos">102</span>                                                <span class="n">localPosition</span><span class="o">=</span><span class="n">pMid</span><span class="p">))</span>
-<span class="linenos">103</span>    <span class="n">mLeft</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerSuperElementRigid</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">oGenericODE2</span><span class="p">,</span>
-<span class="linenos">104</span>                                                  <span class="n">meshNodeNumbers</span><span class="o">=</span><span class="n">nodeLists</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-<span class="linenos">105</span>                                                  <span class="n">useAlternativeApproach</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-<span class="linenos">106</span>                                                  <span class="n">weightingFactors</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="o">/</span><span class="n">nNodes</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">*</span><span class="n">nNodes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-<span class="linenos">107</span>                                                  <span class="n">offset</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
-<span class="linenos">108</span>    <span class="c1">#mbs.AddObject(ObjectJointSpherical(markerNumbers = [mLeft, mGroundI],</span>
-<span class="linenos">109</span>    <span class="c1">#                                   visualization=VSphericalJoint(jointRadius=0.015)))</span>
-<span class="linenos">110</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">GenericJoint</span><span class="p">(</span><span class="n">markerNumbers</span> <span class="o">=</span> <span class="p">[</span><span class="n">mLeft</span><span class="p">,</span> <span class="n">mGroundI</span><span class="p">],</span>
-<span class="linenos">111</span>                               <span class="n">visualization</span><span class="o">=</span><span class="nc">VGenericJoint</span><span class="p">(</span><span class="n">axesRadius</span><span class="o">=</span><span class="mf">0.015</span><span class="p">,</span> <span class="n">axesLength</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)))</span>
-<span class="linenos">112</span>
+<span class="linenos"> 63</span>
+<span class="linenos"> 64</span><span class="n">fem</span><span class="o">=</span><span class="nc">FEMinterface</span><span class="p">()</span>
+<span class="linenos"> 65</span><span class="n">fem</span><span class="o">.</span><span class="nf">ImportMeshFromNGsolve</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">density</span><span class="p">,</span> <span class="n">youngsModulus</span><span class="p">,</span> <span class="n">nu</span><span class="p">,</span> <span class="n">meshOrder</span><span class="o">=</span><span class="n">meshOrder</span><span class="p">)</span>
+<span class="linenos"> 66</span>
+<span class="linenos"> 67</span><span class="c1">#%%++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos"> 68</span><span class="p">[</span><span class="n">oGenericODE2</span><span class="p">,</span> <span class="n">allNodeList</span><span class="p">]</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="nf">CreateLinearFEMObjectGenericODE2</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">graphics</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">dodgerblue</span><span class="p">)</span>
+<span class="linenos"> 69</span>
+<span class="linenos"> 70</span><span class="c1">#%%++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos"> 71</span><span class="c1">#add forces on right side and fix on left side:</span>
+<span class="linenos"> 72</span><span class="n">nLists</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="linenos"> 73</span><span class="n">nodeLists</span> <span class="o">=</span> <span class="p">[[]]</span><span class="o">*</span><span class="n">nLists</span>
+<span class="linenos"> 74</span><span class="n">nNodes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">nLists</span>
+<span class="linenos"> 75</span>
+<span class="linenos"> 76</span><span class="n">nodeLists</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="nf">GetNodesInPlane</span><span class="p">(</span><span class="n">point</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">normal</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="linenos"> 77</span><span class="n">nodeLists</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="nf">GetNodesInPlane</span><span class="p">(</span><span class="n">point</span><span class="o">=</span><span class="p">[</span><span class="n">L</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">normal</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="linenos"> 78</span>
+<span class="linenos"> 79</span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nLists</span><span class="p">):</span>
+<span class="linenos"> 80</span>    <span class="n">nNodes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">nodeLists</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+<span class="linenos"> 81</span>
+<span class="linenos"> 82</span><span class="c1">#apply force to right end:</span>
+<span class="linenos"> 83</span><span class="n">fLoad</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="n">nNodes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">1e-3</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="linenos"> 84</span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">nodeLists</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+<span class="linenos"> 85</span>    <span class="n">mNode</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerNodePosition</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">i</span><span class="p">))</span>
+<span class="linenos"> 86</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">AddLoad</span><span class="p">(</span><span class="nc">Force</span><span class="p">(</span><span class="n">markerNumber</span><span class="o">=</span><span class="n">mNode</span><span class="p">,</span> <span class="n">loadVector</span><span class="o">=</span><span class="n">fLoad</span><span class="p">))</span>
+<span class="linenos"> 87</span>
+<span class="linenos"> 88</span><span class="n">oGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectGround</span><span class="p">())</span>
+<span class="linenos"> 89</span>
+<span class="linenos"> 90</span><span class="k">if</span> <span class="kc">False</span><span class="p">:</span>
+<span class="linenos"> 91</span>    <span class="c1">#apply single sphereical constraints to left end:</span>
+<span class="linenos"> 92</span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">nodeLists</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+<span class="linenos"> 93</span>        <span class="n">mNode</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerNodePosition</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">i</span><span class="p">))</span>
+<span class="linenos"> 94</span>        <span class="n">mGroundI</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerBodyPosition</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">oGround</span><span class="p">,</span>
+<span class="linenos"> 95</span>                                                    <span class="n">localPosition</span><span class="o">=</span><span class="n">fem</span><span class="o">.</span><span class="nf">GetNodePositionsAsArray</span><span class="p">()[</span><span class="n">i</span><span class="p">]))</span>
+<span class="linenos"> 96</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectJointSpherical</span><span class="p">(</span><span class="n">markerNumbers</span> <span class="o">=</span> <span class="p">[</span><span class="n">mNode</span><span class="p">,</span> <span class="n">mGroundI</span><span class="p">],</span>
+<span class="linenos"> 97</span>                                           <span class="c1"># constrainedAxes=[0,0,0],</span>
+<span class="linenos"> 98</span>                                           <span class="n">visualization</span><span class="o">=</span><span class="nc">VSphericalJoint</span><span class="p">(</span><span class="n">jointRadius</span><span class="o">=</span><span class="mf">0.015</span><span class="p">)))</span>
+<span class="linenos"> 99</span><span class="k">else</span><span class="p">:</span> <span class="c1">#use superelement marker</span>
+<span class="linenos">100</span>    <span class="c1">#pMid = [0,wy*0.5,wz*0.5]</span>
+<span class="linenos">101</span>    <span class="n">pMid</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="nf">GetNodePositionsMean</span><span class="p">(</span><span class="n">nodeLists</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="linenos">102</span>    <span class="n">mGroundI</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerBodyRigid</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">oGround</span><span class="p">,</span>
+<span class="linenos">103</span>                                                <span class="n">localPosition</span><span class="o">=</span><span class="n">pMid</span><span class="p">))</span>
+<span class="linenos">104</span>    <span class="n">mLeft</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerSuperElementRigid</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">oGenericODE2</span><span class="p">,</span>
+<span class="linenos">105</span>                                                  <span class="n">meshNodeNumbers</span><span class="o">=</span><span class="n">nodeLists</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos">106</span>                                                  <span class="n">useAlternativeApproach</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="linenos">107</span>                                                  <span class="n">weightingFactors</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="o">/</span><span class="n">nNodes</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">*</span><span class="n">nNodes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos">108</span>                                                  <span class="n">offset</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+<span class="linenos">109</span>    <span class="c1">#mbs.AddObject(ObjectJointSpherical(markerNumbers = [mLeft, mGroundI],</span>
+<span class="linenos">110</span>    <span class="c1">#                                   visualization=VSphericalJoint(jointRadius=0.015)))</span>
+<span class="linenos">111</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">GenericJoint</span><span class="p">(</span><span class="n">markerNumbers</span> <span class="o">=</span> <span class="p">[</span><span class="n">mLeft</span><span class="p">,</span> <span class="n">mGroundI</span><span class="p">],</span>
+<span class="linenos">112</span>                               <span class="n">visualization</span><span class="o">=</span><span class="nc">VGenericJoint</span><span class="p">(</span><span class="n">axesRadius</span><span class="o">=</span><span class="mf">0.015</span><span class="p">,</span> <span class="n">axesLength</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)))</span>
 <span class="linenos">113</span>
 <span class="linenos">114</span>
 <span class="linenos">115</span>
-<span class="linenos">116</span><span class="c1">#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos">117</span>
-<span class="linenos">118</span><span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
-<span class="linenos">119</span>
-<span class="linenos">120</span><span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">()</span>
-<span class="linenos">121</span>
-<span class="linenos">122</span><span class="n">nodeDrawSize</span> <span class="o">=</span> <span class="mf">0.01</span>
-<span class="linenos">123</span>
-<span class="linenos">124</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">defaultSize</span> <span class="o">=</span> <span class="n">nodeDrawSize</span>
-<span class="linenos">125</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">drawNodesAsPoint</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="linenos">126</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">connectors</span><span class="o">.</span><span class="n">defaultSize</span> <span class="o">=</span> <span class="mf">1.25</span><span class="o">*</span><span class="n">nodeDrawSize</span>
-<span class="linenos">127</span>
-<span class="linenos">128</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">show</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="linenos">129</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">showBasis</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1">#of rigid body node of reference frame</span>
-<span class="linenos">130</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">basisSize</span> <span class="o">=</span> <span class="mf">0.12</span>
-<span class="linenos">131</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">bodies</span><span class="o">.</span><span class="n">deformationScaleFactor</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1">#use this factor to scale the deformation of modes</span>
-<span class="linenos">132</span>
-<span class="linenos">133</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">showFaceEdges</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="linenos">134</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">showFaces</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="linenos">135</span>
-<span class="linenos">136</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">show</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="linenos">137</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">drawSimplified</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="linenos">138</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">defaultSize</span> <span class="o">=</span> <span class="mf">0.01</span>
-<span class="linenos">139</span>
-<span class="linenos">140</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">markers</span><span class="o">.</span><span class="n">show</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="linenos">141</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">markers</span><span class="o">.</span><span class="n">defaultSize</span><span class="o">=</span><span class="mf">1.2</span><span class="o">*</span><span class="n">nodeDrawSize</span>
-<span class="linenos">142</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">markers</span><span class="o">.</span><span class="n">drawSimplified</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="linenos">143</span>
-<span class="linenos">144</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">loads</span><span class="o">.</span><span class="n">show</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="linenos">145</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">loads</span><span class="o">.</span><span class="n">drawSimplified</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="linenos">146</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">loads</span><span class="o">.</span><span class="n">defaultSize</span><span class="o">=</span><span class="mf">0.1</span>
-<span class="linenos">147</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">loads</span><span class="o">.</span><span class="n">defaultRadius</span> <span class="o">=</span> <span class="mf">0.002</span>
-<span class="linenos">148</span>
-<span class="linenos">149</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">multiSampling</span><span class="o">=</span><span class="mi">4</span>
-<span class="linenos">150</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">lineWidth</span><span class="o">=</span><span class="mi">2</span>
-<span class="linenos">151</span>
-<span class="linenos">152</span><span class="n">h</span><span class="o">=</span><span class="mf">1e-3</span><span class="o">*</span><span class="mf">0.5</span>
-<span class="linenos">153</span><span class="n">tEnd</span> <span class="o">=</span> <span class="mi">2</span>
-<span class="linenos">154</span>
-<span class="linenos">155</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tEnd</span><span class="o">/</span><span class="n">h</span><span class="p">)</span>
-<span class="linenos">156</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="n">tEnd</span>
-<span class="linenos">157</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">writeSolutionToFile</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="linenos">158</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">verboseMode</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="linenos">159</span><span class="c1">#simulationSettings.timeIntegration.verboseModeFile = 3</span>
-<span class="linenos">160</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">useModifiedNewton</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="linenos">161</span>
-<span class="linenos">162</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">sensorsWritePeriod</span> <span class="o">=</span> <span class="n">h</span>
-<span class="linenos">163</span>
-<span class="linenos">164</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">generalizedAlpha</span><span class="o">.</span><span class="n">spectralRadius</span> <span class="o">=</span> <span class="mf">0.7</span>
-<span class="linenos">165</span><span class="c1">#simulationSettings.displayStatistics = True</span>
-<span class="linenos">166</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">displayComputationTime</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="linenos">167</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">linearSolverType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">LinearSolverType</span><span class="o">.</span><span class="n">EigenSparse</span>
-<span class="linenos">168</span><span class="c1">#create animation:</span>
-<span class="linenos">169</span><span class="c1"># simulationSettings.solutionSettings.recordImagesInterval = 0.005</span>
-<span class="linenos">170</span><span class="c1"># SC.visualizationSettings.exportImages.saveImageFileName = &quot;animation/frame&quot;</span>
-<span class="linenos">171</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">renderWindowSize</span><span class="o">=</span><span class="p">[</span><span class="mi">1920</span><span class="p">,</span><span class="mi">1080</span><span class="p">]</span>
-<span class="linenos">172</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">multiSampling</span> <span class="o">=</span> <span class="mi">4</span>
-<span class="linenos">173</span><span class="c1"># SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.Displacement</span>
-<span class="linenos">174</span><span class="c1"># SC.visualizationSettings.contour.outputVariableComponent = 1 #y-component</span>
-<span class="linenos">175</span>
-<span class="linenos">176</span><span class="n">useGraphics</span><span class="o">=</span><span class="kc">True</span>
-<span class="linenos">177</span><span class="k">if</span> <span class="kc">True</span><span class="p">:</span>
-<span class="linenos">178</span>    <span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
-<span class="linenos">179</span>        <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">autoFitScene</span><span class="o">=</span><span class="kc">False</span>
-<span class="linenos">180</span>
-<span class="linenos">181</span>        <span class="n">exu</span><span class="o">.</span><span class="nf">StartRenderer</span><span class="p">()</span>
-<span class="linenos">182</span>        <span class="k">if</span> <span class="s1">&#39;renderState&#39;</span> <span class="ow">in</span> <span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">:</span> <span class="n">SC</span><span class="o">.</span><span class="nf">SetRenderState</span><span class="p">(</span><span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span><span class="s1">&#39;renderState&#39;</span><span class="p">])</span> <span class="c1">#load last model view</span>
-<span class="linenos">183</span>
-<span class="linenos">184</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">WaitForUserToContinue</span><span class="p">()</span> <span class="c1">#press space to continue</span>
-<span class="linenos">185</span>
-<span class="linenos">186</span>    <span class="c1">#SC.RedrawAndSaveImage()</span>
-<span class="linenos">187</span>    <span class="k">if</span> <span class="kc">True</span><span class="p">:</span>
-<span class="linenos">188</span>        <span class="c1"># mbs.SolveDynamic(solverType=exu.DynamicSolverType.TrapezoidalIndex2,</span>
-<span class="linenos">189</span>        <span class="c1">#                   simulationSettings=simulationSettings)</span>
-<span class="linenos">190</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="o">=</span><span class="n">simulationSettings</span><span class="p">)</span>
-<span class="linenos">191</span>    <span class="k">else</span><span class="p">:</span>
-<span class="linenos">192</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">SolveStatic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="o">=</span><span class="n">simulationSettings</span><span class="p">)</span>
-<span class="linenos">193</span>
-<span class="linenos">194</span>    <span class="c1"># uTip = mbs.GetSensorValues(sensTipDispl)[1]</span>
-<span class="linenos">195</span>    <span class="c1"># print(&quot;nModes=&quot;, nModes, &quot;, tip displacement=&quot;, uTip)</span>
-<span class="linenos">196</span>
-<span class="linenos">197</span>    <span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
-<span class="linenos">198</span>        <span class="n">SC</span><span class="o">.</span><span class="nf">WaitForRenderEngineStopFlag</span><span class="p">()</span>
-<span class="linenos">199</span>        <span class="n">exu</span><span class="o">.</span><span class="nf">StopRenderer</span><span class="p">()</span> <span class="c1">#safely close rendering window!</span>
-<span class="linenos">200</span>
-<span class="linenos">201</span>    <span class="k">if</span> <span class="kc">False</span><span class="p">:</span>
-<span class="linenos">202</span>
-<span class="linenos">203</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sensorNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">sensBushingVel</span><span class="p">],</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="linenos">116</span>
+<span class="linenos">117</span><span class="c1">#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">118</span>
+<span class="linenos">119</span><span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
+<span class="linenos">120</span>
+<span class="linenos">121</span><span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">()</span>
+<span class="linenos">122</span>
+<span class="linenos">123</span><span class="n">nodeDrawSize</span> <span class="o">=</span> <span class="mf">0.01</span>
+<span class="linenos">124</span>
+<span class="linenos">125</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">defaultSize</span> <span class="o">=</span> <span class="n">nodeDrawSize</span>
+<span class="linenos">126</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">drawNodesAsPoint</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="linenos">127</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">connectors</span><span class="o">.</span><span class="n">defaultSize</span> <span class="o">=</span> <span class="mf">1.25</span><span class="o">*</span><span class="n">nodeDrawSize</span>
+<span class="linenos">128</span>
+<span class="linenos">129</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">show</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="linenos">130</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">showBasis</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1">#of rigid body node of reference frame</span>
+<span class="linenos">131</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">basisSize</span> <span class="o">=</span> <span class="mf">0.12</span>
+<span class="linenos">132</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">bodies</span><span class="o">.</span><span class="n">deformationScaleFactor</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1">#use this factor to scale the deformation of modes</span>
+<span class="linenos">133</span>
+<span class="linenos">134</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">showFaceEdges</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">135</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">showFaces</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">136</span>
+<span class="linenos">137</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">show</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">138</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">drawSimplified</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="linenos">139</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">defaultSize</span> <span class="o">=</span> <span class="mf">0.01</span>
+<span class="linenos">140</span>
+<span class="linenos">141</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">markers</span><span class="o">.</span><span class="n">show</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">142</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">markers</span><span class="o">.</span><span class="n">defaultSize</span><span class="o">=</span><span class="mf">1.2</span><span class="o">*</span><span class="n">nodeDrawSize</span>
+<span class="linenos">143</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">markers</span><span class="o">.</span><span class="n">drawSimplified</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="linenos">144</span>
+<span class="linenos">145</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">loads</span><span class="o">.</span><span class="n">show</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="linenos">146</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">loads</span><span class="o">.</span><span class="n">drawSimplified</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="linenos">147</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">loads</span><span class="o">.</span><span class="n">defaultSize</span><span class="o">=</span><span class="mf">0.1</span>
+<span class="linenos">148</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">loads</span><span class="o">.</span><span class="n">defaultRadius</span> <span class="o">=</span> <span class="mf">0.002</span>
+<span class="linenos">149</span>
+<span class="linenos">150</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">multiSampling</span><span class="o">=</span><span class="mi">4</span>
+<span class="linenos">151</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">lineWidth</span><span class="o">=</span><span class="mi">2</span>
+<span class="linenos">152</span>
+<span class="linenos">153</span><span class="n">h</span><span class="o">=</span><span class="mf">1e-3</span><span class="o">*</span><span class="mf">0.5</span>
+<span class="linenos">154</span><span class="n">tEnd</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="linenos">155</span>
+<span class="linenos">156</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tEnd</span><span class="o">/</span><span class="n">h</span><span class="p">)</span>
+<span class="linenos">157</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="n">tEnd</span>
+<span class="linenos">158</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">writeSolutionToFile</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="linenos">159</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">verboseMode</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="linenos">160</span><span class="c1">#simulationSettings.timeIntegration.verboseModeFile = 3</span>
+<span class="linenos">161</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">useModifiedNewton</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">162</span>
+<span class="linenos">163</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">sensorsWritePeriod</span> <span class="o">=</span> <span class="n">h</span>
+<span class="linenos">164</span>
+<span class="linenos">165</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">generalizedAlpha</span><span class="o">.</span><span class="n">spectralRadius</span> <span class="o">=</span> <span class="mf">0.7</span>
+<span class="linenos">166</span><span class="c1">#simulationSettings.displayStatistics = True</span>
+<span class="linenos">167</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">displayComputationTime</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">168</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">linearSolverType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">LinearSolverType</span><span class="o">.</span><span class="n">EigenSparse</span>
+<span class="linenos">169</span><span class="c1">#create animation:</span>
+<span class="linenos">170</span><span class="c1"># simulationSettings.solutionSettings.recordImagesInterval = 0.005</span>
+<span class="linenos">171</span><span class="c1"># SC.visualizationSettings.exportImages.saveImageFileName = &quot;animation/frame&quot;</span>
+<span class="linenos">172</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">renderWindowSize</span><span class="o">=</span><span class="p">[</span><span class="mi">1920</span><span class="p">,</span><span class="mi">1080</span><span class="p">]</span>
+<span class="linenos">173</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">multiSampling</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="linenos">174</span><span class="c1"># SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.Displacement</span>
+<span class="linenos">175</span><span class="c1"># SC.visualizationSettings.contour.outputVariableComponent = 1 #y-component</span>
+<span class="linenos">176</span>
+<span class="linenos">177</span><span class="n">useGraphics</span><span class="o">=</span><span class="kc">True</span>
+<span class="linenos">178</span><span class="k">if</span> <span class="kc">True</span><span class="p">:</span>
+<span class="linenos">179</span>    <span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
+<span class="linenos">180</span>        <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">autoFitScene</span><span class="o">=</span><span class="kc">False</span>
+<span class="linenos">181</span>
+<span class="linenos">182</span>        <span class="n">exu</span><span class="o">.</span><span class="nf">StartRenderer</span><span class="p">()</span>
+<span class="linenos">183</span>        <span class="k">if</span> <span class="s1">&#39;renderState&#39;</span> <span class="ow">in</span> <span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">:</span> <span class="n">SC</span><span class="o">.</span><span class="nf">SetRenderState</span><span class="p">(</span><span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span><span class="s1">&#39;renderState&#39;</span><span class="p">])</span> <span class="c1">#load last model view</span>
+<span class="linenos">184</span>
+<span class="linenos">185</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">WaitForUserToContinue</span><span class="p">()</span> <span class="c1">#press space to continue</span>
+<span class="linenos">186</span>
+<span class="linenos">187</span>    <span class="c1">#SC.RedrawAndSaveImage()</span>
+<span class="linenos">188</span>    <span class="k">if</span> <span class="kc">True</span><span class="p">:</span>
+<span class="linenos">189</span>        <span class="c1"># mbs.SolveDynamic(solverType=exu.DynamicSolverType.TrapezoidalIndex2,</span>
+<span class="linenos">190</span>        <span class="c1">#                   simulationSettings=simulationSettings)</span>
+<span class="linenos">191</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="o">=</span><span class="n">simulationSettings</span><span class="p">)</span>
+<span class="linenos">192</span>    <span class="k">else</span><span class="p">:</span>
+<span class="linenos">193</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">SolveStatic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="o">=</span><span class="n">simulationSettings</span><span class="p">)</span>
+<span class="linenos">194</span>
+<span class="linenos">195</span>    <span class="c1"># uTip = mbs.GetSensorValues(sensTipDispl)[1]</span>
+<span class="linenos">196</span>    <span class="c1"># print(&quot;nModes=&quot;, nModes, &quot;, tip displacement=&quot;, uTip)</span>
+<span class="linenos">197</span>
+<span class="linenos">198</span>    <span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
+<span class="linenos">199</span>        <span class="n">SC</span><span class="o">.</span><span class="nf">WaitForRenderEngineStopFlag</span><span class="p">()</span>
+<span class="linenos">200</span>        <span class="n">exu</span><span class="o">.</span><span class="nf">StopRenderer</span><span class="p">()</span> <span class="c1">#safely close rendering window!</span>
+<span class="linenos">201</span>
+<span class="linenos">202</span>    <span class="k">if</span> <span class="kc">False</span><span class="p">:</span>
+<span class="linenos">203</span>
+<span class="linenos">204</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sensorNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">sensBushingVel</span><span class="p">],</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 </pre></div>
 </div>
 </section>

@@ -33,7 +33,8 @@ You can view and download this file on Github: `mpi4pyExample.py <https://github
    
    
    import exudyn as exu
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    from exudyn.processing import *
    import time
    
@@ -96,11 +97,12 @@ You can view and download this file on Github: `mpi4pyExample.py <https://github
        n=640
        start_time = time.time()
        print('parameter variation '+'with MPI'*useMPI)
-       [p,v]=ParameterVariation(parameterFunction=TestExudyn,
-                                parameters={'mass':(1.,1.,1), 'stiffness':(1000,2000,n)}, 
+       [p,v]=ParameterVariation(parameterFunction = TestExudyn,
+                                parameters = {'mass':(1.,1.,1), 'stiffness':(1000,2000,n)}, 
                                 # debugMode=True,
-                                addComputationIndex=True,
-                                useMultiProcessing=True,
+                                addComputationIndex = True,
+                                useMultiProcessing = True, 
+                                showProgress = True,
                                 #numberOfThreads=8, #automatically determined by mpi4py routines in ParameterVariationList(...)
                                 resultsFile='solution/resultsMPI.txt',
                                 useMPI = useMPI,

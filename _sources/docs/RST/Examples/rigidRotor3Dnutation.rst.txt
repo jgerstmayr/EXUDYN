@@ -26,7 +26,8 @@ You can view and download this file on Github: `rigidRotor3Dnutation.py <https:/
    
    import exudyn as exu
    from exudyn.itemInterface import *
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    
    import time
    import numpy as np
@@ -69,9 +70,9 @@ You can view and download this file on Github: `rigidRotor3Dnutation.py <https:/
    p=[0,0,0]
    lFrame = 0.8
    tFrame = 0.01
-   backgroundX = GraphicsDataCylinder(p,[lFrame,0,0],tFrame,[0.9,0.3,0.3,1],12)
-   backgroundY = GraphicsDataCylinder(p,[0,lFrame,0],tFrame,[0.3,0.9,0.3,1],12)
-   backgroundZ = GraphicsDataCylinder(p,[0,0,lFrame],tFrame,[0.3,0.3,0.9,1],12)
+   backgroundX = graphics.Cylinder(p,[lFrame,0,0],tFrame,[0.9,0.3,0.3,1],12)
+   backgroundY = graphics.Cylinder(p,[0,lFrame,0],tFrame,[0.3,0.9,0.3,1],12)
+   backgroundZ = graphics.Cylinder(p,[0,0,lFrame],tFrame,[0.3,0.3,0.9,1],12)
    #mbs.AddObject(ObjectGround(referencePosition= [0,0,0], visualization=VObjectGround(graphicsData= [backgroundX, backgroundY, backgroundZ])))
    
    #rotor is rotating around x-axis
@@ -89,7 +90,7 @@ You can view and download this file on Github: `rigidRotor3Dnutation.py <https:/
    nGround0=mbs.AddNode(NodePointGround(referenceCoordinates = [0,0,0]))
    
    #add mass point (this is a 3D object with 3 coordinates):
-   gRotor = GraphicsDataCylinder([-lRotor*0.5,0,0],[lRotor*0.5,0,0],r,[0.3,0.3,0.9,1],32)
+   gRotor = graphics.Cylinder([-lRotor*0.5,0,0],[lRotor*0.5,0,0],r,[0.3,0.3,0.9,1],32)
    gRotor3 = [backgroundX, backgroundY, backgroundZ]
    rigid = mbs.AddObject(RigidBody(physicsMass=m, physicsInertia=[Jxx,Jyyzz,Jyyzz,0,0,0], nodeNumber = n1, 
                                    visualization=VObjectRigidBody2D(graphicsData=[gRotor]+gRotor3)))
@@ -130,13 +131,9 @@ You can view and download this file on Github: `rigidRotor3Dnutation.py <https:/
    exu.StartRenderer()              #start graphics visualization
    mbs.WaitForUserToContinue()    #wait for pressing SPACE bar to continue
    
-   fileName = 'coordinatesSolution.txt'
-   solution = LoadSolutionFile('coordinatesSolution.txt')
-   AnimateSolution(mbs, solution, 5, 0.02)
-       
-   #SC.WaitForRenderEngineStopFlag()#wait for pressing 'Q' to quit
    exu.StopRenderer()               #safely close rendering window!
    
+   mbs.SolutionViewer()
    
    ###+++++++++++++++++++++++++++++++++++++++++++++++++++++
    #import matplotlib.pyplot as plt

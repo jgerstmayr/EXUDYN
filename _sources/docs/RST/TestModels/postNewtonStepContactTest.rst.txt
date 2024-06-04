@@ -24,7 +24,8 @@ You can view and download this file on Github: `postNewtonStepContactTest.py <ht
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    
    import exudyn as exu
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    
    useGraphics = True #without test
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -127,13 +128,13 @@ You can view and download this file on Github: `postNewtonStepContactTest.py <ht
    
    #ground node
    d=0.01
-   gGround = GraphicsDataOrthoCubePoint([0,-d*0.5,0],[2*L,d,d],color=color4grey)
+   gGround = graphics.Brick([0,-d*0.5,0],[2*L,d,d],color=graphics.color.grey)
    oGround=mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=[gGround])))
    
    nGround=mbs.AddNode(NodePointGround(referenceCoordinates = [0,0,0]))
    
    #add mass point (this is a 3D object with 3 coordinates):
-   gSphere = GraphicsDataSphere([0,0,0], r, color=color4red, nTiles=20)
+   gSphere = graphics.Sphere([0,0,0], r, color=graphics.color.red, nTiles=20)
    massPoint = mbs.AddObject(MassPoint(physicsMass = mass, nodeNumber = n1,
                                        visualization=VMassPoint(graphicsData=[gSphere])))
    

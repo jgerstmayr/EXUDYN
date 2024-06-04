@@ -23,7 +23,8 @@ You can view and download this file on Github: `generalContactCylinderTest.py <h
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    
    import exudyn as exu
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    import numpy as np
    
    useGraphics = True #without test
@@ -78,14 +79,14 @@ You can view and download this file on Github: `generalContactCylinderTest.py <h
    # gContact.sphereSphereContact = False
    
    #%% ground
-   gFloor = GraphicsDataCheckerBoard(p0,size=planeL, nTiles=10)
+   gFloor = graphics.CheckerBoard(p0,size=planeL, nTiles=10)
    gDataList = [gFloor]
    
    
    nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0] ))
    mGround = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nGround))
    
-   [meshPoints, meshTrigs] = GraphicsData2PointsAndTrigs(gFloor)
+   [meshPoints, meshTrigs] = graphics.ToPointsAndTrigs(gFloor)
    #[meshPoints, meshTrigs] = RefineMesh(meshPoints, meshTrigs) #just to have more triangles on floor
    gContact.AddTrianglesRigidBodyBased(rigidBodyMarkerIndex=mGround, contactStiffness=k, contactDamping=d, frictionMaterialIndex=0,
        pointList=meshPoints,  triangleList=meshTrigs)
@@ -103,9 +104,9 @@ You can view and download this file on Github: `generalContactCylinderTest.py <h
                        inertia=inertia,
                        gravity = gravity,
                        nodeType = exu.NodeType.RotationRotationVector,
-                       graphicsDataList=[GraphicsDataCylinder(pAxis=[0,-0.5*tCyl,0],vAxis=[0,tCyl,0], radius=rCyl, 
+                       graphicsDataList=[graphics.Cylinder(pAxis=[0,-0.5*tCyl,0],vAxis=[0,tCyl,0], radius=rCyl, 
                                                               color=[0.3,0.3,0.3,1],
-                                                              alternatingColor=color4lightgrey,nTiles=64)]
+                                                              alternatingColor=graphics.color.lightgrey,nTiles=64)]
                        )
    nCyl = mbs.GetObject(bCyl)['nodeNumber']
    #print(mbs.GetNode(nCyl))

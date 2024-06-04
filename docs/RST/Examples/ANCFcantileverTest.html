@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ANCFcantileverTest.py &mdash; Exudyn1.8.32.dev1 1.8.32.dev1 documentation</title>
+  <title>ANCFcantileverTest.py &mdash; Exudyn1.8.52.dev1 1.8.52.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=d6ff67ca"></script>
+        <script src="../../../_static/documentation_options.js?v=b761f56e"></script>
         <script src="../../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -41,7 +41,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.8.32.dev1
+            Exudyn1.8.52.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -233,7 +233,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.8.32.dev1</a>
+          <a href="../../../index.html">Exudyn1.8.52.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -273,149 +273,150 @@
 <span class="linenos"> 16</span>
 <span class="linenos"> 17</span><span class="c1">## import exudyn and utilities</span>
 <span class="linenos"> 18</span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
-<span class="linenos"> 19</span><span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="linenos"> 20</span>
-<span class="linenos"> 21</span><span class="c1">## create container and main system to work with</span>
-<span class="linenos"> 22</span><span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
-<span class="linenos"> 23</span><span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
-<span class="linenos"> 24</span>
+<span class="linenos"> 19</span><span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="o">*</span> <span class="c1">#includes itemInterface and rigidBodyUtilities</span>
+<span class="linenos"> 20</span><span class="kn">import</span> <span class="nn">exudyn.graphics</span> <span class="k">as</span> <span class="nn">graphics</span> <span class="c1">#only import if it does not conflict</span>
+<span class="linenos"> 21</span>
+<span class="linenos"> 22</span><span class="c1">## create container and main system to work with</span>
+<span class="linenos"> 23</span><span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
+<span class="linenos"> 24</span><span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
 <span class="linenos"> 25</span>
-<span class="linenos"> 26</span><span class="c1">## create graphics background</span>
-<span class="linenos"> 27</span><span class="n">rect</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mf">2.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">]</span> <span class="c1">#xmin,ymin,xmax,ymax</span>
-<span class="linenos"> 28</span><span class="n">background</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span><span class="s1">&#39;Line&#39;</span><span class="p">,</span> <span class="s1">&#39;color&#39;</span><span class="p">:[</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.8</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;data&#39;</span><span class="p">:[</span><span class="n">rect</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">rect</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="mi">0</span><span class="p">,</span> <span class="n">rect</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">rect</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="mi">0</span><span class="p">,</span> <span class="n">rect</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">rect</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="mi">0</span><span class="p">,</span> <span class="n">rect</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">rect</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="mi">0</span><span class="p">,</span> <span class="n">rect</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">rect</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="mi">0</span><span class="p">]}</span> <span class="c1">#background</span>
-<span class="linenos"> 29</span><span class="n">oGround</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectGround</span><span class="p">(</span><span class="n">referencePosition</span><span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">visualization</span><span class="o">=</span><span class="nc">VObjectGround</span><span class="p">(</span><span class="n">graphicsData</span><span class="o">=</span> <span class="p">[</span><span class="n">background</span><span class="p">])))</span>
-<span class="linenos"> 30</span>
-<span class="linenos"> 31</span><span class="c1">#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos"> 32</span><span class="c1">## define beam dimensions and tip load</span>
-<span class="linenos"> 33</span><span class="n">L</span><span class="o">=</span><span class="mi">2</span>                    <span class="c1"># length of ANCF element in m</span>
-<span class="linenos"> 34</span><span class="n">E</span><span class="o">=</span><span class="mf">2.07e11</span>             <span class="c1"># Young&#39;s modulus of ANCF element in N/m^2</span>
-<span class="linenos"> 35</span><span class="n">rho</span><span class="o">=</span><span class="mi">7800</span>               <span class="c1"># density of ANCF element in kg/m^3</span>
-<span class="linenos"> 36</span><span class="n">b</span><span class="o">=</span><span class="mf">0.1</span>                  <span class="c1"># width of rectangular ANCF element in m</span>
-<span class="linenos"> 37</span><span class="n">h</span><span class="o">=</span><span class="mf">0.1</span>                  <span class="c1"># height of rectangular ANCF element in m</span>
-<span class="linenos"> 38</span><span class="n">A</span><span class="o">=</span><span class="n">b</span><span class="o">*</span><span class="n">h</span>                  <span class="c1"># cross sectional area of ANCF element in m^2</span>
-<span class="linenos"> 39</span><span class="n">I</span><span class="o">=</span><span class="n">b</span><span class="o">*</span><span class="n">h</span><span class="o">**</span><span class="mi">3</span><span class="o">/</span><span class="mi">12</span>            <span class="c1"># second moment of area of ANCF element in m^4</span>
-<span class="linenos"> 40</span><span class="n">f</span><span class="o">=</span><span class="mi">3</span><span class="o">*</span><span class="n">E</span><span class="o">*</span><span class="n">I</span><span class="o">/</span><span class="n">L</span><span class="o">**</span><span class="mi">2</span>           <span class="c1"># tip load applied to ANCF element in N</span>
-<span class="linenos"> 41</span>
-<span class="linenos"> 42</span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;load f=&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
-<span class="linenos"> 43</span>
-<span class="linenos"> 44</span><span class="c1">#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos"> 45</span><span class="c1">## generate ANCFCable2D template containing beam parameters</span>
-<span class="linenos"> 46</span><span class="n">cableTemplate</span> <span class="o">=</span> <span class="nc">Cable2D</span><span class="p">(</span><span class="c1">#physicsLength = L / nElements, #set in GenerateStraightLineANCFCable2D(...)</span>
-<span class="linenos"> 47</span>                        <span class="n">physicsMassPerLength</span> <span class="o">=</span> <span class="n">rho</span><span class="o">*</span><span class="n">A</span><span class="p">,</span>
-<span class="linenos"> 48</span>                        <span class="n">physicsBendingStiffness</span> <span class="o">=</span> <span class="n">E</span><span class="o">*</span><span class="n">I</span><span class="p">,</span>
-<span class="linenos"> 49</span>                        <span class="n">physicsAxialStiffness</span> <span class="o">=</span> <span class="n">E</span><span class="o">*</span><span class="n">A</span><span class="p">,</span>
-<span class="linenos"> 50</span>                        <span class="n">useReducedOrderIntegration</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-<span class="linenos"> 51</span>                        <span class="c1">#nodeNumbers = [0, 0], #will be filled in GenerateStraightLineANCFCable2D(...)</span>
-<span class="linenos"> 52</span>                        <span class="p">)</span>
-<span class="linenos"> 53</span>
-<span class="linenos"> 54</span><span class="c1">## define nodal positions of beam (3D vectors, while cable element is only 2D)</span>
-<span class="linenos"> 55</span><span class="n">positionOfNode0</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="c1"># starting point of line</span>
-<span class="linenos"> 56</span><span class="n">positionOfNode1</span> <span class="o">=</span> <span class="p">[</span><span class="n">L</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="c1"># end point of line</span>
-<span class="linenos"> 57</span>
-<span class="linenos"> 58</span><span class="c1">## number of cable elements for discretization</span>
-<span class="linenos"> 59</span><span class="n">numberOfElements</span> <span class="o">=</span> <span class="mi">64</span>
-<span class="linenos"> 60</span>
-<span class="linenos"> 61</span><span class="c1">## use utility function to create set of straight cable elements between two positions with options for constraints at supports</span>
-<span class="linenos"> 62</span><span class="c1">#alternative to mbs.AddObject(Cable2D(...)) with nodes:</span>
-<span class="linenos"> 63</span><span class="n">ancf</span><span class="o">=</span><span class="nf">GenerateStraightLineANCFCable2D</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span>
-<span class="linenos"> 64</span>                <span class="n">positionOfNode0</span><span class="p">,</span> <span class="n">positionOfNode1</span><span class="p">,</span>
-<span class="linenos"> 65</span>                <span class="n">numberOfElements</span><span class="p">,</span>
-<span class="linenos"> 66</span>                <span class="n">cableTemplate</span><span class="p">,</span> <span class="c1">#this defines the beam element properties</span>
-<span class="linenos"> 67</span>                <span class="n">massProportionalLoad</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">9.81</span><span class="o">*</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="c1">#optionally add gravity</span>
-<span class="linenos"> 68</span>                <span class="n">fixedConstraintsNode0</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="c1">#add constraints for pos and rot (r&#39;_y)</span>
-<span class="linenos"> 69</span>                <span class="n">fixedConstraintsNode1</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
-<span class="linenos"> 70</span>
-<span class="linenos"> 71</span><span class="c1">## add load vector on last node in y-direction</span>
-<span class="linenos"> 72</span><span class="n">mANCFLast</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerNodePosition</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">ancf</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span> <span class="c1">#ancf[0][-1] = last node</span>
-<span class="linenos"> 73</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddLoad</span><span class="p">(</span><span class="nc">Force</span><span class="p">(</span><span class="n">markerNumber</span> <span class="o">=</span> <span class="n">mANCFLast</span><span class="p">,</span> <span class="n">loadVector</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">f</span><span class="p">,</span> <span class="mi">0</span><span class="p">]))</span> <span class="c1">#will be changed in load steps</span>
-<span class="linenos"> 74</span>
+<span class="linenos"> 26</span>
+<span class="linenos"> 27</span><span class="c1">## create graphics background</span>
+<span class="linenos"> 28</span><span class="n">rect</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mf">2.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">]</span> <span class="c1">#xmin,ymin,xmax,ymax</span>
+<span class="linenos"> 29</span><span class="n">background</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span><span class="s1">&#39;Line&#39;</span><span class="p">,</span> <span class="s1">&#39;color&#39;</span><span class="p">:[</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.8</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;data&#39;</span><span class="p">:[</span><span class="n">rect</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">rect</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="mi">0</span><span class="p">,</span> <span class="n">rect</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">rect</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="mi">0</span><span class="p">,</span> <span class="n">rect</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">rect</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="mi">0</span><span class="p">,</span> <span class="n">rect</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">rect</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="mi">0</span><span class="p">,</span> <span class="n">rect</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">rect</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="mi">0</span><span class="p">]}</span> <span class="c1">#background</span>
+<span class="linenos"> 30</span><span class="n">oGround</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectGround</span><span class="p">(</span><span class="n">referencePosition</span><span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">visualization</span><span class="o">=</span><span class="nc">VObjectGround</span><span class="p">(</span><span class="n">graphicsData</span><span class="o">=</span> <span class="p">[</span><span class="n">background</span><span class="p">])))</span>
+<span class="linenos"> 31</span>
+<span class="linenos"> 32</span><span class="c1">#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos"> 33</span><span class="c1">## define beam dimensions and tip load</span>
+<span class="linenos"> 34</span><span class="n">L</span><span class="o">=</span><span class="mi">2</span>                    <span class="c1"># length of ANCF element in m</span>
+<span class="linenos"> 35</span><span class="n">E</span><span class="o">=</span><span class="mf">2.07e11</span>             <span class="c1"># Young&#39;s modulus of ANCF element in N/m^2</span>
+<span class="linenos"> 36</span><span class="n">rho</span><span class="o">=</span><span class="mi">7800</span>               <span class="c1"># density of ANCF element in kg/m^3</span>
+<span class="linenos"> 37</span><span class="n">b</span><span class="o">=</span><span class="mf">0.1</span>                  <span class="c1"># width of rectangular ANCF element in m</span>
+<span class="linenos"> 38</span><span class="n">h</span><span class="o">=</span><span class="mf">0.1</span>                  <span class="c1"># height of rectangular ANCF element in m</span>
+<span class="linenos"> 39</span><span class="n">A</span><span class="o">=</span><span class="n">b</span><span class="o">*</span><span class="n">h</span>                  <span class="c1"># cross sectional area of ANCF element in m^2</span>
+<span class="linenos"> 40</span><span class="n">I</span><span class="o">=</span><span class="n">b</span><span class="o">*</span><span class="n">h</span><span class="o">**</span><span class="mi">3</span><span class="o">/</span><span class="mi">12</span>            <span class="c1"># second moment of area of ANCF element in m^4</span>
+<span class="linenos"> 41</span><span class="n">f</span><span class="o">=</span><span class="mi">3</span><span class="o">*</span><span class="n">E</span><span class="o">*</span><span class="n">I</span><span class="o">/</span><span class="n">L</span><span class="o">**</span><span class="mi">2</span>           <span class="c1"># tip load applied to ANCF element in N</span>
+<span class="linenos"> 42</span>
+<span class="linenos"> 43</span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;load f=&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
+<span class="linenos"> 44</span>
+<span class="linenos"> 45</span><span class="c1">#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos"> 46</span><span class="c1">## generate ANCFCable2D template containing beam parameters</span>
+<span class="linenos"> 47</span><span class="n">cableTemplate</span> <span class="o">=</span> <span class="nc">Cable2D</span><span class="p">(</span><span class="c1">#physicsLength = L / nElements, #set in GenerateStraightLineANCFCable2D(...)</span>
+<span class="linenos"> 48</span>                        <span class="n">physicsMassPerLength</span> <span class="o">=</span> <span class="n">rho</span><span class="o">*</span><span class="n">A</span><span class="p">,</span>
+<span class="linenos"> 49</span>                        <span class="n">physicsBendingStiffness</span> <span class="o">=</span> <span class="n">E</span><span class="o">*</span><span class="n">I</span><span class="p">,</span>
+<span class="linenos"> 50</span>                        <span class="n">physicsAxialStiffness</span> <span class="o">=</span> <span class="n">E</span><span class="o">*</span><span class="n">A</span><span class="p">,</span>
+<span class="linenos"> 51</span>                        <span class="n">useReducedOrderIntegration</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+<span class="linenos"> 52</span>                        <span class="c1">#nodeNumbers = [0, 0], #will be filled in GenerateStraightLineANCFCable2D(...)</span>
+<span class="linenos"> 53</span>                        <span class="p">)</span>
+<span class="linenos"> 54</span>
+<span class="linenos"> 55</span><span class="c1">## define nodal positions of beam (3D vectors, while cable element is only 2D)</span>
+<span class="linenos"> 56</span><span class="n">positionOfNode0</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="c1"># starting point of line</span>
+<span class="linenos"> 57</span><span class="n">positionOfNode1</span> <span class="o">=</span> <span class="p">[</span><span class="n">L</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="c1"># end point of line</span>
+<span class="linenos"> 58</span>
+<span class="linenos"> 59</span><span class="c1">## number of cable elements for discretization</span>
+<span class="linenos"> 60</span><span class="n">numberOfElements</span> <span class="o">=</span> <span class="mi">64</span>
+<span class="linenos"> 61</span>
+<span class="linenos"> 62</span><span class="c1">## use utility function to create set of straight cable elements between two positions with options for constraints at supports</span>
+<span class="linenos"> 63</span><span class="c1">#alternative to mbs.AddObject(Cable2D(...)) with nodes:</span>
+<span class="linenos"> 64</span><span class="n">ancf</span><span class="o">=</span><span class="nf">GenerateStraightLineANCFCable2D</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span>
+<span class="linenos"> 65</span>                <span class="n">positionOfNode0</span><span class="p">,</span> <span class="n">positionOfNode1</span><span class="p">,</span>
+<span class="linenos"> 66</span>                <span class="n">numberOfElements</span><span class="p">,</span>
+<span class="linenos"> 67</span>                <span class="n">cableTemplate</span><span class="p">,</span> <span class="c1">#this defines the beam element properties</span>
+<span class="linenos"> 68</span>                <span class="n">massProportionalLoad</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">9.81</span><span class="o">*</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="c1">#optionally add gravity</span>
+<span class="linenos"> 69</span>                <span class="n">fixedConstraintsNode0</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="c1">#add constraints for pos and rot (r&#39;_y)</span>
+<span class="linenos"> 70</span>                <span class="n">fixedConstraintsNode1</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="linenos"> 71</span>
+<span class="linenos"> 72</span><span class="c1">## add load vector on last node in y-direction</span>
+<span class="linenos"> 73</span><span class="n">mANCFLast</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerNodePosition</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">ancf</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span> <span class="c1">#ancf[0][-1] = last node</span>
+<span class="linenos"> 74</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddLoad</span><span class="p">(</span><span class="nc">Force</span><span class="p">(</span><span class="n">markerNumber</span> <span class="o">=</span> <span class="n">mANCFLast</span><span class="p">,</span> <span class="n">loadVector</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">f</span><span class="p">,</span> <span class="mi">0</span><span class="p">]))</span> <span class="c1">#will be changed in load steps</span>
 <span class="linenos"> 75</span>
-<span class="linenos"> 76</span><span class="c1">#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos"> 77</span><span class="c1">## assemble system and create simulation settings</span>
-<span class="linenos"> 78</span><span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
-<span class="linenos"> 79</span>
-<span class="linenos"> 80</span><span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">()</span> <span class="c1">#takes currently set values or default values</span>
-<span class="linenos"> 81</span>
-<span class="linenos"> 82</span><span class="n">tEnd</span> <span class="o">=</span> <span class="mf">0.1</span>
-<span class="linenos"> 83</span><span class="n">h</span> <span class="o">=</span> <span class="mf">1e-4</span>
-<span class="linenos"> 84</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tEnd</span><span class="o">/</span><span class="n">h</span><span class="p">)</span>
-<span class="linenos"> 85</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="n">tEnd</span>
-<span class="linenos"> 86</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">writeSolutionToFile</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="linenos"> 87</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">solutionWritePeriod</span> <span class="o">=</span> <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span><span class="o">/</span><span class="mi">1000</span>
-<span class="linenos"> 88</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">displayComputationTime</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="linenos"> 89</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">verboseMode</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="linenos"> 90</span>
-<span class="linenos"> 91</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">useModifiedNewton</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="linenos"> 92</span>
-<span class="linenos"> 93</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">displayStatistics</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="linenos"> 94</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">displayComputationTime</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="linenos"> 95</span>
-<span class="linenos"> 96</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">defaultSize</span> <span class="o">=</span> <span class="mf">0.01</span>
-<span class="linenos"> 97</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">solutionInformation</span> <span class="o">=</span> <span class="s2">&quot;ANCF cantilever beam&quot;</span>
-<span class="linenos"> 98</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">linearSolverType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">LinearSolverType</span><span class="o">.</span><span class="n">EigenSparse</span>
-<span class="linenos"> 99</span>
-<span class="linenos">100</span><span class="n">doDynamicSimulation</span> <span class="o">=</span> <span class="kc">True</span> <span class="c1">#switch between static and dynamic simulation</span>
-<span class="linenos">101</span>
+<span class="linenos"> 76</span>
+<span class="linenos"> 77</span><span class="c1">#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos"> 78</span><span class="c1">## assemble system and create simulation settings</span>
+<span class="linenos"> 79</span><span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
+<span class="linenos"> 80</span>
+<span class="linenos"> 81</span><span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">()</span> <span class="c1">#takes currently set values or default values</span>
+<span class="linenos"> 82</span>
+<span class="linenos"> 83</span><span class="n">tEnd</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="linenos"> 84</span><span class="n">h</span> <span class="o">=</span> <span class="mf">1e-4</span>
+<span class="linenos"> 85</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tEnd</span><span class="o">/</span><span class="n">h</span><span class="p">)</span>
+<span class="linenos"> 86</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="n">tEnd</span>
+<span class="linenos"> 87</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">writeSolutionToFile</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos"> 88</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">solutionWritePeriod</span> <span class="o">=</span> <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span><span class="o">/</span><span class="mi">1000</span>
+<span class="linenos"> 89</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">displayComputationTime</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="linenos"> 90</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">verboseMode</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="linenos"> 91</span>
+<span class="linenos"> 92</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">useModifiedNewton</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos"> 93</span>
+<span class="linenos"> 94</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">displayStatistics</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos"> 95</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">displayComputationTime</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos"> 96</span>
+<span class="linenos"> 97</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">defaultSize</span> <span class="o">=</span> <span class="mf">0.01</span>
+<span class="linenos"> 98</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">solutionInformation</span> <span class="o">=</span> <span class="s2">&quot;ANCF cantilever beam&quot;</span>
+<span class="linenos"> 99</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">linearSolverType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">LinearSolverType</span><span class="o">.</span><span class="n">EigenSparse</span>
+<span class="linenos">100</span>
+<span class="linenos">101</span><span class="n">doDynamicSimulation</span> <span class="o">=</span> <span class="kc">True</span> <span class="c1">#switch between static and dynamic simulation</span>
 <span class="linenos">102</span>
-<span class="linenos">103</span><span class="k">if</span> <span class="n">doDynamicSimulation</span><span class="p">:</span>
-<span class="linenos">104</span>    <span class="c1">## do dynamic simulation</span>
-<span class="linenos">105</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StartRenderer</span><span class="p">()</span>
-<span class="linenos">106</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="p">)</span>
-<span class="linenos">107</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">WaitForRenderEngineStopFlag</span><span class="p">()</span>
-<span class="linenos">108</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StopRenderer</span><span class="p">()</span> <span class="c1">#safely close rendering window!</span>
-<span class="linenos">109</span>    <span class="c1">##</span>
-<span class="linenos">110</span><span class="k">else</span><span class="p">:</span>
-<span class="linenos">111</span>    <span class="c1">## perform static simulation with manual load stepping</span>
-<span class="linenos">112</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">verboseMode</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="linenos">113</span>
-<span class="linenos">114</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">relativeTolerance</span> <span class="o">=</span> <span class="mf">1e-8</span>
-<span class="linenos">115</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">absoluteTolerance</span> <span class="o">=</span> <span class="mf">1e-3</span> <span class="c1">#1 for 256 elements; needs to be larger for larger number of load steps</span>
-<span class="linenos">116</span>    <span class="c1">#simulationSettings.staticSolver.numberOfLoadSteps = 1</span>
-<span class="linenos">117</span>
-<span class="linenos">118</span>    <span class="n">nLoadSteps</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
-<span class="linenos">119</span>    <span class="k">for</span> <span class="n">loadSteps</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nLoadSteps</span><span class="p">):</span>
-<span class="linenos">120</span>        <span class="n">nLoad</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="linenos">121</span>        <span class="n">loadValue</span> <span class="o">=</span> <span class="n">f</span><span class="o">**</span><span class="p">((</span><span class="n">loadSteps</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="n">nLoadSteps</span><span class="p">)</span> <span class="c1">#geometric increment of loads</span>
-<span class="linenos">122</span>        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;load=&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">loadValue</span><span class="p">))</span>
-<span class="linenos">123</span>
-<span class="linenos">124</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">SetLoadParameter</span><span class="p">(</span><span class="n">nLoad</span><span class="p">,</span> <span class="s1">&#39;loadVector&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">loadValue</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
-<span class="linenos">125</span>        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;load vector=&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">mbs</span><span class="o">.</span><span class="nf">GetLoadParameter</span><span class="p">(</span><span class="n">nLoad</span><span class="p">,</span> <span class="s1">&#39;loadVector&#39;</span><span class="p">))</span> <span class="p">)</span>
-<span class="linenos">126</span>
-<span class="linenos">127</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">SolveStatic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="p">,</span> <span class="n">updateInitialValues</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="linenos">128</span>
-<span class="linenos">129</span>        <span class="n">sol</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetODE2Coordinates</span><span class="p">()</span>
-<span class="linenos">130</span>
-<span class="linenos">131</span>        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span>
-<span class="linenos">132</span>        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;nEL=&#39;</span><span class="p">,</span><span class="n">numberOfElements</span><span class="p">,</span> <span class="s1">&#39;, tip displacement: x=&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">sol</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">4</span><span class="p">])</span><span class="o">+</span><span class="s1">&#39;, y=&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">sol</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">3</span><span class="p">]))</span>
-<span class="linenos">133</span>        <span class="c1">#MATLAB 1 element: x=0.3622447298905063, y=0.9941447587249748 = paper &quot;on the correct ...&quot;</span>
-<span class="linenos">134</span>        <span class="c1">#2022-03-16:</span>
-<span class="linenos">135</span>        <span class="c1"># nEL= 1 ,  tip displacement: x=-0.36224472989050654,y=-0.9941447587249747</span>
-<span class="linenos">136</span>        <span class="c1"># nEL= 2 ,  tip displacement: x=-0.4889263085609102, y=-1.1752228652637502</span>
-<span class="linenos">137</span>        <span class="c1"># nEL= 4 ,  tip displacement: x=-0.5074287154557922, y=-1.2055337025602493</span>
-<span class="linenos">138</span>        <span class="c1"># nEL= 8 ,  tip displacement: x=-0.5085092365729895, y=-1.207197756093103</span>
-<span class="linenos">139</span>        <span class="c1"># nEL= 16 , tip displacement: x=-0.5085365799149556, y=-1.207238895003594</span>
-<span class="linenos">140</span>        <span class="c1"># nEL= 32 , tip displacement: x=-0.508537277761696,  y=-1.2072398264650905</span>
-<span class="linenos">141</span>        <span class="c1"># nEL= 64 , tip displacement: x=-0.5085373030408489, y=-1.207239853404364</span>
-<span class="linenos">142</span>        <span class="c1"># nEL= 128, tip displacement: x=-0.5085373043168473, y=-1.2072398545511795</span>
-<span class="linenos">143</span>        <span class="c1"># nEL= 256, tip displacement: x=-0.5085373043916903, y=-1.207239854614031</span>
-<span class="linenos">144</span>
-<span class="linenos">145</span>        <span class="c1">#with second SolveStatic:</span>
-<span class="linenos">146</span>        <span class="c1">#nEL= 256 , tip displacement: x=-0.5085373043209366, y=-1.2072398545457574</span>
-<span class="linenos">147</span>        <span class="c1">#converged:                   x=-0.508537304326,     y=-1.207239854550</span>
-<span class="linenos">148</span>
-<span class="linenos">149</span>        <span class="c1">#here (OLD):</span>
-<span class="linenos">150</span>        <span class="c1">#1:  x=-0.36224472989050543, y=-0.994144758724973</span>
-<span class="linenos">151</span>        <span class="c1">#2:  x=-0.4889263083414858, y=-1.1752228650551666</span>
-<span class="linenos">152</span>        <span class="c1">#4:  x=-0.5074287151188892, y=-1.2055337022335404</span>
-<span class="linenos">153</span>        <span class="c1">#8:  x=-0.5085092364970802, y=-1.2071977560198281</span>
-<span class="linenos">154</span>        <span class="c1">#64: x=-0.5085373029700947, y=-1.2072398533360738</span>
-<span class="linenos">155</span>        <span class="c1">#256:x=-0.5085373043209689, y=-1.2072398545457785</span>
-<span class="linenos">156</span>
+<span class="linenos">103</span>
+<span class="linenos">104</span><span class="k">if</span> <span class="n">doDynamicSimulation</span><span class="p">:</span>
+<span class="linenos">105</span>    <span class="c1">## do dynamic simulation</span>
+<span class="linenos">106</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StartRenderer</span><span class="p">()</span>
+<span class="linenos">107</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="p">)</span>
+<span class="linenos">108</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">WaitForRenderEngineStopFlag</span><span class="p">()</span>
+<span class="linenos">109</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StopRenderer</span><span class="p">()</span> <span class="c1">#safely close rendering window!</span>
+<span class="linenos">110</span>    <span class="c1">##</span>
+<span class="linenos">111</span><span class="k">else</span><span class="p">:</span>
+<span class="linenos">112</span>    <span class="c1">## perform static simulation with manual load stepping</span>
+<span class="linenos">113</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">verboseMode</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">114</span>
+<span class="linenos">115</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">relativeTolerance</span> <span class="o">=</span> <span class="mf">1e-8</span>
+<span class="linenos">116</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">staticSolver</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">absoluteTolerance</span> <span class="o">=</span> <span class="mf">1e-3</span> <span class="c1">#1 for 256 elements; needs to be larger for larger number of load steps</span>
+<span class="linenos">117</span>    <span class="c1">#simulationSettings.staticSolver.numberOfLoadSteps = 1</span>
+<span class="linenos">118</span>
+<span class="linenos">119</span>    <span class="n">nLoadSteps</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="linenos">120</span>    <span class="k">for</span> <span class="n">loadSteps</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nLoadSteps</span><span class="p">):</span>
+<span class="linenos">121</span>        <span class="n">nLoad</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">122</span>        <span class="n">loadValue</span> <span class="o">=</span> <span class="n">f</span><span class="o">**</span><span class="p">((</span><span class="n">loadSteps</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="n">nLoadSteps</span><span class="p">)</span> <span class="c1">#geometric increment of loads</span>
+<span class="linenos">123</span>        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;load=&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">loadValue</span><span class="p">))</span>
+<span class="linenos">124</span>
+<span class="linenos">125</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">SetLoadParameter</span><span class="p">(</span><span class="n">nLoad</span><span class="p">,</span> <span class="s1">&#39;loadVector&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">loadValue</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="linenos">126</span>        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;load vector=&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">mbs</span><span class="o">.</span><span class="nf">GetLoadParameter</span><span class="p">(</span><span class="n">nLoad</span><span class="p">,</span> <span class="s1">&#39;loadVector&#39;</span><span class="p">))</span> <span class="p">)</span>
+<span class="linenos">127</span>
+<span class="linenos">128</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">SolveStatic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="p">,</span> <span class="n">updateInitialValues</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">129</span>
+<span class="linenos">130</span>        <span class="n">sol</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetODE2Coordinates</span><span class="p">()</span>
+<span class="linenos">131</span>
+<span class="linenos">132</span>        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span>
+<span class="linenos">133</span>        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;nEL=&#39;</span><span class="p">,</span><span class="n">numberOfElements</span><span class="p">,</span> <span class="s1">&#39;, tip displacement: x=&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">sol</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">4</span><span class="p">])</span><span class="o">+</span><span class="s1">&#39;, y=&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">sol</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">3</span><span class="p">]))</span>
+<span class="linenos">134</span>        <span class="c1">#MATLAB 1 element: x=0.3622447298905063, y=0.9941447587249748 = paper &quot;on the correct ...&quot;</span>
+<span class="linenos">135</span>        <span class="c1">#2022-03-16:</span>
+<span class="linenos">136</span>        <span class="c1"># nEL= 1 ,  tip displacement: x=-0.36224472989050654,y=-0.9941447587249747</span>
+<span class="linenos">137</span>        <span class="c1"># nEL= 2 ,  tip displacement: x=-0.4889263085609102, y=-1.1752228652637502</span>
+<span class="linenos">138</span>        <span class="c1"># nEL= 4 ,  tip displacement: x=-0.5074287154557922, y=-1.2055337025602493</span>
+<span class="linenos">139</span>        <span class="c1"># nEL= 8 ,  tip displacement: x=-0.5085092365729895, y=-1.207197756093103</span>
+<span class="linenos">140</span>        <span class="c1"># nEL= 16 , tip displacement: x=-0.5085365799149556, y=-1.207238895003594</span>
+<span class="linenos">141</span>        <span class="c1"># nEL= 32 , tip displacement: x=-0.508537277761696,  y=-1.2072398264650905</span>
+<span class="linenos">142</span>        <span class="c1"># nEL= 64 , tip displacement: x=-0.5085373030408489, y=-1.207239853404364</span>
+<span class="linenos">143</span>        <span class="c1"># nEL= 128, tip displacement: x=-0.5085373043168473, y=-1.2072398545511795</span>
+<span class="linenos">144</span>        <span class="c1"># nEL= 256, tip displacement: x=-0.5085373043916903, y=-1.207239854614031</span>
+<span class="linenos">145</span>
+<span class="linenos">146</span>        <span class="c1">#with second SolveStatic:</span>
+<span class="linenos">147</span>        <span class="c1">#nEL= 256 , tip displacement: x=-0.5085373043209366, y=-1.2072398545457574</span>
+<span class="linenos">148</span>        <span class="c1">#converged:                   x=-0.508537304326,     y=-1.207239854550</span>
+<span class="linenos">149</span>
+<span class="linenos">150</span>        <span class="c1">#here (OLD):</span>
+<span class="linenos">151</span>        <span class="c1">#1:  x=-0.36224472989050543, y=-0.994144758724973</span>
+<span class="linenos">152</span>        <span class="c1">#2:  x=-0.4889263083414858, y=-1.1752228650551666</span>
+<span class="linenos">153</span>        <span class="c1">#4:  x=-0.5074287151188892, y=-1.2055337022335404</span>
+<span class="linenos">154</span>        <span class="c1">#8:  x=-0.5085092364970802, y=-1.2071977560198281</span>
+<span class="linenos">155</span>        <span class="c1">#64: x=-0.5085373029700947, y=-1.2072398533360738</span>
+<span class="linenos">156</span>        <span class="c1">#256:x=-0.5085373043209689, y=-1.2072398545457785</span>
 <span class="linenos">157</span>
 <span class="linenos">158</span>
 <span class="linenos">159</span>
-<span class="linenos">160</span>        <span class="c1">#sol = mbs.systemData.GetODE2Coordinates(exu.ConfigurationType.Initial)</span>
-<span class="linenos">161</span>        <span class="c1">#print(&#39;initial values=&#39;+str(sol))</span>
+<span class="linenos">160</span>
+<span class="linenos">161</span>        <span class="c1">#sol = mbs.systemData.GetODE2Coordinates(exu.ConfigurationType.Initial)</span>
+<span class="linenos">162</span>        <span class="c1">#print(&#39;initial values=&#39;+str(sol))</span>
 </pre></div>
 </div>
 </section>

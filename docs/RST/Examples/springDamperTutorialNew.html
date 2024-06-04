@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>springDamperTutorialNew.py &mdash; Exudyn1.8.32.dev1 1.8.32.dev1 documentation</title>
+  <title>springDamperTutorialNew.py &mdash; Exudyn1.8.52.dev1 1.8.52.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=d6ff67ca"></script>
+        <script src="../../../_static/documentation_options.js?v=b761f56e"></script>
         <script src="../../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -41,7 +41,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.8.32.dev1
+            Exudyn1.8.52.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -233,7 +233,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.8.32.dev1</a>
+          <a href="../../../index.html">Exudyn1.8.52.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -262,52 +262,52 @@
 <span class="linenos">  5</span><span class="c1">#</span>
 <span class="linenos">  6</span><span class="c1"># Author:   Johannes Gerstmayr</span>
 <span class="linenos">  7</span><span class="c1"># Date:     2023-05-15</span>
-<span class="linenos">  8</span><span class="c1">#</span>
-<span class="linenos">  9</span><span class="c1"># Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See &#39;LICENSE.txt&#39; for more details.</span>
-<span class="linenos"> 10</span><span class="c1">#</span>
-<span class="linenos"> 11</span><span class="c1">#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
-<span class="linenos"> 12</span>
+<span class="linenos">  8</span><span class="c1"># Update:   2024-06-04 (now fully using create functions)</span>
+<span class="linenos">  9</span><span class="c1">#</span>
+<span class="linenos"> 10</span><span class="c1"># Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See &#39;LICENSE.txt&#39; for more details.</span>
+<span class="linenos"> 11</span><span class="c1">#</span>
+<span class="linenos"> 12</span><span class="c1">#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
 <span class="linenos"> 13</span>
-<span class="linenos"> 14</span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
-<span class="linenos"> 15</span><span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="linenos"> 16</span>
-<span class="linenos"> 17</span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span> <span class="c1">#for postprocessing</span>
+<span class="linenos"> 14</span>
+<span class="linenos"> 15</span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
+<span class="linenos"> 16</span><span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="nc">SensorBody</span><span class="p">,</span> <span class="nc">SensorObject</span>
+<span class="linenos"> 17</span><span class="kn">import</span> <span class="nn">exudyn.graphics</span> <span class="k">as</span> <span class="nn">graphics</span> <span class="c1">#only import if it does not conflict</span>
 <span class="linenos"> 18</span>
-<span class="linenos"> 19</span><span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
-<span class="linenos"> 20</span><span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
-<span class="linenos"> 21</span>
-<span class="linenos"> 22</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;EXUDYN version=&#39;</span><span class="o">+</span><span class="n">exu</span><span class="o">.</span><span class="nf">GetVersionString</span><span class="p">())</span>
+<span class="linenos"> 19</span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span> <span class="c1">#for postprocessing</span>
+<span class="linenos"> 20</span>
+<span class="linenos"> 21</span><span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
+<span class="linenos"> 22</span><span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
 <span class="linenos"> 23</span>
-<span class="linenos"> 24</span><span class="n">L</span><span class="o">=</span><span class="mf">0.5</span>
-<span class="linenos"> 25</span><span class="n">mass</span> <span class="o">=</span> <span class="mf">1.6</span>          <span class="c1">#mass in kg</span>
-<span class="linenos"> 26</span><span class="n">spring</span> <span class="o">=</span> <span class="mi">4000</span>       <span class="c1">#stiffness of spring-damper in N/m</span>
-<span class="linenos"> 27</span><span class="n">damper</span> <span class="o">=</span> <span class="mi">8</span>          <span class="c1">#damping constant in N/(m/s)</span>
-<span class="linenos"> 28</span>
-<span class="linenos"> 29</span><span class="n">u0</span><span class="o">=-</span><span class="mf">0.08</span>            <span class="c1">#initial displacement</span>
-<span class="linenos"> 30</span><span class="n">v0</span><span class="o">=</span><span class="mi">1</span>                <span class="c1">#initial velocity</span>
-<span class="linenos"> 31</span><span class="n">f</span> <span class="o">=</span><span class="mi">80</span>               <span class="c1">#force on mass</span>
-<span class="linenos"> 32</span><span class="n">x0</span><span class="o">=</span><span class="n">f</span><span class="o">/</span><span class="n">spring</span>         <span class="c1">#static displacement</span>
-<span class="linenos"> 33</span>
-<span class="linenos"> 34</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;resonance frequency = &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="nf">sqrt</span><span class="p">(</span><span class="n">spring</span><span class="o">/</span><span class="n">mass</span><span class="p">)))</span>
-<span class="linenos"> 35</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;static displacement = &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">x0</span><span class="p">))</span>
-<span class="linenos"> 36</span>
-<span class="linenos"> 37</span><span class="n">oMass</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateMassPoint</span><span class="p">(</span><span class="n">referencePosition</span><span class="o">=</span><span class="p">[</span><span class="n">L</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-<span class="linenos"> 38</span>                            <span class="n">initialDisplacement</span> <span class="o">=</span> <span class="p">[</span><span class="n">u0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-<span class="linenos"> 39</span>                            <span class="n">initialVelocity</span><span class="o">=</span> <span class="p">[</span><span class="n">v0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-<span class="linenos"> 40</span>                            <span class="n">physicsMass</span><span class="o">=</span><span class="n">mass</span><span class="p">)</span> <span class="c1">#force created via gravity</span>
-<span class="linenos"> 41</span>
-<span class="linenos"> 42</span><span class="n">oGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectGround</span><span class="p">())</span>
+<span class="linenos"> 24</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;EXUDYN version=&#39;</span><span class="o">+</span><span class="n">exu</span><span class="o">.</span><span class="nf">GetVersionString</span><span class="p">())</span>
+<span class="linenos"> 25</span>
+<span class="linenos"> 26</span><span class="n">L</span><span class="o">=</span><span class="mf">0.5</span>
+<span class="linenos"> 27</span><span class="n">mass</span> <span class="o">=</span> <span class="mf">1.6</span>          <span class="c1">#mass in kg</span>
+<span class="linenos"> 28</span><span class="n">spring</span> <span class="o">=</span> <span class="mi">4000</span>       <span class="c1">#stiffness of spring-damper in N/m</span>
+<span class="linenos"> 29</span><span class="n">damper</span> <span class="o">=</span> <span class="mi">8</span>          <span class="c1">#damping constant in N/(m/s)</span>
+<span class="linenos"> 30</span>
+<span class="linenos"> 31</span><span class="n">u0</span><span class="o">=-</span><span class="mf">0.08</span>            <span class="c1">#initial displacement</span>
+<span class="linenos"> 32</span><span class="n">v0</span><span class="o">=</span><span class="mi">1</span>                <span class="c1">#initial velocity</span>
+<span class="linenos"> 33</span><span class="n">f</span> <span class="o">=</span><span class="mi">80</span>               <span class="c1">#force on mass</span>
+<span class="linenos"> 34</span><span class="n">x0</span><span class="o">=</span><span class="n">f</span><span class="o">/</span><span class="n">spring</span>         <span class="c1">#static displacement</span>
+<span class="linenos"> 35</span>
+<span class="linenos"> 36</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;resonance frequency = &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="nf">sqrt</span><span class="p">(</span><span class="n">spring</span><span class="o">/</span><span class="n">mass</span><span class="p">)))</span>
+<span class="linenos"> 37</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;static displacement = &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">x0</span><span class="p">))</span>
+<span class="linenos"> 38</span>
+<span class="linenos"> 39</span><span class="n">oMass</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateMassPoint</span><span class="p">(</span><span class="n">referencePosition</span><span class="o">=</span><span class="p">[</span><span class="n">L</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos"> 40</span>                            <span class="n">initialDisplacement</span> <span class="o">=</span> <span class="p">[</span><span class="n">u0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos"> 41</span>                            <span class="n">initialVelocity</span><span class="o">=</span> <span class="p">[</span><span class="n">v0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos"> 42</span>                            <span class="n">physicsMass</span><span class="o">=</span><span class="n">mass</span><span class="p">)</span> <span class="c1">#force created via gravity</span>
 <span class="linenos"> 43</span>
-<span class="linenos"> 44</span><span class="c1">#create spring damper with reference length computed from reference positions (=L)</span>
-<span class="linenos"> 45</span><span class="n">oSD</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateSpringDamper</span><span class="p">(</span><span class="n">bodyOrNodeList</span><span class="o">=</span><span class="p">[</span><span class="n">oMass</span><span class="p">,</span> <span class="n">oGround</span><span class="p">],</span>
-<span class="linenos"> 46</span>                             <span class="n">stiffness</span> <span class="o">=</span> <span class="n">spring</span><span class="p">,</span> <span class="n">damping</span> <span class="o">=</span> <span class="n">damper</span><span class="p">)</span>
-<span class="linenos"> 47</span>
-<span class="linenos"> 48</span><span class="c1">#add load via marker:</span>
-<span class="linenos"> 49</span><span class="n">bodyMarker</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerBodyPosition</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">oMass</span><span class="p">))</span>
-<span class="linenos"> 50</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddLoad</span><span class="p">(</span><span class="nc">LoadForceVector</span><span class="p">(</span><span class="n">markerNumber</span> <span class="o">=</span> <span class="n">bodyMarker</span><span class="p">,</span> <span class="n">loadVector</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
-<span class="linenos"> 51</span>
+<span class="linenos"> 44</span><span class="n">oGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateGround</span><span class="p">()</span>
+<span class="linenos"> 45</span>
+<span class="linenos"> 46</span><span class="c1">#create spring damper with reference length computed from reference positions (=L)</span>
+<span class="linenos"> 47</span><span class="n">oSD</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateSpringDamper</span><span class="p">(</span><span class="n">bodyOrNodeList</span><span class="o">=</span><span class="p">[</span><span class="n">oMass</span><span class="p">,</span> <span class="n">oGround</span><span class="p">],</span>
+<span class="linenos"> 48</span>                             <span class="n">stiffness</span> <span class="o">=</span> <span class="n">spring</span><span class="p">,</span> <span class="n">damping</span> <span class="o">=</span> <span class="n">damper</span><span class="p">)</span>
+<span class="linenos"> 49</span>
+<span class="linenos"> 50</span><span class="c1">#add load on body:</span>
+<span class="linenos"> 51</span><span class="n">mbs</span><span class="o">.</span><span class="nf">CreateForce</span><span class="p">(</span><span class="n">bodyNumber</span> <span class="o">=</span> <span class="n">oMass</span><span class="p">,</span> <span class="n">loadVector</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
 <span class="linenos"> 52</span>
-<span class="linenos"> 53</span><span class="c1">#add sensor:</span>
+<span class="linenos"> 53</span><span class="c1">#add sensors:</span>
 <span class="linenos"> 54</span><span class="n">sForce</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorObject</span><span class="p">(</span><span class="n">objectNumber</span><span class="o">=</span><span class="n">oSD</span><span class="p">,</span> <span class="n">storeInternal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="linenos"> 55</span>                                    <span class="n">outputVariableType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">ForceLocal</span><span class="p">))</span>
 <span class="linenos"> 56</span><span class="n">sDisp</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorBody</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">oMass</span><span class="p">,</span> <span class="n">storeInternal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>

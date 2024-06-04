@@ -27,7 +27,8 @@ You can view and download this file on Github: `mouseInteractionExample.py <http
    
    import exudyn as exu
    from exudyn.itemInterface import *
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    from exudyn.graphicsDataUtilities import *
    
    from math import sin, cos, pi
@@ -48,9 +49,9 @@ You can view and download this file on Github: `mouseInteractionExample.py <http
    
    Ltot = nBodies*sx
    sc = 4 #size of coordinate system
-   coordSys0 = GraphicsDataCylinder([0,0,0], [sz,0,0], 0.01, color=color4red)
-   coordSys1 = GraphicsDataCylinder([0,0,0], [0,sz,0], 0.01, color=color4green)
-   coordSys2 = GraphicsDataCylinder([0,0,0], [0,0,sz], 0.01, color=color4blue)
+   coordSys0 = graphics.Cylinder([0,0,0], [sz,0,0], 0.01, color=graphics.color.red)
+   coordSys1 = graphics.Cylinder([0,0,0], [0,sz,0], 0.01, color=graphics.color.green)
+   coordSys2 = graphics.Cylinder([0,0,0], [0,0,sz], 0.01, color=graphics.color.blue)
    oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0], 
                                       visualization=VObjectGround(graphicsData= [coordSys0, coordSys1, coordSys2])))
    
@@ -84,7 +85,7 @@ You can view and download this file on Github: `mouseInteractionExample.py <http
    
        color=[1,0.1,0.1,1]
    
-       oGraphics = GraphicsDataOrthoCube(-sx*0.5,-sy*0.5,-sz*0.5, sx*0.5, sy*0.5, sz*0.5, color)
+       oGraphics = graphics.BrickXYZ(-sx*0.5,-sy*0.5,-sz*0.5, sx*0.5, sy*0.5, sz*0.5, color)
     
        [nRB, oRB] = AddRigidBody(mainSys=mbs, inertia=RBinertia, 
                                  #nodeType=exu.NodeType.RotationRxyz,
@@ -246,7 +247,6 @@ You can view and download this file on Github: `mouseInteractionExample.py <http
    SC.visualizationSettings.window.ResetKeyPressUserFunction()
    
    if useGraphics:
-   #     SC.WaitForRenderEngineStopFlag()
        exu.StopRenderer() #safely close rendering window!
    
    

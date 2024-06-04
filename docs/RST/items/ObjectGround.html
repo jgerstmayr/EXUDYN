@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ObjectGround &mdash; Exudyn1.8.32.dev1 1.8.32.dev1 documentation</title>
+  <title>ObjectGround &mdash; Exudyn1.8.52.dev1 1.8.52.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=d6ff67ca"></script>
+        <script src="../../../_static/documentation_options.js?v=b761f56e"></script>
         <script src="../../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -43,7 +43,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.8.32.dev1
+            Exudyn1.8.52.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -107,7 +107,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.8.32.dev1</a>
+          <a href="../../../index.html">Exudyn1.8.52.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -291,8 +291,9 @@ inefficient and only designed to enable simpler tests, but not large scale probl
 <p><strong>User function example</strong>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
 <span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="nf">sin</span><span class="p">,</span> <span class="nf">cos</span><span class="p">,</span> <span class="n">pi</span>
-<span class="kn">from</span> <span class="nn">exudyn.itemInterface</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">exudyn.graphicsDataUtilities</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="o">*</span> <span class="c1">#includes itemInterface and rigidBodyUtilities</span>
+<span class="kn">import</span> <span class="nn">exudyn.graphics</span> <span class="k">as</span> <span class="nn">graphics</span>
+
 <span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
 <span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
 <span class="c1">#create simple system:</span>
@@ -303,8 +304,8 @@ inefficient and only designed to enable simpler tests, but not large scale probl
 <span class="k">def</span> <span class="nf">UFgraphics</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">objectNum</span><span class="p">):</span>
     <span class="n">t</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetTime</span><span class="p">(</span><span class="n">exu</span><span class="o">.</span><span class="nc">ConfigurationType</span><span class="o">.</span><span class="n">Visualization</span><span class="p">)</span> <span class="c1">#get time if needed</span>
     <span class="c1">#draw moving sphere on ground</span>
-    <span class="n">graphics1</span><span class="o">=</span><span class="nf">GraphicsDataSphere</span><span class="p">(</span><span class="n">point</span><span class="o">=</span><span class="p">[</span><span class="nf">sin</span><span class="p">(</span><span class="n">t</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">pi</span><span class="p">),</span> <span class="nf">cos</span><span class="p">(</span><span class="n">t</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">pi</span><span class="p">),</span> <span class="mi">0</span><span class="p">],</span>
-                                 <span class="n">radius</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color4red</span><span class="p">,</span> <span class="n">nTiles</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
+    <span class="n">graphics1</span><span class="o">=</span><span class="n">graphics</span><span class="o">.</span><span class="nf">Sphere</span><span class="p">(</span><span class="n">point</span><span class="o">=</span><span class="p">[</span><span class="nf">sin</span><span class="p">(</span><span class="n">t</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">pi</span><span class="p">),</span> <span class="nf">cos</span><span class="p">(</span><span class="n">t</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">pi</span><span class="p">),</span> <span class="mi">0</span><span class="p">],</span>
+                                 <span class="n">radius</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">graphics</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">red</span><span class="p">,</span> <span class="n">nTiles</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">[</span><span class="n">graphics1</span><span class="p">]</span>
 
 <span class="c1">#add object with graphics user function</span>

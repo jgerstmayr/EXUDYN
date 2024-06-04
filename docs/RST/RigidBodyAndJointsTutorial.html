@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Rigid body and joints tutorial &mdash; Exudyn1.8.32.dev1 1.8.32.dev1 documentation</title>
+  <title>Rigid body and joints tutorial &mdash; Exudyn1.8.52.dev1 1.8.52.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=d6ff67ca"></script>
+        <script src="../../_static/documentation_options.js?v=b761f56e"></script>
         <script src="../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -43,7 +43,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.8.32.dev1
+            Exudyn1.8.52.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -91,7 +91,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.8.32.dev1</a>
+          <a href="../../index.html">Exudyn1.8.52.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -120,6 +120,8 @@
 <blockquote>
 <div><p><code class="docutils literal notranslate"><span class="pre">main/pythonDev/Examples/rigidBodyTutorial3withMarkers.py</span></code><code class="docutils literal notranslate"><span class="pre">main/pythonDev/Examples/rigidBodyTutorial2.py</span></code></p>
 </div></blockquote>
+<p><strong>NOTE</strong> that the youtube video uses a slightly older way of creating graphics using <code class="docutils literal notranslate"><span class="pre">GraphicsData...</span></code> functions, which
+can be easily replaced by the newer <code class="docutils literal notranslate"><span class="pre">graphics.</span> <span class="pre">...</span></code> commands shown here. Their interface is identical.</p>
 <p>This tutorial will set up a multibody system containing a ground, two rigid bodies and two revolute joints driven by gravity, compare a 3D view of the example in <a class="reference internal" href="#fig-rigidbodytutorialview"><span class="std std-numref">Fig. 9</span></a>.</p>
 <figure class="align-default" id="id1">
 <span id="fig-rigidbodytutorialview"></span><a class="reference internal image-reference" href="../../_images/TutorialRigidBody1desc.png"><img alt="../../_images/TutorialRigidBody1desc.png" src="../../_images/TutorialRigidBody1desc.png" style="width: 400px;" /></a>
@@ -129,11 +131,18 @@
 </figure>
 <p>We first import the exudyn library and the interface for all nodes, objects, markers, loads and sensors:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
-<span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="o">*</span> <span class="c1">#includes itemInterface, graphicsDataUtilities and rigidBodyUtilities</span>
+<span class="c1">#import specific items, inertia class for general cuboid (hexahedral) block, etc.</span>
+<span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="nc">InertiaCuboid</span><span class="p">,</span> <span class="nc">ObjectRigidBody</span><span class="p">,</span> <span class="nc">MarkerBodyRigid</span><span class="p">,</span> \
+                             <span class="nc">GenericJoint</span><span class="p">,</span> <span class="nc">VObjectJointGeneric</span><span class="p">,</span> <span class="nc">SensorBody</span>
+<span class="kn">import</span> <span class="nn">exudyn.graphics</span> <span class="k">as</span> <span class="nn">graphics</span> <span class="c1">#only import as graphics if it does not conflict</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span> <span class="c1">#for postprocessing</span>
 </pre></div>
 </div>
-<p>The submodule <code class="docutils literal notranslate"><span class="pre">exudyn.utilities</span></code> contains helper functions for graphics representation, 3D rigid bodies and joints.</p>
+<p>The submodule <code class="docutils literal notranslate"><span class="pre">exudyn.utilities</span></code> contains helper functions for graphics representation, 3D rigid bodies and joints.
+For simplicity, many examples just use a star import instead, which is recommended for rapid model development:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="o">*</span>
+</pre></div>
+</div>
 <p>As in the first tutorial, we need a <code class="docutils literal notranslate"><span class="pre">SystemContainer</span></code> and add a new MainSystem <code class="docutils literal notranslate"><span class="pre">mbs</span></code>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
 <span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
@@ -154,6 +163,10 @@
 <span class="n">oGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateGround</span><span class="p">(</span><span class="n">referencePosition</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
 </pre></div>
 </div>
+<p>On the background, the <code class="docutils literal notranslate"><span class="pre">CreateGround</span></code> function creates an object, which is equivalent to:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">oGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectGround</span><span class="p">(</span><span class="n">referencePosition</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+</pre></div>
+</div>
 <p>For physical parameters of the rigid body, we can use the class <code class="docutils literal notranslate"><span class="pre">RigidBodyInertia</span></code>, which allows to define mass, center of mass (COM) and inertia parameters, as well as shifting COM or adding inertias.
 The <code class="docutils literal notranslate"><span class="pre">RigidBodyInertia</span></code> can be used directly to create rigid bodies. Special derived classes can be use to define rigid body inertias for cylinders, cubes, etc., so we use a cube here:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#first link:</span>
@@ -165,8 +178,9 @@ The <code class="docutils literal notranslate"><span class="pre">RigidBodyInerti
 <p>Note that the COM is translated in axial direction, while it would be at the body’s local position [0,0,0] by default!</p>
 <p>For visualization, we add some graphics for the body defined as a 3D cube with center point and dimensions; additionally we draw a basis (three RGB-vectors) at the COM:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#graphics for body</span>
-<span class="n">graphicsBody0</span> <span class="o">=</span> <span class="nf">GraphicsDataOrthoCubePoint</span><span class="p">(</span><span class="n">centerPoint</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="n">L</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="n">w</span><span class="p">],</span><span class="n">color</span><span class="o">=</span><span class="n">color4red</span><span class="p">)</span>
-<span class="n">graphicsCOM0</span> <span class="o">=</span> <span class="nf">GraphicsDataBasis</span><span class="p">(</span><span class="n">origin</span><span class="o">=</span><span class="n">iCube0</span><span class="o">.</span><span class="n">com</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">w</span><span class="p">)</span>
+<span class="n">graphicsBody0</span> <span class="o">=</span> <span class="n">graphics</span><span class="o">.</span><span class="nf">Brick</span><span class="p">(</span><span class="n">centerPoint</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="n">L</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="n">w</span><span class="p">],</span>
+                               <span class="n">color</span><span class="o">=</span><span class="n">graphics</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">red</span><span class="p">)</span>
+<span class="n">graphicsCOM0</span> <span class="o">=</span> <span class="n">graphics</span><span class="o">.</span><span class="nf">Basis</span><span class="p">(</span><span class="n">origin</span><span class="o">=</span><span class="n">iCube0</span><span class="o">.</span><span class="n">com</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">w</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Now we have defined all data for the link (rigid body). We could use <code class="docutils literal notranslate"><span class="pre">mbs.AddNode(NodeRigidBodyEP(...))</span></code> and <code class="docutils literal notranslate"><span class="pre">mbs.AddObject(ObjectRigidBody(...))</span></code> to create a node and a body, but the <code class="docutils literal notranslate"><span class="pre">MainSystem</span></code> since V1.6.110 offers a much more comfortable function:</p>
@@ -220,20 +234,22 @@ For the <strong>first two possibilities only</strong>, following <code class="do
 </div>
 <p><span class="math notranslate nohighlight">\(\ra\)</span> you will see a misalignment of the two parts of the joint by <code class="docutils literal notranslate"><span class="pre">0.1*L</span></code>.
 The latter approach is very general and will also work for any kind of flexible bodies.</p>
-<p>Due to the fact that the definition of markers for general joints is tedious, <strong>option 3</strong> is based on a MainSystem function, which allows to attach revolute joints immediately to bodies and defining the rotation axis only once for the joint:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#revolute joint option 3:</span>
+<p>Due to the fact that the definition of markers for general joints is tedious, <strong>option 3</strong> is based on a MainSystem function, which allows to attach revolute joints immediately to <strong>rigid bodies</strong> and defining the rotation axis only once for the joint:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#revolute joint option 3 (simplest):</span>
 <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateRevoluteJoint</span><span class="p">(</span><span class="n">bodyNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">oGround</span><span class="p">,</span> <span class="n">b0</span><span class="p">],</span> <span class="n">position</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
                         <span class="n">axis</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">axisRadius</span><span class="o">=</span><span class="mf">0.2</span><span class="o">*</span><span class="n">w</span><span class="p">,</span> <span class="n">axisLength</span><span class="o">=</span><span class="mf">1.4</span><span class="o">*</span><span class="n">w</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>For the latter option, there are more arguments that may be specified, e.g., the axis and position can also be defined in the local frame of the first body.</p>
+<p>Note that <code class="docutils literal notranslate"><span class="pre">axis</span></code> and <code class="docutils literal notranslate"><span class="pre">position</span></code> are defined in global coordinates, and local coordinates are computed according to the
+reference configuration of the bodies.
+There exist more arguments that may be specified, e.g., the axis and position can also be defined in the local frame of the first body.</p>
 <p>The second link and the according joint can be set up in a very similar way.
-For visualization, we need to add some graphics for the body defined as a RigidLink GraphicsData function:</p>
+For visualization, we need to add some graphics for the body defined as a RigidLink graphics function:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#second link, simple graphics:</span>
-<span class="n">graphicsBody1</span> <span class="o">=</span> <span class="nf">GraphicsDataRigidLink</span><span class="p">(</span><span class="n">p0</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">L</span><span class="p">],</span><span class="n">p1</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.5</span><span class="o">*</span><span class="n">L</span><span class="p">],</span>
+<span class="n">graphicsBody1</span> <span class="o">=</span> <span class="n">graphics</span><span class="o">.</span><span class="nf">RigidLink</span><span class="p">(</span><span class="n">p0</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">L</span><span class="p">],</span><span class="n">p1</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.5</span><span class="o">*</span><span class="n">L</span><span class="p">],</span>
                                       <span class="n">axis0</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">axis1</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">radius</span><span class="o">=</span><span class="p">[</span><span class="mf">0.06</span><span class="p">,</span><span class="mf">0.05</span><span class="p">],</span>
                                       <span class="n">thickness</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.12</span><span class="p">,</span><span class="mf">0.12</span><span class="p">],</span>
-                                      <span class="n">color</span><span class="o">=</span><span class="n">color4lightgreen</span><span class="p">)</span>
+                                      <span class="n">color</span><span class="o">=</span><span class="n">graphics</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">lightgreen</span><span class="p">)</span>
 
 <span class="n">b1</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">CreateRigidBody</span><span class="p">(</span><span class="n">inertia</span> <span class="o">=</span> <span class="nc">InertiaCuboid</span><span class="p">(</span><span class="n">density</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">sideLengths</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span><span class="mi">1</span><span class="p">]),</span>
                        <span class="n">referencePosition</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">L</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.5</span><span class="o">*</span><span class="n">L</span><span class="p">]),</span>
@@ -410,6 +426,7 @@ If we do not stop the renderer (<code class="docutils literal notranslate"><span
 <p>As the simulation will run very fast, if you did not set <code class="docutils literal notranslate"><span class="pre">simulateInRealtime</span></code> to true. However, you can reload the stored solution and view the stored steps interactively:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="nf">SolutionViewer</span><span class="p">()</span>
 <span class="c1">#alternatively, we could load solution from a file:</span>
+<span class="c1">#from exudyn.utilities import LoadSolutionFile</span>
 <span class="c1">#sol = LoadSolutionFile(&#39;coordinatesSolution.txt&#39;)</span>
 <span class="c1">#mbs.SolutionViewer(sol)</span>
 </pre></div>

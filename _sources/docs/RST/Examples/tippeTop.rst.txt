@@ -27,7 +27,8 @@ You can view and download this file on Github: `tippeTop.py <https://github.com/
    
    import exudyn as exu
    from exudyn.itemInterface import *
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    
    SC = exu.SystemContainer()
    mbs = SC.AddSystem()
@@ -52,11 +53,11 @@ You can view and download this file on Github: `tippeTop.py <https://github.com/
    zz = -0.04
    markerList = []
    p0 = np.array([0.,0,-0.5*tt])
-   gFloor = GraphicsDataOrthoCubePoint(p0,[L,L,tt],color4lightgrey)
-   [meshPoints, meshTrigs] = GraphicsData2PointsAndTrigs(gFloor)
+   gFloor = graphics.Brick(p0,[L,L,tt],graphics.color.lightgrey)
+   [meshPoints, meshTrigs] = graphics.ToPointsAndTrigs(gFloor)
    #gDataList = [gFloor]
    
-   gDataList = [GraphicsDataCheckerBoard([0,0,0],size=L)]
+   gDataList = [graphics.CheckerBoard([0,0,0],size=L)]
    
    useRigidBody = True
    #ns = 20
@@ -68,11 +69,11 @@ You can view and download this file on Github: `tippeTop.py <https://github.com/
    
    for i in range(n):
    
-       color4node = color4steelblue
+       color4node = graphics.color.steelblue
        pS0 = [0,0,-zz]
        pS1 = [0,0,height-r-r2-zz]
-       gList = [GraphicsDataSphere(point=pS0, radius=r, color= color4node, nTiles=24)]
-       gList += [GraphicsDataSphere(point=pS1, radius=r2, color= color4node, nTiles=16)]
+       gList = [graphics.Sphere(point=pS0, radius=r, color= color4node, nTiles=24)]
+       gList += [graphics.Sphere(point=pS1, radius=r2, color= color4node, nTiles=16)]
    
        pRef = [0,0,r+zz]
        v0 = [0,-10*0.,0]
@@ -194,7 +195,6 @@ You can view and download this file on Github: `tippeTop.py <https://github.com/
    if not simulate or True:
        SC.visualizationSettings.general.autoFitScene = False
        
-       sol = LoadSolutionFile('coordinatesSolution.txt')
-       mbs.SolutionViewer(sol)
+       mbs.SolutionViewer()
 
 

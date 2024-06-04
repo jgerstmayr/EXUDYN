@@ -24,7 +24,8 @@ You can view and download this file on Github: `testGymCartpoleEnv.py <https://g
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    
    import exudyn as exu
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    import math
    
    import math
@@ -35,6 +36,9 @@ You can view and download this file on Github: `testGymCartpoleEnv.py <https://g
    import gym
    from gym import logger, spaces, Env
    from gym.error import DependencyNotInstalled
+   
+   import stable_baselines3
+   useOldGym = tuple(map(int, stable_baselines3.__version__.split('.'))) <= tuple(map(int, '1.8.0'.split('.')))
    
    
    class CartPoleEnv(Env):
@@ -86,21 +90,21 @@ You can view and download this file on Github: `testGymCartpoleEnv.py <https://g
            self.rendererRunning=None
            self.useRenderer = False #turn this on if needed
            
-           background = GraphicsDataCheckerBoard(point= [0,0,0], normal= [0,0,1], size=4)
+           background = graphics.CheckerBoard(point= [0,0,0], normal= [0,0,1], size=4)
                
            oGround=self.mbs.AddObject(ObjectGround(referencePosition= [0,0,0],  #x-pos,y-pos,angle
                                               visualization=VObjectGround(graphicsData= [background])))
            nGround=self.mbs.AddNode(NodePointGround())
            
-           gCart = GraphicsDataOrthoCubePoint(size=[0.5*self.length, 0.1*self.length, 0.1*self.length], 
-                                              color=color4dodgerblue)
+           gCart = graphics.Brick(size=[0.5*self.length, 0.1*self.length, 0.1*self.length], 
+                                              color=graphics.color.dodgerblue)
            self.nCart = self.mbs.AddNode(Rigid2D(referenceCoordinates=[0,0,0]));
            oCart = self.mbs.AddObject(RigidBody2D(physicsMass=self.masscart, 
                                              physicsInertia=0.1*self.masscart, #not needed
                                              nodeNumber=self.nCart,
                                              visualization=VObjectRigidBody2D(graphicsData= [gCart])))
            
-           gPole = GraphicsDataOrthoCubePoint(size=[0.1*self.length, self.length, 0.1*self.length], color=color4red)
+           gPole = graphics.Brick(size=[0.1*self.length, self.length, 0.1*self.length], color=graphics.color.red)
            self.nPole = self.mbs.AddNode(Rigid2D(referenceCoordinates=[0,0.5*self.length,0]));
            oPole = self.mbs.AddObject(RigidBody2D(physicsMass=self.masspole, 
                                              physicsInertia=1e-6, #not included in original paper
@@ -224,7 +228,12 @@ You can view and download this file on Github: `testGymCartpoleEnv.py <https://g
                self.steps_beyond_done += 1
                reward = 0.0
    
-           return np.array(self.state, dtype=np.float32), reward, done, {}
+           info = {}
+           terminated, truncated = done, False # since stable-baselines3 > 1.8.0 implementations terminated and truncated 
+           if useOldGym:
+               return np.array(self.state, dtype=np.float32), reward, terminated, info
+           else:
+               return np.array(self.state, dtype=np.float32), reward, terminated, truncated, info
    
    
        def reset(
@@ -266,7 +275,7 @@ You can view and download this file on Github: `testGymCartpoleEnv.py <https://g
            self.dynamicSolver.InitializeSolver(self.mbs, self.simulationSettings) #needed to update initial conditions
            # self.dynamicSolver.InitializeSolverInitialConditions(self.mbs, self.simulationSettings) #needed to update initial conditions
    
-           if not return_info:
+           if not return_info and useOldGym:
                return np.array(self.state, dtype=np.float32)
            else:
                return np.array(self.state, dtype=np.float32), {}

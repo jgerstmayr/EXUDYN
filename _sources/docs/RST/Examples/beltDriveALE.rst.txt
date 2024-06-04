@@ -24,7 +24,8 @@ You can view and download this file on Github: `beltDriveALE.py <https://github.
    
    import exudyn as exu
    from exudyn.itemInterface import *
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    from exudyn.beams import *
    
    import numpy as np
@@ -41,7 +42,7 @@ You can view and download this file on Github: `beltDriveALE.py <https://github.
    
    #%%
    #settings:
-   useGraphics= True
+   useGraphics = True
    useContact = True
    doDynamic = True
    makeAnimation = False
@@ -171,7 +172,6 @@ You can view and download this file on Github: `beltDriveALE.py <https://github.
                            physicsBendingStiffness = EI,
                            physicsAxialStiffness = EA,
                            physicsBendingDamping = dEI,
-                           #physicsAxialDamping = dEA, #not implemented for ANCFALE
                            physicsReferenceAxialStrain = preStretch,
                            physicsReferenceCurvature = 0.,
                            useReducedOrderIntegration = 2,
@@ -268,10 +268,10 @@ You can view and download this file on Github: `beltDriveALE.py <https://github.
        
            rot0 = 0 #initial rotation
            pRef = [p[0], p[1], rot0]
-           gList = [GraphicsDataCylinder(pAxis=[0,0,-dimZ],vAxis=[0,0,-dimZ], radius=r,
-                                         color= color4dodgerblue, nTiles=64),
-                    GraphicsDataArrow(pAxis=[0,0,0], vAxis=[-0.9*r,0,0], radius=0.01*r, color=color4orange),
-                    GraphicsDataArrow(pAxis=[0,0,0], vAxis=[0.9*r,0,0], radius=0.01*r, color=color4orange)]
+           gList = [graphics.Cylinder(pAxis=[0,0,-dimZ],vAxis=[0,0,-dimZ], radius=r,
+                                         color= graphics.color.dodgerblue, nTiles=64),
+                    graphics.Arrow(pAxis=[0,0,0], vAxis=[-0.9*r,0,0], radius=0.01*r, color=graphics.color.orange),
+                    graphics.Arrow(pAxis=[0,0,0], vAxis=[0.9*r,0,0], radius=0.01*r, color=graphics.color.orange)]
    
            omega0 = 0 #initial angular velocity
            v0 = np.array([0,0,omega0]) 
@@ -351,12 +351,6 @@ You can view and download this file on Github: `beltDriveALE.py <https://github.
    
                mCable = mbs.AddMarker(MarkerBodyCable2DShape(bodyNumber=cableList[k], 
                                                              numberOfSegments = nSegments, verticalOffset=-0*hc/2))
-               if k==0:
-                   print('+++++++++++++++++++++++++++++++++++')
-                   print('+++++++++++++++++++++++++++++++++++')
-                   print('extend vertical offset for ALE!!!')
-                   print('+++++++++++++++++++++++++++++++++++')
-                   print('+++++++++++++++++++++++++++++++++++')
                nodeDataContactCable = mbs.AddNode(NodeGenericData(initialCoordinates=initialGapList,
                                                                   numberOfDataCoordinates=nSegments*(1+2) ))
    
@@ -516,7 +510,6 @@ You can view and download this file on Github: `beltDriveALE.py <https://github.
        SC.WaitForRenderEngineStopFlag()
        exu.StopRenderer() #safely close rendering window!
    
-   
    #%%++++++++++++++++++++++++++++++++++++++++
    if True:
        solDir = 'solutionDelete/'
@@ -572,34 +565,6 @@ You can view and download this file on Github: `beltDriveALE.py <https://github.
        # mbs.PlotSensor(sensorNumbers=[dataForce], components=0, labels=['axial force'], colorCodeOffset=2,
        #            xLabel='axial position (m)', yLabel='axial force (N)')
    
-   
-       # if dryFriction==0.5 and nANCFnodes==120:
-       #     #analytical exponential curve, Euler's/Eytelwein's solution:
-       #     na = 12 #number of data points
-       #     dataExp = np.zeros((na*2, 2))
-       #     #f0 = 278.733 #this is at low level, but exp starts later
-       #     f0 = 191.0#287.0
-       #     x0 = 0.5860 #1.1513 #starting coordinate, drawn in -x direction
-       #     d = 0.28     #amount along x drawn
-       #     for i in range(na):
-       #         x = i/na*d
-       #         beta = x/(radiusPulley + hc/2)
-       #         val = f0*exp(beta*dryFriction)
-       #         #print('x=',x,',exp=',val)
-       #         dataExp[i,0] = x0-x
-       #         dataExp[i,1] = val
-       
-       #     f0 = 193.4#287.0
-       #     x0 = 0.984 #1.1513 #starting coordinate, drawn in -x direction
-       #     for i in range(na):
-       #         x = i/na*d
-       #         beta = x/(radiusPulley + hc/2)
-       #         val = f0*exp(beta*dryFriction)
-       #         dataExp[i+na,0] = x0+x
-       #         dataExp[i+na,1] = val
-   
-       #     mbs.PlotSensor(sensorNumbers=[dataExp], components=0, labels=['analytical Eytelwein'], colorCodeOffset=3, newFigure=False,
-       #                lineStyles=[''], markerStyles=['x '], markerDensity=2*na)
    
        #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
        #contact forces are stored (x/y) for every segment ==> put into consecutive array

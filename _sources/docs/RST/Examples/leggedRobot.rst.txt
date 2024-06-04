@@ -25,7 +25,8 @@ You can view and download this file on Github: `leggedRobot.py <https://github.c
    
    import exudyn as exu
    from exudyn.itemInterface import *
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    from exudyn.graphicsDataUtilities import *
    
    from math import sin, cos, pi
@@ -64,10 +65,10 @@ You can view and download this file on Github: `leggedRobot.py <https://github.c
    inertiaFemoral = InertiaCuboid(density=massFemoral/(lFemoral*dFemoral**2), sideLengths=[dFemoral, dFemoral, lFemoral])
    inertiaBody = InertiaCuboid(density=massBody/(dBody**3), sideLengths=[dBody,dBody,dBody])
    
-   graphicsFoot = GraphicsDataOrthoCubePoint(centerPoint=[0,0,0],size=[dFoot*1.1,0.7*rFoot,0.7*rFoot], color=color4lightred)
-   graphicsLeg = GraphicsDataOrthoCubePoint(centerPoint=[0,0,0],size=[dLeg, dLeg, lLeg], color=color4steelblue)
-   graphicsFemoral = GraphicsDataOrthoCubePoint(centerPoint=[0,0,0],size=[dFemoral, dFemoral, lFemoral], color=color4lightgrey)
-   graphicsBody = GraphicsDataOrthoCubePoint(centerPoint=[0,0,0],size=[dBody,dBody,dBody], color=color4green)
+   graphicsFoot = graphics.Brick(centerPoint=[0,0,0],size=[dFoot*1.1,0.7*rFoot,0.7*rFoot], color=graphics.color.lightred)
+   graphicsLeg = graphics.Brick(centerPoint=[0,0,0],size=[dLeg, dLeg, lLeg], color=graphics.color.steelblue)
+   graphicsFemoral = graphics.Brick(centerPoint=[0,0,0],size=[dFemoral, dFemoral, lFemoral], color=graphics.color.lightgrey)
+   graphicsBody = graphics.Brick(centerPoint=[0,0,0],size=[dBody,dBody,dBody], color=graphics.color.green)
    
    z0 = 0*0.1 #initial offset
    #foot, lower leg, femoral
@@ -103,7 +104,7 @@ You can view and download this file on Github: `leggedRobot.py <https://github.c
    
    #%%++++++++++++++++++++++++++++++++++++++++++++++++
    #ground body and marker
-   gGround = GraphicsDataCheckerBoard(point=[0,0,0], size=4)
+   gGround = graphics.CheckerBoard(point=[0,0,0], size=4)
    oGround = mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=[gGround])))
    markerGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
    
@@ -132,7 +133,7 @@ You can view and download this file on Github: `leggedRobot.py <https://github.c
                                                              contactStiffness=cStiffness, 
                                                              contactDamping=cDamping,
                                                              #activeConnector = False, #set to false to deactivated
-                                                             visualization=VObjectConnectorRollingDiscPenalty(discWidth=dFoot, color=color4blue)))
+                                                             visualization=VObjectConnectorRollingDiscPenalty(discWidth=dFoot, color=graphics.color.blue)))
    
    #%%++++++++++++++++++++++++++++++++++++++++++++++++
    #add joints to legs:

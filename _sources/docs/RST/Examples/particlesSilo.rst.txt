@@ -23,7 +23,8 @@ You can view and download this file on Github: `particlesSilo.py <https://github
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    
    import exudyn as exu
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    from exudyn.graphicsDataUtilities import *
    
    import numpy as np
@@ -97,15 +98,15 @@ You can view and download this file on Github: `particlesSilo.py <https://github
    color4wall = [0.6,0.6,0.6,0.5]
    addNormals = False
    hw=10*a
-   gFloor = GraphicsDataOrthoCubePoint(p0,[LL,LL,t],color4steelblue,addNormals)
-   gFloorAdd = GraphicsDataOrthoCubePoint(p0+[-0.5*LL,0,0.5*hw],[t,LL,hw],color4wall,addNormals)
-   gFloor = MergeGraphicsDataTriangleList(gFloor, gFloorAdd)
-   gFloorAdd = GraphicsDataOrthoCubePoint(p0+[ 0.5*LL,0,0.5*hw],[t,LL,hw],color4wall,addNormals)
-   gFloor = MergeGraphicsDataTriangleList(gFloor, gFloorAdd)
-   gFloorAdd = GraphicsDataOrthoCubePoint(p0+[0,-0.5*LL,0.5*hw],[LL,t,hw],color4wall,addNormals)
-   gFloor = MergeGraphicsDataTriangleList(gFloor, gFloorAdd)
-   gFloorAdd = GraphicsDataOrthoCubePoint(p0+[0, 0.5*LL,0.5*hw],[LL,t,hw],color4wall,addNormals)
-   gFloor = MergeGraphicsDataTriangleList(gFloor, gFloorAdd)
+   gFloor = graphics.Brick(p0,[LL,LL,t],graphics.color.steelblue,addNormals)
+   gFloorAdd = graphics.Brick(p0+[-0.5*LL,0,0.5*hw],[t,LL,hw],color4wall,addNormals)
+   gFloor = graphics.MergeTriangleLists(gFloor, gFloorAdd)
+   gFloorAdd = graphics.Brick(p0+[ 0.5*LL,0,0.5*hw],[t,LL,hw],color4wall,addNormals)
+   gFloor = graphics.MergeTriangleLists(gFloor, gFloorAdd)
+   gFloorAdd = graphics.Brick(p0+[0,-0.5*LL,0.5*hw],[LL,t,hw],color4wall,addNormals)
+   gFloor = graphics.MergeTriangleLists(gFloor, gFloorAdd)
+   gFloorAdd = graphics.Brick(p0+[0, 0.5*LL,0.5*hw],[LL,t,hw],color4wall,addNormals)
+   gFloor = graphics.MergeTriangleLists(gFloor, gFloorAdd)
    
    gDataList = [gFloor]
    
@@ -114,23 +115,23 @@ You can view and download this file on Github: `particlesSilo.py <https://github
    mGround = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nGround))
    #mGroundC = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
    
-   [meshPoints, meshTrigs] = GraphicsData2PointsAndTrigs(gFloor)
+   [meshPoints, meshTrigs] = graphics.ToPointsAndTrigs(gFloor)
    #[meshPoints, meshTrigs] = RefineMesh(meshPoints, meshTrigs) #just to have more triangles on floor
    # [meshPoints, meshTrigs] = RefineMesh(meshPoints, meshTrigs) #just to have more triangles on floor
    gContact.AddTrianglesRigidBodyBased(rigidBodyMarkerIndex=mGround, contactStiffness=k, contactDamping=d, frictionMaterialIndex=0,
        pointList=meshPoints,  triangleList=meshTrigs)
    
    if True: #looses color
-       gFloor = GraphicsDataFromPointsAndTrigs(meshPoints, meshTrigs, color=color4wall) #show refined mesh
+       gFloor = graphics.FromPointsAndTrigs(meshPoints, meshTrigs, color=color4wall) #show refined mesh
        gDataList = [gFloor]
    
    
-   color4node = color4blue
+   color4node = graphics.color.blue
    print("start create: number of masses =",n)
    for i in range(n):
    
        kk = int(i/int(n/8))
-       color4node = color4list[min(kk%9,9)]
+       color4node = graphics.colorList[min(kk%9,9)]
    
        if (i%20000 == 0): print("create mass",i)
        offy = 0
@@ -192,10 +193,10 @@ You can view and download this file on Github: `particlesSilo.py <https://github
                          [2*SH2+SH,SR],[2*SH2,SR],[SH2,SR2],[0,SR2]])
        contour = list(contour)
        contour.reverse()
-       gSilo = GraphicsDataSolidOfRevolution(pAxis=[0,0,3*L], vAxis=[0,0,1],
+       gSilo = graphics.SolidOfRevolution(pAxis=[0,0,3*L], vAxis=[0,0,1],
                contour=contour, color=[0.8,0.1,0.1,0.5], nTiles = 64)
        
-       [meshPoints, meshTrigs] = GraphicsData2PointsAndTrigs(gSilo)
+       [meshPoints, meshTrigs] = graphics.ToPointsAndTrigs(gSilo)
        gContact.AddTrianglesRigidBodyBased(rigidBodyMarkerIndex=mGround, contactStiffness=k, contactDamping=d, frictionMaterialIndex=0,
            pointList=meshPoints,  triangleList=meshTrigs)
    
@@ -283,13 +284,13 @@ You can view and download this file on Github: `particlesSilo.py <https://github
            SC.WaitForRenderEngineStopFlag()
            exu.StopRenderer() #safely close rendering window!
            
-   if not simulate or True:
+   if not simulate:
        SC.visualizationSettings.general.autoFitScene = False
        SC.visualizationSettings.general.graphicsUpdateInterval=0.5
        
        print('load solution file')
        #sol = LoadSolutionFile('solution/test2.txt', safeMode=False)
-       sol = LoadSolutionFile('solution/test.txt', safeMode=True)#, maxRows=100)
+       sol = LoadSolutionFile('solution/test.txt', safeMode=True, verbose = True)#, maxRows=100)
        print('start SolutionViewer')
        mbs.SolutionViewer(sol)
    

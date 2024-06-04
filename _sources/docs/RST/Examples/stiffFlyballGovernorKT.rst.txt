@@ -32,7 +32,8 @@ You can view and download this file on Github: `stiffFlyballGovernorKT.py <https
    
    import exudyn as exu
    from exudyn.itemInterface import *
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    from exudyn.graphicsDataUtilities import *
    
    import numpy as np
@@ -114,10 +115,10 @@ You can view and download this file on Github: `stiffFlyballGovernorKT.py <https
                 iRodSum, iRodSum]
    
    ## set up graphics objects (blocks) for 4 bodies
-   graphicsShaft  = GraphicsDataOrthoCube(-widthShaft/2,-widthShaft/2,-lengthShaft/2, widthShaft/2,widthShaft/2,lengthShaft/2, [0.1,0.1,0.8,1])
-   graphicsSlider = GraphicsDataOrthoCube(-dimSlider/2,-dimSlider/2,-dimSlider/2, dimSlider/2,dimSlider/2,dimSlider/2, [0.1,0.1,0.8,1])
-   graphicsRodAC  = GraphicsDataOrthoCubePoint([0.5*lengthRod, 0, 0], [lengthRod,widthRod,widthRod], color4red)
-   graphicsRodBD  = GraphicsDataOrthoCubePoint([0.5*lengthRod, 0, 0], [lengthRod,widthRod,widthRod], color4dodgerblue)
+   graphicsShaft  = graphics.BrickXYZ(-widthShaft/2,-widthShaft/2,-lengthShaft/2, widthShaft/2,widthShaft/2,lengthShaft/2, [0.1,0.1,0.8,1])
+   graphicsSlider = graphics.BrickXYZ(-dimSlider/2,-dimSlider/2,-dimSlider/2, dimSlider/2,dimSlider/2,dimSlider/2, [0.1,0.1,0.8,1])
+   graphicsRodAC  = graphics.Brick([0.5*lengthRod, 0, 0], [lengthRod,widthRod,widthRod], graphics.color.red)
+   graphicsRodBD  = graphics.Brick([0.5*lengthRod, 0, 0], [lengthRod,widthRod,widthRod], graphics.color.dodgerblue)
    
    ## lists for 4 bodies: [shaft, slider, rodAC, rodBD]
    graphicsList=[[graphicsShaft], [graphicsSlider], [graphicsRodAC], [graphicsRodBD]]

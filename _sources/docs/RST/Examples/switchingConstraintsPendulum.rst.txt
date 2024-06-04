@@ -26,7 +26,8 @@ You can view and download this file on Github: `switchingConstraintsPendulum.py 
    
    import exudyn as exu
    from exudyn.itemInterface import *
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    
    SC = exu.SystemContainer()
    mbs = SC.AddSystem()
@@ -103,17 +104,11 @@ You can view and download this file on Github: `switchingConstraintsPendulum.py 
    print('end time =',mbs.systemData.GetTime()) #time after time integration ...
    #print('solution =',mbs.systemData.GetODE2Coordinates()) #solution coordinates after time integration ...
    
-   mbs.WaitForUserToContinue()
    
-   animate = True
-   if animate:
-       fileName = 'coordinatesSolution.txt'
-       solution = LoadSolutionFile('coordinatesSolution.txt')
-       AnimateSolution(mbs, solution, 1, 0.05)
-   
-   
-   #SC.WaitForRenderEngineStopFlag()
+   SC.WaitForRenderEngineStopFlag()
    exu.StopRenderer() #safely close rendering window!
+   
+   mbs.SolutionViewer()
    
 
 

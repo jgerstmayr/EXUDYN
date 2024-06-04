@@ -16,7 +16,8 @@ You can view and download this file on Github: `basicTutorial2024.py <https://gi
    #++++++++++++++++++++++++++++++++
    
    import exudyn as exu
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    
    SC = exu.SystemContainer()
    mbs = SC.AddSystem()
@@ -30,7 +31,7 @@ You can view and download this file on Github: `basicTutorial2024.py <https://gi
                                physicsMass=12,
                                gravity=[0,-9.81,0],
                                drawSize=0.2,
-                               color=color4red)
+                               color=graphics.color.red)
    
    oSD = mbs.CreateSpringDamper(bodyList=[oGround, oMass],
                                 stiffness=500,

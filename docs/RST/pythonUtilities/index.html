@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Python Utility Functions &mdash; Exudyn1.8.32.dev1 1.8.32.dev1 documentation</title>
+  <title>Python Utility Functions &mdash; Exudyn1.8.52.dev1 1.8.52.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=d6ff67ca"></script>
+        <script src="../../../_static/documentation_options.js?v=b761f56e"></script>
         <script src="../../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -43,7 +43,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.8.32.dev1
+            Exudyn1.8.52.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -74,6 +74,7 @@
 <li class="toctree-l2"><a class="reference internal" href="basicUtilities.html">Module: basicUtilities</a></li>
 <li class="toctree-l2"><a class="reference internal" href="beams.html">Module: beams</a></li>
 <li class="toctree-l2"><a class="reference internal" href="FEM.html">Module: FEM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html">Module: graphics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html">Module: graphicsDataUtilities</a></li>
 <li class="toctree-l2"><a class="reference internal" href="GUI.html">Module: GUI</a></li>
 <li class="toctree-l2"><a class="reference internal" href="interactive.html">Module: interactive</a></li>
@@ -114,7 +115,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.8.32.dev1</a>
+          <a href="../../../index.html">Exudyn1.8.52.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -304,41 +305,44 @@
 <li class="toctree-l2"><a class="reference internal" href="FEM.html#class-function-readelementsfromansys">Class function: ReadElementsFromAnsys</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="graphics.html">Module: graphics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-sphere">Function: Sphere</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-lines">Function: Lines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-circle">Function: Circle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-text">Function: Text</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-cuboid">Function: Cuboid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-brickxyz">Function: BrickXYZ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-brick">Function: Brick</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-cylinder">Function: Cylinder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-rigidlink">Function: RigidLink</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-solidofrevolution">Function: SolidOfRevolution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-arrow">Function: Arrow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-basis">Function: Basis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-frame">Function: Frame</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-quad">Function: Quad</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-checkerboard">Function: CheckerBoard</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-solidextrusion">Function: SolidExtrusion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-frompointsandtrigs">Function: FromPointsAndTrigs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-topointsandtrigs">Function: ToPointsAndTrigs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-move">Function: Move</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-mergetrianglelists">Function: MergeTriangleLists</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-fromstlfileascii">Function: FromSTLfileASCII</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-fromstlfile">Function: FromSTLfile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-addedgesandsmoothennormals">Function: AddEdgesAndSmoothenNormals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-exportstl">Function: ExportSTL</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="graphicsDataUtilities.html">Module: graphicsDataUtilities</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-switchtripletorder">Function: SwitchTripletOrder</a></li>
 <li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-computetrianglenormal">Function: ComputeTriangleNormal</a></li>
 <li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-computetrianglearea">Function: ComputeTriangleArea</a></li>
-<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-graphicsdata2pointsandtrigs">Function: GraphicsData2PointsAndTrigs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-graphicsdatafrompointsandtrigs">Function: GraphicsDataFromPointsAndTrigs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-refinemesh">Function: RefineMesh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-shrinkmeshnormaltosurface">Function: ShrinkMeshNormalToSurface</a></li>
-<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-movegraphicsdata">Function: MoveGraphicsData</a></li>
-<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-mergegraphicsdatatrianglelist">Function: MergeGraphicsDataTriangleList</a></li>
-<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-graphicsdataline">Function: GraphicsDataLine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-graphicsdatacircle">Function: GraphicsDataCircle</a></li>
-<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-graphicsdatatext">Function: GraphicsDataText</a></li>
-<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-graphicsdatarectangle">Function: GraphicsDataRectangle</a></li>
-<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-graphicsdataorthocubelines">Function: GraphicsDataOrthoCubeLines</a></li>
-<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-graphicsdataorthocube">Function: GraphicsDataOrthoCube</a></li>
-<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-graphicsdataorthocubepoint">Function: GraphicsDataOrthoCubePoint</a></li>
-<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-graphicsdatacube">Function: GraphicsDataCube</a></li>
-<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-graphicsdatasphere">Function: GraphicsDataSphere</a></li>
-<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-graphicsdatacylinder">Function: GraphicsDataCylinder</a></li>
-<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-graphicsdatarigidlink">Function: GraphicsDataRigidLink</a></li>
-<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-graphicsdatafromstlfiletxt">Function: GraphicsDataFromSTLfileTxt</a></li>
-<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-graphicsdatafromstlfile">Function: GraphicsDataFromSTLfile</a></li>
-<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-addedgesandsmoothennormals">Function: AddEdgesAndSmoothenNormals</a></li>
-<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-exportgraphicsdata2stl">Function: ExportGraphicsData2STL</a></li>
-<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-graphicsdatasolidofrevolution">Function: GraphicsDataSolidOfRevolution</a></li>
-<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-graphicsdataarrow">Function: GraphicsDataArrow</a></li>
-<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-graphicsdatabasis">Function: GraphicsDataBasis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-graphicsdataframe">Function: GraphicsDataFrame</a></li>
-<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-graphicsdataquad">Function: GraphicsDataQuad</a></li>
-<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-graphicsdatacheckerboard">Function: GraphicsDataCheckerBoard</a></li>
 <li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-computetriangularmesh">Function: ComputeTriangularMesh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-segmentsfrompoints">Function: SegmentsFromPoints</a></li>
 <li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-circlepointsandsegments">Function: CirclePointsAndSegments</a></li>
-<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-graphicsdatasolidextrusion">Function: GraphicsDataSolidExtrusion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-graphicsdatarectangle">Function: GraphicsDataRectangle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-graphicsdataorthocubelines">Function: GraphicsDataOrthoCubeLines</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="GUI.html">Module: GUI</a><ul>

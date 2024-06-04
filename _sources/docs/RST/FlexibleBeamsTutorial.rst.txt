@@ -113,7 +113,6 @@ Now, we create a ground object and markers to attach cable with generic joint
 
   oGround = mbs.CreateGround(referencePosition=[0,0,0])
   mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
-
   mCable = mbs.AddMarker(MarkerNodeRigid(nodeNumber=cableData[0][0]))
 
 

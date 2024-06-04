@@ -25,21 +25,15 @@ You can view and download this file on Github: `NGsolveCraigBampton.py <https://
    
    
    import exudyn as exu
-   from exudyn.itemInterface import *
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    from exudyn.FEM import *
-   from exudyn.graphicsDataUtilities import *
    
    SC = exu.SystemContainer()
    mbs = SC.AddSystem()
    
    import numpy as np
    import time
-   #import timeit
-   
-   import exudyn.basicUtilities as eb
-   import exudyn.rigidBodyUtilities as rb
-   import exudyn.utilities as eu
    
    import numpy as np
    
@@ -80,16 +74,13 @@ You can view and download this file on Github: `NGsolveCraigBampton.py <https://
    Emodulus=1e7*10
    nu=0.3
    meshCreated = False
+   meshOrder = 1 #use order 2 for higher accuracy, but more unknowns
    
    #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
    if True: #needs netgen/ngsolve to be installed with pip install; to compute mesh, see e.g.: https://github.com/NGSolve/ngsolve/releases
    
        import ngsolve as ngs
-       import netgen
        from netgen.meshing import *
-   
-       from netgen.geom2d import unit_square
-       #import netgen.libngpy as libng
        from netgen.csg import *
        
        geo = CSGeometry()
@@ -113,7 +104,9 @@ You can view and download this file on Github: `NGsolveCraigBampton.py <https://
        meshCreated = True
        #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
        #Use fem to import FEM model and create FFRFreducedOrder object
-       fem.ImportMeshFromNGsolve(mesh, density=rho, youngsModulus=Emodulus, poissonsRatio=nu)
+       [bfM, bfK, fes] = fem.ImportMeshFromNGsolve(mesh, density=rho, 
+                                                   youngsModulus=Emodulus, poissonsRatio=nu,
+                                                   meshOrder=meshOrder)
        if h == 1.25*a:
            fem.SaveToFile(fileName)
    
@@ -128,12 +121,14 @@ You can view and download this file on Github: `NGsolveCraigBampton.py <https://
        nTip = fem.GetNodeAtPoint(pRight) #tip node (do not use midpoint, as this may not be a mesh node ...)
        #print("nMid=",nMid)
        nodesLeftPlane = fem.GetNodesInPlane(pLeft, [-1,0,0])
-       lenNodesLeftPlane = len(nodesLeftPlane)
-       weightsLeftPlane = np.array((1./lenNodesLeftPlane)*np.ones(lenNodesLeftPlane))
+       # lenNodesLeftPlane = len(nodesLeftPlane)
+       # weightsLeftPlane = np.array((1./lenNodesLeftPlane)*np.ones(lenNodesLeftPlane))
+       weightsLeftPlane = fem.GetNodeWeightsFromSurfaceAreas(nodesLeftPlane)
    
        nodesRightPlane = fem.GetNodesInPlane(pRight, [-1,0,0])
-       lenNodesRightPlane = len(nodesRightPlane)
-       weightsRightPlane = np.array((1./lenNodesRightPlane)*np.ones(lenNodesRightPlane))
+       # lenNodesRightPlane = len(nodesRightPlane)
+       # weightsRightPlane = np.array((1./lenNodesRightPlane)*np.ones(lenNodesRightPlane))
+       weightsRightPlane = fem.GetNodeWeightsFromSurfaceAreas(nodesRightPlane)
    
        #boundaryList = [nodesLeftPlane, nodesRightPlane] #second boudary (right plane) not needed ...
        boundaryList = [nodesLeftPlane] 
@@ -162,8 +157,12 @@ You can view and download this file on Github: `NGsolveCraigBampton.py <https://
            #varType = exu.OutputVariableType.StrainLocal
            print("ComputePostProcessingModes ... (may take a while)")
            start_time = time.time()
-           fem.ComputePostProcessingModes(material=mat, 
-                                          outputVariableType=varType)
+           if True: #faster with ngsolve; requires fes
+               fem.ComputePostProcessingModesNGsolve(fes, material=mat,
+                                              outputVariableType=varType)
+           else:
+               fem.ComputePostProcessingModes(material=mat, 
+                                               outputVariableType=varType)
            print("   ... needed %.3f seconds" % (time.time() - start_time))
            SC.visualizationSettings.contour.reduceRange=False
            SC.visualizationSettings.contour.outputVariable = varType
@@ -182,7 +181,6 @@ You can view and download this file on Github: `NGsolveCraigBampton.py <https://
                                                      gravity=[0,-9.81,0],
                                                      color=[0.1,0.9,0.1,1.],
                                                      )
-       
        
        #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
        #animate modes
@@ -216,11 +214,7 @@ You can view and download this file on Github: `NGsolveCraigBampton.py <https://
        oGround = mbs.AddObject(ObjectGround(referencePosition= [0,0,0]))
    
        if True:
-           nodesLeftPlane = fem.GetNodesInPlane(pLeft, [-1,0,0])
-           lenNodesLeftPlane = len(nodesLeftPlane)
-           weightsLeftPlane = np.array((1./lenNodesLeftPlane)*np.ones(lenNodesLeftPlane))
            leftMidPoint = [0,0,0]
-           #print("nodes in plane=",nodesLeftPlane)
            
            mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=leftMidPoint))
    
@@ -237,8 +231,6 @@ You can view and download this file on Github: `NGsolveCraigBampton.py <https://
                                 fileName=fileDir+'nMidDisplacementCMS'+str(nModes)+'Test.txt', 
                                 outputVariableType = exu.OutputVariableType.Displacement))
            
-       # mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=[GraphicsDataOrthoCubeLines(0, 0, 0, 1, 1, 1)])))
-       # mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=[GraphicsDataOrthoCubeLines(0.2, 0.2, 0.2, 0.8, 0.8, 0.8)], color=color4red)))
        mbs.Assemble()
        
        simulationSettings = exu.SimulationSettings()
@@ -272,7 +264,7 @@ You can view and download this file on Github: `NGsolveCraigBampton.py <https://
        
        simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
        simulationSettings.timeIntegration.endTime = tEnd
-       simulationSettings.solutionSettings.writeSolutionToFile = False
+       # simulationSettings.solutionSettings.writeSolutionToFile = False
        simulationSettings.timeIntegration.verboseMode = 1
        #simulationSettings.timeIntegration.verboseModeFile = 3
        simulationSettings.timeIntegration.newton.useModifiedNewton = True
@@ -327,6 +319,7 @@ You can view and download this file on Github: `NGsolveCraigBampton.py <https://
                exu.StopRenderer() #safely close rendering window!
    
    
+           #mbs.SolutionViewer()
       
    
    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

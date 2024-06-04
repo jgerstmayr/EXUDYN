@@ -24,7 +24,8 @@ You can view and download this file on Github: `laserScannerTest.py <https://git
    
    import exudyn
    import exudyn as exu
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    from exudyn.robotics.utilities import AddLidar
    
    import numpy as np
@@ -84,10 +85,10 @@ You can view and download this file on Github: `laserScannerTest.py <https://git
    rLidar = 0.5*rWheel
    pLidar1 = [-wCar*0.5-rLidar, lCar*0.5+rWheel+rLidar,hCar*0.5]
    pLidar2 = [ wCar*0.5+rLidar,-lCar*0.5-rWheel-rLidar,hCar*0.5]
-   graphicsCar = [GraphicsDataOrthoCubePoint(centerPoint=[0,0,0],size=[wCar-1.1*wWheel, lCar+2*rWheel, hCar], 
-                                            color=color4steelblue)]
-   graphicsCar += [GraphicsDataCylinder(pAxis=pLidar1, vAxis=[0,0,0.5*rLidar], radius=rLidar, clor=color4darkgrey)]
-   graphicsCar += [GraphicsDataCylinder(pAxis=pLidar2, vAxis=[0,0,0.5*rLidar], radius=rLidar, clor=color4darkgrey)]
+   graphicsCar = [graphics.Brick(centerPoint=[0,0,0],size=[wCar-1.1*wWheel, lCar+2*rWheel, hCar], 
+                                            color=graphics.color.steelblue)]
+   graphicsCar += [graphics.Cylinder(pAxis=pLidar1, vAxis=[0,0,0.5*rLidar], radius=rLidar, clor=graphics.color.darkgrey)]
+   graphicsCar += [graphics.Cylinder(pAxis=pLidar2, vAxis=[0,0,0.5*rLidar], radius=rLidar, clor=graphics.color.darkgrey)]
    
    [nCar,bCar]=AddRigidBody(mainSys = mbs, 
                             inertia = inertiaCar, 
@@ -123,21 +124,21 @@ You can view and download this file on Github: `laserScannerTest.py <https://git
    
    #ground body and marker
    LL = 8
-   gGround = GraphicsDataCheckerBoard(point=[0.25*LL,0.25*LL,0],size=2*LL)
+   gGround = graphics.CheckerBoard(point=[0.25*LL,0.25*LL,0],size=2*LL)
    
    #obstacles:
    zz=1
-   gGround = MergeGraphicsDataTriangleList(GraphicsDataOrthoCubePoint(centerPoint=[0,8,0.5*zz],size=[2*zz,zz,1*zz], color=color4dodgerblue), gGround)
-   gGround = MergeGraphicsDataTriangleList(GraphicsDataOrthoCubePoint(centerPoint=[8,6,1.5*zz],size=[zz,2*zz,3*zz], color=color4dodgerblue), gGround)
-   gGround = MergeGraphicsDataTriangleList(GraphicsDataOrthoCubePoint(centerPoint=[4,-4,0.5*zz],size=[2*zz,zz,1*zz], color=color4dodgerblue), gGround)
-   gGround = MergeGraphicsDataTriangleList(GraphicsDataCylinder(pAxis=[8,0,0],vAxis=[0,0,zz], radius=1.5, color=color4dodgerblue, nTiles=64), gGround)
+   gGround = graphics.MergeTriangleLists(graphics.Brick(centerPoint=[0,8,0.5*zz],size=[2*zz,zz,1*zz], color=graphics.color.dodgerblue), gGround)
+   gGround = graphics.MergeTriangleLists(graphics.Brick(centerPoint=[8,6,1.5*zz],size=[zz,2*zz,3*zz], color=graphics.color.dodgerblue), gGround)
+   gGround = graphics.MergeTriangleLists(graphics.Brick(centerPoint=[4,-4,0.5*zz],size=[2*zz,zz,1*zz], color=graphics.color.dodgerblue), gGround)
+   gGround = graphics.MergeTriangleLists(graphics.Cylinder(pAxis=[8,0,0],vAxis=[0,0,zz], radius=1.5, color=graphics.color.dodgerblue, nTiles=64), gGround)
    
    #walls:
    tt=0.2
-   gGround = MergeGraphicsDataTriangleList(GraphicsDataOrthoCubePoint(centerPoint=[0.25*LL,0.25*LL-LL,0.5*zz],size=[2*LL,tt,zz], color=color4dodgerblue), gGround)
-   gGround = MergeGraphicsDataTriangleList(GraphicsDataOrthoCubePoint(centerPoint=[0.25*LL,0.25*LL+LL,0.5*zz],size=[2*LL,tt,zz], color=color4dodgerblue), gGround)
-   gGround = MergeGraphicsDataTriangleList(GraphicsDataOrthoCubePoint(centerPoint=[0.25*LL-LL,0.25*LL,0.5*zz],size=[tt,2*LL,zz], color=color4dodgerblue), gGround)
-   gGround = MergeGraphicsDataTriangleList(GraphicsDataOrthoCubePoint(centerPoint=[0.25*LL+LL,0.25*LL,0.5*zz],size=[tt,2*LL,zz], color=color4dodgerblue), gGround)
+   gGround = graphics.MergeTriangleLists(graphics.Brick(centerPoint=[0.25*LL,0.25*LL-LL,0.5*zz],size=[2*LL,tt,zz], color=graphics.color.dodgerblue), gGround)
+   gGround = graphics.MergeTriangleLists(graphics.Brick(centerPoint=[0.25*LL,0.25*LL+LL,0.5*zz],size=[2*LL,tt,zz], color=graphics.color.dodgerblue), gGround)
+   gGround = graphics.MergeTriangleLists(graphics.Brick(centerPoint=[0.25*LL-LL,0.25*LL,0.5*zz],size=[tt,2*LL,zz], color=graphics.color.dodgerblue), gGround)
+   gGround = graphics.MergeTriangleLists(graphics.Brick(centerPoint=[0.25*LL+LL,0.25*LL,0.5*zz],size=[tt,2*LL,zz], color=graphics.color.dodgerblue), gGround)
    
    
    oGround = mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=[gGround])))
@@ -146,7 +147,7 @@ You can view and download this file on Github: `laserScannerTest.py <https://git
    
    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    #set up general contact geometry where sensors measure
-   [meshPoints, meshTrigs] = GraphicsData2PointsAndTrigs(gGround)
+   [meshPoints, meshTrigs] = graphics.ToPointsAndTrigs(gGround)
    
    ngc = mbs.CreateDistanceSensorGeometry(meshPoints, meshTrigs, rigidBodyMarkerIndex=mGround, searchTreeCellSize=[8,8,1])
    
@@ -155,7 +156,7 @@ You can view and download this file on Github: `laserScannerTest.py <https://git
    #                                     minDistance=0, maxDistance=maxDistance, measureVelocity=True,
    #                                     cylinderRadius=0, storeInternal=True, addGraphicsObject=True, 
    #                                     selectedTypeIndex=exu.ContactTypeIndex.IndexTrigsRigidBodyBased,
-   #                                     color=color4red)
+   #                                     color=graphics.color.red)
    
    maxDistance = 100 #max. distance of sensors; just large enough to reach everything; take care, in zoom all it will show this large area
    
@@ -163,27 +164,27 @@ You can view and download this file on Github: `laserScannerTest.py <https://git
    #  is zero which means that the sensor is drawn into the negative direction during initialization!!!
    sLidar = AddLidar(mbs, generalContactIndex=ngc, positionOrMarker=markerCar2, minDistance=0, maxDistance=maxDistance, 
              numberOfSensors=100,angleStart=1.*pi, angleEnd=2.5*pi, inclination=0,
-             lineLength=1, storeInternal=True, color=color4lawngreen )
+             lineLength=1, storeInternal=True, color=graphics.color.lawngreen )
    
    AddLidar(mbs, generalContactIndex=ngc, positionOrMarker=markerCar2, minDistance=0, maxDistance=maxDistance, 
              numberOfSensors=100,angleStart=1.*pi, angleEnd=2.5*pi, inclination=-4/180*pi,
-             lineLength=1, storeInternal=True, color=color4grey )
+             lineLength=1, storeInternal=True, color=graphics.color.grey )
    
    sLidarInc = AddLidar(mbs, generalContactIndex=ngc, positionOrMarker=markerCar2, minDistance=0, maxDistance=maxDistance, 
              numberOfSensors=100,angleStart=1.*pi, angleEnd=2.5*pi, inclination= 4/180*pi,
-             lineLength=1, storeInternal=True, color=color4grey )
+             lineLength=1, storeInternal=True, color=graphics.color.grey )
    
    AddLidar(mbs, generalContactIndex=ngc, positionOrMarker=markerCar2, minDistance=0, maxDistance=maxDistance, 
              numberOfSensors=100,angleStart=1.*pi, angleEnd=2.5*pi, inclination= 8/180*pi,
-             lineLength=1, storeInternal=True, color=color4grey )
+             lineLength=1, storeInternal=True, color=graphics.color.grey )
    
    AddLidar(mbs, generalContactIndex=ngc, positionOrMarker=markerCar2, minDistance=0, maxDistance=maxDistance, 
              numberOfSensors=100,angleStart=1.*pi, angleEnd=2.5*pi, inclination=12/180*pi,
-             lineLength=1, storeInternal=True, color=color4grey )
+             lineLength=1, storeInternal=True, color=graphics.color.grey )
    
    AddLidar(mbs, generalContactIndex=ngc, positionOrMarker=markerCar1, minDistance=0, maxDistance=maxDistance, 
              numberOfSensors=100,angleStart=0*pi, angleEnd=1.5*pi,
-             lineLength=1, storeInternal=True, color=color4red) #, rotation=RotationMatrixX(2/180*pi))
+             lineLength=1, storeInternal=True, color=graphics.color.red) #, rotation=RotationMatrixX(2/180*pi))
    
    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    
@@ -202,7 +203,7 @@ You can view and download this file on Github: `laserScannerTest.py <https://git
            frictionAngle *= -1
    
        #additional graphics for visualization of rotation (JUST FOR DRAWING!):
-       graphicsWheel = [GraphicsDataOrthoCubePoint(centerPoint=[0,0,0],size=[wWheel*1.1,0.7*rWheel,0.7*rWheel], color=color4lightred)]
+       graphicsWheel = [graphics.Brick(centerPoint=[0,0,0],size=[wWheel*1.1,0.7*rWheel,0.7*rWheel], color=graphics.color.lightred)]
        nCyl = 12
        rCyl = 0.1*rWheel
        for i in range(nCyl): #draw cylinders on wheels
@@ -210,9 +211,9 @@ You can view and download this file on Github: `laserScannerTest.py <https://git
            pAxis = np.array([0,rWheel*np.sin(iPhi),-rWheel*np.cos(iPhi)])
            vAxis = [0.5*wWheel*np.cos(frictionAngle),0.5*wWheel*np.sin(frictionAngle),0]
            vAxis2 = RotationMatrixX(iPhi)@vAxis
-           rColor = color4grey
-           if i >= nCyl/2: rColor = color4darkgrey
-           graphicsWheel += [GraphicsDataCylinder(pAxis=pAxis-vAxis2, vAxis=2*vAxis2, radius=rCyl, 
+           rColor = graphics.color.grey
+           if i >= nCyl/2: rColor = graphics.color.darkgrey
+           graphicsWheel += [graphics.Cylinder(pAxis=pAxis-vAxis2, vAxis=2*vAxis2, radius=rCyl, 
                                                   color=rColor)]
    
    
@@ -267,7 +268,7 @@ You can view and download this file on Github: `laserScannerTest.py <https://git
                                                      dryFrictionProportionalZone=1e-1, 
                                                      rollingFrictionViscous=0.2*0,
                                                      contactStiffness=kRolling, contactDamping=dRolling,
-                                                     visualization=VObjectConnectorRollingDiscPenalty(discWidth=wWheel, color=color4blue)))
+                                                     visualization=VObjectConnectorRollingDiscPenalty(discWidth=wWheel, color=graphics.color.blue)))
        oRollingDiscs += [oRolling]
    
        strNum = str(iWheel)

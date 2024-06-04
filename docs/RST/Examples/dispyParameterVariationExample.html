@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>dispyParameterVariationExample.py &mdash; Exudyn1.8.32.dev1 1.8.32.dev1 documentation</title>
+  <title>dispyParameterVariationExample.py &mdash; Exudyn1.8.52.dev1 1.8.52.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=d6ff67ca"></script>
+        <script src="../../../_static/documentation_options.js?v=b761f56e"></script>
         <script src="../../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -41,7 +41,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.8.32.dev1
+            Exudyn1.8.52.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -233,7 +233,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.8.32.dev1</a>
+          <a href="../../../index.html">Exudyn1.8.52.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -426,19 +426,19 @@
 <span class="linenos">169</span>
 <span class="linenos">170</span>    <span class="c1">#++++++++++++++++++++++++++++++++++++++++++++++++</span>
 <span class="linenos">171</span>    <span class="c1"># perform parameter variation</span>
-<span class="linenos">172</span>    <span class="n">n</span> <span class="o">=</span> <span class="mi">4</span> <span class="c1"># n*n = number of variations</span>
+<span class="linenos">172</span>    <span class="n">n</span> <span class="o">=</span> <span class="mi">2</span> <span class="c1"># n*n = number of variations</span>
 <span class="linenos">173</span>    <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-<span class="linenos">174</span>    <span class="p">[</span><span class="n">pDict</span><span class="p">,</span> <span class="n">values</span><span class="p">]</span> <span class="o">=</span> <span class="nf">ParameterVariation</span><span class="p">(</span><span class="n">parameterFunction</span><span class="o">=</span><span class="n">ParameterFunction</span><span class="p">,</span>
+<span class="linenos">174</span>    <span class="p">[</span><span class="n">pDict</span><span class="p">,</span> <span class="n">values</span><span class="p">]</span> <span class="o">=</span> <span class="nf">ParameterVariation</span><span class="p">(</span><span class="n">parameterFunction</span> <span class="o">=</span> <span class="n">ParameterFunction</span><span class="p">,</span>
 <span class="linenos">175</span>                                         <span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;mass&#39;</span><span class="p">:(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">n</span><span class="p">),</span>
 <span class="linenos">176</span>                                                       <span class="s1">&#39;spring&#39;</span><span class="p">:(</span><span class="mi">2000</span><span class="p">,</span><span class="mi">8000</span><span class="p">,</span><span class="n">n</span><span class="p">),</span>
 <span class="linenos">177</span>                                                       <span class="p">},</span>
 <span class="linenos">178</span>                                         <span class="n">parameterFunctionData</span> <span class="o">=</span> <span class="n">functionData</span><span class="p">,</span>
-<span class="linenos">179</span>                                         <span class="n">debugMode</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-<span class="linenos">180</span>                                         <span class="n">addComputationIndex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<span class="linenos">181</span>                                         <span class="n">useMultiProcessing</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<span class="linenos">182</span>                                         <span class="c1">#showProgress=False, #by default True</span>
-<span class="linenos">183</span>                                         <span class="n">clusterHostNames</span><span class="o">=</span><span class="n">clusterHostNames</span><span class="p">,</span> <span class="c1">#not that there is a significant overhead, thus cluster only makes sense for computations that take longer than 1 second</span>
-<span class="linenos">184</span>                                         <span class="c1">#useDispyWebMonitor=useDispyWebMonitor, #slows down a little and waits 5 seconds in the end to finish</span>
+<span class="linenos">179</span>                                         <span class="n">debugMode</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="linenos">180</span>                                         <span class="n">addComputationIndex</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="linenos">181</span>                                         <span class="n">useMultiProcessing</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="linenos">182</span>                                         <span class="n">showProgress</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="linenos">183</span>                                         <span class="n">clusterHostNames</span> <span class="o">=</span> <span class="n">clusterHostNames</span><span class="p">,</span> <span class="c1">#not that there is a significant overhead, thus cluster only makes sense for computations that take longer than 1 second</span>
+<span class="linenos">184</span>                                         <span class="c1">#useDispyWebMonitor = useDispyWebMonitor, #slows down a little and waits 5 seconds in the end to finish</span>
 <span class="linenos">185</span>                                         <span class="p">)</span>
 <span class="linenos">186</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--- </span><span class="si">%s</span><span class="s2"> seconds ---&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">))</span>
 <span class="linenos">187</span>

@@ -11,6 +11,7 @@ Python Utility Functions
    basicUtilities
    beams
    FEM
+   graphics
    graphicsDataUtilities
    GUI
    interactive

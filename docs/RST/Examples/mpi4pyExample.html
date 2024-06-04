@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>mpi4pyExample.py &mdash; Exudyn1.8.32.dev1 1.8.32.dev1 documentation</title>
+  <title>mpi4pyExample.py &mdash; Exudyn1.8.52.dev1 1.8.52.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=d6ff67ca"></script>
+        <script src="../../../_static/documentation_options.js?v=b761f56e"></script>
         <script src="../../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -41,7 +41,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.8.32.dev1
+            Exudyn1.8.52.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -233,7 +233,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.8.32.dev1</a>
+          <a href="../../../index.html">Exudyn1.8.52.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -278,133 +278,135 @@
 <span class="linenos"> 21</span>
 <span class="linenos"> 22</span>
 <span class="linenos"> 23</span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
-<span class="linenos"> 24</span><span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="linenos"> 25</span><span class="kn">from</span> <span class="nn">exudyn.processing</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="linenos"> 26</span><span class="kn">import</span> <span class="nn">time</span>
-<span class="linenos"> 27</span>
-<span class="linenos"> 28</span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="linenos"> 29</span><span class="kn">import</span> <span class="nn">sys</span>
-<span class="linenos"> 30</span>
-<span class="linenos"> 31</span><span class="n">useMPI</span> <span class="o">=</span> <span class="kc">True</span> <span class="c1">#True requires mpi4py to be installed</span>
-<span class="linenos"> 32</span>
+<span class="linenos"> 24</span><span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="o">*</span> <span class="c1">#includes itemInterface and rigidBodyUtilities</span>
+<span class="linenos"> 25</span><span class="kn">import</span> <span class="nn">exudyn.graphics</span> <span class="k">as</span> <span class="nn">graphics</span> <span class="c1">#only import if it does not conflict</span>
+<span class="linenos"> 26</span><span class="kn">from</span> <span class="nn">exudyn.processing</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="linenos"> 27</span><span class="kn">import</span> <span class="nn">time</span>
+<span class="linenos"> 28</span>
+<span class="linenos"> 29</span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="linenos"> 30</span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="linenos"> 31</span>
+<span class="linenos"> 32</span><span class="n">useMPI</span> <span class="o">=</span> <span class="kc">True</span> <span class="c1">#True requires mpi4py to be installed</span>
 <span class="linenos"> 33</span>
 <span class="linenos"> 34</span>
 <span class="linenos"> 35</span>
-<span class="linenos"> 36</span><span class="c1">#function, which creates and runs model; executed in parallel!</span>
-<span class="linenos"> 37</span><span class="k">def</span> <span class="nf">TestExudyn</span><span class="p">(</span><span class="n">parameterDict</span><span class="p">):</span>
-<span class="linenos"> 38</span>
-<span class="linenos"> 39</span>    <span class="c1">#create an environment for mini example</span>
-<span class="linenos"> 40</span>    <span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
-<span class="linenos"> 41</span>    <span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
-<span class="linenos"> 42</span>
-<span class="linenos"> 43</span>    <span class="n">x</span><span class="o">=</span><span class="mi">1</span>
-<span class="linenos"> 44</span>    <span class="n">y</span><span class="o">=</span><span class="mi">1000</span>
-<span class="linenos"> 45</span>    <span class="n">computationIndex</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="linenos"> 46</span>    <span class="n">x</span> <span class="o">=</span> <span class="n">parameterDict</span><span class="p">[</span><span class="s1">&#39;mass&#39;</span><span class="p">]</span>
-<span class="linenos"> 47</span>    <span class="n">y</span> <span class="o">=</span> <span class="n">parameterDict</span><span class="p">[</span><span class="s1">&#39;stiffness&#39;</span><span class="p">]</span>
-<span class="linenos"> 48</span>
-<span class="linenos"> 49</span>    <span class="n">oGround</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectGround</span><span class="p">(</span><span class="n">referencePosition</span><span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
-<span class="linenos"> 50</span>    <span class="n">nGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">NodePointGround</span><span class="p">(</span><span class="n">referenceCoordinates</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
-<span class="linenos"> 51</span>
-<span class="linenos"> 52</span>    <span class="n">node</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">Node1D</span><span class="p">(</span><span class="n">referenceCoordinates</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-<span class="linenos"> 53</span>                              <span class="n">initialCoordinates</span><span class="o">=</span><span class="p">[(</span><span class="n">x</span><span class="o">-</span><span class="mf">0.5</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">],</span>
-<span class="linenos"> 54</span>                              <span class="n">initialVelocities</span><span class="o">=</span><span class="p">[(</span><span class="n">y</span><span class="o">-</span><span class="mf">0.2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">]))</span>
-<span class="linenos"> 55</span>    <span class="n">mass</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">Mass1D</span><span class="p">(</span><span class="n">nodeNumber</span> <span class="o">=</span> <span class="n">node</span><span class="p">,</span> <span class="n">physicsMass</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
-<span class="linenos"> 56</span>
-<span class="linenos"> 57</span>    <span class="c1">#assemble and solve system for default parameters</span>
-<span class="linenos"> 58</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
-<span class="linenos"> 59</span>    <span class="c1">#exu.SolveDynamic(mbs, exu.SimulationSettings())</span>
-<span class="linenos"> 60</span>
-<span class="linenos"> 61</span>    <span class="n">h</span><span class="o">=</span><span class="mf">1e-3</span>
-<span class="linenos"> 62</span>    <span class="n">tEnd</span> <span class="o">=</span> <span class="mi">100</span> <span class="c1">#nominal: 10</span>
-<span class="linenos"> 63</span>    <span class="c1">#tEnd = 1000</span>
-<span class="linenos"> 64</span>    <span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">()</span>
-<span class="linenos"> 65</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tEnd</span><span class="o">/</span><span class="n">h</span><span class="p">)</span>
-<span class="linenos"> 66</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="n">tEnd</span>
-<span class="linenos"> 67</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">writeSolutionToFile</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1">#no concurrent writing to files ...!</span>
-<span class="linenos"> 68</span>    <span class="c1">#exu.StartRenderer() #don&#39;t do this in parallelization: will crash</span>
-<span class="linenos"> 69</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="p">)</span>
-<span class="linenos"> 70</span>    <span class="c1">#exu.StopRenderer() #don&#39;t do this in parallelization: will crash</span>
-<span class="linenos"> 71</span>
-<span class="linenos"> 72</span>    <span class="c1">#check result, get current mass position at local position [0,0,0]</span>
-<span class="linenos"> 73</span>    <span class="n">result</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetObjectOutputBody</span><span class="p">(</span><span class="n">mass</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Position</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
-<span class="linenos"> 74</span>    <span class="c1">#print(&quot;result &quot;,x, &quot;=&quot;,result)</span>
-<span class="linenos"> 75</span>
-<span class="linenos"> 76</span>    <span class="k">del</span> <span class="n">mbs</span> <span class="c1">#dont forget to delete variables, otherwise memory may leak significantly</span>
-<span class="linenos"> 77</span>    <span class="k">del</span> <span class="n">SC</span>
-<span class="linenos"> 78</span>    <span class="k">return</span> <span class="n">result</span>
-<span class="linenos"> 79</span>    <span class="c1">#final x-coordinate of position shall be 2</span>
-<span class="linenos"> 80</span>
-<span class="linenos"> 81</span><span class="c1">#now run parallelized parameter variation;</span>
-<span class="linenos"> 82</span><span class="c1">#make sure that this only runs in main process:</span>
-<span class="linenos"> 83</span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-<span class="linenos"> 84</span>    <span class="n">n</span><span class="o">=</span><span class="mi">640</span>
-<span class="linenos"> 85</span>    <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-<span class="linenos"> 86</span>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;parameter variation &#39;</span><span class="o">+</span><span class="s1">&#39;with MPI&#39;</span><span class="o">*</span><span class="n">useMPI</span><span class="p">)</span>
-<span class="linenos"> 87</span>    <span class="p">[</span><span class="n">p</span><span class="p">,</span><span class="n">v</span><span class="p">]</span><span class="o">=</span><span class="nf">ParameterVariation</span><span class="p">(</span><span class="n">parameterFunction</span><span class="o">=</span><span class="n">TestExudyn</span><span class="p">,</span>
-<span class="linenos"> 88</span>                             <span class="n">parameters</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;mass&#39;</span><span class="p">:(</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="s1">&#39;stiffness&#39;</span><span class="p">:(</span><span class="mi">1000</span><span class="p">,</span><span class="mi">2000</span><span class="p">,</span><span class="n">n</span><span class="p">)},</span>
-<span class="linenos"> 89</span>                             <span class="c1"># debugMode=True,</span>
-<span class="linenos"> 90</span>                             <span class="n">addComputationIndex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<span class="linenos"> 91</span>                             <span class="n">useMultiProcessing</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<span class="linenos"> 92</span>                             <span class="c1">#numberOfThreads=8, #automatically determined by mpi4py routines in ParameterVariationList(...)</span>
-<span class="linenos"> 93</span>                             <span class="n">resultsFile</span><span class="o">=</span><span class="s1">&#39;solution/resultsMPI.txt&#39;</span><span class="p">,</span>
-<span class="linenos"> 94</span>                             <span class="n">useMPI</span> <span class="o">=</span> <span class="n">useMPI</span><span class="p">,</span>
-<span class="linenos"> 95</span>                             <span class="p">)</span>
-<span class="linenos"> 96</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--- </span><span class="si">%s</span><span class="s2"> seconds ---&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">))</span>
-<span class="linenos"> 97</span>    <span class="c1">#print(&quot;values=&quot;,v)</span>
-<span class="linenos"> 98</span>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;sum=&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span> <span class="c1">#gives sum= 14931163024.24202 with default values</span>
-<span class="linenos"> 99</span>
-<span class="linenos">100</span>
-<span class="linenos">101</span><span class="c1"># old, manual implementation of parameter variation with mpi</span>
-<span class="linenos">102</span><span class="c1"># if useMPI:</span>
-<span class="linenos">103</span><span class="c1">#     import mpi4py</span>
-<span class="linenos">104</span><span class="c1">#     from mpi4py import MPI</span>
-<span class="linenos">105</span><span class="c1">#</span>
-<span class="linenos">106</span><span class="c1">#     comm = MPI.COMM_WORLD</span>
-<span class="linenos">107</span><span class="c1">#     nprocs = comm.Get_size()</span>
-<span class="linenos">108</span><span class="c1">#     rank   = comm.Get_rank()</span>
-<span class="linenos">109</span><span class="c1">#     print(&#39;rank=&#39;, rank, &#39;, size=&#39;, nprocs)</span>
-<span class="linenos">110</span><span class="c1">#</span>
-<span class="linenos">111</span><span class="c1">#     from mpi4py.futures import MPIPoolExecutor</span>
+<span class="linenos"> 36</span>
+<span class="linenos"> 37</span><span class="c1">#function, which creates and runs model; executed in parallel!</span>
+<span class="linenos"> 38</span><span class="k">def</span> <span class="nf">TestExudyn</span><span class="p">(</span><span class="n">parameterDict</span><span class="p">):</span>
+<span class="linenos"> 39</span>
+<span class="linenos"> 40</span>    <span class="c1">#create an environment for mini example</span>
+<span class="linenos"> 41</span>    <span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
+<span class="linenos"> 42</span>    <span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
+<span class="linenos"> 43</span>
+<span class="linenos"> 44</span>    <span class="n">x</span><span class="o">=</span><span class="mi">1</span>
+<span class="linenos"> 45</span>    <span class="n">y</span><span class="o">=</span><span class="mi">1000</span>
+<span class="linenos"> 46</span>    <span class="n">computationIndex</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos"> 47</span>    <span class="n">x</span> <span class="o">=</span> <span class="n">parameterDict</span><span class="p">[</span><span class="s1">&#39;mass&#39;</span><span class="p">]</span>
+<span class="linenos"> 48</span>    <span class="n">y</span> <span class="o">=</span> <span class="n">parameterDict</span><span class="p">[</span><span class="s1">&#39;stiffness&#39;</span><span class="p">]</span>
+<span class="linenos"> 49</span>
+<span class="linenos"> 50</span>    <span class="n">oGround</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectGround</span><span class="p">(</span><span class="n">referencePosition</span><span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+<span class="linenos"> 51</span>    <span class="n">nGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">NodePointGround</span><span class="p">(</span><span class="n">referenceCoordinates</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+<span class="linenos"> 52</span>
+<span class="linenos"> 53</span>    <span class="n">node</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">Node1D</span><span class="p">(</span><span class="n">referenceCoordinates</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+<span class="linenos"> 54</span>                              <span class="n">initialCoordinates</span><span class="o">=</span><span class="p">[(</span><span class="n">x</span><span class="o">-</span><span class="mf">0.5</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">],</span>
+<span class="linenos"> 55</span>                              <span class="n">initialVelocities</span><span class="o">=</span><span class="p">[(</span><span class="n">y</span><span class="o">-</span><span class="mf">0.2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">]))</span>
+<span class="linenos"> 56</span>    <span class="n">mass</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">Mass1D</span><span class="p">(</span><span class="n">nodeNumber</span> <span class="o">=</span> <span class="n">node</span><span class="p">,</span> <span class="n">physicsMass</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+<span class="linenos"> 57</span>
+<span class="linenos"> 58</span>    <span class="c1">#assemble and solve system for default parameters</span>
+<span class="linenos"> 59</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
+<span class="linenos"> 60</span>    <span class="c1">#exu.SolveDynamic(mbs, exu.SimulationSettings())</span>
+<span class="linenos"> 61</span>
+<span class="linenos"> 62</span>    <span class="n">h</span><span class="o">=</span><span class="mf">1e-3</span>
+<span class="linenos"> 63</span>    <span class="n">tEnd</span> <span class="o">=</span> <span class="mi">100</span> <span class="c1">#nominal: 10</span>
+<span class="linenos"> 64</span>    <span class="c1">#tEnd = 1000</span>
+<span class="linenos"> 65</span>    <span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">()</span>
+<span class="linenos"> 66</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tEnd</span><span class="o">/</span><span class="n">h</span><span class="p">)</span>
+<span class="linenos"> 67</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="n">tEnd</span>
+<span class="linenos"> 68</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">writeSolutionToFile</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1">#no concurrent writing to files ...!</span>
+<span class="linenos"> 69</span>    <span class="c1">#exu.StartRenderer() #don&#39;t do this in parallelization: will crash</span>
+<span class="linenos"> 70</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="p">)</span>
+<span class="linenos"> 71</span>    <span class="c1">#exu.StopRenderer() #don&#39;t do this in parallelization: will crash</span>
+<span class="linenos"> 72</span>
+<span class="linenos"> 73</span>    <span class="c1">#check result, get current mass position at local position [0,0,0]</span>
+<span class="linenos"> 74</span>    <span class="n">result</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetObjectOutputBody</span><span class="p">(</span><span class="n">mass</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Position</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos"> 75</span>    <span class="c1">#print(&quot;result &quot;,x, &quot;=&quot;,result)</span>
+<span class="linenos"> 76</span>
+<span class="linenos"> 77</span>    <span class="k">del</span> <span class="n">mbs</span> <span class="c1">#dont forget to delete variables, otherwise memory may leak significantly</span>
+<span class="linenos"> 78</span>    <span class="k">del</span> <span class="n">SC</span>
+<span class="linenos"> 79</span>    <span class="k">return</span> <span class="n">result</span>
+<span class="linenos"> 80</span>    <span class="c1">#final x-coordinate of position shall be 2</span>
+<span class="linenos"> 81</span>
+<span class="linenos"> 82</span><span class="c1">#now run parallelized parameter variation;</span>
+<span class="linenos"> 83</span><span class="c1">#make sure that this only runs in main process:</span>
+<span class="linenos"> 84</span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+<span class="linenos"> 85</span>    <span class="n">n</span><span class="o">=</span><span class="mi">640</span>
+<span class="linenos"> 86</span>    <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="linenos"> 87</span>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;parameter variation &#39;</span><span class="o">+</span><span class="s1">&#39;with MPI&#39;</span><span class="o">*</span><span class="n">useMPI</span><span class="p">)</span>
+<span class="linenos"> 88</span>    <span class="p">[</span><span class="n">p</span><span class="p">,</span><span class="n">v</span><span class="p">]</span><span class="o">=</span><span class="nf">ParameterVariation</span><span class="p">(</span><span class="n">parameterFunction</span> <span class="o">=</span> <span class="n">TestExudyn</span><span class="p">,</span>
+<span class="linenos"> 89</span>                             <span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;mass&#39;</span><span class="p">:(</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="s1">&#39;stiffness&#39;</span><span class="p">:(</span><span class="mi">1000</span><span class="p">,</span><span class="mi">2000</span><span class="p">,</span><span class="n">n</span><span class="p">)},</span>
+<span class="linenos"> 90</span>                             <span class="c1"># debugMode=True,</span>
+<span class="linenos"> 91</span>                             <span class="n">addComputationIndex</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="linenos"> 92</span>                             <span class="n">useMultiProcessing</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="linenos"> 93</span>                             <span class="n">showProgress</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="linenos"> 94</span>                             <span class="c1">#numberOfThreads=8, #automatically determined by mpi4py routines in ParameterVariationList(...)</span>
+<span class="linenos"> 95</span>                             <span class="n">resultsFile</span><span class="o">=</span><span class="s1">&#39;solution/resultsMPI.txt&#39;</span><span class="p">,</span>
+<span class="linenos"> 96</span>                             <span class="n">useMPI</span> <span class="o">=</span> <span class="n">useMPI</span><span class="p">,</span>
+<span class="linenos"> 97</span>                             <span class="p">)</span>
+<span class="linenos"> 98</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--- </span><span class="si">%s</span><span class="s2"> seconds ---&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">))</span>
+<span class="linenos"> 99</span>    <span class="c1">#print(&quot;values=&quot;,v)</span>
+<span class="linenos">100</span>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;sum=&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span> <span class="c1">#gives sum= 14931163024.24202 with default values</span>
+<span class="linenos">101</span>
+<span class="linenos">102</span>
+<span class="linenos">103</span><span class="c1"># old, manual implementation of parameter variation with mpi</span>
+<span class="linenos">104</span><span class="c1"># if useMPI:</span>
+<span class="linenos">105</span><span class="c1">#     import mpi4py</span>
+<span class="linenos">106</span><span class="c1">#     from mpi4py import MPI</span>
+<span class="linenos">107</span><span class="c1">#</span>
+<span class="linenos">108</span><span class="c1">#     comm = MPI.COMM_WORLD</span>
+<span class="linenos">109</span><span class="c1">#     nprocs = comm.Get_size()</span>
+<span class="linenos">110</span><span class="c1">#     rank   = comm.Get_rank()</span>
+<span class="linenos">111</span><span class="c1">#     print(&#39;rank=&#39;, rank, &#39;, size=&#39;, nprocs)</span>
 <span class="linenos">112</span><span class="c1">#</span>
-<span class="linenos">113</span><span class="c1">#</span>
-<span class="linenos">114</span><span class="c1"># if __name__ == &#39;__main__&#39; and useMPI:</span>
-<span class="linenos">115</span><span class="c1">#     #MPI.Init()      # manual initialization of the MPI environment</span>
-<span class="linenos">116</span><span class="c1">#     print(&#39;mpi4py test program\n&#39;)</span>
-<span class="linenos">117</span><span class="c1">#     x=[]</span>
-<span class="linenos">118</span><span class="c1">#     y=np.arange(1,10)</span>
-<span class="linenos">119</span><span class="c1">#     #executor = MPIPoolExecutor(max_workers=8)</span>
-<span class="linenos">120</span><span class="c1">#     executor = MPIPoolExecutor()</span>
-<span class="linenos">121</span><span class="c1">#     #for result in executor.map(fmpi, [1,2,3,4]):</span>
-<span class="linenos">122</span><span class="c1">#     for i in range(n):</span>
-<span class="linenos">123</span><span class="c1">#         x+=[{&#39;mass&#39;:1,</span>
-<span class="linenos">124</span><span class="c1">#              &#39;stiffness&#39;:1000+1000*i/(n-1),</span>
-<span class="linenos">125</span><span class="c1">#              &#39;computationIndex&#39;:i}]</span>
-<span class="linenos">126</span><span class="c1">#     #print(&#39;x=&#39;,x)</span>
-<span class="linenos">127</span><span class="c1">#     v=[]</span>
-<span class="linenos">128</span><span class="c1">#     if False:</span>
-<span class="linenos">129</span><span class="c1">#         start_time = time.time()</span>
-<span class="linenos">130</span><span class="c1">#         for result in executor.map(TestExudyn, x):</span>
-<span class="linenos">131</span><span class="c1">#             v.append(result)</span>
-<span class="linenos">132</span><span class="c1">#         print(&quot;--- %s seconds ---&quot; % (time.time() - start_time))</span>
-<span class="linenos">133</span><span class="c1">#     else:</span>
-<span class="linenos">134</span><span class="c1">#         nVariations=n</span>
-<span class="linenos">135</span><span class="c1">#         import tqdm #progress bar</span>
-<span class="linenos">136</span><span class="c1">#         try: #_instances only available after first run!</span>
-<span class="linenos">137</span><span class="c1">#             tqdm.tqdm._instances.clear() #if open instances of tqdm, which leads to nasty newline</span>
-<span class="linenos">138</span><span class="c1">#         except:</span>
-<span class="linenos">139</span><span class="c1">#             pass</span>
-<span class="linenos">140</span><span class="c1">#         useTQDM = True</span>
-<span class="linenos">141</span>
-<span class="linenos">142</span><span class="c1">#         start_time = time.time()</span>
-<span class="linenos">143</span><span class="c1">#         #for v in (tqdm.tqdm(p.imap(parameterFunction, vInput), total=nVariations)):</span>
-<span class="linenos">144</span><span class="c1">#         for result in (tqdm.tqdm(executor.map(TestExudyn, x), total=nVariations)):</span>
-<span class="linenos">145</span><span class="c1">#             v.append(result)</span>
-<span class="linenos">146</span><span class="c1">#         print(&quot;--- %s seconds ---&quot; % (time.time() - start_time))</span>
-<span class="linenos">147</span>
-<span class="linenos">148</span><span class="c1">#     #print(&#39;rank=&#39;,rank)</span>
-<span class="linenos">149</span><span class="c1">#     print(&#39;sum=&#39;,np.array(v).sum())</span>
-<span class="linenos">150</span><span class="c1">#     #MPI.Finalize()  # manual finalization of the MPI environment</span>
+<span class="linenos">113</span><span class="c1">#     from mpi4py.futures import MPIPoolExecutor</span>
+<span class="linenos">114</span><span class="c1">#</span>
+<span class="linenos">115</span><span class="c1">#</span>
+<span class="linenos">116</span><span class="c1"># if __name__ == &#39;__main__&#39; and useMPI:</span>
+<span class="linenos">117</span><span class="c1">#     #MPI.Init()      # manual initialization of the MPI environment</span>
+<span class="linenos">118</span><span class="c1">#     print(&#39;mpi4py test program\n&#39;)</span>
+<span class="linenos">119</span><span class="c1">#     x=[]</span>
+<span class="linenos">120</span><span class="c1">#     y=np.arange(1,10)</span>
+<span class="linenos">121</span><span class="c1">#     #executor = MPIPoolExecutor(max_workers=8)</span>
+<span class="linenos">122</span><span class="c1">#     executor = MPIPoolExecutor()</span>
+<span class="linenos">123</span><span class="c1">#     #for result in executor.map(fmpi, [1,2,3,4]):</span>
+<span class="linenos">124</span><span class="c1">#     for i in range(n):</span>
+<span class="linenos">125</span><span class="c1">#         x+=[{&#39;mass&#39;:1,</span>
+<span class="linenos">126</span><span class="c1">#              &#39;stiffness&#39;:1000+1000*i/(n-1),</span>
+<span class="linenos">127</span><span class="c1">#              &#39;computationIndex&#39;:i}]</span>
+<span class="linenos">128</span><span class="c1">#     #print(&#39;x=&#39;,x)</span>
+<span class="linenos">129</span><span class="c1">#     v=[]</span>
+<span class="linenos">130</span><span class="c1">#     if False:</span>
+<span class="linenos">131</span><span class="c1">#         start_time = time.time()</span>
+<span class="linenos">132</span><span class="c1">#         for result in executor.map(TestExudyn, x):</span>
+<span class="linenos">133</span><span class="c1">#             v.append(result)</span>
+<span class="linenos">134</span><span class="c1">#         print(&quot;--- %s seconds ---&quot; % (time.time() - start_time))</span>
+<span class="linenos">135</span><span class="c1">#     else:</span>
+<span class="linenos">136</span><span class="c1">#         nVariations=n</span>
+<span class="linenos">137</span><span class="c1">#         import tqdm #progress bar</span>
+<span class="linenos">138</span><span class="c1">#         try: #_instances only available after first run!</span>
+<span class="linenos">139</span><span class="c1">#             tqdm.tqdm._instances.clear() #if open instances of tqdm, which leads to nasty newline</span>
+<span class="linenos">140</span><span class="c1">#         except:</span>
+<span class="linenos">141</span><span class="c1">#             pass</span>
+<span class="linenos">142</span><span class="c1">#         useTQDM = True</span>
+<span class="linenos">143</span>
+<span class="linenos">144</span><span class="c1">#         start_time = time.time()</span>
+<span class="linenos">145</span><span class="c1">#         #for v in (tqdm.tqdm(p.imap(parameterFunction, vInput), total=nVariations)):</span>
+<span class="linenos">146</span><span class="c1">#         for result in (tqdm.tqdm(executor.map(TestExudyn, x), total=nVariations)):</span>
+<span class="linenos">147</span><span class="c1">#             v.append(result)</span>
+<span class="linenos">148</span><span class="c1">#         print(&quot;--- %s seconds ---&quot; % (time.time() - start_time))</span>
+<span class="linenos">149</span>
+<span class="linenos">150</span><span class="c1">#     #print(&#39;rank=&#39;,rank)</span>
+<span class="linenos">151</span><span class="c1">#     print(&#39;sum=&#39;,np.array(v).sum())</span>
+<span class="linenos">152</span><span class="c1">#     #MPI.Finalize()  # manual finalization of the MPI environment</span>
 </pre></div>
 </div>
 </section>

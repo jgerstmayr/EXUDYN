@@ -34,6 +34,7 @@ You can view and download this file on Github: `minimizeExample.py <https://gith
    import os
    from time import sleep
    
+   useGraphics = True
    
    #this is the function which is repeatedly called from ParameterVariation
    #parameterSet contains dictinary with varied parameters
@@ -177,8 +178,8 @@ You can view and download this file on Github: `minimizeExample.py <https://gith
            start_time = time.time()
            [pOpt, vOpt, pList, values] = Minimize(objectiveFunction = ParameterFunction, 
                                                 parameters = {'mass':(1,10), 'spring':(100,10000), 'force':(1,250)}, #parameters provide search range
-                                                showProgress=True,
-                                                debugMode=False,
+                                                showProgress = True,
+                                                debugMode = False,
                                                 addComputationIndex = True,
                                                 tol = 1e-1, #this is a internal parameter, not directly coupled loss
                                                 options={'maxiter':200},
@@ -188,20 +189,20 @@ You can view and download this file on Github: `minimizeExample.py <https://gith
        
            print("optimum parameters=", pOpt)
            print("minimum value=", vOpt)
-       
-           from mpl_toolkits.mplot3d import Axes3D  # noqa: F401 unused import
-           import matplotlib.pyplot as plt
-           #from matplotlib import cm
-           #from matplotlib.ticker import LinearLocator, FormatStrFormatter
-           import numpy as np
-           colorMap = plt.cm.get_cmap('jet') #finite element colors
-           
-           #for negative values:
-           if min(values) <= 0:
-               values = np.array(values)-min(values)*1.001+1e-10
+   
+           if useGraphics:    
+               from mpl_toolkits.mplot3d import Axes3D  # noqa: F401 unused import
+               import matplotlib.pyplot as plt
+               from matplotlib import colormaps
+               import numpy as np
+               colorMap = colormaps.get_cmap('jet') #finite element colors
                
-           plt.close('all')
-           [figList, axList] = PlotOptimizationResults2D(pList, values, yLogScale=True)
+               #for negative values:
+               if min(values) <= 0:
+                   values = np.array(values)-min(values)*1.001+1e-10
+                   
+               plt.close('all')
+               [figList, axList] = PlotOptimizationResults2D(pList, values, yLogScale=True)
            
 
 

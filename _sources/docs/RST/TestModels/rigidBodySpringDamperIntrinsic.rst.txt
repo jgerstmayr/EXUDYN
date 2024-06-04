@@ -23,7 +23,8 @@ You can view and download this file on Github: `rigidBodySpringDamperIntrinsic.p
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    
    import exudyn as exu
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    
    import numpy as np
    
@@ -53,10 +54,10 @@ You can view and download this file on Github: `rigidBodySpringDamperIntrinsic.p
    L = 1
    #++++++++++++++++++++++++++++++++++++++++++++++
    #create two ground and two bodies, rigid body spring damper using different marker order
-   gGround = GraphicsDataOrthoCubePoint(size = [L,0.1,0.25], color=color4blue)
+   gGround = graphics.Brick(size = [L,0.1,0.25], color=graphics.color.blue)
    oGround = mbs.CreateGround(referencePosition = [0,0,0], graphicsDataList=[gGround])
    
-   gBody1 = GraphicsDataOrthoCubePoint(size = [L,0.1,0.2], color=color4red)
+   gBody1 = graphics.Brick(size = [L,0.1,0.2], color=graphics.color.red)
    oBody1 = mbs.CreateRigidBody(referencePosition = [L,0.,0.],
                           referenceRotationMatrix = np.eye(3),
                           initialVelocity = [0.,1.,2.],
@@ -65,7 +66,7 @@ You can view and download this file on Github: `rigidBodySpringDamperIntrinsic.p
                           gravity = [0.,0.,0.],
                           graphicsDataList = [gBody1],)
     
-   gBody2 = GraphicsDataOrthoCubePoint(size = [L,0.1,0.2], color=color4green)
+   gBody2 = graphics.Brick(size = [L,0.1,0.2], color=graphics.color.green)
    oBody2 = mbs.CreateRigidBody(referencePosition = [L,0.,0.],
                           referenceRotationMatrix = np.eye(3),
                           initialVelocity = [0.,1.,2.],

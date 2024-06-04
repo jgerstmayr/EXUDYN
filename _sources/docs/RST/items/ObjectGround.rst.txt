@@ -114,8 +114,9 @@ inefficient and only designed to enable simpler tests, but not large scale probl
 
     import exudyn as exu
     from math import sin, cos, pi
-    from exudyn.itemInterface import *
-    from exudyn.graphicsDataUtilities import *
+    from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+    import exudyn.graphics as graphics
+
     SC = exu.SystemContainer()
     mbs = SC.AddSystem()
     #create simple system:
@@ -126,8 +127,8 @@ inefficient and only designed to enable simpler tests, but not large scale probl
     def UFgraphics(mbs, objectNum):
         t = mbs.systemData.GetTime(exu.ConfigurationType.Visualization) #get time if needed
         #draw moving sphere on ground
-        graphics1=GraphicsDataSphere(point=[sin(t*2*pi), cos(t*2*pi), 0], 
-                                     radius=0.1, color=color4red, nTiles=32)
+        graphics1=graphics.Sphere(point=[sin(t*2*pi), cos(t*2*pi), 0], 
+                                     radius=0.1, color=graphics.color.red, nTiles=32)
         return [graphics1] 
 
     #add object with graphics user function

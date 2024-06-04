@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nMassOscillatorInteractive.py &mdash; Exudyn1.8.32.dev1 1.8.32.dev1 documentation</title>
+  <title>nMassOscillatorInteractive.py &mdash; Exudyn1.8.52.dev1 1.8.52.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=d6ff67ca"></script>
+        <script src="../../../_static/documentation_options.js?v=b761f56e"></script>
         <script src="../../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -41,7 +41,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.8.32.dev1
+            Exudyn1.8.52.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -233,7 +233,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.8.32.dev1</a>
+          <a href="../../../index.html">Exudyn1.8.52.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -268,8 +268,8 @@
 <span class="linenos"> 11</span><span class="c1">#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
 <span class="linenos"> 12</span>
 <span class="linenos"> 13</span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
-<span class="linenos"> 14</span><span class="kn">from</span> <span class="nn">exudyn.itemInterface</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="linenos"> 15</span><span class="kn">from</span> <span class="nn">exudyn.graphicsDataUtilities</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="linenos"> 14</span><span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="o">*</span> <span class="c1">#includes itemInterface and rigidBodyUtilities</span>
+<span class="linenos"> 15</span><span class="kn">import</span> <span class="nn">exudyn.graphics</span> <span class="k">as</span> <span class="nn">graphics</span> <span class="c1">#only import if it does not conflict</span>
 <span class="linenos"> 16</span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="linenos"> 17</span><span class="kn">from</span> <span class="nn">exudyn.interactive</span> <span class="kn">import</span> <span class="nc">InteractiveDialog</span>
 <span class="linenos"> 18</span>
@@ -405,15 +405,15 @@
 <span class="linenos">148</span><span class="n">maxAmp0</span> <span class="o">=</span> <span class="mf">0.1</span>
 <span class="linenos">149</span><span class="n">maxAmpN</span> <span class="o">=</span> <span class="mf">0.1</span><span class="o">*</span><span class="n">N</span>
 <span class="linenos">150</span>
-<span class="linenos">151</span><span class="n">background</span> <span class="o">=</span> <span class="p">[</span><span class="nf">GraphicsDataQuad</span><span class="p">([[</span><span class="o">-</span><span class="n">L0</span><span class="p">,</span><span class="n">hy0</span><span class="p">,</span><span class="n">z</span><span class="p">],[</span> <span class="n">L</span><span class="p">,</span><span class="n">hy0</span><span class="p">,</span><span class="n">z</span><span class="p">],[</span> <span class="n">L</span><span class="p">,</span><span class="n">hy1</span><span class="p">,</span><span class="n">z</span><span class="p">],[</span><span class="o">-</span><span class="n">L0</span><span class="p">,</span><span class="n">hy1</span><span class="p">,</span><span class="n">z</span><span class="p">]],</span>
-<span class="linenos">152</span>                              <span class="n">color</span><span class="o">=</span><span class="n">color4lightgrey</span><span class="p">)]</span>
+<span class="linenos">151</span><span class="n">background</span> <span class="o">=</span> <span class="p">[</span><span class="n">graphics</span><span class="o">.</span><span class="nf">Quad</span><span class="p">([[</span><span class="o">-</span><span class="n">L0</span><span class="p">,</span><span class="n">hy0</span><span class="p">,</span><span class="n">z</span><span class="p">],[</span> <span class="n">L</span><span class="p">,</span><span class="n">hy0</span><span class="p">,</span><span class="n">z</span><span class="p">],[</span> <span class="n">L</span><span class="p">,</span><span class="n">hy1</span><span class="p">,</span><span class="n">z</span><span class="p">],[</span><span class="o">-</span><span class="n">L0</span><span class="p">,</span><span class="n">hy1</span><span class="p">,</span><span class="n">z</span><span class="p">]],</span>
+<span class="linenos">152</span>                              <span class="n">color</span><span class="o">=</span><span class="n">graphics</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">lightgrey</span><span class="p">)]</span>
 <span class="linenos">153</span><span class="n">offCircleY</span> <span class="o">=</span> <span class="mi">1</span><span class="o">*</span><span class="n">hy</span>
 <span class="linenos">154</span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
 <span class="linenos">155</span>    <span class="n">t</span><span class="o">=</span><span class="n">r_mass</span><span class="o">*</span><span class="mf">0.5</span>
 <span class="linenos">156</span>    <span class="n">ox</span> <span class="o">=</span> <span class="n">l_mass</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
 <span class="linenos">157</span>    <span class="n">oy</span> <span class="o">=</span> <span class="n">offCircleY</span>
-<span class="linenos">158</span>    <span class="n">line0</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span><span class="s1">&#39;Line&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">:[</span><span class="n">ox</span><span class="o">-</span><span class="n">t</span><span class="p">,</span><span class="n">oy</span><span class="o">+</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="n">ox</span><span class="o">+</span><span class="n">t</span><span class="p">,</span><span class="n">oy</span><span class="o">+</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;color&#39;</span><span class="p">:</span><span class="n">color4grey</span><span class="p">}</span>
-<span class="linenos">159</span>    <span class="n">line1</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span><span class="s1">&#39;Line&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">:[</span><span class="n">ox</span><span class="o">+</span><span class="mi">0</span><span class="p">,</span><span class="n">oy</span><span class="o">-</span><span class="n">t</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="n">ox</span><span class="o">+</span><span class="mi">0</span><span class="p">,</span><span class="n">oy</span><span class="o">+</span><span class="n">t</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;color&#39;</span><span class="p">:</span><span class="n">color4grey</span><span class="p">}</span>
+<span class="linenos">158</span>    <span class="n">line0</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span><span class="s1">&#39;Line&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">:[</span><span class="n">ox</span><span class="o">-</span><span class="n">t</span><span class="p">,</span><span class="n">oy</span><span class="o">+</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="n">ox</span><span class="o">+</span><span class="n">t</span><span class="p">,</span><span class="n">oy</span><span class="o">+</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;color&#39;</span><span class="p">:</span><span class="n">graphics</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">grey</span><span class="p">}</span>
+<span class="linenos">159</span>    <span class="n">line1</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span><span class="s1">&#39;Line&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">:[</span><span class="n">ox</span><span class="o">+</span><span class="mi">0</span><span class="p">,</span><span class="n">oy</span><span class="o">-</span><span class="n">t</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="n">ox</span><span class="o">+</span><span class="mi">0</span><span class="p">,</span><span class="n">oy</span><span class="o">+</span><span class="n">t</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;color&#39;</span><span class="p">:</span><span class="n">graphics</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">grey</span><span class="p">}</span>
 <span class="linenos">160</span>    <span class="n">background</span> <span class="o">+=</span> <span class="p">[</span><span class="n">line0</span><span class="p">,</span> <span class="n">line1</span><span class="p">]</span>
 <span class="linenos">161</span>
 <span class="linenos">162</span><span class="n">oGround</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectGround</span><span class="p">(</span><span class="n">visualization</span><span class="o">=</span><span class="nc">VObjectGround</span><span class="p">(</span><span class="n">graphicsData</span><span class="o">=</span><span class="n">background</span><span class="p">)))</span>
@@ -425,13 +425,13 @@
 <span class="linenos">168</span>
 <span class="linenos">169</span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
 <span class="linenos">170</span>    <span class="c1">#node for 3D mass point:</span>
-<span class="linenos">171</span>    <span class="n">col</span> <span class="o">=</span> <span class="n">color4steelblue</span>
+<span class="linenos">171</span>    <span class="n">col</span> <span class="o">=</span> <span class="n">graphics</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">steelblue</span>
 <span class="linenos">172</span>    <span class="k">if</span> <span class="n">i</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
-<span class="linenos">173</span>        <span class="n">col</span> <span class="o">=</span> <span class="n">color4green</span>
+<span class="linenos">173</span>        <span class="n">col</span> <span class="o">=</span> <span class="n">graphics</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">green</span>
 <span class="linenos">174</span>    <span class="k">elif</span> <span class="n">i</span><span class="o">==</span><span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span>
-<span class="linenos">175</span>        <span class="n">col</span> <span class="o">=</span> <span class="n">color4lightred</span>
+<span class="linenos">175</span>        <span class="n">col</span> <span class="o">=</span> <span class="n">graphics</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">lightred</span>
 <span class="linenos">176</span>
-<span class="linenos">177</span>    <span class="n">gSphere</span> <span class="o">=</span> <span class="nf">GraphicsDataSphere</span><span class="p">(</span><span class="n">point</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">radius</span><span class="o">=</span><span class="n">r_mass</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">col</span><span class="p">,</span> <span class="n">nTiles</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="linenos">177</span>    <span class="n">gSphere</span> <span class="o">=</span> <span class="n">graphics</span><span class="o">.</span><span class="nf">Sphere</span><span class="p">(</span><span class="n">point</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">radius</span><span class="o">=</span><span class="n">r_mass</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">col</span><span class="p">,</span> <span class="n">nTiles</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
 <span class="linenos">178</span>    <span class="n">node</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">Node1D</span><span class="p">(</span><span class="n">referenceCoordinates</span> <span class="o">=</span> <span class="p">[</span><span class="n">l_mass</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">nMass</span><span class="p">))],</span>
 <span class="linenos">179</span>                              <span class="n">initialCoordinates</span><span class="o">=</span><span class="p">[</span><span class="mf">0.</span><span class="p">],</span>
 <span class="linenos">180</span>                              <span class="n">initialVelocities</span><span class="o">=</span><span class="p">[</span><span class="mf">0.</span><span class="p">]))</span>
@@ -607,12 +607,12 @@
 <span class="linenos">350</span>       <span class="c1"># &#39;limitsY&#39;:[(-maxAmp0,maxAmp0),(-maxAmpN,maxAmpN)]}#,(0,omegaMax)]}</span>
 <span class="linenos">351</span>
 <span class="linenos">352</span>
-<span class="linenos">353</span><span class="n">dialog</span> <span class="o">=</span> <span class="nc">InteractiveDialog</span><span class="p">(</span><span class="n">mbs</span><span class="o">=</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="o">=</span><span class="n">simulationSettings</span><span class="p">,</span>
-<span class="linenos">354</span>                           <span class="n">simulationFunction</span><span class="o">=</span><span class="n">SimulationUF</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Interactive window&#39;</span><span class="p">,</span>
-<span class="linenos">355</span>                           <span class="n">dialogItems</span><span class="o">=</span><span class="n">dialogItems</span><span class="p">,</span> <span class="n">period</span><span class="o">=</span><span class="n">deltaT</span><span class="p">,</span>
-<span class="linenos">356</span>                           <span class="c1">#realtimeFactor=1,</span>
-<span class="linenos">357</span>                           <span class="n">plots</span><span class="o">=</span><span class="n">plots</span><span class="p">,</span>
-<span class="linenos">358</span>                           <span class="n">fontSize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="linenos">353</span><span class="nc">InteractiveDialog</span><span class="p">(</span><span class="n">mbs</span><span class="o">=</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="o">=</span><span class="n">simulationSettings</span><span class="p">,</span>
+<span class="linenos">354</span>                  <span class="n">simulationFunction</span><span class="o">=</span><span class="n">SimulationUF</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Interactive window&#39;</span><span class="p">,</span>
+<span class="linenos">355</span>                  <span class="n">dialogItems</span><span class="o">=</span><span class="n">dialogItems</span><span class="p">,</span> <span class="n">period</span><span class="o">=</span><span class="n">deltaT</span><span class="p">,</span>
+<span class="linenos">356</span>                  <span class="c1">#realtimeFactor=1,</span>
+<span class="linenos">357</span>                  <span class="n">plots</span><span class="o">=</span><span class="n">plots</span><span class="p">,</span>
+<span class="linenos">358</span>                  <span class="n">fontSize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
 <span class="linenos">359</span>
 <span class="linenos">360</span><span class="c1"># #stop solver and close render window</span>
 <span class="linenos">361</span><span class="n">exu</span><span class="o">.</span><span class="nf">StopRenderer</span><span class="p">()</span> <span class="c1">#safely close rendering window!</span>

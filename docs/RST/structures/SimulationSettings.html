@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Simulation settings &mdash; Exudyn1.8.32.dev1 1.8.32.dev1 documentation</title>
+  <title>Simulation settings &mdash; Exudyn1.8.52.dev1 1.8.52.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=d6ff67ca"></script>
+        <script src="../../../_static/documentation_options.js?v=b761f56e"></script>
         <script src="../../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -43,7 +43,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.8.32.dev1
+            Exudyn1.8.52.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -108,7 +108,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.8.32.dev1</a>
+          <a href="../../../index.html">Exudyn1.8.52.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -738,121 +738,121 @@
 <ul>
 <li><div class="line-block">
 <div class="line"><strong>discontinuous</strong> [type = DiscontinuousSettings]:</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolverSettings.discontinuous</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.discontinuous</span></code></div>
 <div class="line">parameters for treatment of discontinuities</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>newton</strong> [type = NewtonSettings]:</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolverSettings.newton</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton</span></code></div>
 <div class="line">parameters for Newton method (e.g. in static solver or time integration)</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>adaptiveStep</strong> [type = bool, default = True]:</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolverSettings.adaptiveStep</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.adaptiveStep</span></code></div>
 <div class="line">True: use step reduction if step fails; False: fixed step size</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>adaptiveStepDecrease</strong> [type = UReal, default = 0.25]:</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolverSettings.adaptiveStepDecrease</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.adaptiveStepDecrease</span></code></div>
 <div class="line">Multiplicative factor (MUST BE: 0 &lt; factor &lt; 1) for step size to decrese due to discontinuousIteration or Newton errors</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>adaptiveStepIncrease</strong> [type = UReal, default = 2]:</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolverSettings.adaptiveStepIncrease</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.adaptiveStepIncrease</span></code></div>
 <div class="line">Multiplicative factor (MUST BE &gt; 1) for step size to increase after previous step reduction due to discontinuousIteration or Newton errors</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>adaptiveStepRecoveryIterations</strong> [type = UInt, default = 7]:</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolverSettings.adaptiveStepRecoveryIterations</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.adaptiveStepRecoveryIterations</span></code></div>
 <div class="line">Number of max. (Newton iterations + discontinuous iterations) at which a step increase is considered; in order to immediately increase steps after reduction, chose a high value</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>adaptiveStepRecoverySteps</strong> [type = UInt, default = 4]:</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolverSettings.adaptiveStepRecoverySteps</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.adaptiveStepRecoverySteps</span></code></div>
 <div class="line">Number of steps needed after which steps will be increased after previous step reduction due to discontinuousIteration or Newton errors</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>computeLoadsJacobian</strong> [type = bool, default = True]:</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolverSettings.computeLoadsJacobian</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.computeLoadsJacobian</span></code></div>
 <div class="line">True: compute (currently numerical) Jacobian for loads, causing additional computational costs; this is advantageous in cases where loads are related nonlinearly to coordinates; False: jacobian of loads not considered (may lead to slow convergence or Newton failure); note that computeLoadsJacobian has no effect in case of doSystemWideDifferentiation, as this anyway includes all load dependencies</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>constrainODE1coordinates</strong> [type = bool, default = True]:</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolverSettings.constrainODE1coordinates</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.constrainODE1coordinates</span></code></div>
 <div class="line">True: ODE1coordinates are constrained to initial values; False: undefined behavior, currently not supported</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>loadStepDuration</strong> [type = PReal, default = 1]:</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolverSettings.loadStepDuration</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.loadStepDuration</span></code></div>
 <div class="line">quasi-time for all load steps (added to current time in load steps)</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>loadStepGeometric</strong> [type = bool, default = False]:</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolverSettings.loadStepGeometric</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.loadStepGeometric</span></code></div>
 <div class="line">if loadStepGeometric=false, the load steps are incremental (arithmetic series, e.g. 0.1,0.2,0.3,…); if true, the load steps are increased in a geometric series, e.g. for <span class="math notranslate nohighlight">\(n=8\)</span> numberOfLoadSteps and <span class="math notranslate nohighlight">\(d = 1000\)</span> loadStepGeometricRange, it follows: <span class="math notranslate nohighlight">\(1000^{1/8}/1000=0.00237\)</span>, <span class="math notranslate nohighlight">\(1000^{2/8}/1000=0.00562\)</span>, <span class="math notranslate nohighlight">\(1000^{3/8}/1000=0.0133\)</span>, …, <span class="math notranslate nohighlight">\(1000^{7/8}/1000=0.422\)</span>, <span class="math notranslate nohighlight">\(1000^{8/8}/1000=1\)</span></div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>loadStepGeometricRange</strong> [type = PReal, default = 1000]:</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolverSettings.loadStepGeometricRange</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.loadStepGeometricRange</span></code></div>
 <div class="line">if loadStepGeometric=true, the load steps are increased in a geometric series, see loadStepGeometric</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>loadStepStart</strong> [type = UReal, default = 0]:</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolverSettings.loadStepStart</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.loadStepStart</span></code></div>
 <div class="line">a quasi time, which can be used for the output (first column) as well as for time-dependent forces; quasi-time is increased in every step i by loadStepDuration/numberOfLoadSteps; loadStepTime = loadStepStart + i*loadStepDuration/numberOfLoadSteps, but loadStepStart untouched ==&gt; increment by user</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>minimumStepSize</strong> [type = PReal, default = 1e-8]:</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolverSettings.minimumStepSize</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.minimumStepSize</span></code></div>
 <div class="line">lower limit of step size, before nonlinear solver stops</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>numberOfLoadSteps</strong> [type = PInt, default = 1]:</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolverSettings.numberOfLoadSteps</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.numberOfLoadSteps</span></code></div>
 <div class="line">number of load steps; if numberOfLoadSteps=1, no load steps are used and full forces are applied at once</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>stabilizerODE2term</strong> [type = UReal, default = 0]:</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolverSettings.stabilizerODE2term</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.stabilizerODE2term</span></code></div>
 <div class="line">add mass-proportional stabilizer term in <a class="reference internal" href="../Abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> part of jacobian for stabilization (scaled ), e.g. of badly conditioned problems; the diagnoal terms are scaled with <span class="math notranslate nohighlight">\(stabilizer = (1-loadStepFactor^2)\)</span>, and go to zero at the end of all load steps: <span class="math notranslate nohighlight">\(loadStepFactor=1\)</span> -&gt; <span class="math notranslate nohighlight">\(stabilizer = 0\)</span></div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>stepInformation</strong> [type = UInt, default = 67]:</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolverSettings.stepInformation</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.stepInformation</span></code></div>
 <div class="line">add up the following binary flags: 0 … show only step time, 1 … show time to go, 2 … show newton iterations (Nit) per step or period, 4 … show Newton jacobians (jac) per step or period, 8 … show discontinuous iterations (Dit) per step or period, 16 … show step size (dt), 32 … show CPU time spent; 64 … show adaptive step reduction warnings; 128 … show step increase information; 1024 … show every time step; time is usually shown in fractions of seconds (s), hours (h), or days</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>useLoadFactor</strong> [type = bool, default = True]:</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolverSettings.useLoadFactor</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.useLoadFactor</span></code></div>
 <div class="line">True: compute a load factor <span class="math notranslate nohighlight">\(\in [0,1]\)</span> from static step time; all loads are scaled by the load factor; False: loads are always scaled with 1 – use this option if time dependent loads use a userFunction</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>verboseMode</strong> [type = UInt, default = 1]:</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolverSettings.verboseMode</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.verboseMode</span></code></div>
 <div class="line">0 … no output, 1 … show errors and load steps, 2 … show short Newton step information (error), 3 … show also solution vector, 4 … show also jacobian, 5 … show also Jacobian inverse</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>verboseModeFile</strong> [type = UInt, default = 0]:</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolverSettings.verboseModeFile</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.verboseModeFile</span></code></div>
 <div class="line">same behaviour as verboseMode, but outputs all solver information to file</div>
 </div>
 </li>

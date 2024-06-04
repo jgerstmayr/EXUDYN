@@ -374,7 +374,7 @@ Graphics user functions via Python
 
 There are some user functions in order to customize drawing:
 
-+  You can assign graphicsData to the visualization to most bodies, such as rigid bodies in order to change the shape. Graphics can also be imported from files (\ ``GraphicsDataFromSTLfileTxt``\ ) using the established format \ :ref:`STL <STL>`\ \ (STereoLithography or Standard Triangle Language; file format available in nearly all CAD systems).
++  You can assign graphicsData to the visualization to most bodies, such as rigid bodies in order to change the shape. Graphics can also be imported from files (\ ``exu.graphics.FromSTLfileASCII``\ , \ ``exu.graphics.FromSTLfile``\ , ) using the established format \ :ref:`STL <STL>`\ \ (STereoLithography or Standard Triangle Language; file format available in nearly all CAD systems).
 +  Some objects, e.g., \ ``ObjectGenericODE2``\  or \ ``ObjectRigidBody``\ , provide customized a function \ ``graphicsDataUserFunction``\ . This user function just returns a list of GraphicsData, see Section :ref:`sec-graphicsdata`\ . With this function you can change the shape of the body in every step of the computation.
 +  Specifically, the \ ``graphicsDataUserFunction``\  in \ ``ObjectGround``\  can be used to draw any moving background in the scene.
 
@@ -394,7 +394,9 @@ Many functions and objects include color information. In order to allow alpha-tr
 +  blue (B) channel 
 +  alpha (A) value, representing the so-called \ **alpha-transparency**\  (A=0: fully transparent, A=1: solid)
 
-E.g., red color with no transparency is obtained by the color=[1,0,0,1]. Color predefinitions are found in \ ``exudynGraphicsDataUtilities.py``\ , e.g., \ ``color4red``\  or \ ``color4steelblue``\  as well a list of 16 colors \ ``color4list``\ , which is convenient to be used in a loop creating objects.
+E.g., red color with no transparency is obtained by the color=[1,0,0,1]. 
+Color predefinitions are found in \ ``graphics.py``\ , e.g., using \ ``graphics.color.red``\  or \ ``graphics.color.steelblue``\  as well a list of 16 colors \ ``graphics.colorList``\ , which is convenient to be used in a loop creating objects.
+Earlier, special colors were given in \ ``exudyn.graphicsDataUtilities.py``\ , e.g., \ ``color4red``\  or \ ``color4steelblue``\  as well as \ ``color4list``\ , which are marked as deprecated.
 
 
 .. _sec-overview-basics-solutionviewer:

@@ -26,7 +26,8 @@ You can view and download this file on Github: `netgenSTLtest.py <https://github
    
    import exudyn as exu
    from exudyn.itemInterface import *
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    from exudyn.FEM import *
    from exudyn.graphicsDataUtilities import *
    
@@ -36,8 +37,6 @@ You can view and download this file on Github: `netgenSTLtest.py <https://github
    import numpy as np
    import time
    
-   
-   useGraphics = True
    
    #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
    #netgen/meshing part:
@@ -57,12 +56,14 @@ You can view and download this file on Github: `netgenSTLtest.py <https://github
        import netgen
        from netgen.meshing import *
    
+       print('load stl file...')
        import netgen.stl as nstl
        #load STL file; needs to be closed (no holes) and consistent!
        #               and may not have defects (may require some processing of STL files!)
-       geom = nstl.STLGeometry('testData/gyro.stl') #gyro bei Peter Manzl
+       geom = nstl.STLGeometry('testData/gyro.stl') #Peter's gyro
    
-       mesh = ngs.Mesh( geom.GenerateMesh(maxh=0.003))
+       maxh=0.01
+       mesh = ngs.Mesh( geom.GenerateMesh(maxh=maxh))
        # mesh.Curve(1) #don't do that!
    
        #set True to see mesh in netgen tool:
@@ -109,7 +110,7 @@ You can view and download this file on Github: `netgenSTLtest.py <https://github
        print("eigen freq.=", fem.GetEigenFrequenciesHz())
    
        #draw cylinder to see geometry of hole    
-       # gGround = [GraphicsDataCylinder([0,0,0],[0,0.02,0], radius=0.011/2, color=color4dodgerblue, nTiles=128)]
+       # gGround = [graphics.Cylinder([0,0,0],[0,0.02,0], radius=0.011/2, color=graphics.color.dodgerblue, nTiles=128)]
        # oGround = mbs.AddObject(ObjectGround(referencePosition= [0,0,0], visualization=VObjectGround(graphicsData=gGround)))
        
            
@@ -220,11 +221,11 @@ You can view and download this file on Github: `netgenSTLtest.py <https://github
        SC.visualizationSettings.sensors.defaultSize = 0.01
        
        h=2e-5 #make small to see some oscillations
-       tEnd = 5
+       tEnd = 0.5
        
        simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
        simulationSettings.timeIntegration.endTime = tEnd
-       simulationSettings.solutionSettings.writeSolutionToFile = True
+       simulationSettings.solutionSettings.writeSolutionToFile = False
        simulationSettings.timeIntegration.verboseMode = 1
        simulationSettings.timeIntegration.simulateInRealtime = True
        simulationSettings.timeIntegration.realtimeFactor = 0.01
@@ -236,92 +237,26 @@ You can view and download this file on Github: `netgenSTLtest.py <https://github
        #simulationSettings.displayStatistics = True
        simulationSettings.displayComputationTime = True
        
-       #create animation:
-       # simulationSettings.solutionSettings.recordImagesInterval = 0.005
-       # SC.visualizationSettings.exportImages.saveImageFileName = "animation/frame"
        SC.visualizationSettings.window.renderWindowSize=[1920,1080]
        SC.visualizationSettings.openGL.multiSampling = 4
    
-       useGraphics=True
-       if True:
-           if useGraphics:
-               SC.visualizationSettings.general.autoFitScene=False
+       SC.visualizationSettings.general.autoFitScene=False
    
-               exu.StartRenderer()
-               if 'renderState' in exu.sys: SC.SetRenderState(exu.sys['renderState']) #load last model view
-           
-               mbs.WaitForUserToContinue() #press space to continue
+       exu.StartRenderer()
+       if 'renderState' in exu.sys: SC.SetRenderState(exu.sys['renderState']) #load last model view
    
-           #SC.RedrawAndSaveImage()
-           if True:
-               # mbs.SolveDynamic(solverType=exu.DynamicSolverType.TrapezoidalIndex2, 
-               #                   simulationSettings=simulationSettings)
-               mbs.SolveDynamic(simulationSettings=simulationSettings)
-           else:
-               mbs.SolveStatic(simulationSettings=simulationSettings)
+       mbs.WaitForUserToContinue() #press space to continue
    
-           # uTip = mbs.GetSensorValues(sensTipDispl)[1]
-           # print("nModes=", nModes, ", tip displacement=", uTip)
-           
-           if varType == exu.OutputVariableType.StressLocal:
-               mises = CMSObjectComputeNorm(mbs, 0, exu.OutputVariableType.StressLocal, 'Mises')
-               print('max von-Mises stress=',mises)
-           
-           if useGraphics:
-               SC.WaitForRenderEngineStopFlag()
-               exu.StopRenderer() #safely close rendering window!
-           
-           if False:
-               
-               mbs.PlotSensor(sensorNumbers=[sensBushingVel], components=[1])
-   
-   #%%
-   if False:
-       import matplotlib.pyplot as plt
-       import matplotlib.ticker as ticker
-       import exudyn as exu
-       from exudyn.utilities import *
-       CC = PlotLineCode
-       comp = 1 #1=x, 2=y, ...
-       var = ''
-       # data = np.loadtxt('solution/hingePartBushing'+var+'2.txt', comments='#', delimiter=',')
-       # plt.plot(data[:,0], data[:,comp], CC(7), label='2 eigenmodes') 
-       # data = np.loadtxt('solution/hingePartBushing'+var+'4.txt', comments='#', delimiter=',')
-       # plt.plot(data[:,0], data[:,comp], CC(8), label='4 eigenmodes') 
-       data = np.loadtxt('solution/hingePartBushing'+var+'8.txt', comments='#', delimiter=',')
-       plt.plot(data[:,0], data[:,comp], CC(9), label='8 eigenmodes') 
-       data = np.loadtxt('solution/hingePartBushing'+var+'16.txt', comments='#', delimiter=',')
-       plt.plot(data[:,0], data[:,comp], CC(10), label='16 eigenmodes') 
-       data = np.loadtxt('solution/hingePartBushing'+var+'32.txt', comments='#', delimiter=',')
-       plt.plot(data[:,0], data[:,comp], CC(11), label='32 eigenmodes') 
-   
-       data = np.loadtxt('solution/hingePartBushing'+var+'2HCB.txt', comments='#', delimiter=',')
-       plt.plot(data[:,0], data[:,comp], CC(1), label='HCB + 2 eigenmodes') 
-       data = np.loadtxt('solution/hingePartBushing'+var+'4HCB.txt', comments='#', delimiter=',')
-       plt.plot(data[:,0], data[:,comp], CC(2), label='HCB + 4 eigenmodes') 
-       data = np.loadtxt('solution/hingePartBushing'+var+'8HCB.txt', comments='#', delimiter=',')
-       plt.plot(data[:,0], data[:,comp], CC(3), label='HCB + 8 eigenmodes') 
-       data = np.loadtxt('solution/hingePartBushing'+var+'16HCB.txt', comments='#', delimiter=',')
-       plt.plot(data[:,0], data[:,comp], CC(4), label='HCB + 16 eigenmodes') 
-       data = np.loadtxt('solution/hingePartBushing'+var+'32HCB.txt', comments='#', delimiter=',')
-       plt.plot(data[:,0], data[:,comp], CC(5), label='HCB + 32 eigenmodes') 
-       data = np.loadtxt('solution/hingePartBushing'+var+'64HCB.txt', comments='#', delimiter=',')
-       plt.plot(data[:,0], data[:,comp], CC(6), label='HCB + 64 eigenmodes') 
-       data = np.loadtxt('solution/hingePartBushing'+var+'128HCB.txt', comments='#', delimiter=',')
-       plt.plot(data[:,0], data[:,comp], CC(7), label='HCB + 128 eigenmodes') 
-   
+       mbs.SolveDynamic(simulationSettings=simulationSettings)
        
-       ax=plt.gca() # get current axes
-       ax.grid(True, 'major', 'both')
-       ax.xaxis.set_major_locator(ticker.MaxNLocator(10)) 
-       ax.yaxis.set_major_locator(ticker.MaxNLocator(10)) 
-       #
-       plt.xlabel("time (s)")
-       plt.ylabel("y-component of tip velocity of hinge (m)")
-       plt.legend() #show labels as legend
-       plt.tight_layout()
-       plt.show() 
-   
+       if varType == exu.OutputVariableType.StressLocal:
+           mises = CMSObjectComputeNorm(mbs, 0, exu.OutputVariableType.StressLocal, 'Mises')
+           print('max von-Mises stress=',mises)
+       
+       SC.WaitForRenderEngineStopFlag()
+       exu.StopRenderer() #safely close rendering window!
+       
+       # mbs.PlotSensor(sensorNumbers=[sensBushingVel], components=[1])
    
    
    

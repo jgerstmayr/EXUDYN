@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>simulateInteractively.py &mdash; Exudyn1.8.32.dev1 1.8.32.dev1 documentation</title>
+  <title>simulateInteractively.py &mdash; Exudyn1.8.52.dev1 1.8.52.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=d6ff67ca"></script>
+        <script src="../../../_static/documentation_options.js?v=b761f56e"></script>
         <script src="../../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -41,7 +41,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.8.32.dev1
+            Exudyn1.8.52.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -233,7 +233,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.8.32.dev1</a>
+          <a href="../../../index.html">Exudyn1.8.52.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -352,12 +352,12 @@
 <span class="linenos"> 95</span><span class="n">nGround</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">NodePointGround</span><span class="p">(</span><span class="n">referenceCoordinates</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
 <span class="linenos"> 96</span><span class="n">a</span><span class="o">=</span><span class="n">L</span>
 <span class="linenos"> 97</span><span class="n">z</span><span class="o">=-</span><span class="mf">0.1</span><span class="o">*</span><span class="n">L</span>
-<span class="linenos"> 98</span><span class="n">background</span> <span class="o">=</span> <span class="nf">GraphicsDataQuad</span><span class="p">([[</span><span class="o">-</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="n">a</span><span class="p">,</span><span class="n">z</span><span class="p">],[</span> <span class="mi">2</span><span class="o">*</span><span class="n">a</span><span class="p">,</span><span class="o">-</span><span class="n">a</span><span class="p">,</span><span class="n">z</span><span class="p">],[</span> <span class="mi">2</span><span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span><span class="n">z</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span><span class="n">z</span><span class="p">]],</span>
-<span class="linenos"> 99</span>                              <span class="n">color</span><span class="o">=</span><span class="n">color4lightgrey</span><span class="p">,</span> <span class="n">alternatingColor</span><span class="o">=</span><span class="n">color4white</span><span class="p">)</span>
+<span class="linenos"> 98</span><span class="n">background</span> <span class="o">=</span> <span class="n">graphics</span><span class="o">.</span><span class="nf">Quad</span><span class="p">([[</span><span class="o">-</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="n">a</span><span class="p">,</span><span class="n">z</span><span class="p">],[</span> <span class="mi">2</span><span class="o">*</span><span class="n">a</span><span class="p">,</span><span class="o">-</span><span class="n">a</span><span class="p">,</span><span class="n">z</span><span class="p">],[</span> <span class="mi">2</span><span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span><span class="n">z</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span><span class="n">z</span><span class="p">]],</span>
+<span class="linenos"> 99</span>                              <span class="n">color</span><span class="o">=</span><span class="n">graphics</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">lightgrey</span><span class="p">,</span> <span class="n">alternatingColor</span><span class="o">=</span><span class="n">graphics</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">white</span><span class="p">)</span>
 <span class="linenos">100</span><span class="n">oGround</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectGround</span><span class="p">(</span><span class="n">visualization</span><span class="o">=</span><span class="nc">VObjectGround</span><span class="p">(</span><span class="n">graphicsData</span><span class="o">=</span><span class="p">[</span><span class="n">background</span><span class="p">])))</span>
 <span class="linenos">101</span>
 <span class="linenos">102</span><span class="c1">#add mass point (this is a 3D object with 3 coordinates):</span>
-<span class="linenos">103</span><span class="n">gCube</span> <span class="o">=</span> <span class="nf">GraphicsDataOrthoCubePoint</span><span class="p">([</span><span class="mf">0.1</span><span class="o">*</span><span class="n">L</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.2</span><span class="o">*</span><span class="n">L</span><span class="p">]</span><span class="o">*</span><span class="mi">3</span><span class="p">,</span> <span class="n">color4steelblue</span><span class="p">)</span>
+<span class="linenos">103</span><span class="n">gCube</span> <span class="o">=</span> <span class="n">graphics</span><span class="o">.</span><span class="nf">Brick</span><span class="p">([</span><span class="mf">0.1</span><span class="o">*</span><span class="n">L</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.2</span><span class="o">*</span><span class="n">L</span><span class="p">]</span><span class="o">*</span><span class="mi">3</span><span class="p">,</span> <span class="n">graphics</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">steelblue</span><span class="p">)</span>
 <span class="linenos">104</span><span class="n">massPoint</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">MassPoint</span><span class="p">(</span><span class="n">physicsMass</span> <span class="o">=</span> <span class="n">mass</span><span class="p">,</span> <span class="n">nodeNumber</span> <span class="o">=</span> <span class="n">nMass</span><span class="p">,</span>
 <span class="linenos">105</span>                                    <span class="n">visualization</span><span class="o">=</span><span class="nc">VMassPoint</span><span class="p">(</span><span class="n">graphicsData</span><span class="o">=</span><span class="p">[</span><span class="n">gCube</span><span class="p">])))</span>
 <span class="linenos">106</span>
@@ -483,10 +483,10 @@
 <span class="linenos">226</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">deltaT</span><span class="o">/</span><span class="n">h</span><span class="p">)</span>
 <span class="linenos">227</span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="n">deltaT</span>
 <span class="linenos">228</span>
-<span class="linenos">229</span><span class="n">dialog</span> <span class="o">=</span> <span class="nc">InteractiveDialog</span><span class="p">(</span><span class="n">mbs</span><span class="o">=</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="o">=</span><span class="n">simulationSettings</span><span class="p">,</span>
-<span class="linenos">230</span>                           <span class="n">simulationFunction</span><span class="o">=</span><span class="n">SimulationUF</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Interactive window&#39;</span><span class="p">,</span>
-<span class="linenos">231</span>                           <span class="n">dialogItems</span><span class="o">=</span><span class="n">dialogItems</span><span class="p">,</span> <span class="n">period</span><span class="o">=</span><span class="n">deltaT</span><span class="p">,</span> <span class="n">realtimeFactor</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-<span class="linenos">232</span>                           <span class="n">plots</span><span class="o">=</span><span class="n">plots</span><span class="p">,</span> <span class="n">fontSize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="linenos">229</span><span class="nc">InteractiveDialog</span><span class="p">(</span><span class="n">mbs</span><span class="o">=</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="o">=</span><span class="n">simulationSettings</span><span class="p">,</span>
+<span class="linenos">230</span>                  <span class="n">simulationFunction</span><span class="o">=</span><span class="n">SimulationUF</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Interactive window&#39;</span><span class="p">,</span>
+<span class="linenos">231</span>                  <span class="n">dialogItems</span><span class="o">=</span><span class="n">dialogItems</span><span class="p">,</span> <span class="n">period</span><span class="o">=</span><span class="n">deltaT</span><span class="p">,</span> <span class="n">realtimeFactor</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+<span class="linenos">232</span>                  <span class="n">plots</span><span class="o">=</span><span class="n">plots</span><span class="p">,</span> <span class="n">fontSize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
 <span class="linenos">233</span>
 <span class="linenos">234</span><span class="c1"># #stop solver and close render window</span>
 <span class="linenos">235</span><span class="n">exu</span><span class="o">.</span><span class="nf">StopRenderer</span><span class="p">()</span> <span class="c1">#safely close rendering window!</span>

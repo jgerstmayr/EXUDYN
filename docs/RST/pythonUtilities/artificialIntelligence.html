@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Module: artificialIntelligence &mdash; Exudyn1.8.32.dev1 1.8.32.dev1 documentation</title>
+  <title>Module: artificialIntelligence &mdash; Exudyn1.8.52.dev1 1.8.52.dev1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=d6ff67ca"></script>
+        <script src="../../../_static/documentation_options.js?v=b761f56e"></script>
         <script src="../../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -41,7 +41,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.8.32.dev1
+            Exudyn1.8.52.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -89,6 +89,7 @@
 <li class="toctree-l2"><a class="reference internal" href="basicUtilities.html">Module: basicUtilities</a></li>
 <li class="toctree-l2"><a class="reference internal" href="beams.html">Module: beams</a></li>
 <li class="toctree-l2"><a class="reference internal" href="FEM.html">Module: FEM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html">Module: graphics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html">Module: graphicsDataUtilities</a></li>
 <li class="toctree-l2"><a class="reference internal" href="GUI.html">Module: GUI</a></li>
 <li class="toctree-l2"><a class="reference internal" href="interactive.html">Module: interactive</a></li>
@@ -129,7 +130,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.8.32.dev1</a>
+          <a href="../../../index.html">Exudyn1.8.52.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -169,7 +170,7 @@ in general, set up a model with CreateMBS(), map state to initial values, initia
 </section>
 <section id="class-function-init">
 <span id="sec-artificialintelligence-openaigyminterfaceenv-env-init"></span><h2>Class function: __init__<a class="headerlink" href="#class-function-init" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py#L36">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py#L45">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -181,7 +182,7 @@ in general, set up a model with CreateMBS(), map state to initial values, initia
 </section>
 <section id="class-function-creatembs">
 <span id="sec-artificialintelligence-openaigyminterfaceenv-env-creatembs"></span><h2>Class function: CreateMBS<a class="headerlink" href="#class-function-creatembs" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py#L70">CreateMBS</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">SC</span></code>, <code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings</span></code>, <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py#L79">CreateMBS</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">SC</span></code>, <code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings</span></code>, <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -194,7 +195,7 @@ in general, set up a model with CreateMBS(), map state to initial values, initia
 </section>
 <section id="class-function-setupspaces">
 <span id="sec-artificialintelligence-openaigyminterfaceenv-env-setupspaces"></span><h2>Class function: SetupSpaces<a class="headerlink" href="#class-function-setupspaces" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py#L74">SetupSpaces</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py#L83">SetupSpaces</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -206,7 +207,7 @@ in general, set up a model with CreateMBS(), map state to initial values, initia
 </section>
 <section id="class-function-mapaction2mbs">
 <span id="sec-artificialintelligence-openaigyminterfaceenv-env-mapaction2mbs"></span><h2>Class function: MapAction2MBS<a class="headerlink" href="#class-function-mapaction2mbs" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py#L79">MapAction2MBS</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">action</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py#L88">MapAction2MBS</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">action</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -218,7 +219,7 @@ in general, set up a model with CreateMBS(), map state to initial values, initia
 </section>
 <section id="class-function-output2stateanddone">
 <span id="sec-artificialintelligence-openaigyminterfaceenv-env-output2stateanddone"></span><h2>Class function: Output2StateAndDone<a class="headerlink" href="#class-function-output2stateanddone" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py#L84">Output2StateAndDone</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py#L93">Output2StateAndDone</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -235,7 +236,7 @@ in general, set up a model with CreateMBS(), map state to initial values, initia
 </section>
 <section id="class-function-state2initialvalues">
 <span id="sec-artificialintelligence-openaigyminterfaceenv-env-state2initialvalues"></span><h2>Class function: State2InitialValues<a class="headerlink" href="#class-function-state2initialvalues" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py#L90">State2InitialValues</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py#L99">State2InitialValues</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -252,7 +253,7 @@ in general, set up a model with CreateMBS(), map state to initial values, initia
 </section>
 <section id="class-function-testmodel">
 <span id="sec-artificialintelligence-openaigyminterfaceenv-env-testmodel"></span><h2>Class function: TestModel<a class="headerlink" href="#class-function-testmodel" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py#L108">TestModel</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">numberOfSteps</span> <span class="pre">=</span> <span class="pre">500</span></code>, <code class="docutils literal notranslate"><span class="pre">seed</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">model</span> <span class="pre">=</span> <span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">solutionFileName</span> <span class="pre">=</span> <span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">useRenderer</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">sleepTime</span> <span class="pre">=</span> <span class="pre">0.01</span></code>, <code class="docutils literal notranslate"><span class="pre">stopIfDone</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">showTimeSpent</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py#L117">TestModel</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">numberOfSteps</span> <span class="pre">=</span> <span class="pre">500</span></code>, <code class="docutils literal notranslate"><span class="pre">seed</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">model</span> <span class="pre">=</span> <span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">solutionFileName</span> <span class="pre">=</span> <span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">useRenderer</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">sleepTime</span> <span class="pre">=</span> <span class="pre">0.01</span></code>, <code class="docutils literal notranslate"><span class="pre">stopIfDone</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">showTimeSpent</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -277,7 +278,7 @@ in general, set up a model with CreateMBS(), map state to initial values, initia
 </section>
 <section id="class-function-setsolver">
 <span id="sec-artificialintelligence-openaigyminterfaceenv-env-setsolver"></span><h2>Class function: SetSolver<a class="headerlink" href="#class-function-setsolver" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py#L147">SetSolver</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">solverType</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py#L156">SetSolver</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">solverType</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -289,7 +290,7 @@ in general, set up a model with CreateMBS(), map state to initial values, initia
 </section>
 <section id="class-function-preinitializesolver">
 <span id="sec-artificialintelligence-openaigyminterfaceenv-env-preinitializesolver"></span><h2>Class function: PreInitializeSolver<a class="headerlink" href="#class-function-preinitializesolver" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py#L173">PreInitializeSolver</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py#L182">PreInitializeSolver</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -301,7 +302,7 @@ in general, set up a model with CreateMBS(), map state to initial values, initia
 </section>
 <section id="class-function-integratestep">
 <span id="sec-artificialintelligence-openaigyminterfaceenv-env-integratestep"></span><h2>Class function: IntegrateStep<a class="headerlink" href="#class-function-integratestep" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py#L180">IntegrateStep</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py#L189">IntegrateStep</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -313,7 +314,7 @@ in general, set up a model with CreateMBS(), map state to initial values, initia
 </section>
 <section id="class-function-step">
 <span id="sec-artificialintelligence-openaigyminterfaceenv-env-step"></span><h2>Class function: step<a class="headerlink" href="#class-function-step" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py#L200">step</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">action</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py#L209">step</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">action</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -325,7 +326,7 @@ in general, set up a model with CreateMBS(), map state to initial values, initia
 </section>
 <section id="class-function-reset">
 <span id="sec-artificialintelligence-openaigyminterfaceenv-env-reset"></span><h2>Class function: reset<a class="headerlink" href="#class-function-reset" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py#L241">reset</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">*</span></code>, <code class="docutils literal notranslate"><span class="pre">seed:</span> <span class="pre">Optional[int]</span> <span class="pre">=</span> <span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">return_info:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">options:</span> <span class="pre">Optional[dict]</span> <span class="pre">=</span> <span class="pre">None</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py#L256">reset</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">*</span></code>, <code class="docutils literal notranslate"><span class="pre">seed:</span> <span class="pre">Optional[int]</span> <span class="pre">=</span> <span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">return_info:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">options:</span> <span class="pre">Optional[dict]</span> <span class="pre">=</span> <span class="pre">None</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -337,7 +338,7 @@ in general, set up a model with CreateMBS(), map state to initial values, initia
 </section>
 <section id="class-function-render">
 <span id="sec-artificialintelligence-openaigyminterfaceenv-env-render"></span><h2>Class function: render<a class="headerlink" href="#class-function-render" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py#L278">render</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">mode</span> <span class="pre">=</span> <span class="pre">&quot;human&quot;</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py#L297">render</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">mode</span> <span class="pre">=</span> <span class="pre">&quot;human&quot;</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -349,7 +350,7 @@ in general, set up a model with CreateMBS(), map state to initial values, initia
 </section>
 <section id="class-function-close">
 <span id="sec-artificialintelligence-openaigyminterfaceenv-env-close"></span><h2>Class function: close<a class="headerlink" href="#class-function-close" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py#L284">close</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py#L303">close</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>

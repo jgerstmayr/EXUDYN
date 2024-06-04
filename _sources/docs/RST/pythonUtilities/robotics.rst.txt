@@ -18,7 +18,7 @@ import this library e.g. with import exudyn.robotics as robotics
 
 Function: StdDH2HT
 ^^^^^^^^^^^^^^^^^^
-`StdDH2HT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1029>`__\ (\ ``DHparameters``\ )
+`StdDH2HT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1030>`__\ (\ ``DHparameters``\ )
 
 - | \ *function description*\ :
   | compute homogeneous transformation matrix HT from standard DHparameters=[theta, d, a, alpha]
@@ -36,7 +36,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: ModDHKK2HT
 ^^^^^^^^^^^^^^^^^^^^
-`ModDHKK2HT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1051>`__\ (\ ``DHparameters``\ )
+`ModDHKK2HT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1052>`__\ (\ ``DHparameters``\ )
 
 - | \ *function description*\ :
   | compute pre- and post- homogeneous transformation matrices from modified Denavit-Hartenberg DHparameters=[alpha, d, theta, r]; returns [HTpre, HTpost]; HTpre is transformation before axis rotation, HTpost includes axis rotation and everything hereafter; modified DH-Parameters according to Khalil and Kleinfinger, 1986
@@ -54,7 +54,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: projectAngleToPMPi
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`projectAngleToPMPi <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1064>`__\ (\ ``q0``\ )
+`projectAngleToPMPi <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1065>`__\ (\ ``q0``\ )
 
 - | \ *function description*\ :
   | This function projects an angle in the range \ :math:`[-min_{float}, +max_{float}]`\  fo the range \ :math:`[-\pi, +\pi]`\
@@ -79,7 +79,7 @@ CLASS VRobotLink (in module robotics)
 
 Class function: __init__
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L97>`__\ (\ ``self``\ , \ ``jointRadius = 0.06``\ , \ ``jointWidth = 0.12``\ , \ ``linkWidth = 0.1``\ , \ ``showMBSjoint = True``\ , \ ``showCOM = True``\ , \ ``linkColor = [0.4,0.4,0.4,1]``\ , \ ``graphicsData = []``\ )
+`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L98>`__\ (\ ``self``\ , \ ``jointRadius = 0.06``\ , \ ``jointWidth = 0.12``\ , \ ``linkWidth = 0.1``\ , \ ``showMBSjoint = True``\ , \ ``showCOM = True``\ , \ ``linkColor = [0.4,0.4,0.4,1]``\ , \ ``graphicsData = []``\ )
 
 - | \ *classFunction*\ :
   | initialize robot link with parameters, being self-explaining
@@ -110,7 +110,7 @@ CLASS RobotLink (in module robotics)
 
 Class function: __init__
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L137>`__\ (\ ``self``\ , \ ``mass``\ , \ ``COM``\ , \ ``inertia``\ , \ ``localHT = erb.HT0()``\ , \ ``jointType = 'Rz'``\ , \ ``parent = -2``\ , \ ``preHT = erb.HT0()``\ , \ ``PDcontrol = (None,None)``\ , \ ``visualization = VRobotLink()``\ )
+`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L138>`__\ (\ ``self``\ , \ ``mass``\ , \ ``COM``\ , \ ``inertia``\ , \ ``localHT = erb.HT0()``\ , \ ``jointType = 'Rz'``\ , \ ``parent = -2``\ , \ ``preHT = erb.HT0()``\ , \ ``PDcontrol = (None,None)``\ , \ ``visualization = VRobotLink()``\ )
 
 - | \ *classFunction*\ :
   | initialize robot link
@@ -131,7 +131,7 @@ Class function: __init__
 
 Class function: SetPDcontrol
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`SetPDcontrol <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L150>`__\ (\ ``self``\ , \ ``Pvalue``\ , \ ``Dvalue``\ )
+`SetPDcontrol <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L151>`__\ (\ ``self``\ , \ ``Pvalue``\ , \ ``Dvalue``\ )
 
 - | \ *classFunction*\ :
   | set PD control values for drive of joint related to link using position-proportional value P and differential value (velocity proportional) D
@@ -142,7 +142,7 @@ Class function: SetPDcontrol
 
 Class function: HasPDcontrol
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`HasPDcontrol <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L154>`__\ (\ ``self``\ )
+`HasPDcontrol <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L155>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | check if contrl is available
@@ -153,7 +153,7 @@ Class function: HasPDcontrol
 
 Class function: GetPDcontrol
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`GetPDcontrol <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L158>`__\ (\ ``self``\ )
+`GetPDcontrol <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L159>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | get PD control values
@@ -176,7 +176,7 @@ CLASS VRobotTool (in module robotics)
 
 Class function: __init__
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L182>`__\ (\ ``self``\ , \ ``graphicsData = []``\ )
+`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L183>`__\ (\ ``self``\ , \ ``graphicsData = []``\ )
 
 - | \ *classFunction*\ :
   | initialize robot tool with parameters; currently only graphicsData, which is a list of GraphicsData same as in mbs Objects
@@ -199,7 +199,7 @@ CLASS RobotTool (in module robotics)
 
 Class function: __init__
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L191>`__\ (\ ``self``\ , \ ``HT = erb.HT0()``\ , \ ``visualization = VRobotTool()``\ )
+`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L192>`__\ (\ ``self``\ , \ ``HT = erb.HT0()``\ , \ ``visualization = VRobotTool()``\ )
 
 - | \ *classFunction*\ :
   | initialize robot tool
@@ -225,7 +225,7 @@ CLASS VRobotBase (in module robotics)
 
 Class function: __init__
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L205>`__\ (\ ``self``\ , \ ``graphicsData = []``\ )
+`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L206>`__\ (\ ``self``\ , \ ``graphicsData = []``\ )
 
 - | \ *classFunction*\ :
   | initialize robot base with parameters; currently only graphicsData, which is a list of GraphicsData same as in mbs Objects
@@ -248,7 +248,7 @@ CLASS RobotBase (in module robotics)
 
 Class function: __init__
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L215>`__\ (\ ``self``\ , \ ``HT = erb.HT0()``\ , \ ``visualization = VRobotBase()``\ )
+`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L216>`__\ (\ ``self``\ , \ ``HT = erb.HT0()``\ , \ ``visualization = VRobotBase()``\ )
 
 - | \ *classFunction*\ :
   | initialize robot base
@@ -274,7 +274,7 @@ CLASS Robot (in module robotics)
 
 Class function: __init__
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L240>`__\ (\ ``self``\ , \ ``gravity = [0,0,-9.81]``\ , \ ``base = RobotBase()``\ , \ ``tool = RobotTool()``\ , \ ``referenceConfiguration = []``\ )
+`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L241>`__\ (\ ``self``\ , \ ``gravity = [0,0,-9.81]``\ , \ ``base = RobotBase()``\ , \ ``tool = RobotTool()``\ , \ ``referenceConfiguration = []``\ )
 
 - | \ *classFunction*\ :
   | initialize robot class
@@ -290,7 +290,7 @@ Class function: __init__
 
 Class function: AddLink
 ^^^^^^^^^^^^^^^^^^^^^^^
-`AddLink <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L266>`__\ (\ ``self``\ , \ ``robotLink``\ )
+`AddLink <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L267>`__\ (\ ``self``\ , \ ``robotLink``\ )
 
 - | \ *classFunction*\ :
   | add a link to serial robot
@@ -301,7 +301,7 @@ Class function: AddLink
 
 Class function: IsSerialRobot
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`IsSerialRobot <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L287>`__\ (\ ``self``\ )
+`IsSerialRobot <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L288>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | return True, if robot is a serial robot
@@ -312,7 +312,7 @@ Class function: IsSerialRobot
 
 Class function: GetLink
 ^^^^^^^^^^^^^^^^^^^^^^^
-`GetLink <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L291>`__\ (\ ``self``\ , \ ``i``\ )
+`GetLink <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L292>`__\ (\ ``self``\ , \ ``i``\ )
 
 - | \ *classFunction*\ :
   | return Link object of link i
@@ -323,7 +323,7 @@ Class function: GetLink
 
 Class function: HasParent
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-`HasParent <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L295>`__\ (\ ``self``\ , \ ``i``\ )
+`HasParent <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L296>`__\ (\ ``self``\ , \ ``i``\ )
 
 - | \ *classFunction*\ :
   | True if link has parent, False if not
@@ -334,7 +334,7 @@ Class function: HasParent
 
 Class function: GetParentIndex
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`GetParentIndex <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L299>`__\ (\ ``self``\ , \ ``i``\ )
+`GetParentIndex <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L300>`__\ (\ ``self``\ , \ ``i``\ )
 
 - | \ *classFunction*\ :
   | Get index of parent link; for serial robot this is simple, but for general trees, there is a index list
@@ -345,7 +345,7 @@ Class function: GetParentIndex
 
 Class function: NumberOfLinks
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`NumberOfLinks <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L304>`__\ (\ ``self``\ )
+`NumberOfLinks <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L305>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | return number of links
@@ -356,7 +356,7 @@ Class function: NumberOfLinks
 
 Class function: GetBaseHT
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-`GetBaseHT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L308>`__\ (\ ``self``\ )
+`GetBaseHT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L309>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | return base as homogeneous transformation
@@ -367,7 +367,7 @@ Class function: GetBaseHT
 
 Class function: GetToolHT
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-`GetToolHT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L312>`__\ (\ ``self``\ )
+`GetToolHT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L313>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | return base as homogeneous transformation
@@ -378,7 +378,7 @@ Class function: GetToolHT
 
 Class function: LinkHT
 ^^^^^^^^^^^^^^^^^^^^^^
-`LinkHT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L316>`__\ (\ ``self``\ , \ ``q``\ )
+`LinkHT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L317>`__\ (\ ``self``\ , \ ``q``\ )
 
 - | \ *classFunction*\ :
   | compute list of homogeneous transformations for every link, using current joint coordinates q; leads to different results for standard and modified DH parameters because link coordinates are different!
@@ -389,7 +389,7 @@ Class function: LinkHT
 
 Class function: JointHT
 ^^^^^^^^^^^^^^^^^^^^^^^
-`JointHT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L345>`__\ (\ ``self``\ , \ ``q``\ )
+`JointHT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L346>`__\ (\ ``self``\ , \ ``q``\ )
 
 - | \ *classFunction*\ :
   | compute list of homogeneous transformations for every joint (after rotation), using current joint coordinates q
@@ -400,7 +400,7 @@ Class function: JointHT
 
 Class function: COMHT
 ^^^^^^^^^^^^^^^^^^^^^
-`COMHT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L372>`__\ (\ ``self``\ , \ ``HT``\ )
+`COMHT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L373>`__\ (\ ``self``\ , \ ``HT``\ )
 
 - | \ *classFunction*\ :
   | compute list of  homogeneous transformations HT from base to every COM using HT list from Robot.JointHT(...)
@@ -411,7 +411,7 @@ Class function: COMHT
 
 Class function: StaticTorques
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`StaticTorques <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L381>`__\ (\ ``self``\ , \ ``HT``\ )
+`StaticTorques <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L382>`__\ (\ ``self``\ , \ ``HT``\ )
 
 - | \ *classFunction*\ :
   | compute list of joint torques for serial robot due to gravity (gravity and mass as given in robot), taking HT from Robot.JointHT()
@@ -422,7 +422,7 @@ Class function: StaticTorques
 
 Class function: Jacobian
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`Jacobian <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L404>`__\ (\ ``self``\ , \ ``HT``\ , \ ``toolPosition = []``\ , \ ``mode = 'all'``\ , \ ``linkIndex = None``\ )
+`Jacobian <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L405>`__\ (\ ``self``\ , \ ``HT``\ , \ ``toolPosition = []``\ , \ ``mode = 'all'``\ , \ ``linkIndex = None``\ )
 
 - | \ *classFunction*\ :
   | compute jacobian for translation and rotation at toolPosition using joint HT; this is using the Robot functions, but is inefficient for simulation purposes
@@ -440,7 +440,7 @@ Class function: Jacobian
 
 Class function: CreateKinematicTree
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateKinematicTree <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L478>`__\ (\ ``self``\ , \ ``mbs``\ , \ ``name = ''``\ , \ ``forceUserFunction = 0``\ )
+`CreateKinematicTree <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L479>`__\ (\ ``self``\ , \ ``mbs``\ , \ ``name = ''``\ , \ ``forceUserFunction = 0``\ )
 
 - | \ *classFunction*\ :
   | Add a ObjectKinematicTree to existing mbs from the robot structure inside this robot class;
@@ -462,7 +462,7 @@ Class function: CreateKinematicTree
 
 Class function: CreateRedundantCoordinateMBS
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateRedundantCoordinateMBS <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L659>`__\ (\ ``self``\ , \ ``mbs``\ , \ ``baseMarker``\ , \ ``jointSpringDamperUserFunctionList = []``\ , \ ``jointLoadUserFunctionList = []``\ , \ ``createJointTorqueLoads = True``\ , \ ``rotationMarkerBase = None``\ , \ ``rigidBodyNodeType = exudyn.NodeType.RotationEulerParameters``\ )
+`CreateRedundantCoordinateMBS <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L660>`__\ (\ ``self``\ , \ ``mbs``\ , \ ``baseMarker``\ , \ ``jointSpringDamperUserFunctionList = []``\ , \ ``jointLoadUserFunctionList = []``\ , \ ``createJointTorqueLoads = True``\ , \ ``rotationMarkerBase = None``\ , \ ``rigidBodyNodeType = exudyn.NodeType.RotationEulerParameters``\ )
 
 - | \ *classFunction*\ :
   | Add items to existing mbs from the robot structure inside this robot class; robot is attached to baseMarker (can be ground object or moving/deformable body);
@@ -487,7 +487,7 @@ Class function: CreateRedundantCoordinateMBS
 
 Class function: GetKinematicTree66
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`GetKinematicTree66 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L903>`__\ (\ ``self``\ )
+`GetKinematicTree66 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L904>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | export kinematicTree
@@ -498,7 +498,7 @@ Class function: GetKinematicTree66
 
 Class function: GetLinkGraphicsData
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`GetLinkGraphicsData <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L933>`__\ (\ ``self``\ , \ ``i``\ , \ ``p0``\ , \ ``p1``\ , \ ``axis0``\ , \ ``axis1``\ , \ ``linkVisualization``\ )
+`GetLinkGraphicsData <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L934>`__\ (\ ``self``\ , \ ``i``\ , \ ``p0``\ , \ ``p1``\ , \ ``axis0``\ , \ ``axis1``\ , \ ``linkVisualization``\ )
 
 - | \ *classFunction*\ :
   | create link GraphicsData (list) for link i; internally used in CreateRedundantCoordinateMBS(...); linkVisualization contains visualization dict of link
@@ -509,7 +509,7 @@ Class function: GetLinkGraphicsData
 
 Class function: BuildFromDictionary
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`BuildFromDictionary <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L977>`__\ (\ ``self``\ , \ ``robotDict``\ )
+`BuildFromDictionary <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L978>`__\ (\ ``self``\ , \ ``robotDict``\ )
 
 - | \ *classFunction*\ :
   | build robot structre from dictionary; this is a DEPRECATED function, which is used in older models; DO NOT USE
@@ -538,7 +538,7 @@ CLASS InverseKinematicsNumerical() (in module robotics)
 
 Class function: __init__
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1088>`__\ (\ ``self``\ , \ ``robot``\ , \ ``jointStiffness = 1e0``\ , \ ``useRenderer = False``\ , \ ``flagDebug = False``\ , \ ``useAlternativeConstraints = False``\ )
+`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1089>`__\ (\ ``self``\ , \ ``robot``\ , \ ``jointStiffness = 1e0``\ , \ ``useRenderer = False``\ , \ ``flagDebug = False``\ , \ ``useAlternativeConstraints = False``\ )
 
 - | \ *classFunction*\ :
   | initialize RigidBodyInertia with scalar mass, 3x3 inertiaTensor (w.r.t. reference point!!!) and center of mass com
@@ -556,7 +556,7 @@ Class function: __init__
 
 Class function: GetCurrentRobotHT
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`GetCurrentRobotHT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1180>`__\ (\ ``self``\ )
+`GetCurrentRobotHT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1181>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | Utility function to get current Homogeneous transformation of the robot to check inverse Kinematics solution
@@ -569,7 +569,7 @@ Class function: GetCurrentRobotHT
 
 Class function: InterpolateHTs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`InterpolateHTs <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1197>`__\ (\ ``self``\ , \ ``T1``\ , \ ``T2``\ , \ ``rotStep = np.pi/16``\ , \ ``minSteps = 1``\ )
+`InterpolateHTs <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1198>`__\ (\ ``self``\ , \ ``T1``\ , \ ``T2``\ , \ ``rotStep = np.pi/16``\ , \ ``minSteps = 1``\ )
 
 - | \ *classFunction*\ :
   | 
@@ -591,7 +591,7 @@ Class function: InterpolateHTs
 
 Class function: SolveSafe
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-`SolveSafe <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1238>`__\ (\ ``self``\ , \ ``T``\ , \ ``q0 = None``\ )
+`SolveSafe <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1239>`__\ (\ ``self``\ , \ ``T``\ , \ ``q0 = None``\ )
 
 - | \ *classFunction*\ :
   | This Method can be used to solve the inverse kinematics problem by solving
@@ -614,7 +614,7 @@ Class function: SolveSafe
 
 Class function: Solve
 ^^^^^^^^^^^^^^^^^^^^^
-`Solve <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1288>`__\ (\ ``self``\ , \ ``T``\ , \ ``q0 = None``\ )
+`Solve <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1289>`__\ (\ ``self``\ , \ ``T``\ , \ ``q0 = None``\ )
 
 - | \ *classFunction*\ :
   | This Method can be used to solve the inverse kinematics problem by solving

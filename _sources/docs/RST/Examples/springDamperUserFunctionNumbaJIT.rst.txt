@@ -29,7 +29,8 @@ You can view and download this file on Github: `springDamperUserFunctionNumbaJIT
    ClearWorkspace()
    
    import exudyn as exu
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    
    import numpy as np
    

@@ -27,7 +27,8 @@ You can view and download this file on Github: `serialRobotInteractiveLimits.py 
    
    import exudyn as exu
    from exudyn.itemInterface import *
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    from exudyn.rigidBodyUtilities import *
    from exudyn.graphicsDataUtilities import *
    from exudyn.robotics import *
@@ -50,21 +51,21 @@ You can view and download this file on Github: `serialRobotInteractiveLimits.py 
    
    mode='newDH'
    
-   graphicsBaseList = [GraphicsDataOrthoCubePoint([0,0,-0.4], [0.12*1,0.12*1,0.6], color4grey)]
-   graphicsBaseList +=[GraphicsDataCylinder([0,0,0], [0.5,0,0], 0.0025, color4red)]
-   graphicsBaseList +=[GraphicsDataCylinder([0,0,0], [0,0.5,0], 0.0025, color4green)]
-   graphicsBaseList +=[GraphicsDataCylinder([0,0,0], [0,0,0.5], 0.0025, color4blue)]
-   graphicsBaseList +=[GraphicsDataCylinder([0,0,-0.1], [0,0,0.1], 0.05, color4blue)]
-   graphicsBaseList +=[GraphicsDataCheckerBoard([0,0,-0.7], [0,0,1], size=2)]
+   graphicsBaseList = [graphics.Brick([0,0,-0.4], [0.12*1,0.12*1,0.6], graphics.color.grey)]
+   graphicsBaseList +=[graphics.Cylinder([0,0,0], [0.5,0,0], 0.0025, graphics.color.red)]
+   graphicsBaseList +=[graphics.Cylinder([0,0,0], [0,0.5,0], 0.0025, graphics.color.green)]
+   graphicsBaseList +=[graphics.Cylinder([0,0,0], [0,0,0.5], 0.0025, graphics.color.blue)]
+   graphicsBaseList +=[graphics.Cylinder([0,0,-0.1], [0,0,0.1], 0.05, graphics.color.blue)]
+   graphicsBaseList +=[graphics.CheckerBoard([0,0,-0.7], [0,0,1], size=2)]
    #newRobot.base.visualization['graphicsData']=graphicsBaseList
    
    ty = 0.03
    tz = 0.04
    zOff = -0.05
    toolSize= [0.05,0.5*ty,0.06]
-   graphicsToolList = [GraphicsDataCylinder(pAxis=[0,0,zOff], vAxis= [0,0,tz], radius=ty*1.5, color=color4red)]
-   graphicsToolList+= [GraphicsDataOrthoCubePoint([0,ty,1.5*tz+zOff], toolSize, color4grey)]
-   graphicsToolList+= [GraphicsDataOrthoCubePoint([0,-ty,1.5*tz+zOff], toolSize, color4grey)]
+   graphicsToolList = [graphics.Cylinder(pAxis=[0,0,zOff], vAxis= [0,0,tz], radius=ty*1.5, color=graphics.color.red)]
+   graphicsToolList+= [graphics.Brick([0,ty,1.5*tz+zOff], toolSize, graphics.color.grey)]
+   graphicsToolList+= [graphics.Brick([0,-ty,1.5*tz+zOff], toolSize, graphics.color.grey)]
    
    
    #changed to new robot structure July 2021:
@@ -120,7 +121,7 @@ You can view and download this file on Github: `serialRobotInteractiveLimits.py 
    
    cnt = 0
    for link in newRobot.links:
-       color = color4list[cnt]
+       color = graphics.colorList[cnt]
        color[3] = 0.75 #make transparent
        link.visualization = VRobotLink(jointRadius=0.06, jointWidth=0.08, showMBSjoint=True, linkWidth=0.05, 
                                        linkColor=color, showCOM= False )
@@ -501,15 +502,14 @@ You can view and download this file on Github: `serialRobotInteractiveLimits.py 
    if 'renderState' in exu.sys:
        SC.SetRenderState(exu.sys[ 'renderState' ])
    
-   dialog = InteractiveDialog(mbs=mbs, simulationSettings=simulationSettings,
-                              simulationFunction=SimulationUF, 
-                              title='Interactive window',
-                              dialogItems=dialogItems, period=0.01, realtimeFactor=4, #realtime is only approx. (does not include time lost for computation ==> 2 is a good choice)
-                              runOnStart=True,
-                              addLabelStringVariables=True,
-                              #addSliderVariables=True
-                              )
-                              # plots=plots, fontSize=12)
+   InteractiveDialog(mbs=mbs, simulationSettings=simulationSettings,
+                     simulationFunction=SimulationUF, 
+                     title='Interactive window',
+                     dialogItems=dialogItems, period=0.01, realtimeFactor=4, #realtime is only approx. (does not include time lost for computation ==> 2 is a good choice)
+                     runOnStart=True,
+                     addLabelStringVariables=True,
+                     #addSliderVariables=True
+                     )
    
    exu.StopRenderer()
    

@@ -23,13 +23,14 @@ You can view and download this file on Github: `gyroStability.py <https://github
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    
    import exudyn as exu
-   from exudyn.itemInterface import *
-   from exudyn.utilities import * #includes graphics and rigid body utilities
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    import numpy as np
    
    SC = exu.SystemContainer()
    mbs = SC.AddSystem()
    
+   useGraphics = True
    
    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++
    #physical parameters
@@ -68,12 +69,12 @@ You can view and download this file on Github: `gyroStability.py <https://github
        # print(iCylSum)
    
        #graphics for body
-       gCyl0 = GraphicsDataSolidOfRevolution (pAxis=[0,0,0]-com, vAxis=[2*L,0,0], 
+       gCyl0 = graphics.SolidOfRevolution(pAxis=[0,0,0]-com, vAxis=[2*L,0,0], 
                                               contour = [[-L,-r],[L,-r],[L,-0.5*r],[-L,-0.5*r],], 
-                                              color= color4steelblue, nTiles= 32, smoothContour=False)
-       gCyl1 = GraphicsDataCylinder(pAxis=[-L,0,0]-com, vAxis=[2*L,0,0],radius=0.5*w, color=color4steelblue, nTiles=32)
-       gCyl2 = GraphicsDataCylinder(pAxis=[0,0,0]-com, vAxis=[0,L,0],radius=0.5*w, color=color4steelblue, nTiles=32)
-       gCOM = GraphicsDataBasis(origin=[0,0,0],length = 1.25*L)
+                                              color= graphics.color.steelblue, nTiles= 32, smoothContour=False)
+       gCyl1 = graphics.Cylinder(pAxis=[-L,0,0]-com, vAxis=[2*L,0,0],radius=0.5*w, color=graphics.color.steelblue, nTiles=32)
+       gCyl2 = graphics.Cylinder(pAxis=[0,0,0]-com, vAxis=[0,L,0],radius=0.5*w, color=graphics.color.steelblue, nTiles=32)
+       gCOM = graphics.Basis(origin=[0,0,0],length = 1.25*L)
        
        nodeType = exu.NodeType.RotationRotationVector
        if doImplicit:
@@ -128,7 +129,6 @@ You can view and download this file on Github: `gyroStability.py <https://github
    # omega 0 =  [ 4.99821534  0.17224996 -0.02919272]
    # omega 1 =  [1.14695373 4.853952   0.82419239]
    # omega 2 =  [-0.08742566  0.11224089  4.99987917]
-   useGraphics = False
    
    if useGraphics:
        simulationSettings.timeIntegration.simulateInRealtime = True
@@ -154,10 +154,8 @@ You can view and download this file on Github: `gyroStability.py <https://github
        om = mbs.GetNodeOutput(n,exu.OutputVariableType.AngularVelocityLocal)
        print('omega '+str(i)+' = ',om)
    
-   if not useGraphics and True:
-       sol = LoadSolutionFile('coordinatesSolution.txt')
-       
-       mbs.SolutionViewer(sol)
+   if not useGraphics:
+       pass #mbs.SolutionViewer()
    
    if False:
        
