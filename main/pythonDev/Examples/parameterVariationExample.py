@@ -150,16 +150,15 @@ if __name__ == '__main__': #include this to enable parallel processing
     
     n = 16
     start_time = time.time()
-    [pDict, values] = ParameterVariation(parameterFunction=ParameterFunction, 
+    [pDict, values] = ParameterVariation(parameterFunction = ParameterFunction, 
                                          parameters = {'mass':(1,2,n), 
                                                        'spring':(2000,8000,n),
                                                        #'test':(1,3,4)
                                                        },
-                                         debugMode=False,
-                                         addComputationIndex=True,
-                                         useMultiProcessing=True,
-                                         #numberOfThreads=2,
-                                         showProgress=True,
+                                         debugMode = False,
+                                         addComputationIndex = True,
+                                         useMultiProcessing = True,
+                                         showProgress = True,
                                          )
 
     print("--- %s seconds ---" % (time.time() - start_time))
@@ -167,10 +166,9 @@ if __name__ == '__main__': #include this to enable parallel processing
 
     from mpl_toolkits.mplot3d import Axes3D  # noqa: F401 unused import
     import matplotlib.pyplot as plt
-    #from matplotlib import cm
-    #from matplotlib.ticker import LinearLocator, FormatStrFormatter
+    from matplotlib import colormaps
     import numpy as np
-    colorMap = plt.cm.get_cmap('jet') #finite element colors
+    colorMap = colormaps.get_cmap('jet') #finite element colors
     
     plt.close('all')
     fig = plt.figure()
@@ -191,12 +189,12 @@ if __name__ == '__main__': #include this to enable parallel processing
     #++++++++++++++++++++++++++++++++++++++++++++++++++
     #now add a refined parameter variation 
     #visualize results with scatter plot
-    [pDict2, values2] = ParameterVariation(parameterFunction=ParameterFunction, 
-                                         parameters={'mass':(1.5,1.7,n), 'spring':(3000,5000,n)},
-                                         debugMode=False,
-                                         addComputationIndex=True,
-                                         useMultiProcessing=True,
-                                         showProgress=True,
+    [pDict2, values2] = ParameterVariation(parameterFunction = ParameterFunction, 
+                                         parameters = {'mass':(1.5,1.7,n), 'spring':(3000,5000,n)},
+                                         debugMode = False,
+                                         addComputationIndex = True,
+                                         useMultiProcessing = True,
+                                         showProgress = True,
                                          )
 
     print('values2[-1]=', values2[-1]) # values2[-1]=1.8943208246113492

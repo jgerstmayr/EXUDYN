@@ -12,7 +12,11 @@
 
 #%%++++++++++++++++++++++++++++++++++
 import exudyn as exu
-from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+from exudyn.utilities import Point, NodePointGround, MassPoint, MarkerNodeCoordinate,\
+                             CoordinateSpringDamper, LoadCoordinate, SensorObject
+#to be sure to have all items and functions imported, just do:
+#from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 import numpy as np #for postprocessing
 
 SC = exu.SystemContainer()

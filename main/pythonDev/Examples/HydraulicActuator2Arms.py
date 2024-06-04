@@ -12,7 +12,8 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 
 #import numpy as np
 from math import sin, cos, sqrt,pi
@@ -26,9 +27,9 @@ addArm2 = True
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #one arm mechanism
-background = [GraphicsDataCheckerBoard(point=[L,0,-2*b],size=5)]
-background += [GraphicsDataCylinder(pAxis=[0,-0.25*L-0.5*b,-0.5*b], vAxis= [0,0,1.*b], radius = 0.25*b, 
-                                     color= color4grey, addEdges=True, nTiles=32)]
+background = [graphics.CheckerBoard(point=[L,0,-2*b],size=5)]
+background += [graphics.Cylinder(pAxis=[0,-0.25*L-0.5*b,-0.5*b], vAxis= [0,0,1.*b], radius = 0.25*b, 
+                                     color= graphics.color.grey, addEdges=True, nTiles=32)]
 
 oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0], visualization=VObjectGround(graphicsData= background)))
 massRigid = 12*10
@@ -39,32 +40,32 @@ g = 9.81    # gravity
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #arm1
 #graphics for arm1
-colCyl = color4orange
-colArm = color4dodgerblue
-graphicsList = [GraphicsDataOrthoCubePoint(size= [L,0.75*b,1.4*b], color= colArm, addEdges=True)]
+colCyl = graphics.color.orange
+colArm = graphics.color.dodgerblue
+graphicsList = [graphics.Brick(size= [L,0.75*b,1.4*b], color= colArm, addEdges=True)]
 
-graphicsList += [GraphicsDataCylinder(pAxis=[-0.5*L,0,-0.75*b], vAxis= [0,0,1.5*b], radius = 0.55*b, 
+graphicsList += [graphics.Cylinder(pAxis=[-0.5*L,0,-0.75*b], vAxis= [0,0,1.5*b], radius = 0.55*b, 
                                      color= colArm, addEdges=True, nTiles=32)]
 
-graphicsList += [GraphicsDataCylinder(pAxis=[-0.5*L,0,-0.8*b], vAxis= [0,0,1.6*b], radius = 0.25*b, 
-                                     color= color4grey, addEdges=True, nTiles=32)]
+graphicsList += [graphics.Cylinder(pAxis=[-0.5*L,0,-0.8*b], vAxis= [0,0,1.6*b], radius = 0.25*b, 
+                                     color= graphics.color.grey, addEdges=True, nTiles=32)]
 
 #bolt
-graphicsList += [GraphicsDataCylinder(pAxis=[-0.25*L,-0.5*b,-0.7*b], vAxis= [0,0,1.4*b], radius = 0.15*b, 
-                                     color= color4grey, addEdges=True, nTiles=32)]
+graphicsList += [graphics.Cylinder(pAxis=[-0.25*L,-0.5*b,-0.7*b], vAxis= [0,0,1.4*b], radius = 0.15*b, 
+                                     color= graphics.color.grey, addEdges=True, nTiles=32)]
 
-graphicsList += [GraphicsDataCylinder(pAxis=[-0.25*L,-0.5*b,-0.6*b], vAxis= [0,0,0.25*b], radius = 0.3*b, 
+graphicsList += [graphics.Cylinder(pAxis=[-0.25*L,-0.5*b,-0.6*b], vAxis= [0,0,0.25*b], radius = 0.3*b, 
                                      color= colArm, addEdges=True, nTiles=32)]
-graphicsList += [GraphicsDataCylinder(pAxis=[-0.25*L,-0.5*b, 0.6*b], vAxis= [0,0,-0.25*b], radius = 0.3*b, 
+graphicsList += [graphics.Cylinder(pAxis=[-0.25*L,-0.5*b, 0.6*b], vAxis= [0,0,-0.25*b], radius = 0.3*b, 
                                      color= colArm, addEdges=True, nTiles=32)]
 
 if addArm2:
-    graphicsList += [GraphicsDataCylinder(pAxis=[ 0.25*L,-0.5*b,-0.7*b], vAxis= [0,0,1.4*b], radius = 0.15*b, 
-                                         color= color4grey, addEdges=True, nTiles=32)]
+    graphicsList += [graphics.Cylinder(pAxis=[ 0.25*L,-0.5*b,-0.7*b], vAxis= [0,0,1.4*b], radius = 0.15*b, 
+                                         color= graphics.color.grey, addEdges=True, nTiles=32)]
 
-    graphicsList += [GraphicsDataCylinder(pAxis=[ 0.25*L,-0.5*b,-0.6*b], vAxis= [0,0,0.25*b], radius = 0.3*b, 
+    graphicsList += [graphics.Cylinder(pAxis=[ 0.25*L,-0.5*b,-0.6*b], vAxis= [0,0,0.25*b], radius = 0.3*b, 
                                          color= colArm, addEdges=True, nTiles=32)]
-    graphicsList += [GraphicsDataCylinder(pAxis=[ 0.25*L,-0.5*b, 0.6*b], vAxis= [0,0,-0.25*b], radius = 0.3*b, 
+    graphicsList += [graphics.Cylinder(pAxis=[ 0.25*L,-0.5*b, 0.6*b], vAxis= [0,0,-0.25*b], radius = 0.3*b, 
                                          color= colArm, addEdges=True, nTiles=32)]
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -121,7 +122,7 @@ oHA = mbs.AddObject(HydraulicActuatorSimple(markerNumbers=[mGH, mRH],
                                             visualization=VHydraulicActuatorSimple(cylinderRadius= 0.55*b, rodRadius= 0.3*b,
                                                                                    baseMountLength = 0.4*b, baseMountRadius = 0.4*b,
                                                                                    rodMountRadius = 0.3*b, pistonLength = 0.2*b, pistonRadius = 0.5*b,
-                                                                                   colorCylinder=colCyl, colorPiston=color4lightgrey),
+                                                                                   colorCylinder=colCyl, colorPiston=graphics.color.lightgrey),
                                             )) 
 
 
@@ -131,21 +132,21 @@ oHA = mbs.AddObject(HydraulicActuatorSimple(markerNumbers=[mGH, mRH],
 #graphics for arm2
 oHA2 = -1
 if addArm2:
-    graphicsList = [GraphicsDataOrthoCubePoint(size= [L,0.75*b,1.4*b], color= colArm, addEdges=True)]
+    graphicsList = [graphics.Brick(size= [L,0.75*b,1.4*b], color= colArm, addEdges=True)]
 
-    graphicsList += [GraphicsDataCylinder(pAxis=[-0.5*L,0,-0.75*b], vAxis= [0,0,1.5*b], radius = 0.55*b, 
+    graphicsList += [graphics.Cylinder(pAxis=[-0.5*L,0,-0.75*b], vAxis= [0,0,1.5*b], radius = 0.55*b, 
                                          color= colArm, addEdges=True, nTiles=32)]
 
-    graphicsList += [GraphicsDataCylinder(pAxis=[-0.5*L,0,-0.8*b], vAxis= [0,0,1.6*b], radius = 0.25*b, 
-                                         color= color4grey, addEdges=True, nTiles=32)]
+    graphicsList += [graphics.Cylinder(pAxis=[-0.5*L,0,-0.8*b], vAxis= [0,0,1.6*b], radius = 0.25*b, 
+                                         color= graphics.color.grey, addEdges=True, nTiles=32)]
 
     #bolt
-    graphicsList += [GraphicsDataCylinder(pAxis=[-0.25*L,-0.5*b,-0.7*b], vAxis= [0,0,1.4*b], radius = 0.15*b, 
-                                         color= color4grey, addEdges=True, nTiles=32)]
+    graphicsList += [graphics.Cylinder(pAxis=[-0.25*L,-0.5*b,-0.7*b], vAxis= [0,0,1.4*b], radius = 0.15*b, 
+                                         color= graphics.color.grey, addEdges=True, nTiles=32)]
 
-    graphicsList += [GraphicsDataCylinder(pAxis=[-0.25*L,-0.5*b,-0.6*b], vAxis= [0,0,0.25*b], radius = 0.3*b, 
+    graphicsList += [graphics.Cylinder(pAxis=[-0.25*L,-0.5*b,-0.6*b], vAxis= [0,0,0.25*b], radius = 0.3*b, 
                                          color= colArm, addEdges=True, nTiles=32)]
-    graphicsList += [GraphicsDataCylinder(pAxis=[-0.25*L,-0.5*b, 0.6*b], vAxis= [0,0,-0.25*b], radius = 0.3*b, 
+    graphicsList += [graphics.Cylinder(pAxis=[-0.25*L,-0.5*b, 0.6*b], vAxis= [0,0,-0.25*b], radius = 0.3*b, 
                                          color= colArm, addEdges=True, nTiles=32)]
     #+++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -188,7 +189,7 @@ if addArm2:
                                                 visualization=VHydraulicActuatorSimple(cylinderRadius= 0.45*b, rodRadius= 0.2*b,
                                                                                        baseMountLength = 0.3*b, baseMountRadius = 0.3*b,
                                                                                        rodMountRadius = 0.2*b, pistonLength = 0.1*b, pistonRadius = 0.4*b,
-                                                                                       colorCylinder=colCyl, colorPiston=color4lightgrey),
+                                                                                       colorCylinder=colCyl, colorPiston=graphics.color.lightgrey),
                                                 )) 
 
 

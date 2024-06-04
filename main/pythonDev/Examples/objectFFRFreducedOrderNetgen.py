@@ -15,7 +15,8 @@
 
 import exudyn as exu
 from exudyn.itemInterface import *
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 from exudyn.FEM import *
 from exudyn.graphicsDataUtilities import *
 
@@ -40,7 +41,7 @@ femInterface = FEMinterface()
 a = 0.025 #height/width of beam
 L = 1     #Length of beam
 
-if False: #needs netgen/ngsolve to be installed to compute mesh, see e.g.: https://github.com/NGSolve/ngsolve/releases
+if True: #needs netgen/ngsolve to be installed to compute mesh, see e.g.: https://github.com/NGSolve/ngsolve/releases
 
     from ngsolve import *
     from netgen.geom2d import unit_square

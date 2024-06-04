@@ -15,7 +15,8 @@
 
 import exudyn as exu
 from exudyn.itemInterface import *
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 
 import numpy as np
 from math import sin, cos, exp, sqrt, pi
@@ -112,7 +113,7 @@ if useLugrePos:
                                 initialCoordinates=[0.],
                                 initialVelocities=[0.]))
     mass1D = mbs.AddObject(Mass1D(nodeNumber = node1D, physicsMass=M,
-                                  visualization=VMass1D(graphicsData=[GraphicsDataSphere(radius=0.05, color=color4dodgerblue)])))
+                                  visualization=VMass1D(graphicsData=[graphics.Sphere(radius=0.05, color=graphics.color.dodgerblue)])))
     
     #+++++++++++++++++++++++++++++++++++++++++++
     #friction model:

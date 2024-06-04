@@ -194,7 +194,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
             class2name = class2name.replace('VSettings','') #fixes name for all visualization settings
             # typicalPaths = typicalPaths.replace('VSettings','') #fixes name for all visualization settings
             
-            conv = ['TimeIntegrationSettings', 'ExplicitIntegrationSettings', 'GeneralizedAlphaSettings',
+            conv = ['TimeIntegrationSettings', 'StaticSolverSettings', 'ExplicitIntegrationSettings', 'GeneralizedAlphaSettings',
             'NewtonSettings', 'DiscontinuousSettings', 'NumericalDifferentiationSettings']
             for c in conv:
                 if c in class2name:

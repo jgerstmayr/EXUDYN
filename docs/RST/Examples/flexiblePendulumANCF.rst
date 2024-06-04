@@ -25,7 +25,8 @@ You can view and download this file on Github: `flexiblePendulumANCF.py <https:/
    import sys
    sys.exudynFast = True
    import exudyn as exu
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    
    import numpy as np
    #from math import sqrt, sin, cos
@@ -93,7 +94,7 @@ You can view and download this file on Github: `flexiblePendulumANCF.py <https:/
    ancfObjects = ancf[1]
    
    oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0],
-                                   visualization=VObjectGround(graphicsData=[GraphicsDataCheckerBoard(size=2)])))
+                                   visualization=VObjectGround(graphicsData=[graphics.CheckerBoard(size=2)])))
    
    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    #sensorFileName = 'solution/beamTip.txt'

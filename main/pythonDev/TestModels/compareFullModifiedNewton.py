@@ -11,7 +11,8 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 
 import numpy as np
 import matplotlib.pyplot as plt

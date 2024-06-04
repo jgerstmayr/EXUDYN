@@ -13,7 +13,8 @@
 
 import exudyn as exu
 from exudyn.itemInterface import *
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 from exudyn.FEM import *
 from exudyn.graphicsDataUtilities import *
 
@@ -43,7 +44,7 @@ ff=1 #factor for higher thickness
 h = 8*ff #height of plate (Y)
 w = 4*ff #width of plate  (Z)
 nModes = 10
-meshH=1*ff
+meshH = 2*ff
 
 
 print("mesh h=", meshH)
@@ -88,9 +89,6 @@ meshCreated = False
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
 if True: #needs netgen/ngsolve to be installed to compute mesh, see e.g.: https://github.com/NGSolve/ngsolve/releases
-    import sys
-    #adjust path to your ngsolve installation (if not added to global path)
-    sys.path.append('C:/ProgramData/ngsolve/lib/site-packages') 
 
     import ngsolve as ngs
     import netgen

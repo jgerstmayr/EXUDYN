@@ -345,7 +345,7 @@ def RestoreSimulationSettings(simulationSettings, store):
 #**belongsTo: MainSystem
 #**example:
 # import exudyn as exu
-# from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+# from exudyn.utilities import *
 # import numpy as np
 # SC = exu.SystemContainer()
 # mbs = SC.AddSystem()
@@ -353,7 +353,7 @@ def RestoreSimulationSettings(simulationSettings, store):
 # b0 = mbs.CreateMassPoint(referencePosition = [2,0,0],
 #                          initialVelocity = [2*0,5,0],
 #                          physicsMass = 1, gravity = [0,-9.81,0],
-#                          drawSize = 0.5, color=color4blue)
+#                          drawSize = 0.5, color=graphics.color.blue)
 # #
 # oGround = mbs.AddObject(ObjectGround())
 # #add vertical spring
@@ -471,14 +471,14 @@ def ComputeLinearizedSystem(mbs,
 #  #take any example from the Examples or TestModels folder, e.g., 'cartesianSpringDamper.py' and run it
 #  #specific example:
 # import exudyn as exu
-# from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+# from exudyn.utilities import *
 # import numpy as np
 # SC = exu.SystemContainer()
 # mbs = SC.AddSystem()
 # #
 # b0 = mbs.CreateMassPoint(referencePosition = [2,0,0],
 #                          physicsMass = 1, gravity = [0,-9.81,0],
-#                          drawSize = 0.5, color=color4blue)
+#                          drawSize = 0.5, color=graphics.color.blue)
 # #
 # oGround = mbs.AddObject(ObjectGround())
 # #add vertical spring
@@ -696,7 +696,7 @@ def ComputeODE2Eigenvalues(mbs,
 #**belongsTo: MainSystem
 #**example:
 # import exudyn as exu
-# from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+# from exudyn.utilities import *
 # import numpy as np
 # SC = exu.SystemContainer()
 # mbs = SC.AddSystem()
@@ -706,8 +706,8 @@ def ComputeODE2Eigenvalues(mbs,
 #                          referencePosition = [6,0,0],
 #                          initialAngularVelocity = [0,8,0],
 #                          gravity = [0,-9.81,0],
-#                          graphicsDataList = [GraphicsDataOrthoCubePoint(size=[1,0.1,0.1], 
-#                                                                       color=color4orange)])
+#                          graphicsDataList = [exu.graphics.Brick(size=[1,0.1,0.1], 
+#                                                                       color=graphics.color.orange)])
 # oGround = mbs.AddObject(ObjectGround())
 # mbs.CreateGenericJoint(bodyNumbers=[oGround, b0], position=[5.5,0,0],
 #                        constrainedAxes=[1,1,1, 1,0,0],
@@ -855,13 +855,13 @@ if __name__ == '__main__':
         bBeam = mbs.CreateRigidBody(inertia = inertiaCuboid,
                                 referencePosition = [beamL*0.5,0,0],
                                 gravity = [0,-9.81*0,0],
-                                graphicsDataList = [GraphicsDataOrthoCubePoint(size=[beamL,beamH,beamW],
-                                color=color4orange)])
+                                graphicsDataList = [exudyn.graphics.Brick(size=[beamL,beamH,beamW],
+                                color=graphics.color.orange)])
         mBeamRight = mbs.AddMarker(MarkerBodyRigid(bodyNumber=bBeam, localPosition=[beamL*0.5,0,0]))
 
         mbs.CreateGenericJoint(bodyNumbers= [oGround,bBeam], position= [0.,0.,0.], 
                                       rotationMatrixAxes= np.eye(3), constrainedAxes= [1,1,1,1,1,0], 
-                                      axesRadius=0.001, axesLength= 0.01, color= color4default)
+                                      axesRadius=0.001, axesLength= 0.01, color= exudyn.graphics.color.default)
     
         markerToConnect = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[beamL,-springL,0])) 
     

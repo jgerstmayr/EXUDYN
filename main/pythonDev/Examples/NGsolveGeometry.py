@@ -12,7 +12,8 @@
 
 
 import exudyn as exu
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 from exudyn.FEM import *
 
 SC = exu.SystemContainer()
@@ -112,8 +113,8 @@ if showCase == 'revolute':
     #body0
     fem0 = FEMinterface()
     fem0.ImportMeshFromNGsolve(mesh0, density=rho, youngsModulus=Emodulus, poissonsRatio=nu)
-    graphics0 = GraphicsDataFromPointsAndTrigs(fem0.GetNodePositionsAsArray(), fem0.GetSurfaceTriangles(), 
-                                               color=color4dodgerblue, )
+    graphics0 = graphics.FromPointsAndTrigs(fem0.GetNodePositionsAsArray(), fem0.GetSurfaceTriangles(), 
+                                               color=graphics.color.dodgerblue, )
     graphics0 = AddEdgesAndSmoothenNormals(graphics0)
     
     mbs.CreateRigidBody(referencePosition=[0,-sy*2-dy,0],
@@ -126,8 +127,8 @@ if showCase == 'revolute':
     #body1
     fem1 = FEMinterface()
     fem1.ImportMeshFromNGsolve(mesh1, density=rho, youngsModulus=Emodulus, poissonsRatio=nu)
-    graphics1 = GraphicsDataFromPointsAndTrigs(fem1.GetNodePositionsAsArray(), fem1.GetSurfaceTriangles(), 
-                                               color=color4lightred)
+    graphics1 = graphics.FromPointsAndTrigs(fem1.GetNodePositionsAsArray(), fem1.GetSurfaceTriangles(), 
+                                               color=graphics.color.lightred)
     graphics1 = AddEdgesAndSmoothenNormals(graphics1)
     
     mbs.CreateRigidBody(referencePosition=[0,-sy,0],
@@ -175,8 +176,8 @@ if showCase == 'spheric':
     #body0
     fem0 = FEMinterface()
     fem0.ImportMeshFromNGsolve(mesh0, density=rho, youngsModulus=Emodulus, poissonsRatio=nu)
-    graphics0 = GraphicsDataFromPointsAndTrigs(fem0.GetNodePositionsAsArray(), fem0.GetSurfaceTriangles(), 
-                                               color=color4dodgerblue, )
+    graphics0 = graphics.FromPointsAndTrigs(fem0.GetNodePositionsAsArray(), fem0.GetSurfaceTriangles(), 
+                                               color=graphics.color.dodgerblue, )
     graphics0 = AddEdgesAndSmoothenNormals(graphics0)
     
     mbs.CreateRigidBody(referencePosition=[0,-sy,0],
@@ -189,8 +190,8 @@ if showCase == 'spheric':
     #body1
     fem1 = FEMinterface()
     fem1.ImportMeshFromNGsolve(mesh1, density=rho, youngsModulus=Emodulus, poissonsRatio=nu)
-    graphics1 = GraphicsDataFromPointsAndTrigs(fem1.GetNodePositionsAsArray(), fem1.GetSurfaceTriangles(), 
-                                               color=color4lightred)
+    graphics1 = graphics.FromPointsAndTrigs(fem1.GetNodePositionsAsArray(), fem1.GetSurfaceTriangles(), 
+                                               color=graphics.color.lightred)
     graphics1 = AddEdgesAndSmoothenNormals(graphics1)
     
     mbs.CreateRigidBody(referencePosition=[0,-sy,0],
@@ -202,11 +203,11 @@ if showCase == 'spheric':
 #+++++++++++++++++++++++++++++++++++++++++++++++++
 #world basis
 gl=[]
-gl += [GraphicsDataText(point=rotBasis@[axis,0,0],text='X')]
-gl += [GraphicsDataText(point=rotBasis@[0,axis,0],text='Y')]
-gl += [GraphicsDataText(point=rotBasis@[0,0,axis],text='Z')]
+gl += [graphics.Text(point=rotBasis@[axis,0,0],text='X')]
+gl += [graphics.Text(point=rotBasis@[0,axis,0],text='Y')]
+gl += [graphics.Text(point=rotBasis@[0,0,axis],text='Z')]
 
-gl += [GraphicsDataBasis(origin=[0,0,0], rotationMatrix=rotBasis, length=axis)]
+gl += [graphics.Basis(origin=[0,0,0], rotationMatrix=rotBasis, length=axis)]
 
 mbs.CreateGround(graphicsDataList=gl)
 

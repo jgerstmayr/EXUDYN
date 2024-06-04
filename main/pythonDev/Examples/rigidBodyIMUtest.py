@@ -12,7 +12,8 @@
 
 import exudyn as exu
 from exudyn.itemInterface import *
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 #
 from math import sin, cos, pi
 
@@ -71,7 +72,7 @@ if mStr == '100HzGeneralRot':
     Ixx = 0.1
     Iyy = 0.4
 
-oGraphics = GraphicsDataOrthoCube(-sx,-s,-s, sx,s,s, [0.8,0.1,0.1,1])
+oGraphics = graphics.BrickXYZ(-sx,-s,-s, sx,s,s, [0.8,0.1,0.1,1])
 oGyro = mbs.AddObject(ObjectRigidBody(physicsMass=mass, 
                                     physicsInertia=[Ixx,Iyy,Izz,0,0,0], 
                                     nodeNumber=nGyro, 

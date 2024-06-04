@@ -11,7 +11,8 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -21,14 +22,14 @@ mbs = SC.AddSystem()
 #rigid pendulum:
 L = 1    #x-dim of pendulum
 b = 0.1  #y-dim of pendulum
-background = GraphicsDataCheckerBoard(point=[-1,0.5,0],size=2)
+background = graphics.CheckerBoard(point=[-1,0.5,0],size=2)
 oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0], visualization=VObjectGround(graphicsData= [background])))
 massRigid = 12
 inertiaRigid = massRigid/12*(L)**2
 g = 9.81    # gravity
 
-graphicsCube = GraphicsDataOrthoCubePoint(size= [L,b,b], color= color4dodgerblue, addEdges=True)
-graphicsJoint = GraphicsDataCylinder(pAxis=[-0.5*L,0,-0.6*b], vAxis= [0,0,1.2*b], radius = 0.55*b, color=color4darkgrey, addEdges=True)
+graphicsCube = graphics.Brick(size= [L,b,b], color= graphics.color.dodgerblue, addEdges=True)
+graphicsJoint = graphics.Cylinder(pAxis=[-0.5*L,0,-0.6*b], vAxis= [0,0,1.2*b], radius = 0.55*b, color=graphics.color.darkgrey, addEdges=True)
 nRigid = mbs.AddNode(Rigid2D(referenceCoordinates=[-0.5*L,L,0], initialVelocities=[0,0,2]));
 oRigid = mbs.AddObject(RigidBody2D(physicsMass=massRigid, physicsInertia=inertiaRigid,nodeNumber=nRigid,
                                    visualization=VObjectRigidBody2D(graphicsData= [graphicsCube, graphicsJoint])))

@@ -15,20 +15,54 @@
 
 import numpy as np
 #import copy as copy #to be able to copy e.g. lists
-from math import sin, cos, pi, sqrt
+from math import sqrt #, sin, cos, pi
 
 import exudyn
 from exudyn.basicUtilities import *
 from exudyn.advancedUtilities import *
 from exudyn.rigidBodyUtilities import *
 from exudyn.graphicsDataUtilities import *
+import exudyn.graphics #requires import for usage during __init__.py
 from exudyn.itemInterface import *
 
 #for compatibility with older models:
 from exudyn.beams import GenerateStraightLineANCFCable2D, GenerateSlidingJoint, GenerateAleSlidingJoint,\
                          GenerateStraightBeam
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#add deprecated GraphicsData functions such that "from exudyn.utilities import *" keeps working:
 
+GraphicsDataOrthoCubePoint = exudyn.graphics.Brick
+GraphicsDataCube = exudyn.graphics.Cuboid
+GraphicsDataOrthoCube = exudyn.graphics.BrickXYZ
+GraphicsDataSphere = exudyn.graphics.Sphere
+GraphicsDataCylinder = exudyn.graphics.Cylinder
+
+GraphicsDataLine = exudyn.graphics.Lines
+GraphicsDataQuad = exudyn.graphics.Quad
+GraphicsDataCircle = exudyn.graphics.Circle
+GraphicsDataText = exudyn.graphics.Text
+
+#advanced objects
+GraphicsDataRigidLink = exudyn.graphics.RigidLink
+GraphicsDataSolidOfRevolution = exudyn.graphics.SolidOfRevolution
+GraphicsDataSolidExtrusion = exudyn.graphics.SolidExtrusion
+GraphicsDataArrow = exudyn.graphics.Arrow
+GraphicsDataBasis = exudyn.graphics.Basis
+GraphicsDataFrame = exudyn.graphics.Frame
+GraphicsDataCheckerBoard = exudyn.graphics.CheckerBoard
+
+#import/export and transformations
+GraphicsDataFromSTLfile = exudyn.graphics.FromSTLfile
+GraphicsDataFromSTLfileTxt = exudyn.graphics.FromSTLfileASCII
+GraphicsDataFromPointsAndTrigs = exudyn.graphics.FromPointsAndTrigs
+GraphicsData2PointsAndTrigs = exudyn.graphics.ToPointsAndTrigs
+ExportGraphicsData2STL = exudyn.graphics.ExportSTL
+
+MoveGraphicsData = exudyn.graphics.Move
+MergeGraphicsDataTriangleList = exudyn.graphics.MergeTriangleLists
+AddEdgesAndSmoothenNormals = exudyn.graphics.AddEdgesAndSmoothenNormals
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -151,8 +185,8 @@ def __UFsensorDistance(mbs, t, sensorNumbers, factors, configuration):
 #           Creates a GeneralContact for efficient search on background. If you have several sets of points and trigs, first merge them or add them manually to the contact
 #**input: 
 #  mbs: MainSystem where contact is created
-#  meshPoints: list of points (3D), as returned by GraphicsData2PointsAndTrigs()
-#  meshTrigs: list of trigs (3 node indices each), as returned by GraphicsData2PointsAndTrigs()
+#  meshPoints: list of points (3D), as returned by graphics.ToPointsAndTrigs()
+#  meshTrigs: list of trigs (3 node indices each), as returned by graphics.ToPointsAndTrigs()
 #  rigidBodyMarkerIndex: rigid body marker to which the triangles are fixed on (ground or moving object)
 #  searchTreeCellSize: size of search tree (X,Y,Z); use larger values in directions where more triangles are located
 #**output: int; returns ngc, which is the number of GeneralContact in mbs, to be used in CreateDistanceSensor(...); keep the gContact as deletion may corrupt data
@@ -196,7 +230,7 @@ def CreateDistanceSensor(mbs, generalContactIndex,
                       maxDistance=1e7, cylinderRadius=0, 
                       selectedTypeIndex=exudyn.ContactTypeIndex.IndexEndOfEnumList,
                       storeInternal = False, fileName = '', measureVelocity = False,
-                      addGraphicsObject=False, drawDisplaced=True, color=color4red):
+                      addGraphicsObject=False, drawDisplaced=True, color=exudyn.graphics.color.red):
     
     markerNumber = -1
     p0list = [0,0,0]
@@ -218,9 +252,9 @@ def CreateDistanceSensor(mbs, generalContactIndex,
         sign = -1.
     if addGraphicsObject:
         if cylinderRadius == 0:
-            gData = GraphicsDataLine([[0,0,0],list(sign*np.array(dirSensor))], color = color)
+            gData = exudyn.graphics.Lines([[0,0,0],list(sign*np.array(dirSensor))], color = color)
         else: 
-            gData = GraphicsDataCylinder([0,0,0],sign*np.array(dirSensor), radius=cylinderRadius, color = color)
+            gData = exudyn.graphics.Cylinder([0,0,0],sign*np.array(dirSensor), radius=cylinderRadius, color = color)
             
         graphicsObject=mbs.AddObject(ObjectGround(referencePosition= p0list,
                                       visualization=VObjectGround(graphicsData=[gData])))

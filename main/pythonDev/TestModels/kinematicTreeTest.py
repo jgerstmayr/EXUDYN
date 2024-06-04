@@ -12,7 +12,8 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 
 import numpy as np
 
@@ -73,8 +74,8 @@ for i in range(n):
 # linkTorques = exu.Vector3DList([[0.,0.,0.]]*n)
 
 #create per-link graphics:
-gLink =  GraphicsDataOrthoCubePoint(centerPoint= [0.5*L,0,0], size= [L,w,w], color= color4dodgerblue)
-gJoint = GraphicsDataCylinder([0,0,-1.25*w], [0,0,2.5*w], 0.4*w, color=color4grey)
+gLink =  graphics.Brick(centerPoint= [0.5*L,0,0], size= [L,w,w], color= graphics.color.dodgerblue)
+gJoint = graphics.Cylinder([0,0,-1.25*w], [0,0,2.5*w], 0.4*w, color=graphics.color.grey)
 gList = [[gJoint,gLink]]*n #one list per link; add joint first, then it will be visible with transparency setting
 
 #create node for unknowns of KinematicTree

@@ -39,12 +39,14 @@ Exudyn
 
 **A flexible multibody dynamics systems simulation code with Python and C++**
 
-Exudyn version = 1.8.32.dev1 (Jones)
+Exudyn version = 1.8.52.dev1 (Jones)
 
 +  **University of Innsbruck**, Department of Mechatronics, Innsbruck, Austria
 
 If you like using Exudyn, please add a *star* on github and follow us on 
 `Twitter @RExudyn <https://twitter.com/RExudyn>`_ !
+
++  **Update on Exudyn V1.8.52**: newer examples use ``exudyn.graphics`` instead of ``GraphicsData`` functions. The old models are backwards-compatible, but the updated examples and test models require version 1.8.52 or newer! Install with ``pip install exudyn --pre -U``
 
 +  **NOTE**: for pure installation, use **pip install exudyn** (see further description below)
 +  *free, open source* and with plenty of *documentation* and *examples*

@@ -57,9 +57,8 @@ def Demo1(showAll = True):
 def Demo2(showAll = True):
     import exudyn as exu
     import exudyn.itemInterface as eii #conversion of data to exudyn dictionaries
-    from exudyn.utilities import GraphicsDataCheckerBoard, eulerParameters0, GraphicsDataSphere, \
-                                 GraphicsDataOrthoCubePoint, AngularVelocity2EulerParameters_t, \
-                                     color4dodgerblue, color4darkgrey
+    from exudyn.utilities import eulerParameters0, AngularVelocity2EulerParameters_t
+    import exudyn.graphics as graphics
     
     SC = exu.SystemContainer()
     mbs = SC.AddSystem()
@@ -75,7 +74,7 @@ def Demo2(showAll = True):
     sx = 3*s #x-size
     cPosZ = 0.1 #offset of constraint in z-direction, to get more arbitrary motion
 
-    background0 = GraphicsDataCheckerBoard(point=[0,-2*zz,-0.5*zz],size=8*zz, size2=6.4*zz, nTiles2=8)
+    background0 = graphics.CheckerBoard(point=[0,-2*zz,-0.5*zz],size=8*zz, size2=6.4*zz, nTiles2=8)
     oGround=mbs.AddObject(eii.ObjectGround(referencePosition= [0,0,0], 
                                        visualization=eii.VObjectGround(graphicsData= [background0])))
     mPosLast = mbs.AddMarker(eii.MarkerBodyPosition(bodyNumber = oGround, 
@@ -89,8 +88,8 @@ def Demo2(showAll = True):
         p0 = [sx+i*2*sx,0.,0] #reference position
     
         nRB = mbs.AddNode(eii.NodeRigidBodyEP(referenceCoordinates=p0+ep0))
-        oGraphics = GraphicsDataOrthoCubePoint(size=[1.8*sx, 2*s, 2*s], color= color4dodgerblue, addEdges=True)
-        oGraphicsJoint = GraphicsDataSphere(point=[-sx,0,cPosZ], radius = 0.6*s, color=color4darkgrey, 
+        oGraphics = graphics.Brick(size=[1.8*sx, 2*s, 2*s], color= graphics.color.dodgerblue, addEdges=True)
+        oGraphicsJoint = graphics.Sphere(point=[-sx,0,cPosZ], radius = 0.6*s, color=graphics.color.darkgrey, 
                                             nTiles=24)
         oRB = mbs.AddObject(eii.ObjectRigidBody(physicsMass=2, 
                                             physicsInertia=[6,1,6,0,0,0], 

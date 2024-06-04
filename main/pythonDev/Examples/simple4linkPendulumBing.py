@@ -11,7 +11,8 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -24,13 +25,13 @@ n3=mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[3,0,0], initialVelocities=[
 
 # create bodies:
 b0=mbs.AddObject(RigidBody2D(physicsMass=1, physicsInertia=1,nodeNumber=n0,
-       visualization=VRigidBody2D(graphicsData=[GraphicsDataLine([[-0.5,0,0],[0.5,0,0]])])))
+       visualization=VRigidBody2D(graphicsData=[graphics.Lines([[-0.5,0,0],[0.5,0,0]])])))
 b1=mbs.AddObject(RigidBody2D(physicsMass=1, physicsInertia=1,nodeNumber=n1,
-                 visualization=VRigidBody2D(graphicsData=[GraphicsDataLine([[-0.5,0,0],[0.5,0,0]])])))
+                 visualization=VRigidBody2D(graphicsData=[graphics.Lines([[-0.5,0,0],[0.5,0,0]])])))
 b2=mbs.AddObject(RigidBody2D(physicsMass=1, physicsInertia=1,nodeNumber=n2,
-                 visualization=VRigidBody2D(graphicsData=[GraphicsDataLine([[-0.5,0,0],[0.5,0,0]])])))
+                 visualization=VRigidBody2D(graphicsData=[graphics.Lines([[-0.5,0,0],[0.5,0,0]])])))
 b3=mbs.AddObject(RigidBody2D(physicsMass=1, physicsInertia=1,nodeNumber=n3,
-                 visualization=VRigidBody2D(graphicsData=[GraphicsDataLine([[-0.5,0,0],[0.5,0,0]])])))
+                 visualization=VRigidBody2D(graphicsData=[graphics.Lines([[-0.5,0,0],[0.5,0,0]])])))
 
 # add markers and loads:
 oGround = mbs.AddObject(ObjectGround())

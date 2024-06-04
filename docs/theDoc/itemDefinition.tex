@@ -1584,8 +1584,9 @@ RotationMatrix & $\LU{0b}{\Rot}$ & rotation matrix in vector form (stored in row
     \pythonstyle\begin{lstlisting}
         import exudyn as exu
         from math import sin, cos, pi
-        from exudyn.itemInterface import *
-        from exudyn.graphicsDataUtilities import *
+        from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+        import exudyn.graphics as graphics
+
         SC = exu.SystemContainer()
         mbs = SC.AddSystem()
         #create simple system:
@@ -1596,8 +1597,8 @@ RotationMatrix & $\LU{0b}{\Rot}$ & rotation matrix in vector form (stored in row
         def UFgraphics(mbs, objectNum):
             t = mbs.systemData.GetTime(exu.ConfigurationType.Visualization) #get time if needed
             #draw moving sphere on ground
-            graphics1=GraphicsDataSphere(point=[sin(t*2*pi), cos(t*2*pi), 0], 
-                                         radius=0.1, color=color4red, nTiles=32)
+            graphics1=graphics.Sphere(point=[sin(t*2*pi), cos(t*2*pi), 0], 
+                                         radius=0.1, color=graphics.color.red, nTiles=32)
             return [graphics1] 
 
         #add object with graphics user function
@@ -2836,8 +2837,8 @@ Force &  & generalized forces for all coordinates (residual of all forces except
             p = mbs.GetObjectOutputSuperElement(objectNumber=itemNumber, variableType = exu.OutputVariableType.Position,
                                                 meshNodeNumber = 0, #get first node's position 
                                                 configuration = exu.ConfigurationType.Visualization)
-            graphics1=GraphicsDataSphere(point=p,radius=0.1, color=color4red)
-                graphics2 = {'type':'Line', 'data': list(p)+[0,0,0], 'color':color4blue}
+            graphics1=graphics.Sphere(point=p,radius=0.1, color=graphics.color.red)
+                graphics2 = {'type':'Line', 'data': list(p)+[0,0,0], 'color':graphics.color.blue}
             return [graphics1, graphics2] 
 
         #now add object instead of object in mini-example:
@@ -10976,7 +10977,7 @@ The item \mybold{MarkerNodeRigid} with type = 'NodeRigid' has the following para
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveReevingSystem.py}{\texttt{beltDriveReevingSystem.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDrivesComparison.py}{\texttt{beltDrivesComparison.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/CMSexampleCourse.py}{\texttt{CMSexampleCourse.py}} (Examples/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py}{\texttt{humanRobotInteraction.py}} (Examples/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCraigBampton.py}{\texttt{NGsolveCraigBampton.py}} (Examples/)
 \item  ...
 
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/abaqusImportTest.py}{\texttt{abaqusImportTest.py}} (TestModels/)
@@ -11973,13 +11974,13 @@ The item \mybold{LoadForceVector} with type = 'ForceVector' has the following pa
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ROSMassPoint.py}{\texttt{ROSMassPoint.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/solutionViewerTest.py}{\texttt{solutionViewerTest.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/SpringDamperMassUserFunction.py}{\texttt{SpringDamperMassUserFunction.py}} (Examples/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/springDamperTutorialNew.py}{\texttt{springDamperTutorialNew.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcantileverTest.py}{\texttt{ANCFcantileverTest.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcantileverTestDyn.py}{\texttt{ANCFcantileverTestDyn.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle.py}{\texttt{ANCFcontactCircle.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle2.py}{\texttt{ANCFcontactCircle2.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFmovingRigidbody.py}{\texttt{ANCFmovingRigidbody.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFrotatingCable2D.py}{\texttt{ANCFrotatingCable2D.py}} (Examples/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFslidingJoint2D.py}{\texttt{ANCFslidingJoint2D.py}} (Examples/)
 \item  ...
 
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/perf3DRigidBodies.py}{\texttt{perf3DRigidBodies.py}} (TestModels/)

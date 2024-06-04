@@ -26,7 +26,8 @@ You can view and download this file on Github: `HydraulicsUserFunction.py <https
    
    import exudyn as exu
    from exudyn.itemInterface import *
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    
    import numpy as np
    from math import sin, cos, sqrt,pi
@@ -40,16 +41,16 @@ You can view and download this file on Github: `HydraulicsUserFunction.py <https
    
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    #one arm mechanism
-   background = GraphicsDataCheckerBoard(point=[0,0.5*L*0,-2*b],size=2)
+   background = graphics.CheckerBoard(point=[0,0.5*L*0,-2*b],size=2)
    oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0], visualization=VObjectGround(graphicsData= [background])))
    massRigid = 12*10
    inertiaRigid = massRigid/12*(L)**2
    g = 9.81    # gravity
    
-   graphicsList = [GraphicsDataOrthoCubePoint(size= [L,b,b], color= color4dodgerblue, addEdges=True)]
+   graphicsList = [graphics.Brick(size= [L,b,b], color= graphics.color.dodgerblue, addEdges=True)]
    
-   graphicsList += [GraphicsDataCylinder(pAxis=[-0.5*L,0,-0.7*b], vAxis= [0,0,1.4*b], radius = 0.55*b, 
-                                        color= color4lightgrey, addEdges=True, nTiles=32)]
+   graphicsList += [graphics.Cylinder(pAxis=[-0.5*L,0,-0.7*b], vAxis= [0,0,1.4*b], radius = 0.55*b, 
+                                        color= graphics.color.lightgrey, addEdges=True, nTiles=32)]
    #print(graphicsList[2])
    nRigid = mbs.AddNode(Rigid2D(referenceCoordinates=[0.5*L,0,0], initialVelocities=[0,0,0]));
    oRigid = mbs.AddObject(RigidBody2D(physicsMass=massRigid, physicsInertia=inertiaRigid,nodeNumber=nRigid,

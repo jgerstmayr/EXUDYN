@@ -27,7 +27,8 @@ You can view and download this file on Github: `tutorialNeuralNetwork.py <https:
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    
    import exudyn as exu
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    
    import sys
    import numpy as np
@@ -82,12 +83,12 @@ You can view and download this file on Github: `tutorialNeuralNetwork.py <https:
    tEnd = 1
    stepSize = 0.01
    
-   gGround = [GraphicsDataOrthoCubePoint(centerPoint=[0,0.5*H,0],size=[0.5*w,H,w],color=color4grey)]
-   gGround += [GraphicsDataOrthoCubePoint(centerPoint=[L,0.5*H,0],size=[0.5*w,H,w],color=color4grey)]
-   gGround += [GraphicsDataOrthoCubePoint(centerPoint=[0.5*L,-0.5*w,0],size=[L,w,w],color=color4grey)]
+   gGround = [graphics.Brick(centerPoint=[0,0.5*H,0],size=[0.5*w,H,w],color=graphics.color.grey)]
+   gGround += [graphics.Brick(centerPoint=[L,0.5*H,0],size=[0.5*w,H,w],color=graphics.color.grey)]
+   gGround += [graphics.Brick(centerPoint=[0.5*L,-0.5*w,0],size=[L,w,w],color=graphics.color.grey)]
    oGround = mbs.CreateGround(graphicsDataList=gGround)
    
-   gRigid = [GraphicsDataOrthoCubePoint(size=sideLengths, color=color4dodgerblue)]
+   gRigid = [graphics.Brick(size=sideLengths, color=graphics.color.dodgerblue)]
    oRigid = mbs.CreateRigidBody(referencePosition=pInit,
                                 inertia = InertiaCuboid(density, sideLengths),
                                 gravity = [0,-g,0],

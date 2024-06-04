@@ -50,6 +50,18 @@ namespace EXUstd {
         return std::isfinite(x);
     }
 
+	//! checks whether a 
+	inline int IsAlphaNumeric(int ch)
+	{
+		return (ch >= '0' && ch <= '9') || (ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z');
+	}
+
+	//! checks whether a character is out of abcd... and ABCD... (ASCII)
+	inline int IsAlpha(int ch)
+	{
+		return (ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z');
+	}
+
 	//! checks whether a number is within a valid range [0,n]; returns true if 0 <= index < n, otherwise false
     //! this may be useful, if Index would be unsigned in future ...
 	inline int IndexIsInRange(Index index, Index rangeBegin, Index rangeEnd)

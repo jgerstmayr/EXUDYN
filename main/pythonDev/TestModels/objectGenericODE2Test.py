@@ -13,7 +13,8 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 from exudyn.FEM import *
 
 useGraphics = True #without test
@@ -120,7 +121,7 @@ oGenericODE2 = mbs.AddObject(ObjectGenericODE2(nodeNumbers = nodeList,
                                                 stiffnessMatrix=fem.GetStiffnessMatrix(sparse=False), 
                                                 forceVector=forceVector, forceUserFunction=UFforce,
                                                 visualization=VObjectGenericODE2(triangleMesh = fem.GetSurfaceTriangles(), 
-                                                                                 color=color4lightred)))
+                                                                                 color=graphics.color.lightred)))
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #add markers and joints

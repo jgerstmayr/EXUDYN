@@ -15,7 +15,8 @@
            
 import exudyn as exu
 from exudyn.itemInterface import *
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 from exudyn.FEM import *
 from exudyn.graphicsDataUtilities import *
 
@@ -175,10 +176,10 @@ print("eigenvals=",femCrank.GetEigenFrequenciesHz()[0:8].round(2))
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #add piston as Mass1D object:
-gGraphicsPiston0 = GraphicsDataCylinder(pAxis=[0,-0.006,0],vAxis=[0,0.02,0], 
-                                       radius=1.5*hC, color=color4steelblue[0:3]+[0.5])
-gGraphicsPiston1 = GraphicsDataCylinder(pAxis=[0,0,-0.6*hC],vAxis=[0,0,1.2*hC], 
-                                       radius=0.5*dBearing, color=color4grey)
+gGraphicsPiston0 = graphics.Cylinder(pAxis=[0,-0.006,0],vAxis=[0,0.02,0], 
+                                       radius=1.5*hC, color=graphics.color.steelblue[0:3]+[0.5])
+gGraphicsPiston1 = graphics.Cylinder(pAxis=[0,0,-0.6*hC],vAxis=[0,0,1.2*hC], 
+                                       radius=0.5*dBearing, color=graphics.color.grey)
 
 nPiston = mbs.AddNode(Node1D(referenceCoordinates=[0]))
 pistonMass = 0.1
@@ -198,9 +199,9 @@ mPiston1 = mbs.AddMarker(MarkerBodyRigid(bodyNumber = oPiston, localPosition = [
 #draw frame at origin
 oS = 0.025 #origin size
 graphicsList = []
-#graphicsList +=[GraphicsDataCylinder([0,0,0], [oS,0,0], 0.00005, color4red)]
-#graphicsList +=[GraphicsDataCylinder([0,0,0], [0,oS,0], 0.00005, color4green)]
-#graphicsList +=[GraphicsDataCylinder([0,0,0], [0,0,oS], 0.00005, color4blue)]
+#graphicsList +=[graphics.Cylinder([0,0,0], [oS,0,0], 0.00005, graphics.color.red)]
+#graphicsList +=[graphics.Cylinder([0,0,0], [0,oS,0], 0.00005, graphics.color.green)]
+#graphicsList +=[graphics.Cylinder([0,0,0], [0,0,oS], 0.00005, graphics.color.blue)]
 oGround = mbs.AddObject(ObjectGround(referencePosition=[0,0,0], visualization=VObjectGround(graphicsData=graphicsList)))
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

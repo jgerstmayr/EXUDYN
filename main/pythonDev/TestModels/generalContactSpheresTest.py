@@ -11,7 +11,8 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 
 import numpy as np
 import time
@@ -73,9 +74,9 @@ pos3 = [ 0,-Hy,rb+H]
 pos4 = [ 0,-Hy,-rb-H]
 posList=[pos0,pos1,pos2,pos3,pos4]
 for pos in posList:
-    colBG = color4grey
+    colBG = graphics.color.grey
     colBG[3] = 0.05
-    gDataList += [GraphicsDataSphere(point=pos, radius=rb, color= colBG, nTiles=50)]
+    gDataList += [graphics.Sphere(point=pos, radius=rb, color= colBG, nTiles=50)]
     nMass = mbs.AddNode(NodePointGround(referenceCoordinates=pos,
                         visualization=VNodePointGround(show=False)))
 
@@ -88,19 +89,19 @@ ns = 20
 gDataSphere = []
 for i in range(ns):
     gRad = radius*(0.75+0.4*(i/ns))
-    gSphere = GraphicsDataSphere(point=[0,0,0], radius=gRad, color=color4blue, nTiles=5)
+    gSphere = graphics.Sphere(point=[0,0,0], radius=gRad, color=graphics.color.blue, nTiles=5)
     gDataSphere += [[gSphere]]
 
 gDataSphere = []
 
 timeCreateStart= -time.time()
 
-color4node = color4blue
+color4node = graphics.color.blue
 maxY = 0
 for i in range(n):
 
     kk = int(i/int(n/16))
-    color4node = color4list[min(kk%9,9)]
+    color4node = graphics.colorList[min(kk%9,9)]
 
     if (i%20000 == 0): exu.Print("create mass",i)
     offy = 0

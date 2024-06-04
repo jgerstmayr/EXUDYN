@@ -9,15 +9,164 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.8.32.dev1, 
-  \item last change =  2024-05-09, 
-  \item Number of issues = 1837, 
-  \item Number of resolved issues = 1626 (32 in current version), 
+  \item Exudyn version = 1.8.52.dev1, 
+  \item last change =  2024-06-04, 
+  \item Number of issues = 1854, 
+  \item Number of resolved issues = 1646 (52 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.8.52}:  resolved Issue 1852: {\bf tutorials}
+(docu)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: adapt tutorials to new exudyn.graphics structure}
+    \item   date resolved: {\bf 2024-06-04 21:48},
+date raised: 2024-06-04 
+  \ei
+  \item[] {\bf Version 1.8.51}:  resolved Issue 1853: {\bf exudyn.graphics}
+(docu)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add documentation in python utilities for these functions}
+    \item   date resolved: {\bf 2024-06-04 21:06},
+date raised: 2024-06-04 
+  \ei
+  \item[] {\bf Version 1.8.50}:  resolved Issue 1851: {\bf artificialIntelligence}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: adapt examples to new stable-baselines version}
+    \item {\bf notes: tested with stable-baselines3 V1.7.0 and V2.3.2}
+    \item   date resolved: {\bf 2024-06-04 17:24},
+date raised: 2024-06-04 
+  \ei
+  \item[] {\bf Version 1.8.49}:  resolved Issue 1850: {\bf artificialIntelligence}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: adapt to stable-baselines3 2.3; add old mode with gym and new mode with gymnasium}
+    \item {\bf notes: kept old mode available if gym is installed with stable-baselines without gymnasium}
+    \item   date resolved: {\bf 2024-06-04 14:59},
+date raised: 2024-06-04 (resolved by: P. Manzl)
+  \ei
+  \item[] {\bf Version 1.8.48}:  resolved Issue 0406: {\bf add NGsolve test}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: with FEMinterface, only for Python37 version}
+    \item {\bf notes: outdated and removed (see new issue 1849)}
+    \item   date resolved: {\bf 2024-06-02 13:30},
+date raised: 2020-05-22 
+  \ei
+  \item[] {\bf Version 1.8.47}:  resolved Issue 0837: {\bf GeneralContact jacobian}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add jacobian and PostNewton for Triangle-Sphere contact}
+    \item   date resolved: {\bf 2024-06-02 10:58},
+date raised: 2021-12-19 
+  \ei
+  \item[] {\bf Version 1.8.46}:  resolved Issue 1847: {\bf GeneralContact}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: change several for-break commands to continue to improve contact behavior}
+    \item   date resolved: {\bf 2024-06-01 20:13},
+date raised: 2024-06-01 
+  \ei
+  \item[] {\bf Version 1.8.45}:  resolved Issue 1475: {\bf tutorial videos}
+(docu)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add new tutorial, replace old ones}
+    \item {\bf notes: already completed on Feb 15 2024}
+    \item   date resolved: {\bf 2024-05-20 19:13},
+date raised: 2023-03-27 
+  \ei
+  \item[] {\bf Version 1.8.44}:  resolved Issue 1474: {\bf tutorial videos}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: fix gettings started video}
+    \item {\bf notes: already completed on Feb 15 2024}
+    \item   date resolved: {\bf 2024-05-20 19:13},
+date raised: 2023-03-27 
+  \ei
+  \item[] {\bf Version 1.8.43}:  resolved Issue 1842: {\bf add FurtherExampels folder for further examples, especially useful for training of LLMs}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: EXTENSION}
+    \item   date resolved: {\bf 2024-05-20 19:08},
+date raised: 2024-05-17 
+  \ei
+  \item[] {\bf Version 1.8.42}:  resolved Issue 1843: {\bf simulationSettings}
+(docu)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: correct path of simulationSettings.staticSolverSettings to simulationSettings.staticSolver in RTD description}
+    \item   date resolved: {\bf 2024-05-17 18:36},
+date raised: 2024-05-17 
+  \ei
+  \item[] {\bf Version 1.8.41}:  resolved Issue 1841: {\bf AddODE2LoadDependencies}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: description is wrong}
+    \item   date resolved: {\bf 2024-05-17 18:29},
+date raised: 2024-05-17 
+  \ei
+  \item[] {\bf Version 1.8.40}:  resolved Issue 1840: {\bf std::isalpha}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: remove std::isalpha and std::isalnum, as it does not compile on certain older compilers}
+    \item   date resolved: {\bf 2024-05-13 17:08},
+date raised: 2024-05-13 
+  \ei
+  \item[] {\bf Version 1.8.39}:  resolved Issue 1838: {\bf Examples check}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add test to check whether examples basically run; use timeout and special setting to turn off all key-press waiting; exclude large examples}
+    \item   date resolved: {\bf 2024-05-12 10:19},
+date raised: 2024-05-11 
+  \ei
+  \item[] {\bf Version 1.8.38}: {\bf \color{warningRed}  resolved BUG 1839}: {\bf ALEANCFCable2D}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: raises error 'ANCFCable2d:ComputeAxialStrain\_t not implemented' if ForceLocal is evaluated}
+    \item {\bf notes: results have to be verified}
+    \item   date resolved: {\bf 2024-05-11 19:18},
+date raised: 2024-05-11 
+  \ei
+  \item[] {\bf Version 1.8.37}:  resolved Issue 1187: {\bf ALEANCFCable2D}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add missing terms related to damping terms coupled with delta qALE}
+    \item {\bf notes: already implemented and checked with paper up to come}
+    \item   date resolved: {\bf 2024-05-11 19:00},
+date raised: 2022-07-06 
+  \ei
+  \item[] {\bf Version 1.8.36}:  resolved Issue 1692: {\bf exudyn.graphics}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: change GraphicsData functions in examples to exudyn.graphics}
+    \item {\bf notes: CHECK your files, if there are any issues due to this change; in general, the previous functionality should be maintained}
+    \item   date resolved: {\bf 2024-05-11 01:18},
+date raised: 2023-11-19 
+  \ei
+  \item[] {\bf Version 1.8.35}:  resolved Issue 1825: {\bf GraphicsDataCube}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: rename to GraphicsDataBrick... functions; use assignment to keep previous functionality}
+    \item {\bf notes: not changed, but introduced exudyn.graphics submodule for graphics functions. OrthoCube now available as exudyn.graphics.Brick}
+    \item   date resolved: {\bf 2024-05-11 01:16},
+date raised: 2024-04-25 
+  \ei
+  \item[] {\bf Version 1.8.34}:  resolved Issue 1691: {\bf exudyn.graphics}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: map graphicsDataUtilities functions to exudyn.graphics for better readability}
+    \item {\bf notes: NOTE that previous GraphicsData functions still work; however, it may be necessary to import exudyn.utilities if you imported exudyn.graphicsDataUtilities directly; examples and test models are adjusted to new functions; it is recommended that users switch to new exudyn.graphics functionality!}
+    \item   date resolved: {\bf 2024-05-10 19:45},
+date raised: 2023-11-19 
+  \ei
+  \item[] {\bf Version 1.8.33}:  resolved Issue 1837: {\bf graphics}
+(check)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: test graphics submodule for future replacement of graphicsDataUtilities}
+    \item   date resolved: {\bf 2024-05-10 10:09},
+date raised: 2024-05-10 
+  \ei
   \item[] {\bf Version 1.8.32}:  resolved Issue 1832: {\bf theory docu}
 (docu)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

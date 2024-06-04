@@ -27,6 +27,7 @@ import exudyn.advancedUtilities as eau
 #import exudyn.utilities as eut
 import exudyn.rigidBodyUtilities as erb
 import exudyn.graphicsDataUtilities as egd
+import exudyn.graphics as graphics
 
 from copy import copy, deepcopy
 import time #for timer in InverseKinematicsNumerical
@@ -488,7 +489,7 @@ class Robot:
             pOff = baseOffset
             Aoff = erb.HT2rotationMatrix(self.base.HT)
             for data in self.base.visualization.graphicsData:
-                graphicsDataBase += [egd.MoveGraphicsData(data, [0,0,0], Aoff)] #only rotated, translation is in ground
+                graphicsDataBase += [exudyn.graphics.Move(data, [0,0,0], Aoff)] #only rotated, translation is in ground
 
             baseObject = mbs.AddObject(eii.ObjectGround(referencePosition=pOff, 
                                                     visualization=eii.VObjectGround(graphicsData=graphicsDataBase)))
@@ -577,12 +578,12 @@ class Robot:
                 colorCOM[0] *= 0.7 #make COM a little darker
                 colorCOM[1] *= 0.7
                 colorCOM[2] *= 0.7
-                graphicsDataLink += [egd.GraphicsDataOrthoCubePoint(rbi.COM(), [dd,dd,dd], colorCOM)]
+                graphicsDataLink += [exudyn.graphics.Brick(rbi.COM(), [dd,dd,dd], colorCOM)]
 
 
             #draw joint in this link
             if showMBSjoint:
-                gJoint = egd.GraphicsDataCylinder(-0.5*wJ*axis, 0.5*wJ*axis, radius=r, color=egd.color4grey)
+                gJoint = exudyn.graphics.Cylinder(-0.5*wJ*axis, 0.5*wJ*axis, radius=r, color=graphics.color.grey)
                 graphicsDataLink += [gJoint]
                 
             #draw link from parent link origin to this link origin, defined by preHT of this link
@@ -591,7 +592,7 @@ class Robot:
                 #parentLink = self.GetLink(iParent)
                 vParent = erb.HT2translation(parentLinkLocalHT@link.preHT)
                 if len(linkVisualization.graphicsData) == 0:
-                    gLink = egd.GraphicsDataCylinder([0.,0.,0.], vParent, radius=0.5*wL, color=color)
+                    gLink = exudyn.graphics.Cylinder([0.,0.,0.], vParent, radius=0.5*wL, color=color)
                     graphicsDataList[iParent] += [gLink]
 
             if len(linkVisualization.graphicsData) != 0:
@@ -603,7 +604,7 @@ class Robot:
                 pOff = erb.HT2translation(self.tool.HT)
                 Aoff = erb.HT2rotationMatrix(self.tool.HT)
                 for data in self.tool.visualization.graphicsData:
-                    graphicsDataLink += [egd.MoveGraphicsData(data, pOff, Aoff)] 
+                    graphicsDataLink += [exudyn.graphics.Move(data, pOff, Aoff)] 
 
             graphicsDataList += [graphicsDataLink]
         
@@ -688,7 +689,7 @@ class Robot:
             pOff = erb.HT2translation(self.base.HT)
             Aoff = erb.HT2rotationMatrix(self.base.HT)
             for data in self.base.visualization.graphicsData:
-                graphicsDataBase += [egd.MoveGraphicsData(data, [0,0,0], Aoff)] #only rotated, translation is in ground
+                graphicsDataBase += [exudyn.graphics.Move(data, [0,0,0], Aoff)] #only rotated, translation is in ground
 
             baseObject = mbs.AddObject(eii.ObjectGround(referencePosition=pOff, 
                                                     visualization=eii.VObjectGround(graphicsData=graphicsDataBase)))
@@ -759,7 +760,7 @@ class Robot:
                 pOff = erb.HT2translation(self.tool.HT)
                 Aoff = erb.HT2rotationMatrix(self.tool.HT)
                 for data in self.tool.visualization.graphicsData:
-                    graphicsList += [egd.MoveGraphicsData(data, pOff, Aoff)] 
+                    graphicsList += [exudyn.graphics.Move(data, pOff, Aoff)] 
 
             
             #++++++++++++++++++++++++
@@ -815,7 +816,7 @@ class Robot:
                                                     rotationMarker0=rotationMarker0,
                                                     rotationMarker1=rotationMarker1,
                                                     visualization=eii.VObjectJointGeneric(show=showMBSjoint, axesRadius = r*0.25, 
-                                                                  axesLength=wJ*1.1, color=egd.color4grey)))
+                                                                  axesLength=wJ*1.1, color=graphics.color.grey)))
 
             jointList+=[jointLink]
             objectSD = None #if not added
@@ -947,7 +948,7 @@ class Robot:
             colorCOM[0] *= 0.8 #make COM a little darker
             colorCOM[1] *= 0.8
             colorCOM[2] *= 0.8
-            graphicsList += [egd.GraphicsDataOrthoCubePoint(com, [dd,dd,dd], colorCOM)]
+            graphicsList += [exudyn.graphics.Brick(com, [dd,dd,dd], colorCOM)]
 
         #draw link:
         if r != 0:
@@ -959,15 +960,15 @@ class Robot:
             #     h0 = wJ
 
             if i != 0:
-                graphicsList += [egd.GraphicsDataCylinder(pAxis=p0, vAxis=-h0*np.array(axis0), 
+                graphicsList += [exudyn.graphics.Cylinder(pAxis=p0, vAxis=-h0*np.array(axis0), 
                                                       radius=r, color=color)]
             
-            graphicsList += [egd.GraphicsDataCylinder(pAxis=p1, vAxis= h1*np.array(axis1), 
+            graphicsList += [exudyn.graphics.Cylinder(pAxis=p1, vAxis= h1*np.array(axis1), 
                                                       radius=r, color=color)]
 
             #draw body as cylinder:
             if ebu.NormL2(ebu.VSub(p1,p0)) > 1e-15:
-                graphicsList += [egd.GraphicsDataCylinder(pAxis=p1, vAxis=ebu.VSub(p0,p1), 
+                graphicsList += [exudyn.graphics.Cylinder(pAxis=p1, vAxis=ebu.VSub(p0,p1), 
                                                       radius=0.5*wL, color=color)]
         
         return graphicsList
@@ -1544,14 +1545,14 @@ class InverseKinematicsNumerical():
 #                                        inertiaTensor=link['inertia'])
 #         inertiaLink = inertiaLink.Translated(com)#needs to be recomputed, because inertia is w.r.t. COM
         
-#         color = list(np.array(egd.color4list[i]))
+#         color = list(np.array(graphics.colorList[i]))
 #         color[3] = bodyAlpha #transparency of bodies
 #         graphicsList = []
 
 #         #draw COM:
 #         if 'showCOM' in args:
 #             dd=args['showCOM']
-#             graphicsList += [egd.GraphicsDataOrthoCubePoint(com, [dd,dd,dd], egd.color4list[i])]
+#             graphicsList += [exudyn.graphics.Brick(com, [dd,dd,dd], graphics.colorList[i])]
 
 #         #draw links:
 #         r = drawLinkSize[0]
@@ -1563,31 +1564,31 @@ class InverseKinematicsNumerical():
 #             if i == 0: #draw full cylinder for first joint
 #                 h0 = w*2
             
-#             graphicsList += [egd.GraphicsDataCylinder(pAxis=p0, vAxis=-h0*axis0, 
+#             graphicsList += [exudyn.graphics.Cylinder(pAxis=p0, vAxis=-h0*axis0, 
 #                                                  radius=r, color=color)]
-#             graphicsList += [egd.GraphicsDataCylinder(pAxis=p1, vAxis= h1*axis1, 
+#             graphicsList += [exudyn.graphics.Cylinder(pAxis=p1, vAxis= h1*axis1, 
 #                                                       radius=r, color=color)]
 
 #             #draw body as cylinder:
 #             if ebu.NormL2(ebu.VSub(p1,p0)) > 1e-15:
-#                 graphicsList += [egd.GraphicsDataCylinder(pAxis=p1, vAxis=ebu.VSub(p0,p1), 
+#                 graphicsList += [exudyn.graphics.Cylinder(pAxis=p1, vAxis=ebu.VSub(p0,p1), 
 #                                                       radius=w, color=color)]
         
 #         if i==len(robot['links']): #tool
 #             pTool = erb.HT2translation(robot['tool']['HT'])
 #             if toolSize[0] != 0:
-#                 colorTool = egd.color4steelblue
+#                 colorTool = graphics.color.steelblue
 #                 colorTool[3] = bodyAlpha #transparency of bodies
                     
 #                 if ebu.NormL2(pTool) != 0:
-#                     graphicsList += [egd.GraphicsDataCylinder(pAxis=p1, vAxis= ebu.VSub(pTool,p1), 
+#                     graphicsList += [exudyn.graphics.Cylinder(pAxis=p1, vAxis= ebu.VSub(pTool,p1), 
 #                                                           radius=r*0.75, color=colorTool)]
                     
 #                 #add some simplified drawing for gripper, may be removed in future
 #                 ty = toolSize[0]
 #                 tz = toolSize[0]
-#                 graphicsList += [egd.GraphicsDataOrthoCubePoint(pTool+[0,ty,0.5*tz], toolSize, colorTool)]
-#                 graphicsList += [egd.GraphicsDataOrthoCubePoint(pTool+[0,-ty,0.5*tz], toolSize, colorTool)]
+#                 graphicsList += [exudyn.graphics.Brick(pTool+[0,ty,0.5*tz], toolSize, colorTool)]
+#                 graphicsList += [exudyn.graphics.Brick(pTool+[0,-ty,0.5*tz], toolSize, colorTool)]
                 
         
 #         #++++++++++++++++++++++++
@@ -1618,12 +1619,12 @@ class InverseKinematicsNumerical():
 #     #    jointLink = mbs.AddObject(GenericJoint(markerNumbers=[lastMarker, mLink0],
 #     #                                           constrainedAxes=[1,1,1,1,1,0],
 #     #                                           rotationMarker1=A0T,
-#     #                                           visualization=VObjectJointGeneric(axesRadius = 0.01,axesLength=0.1, color=egd.color4red)))
+#     #                                           visualization=VObjectJointGeneric(axesRadius = 0.01,axesLength=0.1, color=graphics.color.red)))
 #         jointLink = mbs.AddObject(eii.GenericJoint(markerNumbers=[mLink0, lastMarker],
 #                                                constrainedAxes=[1,1,1,1,1,0],
 #                                                rotationMarker0=A0T,
 #                                                rotationMarker1=rotation1,
-#                                                visualization=eii.VObjectJointGeneric(axesRadius = 0.01,axesLength=0.1, color=egd.color4red)))
+#                                                visualization=eii.VObjectJointGeneric(axesRadius = 0.01,axesLength=0.1, color=graphics.color.red)))
                 
 #         #load on previous body, negative sign
 #         loadSize = 1

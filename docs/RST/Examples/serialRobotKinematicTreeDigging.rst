@@ -27,7 +27,8 @@ You can view and download this file on Github: `serialRobotKinematicTreeDigging.
    # sys.exudynFast = True
    
    import exudyn as exu
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    #from exudyn.rigidBodyUtilities import *
    #from exudyn.graphicsDataUtilities import *
    from exudyn.robotics import *
@@ -45,7 +46,7 @@ You can view and download this file on Github: `serialRobotKinematicTreeDigging.
    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    compensateStaticTorques = False #static torque compensation converges slowly!
    useKinematicTree = True
-   useGraphics=True
+   useGraphics = True
    addParticles = True
    doFast = 0 #0 / 1
    #kinematic tree and redundant mbs agrees for stdDH version up to 1e-10, with compensateStaticTorques = False
@@ -87,25 +88,25 @@ You can view and download this file on Github: `serialRobotKinematicTreeDigging.
    p1 = np.array([-0.5*LL,0.5*LL+0.5*a,-0.5*t-b])
    color4wall = [0.6,0.6,0.6,0.5]
    addNormals = False
-   gBox1 = GraphicsDataOrthoCubePoint(p0,[LL,LL,t],color4steelblue,addNormals)
-   gBox1Add = GraphicsDataOrthoCubePoint(p0+[-0.5*LLx,0,0.35*hw],[t,LL,0.7*hw],color4wall,addNormals)
-   gBox1 = MergeGraphicsDataTriangleList(gBox1, gBox1Add)
-   gBox1Add = GraphicsDataOrthoCubePoint(p0+[ 0.5*LLx,0,0.5*hw],[t,LL,hw],color4wall,addNormals)
-   gBox1 = MergeGraphicsDataTriangleList(gBox1, gBox1Add)
-   gBox1Add = GraphicsDataOrthoCubePoint(p0+[0,-0.5*LL,0.5*hw],[LLx,t,hw],color4wall,addNormals)
-   gBox1 = MergeGraphicsDataTriangleList(gBox1, gBox1Add)
-   gBox1Add = GraphicsDataOrthoCubePoint(p0+[0, 0.5*LL,0.5*hw],[LLx,t,hw],color4wall,addNormals)
-   gBox1 = MergeGraphicsDataTriangleList(gBox1, gBox1Add)
+   gBox1 = graphics.Brick(p0,[LL,LL,t],graphics.color.steelblue,addNormals)
+   gBox1Add = graphics.Brick(p0+[-0.5*LLx,0,0.35*hw],[t,LL,0.7*hw],color4wall,addNormals)
+   gBox1 = graphics.MergeTriangleLists(gBox1, gBox1Add)
+   gBox1Add = graphics.Brick(p0+[ 0.5*LLx,0,0.5*hw],[t,LL,hw],color4wall,addNormals)
+   gBox1 = graphics.MergeTriangleLists(gBox1, gBox1Add)
+   gBox1Add = graphics.Brick(p0+[0,-0.5*LL,0.5*hw],[LLx,t,hw],color4wall,addNormals)
+   gBox1 = graphics.MergeTriangleLists(gBox1, gBox1Add)
+   gBox1Add = graphics.Brick(p0+[0, 0.5*LL,0.5*hw],[LLx,t,hw],color4wall,addNormals)
+   gBox1 = graphics.MergeTriangleLists(gBox1, gBox1Add)
    
-   gBox2 = GraphicsDataOrthoCubePoint(p1,[LL,LL,t],color4steelblue,addNormals)
-   gBox2Add = GraphicsDataOrthoCubePoint(p1+[-0.5*LL,0,0.5*hw],[t,LL,hw],color4wall,addNormals)
-   gBox2 = MergeGraphicsDataTriangleList(gBox2, gBox2Add)
-   gBox2Add = GraphicsDataOrthoCubePoint(p1+[ 0.5*LL,0,0.35*hw],[t,LL,0.7*hw],color4wall,addNormals)
-   gBox2 = MergeGraphicsDataTriangleList(gBox2, gBox2Add)
-   gBox2Add = GraphicsDataOrthoCubePoint(p1+[0,-0.5*LL,0.35*hw],[LL,t,0.7*hw],color4wall,addNormals)
-   gBox2 = MergeGraphicsDataTriangleList(gBox2, gBox2Add)
-   gBox2Add = GraphicsDataOrthoCubePoint(p1+[0, 0.5*LL,0.5*hw],[LL,t,hw],color4wall,addNormals)
-   gBox2 = MergeGraphicsDataTriangleList(gBox2, gBox2Add)
+   gBox2 = graphics.Brick(p1,[LL,LL,t],graphics.color.steelblue,addNormals)
+   gBox2Add = graphics.Brick(p1+[-0.5*LL,0,0.5*hw],[t,LL,hw],color4wall,addNormals)
+   gBox2 = graphics.MergeTriangleLists(gBox2, gBox2Add)
+   gBox2Add = graphics.Brick(p1+[ 0.5*LL,0,0.35*hw],[t,LL,0.7*hw],color4wall,addNormals)
+   gBox2 = graphics.MergeTriangleLists(gBox2, gBox2Add)
+   gBox2Add = graphics.Brick(p1+[0,-0.5*LL,0.35*hw],[LL,t,0.7*hw],color4wall,addNormals)
+   gBox2 = graphics.MergeTriangleLists(gBox2, gBox2Add)
+   gBox2Add = graphics.Brick(p1+[0, 0.5*LL,0.5*hw],[LL,t,hw],color4wall,addNormals)
+   gBox2 = graphics.MergeTriangleLists(gBox2, gBox2Add)
    
    #gDataList = [gBox1]
    
@@ -163,17 +164,17 @@ You can view and download this file on Github: `serialRobotKinematicTreeDigging.
        m /= radius0 #use larger mass for smaller particles ...
    
        if addParticles:
-           [meshPoints, meshTrigs] = GraphicsData2PointsAndTrigs(gBox1)
+           [meshPoints, meshTrigs] = graphics.ToPointsAndTrigs(gBox1)
            gContact.AddTrianglesRigidBodyBased(rigidBodyMarkerIndex=mGround, 
                                                contactStiffness=k, contactDamping=d, frictionMaterialIndex=0,
                pointList=meshPoints,  triangleList=meshTrigs)
-           [meshPoints, meshTrigs] = GraphicsData2PointsAndTrigs(gBox2)
+           [meshPoints, meshTrigs] = graphics.ToPointsAndTrigs(gBox2)
            gContact.AddTrianglesRigidBodyBased(rigidBodyMarkerIndex=mGround, 
                                                contactStiffness=k, contactDamping=d, frictionMaterialIndex=0,
                pointList=meshPoints,  triangleList=meshTrigs)
    
        #create particles:
-       color4node = color4blue
+       color4node = graphics.color.blue
        cnt = 0
        pBoxRef = p0 + [-0.5*radius0,-0.5*radius0,t+radius0]
        
@@ -185,7 +186,7 @@ You can view and download this file on Github: `serialRobotKinematicTreeDigging.
            for iy in range(npy+1):
                for iz in range(npz+1):
        
-                   color4node = color4list[int(min((iz/npz*10),10) )]
+                   color4node = graphics.colorList[int(min((iz/npz*10),10) )]
        
                    valueRand = np.random.random(1)[0]
                    radius = radius0 - radius0*0.3*valueRand #add some random size to decrease artifacts
@@ -207,7 +208,7 @@ You can view and download this file on Github: `serialRobotKinematicTreeDigging.
                    
                    #omitting the graphics speeds up, but does not allow shadow of particles ...
                    oMass = mbs.AddObject(MassPoint(physicsMass=m, nodeNumber=nMass,
-                                                   #visualization=VMassPoint(graphicsData=[GraphicsDataSphere(radius=radius, color=color4node, nTiles=6)])
+                                                   #visualization=VMassPoint(graphicsData=[graphics.Sphere(radius=radius, color=color4node, nTiles=6)])
                                                    ))
                    mThis = mbs.AddMarker(MarkerNodePosition(nodeNumber=nMass))
        
@@ -225,13 +226,13 @@ You can view and download this file on Github: `serialRobotKinematicTreeDigging.
        contour=np.array([[0,0],[0,cupR],[cupH,cupR],[cupH, cupR-cupT],[cupT, cupR-cupT],[cupT, 0]])
        contour = list(contour)
        contour.reverse()
-       gCup = GraphicsDataSolidOfRevolution(pAxis=[xOffTool,0,zOffTool], vAxis=[-1,0,0],
+       gCup = graphics.SolidOfRevolution(pAxis=[xOffTool,0,zOffTool], vAxis=[-1,0,0],
                contour=contour, color=colorCup, nTiles = 64)
    
-       gCupAdd = GraphicsDataCylinder(pAxis=[0,0,0], vAxis=[0,0,zOffTool-cupRI*1.01], radius=0.02, color=colorCup)
-       gCup = MergeGraphicsDataTriangleList(gCup, gCupAdd)
+       gCupAdd = graphics.Cylinder(pAxis=[0,0,0], vAxis=[0,0,zOffTool-cupRI*1.01], radius=0.02, color=colorCup)
+       gCup = graphics.MergeTriangleLists(gCup, gCupAdd)
        
-       [meshPointsTool, meshTrigsTool] = GraphicsData2PointsAndTrigs(gCup)
+       [meshPointsTool, meshTrigsTool] = graphics.ToPointsAndTrigs(gCup)
    
    
    
@@ -248,12 +249,12 @@ You can view and download this file on Github: `serialRobotKinematicTreeDigging.
    gravity=[0,0,-9.81]  #gravity
    
    graphicsBaseList  = []
-   graphicsBaseList += [GraphicsDataOrthoCubePoint([0,0,-b*0.5-0.025], [a,a,b+t-0.05], color4brown)]
-   graphicsBaseList += [GraphicsDataCheckerBoard([0,0,-b-0.5*t], size=2.4)] 
+   graphicsBaseList += [graphics.Brick([0,0,-b*0.5-0.025], [a,a,b+t-0.05], graphics.color.brown)]
+   graphicsBaseList += [graphics.CheckerBoard([0,0,-b-0.5*t], size=2.4)] 
    
    
    rRobotTCP = 0.041 
-   graphicsToolList = [GraphicsDataCylinder(pAxis=[0,0,0], vAxis= [0,0,0.06], radius=0.05, color=color4red, nTiles=8)]
+   graphicsToolList = [graphics.Cylinder(pAxis=[0,0,0], vAxis= [0,0,0.06], radius=0.05, color=graphics.color.red, nTiles=8)]
    
    
    graphicsToolList+= [gCup]
@@ -273,7 +274,7 @@ You can view and download this file on Github: `serialRobotKinematicTreeDigging.
                                   inertia=link['inertia'], 
                                   localHT=StdDH2HT(link['stdDH']),
                                   PDcontrol=(Pcontrol[cnt], Dcontrol[cnt]),
-                                  visualization=VRobotLink(linkColor=color4list[cnt], showCOM=False, showMBSjoint=useGraphics)
+                                  visualization=VRobotLink(linkColor=graphics.colorList[cnt], showCOM=False, showMBSjoint=useGraphics)
                                   ))
    
    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -415,7 +416,7 @@ You can view and download this file on Github: `serialRobotKinematicTreeDigging.
    simulationSettings.solutionSettings.outputPrecision = 5 #make files smaller
    simulationSettings.solutionSettings.exportAccelerations = False
    simulationSettings.solutionSettings.exportVelocities = False
-   simulationSettings.solutionSettings.coordinatesSolutionFileName = 'solution/test8.sol'
+   simulationSettings.solutionSettings.coordinatesSolutionFileName = 'solution/test.sol'
    #simulationSettings.solutionSettings.writeSolutionToFile = False
    # simulationSettings.timeIntegration.simulateInRealtime = True
    # simulationSettings.timeIntegration.realtimeFactor = 0.25
@@ -423,11 +424,11 @@ You can view and download this file on Github: `serialRobotKinematicTreeDigging.
    simulationSettings.timeIntegration.explicitIntegration.computeMassMatrixInversePerBody = True #>>speedup ...
    # simulationSettings.timeIntegration.reuseConstantMassMatrix = True
    
-   simulationSettings.parallel.numberOfThreads = 12
+   simulationSettings.parallel.numberOfThreads = 8
    
    simulationSettings.timeIntegration.verboseMode = 1
    simulationSettings.timeIntegration.verboseModeFile = 1
-   simulationSettings.solutionSettings.solverInformationFileName = 'solution/solverTest8.txt'
+   simulationSettings.solutionSettings.solverInformationFileName = 'solution/solverTest.txt'
    # simulationSettings.displayComputationTime = True
    # simulationSettings.displayStatistics = True
    simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
@@ -482,10 +483,11 @@ You can view and download this file on Github: `serialRobotKinematicTreeDigging.
        SC.visualizationSettings.general.autoFitScene = False
        # SC.visualizationSettings.general.graphicsUpdateInterval=0.5
        
-       print('load solution file')
-       sol = LoadSolutionFile('solution/test7.sol', safeMode=True)#, maxRows=100)
-       print('start SolutionViewer')
-       mbs.SolutionViewer(sol)
+       # print('load solution file')
+       # sol = LoadSolutionFile('solution/test.sol', safeMode=True)#, maxRows=100)
+       # print('start SolutionViewer')
+       # mbs.SolutionViewer(sol)
+       mbs.SolutionViewer()
     
    
    

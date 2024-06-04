@@ -5,11 +5,11 @@ The Python source code of the first tutorial can be found in the file:
 
    \ ``main/pythonDev/Examples/springDamperTutorial.py``\ 
 
-A similar version based on a simplified approach (using a 3D mass point) is available as
+A similar version based on a simplified approach (using a 3D mass point) is available as, which uses simplified approaches:
 
    \ ``main/pythonDev/Examples/springDamperTutorialNew.py``\ 
 
-This tutorial will set up a mass point and a spring damper, dynamically compute the solution and evaluate the reference solution.
+The following tutorial will set up a mass point and a spring damper, dynamically compute the solution and evaluate the reference solution.
 
 
 We import the exudyn library and the interface for all nodes, objects, markers, loads and sensors:
@@ -17,8 +17,18 @@ We import the exudyn library and the interface for all nodes, objects, markers, 
 .. code-block:: python
 
   import exudyn as exu
-  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities, rigidBodyUtilities, ...
-  import numpy as np #not required in general, but convenient for linear algebra
+  from exudyn.utilities import Point, NodePointGround, MassPoint, MarkerNodeCoordinate,\
+                               CoordinateSpringDamper, LoadCoordinate, SensorObject
+  import exudyn.graphics as graphics #only import if it does not conflict
+  import numpy as np #for postprocessing
+
+
+Instead of the named import of \ ``exudyn.utilities``\  functions and classes, you can use a star import,
+which includes \ ``itemInterface``\ , \ ``rigidBodyUtilities``\  and some helper functions:
+
+.. code-block:: python
+
+  from exudyn.utilities import *
 
 
 Next, we need a \ ``SystemContainer``\ , which contains all computable systems and add a new MainSystem \ ``mbs``\ .

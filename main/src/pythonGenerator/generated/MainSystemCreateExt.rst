@@ -4,7 +4,7 @@
 
 Function: CreateGround
 ^^^^^^^^^^^^^^^^^^^^^^
-`CreateGround <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L132>`__\ (\ ``name = ''``\ , \ ``referencePosition = [0.,0.,0.]``\ , \ ``referenceRotationMatrix = np.eye(3)``\ , \ ``graphicsDataList = []``\ , \ ``graphicsDataUserFunction = 0``\ , \ ``show = True``\ )
+`CreateGround <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L131>`__\ (\ ``name = ''``\ , \ ``referencePosition = [0.,0.,0.]``\ , \ ``referenceRotationMatrix = np.eye(3)``\ , \ ``graphicsDataList = []``\ , \ ``graphicsDataUserFunction = 0``\ , \ ``show = True``\ )
 
 - | \ *function description*\ :
   | helper function to create a ground object, using arguments of ObjectGround; this function is mainly added for consistency with other mainSystemExtensions
@@ -24,12 +24,12 @@ Function: CreateGround
 .. code-block:: python
 
   import exudyn as exu
-  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+  from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
   import numpy as np
   SC = exu.SystemContainer()
   mbs = SC.AddSystem()
   ground=mbs.CreateGround(referencePosition = [2,0,0],
-                          graphicsDataList = [GraphicsDataCheckerBoard(point=[0,0,0], normal=[0,1,0],size=4)])
+                          graphicsDataList = [exu.graphics.CheckerBoard(point=[0,0,0], normal=[0,1,0],size=4)])
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
@@ -42,7 +42,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: CreateMassPoint
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateMassPoint <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L201>`__\ (\ ``name = ''``\ , \ ``referencePosition = [0.,0.,0.]``\ , \ ``initialDisplacement = [0.,0.,0.]``\ , \ ``initialVelocity = [0.,0.,0.]``\ , \ ``physicsMass = 0``\ , \ ``gravity = [0.,0.,0.]``\ , \ ``graphicsDataList = []``\ , \ ``drawSize = -1``\ , \ ``color = [-1.,-1.,-1.,-1.]``\ , \ ``show = True``\ , \ ``create2D = False``\ , \ ``returnDict = False``\ )
+`CreateMassPoint <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L200>`__\ (\ ``name = ''``\ , \ ``referencePosition = [0.,0.,0.]``\ , \ ``initialDisplacement = [0.,0.,0.]``\ , \ ``initialVelocity = [0.,0.,0.]``\ , \ ``physicsMass = 0``\ , \ ``gravity = [0.,0.,0.]``\ , \ ``graphicsDataList = []``\ , \ ``drawSize = -1``\ , \ ``color = [-1.,-1.,-1.,-1.]``\ , \ ``show = True``\ , \ ``create2D = False``\ , \ ``returnDict = False``\ )
 
 - | \ *function description*\ :
   | helper function to create 2D or 3D mass point object and node, using arguments as in NodePoint and MassPoint
@@ -67,14 +67,14 @@ Function: CreateMassPoint
 .. code-block:: python
 
   import exudyn as exu
-  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+  from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
   import numpy as np
   SC = exu.SystemContainer()
   mbs = SC.AddSystem()
   b0=mbs.CreateMassPoint(referencePosition = [0,0,0],
                          initialVelocity = [2,5,0],
                          physicsMass = 1, gravity = [0,-9.81,0],
-                         drawSize = 0.5, color=color4blue)
+                         drawSize = 0.5, color=exu.graphics.color.blue)
   mbs.Assemble()
   simulationSettings = exu.SimulationSettings() #takes currently set values or default values
   simulationSettings.timeIntegration.numberOfSteps = 1000
@@ -92,7 +92,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: CreateRigidBody
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateRigidBody <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L332>`__\ (\ ``name = ''``\ , \ ``referencePosition = [0.,0.,0.]``\ , \ ``referenceRotationMatrix = np.eye(3)``\ , \ ``initialVelocity = [0.,0.,0.]``\ , \ ``initialAngularVelocity = [0.,0.,0.]``\ , \ ``initialDisplacement = None``\ , \ ``initialRotationMatrix = None``\ , \ ``inertia = None``\ , \ ``gravity = [0.,0.,0.]``\ , \ ``nodeType = exudyn.NodeType.RotationEulerParameters``\ , \ ``graphicsDataList = []``\ , \ ``graphicsDataUserFunction = 0``\ , \ ``drawSize = -1``\ , \ ``color = [-1.,-1.,-1.,-1.]``\ , \ ``show = True``\ , \ ``create2D = False``\ , \ ``returnDict = False``\ )
+`CreateRigidBody <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L331>`__\ (\ ``name = ''``\ , \ ``referencePosition = [0.,0.,0.]``\ , \ ``referenceRotationMatrix = np.eye(3)``\ , \ ``initialVelocity = [0.,0.,0.]``\ , \ ``initialAngularVelocity = [0.,0.,0.]``\ , \ ``initialDisplacement = None``\ , \ ``initialRotationMatrix = None``\ , \ ``inertia = None``\ , \ ``gravity = [0.,0.,0.]``\ , \ ``nodeType = exudyn.NodeType.RotationEulerParameters``\ , \ ``graphicsDataList = []``\ , \ ``graphicsDataUserFunction = 0``\ , \ ``drawSize = -1``\ , \ ``color = [-1.,-1.,-1.,-1.]``\ , \ ``show = True``\ , \ ``create2D = False``\ , \ ``returnDict = False``\ )
 
 - | \ *function description*\ :
   | helper function to create 3D (or 2D) rigid body object and node; all quantities are global (angular velocity, etc.)
@@ -121,7 +121,7 @@ Function: CreateRigidBody
 .. code-block:: python
 
   import exudyn as exu
-  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+  from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
   import numpy as np
   SC = exu.SystemContainer()
   mbs = SC.AddSystem()
@@ -131,8 +131,8 @@ Function: CreateRigidBody
                            initialVelocity = [2,5,0],
                            initialAngularVelocity = [5,0.5,0.7],
                            gravity = [0,-9.81,0],
-                           graphicsDataList = [GraphicsDataOrthoCubePoint(size=[1,0.1,0.1],
-                                                                        color=color4red)])
+                           graphicsDataList = [exu.graphics.Brick(size=[1,0.1,0.1],
+                                                                        color=exu.graphics.color.red)])
   mbs.Assemble()
   simulationSettings = exu.SimulationSettings() #takes currently set values or default values
   simulationSettings.timeIntegration.numberOfSteps = 1000
@@ -150,7 +150,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: CreateSpringDamper
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateSpringDamper <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L560>`__\ (\ ``name = ''``\ , \ ``bodyList = [None, None]``\ , \ ``localPosition0 = [0.,0.,0.]``\ , \ ``localPosition1 = [0.,0.,0.]``\ , \ ``referenceLength = None``\ , \ ``stiffness = 0.``\ , \ ``damping = 0.``\ , \ ``force = 0.``\ , \ ``velocityOffset = 0.``\ , \ ``springForceUserFunction = 0``\ , \ ``bodyOrNodeList = [None, None]``\ , \ ``show = True``\ , \ ``drawSize = -1``\ , \ ``color = color4default``\ )
+`CreateSpringDamper <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L559>`__\ (\ ``name = ''``\ , \ ``bodyList = [None, None]``\ , \ ``localPosition0 = [0.,0.,0.]``\ , \ ``localPosition1 = [0.,0.,0.]``\ , \ ``referenceLength = None``\ , \ ``stiffness = 0.``\ , \ ``damping = 0.``\ , \ ``force = 0.``\ , \ ``velocityOffset = 0.``\ , \ ``springForceUserFunction = 0``\ , \ ``bodyOrNodeList = [None, None]``\ , \ ``show = True``\ , \ ``drawSize = -1``\ , \ ``color = exudyn.graphics.color.default``\ )
 
 - | \ *function description*\ :
   | helper function to create SpringDamper connector, using arguments from ObjectConnectorSpringDamper; similar interface as CreateDistanceConstraint(...), see there for for further information
@@ -177,14 +177,14 @@ Function: CreateSpringDamper
 .. code-block:: python
 
   import exudyn as exu
-  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+  from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
   import numpy as np
   SC = exu.SystemContainer()
   mbs = SC.AddSystem()
   b0 = mbs.CreateMassPoint(referencePosition = [2,0,0],
                            initialVelocity = [2,5,0],
                            physicsMass = 1, gravity = [0,-9.81,0],
-                           drawSize = 0.5, color=color4blue)
+                           drawSize = 0.5, color=exu.graphics.color.blue)
   oGround = mbs.AddObject(ObjectGround())
   #add vertical spring
   oSD = mbs.CreateSpringDamper(bodyList=[oGround, b0],
@@ -210,7 +210,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: CreateCartesianSpringDamper
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateCartesianSpringDamper <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L693>`__\ (\ ``name = ''``\ , \ ``bodyList = [None, None]``\ , \ ``localPosition0 = [0.,0.,0.]``\ , \ ``localPosition1 = [0.,0.,0.]``\ , \ ``stiffness = [0.,0.,0.]``\ , \ ``damping = [0.,0.,0.]``\ , \ ``offset = [0.,0.,0.]``\ , \ ``springForceUserFunction = 0``\ , \ ``bodyOrNodeList = [None, None]``\ , \ ``show = True``\ , \ ``drawSize = -1``\ , \ ``color = color4default``\ )
+`CreateCartesianSpringDamper <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L692>`__\ (\ ``name = ''``\ , \ ``bodyList = [None, None]``\ , \ ``localPosition0 = [0.,0.,0.]``\ , \ ``localPosition1 = [0.,0.,0.]``\ , \ ``stiffness = [0.,0.,0.]``\ , \ ``damping = [0.,0.,0.]``\ , \ ``offset = [0.,0.,0.]``\ , \ ``springForceUserFunction = 0``\ , \ ``bodyOrNodeList = [None, None]``\ , \ ``show = True``\ , \ ``drawSize = -1``\ , \ ``color = exudyn.graphics.color.default``\ )
 
 - | \ *function description*\ :
   | helper function to create CartesianSpringDamper connector, using arguments from ObjectConnectorCartesianSpringDamper
@@ -235,13 +235,13 @@ Function: CreateCartesianSpringDamper
 .. code-block:: python
 
   import exudyn as exu
-  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+  from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
   import numpy as np
   SC = exu.SystemContainer()
   mbs = SC.AddSystem()
   b0 = mbs.CreateMassPoint(referencePosition = [7,0,0],
                             physicsMass = 1, gravity = [0,-9.81,0],
-                            drawSize = 0.5, color=color4blue)
+                            drawSize = 0.5, color=exu.graphics.color.blue)
   oGround = mbs.AddObject(ObjectGround())
   oSD = mbs.CreateCartesianSpringDamper(bodyList=[oGround, b0],
                                 localPosition0=[7.5,1,0],
@@ -266,7 +266,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: CreateRigidBodySpringDamper
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateRigidBodySpringDamper <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L781>`__\ (\ ``name = ''``\ , \ ``bodyList = [None, None]``\ , \ ``localPosition0 = [0.,0.,0.]``\ , \ ``localPosition1 = [0.,0.,0.]``\ , \ ``stiffness = np.zeros((6,6))``\ , \ ``damping = np.zeros((6,6))``\ , \ ``offset = [0.,0.,0.,0.,0.,0.]``\ , \ ``rotationMatrixJoint = np.eye(3)``\ , \ ``useGlobalFrame = True``\ , \ ``intrinsicFormulation = True``\ , \ ``springForceTorqueUserFunction = 0``\ , \ ``postNewtonStepUserFunction = 0``\ , \ ``bodyOrNodeList = [None, None]``\ , \ ``show = True``\ , \ ``drawSize = -1``\ , \ ``color = color4default``\ )
+`CreateRigidBodySpringDamper <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L780>`__\ (\ ``name = ''``\ , \ ``bodyList = [None, None]``\ , \ ``localPosition0 = [0.,0.,0.]``\ , \ ``localPosition1 = [0.,0.,0.]``\ , \ ``stiffness = np.zeros((6,6))``\ , \ ``damping = np.zeros((6,6))``\ , \ ``offset = [0.,0.,0.,0.,0.,0.]``\ , \ ``rotationMatrixJoint = np.eye(3)``\ , \ ``useGlobalFrame = True``\ , \ ``intrinsicFormulation = True``\ , \ ``springForceTorqueUserFunction = 0``\ , \ ``postNewtonStepUserFunction = 0``\ , \ ``bodyOrNodeList = [None, None]``\ , \ ``show = True``\ , \ ``drawSize = -1``\ , \ ``color = exudyn.graphics.color.default``\ )
 
 - | \ *function description*\ :
   | helper function to create RigidBodySpringDamper connector, using arguments from ObjectConnectorRigidBodySpringDamper, see there for the full documentation
@@ -294,7 +294,7 @@ Function: CreateRigidBodySpringDamper
 
 .. code-block:: python
 
-  #TODO
+  #coming later
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
@@ -307,7 +307,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: CreateRevoluteJoint
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateRevoluteJoint <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L926>`__\ (\ ``name = ''``\ , \ ``bodyNumbers = [None, None]``\ , \ ``position = []``\ , \ ``axis = []``\ , \ ``useGlobalFrame = True``\ , \ ``show = True``\ , \ ``axisRadius = 0.1``\ , \ ``axisLength = 0.4``\ , \ ``color = color4default``\ )
+`CreateRevoluteJoint <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L925>`__\ (\ ``name = ''``\ , \ ``bodyNumbers = [None, None]``\ , \ ``position = []``\ , \ ``axis = []``\ , \ ``useGlobalFrame = True``\ , \ ``show = True``\ , \ ``axisRadius = 0.1``\ , \ ``axisLength = 0.4``\ , \ ``color = exudyn.graphics.color.default``\ )
 
 - | \ *function description*\ :
   | Create revolute joint between two bodies; definition of joint position and axis in global coordinates (alternatively in body0 local coordinates) for reference configuration of bodies; all markers, markerRotation and other quantities are automatically computed
@@ -329,7 +329,7 @@ Function: CreateRevoluteJoint
 .. code-block:: python
 
   import exudyn as exu
-  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+  from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
   import numpy as np
   SC = exu.SystemContainer()
   mbs = SC.AddSystem()
@@ -337,8 +337,8 @@ Function: CreateRevoluteJoint
                                                    sideLengths=[1,0.1,0.1]),
                            referencePosition = [3,0,0],
                            gravity = [0,-9.81,0],
-                           graphicsDataList = [GraphicsDataOrthoCubePoint(size=[1,0.1,0.1],
-                                                                        color=color4steelblue)])
+                           graphicsDataList = [exu.graphics.Brick(size=[1,0.1,0.1],
+                                                                        color=exu.graphics.color.steelblue)])
   oGround = mbs.AddObject(ObjectGround())
   mbs.CreateRevoluteJoint(bodyNumbers=[oGround, b0], position=[2.5,0,0], axis=[0,0,1],
                           useGlobalFrame=True, axisRadius=0.02, axisLength=0.14)
@@ -359,7 +359,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: CreatePrismaticJoint
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreatePrismaticJoint <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L1028>`__\ (\ ``name = ''``\ , \ ``bodyNumbers = [None, None]``\ , \ ``position = []``\ , \ ``axis = []``\ , \ ``useGlobalFrame = True``\ , \ ``show = True``\ , \ ``axisRadius = 0.1``\ , \ ``axisLength = 0.4``\ , \ ``color = color4default``\ )
+`CreatePrismaticJoint <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L1027>`__\ (\ ``name = ''``\ , \ ``bodyNumbers = [None, None]``\ , \ ``position = []``\ , \ ``axis = []``\ , \ ``useGlobalFrame = True``\ , \ ``show = True``\ , \ ``axisRadius = 0.1``\ , \ ``axisLength = 0.4``\ , \ ``color = exudyn.graphics.color.default``\ )
 
 - | \ *function description*\ :
   | Create prismatic joint between two bodies; definition of joint position and axis in global coordinates (alternatively in body0 local coordinates) for reference configuration of bodies; all markers, markerRotation and other quantities are automatically computed
@@ -381,7 +381,7 @@ Function: CreatePrismaticJoint
 .. code-block:: python
 
   import exudyn as exu
-  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+  from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
   import numpy as np
   SC = exu.SystemContainer()
   mbs = SC.AddSystem()
@@ -390,8 +390,8 @@ Function: CreatePrismaticJoint
                            referencePosition = [4,0,0],
                            initialVelocity = [0,4,0],
                            gravity = [0,-9.81,0],
-                           graphicsDataList = [GraphicsDataOrthoCubePoint(size=[1,0.1,0.1],
-                                                                        color=color4steelblue)])
+                           graphicsDataList = [exu.graphics.Brick(size=[1,0.1,0.1],
+                                                                        color=exu.graphics.color.steelblue)])
   oGround = mbs.AddObject(ObjectGround())
   mbs.CreatePrismaticJoint(bodyNumbers=[oGround, b0], position=[3.5,0,0], axis=[0,1,0],
                            useGlobalFrame=True, axisRadius=0.02, axisLength=1)
@@ -412,7 +412,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: CreateSphericalJoint
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateSphericalJoint <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L1122>`__\ (\ ``name = ''``\ , \ ``bodyNumbers = [None, None]``\ , \ ``position = []``\ , \ ``constrainedAxes = [1,1,1]``\ , \ ``useGlobalFrame = True``\ , \ ``show = True``\ , \ ``jointRadius = 0.1``\ , \ ``color = color4default``\ )
+`CreateSphericalJoint <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L1121>`__\ (\ ``name = ''``\ , \ ``bodyNumbers = [None, None]``\ , \ ``position = []``\ , \ ``constrainedAxes = [1,1,1]``\ , \ ``useGlobalFrame = True``\ , \ ``show = True``\ , \ ``jointRadius = 0.1``\ , \ ``color = exudyn.graphics.color.default``\ )
 
 - | \ *function description*\ :
   | Create spherical joint between two bodies; definition of joint position in global coordinates (alternatively in body0 local coordinates) for reference configuration of bodies; all markers are automatically computed
@@ -433,7 +433,7 @@ Function: CreateSphericalJoint
 .. code-block:: python
 
   import exudyn as exu
-  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+  from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
   import numpy as np
   SC = exu.SystemContainer()
   mbs = SC.AddSystem()
@@ -442,8 +442,8 @@ Function: CreateSphericalJoint
                            referencePosition = [5,0,0],
                            initialAngularVelocity = [5,0,0],
                            gravity = [0,-9.81,0],
-                           graphicsDataList = [GraphicsDataOrthoCubePoint(size=[1,0.1,0.1],
-                                                                        color=color4orange)])
+                           graphicsDataList = [exu.graphics.Brick(size=[1,0.1,0.1],
+                                                                        color=exu.graphics.color.orange)])
   oGround = mbs.AddObject(ObjectGround())
   mbs.CreateSphericalJoint(bodyNumbers=[oGround, b0], position=[5.5,0,0],
                            useGlobalFrame=True, jointRadius=0.06)
@@ -464,7 +464,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: CreateGenericJoint
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateGenericJoint <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L1212>`__\ (\ ``name = ''``\ , \ ``bodyNumbers = [None, None]``\ , \ ``position = []``\ , \ ``rotationMatrixAxes = np.eye(3)``\ , \ ``constrainedAxes = [1,1,1, 1,1,1]``\ , \ ``useGlobalFrame = True``\ , \ ``offsetUserFunction = 0``\ , \ ``offsetUserFunction_t = 0``\ , \ ``show = True``\ , \ ``axesRadius = 0.1``\ , \ ``axesLength = 0.4``\ , \ ``color = color4default``\ )
+`CreateGenericJoint <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L1211>`__\ (\ ``name = ''``\ , \ ``bodyNumbers = [None, None]``\ , \ ``position = []``\ , \ ``rotationMatrixAxes = np.eye(3)``\ , \ ``constrainedAxes = [1,1,1, 1,1,1]``\ , \ ``useGlobalFrame = True``\ , \ ``offsetUserFunction = 0``\ , \ ``offsetUserFunction_t = 0``\ , \ ``show = True``\ , \ ``axesRadius = 0.1``\ , \ ``axesLength = 0.4``\ , \ ``color = exudyn.graphics.color.default``\ )
 
 - | \ *function description*\ :
   | Create generic joint between two bodies; definition of joint position (position) and axes (rotationMatrixAxes) in global coordinates (useGlobalFrame=True) or in local coordinates of body0 (useGlobalFrame=False), where rotationMatrixAxes is an additional rotation to body0; all markers, markerRotation and other quantities are automatically computed
@@ -490,7 +490,7 @@ Function: CreateGenericJoint
 .. code-block:: python
 
   import exudyn as exu
-  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+  from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
   import numpy as np
   SC = exu.SystemContainer()
   mbs = SC.AddSystem()
@@ -499,8 +499,8 @@ Function: CreateGenericJoint
                            referencePosition = [6,0,0],
                            initialAngularVelocity = [0,8,0],
                            gravity = [0,-9.81,0],
-                           graphicsDataList = [GraphicsDataOrthoCubePoint(size=[1,0.1,0.1],
-                                                                        color=color4orange)])
+                           graphicsDataList = [exu.graphics.Brick(size=[1,0.1,0.1],
+                                                                        color=exu.graphics.color.orange)])
   oGround = mbs.AddObject(ObjectGround())
   mbs.CreateGenericJoint(bodyNumbers=[oGround, b0], position=[5.5,0,0],
                          constrainedAxes=[1,1,1, 1,0,0],
@@ -515,7 +515,7 @@ Function: CreateGenericJoint
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `bungeeJump.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bungeeJump.py>`_\  (Ex), \ `pistonEngine.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/pistonEngine.py>`_\  (Ex), \ `universalJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/universalJoint.py>`_\  (Ex), \ `bricardMechanism.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/bricardMechanism.py>`_\  (TM), \ `complexEigenvaluesTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/complexEigenvaluesTest.py>`_\  (TM), \ `computeODE2AEeigenvaluesTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/computeODE2AEeigenvaluesTest.py>`_\  (TM), \ `driveTrainTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/driveTrainTest.py>`_\  (TM), \ `mainSystemExtensionsTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mainSystemExtensionsTests.py>`_\  (TM)
+    \ `bungeeJump.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bungeeJump.py>`_\  (Ex), \ `pistonEngine.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/pistonEngine.py>`_\  (Ex), \ `universalJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/universalJoint.py>`_\  (Ex), \ `bricardMechanism.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/bricardMechanism.py>`_\  (TM), \ `complexEigenvaluesTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/complexEigenvaluesTest.py>`_\  (TM), \ `computeODE2AEeigenvaluesTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/computeODE2AEeigenvaluesTest.py>`_\  (TM), \ `driveTrainTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/driveTrainTest.py>`_\  (TM), \ `generalContactImplicit2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/generalContactImplicit2.py>`_\  (TM)
 
 
 
@@ -523,7 +523,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: CreateDistanceConstraint
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateDistanceConstraint <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L1325>`__\ (\ ``name = ''``\ , \ ``bodyList = [None, None]``\ , \ ``localPosition0 = [0.,0.,0.]``\ , \ ``localPosition1 = [0.,0.,0.]``\ , \ ``distance = None``\ , \ ``bodyOrNodeList = [None, None]``\ , \ ``show = True``\ , \ ``drawSize = -1.``\ , \ ``color = color4default``\ )
+`CreateDistanceConstraint <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L1324>`__\ (\ ``name = ''``\ , \ ``bodyList = [None, None]``\ , \ ``localPosition0 = [0.,0.,0.]``\ , \ ``localPosition1 = [0.,0.,0.]``\ , \ ``distance = None``\ , \ ``bodyOrNodeList = [None, None]``\ , \ ``show = True``\ , \ ``drawSize = -1.``\ , \ ``color = exudyn.graphics.color.default``\ )
 
 - | \ *function description*\ :
   | Create distance joint between two bodies; definition of joint positions in local coordinates of bodies or nodes; if distance=None, it is computed automatically from reference length; all markers are automatically computed
@@ -545,7 +545,7 @@ Function: CreateDistanceConstraint
 .. code-block:: python
 
   import exudyn as exu
-  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+  from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
   import numpy as np
   SC = exu.SystemContainer()
   mbs = SC.AddSystem()
@@ -553,8 +553,8 @@ Function: CreateDistanceConstraint
                                                     sideLengths=[1,0.1,0.1]),
                             referencePosition = [6,0,0],
                             gravity = [0,-9.81,0],
-                            graphicsDataList = [GraphicsDataOrthoCubePoint(size=[1,0.1,0.1],
-                                                                        color=color4orange)])
+                            graphicsDataList = [exu.graphics.Brick(size=[1,0.1,0.1],
+                                                                        color=exu.graphics.color.orange)])
   m1 = mbs.CreateMassPoint(referencePosition=[5.5,-1,0],
                            physicsMass=1, drawSize = 0.2)
   n1 = mbs.GetObject(m1)['nodeNumber']
@@ -586,7 +586,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: CreateForce
 ^^^^^^^^^^^^^^^^^^^^^
-`CreateForce <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L1445>`__\ (\ ``name = ''``\ , \ ``bodyNumber = None``\ , \ ``loadVector = [0.,0.,0.]``\ , \ ``localPosition = [0.,0.,0.]``\ , \ ``bodyFixed = False``\ , \ ``loadVectorUserFunction = 0``\ , \ ``show = True``\ )
+`CreateForce <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L1444>`__\ (\ ``name = ''``\ , \ ``bodyNumber = None``\ , \ ``loadVector = [0.,0.,0.]``\ , \ ``localPosition = [0.,0.,0.]``\ , \ ``bodyFixed = False``\ , \ ``loadVectorUserFunction = 0``\ , \ ``show = True``\ )
 
 - | \ *function description*\ :
   | helper function to create force applied to given body
@@ -606,14 +606,14 @@ Function: CreateForce
 .. code-block:: python
 
   import exudyn as exu
-  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+  from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
   import numpy as np
   SC = exu.SystemContainer()
   mbs = SC.AddSystem()
   b0=mbs.CreateMassPoint(referencePosition = [0,0,0],
                          initialVelocity = [2,5,0],
                          physicsMass = 1, gravity = [0,-9.81,0],
-                         drawSize = 0.5, color=color4blue)
+                         drawSize = 0.5, color=exu.graphics.color.blue)
   f0=mbs.CreateForce(bodyNumber=b0, loadVector=[100,0,0],
                      localPosition=[0,0,0])
   mbs.Assemble()
@@ -633,7 +633,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: CreateTorque
 ^^^^^^^^^^^^^^^^^^^^^^
-`CreateTorque <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L1523>`__\ (\ ``name = ''``\ , \ ``bodyNumber = None``\ , \ ``loadVector = [0.,0.,0.]``\ , \ ``localPosition = [0.,0.,0.]``\ , \ ``bodyFixed = False``\ , \ ``loadVectorUserFunction = 0``\ , \ ``show = True``\ )
+`CreateTorque <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L1522>`__\ (\ ``name = ''``\ , \ ``bodyNumber = None``\ , \ ``loadVector = [0.,0.,0.]``\ , \ ``localPosition = [0.,0.,0.]``\ , \ ``bodyFixed = False``\ , \ ``loadVectorUserFunction = 0``\ , \ ``show = True``\ )
 
 - | \ *function description*\ :
   | helper function to create torque applied to given body
@@ -653,7 +653,7 @@ Function: CreateTorque
 .. code-block:: python
 
   import exudyn as exu
-  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+  from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
   import numpy as np
   SC = exu.SystemContainer()
   mbs = SC.AddSystem()
@@ -661,8 +661,8 @@ Function: CreateTorque
                                                    sideLengths=[1,0.1,0.1]),
                            referencePosition = [1,3,0],
                            gravity = [0,-9.81,0],
-                           graphicsDataList = [GraphicsDataOrthoCubePoint(size=[1,0.1,0.1],
-                                                                        color=color4red)])
+                           graphicsDataList = [exu.graphics.Brick(size=[1,0.1,0.1],
+                                                                        color=exu.graphics.color.red)])
   f0=mbs.CreateTorque(bodyNumber=b0, loadVector=[0,100,0])
   mbs.Assemble()
   simulationSettings = exu.SimulationSettings() #takes currently set values or default values

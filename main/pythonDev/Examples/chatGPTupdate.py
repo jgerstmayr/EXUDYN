@@ -26,15 +26,16 @@
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++
 #create rigid bodies and mass points with distance constraint and joints
 import exudyn as exu
-from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 import numpy as np
 SC = exu.SystemContainer()
 mbs = SC.AddSystem() #create a MainSystem 'mbs' to work with
 
 #draw orthonormal cube in local frame where it is added to;
 #cube is added to reference point of object, usually the center of mass (COM):
-graphicsCube = GraphicsDataOrthoCubePoint(centerPoint = [0,0,0], 
-                                          size=[1,0.1,0.1], color=color4orange)
+graphicsCube = graphics.Brick(centerPoint = [0,0,0], 
+                                          size=[1,0.1,0.1], color=graphics.color.orange)
 
 #create inertia (mass, COM, inertia tensor) to be used in rigid body:
 inertiaCube = InertiaCuboid(density=5000, sideLengths=[1,0.1,0.1])
@@ -72,9 +73,9 @@ n1 = mbs.GetObject(m1)['nodeNumber']
     
 #add a ground object:
 #graphics data for sphere:
-gGround0 = GraphicsDataSphere(point=[3,1,0], radius = 0.1, color=color4red, nTiles=16)
+gGround0 = graphics.Sphere(point=[3,1,0], radius = 0.1, color=graphics.color.red, nTiles=16)
 #graphics for checkerboard background:
-gGround1 = GraphicsDataCheckerBoard(point=[3,0,-2], normal=[0,0,1], size=10)
+gGround1 = graphics.CheckerBoard(point=[3,0,-2], normal=[0,0,1], size=10)
 oGround = mbs.CreateGround(graphicsDataList=[gGround0,gGround1])
 
 #create a rigid distance between bodies (using local position) or between nodes
@@ -139,7 +140,7 @@ mbs.CreatePrismaticJoint(bodyNumbers=[oGround, b1], position=[2,0,0], axis=[1,0,
 #create simple mass point, connected with ground
 m2 = mbs.CreateMassPoint(referencePosition = [7,2,0],
                          physicsMass = 10, gravity = [0,-9.81,0],
-                         drawSize = 0.5, color=color4blue)
+                         drawSize = 0.5, color=graphics.color.blue)
 
 #create spring damper between bodies (using local position) or between nodes
 #spring-damper may not have size 0; spring reference length is computed from reference configuration

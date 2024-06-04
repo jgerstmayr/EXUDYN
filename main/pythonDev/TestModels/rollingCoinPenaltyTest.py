@@ -16,7 +16,8 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 
 import numpy as np
 
@@ -53,7 +54,7 @@ inertiaRing = RigidBodyInertia(mass=1, inertiaTensor= np.diag([0.5*m*r**2, 0.25*
 #print(inertiaRing)
 
 #additional graphics for visualization of rotation:
-graphicsBody = GraphicsDataOrthoCubePoint(centerPoint=[0,0,0],size=[w*1.1,0.7*r,0.7*r], color=color4lightred)
+graphicsBody = graphics.Brick(centerPoint=[0,0,0],size=[w*1.1,0.7*r,0.7*r], color=graphics.color.lightred)
 
 [n0,b0]=AddRigidBody(mainSys = mbs, 
                      inertia = inertiaRing, 
@@ -66,7 +67,7 @@ graphicsBody = GraphicsDataOrthoCubePoint(centerPoint=[0,0,0],size=[w*1.1,0.7*r,
                      graphicsDataList = [graphicsBody])
 
 #ground body and marker
-gGround = GraphicsDataOrthoCubePoint(centerPoint=[0,0,-0.001],size=[0.3,0.3,0.002], color=color4lightgrey)
+gGround = graphics.Brick(centerPoint=[0,0,-0.001],size=[0.3,0.3,0.002], color=graphics.color.lightgrey)
 oGround = mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=[gGround])))
 markerGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
 
@@ -79,7 +80,7 @@ oRolling=mbs.AddObject(ObjectConnectorRollingDiscPenalty(markerNumbers=[markerGr
                                               discRadius=r, dryFriction=[0.8,0.8], dryFrictionProportionalZone=1e-2, 
                                               rollingFrictionViscous=0.2,
                                               contactStiffness=1e5, contactDamping=1e4,
-                                              visualization=VObjectConnectorRollingDiscPenalty(discWidth=w, color=color4blue)))
+                                              visualization=VObjectConnectorRollingDiscPenalty(discWidth=w, color=graphics.color.blue)))
 
 
 #sensor for trace of contact point:

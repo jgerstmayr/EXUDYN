@@ -14,10 +14,13 @@
 
 import exudyn as exu
 from exudyn.itemInterface import *
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
+
+useGraphics = False
 
 nBodies = 8
 nBodies2 = 4#3
@@ -70,7 +73,8 @@ mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nGround, coordinate=0)
 
 mbs.Assemble()
 
-exu.StartRenderer()
+if useGraphics: 
+ exu.StartRenderer()
 
 simulationSettings = exu.SimulationSettings()
 simulationSettings.timeIntegration.numberOfSteps = 20
@@ -84,8 +88,12 @@ simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
 SC.visualizationSettings.nodes.defaultSize = 0.05
 SC.visualizationSettings.openGL.multiSampling = 4
 
-for i in range(800): #1000
-    print('iteration '+str(i)+':')
+nSteps = 10
+if useGraphics: 
+    nSteps = 800
+
+for i in range(nSteps): #1000
+    # print('iteration '+str(i)+':')
     mbs.SolveDynamic(simulationSettings, solverType = exudyn.DynamicSolverType.DOPRI5)
 
     for spring in springList:
@@ -97,8 +105,8 @@ for i in range(800): #1000
         #print('spring '+str(spring)+' force = ' + str(force))
         
         if force > 400:
-            if mbs.GetObjectParameter(spring, 'activeConnector'):
-                print('BREAK spring '+str(spring))
+            # if mbs.GetObjectParameter(spring, 'activeConnector'):
+            #     print('BREAK spring '+str(spring))
             mbs.SetObjectParameter(spring, 'activeConnector', False)
             mbs.SetObjectParameter(spring, 'Vshow', False)
 
@@ -110,6 +118,7 @@ for i in range(800): #1000
 u = mbs.GetNodeOutput(nBodies-2, exu.OutputVariableType.Position) #tip node
 print('dynamic tip displacement (y)=', u[1])
 
-SC.WaitForRenderEngineStopFlag()
-exu.StopRenderer() 
+if useGraphics: 
+    SC.WaitForRenderEngineStopFlag()
+    exu.StopRenderer() 
 

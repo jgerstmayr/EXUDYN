@@ -15,6 +15,7 @@
 
 import numpy as np
 import exudyn.graphicsDataUtilities as gdu
+import exudyn.graphics as graphics
 import exudyn.robotics as rob
 from exudyn.rigidBodyUtilities import HT2rotationMatrix, HT2translation, Skew, HTtranslate, InverseHT,\
                                       HT0, HTrotateY, HTrotateX, RigidBodyInertia
@@ -572,7 +573,7 @@ def LinkDict2Robot(robotLinkDict, robotClass=None):
                                inertia=link['inertia'], 
                                localHT= rob.StdDH2HT(link['stdDH']), 
                                PDcontrol = PDcontrol, 
-                               visualization=rob.VRobotLink(linkColor=gdu.color4list[i])
+                               visualization=rob.VRobotLink(linkColor=graphics.colorList[i])
                                 ))
     elif dhMode=='modDHKK':
         #++++++++++++++++++++++++++++++++++++++++++++++++++++++++

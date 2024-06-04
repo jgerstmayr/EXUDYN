@@ -22,7 +22,8 @@ You can view and download this file on Github: `symbolicModuleTest.py <https://g
    #
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    import exudyn as exu
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    
    useGraphics = False #without test
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

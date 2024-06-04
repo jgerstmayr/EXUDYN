@@ -58,8 +58,8 @@ hy0=-hy
 maxAmp0 = 0.1
 maxAmpN = 0.1*N
 
-background = [GraphicsDataQuad([[-L0,hy0,z],[ L,hy0,z],[ L,hy1,z],[-L0,hy1,z]], 
-                              color=color4lightgrey)]
+background = [graphics.Quad([[-L0,hy0,z],[ L,hy0,z],[ L,hy1,z],[-L0,hy1,z]], 
+                              color=graphics.color.lightgrey)]
     
 oGround=mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=background)))
 
@@ -73,15 +73,15 @@ markerList = []
 
 for i in range(N+useConstraint):
     #node for 3D mass point:
-    col = color4steelblue
+    col = graphics.color.steelblue
     if i==int(useConstraint):
-        col = color4green
+        col = graphics.color.green
     elif i==N-int(not useConstraint):
-        col = color4lightred
+        col = graphics.color.lightred
     elif i==0 and useConstraint:
-        col = color4lightgrey
+        col = graphics.color.lightgrey
 
-    gSphere = GraphicsDataSphere(point=[0,0,0], radius=r_mass, color=col, nTiles=32)
+    gSphere = graphics.Sphere(point=[0,0,0], radius=r_mass, color=col, nTiles=32)
     
     node = mbs.AddNode(Node1D(referenceCoordinates = [l_mass*(len(nMass)+1-useConstraint)],
                               initialCoordinates=[0.],

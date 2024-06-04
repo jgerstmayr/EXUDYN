@@ -1,17 +1,22 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  3D rigid body tutorial with 2 bodies and revolute joints, using new mainSystemExtension functionality
+# Details:  3D rigid body tutorial with 2 bodies and revolute joints, using mbs.Create functions throughout;
+#           Follows online tutorial without markers
 #
 # Author:   Johannes Gerstmayr
 # Date:     2023-05-16
+# Modified: 2024-06-04
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
-from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+from exudyn.utilities import InertiaCuboid, SensorBody
+#to be sure to have all items and functions imported, just do:
+#from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 import numpy as np
 
 SC = exu.SystemContainer()
@@ -36,8 +41,8 @@ iCube0 = InertiaCuboid(density=5000, sideLengths=bodyDim)
 iCube0 = iCube0.Translated([-0.25*L,0,0]) #transform COM, COM not at reference point!
 
 #graphics for body
-graphicsBody0 = GraphicsDataOrthoCubePoint(centerPoint=[0,0,0],size=[L,w,w],color=color4red)
-graphicsCOM0 = GraphicsDataBasis(origin=iCube0.com, length=2*w) #COM frame
+graphicsBody0 = graphics.Brick(centerPoint=[0,0,0],size=[L,w,w],color=graphics.color.red)
+graphicsCOM0 = graphics.Basis(origin=iCube0.com, length=2*w) #COM frame
 
 #create rigid node and body
 b0=mbs.CreateRigidBody(inertia = iCube0, #includes COM
@@ -52,9 +57,9 @@ mbs.CreateRevoluteJoint(bodyNumbers=[oGround, b0], position=[0,0,0],
 
 #%%++++++++++++++++++++++++++
 #second link:
-graphicsBody1 = GraphicsDataRigidLink(p0=[0,0,-0.5*L],p1=[0,0,0.5*L], 
+graphicsBody1 = graphics.RigidLink(p0=[0,0,-0.5*L],p1=[0,0,0.5*L], 
                                      axis0=[1,0,0], axis1=[0,0,0], radius=[0.06,0.05], 
-                                     thickness = 0.1, width = [0.12,0.12], color=color4lightgreen)
+                                     thickness = 0.1, width = [0.12,0.12], color=graphics.color.lightgreen)
 
 b1=mbs.CreateRigidBody(inertia = InertiaCuboid(density=5000, sideLengths=[0.1,0.1,1]),
                             referencePosition = np.array([L,0,0.5*L]), #reference pos = center of mass, body1
@@ -96,7 +101,7 @@ h = 1e-3 #step size
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.timeIntegration.verboseMode = 1
-simulationSettings.solutionSettings.solutionWritePeriod = 0.005 #store every 5 ms
+simulationSettings.solutionSettings.solutionWritePeriod = 0.01 #store every 10 ms
 
 SC.visualizationSettings.window.renderWindowSize=[1600,1200]
 SC.visualizationSettings.openGL.multiSampling = 4

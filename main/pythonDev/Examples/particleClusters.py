@@ -12,7 +12,8 @@
 
 import exudyn as exu
 from exudyn.itemInterface import *
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 from exudyn.graphicsDataUtilities import *
 
 import numpy as np
@@ -59,17 +60,17 @@ markerList = []
 radiusList = []
 p0 = np.array([0.45*LL,-4*radius,0])
 color4wall = [0.9,0.9,0.7,0.25]
-gFloor = GraphicsDataOrthoCubePoint(p0,[LL,a,wWall],color4steelblue)
-gFloorAdd = GraphicsDataOrthoCubePoint(p0+[-0.5*LL,0.5*hWall,0],[a,hWall,wWall],color4wall)
-gFloor = MergeGraphicsDataTriangleList(gFloor, gFloorAdd)
-gFloorAdd = GraphicsDataOrthoCubePoint(p0+[ 0.5*LL,0.5*hWall,0],[a,hWall,wWall],color4wall)
-gFloor = MergeGraphicsDataTriangleList(gFloor, gFloorAdd)
-gFloorAdd = GraphicsDataOrthoCubePoint(p0+[ 0,0.5*hWall,-0.5*wWall],[LL,hWall,a],color4wall)
-gFloor = MergeGraphicsDataTriangleList(gFloor, gFloorAdd)
-gFloorAdd = GraphicsDataOrthoCubePoint(p0+[ 0,0.5*hWall, 0.5*wWall],[LL,hWall,a],color4wall)
-gFloor = MergeGraphicsDataTriangleList(gFloor, gFloorAdd)
+gFloor = graphics.Brick(p0,[LL,a,wWall],graphics.color.steelblue)
+gFloorAdd = graphics.Brick(p0+[-0.5*LL,0.5*hWall,0],[a,hWall,wWall],color4wall)
+gFloor = graphics.MergeTriangleLists(gFloor, gFloorAdd)
+gFloorAdd = graphics.Brick(p0+[ 0.5*LL,0.5*hWall,0],[a,hWall,wWall],color4wall)
+gFloor = graphics.MergeTriangleLists(gFloor, gFloorAdd)
+gFloorAdd = graphics.Brick(p0+[ 0,0.5*hWall,-0.5*wWall],[LL,hWall,a],color4wall)
+gFloor = graphics.MergeTriangleLists(gFloor, gFloorAdd)
+gFloorAdd = graphics.Brick(p0+[ 0,0.5*hWall, 0.5*wWall],[LL,hWall,a],color4wall)
+gFloor = graphics.MergeTriangleLists(gFloor, gFloorAdd)
 
-[meshPoints, meshTrigs] = GraphicsData2PointsAndTrigs(gFloor)
+[meshPoints, meshTrigs] = graphics.ToPointsAndTrigs(gFloor)
 
 gDataList = [gFloor]
 
@@ -83,9 +84,9 @@ pos1 = [5*radius,-RR*2,0]
 #posList=[pos0]
 posList=[]
 for pos in posList:
-    #gDataList += [{'type':'Circle','position':pos,'radius':rb, 'color':color4grey}]
-    gDataList += [GraphicsDataSphere(point=pos, radius=rb, color= color4grey, nTiles=40)]
-    #gDataList += [GraphicsDataRectangle(-1.2*H,-H*0.75,1.2*H,10*H,color=color4red)]
+    #gDataList += [{'type':'Circle','position':pos,'radius':rb, 'color':graphics.color.grey}]
+    gDataList += [graphics.Sphere(point=pos, radius=rb, color= graphics.color.grey, nTiles=40)]
+    #gDataList += [GraphicsDataRectangle(-1.2*H,-H*0.75,1.2*H,10*H,color=graphics.color.red)]
     nMass = mbs.AddNode(NodePointGround(referenceCoordinates=pos))
     #oMass = mbs.AddObject(MassPoint(physicsMass=m, nodeNumber=nMass))
     mThis = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nMass))
@@ -102,19 +103,19 @@ gContact = mbs.AddGeneralContact()
 lastColor=[0,0,0,0]    
 for i in range(n):
 
-    color4node = color4list[min(9, int((int(i/rows)%rows2 * 10)/rows2))]
+    color4node = graphics.colorList[min(9, int((int(i/rows)%rows2 * 10)/rows2))]
     if lastColor != color4node:
         lastColor = color4node
-        gList = [GraphicsDataSphere(point=[0,0,0], radius=radius, color= color4node, nTiles=8)]
+        gList = [graphics.Sphere(point=[0,0,0], radius=radius, color= color4node, nTiles=8)]
         if useClusters:
             gList = []
-            gList += [GraphicsDataSphere(point=[   0,0,-drz], radius=radius, color= color4node, nTiles=8)]
-            gList += [GraphicsDataSphere(point=[   0,0, drz], radius=radius, color= color4node, nTiles=8)]
-            gList += [GraphicsDataSphere(point=[-drx,0,-drz], radius=radius, color= color4node, nTiles=8)]
-            gList += [GraphicsDataSphere(point=[ drx,0,-drz], radius=radius, color= color4node, nTiles=8)]
-            gList += [GraphicsDataSphere(point=[ drx,0, drz], radius=radius, color= color4node, nTiles=8)]
-            gList += [GraphicsDataSphere(point=[-drx,0, drz], radius=radius, color= color4node, nTiles=8)]
-            #gList = [GraphicsDataOrthoCubePoint(centerPoint=[0,0,0], size=[2*radius+2*drx,2*radius,2*radius+2*drz], color= color4node)]
+            gList += [graphics.Sphere(point=[   0,0,-drz], radius=radius, color= color4node, nTiles=8)]
+            gList += [graphics.Sphere(point=[   0,0, drz], radius=radius, color= color4node, nTiles=8)]
+            gList += [graphics.Sphere(point=[-drx,0,-drz], radius=radius, color= color4node, nTiles=8)]
+            gList += [graphics.Sphere(point=[ drx,0,-drz], radius=radius, color= color4node, nTiles=8)]
+            gList += [graphics.Sphere(point=[ drx,0, drz], radius=radius, color= color4node, nTiles=8)]
+            gList += [graphics.Sphere(point=[-drx,0, drz], radius=radius, color= color4node, nTiles=8)]
+            #gList = [graphics.Brick(centerPoint=[0,0,0], size=[2*radius+2*drx,2*radius,2*radius+2*drz], color= color4node)]
 
 
     dd = 2.5*radius
@@ -137,14 +138,14 @@ for i in range(n):
         rot0=RotationMatrixZ(0.2) @ RotationMatrixX(0.1)
         RBinertia = InertiaSphere(10*m, radius*8)
         forceY *= 10
-        gCube=GraphicsDataOrthoCubePoint(centerPoint=[0,0,0], size=[2*radius+cubeX,2*radius+cubeY,2*radius+cubeZ], color= color4steelblue)
+        gCube=graphics.Brick(centerPoint=[0,0,0], size=[2*radius+cubeX,2*radius+cubeY,2*radius+cubeZ], color= graphics.color.steelblue)
         gList = [gCube]
 
         if isCube:
             for ix in range(2):
                 for iy in range(2):
                     for iz in range(2):
-                        gList += [GraphicsDataSphere(point=[ cubeX*(ix-0.5), cubeY*(iy-0.5), cubeZ*(iz-0.5) ], radius=radius, color= color4node, nTiles=8)]
+                        gList += [graphics.Sphere(point=[ cubeX*(ix-0.5), cubeY*(iy-0.5), cubeZ*(iz-0.5) ], radius=radius, color= color4node, nTiles=8)]
 
     [nMass, oMass] = AddRigidBody(mainSys=mbs, inertia=RBinertia, 
                           #nodeType=exu.NodeType.RotationRxyz,
@@ -170,7 +171,7 @@ for i in range(n):
         markerList += [mBody]
     else:
         if isCube:
-            [meshPointsCube, meshTrigsCube] = GraphicsData2PointsAndTrigs(gCube)
+            [meshPointsCube, meshTrigsCube] = graphics.ToPointsAndTrigs(gCube)
             mCube = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oMass, localPosition=[0,0,0]))
             gContact.AddTrianglesRigidBodyBased(rigidBodyMarkerIndex=mCube, contactStiffness=k, contactDamping=d, frictionMaterialIndex=0,
                                                 pointList=meshPointsCube,  triangleList=meshTrigsCube)

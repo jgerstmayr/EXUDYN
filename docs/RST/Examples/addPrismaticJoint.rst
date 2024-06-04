@@ -27,7 +27,8 @@ You can view and download this file on Github: `addPrismaticJoint.py <https://gi
    
    ## import libaries
    import exudyn as exu
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    
    from math import sin, cos, pi
    import numpy as np
@@ -70,7 +71,7 @@ You can view and download this file on Github: `addPrismaticJoint.py <https://gi
        ### create inertia for block with dimensions [L,d,d]
        inertia = InertiaCuboid(density=1000, sideLengths=[L,d,d])
        ### create graphics for body as block with (body-fixed) centerPoint, size and color
-       graphicsBody = GraphicsDataOrthoCubePoint(centerPoint=[0,0,0], size=[0.96*L,d,d], color=color4steelblue)
+       graphicsBody = graphics.Brick(centerPoint=[0,0,0], size=[0.96*L,d,d], color=graphics.color.steelblue)
    
        ### create and add rigid body to mbs
        p0 += Alist[i] @ (0.5*vLoc)

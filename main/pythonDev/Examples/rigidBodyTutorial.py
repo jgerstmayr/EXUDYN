@@ -1,18 +1,22 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  3D rigid body example with joints
+# Details:  Single 3D rigid body example with generic joint
 #
 # Author:   Johannes Gerstmayr
 # Date:     2020-03-14
-# Modified: 2023-04-18
+# Modified: 2024-06-04 (updated to CreateRigidBody)
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
-from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+from exudyn.utilities import ObjectGround, InertiaCuboid, AddRigidBody, MarkerBodyRigid, GenericJoint, \
+                             VObjectJointGeneric, SensorBody
+#to be sure to have all items and functions imported, just do:
+#from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 import numpy as np
 
 SC = exu.SystemContainer()
@@ -29,21 +33,18 @@ iCube = InertiaCuboid(density=5000, sideLengths=[1,0.1,0.1])
 print(iCube)
 
 #graphics for body
-graphicsBody = GraphicsDataRigidLink(p0=[-0.5*bodyDim[0],0,0],p1=[0.5*bodyDim[0],0,0], 
+graphicsBody = graphics.RigidLink(p0=[-0.5*bodyDim[0],0,0],p1=[0.5*bodyDim[0],0,0], 
                                      axis1=[0,0,1], radius=[0.01,0.01], 
-                                     thickness = 0.01, width = [0.02,0.02], color=color4lightred)
+                                     thickness = 0.01, width = [0.02,0.02], color=graphics.color.lightred)
 
-[n0,b0]=AddRigidBody(mainSys = mbs,
-                     inertia = iCube,
-                     nodeType = str(exu.NodeType.RotationEulerParameters),
-                     position = pMid0,
-                     rotationMatrix = np.diag([1,1,1]),
-                     angularVelocity = [0,0,0],
-                     gravity = g, #will automatically add a load on body
-                     graphicsDataList = [graphicsBody])
+#create rigid body with gravity load with one create function, which creates node, object, marker and load!
+b0=mbs.CreateRigidBody(inertia = iCube,
+                       referencePosition = pMid0,
+                       gravity = g,
+                       graphicsDataList = [graphicsBody])
 
 #ground body and marker
-oGround = mbs.AddObject(ObjectGround())
+oGround = mbs.CreateGround()
 markerGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
 
 #markers are needed to link joints and bodies; also needed for loads

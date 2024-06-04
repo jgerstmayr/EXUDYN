@@ -13,7 +13,8 @@
 
 import exudyn as exu
 from exudyn.itemInterface import *
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 from exudyn.FEM import *
 from exudyn.graphicsDataUtilities import *
 
@@ -64,7 +65,7 @@ fem=FEMinterface()
 fem.ImportMeshFromNGsolve(mesh, density, youngsModulus, nu, meshOrder=meshOrder)
 
 #%%++++++++++++++++++++++++++++++++++++++++
-[oGenericODE2, allNodeList] = fem.CreateLinearFEMObjectGenericODE2(mbs, color=color4dodgerblue)
+[oGenericODE2, allNodeList] = fem.CreateLinearFEMObjectGenericODE2(mbs, color=graphics.color.dodgerblue)
 
 #%%++++++++++++++++++++++++++++++++++++++++
 #add forces on right side and fix on left side:

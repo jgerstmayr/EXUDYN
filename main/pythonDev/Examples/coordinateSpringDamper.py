@@ -12,7 +12,8 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -119,7 +120,6 @@ print('error exact-numerical=',refSol[steps,1] - uCartesianSpringDamper)
 
 data = np.loadtxt('coordinatesSolution.txt', comments='#', delimiter=',')
 plt.plot(data[:,0], data[:,1], 'b-') #numerical solution
-#plt.plot(data[:,0], data[:,1+3], 'g-') #numerical solution:velocity
 plt.plot(refSol[:,0], refSol[:,1], 'r-') #exact solution
 
 ax=plt.gca() # get current axes

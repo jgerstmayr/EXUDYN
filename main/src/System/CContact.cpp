@@ -617,10 +617,10 @@ void GeneralContact::FinalizeContact(const CSystem& cSystem)//, Index3 searchTre
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#define UNIFIED_CONTACT_FUNCTIONS
+
 //! unified function to compute contact forces, in particular for unification to compute derivatives for jacobians
 template<Index opMode, typename TReal>
-TReal GeneralContact::ComputeContactForces(TReal gap, const SlimVectorBase<TReal,3>& deltaP0, 
+TReal GeneralContact::ComputeContactForces(TReal gap, const SlimVectorBase<TReal,3>& n0, 
 	TReal deltaVnormal, const SlimVectorBase<TReal,3>& deltaVji,
 	TReal kContact, TReal dContact, TReal dryFriction, bool frictionRegularizedRegion, const SlimVectorBase<TReal,3>& storedFFriction,
 	SlimVectorBase<TReal,3>& fVec, SlimVectorBase<TReal,3>& fFriction)
@@ -628,11 +628,11 @@ TReal GeneralContact::ComputeContactForces(TReal gap, const SlimVectorBase<TReal
 	//compute scalar force:
 	TReal contactForce = kContact * gap + dContact * deltaVnormal; //in case of contact, must be negative
 
-	fVec = contactForce * deltaP0; //this is the force pointing from sphereJ to sphereI
+	fVec = contactForce * n0; //this is the force pointing from sphereJ to sphereI
 	if (dryFriction != 0.)
 	{
 		//global sphere velocity at contact point:
-		SlimVectorBase<TReal,3> deltaVtangent = deltaVji - deltaVnormal * deltaP0;	//tangent velocity
+		SlimVectorBase<TReal,3> deltaVtangent = deltaVji - deltaVnormal * n0;	//tangent velocity
 		TReal relVel;
 		if (opMode != CCode2rhsFromActiveSets) //most important for explicit integrators
 		{
@@ -666,7 +666,7 @@ inline void ComputeContactForceJacobian(
 	const GeneralContactSettings& settings,
 	Real dryFriction, Real factorODE2, Real factorODE2_t, bool computeFrictionTerms, Real factNormalContact,
 	Real Linv, const Vector3D& n0, const Vector3D& deltaVJI, Real dContact, Real contactForce,
-	Vector3D& deltaVtangent, Real& factRegularizedFriction, Matrix3D& JacFc)
+	const Vector3D& deltaVtangent, Real& factRegularizedFriction, Matrix3D& JacFc)
 {
 
 	//compute stiffness matrix in direction of contact, analogously to SpringDamper
@@ -1210,29 +1210,24 @@ void GeneralContact::ComputeContactMarkerBasedSpheres(TemporaryComputationDataAr
 		{
 			contactObjects = addedObjects[threadID];
 			//determine potential contacts using bounding boxes:
-			//searchTree.GetSingleItemsInBoxMaxMinIndex(allBoundingBoxes[gi], *contactObjects, *addedObjectsFlags[threadID],
-			//	gi, globalContactIndexOffsets[spheresMarkerBasedIndex]);
-
 			//if boundingBoxes are pre-checked, this is faster for over-filled search tree boxes
 			searchTree.GetSingleItemsInBoxMaxMinIndex(allBoundingBoxes[gi], *contactObjects, *addedObjectsFlags[threadID], allBoundingBoxes,
 				globalContactIndexOffsets[spheresMarkerBasedIndex+1], gi);
-			//this order leads to larger bunches of work for the latest tasks -> this is less optimal for parallelization
-			//searchTree.GetSingleItemsInBoxMaxMinIndex(allBoundingBoxes[gi], *contactObjects, *addedObjectsFlags[threadID], allBoundingBoxes,
-			//	gi, globalContactIndexOffsets[spheresMarkerBasedIndex]);
 		}
+
+		bool frictionRegularizedRegion;
 
 		//check if there is really contact:
 		for (Index contactCnt = 0; contactCnt < contactObjects->NumberOfItems(); contactCnt++)
 		//for (Index gjSign : *contactObjects)
 		{
 			Index gj;
-			bool frictionRegularizedRegion;
 			if (opMode == CCode2rhsFromActiveSets) { 
 				ActiveContact2IndexRegularizedFriction(contactObjects->GetItem(contactCnt), gj, frictionRegularizedRegion); }
 			else {gj = contactObjects->GetItem(contactCnt); frictionRegularizedRegion = true;}
 
 			if (!EXUstd::IndexIsInRange(gj, globalContactIndexOffsets[spheresMarkerBasedIndex], 
-				globalContactIndexOffsets[spheresMarkerBasedIndex + 1])) { break; } //run loop only for sphere-sphere!
+				globalContactIndexOffsets[spheresMarkerBasedIndex + 1])) { continue; } //run loop only for sphere-sphere!
 
 			const ContactSpheresMarkerBased& sphereJ = spheresMarkerBased[gj - globalContactIndexOffsets[spheresMarkerBasedIndex]];
 			Vector3D deltaP(sphereJ.position - sphereI.position); //points from sphereI to sphereJ
@@ -1243,22 +1238,22 @@ void GeneralContact::ComputeContactMarkerBasedSpheres(TemporaryComputationDataAr
 			if (((opMode == CCode2rhsFromActiveSets) || (gap < 0.)) && dist != 0.)
 			{ //now we have contact! sqrt and other functions are slow, but only called for contacts
 				//Real dist = sqrt(dist2); //distance of midpoints
-				Vector3D deltaP0 = (1. / dist)*deltaP;
+				Vector3D n0 = (1. / dist)*deltaP;
 				if (verboseMode >= 2) pout << "  ** inside contact computation\n";
 
 				Vector3D vSphereI = sphereI.velocity;
 				Vector3D vSphereJ = sphereJ.velocity;
-				Real deltaVnormal = deltaP0 * (vSphereJ - vSphereI); //relative velocity in normal direction; to be consistent with jacobian
+				Real deltaVnormal = n0 * (vSphereJ - vSphereI); //relative velocity in normal direction; to be consistent with jacobian
 
 				Real dryFriction = settings.frictionPairings(sphereI.frictionMaterialIndex, sphereJ.frictionMaterialIndex);
 				if (dryFriction != 0.)
 				{
 					//add gap, as we need to use a common point for the velocity, otherwise we generate an additional torque (e.g. on clusters...)!
-					vSphereI += (sphereI.orientation * sphereI.angularVelocity).CrossProduct(( sphereI.radius + 0.5*gap)*deltaP0);
-					vSphereJ += (sphereJ.orientation * sphereJ.angularVelocity).CrossProduct((-sphereJ.radius - 0.5*gap)*deltaP0);
+					vSphereI += (sphereI.orientation * sphereI.angularVelocity).CrossProduct(( sphereI.radius + 0.5*gap)*n0);
+					vSphereJ += (sphereJ.orientation * sphereJ.angularVelocity).CrossProduct((-sphereJ.radius - 0.5*gap)*n0);
 					//these two points are identical up to 16 digits:
-					//pout << "pi=" << sphereI.position + (sphereI.radius + 0.5 * gap) * deltaP0;
-					//pout << ", pj=" << sphereJ.position - (sphereJ.radius + 0.5 * gap) * deltaP0 << "\n";
+					//pout << "pi=" << sphereI.position + (sphereI.radius + 0.5 * gap) * n0;
+					//pout << ", pj=" << sphereJ.position - (sphereJ.radius + 0.5 * gap) * n0 << "\n";
 				}
 
 				Real kContact = sphereI.contactStiffness * sphereJ.contactStiffness / (sphereI.contactStiffness + sphereJ.contactStiffness);
@@ -1270,49 +1265,9 @@ void GeneralContact::ComputeContactMarkerBasedSpheres(TemporaryComputationDataAr
 				Vector3D fVec;
 				Vector3D fFriction;
 
-#ifdef UNIFIED_CONTACT_FUNCTIONS
-				contactForce = ComputeContactForces<opMode, Real>(gap, deltaP0, deltaVnormal, (vSphereJ - vSphereI), kContact, dContact,
+				contactForce = ComputeContactForces<opMode, Real>(gap, n0, deltaVnormal, (vSphereJ - vSphereI), kContact, dContact,
 					dryFriction, frictionRegularizedRegion, (*allActiveContactsVector[gi])[contactCnt],
 					fVec, fFriction);
-#else
-				//compute scalar force:
-				contactForce = kContact * gap + dContact * deltaVnormal; //in case of contact, must be negative
-
-				fVec = contactForce * deltaP0; //this is the force pointing from sphereJ to sphereI
-				//if (verboseMode >= 3) pout  << "contact f=" << fVec << "\n";
-
-				if (dryFriction != 0.)
-				{
-					//global sphere velocity at contact point:
-					Vector3D deltaVtangent = (vSphereJ - vSphereI) - deltaVnormal * deltaP0;	//tangent velocity
-					Real relVel;
-					if (opMode != CCode2rhsFromActiveSets) //most important for explicit integrators
-					{
-						frictionRegularizedRegion = ContactHelper::ComputeFrictionForce<Vector3D, Real, false>(fFriction, 
-							deltaVtangent, -contactForce, 
-							dryFriction, settings.frictionProportionalZone, relVel);
-					}
-					else
-					{
-						//friction mode is given from frictionRegularizedRegion!
-						ContactHelper::ComputeFrictionForce<Vector3D, Real, true>(fFriction, deltaVtangent, -contactForce, dryFriction,
-							settings.frictionProportionalZone, relVel, frictionRegularizedRegion);
-						
-						/*
-						//assure that sign is preserved over Newton iterations:
-						if (!frictionRegularizedRegion && (fFriction * (*allActiveContactsVector[gi])[contactCnt] < 0)) { fFriction *= -1.; }
-						*/
-						//the following option helps to avoid Newton problems for switching friction sign:
-						//==> but leads to unphysical effects!
-
-						if (!frictionRegularizedRegion && settings.sphereSphereFrictionRecycle) { fFriction = (*allActiveContactsVector[gi])[contactCnt]; } 
-
-						//if (gj > 2) pout << "j=" << gjSign << ", fContact=" << fVec << ", Ffric=" << fVec - f0 << ", n0=" << deltaP0 << ", vN=" << deltaVnormal << ", dV(J-I)=" << (vSphereJ - vSphereI) << ", deltaVtang=" << deltaVtangent << "\n";
-						//if (gj > 2) pout << "j=" << contactObjects->GetItem(contactCnt) << ", fC=" << contactForce << ", Ffric=" << fFriction << ", lastFric=" << (*allActiveContactsVector[gi])[contactCnt]  << ", deltaVtang=" << deltaVtangent << "\n";
-					}
-					fVec += fFriction;
-				}
-#endif //UNIFIED_CONTACT_FUNCTIONS
 
 				if (opMode != CCactiveSets)
 				{
@@ -1327,7 +1282,7 @@ void GeneralContact::ComputeContactMarkerBasedSpheres(TemporaryComputationDataAr
 							if (dryFriction != 0. && allRotationJacobians[gj + index2JacIndex]->NumberOfColumns() != 0)
 							{
 								//add torque
-								EXUmath::MultMatrixTransposedVectorAdd(*allRotationJacobians[gj + index2JacIndex], (( -sphereJ.radius - 0.5*gap)*deltaP0).CrossProduct(fVec), ode2Lhs);
+								EXUmath::MultMatrixTransposedVectorAdd(*allRotationJacobians[gj + index2JacIndex], (( -sphereJ.radius - 0.5*gap)*n0).CrossProduct(fVec), ode2Lhs);
 							}
 							//pout << "lhs j=" << ode2Lhs << "\n";
 							//add to systemvector:
@@ -1345,7 +1300,7 @@ void GeneralContact::ComputeContactMarkerBasedSpheres(TemporaryComputationDataAr
 							if (dryFriction != 0. && allRotationJacobians[gi + index2JacIndex]->NumberOfColumns() != 0)
 							{
 								//add torque
-								EXUmath::MultMatrixTransposedVectorAdd(*allRotationJacobians[gi + index2JacIndex], (( -sphereI.radius - 0.5*gap)*deltaP0).CrossProduct(fVec), ode2Lhs);
+								EXUmath::MultMatrixTransposedVectorAdd(*allRotationJacobians[gi + index2JacIndex], (( -sphereI.radius - 0.5*gap)*n0).CrossProduct(fVec), ode2Lhs);
 							}
 							//pout << "lhs i=" << ode2Lhs << "\n";
 							//add to systemvector:
@@ -1364,9 +1319,9 @@ void GeneralContact::ComputeContactMarkerBasedSpheres(TemporaryComputationDataAr
 						frictionRegularizedRegion = true;
 						if (dryFriction != 0.)
 						{
-							Vector3D deltaVtangent = (vSphereJ - vSphereI) - deltaVnormal * deltaP0;	//tangent velocity
+							Vector3D deltaVtangent = (vSphereJ - vSphereI) - deltaVnormal * n0;	//tangent velocity
 							frictionRegularizedRegion = (deltaVtangent.GetL2Norm() < settings.frictionProportionalZone);
-							//if (gj > 2) pout << "PN: j=" << gjSign << ", fricReg=" << frictionRegularizedRegion << ", n0=" << deltaP0 << ", vN=" << deltaVnormal << ", dV(J-I)=" << (vSphereJ - vSphereI) << ", deltaVtang=" << deltaVtangent << "\n";
+							//if (gj > 2) pout << "PN: j=" << gjSign << ", fricReg=" << frictionRegularizedRegion << ", n0=" << n0 << ", vN=" << deltaVnormal << ", dV(J-I)=" << (vSphereJ - vSphereI) << ", deltaVtang=" << deltaVtangent << "\n";
 
 							allActiveContactsVector[gi]->AppendPure(fFriction); //only in case of friction!
 
@@ -1467,7 +1422,7 @@ void GeneralContact::ComputeContactANCFCable2D(const CSystem& cSystem, Temporary
 
 			if (!EXUstd::IndexIsInRange(gj, globalContactIndexOffsets[spheresMarkerBasedIndex],
 				globalContactIndexOffsets[spheresMarkerBasedIndex + 1])) {
-				break;
+				continue;
 			} //run loop only for ANCF-circle!
 
 			//pout << "gi=" << gi << ", cobjs=" << *contactObjects << "\n";
@@ -1531,7 +1486,7 @@ void GeneralContact::ComputeContactANCFCable2D(const CSystem& cSystem, Temporary
 				Real dryFriction = settings.frictionPairings(ancfI.frictionMaterialIndex, sphereJ.frictionMaterialIndex);
 				//if (dryFriction != 0.)
 				//{
-				//	Vector3D contactPoint = sphereI.position + sphereI.radius*deltaP0;
+				//	Vector3D contactPoint = sphereI.position + sphereI.radius*n0;
 				//	vSphereI += (sphereI.orientation * sphereI.angularVelocity).CrossProduct(contactPoint - sphereI.position);
 				//	vSphereJ += (sphereJ.orientation * sphereJ.angularVelocity).CrossProduct(contactPoint - sphereJ.position);
 				//}
@@ -1644,7 +1599,7 @@ void GeneralContact::ComputeContactTrigsRigidBodyBased(TemporaryComputationDataA
 		Index inside;
 
 		//+++++++++++++++++++++++++++++
-		//sphereI is 
+		//sphereI may come in contact with trigJ
 		Index gi = (Index)i + globalContactIndexOffsets[spheresMarkerBasedIndex];
 		const ContactSpheresMarkerBased& sphereI = spheresMarkerBased[(Index)i];
 
@@ -1731,7 +1686,7 @@ void GeneralContact::ComputeContactTrigsRigidBodyBased(TemporaryComputationDataA
 							{
 								//pout << "  ** found plane, trig=" << trigFound.trigGID << " (inside=" << trigFound.inside << "), planeGID=" << planeTemp.trigGID << " (inside=" << planeTemp.inside << ")\n";
 								excludeContact = true; 
-								break;
+								break; //we only search for one other triangle, then we exclude this contact
 							}
 						}
 					}
@@ -1761,31 +1716,38 @@ void GeneralContact::ComputeContactTrigsRigidBodyBased(TemporaryComputationDataA
 					//pout << "  ** add active contact Sphere-Trig: " << gi << " - " << trigFound.trigGID << "\n";
 					if (verboseMode >= 2) pout << "  ** add active contact Sphere-Trig: " << gi << " - " << trigFound.trigGID << "\n";
 
-					if (opMode != CCactiveSets)
-					{
-						//contactObjects will then be used in contact computation below
-						contactObjects->AppendPure(trigFound.trigGID);
-					}
-					else
-					{
-						//activate this contact for ODE2RHS
-						allActiveContacts[gi]->AppendPure(trigFound.trigGID);
-						//errorMax = EXUstd::Maximum(errorMax, fabs(pen));
-					}
+					contactObjects->AppendPure(trigFound.trigGID);
+					//if (opMode != CCactiveSets)
+					//{
+					//	//contactObjects will then be used in contact computation below
+					//	contactObjects->AppendPure(trigFound.trigGID);
+					//}
+					//else
+					//{
+					//	//activate this contact for ODE2RHS
+					//	allActiveContacts[gi]->AppendPure(trigFound.trigGID);
+					//}
 				}
 			}
 
 		}
 
+		bool frictionRegularizedRegion;
 		//compute contact with all triangles (now this may also include sphere-sphere indices if coming from active sets!!!)
-		for (Index gj : *contactObjects)
+		for (Index gjSign : *contactObjects)
 		{
+			Index gj;
+			if (opMode == CCode2rhsFromActiveSets) {
+				ActiveContact2IndexRegularizedFriction(gjSign, gj, frictionRegularizedRegion);
+			}
+			else { gj = gjSign; frictionRegularizedRegion = true; }
+
 			if (!EXUstd::IndexIsInRange(gj, globalContactIndexOffsets[trigsRigidBodyBasedIndex],
 				globalContactIndexOffsets[trigsRigidBodyBasedIndex + 1])) {
-				break;
+				continue; //break would not work appropriately
 			} //run loop only for sphere-trig!
 
-			   //compute triangle contact, pp
+				//compute triangle contact, pp
 			Index j = gj - globalContactIndexOffsets[trigsRigidBodyBasedIndex];
 			const ContactTriangleRigidBodyBased& trigJ = trigsRigidBodyBased[j];
 			const ContactRigidBodyMarkerBased& rigid = rigidBodyMarkerBased[trigJ.contactRigidBodyIndex];
@@ -1800,90 +1762,136 @@ void GeneralContact::ComputeContactTrigsRigidBodyBased(TemporaryComputationDataA
 
 			Vector3D deltaP(trigPP - sphereI.position); //points from sphereI to trigJ!!!
 			Real dist = deltaP.GetL2Norm();
-			if (dist == 0) { break; } //should never happen, but also no warning!
+			if (dist == 0) { continue; } //should never happen, but also no warning!
 			//compute contact forces
-			Vector3D deltaP0 = (1. / dist)*deltaP;
+			Vector3D n0 = (1. / dist) * deltaP;
 
-			Real pen = sphereI.radius - dist; //penetration is positive
 			//compute velocities
 			//global trig velocity at contact point
-			Vector3D vTrig = (rigid.orientation * rigid.angularVelocity).CrossProduct(trigPP - rigid.position) + rigid.velocity;
+			Vector3D vTrigJ = (rigid.orientation * rigid.angularVelocity).CrossProduct(trigPP - rigid.position) + rigid.velocity;
 			//global sphere velocity at contact point:
-			Vector3D vSphere = (sphereI.orientation * sphereI.angularVelocity).CrossProduct(trigPP - sphereI.position) + sphereI.velocity;
-			Real deltaVnormal = deltaP0 * (vSphere - vTrig); // -deltaP0 * (vTrig - vSphere);		//penetration velocity
+			Vector3D vSphereI = (sphereI.orientation * sphereI.angularVelocity).CrossProduct(trigPP - sphereI.position) + sphereI.velocity;
+			Real deltaVnormal = n0 * (vTrigJ - vSphereI); // -n0 * (vTrigJ - vSphereI);		//penetration velocity
+
+			Real gap = dist - sphereI.radius; //gap is negative
 
 			Real kContact = sphereI.contactStiffness * rigid.contactStiffness / (sphereI.contactStiffness + rigid.contactStiffness);
 
 			//damping acts parallel, otherwise if the sphere has 0 damping, the trig damping had no influence
 			Real dContact = sphereI.contactDamping + rigid.contactDamping;
-			
-			//compute scalar force:
-			Real contactPressure = -kContact * pen - dContact * deltaVnormal;
+
+			//compute scalar force (pressure is negative):
+			Real contactForce = kContact * gap + dContact * deltaVnormal;
 
 			if (!inside && !settings.excludeDuplicatedTrigSphereContactPoints)
-			{ contactPressure *= 0.5; } //always at least two edges at same time!
+			{
+				contactForce *= 0.5;
+			} //always at least two edges at same time!
 
-			Vector3D fVec = contactPressure * deltaP0;
+			Vector3D fVec = contactForce * n0;
 
 			Real dryFriction = settings.frictionPairings(sphereI.frictionMaterialIndex, rigid.frictionMaterialIndex);
+			Vector3D fFriction;
+			//if (dryFriction != 0.)
+			//{
+			//	Vector3D deltaVtangent = (vTrigJ - vSphereI) - deltaVnormal * n0;	//tangent velocity
+			//	Real relVel;
+			//	ContactHelper::ComputeFrictionForce<Vector3D>(fFriction, deltaVtangent, -contactForce, dryFriction,
+			//		settings.frictionProportionalZone, relVel);
+			//	fVec += fFriction;
+			//}
+
 			if (dryFriction != 0.)
 			{
-				Vector3D deltaVtangent = (vSphere - vTrig) - deltaVnormal * deltaP0;	//tangent velocity
+				//global sphere velocity at contact point:
+				Vector3D deltaVtangent = (vTrigJ - vSphereI) - deltaVnormal * n0;	//tangent velocity
 				Real relVel;
-				Vector3D fAdd;
-				ContactHelper::ComputeFrictionForce<Vector3D>(fAdd, deltaVtangent, contactPressure, dryFriction,
-					settings.frictionProportionalZone, relVel);
-				fVec += fAdd;
+				if (opMode != CCode2rhsFromActiveSets) //most important for explicit integrators
+				{
+					frictionRegularizedRegion = ContactHelper::ComputeFrictionForce<Vector3D>(fFriction, deltaVtangent, -contactForce, dryFriction,
+						settings.frictionProportionalZone, relVel);
+				}
+				else
+				{
+					//friction mode is given from frictionRegularizedRegion!
+					frictionRegularizedRegion = ContactHelper::ComputeFrictionForce<Vector3D, Real, true>(fFriction, deltaVtangent, -contactForce, dryFriction,
+						settings.frictionProportionalZone, relVel, frictionRegularizedRegion);
+
+					//if (!frictionRegularizedRegion && settings.sphereSphereFrictionRecycle) { fFriction = storedFFriction; }
+				}
+				fVec += fFriction;
 			}
 
-			//if (verboseMode >= 3) pout  << "contact f=" << fVec << "\n";
 
-			//apply forces to trig (via rigid body)
-			//Index index2JacIndexTrigs = globalJacobianIndexOffsets[trigsRigidBodyBasedIndex] - globalContactIndexOffsets[trigsRigidBodyBasedIndex];
-			Index trigJacIndex = trigJ.contactRigidBodyIndex + globalJacobianIndexOffsets[trigsRigidBodyBasedIndex];
-			Index sphereJacIndex = (Index)i + globalJacobianIndexOffsets[spheresMarkerBasedIndex];
-
-
-			//marker J (positive):    (according to computation of relative position)
-			if (allPositionJacobians[trigJacIndex]->NumberOfColumns() != 0) //special case: COGround has (0,0) Jacobian
+			if (opMode != CCactiveSets) //from here, we do not need to compute for active set determination
 			{
-				EXUmath::MultMatrixTransposedVector(*allPositionJacobians[trigJacIndex], fVec, ode2Lhs);
-				if (dryFriction != 0. && allRotationJacobians[trigJacIndex]->NumberOfColumns() != 0)
+
+				//if (verboseMode >= 3) pout  << "contact f=" << fVec << "\n";
+
+				//apply forces to trig (via rigid body)
+				//Index index2JacIndexTrigs = globalJacobianIndexOffsets[trigsRigidBodyBasedIndex] - globalContactIndexOffsets[trigsRigidBodyBasedIndex];
+				Index trigJacIndex = trigJ.contactRigidBodyIndex + globalJacobianIndexOffsets[trigsRigidBodyBasedIndex];
+				Index sphereJacIndex = (Index)i + globalJacobianIndexOffsets[spheresMarkerBasedIndex];
+
+
+				//marker J (positive):    (according to computation of relative position)
+				if (allPositionJacobians[trigJacIndex]->NumberOfColumns() != 0) //special case: COGround has (0,0) Jacobian
 				{
-					//add torque
-					EXUmath::MultMatrixTransposedVectorAdd(*allRotationJacobians[trigJacIndex],
-						//WRONG: ((-sphereI.radius)*deltaP0).CrossProduct(fVec), ode2Lhs);
-						(trigPP - rigid.position).CrossProduct(fVec), ode2Lhs);
+					EXUmath::MultMatrixTransposedVector(*allPositionJacobians[trigJacIndex], fVec, ode2Lhs);
+					if (dryFriction != 0. && allRotationJacobians[trigJacIndex]->NumberOfColumns() != 0)
+					{
+						//add torque
+						EXUmath::MultMatrixTransposedVectorAdd(*allRotationJacobians[trigJacIndex],
+							(trigPP - rigid.position).CrossProduct(fVec), ode2Lhs);
+					}
+					//pout << "  sphere-Trig" << gi << " - " << gj << ": Trig" << ", rbim=" << trigJ.contactRigidBodyIndex << ", ode2Lhs=" << ode2Lhs 
+					//	<< ", index2JacIndexTrigs=" << index2JacIndexTrigs << ", LTG=" << *allLTGs[trigJ.contactRigidBodyIndex + index2JacIndexTrigs] << "\n";
+					//add to systemvector:
+					for (Index k = 0; k < ode2Lhs.NumberOfItems(); k++)
+					{
+						tempArray[threadID].sparseVector.AddIndexAndValue(allLTGs[trigJacIndex]->GetItem(k), ode2Lhs[k]); //added positive (LHS)
+					}
 				}
-				//pout << "  sphere-Trig" << gi << " - " << gj << ": Trig" << ", rbim=" << trigJ.contactRigidBodyIndex << ", ode2Lhs=" << ode2Lhs 
-				//	<< ", index2JacIndexTrigs=" << index2JacIndexTrigs << ", LTG=" << *allLTGs[trigJ.contactRigidBodyIndex + index2JacIndexTrigs] << "\n";
-				//add to systemvector:
-				for (Index k = 0; k < ode2Lhs.NumberOfItems(); k++)
+				//apply forces to sphere (as in sphere-sphere)
+				//marker I (negative):
+				if (allPositionJacobians[sphereJacIndex]->NumberOfColumns() != 0) //special case: COGround has (0,0) Jacobian
 				{
-					tempArray[threadID].sparseVector.AddIndexAndValue(allLTGs[trigJacIndex]->GetItem(k), ode2Lhs[k]); //added positive (LHS)
+					EXUmath::MultMatrixTransposedVector(*allPositionJacobians[sphereJacIndex], -fVec, ode2Lhs);
+					if (dryFriction != 0. && allRotationJacobians[sphereJacIndex]->NumberOfColumns() != 0)
+					{
+						//pout << "n=" << ((-sphereI.radius) * n0) << "fVec=" << fVec << "\n";
+						//pout << "torque=" << ((-sphereI.radius) * n0).CrossProduct(fVec)[1] << "\n";
+						//add torque
+						EXUmath::MultMatrixTransposedVectorAdd(*allRotationJacobians[sphereJacIndex],
+							//this is not fully symmetric regarding torques (contact calculation point at trigPP): 
+							(sphereI.position - trigPP).CrossProduct(fVec), ode2Lhs);
+
+					}
+					//pout << "  sphere-Trig" << gi << " - " << gj << ": Sphere ode2Lhs=" << ode2Lhs << ", LTG=" << *allLTGs[gi + index2JacIndexSpheres] << "\n";
+					//add to systemvector:
+					for (Index k = 0; k < ode2Lhs.NumberOfItems(); k++)
+					{
+						tempArray[threadID].sparseVector.AddIndexAndValue(allLTGs[sphereJacIndex]->GetItem(k), ode2Lhs[k]); //added positive (LHS)
+					}
 				}
 			}
-			//apply forces to sphere (as in sphere-sphere)
-			//marker I (negative):
-			if (allPositionJacobians[sphereJacIndex]->NumberOfColumns() != 0) //special case: COGround has (0,0) Jacobian
+			else
 			{
-				EXUmath::MultMatrixTransposedVector(*allPositionJacobians[sphereJacIndex], -fVec, ode2Lhs);
-				if (dryFriction != 0. && allRotationJacobians[sphereJacIndex]->NumberOfColumns() != 0)
+				//allActiveContacts[gi]->AppendPure(gj);
+				if (contactForce < 0.) //may be positive because of velocity term
 				{
-					//pout << "n=" << ((-sphereI.radius) * deltaP0) << "fVec=" << fVec << "\n";
-					//pout << "torque=" << ((-sphereI.radius) * deltaP0).CrossProduct(fVec)[1] << "\n";
-					//add torque
-					EXUmath::MultMatrixTransposedVectorAdd(*allRotationJacobians[sphereJacIndex],
-						//this is not fully symmetric regarding torques (contact calculation point at trigPP): 
-						//   ((-sphereI.radius)* deltaP0).CrossProduct(fVec), ode2Lhs);
-						(sphereI.position - trigPP).CrossProduct(fVec), ode2Lhs);
-					
-				}
-				//pout << "  sphere-Trig" << gi << " - " << gj << ": Sphere ode2Lhs=" << ode2Lhs << ", LTG=" << *allLTGs[gi + index2JacIndexSpheres] << "\n";
-				//add to systemvector:
-				for (Index k = 0; k < ode2Lhs.NumberOfItems(); k++)
-				{
-					tempArray[threadID].sparseVector.AddIndexAndValue(allLTGs[sphereJacIndex]->GetItem(k), ode2Lhs[k]); //added positive (LHS)
+					frictionRegularizedRegion = true;
+					if (dryFriction != 0.)
+					{
+						Vector3D deltaVtangent = (vTrigJ - vSphereI) - deltaVnormal * n0;	//tangent velocity
+						frictionRegularizedRegion = (deltaVtangent.GetL2Norm() < settings.frictionProportionalZone);
+						//if (gj > 2) pout << "PN: j=" << gjSign << ", fricReg=" << frictionRegularizedRegion << ", n0=" << n0 << ", vN=" << deltaVnormal << ", dV(J-I)=" << (vSphereJ - vSphereI) << ", deltaVtang=" << deltaVtangent << "\n";
+
+						allActiveContactsVector[gi]->AppendPure(fFriction); //only in case of friction!
+						
+						if (verboseMode >= 2) pout << "  ** add contact trig (" << frictionRegularizedRegion << "):" << gj - globalContactIndexOffsets[trigsRigidBodyBasedIndex] << " to sphere " << i << "\n";
+					}
+					allActiveContacts[gi]->AppendPure(IndexRegularizedFriction2ActiveContact(gj, frictionRegularizedRegion));
 				}
 			}
 		}
@@ -1959,8 +1967,6 @@ void GeneralContact::JacobianODE2LHS(const CSystem& cSystem, TemporaryComputatio
 		//went inside parallel loop:
 		Index threadID = exuThreading::TaskManager::GetThreadId();
 
-	//for (NGSsizeType i = 0; i < nItems; i++)
-	//{
 		//Index threadID = 0;
 		Index index2JacIndex = globalJacobianIndexOffsets[spheresMarkerBasedIndex] - globalContactIndexOffsets[spheresMarkerBasedIndex];
 		//ResizableVector& ode2Lhs = tempArray[threadID].localODE2LHS;
@@ -1994,7 +2000,7 @@ void GeneralContact::JacobianODE2LHS(const CSystem& cSystem, TemporaryComputatio
 			Real Linv = 1. / dist;
 
 			Vector3D n0(deltaP);
-			n0*=Linv; //=deltaP0
+			n0*=Linv;
 
 			Real dryFriction = settings.frictionPairings(sphereI.frictionMaterialIndex, sphereJ.frictionMaterialIndex);
 			bool computeFrictionTerms = (dryFriction != 0.);
@@ -2031,7 +2037,6 @@ void GeneralContact::JacobianODE2LHS(const CSystem& cSystem, TemporaryComputatio
 			Real contactForce = kContact * gap + dContact * deltaVnormal;
 
 			Vector3D fVec = contactForce * n0; //this is the force pointing from sphereJ to sphereI
-			Real factRegularizedFriction = 0.;
 			Vector3D deltaVtangent(0.);
 
 			if (computeFrictionTerms)
@@ -2042,60 +2047,10 @@ void GeneralContact::JacobianODE2LHS(const CSystem& cSystem, TemporaryComputatio
 				if (!(frictionRegularizedRegion && settings.frictionProportionalZone != 0.)) { computeFrictionTerms = false; }
 			}
 
-#ifdef UNIFIED_CONTACT_FUNCTIONS
-
+			Real factRegularizedFriction = 0.;
 			ComputeContactForceJacobian(settings, dryFriction, factorODE2, factorODE2_t, computeFrictionTerms, factNormalContact,
-				Linv, n0, deltaVJI, dContact, contactForce,
-				deltaVtangent, factRegularizedFriction, JacFc); //last line are return values
-
-#else
-
-			//compute stiffness matrix in direction of contact, analogously to SpringDamper
-			//Jj = d(k*deltaP^T*dp/dqj)/dqj, Ji = d(-k*deltaP^T*dp/dqi)/dqi
-			//Jj = k*(dp/dqj)^T*dp/dqj, ...
-
-			//rows of jacobian = dimension of position = always 3
-			//columns of jacobians = coordinates, may be different
-
-			//special matrix needed several times (without factor 1/L):
-			Matrix3D IsubNN;
-			IsubNN.SetWithDiadicProduct(-n0, n0);
-			IsubNN(0, 0) += 1.;
-			IsubNN(1, 1) += 1.;
-			IsubNN(2, 2) += 1.;
-			//+++++++++++++++++++++++++++++++++++++++++++++++
-			//d(fc)/dq + d(fc)/dq_t:
-
-			Vector3D n0mu = n0;
-			if (computeFrictionTerms) //second check not necessary, but used for safety!
-			{
-				n0mu -= dryFriction / settings.frictionProportionalZone * deltaVtangent;
-			}
-			JacFc.SetWithDiadicProduct(factNormalContact*n0mu, n0);
-
-
-			//add d_c*d(v_n)/dq:
-			Matrix3D JacFcAdd;
-			Vector3D vAdd = (factorODE2 * dContact * Linv) * deltaVJI; //no difference if center velocity or tangent vel.
-			JacFcAdd.SetWithDiadicProduct(n0mu, vAdd*IsubNN);
-			JacFc += JacFcAdd;
-			//+++++++++++++++++++++++++++++++++++++++++++++++
-			//Matrix3D JacFcFriction; //factor*(I - n0 x n0)
-
-			if (computeFrictionTerms) 
-			{
-				factRegularizedFriction = factorODE2_t * contactForce * dryFriction / settings.frictionProportionalZone;
-
-				//negative sign checked:
-				JacFc += (-factRegularizedFriction) * IsubNN;
-			}
-
-			//++++++++++++++++++++++++++++++++++++++++
-			//added terms: f_c * d(n_0)/dq (influence is small ...)
-			// factorODE*f_c*1/L (I - diad(n0,n0) )
-			JacFc += (Linv*factorODE2*contactForce) * IsubNN;
-			//++++++++++++++++++++++++++++++++++++++++
-#endif //UNIFIED_CONTACT_FUNCTIONS
+				Linv, n0, deltaVJI, dContact, contactForce, deltaVtangent, 
+				factRegularizedFriction, JacFc); //last line are return values
 
 			//ResizableVector& vecTemp = tempArray[threadID].localODE2LHS; //used as temporary vector
 			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -2121,141 +2076,10 @@ void GeneralContact::JacobianODE2LHS(const CSystem& cSystem, TemporaryComputatio
 				JacTorqueFc.SetWithDiadicProduct(deltaVtangent, (factNormalContact * dryFriction / settings.frictionProportionalZone) * n0);
 			}
 
-#ifdef UNIFIED_CONTACT_FUNCTIONS
-
 			AddJacobianTerms(tempArray[threadID],
 				columnsi, columnsj, JACi, JACj,rotColumnsi, rotColumnsj, rotJACi, rotJACj,
-				*allLTGs[gi], *allLTGs[gj], rTildeNI, rTildeNJ, computeFrictionTerms, factRegularizedFriction, JacFc, JacTorqueFc,
+				*allLTGs[gi + index2JacIndex], *allLTGs[gj + index2JacIndex], rTildeNI, rTildeNJ, computeFrictionTerms, factRegularizedFriction, JacFc, JacTorqueFc,
 				triplets);
-
-#else
-			ResizableMatrix& m = tempArray[threadID].localJacobian;
-			ResizableMatrix& temp = tempArray[threadID].localJacobian_t; //used as temporary matrix
-			ResizableMatrix& temp2 = tempArray[threadID].loadJacobian;   //used as temporary matrix
-
-			if (columnsj) //in case of ground elements ...
-			{
-				//force part jj:
-				//JposJ.T*d(Fc)/dposJ*JposJ 
-				EXUmath::MultMatrixMatrixTemplate(JacFc, JACj, temp);
-
-				if (computeFrictionTerms && rotColumnsj != 0)
-				{
-					//JposJ.T*d(Fc)/drotJ*JrotJ
-					EXUmath::MultMatrixMatrixTemplate(-factRegularizedFriction * rTildeNJ, rotJACj, temp2);
-
-					temp += temp2;
-				}
-				EXUmath::MultMatrixTransposedMatrixTemplate(JACj, temp, m);
-
-				//torque part jj:
-				if (computeFrictionTerms && rotColumnsj != 0)
-				{
-					//JrotJ.T*(d(TcJ)/drotJ*JrotJ + d(Tc)/dposJ*JposJ)
-					Matrix3D JacTorqueJ; //JacFcFriction includes factorODE2_t
-					JacTorqueJ = factRegularizedFriction * rTildeNJ;
-					EXUmath::MultMatrixMatrixTemplate(JacTorqueJ * rTildeNJ, rotJACj, temp2);
-
-					EXUmath::MultMatrixMatrixTemplate(JacTorqueJ + rTildeNJ*JacTorqueFc, JACj, temp);
-					temp2 += temp;
-					EXUmath::MultMatrixTransposedMatrixTemplate(rotJACj, temp2, temp);
-					m += temp;
-				}
-				EXUmath::AddMatrixToSparseTripletVector(triplets, m, *allLTGs[gj], *allLTGs[gj]);
-
-				if (columnsi)
-				{
-					//force part ji: //negative sign added to JacFc term and removed from rnA term
-					//JposJ.T*d(Fc)/dposI*JposI
-					EXUmath::MultMatrixMatrixTemplate(-1.*JacFc, JACi, temp);
-
-					if (computeFrictionTerms && rotColumnsi != 0)
-					{
-						//JposJ.T*d(Fc)/drotI*JrotI
-						EXUmath::MultMatrixMatrixTemplate(-factRegularizedFriction* rTildeNI, rotJACi, m);
-
-						temp += m;
-					}
-					EXUmath::MultMatrixTransposedMatrixTemplate(JACj, temp, m);
-
-					//torque part ji:
-					//JrotJ.T*(d(TcJ)/drotI*JrotI + d(Tc)/dposI*JposI)
-					if (computeFrictionTerms && rotColumnsi != 0)
-					{
-						Matrix3D JacTorqueJ; //JacFcFriction includes factorODE2_t
-						JacTorqueJ = factRegularizedFriction * rTildeNJ;
-						EXUmath::MultMatrixMatrixTemplate(JacTorqueJ * rTildeNI, rotJACi, temp2);
-						EXUmath::MultMatrixMatrixTemplate(JacTorqueJ + rTildeNJ * JacTorqueFc, JACi, temp);
-						temp2 -= temp;
-						EXUmath::MultMatrixTransposedMatrixTemplate(rotJACj, temp2, temp);
-						m += temp;
-					}
-
-					EXUmath::AddMatrixToSparseTripletVector<ResizableMatrix, false>(triplets, m, *allLTGs[gj], *allLTGs[gi], 1.);
-
-					//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-					//force part ij: 
-					//JposI.T*d(Fc)/dposJ*JposJ
-					EXUmath::MultMatrixMatrixTemplate(-1.*JacFc, JACj, temp);
-
-					if (computeFrictionTerms && rotColumnsj != 0)
-					{
-						//JposI.T*d(Fc)/drotJ*JrotJ //additional *(-1) due to -Jaci compensates negative sign
-						EXUmath::MultMatrixMatrixTemplate(factRegularizedFriction * rTildeNJ, rotJACj, m);
-
-						temp += m;
-					}
-					EXUmath::MultMatrixTransposedMatrixTemplate(JACi, temp, m);
-
-					//torque part ij:
-					//JrotI.T*(d(TcI)/drotJ*JrotJ + d(Tc)/dposJ*JposJ)
-					if (computeFrictionTerms && rotColumnsj != 0)
-					{
-						Matrix3D JacTorqueI; //JacFcFriction includes factorODE2_t
-						JacTorqueI = factRegularizedFriction * rTildeNI;
-						EXUmath::MultMatrixMatrixTemplate(JacTorqueI * rTildeNJ, rotJACj, temp2);
-						EXUmath::MultMatrixMatrixTemplate(JacTorqueI + rTildeNI * JacTorqueFc, JACj, temp);
-						temp2 += temp;
-						EXUmath::MultMatrixTransposedMatrixTemplate(rotJACi, temp2, temp);
-						m += temp;
-					}
-
-					EXUmath::AddMatrixToSparseTripletVector<ResizableMatrix, false>(triplets, m, *allLTGs[gi], *allLTGs[gj], 1.);
-
-				}
-			}
-
-			if (columnsi)
-			{
-				//force part ii:
-				EXUmath::MultMatrixMatrixTemplate(JacFc, JACi, temp);
-
-				if (computeFrictionTerms && rotColumnsi != 0)
-				{
-					//JposI.T*d(Fc)/drotI*JrotI
-					//SIGN change due to JposI
-					EXUmath::MultMatrixMatrixTemplate(factRegularizedFriction * rTildeNI, rotJACi, temp2);
-
-					temp += temp2;
-				}
-				EXUmath::MultMatrixTransposedMatrixTemplate(JACi, temp, m);
-
-				//torque part ii:
-				if (computeFrictionTerms && rotColumnsi != 0)
-				{
-					//JrotI.T*(d(TcJ)/drotI*JrotI + d(Tc)/dposI*JposI)
-					Matrix3D JacTorqueI; //JacFcFriction includes factorODE2_t
-					JacTorqueI = factRegularizedFriction * rTildeNI;
-					EXUmath::MultMatrixMatrixTemplate(JacTorqueI * rTildeNI, rotJACi, temp2);
-					EXUmath::MultMatrixMatrixTemplate(JacTorqueI + rTildeNI * JacTorqueFc, JACi, temp);
-					temp2 -= temp;  //SIGN as in theDoc
-					EXUmath::MultMatrixTransposedMatrixTemplate(rotJACi, temp2, temp);
-					m += temp;
-				}
-				EXUmath::AddMatrixToSparseTripletVector(triplets, m, *allLTGs[gi], *allLTGs[gi]);
-
-			}
-#endif //UNIFIED_CONTACT_FUNCTIONS
 
 		}
 	//}//serial
@@ -2343,7 +2167,155 @@ void GeneralContact::JacobianODE2LHS(const CSystem& cSystem, TemporaryComputatio
 	//}//serial
 	}, taskSplit); //must be multiple of number of treads, but better 8*nThreads or larger for large problems
 
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//SPHERE-TRIG; issue #837
 
+#define JAC_SPHERE_TRIG
+
+#ifdef JAC_SPHERE_TRIG
+	taskSplit = nThreads; //shall be multiple of number of treads (Default=nThreads), but better 8*nThreads or larger for large problems
+	if ((Index)nItems > 400 * nThreads) { taskSplit = 100 * nThreads; }
+	exuThreading::ParallelFor(nItems, [this, &cSystem, &tempArray, &factorODE2, &factorODE2_t, &nItems](NGSsizeType i)
+	{
+		//+++++++++++++++++++++++++++++
+		//went inside parallel loop:
+		Index threadID = exuThreading::TaskManager::GetThreadId();
+
+		Index index2JacIndex = globalJacobianIndexOffsets[spheresMarkerBasedIndex] - globalContactIndexOffsets[spheresMarkerBasedIndex];
+		SparseTripletVector& triplets = tempArray[threadID].sparseTriplets;
+		//+++++++++++++++++++++++++++++
+
+		std::array<Vector3D, 3> trigPoints; //global triangle points
+		Vector3D trigPP; //point at shortest distance on triangle or triangle edges
+		Index inside;
+
+		Index gi = (Index)i + globalContactIndexOffsets[spheresMarkerBasedIndex]; //i is local, gi is global index (which is the same for the first contact objects)
+		const ContactSpheresMarkerBased& sphereI = spheresMarkerBased[(Index)i];
+
+		Index minIndex = globalContactIndexOffsets[trigsRigidBodyBasedIndex]; //we are only search for trigs!
+		Index maxIndex = globalContactIndexOffsets[trigsRigidBodyBasedIndex + 1];
+
+		////determine potential contacts using bounding boxes:
+		//run through all active contacts of sphere i
+		for (Index gjSign : *(allActiveContacts[gi]))
+		{
+			Index gj;
+			bool frictionRegularizedRegion;
+			ActiveContact2IndexRegularizedFriction(gjSign, gj, frictionRegularizedRegion);
+
+			//only consider contact with trigs
+			if (!EXUstd::IndexIsInRange(gj, globalContactIndexOffsets[trigsRigidBodyBasedIndex], globalContactIndexOffsets[trigsRigidBodyBasedIndex + 1]))
+			{
+				continue;
+			}
+			
+			//compute triangle contact, pp
+			Index j = gj - globalContactIndexOffsets[trigsRigidBodyBasedIndex];
+			const ContactTriangleRigidBodyBased& trigJ = trigsRigidBodyBased[j];
+			const ContactRigidBodyMarkerBased& rigid = rigidBodyMarkerBased[trigJ.contactRigidBodyIndex];
+
+			//compute global points
+			for (Index k = 0; k < (Index)trigPoints.size(); k++)
+			{
+				trigPoints[k] = rigid.orientation * trigJ.points[k] + rigid.position;
+			}
+
+			HGeometry::MinDistTP(trigPoints[0], trigPoints[1], trigPoints[2], sphereI.position, trigPP, inside);
+
+			Vector3D deltaP(trigPP - sphereI.position); //points from sphereI to trigJ!!!
+			Real dist = deltaP.GetL2Norm();
+			if (dist == 0.) { continue; } //except this case, as it causes div by zero! could be particles at same location (for some strange reasons ...)
+
+			Real Linv = 1. / dist;
+			Vector3D n0(deltaP);
+			n0 *= Linv;
+
+			Real gap = dist - sphereI.radius; //gap is negative
+			//compute velocities
+			//global trig velocity at contact point
+			Vector3D vTrigJ = (rigid.orientation * rigid.angularVelocity).CrossProduct(trigPP - rigid.position) + rigid.velocity;
+			//global sphere velocity at contact point:
+			Vector3D vSphereI = (sphereI.orientation * sphereI.angularVelocity).CrossProduct(trigPP - sphereI.position) + sphereI.velocity;
+			Real deltaVnormal = n0 * (vTrigJ - vSphereI); // -n0 * (vTrigJ - vSphereI);		//penetration velocity
+
+			Real kContact = sphereI.contactStiffness * rigid.contactStiffness / (sphereI.contactStiffness + rigid.contactStiffness);
+
+			//damping acts parallel, otherwise if the sphere has 0 damping, the trig damping has no influence
+			Real dContact = sphereI.contactDamping + rigid.contactDamping;
+
+			//compute scalar force:
+			Real contactForce = kContact * gap + dContact * deltaVnormal;
+
+			if (!inside && !settings.excludeDuplicatedTrigSphereContactPoints)
+			{
+				contactForce *= 0.5;
+			} //always at least two edges at same time!
+
+			Vector3D fVec = contactForce * n0;
+
+			Real dryFriction = settings.frictionPairings(sphereI.frictionMaterialIndex, rigid.frictionMaterialIndex);
+			bool computeFrictionTerms = (dryFriction != 0.);
+
+			//++++++++++++++++++++++++++++++++++++++++++++++++++
+			//at this point, we could also use automatic differentiation, giving a simpler implementation
+			Real factNormalContact = factorODE2 * kContact + factorODE2_t * dContact; //normal direction gives same terms for stiffness and velocity
+			Vector3D deltaVJI = (vTrigJ - vSphereI);
+			Matrix3D JacFc;
+
+			Real factRegularizedFriction = 0.;
+			Vector3D deltaVtangent(0.);
+
+			if (computeFrictionTerms)
+			{
+				//global sphere tangent velocity at contact point:
+				deltaVtangent = deltaVJI - deltaVnormal * n0;	//tangent velocity
+
+				if (!(frictionRegularizedRegion && settings.frictionProportionalZone != 0.)) { computeFrictionTerms = false; }
+			}
+			//computeFrictionTerms = false;
+
+			ComputeContactForceJacobian(settings, dryFriction, factorODE2, factorODE2_t, computeFrictionTerms, factNormalContact,
+				Linv, n0, deltaVJI, dContact, contactForce, deltaVtangent, 
+				factRegularizedFriction, JacFc); //last line are return values
+
+			//ResizableVector& vecTemp = tempArray[threadID].localODE2LHS; //used as temporary vector
+			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			Index trigJjacIndex = trigJ.contactRigidBodyIndex + globalJacobianIndexOffsets[trigsRigidBodyBasedIndex];
+			Index sphereIjacIndex = (Index)i + globalJacobianIndexOffsets[spheresMarkerBasedIndex];
+
+			//position/forces:
+			const ResizableMatrix& JACj = *allPositionJacobians[trigJjacIndex];
+			const ResizableMatrix& JACi = *allPositionJacobians[sphereIjacIndex];
+			Index columnsj = JACj.NumberOfColumns();
+			Index columnsi = JACi.NumberOfColumns();
+
+			const ResizableMatrix& rotJACj = *allRotationJacobians[trigJjacIndex];
+			const ResizableMatrix& rotJACi = *allRotationJacobians[sphereIjacIndex];
+			Index rotColumnsj = rotJACj.NumberOfColumns();
+			Index rotColumnsi = rotJACi.NumberOfColumns();
+
+			Vector3D pJ = (rigid.position - trigPP);
+			//vectors 
+			Matrix3D rTildeNJ = RigidBodyMath::Vector2SkewMatrix(pJ); //(skew) vector from contact point to ref. point J
+			Matrix3D rTildeNI = RigidBodyMath::Vector2SkewMatrix((sphereI.radius) * n0); //(skew) vector from I to contact point
+
+			//compute additional term in Torque jacobian
+			Matrix3D JacTorqueFc(3, 3, 0.);
+			if (computeFrictionTerms)
+			{
+				JacTorqueFc.SetWithDiadicProduct(deltaVtangent, (factNormalContact * dryFriction / settings.frictionProportionalZone) * n0);
+			}
+
+			AddJacobianTerms(tempArray[threadID],
+				columnsi, columnsj, JACi, JACj, rotColumnsi, rotColumnsj, rotJACi, rotJACj,
+				*allLTGs[sphereIjacIndex], *allLTGs[trigJjacIndex], rTildeNI, rTildeNJ, computeFrictionTerms, factRegularizedFriction, JacFc, JacTorqueFc,
+				triplets);
+
+		}
+		//}//serial
+	}, taskSplit); //must be multiple of number of treads, but better 8*nThreads or larger for large problems
+#endif
 
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -2369,8 +2341,10 @@ void GeneralContact::ComputeContactJacobianANCFcableCircleContact(Index gi, Inde
 {
 	Real r = sphere.radius;
 
-	//Index index2JacIndexI = globalJacobianIndexOffsets[ancfCable2DIndex] - globalContactIndexOffsets[ancfCable2DIndex];
+	Index index2JacIndexI = globalJacobianIndexOffsets[ancfCable2DIndex] - globalContactIndexOffsets[ancfCable2DIndex];
 	Index index2JacIndexJ = globalJacobianIndexOffsets[spheresMarkerBasedIndex] - globalContactIndexOffsets[spheresMarkerBasedIndex];
+	Index jgi = index2JacIndexI + gi;
+	Index jgj = index2JacIndexJ + gj;
 
 	SparseTripletVector& triplets = tempData.sparseTriplets;
 
@@ -2476,7 +2450,7 @@ void GeneralContact::ComputeContactJacobianANCFcableCircleContact(Index gi, Inde
 			//	settings.frictionProportionalZone, relVel, frictionRegularizedRegion);
 
 			//fContact += frictionAdd;
-			//pout << "I=" << i << ", fContact=" << fVec << ", Ffric=" << fVec - f0 << ", dP0=" << deltaP0 << ", vN=" << deltaVnormal << ", dV(I-J)=" << (vSphereI - vSphereJ) << ", deltaVtang=" << deltaVtangent << "\n";
+			//pout << "I=" << i << ", fContact=" << fVec << ", Ffric=" << fVec - f0 << ", dP0=" << n0 << ", vN=" << deltaVnormal << ", dV(I-J)=" << (vSphereI - vSphereJ) << ", deltaVtang=" << deltaVtangent << "\n";
 
 #ifndef ANCFuseFrictionPenalty
 			if (settings.frictionProportionalZone != 0) 
@@ -2532,7 +2506,7 @@ void GeneralContact::ComputeContactJacobianANCFcableCircleContact(Index gi, Inde
 		//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 		//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-		const ResizableMatrix& JACj = *allPositionJacobians[gj + index2JacIndexJ];
+		const ResizableMatrix& JACj = *allPositionJacobians[jgj];
 		
 		//ANCF jacobian is computed manually-> use CSystem interface in future!
 		ConstSizeMatrix<3* DANCFmaxCoordinates> JACi; // *allPositionJacobians[gi + index2JacIndexI];
@@ -2545,7 +2519,7 @@ void GeneralContact::ComputeContactJacobianANCFcableCircleContact(Index gi, Inde
 		Index columnsj = JACj.NumberOfColumns();
 		Index columnsi = JACi.NumberOfColumns();
 
-		const ResizableMatrix& rotJACj = *allRotationJacobians[gj + index2JacIndexJ];
+		const ResizableMatrix& rotJACj = *allRotationJacobians[jgj];
 		Index rotColumnsj = rotJACj.NumberOfColumns();
 
 		//const ResizableMatrix& rotJACi = *allRotationJacobians[gi + index2JacIndexI];
@@ -2590,7 +2564,7 @@ void GeneralContact::ComputeContactJacobianANCFcableCircleContact(Index gi, Inde
 			jac.SetSubmatrix(locJac, columnsi, columnsi, 1.);
 #endif
 
-			EXUmath::AddMatrixToSparseTripletVector(triplets, locJac, *allLTGs[gj], *allLTGs[gj]);
+			EXUmath::AddMatrixToSparseTripletVector(triplets, locJac, *allLTGs[jgj], *allLTGs[jgj]);
 
 			if (columnsi)
 			{
@@ -2613,7 +2587,7 @@ void GeneralContact::ComputeContactJacobianANCFcableCircleContact(Index gi, Inde
 					locJac += temp2; 
 				}
 
-				EXUmath::AddMatrixToSparseTripletVector<ResizableMatrix, true>(triplets, locJac, *allLTGs[gj], *allLTGs[gi], 1.);
+				EXUmath::AddMatrixToSparseTripletVector<ResizableMatrix, true>(triplets, locJac, *allLTGs[jgj], *allLTGs[jgi], 1.);
 #ifdef debugJac
 				jac.SetSubmatrix(locJac, columnsi, 0, 1.);
 #endif
@@ -2625,7 +2599,7 @@ void GeneralContact::ComputeContactJacobianANCFcableCircleContact(Index gi, Inde
 
 				EXUmath::MultMatrixTransposedMatrixTemplate(JACi, temp, locJac);
 
-				//EXUmath::AddMatrixToSparseTripletVector<ResizableMatrix, false>(triplets, locJac, *allLTGs[gi], *allLTGs[gj], 1.);
+				//EXUmath::AddMatrixToSparseTripletVector<ResizableMatrix, false>(triplets, locJac, *allLTGs[jgi], *allLTGs[jgj], 1.);
 #ifdef debugJac
 				jac.SetSubmatrix(locJac.GetTransposed(), 0, columnsi, 1.);
 #endif
@@ -2640,7 +2614,7 @@ void GeneralContact::ComputeContactJacobianANCFcableCircleContact(Index gi, Inde
 			EXUmath::MultMatrixTransposedMatrixTemplate(JACi, temp, locJac);
 
 
-			EXUmath::AddMatrixToSparseTripletVector(triplets, locJac, *allLTGs[gi], *allLTGs[gi]);
+			EXUmath::AddMatrixToSparseTripletVector(triplets, locJac, *allLTGs[jgi], *allLTGs[jgi]);
 
 #ifdef debugJac
 			jac.SetSubmatrix(locJac, 0, 0, 1.);
@@ -2679,9 +2653,6 @@ void GeneralContact::ComputeContactJacobianANCFcableCircleContact(Index gi, Inde
 Real GeneralContact::PostNewtonStep(const CSystem& cSystem, TemporaryComputationDataArray& tempArray, Real& recommendedStepSize)
 {
 	if (verboseMode >= 2) { pout << "\n****************\n  Post Newton\nt=" << cSystem.GetSystemData().GetCData().currentState.GetTime() << "\n"; }
-
-	//DELETE:
-	//if (verboseMode >= 2) { pout << "Post Newton: new\n"; }
 
 	if (cSystem.GetSolverData().doPostNewtonIteration)
 	{

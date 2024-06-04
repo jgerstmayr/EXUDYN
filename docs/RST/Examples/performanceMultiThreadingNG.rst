@@ -25,7 +25,8 @@ You can view and download this file on Github: `performanceMultiThreadingNG.py <
    
    import exudyn as exu
    from exudyn.itemInterface import *
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    from exudyn.graphicsDataUtilities import *
    
    
@@ -46,7 +47,7 @@ You can view and download this file on Github: `performanceMultiThreadingNG.py <
        mbs.Reset()
    
        a=0.03
-       gBody = GraphicsDataOrthoCube(-a, -a, -a, a, a, a, color=color4steelblue)
+       gBody = graphics.BrickXYZ(-a, -a, -a, a, a, a, color=graphics.color.steelblue)
    
        m = 1 #mass
        J=[1,2,3,0,0,0] #inertia

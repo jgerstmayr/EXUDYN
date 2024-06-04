@@ -17,7 +17,8 @@ from math import pi, sin, cos#, sqrt
 from copy import copy, deepcopy
 
 import exudyn as exu
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 from exudyn.rigidBodyUtilities import Skew, Skew2Vec
 from exudyn.robotics import *
 
@@ -28,7 +29,7 @@ mbs = SC.AddSystem()
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-gGround = GraphicsDataOrthoCubePoint(centerPoint=[-0.5,0,0], size=[1,0.4,0.5], color=color4lightgrey)
+gGround = graphics.Brick(centerPoint=[-0.5,0,0], size=[1,0.4,0.5], color=graphics.color.lightgrey)
 objectGround = mbs.AddObject(ObjectGround(referencePosition = [0,0,0],
                                           visualization=VObjectGround(graphicsData=[gGround])))
 
@@ -78,9 +79,9 @@ sCases = []
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 baseMarker = mbs.AddMarker(MarkerBodyRigid(bodyNumber=objectGround, localPosition=[0,0,0]))
 graphicsBaseList = [gGround]
-graphicsBaseList +=[GraphicsDataCylinder([0,0,0], [0.5,0,0], 0.0025, color4red)]
-graphicsBaseList +=[GraphicsDataCylinder([0,0,0], [0,0.5,0], 0.0025, color4green)]
-graphicsBaseList +=[GraphicsDataCylinder([0,0,0], [0,0,0.5], 0.0025, color4blue)]
+graphicsBaseList +=[graphics.Cylinder([0,0,0], [0.5,0,0], 0.0025, graphics.color.red)]
+graphicsBaseList +=[graphics.Cylinder([0,0,0], [0,0.5,0], 0.0025, graphics.color.green)]
+graphicsBaseList +=[graphics.Cylinder([0,0,0], [0,0,0.5], 0.0025, graphics.color.blue)]
 newRobot = Robot(gravity=gravity3D,
               base = RobotBase(visualization=VRobotBase(graphicsData=graphicsBaseList)),
               tool = RobotTool(HT=HTtranslate([0,0,0]), visualization=VRobotTool(graphicsData=[])),
@@ -175,11 +176,11 @@ if useKT:
             # A = HT2rotationMatrix(H)
 
             vAxis = A@np.array([0,0,0.25*L])
-            graphicsList += [GraphicsDataCylinder(pAxis=p-0.5*vAxis, vAxis=vAxis, radius=0.05*L, color=color4red)]
-            cube= GraphicsDataOrthoCubePoint(centerPoint=[0.5*L,0,0], size=[L,0.08*L,0.15*L], color=color4brown)
-            cube2 = MoveGraphicsData(cube, p, A)
+            graphicsList += [graphics.Cylinder(pAxis=p-0.5*vAxis, vAxis=vAxis, radius=0.05*L, color=graphics.color.red)]
+            cube= graphics.Brick(centerPoint=[0.5*L,0,0], size=[L,0.08*L,0.15*L], color=graphics.color.brown)
+            cube2 = graphics.Move(cube, p, A)
             graphicsList += [cube2]
-            #graphicsList += [{'type':'Line', 'data': list(p)+list(p0), 'color':color4blue}]
+            #graphicsList += [{'type':'Line', 'data': list(p)+list(p0), 'color':graphics.color.blue}]
         return graphicsList
 
     nGeneric=mbs.AddNode(NodeGenericODE2(referenceCoordinates = [0]*n, 
@@ -246,11 +247,11 @@ if useKT2:
             A = HT2rotationMatrix(T)
 
             vAxis = A@np.array([0,0,0.28*L])
-            graphicsList += [GraphicsDataCylinder(pAxis=p-0.5*vAxis, vAxis=vAxis, radius=0.045*L, color=color4red)]
-            cube= GraphicsDataOrthoCubePoint(centerPoint=[0.5*L,0,0], size=[L,0.085*L,0.145*L], color=color4steelblue)
-            cube2 = MoveGraphicsData(cube, p, A)
+            graphicsList += [graphics.Cylinder(pAxis=p-0.5*vAxis, vAxis=vAxis, radius=0.045*L, color=graphics.color.red)]
+            cube= graphics.Brick(centerPoint=[0.5*L,0,0], size=[L,0.085*L,0.145*L], color=graphics.color.steelblue)
+            cube2 = graphics.Move(cube, p, A)
             graphicsList += [cube2]
-            #graphicsList += [{'type':'Line', 'data': list(p)+list(p0), 'color':color4blue}]
+            #graphicsList += [{'type':'Line', 'data': list(p)+list(p0), 'color':graphics.color.blue}]
         return graphicsList
 
     nGeneric2=mbs.AddNode(NodeGenericODE2(referenceCoordinates = [0]*n, 
@@ -280,8 +281,8 @@ if useKTcpp:
         
     
         #graphics for link and joint:
-        gLink =  GraphicsDataOrthoCubePoint(centerPoint= [0.5*L,0,0], size= [L,w,w], color= color4dodgerblue)
-        gJoint = GraphicsDataCylinder([0,0,-1.25*w], [0,0,2.5*w], 0.4*w, color=color4grey)
+        gLink =  graphics.Brick(centerPoint= [0.5*L,0,0], size= [L,w,w], color= graphics.color.dodgerblue)
+        gJoint = graphics.Cylinder([0,0,-1.25*w], [0,0,2.5*w], 0.4*w, color=graphics.color.grey)
         gList = [[gLink,gJoint]]*n
     
         nGenericCpp = mbs.AddNode(NodeGenericODE2(referenceCoordinates=[0.]*n,

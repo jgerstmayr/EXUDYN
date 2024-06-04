@@ -16,7 +16,8 @@ import sys
 sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
 
 import exudyn as exu
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 from exudyn.graphicsDataUtilities import *
 import numpy as np
 
@@ -39,7 +40,7 @@ oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0]))
 nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 
 #example with rigid body at [0,0,0], 1kg under initial velocity
-graphicsBody = GraphicsDataOrthoCubePoint(centerPoint=[0,0,0],size=[0.09,0.09,0.2], color=color4lightred)
+graphicsBody = graphics.Brick(centerPoint=[0,0,0],size=[0.09,0.09,0.2], color=graphics.color.lightred)
 nBody = mbs.AddNode(RigidRxyz(initialVelocities=[0,10,0, 2*pi*4,0,0]))
 oBody = mbs.AddObject(RigidBody(physicsMass=1, physicsInertia=[1,1,1,0,0,0], nodeNumber=nBody, 
                                 visualization=VRigidBody(graphicsData=[graphicsBody])))

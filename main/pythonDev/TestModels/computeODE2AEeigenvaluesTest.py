@@ -11,7 +11,8 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 import numpy as np
 
 
@@ -47,13 +48,13 @@ inertiaCuboid=InertiaCuboid(density=rho,
 bBeam = mbs.CreateRigidBody(inertia = inertiaCuboid,
                         referencePosition = [beamL*0.5,0,0],
                         gravity = [0,-9.81*0,0],
-                        graphicsDataList = [GraphicsDataOrthoCubePoint(size=[beamL,beamH,beamW],
-                        color=color4orange)])
+                        graphicsDataList = [graphics.Brick(size=[beamL,beamH,beamW],
+                        color=graphics.color.orange)])
 mBeamRight = mbs.AddMarker(MarkerBodyRigid(bodyNumber=bBeam, localPosition=[beamL*0.5,0,0]))
 
 mbs.CreateGenericJoint(bodyNumbers= [oGround,bBeam], position= [0.,0.,0.], 
                               rotationMatrixAxes= np.eye(3), constrainedAxes= [1,1,1,1,1,0], 
-                              axesRadius=0.001, axesLength= 0.01, color= color4default)
+                              axesRadius=0.001, axesLength= 0.01, color= graphics.color.default)
 
 markerToConnect = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[beamL,-springL,0])) 
 
@@ -96,8 +97,8 @@ p0 = np.array([beamL*0.5,0,0])
 b0 = mbs.CreateRigidBody(inertia = inertiaCuboid,
                          referencePosition = p0,
                          gravity = [0,-9.81,0],
-                         graphicsDataList = [GraphicsDataOrthoCubePoint(size=[beamL,beamH,beamW],
-                         color=color4orange)])
+                         graphicsDataList = [graphics.Brick(size=[beamL,beamH,beamW],
+                         color=graphics.color.orange)])
 
 R1 = RotationMatrixZ(-0.25*pi)@RotationMatrixY(0.25*pi)
 p1 = 2*p0 + R1@p0
@@ -105,8 +106,8 @@ b1 = mbs.CreateRigidBody(inertia = inertiaCuboid,
                          referencePosition = p1,
                          referenceRotationMatrix = R1,
                          gravity = [0,-9.81,0],
-                         graphicsDataList = [GraphicsDataOrthoCubePoint(size=[beamL,beamH,beamW],
-                         color=color4dodgerblue)])
+                         graphicsDataList = [graphics.Brick(size=[beamL,beamH,beamW],
+                         color=graphics.color.dodgerblue)])
 
 mbs.CreateGenericJoint(bodyNumbers= [oGround,b0], position= [0.,0.,0.], 
                        constrainedAxes= [1,1,1,1,1,0], 

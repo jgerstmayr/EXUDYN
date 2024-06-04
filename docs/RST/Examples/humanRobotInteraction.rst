@@ -23,8 +23,8 @@ You can view and download this file on Github: `humanRobotInteraction.py <https:
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    
    import exudyn as exu
-   from exudyn.itemInterface import *
-   from exudyn.utilities import * #includes graphics and rigid body utilities
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    import numpy as np
    from exudyn.robotics import *
    from exudyn.robotics.motion import Trajectory, ProfileConstantAcceleration, ProfilePTP
@@ -44,6 +44,13 @@ You can view and download this file on Github: `humanRobotInteraction.py <https:
    
    
    tStart = time.time()
+   
+   #try to turn of warnings for stl geometry:
+   try:
+       import stl
+       def NoWarnings(*args): pass
+       stl.base.BaseMesh.warning = NoWarnings
+   except: pass
    
    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++
    #physical parameters
@@ -95,20 +102,21 @@ You can view and download this file on Github: `humanRobotInteraction.py <https:
    
    
    #graphics taken from https://grabcad.com/library/articulated-dummy-1
-   dataUAL = GraphicsDataFromSTLfile(fileName=myDir+'UpperArm_L.stl', 
-                                           color=color4blue, verbose=verbose, density=density,
+   #print('1*********************************************',flush=True)
+   dataUAL = graphics.FromSTLfile(fileName=myDir+'UpperArm_L.stl', 
+                                           color=graphics.color.blue, verbose=verbose, density=density,
                                            scale = scaleBody)
    
-   dataLAL = GraphicsDataFromSTLfile(fileName=myDir+'LowerArm_L.stl', 
-                                           color=color4dodgerblue, verbose=verbose, density=density,
+   dataLAL = graphics.FromSTLfile(fileName=myDir+'LowerArm_L.stl', 
+                                           color=graphics.color.dodgerblue, verbose=verbose, density=density,
                                            scale = scaleBody)
    
    if addHand:
-       dataHandL = GraphicsDataFromSTLfile(fileName=myDir+'Hand_L.stl', 
-                                               color=color4brown, verbose=verbose, density=density,
+       dataHandL = graphics.FromSTLfile(fileName=myDir+'Hand_L.stl', 
+                                               color=graphics.color.brown, verbose=verbose, density=density,
                                                scale = scaleBody)
-       dataFingersL = GraphicsDataFromSTLfile(fileName=myDir+'Fingers_L.stl', 
-                                               color=color4brown, verbose=verbose, density=density,
+       dataFingersL = graphics.FromSTLfile(fileName=myDir+'Fingers_L.stl', 
+                                               color=graphics.color.brown, verbose=verbose, density=density,
                                                scale = scaleBody)
        
        #++++++++++++++++++++++++++++++++++
@@ -125,15 +133,15 @@ You can view and download this file on Github: `humanRobotInteraction.py <https:
        dataLAL[1]['inertia'] = rbiLAL.InertiaCOM()
        dataLAL[1]['COM'] = rbiLAL.COM()
    #++++++++++++++++++++++++++++++++++
-   graphicsBody += [AddEdgesAndSmoothenNormals(GraphicsDataFromSTLfile(fileName=myDir+'Torso.stl', 
-                                           color=color4grey, verbose=verbose, density=density,
+   graphicsBody += [AddEdgesAndSmoothenNormals(graphics.FromSTLfile(fileName=myDir+'Torso.stl', 
+                                           color=graphics.color.grey, verbose=verbose, density=density,
                                            scale = scaleBody)[0], addEdges=False)]
    
    
    if addFullBody:
        for part in listBody:
-           data = GraphicsDataFromSTLfile(fileName=myDir+''+part+'.stl', 
-                                          color=color4grey, verbose=verbose, density=density*0,
+           data = graphics.FromSTLfile(fileName=myDir+''+part+'.stl', 
+                                          color=graphics.color.grey, verbose=verbose, density=density*0,
                                           scale = scaleBody)
            graphicsBody += [AddEdgesAndSmoothenNormals(data, addEdges=False)]
            #graphicsBody += [data[0]]
@@ -149,7 +157,7 @@ You can view and download this file on Github: `humanRobotInteraction.py <https:
    
    
    #body fixed to ground    
-   graphicsBody += [GraphicsDataCheckerBoard(size=4)]
+   graphicsBody += [graphics.CheckerBoard(size=4)]
    
    pBody = np.array([0,0,0])
    oGround = mbs.AddObject(ObjectGround(referencePosition=pBody, visualization=VObjectGround(graphicsData=graphicsBody)))
@@ -191,7 +199,7 @@ You can view and download this file on Github: `humanRobotInteraction.py <https:
        showCOM     = False
    
        body = dataUAL
-       body[0] = MoveGraphicsData(AddEdgesAndSmoothenNormals(body[0], addEdges=False), -leftShoulder, np.eye(3))
+       body[0] = graphics.Move(AddEdgesAndSmoothenNormals(body[0], addEdges=False), -leftShoulder, np.eye(3))
        link = body[1]
    
        articulatedBody.AddLink(RobotLink(jointType='Rx',
@@ -219,18 +227,18 @@ You can view and download this file on Github: `humanRobotInteraction.py <https:
                                ))
    
        body = dataLAL
-       body[0] = MoveGraphicsData(AddEdgesAndSmoothenNormals(body[0], addEdges=False), -leftElbow, np.eye(3))
+       body[0] = graphics.Move(AddEdgesAndSmoothenNormals(body[0], addEdges=False), -leftElbow, np.eye(3))
        link = body[1]
        gList = [body[0]]
        
        if addHand:
            if not addHandKinematic:
-               dataHandL[0] = MoveGraphicsData(AddEdgesAndSmoothenNormals(dataHandL[0], addEdges=False), -leftElbow, np.eye(3))
-               dataFingersL[0] = MoveGraphicsData(dataFingersL[0], -leftElbow, np.eye(3))
+               dataHandL[0] = graphics.Move(AddEdgesAndSmoothenNormals(dataHandL[0], addEdges=False), -leftElbow, np.eye(3))
+               dataFingersL[0] = graphics.Move(dataFingersL[0], -leftElbow, np.eye(3))
                gList = [body[0], dataHandL[0], dataFingersL[0]]
            
            
-       gList += [GraphicsDataSphere(leftHand-leftElbow, radius=rHand, color=color4brown, nTiles=16)]
+       gList += [graphics.Sphere(leftHand-leftElbow, radius=rHand, color=graphics.color.brown, nTiles=16)]
        
        articulatedBody.AddLink(RobotLink(jointType='Ry',
                                          mass=link['mass'],
@@ -245,8 +253,8 @@ You can view and download this file on Github: `humanRobotInteraction.py <https:
        if addHandKinematic:
            body = dataHandL
            link = body[1]
-           dataHandL[0] = MoveGraphicsData(dataHandL[0], -leftHand, np.eye(3))
-           dataFingersL[0] = MoveGraphicsData(dataFingersL[0], -leftHand, np.eye(3))
+           dataHandL[0] = graphics.Move(dataHandL[0], -leftHand, np.eye(3))
+           dataFingersL[0] = graphics.Move(dataFingersL[0], -leftHand, np.eye(3))
            gList = [dataHandL[0], dataFingersL[0]]
    
    
@@ -285,7 +293,7 @@ You can view and download this file on Github: `humanRobotInteraction.py <https:
        if False:
            body = dataUAL
            
-           body[0] = MoveGraphicsData(body[0], -body[1]['COM'], np.eye(3))
+           body[0] = graphics.Move(body[0], -body[1]['COM'], np.eye(3))
            
            [nUAL,bUAL]=AddRigidBody(mainSys = mbs,
                                 inertia = RigidBodyInertia(mass=body[1]['mass'], inertiaTensor=body[1]['inertia'], com=[0,0,0]),
@@ -309,7 +317,7 @@ You can view and download this file on Github: `humanRobotInteraction.py <https:
            #lower arm left:
            body = dataLAL
            
-           body[0] = MoveGraphicsData(body[0], -body[1]['COM'], np.eye(3))
+           body[0] = graphics.Move(body[0], -body[1]['COM'], np.eye(3))
            
            [nUAL,bUAL]=AddRigidBody(mainSys = mbs,
                                 inertia = RigidBodyInertia(mass=body[1]['mass'], inertiaTensor=body[1]['inertia'], com=[0,0,0]),
@@ -345,22 +353,22 @@ You can view and download this file on Github: `humanRobotInteraction.py <https:
        jointRadius=0.06
        linkWidth=0.1
        
-       graphicsBaseList = [GraphicsDataOrthoCubePoint([0,0,-0.15], [0.12,0.12,0.1], color4grey)]
-       graphicsBaseList = [GraphicsDataOrthoCubePoint([0,0,-0.75*0.5-0.05], [pBase[2],pBase[2],0.65], color4brown)]
-       graphicsBaseList +=[GraphicsDataCylinder([0,0,0], [0.5,0,0], 0.0025, color4red)]
-       graphicsBaseList +=[GraphicsDataCylinder([0,0,0], [0,0.5,0], 0.0025, color4green)]
-       graphicsBaseList +=[GraphicsDataCylinder([0,0,0], [0,0,0.5], 0.0025, color4blue)]
-       graphicsBaseList +=[GraphicsDataCylinder([0,0,-jointWidth], [0,0,jointWidth], linkWidth*0.5, color4list[0])] #belongs to first body
+       graphicsBaseList = [graphics.Brick([0,0,-0.15], [0.12,0.12,0.1], graphics.color.grey)]
+       graphicsBaseList = [graphics.Brick([0,0,-0.75*0.5-0.05], [pBase[2],pBase[2],0.65], graphics.color.brown)]
+       graphicsBaseList +=[graphics.Cylinder([0,0,0], [0.5,0,0], 0.0025, graphics.color.red)]
+       graphicsBaseList +=[graphics.Cylinder([0,0,0], [0,0.5,0], 0.0025, graphics.color.green)]
+       graphicsBaseList +=[graphics.Cylinder([0,0,0], [0,0,0.5], 0.0025, graphics.color.blue)]
+       graphicsBaseList +=[graphics.Cylinder([0,0,-jointWidth], [0,0,jointWidth], linkWidth*0.5, graphics.colorList[0])] #belongs to first body
        
        rRobotTCP = 0.041 #also used for contact
        ty = 0.03
        tz = 0.04
        zOff = -0.05+0.1
        toolSize= [0.05,0.5*ty,0.06]
-       graphicsToolList = [GraphicsDataCylinder(pAxis=[0,0,zOff], vAxis= [0,0,tz], radius=ty*1.5, color=color4red)]
-       # graphicsToolList+= [GraphicsDataOrthoCubePoint([0,ty,1.5*tz+zOff], toolSize, color4grey)] #gripper
-       # graphicsToolList+= [GraphicsDataOrthoCubePoint([0,-ty,1.5*tz+zOff], toolSize, color4grey)] #gripper
-       graphicsToolList+= [GraphicsDataSphere(point=[0,0,0.12],radius=rRobotTCP, color=[1,0,0,1], nTiles=16)]
+       graphicsToolList = [graphics.Cylinder(pAxis=[0,0,zOff], vAxis= [0,0,tz], radius=ty*1.5, color=graphics.color.red)]
+       # graphicsToolList+= [graphics.Brick([0,ty,1.5*tz+zOff], toolSize, graphics.color.grey)] #gripper
+       # graphicsToolList+= [graphics.Brick([0,-ty,1.5*tz+zOff], toolSize, graphics.color.grey)] #gripper
+       graphicsToolList+= [graphics.Sphere(point=[0,0,0.12],radius=rRobotTCP, color=[1,0,0,1], nTiles=16)]
        
        #+++++++++
        
@@ -376,7 +384,7 @@ You can view and download this file on Github: `humanRobotInteraction.py <https:
                                       inertia=link['inertia'], 
                                       localHT=StdDH2HT(link['stdDH']),
                                       PDcontrol=(Pcontrol[cnt], Dcontrol[cnt]),
-                                      visualization=VRobotLink(linkColor=color4list[cnt], showCOM=False, showMBSjoint=True)
+                                      visualization=VRobotLink(linkColor=graphics.colorList[cnt], showCOM=False, showMBSjoint=True)
                                       ))
    
        q0 = [0,0.5*pi,-0.5*pi,0,0,0] #zero angle configuration
@@ -435,28 +443,6 @@ You can view and download this file on Github: `humanRobotInteraction.py <https:
        markerList = [mHand, mRobotTCP0]
        radiusList = [rHand*1.1, rRobotTCP]
    
-       # rr=0.3
-       # [n0,b0]=AddRigidBody(mainSys = mbs,
-       #                      inertia = RigidBodyInertia(mass=100, inertiaTensor=np.eye(3), com=[0,0,0]),
-       #                      nodeType = exu.NodeType.RotationEulerParameters,
-       #                      position = [-0.3,-0.1,2],
-       #                      rotationMatrix = np.eye(3),
-       #                      angularVelocity = [0,0,0],
-       #                      gravity = gravity,
-       #                      graphicsDataList = [GraphicsDataSphere(radius=rr, color=color4green, nTiles=16)])
-       # markerList += [mbs.AddMarker(MarkerNodeRigid(nodeNumber=n0))]
-       # radiusList += [rr]
-       # [n0,b0]=AddRigidBody(mainSys = mbs,
-       #                      inertia = RigidBodyInertia(mass=100, inertiaTensor=np.eye(3), com=[0,0,0]),
-       #                      nodeType = exu.NodeType.RotationEulerParameters,
-       #                      position = [-1.1,-0.4,2.1],
-       #                      rotationMatrix = np.eye(3),
-       #                      angularVelocity = [0,0,0],
-       #                      gravity = gravity,
-       #                      graphicsDataList = [GraphicsDataSphere(radius=rr, color=color4green, nTiles=16)])
-       # markerList += [mbs.AddMarker(MarkerNodeRigid(nodeNumber=n0))]
-       # radiusList += [rr]
-                                    
        
        
        gContact = mbs.AddGeneralContact()
@@ -514,15 +500,10 @@ You can view and download this file on Github: `humanRobotInteraction.py <https:
    
    mbs.SolveDynamic(simulationSettings = simulationSettings,
                      solverType=exu.DynamicSolverType.TrapezoidalIndex2)
-   # mbs.SolveDynamic(simulationSettings = simulationSettings,
-   #                   solverType=exu.DynamicSolverType.ExplicitEuler)
    
-   # SC.WaitForRenderEngineStopFlag() #stop before closing
    exu.StopRenderer() #safely close rendering window!
    
-   sol = LoadSolutionFile('coordinatesSolution.txt')
-   
-   mbs.SolutionViewer(sol)
+   mbs.SolutionViewer()
    
    if False:
        

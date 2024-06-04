@@ -19,33 +19,95 @@ You can view and download this file on Github: `openAIgymNLinkContinuous.py <htt
    # edited by: Peter Manzl          
    # Date:      2022-05-25
    #
+   # Update:    2024-06-03: now moved to stable-baselines3 version 2.3.2; updated for use with tensorboard
+   # Notes:     requires pip install stable-baselines3[extra]
+   # 
    # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
    #
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-   
-   #NOTE: this model is using the stable-baselines3 version 1.7.0, which requires:
-   #pip install exudyn
-   #pip install pip install wheel==0.38.4 setuptools==66.0.0
-   #      => this downgrades setuptools to be able to install gym==0.21
-   #pip install stable-baselines3==1.7.0
-   #tested within a virtual environment: conda create -n venvP311 python=3.11 scipy matplotlib tqdm spyder-kernels=2.5 ipykernel psutil -y
    
    # import sys
    # sys.exudynFast = True #this variable is used to signal to load the fast exudyn module
    
    import exudyn as exu
-   from exudyn.utilities import *
-   from exudyn.robotics import *
-   from exudyn.artificialIntelligence import *
+   # from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   from exudyn.utilities import ObjectGround, VObjectGround, RigidBodyInertia, HTtranslate, HTtranslateY, HT0,\
+                               MarkerNodeCoordinate, LoadCoordinate, LoadSolutionFile
+   import exudyn.graphics as graphics #only import if it does not conflict
+   from exudyn.robotics import Robot, RobotLink, VRobotLink, RobotBase, VRobotBase, RobotTool, VRobotTool
+   from exudyn.artificialIntelligence import OpenAIGymInterfaceEnv, spaces, logger
+   #from exudyn.artificialIntelligence import *
    import math
+   import numpy as np
    
    import os
+   import sys
    os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
+   
+   import stable_baselines3
+   useOldGym = tuple(map(int, stable_baselines3.__version__.split('.'))) <= tuple(map(int, '1.8.0'.split('.')))
    
    ##%% here the number of links can be changed. Note that for n < 3 the actuator 
    # force might need to be increased
    nLinks = 2 #number of inverted links ...
    flagContinuous = True  # to choose for agent between A2C and SAC
+   
+   #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+   #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+   #if you like to visualize the training progress in tensorboard:
+   # pip install tensorboard
+   # open anaconda prompt (where your according python/environment runs)
+   # go to directory: 
+   #   solution/ 
+   # call this in anaconda prompt:
+   #   tensorboard --logdir=./tensorboard_log/
+   # open web browser to show progress (reward, loss, ...):
+   #   http://localhost:6006/
+   
+   
+   #add logger for reward:
+   from stable_baselines3.common.callbacks import BaseCallback
+   from stable_baselines3.common.logger import Logger
+   
+   hasTensorboard = False
+   try:
+       import tensorboard
+       hasTensorboard = True
+       print('output written to tensorboard, start tensorboard to see progress!')
+   except:
+       pass
+   
+   #derive class from logger to log additional information
+   #this is needed for vectorized environments, where reward is not logged automatically
+   class RewardLoggingCallback(BaseCallback):
+       def __init__(self, verbose=0):
+           super(RewardLoggingCallback, self).__init__(verbose)
+   
+       #log mean values at rollout end
+       def _on_rollout_end(self) -> bool:
+           if 'infos' in self.locals:
+               info = self.locals['infos'][-1]
+               # print('infos:', info)
+               if 'rewardMean' in info:
+                   self.logger.record("rollout/rewardMean", info['rewardMean'])
+               if 'episodeLen' in info:
+                   self.logger.record("rollout/episodeLen", info['episodeLen'])
+               if 'rewardSum' in info:
+                   self.logger.record("rollout/rewardSum", info['rewardSum'])
+   
+       #log (possibly) every step 
+       def _on_step(self) -> bool:
+           #extract local variables to find reward
+           if 'infos' in self.locals:
+               info = self.locals['infos'][-1]
+   
+               if 'reward' in info:
+                   self.logger.record("train/reward", info['reward'])
+               #for SAC / A2C in non-vectorized envs, per episode:
+               if 'episode' in info and 'r' in info['episode']:
+                   self.logger.record("episode/reward", info['episode']['r'])
+           return True
+   #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    
    
    class InvertedNPendulumEnv(OpenAIGymInterfaceEnv):
@@ -79,7 +141,7 @@ You can view and download this file on Github: `openAIgymNLinkContinuous.py <htt
            
            self.force_mag = 40 # 10 #10*2 works for 7e7 steps; must be larger for triple pendulum to be more reactive ...
            if self.nLinks == 1: 
-               self.force_mage = 12
+               self.force_mag = 12
            if self.nLinks == 3: 
                self.force_mag = self.force_mag*1.5 
                thresholdFactor = 2
@@ -87,27 +149,31 @@ You can view and download this file on Github: `openAIgymNLinkContinuous.py <htt
                self.force_mag = self.force_mag*3
                thresholdFactor = 5
    
+           if self.flagContinuous: 
+               self.force_mag *= 2 #continuous controller can have larger max value
+   
            if 'thresholdFactor' in kwargs:
                thresholdFactor = kwargs['thresholdFactor']
+   
+           self.stepUpdateTime = 0.02  # step size for RL-method
            
-           self.stepUpdateTime = 0.02  # seconds between state updates
-           
-           background = GraphicsDataCheckerBoard(point= [0,0.5*self.length,-0.5*width], 
+           background = graphics.CheckerBoard(point= [0,0.5*self.length,-0.5*width], 
                                                  normal= [0,0,1], size=10, size2=6, nTiles=20, nTiles2=12)
            
            oGround=self.mbs.AddObject(ObjectGround(referencePosition= [0,0,0],  #x-pos,y-pos,angle
                                               visualization=VObjectGround(graphicsData= [background])))
    
    
+           #build kinematic tree with Robot class
            L = self.length
            w = width
            gravity3D = [0.,-gravity,0]
-           graphicsBaseList = [GraphicsDataOrthoCubePoint(size=[L*4, 0.8*w, 0.8*w], color=color4grey)] #rail
+           graphicsBaseList = [graphics.Brick(size=[L*4, 0.8*w, 0.8*w], color=graphics.color.grey)] #rail
            
            newRobot = Robot(gravity=gravity3D,
                          base = RobotBase(visualization=VRobotBase(graphicsData=graphicsBaseList)),
                          tool = RobotTool(HT=HTtranslate([0,0.5*L,0]), visualization=VRobotTool(graphicsData=[
-                             GraphicsDataOrthoCubePoint(size=[w, L, w], color=color4orange)])),
+                             graphics.Brick(size=[w, L, w], color=graphics.color.orange)])),
                          referenceConfiguration = []) #referenceConfiguration created with 0s automatically
            
            #cart:
@@ -115,7 +181,7 @@ You can view and download this file on Github: `openAIgymNLinkContinuous.py <htt
            link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 
                             jointType='Px', preHT=HT0(), 
                             # PDcontrol=(pControl, dControl),
-                            visualization=VRobotLink(linkColor=color4lawngreen))
+                            visualization=VRobotLink(linkColor=graphics.color.lawngreen))
            newRobot.AddLink(link)
        
            
@@ -131,7 +197,7 @@ You can view and download this file on Github: `openAIgymNLinkContinuous.py <htt
                link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 
                                 jointType='Rz', preHT=preHT, 
                                 #PDcontrol=(pControl, dControl),
-                                visualization=VRobotLink(linkColor=color4blue))
+                                visualization=VRobotLink(linkColor=graphics.color.blue))
                newRobot.AddLink(link)
            
            self.Jlink = Jlink
@@ -153,10 +219,10 @@ You can view and download this file on Github: `openAIgymNLinkContinuous.py <htt
            #%%++++++++++++++++++++++++
            self.mbs.Assemble() #computes initial vector
            
-           self.simulationSettings.timeIntegration.numberOfSteps = 1
+           self.simulationSettings.timeIntegration.numberOfSteps = 1 #this is the number of solver steps per RL-step
            self.simulationSettings.timeIntegration.endTime = 0 #will be overwritten in step
            self.simulationSettings.timeIntegration.verboseMode = 0
-           self.simulationSettings.solutionSettings.writeSolutionToFile = False
+           self.simulationSettings.solutionSettings.writeSolutionToFile = False #set True only for postprocessing
            #self.simulationSettings.timeIntegration.simulateInRealtime = True
            
            self.simulationSettings.timeIntegration.newton.useModifiedNewton = True
@@ -164,8 +230,6 @@ You can view and download this file on Github: `openAIgymNLinkContinuous.py <htt
            self.SC.visualizationSettings.general.drawWorldBasis=True
            self.SC.visualizationSettings.general.graphicsUpdateInterval = 0.01
            self.SC.visualizationSettings.openGL.multiSampling=4
-           
-           #self.simulationSettings.solutionSettings.solutionInformation = "Open AI gym"
            
            #+++++++++++++++++++++++++++++++++++++++++++++++++++++
            # Angle at which to fail the episode
@@ -176,11 +240,16 @@ You can view and download this file on Github: `openAIgymNLinkContinuous.py <htt
            #must return state size
            stateSize = (self.nTotalLinks)*2 #the number of states (position/velocity that are used by learning algorithm)
    
+           #to track mean reward:
+           self.rewardCnt = 0
+           self.rewardMean = 0
+   
            return stateSize
    
        #**classFunction: OVERRIDE this function to set up self.action_space and self.observation_space
        def SetupSpaces(self):
    
+           #space is 2 times larger than space at which we get done
            high = np.array(
                [
                    self.x_threshold * 2,
@@ -200,6 +269,7 @@ You can view and download this file on Github: `openAIgymNLinkContinuous.py <htt
            #see https://github.com/openai/gym/blob/64b4b31d8245f6972b3d37270faf69b74908a67d/gym/core.py#L16
            #for Env:
            if flagContinuous: 
+               #action is -1 ... +1, then scaled with self.force_mag
                self.action_space = spaces.Box(low=np.array([-1 ], dtype=np.float32),
                                               high=np.array([1], dtype=np.float32), dtype=np.float32)
            else: 
@@ -213,7 +283,6 @@ You can view and download this file on Github: `openAIgymNLinkContinuous.py <htt
        def MapAction2MBS(self, action):
            if flagContinuous: 
                force = action[0] * self.force_mag
-               # print(force)
            else:     
                force = self.force_mag if action == 1 else -self.force_mag        
            self.mbs.SetLoadParameter(self.lControl, 'load', force)
@@ -245,10 +314,25 @@ You can view and download this file on Github: `openAIgymNLinkContinuous.py <htt
            initialValues = self.state[0:self.nTotalLinks]
            initialValues_t = self.state[self.nTotalLinks:]
                   
+           #set initial values into mbs immediately
+           self.mbs.systemData.SetODE2Coordinates(initialValues, exu.ConfigurationType.Initial)
+           self.mbs.systemData.SetODE2Coordinates_t(initialValues_t, exu.ConfigurationType.Initial)
+   
+           #this function is only called at reset(); so, we can use it to reset the mean reward:
+           self.rewardCnt = 0
+           self.rewardMean = 0
+   
            return [initialValues,initialValues_t]
-           
+       
+       #**classFunction: this is the objective which the RL method tries to maximize (average expected reward)
        def getReward(self): 
-           reward = 1 - 0.5 * abs(self.state[0])/self.x_threshold - 0.5 * abs(self.state[1]) / self.theta_threshold_radians
+           #reward = 1 - 0.5 * abs(self.state[0])/self.x_threshold - 0.5 * abs(self.state[1]) / self.theta_threshold_radians
+   
+           reward = 1 - 0.5 * abs(self.state[0])/self.x_threshold
+           for i in range(self.nLinks):
+               reward -=  0.5 * abs(self.state[i+1]) / (self.theta_threshold_radians*self.nLinks)
+           if reward < 0: reward = 0
+   
            return reward 
    
        #**classFunction: openAI gym interface function which is called to compute one step
@@ -259,9 +343,10 @@ You can view and download this file on Github: `openAIgymNLinkContinuous.py <htt
            
            #++++++++++++++++++++++++++++++++++++++++++++++++++
            #main steps:
-           [initialValues,initialValues_t] = self.State2InitialValues()
-           self.mbs.systemData.SetODE2Coordinates(initialValues, exu.ConfigurationType.Initial)
-           self.mbs.systemData.SetODE2Coordinates_t(initialValues_t, exu.ConfigurationType.Initial)
+           #initial values only set in reset function!
+           # [initialValues,initialValues_t] = self.State2InitialValues()
+           # self.mbs.systemData.SetODE2Coordinates(initialValues, exu.ConfigurationType.Initial)
+           # self.mbs.systemData.SetODE2Coordinates_t(initialValues_t, exu.ConfigurationType.Initial)
    
            self.MapAction2MBS(action)
            
@@ -272,18 +357,11 @@ You can view and download this file on Github: `openAIgymNLinkContinuous.py <htt
            # print('state:', self.state, 'done: ', done)
            #++++++++++++++++++++++++++++++++++++++++++++++++++
            #compute reward and done
-           # chi_x = []
-           # chi_phi = [0.1, 0.1]
-           x = self.state[0]
-           phi = self.state[1:3]
-           # self.state [0] + 
-           # if done: 
-               # print('done at step {}'.format(self.step))
+   
            if not done:
-               
                reward = self.getReward()
            elif self.steps_beyond_done is None:
-               # Arm1 just fell!
+               # system just fell down
                self.steps_beyond_done = 0
                reward = self.getReward()
            else:
@@ -298,7 +376,22 @@ You can view and download this file on Github: `openAIgymNLinkContinuous.py <htt
                self.steps_beyond_done += 1
                reward = 0.0
    
-           return np.array(self.state, dtype=np.float32), reward, done, {}
+           self.rewardCnt += 1
+           self.rewardMean += reward
+   
+           info = {'reward': reward} #put reward into info for logger
+   
+           #compute mean values per episode:
+           if self.rewardCnt != 0: #per epsiode
+               info['rewardMean'] = self.rewardMean / self.rewardCnt
+               info['rewardSum'] = self.rewardMean
+               info['episodeLen'] = self.rewardCnt
+   
+           terminated, truncated = done, False # since stable-baselines3 > 1.8.0 implementations terminated and truncated 
+           if useOldGym:
+               return np.array(self.state, dtype=np.float32), reward, terminated, info
+           else:
+               return np.array(self.state, dtype=np.float32), reward, terminated, truncated, info
    
    
    
@@ -314,9 +407,18 @@ You can view and download this file on Github: `openAIgymNLinkContinuous.py <htt
        #pip install stable_baselines3
        from stable_baselines3 import A2C, SAC
        
+       tensorboard_log = None #no logging
+       rewardCallback = None
+       verbose = 0 #turn off to just view in tensorboard
+       if hasTensorboard: #only us if tensorboard is available
+           tensorboard_log = "solution/tensorboard_log/" #dir
+           rewardCallback = RewardLoggingCallback()
+       else:
+           verbose = 1 #turn on without tensorboard
        
        # here the model is loaded (either for vectorized or scalar environmentÂ´using SAC or A2C).     
        def getModel(flagContinuous, myEnv, modelType='SAC'): 
+   
            if flagContinuous : 
                if modelType=='SAC': 
                    model = SAC('MlpPolicy',
@@ -324,12 +426,14 @@ You can view and download this file on Github: `openAIgymNLinkContinuous.py <htt
                           learning_rate=8e-4,
                           device='cpu', #usually cpu is faster for this size of networks
                           batch_size=128,
-                          verbose=1)
+                          tensorboard_log=tensorboard_log,
+                          verbose=verbose)
                elif modelType == 'A2C': 
                    model = A2C('MlpPolicy', 
                            myEnv, 
                            device='cpu',  
-                           verbose=1)
+                           tensorboard_log=tensorboard_log,
+                           verbose=verbose)
                else: 
                    print('Please specify the modelType.')
                    raise ValueError
@@ -338,34 +442,40 @@ You can view and download this file on Github: `openAIgymNLinkContinuous.py <htt
                        myEnv, 
                        device='cpu',  #usually cpu is faster for this size of networks
                        #device='cuda',  #optimal with 64 SubprocVecEnv, torch.set_num_threads(1)
-                       verbose=1)
+                       tensorboard_log=tensorboard_log,
+                       verbose=verbose)
            return model
    
    
+       modelType = 'SAC' #use A2C or SAC
        #create model and do reinforcement learning
        modelName = 'openAIgym{}Link{}'.format(nLinks, 'Continuous'*flagContinuous)
-       if False: #'scalar' environment:
+       if True: #'scalar' environment, slower:
            env = InvertedNPendulumEnv()
-           #check if model runs:
-           #env.SetSolver(exu.DynamicSolverType.ExplicitMidpoint)
-           #env.SetSolver(exu.DynamicSolverType.RK44) #very acurate
-           #env.TestModel(numberOfSteps=200, seed=42, sleepTime=0.02*0, useRenderer=True)
-           model = getModel(flagContinuous, env)
-           # env.useRenderer = True
-           # env.render()
+   
+           #first, check if model runs:
+           if False:
+               env.TestModel(numberOfSteps=2000, seed=42, sleepTime=0.02, useRenderer=True)
+               sys.exit()
+   
+           model = getModel(flagContinuous, env, modelType=modelType) 
    
            ts = -time.time()
-           model.learn(total_timesteps=20000) 
+           model.learn(total_timesteps=int(250e3), #min 250k steps required to start having success to stabilize double pendulum
+                       # progress_bar=True, #requires tqdm and rich package; set True to only see progress and set log_interval very high
+                       log_interval=10, #logs per episode; influences local output and tensorboard
+                       callback = rewardCallback,
+                       )
            
            print('*** learning time total =',ts+time.time(),'***')
        
            #save learned model
            
            model.save("solution/" + modelName)
-       else:
+       else: #parallel; faster #set verbose=0 in getModel()!
            import torch #stable-baselines3 is based on pytorch
            n_cores= max(1,int(os.cpu_count()/2)) #n_cores should be number of real cores (not threads)
-           n_cores = 14
+           # n_cores = 2
            torch.set_num_threads(n_cores) #seems to be ideal to match the size of subprocVecEnv
            
            print('using',n_cores,'cores')
@@ -374,14 +484,18 @@ You can view and download this file on Github: `openAIgymNLinkContinuous.py <htt
            vecEnv = SubprocVecEnv([InvertedNPendulumEnv for i in range(n_cores)])
            
        
-           #main learning task;  with 20 cores 800 000 steps take in the continous 
+           #main learning task;  with 20 cores 800 000 steps take in the continuous 
            # case approximatly 18 minutes (SAC), discrete (A2C) takes 2 minutes. 
-           model = getModel(flagContinuous, vecEnv, modelType='SAC')
+           model = getModel(flagContinuous, vecEnv, modelType=modelType)
    
            ts = -time.time()
            print('start learning of agent with {}'.format(str(model.policy).split('(')[0]))
-           # model.learn(total_timesteps=50000) 
-           model.learn(total_timesteps=int(1_000_000))
+   
+           model.learn(total_timesteps=int(250e3), #A2C starts working above 250k; SAC similar
+                       progress_bar=True, #requires tqdm and rich package; set True to only see progress and set log_interval very high (100_000_000)
+                       log_interval=10, #logs per episode; influences local output and tensorboard
+                       callback = rewardCallback,
+                       )
            print('*** learning time total =',ts+time.time(),'***')
        
            #save learned model
@@ -406,9 +520,8 @@ You can view and download this file on Github: `openAIgymNLinkContinuous.py <htt
            from exudyn.interactive import SolutionViewer
            env.SC.visualizationSettings.general.autoFitScene = False
            solution = LoadSolutionFile(solutionFile)
-           SolutionViewer(env.mbs, solution) #loads solution file via name stored in mbs
-   
-   
+           
+           SolutionViewer(env.mbs, solution, timeout=0.005, rowIncrement=2) #loads solution file via name stored in mbs
    
 
 

@@ -13,7 +13,8 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
-from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 import numpy as np
 
 useGraphics = True #without test
@@ -67,14 +68,14 @@ rotList = [
 
 listRotAxes = [rotY,rotZ,rotX, rotY,rotZ,rotX,]
 
-gGround = [GraphicsDataCheckerBoard(point=[0,-2.1,0],normal=[0,1,0],size=6)]
+gGround = [graphics.CheckerBoard(point=[0,-2.1,0],normal=[0,1,0],size=6)]
 
 oGround = mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=gGround)))
 listBodies = [oGround]
 
-gData = [GraphicsDataOrthoCubePoint(centerPoint=[0.5*L,0,0],
-                                    size=[L,r,r], color=color4steelblue)]
-gData +=[GraphicsDataBasis(length = 0.25)]
+gData = [graphics.Brick(centerPoint=[0.5*L,0,0],
+                                    size=[L,r,r], color=graphics.color.steelblue)]
+gData +=[graphics.Basis(length = 0.25)]
 
 for i, p in enumerate(listP):
     if i != 5:

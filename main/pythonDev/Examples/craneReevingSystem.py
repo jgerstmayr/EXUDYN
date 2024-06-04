@@ -16,7 +16,8 @@
 
 ## import exudyn package, utils and math packages
 import exudyn as exu
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 
 import numpy as np
 from math import sin, cos, sqrt,pi
@@ -26,7 +27,7 @@ SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
 ## create ground with checker board background
-gGround = GraphicsDataCheckerBoard(point=[0,0,0], normal = [0,1,0], size=60, nTiles=12)
+gGround = graphics.CheckerBoard(point=[0,0,0], normal = [0,1,0], size=60, nTiles=12)
 oGround = mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=[gGround])))
 
 ## define parameters of crane
@@ -34,7 +35,7 @@ tRoll = 0.05    #thickness rolls (graphics)
 rHook = 0.2     #radius of Hook rolls
 rCarr = 0.3     #radius of Carriage rolls
 g = [0,-9.81,0]
-colorRolls = color4red
+colorRolls = graphics.color.red
 
 H = 40 #crane height
 L = 30 #boom length
@@ -94,8 +95,8 @@ Vtower = Dtower*Dtower*H
 inertiaTower = InertiaCuboid(2000/Vtower, [Dtower,H,Dtower])
 
 ## model tower as body, which may be moved as well ...
-graphicsTower = [GraphicsDataOrthoCubePoint([0,0,0],[Dtower,H,Dtower],color=color4grey, addEdges = True)]
-graphicsTower += [GraphicsDataCylinder([0,0.5*H-Darm*0.5,0],[0,0.5*Darm,0],radius=1.1*Darm, color=color4grey)]
+graphicsTower = [graphics.Brick([0,0,0],[Dtower,H,Dtower],color=graphics.color.grey, addEdges = True)]
+graphicsTower += [graphics.Cylinder([0,0.5*H-Darm*0.5,0],[0,0.5*Darm,0],radius=1.1*Darm, color=graphics.color.grey)]
 [nTower,bTower]=AddRigidBody(mainSys = mbs, 
                       inertia = inertiaTower, 
                       nodeType = exu.NodeType.RotationEulerParameters, 
@@ -129,9 +130,9 @@ pRollCarr[4] = [ 0.5*Lcarr,0, 0*hookZoff]
 ## add graphics data for carriage
 graphicsCarr = []
 for p in pRollCarr:
-    graphicsCarr += [GraphicsDataCylinder(p-0.5*zRoll,zRoll,radius=rHook, color=colorRolls, addEdges=True)]
+    graphicsCarr += [graphics.Cylinder(p-0.5*zRoll,zRoll,radius=rHook, color=colorRolls, addEdges=True)]
 
-graphicsCarr += [GraphicsDataOrthoCubePoint([0,0,0],[1.2*Lcarr,0.2*Dcarr,1.2*Dcarr],color=color4grey[0:3]+[0.5], addEdges = True)]
+graphicsCarr += [graphics.Brick([0,0,0],[1.2*Lcarr,0.2*Dcarr,1.2*Dcarr],color=graphics.color.grey[0:3]+[0.5], addEdges = True)]
 
 ### add rigid body for carriage
 [nCarr,bCarr]=AddRigidBody(mainSys = mbs, 
@@ -157,9 +158,9 @@ rRollArm = [0,rCarr,0]
 ## add tower as rigid body
 graphicsArm = []
 for i,p in enumerate(pRollArm):
-    graphicsArm += [GraphicsDataCylinder(p-0.5*zRoll,zRoll,radius=max(0.1*rCarr,rRollArm[i]), color=colorRolls, addEdges=True)]
+    graphicsArm += [graphics.Cylinder(p-0.5*zRoll,zRoll,radius=max(0.1*rCarr,rRollArm[i]), color=colorRolls, addEdges=True)]
 
-graphicsArm += [GraphicsDataOrthoCubePoint([-0.1*L,0,0],[L*1.2,Darm,Darm],color=[0.3,0.3,0.9,0.5], addEdges = True)]
+graphicsArm += [graphics.Brick([-0.1*L,0,0],[L*1.2,Darm,Darm],color=[0.3,0.3,0.9,0.5], addEdges = True)]
 [nArm,bArm]=AddRigidBody(mainSys = mbs, 
                       inertia = inertiaArm, 
                       nodeType = exu.NodeType.RotationEulerParameters, 
@@ -217,7 +218,7 @@ oRScarr1=mbs.AddObject(ReevingSystemSprings(markerNumbers=markerListCarriage1,
                                             referenceLength = LrefRopeCarriage1,
                                             dampingTorsional = dampingRopeTorsional, dampingShear = dampingRopeShear*0,
                                             sheavesAxes=sheavesAxes1, sheavesRadii=rRollArm,
-                                            visualization=VReevingSystemSprings(ropeRadius=rRope, color=color4lawngreen)))
+                                            visualization=VReevingSystemSprings(ropeRadius=rRope, color=graphics.color.lawngreen)))
 
 ## create second reeving system object for carriage
 oRScarr2=mbs.AddObject(ReevingSystemSprings(markerNumbers=markerListCarriage2, 
@@ -226,7 +227,7 @@ oRScarr2=mbs.AddObject(ReevingSystemSprings(markerNumbers=markerListCarriage2,
                                             referenceLength = LrefRopeCarriage2,
                                             dampingTorsional = dampingRopeTorsional*0,
                                             sheavesAxes=sheavesAxes2, sheavesRadii=[0,0],
-                                            visualization=VReevingSystemSprings(ropeRadius=rRope, color=color4lawngreen)))
+                                            visualization=VReevingSystemSprings(ropeRadius=rRope, color=graphics.color.lawngreen)))
 
 #++++++++++++++++++++++++++++
 ## set up inertia and parameters for hook
@@ -246,10 +247,10 @@ pRollHook[3] = [ 0.5*Lhook,0, hookZoff]
 ## set up graphics for hook
 graphicsHook = []
 for p in pRollHook:
-    graphicsHook += [GraphicsDataCylinder(p-0.5*zRoll,zRoll,radius=rHook, color=colorRolls, addEdges=True)]
+    graphicsHook += [graphics.Cylinder(p-0.5*zRoll,zRoll,radius=rHook, color=colorRolls, addEdges=True)]
 
-graphicsHook += [GraphicsDataOrthoCubePoint([0,0,0],[Lhook,0.2*Dhook,Dhook],color=color4grey[0:3]+[0.5], addEdges = True)]
-graphicsHook += [GraphicsDataOrthoCubePoint([0,-Dhook,0],[4*Lhook,2*Dhook,2*Dhook],color=color4grey[0:3]+[0.5], addEdges = True)]
+graphicsHook += [graphics.Brick([0,0,0],[Lhook,0.2*Dhook,Dhook],color=graphics.color.grey[0:3]+[0.5], addEdges = True)]
+graphicsHook += [graphics.Brick([0,-Dhook,0],[4*Lhook,2*Dhook,2*Dhook],color=graphics.color.grey[0:3]+[0.5], addEdges = True)]
 
 ## add rigid body for hook
 [nHook,bHook]=AddRigidBody(mainSys = mbs, 
@@ -302,7 +303,7 @@ oRScarr1=mbs.AddObject(ReevingSystemSprings(markerNumbers=markerListHook,
                                             stiffnessPerLength=stiffnessRope, dampingPerLength=dampingRope*0.1, referenceLength = LrefRopeHook,
                                             dampingTorsional = dampingRopeTorsional*0.1, dampingShear = dampingRopeShear,
                                             sheavesAxes=sheavesAxesHook, sheavesRadii=radiiRollHook,
-                                            visualization=VReevingSystemSprings(ropeRadius=rRope, color=color4dodgerblue)))
+                                            visualization=VReevingSystemSprings(ropeRadius=rRope, color=graphics.color.dodgerblue)))
 
 
 ## add sensors to show trace of hook
@@ -416,7 +417,6 @@ if True:
     #%%++++++++++++
     
     SC.visualizationSettings.general.autoFitScene = False
-    # solution = LoadSolutionFile(solutionFile)
     mbs.SolutionViewer() #loads solution file via name stored in mbs
 
 #%%++++++++++++

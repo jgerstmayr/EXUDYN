@@ -30,7 +30,8 @@ You can view and download this file on Github: `stiffFlyballGovernor2.py <https:
    ## import libaries
    import exudyn as exu
    from exudyn.itemInterface import *
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    from exudyn.graphicsDataUtilities import *
    
    import numpy as np
@@ -134,10 +135,10 @@ You can view and download this file on Github: `stiffFlyballGovernor2.py <https:
                         omega0]    # rodBD
    
    ## create graphics objects for bodies
-   graphicsRodAC  = GraphicsDataOrthoCube(-(lengthRod/2-refRod[0]),-widthRod/2,-widthRod/2, lengthRod/2+refRod[0],widthRod/2,widthRod/2, [0.1,0.1,0.8,1])
-   graphicsRodBD  = GraphicsDataOrthoCube(-lengthRod/2-refRod[0],-widthRod/2,-widthRod/2, lengthRod/2-refRod[0],widthRod/2,widthRod/2, [0.1,0.1,0.8,1])
-   graphicsSlider = GraphicsDataOrthoCube(-dimSlider/2,-dimSlider/2,-dimSlider/2, dimSlider/2,dimSlider/2,dimSlider/2, [0.1,0.1,0.8,1])
-   graphicsShaft  = GraphicsDataOrthoCube(-widthShaft/2,-widthShaft/2,-lengthShaft/2, widthShaft/2,widthShaft/2,lengthShaft/2, [0.1,0.1,0.8,1])
+   graphicsRodAC  = graphics.BrickXYZ(-(lengthRod/2-refRod[0]),-widthRod/2,-widthRod/2, lengthRod/2+refRod[0],widthRod/2,widthRod/2, [0.1,0.1,0.8,1])
+   graphicsRodBD  = graphics.BrickXYZ(-lengthRod/2-refRod[0],-widthRod/2,-widthRod/2, lengthRod/2-refRod[0],widthRod/2,widthRod/2, [0.1,0.1,0.8,1])
+   graphicsSlider = graphics.BrickXYZ(-dimSlider/2,-dimSlider/2,-dimSlider/2, dimSlider/2,dimSlider/2,dimSlider/2, [0.1,0.1,0.8,1])
+   graphicsShaft  = graphics.BrickXYZ(-widthShaft/2,-widthShaft/2,-lengthShaft/2, widthShaft/2,widthShaft/2,lengthShaft/2, [0.1,0.1,0.8,1])
    
    #lists for 4 nodes/bodies: [shaft, slider, rodAC, rodBD]
    graphicsList=[graphicsShaft, graphicsSlider, graphicsRodAC, graphicsRodBD]

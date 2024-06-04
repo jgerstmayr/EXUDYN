@@ -24,7 +24,7 @@ g = 9.81
 
 r = 0.05 #just for graphics
 graphicsBackground = GraphicsDataRectangle(-1.2*L,-1.2*L, 1.2*L, 0.2*L, [1,1,1,1]) #for appropriate zoom
-graphicsSphere = GraphicsDataSphere(point=[0,0,0], radius=r, color=[1.,0.2,0.2,1], nTiles = 8)
+graphicsSphere = graphics.Sphere(point=[0,0,0], radius=r, color=[1.,0.2,0.2,1], nTiles = 8)
 #add ground object and mass point:
 
 #initial velocity:

@@ -181,7 +181,7 @@ namespace ngstd
                                 int antasks = task_manager ? task_manager->GetNumThreads() : 0,
                                 TotalCosts costs = 1000)
   {
-    if (task_manager && costs() >= 1000)
+    if (task_manager && costs() >= 1000 && r.Size() > 1) //added r.Size() > 1 to avoid CreateJob for empty tasks
 
       task_manager -> CreateJob 
         ([r, f] (TaskInfo & ti) 

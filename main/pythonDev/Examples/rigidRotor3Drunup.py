@@ -14,7 +14,8 @@ sys.path.append('../TestModels')            #for modelUnitTest as this example m
 
 import exudyn as exu
 from exudyn.itemInterface import *
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 
 import time
 import numpy as np
@@ -85,15 +86,15 @@ def SweepCos(t, t1, f0, f1):
 #def userLoadBWy(t, load):
 #    return -load*np.cos(omegaInitial*t) #negative sign: FW, positive sign: BW
 
-#background1 = GraphicsDataOrthoCube(0,0,0,.5,0.5,0.5,[0.3,0.3,0.9,1])
+#background1 = graphics.BrickXYZ(0,0,0,.5,0.5,0.5,[0.3,0.3,0.9,1])
 
 #draw RGB-frame at origin
 p=[0,0,0]
 lFrame = 0.8
 tFrame = 0.01
-backgroundX = GraphicsDataCylinder(p,[lFrame,0,0],tFrame,[0.9,0.3,0.3,1],12)
-backgroundY = GraphicsDataCylinder(p,[0,lFrame,0],tFrame,[0.3,0.9,0.3,1],12)
-backgroundZ = GraphicsDataCylinder(p,[0,0,lFrame],tFrame,[0.3,0.3,0.9,1],12)
+backgroundX = graphics.Cylinder(p,[lFrame,0,0],tFrame,[0.9,0.3,0.3,1],12)
+backgroundY = graphics.Cylinder(p,[0,lFrame,0],tFrame,[0.3,0.9,0.3,1],12)
+backgroundZ = graphics.Cylinder(p,[0,0,lFrame],tFrame,[0.3,0.3,0.9,1],12)
 #mbs.AddObject(ObjectGround(referencePosition= [0,0,0], visualization=VObjectGround(graphicsData= [backgroundX, backgroundY, backgroundZ])))
 
 #rotor is rotating around x-axis
@@ -112,8 +113,8 @@ nGround0=mbs.AddNode(NodePointGround(referenceCoordinates = [-L/2,0,0]))
 nGround1=mbs.AddNode(NodePointGround(referenceCoordinates = [ L/2,0,0]))
 
 #add mass point (this is a 3D object with 3 coordinates):
-gRotor = GraphicsDataCylinder([-lRotor*0.5,0,0],[lRotor,0,0],r,[0.3,0.3,0.9,1],128)
-gRotor2 = GraphicsDataCylinder([-L0,0,0],[L,0,0],r*0.05,[0.3,0.3,0.9,1],16)
+gRotor = graphics.Cylinder([-lRotor*0.5,0,0],[lRotor,0,0],r,[0.3,0.3,0.9,1],128)
+gRotor2 = graphics.Cylinder([-L0,0,0],[L,0,0],r*0.05,[0.3,0.3,0.9,1],16)
 gRotor3 = [backgroundX, backgroundY, backgroundZ]
 rigid = mbs.AddObject(RigidBody(physicsMass=m, physicsInertia=[Jxx,Jyyzz,Jyyzz,0,0,0], nodeNumber = n1, visualization=VObjectRigidBody2D(graphicsData=[gRotor, gRotor2]+gRotor3)))
 

@@ -28,7 +28,8 @@ You can view and download this file on Github: `connectorGravityTest.py <https:/
    
    import exudyn as exu
    from exudyn.itemInterface import *
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    import numpy as np
    
    useGraphics = True #without test
@@ -56,14 +57,14 @@ You can view and download this file on Github: `connectorGravityTest.py <https:/
    rOrbit = [2e5, 4e5, 8e5, 10e5]
    vOrbitEps = [1.,1.,1.,1.] #factors to make non-circular orbits...
    
-   background = GraphicsDataCheckerBoard(point=[0,0,-2*sizeMass0], size=2.1*max(rOrbit), 
+   background = graphics.CheckerBoard(point=[0,0,-2*sizeMass0], size=2.1*max(rOrbit), 
                                          color=[0,0,0,1], alternatingColor=[0.05,0,0,1])
    
    oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0],
                                       visualization=VObjectGround(graphicsData=[background])))
    # nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
    node0 = mbs.AddNode(NodePoint(referenceCoordinates = [0,0,0])) #planet
-   gMass0 = GraphicsDataSphere(radius=1e5, color=color4blue, nTiles=64)
+   gMass0 = graphics.Sphere(radius=1e5, color=graphics.color.blue, nTiles=64)
    oMassPoint0 = mbs.AddObject(MassPoint(nodeNumber = node0, physicsMass=massStar,
                                          visualization=VMassPoint(graphicsData=[gMass0])))
    m0 = mbs.AddMarker(MarkerNodePosition(nodeNumber=node0))
@@ -76,7 +77,7 @@ You can view and download this file on Github: `connectorGravityTest.py <https:/
        node1 = mbs.AddNode(NodePoint(referenceCoordinates = [r,0,0], 
                                      initialVelocities=[0,vOrbit,0])) #satellite
        
-       gMass1 = GraphicsDataSphere(radius=sizeMass[i], color=color4list[i], nTiles=24)
+       gMass1 = graphics.Sphere(radius=sizeMass[i], color=graphics.colorList[i], nTiles=24)
        
        oMassPoint1 = mbs.AddObject(MassPoint(nodeNumber = node1, physicsMass=mass[i],
                                              visualization=VMassPoint(graphicsData=[gMass1])))

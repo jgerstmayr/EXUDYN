@@ -13,7 +13,8 @@
 
 import exudyn as exu
 from exudyn.itemInterface import *
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 from exudyn.rigidBodyUtilities import *
 from exudyn.graphicsDataUtilities import *
 from exudyn.robotics import *
@@ -42,19 +43,19 @@ jointWidth=0.1
 jointRadius=0.06
 linkWidth=0.1
 
-graphicsBaseList = [GraphicsDataOrthoCubePoint([0,0,-0.15], [0.12,0.12,0.1], color4grey)]
-graphicsBaseList +=[GraphicsDataCylinder([0,0,0], [0.5,0,0], 0.0025, color4red)]
-graphicsBaseList +=[GraphicsDataCylinder([0,0,0], [0,0.5,0], 0.0025, color4green)]
-graphicsBaseList +=[GraphicsDataCylinder([0,0,0], [0,0,0.5], 0.0025, color4blue)]
-graphicsBaseList +=[GraphicsDataCylinder([0,0,-jointWidth], [0,0,jointWidth], linkWidth*0.5, color4list[0])] #belongs to first body
+graphicsBaseList = [graphics.Brick([0,0,-0.15], [0.12,0.12,0.1], graphics.color.grey)]
+graphicsBaseList +=[graphics.Cylinder([0,0,0], [0.5,0,0], 0.0025, graphics.color.red)]
+graphicsBaseList +=[graphics.Cylinder([0,0,0], [0,0.5,0], 0.0025, graphics.color.green)]
+graphicsBaseList +=[graphics.Cylinder([0,0,0], [0,0,0.5], 0.0025, graphics.color.blue)]
+graphicsBaseList +=[graphics.Cylinder([0,0,-jointWidth], [0,0,jointWidth], linkWidth*0.5, graphics.colorList[0])] #belongs to first body
 
 ty = 0.03
 tz = 0.04
 zOff = -0.05
 toolSize= [0.05,0.5*ty,0.06]
-graphicsToolList = [GraphicsDataCylinder(pAxis=[0,0,zOff], vAxis= [0,0,tz], radius=ty*1.5, color=color4red)]
-graphicsToolList+= [GraphicsDataOrthoCubePoint([0,ty,1.5*tz+zOff], toolSize, color4grey)]
-graphicsToolList+= [GraphicsDataOrthoCubePoint([0,-ty,1.5*tz+zOff], toolSize, color4grey)]
+graphicsToolList = [graphics.Cylinder(pAxis=[0,0,zOff], vAxis= [0,0,tz], radius=ty*1.5, color=graphics.color.red)]
+graphicsToolList+= [graphics.Brick([0,ty,1.5*tz+zOff], toolSize, graphics.color.grey)]
+graphicsToolList+= [graphics.Brick([0,-ty,1.5*tz+zOff], toolSize, graphics.color.grey)]
 
 #control parameters, per joint:
 fc=1
@@ -121,7 +122,7 @@ if mode=='newDH':
                                    inertia=link['inertia'], 
                                    localHT=StdDH2HT(link['stdDH']),
                                    PDcontrol=(Pcontrol[cnt], Dcontrol[cnt]),
-                                   visualization=VRobotLink(linkColor=color4list[cnt])
+                                   visualization=VRobotLink(linkColor=graphics.colorList[cnt])
                                    ))
 elif mode=='newModDH': #computes preHT and localHT, but ALSO converts inertia parameters from stdDH to modDHKK (NEEDED!)
     for cnt, link in enumerate(linkList): 
@@ -140,7 +141,7 @@ elif mode=='newModDH': #computes preHT and localHT, but ALSO converts inertia pa
                                    preHT = preHT,
                                    localHT=localHT,
                                    PDcontrol=(Pcontrol[cnt], Dcontrol[cnt]),
-                                   visualization=VRobotLink(linkColor=color4list[cnt])
+                                   visualization=VRobotLink(linkColor=graphics.colorList[cnt])
                                    #visualization=VRobotLink(showCOM=True, showMBSjoint=False, graphicsData=gLinkList[cnt])
                                    ))
 else:

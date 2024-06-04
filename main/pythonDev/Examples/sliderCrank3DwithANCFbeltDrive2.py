@@ -29,8 +29,6 @@
 import sys
 import os
 
-#import exudyn
-sys.path.append('../../../bin/WorkingRelease')
     
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -52,7 +50,7 @@ from exudyn.itemInterface import (MarkerNodeRotationCoordinate, ObjectConnectorC
                            MarkerNodeCoordinate, Force, SensorBody, NodeRigidBody2D, ObjectRigidBody2D, 
                            MarkerBodyRigid, ObjectJointRevolute2D, SensorLoad)
 from exudyn.utilities import AddRigidBody, RigidBodyInertia, ObjectConnectorCoordinate, InertiaCuboid
-from exudyn.graphicsDataUtilities import GraphicsDataRigidLink, GraphicsDataOrthoCube
+import exudyn.graphics as graphics #only import if it does not conflict
 #import visHelper
 #visHelper.init()
 
@@ -188,7 +186,8 @@ print("Exudyn used:", exu.GetVersionString())
 
 sys_set = 4
 
-export_images = True
+useGraphics = True
+export_images = useGraphics
 PLOTS_PATH = "plots/"
 
 if export_images:
@@ -609,7 +608,7 @@ if sys_set == 1 or sys_set == 3:
     #crank
     
     #visualization of crank
-    graphics_crank = GraphicsDataRigidLink(p0=[-0.5*L_A,0,-h_A/2],
+    graphics_crank = graphics.RigidLink(p0=[-0.5*L_A,0,-h_A/2],
                                            p1=[0.5*L_A ,0,-h_A/2], 
                                            axis0=[0,0,1], axis1=[0,0,1], 
                                            radius=[0.5*h_A,0.5*h_A],
@@ -628,7 +627,7 @@ if sys_set == 1 or sys_set == 3:
     #connecting rod
     
     #visualization of connecting rod
-    graphics_conrod = GraphicsDataRigidLink(p0=[-0.5*L_B,0,h_B/2],
+    graphics_conrod = graphics.RigidLink(p0=[-0.5*L_B,0,h_B/2],
                                             p1=[0.5*L_B,0,h_B/2], 
                                             axis0=[0,0,1], axis1=[0,0,1],
                                             radius=[0.5*h_B,0.5*h_B],
@@ -648,7 +647,7 @@ if sys_set == 1 or sys_set == 3:
     
     #visualization of slider
     c=0.025 #dimension of slider
-    graphics_slider = GraphicsDataOrthoCube(-c,-c,-c*2,c,c,0,
+    graphics_slider = graphics.BrickXYZ(-c,-c,-c*2,c,c,0,
                                             color=[0.2,0.2,0.2,0.9])
     #node on center of gravity of slider
     nP2D_slider = mbs.AddNode(NodePoint2D(referenceCoordinates=[-(L_A+L_B),0]))
@@ -730,15 +729,15 @@ if sys_set == 2 or sys_set == 4:
     
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #crank
-    graphics_crank_1 = GraphicsDataRigidLink(p0=[0,0,0],p1=[0,0,-b_a0], axis1=[0,0,1], radius=[h_A/2,h_A/1.3], 
+    graphics_crank_1 = graphics.RigidLink(p0=[0,0,0],p1=[0,0,-b_a0], axis1=[0,0,1], radius=[h_A/2,h_A/1.3], 
                                        thickness = h_A, width=[0,h_A/2], color=[0.8,0.8,0.8,1])
-    graphics_crank_2 = GraphicsDataRigidLink(p0=[0,0,0],p1=[-L_A,0,0], radius=[h_A/2,h_A/2], 
+    graphics_crank_2 = graphics.RigidLink(p0=[0,0,0],p1=[-L_A,0,0], radius=[h_A/2,h_A/2], 
                                        thickness = h_A, color=[0.8,0.8,0.8,1])
-    graphics_crank_3 = GraphicsDataRigidLink(p0=[-L_A,0,0],p1=[-L_A,0,b_a1], radius=[h_A/2,h_A/2], 
+    graphics_crank_3 = graphics.RigidLink(p0=[-L_A,0,0],p1=[-L_A,0,b_a1], radius=[h_A/2,h_A/2], 
                                        thickness = h_A, color=[0.8,0.8,0.8,1])
-    graphics_crank_4 = GraphicsDataRigidLink(p0=[-L_A,0,b_a1],p1=[0,0,b_a1], radius=[h_A/2,h_A/2], 
+    graphics_crank_4 = graphics.RigidLink(p0=[-L_A,0,b_a1],p1=[0,0,b_a1], radius=[h_A/2,h_A/2], 
                                        thickness = h_A, color=[0.8,0.8,0.8,1])
-    graphics_crank_5 = GraphicsDataRigidLink(p0=[0,0,b_a1],p1=[0,0,b_a1+b_a2],axis1=[0,0,1], radius=[h_A/2,h_A/1.3], 
+    graphics_crank_5 = graphics.RigidLink(p0=[0,0,b_a1],p1=[0,0,b_a1+b_a2],axis1=[0,0,1], radius=[h_A/2,h_A/1.3], 
                                        thickness = h_A, width=[0,h_A/2], color=[0.8,0.8,0.8,1])
     [nRG_crank,oRB_crank]=AddRigidBody(mainSys = mbs, inertia=inertia_crank, nodeType=str(nodeType), 
                                            position=[0,0,b_a0], angularVelocity=[0,0,0],
@@ -747,7 +746,7 @@ if sys_set == 2 or sys_set == 4:
     
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #connecting rod
-    graphics_conrod = GraphicsDataRigidLink(p0=[L_B/2,0,0],p1=[-L_B/2,0,0], axis0=[0,0,1], axis1=[0,0,1], radius=[h_B/1.5,h_B/2], 
+    graphics_conrod = graphics.RigidLink(p0=[L_B/2,0,0],p1=[-L_B/2,0,0], axis0=[0,0,1], axis1=[0,0,1], radius=[h_B/1.5,h_B/2], 
                                        thickness = h_B, width=[h_B,h_B], color=[0.5,0.5,0.5,1])
     [nRG_conrod,oRB_conrod]=AddRigidBody(mainSys = mbs, inertia=inertia_conrod, nodeType=str(nodeType), angularVelocity=[0,0,0],
                                           position=[-L_A-L_B/2,0,b_a0+b_a1/2], gravity=g, graphicsDataList=[graphics_conrod])
@@ -755,7 +754,7 @@ if sys_set == 2 or sys_set == 4:
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #slider
     d=0.07
-    graphics_slider = GraphicsDataOrthoCube(-d/2,-d/2,-d-h_B/2,d/2,d/2,-h_B/2, 
+    graphics_slider = graphics.BrickXYZ(-d/2,-d/2,-d-h_B/2,d/2,d/2,-h_B/2, 
                                             color=[0.2,0.2,0.2,0.9])
     [nRB_slider,oRB_slider]=AddRigidBody(mainSys = mbs, 
                                          inertia=inertia_slider, 

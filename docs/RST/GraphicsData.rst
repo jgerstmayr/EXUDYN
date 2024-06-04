@@ -8,7 +8,8 @@ All graphics objects are defined by a \ ``GraphicsData``\  structure.
 Note that currently the visualization is based on a very simple and ancient OpenGL implementation, as there is currently no simple platform independent alternative. However, most of the heavy load triangle-based operations are implemented in C++ and are realized by very efficient OpenGL commands. However, note that the number of triangles to represent the object should be kept in a feasible range (\ :math:`<1000000`\ ) in order to obtain a fast response of the renderer.
 
 Many objects include a \ ``GraphicsData``\  dictionary structure for definition of attached visualization of the object.
-Note that objects expect a list of \ ``GraphicsData``\ , which can be produced with \ ``GraphicsData...(...)``\  functions. Note that if reading out the \ ``GraphicsData``\  from the object again, it usually has a different structure sorted by types of \ ``GraphicsData``\ .
+Note that objects expect a list of \ ``GraphicsData``\ , which can be produced with \ ``exudyn.graphics. ...``\  functions (until Exudyn 1.8.33 with \ ``GraphicsData...(...)``\ , which are now deprecated). 
+Note that if reading out the \ ``GraphicsData``\  from the object again, it usually has a different structure sorted by types of \ ``GraphicsData``\ .
 Typically, you can use primitives (cube, sphere, ...) or \ :ref:`STL <STL>`\  data to define the objects appearance.
 \ ``GraphicsData``\  dictionaries can be created with functions provided in the utilities module \ ``exudyn.graphicsDataUtilities``\ , see Section :ref:`sec-module-graphicsdatautilities`\ .
 

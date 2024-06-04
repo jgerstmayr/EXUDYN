@@ -12,7 +12,8 @@
 
 import exudyn as exu
 from exudyn.itemInterface import *
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 from exudyn.beams import *
 from exudyn.robotics import *
 
@@ -208,10 +209,10 @@ massLoad=2
 
 bMass0 = mbs.AddObject(ObjectMassPoint2D(physicsMass=massLoad, 
                                          nodeNumber=node0,
-                                visualization=VMassPoint2D(graphicsData=[GraphicsDataSphere(radius=0.1, nTiles=32)])))
+                                visualization=VMassPoint2D(graphicsData=[graphics.Sphere(radius=0.1, nTiles=32)])))
 bMassL = mbs.AddObject(ObjectMassPoint2D(physicsMass=massLoad, 
                                          nodeNumber=nodeL,
-                                visualization=VMassPoint2D(graphicsData=[GraphicsDataSphere(radius=0.1, nTiles=32)])))
+                                visualization=VMassPoint2D(graphicsData=[graphics.Sphere(radius=0.1, nTiles=32)])))
 
 mBody0=mbs.AddMarker(MarkerBodyPosition(bodyNumber=bMass0))
 mbs.AddLoad(Force(markerNumber=mBody0, loadVector=massLoad*gVec))
@@ -251,9 +252,9 @@ if useContact:
         
         rot0 = 0 #initial rotation
         pRef = [p[0], p[1], rot0]
-        gList = [GraphicsDataCylinder(pAxis=[0,0,-dimZ],vAxis=[0,0,-dimZ], radius=r,
-                                      color= color4lightgrey, nTiles=64),
-                 GraphicsDataArrow(pAxis=[0,0,0], vAxis=[0.9*r,0,0], radius=0.01*r, color=color4orange)]
+        gList = [graphics.Cylinder(pAxis=[0,0,-dimZ],vAxis=[0,0,-dimZ], radius=r,
+                                      color= graphics.color.lightgrey, nTiles=64),
+                 graphics.Arrow(pAxis=[0,0,0], vAxis=[0.9*r,0,0], radius=0.01*r, color=graphics.color.orange)]
 
         omega0 = 0 #initial angular velocity
         v0 = np.array([0,0,omega0]) 
@@ -382,9 +383,10 @@ if True:
 if useGraphics and True:
     SC.visualizationSettings.general.autoFitScene = False
     SC.visualizationSettings.general.graphicsUpdateInterval=0.02
-    from exudyn.interactive import SolutionViewer
-    sol = LoadSolutionFile('solution/coordinatesSolution.txt', safeMode=True)#, maxRows=100)
-    SolutionViewer(mbs, sol)
+    # from exudyn.interactive import SolutionViewer
+    # sol = LoadSolutionFile('solution/coordinatesSolution.txt', safeMode=True)#, maxRows=100)
+    # SolutionViewer(mbs, sol)
+    mbs.SolutionViewer()
 
 
 if useGraphics: 

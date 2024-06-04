@@ -15,7 +15,8 @@ sys.path.append('../TestModels')            #for modelUnitTest as this example m
 
 import exudyn as exu
 from exudyn.itemInterface import *
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 
 import time
 import numpy as np
@@ -96,16 +97,16 @@ print('omega intial (Hz)= '+str(omegaInitial/(2*np.pi)))
 #def userLoadBWy(t, load):
 #    return -load*np.cos(omegaInitial*t) #negative sign: FW, positive sign: BW
 
-#background1 = GraphicsDataOrthoCube(0,0,0,.5,0.5,0.5,[0.3,0.3,0.9,1])
+#background1 = graphics.BrickXYZ(0,0,0,.5,0.5,0.5,[0.3,0.3,0.9,1])
 
 #draw RGB-frame at origin
 p=[0,0,0]
 rDraw = 0.05*r
 lFrame = rDraw*1.2
 tFrame = 0.01*0.15
-backgroundX = GraphicsDataCylinder(p,[lFrame,0,0],tFrame,[0.9,0.3,0.3,1],12)
-backgroundY = GraphicsDataCylinder(p,[0,lFrame,0],tFrame*0.5,[0.3,0.9,0.3,1],12)
-backgroundZ = GraphicsDataCylinder(p,[0,0,lFrame],tFrame*0.5,[0.3,0.3,0.9,1],12)
+backgroundX = graphics.Cylinder(p,[lFrame,0,0],tFrame,[0.9,0.3,0.3,1],12)
+backgroundY = graphics.Cylinder(p,[0,lFrame,0],tFrame*0.5,[0.3,0.9,0.3,1],12)
+backgroundZ = graphics.Cylinder(p,[0,0,lFrame],tFrame*0.5,[0.3,0.3,0.9,1],12)
 black=[0,0,0,1]
 textCOM = {'type':'Text', 'text': 'COM', 'color': black, 'position': [lFrame*1.1,0,0]}
 textSHAFT = {'type':'Text', 'text': 'SHAFT', 'color': black, 'position': [L-L0+0.1,-eps,0]}
@@ -129,10 +130,10 @@ nGround0=mbs.AddNode(NodePointGround(referenceCoordinates = [-L/2,0,0]))
 nGround1=mbs.AddNode(NodePointGround(referenceCoordinates = [ L/2,0,0]))
 
 #add mass point (this is a 3D object with 3 coordinates):
-gRotor = GraphicsDataCylinder([-lRotor*0.2,0,0],[lRotor*0.4,0,0],rDraw,
+gRotor = graphics.Cylinder([-lRotor*0.2,0,0],[lRotor*0.4,0,0],rDraw,
                               [0.3,0.3,0.9,1],128)
-gRotor2 = GraphicsDataCylinder([-L0,-eps,0],[L,0,0],r*0.01*0.25,[0.6,0.6,0.6,1],16)
-gRotorCOM = GraphicsDataCylinder([-lRotor*0.1,0,0],[lRotor*0.6*0.1,0,0],r*0.01*0.5,
+gRotor2 = graphics.Cylinder([-L0,-eps,0],[L,0,0],r*0.01*0.25,[0.6,0.6,0.6,1],16)
+gRotorCOM = graphics.Cylinder([-lRotor*0.1,0,0],[lRotor*0.6*0.1,0,0],r*0.01*0.5,
                                  [0.3,0.9,0.3,1],16)
 gRotor3 = [backgroundX, backgroundY, backgroundZ, textCOM, textY, textZ, textSHAFT]
 rigid = mbs.AddObject(RigidBody(physicsMass=m, 

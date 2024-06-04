@@ -95,12 +95,12 @@ nMass=mbs.AddNode(Point(referenceCoordinates = [L,0,0]))
 nGround=mbs.AddNode(NodePointGround(referenceCoordinates = [0,0,0]))
 a=L
 z=-0.1*L
-background = GraphicsDataQuad([[-0,-a,z],[ 2*a,-a,z],[ 2*a, a,z],[0, a,z]], 
-                              color=color4lightgrey, alternatingColor=color4white)
+background = graphics.Quad([[-0,-a,z],[ 2*a,-a,z],[ 2*a, a,z],[0, a,z]], 
+                              color=graphics.color.lightgrey, alternatingColor=graphics.color.white)
 oGround=mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=[background])))
 
 #add mass point (this is a 3D object with 3 coordinates):
-gCube = GraphicsDataOrthoCubePoint([0.1*L,0,0], [0.2*L]*3, color4steelblue)
+gCube = graphics.Brick([0.1*L,0,0], [0.2*L]*3, graphics.color.steelblue)
 massPoint = mbs.AddObject(MassPoint(physicsMass = mass, nodeNumber = nMass,
                                     visualization=VMassPoint(graphicsData=[gCube])))
 
@@ -226,10 +226,10 @@ simulationSettings.timeIntegration.verboseMode = 0 #turn off, because of lots of
 simulationSettings.timeIntegration.numberOfSteps = int(deltaT/h)
 simulationSettings.timeIntegration.endTime = deltaT
 
-dialog = InteractiveDialog(mbs=mbs, simulationSettings=simulationSettings,
-                           simulationFunction=SimulationUF, title='Interactive window',
-                           dialogItems=dialogItems, period=deltaT, realtimeFactor=10,
-                           plots=plots, fontSize=12)
+InteractiveDialog(mbs=mbs, simulationSettings=simulationSettings,
+                  simulationFunction=SimulationUF, title='Interactive window',
+                  dialogItems=dialogItems, period=deltaT, realtimeFactor=10,
+                  plots=plots, fontSize=12)
 
 # #stop solver and close render window
 exu.StopRenderer() #safely close rendering window!

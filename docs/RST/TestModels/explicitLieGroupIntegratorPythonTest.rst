@@ -24,7 +24,8 @@ You can view and download this file on Github: `explicitLieGroupIntegratorPython
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    
    import exudyn as exu
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    from exudyn.lieGroupIntegration import *
    
    import numpy as np
@@ -96,7 +97,7 @@ You can view and download this file on Github: `explicitLieGroupIntegratorPython
        nRB = mbs.AddNode(NodeRigidBodyRotVecLG(referenceCoordinates=p0+rot0, initialVelocities=v0+list(rot_t0)))
    
    
-   oGraphics = GraphicsDataOrthoCube(-r/2,-L/2,-r/2, r/2,L/2,r/2, [0.1,0.1,0.8,1])
+   oGraphics = graphics.BrickXYZ(-r/2,-L/2,-r/2, r/2,L/2,r/2, [0.1,0.1,0.8,1])
    oRB = mbs.AddObject(ObjectRigidBody(physicsMass=m, physicsInertia=[JFP[0][0], JFP[1][1], JFP[2][2], JFP[1][2], JFP[0][2], JFP[0][1]], 
                                        nodeNumber=nRB, visualization=VObjectRigidBody(graphicsData=[oGraphics])))
    

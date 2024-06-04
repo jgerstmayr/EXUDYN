@@ -12,7 +12,8 @@
 
 import exudyn as exu
 from exudyn.itemInterface import *
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -37,7 +38,7 @@ mode='GA'
 inertiaSegment = 0*massPerSegment/(12*segmentLength**2) #inertia of segment needs to be zero to agree with Bernoulli-Euler beam
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-background = GraphicsDataCheckerBoard([0,0,0],[0,0,1], size=L*3)
+background = graphics.CheckerBoard([0,0,0],[0,0,1], size=L*3)
 oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0], 
                                    visualization=VObjectGround(graphicsData= [background])))
 
@@ -45,7 +46,7 @@ mPrevious = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition =
 mRotPrevious = -1
 oSegmentLast = -1 #store last segment for sensor
 for i in range(nSegments):
-    graphicsBeam = GraphicsDataOrthoCubePoint([0,0,0],[segmentLength, a, a], color4red)
+    graphicsBeam = graphics.Brick([0,0,0],[segmentLength, a, a], graphics.color.red)
     nRigid = mbs.AddNode(Rigid2D(referenceCoordinates=[(0.5+i)*segmentLength,0,0]))
     oRigid = mbs.AddObject(RigidBody2D(physicsMass=massPerSegment, 
                                        physicsInertia=inertiaSegment,
@@ -77,7 +78,7 @@ if useANCF:
     cable = ObjectANCFCable2D(nodeNumbers=[0,0],physicsLength=segmentLength, 
                               physicsMassPerLength=rhoA, physicsBendingStiffness=EI,
                               physicsAxialStiffness=EI*1e4, useReducedOrderIntegration=True,
-                              visualization=VCable2D(drawHeight = a, color=color4steelblue))
+                              visualization=VCable2D(drawHeight = a, color=graphics.color.steelblue))
     
     ANCFcable = GenerateStraightLineANCFCable2D(mbs, positionOfNode0=[0,offY,0], positionOfNode1=[L,offY,0], 
                                     numberOfElements=nSegments, cableTemplate=cable,

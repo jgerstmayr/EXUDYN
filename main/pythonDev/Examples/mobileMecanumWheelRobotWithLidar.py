@@ -14,7 +14,8 @@
 
 import exudyn
 import exudyn as exu
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 from exudyn.robotics.utilities import AddLidar
 from exudyn.robotics.motion import Trajectory, ProfileConstantAcceleration
 
@@ -102,13 +103,13 @@ inertiaCar = InertiaCuboid(density=mCar/(lCar*wCar*hCar),sideLengths=[wCar, lCar
 rLidar = 0.5*rWheel
 pLidar1 = [(-wCar*0.5-rLidar)*0, 0*(lCar*0.5+rWheel+rLidar), hCar*0.8]
 # pLidar2 = [ wCar*0.5+rLidar,-lCar*0.5-rWheel-rLidar,hCar*0.5]
-graphicsCar = [GraphicsDataOrthoCubePoint(centerPoint=[0,0,0],size=[wCar-1.1*wWheel, lCar+2*rWheel, hCar], 
-                                         color=color4steelblue)]
+graphicsCar = [graphics.Brick(centerPoint=[0,0,0],size=[wCar-1.1*wWheel, lCar+2*rWheel, hCar], 
+                                         color=graphics.color.steelblue)]
 
 
-graphicsCar += [GraphicsDataCylinder(pAxis=pLidar1, vAxis=[0,0,0.5*rLidar], radius=rLidar, clor=color4darkgrey)]
-graphicsCar += [GraphicsDataBasis(headFactor = 4, length=2)]
-# graphicsCar += [GraphicsDataCylinder(pAxis=pLidar2, vAxis=[0,0,0.5*rLidar], radius=rLidar, clor=color4darkgrey)]
+graphicsCar += [graphics.Cylinder(pAxis=pLidar1, vAxis=[0,0,0.5*rLidar], radius=rLidar, clor=graphics.color.darkgrey)]
+graphicsCar += [graphics.Basis(headFactor = 4, length=2)]
+# graphicsCar += [graphics.Cylinder(pAxis=pLidar2, vAxis=[0,0,0.5*rLidar], radius=rLidar, clor=graphics.color.darkgrey)]
 
 [nCar,bCar]=AddRigidBody(mainSys = mbs, 
                          inertia = inertiaCar, 
@@ -142,21 +143,21 @@ sAngularVelWheels=[]
 
 #ground body and marker
 LL = 8
-gGround = GraphicsDataCheckerBoard(point=[0.25*LL,0.25*LL,0],size=2*LL)
+gGround = graphics.CheckerBoard(point=[0.25*LL,0.25*LL,0],size=2*LL)
 
 #obstacles:
 zz=1
-gGround = MergeGraphicsDataTriangleList(GraphicsDataOrthoCubePoint(centerPoint=[0,7,0.5*zz],size=[2*zz,zz,1*zz], color=color4dodgerblue), gGround)
-gGround = MergeGraphicsDataTriangleList(GraphicsDataOrthoCubePoint(centerPoint=[6,5,1.5*zz],size=[zz,2*zz,3*zz], color=color4dodgerblue), gGround)
-gGround = MergeGraphicsDataTriangleList(GraphicsDataOrthoCubePoint(centerPoint=[3,-2.5,0.5*zz],size=[2*zz,zz,1*zz], color=color4dodgerblue), gGround)
-gGround = MergeGraphicsDataTriangleList(GraphicsDataCylinder(pAxis=[-3,0,0],vAxis=[0,0,zz], radius=1.5, color=color4dodgerblue, nTiles=64), gGround)
+gGround = graphics.MergeTriangleLists(graphics.Brick(centerPoint=[0,7,0.5*zz],size=[2*zz,zz,1*zz], color=graphics.color.dodgerblue), gGround)
+gGround = graphics.MergeTriangleLists(graphics.Brick(centerPoint=[6,5,1.5*zz],size=[zz,2*zz,3*zz], color=graphics.color.dodgerblue), gGround)
+gGround = graphics.MergeTriangleLists(graphics.Brick(centerPoint=[3,-2.5,0.5*zz],size=[2*zz,zz,1*zz], color=graphics.color.dodgerblue), gGround)
+gGround = graphics.MergeTriangleLists(graphics.Cylinder(pAxis=[-3,0,0],vAxis=[0,0,zz], radius=1.5, color=graphics.color.dodgerblue, nTiles=64), gGround)
 
 #walls:
 tt=0.2
-gGround = MergeGraphicsDataTriangleList(GraphicsDataOrthoCubePoint(centerPoint=[0.25*LL,0.25*LL-LL,0.5*zz],size=[2*LL,tt,zz], color=color4dodgerblue), gGround)
-gGround = MergeGraphicsDataTriangleList(GraphicsDataOrthoCubePoint(centerPoint=[0.25*LL,0.25*LL+LL,0.5*zz],size=[2*LL,tt,zz], color=color4dodgerblue), gGround)
-gGround = MergeGraphicsDataTriangleList(GraphicsDataOrthoCubePoint(centerPoint=[0.25*LL-LL,0.25*LL,0.5*zz],size=[tt,2*LL,zz], color=color4dodgerblue), gGround)
-gGround = MergeGraphicsDataTriangleList(GraphicsDataOrthoCubePoint(centerPoint=[0.25*LL+LL,0.25*LL,0.5*zz],size=[tt,2*LL,zz], color=color4dodgerblue), gGround)
+gGround = graphics.MergeTriangleLists(graphics.Brick(centerPoint=[0.25*LL,0.25*LL-LL,0.5*zz],size=[2*LL,tt,zz], color=graphics.color.dodgerblue), gGround)
+gGround = graphics.MergeTriangleLists(graphics.Brick(centerPoint=[0.25*LL,0.25*LL+LL,0.5*zz],size=[2*LL,tt,zz], color=graphics.color.dodgerblue), gGround)
+gGround = graphics.MergeTriangleLists(graphics.Brick(centerPoint=[0.25*LL-LL,0.25*LL,0.5*zz],size=[tt,2*LL,zz], color=graphics.color.dodgerblue), gGround)
+gGround = graphics.MergeTriangleLists(graphics.Brick(centerPoint=[0.25*LL+LL,0.25*LL,0.5*zz],size=[tt,2*LL,zz], color=graphics.color.dodgerblue), gGround)
 
 
 oGround = mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=[gGround])))
@@ -170,7 +171,7 @@ def Rot2D(phi):
     return np.array([[np.cos(phi),-np.sin(phi)],
                      [np.sin(phi), np.cos(phi)]])
 
-[meshPoints, meshTrigs] = GraphicsData2PointsAndTrigs(gGround)
+[meshPoints, meshTrigs] = graphics.ToPointsAndTrigs(gGround)
 
 ngc = mbs.CreateDistanceSensorGeometry(meshPoints, meshTrigs, rigidBodyMarkerIndex=mGround, searchTreeCellSize=[8,8,1])
 maxDistance = 20 #max. distance of sensors; just large enough to reach everything; take care, in zoom all it will show this large area
@@ -187,12 +188,12 @@ mbs.variables['sLidarList'] = AddLidar(mbs, generalContactIndex=ngc, positionOrM
           numberOfSensors=mbs.variables['Lidar'][2], addGraphicsObject=True,
           angleStart=mbs.variables['Lidar'][0], 
           angleEnd=mbs.variables['Lidar'][1], # 1.5*pi-pi,
-          lineLength=1, storeInternal=True, color=color4red, inclination=0., rotation=RotationMatrixZ(np.pi/2*0))
+          lineLength=1, storeInternal=True, color=graphics.color.red, inclination=0., rotation=RotationMatrixZ(np.pi/2*0))
 
 if False: # here additional Sensors could be created to have e.g. two markers diagonally on the car (robot)
     AddLidar(mbs, generalContactIndex=ngc, positionOrMarker=markerCar2, minDistance=0, maxDistance=maxDistance, 
               numberOfSensors=100,angleStart=0, angleEnd=1.5*pi, inclination=-4/180*pi,
-              lineLength=1, storeInternal=True, color=color4grey )
+              lineLength=1, storeInternal=True, color=graphics.color.grey )
     
 
     
@@ -215,7 +216,7 @@ for iWheel in range(nWheels):
         frictionAngle *= -1
 
     #additional graphics for visualization of rotation (JUST FOR DRAWING!):
-    graphicsWheel = [GraphicsDataOrthoCubePoint(centerPoint=[0,0,0],size=[wWheel*1.1,0.7*rWheel,0.7*rWheel], color=color4lightred)]
+    graphicsWheel = [graphics.Brick(centerPoint=[0,0,0],size=[wWheel*1.1,0.7*rWheel,0.7*rWheel], color=graphics.color.lightred)]
     nCyl = 12
     rCyl = 0.1*rWheel
     for i in range(nCyl): #draw cylinders on wheels
@@ -223,11 +224,11 @@ for iWheel in range(nWheels):
         pAxis = np.array([0,rWheel*np.sin(iPhi),-rWheel*np.cos(iPhi)])
         vAxis = [0.5*wWheel*np.cos(frictionAngle),0.5*wWheel*np.sin(frictionAngle),0]
         vAxis2 = RotationMatrixX(iPhi)@vAxis
-        rColor = color4grey
-        if i >= nCyl/2: rColor = color4darkgrey
-        graphicsWheel += [GraphicsDataCylinder(pAxis=pAxis-vAxis2, vAxis=2*vAxis2, radius=rCyl, 
+        rColor = graphics.color.grey
+        if i >= nCyl/2: rColor = graphics.color.darkgrey
+        graphicsWheel += [graphics.Cylinder(pAxis=pAxis-vAxis2, vAxis=2*vAxis2, radius=rCyl, 
                                                color=rColor)]
-        graphicsWheel+= [GraphicsDataBasis()]
+        graphicsWheel+= [graphics.Basis()]
 
     dx = -0.5*wCar
     dy = -0.5*lCar
@@ -273,7 +274,7 @@ for iWheel in range(nWheels):
                                                   dryFrictionProportionalZone=1e-1, 
                                                   rollingFrictionViscous=0.01,
                                                   contactStiffness=kRolling, contactDamping=dRolling,
-                                                  visualization=VObjectConnectorRollingDiscPenalty(discWidth=wWheel, color=color4blue)))
+                                                  visualization=VObjectConnectorRollingDiscPenalty(discWidth=wWheel, color=graphics.color.blue)))
     oRollingDiscs += [oRolling]
 
     strNum = str(iWheel)

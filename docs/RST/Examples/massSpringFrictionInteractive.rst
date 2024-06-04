@@ -27,7 +27,8 @@ You can view and download this file on Github: `massSpringFrictionInteractive.py
    #sys.path.append('C:/DATA/cpp/EXUDYN_git/main/bin/WorkingRelease') #for exudyn, itemInterface and exudynUtilities
    
    import exudyn as exu
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    from exudyn.interactive import InteractiveDialog
    from exudyn.physics import StribeckFunction, RegularizedFriction
    
@@ -100,8 +101,8 @@ You can view and download this file on Github: `massSpringFrictionInteractive.py
    lBand = 200*L
    w = L*0.5
    z=-tt
-   gBackground = [GraphicsDataQuad([[-lBand,-w,z],[ L,-w,z],[ L, w,z],[-lBand, w,z]], 
-                                 color=color4lightgrey, alternatingColor=color4grey,
+   gBackground = [graphics.Quad([[-lBand,-w,z],[ L,-w,z],[ L, w,z],[-lBand, w,z]], 
+                                 color=graphics.color.lightgrey, alternatingColor=graphics.color.grey,
                                  nTiles=200, nTilesY=6)]
    
    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -111,7 +112,7 @@ You can view and download this file on Github: `massSpringFrictionInteractive.py
                         initialVelocities= [v0,0,0]))
    
    #add mass points and ground object:
-   gCube = GraphicsDataOrthoCube(-tt, -tt, -tt, tt, tt, tt, color4steelblue)
+   gCube = graphics.BrickXYZ(-tt, -tt, -tt, tt, tt, tt, graphics.color.steelblue)
    massPoint = mbs.AddObject(MassPoint(physicsMass = mass, nodeNumber = nMass, 
                                        visualization=VObjectMassPoint(graphicsData=[gCube])))
    
@@ -295,7 +296,8 @@ You can view and download this file on Github: `massSpringFrictionInteractive.py
    dialog = InteractiveDialog(mbs=mbs, simulationSettings=simulationSettings,
                               simulationFunction=SimulationUF, 
                               title='Interactive window',
-                              dialogItems=dialogItems, period=deltaT, realtimeFactor=10,
+                              dialogItems=dialogItems, period=deltaT, realtimeFactor=10, 
+                              runOnStart=True,
                               plots=plots, fontSize=12)
    
    # #stop solver and close render window

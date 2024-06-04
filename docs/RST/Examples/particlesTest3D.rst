@@ -24,7 +24,8 @@ You can view and download this file on Github: `particlesTest3D.py <https://gith
    
    import exudyn as exu
    from exudyn.itemInterface import *
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    from exudyn.graphicsDataUtilities import *
    
    import numpy as np
@@ -42,7 +43,7 @@ You can view and download this file on Github: `particlesTest3D.py <https://gith
    useGraphics = True
    
    L = 1
-   n = 8000*8*4 #*8*4 #32*8*8
+   n = 8000 #up to 256000; *8*4 #32*8*8
    # n = 5000
    a = 0.2*L*0.5*10*0.5
    radius = 0.35*a
@@ -63,12 +64,12 @@ You can view and download this file on Github: `particlesTest3D.py <https://gith
    pos4 = [ 0,0,-rb-H]
    posList=[pos0,pos1,pos2,pos3,pos4]
    for pos in posList:
-       #gDataList += [{'type':'Circle','position':pos,'radius':rb, 'color':color4grey}]
-       #gDataList += [GraphicsDataCylinder(pAxis=pos, vAxis=[0,0,0.1], radius=rb, color= color4grey, nTiles=200)]
-       colBG = color4grey
+       #gDataList += [{'type':'Circle','position':pos,'radius':rb, 'color':graphics.color.grey}]
+       #gDataList += [graphics.Cylinder(pAxis=pos, vAxis=[0,0,0.1], radius=rb, color= graphics.color.grey, nTiles=200)]
+       colBG = graphics.color.grey
        colBG[3] = 0.05
-       gDataList += [GraphicsDataSphere(point=pos, radius=rb, color= colBG, nTiles=100)]
-       #gDataList += [GraphicsDataRectangle(-1.2*H,-H*0.75,1.2*H,16*H,color=color4red)]
+       gDataList += [graphics.Sphere(point=pos, radius=rb, color= colBG, nTiles=100)]
+       #gDataList += [GraphicsDataRectangle(-1.2*H,-H*0.75,1.2*H,16*H,color=graphics.color.red)]
        nMass = mbs.AddNode(NodePointGround(referenceCoordinates=pos,
                            visualization=VNodePointGround(show=False)))
        #oMass = mbs.AddObject(MassPoint(physicsMass=m, nodeNumber=nMass))
@@ -81,26 +82,26 @@ You can view and download this file on Github: `particlesTest3D.py <https://gith
    gDataSphere = []
    for i in range(ns):
        gRad = radius*(0.75+0.4*(i/ns))
-       # gSphere = GraphicsDataCylinder(pAxis=[0,0,-0.25], vAxis=[0,0,0.5], radius=gRad, color=color4blue, nTiles=12)
-       # gSphere2 = GraphicsDataCylinder(pAxis=[0,0,-0.3], vAxis=[0,0,0.6], radius=0.8*gRad, color=color4steelblue, nTiles=10)
-       gSphere = GraphicsDataSphere(point=[0,0,0], radius=gRad, color=color4blue, nTiles=8)
+       # gSphere = graphics.Cylinder(pAxis=[0,0,-0.25], vAxis=[0,0,0.5], radius=gRad, color=graphics.color.blue, nTiles=12)
+       # gSphere2 = graphics.Cylinder(pAxis=[0,0,-0.3], vAxis=[0,0,0.6], radius=0.8*gRad, color=graphics.color.steelblue, nTiles=10)
+       gSphere = graphics.Sphere(point=[0,0,0], radius=gRad, color=graphics.color.blue, nTiles=8)
        gDataSphere += [[gSphere]]
    
    gDataSphere = []
    
-   color4node = color4blue
+   color4node = graphics.color.blue
    print("start create: number of masses =",n)
    for i in range(n):
    
        kk = int(i/12800)
-       color4node = color4list[min(kk%12,11)]
+       color4node = graphics.colorList[min(kk%12,11)]
        # if (i%10000 == 0):
            # gDataSphere = []
            # for i in range(ns):
            #     gRad = radius*(0.75+0.4*(i/ns))
-           #     # gSphere = GraphicsDataCylinder(pAxis=[0,0,-0.25], vAxis=[0,0,0.5], radius=gRad, color=color4blue, nTiles=12)
-           #     # gSphere2 = GraphicsDataCylinder(pAxis=[0,0,-0.3], vAxis=[0,0,0.6], radius=0.8*gRad, color=color4steelblue, nTiles=10)
-           #     gSphere = GraphicsDataSphere(point=[0,0,0], radius=gRad, color=color4list[min(k%12,11)], nTiles=8)
+           #     # gSphere = graphics.Cylinder(pAxis=[0,0,-0.25], vAxis=[0,0,0.5], radius=gRad, color=graphics.color.blue, nTiles=12)
+           #     # gSphere2 = graphics.Cylinder(pAxis=[0,0,-0.3], vAxis=[0,0,0.6], radius=0.8*gRad, color=graphics.color.steelblue, nTiles=10)
+           #     gSphere = graphics.Sphere(point=[0,0,0], radius=gRad, color=graphics.colorList[min(k%12,11)], nTiles=8)
            #     gDataSphere += [[gSphere]]
            
    
@@ -114,8 +115,8 @@ You can view and download this file on Github: `particlesTest3D.py <https://gith
    
        valueRand = np.random.random(1)[0]
        gRad = radius*(0.75+0.4*valueRand)
-       #gSphere = GraphicsDataCylinder(pAxis=[0,0,-0.25], vAxis=[0,0,0.25], radius=gRad, color= color4steelblue, nTiles=16)
-       #gSphere2 = GraphicsDataCylinder(pAxis=[0,0,-0.3], vAxis=[0,0,0.3], radius=0.8*gRad, color= color4blue, nTiles=12)
+       #gSphere = graphics.Cylinder(pAxis=[0,0,-0.25], vAxis=[0,0,0.25], radius=gRad, color= graphics.color.steelblue, nTiles=16)
+       #gSphere2 = graphics.Cylinder(pAxis=[0,0,-0.3], vAxis=[0,0,0.3], radius=0.8*gRad, color= graphics.color.blue, nTiles=12)
        nMass = mbs.AddNode(NodePoint(referenceCoordinates=[offx,offy,offz],
                                      initialVelocities=[0,-20,0],
                                      visualization=VNodePoint(show=True,drawSize=2*gRad, color=color4node)))
@@ -246,10 +247,11 @@ You can view and download this file on Github: `particlesTest3D.py <https://gith
        SC.visualizationSettings.general.autoFitScene = False
        SC.visualizationSettings.general.graphicsUpdateInterval=0.5
        
-       print('load solution file')
-       sol = LoadSolutionFile('particles3DX.txt', safeMode=True)
-       #sol = LoadSolutionFile('coordinatesSolution2.txt')
+       #load previously computed solution
+       # print('load solution file')
+       # sol = LoadSolutionFile('particles3DX.txt', safeMode=True)
        print('start SolutionViewer')
-       mbs.SolutionViewer(sol)
+       # mbs.SolutionViewer(sol)
+       mbs.SolutionViewer()
 
 

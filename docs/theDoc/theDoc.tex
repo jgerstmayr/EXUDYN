@@ -173,14 +173,18 @@ __init__, NumberOfSystems, Reset,
 %
 SymReal,
 InertiaCuboid, 
-Translated, GraphicsDataRigidLink, GraphicsDataBasis,
-AddRigidBody, AddRevoluteJoint, Info, DrawSystemGraph, SetRenderState,
+Translated, RigidLink, Basis, Brick,
+Info, DrawSystemGraph, SetRenderState,
 WaitForRenderEngineStopFlag, WaitForUserToContinue, LoadSolutionFile,
 SolutionViewer, PlotSensor,
 %
-CreateMassPoint, CreateRigidBody, CreateSpringDamper, CreateRevoluteJoint,
+Cable2D, GenericJoint, ObjectJointRevoluteZ, MarkerBodyRigid, ObjectRigidBody, ObjectGround,
+%
+CreateGround, CreateMassPoint, CreateRigidBody, CreateSpringDamper, CreateRevoluteJoint,
 CreatePrismaticJoint, CreateSphericalJoint, CreateGenericJoint,
-CreateDistanceSensorGeometry, CreateDistanceSensor
+CreateDistanceSensorGeometry, CreateDistanceSensor,
+CreateForce, CreateTorque, 
+GenerateStraightBeam, 
 },          % Custom highlighting
 emphstyle=\ttfamily\small\bfseries\color{deepred},    % Custom highlighting style
 stringstyle=\color{deepgreen},

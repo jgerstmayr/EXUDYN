@@ -5,6 +5,7 @@
 #
 # Author:   Johannes Gerstmayr 
 # Date:     2021-04-20
+# Update:   2024-05-14: add node weighting and add some fixes
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
@@ -12,22 +13,15 @@
 
 
 import exudyn as exu
-from exudyn.itemInterface import *
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 from exudyn.FEM import *
-from exudyn.graphicsDataUtilities import *
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
 import numpy as np
 import time
-
-#import timeit
-
-import exudyn.basicUtilities as eb
-import exudyn.rigidBodyUtilities as rb
-import exudyn.utilities as eu
 
 
 useGraphics = True
@@ -93,7 +87,7 @@ if True: #needs netgen/ngsolve to be installed to compute mesh, see e.g.: https:
 
     geo.Add(block+bolt0+bolt+bushing)
 
-    curvaturesafety = 5
+    curvaturesafety = 2
     if meshH==0.04: 
         curvaturesafety = 1.2#this case is for creating very small files ...
 
@@ -126,15 +120,13 @@ if True: #now import mesh as mechanical model to EXUDYN
     boltP2=[0,-b,0]
     nodesOnBolt = fem.GetNodesOnCylinder(boltP1, boltP2, radius=0.5*d)
     #print("boundary nodes bolt=", nodesOnBolt)
-    nodesOnBoltLen = len(nodesOnBolt)
-    nodesOnBoltWeights = np.array((1./nodesOnBoltLen)*np.ones(nodesOnBoltLen))
+    nodesOnBoltWeights = fem.GetNodeWeightsFromSurfaceAreas(nodesOnBolt)
 
     bushingP1=[L,0,0]
     bushingP2=[L,-b,0]
     nodesOnBushing = fem.GetNodesOnCylinder(bushingP1, bushingP2, radius=0.5*d)
     #print("boundary nodes bushing=", nodesOnBushing)
-    nodesOnBushingLen = len(nodesOnBushing)
-    nodesOnBushingWeights = np.array((1./nodesOnBushingLen)*np.ones(nodesOnBushingLen))
+    nodesOnBushingWeights = fem.GetNodeWeightsFromSurfaceAreas(nodesOnBushing)
 
     print("nNodes=",fem.NumberOfNodes())
 
@@ -206,7 +198,6 @@ if True: #now import mesh as mechanical model to EXUDYN
     nodeDrawSize = 0.0025 #for joint drawing
 
     
-    #mRB = mbs.AddMarker(MarkerNodeRigid(nodeNumber=objFFRF['nRigidBody']))
 
     if True:
         boltMidPoint = 0.5*(np.array(boltP1)+boltP2)
@@ -216,7 +207,6 @@ if True: #now import mesh as mechanical model to EXUDYN
         altApproach = True
         mBolt = mbs.AddMarker(MarkerSuperElementRigid(bodyNumber=objFFRF['oFFRFreducedOrder'], 
                                                       meshNodeNumbers=np.array(nodesOnBolt), #these are the meshNodeNumbers
-                                                      #referencePosition=boltMidPoint,
                                                       useAlternativeApproach=altApproach,
                                                       weightingFactors=nodesOnBoltWeights))
         bushingMidPoint = 0.5*(np.array(bushingP1)+bushingP2)
@@ -224,7 +214,6 @@ if True: #now import mesh as mechanical model to EXUDYN
         #add marker for visualization of boundary nodes
         mBushing = mbs.AddMarker(MarkerSuperElementRigid(bodyNumber=objFFRF['oFFRFreducedOrder'], 
                                                       meshNodeNumbers=np.array(nodesOnBushing), #these are the meshNodeNumbers
-                                                      #referencePosition=bushingMidPoint,
                                                       useAlternativeApproach=altApproach,
                                                       weightingFactors=nodesOnBushingWeights))
 
@@ -245,15 +234,6 @@ if True: #now import mesh as mechanical model to EXUDYN
                                         constrainedAxes = lockedAxes,
                                         visualization=VGenericJoint(axesRadius=0.1*b, axesLength=0.1*b)))
     
-    
-    if False:
-        cms = ObjectFFRFreducedOrderInterface(fem)
-        
-        objFFRF = cms.AddObjectFFRFreducedOrder(mbs, positionRef=[0,0,0], 
-                                                      initialVelocity=[0,0,0], 
-                                                      initialAngularVelocity=[0,0,0],
-                                                      color=[0.9,0.9,0.9,1.],
-                                                      )
         
     #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
     #animate modes
@@ -287,8 +267,8 @@ if True: #now import mesh as mechanical model to EXUDYN
         nodeNumber = objFFRF['nGenericODE2'] #this is the node with the generalized coordinates
         AnimateModes(SC, mbs, nodeNumber, period=0.1, showTime=False, renderWindowText='Hurty-Craig-Bampton: 2 x 6 static modes and 8 eigenmodes\n',
                      runOnStart=True)
-        # import sys
-        # sys.exit()
+        import sys
+        sys.exit()
 
     #add gravity (not necessary if user functions used)
     oFFRF = objFFRF['oFFRFreducedOrder']
@@ -298,9 +278,9 @@ if True: #now import mesh as mechanical model to EXUDYN
     
     #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
     fileDir = 'solution/'
-    # sensBolt = mbs.AddSensor(SensorMarker(markerNumber=mBolt, 
-    #                                       fileName=fileDir+'hingePartBoltPos'+str(nModes)+strMode+'.txt', 
-    #                                       outputVariableType = exu.OutputVariableType.Position))
+    sensBolt = mbs.AddSensor(SensorMarker(markerNumber=mBolt, 
+                                          fileName=fileDir+'hingePartBoltPos'+str(nModes)+strMode+'.txt', 
+                                          outputVariableType = exu.OutputVariableType.Position))
     # sensBushing= mbs.AddSensor(SensorMarker(markerNumber=mBushing, 
     #                                       fileName=fileDir+'hingePartBushingPos'+str(nModes)+strMode+'.txt', 
     #                                       outputVariableType = exu.OutputVariableType.Position))
@@ -334,8 +314,8 @@ if True: #now import mesh as mechanical model to EXUDYN
     
     simulationSettings.solutionSettings.solutionInformation = "CMStutorial "+str(nModes)+" "+strMode+"modes"
     
-    h=0.25e-3*4
-    tEnd = 0.25*8
+    h=1e-3
+    tEnd = 2
     
     simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
     simulationSettings.timeIntegration.endTime = tEnd
@@ -374,9 +354,6 @@ if True: #now import mesh as mechanical model to EXUDYN
         else:
             mbs.SolveStatic(simulationSettings=simulationSettings)
 
-        # uTip = mbs.GetSensorValues(sensTipDispl)[1]
-        # print("nModes=", nModes, ", tip displacement=", uTip)
-        
         if varType == exu.OutputVariableType.StressLocal:
             mises = CMSObjectComputeNorm(mbs, 0, exu.OutputVariableType.StressLocal, 'Mises')
             print('max von-Mises stress=',mises)
@@ -394,7 +371,8 @@ if False:
     import matplotlib.pyplot as plt
     import matplotlib.ticker as ticker
     import exudyn as exu
-    from exudyn.utilities import *
+    from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+    import exudyn.graphics as graphics #only import if it does not conflict
     CC = PlotLineCode
     comp = 1 #1=x, 2=y, ...
     var = ''

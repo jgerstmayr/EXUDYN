@@ -18,12 +18,10 @@
 #pip install exudyn
 
 import exudyn as exu
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 from exudyn.artificialIntelligence import *
 import math
-
-# import sys
-# sys.exit()
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -48,15 +46,15 @@ class InvertedDoublePendulumEnv(OpenAIGymInterfaceEnv):
         self.force_mag = 10.0
         self.stepUpdateTime = 0.02  # seconds between state updates
         
-        background = GraphicsDataCheckerBoard(point= [0,0.5*self.length,-0.5*width], 
+        background = graphics.CheckerBoard(point= [0,0.5*self.length,-0.5*width], 
                                               normal= [0,0,1], size=10, size2=6, nTiles=20, nTiles2=12)
             
         oGround=self.mbs.AddObject(ObjectGround(referencePosition= [0,0,0],  #x-pos,y-pos,angle
                                            visualization=VObjectGround(graphicsData= [background])))
         nGround=self.mbs.AddNode(NodePointGround())
         
-        gCart = GraphicsDataOrthoCubePoint(size=[0.5*self.length, width, width], 
-                                           color=color4dodgerblue)
+        gCart = graphics.Brick(size=[0.5*self.length, width, width], 
+                                           color=graphics.color.dodgerblue)
         self.nCart = self.mbs.AddNode(Rigid2D(referenceCoordinates=[0,0,0]));
         oCart = self.mbs.AddObject(RigidBody2D(physicsMass=masscart, 
                                           physicsInertia=0.1*masscart, #not needed
@@ -64,9 +62,9 @@ class InvertedDoublePendulumEnv(OpenAIGymInterfaceEnv):
                                           visualization=VObjectRigidBody2D(graphicsData= [gCart])))
         mCartCOM = self.mbs.AddMarker(MarkerNodePosition(nodeNumber=self.nCart))
         
-        gArm1 = GraphicsDataOrthoCubePoint(size=[width, self.length, width], color=color4red)
-        gArm1joint = GraphicsDataCylinder(pAxis=[0,-0.5*self.length,-0.6*width], vAxis=[0,0,1.2*width], 
-                                          radius=0.0625*self.length, color=color4darkgrey)
+        gArm1 = graphics.Brick(size=[width, self.length, width], color=graphics.color.red)
+        gArm1joint = graphics.Cylinder(pAxis=[0,-0.5*self.length,-0.6*width], vAxis=[0,0,1.2*width], 
+                                          radius=0.0625*self.length, color=graphics.color.darkgrey)
         self.nArm1 = self.mbs.AddNode(Rigid2D(referenceCoordinates=[0,0.5*self.length,0]));
         oArm1 = self.mbs.AddObject(RigidBody2D(physicsMass=massarm, 
                                           physicsInertia=armInertia, #not included in original paper
@@ -77,7 +75,7 @@ class InvertedDoublePendulumEnv(OpenAIGymInterfaceEnv):
         mArm1JointA = self.mbs.AddMarker(MarkerBodyPosition(bodyNumber=oArm1, localPosition=[0,-0.5*self.length,0]))
         mArm1JointB = self.mbs.AddMarker(MarkerBodyPosition(bodyNumber=oArm1, localPosition=[0, 0.5*self.length,0]))
 
-        gArm2 = GraphicsDataOrthoCubePoint(size=[width, self.length, width], color=color4red)
+        gArm2 = graphics.Brick(size=[width, self.length, width], color=graphics.color.red)
         self.nArm2 = self.mbs.AddNode(Rigid2D(referenceCoordinates=[0,1.5*self.length,0]));
         oArm2 = self.mbs.AddObject(RigidBody2D(physicsMass=massarm, 
                                           physicsInertia=armInertia, #not included in original paper

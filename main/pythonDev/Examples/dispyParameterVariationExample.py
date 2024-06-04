@@ -169,19 +169,19 @@ if __name__ == '__main__':
 
     #++++++++++++++++++++++++++++++++++++++++++++++++
     # perform parameter variation
-    n = 4 # n*n = number of variations
+    n = 2 # n*n = number of variations
     start_time = time.time()
-    [pDict, values] = ParameterVariation(parameterFunction=ParameterFunction, 
+    [pDict, values] = ParameterVariation(parameterFunction = ParameterFunction, 
                                          parameters = {'mass':(1,2,n), 
                                                        'spring':(2000,8000,n),
                                                        },
                                          parameterFunctionData = functionData,
-                                         debugMode=False,
-                                         addComputationIndex=True,
-                                         useMultiProcessing=True,
-                                         #showProgress=False, #by default True
-                                         clusterHostNames=clusterHostNames, #not that there is a significant overhead, thus cluster only makes sense for computations that take longer than 1 second
-                                         #useDispyWebMonitor=useDispyWebMonitor, #slows down a little and waits 5 seconds in the end to finish
+                                         debugMode = False,
+                                         addComputationIndex = True,
+                                         useMultiProcessing = True,
+                                         showProgress = True, 
+                                         clusterHostNames = clusterHostNames, #not that there is a significant overhead, thus cluster only makes sense for computations that take longer than 1 second
+                                         #useDispyWebMonitor = useDispyWebMonitor, #slows down a little and waits 5 seconds in the end to finish
                                          )
     print("--- %s seconds ---" % (time.time() - start_time))
     

@@ -16,7 +16,8 @@ import sys
 import exudyn as exu
 
 from exudyn.itemInterface import *
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 from exudyn.rigidBodyUtilities import *
 from exudyn.FEM import *
 
@@ -349,15 +350,18 @@ if True:
     meshCrank.Curve(1)
     if netgenDrawing: 
         Draw(meshCrank)
-    #save mesh to file:
-    meshCrank.ngmesh.Export('testData/crankshaft.mesh','Neutral Format')
+    
+    if False:
+        #save mesh to file:
+        meshCrank.ngmesh.Export('testData/crankshaft.mesh','Neutral Format')
 
 if True:
     meshConrod = Mesh( geoConrod.GenerateMesh(maxh=meshSize)) #in videos 0.003
     meshConrod.Curve(1)
     if netgenDrawing: 
         Draw(meshConrod)
-    meshConrod.ngmesh.Export('testData/conrod.mesh','Neutral Format')
+    if False:
+        meshConrod.ngmesh.Export('testData/conrod.mesh','Neutral Format')
     #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 if True:
@@ -365,7 +369,8 @@ if True:
     meshPiston.Curve(1)
     if netgenDrawing: 
         Draw(meshPiston)
-    meshPiston.ngmesh.Export('testData/piston.mesh','Neutral Format')
+    if False:
+        meshPiston.ngmesh.Export('testData/piston.mesh','Neutral Format')
     #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #here starts the EXUDYN part
@@ -386,7 +391,8 @@ if True:
     eigenModesNGsolve=True
     nModes=8
 
-    [bfM, bfK, fes] = femCrank.ImportMeshFromNGsolve(meshCrank, density, youngsModulus, poissonsRatio, verbose = True, meshOrder = meshOrder)
+    [bfM, bfK, fes] = femCrank.ImportMeshFromNGsolve(meshCrank, density, youngsModulus, poissonsRatio, 
+                                                     verbose = True, meshOrder = meshOrder)
                           # computeEigenmodes=eigenModesNGsolve, excludeRigidBodyModes = 6,
                           # numberOfModes = nModes, maxEigensolveIterations=20)
 
@@ -472,7 +478,8 @@ if True:
     excludeRigidBodyModes = 6
     femConrod = FEMinterface()
     # femConrod.ImportMeshFromNGsolve(meshConrod, density, youngsModulus, poissonsRatio, verbose = False)
-    [bfM, bfK, fes] = femConrod.ImportMeshFromNGsolve(meshConrod, density, youngsModulus, poissonsRatio, verbose = False, meshOrder = meshOrder)
+    [bfM, bfK, fes] = femConrod.ImportMeshFromNGsolve(meshConrod, density, youngsModulus, poissonsRatio, 
+                                                      verbose = False, meshOrder = meshOrder)
                           # computeEigenmodes=eigenModesNGsolve, excludeRigidBodyModes = 6,
                           # numberOfModes = nModes, maxEigensolveIterations=20)
     if verbose: print("number of coordinates conrod =", femConrod.NumberOfCoordinates())

@@ -20,6 +20,8 @@ from exudyn.utilities import AddSensorRecorder
 
 import numpy as np #for postprocessing
 
+useGraphics = True
+
 #this is the function which is repeatedly called from ComputeSensitivities
 #parameterSet contains dictinary with varied parameters
 def ParameterFunction(parameterSet):
@@ -70,10 +72,9 @@ def ParameterFunction(parameterSet):
     mbs.AddLoad(LoadCoordinate(markerNumber = nodeMarker, 
                                              load = P.force))
     #add sensor:
-    fileName = 'solution/paramVarDisplacement'+ str(P.computationIndex) +'.txt'#
     flagWriteFile = False
     if P.computationIndex == 'Ref': flagWriteFile = True
-    sData = mbs.AddSensor(SensorObject(objectNumber=nC, fileName=fileName, 
+    sData = mbs.AddSensor(SensorObject(objectNumber=nC, storeInternal=True,
                                outputVariableType=exu.OutputVariableType.Force, 
                                writeToFile=flagWriteFile))
     
@@ -88,8 +89,8 @@ def ParameterFunction(parameterSet):
     simulationSettings.timeIntegration.endTime = tEnd
     
     simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1 #no damping
-    if not(flagWriteFile): 
-        sRecorder = AddSensorRecorder(mbs, sData, tEnd, simulationSettings.solutionSettings.sensorsWritePeriod, sensorOutputSize=1)
+    # if not(flagWriteFile): 
+    #     sRecorder = AddSensorRecorder(mbs, sData, tEnd, simulationSettings.solutionSettings.sensorsWritePeriod, sensorOutputSize=1)
     
     #exu.StartRenderer()              #start graphics visualization
     #mbs.WaitForUserToContinue()    #wait for pressing SPACE bar to continue
@@ -103,13 +104,7 @@ def ParameterFunction(parameterSet):
     #+++++++++++++++++++++++++++++++++++++++++++++++++++++
     #evaluate difference between reference and optimized solution
     #reference solution:
-    
-
-    if flagWriteFile: 
-        data = np.loadtxt(fileName, comments='#', delimiter=',')
-    else: 
-        data = mbs.variables['sensorRecord0']
-
+    data = mbs.GetSensorStoredData(sData)
     avgPos = np.average(np.abs(data))
     #+++++++++++++++++++++++++++++++++++++++++++++++++++++
     #compute exact solution:
@@ -136,8 +131,8 @@ if __name__ == '__main__': #include this to enable parallel processing
     import time
     useMultiProcessing = exudyn
     start_time = time.time()
-    n = [2, 2]
-    fVar = [1e-3, 1.5e-3, 1]
+    n = [2, 2] #number of variations
+    fVar = [1e-3, 1.5e-3, 1] #differentiation eps
     mRef = 1.5
     kRef = 4000
     [pList, valRef, valuesSorted, sensitivity] = ComputeSensitivities(parameterFunction=ParameterFunction, 
@@ -145,17 +140,17 @@ if __name__ == '__main__': #include this to enable parallel processing
                                                        'spring': (kRef,fVar[1], n[1]),
                                                        },
                                          scaledByReference=False,  
-                                         debugMode=True,
+                                         debugMode=useGraphics,
                                          addComputationIndex=True,
                                          useMultiProcessing=False,
-                                         showProgress=True,)
+                                         showProgress=useGraphics)
     
     testResult = np.average(np.abs(sensitivity))
     if True: 
         print("--- %s seconds ---" % (time.time() - start_time))
         PlotSensitivityResults(valRef, valuesSorted, sensitivity, strYAxis=['avg. $|x|$', 'x0', ''])
     else: 
-        exu.Print('result of ConvexContactTest=',testResult)
+        exu.Print('result of Sensitivities Examaple=',testResult)
     
 
 

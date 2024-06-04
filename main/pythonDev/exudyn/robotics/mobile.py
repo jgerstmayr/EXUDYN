@@ -21,6 +21,7 @@ import exudyn as exu
 from exudyn.itemInterface import *
 from exudyn.utilities import *
 from exudyn.graphicsDataUtilities import *
+import exudyn.graphics as graphics
 from exudyn.robotics import *
 
 import numpy as np
@@ -119,19 +120,19 @@ def mobileRobot2MBS(mbs, mobileRobot, markerGround, flagGraphicsRollers=True, *a
     ################
     graphicsPlatformList=[]
     # drawing platform coordinate system 
-    graphicsPlatformList += [GraphicsDataCylinder([0,0,0], [0.5,0,0], 0.001, color4red)]
-    graphicsPlatformList += [GraphicsDataCylinder([0,0,0], [0,0.5,0], 0.001, color4green)]
-    graphicsPlatformList += [GraphicsDataCylinder([0,0,0], [0,0,0.2], 0.001, color4blue)]
+    graphicsPlatformList += [graphics.Cylinder([0,0,0], [0.5,0,0], 0.001, graphics.color.red)]
+    graphicsPlatformList += [graphics.Cylinder([0,0,0], [0,0.5,0], 0.001, graphics.color.green)]
+    graphicsPlatformList += [graphics.Cylinder([0,0,0], [0,0,0.2], 0.001, graphics.color.blue)]
 
     if mobileRobot['platformRepresentation']=='box':
-        graphicsPlatformList += [GraphicsDataOrthoCubePoint(centerPoint=[0.0,0.0,0.0],size=[lCar, wCar-1.1*wWheel, hCar], color=color4steelblue[0:3]+[0.2])]
+        graphicsPlatformList += [graphics.Brick(centerPoint=[0.0,0.0,0.0],size=[lCar, wCar-1.1*wWheel, hCar], color=graphics.color.steelblue[0:3]+[0.2])]
     if mobileRobot['platformRepresentation'] == 'stl':
         try:
-            stlGrafics = GraphicsDataFromSTLfileTxt(mobileRobot['platformStlFile'],color=[1,1,1,1])
+            stlGrafics = graphics.FromSTLfileASCII(mobileRobot['platformStlFile'],color=[1,1,1,1])
             graphicsPlatformList += [stlGrafics]
         except:
             print('stl not found, maybe wrong directory, use box instead')
-            graphicsPlatformList += [GraphicsDataOrthoCubePoint(centerPoint=[0,0,2.0],size=[lCar, wCar-1.1*wWheel, hCar], color=color4steelblue[0:3]+[0.2])]
+            graphicsPlatformList += [graphics.Brick(centerPoint=[0,0,2.0],size=[lCar, wCar-1.1*wWheel, hCar], color=graphics.color.steelblue[0:3]+[0.2])]
 
     [nPlatform,bPlatform] = AddRigidBody(mainSys = mbs, 
                             inertia = inertiaPlatform, 
@@ -188,10 +189,10 @@ def mobileRobot2MBS(mbs, mobileRobot, markerGround, flagGraphicsRollers=True, *a
         if mobileRobot['wheelType']==2:
             frictionAngle = 0
         # additional graphics for visualization of rollers on the wheel (JUST FOR DRAWING!):
-        # graphicsWheel = [GraphicsDataOrthoCubePoint(centerPoint=[0,0,0],size=[1.1*wWheel,0.7*rWheel,0.7*rWheel], color=color4lightred)]
-        graphicsWheel = [GraphicsDataCylinder(pAxis=[-0.55*wWheel,0,0], vAxis=[1.1*wWheel,0,0], radius=0.34*rWheel, color=color4lightred)]
+        # graphicsWheel = [graphics.Brick(centerPoint=[0,0,0],size=[1.1*wWheel,0.7*rWheel,0.7*rWheel], color=graphics.color.lightred)]
+        graphicsWheel = [graphics.Cylinder(pAxis=[-0.55*wWheel,0,0], vAxis=[1.1*wWheel,0,0], radius=0.34*rWheel, color=graphics.color.lightred)]
         if 0: # debugging roller orientations
-            graphicsWheel += [GraphicsDataCylinder([-0.1,0,0], [0.001, 0, 0], radius = param['r'], nTiles = 64, color=color4lawngreen)]
+            graphicsWheel += [graphics.Cylinder([-0.1,0,0], [0.001, 0, 0], radius = param['r'], nTiles = 64, color=graphics.color.lawngreen)]
         
         if flagGraphicsRollers: 
             contour =  [[-param['lRoll']/2, 0]]  
@@ -208,15 +209,15 @@ def mobileRobot2MBS(mbs, mobileRobot, markerGround, flagGraphicsRollers=True, *a
             if flagGraphicsRollers: # draw as cylinders
                 pAxle = np.array([0,-(param['r']-param['rRoll'])*np.sin(iPhi), - (param['r']-param['rRoll'])*np.cos(iPhi)])    
                 vAxle = RotationMatrixX(-iPhi ) @  RotationMatrixZ(frictionAngle) @ [0.5*param['lRoll'],0,0]
-                graphicsWheel += [GraphicsDataSolidOfRevolution(pAxis=pAxle, vAxis=vAxle, contour=contour, color=color4blue[0:3]+[1],# color=color4blue[0:3] +[alpha], 
+                graphicsWheel += [graphics.SolidOfRevolution(pAxis=pAxle, vAxis=vAxle, contour=contour, color=graphics.color.blue[0:3]+[1],# color=graphics.color.blue[0:3] +[alpha], 
                                                 nTiles = 16)]        
             else:
                 pAxle = np.array([0,rWheel*np.sin(iPhi),-rWheel*np.cos(iPhi)])
                 vAxle = [0.5*wWheel*np.cos(frictionAngle+np.pi/2),0.5*wWheel*np.sin(frictionAngle+np.pi/2),0]
                 vAxle2 = RotationMatrixX(iPhi)@vAxle
-                rColor = color4grey
-                if i >= nCyl/2: rColor = color4darkgrey
-                graphicsWheel += [GraphicsDataCylinder(pAxis=pAxle-vAxle2, vAxis=2*vAxle2, radius=rCyl, 
+                rColor = graphics.color.grey
+                if i >= nCyl/2: rColor = graphics.color.darkgrey
+                graphicsWheel += [graphics.Cylinder(pAxis=pAxle-vAxle2, vAxis=2*vAxle2, radius=rCyl, 
                                                 color=rColor)]
         # mounting wheels according platform setup
         dx = 0.5 * mobileRobot['wheelBase']
@@ -269,7 +270,7 @@ def mobileRobot2MBS(mbs, mobileRobot, markerGround, flagGraphicsRollers=True, *a
                                                     rollingFrictionViscous=mobileRobot['friction'][2], 
                                                     useLinearProportionalZone=mobileRobot['linearRegularization'], 
                                                     contactStiffness=kRolling, contactDamping=dRolling,
-                                                    # visualization=VObjectConnectorRollingDiscPenalty(discWidth=wWheel, color=color4blue)))
+                                                    # visualization=VObjectConnectorRollingDiscPenalty(discWidth=wWheel, color=graphics.color.blue)))
                                                     visualization=VObjectConnectorRollingDiscPenalty(show=False)))
         oRollingDiscsList += [oRolling]
     d = {'nPlatformList': nPlatformList,

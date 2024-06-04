@@ -12,7 +12,8 @@
 
 import exudyn as exu
 from exudyn.itemInterface import *
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 from exudyn.graphicsDataUtilities import *
 
 import numpy as np
@@ -51,12 +52,12 @@ pos3 = [ 0,-Hy,rb+H]
 pos4 = [ 0,-Hy,-rb-H]
 posList=[pos0,pos1,pos2,pos3,pos4]
 for pos in posList:
-    #gDataList += [{'type':'Circle','position':pos,'radius':rb, 'color':color4grey}]
-    #gDataList += [GraphicsDataCylinder(pAxis=pos, vAxis=[0,0,0.1], radius=rb, color= color4grey, nTiles=200)]
-    colBG = color4grey
+    #gDataList += [{'type':'Circle','position':pos,'radius':rb, 'color':graphics.color.grey}]
+    #gDataList += [graphics.Cylinder(pAxis=pos, vAxis=[0,0,0.1], radius=rb, color= graphics.color.grey, nTiles=200)]
+    colBG = graphics.color.grey
     colBG[3] = 0.05
-    gDataList += [GraphicsDataSphere(point=pos, radius=rb, color= colBG, nTiles=100)]
-    #gDataList += [GraphicsDataRectangle(-1.2*H,-H,1.2*H,14*H,color=color4red)]#80000 particles
+    gDataList += [graphics.Sphere(point=pos, radius=rb, color= colBG, nTiles=100)]
+    #gDataList += [GraphicsDataRectangle(-1.2*H,-H,1.2*H,14*H,color=graphics.color.red)]#80000 particles
     nMass = mbs.AddNode(NodePointGround(referenceCoordinates=pos,
                         visualization=VNodePointGround(show=False)))
     #oMass = mbs.AddObject(MassPoint(physicsMass=m, nodeNumber=nMass))
@@ -65,12 +66,12 @@ for pos in posList:
     radiusList += [rb]
 
 
-color4node = color4blue
+color4node = graphics.color.blue
 print("start create: number of masses =",n)
 for i in range(n):
 
     kk = int(i/int(n/16))
-    color4node = color4list[min(kk%9,9)]
+    color4node = graphics.colorList[min(kk%9,9)]
 
     if (i%20000 == 0): print("create mass",i)
     offy = 0

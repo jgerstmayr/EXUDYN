@@ -16,7 +16,8 @@
 
 import exudyn as exu
 from exudyn.itemInterface import *
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 from exudyn.FEM import *
 from exudyn.graphicsDataUtilities import *
 
@@ -26,6 +27,7 @@ mbs = SC.AddSystem()
 import numpy as np
 
 import timeit
+import time
 
 import exudyn.basicUtilities as eb
 import exudyn.rigidBodyUtilities as rb
@@ -87,7 +89,7 @@ if __name__ == '__main__': #needed to use multiprocessing for mode computation
     
         #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
         #Use fem to import FEM model and create FFRFreducedOrder object
-        fem.ImportMeshFromNGsolve(mesh, density=rho, youngsModulus=Emodulus, poissonsRatio=nu)
+        [bfM, bfK, fes] = fem.ImportMeshFromNGsolve(mesh, density=rho, youngsModulus=Emodulus, poissonsRatio=nu)
         meshCreated  = True
         if (h==a): #save only if it has smaller size
             fem.SaveToFile(fileName)
@@ -106,9 +108,17 @@ if __name__ == '__main__': #needed to use multiprocessing for mode computation
     #varType = exu.OutputVariableType.StrainLocal
     print("ComputePostProcessingModes ... (may take a while)")
     start_time = time.time()
-    fem.ComputePostProcessingModes(material=mat, 
-                                   outputVariableType=varType,
-                                   numberOfThreads=5)
+    if False:
+        #without ngsolve - works for any kind of tet-mesh:
+        fem.ComputePostProcessingModes(material=mat,
+                                       outputVariableType=varType,
+                                       #numberOfThreads=8, #currently does not work
+                                       )
+    else:
+        #with ngsolve, only works for netgen-meshes!
+        fem.ComputePostProcessingModesNGsolve(fes, material=mat,
+                                              outputVariableType=varType)
+
     print("--- %s seconds ---" % (time.time() - start_time))
     
     #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++

@@ -15,7 +15,8 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 
 import numpy as np
 
@@ -52,7 +53,7 @@ inertiaRing = RigidBodyInertia(mass=1, inertiaTensor= np.diag([0.5*m*r**2, 0.25*
 #print(inertiaRing)
 
 #additional graphics for visualization of rotation:
-graphicsBody = GraphicsDataOrthoCubePoint(centerPoint=[0,0,0],size=[w*1.1,0.7*r,0.7*r], color=color4lightred)
+graphicsBody = graphics.Brick(centerPoint=[0,0,0],size=[w*1.1,0.7*r,0.7*r], color=graphics.color.lightred)
 
 [n0,b0]=AddRigidBody(mainSys = mbs, 
                      inertia = inertiaRing, 
@@ -65,7 +66,7 @@ graphicsBody = GraphicsDataOrthoCubePoint(centerPoint=[0,0,0],size=[w*1.1,0.7*r,
                      graphicsDataList = [graphicsBody])
 
 #ground body and marker
-gGround = GraphicsDataOrthoCubePoint(centerPoint=[0,0,-0.001],size=[0.12,0.12,0.002], color=color4lightgrey)
+gGround = graphics.Brick(centerPoint=[0,0,-0.001],size=[0.12,0.12,0.002], color=graphics.color.lightgrey)
 oGround = mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=[gGround])))
 markerGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
 
@@ -75,7 +76,7 @@ markerBody0J0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b0, localPosition=[0,0,
 #rolling disc:
 oRolling=mbs.AddObject(ObjectJointRollingDisc(markerNumbers=[markerGround, markerBody0J0], 
                                               constrainedAxes=[1,1,1], discRadius=r,
-                                              visualization=VObjectJointRollingDisc(discWidth=w,color=color4blue)))
+                                              visualization=VObjectJointRollingDisc(discWidth=w,color=graphics.color.blue)))
 
 sForce=mbs.AddSensor(SensorObject(objectNumber=oRolling, storeInternal=True,#fileName='solution/rollingDiscTrail.txt', 
                                   outputVariableType = exu.OutputVariableType.ForceLocal))

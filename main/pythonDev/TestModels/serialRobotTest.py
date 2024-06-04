@@ -13,7 +13,8 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 from exudyn.rigidBodyUtilities import *
 from exudyn.robotics import *
 from exudyn.robotics.motion import Trajectory, ProfileConstantAcceleration
@@ -46,19 +47,19 @@ jointWidth=0.1
 jointRadius=0.06
 linkWidth=0.1
 
-graphicsBaseList = [GraphicsDataOrthoCubePoint([0,0,-0.15], [0.4,0.4,0.1], color4grey)]
-graphicsBaseList +=[GraphicsDataCylinder([0,0,0], [0.5,0,0], 0.0025, color4red)]
-graphicsBaseList +=[GraphicsDataCylinder([0,0,0], [0,0.5,0], 0.0025, color4green)]
-graphicsBaseList +=[GraphicsDataCylinder([0,0,0], [0,0,0.5], 0.0025, color4blue)]
-graphicsBaseList +=[GraphicsDataCylinder([0,0,-jointWidth], [0,0,jointWidth], linkWidth*0.5, color4list[0])] #belongs to first body
+graphicsBaseList = [graphics.Brick([0,0,-0.15], [0.4,0.4,0.1], graphics.color.grey)]
+graphicsBaseList +=[graphics.Cylinder([0,0,0], [0.5,0,0], 0.0025, graphics.color.red)]
+graphicsBaseList +=[graphics.Cylinder([0,0,0], [0,0.5,0], 0.0025, graphics.color.green)]
+graphicsBaseList +=[graphics.Cylinder([0,0,0], [0,0,0.5], 0.0025, graphics.color.blue)]
+graphicsBaseList +=[graphics.Cylinder([0,0,-jointWidth], [0,0,jointWidth], linkWidth*0.5, graphics.colorList[0])] #belongs to first body
 
 ty = 0.03
 tz = 0.04
 zOff = -0.05
 toolSize= [0.05,0.5*ty,0.06]
-graphicsToolList = [GraphicsDataCylinder(pAxis=[0,0,zOff], vAxis= [0,0,tz], radius=ty*1.5, color=color4red)]
-graphicsToolList+= [GraphicsDataOrthoCubePoint([0,ty,1.5*tz+zOff], toolSize, color4grey)]
-graphicsToolList+= [GraphicsDataOrthoCubePoint([0,-ty,1.5*tz+zOff], toolSize, color4grey)]
+graphicsToolList = [graphics.Cylinder(pAxis=[0,0,zOff], vAxis= [0,0,tz], radius=ty*1.5, color=graphics.color.red)]
+graphicsToolList+= [graphics.Brick([0,ty,1.5*tz+zOff], toolSize, graphics.color.grey)]
+graphicsToolList+= [graphics.Brick([0,-ty,1.5*tz+zOff], toolSize, graphics.color.grey)]
 
 
 #changed to new robot structure July 2021:
@@ -67,12 +68,12 @@ newRobot = Robot(gravity=[0,0,9.81],
                  tool = RobotTool(HT=HTtranslate([0,0,0.1]), visualization=VRobotTool(graphicsData=graphicsToolList)),
                  referenceConfiguration = []) #referenceConfiguration created with 0s automatically
 
-newRobot.AddLink(RobotLink(mass=20, COM=[0,0,0], inertia=np.diag([1e-8,0.35,1e-8]), localHT = StdDH2HT([0,0,0,np.pi/2]), visualization=VRobotLink(linkColor=color4list[0])))
-newRobot.AddLink(RobotLink(mass=17.4, COM=[-0.3638, 0.006, 0.2275], inertia=np.diag([0.13,0.524,0.539]), localHT = StdDH2HT([0,0,0.4318,0]), visualization=VRobotLink(linkColor=color4list[1])))
-newRobot.AddLink(RobotLink(mass=4.8, COM=[-0.0203,-0.0141,0.07], inertia=np.diag([0.066,0.086,0.0125]), localHT = StdDH2HT([0,0.15,0.0203,-np.pi/2]), visualization=VRobotLink(linkColor=color4list[2])))
-newRobot.AddLink(RobotLink(mass=0.82, COM=[0,0.019,0], inertia=np.diag([0.0018,0.0013,0.0018]), localHT = StdDH2HT([0,0.4318,0,np.pi/2]), visualization=VRobotLink(linkColor=color4list[3])))
-newRobot.AddLink(RobotLink(mass=0.34, COM=[0,0,0], inertia=np.diag([0.0003,0.0004,0.0003]), localHT = StdDH2HT([0,0,0,-np.pi/2]), visualization=VRobotLink(linkColor=color4list[4])))
-newRobot.AddLink(RobotLink(mass=0.09, COM=[0,0,0.032], inertia=np.diag([0.00015,0.00015,4e-5]), localHT = StdDH2HT([0,0,0,0]), visualization=VRobotLink(linkColor=color4list[5])))
+newRobot.AddLink(RobotLink(mass=20, COM=[0,0,0], inertia=np.diag([1e-8,0.35,1e-8]), localHT = StdDH2HT([0,0,0,np.pi/2]), visualization=VRobotLink(linkColor=graphics.colorList[0])))
+newRobot.AddLink(RobotLink(mass=17.4, COM=[-0.3638, 0.006, 0.2275], inertia=np.diag([0.13,0.524,0.539]), localHT = StdDH2HT([0,0,0.4318,0]), visualization=VRobotLink(linkColor=graphics.colorList[1])))
+newRobot.AddLink(RobotLink(mass=4.8, COM=[-0.0203,-0.0141,0.07], inertia=np.diag([0.066,0.086,0.0125]), localHT = StdDH2HT([0,0.15,0.0203,-np.pi/2]), visualization=VRobotLink(linkColor=graphics.colorList[2])))
+newRobot.AddLink(RobotLink(mass=0.82, COM=[0,0.019,0], inertia=np.diag([0.0018,0.0013,0.0018]), localHT = StdDH2HT([0,0.4318,0,np.pi/2]), visualization=VRobotLink(linkColor=graphics.colorList[3])))
+newRobot.AddLink(RobotLink(mass=0.34, COM=[0,0,0], inertia=np.diag([0.0003,0.0004,0.0003]), localHT = StdDH2HT([0,0,0,-np.pi/2]), visualization=VRobotLink(linkColor=graphics.colorList[4])))
+newRobot.AddLink(RobotLink(mass=0.09, COM=[0,0,0.032], inertia=np.diag([0.00015,0.00015,4e-5]), localHT = StdDH2HT([0,0,0,0]), visualization=VRobotLink(linkColor=graphics.colorList[5])))
 
 
 # newRobot = Robot(gravity=[0,0,-9.81], referenceConfiguration = [])
@@ -113,10 +114,10 @@ Dcontrol = np.array([400,   400,   100,   1,   1,   0.05])  #last value 0.05 giv
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 #base, graphics, object and marker:
-graphicsBaseList = [GraphicsDataOrthoCubePoint([0,0,-0.2], [0.4,0.4,0.1], color4grey)]
-graphicsBaseList +=[GraphicsDataCylinder([0,0,0], [0.5,0,0], 0.0025, color4red)]
-graphicsBaseList +=[GraphicsDataCylinder([0,0,0], [0,0.5,0], 0.0025, color4green)]
-graphicsBaseList +=[GraphicsDataCylinder([0,0,0], [0,0,0.5], 0.0025, color4blue)]
+graphicsBaseList = [graphics.Brick([0,0,-0.2], [0.4,0.4,0.1], graphics.color.grey)]
+graphicsBaseList +=[graphics.Cylinder([0,0,0], [0.5,0,0], 0.0025, graphics.color.red)]
+graphicsBaseList +=[graphics.Cylinder([0,0,0], [0,0.5,0], 0.0025, graphics.color.green)]
+graphicsBaseList +=[graphics.Cylinder([0,0,0], [0,0,0.5], 0.0025, graphics.color.blue)]
 #oGround = mbs.AddObject(ObjectGround(referencePosition=list(HT2translation(Tcurrent)), 
 objectGround = mbs.AddObject(ObjectGround(referencePosition=HT2translation(newRobot.GetBaseHT()), 
                                      visualization=VObjectGround(graphicsData=graphicsBaseList)))

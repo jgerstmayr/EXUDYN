@@ -12,7 +12,8 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 import math
 
 import math
@@ -24,6 +25,8 @@ import gym
 from gym import logger, spaces, Env
 from gym.error import DependencyNotInstalled
 
+import stable_baselines3
+useOldGym = tuple(map(int, stable_baselines3.__version__.split('.'))) <= tuple(map(int, '1.8.0'.split('.')))
 
 class DoublePendulumEnv(Env):
     
@@ -73,14 +76,14 @@ class DoublePendulumEnv(Env):
         self.rendererRunning=None
         self.useRenderer = False #turn this on if needed
         
-        background = GraphicsDataCheckerBoard(point= [0,0,0], normal= [0,0,1], size=4)
+        background = graphics.CheckerBoard(point= [0,0,0], normal= [0,0,1], size=4)
             
         oGround=self.mbs.AddObject(ObjectGround(referencePosition= [0,0,0],  #x-pos,y-pos,angle
                                            visualization=VObjectGround(graphicsData= [background])))
         nGround=self.mbs.AddNode(NodePointGround())
         
-        gCart = GraphicsDataOrthoCubePoint(size=[0.5*self.length, 0.1*self.length, 0.1*self.length], 
-                                           color=color4dodgerblue)
+        gCart = graphics.Brick(size=[0.5*self.length, 0.1*self.length, 0.1*self.length], 
+                                           color=graphics.color.dodgerblue)
         self.nCart = self.mbs.AddNode(Rigid2D(referenceCoordinates=[0,0,0]));
         oCart = self.mbs.AddObject(RigidBody2D(physicsMass=self.masscart, 
                                           physicsInertia=0.1*self.masscart, #not needed
@@ -88,7 +91,7 @@ class DoublePendulumEnv(Env):
                                           visualization=VObjectRigidBody2D(graphicsData= [gCart])))
         mCartCOM = self.mbs.AddMarker(MarkerNodePosition(nodeNumber=self.nCart))
         
-        gArm1 = GraphicsDataOrthoCubePoint(size=[0.1*self.length, self.length, 0.1*self.length], color=color4red)
+        gArm1 = graphics.Brick(size=[0.1*self.length, self.length, 0.1*self.length], color=graphics.color.red)
         self.nArm1 = self.mbs.AddNode(Rigid2D(referenceCoordinates=[0,0.5*self.length,0]));
         oArm1 = self.mbs.AddObject(RigidBody2D(physicsMass=self.massarm, 
                                           physicsInertia=self.armInertia, #not included in original paper
@@ -99,7 +102,7 @@ class DoublePendulumEnv(Env):
         mArm1JointA = self.mbs.AddMarker(MarkerBodyPosition(bodyNumber=oArm1, localPosition=[0,-0.5*self.length,0]))
         mArm1JointB = self.mbs.AddMarker(MarkerBodyPosition(bodyNumber=oArm1, localPosition=[0, 0.5*self.length,0]))
 
-        gArm2 = GraphicsDataOrthoCubePoint(size=[0.1*self.length, self.length, 0.1*self.length], color=color4red)
+        gArm2 = graphics.Brick(size=[0.1*self.length, self.length, 0.1*self.length], color=graphics.color.red)
         self.nArm2 = self.mbs.AddNode(Rigid2D(referenceCoordinates=[0,1.5*self.length,0]));
         oArm2 = self.mbs.AddObject(RigidBody2D(physicsMass=self.massarm, 
                                           physicsInertia=self.armInertia, #not included in original paper
@@ -225,7 +228,12 @@ class DoublePendulumEnv(Env):
             self.steps_beyond_done += 1
             reward = 0.0
 
-        return np.array(self.state, dtype=np.float32), reward, done, {}
+        info = {}
+        terminated, truncated = done, False # since stable-baselines3 > 1.8.0 implementations terminated and truncated 
+        if useOldGym:
+            return np.array(self.state, dtype=np.float32), reward, terminated, info
+        else:
+            return np.array(self.state, dtype=np.float32), reward, terminated, truncated, info
 
     def setState2InitialValues(self):
         #+++++++++++++++++++++++++++++++++++++++++++++
@@ -277,7 +285,7 @@ class DoublePendulumEnv(Env):
 
         #+++++++++++++++++++++++++++++++++++++++++++++
 
-        if not return_info:
+        if not return_info and useOldGym:
             return np.array(self.state, dtype=np.float32)
         else:
             return np.array(self.state, dtype=np.float32), {}

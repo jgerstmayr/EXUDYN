@@ -31,7 +31,8 @@ from spatialmath import SE3
 
 # exudyn imports
 import exudyn as exu 
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 from exudyn.itemInterface import *
 from exudyn.rigidBodyUtilities import *
 from exudyn.graphicsDataUtilities import *
@@ -146,13 +147,13 @@ def SimulationMobileRobot(funcStatMachine,myROSInterface, p0=[0,0], theta0=0, fl
     debugOffsetNumber= debugPlatformOffset
     
     #ground body and marker
-    gGround = GraphicsDataCheckerBoard(point = [0,0,0], size=8, nTiles = 12) # (centerPoint=[4,4,-0.001],size=[12,12,0.002], color=color4lightgrey[0:3]+[0.5])
+    gGround = graphics.CheckerBoard(point = [0,0,0], size=8, nTiles = 12) # (centerPoint=[4,4,-0.001],size=[12,12,0.002], color=graphics.color.lightgrey[0:3]+[0.5])
     graphicsGroundList =[gGround]
     coordinateSystemGround = False
     if coordinateSystemGround:
-        graphicsGroundList += [GraphicsDataCylinder([0,0,0], [0.5,0,0], 0.0035, color4red)]            # base coordinate system x
-        graphicsGroundList +=[GraphicsDataCylinder([0,0,0], [0,0.5,0], 0.0035, color4green)]          # base coordinate system y
-        graphicsGroundList +=[GraphicsDataCylinder([0,0,0], [0,0,0.5], 0.0035, color4blue)]           # base coordinate system z
+        graphicsGroundList += [graphics.Cylinder([0,0,0], [0.5,0,0], 0.0035, graphics.color.red)]            # base coordinate system x
+        graphicsGroundList +=[graphics.Cylinder([0,0,0], [0,0.5,0], 0.0035, graphics.color.green)]          # base coordinate system y
+        graphicsGroundList +=[graphics.Cylinder([0,0,0], [0,0,0.5], 0.0035, graphics.color.blue)]           # base coordinate system z
     oGround = mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=graphicsGroundList)))
     markerGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
     comShiftPlatform = [0,0,0]
@@ -281,11 +282,11 @@ def SimulationMobileRobot(funcStatMachine,myROSInterface, p0=[0,0], theta0=0, fl
         toolSize= [tx*0.5, 0.06,0.12]
         r6 = 0.04
         graphicsToolList = []
-        graphicsToolList += [GraphicsDataCylinder(pAxis=[0,0,zOff], vAxis= [0,0,np.abs(zOff)*0.8], radius=r6, color=color4red)]
-        graphicsToolList+= [GraphicsDataOrthoCubePoint([ tx,0, 0], toolSize, color4grey)]
-        graphicsToolList+= [GraphicsDataOrthoCubePoint([-tx,0, 0], toolSize, color4grey)]
-        graphicsToolList+= [GraphicsDataOrthoCubePoint([0,0, -0.05], [tx*5,0.09,0.04], color4grey)]
-        graphicsToolList += [GraphicsDataBasis(length=0.2)]
+        graphicsToolList += [graphics.Cylinder(pAxis=[0,0,zOff], vAxis= [0,0,np.abs(zOff)*0.8], radius=r6, color=graphics.color.red)]
+        graphicsToolList+= [graphics.Brick([ tx,0, 0], toolSize, graphics.color.grey)]
+        graphicsToolList+= [graphics.Brick([-tx,0, 0], toolSize, graphics.color.grey)]
+        graphicsToolList+= [graphics.Brick([0,0, -0.05], [tx*5,0.09,0.04], graphics.color.grey)]
+        graphicsToolList += [graphics.Basis(length=0.2)]
         basePoseHT=mobileRobot['platformInitialPose'] @ mobileRobot['serialRobotMountpoint'] @ HTrotateZ(qOffset[0]) #robot base position and orientation  
 
         # manipulator input with included function from exudyn robotics models
@@ -385,7 +386,7 @@ def SimulationMobileRobot(funcStatMachine,myROSInterface, p0=[0,0], theta0=0, fl
         else: 
             PosObj = (np.random.rand(3)-0.5) * [0.4,0.8,0] + [1.5 ,0, hTable + hObj/2]
         
-        graphicsTarget = GraphicsDataCylinder(pAxis = [0,0,-hObj/2], vAxis = [0,0,hObj ], radius = 0.02, color=color4lightgreen)
+        graphicsTarget = graphics.Cylinder(pAxis = [0,0,-hObj/2], vAxis = [0,0,hObj ], radius = 0.02, color=graphics.color.lightgreen)
         inertiaTarget = InertiaCylinder(500, hObj , 0.02, 2)
         nObj, bObj = AddRigidBody(mainSys = mbs, 
                     inertia = inertiaTarget, 
@@ -399,7 +400,7 @@ def SimulationMobileRobot(funcStatMachine,myROSInterface, p0=[0,0], theta0=0, fl
         mObj = mbs.AddMarker(MarkerBodyRigid(bodyNumber=bObj))
         cGrasp = mbs.AddObject(RigidBodySpringDamper(markerNumbers=[mEndeffektor, mObj], stiffness = np.eye(6)*1e3, damping = np.eye(6)*1e2, 
                                                     visualization={'show': False, 'drawSize': -1, 'color': [0]*4}, activeConnector=False))
-        graphicsTable = GraphicsDataOrthoCubePoint(centerPoint = [0,0,0], size = [xTable, yTable, hTable], color=color4darkgrey2)
+        graphicsTable = graphics.Brick(centerPoint = [0,0,0], size = [xTable, yTable, hTable], color=graphics.color.darkgrey2)
         
         nTable, bTable = AddRigidBody(mainSys = mbs, 
                         inertia = inertiaTarget, 

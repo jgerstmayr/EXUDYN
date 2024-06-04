@@ -249,7 +249,7 @@ Function: ComputeLinearizedSystem
 .. code-block:: python
 
   import exudyn as exu
-  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+  from exudyn.utilities import *
   import numpy as np
   SC = exu.SystemContainer()
   mbs = SC.AddSystem()
@@ -257,7 +257,7 @@ Function: ComputeLinearizedSystem
   b0 = mbs.CreateMassPoint(referencePosition = [2,0,0],
                            initialVelocity = [2*0,5,0],
                            physicsMass = 1, gravity = [0,-9.81,0],
-                           drawSize = 0.5, color=color4blue)
+                           drawSize = 0.5, color=graphics.color.blue)
   #
   oGround = mbs.AddObject(ObjectGround())
   #add vertical spring
@@ -308,14 +308,14 @@ Function: ComputeODE2Eigenvalues
    #take any example from the Examples or TestModels folder, e.g., 'cartesianSpringDamper.py' and run it
    #specific example:
   import exudyn as exu
-  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+  from exudyn.utilities import *
   import numpy as np
   SC = exu.SystemContainer()
   mbs = SC.AddSystem()
   #
   b0 = mbs.CreateMassPoint(referencePosition = [2,0,0],
                            physicsMass = 1, gravity = [0,-9.81,0],
-                           drawSize = 0.5, color=color4blue)
+                           drawSize = 0.5, color=graphics.color.blue)
   #
   oGround = mbs.AddObject(ObjectGround())
   #add vertical spring
@@ -367,7 +367,7 @@ Function: ComputeSystemDegreeOfFreedom
 .. code-block:: python
 
   import exudyn as exu
-  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+  from exudyn.utilities import *
   import numpy as np
   SC = exu.SystemContainer()
   mbs = SC.AddSystem()
@@ -377,8 +377,8 @@ Function: ComputeSystemDegreeOfFreedom
                            referencePosition = [6,0,0],
                            initialAngularVelocity = [0,8,0],
                            gravity = [0,-9.81,0],
-                           graphicsDataList = [GraphicsDataOrthoCubePoint(size=[1,0.1,0.1],
-                                                                        color=color4orange)])
+                           graphicsDataList = [exu.graphics.Brick(size=[1,0.1,0.1],
+                                                                        color=graphics.color.orange)])
   oGround = mbs.AddObject(ObjectGround())
   mbs.CreateGenericJoint(bodyNumbers=[oGround, b0], position=[5.5,0,0],
                          constrainedAxes=[1,1,1, 1,0,0],
@@ -399,15 +399,15 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: CreateDistanceSensorGeometry
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateDistanceSensorGeometry <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L161>`__\ (\ ``meshPoints``\ , \ ``meshTrigs``\ , \ ``rigidBodyMarkerIndex``\ , \ ``searchTreeCellSize = [8,8,8]``\ )
+`CreateDistanceSensorGeometry <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L195>`__\ (\ ``meshPoints``\ , \ ``meshTrigs``\ , \ ``rigidBodyMarkerIndex``\ , \ ``searchTreeCellSize = [8,8,8]``\ )
 
 - | \ *function description*\ :
   | Add geometry for distance sensor given by points and triangles (point indices) to mbs; use a rigid body marker where the geometry is put on;
   | Creates a GeneralContact for efficient search on background. If you have several sets of points and trigs, first merge them or add them manually to the contact
   | - NOTE that this function is added to MainSystem via Python function CreateDistanceSensorGeometry.
 - | \ *input*\ :
-  | \ ``meshPoints``\ : list of points (3D), as returned by GraphicsData2PointsAndTrigs()
-  | \ ``meshTrigs``\ : list of trigs (3 node indices each), as returned by GraphicsData2PointsAndTrigs()
+  | \ ``meshPoints``\ : list of points (3D), as returned by graphics.ToPointsAndTrigs()
+  | \ ``meshTrigs``\ : list of trigs (3 node indices each), as returned by graphics.ToPointsAndTrigs()
   | \ ``rigidBodyMarkerIndex``\ : rigid body marker to which the triangles are fixed on (ground or moving object)
   | \ ``searchTreeCellSize``\ : size of search tree (X,Y,Z); use larger values in directions where more triangles are located
 - | \ *output*\ :
@@ -425,7 +425,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: CreateDistanceSensor
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateDistanceSensor <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L194>`__\ (\ ``generalContactIndex``\ , \ ``positionOrMarker``\ , \ ``dirSensor``\ , \ ``minDistance = -1e7``\ , \ ``maxDistance = 1e7``\ , \ ``cylinderRadius = 0``\ , \ ``selectedTypeIndex = exudyn.ContactTypeIndex.IndexEndOfEnumList``\ , \ ``storeInternal = False``\ , \ ``fileName = ''``\ , \ ``measureVelocity = False``\ , \ ``addGraphicsObject = False``\ , \ ``drawDisplaced = True``\ , \ ``color = color4red``\ )
+`CreateDistanceSensor <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L228>`__\ (\ ``generalContactIndex``\ , \ ``positionOrMarker``\ , \ ``dirSensor``\ , \ ``minDistance = -1e7``\ , \ ``maxDistance = 1e7``\ , \ ``cylinderRadius = 0``\ , \ ``selectedTypeIndex = exudyn.ContactTypeIndex.IndexEndOfEnumList``\ , \ ``storeInternal = False``\ , \ ``fileName = ''``\ , \ ``measureVelocity = False``\ , \ ``addGraphicsObject = False``\ , \ ``drawDisplaced = True``\ , \ ``color = exudyn.graphics.color.red``\ )
 
 - | \ *function description*\ :
   | Function to create distance sensor based on GeneralContact in mbs; sensor can be either placed on absolute position or attached to rigid body marker; in case of marker, dirSensor is relative to the marker
@@ -459,7 +459,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: DrawSystemGraph
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-`DrawSystemGraph <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L849>`__\ (\ ``showLoads = True``\ , \ ``showSensors = True``\ , \ ``useItemNames = False``\ , \ ``useItemTypes = False``\ , \ ``addItemTypeNames = True``\ , \ ``multiLine = True``\ , \ ``fontSizeFactor = 1.``\ , \ ``layoutDistanceFactor = 3.``\ , \ ``layoutIterations = 100``\ , \ ``showLegend = True``\ , \ ``tightLayout = True``\ )
+`DrawSystemGraph <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L883>`__\ (\ ``showLoads = True``\ , \ ``showSensors = True``\ , \ ``useItemNames = False``\ , \ ``useItemTypes = False``\ , \ ``addItemTypeNames = True``\ , \ ``multiLine = True``\ , \ ``fontSizeFactor = 1.``\ , \ ``layoutDistanceFactor = 3.``\ , \ ``layoutIterations = 100``\ , \ ``showLegend = True``\ , \ ``tightLayout = True``\ )
 
 - | \ *function description*\ :
   | helper function which draws system graph of a MainSystem (mbs); several options let adjust the appearance of the graph; the graph visualization uses randomizer, which results in different graphs after every run!

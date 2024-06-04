@@ -23,7 +23,8 @@ You can view and download this file on Github: `plotSensorTest.py <https://githu
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    
    import exudyn as exu
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    
    from math import sin, cos, pi
    import numpy as np
@@ -51,7 +52,7 @@ You can view and download this file on Github: `plotSensorTest.py <https://githu
    
    #create background, in order to have according zoom all
    zz=2*L
-   #background0 = GraphicsDataRectangle(-zz,-zz,zz,zz,color4white)
+   #background0 = GraphicsDataRectangle(-zz,-zz,zz,zz,graphics.color.white)
    oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0])) #,visualization=VObjectGround(graphicsData= [background0])))
    mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber = oGround, localPosition=[0,0,0]))
    
@@ -65,7 +66,7 @@ You can view and download this file on Github: `plotSensorTest.py <https://githu
    p0 += (0.5*vLoc)
    
    ep0 = eulerParameters0 #no rotation
-   graphicsBody = GraphicsDataOrthoCubePoint([0,0,0], [L,d,d], color4steelblue)
+   graphicsBody = graphics.Brick([0,0,0], [L,d,d], graphics.color.steelblue)
    oRB = mbs.CreateRigidBody(inertia=inertia, 
                              referencePosition=p0,
                              gravity=g,

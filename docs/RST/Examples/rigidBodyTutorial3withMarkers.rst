@@ -17,14 +17,18 @@ You can view and download this file on Github: `rigidBodyTutorial3withMarkers.py
    #
    # Author:   Johannes Gerstmayr
    # Date:     2021-08-05
-   # Date:     2023-05-16 (updated to MainSystem Python extensions)
+   # Date:     2024-06-04 (updated to MainSystem Python extensions)
    #
    # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
    #
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    
    import exudyn as exu
-   from exudyn.utilities import * #includes graphicsDataUtilities and rigidBodyUtilities
+   from exudyn.utilities import ObjectGround, InertiaCuboid, MarkerBodyRigid, GenericJoint, \
+                                VObjectJointGeneric, SensorBody
+   #to be sure to have all items and functions imported, just do:
+   #from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    import numpy as np
    
    SC = exu.SystemContainer()
@@ -41,7 +45,7 @@ You can view and download this file on Github: `rigidBodyTutorial3withMarkers.py
    pMid0 = np.array([L*0.5,0,0]) #center of mass, body0
    
    #ground body
-   oGround = mbs.AddObject(ObjectGround())
+   oGround = mbs.CreateGround()
    
    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++
    #first link:
@@ -50,10 +54,10 @@ You can view and download this file on Github: `rigidBodyTutorial3withMarkers.py
    iCube0 = iCube0.Translated([-0.25*L,0,0]) #transform COM, COM not at reference point!
    
    #graphics for body
-   graphicsBody0 = GraphicsDataRigidLink(p0=[-0.5*L,0,0],p1=[0.5*L,0,0], 
+   graphicsBody0 = graphics.RigidLink(p0=[-0.5*L,0,0],p1=[0.5*L,0,0], 
                                         axis0=[0,0,1], axis1=[0,0,0], radius=[0.5*w,0.5*w], 
-                                        thickness = w, width = [1.2*w,1.2*w], color=color4red)
-   graphicsCOM0 = GraphicsDataBasis(origin=iCube0.com, length=2*w)
+                                        thickness = w, width = [1.2*w,1.2*w], color=graphics.color.red)
+   graphicsCOM0 = graphics.Basis(origin=iCube0.com, length=2*w)
    
    #create rigid body; we could use other formulation, e.g., by selecting nodeType = exu.NodeType.RotationRotationVector
    b0=mbs.CreateRigidBody(inertia = iCube0, #includes COM
@@ -83,9 +87,9 @@ You can view and download this file on Github: `rigidBodyTutorial3withMarkers.py
    
    #%%++++++++++++++++++++++++++
    #second link:
-   graphicsBody1 = GraphicsDataRigidLink(p0=[0,0,-0.5*L],p1=[0,0,0.5*L], 
+   graphicsBody1 = graphics.RigidLink(p0=[0,0,-0.5*L],p1=[0,0,0.5*L], 
                                         axis0=[1,0,0], axis1=[0,0,0], radius=[0.06,0.05], 
-                                        thickness = 0.1, width = [0.12,0.12], color=color4lightgreen)
+                                        thickness = 0.1, width = [0.12,0.12], color=graphics.color.lightgreen)
    
    iCube1 = InertiaCuboid(density=5000, sideLengths=[0.1,0.1,1])
    

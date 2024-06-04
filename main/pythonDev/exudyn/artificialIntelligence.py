@@ -23,8 +23,17 @@ from typing import Optional #, Union
 
 import numpy as np
 
-#import gym #not needed here
-from gym import logger, spaces, Env
+# for older versions the reset and step function behaves slightly differently
+# for step see https://gymnasium.farama.org/tutorials/gymnasium_basics/handling_time_limits/
+import stable_baselines3
+useOldGym = tuple(map(int, stable_baselines3.__version__.split('.'))) <= tuple(map(int, '1.8.0'.split('.')))
+if useOldGym:
+    #old version #will be removed in future versions!
+    from gym import logger, spaces, Env
+    #print('exudyn.artificialIntelligence: imported gym')
+else:
+    from gymnasium import logger, spaces, Env
+    #print('exudyn.artificialIntelligence: imported gymnasium')
 
 
 #**class: interface class to set up Exudyn model which can be used as model in open AI gym;
@@ -129,7 +138,7 @@ class OpenAIGymInterfaceEnv(Env):
             if np.isnan(self.state).any(): 
                 self.flagNan = True
                 break # 
-            observation, reward, done, info = self.step(action)
+            observation, reward, done, info = self.step(action)[:4] #accomodate for old and new version
             self.render()
             if self.mbs.GetRenderEngineStopFlag(): #user presses quit
                 break
@@ -234,8 +243,14 @@ class OpenAIGymInterfaceEnv(Env):
             self.steps_beyond_done += 1
             reward = 0.0
 
-        return np.array(self.state, dtype=np.float32), reward, done, {}
 
+        if useOldGym: #will be removed in future versions!
+            return np.array(self.state, dtype=np.float32), reward, done, {}
+        else:
+            terminated, truncated = done, False # in implementations terminated and truncated should be distinguished
+            return np.array(self.state, dtype=np.float32), reward, terminated, truncated, {}
+
+ 
 
     #**classFunction: openAI gym function which resets the system
     def reset(
@@ -269,10 +284,14 @@ class OpenAIGymInterfaceEnv(Env):
 
         #+++++++++++++++++++++++++++++++++++++++++++++
 
-        if not return_info:
+
+        if not return_info and useOldGym:
+            #will be removed in future!
             return np.array(self.state, dtype=np.float32)
         else:
             return np.array(self.state, dtype=np.float32), {}
+    
+     
 
     #**classFunction: openAI gym interface function to render the system
     def render(self, mode="human"):

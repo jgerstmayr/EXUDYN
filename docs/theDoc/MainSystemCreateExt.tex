@@ -1,5 +1,5 @@
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L132}{CreateGround}{}}}\label{sec:mainsystemextensions:CreateGround}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L131}{CreateGround}{}}}\label{sec:mainsystemextensions:CreateGround}
 ({\it name}= '', {\it referencePosition}= [0.,0.,0.], {\it referenceRotationMatrix}= np.eye(3), {\it graphicsDataList}= [], {\it graphicsDataUserFunction}= 0, {\it show}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -28,12 +28,12 @@
 \item[--]
 {\bf example}: \vspace{-12pt}\ei\begin{lstlisting}[language=Python, xleftmargin=36pt]
   import exudyn as exu
-  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+  from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
   import numpy as np
   SC = exu.SystemContainer()
   mbs = SC.AddSystem()
   ground=mbs.CreateGround(referencePosition = [2,0,0],
-                          graphicsDataList = [GraphicsDataCheckerBoard(point=[0,0,0], normal=[0,1,0],size=4)])
+                          graphicsDataList = [exu.graphics.CheckerBoard(point=[0,0,0], normal=[0,1,0],size=4)])
 \end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspace{12pt}\end{itemize}
 %
 
@@ -56,7 +56,7 @@
 
 %
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L201}{CreateMassPoint}{}}}\label{sec:mainsystemextensions:CreateMassPoint}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L200}{CreateMassPoint}{}}}\label{sec:mainsystemextensions:CreateMassPoint}
 ({\it name}= '', {\it referencePosition}= [0.,0.,0.], {\it initialDisplacement}= [0.,0.,0.], {\it initialVelocity}= [0.,0.,0.], {\it physicsMass}= 0, {\it gravity}= [0.,0.,0.], {\it graphicsDataList}= [], {\it drawSize}= -1, {\it color}= [-1.,-1.,-1.,-1.], {\it show}= True, {\it create2D}= False, {\it returnDict}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -90,14 +90,14 @@
 \item[--]
 {\bf example}: \vspace{-12pt}\ei\begin{lstlisting}[language=Python, xleftmargin=36pt]
   import exudyn as exu
-  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+  from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
   import numpy as np
   SC = exu.SystemContainer()
   mbs = SC.AddSystem()
   b0=mbs.CreateMassPoint(referencePosition = [0,0,0],
                          initialVelocity = [2,5,0],
                          physicsMass = 1, gravity = [0,-9.81,0],
-                         drawSize = 0.5, color=color4blue)
+                         drawSize = 0.5, color=exu.graphics.color.blue)
   mbs.Assemble()
   simulationSettings = exu.SimulationSettings() #takes currently set values or default values
   simulationSettings.timeIntegration.numberOfSteps = 1000
@@ -122,7 +122,7 @@
 
 %
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L332}{CreateRigidBody}{}}}\label{sec:mainsystemextensions:CreateRigidBody}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L331}{CreateRigidBody}{}}}\label{sec:mainsystemextensions:CreateRigidBody}
 ({\it name}= '', {\it referencePosition}= [0.,0.,0.], {\it referenceRotationMatrix}= np.eye(3), {\it initialVelocity}= [0.,0.,0.], {\it initialAngularVelocity}= [0.,0.,0.], {\it initialDisplacement}= None, {\it initialRotationMatrix}= None, {\it inertia}= None, {\it gravity}= [0.,0.,0.], {\it nodeType}= exudyn.NodeType.RotationEulerParameters, {\it graphicsDataList}= [], {\it graphicsDataUserFunction}= 0, {\it drawSize}= -1, {\it color}= [-1.,-1.,-1.,-1.], {\it show}= True, {\it create2D}= False, {\it returnDict}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -160,7 +160,7 @@
 \item[--]
 {\bf example}: \vspace{-12pt}\ei\begin{lstlisting}[language=Python, xleftmargin=36pt]
   import exudyn as exu
-  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+  from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
   import numpy as np
   SC = exu.SystemContainer()
   mbs = SC.AddSystem()
@@ -170,8 +170,8 @@
                            initialVelocity = [2,5,0],
                            initialAngularVelocity = [5,0.5,0.7],
                            gravity = [0,-9.81,0],
-                           graphicsDataList = [GraphicsDataOrthoCubePoint(size=[1,0.1,0.1],
-                                                                        color=color4red)])
+                           graphicsDataList = [exu.graphics.Brick(size=[1,0.1,0.1],
+                                                                        color=exu.graphics.color.red)])
   mbs.Assemble()
   simulationSettings = exu.SimulationSettings() #takes currently set values or default values
   simulationSettings.timeIntegration.numberOfSteps = 1000
@@ -199,8 +199,8 @@
 
 %
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L560}{CreateSpringDamper}{}}}\label{sec:mainsystemextensions:CreateSpringDamper}
-({\it name}= '', {\it bodyList}= [None, None], {\it localPosition0}= [0.,0.,0.], {\it localPosition1}= [0.,0.,0.], {\it referenceLength}= None, {\it stiffness}= 0., {\it damping}= 0., {\it force}= 0., {\it velocityOffset}= 0., {\it springForceUserFunction}= 0, {\it bodyOrNodeList}= [None, None], {\it show}= True, {\it drawSize}= -1, {\it color}= color4default)
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L559}{CreateSpringDamper}{}}}\label{sec:mainsystemextensions:CreateSpringDamper}
+({\it name}= '', {\it bodyList}= [None, None], {\it localPosition0}= [0.,0.,0.], {\it localPosition1}= [0.,0.,0.], {\it referenceLength}= None, {\it stiffness}= 0., {\it damping}= 0., {\it force}= 0., {\it velocityOffset}= 0., {\it springForceUserFunction}= 0, {\it bodyOrNodeList}= [None, None], {\it show}= True, {\it drawSize}= -1, {\it color}= exudyn.graphics.color.default)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
@@ -235,14 +235,14 @@
 \item[--]
 {\bf example}: \vspace{-12pt}\ei\begin{lstlisting}[language=Python, xleftmargin=36pt]
   import exudyn as exu
-  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+  from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
   import numpy as np
   SC = exu.SystemContainer()
   mbs = SC.AddSystem()
   b0 = mbs.CreateMassPoint(referencePosition = [2,0,0],
                            initialVelocity = [2,5,0],
                            physicsMass = 1, gravity = [0,-9.81,0],
-                           drawSize = 0.5, color=color4blue)
+                           drawSize = 0.5, color=exu.graphics.color.blue)
   oGround = mbs.AddObject(ObjectGround())
   #add vertical spring
   oSD = mbs.CreateSpringDamper(bodyList=[oGround, b0],
@@ -275,8 +275,8 @@
 
 %
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L693}{CreateCartesianSpringDamper}{}}}\label{sec:mainsystemextensions:CreateCartesianSpringDamper}
-({\it name}= '', {\it bodyList}= [None, None], {\it localPosition0}= [0.,0.,0.], {\it localPosition1}= [0.,0.,0.], {\it stiffness}= [0.,0.,0.], {\it damping}= [0.,0.,0.], {\it offset}= [0.,0.,0.], {\it springForceUserFunction}= 0, {\it bodyOrNodeList}= [None, None], {\it show}= True, {\it drawSize}= -1, {\it color}= color4default)
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L692}{CreateCartesianSpringDamper}{}}}\label{sec:mainsystemextensions:CreateCartesianSpringDamper}
+({\it name}= '', {\it bodyList}= [None, None], {\it localPosition0}= [0.,0.,0.], {\it localPosition1}= [0.,0.,0.], {\it stiffness}= [0.,0.,0.], {\it damping}= [0.,0.,0.], {\it offset}= [0.,0.,0.], {\it springForceUserFunction}= 0, {\it bodyOrNodeList}= [None, None], {\it show}= True, {\it drawSize}= -1, {\it color}= exudyn.graphics.color.default)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
@@ -309,13 +309,13 @@
 \item[--]
 {\bf example}: \vspace{-12pt}\ei\begin{lstlisting}[language=Python, xleftmargin=36pt]
   import exudyn as exu
-  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+  from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
   import numpy as np
   SC = exu.SystemContainer()
   mbs = SC.AddSystem()
   b0 = mbs.CreateMassPoint(referencePosition = [7,0,0],
                             physicsMass = 1, gravity = [0,-9.81,0],
-                            drawSize = 0.5, color=color4blue)
+                            drawSize = 0.5, color=exu.graphics.color.blue)
   oGround = mbs.AddObject(ObjectGround())
   oSD = mbs.CreateCartesianSpringDamper(bodyList=[oGround, b0],
                                 localPosition0=[7.5,1,0],
@@ -344,8 +344,8 @@
 
 %
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L781}{CreateRigidBodySpringDamper}{}}}\label{sec:mainsystemextensions:CreateRigidBodySpringDamper}
-({\it name}= '', {\it bodyList}= [None, None], {\it localPosition0}= [0.,0.,0.], {\it localPosition1}= [0.,0.,0.], {\it stiffness}= np.zeros((6,6)), {\it damping}= np.zeros((6,6)), {\it offset}= [0.,0.,0.,0.,0.,0.], {\it rotationMatrixJoint}= np.eye(3), {\it useGlobalFrame}= True, {\it intrinsicFormulation}= True, {\it springForceTorqueUserFunction}= 0, {\it postNewtonStepUserFunction}= 0, {\it bodyOrNodeList}= [None, None], {\it show}= True, {\it drawSize}= -1, {\it color}= color4default)
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L780}{CreateRigidBodySpringDamper}{}}}\label{sec:mainsystemextensions:CreateRigidBodySpringDamper}
+({\it name}= '', {\it bodyList}= [None, None], {\it localPosition0}= [0.,0.,0.], {\it localPosition1}= [0.,0.,0.], {\it stiffness}= np.zeros((6,6)), {\it damping}= np.zeros((6,6)), {\it offset}= [0.,0.,0.,0.,0.,0.], {\it rotationMatrixJoint}= np.eye(3), {\it useGlobalFrame}= True, {\it intrinsicFormulation}= True, {\it springForceTorqueUserFunction}= 0, {\it postNewtonStepUserFunction}= 0, {\it bodyOrNodeList}= [None, None], {\it show}= True, {\it drawSize}= -1, {\it color}= exudyn.graphics.color.default)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
@@ -381,7 +381,7 @@
 {\bf output}: ObjectIndex; returns index of newly created object
 \item[--]
 {\bf example}: \vspace{-12pt}\ei\begin{lstlisting}[language=Python, xleftmargin=36pt]
-  #TODO
+  #coming later
 \end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspace{12pt}\end{itemize}
 %
 
@@ -394,8 +394,8 @@
 
 %
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L926}{CreateRevoluteJoint}{}}}\label{sec:mainsystemextensions:CreateRevoluteJoint}
-({\it name}= '', {\it bodyNumbers}= [None, None], {\it position}= [], {\it axis}= [], {\it useGlobalFrame}= True, {\it show}= True, {\it axisRadius}= 0.1, {\it axisLength}= 0.4, {\it color}= color4default)
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L925}{CreateRevoluteJoint}{}}}\label{sec:mainsystemextensions:CreateRevoluteJoint}
+({\it name}= '', {\it bodyNumbers}= [None, None], {\it position}= [], {\it axis}= [], {\it useGlobalFrame}= True, {\it show}= True, {\it axisRadius}= 0.1, {\it axisLength}= 0.4, {\it color}= exudyn.graphics.color.default)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
@@ -425,7 +425,7 @@
 \item[--]
 {\bf example}: \vspace{-12pt}\ei\begin{lstlisting}[language=Python, xleftmargin=36pt]
   import exudyn as exu
-  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+  from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
   import numpy as np
   SC = exu.SystemContainer()
   mbs = SC.AddSystem()
@@ -433,8 +433,8 @@
                                                    sideLengths=[1,0.1,0.1]),
                            referencePosition = [3,0,0],
                            gravity = [0,-9.81,0],
-                           graphicsDataList = [GraphicsDataOrthoCubePoint(size=[1,0.1,0.1],
-                                                                        color=color4steelblue)])
+                           graphicsDataList = [exu.graphics.Brick(size=[1,0.1,0.1],
+                                                                        color=exu.graphics.color.steelblue)])
   oGround = mbs.AddObject(ObjectGround())
   mbs.CreateRevoluteJoint(bodyNumbers=[oGround, b0], position=[2.5,0,0], axis=[0,0,1],
                           useGlobalFrame=True, axisRadius=0.02, axisLength=0.14)
@@ -465,8 +465,8 @@
 
 %
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L1028}{CreatePrismaticJoint}{}}}\label{sec:mainsystemextensions:CreatePrismaticJoint}
-({\it name}= '', {\it bodyNumbers}= [None, None], {\it position}= [], {\it axis}= [], {\it useGlobalFrame}= True, {\it show}= True, {\it axisRadius}= 0.1, {\it axisLength}= 0.4, {\it color}= color4default)
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L1027}{CreatePrismaticJoint}{}}}\label{sec:mainsystemextensions:CreatePrismaticJoint}
+({\it name}= '', {\it bodyNumbers}= [None, None], {\it position}= [], {\it axis}= [], {\it useGlobalFrame}= True, {\it show}= True, {\it axisRadius}= 0.1, {\it axisLength}= 0.4, {\it color}= exudyn.graphics.color.default)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
@@ -496,7 +496,7 @@
 \item[--]
 {\bf example}: \vspace{-12pt}\ei\begin{lstlisting}[language=Python, xleftmargin=36pt]
   import exudyn as exu
-  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+  from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
   import numpy as np
   SC = exu.SystemContainer()
   mbs = SC.AddSystem()
@@ -505,8 +505,8 @@
                            referencePosition = [4,0,0],
                            initialVelocity = [0,4,0],
                            gravity = [0,-9.81,0],
-                           graphicsDataList = [GraphicsDataOrthoCubePoint(size=[1,0.1,0.1],
-                                                                        color=color4steelblue)])
+                           graphicsDataList = [exu.graphics.Brick(size=[1,0.1,0.1],
+                                                                        color=exu.graphics.color.steelblue)])
   oGround = mbs.AddObject(ObjectGround())
   mbs.CreatePrismaticJoint(bodyNumbers=[oGround, b0], position=[3.5,0,0], axis=[0,1,0],
                            useGlobalFrame=True, axisRadius=0.02, axisLength=1)
@@ -529,8 +529,8 @@
 
 %
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L1122}{CreateSphericalJoint}{}}}\label{sec:mainsystemextensions:CreateSphericalJoint}
-({\it name}= '', {\it bodyNumbers}= [None, None], {\it position}= [], {\it constrainedAxes}= [1,1,1], {\it useGlobalFrame}= True, {\it show}= True, {\it jointRadius}= 0.1, {\it color}= color4default)
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L1121}{CreateSphericalJoint}{}}}\label{sec:mainsystemextensions:CreateSphericalJoint}
+({\it name}= '', {\it bodyNumbers}= [None, None], {\it position}= [], {\it constrainedAxes}= [1,1,1], {\it useGlobalFrame}= True, {\it show}= True, {\it jointRadius}= 0.1, {\it color}= exudyn.graphics.color.default)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
@@ -559,7 +559,7 @@
 \item[--]
 {\bf example}: \vspace{-12pt}\ei\begin{lstlisting}[language=Python, xleftmargin=36pt]
   import exudyn as exu
-  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+  from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
   import numpy as np
   SC = exu.SystemContainer()
   mbs = SC.AddSystem()
@@ -568,8 +568,8 @@
                            referencePosition = [5,0,0],
                            initialAngularVelocity = [5,0,0],
                            gravity = [0,-9.81,0],
-                           graphicsDataList = [GraphicsDataOrthoCubePoint(size=[1,0.1,0.1],
-                                                                        color=color4orange)])
+                           graphicsDataList = [exu.graphics.Brick(size=[1,0.1,0.1],
+                                                                        color=exu.graphics.color.orange)])
   oGround = mbs.AddObject(ObjectGround())
   mbs.CreateSphericalJoint(bodyNumbers=[oGround, b0], position=[5.5,0,0],
                            useGlobalFrame=True, jointRadius=0.06)
@@ -590,8 +590,8 @@
 
 %
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L1212}{CreateGenericJoint}{}}}\label{sec:mainsystemextensions:CreateGenericJoint}
-({\it name}= '', {\it bodyNumbers}= [None, None], {\it position}= [], {\it rotationMatrixAxes}= np.eye(3), {\it constrainedAxes}= [1,1,1, 1,1,1], {\it useGlobalFrame}= True, {\it offsetUserFunction}= 0, {\it offsetUserFunction\_t}= 0, {\it show}= True, {\it axesRadius}= 0.1, {\it axesLength}= 0.4, {\it color}= color4default)
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L1211}{CreateGenericJoint}{}}}\label{sec:mainsystemextensions:CreateGenericJoint}
+({\it name}= '', {\it bodyNumbers}= [None, None], {\it position}= [], {\it rotationMatrixAxes}= np.eye(3), {\it constrainedAxes}= [1,1,1, 1,1,1], {\it useGlobalFrame}= True, {\it offsetUserFunction}= 0, {\it offsetUserFunction\_t}= 0, {\it show}= True, {\it axesRadius}= 0.1, {\it axesLength}= 0.4, {\it color}= exudyn.graphics.color.default)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
@@ -625,7 +625,7 @@
 \item[--]
 {\bf example}: \vspace{-12pt}\ei\begin{lstlisting}[language=Python, xleftmargin=36pt]
   import exudyn as exu
-  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+  from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
   import numpy as np
   SC = exu.SystemContainer()
   mbs = SC.AddSystem()
@@ -634,8 +634,8 @@
                            referencePosition = [6,0,0],
                            initialAngularVelocity = [0,8,0],
                            gravity = [0,-9.81,0],
-                           graphicsDataList = [GraphicsDataOrthoCubePoint(size=[1,0.1,0.1],
-                                                                        color=color4orange)])
+                           graphicsDataList = [exu.graphics.Brick(size=[1,0.1,0.1],
+                                                                        color=exu.graphics.color.orange)])
   oGround = mbs.AddObject(ObjectGround())
   mbs.CreateGenericJoint(bodyNumbers=[oGround, b0], position=[5.5,0,0],
                          constrainedAxes=[1,1,1, 1,0,0],
@@ -659,15 +659,15 @@
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/complexEigenvaluesTest.py}{\texttt{complexEigenvaluesTest.py}} (TM), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/computeODE2AEeigenvaluesTest.py}{\texttt{computeODE2AEeigenvaluesTest.py}} (TM), 
 \\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/driveTrainTest.py}{\texttt{driveTrainTest.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mainSystemExtensionsTests.py}{\texttt{mainSystemExtensionsTests.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/generalContactImplicit2.py}{\texttt{generalContactImplicit2.py}} (TM), 
  ...
 
 \ei
 
 %
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L1325}{CreateDistanceConstraint}{}}}\label{sec:mainsystemextensions:CreateDistanceConstraint}
-({\it name}= '', {\it bodyList}= [None, None], {\it localPosition0}= [0.,0.,0.], {\it localPosition1}= [0.,0.,0.], {\it distance}= None, {\it bodyOrNodeList}= [None, None], {\it show}= True, {\it drawSize}= -1., {\it color}= color4default)
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L1324}{CreateDistanceConstraint}{}}}\label{sec:mainsystemextensions:CreateDistanceConstraint}
+({\it name}= '', {\it bodyList}= [None, None], {\it localPosition0}= [0.,0.,0.], {\it localPosition1}= [0.,0.,0.], {\it distance}= None, {\it bodyOrNodeList}= [None, None], {\it show}= True, {\it drawSize}= -1., {\it color}= exudyn.graphics.color.default)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
@@ -697,7 +697,7 @@
 \item[--]
 {\bf example}: \vspace{-12pt}\ei\begin{lstlisting}[language=Python, xleftmargin=36pt]
   import exudyn as exu
-  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+  from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
   import numpy as np
   SC = exu.SystemContainer()
   mbs = SC.AddSystem()
@@ -705,8 +705,8 @@
                                                     sideLengths=[1,0.1,0.1]),
                             referencePosition = [6,0,0],
                             gravity = [0,-9.81,0],
-                            graphicsDataList = [GraphicsDataOrthoCubePoint(size=[1,0.1,0.1],
-                                                                        color=color4orange)])
+                            graphicsDataList = [exu.graphics.Brick(size=[1,0.1,0.1],
+                                                                        color=exu.graphics.color.orange)])
   m1 = mbs.CreateMassPoint(referencePosition=[5.5,-1,0],
                            physicsMass=1, drawSize = 0.2)
   n1 = mbs.GetObject(m1)['nodeNumber']
@@ -739,7 +739,7 @@
 
 %
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L1445}{CreateForce}{}}}\label{sec:mainsystemextensions:CreateForce}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L1444}{CreateForce}{}}}\label{sec:mainsystemextensions:CreateForce}
 ({\it name}= '', {\it bodyNumber}= None, {\it loadVector}= [0.,0.,0.], {\it localPosition}= [0.,0.,0.], {\it bodyFixed}= False, {\it loadVectorUserFunction}= 0, {\it show}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -768,14 +768,14 @@
 \item[--]
 {\bf example}: \vspace{-12pt}\ei\begin{lstlisting}[language=Python, xleftmargin=36pt]
   import exudyn as exu
-  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+  from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
   import numpy as np
   SC = exu.SystemContainer()
   mbs = SC.AddSystem()
   b0=mbs.CreateMassPoint(referencePosition = [0,0,0],
                          initialVelocity = [2,5,0],
                          physicsMass = 1, gravity = [0,-9.81,0],
-                         drawSize = 0.5, color=color4blue)
+                         drawSize = 0.5, color=exu.graphics.color.blue)
   f0=mbs.CreateForce(bodyNumber=b0, loadVector=[100,0,0],
                      localPosition=[0,0,0])
   mbs.Assemble()
@@ -801,7 +801,7 @@
 
 %
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L1523}{CreateTorque}{}}}\label{sec:mainsystemextensions:CreateTorque}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/mainSystemExtensions.py\#L1522}{CreateTorque}{}}}\label{sec:mainsystemextensions:CreateTorque}
 ({\it name}= '', {\it bodyNumber}= None, {\it loadVector}= [0.,0.,0.], {\it localPosition}= [0.,0.,0.], {\it bodyFixed}= False, {\it loadVectorUserFunction}= 0, {\it show}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -830,7 +830,7 @@
 \item[--]
 {\bf example}: \vspace{-12pt}\ei\begin{lstlisting}[language=Python, xleftmargin=36pt]
   import exudyn as exu
-  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+  from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
   import numpy as np
   SC = exu.SystemContainer()
   mbs = SC.AddSystem()
@@ -838,8 +838,8 @@
                                                    sideLengths=[1,0.1,0.1]),
                            referencePosition = [1,3,0],
                            gravity = [0,-9.81,0],
-                           graphicsDataList = [GraphicsDataOrthoCubePoint(size=[1,0.1,0.1],
-                                                                        color=color4red)])
+                           graphicsDataList = [exu.graphics.Brick(size=[1,0.1,0.1],
+                                                                        color=exu.graphics.color.red)])
   f0=mbs.CreateTorque(bodyNumber=b0, loadVector=[0,100,0])
   mbs.Assemble()
   simulationSettings = exu.SimulationSettings() #takes currently set values or default values

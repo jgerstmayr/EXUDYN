@@ -13,7 +13,8 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 
 import numpy as np
 
@@ -67,8 +68,8 @@ inertiaWheel = InertiaCylinder(density=rhoWheel, length=wWheel, outerRadius=rWhe
 inertiaCar = InertiaCuboid(density=mCar/(lCar*wCar*hCar),sideLengths=[wCar, lCar, hCar])
 #exu.Print(inertiaCar)
 
-graphicsCar = GraphicsDataOrthoCubePoint(centerPoint=[0,0,0],size=[wCar-1.1*wWheel, lCar, hCar], 
-                                         color=color4steelblue)
+graphicsCar = graphics.Brick(centerPoint=[0,0,0],size=[wCar-1.1*wWheel, lCar, hCar], 
+                                         color=graphics.color.steelblue)
 [nCar,bCar]=AddRigidBody(mainSys = mbs, 
                          inertia = inertiaCar, 
                          nodeType = str(exu.NodeType.RotationEulerParameters), 
@@ -95,7 +96,7 @@ sAngularVelWheels=[]
 # +---->X, wCar
 
 #ground body and marker
-gGround = GraphicsDataOrthoCubePoint(centerPoint=[4,4,-0.001],size=[12,12,0.002], color=color4lightgrey[0:3]+[0.2])
+gGround = graphics.Brick(centerPoint=[4,4,-0.001],size=[12,12,0.002], color=graphics.color.lightgrey[0:3]+[0.2])
 oGround = mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=[gGround])))
 markerGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
 
@@ -114,7 +115,7 @@ for iWheel in range(nWheels):
         frictionAngle *= -1
 
     #additional graphics for visualization of rotation (JUST FOR DRAWING!):
-    graphicsWheel = [GraphicsDataOrthoCubePoint(centerPoint=[0,0,0],size=[wWheel*1.1,0.7*rWheel,0.7*rWheel], color=color4lightred)]
+    graphicsWheel = [graphics.Brick(centerPoint=[0,0,0],size=[wWheel*1.1,0.7*rWheel,0.7*rWheel], color=graphics.color.lightred)]
     nCyl = 12
     rCyl = 0.1*rWheel
     for i in range(nCyl): #draw cylinders on wheels
@@ -122,9 +123,9 @@ for iWheel in range(nWheels):
         pAxis = np.array([0,rWheel*np.sin(iPhi),-rWheel*np.cos(iPhi)])
         vAxis = [0.5*wWheel*np.cos(frictionAngle),0.5*wWheel*np.sin(frictionAngle),0]
         vAxis2 = RotationMatrixX(iPhi)@vAxis
-        rColor = color4grey
-        if i >= nCyl/2: rColor = color4darkgrey
-        graphicsWheel += [GraphicsDataCylinder(pAxis=pAxis-vAxis2, vAxis=2*vAxis2, radius=rCyl, 
+        rColor = graphics.color.grey
+        if i >= nCyl/2: rColor = graphics.color.darkgrey
+        graphicsWheel += [graphics.Cylinder(pAxis=pAxis-vAxis2, vAxis=2*vAxis2, radius=rCyl, 
                                                color=rColor)]
 
 
@@ -179,7 +180,7 @@ for iWheel in range(nWheels):
                                                   dryFrictionProportionalZone=1e-1, 
                                                   rollingFrictionViscous=0.2*0,
                                                   contactStiffness=kRolling, contactDamping=dRolling,
-                                                  visualization=VObjectConnectorRollingDiscPenalty(discWidth=wWheel, color=color4blue)))
+                                                  visualization=VObjectConnectorRollingDiscPenalty(discWidth=wWheel, color=graphics.color.blue)))
     oRollingDiscs += [oRolling]
 
     strNum = str(iWheel)

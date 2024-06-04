@@ -13,7 +13,8 @@
 
 import exudyn as exu
 from exudyn.itemInterface import *
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 from exudyn.graphicsDataUtilities import *
 
 import numpy as np
@@ -47,9 +48,9 @@ pos1 = [-rb-H,0,0]
 pos2 = [ rb+H,0,0]
 posList=[pos0,pos1,pos2]
 for pos in posList:
-    #gDataList += [{'type':'Circle','position':pos,'radius':rb, 'color':color4grey}]
-    gDataList += [GraphicsDataCylinder(pAxis=pos, vAxis=[0,0,0.1], radius=rb, color= color4grey, nTiles=200)]
-    #gDataList += [GraphicsDataRectangle(-1.2*H,-H*0.75,1.2*H,10*H,color=color4red)]
+    #gDataList += [{'type':'Circle','position':pos,'radius':rb, 'color':graphics.color.grey}]
+    gDataList += [graphics.Cylinder(pAxis=pos, vAxis=[0,0,0.1], radius=rb, color= graphics.color.grey, nTiles=200)]
+    #gDataList += [GraphicsDataRectangle(-1.2*H,-H*0.75,1.2*H,10*H,color=graphics.color.red)]
     nMass = mbs.AddNode(NodePointGround(referenceCoordinates=pos))
     #oMass = mbs.AddObject(MassPoint(physicsMass=m, nodeNumber=nMass))
     mThis = mbs.AddMarker(MarkerNodePosition(nodeNumber=nMass))
@@ -63,8 +64,8 @@ ns = 20
 gDataSphere = []
 for i in range(ns):
     gRad = radius*(0.75+0.4*(i/ns))
-    gSphere = GraphicsDataCylinder(pAxis=[0,0,-0.25], vAxis=[0,0,0.5], radius=gRad, color=color4blue, nTiles=12)
-    gSphere2 = GraphicsDataCylinder(pAxis=[0,0,-0.3], vAxis=[0,0,0.6], radius=0.8*gRad, color=color4steelblue, nTiles=10)
+    gSphere = graphics.Cylinder(pAxis=[0,0,-0.25], vAxis=[0,0,0.5], radius=gRad, color=graphics.color.blue, nTiles=12)
+    gSphere2 = graphics.Cylinder(pAxis=[0,0,-0.3], vAxis=[0,0,0.6], radius=0.8*gRad, color=graphics.color.steelblue, nTiles=10)
     gDataSphere += [[gSphere, gSphere2]]
 
 

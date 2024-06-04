@@ -13,6 +13,9 @@ For alternative approaches, see
    \ ``main/pythonDev/Examples/rigidBodyTutorial3withMarkers.py``\ 
    \ ``main/pythonDev/Examples/rigidBodyTutorial2.py``\ 
 
+\ **NOTE**\  that the youtube video uses a slightly older way of creating graphics using \ ``GraphicsData...``\  functions, which
+can be easily replaced by the newer \ ``graphics. ...``\  commands shown here. Their interface is identical.
+
 This tutorial will set up a multibody system containing a ground, two rigid bodies and two revolute joints driven by gravity, compare a 3D view of the example in \ :numref:`fig-rigidbodytutorialview`\ .
 
 
@@ -30,11 +33,22 @@ We first import the exudyn library and the interface for all nodes, objects, mar
 .. code-block:: python
 
   import exudyn as exu
-  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+  #import specific items, inertia class for general cuboid (hexahedral) block, etc.
+  from exudyn.utilities import InertiaCuboid, ObjectRigidBody, MarkerBodyRigid, \
+                               GenericJoint, VObjectJointGeneric, SensorBody
+  import exudyn.graphics as graphics #only import as graphics if it does not conflict
   import numpy as np #for postprocessing
 
 
 The submodule \ ``exudyn.utilities``\  contains helper functions for graphics representation, 3D rigid bodies and joints.
+For simplicity, many examples just use a star import instead, which is recommended for rapid model development:
+
+.. code-block:: python
+
+  from exudyn.utilities import *
+
+
+
 
 As in the first tutorial, we need a \ ``SystemContainer``\  and add a new MainSystem \ ``mbs``\ :
 
@@ -67,6 +81,13 @@ We add an empty ground body, using default values. It's origin is at [0,0,0] and
   oGround = mbs.CreateGround(referencePosition=[0,0,0])
 
 
+On the background, the \ ``CreateGround``\  function creates an object, which is equivalent to:
+
+.. code-block:: python
+
+  oGround = mbs.AddObject(ObjectGround(referencePosition=[0,0,0]))
+
+
 
 
 
@@ -88,8 +109,9 @@ For visualization, we add some graphics for the body defined as a 3D cube with c
 .. code-block:: python
 
   #graphics for body
-  graphicsBody0 = GraphicsDataOrthoCubePoint(centerPoint=[0,0,0],size=[L,w,w],color=color4red)
-  graphicsCOM0 = GraphicsDataBasis(origin=iCube0.com, length=2*w)
+  graphicsBody0 = graphics.Brick(centerPoint=[0,0,0],size=[L,w,w],
+                                 color=graphics.color.red)
+  graphicsCOM0 = graphics.Basis(origin=iCube0.com, length=2*w)
 
 
 
@@ -164,29 +186,31 @@ Note that an error in the definition of markers for the joints can be also detec
 \ :math:`\ra`\  you will see a misalignment of the two parts of the joint by \ ``0.1*L``\ .
 The latter approach is very general and will also work for any kind of flexible bodies.
 
-Due to the fact that the definition of markers for general joints is tedious, \ **option 3**\  is based on a MainSystem function, which allows to attach revolute joints immediately to bodies and defining the rotation axis only once for the joint:
+Due to the fact that the definition of markers for general joints is tedious, \ **option 3**\  is based on a MainSystem function, which allows to attach revolute joints immediately to \ **rigid bodies**\  and defining the rotation axis only once for the joint:
 
 .. code-block:: python
 
-  #revolute joint option 3:
+  #revolute joint option 3 (simplest):
   mbs.CreateRevoluteJoint(bodyNumbers=[oGround, b0], position=[0,0,0], 
                           axis=[0,0,1], axisRadius=0.2*w, axisLength=1.4*w)
 
 
-For the latter option, there are more arguments that may be specified, e.g., the axis and position can also be defined in the local frame of the first body.
+Note that \ ``axis``\  and \ ``position``\  are defined in global coordinates, and local coordinates are computed according to the
+reference configuration of the bodies.
+There exist more arguments that may be specified, e.g., the axis and position can also be defined in the local frame of the first body.
 
 
 
 The second link and the according joint can be set up in a very similar way.
-For visualization, we need to add some graphics for the body defined as a RigidLink GraphicsData function:
+For visualization, we need to add some graphics for the body defined as a RigidLink graphics function:
 
 .. code-block:: python
 
   #second link, simple graphics:
-  graphicsBody1 = GraphicsDataRigidLink(p0=[0,0,-0.5*L],p1=[0,0,0.5*L], 
+  graphicsBody1 = graphics.RigidLink(p0=[0,0,-0.5*L],p1=[0,0,0.5*L], 
                                         axis0=[1,0,0], axis1=[0,0,0], radius=[0.06,0.05], 
                                         thickness = 0.1, width = [0.12,0.12], 
-                                        color=color4lightgreen)
+                                        color=graphics.color.lightgreen)
 
   b1=mbs.CreateRigidBody(inertia = InertiaCuboid(density=5000, sideLengths=[0.1,0.1,1]),
                          referencePosition = np.array([L,0,0.5*L]), 
@@ -448,6 +472,7 @@ As the simulation will run very fast, if you did not set \ ``simulateInRealtime`
 
   mbs.SolutionViewer()
   #alternatively, we could load solution from a file:
+  #from exudyn.utilities import LoadSolutionFile
   #sol = LoadSolutionFile('coordinatesSolution.txt')
   #mbs.SolutionViewer(sol)
 

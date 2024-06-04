@@ -23,14 +23,15 @@ You can view and download this file on Github: `ANCFrotatingCable2D.py <https://
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    
    import exudyn as exu
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    
    SC = exu.SystemContainer()
    mbs = SC.AddSystem()
    
    
    #background
-   background = GraphicsDataCheckerBoard(point=[0,0,-0.1],size = 5)
+   background = graphics.CheckerBoard(point=[0,0,-0.1],size = 5)
    oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0], visualization=VObjectGround(graphicsData= [background])))
    
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -83,7 +84,7 @@ You can view and download this file on Github: `ANCFrotatingCable2D.py <https://
    
    if True:
        #create rigid body:
-       gBody = GraphicsDataOrthoCubePoint(size = [h,h,h], color=color4red)
+       gBody = graphics.Brick(size = [h,h,h], color=graphics.color.red)
        dictBody = mbs.CreateRigidBody(referencePosition=[0,0,0],
                                    inertia = InertiaCuboid(1000, [h,h,h]),
                                    graphicsDataList=[gBody],

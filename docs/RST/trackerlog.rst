@@ -19,15 +19,86 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.8.32.dev1, 
-+  last change =  2024-05-09, 
-+  Number of issues = 1837, 
-+  Number of resolved issues = 1626 (32 in current version), 
++  Exudyn version = 1.8.52.dev1, 
++  last change =  2024-06-04, 
++  Number of issues = 1854, 
++  Number of resolved issues = 1646 (52 in current version), 
 
 ***********
 Version 1.8
 ***********
 
+ * Version 1.8.52: resolved Issue 1852: tutorials (docu)
+    - description:  adapt tutorials to new exudyn.graphics structure
+    - date resolved: **2024-06-04 21:48**\ , date raised: 2024-06-04 
+ * Version 1.8.51: resolved Issue 1853: exudyn.graphics (docu)
+    - description:  add documentation in python utilities for these functions
+    - date resolved: **2024-06-04 21:06**\ , date raised: 2024-06-04 
+ * Version 1.8.50: resolved Issue 1851: artificialIntelligence (change)
+    - description:  adapt examples to new stable-baselines version
+    - **notes:** tested with stable-baselines3 V1.7.0 and V2.3.2
+    - date resolved: **2024-06-04 17:24**\ , date raised: 2024-06-04 
+ * Version 1.8.49: resolved Issue 1850: artificialIntelligence (change)
+    - description:  adapt to stable-baselines3 2.3; add old mode with gym and new mode with gymnasium
+    - **notes:** kept old mode available if gym is installed with stable-baselines without gymnasium
+    - date resolved: **2024-06-04 14:59**\ , date raised: 2024-06-04 
+    - resolved by: P. Manzl
+ * Version 1.8.48: resolved Issue 0406: add NGsolve test (extension)
+    - description:  with FEMinterface, only for Python37 version
+    - **notes:** outdated and removed (see new issue 1849)
+    - date resolved: **2024-06-02 13:30**\ , date raised: 2020-05-22 
+ * Version 1.8.47: resolved Issue 0837: GeneralContact jacobian (extension)
+    - description:  add jacobian and PostNewton for Triangle-Sphere contact
+    - date resolved: **2024-06-02 10:58**\ , date raised: 2021-12-19 
+ * Version 1.8.46: resolved Issue 1847: GeneralContact (fix)
+    - description:  change several for-break commands to continue to improve contact behavior
+    - date resolved: **2024-06-01 20:13**\ , date raised: 2024-06-01 
+ * Version 1.8.45: resolved Issue 1475: tutorial videos (docu)
+    - description:  add new tutorial, replace old ones
+    - **notes:** already completed on Feb 15 2024
+    - date resolved: **2024-05-20 19:13**\ , date raised: 2023-03-27 
+ * Version 1.8.44: resolved Issue 1474: tutorial videos (fix)
+    - description:  fix gettings started video
+    - **notes:** already completed on Feb 15 2024
+    - date resolved: **2024-05-20 19:13**\ , date raised: 2023-03-27 
+ * Version 1.8.43: resolved Issue 1842: add FurtherExampels folder for further examples, especially useful for training of LLMs (extension)
+    - description:  EXTENSION
+    - date resolved: **2024-05-20 19:08**\ , date raised: 2024-05-17 
+ * Version 1.8.42: resolved Issue 1843: simulationSettings (docu)
+    - description:  correct path of simulationSettings.staticSolverSettings to simulationSettings.staticSolver in RTD description
+    - date resolved: **2024-05-17 18:36**\ , date raised: 2024-05-17 
+ * Version 1.8.41: resolved Issue 1841: AddODE2LoadDependencies (fix)
+    - description:  description is wrong
+    - date resolved: **2024-05-17 18:29**\ , date raised: 2024-05-17 
+ * Version 1.8.40: resolved Issue 1840: std::isalpha (fix)
+    - description:  remove std::isalpha and std::isalnum, as it does not compile on certain older compilers
+    - date resolved: **2024-05-13 17:08**\ , date raised: 2024-05-13 
+ * Version 1.8.39: resolved Issue 1838: Examples check (extension)
+    - description:  add test to check whether examples basically run; use timeout and special setting to turn off all key-press waiting; exclude large examples
+    - date resolved: **2024-05-12 10:19**\ , date raised: 2024-05-11 
+ * Version 1.8.38: :textred:`resolved BUG 1839` : ALEANCFCable2D 
+    - description:  raises error 'ANCFCable2d:ComputeAxialStrain_t not implemented' if ForceLocal is evaluated
+    - **notes:** results have to be verified
+    - date resolved: **2024-05-11 19:18**\ , date raised: 2024-05-11 
+ * Version 1.8.37: resolved Issue 1187: ALEANCFCable2D (extension)
+    - description:  add missing terms related to damping terms coupled with delta qALE
+    - **notes:** already implemented and checked with paper up to come
+    - date resolved: **2024-05-11 19:00**\ , date raised: 2022-07-06 
+ * Version 1.8.36: resolved Issue 1692: exudyn.graphics (fix)
+    - description:  change GraphicsData functions in examples to exudyn.graphics
+    - **notes:** CHECK your files, if there are any issues due to this change; in general, the previous functionality should be maintained
+    - date resolved: **2024-05-11 01:18**\ , date raised: 2023-11-19 
+ * Version 1.8.35: resolved Issue 1825: GraphicsDataCube (change)
+    - description:  rename to GraphicsDataBrick... functions; use assignment to keep previous functionality
+    - **notes:** not changed, but introduced exudyn.graphics submodule for graphics functions. OrthoCube now available as exudyn.graphics.Brick
+    - date resolved: **2024-05-11 01:16**\ , date raised: 2024-04-25 
+ * Version 1.8.34: resolved Issue 1691: exudyn.graphics (extension)
+    - description:  map graphicsDataUtilities functions to exudyn.graphics for better readability
+    - **notes:** NOTE that previous GraphicsData functions still work; however, it may be necessary to import exudyn.utilities if you imported exudyn.graphicsDataUtilities directly; examples and test models are adjusted to new functions; it is recommended that users switch to new exudyn.graphics functionality!
+    - date resolved: **2024-05-10 19:45**\ , date raised: 2023-11-19 
+ * Version 1.8.33: resolved Issue 1837: graphics (check)
+    - description:  test graphics submodule for future replacement of graphicsDataUtilities
+    - date resolved: **2024-05-10 10:09**\ , date raised: 2024-05-10 
  * Version 1.8.32: resolved Issue 1832: theory docu (docu)
     - description:  add description of computation of stresses for FFRFreducedOrder
     - date resolved: **2024-05-09 17:12**\ , date raised: 2024-05-03 
@@ -5285,9 +5356,25 @@ Version 0.1
 Open issues
 ***********
 
- * **open issue 1825:** GraphicsDataCube    
-    - description:  rename to GraphicsDataBrick... functions; use assignment to keep previous functionality
-    - date raised: 2024-04-25 
+ * **open issue 1849:** tutorial            
+    - description:  add FFRFreducedOrder with NGsolve tutorial
+    - date raised: 2024-06-02 
+
+ * **open issue 1848:** GeneralContact      
+    - description:  Test and improve implicit SPHERE-TRIG contact
+    - date raised: 2024-06-02 
+
+ * **open issue 1846:** ComputePostProcessingModes
+    - description:  numberOfThreads> 1 not working: no modes computed
+    - date raised: 2024-05-29 
+
+ * **open issue 1845:** ComputePostProcessingModes
+    - description:  numberOfThreads> 1 not working: conversion of vectorInput to np.array makes problems
+    - date raised: 2024-05-29 
+
+ * **open issue 1844:** AddRigidBody        
+    - description:  add warning to this and related functions for deprecation
+    - date raised: 2024-05-28 
 
  * **open issue 1822:** inverse dynamics    
     - description:  consider an inverse dynamics solver for constrained systems; this requires decouple constraints from Lagrange multipliers; add separate LTG list for Lagrange multipliers and objectLTGAE; separate CObject::GetAlgebraicEquationsSize from LagrangeMultiplier size; check markerDataStructure.GetLagrangeMultipliers; see CSystemData::ComputeMarkerDataStructure
@@ -5367,14 +5454,6 @@ Open issues
 
  * **open issue 1695:** taskmanager         
     - description:  extend microthreading for taskmanager-based load management; remove taskmanager from repo and create pure BSD license
-    - date raised: 2023-11-19 
-
- * **open issue 1692:** exudyn.graphics     
-    - description:  change GraphicsData functions in examples to exudyn.graphics
-    - date raised: 2023-11-19 
-
- * **open issue 1691:** exudyn.graphics     
-    - description:  map graphicsDataUtilities functions to exudyn.graphics for better readability
     - date raised: 2023-11-19 
 
  * **open issue 1684:** ObjectIndex         
@@ -5513,14 +5592,6 @@ Open issues
     - description:  both in Python and C++, fix range to 0..2\*pi, as large angles cause low accuracy
     - date raised: 2023-03-27 
 
- * :textorange:`open issue 1475:` tutorial videos     
-    - description:  add new tutorial, replace old ones
-    - date raised: 2023-03-27 
-
- * :textred:`open issue 1474:` tutorial videos     
-    - description:  fix gettings started video
-    - date raised: 2023-03-27 
-
  * **open issue 1455:** MarkerSuperElementRigidBody
     - description:  fix derivative of exponential map for velocity level
     - date raised: 2023-03-05 
@@ -5604,10 +5675,6 @@ Open issues
  * **open issue 1189:** ContactFrictionCircleCable2D
     - description:  add velocity offset to MarkerCable2DShape
     - date raised: 2022-07-08 
-
- * **open issue 1187:** ALEANCFCable2D      
-    - description:  add missing terms related to damping terms coupled with delta qALE
-    - date raised: 2022-07-06 
 
  * **open issue 1167:** user functions      
     - description:  check https://pybind11.readthedocs.io/en/stable/advanced/cast/functional.html regarding stateless functions and test performance with C++ functions for simple spring-damper
@@ -5817,10 +5884,6 @@ Open issues
     - description:  add jacobian and PostNewton for cable-sphere (circle) contact
     - date raised: 2021-12-19 
 
- * **open issue 0837:** GeneralContact jacobian
-    - description:  add jacobian and PostNewton for Triangle-Sphere contact
-    - date raised: 2021-12-19 
-
  * **open issue 0836:** GeneralContact add cone
     - description:  for 3D cables add cone (including cylinder) to contact with 3D cables
     - date raised: 2021-12-19 
@@ -5980,10 +6043,6 @@ Open issues
  * **open issue 0410:** drawing information 
     - description:  add consistent drawing information in show field of every item
     - date raised: 2020-05-24 
-
- * **open issue 0406:** add NGsolve test    
-    - description:  with FEMinterface, only for Python37 version
-    - date raised: 2020-05-22 
 
  * **open issue 0401:** add sensor miniexamples
     - description:  .

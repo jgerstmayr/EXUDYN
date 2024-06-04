@@ -12,7 +12,8 @@
 
 import exudyn as exu
 from exudyn.itemInterface import *
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 from exudyn.beams import *
 
 import numpy as np
@@ -61,10 +62,10 @@ bW = 30
 bT = 80
 tH = 190
 tW = 8
-gList += [GraphicsDataOrthoCubePoint([-bW*0.5,-bH*0.5,0],size=[bW-2,bH,bT],color=color4grey)]
-gList += [GraphicsDataOrthoCubePoint([-1,-0.1,0],size=[2,0.2,2],color=color4grey)]
-gList += [GraphicsDataOrthoCubePoint([-bW*0.5,-tH*0.5,0],size=[tW,tH,tW],color=[0.6,0.6,0.6,0.2])]
-gList += [GraphicsDataOrthoCubePoint([-25+10,-tH-2,0],size=[50,4,bT],color=color4steelblue)]
+gList += [graphics.Brick([-bW*0.5,-bH*0.5,0],size=[bW-2,bH,bT],color=graphics.color.grey)]
+gList += [graphics.Brick([-1,-0.1,0],size=[2,0.2,2],color=graphics.color.grey)]
+gList += [graphics.Brick([-bW*0.5,-tH*0.5,0],size=[tW,tH,tW],color=[0.6,0.6,0.6,0.2])]
+gList += [graphics.Brick([-25+10,-tH-2,0],size=[50,4,bT],color=graphics.color.steelblue)]
 
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -103,10 +104,10 @@ mCable = mbs.AddMarker(MarkerNodePosition(nodeNumber=nLast))
 #add jumper as rigid body
 gJumper = []
 hJumper = 1.8
-#gJumper += [GraphicsDataOrthoCubePoint([0,0,0],size=[0.4,1.8,0.5],color=color4blue)]
-gJumper += [GraphicsDataOrthoCubePoint([0,0.3,0],size=[0.5,0.64,0.5],color=color4blue)]
-gJumper += [GraphicsDataOrthoCubePoint([0,-0.25*hJumper,0],size=[0.3,0.5*hJumper,0.5],color=color4darkgrey)]
-gJumper += [GraphicsDataSphere([0,0.75,0],radius=0.15,color=color4orange)]
+#gJumper += [graphics.Brick([0,0,0],size=[0.4,1.8,0.5],color=graphics.color.blue)]
+gJumper += [graphics.Brick([0,0.3,0],size=[0.5,0.64,0.5],color=graphics.color.blue)]
+gJumper += [graphics.Brick([0,-0.25*hJumper,0],size=[0.3,0.5*hJumper,0.5],color=graphics.color.darkgrey)]
+gJumper += [graphics.Sphere([0,0.75,0],radius=0.15,color=graphics.color.orange)]
 
 bJumper = mbs.CreateRigidBody(referencePosition=[0,0.5*hJumper,0],
                               inertia=InertiaCuboid(250, sideLengths=[0.4,1.8,0.5]), #90kg

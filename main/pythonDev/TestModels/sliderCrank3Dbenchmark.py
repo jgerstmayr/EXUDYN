@@ -12,7 +12,8 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 from exudyn.lieGroupIntegration import *
 
 import numpy as np
@@ -109,10 +110,10 @@ nodeType=exu.NodeType.RotationEulerParameters
 
 
 ################ Body0: CRANK
-#graphicsAB = GraphicsDataOrthoCube(-d/2,-d/2,0, d/2,d/2, lAB, [0.1,0.1,0.8,1])
-graphicsAB = GraphicsDataRigidLink(p0=[0,0,0],p1=[0,0,lAB], axis0=[1,0,0], 
+#graphicsAB = graphics.BrickXYZ(-d/2,-d/2,0, d/2,d/2, lAB, [0.1,0.1,0.8,1])
+graphicsAB = graphics.RigidLink(p0=[0,0,0],p1=[0,0,lAB], axis0=[1,0,0], 
                                    radius=[0.01,0.01], thickness = 0.01, 
-                                   width = [0.02,0.02], color=color4steelblue)
+                                   width = [0.02,0.02], color=graphics.color.steelblue)
 
 b0 = mbs.CreateRigidBody(inertia=inertiaAB, 
                          nodeType=nodeType,
@@ -124,9 +125,9 @@ b0 = mbs.CreateRigidBody(inertia=inertiaAB,
 n0 = mbs.GetObject(b0)['nodeNumber']
 
 ################ Body1: CONROD
-graphicsBC = GraphicsDataRigidLink(p0=[-0.5*lBC,0,0],p1=[0.5*lBC,0,0], axis1=[0,0,0], 
+graphicsBC = graphics.RigidLink(p0=[-0.5*lBC,0,0],p1=[0.5*lBC,0,0], axis1=[0,0,0], 
                                    radius=[0.01,0.01], thickness = 0.01, 
-                                   width = [0.02,0.02], color=color4lightred)
+                                   width = [0.02,0.02], color=graphics.color.lightred)
 pBC = ScalarMult(0.5,VAdd(pB,pC))
 b1 = mbs.CreateRigidBody(inertia=inertiaBC, 
                          nodeType=nodeType,
@@ -139,7 +140,7 @@ n1 = mbs.GetObject(b1)['nodeNumber']
 
 ################ Body2: SLIDER
 dSlider = 0.02
-graphicsSlider = GraphicsDataOrthoCubePoint(size=[dSlider*2,dSlider,dSlider], color=color4dodgerblue[0:3]+[0.5])
+graphicsSlider = graphics.Brick(size=[dSlider*2,dSlider,dSlider], color=graphics.color.dodgerblue[0:3]+[0.5])
 b2 = mbs.CreateRigidBody(inertia=inertiaSlider, 
                          nodeType=nodeType,
                          referencePosition=pC, 
@@ -153,10 +154,10 @@ dimT = 0.02
 dimZ = 0.2
 dimX = 0.3
 dimY = 0.24
-gGround = [GraphicsDataOrthoCubePoint([-0.5*dimT,0,0.5*dimZ-dimT],[dimT, dimY, dimZ], color=color4grey) ]
-gGround+= [GraphicsDataOrthoCubePoint([0.5*dimX-dimT,0,-dimT*0.5-dSlider*0.5],[dimX, dimY, dimT], color=color4darkgrey) ]
-gGround+= [GraphicsDataOrthoCubePoint([0.5*dimX-dimT,-dSlider*0.25-dimY*0.25,-dimT*0.5],[dimX, dimY*0.5-dSlider*0.5, dimT], color=color4grey) ]
-gGround+= [GraphicsDataOrthoCubePoint([0.5*dimX-dimT,+dSlider*0.25+dimY*0.25,-dimT*0.5],[dimX, dimY*0.5-dSlider*0.5, dimT], color=color4grey) ]
+gGround = [graphics.Brick([-0.5*dimT,0,0.5*dimZ-dimT],[dimT, dimY, dimZ], color=graphics.color.grey) ]
+gGround+= [graphics.Brick([0.5*dimX-dimT,0,-dimT*0.5-dSlider*0.5],[dimX, dimY, dimT], color=graphics.color.darkgrey) ]
+gGround+= [graphics.Brick([0.5*dimX-dimT,-dSlider*0.25-dimY*0.25,-dimT*0.5],[dimX, dimY*0.5-dSlider*0.5, dimT], color=graphics.color.grey) ]
+gGround+= [graphics.Brick([0.5*dimX-dimT,+dSlider*0.25+dimY*0.25,-dimT*0.5],[dimX, dimY*0.5-dSlider*0.5, dimT], color=graphics.color.grey) ]
 
 #simple function to add ground:
 oGround = mbs.CreateGround(graphicsDataList = gGround)

@@ -26,14 +26,15 @@ You can view and download this file on Github: `testGymCartpole.py <https://gith
    
    #+++++++++++++++++++++++++++++++++++++++++++++++++
    #conda create -n venvGym python=3.10 numpy matplotlib spyder-kernels=2.4 ipykernel -y
-   #pip install gym[spaces]
+   #pip install pip install wheel==0.38.4 setuptools==66.0.0
+   #      => this downgrades setuptools to be able to install gym==0.21
    #pip install stable-baselines3==1.7.0
-   #pip install exudyn
    
    import time
    from math import sin, cos
    from testGymCartpoleEnv import CartPoleEnv
    
+   useGraphics = True
    if True: #test the model by just integrating in Exudyn and apply force
    
        env = CartPoleEnv()
@@ -64,30 +65,34 @@ You can view and download this file on Github: `testGymCartpole.py <https://gith
        env = CartPoleEnv(thresholdFactor=5,forceFactor=2)
    
        env.useRenderer = False
+       total_timesteps = 1000 #for quick test only; does not stabilize
+       if useGraphics:
+           total_timesteps = 100_000 #works sometimes, may need more steps
        
        from stable_baselines3 import A2C
        model = A2C('MlpPolicy', env,
                    device='cpu',  #usually cpu is faster for this size of networks
                    verbose=1)
        ts = -time.time()
-       model.learn(total_timesteps=10000)
+       model.learn(total_timesteps=total_timesteps)
        print('time spent=',ts+time.time())
    
        model.save('solution/cartpoleLearn')
        
        #%%+++++++++++++++++++++++++++++++++++++++
-       env = CartPoleEnv(10)#test with larger threshold
-       env.useRenderer = True
-       obs = env.reset()
-       for i in range(100):
-           action, _state = model.predict(obs, deterministic=True)
-           obs, reward, done, info = env.step(action)
-           env.render()
-           if done:
-             obs = env.reset()
-           time.sleep(0.05) #to see results ...
-           
-       env.close()
+       if useGraphics:
+           env = CartPoleEnv(10)#test with larger threshold
+           env.useRenderer = True
+           obs = env.reset()
+           for i in range(100):
+               action, _state = model.predict(obs, deterministic=True)
+               obs, reward, done, info = env.step(action)
+               env.render()
+               if done:
+                 obs = env.reset()
+               time.sleep(0.05) #to see results ...
+               
+           env.close()
    
    
 

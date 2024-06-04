@@ -24,7 +24,8 @@ You can view and download this file on Github: `InverseKinematicsNumericalExampl
    
    import exudyn as exu
    from exudyn.itemInterface import *
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    from exudyn.rigidBodyUtilities import *
    from exudyn.graphicsDataUtilities import *
    from exudyn.robotics import *
@@ -36,8 +37,8 @@ You can view and download this file on Github: `InverseKinematicsNumericalExampl
    jointWidth=0.1
    jointRadius=0.06
    linkWidth=0.1
-   graphicsBaseList = [GraphicsDataOrthoCubePoint([0,0,-0.15], [0.12,0.12,0.1], color4grey)]
-   graphicsBaseList +=[GraphicsDataCylinder([0,0,-jointWidth], [0,0,jointWidth], linkWidth*0.5, color4list[0])] #belongs to first body
+   graphicsBaseList = [graphics.Brick([0,0,-0.15], [0.12,0.12,0.1], graphics.color.grey)]
+   graphicsBaseList +=[graphics.Cylinder([0,0,-jointWidth], [0,0,jointWidth], linkWidth*0.5, graphics.colorList[0])] #belongs to first body
    
    from exudyn.robotics.models import ManipulatorPuma560, ManipulatorPANDA, ManipulatorUR5
    # robotDef = ManipulatorPuma560()
@@ -46,7 +47,7 @@ You can view and download this file on Github: `InverseKinematicsNumericalExampl
    flagStdDH = True
    # LinkList2Robot() # todo: build robot using the utility function
    
-   toolGraphics = [GraphicsDataBasis(length=0.3*0)]
+   toolGraphics = [graphics.Basis(length=0.3*0)]
    robot2 = Robot(gravity=[0,0,-9.81],
                  base = RobotBase(HT=HTtranslate([0,0,0]), visualization=VRobotBase(graphicsData=graphicsBaseList)),
                  tool = RobotTool(HT=HTtranslate([0,0,0.1*0]), visualization=VRobotTool(graphicsData=toolGraphics)),
@@ -62,7 +63,7 @@ You can view and download this file on Github: `InverseKinematicsNumericalExampl
                                    localHT=StdDH2HT(link['stdDH']),
                                    # localHT=StdDH2HT(link['modKKDH']),
                                   PDcontrol=(10, 1),
-                                  visualization=VRobotLink(linkColor=color4list[cnt], showCOM=False, showMBSjoint=True)
+                                  visualization=VRobotLink(linkColor=graphics.colorList[cnt], showCOM=False, showMBSjoint=True)
                                   ))                                                
        # save read DH-Parameters into variables for convenience
        if flagStdDH: # std-dh  

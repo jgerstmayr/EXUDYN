@@ -4,7 +4,8 @@
 #++++++++++++++++++++++++++++++++
 
 import exudyn as exu
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -18,7 +19,7 @@ oMass = mbs.CreateMassPoint(name='HeavyMass',
                             physicsMass=12,
                             gravity=[0,-9.81,0],
                             drawSize=0.2,
-                            color=color4red)
+                            color=graphics.color.red)
 
 oSD = mbs.CreateSpringDamper(bodyList=[oGround, oMass],
                              stiffness=500,

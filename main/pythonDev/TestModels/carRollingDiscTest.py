@@ -11,7 +11,8 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 import numpy as np
 
 useGraphics = True #without test
@@ -66,7 +67,7 @@ inertiaCar = InertiaCuboid(density=mCar/(lCar*wCar*hCar),sideLengths=[wCar, lCar
 
 #%%++++++++++++++++++++++++++++++
 #create car node and body:
-graphicsCar = GraphicsDataOrthoCubePoint(centerPoint=[0,0,0],size=[wCar-1.1*wWheel, lCar, hCar], color=color4lightred)
+graphicsCar = graphics.Brick(centerPoint=[0,0,0],size=[wCar-1.1*wWheel, lCar, hCar], color=graphics.color.lightred)
 bCar=mbs.CreateRigidBody(inertia = inertiaCar, 
                          referencePosition = p0Car, 
                          referenceRotationMatrix = initialRotationCar,
@@ -91,7 +92,7 @@ oRollingDiscs=[]
 # +---->X, wCar
 
 #ground body and marker
-gGround = GraphicsDataOrthoCubePoint(centerPoint=[0,0,-0.001],size=[30,30,0.002], color=color4lightgrey)
+gGround = graphics.Brick(centerPoint=[0,0,-0.001],size=[30,30,0.002], color=graphics.color.lightgrey)
 oGround = mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=[gGround])))
 markerGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
 
@@ -108,7 +109,7 @@ sRollForce=[]
 #create wheels bodies and nodes:
 for iWheel in range(nWheels):
     #additional graphics for visualization of rotation:
-    graphicsWheel = GraphicsDataOrthoCubePoint(centerPoint=[0,0,0],size=[wWheel*1.1,0.7*rWheel,0.7*rWheel], color=color4lightred)
+    graphicsWheel = graphics.Brick(centerPoint=[0,0,0],size=[wWheel*1.1,0.7*rWheel,0.7*rWheel], color=graphics.color.lightred)
 
     dx = -0.5*wCar
     dy = -0.5*lCar
@@ -170,7 +171,7 @@ for iWheel in range(nWheels):
                                                   dryFrictionProportionalZone=1e-1, 
                                                   rollingFrictionViscous=0.2*0,
                                                   contactStiffness=kRolling, contactDamping=dRolling,
-                                                  visualization=VObjectConnectorRollingDiscPenalty(discWidth=wWheel, color=color4blue)))
+                                                  visualization=VObjectConnectorRollingDiscPenalty(discWidth=wWheel, color=graphics.color.blue)))
     oRollingDiscs += [oRolling]
 
     strNum = str(iWheel)

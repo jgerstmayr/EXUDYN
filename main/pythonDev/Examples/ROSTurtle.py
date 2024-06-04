@@ -28,7 +28,8 @@
 import numpy as np
 import sys
 import exudyn as exu
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 
 # import needed ROS modules and messages
 import rospy
@@ -105,19 +106,19 @@ def main():
     boxdensity = 1e-5
     boxLength = [0.5, 0.25, 0.1]
 
-    background = GraphicsDataCheckerBoard(point=[0,0,0], 
+    background = graphics.CheckerBoard(point=[0,0,0], 
                                         normal=[0, 0, 1], 
                                         color=[0.7]*3+[0.5], 
                                         alternatingColor=[0.8]*3+[1],
                                         nTiles=10,
                                         size=10)
 
-    graphicsCube = GraphicsDataOrthoCubePoint(centerPoint = [0,0,0], 
+    graphicsCube = graphics.Brick(centerPoint = [0,0,0], 
                                         size = boxLength,
                                         color = [1,0.,0.,1.],
                                         addNormals = False, 
                                         addEdges = False, 
-                                        edgeColor = color4black, 
+                                        edgeColor = graphics.color.black, 
                                         addFaces = True)
     inertiaCube = InertiaCuboid(density= boxdensity, sideLengths = boxLength)
     
@@ -143,7 +144,7 @@ def main():
             
                 for i in range(int(len(trajData)/3)): 
                     trajData[2+3*i] += 0.115 # draw it on top of the robot
-                graphicsTraj = {'type':'Line', 'data': trajData, 'color':color4blue}
+                graphicsTraj = {'type':'Line', 'data': trajData, 'color':graphics.color.blue}
             else: 
                 graphicsTraj = []
             return [graphicsTraj]
@@ -158,7 +159,7 @@ def main():
             path2stl = ''
         print('stl file path: ', path2stl)
         turtleRot = RotationMatrixZ(-np.pi/2)
-        stlGrafics = GraphicsDataFromSTLfile(path2stl+'ROSTurtle.stl',color=[1,0,0,1],scale=0.25,pOff=[0.35,0,0], Aoff=turtleRot)
+        stlGrafics = graphics.FromSTLfile(path2stl+'ROSTurtle.stl',color=[1,0,0,1],scale=0.25,pOff=[0.35,0,0], Aoff=turtleRot)
         graphicsTurtleList += [stlGrafics]
     except:
         print('stl not found, maybe wrong directory, use box instead')

@@ -1260,21 +1260,31 @@ Vector2D CObjectANCFCable2DBase::ComputeSlopeVector_xt(Real x, ConfigurationType
 //!  compute the axial strain at a certain axial position, for given configuration
 Real CObjectANCFCable2DBase::ComputeAxialStrain_t(Real x, bool isALE, Real physicsMovingMassFactor, ConfigurationType configuration) const
 {
-	CHECKandTHROW(!(isALE && physicsMovingMassFactor == 1), "ANCFCable2d:ComputeAxialStrain_t not implemented for ALE case with physicsMovingMassFactor=1");
+	//CHECKandTHROW(!(isALE && physicsMovingMassFactor == 1), "ANCFCable2d:ComputeAxialStrain_t not implemented for ALE case with physicsMovingMassFactor=1");
 
 	Vector2D rx = ComputeSlopeVector(x, configuration);
 	Vector2D rx_t = ComputeSlopeVector_t(x, configuration);
 	Real rxNorm2 = rx.GetL2NormSquared();
 	Real rxNorm = sqrt(rxNorm2);
 
-	return (rx * rx_t) / rxNorm; //rate of axial strain
+	if (!(isALE && (physicsMovingMassFactor == 1.)))
+	{
+		return (rx * rx_t) / rxNorm; //rate of axial strain
+	}
+	else
+	{
+		//ALE: include convective terms
+		Vector2D rxx = ComputeSlopeVector_x(x, configuration);
+		Real vALE = ((CNodeODE2*)GetCNode(2))->GetCurrentCoordinateVector_t()[0];
+		return (rx * (vALE * rxx + rx_t)) / rxNorm;
+	}
 }
 
 
 //!  compute the (bending) curvature at a certain axial position, for given configuration
 Real CObjectANCFCable2DBase::ComputeCurvature_t(Real x, bool isALE, Real physicsMovingMassFactor, ConfigurationType configuration) const
 {
-	CHECKandTHROW(!(isALE && physicsMovingMassFactor == 1), "ANCFCable2d:ComputeCurvature_t not implemented for ALE case with physicsMovingMassFactor=1");
+	//CHECKandTHROW(!(isALE && physicsMovingMassFactor == 1), "ANCFCable2d:ComputeCurvature_t not implemented for ALE case with physicsMovingMassFactor=1");
 
 	Vector2D rx = ComputeSlopeVector(x, configuration);
 	Vector2D rxx = ComputeSlopeVector_x(x, configuration);
@@ -1288,7 +1298,35 @@ Real CObjectANCFCable2DBase::ComputeCurvature_t(Real x, bool isALE, Real physics
 	Real f_t = rx_t.CrossProduct2D(rxx) + rx.CrossProduct2D(rxx_t);
 	Real g_t = 2 * (rx_t * rx);
 
-	return (f_t*g - f * g_t) / EXUstd::Square(g);
+	if (!(isALE && (physicsMovingMassFactor == 1.)))
+	{
+		return (f_t * g - f * g_t) / EXUstd::Square(g);
+	}
+	else
+	{
+		//ALE: include convective terms
+		Real vALE = ((CNodeODE2*)GetCNode(2))->GetCurrentCoordinateVector_t()[0];
+
+		Vector2D vx = vALE * rxx + rx_t;
+
+		//compute rxxx:
+		Vector4D SVxxx = ComputeShapeFunctions_xxx(x, GetLength());
+		Vector2D rxxx = MapCoordinates(SVxxx, ((CNodeODE2*)GetCNode(0))->GetCoordinateVector(configuration), ((CNodeODE2*)GetCNode(1))->GetCoordinateVector(configuration));
+		if (configuration != ConfigurationType::Reference) //add reference configuration to any current, initial, visualization coordinates (except reference configuration!)
+		{
+			rxxx += MapCoordinates(SVxxx, ((CNodeODE2*)GetCNode(0))->GetCoordinateVector(ConfigurationType::Reference), ((CNodeODE2*)GetCNode(1))->GetCoordinateVector(ConfigurationType::Reference));
+		}
+
+		Vector2D vxx = vALE * rxxx + rxx_t;
+
+		Real rxCrossVxx = vx.CrossProduct2D(rxx) + rx.CrossProduct2D(vxx); //this substitutes rxCrossRxx_t in curvature_t of ANCF
+		Real rxCrossRxx = rx.CrossProduct2D(rxx);
+		Real rxNorm2 = rx.GetL2NormSquared();
+
+		Real rxvx = 2. * (rx * vx);  //this substitutes rxNorm2_t
+
+		return (rxCrossVxx * rxNorm2 - rxCrossRxx * rxvx) / EXUstd::Square(rxNorm2);
+	}
 }
 
 

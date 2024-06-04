@@ -21,7 +21,7 @@ import exudyn as exu
 import exudyn.plot
 import exudyn.solver
 import exudyn.interactive
-#import exudyn.robotics
+import exudyn.graphics
 import exudyn.utilities
 
 from exudyn.rigidBodyUtilities import GetRigidBodyNode, ComputeOrthonormalBasis, \
@@ -33,7 +33,6 @@ from exudyn.advancedUtilities import RaiseTypeError, IsVector, ExpectedType, IsV
                                     IsValidRealInt, IsValidPRealInt, IsValidURealInt, IsIntVector, \
                                     IsValidBool, IsSquareMatrix, IsNone, IsNotNone
 
-from exudyn.graphicsDataUtilities import color4default, color4red
 import numpy as np
 import copy
 
@@ -121,13 +120,13 @@ def ProcessBodyNodeLists(bodyList, bodyOrNodeList, localPosition0, localPosition
 #**belongsTo: MainSystem
 #**example:
 # import exudyn as exu
-# from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+# from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 # import numpy as np
 # SC = exu.SystemContainer()
 # mbs = SC.AddSystem()
 # 
 # ground=mbs.CreateGround(referencePosition = [2,0,0],
-#                         graphicsDataList = [GraphicsDataCheckerBoard(point=[0,0,0], normal=[0,1,0],size=4)])
+#                         graphicsDataList = [exu.graphics.CheckerBoard(point=[0,0,0], normal=[0,1,0],size=4)])
 # 
 def MainSystemCreateGround(mbs,
                            name = '',   
@@ -183,7 +182,7 @@ def MainSystemCreateGround(mbs,
 #**belongsTo: MainSystem
 #**example:
 # import exudyn as exu
-# from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+# from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 # import numpy as np
 # SC = exu.SystemContainer()
 # mbs = SC.AddSystem()
@@ -191,7 +190,7 @@ def MainSystemCreateGround(mbs,
 # b0=mbs.CreateMassPoint(referencePosition = [0,0,0],
 #                        initialVelocity = [2,5,0],
 #                        physicsMass = 1, gravity = [0,-9.81,0],
-#                        drawSize = 0.5, color=color4blue)
+#                        drawSize = 0.5, color=exu.graphics.color.blue)
 # 
 # mbs.Assemble()
 # simulationSettings = exu.SimulationSettings() #takes currently set values or default values
@@ -309,7 +308,7 @@ def MainSystemCreateMassPoint(mbs,
 #**belongsTo: MainSystem
 #**example:
 # import exudyn as exu
-# from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+# from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 # import numpy as np
 # SC = exu.SystemContainer()
 # mbs = SC.AddSystem()
@@ -320,8 +319,8 @@ def MainSystemCreateMassPoint(mbs,
 #                          initialVelocity = [2,5,0],
 #                          initialAngularVelocity = [5,0.5,0.7],
 #                          gravity = [0,-9.81,0],
-#                          graphicsDataList = [GraphicsDataOrthoCubePoint(size=[1,0.1,0.1], 
-#                                                                       color=color4red)])
+#                          graphicsDataList = [exu.graphics.Brick(size=[1,0.1,0.1], 
+#                                                                       color=exu.graphics.color.red)])
 # 
 # mbs.Assemble()
 # simulationSettings = exu.SimulationSettings() #takes currently set values or default values
@@ -533,7 +532,7 @@ def MainSystemCreateRigidBody(mbs,
 #**belongsTo: MainSystem
 #**example:
 # import exudyn as exu
-# from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+# from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 # import numpy as np
 # SC = exu.SystemContainer()
 # mbs = SC.AddSystem()
@@ -541,7 +540,7 @@ def MainSystemCreateRigidBody(mbs,
 # b0 = mbs.CreateMassPoint(referencePosition = [2,0,0],
 #                          initialVelocity = [2,5,0],
 #                          physicsMass = 1, gravity = [0,-9.81,0],
-#                          drawSize = 0.5, color=color4blue)
+#                          drawSize = 0.5, color=exu.graphics.color.blue)
 # 
 # oGround = mbs.AddObject(ObjectGround())
 # #add vertical spring
@@ -567,7 +566,7 @@ def MainSystemCreateSpringDamper(mbs,
                                  velocityOffset = 0., 
                                  springForceUserFunction = 0,
                                  bodyOrNodeList=[None, None], 
-                                 show=True, drawSize=-1, color=color4default):
+                                 show=True, drawSize=-1, color=exudyn.graphics.color.default):
     #perform some checks:
     where='MainSystem.CreateSpringDamper(...)'
     internBodyNodeList = ProcessBodyNodeLists(bodyList, bodyOrNodeList, localPosition0, localPosition1, where)
@@ -666,14 +665,14 @@ def MainSystemCreateSpringDamper(mbs,
 #**belongsTo: MainSystem
 #**example:
 # import exudyn as exu
-# from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+# from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 # import numpy as np
 # SC = exu.SystemContainer()
 # mbs = SC.AddSystem()
 # 
 # b0 = mbs.CreateMassPoint(referencePosition = [7,0,0],
 #                           physicsMass = 1, gravity = [0,-9.81,0],
-#                           drawSize = 0.5, color=color4blue)
+#                           drawSize = 0.5, color=exu.graphics.color.blue)
 # 
 # oGround = mbs.AddObject(ObjectGround())
 # 
@@ -699,7 +698,7 @@ def MainSystemCreateCartesianSpringDamper(mbs,
                                  offset = [0.,0.,0.],
                                  springForceUserFunction = 0,
                                  bodyOrNodeList=[None, None], 
-                                 show=True, drawSize=-1, color=color4default):
+                                 show=True, drawSize=-1, color=exudyn.graphics.color.default):
 
     where='MainSystem.CreateCartesianSpringDamper(...)'
     internBodyNodeList = ProcessBodyNodeLists(bodyList, bodyOrNodeList, localPosition0, localPosition1, where)
@@ -777,7 +776,7 @@ def MainSystemCreateCartesianSpringDamper(mbs,
 #**output: ObjectIndex; returns index of newly created object
 #**belongsTo: MainSystem
 #**example:
-# #TODO
+# #coming later
 def MainSystemCreateRigidBodySpringDamper(mbs,
                                  name='',
                                  bodyList=[None, None], 
@@ -792,7 +791,7 @@ def MainSystemCreateRigidBodySpringDamper(mbs,
                                  springForceTorqueUserFunction=0,
                                  postNewtonStepUserFunction=0,
                                  bodyOrNodeList=[None, None],
-                                 show=True, drawSize=-1, color=color4default):
+                                 show=True, drawSize=-1, color=exudyn.graphics.color.default):
 
     where='MainSystem.CreateRigidBodySpringDamper(...)'
     internBodyNodeList = ProcessBodyNodeLists(bodyList, bodyOrNodeList, localPosition0, localPosition1, where)
@@ -902,7 +901,7 @@ def MainSystemCreateRigidBodySpringDamper(mbs,
 #**belongsTo: MainSystem
 #**example:
 # import exudyn as exu
-# from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+# from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 # import numpy as np
 # SC = exu.SystemContainer()
 # mbs = SC.AddSystem()
@@ -911,8 +910,8 @@ def MainSystemCreateRigidBodySpringDamper(mbs,
 #                                                  sideLengths=[1,0.1,0.1]),
 #                          referencePosition = [3,0,0],
 #                          gravity = [0,-9.81,0],
-#                          graphicsDataList = [GraphicsDataOrthoCubePoint(size=[1,0.1,0.1], 
-#                                                                       color=color4steelblue)])
+#                          graphicsDataList = [exu.graphics.Brick(size=[1,0.1,0.1], 
+#                                                                       color=exu.graphics.color.steelblue)])
 # oGround = mbs.AddObject(ObjectGround())
 # mbs.CreateRevoluteJoint(bodyNumbers=[oGround, b0], position=[2.5,0,0], axis=[0,0,1],
 #                         useGlobalFrame=True, axisRadius=0.02, axisLength=0.14)
@@ -925,7 +924,7 @@ def MainSystemCreateRigidBodySpringDamper(mbs,
 # mbs.SolveDynamic(simulationSettings = simulationSettings)
 def MainSystemCreateRevoluteJoint(mbs, name='', bodyNumbers=[None, None], 
                                   position=[], axis=[], useGlobalFrame=True, 
-                                  show=True, axisRadius=0.1, axisLength=0.4, color=color4default):
+                                  show=True, axisRadius=0.1, axisLength=0.4, color=exudyn.graphics.color.default):
     
     where = 'MainSystem.CreateRevoluteJoint(...)'
     if not exudyn.__useExudynFast:
@@ -1002,7 +1001,7 @@ def MainSystemCreateRevoluteJoint(mbs, name='', bodyNumbers=[None, None],
 #**belongsTo: MainSystem
 #**example:
 # import exudyn as exu
-# from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+# from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 # import numpy as np
 # SC = exu.SystemContainer()
 # mbs = SC.AddSystem()
@@ -1012,8 +1011,8 @@ def MainSystemCreateRevoluteJoint(mbs, name='', bodyNumbers=[None, None],
 #                          referencePosition = [4,0,0],
 #                          initialVelocity = [0,4,0],
 #                          gravity = [0,-9.81,0],
-#                          graphicsDataList = [GraphicsDataOrthoCubePoint(size=[1,0.1,0.1], 
-#                                                                       color=color4steelblue)])
+#                          graphicsDataList = [exu.graphics.Brick(size=[1,0.1,0.1], 
+#                                                                       color=exu.graphics.color.steelblue)])
 # 
 # oGround = mbs.AddObject(ObjectGround())
 # mbs.CreatePrismaticJoint(bodyNumbers=[oGround, b0], position=[3.5,0,0], axis=[0,1,0], 
@@ -1027,7 +1026,7 @@ def MainSystemCreateRevoluteJoint(mbs, name='', bodyNumbers=[None, None],
 # mbs.SolveDynamic(simulationSettings = simulationSettings)
 def MainSystemCreatePrismaticJoint(mbs, name='', bodyNumbers=[None, None], 
                                   position=[], axis=[], useGlobalFrame=True, 
-                                  show=True, axisRadius=0.1, axisLength=0.4, color=color4default):
+                                  show=True, axisRadius=0.1, axisLength=0.4, color=exudyn.graphics.color.default):
         
     where = 'MainSystem.CreatePrismaticJoint(...)'
     if not exudyn.__useExudynFast:
@@ -1097,7 +1096,7 @@ def MainSystemCreatePrismaticJoint(mbs, name='', bodyNumbers=[None, None],
 #**belongsTo: MainSystem
 #**example:
 # import exudyn as exu
-# from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+# from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 # import numpy as np
 # SC = exu.SystemContainer()
 # mbs = SC.AddSystem()
@@ -1107,8 +1106,8 @@ def MainSystemCreatePrismaticJoint(mbs, name='', bodyNumbers=[None, None],
 #                          referencePosition = [5,0,0],
 #                          initialAngularVelocity = [5,0,0],
 #                          gravity = [0,-9.81,0],
-#                          graphicsDataList = [GraphicsDataOrthoCubePoint(size=[1,0.1,0.1], 
-#                                                                       color=color4orange)])
+#                          graphicsDataList = [exu.graphics.Brick(size=[1,0.1,0.1], 
+#                                                                       color=exu.graphics.color.orange)])
 # oGround = mbs.AddObject(ObjectGround())
 # mbs.CreateSphericalJoint(bodyNumbers=[oGround, b0], position=[5.5,0,0], 
 #                          useGlobalFrame=True, jointRadius=0.06)
@@ -1121,7 +1120,7 @@ def MainSystemCreatePrismaticJoint(mbs, name='', bodyNumbers=[None, None],
 # mbs.SolveDynamic(simulationSettings = simulationSettings)
 def MainSystemCreateSphericalJoint(mbs, name='', bodyNumbers=[None, None], 
                                   position=[], constrainedAxes=[1,1,1], useGlobalFrame=True, 
-                                  show=True, jointRadius=0.1, color=color4default):
+                                  show=True, jointRadius=0.1, color=exudyn.graphics.color.default):
         
     where = 'MainSystem.CreateSphericalJoint(...)'
     if not exudyn.__useExudynFast:
@@ -1185,7 +1184,7 @@ def MainSystemCreateSphericalJoint(mbs, name='', bodyNumbers=[None, None],
 #**belongsTo: MainSystem
 #**example:
 # import exudyn as exu
-# from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+# from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 # import numpy as np
 # SC = exu.SystemContainer()
 # mbs = SC.AddSystem()
@@ -1195,8 +1194,8 @@ def MainSystemCreateSphericalJoint(mbs, name='', bodyNumbers=[None, None],
 #                          referencePosition = [6,0,0],
 #                          initialAngularVelocity = [0,8,0],
 #                          gravity = [0,-9.81,0],
-#                          graphicsDataList = [GraphicsDataOrthoCubePoint(size=[1,0.1,0.1], 
-#                                                                       color=color4orange)])
+#                          graphicsDataList = [exu.graphics.Brick(size=[1,0.1,0.1], 
+#                                                                       color=exu.graphics.color.orange)])
 # oGround = mbs.AddObject(ObjectGround())
 # mbs.CreateGenericJoint(bodyNumbers=[oGround, b0], position=[5.5,0,0],
 #                        constrainedAxes=[1,1,1, 1,0,0],
@@ -1215,7 +1214,7 @@ def MainSystemCreateGenericJoint(mbs, name='', bodyNumbers=[None, None],
                                  constrainedAxes=[1,1,1, 1,1,1], 
                                  useGlobalFrame=True,
                                  offsetUserFunction=0, offsetUserFunction_t=0,
-                                 show=True, axesRadius=0.1, axesLength=0.4, color=color4default):
+                                 show=True, axesRadius=0.1, axesLength=0.4, color=exudyn.graphics.color.default):
         
     where = 'MainSystem.CreateGenericJoint(...)'
     if not exudyn.__useExudynFast:
@@ -1288,7 +1287,7 @@ def MainSystemCreateGenericJoint(mbs, name='', bodyNumbers=[None, None],
 #**belongsTo: MainSystem
 #**example:
 # import exudyn as exu
-# from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+# from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 # import numpy as np
 # SC = exu.SystemContainer()
 # mbs = SC.AddSystem()
@@ -1297,8 +1296,8 @@ def MainSystemCreateGenericJoint(mbs, name='', bodyNumbers=[None, None],
 #                                                   sideLengths=[1,0.1,0.1]),
 #                           referencePosition = [6,0,0],
 #                           gravity = [0,-9.81,0],
-#                           graphicsDataList = [GraphicsDataOrthoCubePoint(size=[1,0.1,0.1], 
-#                                                                       color=color4orange)])
+#                           graphicsDataList = [exu.graphics.Brick(size=[1,0.1,0.1], 
+#                                                                       color=exu.graphics.color.orange)])
 # m1 = mbs.CreateMassPoint(referencePosition=[5.5,-1,0],
 #                          physicsMass=1, drawSize = 0.2)
 # n1 = mbs.GetObject(m1)['nodeNumber']
@@ -1328,7 +1327,7 @@ def MainSystemCreateDistanceConstraint(mbs, name='',
                                        localPosition1 = [0.,0.,0.], 
                                        distance=None, 
                                        bodyOrNodeList=[None, None],
-                                       show=True, drawSize=-1., color=color4default):
+                                       show=True, drawSize=-1., color=exudyn.graphics.color.default):
     
     where = 'MainSystem.CreateDistanceConstraint(...)'
     internBodyNodeList = ProcessBodyNodeLists(bodyList, bodyOrNodeList, localPosition0, localPosition1, where)
@@ -1424,7 +1423,7 @@ def MainSystemCreateDistanceConstraint(mbs, name='',
 #**belongsTo: MainSystem
 #**example:
 # import exudyn as exu
-# from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+# from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 # import numpy as np
 # SC = exu.SystemContainer()
 # mbs = SC.AddSystem()
@@ -1432,7 +1431,7 @@ def MainSystemCreateDistanceConstraint(mbs, name='',
 # b0=mbs.CreateMassPoint(referencePosition = [0,0,0],
 #                        initialVelocity = [2,5,0],
 #                        physicsMass = 1, gravity = [0,-9.81,0],
-#                        drawSize = 0.5, color=color4blue)
+#                        drawSize = 0.5, color=exu.graphics.color.blue)
 #
 # f0=mbs.CreateForce(bodyNumber=b0, loadVector=[100,0,0],
 #                    localPosition=[0,0,0])
@@ -1501,7 +1500,7 @@ def MainSystemCreateForce(mbs,
 #**belongsTo: MainSystem
 #**example:
 # import exudyn as exu
-# from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+# from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 # import numpy as np
 # SC = exu.SystemContainer()
 # mbs = SC.AddSystem()
@@ -1510,8 +1509,8 @@ def MainSystemCreateForce(mbs,
 #                                                  sideLengths=[1,0.1,0.1]),
 #                          referencePosition = [1,3,0],
 #                          gravity = [0,-9.81,0],
-#                          graphicsDataList = [GraphicsDataOrthoCubePoint(size=[1,0.1,0.1], 
-#                                                                       color=color4red)])
+#                          graphicsDataList = [exu.graphics.Brick(size=[1,0.1,0.1], 
+#                                                                       color=exu.graphics.color.red)])
 #
 # f0=mbs.CreateTorque(bodyNumber=b0, loadVector=[0,100,0])
 # 
@@ -1521,7 +1520,7 @@ def MainSystemCreateForce(mbs,
 # simulationSettings.timeIntegration.endTime = 2
 # mbs.SolveDynamic(simulationSettings = simulationSettings)
 def MainSystemCreateTorque(mbs,
-                name = '',   
+                name = '',
                 bodyNumber = None,
                 loadVector = [0.,0.,0.], 
                 localPosition = [0.,0.,0.], 

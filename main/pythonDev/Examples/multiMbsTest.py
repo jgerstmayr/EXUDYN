@@ -12,7 +12,8 @@
 
 import exudyn as exu
 from exudyn.itemInterface import *
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 
 import numpy as np
 
@@ -31,7 +32,7 @@ def CreateSystem(mbs, pOff, color0):
     #print(iCube)
     
     #graphics for body
-    graphicsBody0 = GraphicsDataRigidLink(p0=[-0.5*bodyDim[0],0,0],p1=[0.5*bodyDim[0],0,0], 
+    graphicsBody0 = graphics.RigidLink(p0=[-0.5*bodyDim[0],0,0],p1=[0.5*bodyDim[0],0,0], 
                                          axis0=[0,0,1], axis1=[0,0,0*1], radius=[0.05,0.05], 
                                          thickness = 0.1, width = [0.12,0.12], color=color0)
     
@@ -93,10 +94,10 @@ SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 mbs2 = SC2.AddSystem()
 
-CreateSystem(mbs, [0,0,0], color4red)
-CreateSystem(mbs, [1.2,0,0], color4blue)
-CreateSystem(mbs2, [0,0,0], color4red)
-CreateSystem(mbs2, [0.6,-1.2,0], color4green)
+CreateSystem(mbs, [0,0,0], graphics.color.red)
+CreateSystem(mbs, [1.2,0,0], graphics.color.blue)
+CreateSystem(mbs2, [0,0,0], graphics.color.red)
+CreateSystem(mbs2, [0.6,-1.2,0], graphics.color.green)
 
 SC.AttachToRenderEngine()
 exu.StartRenderer()

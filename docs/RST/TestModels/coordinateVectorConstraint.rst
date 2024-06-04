@@ -23,7 +23,8 @@ You can view and download this file on Github: `coordinateVectorConstraint.py <h
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    
    import exudyn as exu
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    import numpy as np
    
    useGraphics = True #without test
@@ -54,13 +55,13 @@ You can view and download this file on Github: `coordinateVectorConstraint.py <h
    #add ground object and mass point:
    sizeRect = 1.2*L*(1+int(doublePendulum))
    #graphicsBackground = GraphicsDataRectangle(-sizeRect,-sizeRect, sizeRect, 0.2*L, [1,1,1,1]) #for appropriate zoom
-   graphicsBackground = GraphicsDataCheckerBoard(point=[0,-0.5*sizeRect,-2*r],size=sizeRect*1.8)
+   graphicsBackground = graphics.CheckerBoard(point=[0,-0.5*sizeRect,-2*r],size=sizeRect*1.8)
    
    oGround = mbs.AddObject(ObjectGround(referencePosition = [0,0,0], 
                               visualization = VObjectGround(graphicsData = [graphicsBackground])))
    
    
-   graphicsSphere = GraphicsDataSphere(point=[0,0,0], radius=r, color=color4steelblue, nTiles = 16)
+   graphicsSphere = graphics.Sphere(point=[0,0,0], radius=r, color=graphics.color.steelblue, nTiles = 16)
    
    nR0 = mbs.AddNode(Point2D(referenceCoordinates=[L,0]))
    oR0 = mbs.AddObject(MassPoint2D(nodeNumber=nR0, physicsMass=mass, visualization=VMassPoint2D(graphicsData=[graphicsSphere])))
@@ -112,7 +113,7 @@ You can view and download this file on Github: `coordinateVectorConstraint.py <h
    
    #for double pendulum, we add a second link
    if doublePendulum:
-       graphicsSphere = GraphicsDataSphere(point=[0,0,0], radius=r, color=color4red, nTiles = 16)
+       graphicsSphere = graphics.Sphere(point=[0,0,0], radius=r, color=graphics.color.red, nTiles = 16)
        nR1 = mbs.AddNode(Point2D(referenceCoordinates=[L*2,0]))
        oR1 = mbs.AddObject(MassPoint2D(nodeNumber=nR1, physicsMass=mass, visualization=VMassPoint2D(graphicsData=[graphicsSphere])))
        

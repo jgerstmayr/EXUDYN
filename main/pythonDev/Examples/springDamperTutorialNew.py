@@ -5,6 +5,7 @@
 #
 # Author:   Johannes Gerstmayr
 # Date:     2023-05-15
+# Update:   2024-06-04 (now fully using create functions)
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
@@ -12,7 +13,8 @@
 
 
 import exudyn as exu
-from exudyn.utilities import *
+from exudyn.utilities import SensorBody, SensorObject
+import exudyn.graphics as graphics #only import if it does not conflict
 
 import numpy as np #for postprocessing
 
@@ -39,18 +41,16 @@ oMass = mbs.CreateMassPoint(referencePosition=[L,0,0],
                             initialVelocity= [v0,0,0],
                             physicsMass=mass) #force created via gravity
 
-oGround = mbs.AddObject(ObjectGround())
+oGround = mbs.CreateGround()
 
 #create spring damper with reference length computed from reference positions (=L)
 oSD = mbs.CreateSpringDamper(bodyOrNodeList=[oMass, oGround], 
                              stiffness = spring, damping = damper) 
 
-#add load via marker:
-bodyMarker = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oMass))
-mbs.AddLoad(LoadForceVector(markerNumber = bodyMarker, loadVector = [f,0,0]))
+#add load on body:
+mbs.CreateForce(bodyNumber = oMass, loadVector = [f,0,0])
 
-
-#add sensor:
+#add sensors:
 sForce = mbs.AddSensor(SensorObject(objectNumber=oSD, storeInternal=True,
                                     outputVariableType=exu.OutputVariableType.ForceLocal))
 sDisp = mbs.AddSensor(SensorBody(bodyNumber=oMass, storeInternal=True,

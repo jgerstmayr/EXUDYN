@@ -2,7 +2,6 @@
 # This is an EXUDYN example
 #
 # Details:  ANCF ALE with under gravity
-# Notes:    This example fails to solve with the current settings; needs to be reworked
 #
 # Author:   Johannes Gerstmayr
 # Date:     2020-02-17
@@ -12,11 +11,8 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
-from exudyn.itemInterface import *
-
-# from exudyn.basicUtilities import *
-# from exudyn.graphicsDataUtilities import *
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 
 import numpy as np
 from math import sqrt, sin, cos
@@ -39,16 +35,13 @@ mbs = SC.AddSystem()
 
 #++++++++++++++++++++++++++++++++++
 #initialize variables        
-vALE0=1 #initial velocity
 
 useGraphics = True
-if useGraphics:
-    nElements = 32 #16 
-else:
-    nElements = 4
-    vALE0=2 #initial velocity
-    h= 4e-3
-    tEnd = 2
+
+nElements = 8
+vALE0=1 #initial velocity
+h= 2e-3
+tEnd = 2 #fails at higher times ... check if this is just unstable due to very flexible beam
     
 damper = 0.01 #0.1: standard for parameter variation; 0.001: almost no damping, but solution is still oscillating at evaluation period
 

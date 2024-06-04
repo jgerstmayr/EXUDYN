@@ -22,17 +22,25 @@ The Python source code of the first tutorial can be found in the file:
 \bi
   \item[] \texttt{main/pythonDev/Examples/springDamperTutorial.py}
 \ei
-A similar version based on a simplified approach (using a 3D mass point) is available as
+A similar version based on a simplified approach (using a 3D mass point) is available as, which uses simplified approaches:
 \bi
   \item[] \texttt{main/pythonDev/Examples/springDamperTutorialNew.py}
 \ei
-This tutorial will set up a mass point and a spring damper, dynamically compute the solution and evaluate the reference solution.
+The following tutorial will set up a mass point and a spring damper, dynamically compute the solution and evaluate the reference solution.
 \vspace{6pt}\\
 We import the exudyn library and the interface for all nodes, objects, markers, loads and sensors:
 \pythonstyle\begin{lstlisting}
   import exudyn as exu
-  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities, rigidBodyUtilities, ...
-  import numpy as np #not required in general, but convenient for linear algebra
+  from exudyn.utilities import Point, NodePointGround, MassPoint, MarkerNodeCoordinate,\
+                               CoordinateSpringDamper, LoadCoordinate, SensorObject
+  import exudyn.graphics as graphics #only import if it does not conflict
+  import numpy as np #for postprocessing
+\end{lstlisting}
+%
+Instead of the named import of \texttt{exudyn.utilities} functions and classes, you can use a star import,
+which includes \texttt{itemInterface}, \texttt{rigidBodyUtilities} and some helper functions:
+\pythonstyle\begin{lstlisting}
+  from exudyn.utilities import *
 \end{lstlisting}
 %
 Next, we need a \texttt{SystemContainer}, which contains all computable systems and add a new MainSystem \texttt{mbs}.
@@ -269,6 +277,9 @@ For alternative approaches, see
   \item[] \texttt{main/pythonDev/Examples/rigidBodyTutorial3withMarkers.py}
   \item[] \texttt{main/pythonDev/Examples/rigidBodyTutorial2.py}
 \ei
+\mybold{NOTE} that the youtube video uses a slightly older way of creating graphics using \texttt{GraphicsData...} functions, which
+can be easily replaced by the newer \texttt{graphics. ...} commands shown here. Their interface is identical.
+
 This tutorial will set up a multibody system containing a ground, two rigid bodies and two revolute joints driven by gravity, compare a 3D view of the example in \fig{fig_RigidBodyTutorialView}.
 %
 \LatexRSTfigure{figures/TutorialRigidBody1desc}{fig_RigidBodyTutorialView}{14cm}{400}{Render view of rigid body tutorial, showing objects, nodes (N0, N1), and loads.}
@@ -291,10 +302,18 @@ This tutorial will set up a multibody system containing a ground, two rigid bodi
 \noindent We first import the exudyn library and the interface for all nodes, objects, markers, loads and sensors:
 \pythonstyle\begin{lstlisting}
   import exudyn as exu
-  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+  #import specific items, inertia class for general cuboid (hexahedral) block, etc.
+  from exudyn.utilities import InertiaCuboid, ObjectRigidBody, MarkerBodyRigid, \
+                               GenericJoint, VObjectJointGeneric, SensorBody
+  import exudyn.graphics as graphics #only import as graphics if it does not conflict
   import numpy as np #for postprocessing
 \end{lstlisting}
 The submodule \texttt{exudyn.utilities} contains helper functions for graphics representation, 3D rigid bodies and joints.
+For simplicity, many examples just use a star import instead, which is recommended for rapid model development:
+\pythonstyle\begin{lstlisting}
+  from exudyn.utilities import *
+\end{lstlisting}
+
 
 \noindent As in the first tutorial, we need a \texttt{SystemContainer} and add a new MainSystem \texttt{mbs}:
 \pythonstyle\begin{lstlisting}
@@ -318,7 +337,10 @@ The submodule \texttt{exudyn.utilities} contains helper functions for graphics r
   #ground body, located at specific position (there could be several ground objects)
   oGround = mbs.CreateGround(referencePosition=[0,0,0])
 \end{lstlisting}
-%oGround = mbs.AddObject(ObjectGround())
+On the background, the \texttt{CreateGround} function creates an object, which is equivalent to:
+\pythonstyle\begin{lstlisting}
+  oGround = mbs.AddObject(ObjectGround(referencePosition=[0,0,0]))
+\end{lstlisting}
 
 \horizontalRuler\\
 \noindent For physical parameters of the rigid body, we can use the class \texttt{RigidBodyInertia}, which allows to define mass, center of mass (COM) and inertia parameters, as well as shifting COM or adding inertias.
@@ -334,8 +356,9 @@ Note that the COM is translated in axial direction, while it would be at the bod
 \noindent For visualization, we add some graphics for the body defined as a 3D cube with center point and dimensions; additionally we draw a basis (three RGB-vectors) at the COM:
 \pythonstyle\begin{lstlisting}
   #graphics for body
-  graphicsBody0 = GraphicsDataOrthoCubePoint(centerPoint=[0,0,0],size=[L,w,w],color=color4red)
-  graphicsCOM0 = GraphicsDataBasis(origin=iCube0.com, length=2*w)
+  graphicsBody0 = graphics.Brick(centerPoint=[0,0,0],size=[L,w,w],
+                                 color=graphics.color.red)
+  graphicsCOM0 = graphics.Basis(origin=iCube0.com, length=2*w)
 \end{lstlisting}
 
 \noindent Now we have defined all data for the link (rigid body). We could use \texttt{mbs.AddNode(NodeRigidBodyEP(...))} and \texttt{mbs.AddObject(ObjectRigidBody(...))} to create a node and a body, but the \texttt{MainSystem} since V1.6.110 offers a much more comfortable function:
@@ -394,23 +417,25 @@ Additional transformation matrices (\texttt{rotationMarker0/1}) can be added in 
 $\ra$ you will see a misalignment of the two parts of the joint by \texttt{0.1*L}.
 The latter approach is very general and will also work for any kind of flexible bodies.
 
-\noindent Due to the fact that the definition of markers for general joints is tedious, \mybold{option 3} is based on a MainSystem function, which allows to attach revolute joints immediately to bodies and defining the rotation axis only once for the joint:
+\noindent Due to the fact that the definition of markers for general joints is tedious, \mybold{option 3} is based on a MainSystem function, which allows to attach revolute joints immediately to \mybold{rigid bodies} and defining the rotation axis only once for the joint:
 \pythonstyle\begin{lstlisting}
-  #revolute joint option 3:
+  #revolute joint option 3 (simplest):
   mbs.CreateRevoluteJoint(bodyNumbers=[oGround, b0], position=[0,0,0], 
                           axis=[0,0,1], axisRadius=0.2*w, axisLength=1.4*w)
 \end{lstlisting}
-For the latter option, there are more arguments that may be specified, e.g., the axis and position can also be defined in the local frame of the first body.
+Note that \texttt{axis} and \texttt{position} are defined in global coordinates, and local coordinates are computed according to the
+reference configuration of the bodies.
+There exist more arguments that may be specified, e.g., the axis and position can also be defined in the local frame of the first body.
 
 \horizontalRuler\\
 \noindent The second link and the according joint can be set up in a very similar way.
-For visualization, we need to add some graphics for the body defined as a RigidLink GraphicsData function:
+For visualization, we need to add some graphics for the body defined as a RigidLink graphics function:
 \pythonstyle\begin{lstlisting}
   #second link, simple graphics:
-  graphicsBody1 = GraphicsDataRigidLink(p0=[0,0,-0.5*L],p1=[0,0,0.5*L], 
+  graphicsBody1 = graphics.RigidLink(p0=[0,0,-0.5*L],p1=[0,0,0.5*L], 
                                         axis0=[1,0,0], axis1=[0,0,0], radius=[0.06,0.05], 
                                         thickness = 0.1, width = [0.12,0.12], 
-                                        color=color4lightgreen)
+                                        color=graphics.color.lightgreen)
 
   b1=mbs.CreateRigidBody(inertia = InertiaCuboid(density=5000, sideLengths=[0.1,0.1,1]),
                          referencePosition = np.array([L,0,0.5*L]), 
@@ -620,6 +645,7 @@ If we do not stop the renderer (\texttt{StopRenderer()}), it will stay open for 
 \pythonstyle\begin{lstlisting}
   mbs.SolutionViewer()
   #alternatively, we could load solution from a file:
+  #from exudyn.utilities import LoadSolutionFile
   #sol = LoadSolutionFile('coordinatesSolution.txt')
   #mbs.SolutionViewer(sol)
 \end{lstlisting}
@@ -730,7 +756,6 @@ but in this case, we do not add constraints:
 \pythonstyle\begin{lstlisting}
   oGround = mbs.CreateGround(referencePosition=[0,0,0])
   mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
-
   mCable = mbs.AddMarker(MarkerNodeRigid(nodeNumber=cableData[0][0]))
 \end{lstlisting}
 

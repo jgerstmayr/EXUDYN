@@ -23,7 +23,8 @@ You can view and download this file on Github: `scissorPrismaticRevolute2D.py <h
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    
    import exudyn as exu
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    
    useGraphics = True #without test
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -50,9 +51,9 @@ You can view and download this file on Github: `scissorPrismaticRevolute2D.py <h
    
    r = 0.05 #just for graphics
    nL = (n+0.5)*L
-   graphicsBackground = GraphicsDataRectangle(-L*1.5,-L*1.5, 1.5*nL, nL, color4lightgrey) #for appropriate zoom
-   graphicscube = GraphicsDataRectangle(-L,-0.5*b, L, 0.5*b, color4steelblue) #GraphicsDataSphere(point=[0,0,0], radius=r, color=[1.,0.2,0.2,1], nTiles = 8)
-   graphicscube2 = GraphicsDataRectangle(-L,-0.5*b, n*L*2**0.5, 0.5*b, color4steelblue) #GraphicsDataSphere(point=[0,0,0], radius=r, color=[1.,0.2,0.2,1], nTiles = 8)
+   graphicsBackground = GraphicsDataRectangle(-L*1.5,-L*1.5, 1.5*nL, nL, graphics.color.lightgrey) #for appropriate zoom
+   graphicscube = GraphicsDataRectangle(-L,-0.5*b, L, 0.5*b, graphics.color.steelblue) #graphics.Sphere(point=[0,0,0], radius=r, color=[1.,0.2,0.2,1], nTiles = 8)
+   graphicscube2 = GraphicsDataRectangle(-L,-0.5*b, n*L*2**0.5, 0.5*b, graphics.color.steelblue) #graphics.Sphere(point=[0,0,0], radius=r, color=[1.,0.2,0.2,1], nTiles = 8)
    #add ground object and mass point:
    
    pi = 3.1415926535897932384626

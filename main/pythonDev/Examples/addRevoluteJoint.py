@@ -15,8 +15,8 @@
 
 ## import libaries
 import exudyn as exu
-from exudyn.itemInterface import *
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 
 from math import sin, cos, pi
 import numpy as np
@@ -58,7 +58,7 @@ axisList=[v0,v1,v2,v3]
 for i in range(4):
     ### create inertia for block with dimensions [L,d,d] and graphics for block
     inertia = InertiaCuboid(density=1000, sideLengths=[L,d,d])
-    graphicsBody = GraphicsDataOrthoCubePoint([0,0,0], [0.96*L,d,d], color4steelblue)
+    graphicsBody = graphics.Brick([0,0,0], [0.96*L,d,d], graphics.color.steelblue)
 
     ### create and add rigid body to mbs
     p0 += Alist[i] @ (0.5*vLoc)

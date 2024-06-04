@@ -26,7 +26,8 @@ You can view and download this file on Github: `rotatingTableTest.py <https://gi
    #%%
    import exudyn as exu
    from exudyn.itemInterface import *
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    from exudyn.graphicsDataUtilities import *
    
    import numpy as np
@@ -71,10 +72,10 @@ You can view and download this file on Github: `rotatingTableTest.py <https://gi
        
        iWheel = InertiaCylinder(1000, w, r, axis=2) 
        
-       graphicsBodyWheel = [GraphicsDataOrthoCubePoint(size=[1.2*r,1.2*r, w*3], color=color4lightred, addEdges=True)]
-       graphicsBodyWheel+= [GraphicsDataCylinder(pAxis=[0,0,-0.5*w], vAxis=[0,0,w], radius=r, color=color4dodgerblue, nTiles=32, addEdges=True)]
-       graphicsBodyWheel+= [GraphicsDataCylinder(pAxis=[0,0,-d], vAxis=[0,0,d], radius=0.5*w, 
-                                                 color=color4orange, addEdges=True)]
+       graphicsBodyWheel = [graphics.Brick(size=[1.2*r,1.2*r, w*3], color=graphics.color.lightred, addEdges=True)]
+       graphicsBodyWheel+= [graphics.Cylinder(pAxis=[0,0,-0.5*w], vAxis=[0,0,w], radius=r, color=graphics.color.dodgerblue, nTiles=32, addEdges=True)]
+       graphicsBodyWheel+= [graphics.Cylinder(pAxis=[0,0,-d], vAxis=[0,0,d], radius=0.5*w, 
+                                                 color=graphics.color.orange, addEdges=True)]
        bWheel = mbs.CreateRigidBody(inertia = iWheel, 
                                     referencePosition = p0Wheel, 
                                     gravity = gravity, 
@@ -83,7 +84,7 @@ You can view and download this file on Github: `rotatingTableTest.py <https://gi
        #ground body and marker
        p0Ground= p0Plane
        iPlane = RigidBodyInertia(mass=100, inertiaTensor=np.eye(3)*1000)
-       graphicsPlane = [GraphicsDataCheckerBoard(point=[0,0,0], normal=n0Plane, size=6*d)]
+       graphicsPlane = [graphics.CheckerBoard(point=[0,0,0], normal=n0Plane, size=6*d)]
        oGround = mbs.AddObject(ObjectGround(referencePosition=p0Plane))
        
        #ground is also a movable rigid body
@@ -140,7 +141,7 @@ You can view and download this file on Github: `rotatingTableTest.py <https://gi
                                                              discRadius=r, 
                                                              discAxis=vDisc,
                                                              planeNormal = n0Plane,
-                                                             visualization=VObjectJointRollingDisc(show=False,discWidth=w,color=color4blue)))
+                                                             visualization=VObjectJointRollingDisc(show=False,discWidth=w,color=graphics.color.blue)))
            else:
                nGeneric = mbs.AddNode(NodeGenericData(initialCoordinates=[0,0,0], numberOfDataCoordinates=3))
                oRolling=mbs.AddObject(RollingDiscPenalty(markerNumbers=[markerRollingPlane,markerWheelCenter],
@@ -150,7 +151,7 @@ You can view and download this file on Github: `rotatingTableTest.py <https://gi
                                                            planeNormal = n0Plane, contactStiffness=kSD, contactDamping=dSD, 
                                                            dryFriction=[0.5,0.5], dryFrictionProportionalZone=0.01, 
                                                            useLinearProportionalZone=True,
-                                                           visualization=VObjectJointRollingDisc(show=False,discWidth=w,color=color4blue)))
+                                                           visualization=VObjectJointRollingDisc(show=False,discWidth=w,color=graphics.color.blue)))
        
            sForce = mbs.AddSensor(SensorObject(objectNumber=oRolling, storeInternal=True,
                                                outputVariableType = exu.OutputVariableType.ForceLocal))
@@ -166,7 +167,7 @@ You can view and download this file on Github: `rotatingTableTest.py <https://gi
        #                                                          discRadius=r, 
        #                                                          discAxis=AA@vDisc,
        #                                                          planeNormal = AA@n0Plane,
-       #                                                          visualization=VObjectJointRollingDisc(discWidth=w,color=color4blue)))
+       #                                                          visualization=VObjectJointRollingDisc(discWidth=w,color=graphics.color.blue)))
        
        sAngVel = mbs.AddSensor(SensorBody(bodyNumber=bWheel, storeInternal=True,
                                           outputVariableType = exu.OutputVariableType.AngularVelocity))

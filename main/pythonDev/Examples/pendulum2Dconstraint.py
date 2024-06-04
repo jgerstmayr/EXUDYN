@@ -12,7 +12,8 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -23,7 +24,7 @@ g = 9.81
 
 r = 0.05 #just for graphics
 graphicsBackground = GraphicsDataRectangle(-1.2*L,-1.2*L, 1.2*L, 0.2*L, [1,1,1,1]) #for appropriate zoom
-graphicsSphere = GraphicsDataSphere(point=[0,0,0], radius=r, color=[1.,0.2,0.2,1], nTiles = 16)
+graphicsSphere = graphics.Sphere(point=[0,0,0], radius=r, color=[1.,0.2,0.2,1], nTiles = 16)
 
 #add ground object and mass point:
 oGround = mbs.AddObject(ObjectGround(referencePosition = [0,0,0], 

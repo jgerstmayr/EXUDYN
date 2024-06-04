@@ -23,14 +23,19 @@ mutableArgsFunctionsChecked = [
     'CreateReevingCurve', 'AddObjectFFRF','CMSObjectComputeNorm', 'AddObjectFFRFreducedOrderWithUserFunctions',
     'AddObjectFFRFreducedOrder', 'AddElasticSupportAtNode', 'CreateLinearFEMObjectGenericODE2', 
     'CreateNonlinearFEMObjectGenericODE2NGsolve', 'ComputeHurtyCraigBamptonModes',  
+    #graphics:
+    'Sphere','Line','Circle','Text','Cuboid','BrickXYZ','Brick','Cylinder','RigidLink','SolidOfRevolution',
+    'Arrow','Basis','Frame','Quad','CheckerBoard','SolidExtrusion','FromPointsAndTrigs','FromSTLfileASCII',
+    'FromSTLfile','Brick','Brick','Brick','Brick',
     #graphicsDataUtilities:
-    'GraphicsDataFromPointsAndTrigs', 
-    'GraphicsDataLine', 'GraphicsDataCircle', 'GraphicsDataText', 'GraphicsDataRectangle', #4 x problems fixed using list()
-    'GraphicsDataOrthoCubeLines', 'GraphicsDataOrthoCube', 'GraphicsDataOrthoCubePoint', 'GraphicsDataCube', #4 x problems fixed using list()
-    'GraphicsDataSphere', 'GraphicsDataCylinder', 'GraphicsDataRigidLink', 'GraphicsDataFromSTLfileTxt', #4 x problems fixed using list()
-    'GraphicsDataCheckerBoard', 'GraphicsDataArrow', 'GraphicsDataBasis', 'GraphicsDataFrame', #ok
-    'GraphicsDataFromSTLfile', 'CirclePointsAndSegments', 'GraphicsDataSolidExtrusion', 'AddEdgesAndSmoothenNormals', #4 x problems fixed using list()
-    'GraphicsDataSolidOfRevolution', 'GraphicsDataQuad', #2 x problems fixed using list()
+    'CirclePointsAndSegments', 'GraphicsDataRectangle', 'GraphicsDataOrthoCubeLines', 'AddEdgesAndSmoothenNormals',
+    # 'GraphicsDataFromPointsAndTrigs', 
+    # 'GraphicsDataLine', 'GraphicsDataCircle', 'GraphicsDataText', 'GraphicsDataRectangle', #4 x problems fixed using list()
+    # 'GraphicsDataOrthoCubeLines', 'GraphicsDataOrthoCube', 'GraphicsDataOrthoCubePoint', 'GraphicsDataCube', #4 x problems fixed using list()
+    # 'GraphicsDataSphere', 'GraphicsDataCylinder', 'GraphicsDataRigidLink', 'GraphicsDataFromSTLfileTxt', #4 x problems fixed using list()
+    # 'GraphicsDataCheckerBoard', 'GraphicsDataArrow', 'GraphicsDataBasis', 'GraphicsDataFrame', #ok
+    # 'GraphicsDataFromSTLfile', 'GraphicsDataSolidExtrusion', 'AddEdgesAndSmoothenNormals', #4 x problems fixed using list()
+    # 'GraphicsDataSolidOfRevolution', 'GraphicsDataQuad', #2 x problems fixed using list()
     #interactive:
     'SolutionViewer',#'__init__',
     #kinematicTree:
@@ -73,6 +78,7 @@ filesParsed=[
              'basicUtilities.py',
              'beams.py',
              'FEM.py',
+             'graphics.py',
              'graphicsDataUtilities.py',
              'GUI.py', 
              'interactive.py',
@@ -466,7 +472,7 @@ def DictToItemsText(functionDict, tagList, addStr, eraseInput=''):
             strTag = RemoveIndentation(functionDict[tag].strip())
             #print(strTag)
             if tag == 'example':
-                strTag = functionDict[tag].strip('\n') #do not remove indentation, nor strip spaces, only blank lines
+                strTag = functionDict[tag].strip('\n').replace('\\_','_') #do not remove indentation, nor strip spaces, only blank lines
                 #print("example=", strTag)
                 sLatex += '\\vspace{-12pt}\\ei' #for global itemize list for function
                 sLatex += '\\begin{lstlisting}[language=Python, xleftmargin=36pt]\n'

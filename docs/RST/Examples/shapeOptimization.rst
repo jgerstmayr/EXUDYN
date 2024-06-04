@@ -23,7 +23,8 @@ You can view and download this file on Github: `shapeOptimization.py <https://gi
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    
    import exudyn as exu
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    from exudyn.FEM import *
    from exudyn.graphicsDataUtilities import *
    from exudyn.processing import GeneticOptimization, ParameterVariation, PlotOptimizationResults2D, Minimize
@@ -262,11 +263,11 @@ You can view and download this file on Github: `shapeOptimization.py <https://gi
                                                  randomizerInitialization=0, #for reproducible results
                                                  #distanceFactor = 0.1, 
                                                  distanceFactor = 0., 
-                                                 debugMode=False,
-                                                 useMultiProcessing=True, #may be problematic for test
+                                                 debugMode = False,
+                                                 useMultiProcessing = True, #may be problematic for test
                                                  numberOfThreads = 20,
-                                                 addComputationIndex=True,
-                                                 showProgress=True, 
+                                                 addComputationIndex = True,
+                                                 showProgress = True, 
                                                  resultsFile = 'solution/shapeOptimization.txt',
                                                  )
    
@@ -276,7 +277,7 @@ You can view and download this file on Github: `shapeOptimization.py <https://gi
        u = vOpt
        exu.Print("optimized eigenfrequency=",-u)
    
-       if True:
+       if useGraphics:
            # from mpl_toolkits.mplot3d import Axes3D  # noqa: F401 unused import
            import matplotlib.pyplot as plt
    

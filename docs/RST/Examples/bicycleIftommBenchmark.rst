@@ -26,7 +26,8 @@ You can view and download this file on Github: `bicycleIftommBenchmark.py <https
    
    import exudyn as exu
    from exudyn.itemInterface import *
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    from exudyn.graphicsDataUtilities import *
    
    from math import sin, cos, pi
@@ -125,12 +126,12 @@ You can view and download this file on Github: `bicycleIftommBenchmark.py <https
    #%%++++++++++++++++++++++++++++++++++++++++++++++++
    #visualization:
    dY = 0.02
-   #graphicsFrame = GraphicsDataOrthoCubePoint(centerPoint=[0,0,0],size=[dFoot*1.1,0.7*rFoot,0.7*rFoot], color=color4lightred)
-   graphicsR = GraphicsDataCylinder(pAxis=[-1*dY,0,0], vAxis=[dY*2,0,0], radius=rR, color=color4steelblue, nTiles=4)
-   graphicsF = GraphicsDataCylinder(pAxis=[-1*dY,0,0], vAxis=[dY*2,0,0], radius=rF, color=color4steelblue, nTiles=4)
-   graphicsB = GraphicsDataCylinder(pAxis=P1-bCOM, vAxis=P2-P1, radius=dY*1.5, color=color4lightred)
-   graphicsB2 = GraphicsDataSphere(point=[0,0,0], radius=3*dY, color=color4lightgrey)
-   graphicsH = GraphicsDataCylinder(pAxis=P3-hCOM, vAxis=P2-P3, radius=dY*1.3, color=color4lightgreen)
+   #graphicsFrame = graphics.Brick(centerPoint=[0,0,0],size=[dFoot*1.1,0.7*rFoot,0.7*rFoot], color=graphics.color.lightred)
+   graphicsR = graphics.Cylinder(pAxis=[-1*dY,0,0], vAxis=[dY*2,0,0], radius=rR, color=graphics.color.steelblue, nTiles=4)
+   graphicsF = graphics.Cylinder(pAxis=[-1*dY,0,0], vAxis=[dY*2,0,0], radius=rF, color=graphics.color.steelblue, nTiles=4)
+   graphicsB = graphics.Cylinder(pAxis=P1-bCOM, vAxis=P2-P1, radius=dY*1.5, color=graphics.color.lightred)
+   graphicsB2 = graphics.Sphere(point=[0,0,0], radius=3*dY, color=graphics.color.lightgrey)
+   graphicsH = graphics.Cylinder(pAxis=P3-hCOM, vAxis=P2-P3, radius=dY*1.3, color=graphics.color.lightgreen)
    
    #option to track motion of bicycle
    if True: 
@@ -201,7 +202,7 @@ You can view and download this file on Github: `bicycleIftommBenchmark.py <https
    
    #%%++++++++++++++++++++++++++++++++++++++++++++++++
    #ground body and marker
-   gGround = GraphicsDataCheckerBoard(point=[0,0,0], size=200, nTiles=64)
+   gGround = graphics.CheckerBoard(point=[0,0,0], size=200, nTiles=64)
    oGround = mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=[gGround])))
    markerGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
    
@@ -254,7 +255,7 @@ You can view and download this file on Github: `bicycleIftommBenchmark.py <https
                                                                  contactDamping=cDamping,
                                                                  #activeConnector = False, #set to false to deactivated
                                                                  visualization=VObjectConnectorRollingDiscPenalty(show=True, 
-                                                                                                                  discWidth=dY, color=color4blue)))
+                                                                                                                  discWidth=dY, color=graphics.color.blue)))
        
        nGenericF = mbs.AddNode(NodeGenericData(initialCoordinates=[0,0,0], numberOfDataCoordinates=3))
        oRollingF=mbs.AddObject(ObjectConnectorRollingDiscPenalty(markerNumbers=[markerGround, markerF], 
@@ -267,16 +268,16 @@ You can view and download this file on Github: `bicycleIftommBenchmark.py <https
                                                                  contactStiffness=cStiffness, 
                                                                  contactDamping=cDamping,
                                                                  #activeConnector = False, #set to false to deactivated
-                                                                 visualization=VObjectConnectorRollingDiscPenalty(show=True, discWidth=dY, color=color4blue)))
+                                                                 visualization=VObjectConnectorRollingDiscPenalty(show=True, discWidth=dY, color=graphics.color.blue)))
    else:
        if True:
            oRollingR=mbs.AddObject(ObjectJointRollingDisc(markerNumbers=[markerGround, markerR], 
                                                            discRadius=rR, 
-                                                           visualization=VObjectJointRollingDisc(show=True, discWidth=dY, color=color4blue)))
+                                                           visualization=VObjectJointRollingDisc(show=True, discWidth=dY, color=graphics.color.blue)))
            
            oRollingF=mbs.AddObject(ObjectJointRollingDisc(markerNumbers=[markerGround, markerF], 
                                                            discRadius=rF, 
-                                                           visualization=VObjectJointRollingDisc(show=True, discWidth=dY, color=color4blue)))
+                                                           visualization=VObjectJointRollingDisc(show=True, discWidth=dY, color=graphics.color.blue)))
        
    
    

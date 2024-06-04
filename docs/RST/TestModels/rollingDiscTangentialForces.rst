@@ -23,7 +23,8 @@ You can view and download this file on Github: `rollingDiscTangentialForces.py <
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    
    import exudyn as exu
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    
    import numpy as np
    
@@ -128,9 +129,9 @@ You can view and download this file on Github: `rollingDiscTangentialForces.py <
    vOff = -r*planeNormal+[0,0,r]
    
    #graphics for body
-   graphicsBody = GraphicsDataRigidLink(p0=[-0.5*bodyDim[0],0,0], p1=[0.5*bodyDim[0],0,0], 
+   graphicsBody = graphics.RigidLink(p0=[-0.5*bodyDim[0],0,0], p1=[0.5*bodyDim[0],0,0], 
                                         axis1=[0,0,1], radius=[0.01,0.01], 
-                                        thickness = 0.2, width = [0.2,0.2], color=color4lightred)
+                                        thickness = 0.2, width = [0.2,0.2], color=graphics.color.lightred)
    
    #%%
    [n0,b0]=AddRigidBody(mainSys = mbs, 
@@ -144,7 +145,7 @@ You can view and download this file on Github: `rollingDiscTangentialForces.py <
                         graphicsDataList = [graphicsBody])
    
    
-   graphicsBodyWheel = GraphicsDataOrthoCubePoint(centerPoint=[0,0,0],size=[w*2,1.4*r,1.4*r], color=color4lightred)
+   graphicsBodyWheel = graphics.Brick(centerPoint=[0,0,0],size=[w*2,1.4*r,1.4*r], color=graphics.color.lightred)
    [n1,bWheel]=AddRigidBody(mainSys = mbs, 
                         inertia = iWheel, 
                         nodeType = str(exu.NodeType.RotationEulerParameters), 
@@ -158,8 +159,8 @@ You can view and download this file on Github: `rollingDiscTangentialForces.py <
    
    
    #ground body and marker
-   #graphicsPlane = GraphicsDataOrthoCubePoint(centerPoint=[0,0,-0.1],size=[3*d,3*d,0.2], color=color4grey)
-   graphicsPlane = GraphicsDataCheckerBoard(point=vOff, normal=planeNormal, size=3*d)
+   #graphicsPlane = graphics.Brick(centerPoint=[0,0,-0.1],size=[3*d,3*d,0.2], color=graphics.color.grey)
+   graphicsPlane = graphics.CheckerBoard(point=vOff, normal=planeNormal, size=3*d)
    
    oGround = mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=[graphicsPlane])))
    markerSupportGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,r]))
@@ -187,7 +188,7 @@ You can view and download this file on Github: `rollingDiscTangentialForces.py <
                                                      constrainedAxes=[1,1,1], #note that tangential constraints lead to additional forces on ground ==> changes force on ground!
                                                      discRadius=r, 
                                                      #planeNormal = planeNormal,
-                                                     visualization=VObjectJointRollingDisc(discWidth=w,color=color4blue)))
+                                                     visualization=VObjectJointRollingDisc(discWidth=w,color=graphics.color.blue)))
    else:
        nGeneric = mbs.AddNode(NodeGenericData(initialCoordinates=[0,0,0], numberOfDataCoordinates=3))
        oRolling=mbs.AddObject(ObjectConnectorRollingDiscPenalty(markerNumbers=[markerRollingPlane,markerBodyWheel],
@@ -196,7 +197,7 @@ You can view and download this file on Github: `rollingDiscTangentialForces.py <
                                                                 planeNormal = planeNormal,
                                                                 contactStiffness=1e5, contactDamping=1e3, 
                                                                 dryFriction=[1,1],
-                                                                visualization=VObjectConnectorRollingDiscPenalty(discWidth=w,color=color4blue)))
+                                                                visualization=VObjectConnectorRollingDiscPenalty(discWidth=w,color=graphics.color.blue)))
    
    sForce = mbs.AddSensor(SensorObject(objectNumber=oRolling, storeInternal=True,
                                        outputVariableType = exu.OutputVariableType.ForceLocal))

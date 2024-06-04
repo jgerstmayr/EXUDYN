@@ -11,7 +11,8 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 
 import numpy as np
 
@@ -74,25 +75,25 @@ gContact.SetSearchTreeCellSize(numberOfCells=[4,4,4])
 p0 = np.array([0,0,-0.5*t])
 color4wall = [0.9,0.9,0.7,0.5]
 addNormals = False
-gFloor = GraphicsDataOrthoCubePoint(p0,[L,L,t],color4steelblue,addNormals)
-gFloorAdd = GraphicsDataOrthoCubePoint(p0+[-0.5*L,0,a],[t,L,2*a],color4wall,addNormals)
-gFloor = MergeGraphicsDataTriangleList(gFloor, gFloorAdd)
-gFloorAdd = GraphicsDataOrthoCubePoint(p0+[ 0.5*L,0,a],[t,L,2*a],color4wall,addNormals)
-gFloor = MergeGraphicsDataTriangleList(gFloor, gFloorAdd)
-gFloorAdd = GraphicsDataOrthoCubePoint(p0+[0,-0.5*L,a],[L,t,2*a],color4wall,addNormals)
-gFloor = MergeGraphicsDataTriangleList(gFloor, gFloorAdd)
-gFloorAdd = GraphicsDataOrthoCubePoint(p0+[0, 0.5*L,a],[L,t,2*a],color4wall,addNormals)
-gFloor = MergeGraphicsDataTriangleList(gFloor, gFloorAdd)
+gFloor = graphics.Brick(p0,[L,L,t],graphics.color.steelblue,addNormals)
+gFloorAdd = graphics.Brick(p0+[-0.5*L,0,a],[t,L,2*a],color4wall,addNormals)
+gFloor = graphics.MergeTriangleLists(gFloor, gFloorAdd)
+gFloorAdd = graphics.Brick(p0+[ 0.5*L,0,a],[t,L,2*a],color4wall,addNormals)
+gFloor = graphics.MergeTriangleLists(gFloor, gFloorAdd)
+gFloorAdd = graphics.Brick(p0+[0,-0.5*L,a],[L,t,2*a],color4wall,addNormals)
+gFloor = graphics.MergeTriangleLists(gFloor, gFloorAdd)
+gFloorAdd = graphics.Brick(p0+[0, 0.5*L,a],[L,t,2*a],color4wall,addNormals)
+gFloor = graphics.MergeTriangleLists(gFloor, gFloorAdd)
 
 bb = 0.75*a
 bh = 0.25*a
 p1 = np.array([0.5*L,0.5*L,0])
-gFloorAdd = GraphicsDataOrthoCubePoint(p1+[-bb*3, -bb, 0.5*bh],[bb,bb,bh],color4wall,addNormals)
-gFloor = MergeGraphicsDataTriangleList(gFloor, gFloorAdd)
-gFloorAdd = GraphicsDataOrthoCubePoint(p1+[-bb*2, -bb, 1.5*bh],[bb,bb,bh],color4wall,addNormals)
-gFloor = MergeGraphicsDataTriangleList(gFloor, gFloorAdd)
-gFloorAdd = GraphicsDataOrthoCubePoint(p1+[-bb*1, -bb, 2.5*bh],[bb,bb,bh],color4wall,addNormals)
-gFloor = MergeGraphicsDataTriangleList(gFloor, gFloorAdd)
+gFloorAdd = graphics.Brick(p1+[-bb*3, -bb, 0.5*bh],[bb,bb,bh],color4wall,addNormals)
+gFloor = graphics.MergeTriangleLists(gFloor, gFloorAdd)
+gFloorAdd = graphics.Brick(p1+[-bb*2, -bb, 1.5*bh],[bb,bb,bh],color4wall,addNormals)
+gFloor = graphics.MergeTriangleLists(gFloor, gFloorAdd)
+gFloorAdd = graphics.Brick(p1+[-bb*1, -bb, 2.5*bh],[bb,bb,bh],color4wall,addNormals)
+gFloor = graphics.MergeTriangleLists(gFloor, gFloorAdd)
 
 gDataList = [gFloor]
 
@@ -101,20 +102,20 @@ nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0] ))
 mGround = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nGround))
 mGroundC = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
 
-[meshPoints, meshTrigs] = GraphicsData2PointsAndTrigs(gFloor)
+[meshPoints, meshTrigs] = graphics.ToPointsAndTrigs(gFloor)
 #[meshPoints, meshTrigs] = RefineMesh(meshPoints, meshTrigs) #just to have more triangles on floor
 # [meshPoints, meshTrigs] = RefineMesh(meshPoints, meshTrigs) #just to have more triangles on floor
 gContact.AddTrianglesRigidBodyBased(rigidBodyMarkerIndex=mGround, contactStiffness=k, contactDamping=d, frictionMaterialIndex=0,
     pointList=meshPoints,  triangleList=meshTrigs)
 
 if True: #looses color
-    gFloor = GraphicsDataFromPointsAndTrigs(meshPoints, meshTrigs, color=color4wall) #show refined mesh
+    gFloor = graphics.FromPointsAndTrigs(meshPoints, meshTrigs, color=color4wall) #show refined mesh
     gDataList = [gFloor]
 
 evalNodes = [] #collect nodes that are evaluated for test
 #%%++++++++++++++++++++++++++++++++++++++++++++
 #free rolling sphere:
-gList = [GraphicsDataSphere(point=[0,0,0], radius=r, color= color4red, nTiles=24)]
+gList = [graphics.Sphere(point=[0,0,0], radius=r, color= graphics.color.red, nTiles=24)]
 omega0 = -4.*np.array([5,1.,0.])
 pRef = [-0.4*L,-0.4*L,r-0*m*gFact/k]
 RBinertia = InertiaSphere(m, r)
@@ -142,7 +143,7 @@ evalNodes += [nMass]
 
 #%%++++++++++++++++++++++++++++++++++++++++++++
 #free rolling sphere at midpoint, many triangles in close contact; slowly go through critical points:
-gList = [GraphicsDataSphere(point=[0,0,0], radius=r, color= color4yellow, nTiles=24)]
+gList = [graphics.Sphere(point=[0,0,0], radius=r, color= graphics.color.yellow, nTiles=24)]
 omega0 = -1e-12*np.array([1,0.1,0.])
 pRef = [1e-15,-1e-14,r-2*m*gFact/k]
 RBinertia = InertiaSphere(m, r)
@@ -174,9 +175,9 @@ pf = np.array([-1.2*L,0,0])
 nGroundF = mbs.AddNode(NodePointGround(referenceCoordinates=pf ))
 mNode = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nGroundF))
 gContact.AddSphereWithMarker(mNode, radius=r, contactStiffness=k, contactDamping=d, frictionMaterialIndex=0)
-gDataList += [GraphicsDataSphere(point=pf, radius=r, color= color4grey, nTiles=24)]
+gDataList += [graphics.Sphere(point=pf, radius=r, color= graphics.color.grey, nTiles=24)]
 
-gList = [GraphicsDataSphere(point=[0,0,0], radius=r, color= color4lightgreen, nTiles=24)]
+gList = [graphics.Sphere(point=[0,0,0], radius=r, color= graphics.color.lightgreen, nTiles=24)]
 
 pRef = pf+[0,2*r,0] #[-0.4*L,-0.4*L,r-m*gFact/k]
 RBinertia = InertiaSphere(m, r)
@@ -206,9 +207,9 @@ pr = np.array([-1.2*L,0.5*L,0])
 nGroundF2 = mbs.AddNode(NodePointGround(referenceCoordinates=pr ))
 mNode2 = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nGroundF2))
 gContact.AddSphereWithMarker(mNode2, radius=r, contactStiffness=k, contactDamping=d, frictionMaterialIndex=0)
-gDataList += [GraphicsDataSphere(point=pr, radius=r, color= color4lightgrey, nTiles=24)]
+gDataList += [graphics.Sphere(point=pr, radius=r, color= graphics.color.lightgrey, nTiles=24)]
 
-gList = [GraphicsDataSphere(point=[0,0,0], radius=r, color= color4lightred, nTiles=24)]
+gList = [graphics.Sphere(point=[0,0,0], radius=r, color= graphics.color.lightred, nTiles=24)]
 
 dRol = r*0.01
 pRef = pr+[0,2*r-2*dRol,0] #force=k*r*0.01
@@ -254,7 +255,7 @@ evalNodes += [nMassR]
 #sphere on stairs
 #%%++++++++++++++++++++++++++++++++++++++++++++
 #free rolling sphere at midpoint, many triangles in close contact; slowly go through critical points:
-gList = [GraphicsDataSphere(point=[0,0,0], radius=0.5*r, color= color4yellow, nTiles=24)]
+gList = [graphics.Sphere(point=[0,0,0], radius=0.5*r, color= graphics.color.yellow, nTiles=24)]
 omega0 = np.array([-0.05,-5,0.])
 pRef = [0.5*L-1.45*bb, 0.5*L-1.20*bb, 3*bh+0.5*r-2*m*gFact/k] #[0.5*L-1.45*bb, 0.5*L-1.40*bb, ..] goes to edge
 RBinertia = InertiaSphere(m, 0.5*r)
@@ -281,8 +282,8 @@ evalNodes += [nMassStair]
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #contact of cube with ground
 tTrig = 0.25*r #size of contact points on mesh ('thickness')
-gCube = GraphicsDataOrthoCubePoint(size=[3*r,2*r,r], color= color4steelblue,addNormals=addNormals)
-[meshPoints, meshTrigs] = GraphicsData2PointsAndTrigs(gCube)
+gCube = graphics.Brick(size=[3*r,2*r,r], color= graphics.color.steelblue,addNormals=addNormals)
+[meshPoints, meshTrigs] = graphics.ToPointsAndTrigs(gCube)
 
 #for tests, 1 refinement!
 [meshPoints, meshTrigs] = RefineMesh(meshPoints, meshTrigs) #just to have more triangles on floor
@@ -294,12 +295,12 @@ gCube = GraphicsDataOrthoCubePoint(size=[3*r,2*r,r], color= color4steelblue,addN
 [meshPoints2, meshTrigs2] = ShrinkMeshNormalToSurface(meshPoints, meshTrigs, tTrig)
 
 #add mesh to visualization
-gCube = GraphicsDataFromPointsAndTrigs(meshPoints, meshTrigs, color=color4steelblue) #show refined mesh
+gCube = graphics.FromPointsAndTrigs(meshPoints, meshTrigs, color=graphics.color.steelblue) #show refined mesh
 gList = [gCube]
 
 #add points for contact to visualization (shrinked)
 for p in meshPoints2:
-    gList += [GraphicsDataSphere(point=p, radius=tTrig, color=color4red)]
+    gList += [graphics.Sphere(point=p, radius=tTrig, color=graphics.color.red)]
     
 pRef = [0.5*L-2*r, 0.25*L, 0.5*r+1.5*tTrig]
 v0 = np.array([-2,0,0])

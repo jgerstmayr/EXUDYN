@@ -11,7 +11,8 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 from exudyn.FEM import *
 
 import numpy as np
@@ -44,7 +45,7 @@ addForce = True #add gravity as body / link forces
 addConstraint = True #add constraint at tip of chain
 
 
-gGround =  GraphicsDataCheckerBoard(point= [0,0,-2], size = 12)
+gGround =  graphics.CheckerBoard(point= [0,0,-2], size = 12)
 objectGround = mbs.AddObject(ObjectGround(referencePosition = [0,0,0],
                                           visualization=VObjectGround(graphicsData=[gGround])))
 baseMarker = mbs.AddMarker(MarkerBodyRigid(bodyNumber=objectGround, localPosition=[0,0,0]))
@@ -55,12 +56,12 @@ pControl = 20000 #we keep the motion of the prismatic joint fixed
 dControl = pControl*0.02
 
 gravity3D = [0,-9.81*0,0]
-graphicsBaseList = [GraphicsDataOrthoCubePoint(size=[L*4, 0.8*w, 0.8*w], color=color4grey)] #rail
+graphicsBaseList = [graphics.Brick(size=[L*4, 0.8*w, 0.8*w], color=graphics.color.grey)] #rail
 
 newRobot = Robot(gravity=gravity3D,
               base = RobotBase(visualization=VRobotBase(graphicsData=graphicsBaseList)),
               tool = RobotTool(HT=HTtranslate([0,0.5*L,0]), visualization=VRobotTool(graphicsData=[
-                  GraphicsDataOrthoCubePoint(size=[w, L, w], color=color4orange)])),
+                  graphics.Brick(size=[w, L, w], color=graphics.color.orange)])),
               referenceConfiguration = []) #referenceConfiguration created with 0s automatically
 
 #cart:
@@ -68,7 +69,7 @@ Jlink = InertiaCuboid(density=5000, sideLengths=[L,w,w]) #w.r.t. reference cente
 link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 
                  jointType='Px', preHT=HT0(), 
                  PDcontrol=(pControl, dControl),
-                 visualization=VRobotLink(linkColor=color4lawngreen))
+                 visualization=VRobotLink(linkColor=graphics.color.lawngreen))
 newRobot.AddLink(link)
 linksList = [copy(link)]
 
@@ -83,7 +84,7 @@ for i in range(nChainLinks):
     link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 
                      jointType='Rz', preHT=preHT, 
                      PDcontrol=(pControl*0, dControl*0),
-                     visualization=VRobotLink(linkColor=color4blue))
+                     visualization=VRobotLink(linkColor=graphics.color.blue))
     newRobot.AddLink(link)
     linksList += [copy(link)]
 

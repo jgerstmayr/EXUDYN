@@ -10,12 +10,13 @@
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#pip install gym
-#pip instal pygame
+
+
 import time
 from math import sin, cos
 from testGymDoublePendulumEnv import DoublePendulumEnv
 
+useGraphics = True
 #%%+++++++++++++++++++++++++++++++++++++++++++++
 if False: #test the model by just integrating in Exudyn and apply force
 
@@ -42,7 +43,8 @@ if False: #testing the model with some random input
     ts = -time.time()
     for _ in range(1000):
         action = env.action_space.sample()
-        observation, reward, done, info = env.step(action)
+        observation, reward, done, info = env.step(action)[:4] #accomodate for steps which return > 4 args
+            
         env.render()
         if done:
             observation, info = env.reset(return_info=True)
@@ -61,6 +63,10 @@ if True: #do some reinforcement learning with exudyn model
     
     from stable_baselines3 import A2C
 
+    total_timesteps = 1000 #for quick test only; does not stabilize
+    if useGraphics:
+        total_timesteps = 1000_000 #works sometimes already good
+
     doLearning = True
     if doLearning:
         env = DoublePendulumEnv(1)
@@ -69,24 +75,25 @@ if True: #do some reinforcement learning with exudyn model
         
         ts = -time.time()
         model = A2C('MlpPolicy', env, verbose=1)
-        model.learn(total_timesteps=10000000)
+        model.learn(total_timesteps=total_timesteps)
         print('time spent=',ts+time.time())
 
     #%%++++++++++++++++++++++++ 
-    env = DoublePendulumEnv(10) #allow larger threshold for testing
-    env.useRenderer = True
-    obs = env.reset()
-    for i in range(5000):
-        action, _state = model.predict(obs, deterministic=True)
-        obs, reward, done, info = env.step(action)
-        env.render()
-        time.sleep(0.01) 
-        if done:
-          obs = env.reset()
-        if env.mbs.GetRenderEngineStopFlag(): #stop if user press Q
-            break
-
-    env.close()
+    if useGraphics:
+        env = DoublePendulumEnv(10) #allow larger threshold for testing
+        env.useRenderer = True
+        obs = env.reset()
+        for i in range(5000):
+            action, _state = model.predict(obs, deterministic=True)
+            obs, reward, done, info = env.step(action)[:4]
+            env.render()
+            time.sleep(0.01) 
+            if done:
+              obs = env.reset()
+            if env.mbs.GetRenderEngineStopFlag(): #stop if user press Q
+                break
+    
+        env.close()
       
       
       

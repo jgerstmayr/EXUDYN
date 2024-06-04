@@ -13,7 +13,8 @@
 
 import exudyn as exu
 from exudyn.itemInterface import *
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 
 import time
 import numpy as np
@@ -21,6 +22,8 @@ import numpy as np
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 print('EXUDYN version='+exu.GetVersionString())
+
+useGraphics = True
 
 L=1                     #total rotor axis length
 m = 1                   #mass of one disc in kg
@@ -62,9 +65,9 @@ steps = 10000         #number of steps
 p=[0,0,0]
 lFrame = 0.8
 tFrame = 0.01
-backgroundX = GraphicsDataCylinder(p,[lFrame,0,0],tFrame,[0.9,0.3,0.3,1],12)
-backgroundY = GraphicsDataCylinder(p,[0,lFrame,0],tFrame,[0.3,0.9,0.3,1],12)
-backgroundZ = GraphicsDataCylinder(p,[0,0,lFrame],tFrame,[0.3,0.3,0.9,1],12)
+backgroundX = graphics.Cylinder(p,[lFrame,0,0],tFrame,[0.9,0.3,0.3,1],12)
+backgroundY = graphics.Cylinder(p,[0,lFrame,0],tFrame,[0.3,0.9,0.3,1],12)
+backgroundZ = graphics.Cylinder(p,[0,0,lFrame],tFrame,[0.3,0.3,0.9,1],12)
 #mbs.AddObject(ObjectGround(referencePosition= [0,0,0], visualization=VObjectGround(graphicsData= [backgroundX, backgroundY, backgroundZ])))
 
 #rotor is rotating around x-axis
@@ -86,10 +89,10 @@ nGround1=mbs.AddNode(NodePointGround(referenceCoordinates = [ L/2,0,0]))
 
 #add mass point (this is a 3D object with 3 coordinates):
 transl = 0.9 #<1 gives transparent object
-gRotor0 = GraphicsDataCylinder([-lRotor*0.5,0,0],[lRotor,0,0],r,[0.3,0.3,0.9,transl],32)
-gRotor1 = GraphicsDataCylinder([-lRotor*0.5,0,0],[lRotor,0,0],r,[0.9,0.3,0.3,transl],32)
-gRotor0Axis = GraphicsDataCylinder([-L*0.5+0.5*lRotor,0,0],[L*0.5,0,0],r*0.05,[0.3,0.3,0.9,1],16)
-gRotor1Axis = GraphicsDataCylinder([-0.5*lRotor,0,0],[L*0.5,0,0],r*0.05,[0.3,0.3,0.9,1],16)
+gRotor0 = graphics.Cylinder([-lRotor*0.5,0,0],[lRotor,0,0],r,[0.3,0.3,0.9,transl],32)
+gRotor1 = graphics.Cylinder([-lRotor*0.5,0,0],[lRotor,0,0],r,[0.9,0.3,0.3,transl],32)
+gRotor0Axis = graphics.Cylinder([-L*0.5+0.5*lRotor,0,0],[L*0.5,0,0],r*0.05,[0.3,0.3,0.9,1],16)
+gRotor1Axis = graphics.Cylinder([-0.5*lRotor,0,0],[L*0.5,0,0],r*0.05,[0.3,0.3,0.9,1],16)
 gRotorCS = [backgroundX, backgroundY, backgroundZ]
 rigid0 = mbs.AddObject(RigidBody(physicsMass=m, physicsInertia=[Jxx,Jyyzz,Jyyzz,0,0,0], nodeNumber = n0, visualization=VObjectRigidBody2D(graphicsData=[gRotor0, gRotor0Axis]+gRotorCS)))
 rigid1 = mbs.AddObject(RigidBody(physicsMass=m, physicsInertia=[Jxx,Jyyzz,Jyyzz,0,0,0], nodeNumber = n1, visualization=VObjectRigidBody2D(graphicsData=[gRotor1, gRotor1Axis]+gRotorCS)))
@@ -152,14 +155,16 @@ simulationSettings.linearSolverType = exu.LinearSolverType.EXUdense
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1
 SC.visualizationSettings.general.useMultiThreadedRendering = False
 
-exu.StartRenderer()              #start graphics visualization
-mbs.WaitForUserToContinue()    #wait for pressing SPACE bar to continue
+if useGraphics:
+    exu.StartRenderer()              #start graphics visualization
+    mbs.WaitForUserToContinue()    #wait for pressing SPACE bar to continue
 
 #start solver:
 mbs.SolveDynamic(simulationSettings)
 
-SC.WaitForRenderEngineStopFlag()#wait for pressing 'Q' to quit
-exu.StopRenderer()               #safely close rendering window!
+if useGraphics:
+    SC.WaitForRenderEngineStopFlag()#wait for pressing 'Q' to quit
+    exu.StopRenderer()               #safely close rendering window!
 
 #evaluate final (=current) output values
 u = mbs.GetNodeOutput(n1, exu.OutputVariableType.AngularVelocity)
@@ -170,7 +175,7 @@ print('omega=',u)
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 
-if True:
+if useGraphics:
     data = np.loadtxt('coordinatesSolution.txt', comments='#', delimiter=',')
     n=steps
     plt.rcParams.update({'font.size': 24})

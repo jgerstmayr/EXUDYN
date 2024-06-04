@@ -26,7 +26,8 @@ You can view and download this file on Github: `sliderCrankFloatingTest.py <http
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    
    import exudyn as exu
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    
    import numpy as np
    
@@ -53,13 +54,13 @@ You can view and download this file on Github: `sliderCrankFloatingTest.py <http
    #ground object/node:
    
    #background = GraphicsDataRectangle(-0.5, -0.5, 1, 0.5, color=[1,1,1,1.]) #invisible background
-   ##background2 = GraphicsDataOrthoCube(-1, -1, -1, 2, -0.8, -0.8, color=[0.3,0.5,0.5,1.]) 
-   #background2 = GraphicsDataCylinder(pAxis=[0,0.5,0],vAxis=[0,0,1],radius=0.3, color=[0.3,0.5,0.5,1.], 
+   ##background2 = graphics.BrickXYZ(-1, -1, -1, 2, -0.8, -0.8, color=[0.3,0.5,0.5,1.]) 
+   #background2 = graphics.Cylinder(pAxis=[0,0.5,0],vAxis=[0,0,1],radius=0.3, color=[0.3,0.5,0.5,1.], 
    #                                   nTiles=16, angleRange=[0,pi*1.2], lastFace=True, cutPlain=True) 
    #
-   #background2 = GraphicsDataSphere(point=[0,0.5,0],radius=0.3,color=[0.3,0.5,0.5,1.],nTiles=8)
+   #background2 = graphics.Sphere(point=[0,0.5,0],radius=0.3,color=[0.3,0.5,0.5,1.],nTiles=8)
    #
-   #background2 = GraphicsDataRigidLink(p0=[0,0.5,0],p1=[1,0.5,0], axis0=[0,0,1], axis1=[0,0,1],
+   #background2 = graphics.RigidLink(p0=[0,0.5,0],p1=[1,0.5,0], axis0=[0,0,1], axis1=[0,0,1],
    #                                    radius=[0.1,0.1],thickness=0.2, width=[0.2,0.2],color=[0.3,0.5,0.5,1.],nTiles=16)
    
    solutionSliderCrankIndex2  = 0
@@ -80,7 +81,7 @@ You can view and download this file on Github: `sliderCrankFloatingTest.py <http
        
        #graphics for floating frame:
        #gFloating = GraphicsDataRectangle(-0.25, -0.25, 0.8, 0.25, color=[0.7,0.4,0.4,1.]) 
-       gFloating = GraphicsDataOrthoCube(-0.25, -0.25, -0.1, 0.8, 0.25, -0.05, color=[0.3,0.3,0.3,1.]) 
+       gFloating = graphics.BrickXYZ(-0.25, -0.25, -0.1, 0.8, 0.25, -0.05, color=[0.3,0.3,0.3,1.]) 
        
        if constrainGroundBody:
            floatingRB = mbs.AddObject(ObjectGround(referencePosition=[0,0,0], visualization=VObjectGround(graphicsData=[gFloating])))    
@@ -119,17 +120,17 @@ You can view and download this file on Github: `sliderCrankFloatingTest.py <http
        
        ty = 0.05    #thickness
        tz = 0.05    #thickness
-       #graphics1 = GraphicsDataRectangle(-0.5*L1,-0.5*ty,0.5*L1,0.5*ty,color4steelblue)
-       #graphics1 = GraphicsDataOrthoCube(-0.5*L1,-0.5*ty,-tz,0.5*L1,0.5*ty,0,color4steelblue)
-       graphics1 = GraphicsDataRigidLink(p0=[-0.5*L1,0,-0.5*tz],p1=[0.5*L1,0,-0.5*tz], 
+       #graphics1 = GraphicsDataRectangle(-0.5*L1,-0.5*ty,0.5*L1,0.5*ty,graphics.color.steelblue)
+       #graphics1 = graphics.BrickXYZ(-0.5*L1,-0.5*ty,-tz,0.5*L1,0.5*ty,0,graphics.color.steelblue)
+       graphics1 = graphics.RigidLink(p0=[-0.5*L1,0,-0.5*tz],p1=[0.5*L1,0,-0.5*tz], 
                                          axis0=[0,0,1], axis1=[0,0,1],radius=[0.5*ty,0.5*ty],
-                                         thickness=0.8*ty, width=[tz,tz], color=color4steelblue,nTiles=16)
+                                         thickness=0.8*ty, width=[tz,tz], color=graphics.color.steelblue,nTiles=16)
        
-       #graphics2 = GraphicsDataRectangle(-0.5*L2,-0.5*ty,0.5*L2,0.5*ty,color4lightred)
-       #graphics2 = GraphicsDataOrthoCube(-0.5*L2,-0.5*ty,0,0.5*L2,0.5*ty,tz,color4lightred)
-       graphics2 = GraphicsDataRigidLink(p0=[-0.5*L2,0,0.5*tz],p1=[0.5*L2,0,0.5*tz], 
+       #graphics2 = GraphicsDataRectangle(-0.5*L2,-0.5*ty,0.5*L2,0.5*ty,graphics.color.lightred)
+       #graphics2 = graphics.BrickXYZ(-0.5*L2,-0.5*ty,0,0.5*L2,0.5*ty,tz,graphics.color.lightred)
+       graphics2 = graphics.RigidLink(p0=[-0.5*L2,0,0.5*tz],p1=[0.5*L2,0,0.5*tz], 
                                          axis0=[0,0,1], axis1=[0,0,1],radius=[0.5*ty,0.5*ty],
-                                         thickness=0.8*ty, width=[tz,tz], color=color4lightred,nTiles=16)
+                                         thickness=0.8*ty, width=[tz,tz], color=graphics.color.lightred,nTiles=16)
        
        #crank:
        nRigid1 = mbs.AddNode(Rigid2D(referenceCoordinates=[s1,0,0], 
@@ -151,7 +152,7 @@ You can view and download this file on Github: `sliderCrankFloatingTest.py <http
        #++++++++++++++++++++++++++++++++
        #slider:
        c=0.025 #dimension of mass
-       graphics3 = GraphicsDataOrthoCube(-c,-c,-c*2,c,c,0,color4grey)
+       graphics3 = graphics.BrickXYZ(-c,-c,-c*2,c,c,0,graphics.color.grey)
        
        #nMass = mbs.AddNode(Point2D(referenceCoordinates=[L1+L2,0]))
        #oMass = mbs.AddObject(MassPoint2D(physicsMass=m3, nodeNumber=nMass,visualization=VObjectMassPoint2D(graphicsData= [graphics3])))

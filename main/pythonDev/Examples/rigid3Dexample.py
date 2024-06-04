@@ -12,7 +12,8 @@
 
 import exudyn as exu
 from exudyn.itemInterface import *
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -30,8 +31,8 @@ sx = 3*s #x-size
 cPosZ = 0.1 #offset of constraint in z-direction
 
 #create background, in order to have according zoom all
-# background0 = GraphicsDataRectangle(-zz,-2*zz,zz,zz,color4white)
-background0 = GraphicsDataCheckerBoard(point=[0,-0.5*zz,-0.25*zz],size=6*zz)
+# background0 = GraphicsDataRectangle(-zz,-2*zz,zz,zz,graphics.color.white)
+background0 = graphics.CheckerBoard(point=[0,-0.5*zz,-0.25*zz],size=6*zz)
 oGround=mbs.CreateGround(referencePosition= [0,0,0], 
                          graphicsDataList = [background0])
 mPosLast = mbs.AddMarker(MarkerBodyPosition(bodyNumber = oGround, 
@@ -52,9 +53,9 @@ for i in range(20):
 
     nRB = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=p0+ep0, 
                                       initialVelocities=v0+list(ep_t0)))
-    oGraphicsLines = GraphicsDataOrthoCubeLines(-0.9*sx,-s,-s, 0.9*sx,s,s, color=color4black)
-    oGraphics = GraphicsDataOrthoCubePoint(size=[1.8*sx, 2*s, 2*s], color= color4dodgerblue)
-    oGraphicsJoint = GraphicsDataSphere(point=[-sx,0,cPosZ], radius = 0.6*s, color=color4darkgrey, nTiles=24)
+    oGraphicsLines = GraphicsDataOrthoCubeLines(-0.9*sx,-s,-s, 0.9*sx,s,s, color=graphics.color.black)
+    oGraphics = graphics.Brick(size=[1.8*sx, 2*s, 2*s], color= graphics.color.dodgerblue)
+    oGraphicsJoint = graphics.Sphere(point=[-sx,0,cPosZ], radius = 0.6*s, color=graphics.color.darkgrey, nTiles=24)
     oRB = mbs.AddObject(ObjectRigidBody(physicsMass=2, 
                                         physicsInertia=[6,1,6,0,0,0], 
                                         nodeNumber=nRB, 

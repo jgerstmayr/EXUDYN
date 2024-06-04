@@ -329,7 +329,7 @@
 \item[--]
 {\bf example}: \vspace{-12pt}\ei\begin{lstlisting}[language=Python, xleftmargin=36pt]
   import exudyn as exu
-  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+  from exudyn.utilities import *
   import numpy as np
   SC = exu.SystemContainer()
   mbs = SC.AddSystem()
@@ -337,7 +337,7 @@
   b0 = mbs.CreateMassPoint(referencePosition = [2,0,0],
                            initialVelocity = [2*0,5,0],
                            physicsMass = 1, gravity = [0,-9.81,0],
-                           drawSize = 0.5, color=color4blue)
+                           drawSize = 0.5, color=graphics.color.blue)
   #
   oGround = mbs.AddObject(ObjectGround())
   #add vertical spring
@@ -399,14 +399,14 @@
    #take any example from the Examples or TestModels folder, e.g., 'cartesianSpringDamper.py' and run it
    #specific example:
   import exudyn as exu
-  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+  from exudyn.utilities import *
   import numpy as np
   SC = exu.SystemContainer()
   mbs = SC.AddSystem()
   #
   b0 = mbs.CreateMassPoint(referencePosition = [2,0,0],
                            physicsMass = 1, gravity = [0,-9.81,0],
-                           drawSize = 0.5, color=color4blue)
+                           drawSize = 0.5, color=graphics.color.blue)
   #
   oGround = mbs.AddObject(ObjectGround())
   #add vertical spring
@@ -475,7 +475,7 @@
 \item[--]
 {\bf example}: \vspace{-12pt}\ei\begin{lstlisting}[language=Python, xleftmargin=36pt]
   import exudyn as exu
-  from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+  from exudyn.utilities import *
   import numpy as np
   SC = exu.SystemContainer()
   mbs = SC.AddSystem()
@@ -485,8 +485,8 @@
                            referencePosition = [6,0,0],
                            initialAngularVelocity = [0,8,0],
                            gravity = [0,-9.81,0],
-                           graphicsDataList = [GraphicsDataOrthoCubePoint(size=[1,0.1,0.1],
-                                                                        color=color4orange)])
+                           graphicsDataList = [exu.graphics.Brick(size=[1,0.1,0.1],
+                                                                        color=graphics.color.orange)])
   oGround = mbs.AddObject(ObjectGround())
   mbs.CreateGenericJoint(bodyNumbers=[oGround, b0], position=[5.5,0,0],
                          constrainedAxes=[1,1,1, 1,0,0],
@@ -509,7 +509,7 @@
 
 %
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L161}{CreateDistanceSensorGeometry}{}}}\label{sec:mainsystemextensions:CreateDistanceSensorGeometry}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L195}{CreateDistanceSensorGeometry}{}}}\label{sec:mainsystemextensions:CreateDistanceSensorGeometry}
 ({\it meshPoints}, {\it meshTrigs}, {\it rigidBodyMarkerIndex}, {\it searchTreeCellSize}= [8,8,8])
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -526,8 +526,8 @@
 {\bf input}: \vspace{-6pt}
 \begin{itemize}[leftmargin=1.2cm]
 \setlength{\itemindent}{-0.7cm}
-\item[]{\it meshPoints}: list of points (3D), as returned by GraphicsData2PointsAndTrigs()
-\item[]{\it meshTrigs}: list of trigs (3 node indices each), as returned by GraphicsData2PointsAndTrigs()
+\item[]{\it meshPoints}: list of points (3D), as returned by graphics.ToPointsAndTrigs()
+\item[]{\it meshTrigs}: list of trigs (3 node indices each), as returned by graphics.ToPointsAndTrigs()
 \item[]{\it rigidBodyMarkerIndex}: rigid body marker to which the triangles are fixed on (ground or moving object)
 \item[]{\it searchTreeCellSize}: size of search tree (X,Y,Z); use larger values in directions where more triangles are located
 \end{itemize}
@@ -547,8 +547,8 @@
 
 %
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L194}{CreateDistanceSensor}{}}}\label{sec:mainsystemextensions:CreateDistanceSensor}
-({\it generalContactIndex}, {\it positionOrMarker}, {\it dirSensor}, {\it minDistance}= -1e7, {\it maxDistance}= 1e7, {\it cylinderRadius}= 0, {\it selectedTypeIndex}= exudyn.ContactTypeIndex.IndexEndOfEnumList, {\it storeInternal}= False, {\it fileName}= '', {\it measureVelocity}= False, {\it addGraphicsObject}= False, {\it drawDisplaced}= True, {\it color}= color4red)
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L228}{CreateDistanceSensor}{}}}\label{sec:mainsystemextensions:CreateDistanceSensor}
+({\it generalContactIndex}, {\it positionOrMarker}, {\it dirSensor}, {\it minDistance}= -1e7, {\it maxDistance}= 1e7, {\it cylinderRadius}= 0, {\it selectedTypeIndex}= exudyn.ContactTypeIndex.IndexEndOfEnumList, {\it storeInternal}= False, {\it fileName}= '', {\it measureVelocity}= False, {\it addGraphicsObject}= False, {\it drawDisplaced}= True, {\it color}= exudyn.graphics.color.red)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
@@ -593,7 +593,7 @@
 
 %
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L849}{DrawSystemGraph}{}}}\label{sec:mainsystemextensions:DrawSystemGraph}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L883}{DrawSystemGraph}{}}}\label{sec:mainsystemextensions:DrawSystemGraph}
 ({\it showLoads}= True, {\it showSensors}= True, {\it useItemNames}= False, {\it useItemTypes}= False, {\it addItemTypeNames}= True, {\it multiLine}= True, {\it fontSizeFactor}= 1., {\it layoutDistanceFactor}= 3., {\it layoutIterations}= 100, {\it showLegend}= True, {\it tightLayout}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}

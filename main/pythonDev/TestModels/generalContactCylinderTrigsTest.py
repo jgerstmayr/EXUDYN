@@ -11,7 +11,8 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 import numpy as np
 
 useGraphics = True #without test
@@ -66,7 +67,7 @@ gContact.SetSearchTreeCellSize(numberOfCells=[ss,ss,ss])
 
 
 #%% ground
-gFloor = GraphicsDataCheckerBoard(p0+[planeL*xFact*0.5,0,0],size=planeL*xFact, size2=planeL, nTiles=8)
+gFloor = graphics.CheckerBoard(p0+[planeL*xFact*0.5,0,0],size=planeL*xFact, size2=planeL, nTiles=8)
 oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0],
                                     visualization=VObjectGround(graphicsData=[gFloor])))
 
@@ -74,9 +75,9 @@ oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0],
 # nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0] ))
 # mGround = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nGround))
 
-gCyl = GraphicsDataCylinder(pAxis=[0,-0.5*tCyl,0],vAxis=[0,tCyl,0], radius=rCyl, 
+gCyl = graphics.Cylinder(pAxis=[0,-0.5*tCyl,0],vAxis=[0,tCyl,0], radius=rCyl, 
                                        color=[0.3,0.3,0.3,1],
-                                       alternatingColor=color4lightgrey,nTiles=64)
+                                       alternatingColor=graphics.color.lightgrey,nTiles=64)
 
 
 #rigid body containing sphere markers:
@@ -100,7 +101,7 @@ sVel = mbs.AddSensor(SensorBody(bodyNumber=bCyl, storeInternal=True,
 sOmega = mbs.AddSensor(SensorBody(bodyNumber=bCyl, storeInternal=True, 
                                 outputVariableType=exu.OutputVariableType.AngularVelocity))
 
-[meshPoints, meshTrigs] = GraphicsData2PointsAndTrigs(gCyl)
+[meshPoints, meshTrigs] = graphics.ToPointsAndTrigs(gCyl)
 
 
 gContact.AddTrianglesRigidBodyBased(rigidBodyMarkerIndex=mCyl, 

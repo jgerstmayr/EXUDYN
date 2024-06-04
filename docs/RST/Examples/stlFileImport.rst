@@ -24,7 +24,8 @@ You can view and download this file on Github: `stlFileImport.py <https://github
    
    import exudyn as exu
    from exudyn.itemInterface import *
-   from exudyn.utilities import * #includes graphics and rigid body utilities
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict #includes graphics and rigid body utilities
    import numpy as np
    
    SC = exu.SystemContainer()
@@ -51,19 +52,19 @@ You can view and download this file on Github: `stlFileImport.py <https://github
    #graphics for body
    fileName = 'solution/stlImport.stl'
    if True: #True=create STL file; False=load STL file
-       graphicsBody0 = GraphicsDataOrthoCubePoint([0,0,0], bodyDim, color4dodgerblue)
-       ExportGraphicsData2STL(graphicsBody0, fileName)
+       graphicsBody0 = graphics.Brick([0,0,0], bodyDim, graphics.color.dodgerblue)
+       graphics.ExportSTL(graphicsBody0, fileName)
    
-   graphicsBody0 = GraphicsDataFromSTLfileTxt(fileName, color4dodgerblue) #color not stored in STL file
+   graphicsBody0 = graphics.FromSTLfileASCII(fileName, graphics.color.dodgerblue) #color not stored in STL file
    #faster version (for large STL files): 
    #use binary files and install numpy-stl library: [allow options like scale, offset, ...]
-   # graphicsBody0 = GraphicsDataFromSTLfile(fileName, color4dodgerblue, scale=1., Aoff=np.eye(3), pOff=[0,0,0])
+   # graphicsBody0 = graphics.FromSTLfile(fileName, graphics.color.dodgerblue, scale=1., Aoff=np.eye(3), pOff=[0,0,0])
    
    #+++++++++++++++++++++++
    graphicsBody0 = AddEdgesAndSmoothenNormals(graphicsBody0, edgeAngle = 0.25*pi, addEdges=True, smoothNormals=True)
    
    
-   graphicsCOM0 = GraphicsDataBasis(origin=iCube0.com, length=2*w)
+   graphicsCOM0 = graphics.Basis(origin=iCube0.com, length=2*w)
    
    [n0,b0]=AddRigidBody(mainSys = mbs,
                         inertia = iCube0, #includes COM

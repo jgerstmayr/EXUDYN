@@ -23,6 +23,7 @@ namespace Symbolic
 {
 class ExpressionNamedReal;
 
+
 //! base class for expression tree
 class ExpressionBase
 {
@@ -55,17 +56,25 @@ public:
 	//virtual ExpressionBase* clone() const = 0; // Pure virtual clone method
 	virtual void Destroy() = 0; //Pure virtual destroy method, which deletes tree reversely
 
+	//variable must start with character, then may also contain numbers and '_'
 	static bool IsRegularVariableName(const STDstring str)
 	{
 		return true;
 		if (str.empty()) { return false; }
 
-		if (!std::isalpha(str[0])) { return false; }
+		if (!EXUstd::IsAlpha(str[0])) { return false; }
 
-		for (char ch : str) 
+		for (char ch : str)
 		{
-			if (!std::isalnum(ch) && ch != '_') { return false; }
+			if (!EXUstd::IsAlphaNumeric(ch) && ch != '_') { return false; }
 		}
+
+		//if (!std::isalpha(str[0])) { return false; }
+
+		//for (char ch : str) 
+		//{
+		//	if (!std::isalnum(ch) && ch != '_') { return false; }
+		//}
 
 		return true;
 	}

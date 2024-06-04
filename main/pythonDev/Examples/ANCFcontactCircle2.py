@@ -11,7 +11,8 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 
 
 SC = exu.SystemContainer()
@@ -28,11 +29,11 @@ rect = [-0.5,-1,2.5,1] #xmin,ymin,xmax,ymax
 background1 = {'type':'Line', 'color':[0.1,0.1,0.8,1], 'data':[0,-1,0, 2,-1,0]} #background
 
 
-background  = [GraphicsDataRectangle(-0.5,-1,2.5,1, color=color4blue)]
-background += [GraphicsDataLine([[0,-1,0], [2,-1,0]], color=color4green)]
-background += [GraphicsDataCircle(point=pCircle, radius = circleRadius-0.002, color=color4blue)] #not necessary, as it is drawn by connector
-background += [GraphicsDataCircle(point=pCircle2, radius = circleRadius2-0.002, color=color4blue)] #not necessary, as it is drawn by connector
-background += [GraphicsDataText(point=[0.,0.2,0], text = 'ANCF contact with circle', color=color4black)]
+background  = [GraphicsDataRectangle(-0.5,-1,2.5,1, color=graphics.color.blue)]
+background += [graphics.Lines([[0,-1,0], [2,-1,0]], color=graphics.color.green)]
+background += [graphics.Circle(point=pCircle, radius = circleRadius-0.002, color=graphics.color.blue)] #not necessary, as it is drawn by connector
+background += [graphics.Circle(point=pCircle2, radius = circleRadius2-0.002, color=graphics.color.blue)] #not necessary, as it is drawn by connector
+background += [graphics.Text(point=[0.,0.2,0], text = 'ANCF contact with circle', color=graphics.color.black)]
 
 oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0], visualization=VObjectGround(graphicsData= background)))
 

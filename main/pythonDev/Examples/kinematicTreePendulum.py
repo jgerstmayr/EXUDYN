@@ -11,7 +11,8 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 from exudyn.FEM import *
 
 import numpy as np
@@ -25,7 +26,7 @@ mbs = SC.AddSystem()
 
 useGraphics = True
 
-gGround =  GraphicsDataCheckerBoard(point= [0,0,-2], size = 12)
+gGround =  graphics.CheckerBoard(point= [0,0,-2], size = 12)
 objectGround = mbs.AddObject(ObjectGround(referencePosition = [0,0,0],
                                           visualization=VObjectGround(graphicsData=[gGround])))
 
@@ -33,12 +34,12 @@ L = 0.5 #length
 w = 0.1 #width of links
 
 gravity3D = [0,-9.81*1,0]
-graphicsBaseList = [GraphicsDataOrthoCubePoint(size=[L*4, 0.8*w, 0.8*w], color=color4grey)] #rail
+graphicsBaseList = [graphics.Brick(size=[L*4, 0.8*w, 0.8*w], color=graphics.color.grey)] #rail
 
 newRobot = Robot(gravity=gravity3D,
               base = RobotBase(visualization=VRobotBase(graphicsData=graphicsBaseList)),
               tool = RobotTool(HT=HTtranslate([0,0.5*L,0]), visualization=VRobotTool(graphicsData=[
-                  GraphicsDataOrthoCubePoint(size=[w, L, w], color=color4orange)])),
+                  graphics.Brick(size=[w, L, w], color=graphics.color.orange)])),
               referenceConfiguration = []) #referenceConfiguration created with 0s automatically
 
 linksList = []
@@ -54,7 +55,7 @@ for i in range(nChainLinks):
     link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 
                      jointType='Rz', preHT=preHT, 
                      #PDcontrol=(pControl*0, dControl*0),
-                     visualization=VRobotLink(linkColor=color4blue))
+                     visualization=VRobotLink(linkColor=graphics.color.blue))
     newRobot.AddLink(link)
     linksList += [copy(link)]
 

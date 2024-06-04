@@ -13,7 +13,8 @@
 #sys.path.append('C:/DATA/cpp/EXUDYN_git/main/bin/WorkingRelease') #for exudyn, itemInterface and exudynUtilities
 
 import exudyn as exu
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 
 useGraphics = True #without test
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -69,9 +70,9 @@ w = 0.05*L #drawing
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 gBackground = []
-gBackground += [GraphicsDataOrthoCubePoint([-0.5*(L+w),0,0],[w,0.5*L,w], color=color4darkgrey)]
-gBackground += [GraphicsDataOrthoCubePoint([ 0.5*(L+w),0,0],[w,0.5*L,w], color=color4darkgrey)]
-gBackground += [GraphicsDataOrthoCubePoint([0,-w,0],[L,w,w], color=color4grey)]
+gBackground += [graphics.Brick([-0.5*(L+w),0,0],[w,0.5*L,w], color=graphics.color.darkgrey)]
+gBackground += [graphics.Brick([ 0.5*(L+w),0,0],[w,0.5*L,w], color=graphics.color.darkgrey)]
+gBackground += [graphics.Brick([0,-w,0],[L,w,w], color=graphics.color.grey)]
 
 objectGround = mbs.AddObject(ObjectGround(referencePosition = [0,0,0], 
                                           visualization=VObjectGround(graphicsData=gBackground)))
@@ -87,7 +88,7 @@ if useFrictionReg:
                          initialVelocities= [v0,0,0]))
 
     #add mass points and ground object:
-    gCube = GraphicsDataOrthoCubePoint(size=[w,w,w], color=color4steelblue)
+    gCube = graphics.Brick(size=[w,w,w], color=graphics.color.steelblue)
     massPoint0 = mbs.AddObject(MassPoint(physicsMass = mass, nodeNumber = nMass0, 
                                         visualization=VObjectMassPoint(graphicsData=[gCube])))
 
@@ -118,7 +119,7 @@ if useFrictionBristle:
                          initialVelocities= [v0,0,0]))
 
     #add mass points and ground object:
-    gCube = GraphicsDataOrthoCubePoint(size=[w,w,w], color=color4steelblue)
+    gCube = graphics.Brick(size=[w,w,w], color=graphics.color.steelblue)
     massPoint0 = mbs.AddObject(MassPoint(physicsMass = mass, nodeNumber = nMass0, 
                                         visualization=VObjectMassPoint(graphicsData=[gCube])))
 
@@ -151,7 +152,7 @@ if useLimitStops:
                          initialVelocities= [v0,0,0]))
 
     #add mass points and ground object:
-    gCube = GraphicsDataOrthoCubePoint(size=[w,w,w], color=color4steelblue)
+    gCube = graphics.Brick(size=[w,w,w], color=graphics.color.steelblue)
     massPoint1 = mbs.AddObject(MassPoint(physicsMass = mass, nodeNumber = nMass1, 
                                         visualization=VObjectMassPoint(graphicsData=[gCube])))
 
@@ -191,10 +192,10 @@ if useGears: #show that also transmission / gear ratio works; test for limit sto
                                 initialVelocities=[omega1])) #\psi_t0ini
 
     #add mass points and ground object:
-    gRotor0 = [GraphicsDataOrthoCubePoint(size=[0.5*w,0.5*w,w], color=color4grey)]
-    gRotor0 += [GraphicsDataCylinder(pAxis=[0,0,-0.25*w],vAxis=[0,0,0.5*w], radius = rad0, color=color4orange, nTiles=32)]
-    gRotor1 = [GraphicsDataOrthoCubePoint(size=[3*0.5*w,3*0.5*w,w], color=color4grey)]
-    gRotor1 += [GraphicsDataCylinder(pAxis=[0,0,-0.25*w],vAxis=[0,0,0.5*w], radius = rad1, color=color4dodgerblue, nTiles=32)]
+    gRotor0 = [graphics.Brick(size=[0.5*w,0.5*w,w], color=graphics.color.grey)]
+    gRotor0 += [graphics.Cylinder(pAxis=[0,0,-0.25*w],vAxis=[0,0,0.5*w], radius = rad0, color=graphics.color.orange, nTiles=32)]
+    gRotor1 = [graphics.Brick(size=[3*0.5*w,3*0.5*w,w], color=graphics.color.grey)]
+    gRotor1 += [graphics.Cylinder(pAxis=[0,0,-0.25*w],vAxis=[0,0,0.5*w], radius = rad1, color=graphics.color.dodgerblue, nTiles=32)]
     gear0 = mbs.AddObject(Rotor1D(physicsInertia = 1, nodeNumber = nG0,
                                   referencePosition = [-rad0,-4*w,0],
                                   visualization=VRotor1D(graphicsData=gRotor0)))

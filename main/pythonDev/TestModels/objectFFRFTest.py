@@ -12,7 +12,8 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 from exudyn.FEM import *
 
 useGraphics = True #without test
@@ -399,7 +400,7 @@ if useFFRFobject:
                                                     #computeFFRFterms=True,
                                                     #massMatrixUserFunction=UFmassGenericODE2,
                                                     visualization=VObjectFFRF(triangleMesh = trigList, 
-                                                                              color=color4lightred,
+                                                                              color=graphics.color.lightred,
                                                                               showNodes = True)))
 else:
     oGenericODE2 = mbs.AddObject(ObjectGenericODE2(nodeNumbers = nodeList, 
@@ -410,7 +411,7 @@ else:
                                                     useFirstNodeAsReferenceFrame=True, #does not exist anymore
                                                     massMatrixUserFunction=UFmassGenericODE2,
                                                     visualization=VObjectGenericODE2(triangleMesh = trigList, 
-                                                                                     color=color4lightred,
+                                                                                     color=graphics.color.lightred,
                                                                                      showNodes = True)))
 
 if nODE2rot == 4: #for euler parameters --> add body to constrain EP

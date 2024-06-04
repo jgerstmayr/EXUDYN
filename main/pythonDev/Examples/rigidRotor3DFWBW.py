@@ -15,7 +15,8 @@ sys.path.append('../TestModels')            #for modelUnitTest as this example m
 
 import exudyn as exu
 from exudyn.itemInterface import *
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 from math import cos, sin
 
 import time
@@ -78,15 +79,15 @@ def UFload(mbs, t, load):
     phi = mbs.GetNodeOutput(nodeNumber=n1, variableType=exu.OutputVariableType.Rotation)[0]
     return [0, sign*loadFact*cos(phi), loadFact*sin(phi)]
 
-#background1 = GraphicsDataOrthoCube(0,0,0,.5,0.5,0.5,[0.3,0.3,0.9,1])
+#background1 = graphics.BrickXYZ(0,0,0,.5,0.5,0.5,[0.3,0.3,0.9,1])
 
 #draw RGB-frame at origin
 p=[0,0,0]
 lFrame = 0.9
 tFrame = 0.01
-backgroundX = GraphicsDataCylinder(p,[lFrame,0,0],tFrame,[0.9,0.3,0.3,1],12)
-backgroundY = GraphicsDataCylinder(p,[0,lFrame,0],tFrame,[0.3,0.9,0.3,1],12)
-backgroundZ = GraphicsDataCylinder(p,[0,0,lFrame],tFrame,[0.3,0.3,0.9,1],12)
+backgroundX = graphics.Cylinder(p,[lFrame,0,0],tFrame,[0.9,0.3,0.3,1],12)
+backgroundY = graphics.Cylinder(p,[0,lFrame,0],tFrame,[0.3,0.9,0.3,1],12)
+backgroundZ = graphics.Cylinder(p,[0,0,lFrame],tFrame,[0.3,0.3,0.9,1],12)
 
 #visualize forces:
 lVec = r*0.8
@@ -105,14 +106,14 @@ def UFgraphics(mainSystem, bodyNr):
     phi += 0.9*0.05*omega[0] #graphics is always delayed ...
     #print("rot=", phi)
 
-    #g0=GraphicsDataSphere(point=p0,radius=0.01, color=color4green)
-    #g1=GraphicsDataSphere(point=p1,radius=0.01, color=color4red)
+    #g0=graphics.Sphere(point=p0,radius=0.01, color=graphics.color.green)
+    #g1=graphics.Sphere(point=p1,radius=0.01, color=graphics.color.red)
     xVec = 0.5+lRotor
     p0 = [xVec,0,0]
     p1 = [xVec,sign*lVec*cos(phi), lVec*sin(phi)]
     p2 = [xVec,sign*(1-f1)*lVec*cos(phi)-f2*lVec*sin(phi), (1-f1)*lVec*sin(phi)+f2*sign*lVec*cos(phi)]
     p3 = [xVec,sign*(1-f1)*lVec*cos(phi)+f2*lVec*sin(phi), (1-f1)*lVec*sin(phi)-f2*sign*lVec*cos(phi)]
-    gLine = {'type':'Line', 'data': p0+p1+p2+p1+p3, 'color':color4red}
+    gLine = {'type':'Line', 'data': p0+p1+p2+p1+p3, 'color':graphics.color.red}
     return [gLine]#,g0,g1] #return list of graphics data
 
 mbs.AddObject(ObjectGround(referencePosition= [0,0,0], 
@@ -134,8 +135,8 @@ nGround0=mbs.AddNode(NodePointGround(referenceCoordinates = [-L/2,0,0]))
 nGround1=mbs.AddNode(NodePointGround(referenceCoordinates = [ L/2,0,0]))
 
 #add mass point (this is a 3D object with 3 coordinates):
-gRotor = GraphicsDataCylinder([-lRotor*0.5,0,0],[lRotor,0,0],r,[0.3,0.3,0.9,1],128)
-gRotor2 = GraphicsDataCylinder([-L0,0,0],[L,0,0],r*0.05,[0.3,0.3,0.9,1],16)
+gRotor = graphics.Cylinder([-lRotor*0.5,0,0],[lRotor,0,0],r,[0.3,0.3,0.9,1],128)
+gRotor2 = graphics.Cylinder([-L0,0,0],[L,0,0],r*0.05,[0.3,0.3,0.9,1],16)
 gRotor3 = [backgroundX, backgroundY, backgroundZ]
 rigid = mbs.AddObject(RigidBody(physicsMass=m, physicsInertia=[Jxx,Jyyzz,Jyyzz,0,0,0], nodeNumber = n1, visualization=VObjectRigidBody2D(graphicsData=[gRotor, gRotor2]+gRotor3)))
 

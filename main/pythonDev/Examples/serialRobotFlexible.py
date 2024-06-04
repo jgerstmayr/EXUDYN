@@ -14,7 +14,8 @@
 
 import exudyn as exu
 from exudyn.itemInterface import *
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 from exudyn.rigidBodyUtilities import *
 from exudyn.graphicsDataUtilities import *
 from exudyn.robotics import *
@@ -242,25 +243,25 @@ for i in range(nFlexBodies):
 #robotics part
 graphicsBaseList = []
 if not useFlexBody:
-    #graphicsBaseList +=[GraphicsDataOrthoCubePoint([0,0,-0.15], [0.12,0.12,0.1], color4grey)]
+    #graphicsBaseList +=[graphics.Brick([0,0,-0.15], [0.12,0.12,0.1], graphics.color.grey)]
 
-    graphicsBaseList +=[GraphicsDataCylinder([0,0,-Lbase], [0,0,Lbase-flangeBaseL], rBase, color4blue)]
-    graphicsBaseList +=[GraphicsDataCylinder([0,0,-flangeBaseL], [0,0,flangeBaseL], flangeBaseR, color4blue)]
-    graphicsBaseList +=[GraphicsDataCylinder([0,0,0], [0.25,0,0], 0.00125, color4red)]
-    graphicsBaseList +=[GraphicsDataCylinder([0,0,0], [0,0.25,0], 0.00125, color4green)]
-    graphicsBaseList +=[GraphicsDataCylinder([0,0,0], [0,0,0.25], 0.00125, color4blue)]
+    graphicsBaseList +=[graphics.Cylinder([0,0,-Lbase], [0,0,Lbase-flangeBaseL], rBase, graphics.color.blue)]
+    graphicsBaseList +=[graphics.Cylinder([0,0,-flangeBaseL], [0,0,flangeBaseL], flangeBaseR, graphics.color.blue)]
+    graphicsBaseList +=[graphics.Cylinder([0,0,0], [0.25,0,0], 0.00125, graphics.color.red)]
+    graphicsBaseList +=[graphics.Cylinder([0,0,0], [0,0.25,0], 0.00125, graphics.color.green)]
+    graphicsBaseList +=[graphics.Cylinder([0,0,0], [0,0,0.25], 0.00125, graphics.color.blue)]
 
 #base graphics is fixed to ground!!!
-graphicsBaseList +=[GraphicsDataCheckerBoard([0,0,-Lbase], size=2.5)]
+graphicsBaseList +=[graphics.CheckerBoard([0,0,-Lbase], size=2.5)]
 #newRobot.base.visualization['graphicsData']=graphicsBaseList
 
 ty = 0.03
 tz = 0.04
 zOff = -0.05
 toolSize= [0.05,0.5*ty,0.06]
-graphicsToolList = [GraphicsDataCylinder(pAxis=[0,0,zOff], vAxis= [0,0,tz], radius=ty*1.5, color=color4red)]
-graphicsToolList+= [GraphicsDataOrthoCubePoint([0,ty,1.5*tz+zOff], toolSize, color4grey)]
-graphicsToolList+= [GraphicsDataOrthoCubePoint([0,-ty,1.5*tz+zOff], toolSize, color4grey)]
+graphicsToolList = [graphics.Cylinder(pAxis=[0,0,zOff], vAxis= [0,0,tz], radius=ty*1.5, color=graphics.color.red)]
+graphicsToolList+= [graphics.Brick([0,ty,1.5*tz+zOff], toolSize, graphics.color.grey)]
+graphicsToolList+= [graphics.Brick([0,-ty,1.5*tz+zOff], toolSize, graphics.color.grey)]
 
 
 #changed to new robot structure July 2021:
@@ -321,7 +322,7 @@ for i, link in enumerate(linkList):
 
 showCOM = False
 for cnt, link in enumerate(newRobot.links):
-    color = color4list[cnt]
+    color = graphics.colorList[cnt]
     color[3] = 0.75 #make transparent
     link.visualization = VRobotLink(jointRadius=0.055, jointWidth=0.055*2, showMBSjoint=False,
                                     linkWidth=2*0.05, linkColor=color, showCOM= showCOM )

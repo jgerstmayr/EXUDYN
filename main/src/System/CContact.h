@@ -400,11 +400,11 @@ public:
 		}
 	}
 
-	inline void ActiveContact2IndexRegularizedFriction(Index activeContactIndex, Index& indexSigned, bool& frictionRegularizedRegion)
+	inline void ActiveContact2IndexRegularizedFriction(Index activeContactIndex, Index& indexUnsigned, bool& frictionRegularizedRegion)
 	{
-		if (activeContactIndex >= 0) { indexSigned = activeContactIndex; frictionRegularizedRegion = true; return; }
+		if (activeContactIndex >= 0) { indexUnsigned = activeContactIndex; frictionRegularizedRegion = true; return; }
 		frictionRegularizedRegion = false;
-		indexSigned = -activeContactIndex;
+		indexUnsigned = -activeContactIndex;
 	}
 
 	inline Index IndexRegularizedFriction2ActiveContact(Index index, bool frictionRegularizedRegion)

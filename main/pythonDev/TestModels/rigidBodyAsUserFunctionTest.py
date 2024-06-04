@@ -13,7 +13,8 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 
 import numpy as np
 
@@ -38,7 +39,7 @@ zz = 1 #max size
 s = 0.1 #size of cube
 sx = 3*s #x-size
 
-background0 = GraphicsDataRectangle(-zz,-zz,zz,zz,color4white)
+background0 = GraphicsDataRectangle(-zz,-zz,zz,zz,graphics.color.white)
 oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0], 
                                    visualization=VObjectGround(graphicsData= [background0])))
 mPosLast = mbs.AddMarker(MarkerBodyPosition(bodyNumber = oGround, 
@@ -60,7 +61,7 @@ mass = 2
 inertia6D = [6,1,6,0,1,0]
 g = 9.81
 
-oGraphics = GraphicsDataOrthoCubePoint(centerPoint=[0,0,0], size=[sx,s,s], color=color4red)
+oGraphics = graphics.Brick(centerPoint=[0,0,0], size=[sx,s,s], color=graphics.color.red)
 oRB = mbs.AddObject(ObjectRigidBody(physicsMass=mass, 
                                     physicsInertia=inertia6D, 
                                     nodeNumber=nRB, 
@@ -126,7 +127,7 @@ if True: #rigid body as user function
         A = mbs.GetNodeOutput(nodeNumber=n, variableType=exu.OutputVariableType.RotationMatrix, configuration=exu.ConfigurationType.Visualization)
         
         A0 = np.reshape(A, (3,3))
-        graphics1 = MoveGraphicsData(oGraphics, p0, A0)
+        graphics1 = graphics.Move(oGraphics, p0, A0)
         return [graphics1]
 
     mbs.AddObject(ObjectGenericODE2(nodeNumbers = [nRB2], 

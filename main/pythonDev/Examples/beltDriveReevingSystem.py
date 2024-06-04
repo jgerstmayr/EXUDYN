@@ -12,7 +12,8 @@
 
 import exudyn as exu
 from exudyn.itemInterface import *
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 from exudyn.beams import *
 
 import numpy as np
@@ -292,10 +293,10 @@ if useContact:
     
         rot0 = 0 #initial rotation
         pRef = [p[0], p[1], rot0]
-        gList = [GraphicsDataCylinder(pAxis=[0,0,-dimZ],vAxis=[0,0,-dimZ], radius=r,
-                                      color= color4dodgerblue, nTiles=64),
-                 GraphicsDataArrow(pAxis=[0,0,0], vAxis=[-0.9*r,0,0], radius=0.01*r, color=color4orange),
-                 GraphicsDataArrow(pAxis=[0,0,0], vAxis=[0.9*r,0,0], radius=0.01*r, color=color4orange)]
+        gList = [graphics.Cylinder(pAxis=[0,0,-dimZ],vAxis=[0,0,-dimZ], radius=r,
+                                      color= graphics.color.dodgerblue, nTiles=64),
+                 graphics.Arrow(pAxis=[0,0,0], vAxis=[-0.9*r,0,0], radius=0.01*r, color=graphics.color.orange),
+                 graphics.Arrow(pAxis=[0,0,0], vAxis=[0.9*r,0,0], radius=0.01*r, color=graphics.color.orange)]
 
         omega0 = 0 #initial angular velocity
         v0 = np.array([0,0,omega0]) 

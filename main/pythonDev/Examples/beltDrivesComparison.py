@@ -15,7 +15,8 @@ sys.exudynFast = True
 
 import exudyn as exu
 from exudyn.itemInterface import *
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 from exudyn.beams import *
 
 import numpy as np
@@ -29,7 +30,7 @@ mbs = SC.AddSystem()
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #settings:
-useGraphics= True
+useGraphics = True
 useGeneralContact = False
 useContact = True
 staticEqulibrium = not useGeneralContact
@@ -201,11 +202,11 @@ for cnt, circleList in enumerate(reevingSystems):
             #add tensioning system
             nTensioner = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[offX+0.4*dWheels,0,0],
                                                 visualization=VNodeRigidBody2D(drawSize=dimZ*2)))
-            #gTensioner = [GraphicsDataOrthoCubePoint([0,0,dimZ],size=[0.1*rWheel,2.2*tensionerY,dimZ],color=color4orange)]
-            cyl0 = GraphicsDataCylinder([0,tensionerY+0.05*rWheel,dimZ],vAxis=[0,-2*tensionerY-0.1*rWheel,0], 
-                                        radius=0.05*rWheel, color=color4orange)
-            cyl1 = GraphicsDataCylinder([0,tensionerY,dimZ],vAxis=[0.6*dWheels,-tensionerY,0], radius=0.05*rWheel, color=color4orange)
-            cyl2 = GraphicsDataCylinder([0,-tensionerY,dimZ],vAxis=[0.6*dWheels,tensionerY,0], radius=0.05*rWheel, color=color4orange)
+            #gTensioner = [graphics.Brick([0,0,dimZ],size=[0.1*rWheel,2.2*tensionerY,dimZ],color=graphics.color.orange)]
+            cyl0 = graphics.Cylinder([0,tensionerY+0.05*rWheel,dimZ],vAxis=[0,-2*tensionerY-0.1*rWheel,0], 
+                                        radius=0.05*rWheel, color=graphics.color.orange)
+            cyl1 = graphics.Cylinder([0,tensionerY,dimZ],vAxis=[0.6*dWheels,-tensionerY,0], radius=0.05*rWheel, color=graphics.color.orange)
+            cyl2 = graphics.Cylinder([0,-tensionerY,dimZ],vAxis=[0.6*dWheels,tensionerY,0], radius=0.05*rWheel, color=graphics.color.orange)
             gTensioner = [cyl0,cyl1,cyl2]
 
             oTensioner = mbs.AddObject(ObjectRigidBody2D(physicsMass=wheelMass*10, physicsInertia=wheelInertia*10,
@@ -235,12 +236,12 @@ for cnt, circleList in enumerate(reevingSystems):
             
             rot0 = 0 #initial rotation
             pRef = [p[0], p[1], rot0]
-            gList = [GraphicsDataCylinder(pAxis=[0,0,-0.5*dimZ],vAxis=[0,0,dimZ], radius=r-h,
-                                          color= color4dodgerblue, nTiles=64),
-                     GraphicsDataArrow(pAxis=[0,0,dimZ], vAxis=[0.9*r,0,0], radius=0.01*r, color=color4orange)]
+            gList = [graphics.Cylinder(pAxis=[0,0,-0.5*dimZ],vAxis=[0,0,dimZ], radius=r-h,
+                                          color= graphics.color.dodgerblue, nTiles=64),
+                     graphics.Arrow(pAxis=[0,0,dimZ], vAxis=[0.9*r,0,0], radius=0.01*r, color=graphics.color.orange)]
 
             if i == 1+hasTensioner:
-                gList += [GraphicsDataOrthoCubePoint([0,-0.5*leverArm,-dimZ],size=[leverArm*0.1,leverArm,dimZ],color=color4red)]
+                gList += [graphics.Brick([0,-0.5*leverArm,-dimZ],size=[leverArm*0.1,leverArm,dimZ],color=graphics.color.red)]
 
     
             omega0 = 0 #initial angular velocity
@@ -438,7 +439,7 @@ mbs.SolveDynamic(simulationSettings,
 
 
 
-if useGraphics and True:
+if useGraphics:
     SC.visualizationSettings.general.autoFitScene = False
     SC.visualizationSettings.general.graphicsUpdateInterval=0.02
     

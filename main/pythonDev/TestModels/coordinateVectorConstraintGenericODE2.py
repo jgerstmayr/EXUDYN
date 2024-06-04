@@ -11,7 +11,8 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 import numpy as np
 
 useGraphics = True #without test
@@ -41,13 +42,13 @@ d = r/2
 #add ground object and mass point:
 sizeRect = 1.2*L*2
 #graphicsBackground = GraphicsDataRectangle(-sizeRect,-sizeRect, sizeRect, 0.2*L, [1,1,1,1]) #for appropriate zoom
-graphicsBackground = GraphicsDataCheckerBoard(point=[0,-0.5*sizeRect,-2*r],size=sizeRect*1.8)
+graphicsBackground = graphics.CheckerBoard(point=[0,-0.5*sizeRect,-2*r],size=sizeRect*1.8)
 
 oGround = mbs.AddObject(ObjectGround(referencePosition = [0,0,0], 
                            visualization = VObjectGround(graphicsData = [graphicsBackground])))
 
 
-graphicsSphere = GraphicsDataSphere(point=[0,0,0], radius=r, color=color4steelblue, nTiles = 16)
+graphicsSphere = graphics.Sphere(point=[0,0,0], radius=r, color=graphics.color.steelblue, nTiles = 16)
 
 nR0 = mbs.AddNode(Point2D(referenceCoordinates=[L,0]))
 
@@ -69,7 +70,7 @@ sPos0 = mbs.AddSensor(SensorNode(nodeNumber = nR0, storeInternal = True,
                                  outputVariableType=exu.OutputVariableType.Position))
 
 
-graphicsSphere = GraphicsDataSphere(point=[0,0,0], radius=r, color=color4red, nTiles = 16)
+graphicsSphere = graphics.Sphere(point=[0,0,0], radius=r, color=graphics.color.red, nTiles = 16)
 nR1 = mbs.AddNode(Point2D(referenceCoordinates=[L*2,0]))
 
 #instead of MassPoint2D, create one object ...

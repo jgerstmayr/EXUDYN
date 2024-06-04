@@ -12,10 +12,11 @@
 
 
 import exudyn as exu
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 from exudyn.artificialIntelligence import *
 import math
-
+import os
 
 class InvertedTriplePendulumEnv(OpenAIGymInterfaceEnv):
         
@@ -39,15 +40,15 @@ class InvertedTriplePendulumEnv(OpenAIGymInterfaceEnv):
         self.force_mag = 10.0*2 #must be larger for triple pendulum to be more reactive ...
         self.stepUpdateTime = 0.02  # seconds between state updates
         
-        background = GraphicsDataCheckerBoard(point= [0,0.5*self.length,-0.5*width], 
+        background = graphics.CheckerBoard(point= [0,0.5*self.length,-0.5*width], 
                                               normal= [0,0,1], size=10, size2=6, nTiles=20, nTiles2=12)
             
         oGround=self.mbs.AddObject(ObjectGround(referencePosition= [0,0,0],  #x-pos,y-pos,angle
                                            visualization=VObjectGround(graphicsData= [background])))
         nGround=self.mbs.AddNode(NodePointGround())
         
-        gCart = GraphicsDataOrthoCubePoint(size=[0.5*self.length, width, width], 
-                                           color=color4dodgerblue)
+        gCart = graphics.Brick(size=[0.5*self.length, width, width], 
+                                           color=graphics.color.dodgerblue)
         self.nCart = self.mbs.AddNode(Rigid2D(referenceCoordinates=[0,0,0]));
         oCart = self.mbs.AddObject(RigidBody2D(physicsMass=masscart, 
                                           physicsInertia=0.1*masscart, #not needed
@@ -55,9 +56,9 @@ class InvertedTriplePendulumEnv(OpenAIGymInterfaceEnv):
                                           visualization=VObjectRigidBody2D(graphicsData= [gCart])))
         mCartCOM = self.mbs.AddMarker(MarkerNodePosition(nodeNumber=self.nCart))
         
-        gArm1 = GraphicsDataOrthoCubePoint(size=[width, self.length, width], color=color4red)
-        gArm1joint = GraphicsDataCylinder(pAxis=[0,-0.5*self.length,-0.6*width], vAxis=[0,0,1.2*width], 
-                                          radius=0.0625*self.length, color=color4darkgrey)
+        gArm1 = graphics.Brick(size=[width, self.length, width], color=graphics.color.red)
+        gArm1joint = graphics.Cylinder(pAxis=[0,-0.5*self.length,-0.6*width], vAxis=[0,0,1.2*width], 
+                                          radius=0.0625*self.length, color=graphics.color.darkgrey)
         self.nArm1 = self.mbs.AddNode(Rigid2D(referenceCoordinates=[0,0.5*self.length,0]));
         oArm1 = self.mbs.AddObject(RigidBody2D(physicsMass=massarm, 
                                           physicsInertia=armInertia, #not included in original paper
@@ -68,7 +69,7 @@ class InvertedTriplePendulumEnv(OpenAIGymInterfaceEnv):
         mArm1JointA = self.mbs.AddMarker(MarkerBodyPosition(bodyNumber=oArm1, localPosition=[0,-0.5*self.length,0]))
         mArm1JointB = self.mbs.AddMarker(MarkerBodyPosition(bodyNumber=oArm1, localPosition=[0, 0.5*self.length,0]))
 
-        gArm2 = GraphicsDataOrthoCubePoint(size=[width, self.length, width], color=color4red)
+        gArm2 = graphics.Brick(size=[width, self.length, width], color=graphics.color.red)
         self.nArm2 = self.mbs.AddNode(Rigid2D(referenceCoordinates=[0,1.5*self.length,0]));
         oArm2 = self.mbs.AddObject(RigidBody2D(physicsMass=massarm, 
                                           physicsInertia=armInertia, #not included in original paper
@@ -79,7 +80,7 @@ class InvertedTriplePendulumEnv(OpenAIGymInterfaceEnv):
         mArm2Joint = self.mbs.AddMarker(MarkerBodyPosition(bodyNumber=oArm2, localPosition=[0,-0.5*self.length,0]))
         mArm2JointB = self.mbs.AddMarker(MarkerBodyPosition(bodyNumber=oArm2, localPosition=[0, 0.5*self.length,0]))
 
-        gArm3 = GraphicsDataOrthoCubePoint(size=[width, self.length, width], color=color4red)
+        gArm3 = graphics.Brick(size=[width, self.length, width], color=graphics.color.red)
         self.nArm3 = self.mbs.AddNode(Rigid2D(referenceCoordinates=[0,2.5*self.length,0]));
         oArm3 = self.mbs.AddObject(RigidBody2D(physicsMass=massarm, 
                                           physicsInertia=armInertia, #not included in original paper
@@ -283,7 +284,8 @@ if __name__ == '__main__': #this is only executed when file is direct called in 
         #  consuming environments (otherwise learning algo may be the bottleneck)
         #  https://www.programcreek.com/python/example/121472/stable_baselines.common.vec_env.SubprocVecEnv
         import torch #stable-baselines3 is based on pytorch
-        n_cores=14 #should be number of real cores (not threads)
+        n_cores= max(1,int(os.cpu_count()/2)) #n_cores should be number of real cores (not threads)
+        #n_cores=14 #should be number of real cores (not threads)
         torch.set_num_threads(n_cores) #seems to be ideal to match the size of subprocVecEnv
         
         #test problem with nSteps=400 in time integration

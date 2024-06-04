@@ -24,7 +24,8 @@ You can view and download this file on Github: `ConvexContactTest.py <https://gi
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    
    import exudyn as exu
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    
    useGraphics = True #without test
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -44,7 +45,7 @@ You can view and download this file on Github: `ConvexContactTest.py <https://gi
    
    # create Ground and graphics: 
    scb, g1, g2 = 0.5, 0.92, 0.72
-   graphGround = GraphicsDataCheckerBoard (point= [0,0,0], normal= [0,0,1], size= scb, color= [g1, g1, g1, 1.0],
+   graphGround = graphics.CheckerBoard(point= [0,0,0], normal= [0,0,1], size= scb, color= [g1, g1, g1, 1.0],
                                            alternatingColor= [g2, g2, g2, 1.0], nTiles= 12)
    oGround = mbs.CreateGround(referencePosition = [0,0,0], 
                               graphicsDataList=[graphGround])
@@ -59,8 +60,8 @@ You can view and download this file on Github: `ConvexContactTest.py <https://gi
    for i in range(np.size(x)):
        contour+= [[x[i], np.polyval(poly, x[i])]]
    contour += [ [length/2, 0]] # to create a closed contour
-   graphRoll = [GraphicsDataSolidOfRevolution([0,0,0], [1,0,0], contour, color4lightred[0:3]+[1],
-                                             alternatingColor=color4blue, nTiles = 32)]
+   graphRoll = [graphics.SolidOfRevolution([0,0,0], [1,0,0], contour, graphics.color.lightred[0:3]+[1],
+                                             alternatingColor=graphics.color.blue, nTiles = 32)]
    
    InertiaRoll = InertiaCylinder(density=7800, length=length, outerRadius=3e-3, axis=0) 
    bRoll = mbs.CreateRigidBody(inertia = InertiaRoll, 
@@ -79,7 +80,7 @@ You can view and download this file on Github: `ConvexContactTest.py <https://gi
                            nodeNumber=nData, contactStiffness=1e3, contactDamping=1, dynamicFriction = 0.9,
                           staticFrictionOffset = 0, viscousFriction=0, exponentialDecayStatic=1e-3, 
                           frictionProportionalZone=1e-4, rollLength=length, coefficientsHull=poly, 
-                          visualization={'show': True, 'color': color4lightgreen}))
+                          visualization={'show': True, 'color': graphics.color.lightgreen}))
    
    sBody = mbs.AddSensor(SensorBody(bodyNumber=bRoll, #fileName='PosRoller.txt',
                                     storeInternal=True,

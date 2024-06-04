@@ -15,7 +15,8 @@
 
 import exudyn as exu
 from exudyn.itemInterface import *
-from exudyn.utilities import * #includes graphics and rigid body utilities
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 import numpy as np
 from math import pi, sin, cos
 
@@ -47,7 +48,7 @@ for case in cases:
     pMid2 = np.array([L,L*0.5,0]) #center of mass, body2
 
     #ground body
-    graphicsCOM0 = GraphicsDataBasis(origin=[0,0,0], length=4*w)
+    graphicsCOM0 = graphics.Basis(origin=[0,0,0], length=4*w)
     oGround = mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=[graphicsCOM0])))
     markerGround0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
     markerGround1 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[L,0,0]))
@@ -57,15 +58,15 @@ for case in cases:
     iCube0 = InertiaCuboid(density=5000, sideLengths=bodyDim)
 
     #graphics for body
-    graphicsBody0 = GraphicsDataRigidLink(p0=[-0.5*L,0,0],p1=[0.5*L,0,0], 
+    graphicsBody0 = graphics.RigidLink(p0=[-0.5*L,0,0],p1=[0.5*L,0,0], 
                                          axis0=[0,0,1], axis1=[0,0,1], radius=[0.5*w,0.5*w], 
-                                         thickness = w, width = [1.2*w,1.2*w], color=color4red)
-    graphicsBody1 = GraphicsDataRigidLink(p0=[-0.5*L,0,0],p1=[0.5*L,0,0], 
+                                         thickness = w, width = [1.2*w,1.2*w], color=graphics.color.red)
+    graphicsBody1 = graphics.RigidLink(p0=[-0.5*L,0,0],p1=[0.5*L,0,0], 
                                          axis0=[0,0,1], axis1=[0,0,1], radius=[0.5*w,0.5*w], 
-                                         thickness = w, width = [1.2*w,1.2*w], color=color4green)
-    graphicsBody2 = GraphicsDataRigidLink(p0=[-0.5*L,0,0],p1=[0.5*L,0,0], 
+                                         thickness = w, width = [1.2*w,1.2*w], color=graphics.color.green)
+    graphicsBody2 = graphics.RigidLink(p0=[-0.5*L,0,0],p1=[0.5*L,0,0], 
                                          axis0=[0,0,1], axis1=[0,0,1], radius=[0.5*w,0.5*w], 
-                                         thickness = w, width = [1.2*w,1.2*w], color=color4steelblue)
+                                         thickness = w, width = [1.2*w,1.2*w], color=graphics.color.steelblue)
 
     [n0,b0]=AddRigidBody(mainSys = mbs,
                          inertia = iCube0, #includes COM
@@ -179,7 +180,7 @@ for case in cases:
         exu.StopRenderer() #safely close rendering window!
 
     #check redundant constraints and DOF:
-    mbs.ComputeSystemDegreeOfFreedom(verbose=True)
+    mbs.ComputeSystemDegreeOfFreedom(verbose=useGraphics)
 
 
 if False:

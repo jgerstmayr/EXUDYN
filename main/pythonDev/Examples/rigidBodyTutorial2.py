@@ -1,18 +1,22 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  3D rigid body tutorial with 2 bodies and revolute joints
+# Details:  3D rigid body tutorial with 2 bodies and revolute joints, using generic joints
 #
 # Author:   Johannes Gerstmayr
 # Date:     2021-03-22
-# Modified: 2023-04-18
+# Modified: 2024-06-04
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
-from exudyn.utilities import * #includes itemInterface, graphicsDataUtilities and rigidBodyUtilities
+from exudyn.utilities import ObjectGround, InertiaCuboid, AddRigidBody, MarkerBodyRigid, GenericJoint, \
+                             VObjectJointGeneric, SensorBody
+#to be sure to have all items and functions imported, just do:
+#from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 import numpy as np
 
 SC = exu.SystemContainer()
@@ -32,22 +36,19 @@ iCube0 = InertiaCuboid(density=5000, sideLengths=[1,0.1,0.1])
 #print(iCube)
 
 #graphics for body
-graphicsBody0 = GraphicsDataRigidLink(p0=[-0.5*bodyDim[0],0,0],p1=[0.5*bodyDim[0],0,0], 
+graphicsBody0 = graphics.RigidLink(p0=[-0.5*bodyDim[0],0,0],p1=[0.5*bodyDim[0],0,0], 
                                      axis0=[0,0,1], axis1=[0,0,0*1], radius=[0.05,0.05], 
-                                     thickness = 0.1, width = [0.12,0.12], color=color4red)
+                                     thickness = 0.1, width = [0.12,0.12], color=graphics.color.red)
 
-[n0,b0]=AddRigidBody(mainSys = mbs,
-                     inertia = iCube0,
-                     nodeType = str(exu.NodeType.RotationEulerParameters),
-                     position = pMid0,
-                     rotationMatrix = np.diag([1,1,1]),
-                     angularVelocity = [0,0,0],
-                     gravity = g, #will automatically add a load on body
-                     graphicsDataList = [graphicsBody0])
+#create rigid body with gravity load with one create function, which creates node, object, marker and load!
+b0=mbs.CreateRigidBody(inertia = iCube0,
+                       referencePosition = pMid0,
+                       gravity = g,
+                       graphicsDataList = [graphicsBody0])
 
 #markers are needed to link joints and bodies; also needed for loads
 #ground body and marker
-oGround = mbs.AddObject(ObjectGround())
+oGround = mbs.CreateGround()
 markerGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
 
 #markers for rigid body:
@@ -63,20 +64,17 @@ mbs.AddObject(GenericJoint(markerNumbers=[markerGround, markerBody0J0],
 #second link:
 pMid1 = np.array([bodyDim[0],0,0]) + np.array([0,0,0.5*bodyDim[0]]) #center of mass, body1
 
-graphicsBody1 = GraphicsDataRigidLink(p0=[0,0,-0.5*bodyDim[0]],p1=[0,0,0.5*bodyDim[0]], 
+graphicsBody1 = graphics.RigidLink(p0=[0,0,-0.5*bodyDim[0]],p1=[0,0,0.5*bodyDim[0]], 
                                      axis0=[1,0,0], axis1=[0,0,0], radius=[0.06,0.05], 
-                                     thickness = 0.1, width = [0.12,0.12], color=color4steelblue)
+                                     thickness = 0.1, width = [0.12,0.12], color=graphics.color.steelblue)
 
 iCube1 = InertiaCuboid(density=5000, sideLengths=[0.1,0.1,1])
 
-[n1,b1]=AddRigidBody(mainSys = mbs,
-                     inertia = iCube1,
-                     nodeType = str(exu.NodeType.RotationEulerParameters),
-                     position = pMid1,
-                     rotationMatrix = np.diag([1,1,1]),
-                     angularVelocity = [0,0,0],
-                     gravity = g, #will automatically add a load on body
-                     graphicsDataList = [graphicsBody1])
+#create second rigid body:
+b1=mbs.CreateRigidBody(inertia = iCube1,
+                       referencePosition = pMid1,
+                       gravity = g,
+                       graphicsDataList = [graphicsBody1])
 
 #add sensor to body in order to measure and store global position over time
 sens1=mbs.AddSensor(SensorBody(bodyNumber=b1, localPosition=[0,0,0.5*bodyDim[0]],

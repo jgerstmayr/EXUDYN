@@ -16,7 +16,8 @@
 
 ## import basic libaries
 import exudyn as exu
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 from math import sin, cos, asin, acos, pi, exp, log, tan, atan, radians
 
 
@@ -117,9 +118,9 @@ def ComputeSliderCrank(angleCrank, anglePiston, l1, l2):
 ## function to create multibody system for certain crank and piston configuration
 def CreateEngine(P):
 
-    colorCrank = color4grey
-    colorConrod = color4dodgerblue
-    colorPiston = color4brown[0:3]+[0.5]
+    colorCrank = graphics.color.grey
+    colorConrod = graphics.color.dodgerblue
+    colorPiston = graphics.color.brown[0:3]+[0.5]
     showJoints = True
 
     ## set up ground object    
@@ -128,7 +129,7 @@ def CreateEngine(P):
     oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0], visualization=VObjectGround(graphicsData= [])))
     nGround=mbs.AddNode(NodePointGround(referenceCoordinates = [0,0,0]))
 
-    gEngine = [GraphicsDataOrthoCubePoint(centerPoint=[0,0,0], size=[P.MaxDimX()*2, P.MaxDimX(), eL*1.2], 
+    gEngine = [graphics.Brick(centerPoint=[0,0,0], size=[P.MaxDimX()*2, P.MaxDimX(), eL*1.2], 
                                           color=[0.6,0.6,0.6,0.1], addEdges=True, 
                                           edgeColor = [0.8,0.8,0.8,0.3], addFaces=False)]
     
@@ -167,30 +168,30 @@ def CreateEngine(P):
         if cnt>0: zAdd = P.crankArmWidth
         
         ### create graphics for crank part
-        gCrank += [GraphicsDataCylinder(pAxis=[0,0,zOff-zAdd], vAxis=[0,0,P.crankBearingWidth+P.crankArmWidth+zAdd], 
-                                        radius=P.crankBearingRadius, color=color4red)]
+        gCrank += [graphics.Cylinder(pAxis=[0,0,zOff-zAdd], vAxis=[0,0,P.crankBearingWidth+P.crankArmWidth+zAdd], 
+                                        radius=P.crankBearingRadius, color=graphics.color.red)]
         ### create graphics for crank arm1
-        arm1 = GraphicsDataOrthoCubePoint([P.crankArmLength*0.5,0,zOff+P.crankArmWidth*0.5+P.crankBearingWidth], 
+        arm1 = graphics.Brick([P.crankArmLength*0.5,0,zOff+P.crankArmWidth*0.5+P.crankBearingWidth], 
                                               size=[P.crankArmLength,P.crankArmHeight,P.crankArmWidth], color=colorCrank)
-        gCrank += [MoveGraphicsData(arm1, [0,0,0], Ac)]
+        gCrank += [graphics.Move(arm1, [0,0,0], Ac)]
         
         ### create graphics for conrod bearing
-        gCrank += [GraphicsDataCylinder(pAxis=Ac@[P.crankArmLength,0,zOff+P.crankBearingWidth+P.crankArmWidth*0], 
+        gCrank += [graphics.Cylinder(pAxis=Ac@[P.crankArmLength,0,zOff+P.crankBearingWidth+P.crankArmWidth*0], 
                                        vAxis=[0,0,P.conrodCrankCylLength+2*P.crankArmWidth], radius=P.conrodCrankCylRadius, color=colorCrank)]
 
         ### create graphics for crank arm2
-        arm2 = GraphicsDataOrthoCubePoint([P.crankArmLength*0.5,0,zOff+P.crankArmWidth*1.5+P.crankBearingWidth+P.conrodCrankCylLength], 
+        arm2 = graphics.Brick([P.crankArmLength*0.5,0,zOff+P.crankArmWidth*1.5+P.crankBearingWidth+P.conrodCrankCylLength], 
                                               size=[P.crankArmLength,P.crankArmHeight,P.crankArmWidth],
                                               color=colorCrank)
-        gCrank += [MoveGraphicsData(arm2, [0,0,0], Ac)]
+        gCrank += [graphics.Move(arm2, [0,0,0], Ac)]
 
         if cnt == len(P.crankAngles)-1:
-            gCrank += [GraphicsDataCylinder(pAxis=[0,0,zOff+P.crankArmWidth+P.crankBearingWidth+P.conrodCrankCylLength], vAxis=[0,0,P.crankBearingWidth+P.crankArmWidth], 
-                                            radius=P.crankBearingRadius, color=color4red)]
+            gCrank += [graphics.Cylinder(pAxis=[0,0,zOff+P.crankArmWidth+P.crankBearingWidth+P.conrodCrankCylLength], vAxis=[0,0,P.crankBearingWidth+P.crankArmWidth], 
+                                            radius=P.crankBearingRadius, color=graphics.color.red)]
 
         #++++++++++++++++++++++++++++++++++++++            
         ### create graphics for conrod
-        gConrod = [ GraphicsDataRigidLink (p0=[-0.5*P.conrodLength, 0, 0], p1=[0.5*P.conrodLength,0,0], axis0= [0,0,1], axis1= [0,0,1], 
+        gConrod = [ graphics.RigidLink(p0=[-0.5*P.conrodLength, 0, 0], p1=[0.5*P.conrodLength,0,0], axis0= [0,0,1], axis1= [0,0,1], 
                                            radius= [P.conrodRadius]*2, 
                                            thickness= P.conrodHeight, width=[P.conrodWidth]*2, color= colorConrod, nTiles= 16)]
 
@@ -206,7 +207,7 @@ def CreateEngine(P):
         bConrodList += [bConrod]
         #++++++++++++++++++++++++++++++++++++++            
         ### create graphics for piston
-        gPiston = [GraphicsDataCylinder(pAxis=[-P.conrodRadius*0.5,0,0],
+        gPiston = [graphics.Cylinder(pAxis=[-P.conrodRadius*0.5,0,0],
                                          vAxis=[P.pistonLength,0,0], radius=P.pistonRadius, color=colorPiston)]
         ### create rigid body for piston
         bPiston = mbs.CreateRigidBody(inertia = P.inertiaPiston,

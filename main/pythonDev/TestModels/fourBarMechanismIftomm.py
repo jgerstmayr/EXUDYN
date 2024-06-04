@@ -11,7 +11,8 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 
 from math import sin, cos, pi
 import numpy as np
@@ -56,11 +57,11 @@ listMarkers1=[]
 listSensors=[]
 
 for i in range(len(listRef)):
-    graphicsBar = GraphicsDataRigidLink(p0=[-0.5*L,0,0], p1=[0.5*L,0,0], 
+    graphicsBar = graphics.RigidLink(p0=[-0.5*L,0,0], p1=[0.5*L,0,0], 
                                         axis0=[0,0,1],axis1=[0,0,1],
                                         radius=[0.5*w,0.5*w], thickness=w,
                                         width=[0.5*w*2,0.5*w*2],
-                                        color=color4steelblue)
+                                        color=graphics.color.steelblue)
     
     nRigid=mbs.AddNode(NodeRigidBody2D(referenceCoordinates=listRef[i],
                                        initialVelocities=listVel[i]))
@@ -94,7 +95,7 @@ for i in range(len(listRef)):
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++
 #ground body and marker
-gGround = GraphicsDataCheckerBoard(point=[L,0,-w], size=4)
+gGround = graphics.CheckerBoard(point=[L,0,-w], size=4)
 oGround = mbs.AddObject(ObjectGround())
 #oGround = mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=[gGround])))
 markerGround0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))

@@ -12,7 +12,8 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 from exudyn.lieGroupIntegration import *
 
 import numpy as np
@@ -99,19 +100,19 @@ nodeType=exu.NodeType.RotationEulerParameters
 
 
 ################ Body0: CRANK
-#graphicsAB = GraphicsDataOrthoCube(-d/2,-d/2,0, d/2,d/2, lAB, [0.1,0.1,0.8,1])
-graphicsAB = GraphicsDataRigidLink(p0=[0,0,0],p1=[0,0,lAB], axis0=[1,0,0], 
+#graphicsAB = graphics.BrickXYZ(-d/2,-d/2,0, d/2,d/2, lAB, [0.1,0.1,0.8,1])
+graphicsAB = graphics.RigidLink(p0=[0,0,0],p1=[0,0,lAB], axis0=[1,0,0], 
                                    radius=[0.01,0.01], thickness = 0.01, 
-                                   width = [0.02,0.02], color=color4steelblue)
+                                   width = [0.02,0.02], color=graphics.color.steelblue)
 
 [n0,b0]=AddRigidBody(mainSys = mbs, inertia=inertiaAB, nodeType=str(nodeType), 
                     position=pA, angularVelocity=omega0, gravity=g, 
                     graphicsDataList=[graphicsAB])
 
 ################ Body1: CONROD
-graphicsBC = GraphicsDataRigidLink(p0=[-0.5*lBC,0,0],p1=[0.5*lBC,0,0], axis1=[0,0,0], 
+graphicsBC = graphics.RigidLink(p0=[-0.5*lBC,0,0],p1=[0.5*lBC,0,0], axis1=[0,0,0], 
                                    radius=[0.01,0.01], thickness = 0.01, 
-                                   width = [0.02,0.02], color=color4lightred)
+                                   width = [0.02,0.02], color=graphics.color.lightred)
 pBC = ScalarMult(0.5,VAdd(pB,pC))
 [n1,b1]=AddRigidBody(mainSys = mbs, inertia=inertiaBC, nodeType=str(nodeType), 
                     position=pBC, velocity=v1Init, angularVelocity=omega1Init, 
@@ -119,7 +120,7 @@ pBC = ScalarMult(0.5,VAdd(pB,pC))
 
 ################ Body2: SLIDER
 d = 0.03
-graphicsSlider = GraphicsDataOrthoCube(-d/2,-d/2,-d/2, d/2,d/2, d/2, [0.5,0.5,0.5,0.5])
+graphicsSlider = graphics.BrickXYZ(-d/2,-d/2,-d/2, d/2,d/2, d/2, [0.5,0.5,0.5,0.5])
 [n2,b2]=AddRigidBody(mainSys = mbs, inertia=inertiaSlider, nodeType=str(nodeType), 
                     position=pC, velocity=v2Init, angularVelocity=[0,0,0], 
                     graphicsDataList=[graphicsSlider])

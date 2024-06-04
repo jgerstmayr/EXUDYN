@@ -13,7 +13,8 @@
 
 import exudyn as exu
 from exudyn.itemInterface import *
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 from exudyn.FEM import *
 from exudyn.graphicsDataUtilities import *
 import time 
@@ -388,7 +389,8 @@ if True:
     import matplotlib.pyplot as plt
     import matplotlib.ticker as ticker
     import exudyn as exu
-    from exudyn.utilities import *
+    from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
     CC = PlotLineCode
     comp = 3 #1=x, 2=y, ...
     var = 'Vel'

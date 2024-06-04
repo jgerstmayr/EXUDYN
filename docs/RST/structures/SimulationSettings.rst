@@ -381,64 +381,64 @@ Settings for static solver linear or nonlinear (Newton).
 StaticSolverSettings has the following items:
 
 * | **discontinuous** [type = DiscontinuousSettings]:
-  | \ ``simulationSettings.staticSolverSettings.discontinuous``\ 
+  | \ ``simulationSettings.staticSolver.discontinuous``\ 
   | parameters for treatment of discontinuities
 * | **newton** [type = NewtonSettings]:
-  | \ ``simulationSettings.staticSolverSettings.newton``\ 
+  | \ ``simulationSettings.staticSolver.newton``\ 
   | parameters for Newton method (e.g. in static solver or time integration)
 * | **adaptiveStep** [type = bool, default = True]:
-  | \ ``simulationSettings.staticSolverSettings.adaptiveStep``\ 
+  | \ ``simulationSettings.staticSolver.adaptiveStep``\ 
   | True: use step reduction if step fails; False: fixed step size
 * | **adaptiveStepDecrease** [type = UReal, default = 0.25]:
-  | \ ``simulationSettings.staticSolverSettings.adaptiveStepDecrease``\ 
+  | \ ``simulationSettings.staticSolver.adaptiveStepDecrease``\ 
   | Multiplicative factor (MUST BE: 0 < factor < 1) for step size to decrese due to discontinuousIteration or Newton errors
 * | **adaptiveStepIncrease** [type = UReal, default = 2]:
-  | \ ``simulationSettings.staticSolverSettings.adaptiveStepIncrease``\ 
+  | \ ``simulationSettings.staticSolver.adaptiveStepIncrease``\ 
   | Multiplicative factor (MUST BE > 1) for step size to increase after previous step reduction due to discontinuousIteration or Newton errors
 * | **adaptiveStepRecoveryIterations** [type = UInt, default = 7]:
-  | \ ``simulationSettings.staticSolverSettings.adaptiveStepRecoveryIterations``\ 
+  | \ ``simulationSettings.staticSolver.adaptiveStepRecoveryIterations``\ 
   | Number of max. (Newton iterations + discontinuous iterations) at which a step increase is considered; in order to immediately increase steps after reduction, chose a high value
 * | **adaptiveStepRecoverySteps** [type = UInt, default = 4]:
-  | \ ``simulationSettings.staticSolverSettings.adaptiveStepRecoverySteps``\ 
+  | \ ``simulationSettings.staticSolver.adaptiveStepRecoverySteps``\ 
   | Number of steps needed after which steps will be increased after previous step reduction due to discontinuousIteration or Newton errors
 * | **computeLoadsJacobian** [type = bool, default = True]:
-  | \ ``simulationSettings.staticSolverSettings.computeLoadsJacobian``\ 
+  | \ ``simulationSettings.staticSolver.computeLoadsJacobian``\ 
   | True: compute (currently numerical) Jacobian for loads, causing additional computational costs; this is advantageous in cases where loads are related nonlinearly to coordinates; False: jacobian of loads not considered (may lead to slow convergence or Newton failure); note that computeLoadsJacobian has no effect in case of doSystemWideDifferentiation, as this anyway includes all load dependencies
 * | **constrainODE1coordinates** [type = bool, default = True]:
-  | \ ``simulationSettings.staticSolverSettings.constrainODE1coordinates``\ 
+  | \ ``simulationSettings.staticSolver.constrainODE1coordinates``\ 
   | True: ODE1coordinates are constrained to initial values; False: undefined behavior, currently not supported
 * | **loadStepDuration** [type = PReal, default = 1]:
-  | \ ``simulationSettings.staticSolverSettings.loadStepDuration``\ 
+  | \ ``simulationSettings.staticSolver.loadStepDuration``\ 
   | quasi-time for all load steps (added to current time in load steps)
 * | **loadStepGeometric** [type = bool, default = False]:
-  | \ ``simulationSettings.staticSolverSettings.loadStepGeometric``\ 
+  | \ ``simulationSettings.staticSolver.loadStepGeometric``\ 
   | if loadStepGeometric=false, the load steps are incremental (arithmetic series, e.g. 0.1,0.2,0.3,...); if true, the load steps are increased in a geometric series, e.g. for \ :math:`n=8`\  numberOfLoadSteps and \ :math:`d = 1000`\  loadStepGeometricRange, it follows: \ :math:`1000^{1/8}/1000=0.00237`\ , \ :math:`1000^{2/8}/1000=0.00562`\ , \ :math:`1000^{3/8}/1000=0.0133`\ , ..., \ :math:`1000^{7/8}/1000=0.422`\ , \ :math:`1000^{8/8}/1000=1`\ 
 * | **loadStepGeometricRange** [type = PReal, default = 1000]:
-  | \ ``simulationSettings.staticSolverSettings.loadStepGeometricRange``\ 
+  | \ ``simulationSettings.staticSolver.loadStepGeometricRange``\ 
   | if loadStepGeometric=true, the load steps are increased in a geometric series, see loadStepGeometric
 * | **loadStepStart** [type = UReal, default = 0]:
-  | \ ``simulationSettings.staticSolverSettings.loadStepStart``\ 
+  | \ ``simulationSettings.staticSolver.loadStepStart``\ 
   | a quasi time, which can be used for the output (first column) as well as for time-dependent forces; quasi-time is increased in every step i by loadStepDuration/numberOfLoadSteps; loadStepTime = loadStepStart + i*loadStepDuration/numberOfLoadSteps, but loadStepStart untouched ==> increment by user
 * | **minimumStepSize** [type = PReal, default = 1e-8]:
-  | \ ``simulationSettings.staticSolverSettings.minimumStepSize``\ 
+  | \ ``simulationSettings.staticSolver.minimumStepSize``\ 
   | lower limit of step size, before nonlinear solver stops
 * | **numberOfLoadSteps** [type = PInt, default = 1]:
-  | \ ``simulationSettings.staticSolverSettings.numberOfLoadSteps``\ 
+  | \ ``simulationSettings.staticSolver.numberOfLoadSteps``\ 
   | number of load steps; if numberOfLoadSteps=1, no load steps are used and full forces are applied at once
 * | **stabilizerODE2term** [type = UReal, default = 0]:
-  | \ ``simulationSettings.staticSolverSettings.stabilizerODE2term``\ 
+  | \ ``simulationSettings.staticSolver.stabilizerODE2term``\ 
   | add mass-proportional stabilizer term in \ :ref:`ODE2 <ODE2>`\  part of jacobian for stabilization (scaled ), e.g. of badly conditioned problems; the diagnoal terms are scaled with \ :math:`stabilizer = (1-loadStepFactor^2)`\ , and go to zero at the end of all load steps: \ :math:`loadStepFactor=1`\  -> \ :math:`stabilizer = 0`\ 
 * | **stepInformation** [type = UInt, default = 67]:
-  | \ ``simulationSettings.staticSolverSettings.stepInformation``\ 
+  | \ ``simulationSettings.staticSolver.stepInformation``\ 
   | add up the following binary flags: 0 ... show only step time, 1 ... show time to go, 2 ... show newton iterations (Nit) per step or period, 4 ... show Newton jacobians (jac) per step or period, 8 ... show discontinuous iterations (Dit) per step or period, 16 ... show step size (dt), 32 ... show CPU time spent; 64 ... show adaptive step reduction warnings; 128 ... show step increase information; 1024 ... show every time step; time is usually shown in fractions of seconds (s), hours (h), or days
 * | **useLoadFactor** [type = bool, default = True]:
-  | \ ``simulationSettings.staticSolverSettings.useLoadFactor``\ 
+  | \ ``simulationSettings.staticSolver.useLoadFactor``\ 
   | True: compute a load factor \ :math:`\in [0,1]`\  from static step time; all loads are scaled by the load factor; False: loads are always scaled with 1 -- use this option if time dependent loads use a userFunction
 * | **verboseMode** [type = UInt, default = 1]:
-  | \ ``simulationSettings.staticSolverSettings.verboseMode``\ 
+  | \ ``simulationSettings.staticSolver.verboseMode``\ 
   | 0 ... no output, 1 ... show errors and load steps, 2 ... show short Newton step information (error), 3 ... show also solution vector, 4 ... show also jacobian, 5 ... show also Jacobian inverse
 * | **verboseModeFile** [type = UInt, default = 0]:
-  | \ ``simulationSettings.staticSolverSettings.verboseModeFile``\ 
+  | \ ``simulationSettings.staticSolver.verboseModeFile``\ 
   | same behaviour as verboseMode, but outputs all solver information to file
 
 

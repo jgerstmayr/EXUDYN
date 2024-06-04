@@ -25,7 +25,8 @@ You can view and download this file on Github: `serialRobotInverseKinematics.py 
    
    import exudyn as exu
    from exudyn.itemInterface import *
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    from exudyn.rigidBodyUtilities import *
    from exudyn.graphicsDataUtilities import *
    from exudyn.robotics import *
@@ -60,20 +61,20 @@ You can view and download this file on Github: `serialRobotInverseKinematics.py 
    jointRadius=0.06
    linkWidth=0.1
    
-   graphicsBaseList = [GraphicsDataOrthoCubePoint([0,0,-0.35], [0.12,0.12,0.5], color4grey)]
-   graphicsBaseList +=[GraphicsDataCylinder([0,0,0], [0.5,0,0], 0.0025, color4red)]
-   graphicsBaseList +=[GraphicsDataCylinder([0,0,0], [0,0.5,0], 0.0025, color4green)]
-   graphicsBaseList +=[GraphicsDataCylinder([0,0,0], [0,0,0.5], 0.0025, color4blue)]
-   graphicsBaseList +=[GraphicsDataCylinder([0,0,-jointWidth], [0,0,jointWidth], linkWidth*0.5, color4list[0])] #belongs to first body
-   graphicsBaseList +=[GraphicsDataCheckerBoard([0,0,-0.6], [0,0,1], size=2)]
+   graphicsBaseList = [graphics.Brick([0,0,-0.35], [0.12,0.12,0.5], graphics.color.grey)]
+   graphicsBaseList +=[graphics.Cylinder([0,0,0], [0.5,0,0], 0.0025, graphics.color.red)]
+   graphicsBaseList +=[graphics.Cylinder([0,0,0], [0,0.5,0], 0.0025, graphics.color.green)]
+   graphicsBaseList +=[graphics.Cylinder([0,0,0], [0,0,0.5], 0.0025, graphics.color.blue)]
+   graphicsBaseList +=[graphics.Cylinder([0,0,-jointWidth], [0,0,jointWidth], linkWidth*0.5, graphics.colorList[0])] #belongs to first body
+   graphicsBaseList +=[graphics.CheckerBoard([0,0,-0.6], [0,0,1], size=2)]
    
    ty = 0.03
    tz = 0.04
    zOff = -0.05
    toolSize= [0.05,0.5*ty,0.06]
-   graphicsToolList = [GraphicsDataCylinder(pAxis=[0,0,zOff], vAxis= [0,0,tz], radius=ty*1.5, color=color4red)]
-   graphicsToolList+= [GraphicsDataOrthoCubePoint([0,ty,1.5*tz+zOff], toolSize, color4grey)]
-   graphicsToolList+= [GraphicsDataOrthoCubePoint([0,-ty,1.5*tz+zOff], toolSize, color4grey)]
+   graphicsToolList = [graphics.Cylinder(pAxis=[0,0,zOff], vAxis= [0,0,tz], radius=ty*1.5, color=graphics.color.red)]
+   graphicsToolList+= [graphics.Brick([0,ty,1.5*tz+zOff], toolSize, graphics.color.grey)]
+   graphicsToolList+= [graphics.Brick([0,-ty,1.5*tz+zOff], toolSize, graphics.color.grey)]
    
    # here another robot could be loaded; note that the robots sizes and workspaces and zero configuration 
    # differ, so the HTmove may need to be adjusted to be inside the workspace
@@ -155,9 +156,9 @@ You can view and download this file on Github: `serialRobotInverseKinematics.py 
    
    
    #use frame for prescribed TCP:
-   gFrame = [GraphicsDataFrame(HTlastJoint, length=0.3, colors=[color4lightgrey]*3)]
-   gFrame += [GraphicsDataFrame(HTlastJoint@HTmove, length=0.3, colors=[color4grey]*3)]
-   gFrame += [GraphicsDataFrame(HTlastJoint@HTmove@HTmove, length=0.3, colors=[color4dodgerblue]*3)]
+   gFrame = [graphics.Frame(HTlastJoint, length=0.3, colors=[graphics.color.lightgrey]*3)]
+   gFrame += [graphics.Frame(HTlastJoint@HTmove, length=0.3, colors=[graphics.color.grey]*3)]
+   gFrame += [graphics.Frame(HTlastJoint@HTmove@HTmove, length=0.3, colors=[graphics.color.dodgerblue]*3)]
    oGround = mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=gFrame)))
    
    robotDict = robot.CreateKinematicTree(mbs)
@@ -290,7 +291,7 @@ You can view and download this file on Github: `serialRobotInverseKinematics.py 
    #%%++++++++++++++++++++++++++++++++++++++++++++
    
    
-   q = mbs.GetObjectOutput(oKT, exu.OutputVariableType.Coordinates)
+   q = mbs.GetObjectOutputBody(oKT, exu.OutputVariableType.Coordinates)
    exu.Print("rotations at tEnd=", VSum(q), ',', q)
        
    #%%++++++++++++++++++++++++++++++++++++++++++++

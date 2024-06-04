@@ -11,7 +11,8 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 ClearWorkspace()
 
 from exudyn.FEM import *
@@ -172,10 +173,10 @@ Mfem = CSRtoScipySparseCSR(fem.GetMassMatrix(sparse=True))
 mode = 'nonlinearFEM'
 
 if mode == 'linearFEM':
-    [oGenericODE2, femToMbsNodeList] = fem.CreateLinearFEMObjectGenericODE2(mbs, color4lawngreen)
+    [oGenericODE2, femToMbsNodeList] = fem.CreateLinearFEMObjectGenericODE2(mbs, graphics.color.lawngreen)
 elif mode == 'nonlinearFEM':
     [oGenericODE2, femToMbsNodeList] = fem.CreateNonlinearFEMObjectGenericODE2NGsolve(mbs, mesh, density=density, youngsModulus=youngsModulus, 
-                                               poissonsRatio=nu, meshOrder= 1, color= color4red)
+                                               poissonsRatio=nu, meshOrder= 1, color= graphics.color.red)
 if 'ACF' in mode:
     print('mode ACF')
     #%%++++++++++++++++++++++++++++++++++++++++
@@ -209,7 +210,7 @@ if 'ACF' in mode:
                                                     #stiffnessMatrix=Kcsr,
                                                     #forceVector=np.zeros(nRows), 
                                                     forceUserFunction=UFforce,
-                                                    visualization=VObjectGenericODE2(triangleMesh = fem.GetSurfaceTriangles(), color=color4lightred)
+                                                    visualization=VObjectGenericODE2(triangleMesh = fem.GetSurfaceTriangles(), color=graphics.color.lightred)
                                                     ))
 
 #get 3 mbs nodes for corotational frame:
@@ -286,7 +287,7 @@ def UFgraphics(mbs, objectNum):
     for i in range(3):
         v = np.zeros(3)
         v[i] = 1
-        graphicsData += [GraphicsDataArrow(p0, A@v, 0.01, color4list[i])]
+        graphicsData += [graphics.Arrow(p0, A@v, 0.01, graphics.colorList[i])]
     
     return graphicsData
 

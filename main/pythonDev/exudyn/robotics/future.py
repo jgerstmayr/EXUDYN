@@ -446,14 +446,14 @@ if __name__ == '__main__':
     import exudyn.robotics.models as models
     
     # define robot base parameter 
-    graphicsBaseList = [GraphicsDataOrthoCubePoint([0,0,-0.15], [0.4,0.4,0.1], color4grey)]
-    graphicsBaseList +=[GraphicsDataCylinder([0,0,0], [0.5,0,0], 0.0025, color4red)]
-    graphicsBaseList +=[GraphicsDataCylinder([0,0,0], [0,0.5,0], 0.0025, color4green)]
-    graphicsBaseList +=[GraphicsDataCylinder([0,0,0], [0,0,0.5], 0.0025, color4blue)]
+    graphicsBaseList = [graphics.Brick([0,0,-0.15], [0.4,0.4,0.1], graphics.color.grey)]
+    graphicsBaseList +=[graphics.Cylinder([0,0,0], [0.5,0,0], 0.0025, graphics.color.red)]
+    graphicsBaseList +=[graphics.Cylinder([0,0,0], [0,0.5,0], 0.0025, graphics.color.green)]
+    graphicsBaseList +=[graphics.Cylinder([0,0,0], [0,0,0.5], 0.0025, graphics.color.blue)]
     toolSize= [0.0,0.0,0.0]
-    graphicsToolList = [GraphicsDataCylinder(pAxis=[0,0,0], vAxis= [0,0,0], radius=0, color=color4red)]
-    graphicsToolList+= [GraphicsDataOrthoCubePoint([0,0,0], toolSize, color4grey)]
-    graphicsToolList+= [GraphicsDataOrthoCubePoint([0,0,0], toolSize, color4grey)]
+    graphicsToolList = [graphics.Cylinder(pAxis=[0,0,0], vAxis= [0,0,0], radius=0, color=graphics.color.red)]
+    graphicsToolList+= [graphics.Brick([0,0,0], toolSize, graphics.color.grey)]
+    graphicsToolList+= [graphics.Brick([0,0,0], toolSize, graphics.color.grey)]
 
     basePose2HT= HTtranslate([0,0,0]) @ HTrotateZ(0)    #robot base position and orientation  
     toolPose2HT=HTtranslate([0,0,0]) @ HTrotateZ(0)      #robot tool position and orientation 

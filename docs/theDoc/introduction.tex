@@ -655,7 +655,7 @@ see also \refSection{sec:renderState}.
 \mysubsubsection{Graphics user functions via Python}
 There are some user functions in order to customize drawing:
 \bi
-  \item You can assign graphicsData to the visualization to most bodies, such as rigid bodies in order to change the shape. Graphics can also be imported from files (\texttt{GraphicsDataFromSTLfileTxt}) using the established format \ac{STL}\footnote{STereoLithography or Standard Triangle Language; file format available in nearly all CAD systems}.
+  \item You can assign graphicsData to the visualization to most bodies, such as rigid bodies in order to change the shape. Graphics can also be imported from files (\texttt{exu.graphics.FromSTLfileASCII}, \texttt{exu.graphics.FromSTLfile}, ) using the established format \ac{STL}\footnote{STereoLithography or Standard Triangle Language; file format available in nearly all CAD systems}.
   \item Some objects, e.g., \texttt{ObjectGenericODE2} or \texttt{ObjectRigidBody}, provide customized a function \texttt{graphicsDataUserFunction}. This user function just returns a list of GraphicsData, see \refSection{sec:graphicsData}. With this function you can change the shape of the body in every step of the computation.
   \item Specifically, the \texttt{graphicsDataUserFunction} in \texttt{ObjectGround} can be used to draw any moving background in the scene.
 \ei
@@ -669,7 +669,9 @@ Many functions and objects include color information. In order to allow alpha-tr
   \item blue (B) channel 
   \item alpha (A) value, representing the so-called \mybold{alpha-transparency} (A=0: fully transparent, A=1: solid)
 \ei
-E.g., red color with no transparency is obtained by the color=[1,0,0,1]. Color predefinitions are found in \texttt{exudynGraphicsDataUtilities.py}, e.g., \texttt{color4red} or \texttt{color4steelblue} as well a list of 16 colors \texttt{color4list}, which is convenient to be used in a loop creating objects.
+E.g., red color with no transparency is obtained by the color=[1,0,0,1]. 
+Color predefinitions are found in \texttt{graphics.py}, e.g., using \texttt{graphics.color.red} or \texttt{graphics.color.steelblue} as well a list of 16 colors \texttt{graphics.colorList}, which is convenient to be used in a loop creating objects.
+Earlier, special colors were given in \texttt{exudyn.graphicsDataUtilities.py}, e.g., \texttt{color4red} or \texttt{color4steelblue} as well as \texttt{color4list}, which are marked as deprecated.
 
 \mysubsubsectionlabel{Solution viewer}{sec:overview:basics:solutionviewer}
 \codeName offers a convenient WYSIWYS -- 'What you See is What you Simulate' interface, showing you the computation results during simulation in the render window.

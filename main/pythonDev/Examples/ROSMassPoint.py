@@ -20,7 +20,8 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 import numpy as np
 import exudyn as exu
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 
 # import needed ROS modules and messages
 import rospy
@@ -86,12 +87,12 @@ def main():
     # mass and dimension of sphere
     mass = 6
     r = 0.03
-    background = GraphicsDataCheckerBoard(point=[-0.5,0,0], 
+    background = graphics.CheckerBoard(point=[-0.5,0,0], 
                                         normal=[1, 0, 0], 
                                         color=[0.7]*3+[1], 
                                         alternatingColor=[0.8]*3+[1])
 
-    graphicsSphere = GraphicsDataSphere(point=[0,0,0],
+    graphicsSphere = graphics.Sphere(point=[0,0,0],
                                     radius=r,
                                     color=(1,0,0,1),
                                     nTiles=64)

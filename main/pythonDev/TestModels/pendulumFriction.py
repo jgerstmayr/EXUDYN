@@ -12,7 +12,8 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 from exudyn.FEM import *
 
 import numpy as np
@@ -46,9 +47,9 @@ oGround = mbs.AddObject(ObjectGround(referencePosition = [0,0,0],
                            visualization = VObjectGround(graphicsData = [graphicsBackground])))
 
 
-graphicsSphere = GraphicsDataSphere(point=[L/2,0,0], radius=r, color=[1.,0.2,0.2,1], nTiles = 16)
-graphicsSphere2 = GraphicsDataSphere(point=[0,0,0], radius=r, color=color4steelblue, nTiles = 16)
-graphicsLink = GraphicsDataOrthoCube(-L/2,-d/2,-d/2, L/2,d/2, d/2, [0.5,0.5,0.5,0.5])
+graphicsSphere = graphics.Sphere(point=[L/2,0,0], radius=r, color=[1.,0.2,0.2,1], nTiles = 16)
+graphicsSphere2 = graphics.Sphere(point=[0,0,0], radius=r, color=graphics.color.steelblue, nTiles = 16)
+graphicsLink = graphics.BrickXYZ(-L/2,-d/2,-d/2, L/2,d/2, d/2, [0.5,0.5,0.5,0.5])
 
 inertia = InertiaCuboid(density=mass/(L*d*d), sideLengths=[L,d,d])
 exu.Print("mass=",inertia.mass)

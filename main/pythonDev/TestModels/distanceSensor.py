@@ -11,7 +11,8 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 
 useGraphics = True #without test
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -53,14 +54,14 @@ rRot = 0.2 #rotating table radius
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # add sphere and ground
 addEdges=False
-gFloor = GraphicsDataOrthoCubePoint([0.45*L,0,-0.5*t],[L,L,t],color4steelblue,False,addEdges=addEdges)
-gFloorAdd = GraphicsDataCylinder([0,1*rRot,0],[0,2*rRot,0], radius=0.5*rRot, color=color4dodgerblue, addEdges=addEdges, 
+gFloor = graphics.Brick([0.45*L,0,-0.5*t],[L,L,t],graphics.color.steelblue,False,addEdges=addEdges)
+gFloorAdd = graphics.Cylinder([0,1*rRot,0],[0,2*rRot,0], radius=0.5*rRot, color=graphics.color.dodgerblue, addEdges=addEdges, 
                                  #angleRange=[0.5*pi,1.65*pi],lastFace=False,
                                  #angleRange=[0.5*pi,1.5*pi],lastFace=False,
                                  nTiles=4*8)#,
-gFloor = MergeGraphicsDataTriangleList(gFloorAdd, gFloor)
+gFloor = graphics.MergeTriangleLists(gFloorAdd, gFloor)
 gDataList = [gFloor]
-[meshPoints, meshTrigs] = GraphicsData2PointsAndTrigs(gFloor)
+[meshPoints, meshTrigs] = graphics.ToPointsAndTrigs(gFloor)
 
 
 nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0] ))
@@ -70,12 +71,12 @@ mGround = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nGround))
 gContact.AddTrianglesRigidBodyBased(rigidBodyMarkerIndex=mGround, contactStiffness=k, contactDamping=d, 
                                     frictionMaterialIndex=0, pointList=meshPoints, triangleList=meshTrigs)
 
-#gDataList = [GraphicsDataFromPointsAndTrigs(meshPoints, meshTrigs, color4green)]
+#gDataList = [graphics.FromPointsAndTrigs(meshPoints, meshTrigs, graphics.color.green)]
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #add rotating table:
-gTable = [GraphicsDataCylinder([0,0,0],[0,0,0.05*rRot],radius=rRot, color=color4orange,addEdges=True, nTiles=64)]
-gTable+= [GraphicsDataCylinder([0,-rRot,0.05*rRot],[0,0,0.05*rRot],radius=0.1*rRot, color=color4orange,addEdges=True, nTiles=16)]
+gTable = [graphics.Cylinder([0,0,0],[0,0,0.05*rRot],radius=rRot, color=graphics.color.orange,addEdges=True, nTiles=64)]
+gTable+= [graphics.Cylinder([0,-rRot,0.05*rRot],[0,0,0.05*rRot],radius=0.1*rRot, color=graphics.color.orange,addEdges=True, nTiles=16)]
 nTable = mbs.AddNode(Node1D(referenceCoordinates=[0], initialVelocities=[4*pi]))
 oTable = mbs.AddObject(ObjectRotationalMass1D(physicsInertia=1, nodeNumber=nTable, referencePosition=[0,rRot,rRot], 
                                               referenceRotation=np.eye(3), 
@@ -89,8 +90,8 @@ p0 = np.array([0,0,radius-f/(k*0.5)]) #stiffness is serial from sphere and trigs
 v0 = np.array([0.2,0,0])
 omega0 = np.array([0,0*v0[0]/radius,0])
 
-gObject = [GraphicsDataSphere(radius=radius, color=color4orange, nTiles=20)]
-gObject += [GraphicsDataBasis(length=2*radius)]
+gObject = [graphics.Sphere(radius=radius, color=graphics.color.orange, nTiles=20)]
+gObject += [graphics.Basis(length=2*radius)]
 RBinertia = InertiaSphere(m, radius)
 oMass = mbs.CreateRigidBody(referencePosition=p0, 
                             initialVelocity=v0,

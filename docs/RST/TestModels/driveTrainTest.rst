@@ -27,7 +27,8 @@ You can view and download this file on Github: `driveTrainTest.py <https://githu
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    
    import exudyn as exu
-   from exudyn.utilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
    from exudyn.FEM import *
    
    import numpy as np
@@ -52,7 +53,7 @@ You can view and download this file on Github: `driveTrainTest.py <https://githu
    s = 0.1 #width of cube
    sx = 3*s #length of cube/body
    
-   background0 = GraphicsDataRectangle(-1,-1,1,1,color4white)
+   background0 = GraphicsDataRectangle(-1,-1,1,1,graphics.color.white)
    oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0], 
                                       visualization=VObjectGround(graphicsData= [background0])))
    
@@ -80,11 +81,11 @@ You can view and download this file on Github: `driveTrainTest.py <https://githu
    p0 = [0,0,0]        #reference position / COM of crank
    v0 = [0,0,0]     #initial translational velocity
    
-   color0= color4grey
-   gGraphics0 = GraphicsDataOrthoCube(-0.5*L0,-a*0.9,-a*0.9,0.5*L0,a*0.9,a*0.9, color0)
-   gGraphics0b = GraphicsDataOrthoCube(-0.5*L0,-a*0.9,-a*0.9+4*a,0.5*L0,a*0.9,a*0.9+4*a, color0)
-   gGraphics0c = GraphicsDataCylinder([0.5*L0,0,-a],[0,0,6*a],a, color4darkgrey)
-   gGraphics0d = GraphicsDataCylinder([-0.5*L0,0,3*a],[0,0,4*a],a, color4darkgrey)
+   color0= graphics.color.grey
+   gGraphics0 = graphics.BrickXYZ(-0.5*L0,-a*0.9,-a*0.9,0.5*L0,a*0.9,a*0.9, color0)
+   gGraphics0b = graphics.BrickXYZ(-0.5*L0,-a*0.9,-a*0.9+4*a,0.5*L0,a*0.9,a*0.9+4*a, color0)
+   gGraphics0c = graphics.Cylinder([0.5*L0,0,-a],[0,0,6*a],a, graphics.color.darkgrey)
+   gGraphics0d = graphics.Cylinder([-0.5*L0,0,3*a],[0,0,4*a],a, graphics.color.darkgrey)
    
    oRB0 = mbs.CreateRigidBody(inertia=inertiaCrank, 
                              referencePosition=p0, 
@@ -152,8 +153,8 @@ You can view and download this file on Github: `driveTrainTest.py <https://githu
            Acrank = RotationMatrixZ(pi)
            offZ = 4*a
        
-       color1= color4grey
-       gGraphics1 = GraphicsDataOrthoCube(-0.5*L1,-a*0.9,-a*0.9,0.5*L1,a*0.9,a*0.9, color1)
+       color1= graphics.color.grey
+       gGraphics1 = graphics.BrickXYZ(-0.5*L1,-a*0.9,-a*0.9,0.5*L1,a*0.9,a*0.9, color1)
        omega1 = [0,0,0]    #initial angular velocity of bodies
    
        p1 = [0.5*L0+0.5*L1,0,2*a+offZ]        #reference position / COM of crank
@@ -187,11 +188,11 @@ You can view and download this file on Github: `driveTrainTest.py <https://githu
        
        axPiston = list(A @ np.array([L2,0,0]))
        refPosPiston = list(A @ np.array([0.5*L0+L1-offsetPiston,0,2*a+offZ]))
-       gGraphicsPiston = GraphicsDataCylinder(pAxis=[0,0,0],vAxis=axPiston, radius=2*a, color=color4steelblue)
+       gGraphicsPiston = graphics.Cylinder(pAxis=[0,0,0],vAxis=axPiston, radius=2*a, color=graphics.color.steelblue)
        pistonMass = 0.2
        if i==3: 
            pistonMass *=1.5 #add disturbance into system ...
-           gGraphicsPiston = GraphicsDataCylinder(pAxis=[0,0,0],vAxis=axPiston, radius=2*a, color=color4red)
+           gGraphicsPiston = graphics.Cylinder(pAxis=[0,0,0],vAxis=axPiston, radius=2*a, color=graphics.color.red)
    
        n1D1 = mbs.AddNode(Node1D(referenceCoordinates=[0]))
        oPiston1 = mbs.AddObject(Mass1D(physicsMass = pistonMass, 
@@ -217,10 +218,10 @@ You can view and download this file on Github: `driveTrainTest.py <https://githu
    inertiaDiscSmall = InertiaCylinder(density=rho, length=2*a, outerRadius=discSmall, axis=2)
    #print("Jzz=", inertiaDiscBig.GetInertia6D()[2], 0.5*rho*pi*discBig**4*(2*a))
    
-   gGraphicsDiscBig0a = GraphicsDataCylinder([0,0,-a],[0,0,2*a], discBig, color4lightred, 64)
-   gGraphicsDiscBig0b = GraphicsDataOrthoCube(0,-0.25*a,-a*1.01, discBig, 0.25*a, a*1.01, color4lightgrey) #add something to the cylinder to see rotation
-   gGraphicsDiscSmall0a = GraphicsDataCylinder([0,0,-a],[0,0,2*a], discSmall, color4lightred, 32)
-   gGraphicsDiscSmall0b = GraphicsDataOrthoCube(0,-0.25*a,-a*1.01, discSmall, 0.25*a, a*1.01, color4lightgrey) #add something to the cylinder to see rotation
+   gGraphicsDiscBig0a = graphics.Cylinder([0,0,-a],[0,0,2*a], discBig, graphics.color.lightred, 64)
+   gGraphicsDiscBig0b = graphics.BrickXYZ(0,-0.25*a,-a*1.01, discBig, 0.25*a, a*1.01, graphics.color.lightgrey) #add something to the cylinder to see rotation
+   gGraphicsDiscSmall0a = graphics.Cylinder([0,0,-a],[0,0,2*a], discSmall, graphics.color.lightred, 32)
+   gGraphicsDiscSmall0b = graphics.BrickXYZ(0,-0.25*a,-a*1.01, discSmall, 0.25*a, a*1.01, graphics.color.lightgrey) #add something to the cylinder to see rotation
    
    #Gear0:
    nDT0 = mbs.AddNode(Node1D(referenceCoordinates = [0]))
@@ -249,7 +250,7 @@ You can view and download this file on Github: `driveTrainTest.py <https://githu
                                       visualization=VObjectConnectorCoordinate(show=False)))
    
    #Gear2:
-   gGraphicsDiscAxis2 = GraphicsDataCylinder([0,0,-2*a],[0,0,7*a], a, color4grey)
+   gGraphicsDiscAxis2 = graphics.Cylinder([0,0,-2*a],[0,0,7*a], a, graphics.color.grey)
    nDT2 = mbs.AddNode(Node1D(referenceCoordinates = [0]))
    oDT2 = mbs.AddObject(Rotor1D(nodeNumber = nDT2, 
                                 physicsInertia=inertiaDiscBig.GetInertia6D()[2],
@@ -261,7 +262,7 @@ You can view and download this file on Github: `driveTrainTest.py <https://githu
                                       visualization=VObjectConnectorCoordinate(show=False)))
    
    #Gear3:
-   gGraphicsDiscAxis3 = GraphicsDataCylinder([0,0,-2*a],[0,0,4*a], a, color4grey)
+   gGraphicsDiscAxis3 = graphics.Cylinder([0,0,-2*a],[0,0,4*a], a, graphics.color.grey)
    nDT3 = mbs.AddNode(Node1D(referenceCoordinates = [0]))
    oDT3 = mbs.AddObject(Rotor1D(nodeNumber = nDT3, 
                                 physicsInertia=inertiaDiscSmall.GetInertia6D()[2],
@@ -275,8 +276,8 @@ You can view and download this file on Github: `driveTrainTest.py <https://githu
    
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    #flywheel, connected with MarkerNodeRotationCoordinate:
-   gGraphicsDiscFlyWheel0a = GraphicsDataCylinder([0,0,-2*a],[0,0,2*a], discBig, [0.4,0.9,0.4,0.5], 64)
-   gGraphicsDiscFlyWheel0b = GraphicsDataOrthoCube(0,-0.25*a,-a*2.01, discBig, 0.25*a, a*0.01, [0.7,0.7,0.7,0.5]) #add something to the cylinder to see rotation
+   gGraphicsDiscFlyWheel0a = graphics.Cylinder([0,0,-2*a],[0,0,2*a], discBig, [0.4,0.9,0.4,0.5], 64)
+   gGraphicsDiscFlyWheel0b = graphics.BrickXYZ(0,-0.25*a,-a*2.01, discBig, 0.25*a, a*0.01, [0.7,0.7,0.7,0.5]) #add something to the cylinder to see rotation
    nDT4 = mbs.AddNode(Node1D(referenceCoordinates = [0]))
    oDT4 = mbs.AddObject(Rotor1D(nodeNumber = nDT4, 
                                 physicsInertia=5*inertiaDiscBig.GetInertia6D()[2],

@@ -13,6 +13,7 @@ sys.path.append('../../TestModels') #for direct run in directory
 
 import exudyn as exu
 from exudyn.utilities import *
+import exudyn.graphics as graphics
 
 from modelUnitTests import ExudynTestStructure, exudynTestGlobals
 import numpy as np

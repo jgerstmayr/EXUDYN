@@ -24,7 +24,9 @@ You can view and download this file on Github: `nMassOscillator.py <https://gith
    
    import exudyn as exu
    from exudyn.itemInterface import *
-   from exudyn.graphicsDataUtilities import *
+   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn.graphics as graphics #only import if it does not conflict
+   
    import matplotlib.pyplot as plt
    from exudyn.interactive import InteractiveDialog
    
@@ -160,15 +162,15 @@ You can view and download this file on Github: `nMassOscillator.py <https://gith
    maxAmp0 = 0.1
    maxAmpN = 0.1*N
    
-   background = [GraphicsDataQuad([[-L0,hy0,z],[ L,hy0,z],[ L,hy1,z],[-L0,hy1,z]], 
-                                 color=color4lightgrey)]
+   background = [graphics.Quad([[-L0,hy0,z],[ L,hy0,z],[ L,hy1,z],[-L0,hy1,z]], 
+                                 color=graphics.color.lightgrey)]
    offCircleY = 1*hy
    # for i in range(N):
    #     t=r_mass*0.5
    #     ox = l_mass*(i+1)
    #     oy = offCircleY
-   #     line0 = {'type':'Line', 'data':[ox-t,oy+0,0, ox+t,oy+0,0], 'color':color4grey}
-   #     line1 = {'type':'Line', 'data':[ox+0,oy-t,0, ox+0,oy+t,0], 'color':color4grey}
+   #     line0 = {'type':'Line', 'data':[ox-t,oy+0,0, ox+t,oy+0,0], 'color':graphics.color.grey}
+   #     line1 = {'type':'Line', 'data':[ox+0,oy-t,0, ox+0,oy+t,0], 'color':graphics.color.grey}
    #     background += [line0, line1]
        
    oGround=mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=background)))
@@ -180,13 +182,13 @@ You can view and download this file on Github: `nMassOscillator.py <https://gith
    
    for i in range(N):
        #node for 3D mass point:
-       col = color4steelblue
+       col = graphics.color.steelblue
        if i==0:
-           col = color4green
+           col = graphics.color.green
        elif i==N-1:
-           col = color4lightred
+           col = graphics.color.lightred
    
-       gSphere = GraphicsDataSphere(point=[0,0,0], radius=r_mass, color=col, nTiles=16)
+       gSphere = graphics.Sphere(point=[0,0,0], radius=r_mass, color=col, nTiles=16)
        node = mbs.AddNode(Node1D(referenceCoordinates = [l_mass*(1+len(nMass))],
                                  initialCoordinates=[0.],
                                  initialVelocities=[0.]))

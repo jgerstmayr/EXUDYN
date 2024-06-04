@@ -11,7 +11,8 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
-from exudyn.utilities import *
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics #only import if it does not conflict
 
 useGraphics = True #without test
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -73,7 +74,7 @@ for i in range(nBodies):
     #p0 += (0.5*vLoc)
 
     ep0 = eulerParameters0 #no rotation
-    graphicsBody = GraphicsDataOrthoCubePoint([0,0,0], [0.96*L,d,d], color4steelblue)
+    graphicsBody = graphics.Brick([0,0,0], [0.96*L,d,d], graphics.color.steelblue)
     # ep = RotationMatrix2EulerParameters(Alist[i])
     # ep = (1./np.linalg.norm(ep)) * ep
     oRB = mbs.CreateRigidBody(inertia=inertia, 
