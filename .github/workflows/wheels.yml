@@ -14,8 +14,9 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        # python-version: ['10']
-        python-version: ['8','9','10','11','12']
+        python-version: []
+        #python-version: ['10']
+        #python-version: ['8','9','10','11','12']
 
     steps:
       - uses: actions/checkout@v4
@@ -111,16 +112,16 @@ jobs:
             # python-version: "3.9"
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
 
     - name: Set up Python 3.${{ matrix.python-version }}
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: 3.${{ matrix.python-version }}
 
     - name: Check if QEMU is needed for Linux
       if: runner.os == 'Linux'
-      uses: docker/setup-qemu-action@v3
+      uses: docker/setup-qemu-action@v4
       with:
         platforms: arm64
 
