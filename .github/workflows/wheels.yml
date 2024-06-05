@@ -133,7 +133,7 @@ jobs:
         CIBW_BEFORE_BUILD_LINUX: "yum install -y epel-release && yum update -y && yum install -y glfw-devel libX11-devel"
         CIBW_BUILD: "cp3${{ matrix.python-version }}-*"
         CIBW_SKIP: "*-win32 *musllinux*"   #skip building 32-bit (win32) wheels
-        CIBW_ARCHS_MACOS: "arm64" #universal2 or arm64 and x86_64
+        CIBW_ARCHS_MACOS: "x86_64" #universal2 or arm64 and x86_64
         CIBW_ARCHS_LINUX: "aarch64"    #for raspberry pi, etc.
 
         #CIBW_ENVIRONMENT_MACOS: "MACOSX_DEPLOYMENT_TARGET=10.9"  # does not change version
