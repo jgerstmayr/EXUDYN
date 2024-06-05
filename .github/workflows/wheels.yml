@@ -136,7 +136,7 @@ jobs:
         CIBW_ARCHS_MACOS: "x86_64" #universal2 or arm64 and x86_64
         CIBW_ARCHS_LINUX: "aarch64"    #for raspberry pi, etc.
 
-        #CIBW_ENVIRONMENT_MACOS: "MACOSX_DEPLOYMENT_TARGET=10.9"  # does not change version
+        CIBW_ENVIRONMENT_MACOS: "MACOSX_DEPLOYMENT_TARGET=11.0"  # does not change version
         #{project} folder is in Exudyn root, not in main!
         CIBW_TEST_COMMAND_WINDOWS: "cd /d {project}/main/pythonDev/TestModels && python runTestSuite.py -quiet -local"
         # perform a test and rename it into a wheel to be copied by cibuild ...
