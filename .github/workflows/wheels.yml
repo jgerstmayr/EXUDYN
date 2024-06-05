@@ -111,7 +111,7 @@ jobs:
             # python-version: "3.9"
 
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v4
 
     - name: Set up Python 3.${{ matrix.python-version }}
       uses: actions/setup-python@v5
@@ -120,7 +120,7 @@ jobs:
 
     - name: Check if QEMU is needed for Linux
       if: runner.os == 'Linux'
-      uses: docker/setup-qemu-action@v4
+      uses: docker/setup-qemu-action@v3
       with:
         platforms: arm64
 
