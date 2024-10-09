@@ -142,7 +142,7 @@ jobs:
         CIBW_TEST_COMMAND_LINUX: "cd {project}/main/pythonDev/TestModels && python runTestSuite.py -quiet -local"
         CIBW_TEST_COMMAND_MACOS: "cd {project}/main/pythonDev/TestModels && python runTestSuite.py -quiet -local"
         CIBW_TEST_REQUIRES: numpy matplotlib scipy
-        CIBW_TEST_REQUIRES_WINDOWS: "numpy==1.26.4 matplotlib scipy"
+        CIBW_TEST_REQUIRES_WINDOWS: "numpy<2.0.0 matplotlib scipy"
 
     - uses: actions/upload-artifact@v4 #artifacts are stored locally!
       with:
