@@ -151,8 +151,7 @@ You can view and download this file on Github: `generalContactCylinderTest.py <h
    #simulationSettings.displayComputationTime = True
    #simulationSettings.displayStatistics = True
    simulationSettings.timeIntegration.verboseMode = 1
-   # simulationSettings.parallel.numberOfThreads = 4
-   # simulationSettings.timeIntegration.simulateInRealtime = True
+   #simulationSettings.parallel.numberOfThreads = 4
    
    SC.visualizationSettings.general.graphicsUpdateInterval=0.02
    SC.visualizationSettings.general.drawCoordinateSystem=True

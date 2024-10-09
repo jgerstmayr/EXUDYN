@@ -229,7 +229,10 @@ GeneralizedAlphaSettings has the following items:
   | True: compute initial accelerations from system EOM in acceleration form; NOTE that initial accelerations that are following from user functions in constraints are not considered for now! False: use zero accelerations
 * | **lieGroupAddTangentOperator** [type = bool, default = True]:
   | \ ``simulationSettings.timeIntegration.generalizedAlpha.lieGroupAddTangentOperator``\ 
-  | True: for Lie group nodes, the integrator adds the tangent operator for stiffness and constraint matrices, for improved Newton convergence; not available for sparse matrix mode (EigenSparse)
+  | True: for Lie group nodes, in case that lieGroupSimplifiedKinematicRelations=True, the integrator adds the tangent operator for stiffness and constraint matrices, for improved Newton convergence; not available for sparse matrix mode (EigenSparse)
+* | **lieGroupSimplifiedKinematicRelations** [type = bool, default = True]:
+  | \ ``simulationSettings.timeIntegration.generalizedAlpha.lieGroupSimplifiedKinematicRelations``\ 
+  | True: for Lie group nodes, the integrator uses the original kinematic relations of the Bruls and Cardona 2010 paper
 * | **newmarkBeta** [type = UReal, default = 0.25]:
   | \ ``simulationSettings.timeIntegration.generalizedAlpha.newmarkBeta``\ 
   | value beta for Newmark method; default value beta = \ :math:`\frac 1 4`\  corresponds to (undamped) trapezoidal rule

@@ -370,11 +370,7 @@ You can view and download this file on Github: `generalContactFrictionTests.py <
        
    simulationSettings.solutionSettings.sensorsWritePeriod = h*10
    simulationSettings.solutionSettings.outputPrecision = 8 #make files smaller
-   # simulationSettings.displayComputationTime = True
-   # simulationSettings.displayGlobalTimers = True
-   #simulationSettings.displayStatistics = True
    simulationSettings.timeIntegration.verboseMode = 1
-   simulationSettings.parallel.numberOfThreads = 1
    
    simulationSettings.timeIntegration.newton.numericalDifferentiation.forODE2 = False
    simulationSettings.timeIntegration.newton.useModifiedNewton = False

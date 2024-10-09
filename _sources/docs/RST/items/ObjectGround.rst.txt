@@ -82,7 +82,7 @@ a global point \ :math:`\LU{0}{{\mathbf{p}}}`\  using the reference point \ :mat
 
 A user function, which is called by the visualization thread in order to draw user-defined objects.
 The function can be used to generate any \ ``BodyGraphicsData``\ , see Section  :ref:`sec-graphicsdata`\ .
-Use \ ``graphicsDataUtilities``\  functions, see Section  :ref:`sec-module-graphicsdatautilities`\ , to create more complicated objects. 
+Use \ ``exudyn.graphics``\  functions, see Section  :ref:`sec-module-graphics`\ , to create more complicated objects. 
 Note that \ ``graphicsDataUserFunction``\  needs to copy lots of data and is therefore
 inefficient and only designed to enable simpler tests, but not large scale problems.
 

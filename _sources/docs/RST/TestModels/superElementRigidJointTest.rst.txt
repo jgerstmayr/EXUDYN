@@ -58,7 +58,6 @@ You can view and download this file on Github: `superElementRigidJointTest.py <h
    nodeNumberUnbalance = 9  #on disc, max y-value
    unbalance = 0.1
    fem.AddNodeMass(nodeNumberUnbalance, unbalance)
-   #print(fem.GetMassMatrix()[8*3:11*3,:])
    
    nModes = 20
    fem.ComputeEigenmodes(nModes, excludeRigidBodyModes = 6, useSparseSolver = True)

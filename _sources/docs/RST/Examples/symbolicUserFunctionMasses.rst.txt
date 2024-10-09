@@ -103,21 +103,21 @@ You can view and download this file on Github: `symbolicUserFunctionMasses.py <h
            for k in range(nz):
                if i > 0:
                    rr = 1. - np.random.rand()*0.05
-                   cList += [mbs.CreateSpringDamper(    bodyList=[bList[i,j,k], bList[i-1,j,k]], stiffness=stiffness*rr, damping=damping,drawSize = 0, show=showSprings)]
+                   cList += [mbs.CreateSpringDamper(    bodyNumbers=[bList[i,j,k], bList[i-1,j,k]], stiffness=stiffness*rr, damping=damping,drawSize = 0, show=showSprings)]
                    if j>0:
-                       cList += [mbs.CreateSpringDamper(bodyList=[bList[i,j,k], bList[i-1,j-1,k]], stiffness=stiffness*rr, damping=damping,drawSize = 0, show=showSprings)]
-                       cList += [mbs.CreateSpringDamper(bodyList=[bList[i,j,k], bList[i  ,j-1,k]], stiffness=stiffness*rr, damping=damping,drawSize = 0, show=showSprings)]
+                       cList += [mbs.CreateSpringDamper(bodyNumbers=[bList[i,j,k], bList[i-1,j-1,k]], stiffness=stiffness*rr, damping=damping,drawSize = 0, show=showSprings)]
+                       cList += [mbs.CreateSpringDamper(bodyNumbers=[bList[i,j,k], bList[i  ,j-1,k]], stiffness=stiffness*rr, damping=damping,drawSize = 0, show=showSprings)]
                        if k>0:
-                           cList += [mbs.CreateSpringDamper(bodyList=[bList[i,j,k], bList[i,j-1,k-1]], stiffness=stiffness*rr, damping=damping,drawSize = 0, show=showSprings)]
+                           cList += [mbs.CreateSpringDamper(bodyNumbers=[bList[i,j,k], bList[i,j-1,k-1]], stiffness=stiffness*rr, damping=damping,drawSize = 0, show=showSprings)]
                    if j<ny-1:
-                       cList += [mbs.CreateSpringDamper(bodyList=[bList[i,j,k], bList[i-1,j+1,k]], stiffness=stiffness*rr, damping=damping,drawSize = 0, show=showSprings)]
+                       cList += [mbs.CreateSpringDamper(bodyNumbers=[bList[i,j,k], bList[i-1,j+1,k]], stiffness=stiffness*rr, damping=damping,drawSize = 0, show=showSprings)]
                    if k>0:
-                       cList += [mbs.CreateSpringDamper(bodyList=[bList[i,j,k], bList[i-1,j,k-1]], stiffness=stiffness*rr, damping=damping,drawSize = 0, show=showSprings)]
-                       cList += [mbs.CreateSpringDamper(bodyList=[bList[i,j,k], bList[i  ,j,k-1]], stiffness=stiffness*rr, damping=damping,drawSize = 0, show=showSprings)]
+                       cList += [mbs.CreateSpringDamper(bodyNumbers=[bList[i,j,k], bList[i-1,j,k-1]], stiffness=stiffness*rr, damping=damping,drawSize = 0, show=showSprings)]
+                       cList += [mbs.CreateSpringDamper(bodyNumbers=[bList[i,j,k], bList[i  ,j,k-1]], stiffness=stiffness*rr, damping=damping,drawSize = 0, show=showSprings)]
                    if k<nz-1:
-                       cList += [mbs.CreateSpringDamper(bodyList=[bList[i,j,k], bList[i-1,j,k+1]], stiffness=stiffness*rr, damping=damping,drawSize = 0, show=showSprings)]
+                       cList += [mbs.CreateSpringDamper(bodyNumbers=[bList[i,j,k], bList[i-1,j,k+1]], stiffness=stiffness*rr, damping=damping,drawSize = 0, show=showSprings)]
                        if j>0:
-                           cList += [mbs.CreateSpringDamper(bodyList=[bList[i,j,k], bList[i,j-1,k+1]], stiffness=stiffness*rr, damping=damping,drawSize = 0, show=showSprings)]
+                           cList += [mbs.CreateSpringDamper(bodyNumbers=[bList[i,j,k], bList[i,j-1,k+1]], stiffness=stiffness*rr, damping=damping,drawSize = 0, show=showSprings)]
    
    
    # CAUTION: this only works, if every object has its own user function!!!

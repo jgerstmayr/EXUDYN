@@ -4,9 +4,9 @@
 Module: graphicsDataUtilities
 =============================
 
-Utility functions for visualization, which provides functions for basic graphics manipulation, colors, mesh manipulation, etc.;
-for creation of graphics primitives such as cuboid, cylinder, sphere, solid of revolution, etc., see exudyn.graphics,
-which also includes functionality for conversion of graphics data to triangular meshes (points and triangles)
+Utility functions for visualization, which provides functions for special graphics manipulation, colors, mesh manipulation, etc.;
+note that specific function for GraphicsData creation now moved into the graphics submodule;
+includes functionality like mesh manipulation and some helper functions
 
 - Author:    Johannes Gerstmayr 
 - Date:      2020-07-26 (created)  Modified: 2024-05-10 (moved primitive functions to graphics) 

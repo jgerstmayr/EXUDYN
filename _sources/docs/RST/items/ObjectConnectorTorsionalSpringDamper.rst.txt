@@ -32,9 +32,9 @@ The item \ **ObjectConnectorTorsionalSpringDamper**\  with type = 'ConnectorTors
   | local rotation matrix for marker 0; transforms joint into marker coordinates
 * | **rotationMarker1** [type = Matrix3D, default = [[1,0,0], [0,1,0], [0,0,1]]]:
   | local rotation matrix for marker 1; transforms joint into marker coordinates
-* | **offset** [\ :math:`v_\mathrm{off}`\ , type = Real, default = 0.]:
+* | **offset** [\ :math:`\theta_\mathrm{off}`\ , type = Real, default = 0.]:
   | rotational offset considered in the spring torque calculation (this can be used as rotation control input!)
-* | **velocityOffset** [\ :math:`\dot v_\mathrm{off}`\ , type = Real, default = 0.]:
+* | **velocityOffset** [\ :math:`\omega_\mathrm{off}`\ , type = Real, default = 0.]:
   | angular velocity offset considered in the damper torque calculation (this can be used as angular velocity control input!)
 * | **torque** [\ :math:`\tau_c`\ , type = Real, default = 0.]:
   | additional constant torque [SI:Nm] added to spring-damper; this can be used to prescribe a torque between the two attached bodies (e.g., for actuation and control)
@@ -135,7 +135,7 @@ If \ ``activeConnector = True``\ , the vector spring force is computed as
 
 .. math::
 
-   \tau_{SD} = k \left(\Delta\theta - v_\mathrm{off} \right) + d \left(\Delta\omega - \dot v_\mathrm{off} \right) + \tau_c
+   \tau_{SD} = k \left(\Delta\theta - \theta_\mathrm{off} \right) + d \left(\Delta\omega - \omega_\mathrm{off} \right) + \tau_c
 
 
 if \ ``activeConnector = False``\ , \ :math:`\tau_{SD}`\  is set zero.

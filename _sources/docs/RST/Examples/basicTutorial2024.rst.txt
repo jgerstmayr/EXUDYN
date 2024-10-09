@@ -33,7 +33,7 @@ You can view and download this file on Github: `basicTutorial2024.py <https://gi
                                drawSize=0.2,
                                color=graphics.color.red)
    
-   oSD = mbs.CreateSpringDamper(bodyList=[oGround, oMass],
+   oSD = mbs.CreateSpringDamper(bodyNumbers=[oGround, oMass],
                                 stiffness=500,
                                 damping=10,
                                 drawSize=0.1)

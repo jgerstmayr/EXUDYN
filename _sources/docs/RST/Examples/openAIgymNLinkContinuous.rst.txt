@@ -133,7 +133,7 @@ You can view and download this file on Github: `openAIgymNLinkContinuous.py <htt
            masscart = 1.
            massarm = 0.1
            total_mass = massarm + masscart
-           armInertia = self.length**2*0.5*massarm
+           armInertia = self.length**2*0.5*massarm #for a rod with equally distributed mass, correctly, it would read self.length**2*massarm/3; using here the values of previous research
            
            # environment variables  and force magnitudes and are taken from the  
            # paper "Reliability evaluation of reinforcement learning methods for 
@@ -145,9 +145,9 @@ You can view and download this file on Github: `openAIgymNLinkContinuous.py <htt
            if self.nLinks == 3: 
                self.force_mag = self.force_mag*1.5 
                thresholdFactor = 2
-           if self.nLinks == 4: 
-               self.force_mag = self.force_mag*3
-               thresholdFactor = 5
+           if self.nLinks >= 4: 
+               self.force_mag = self.force_mag*2.5
+               thresholdFactor = 2.5
    
            if self.flagContinuous: 
                self.force_mag *= 2 #continuous controller can have larger max value
@@ -331,6 +331,10 @@ You can view and download this file on Github: `openAIgymNLinkContinuous.py <htt
            reward = 1 - 0.5 * abs(self.state[0])/self.x_threshold
            for i in range(self.nLinks):
                reward -=  0.5 * abs(self.state[i+1]) / (self.theta_threshold_radians*self.nLinks)
+           
+           if self.nLinks > 2: #larger weight on last link!
+               reward -=  5. * 0.5 * abs(self.state[self.nTotalLinks-1]) / self.theta_threshold_radians
+               
            if reward < 0: reward = 0
    
            return reward 
@@ -506,9 +510,9 @@ You can view and download this file on Github: `openAIgymNLinkContinuous.py <htt
            #only load and test
            if False: 
                if flagContinuous and modelType == 'A2C': 
-                   model = SAC.load("solution/" + modelName)
-               else: 
                    model = A2C.load("solution/" + modelName)
+               else: 
+                   model = SAC.load("solution/" + modelName)
            
            env = InvertedNPendulumEnv(thresholdFactor=5) #larger threshold for testing
            solutionFile='solution/learningCoordinates.txt'

@@ -33,7 +33,7 @@ Function: StribeckFunction
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `massSpringFrictionInteractive.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/massSpringFrictionInteractive.py>`_\  (Ex)
+    \ `massSpringFrictionInteractive.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/massSpringFrictionInteractive.py>`_\  (Ex), \ `springMassFriction.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/springMassFriction.py>`_\  (Ex)
 
 
 

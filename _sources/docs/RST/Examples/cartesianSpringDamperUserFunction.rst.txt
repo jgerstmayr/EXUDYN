@@ -58,7 +58,7 @@ You can view and download this file on Github: `cartesianSpringDamperUserFunctio
                        physicsMass=mass)
    
    ## create spring damper between ground and mass point
-   csd = mbs.CreateCartesianSpringDamper(bodyList=[objectGround, massPoint],
+   csd = mbs.CreateCartesianSpringDamper(bodyNumbers=[objectGround, massPoint],
                                    stiffness = [k,k,k], 
                                    damping   = [d,0,0],
                                    offset    = [L,0,0])

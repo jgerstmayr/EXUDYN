@@ -75,7 +75,7 @@ You can view and download this file on Github: `symbolicUserFunctionTest.py <htt
    oGround = mbs.CreateGround()
    
    oMassPoint = mbs.CreateMassPoint(referencePosition=[1.+0.05,0,0], physicsMass=1)
-   co = mbs.CreateSpringDamper(bodyList=[oGround, oMassPoint],
+   co = mbs.CreateSpringDamper(bodyNumbers=[oGround, oMassPoint],
                                referenceLength = 0.1, stiffness = 100, 
                                damping = 1,
                                springForceUserFunction = springForceUserFunction,

@@ -52,6 +52,7 @@ and they usually include some range or size check (e.g., \ ``PReal``\  is checke
 +  \ ``PyFunctionGraphicsData``\  \ :math:`\ldots`\  a user function providing GraphicsData, see the user function description of the according object
 +  \ ``PyFunctionMbsScalar...``\  \ :math:`\ldots`\  a user function for the according object; the name is chosen according to the interface (arguments containing scalars, vectors, etc.) and is only used internally for code generation; see the according user function description
 
+Note that for integers, there is also the \ ``exu.InvalidIndex()``\  which is used to uniquely mark invalid indices, e.g., for default values of node numbers in objects or for other functions, often marked as \ ``invalid (-1)``\  in the documentation. Currently, the invalid index is set to -1, but it may change in the future!
 
 
 States and coordinate attributes
