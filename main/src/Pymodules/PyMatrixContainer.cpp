@@ -297,8 +297,8 @@ void PyMatrixContainer::AddSparseMatrixBase(const py::object& sparseMatrix, Real
 	py::array_t<Real> data = sparseMatrix.attr("data").cast<py::array_t<Real>>();
 
 	// Compute the number of rows and non-zero elements
-	Index num_rows = indptr.shape(0) - 1;  // 'indptr' length is 'num_rows + 1'
-	Index nnz = (Index)data.size();            // Number of non-zero elements
+	Index num_rows = (Index)indptr.shape(0) - 1;  // 'indptr' length is 'num_rows + 1'
+	//Index nnz = (Index)data.size();            // Number of non-zero elements
 
 	// Access the raw data
 	auto indptr_ptr = indptr.unchecked<1>();
@@ -309,9 +309,9 @@ void PyMatrixContainer::AddSparseMatrixBase(const py::object& sparseMatrix, Real
 
 	if (useDenseMatrix)
 	{
-		for (int row = 0; row < num_rows; ++row)
+		for (Index row = 0; row < num_rows; ++row)
 		{
-			for (int idx = indptr_ptr(row); idx < indptr_ptr(row + 1); ++idx)
+			for (Index idx = indptr_ptr(row); idx < indptr_ptr(row + 1); ++idx)
 			{
 
 				denseMatrix(row, indices_ptr(idx)) += factor * data_ptr(idx);
@@ -320,9 +320,9 @@ void PyMatrixContainer::AddSparseMatrixBase(const py::object& sparseMatrix, Real
 	}
 	else
 	{	//sparse:
-		for (int row = 0; row < num_rows; ++row)
+		for (Index row = 0; row < num_rows; ++row)
 		{
-			for (int idx = indptr_ptr(row); idx < indptr_ptr(row + 1); ++idx)
+			for (Index idx = indptr_ptr(row); idx < indptr_ptr(row + 1); ++idx)
 			{
 				sparseTripletMatrix.AddTriplet(EXUmath::Triplet(row, indices_ptr(idx), factor * data_ptr(idx)));
 			}

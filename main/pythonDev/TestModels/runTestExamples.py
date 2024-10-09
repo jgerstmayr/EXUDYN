@@ -329,7 +329,7 @@ if __name__ == '__main__': #include to avoid potential problems with multiproces
     else:
         exu.Print(str(len(examplesFailed)) + ' Examples OUT OF '+ str(totalExamples) + ' FAILED: ')
         for ef in examplesFailed:
-            exu.Print('  TestModel ' + ef + ' FAILED')
+            exu.Print('  Example ' + ef + ' FAILED')
 
     exu.Print('Skipped '+str(nSkipped)+' examples')
     exu.Print('******************************************')

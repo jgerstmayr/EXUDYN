@@ -508,8 +508,8 @@ public:
 		}
 		else if (py::isinstance<py::int_>(pyItemIndex)) //MainSystem
 		{
-			Index itemIndex = py::cast<Index>(pyItemIndex);
-			CHECKandTHROW(itemIndex == -1, "Symbolic::SymbolicUserFunction: invalid item type (must be ObjectIndex, LoadIndex or -1 for MainSystem)");
+			//Index itemIndex = py::cast<Index>(pyItemIndex);
+			CHECKandTHROW(py::cast<Index>(pyItemIndex) == -1, "Symbolic::SymbolicUserFunction: invalid item type (must be ObjectIndex, LoadIndex or -1 for MainSystem)");
 			indexType = "None";
 			itemTypeName = "MainSystem";
 			itemNumber = -1;

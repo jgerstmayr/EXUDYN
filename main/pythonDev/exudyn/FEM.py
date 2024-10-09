@@ -132,7 +132,7 @@ def CSRtoRowsAndColumns(sparseMatrixCSR):
 
 
 warnedCSRtoScipySparseCSR = False #add warning if this function is used with old format!
-#**function: convert internal compressed CSR to scipy.sparse csr matrix
+#**function: DEPRECATED: convert internal compressed CSR to scipy.sparse csr matrix; should not be used and raises warning; use SparseTripletsToScipySparseCSR instead!
 def CSRtoScipySparseCSR(sparseMatrixCSR):
     if IsListOrArray(sparseMatrixCSR):
         global warnedCSRtoScipySparseCSR
@@ -149,6 +149,17 @@ def CSRtoScipySparseCSR(sparseMatrixCSR):
         CheckForSciPyMatrix(sparseMatrixCSR, 'CSRtoScipySparseCSR')
         return sparseMatrixCSR
 
+#**function: convert list of sparse triplets (or numpy array with one sparse triplet per row) into scipy.sparse csr_matrix
+def SparseTripletsToScipySparseCSR(sparseTriplets):
+    if IsListOrArray(sparseTriplets):
+        if type(sparseTriplets) == list:
+            sparseTriplets = np.array(sparseTriplets)
+            
+        from scipy.sparse import csr_matrix
+        X = csr_matrix((sparseTriplets[:,2],(sparseTriplets[:,0].astype(int),sparseTriplets[:,1].astype(int))))
+        return X
+    else:
+        raise ValueError('SparseTripletsToScipySparseCSR: requires sparse triplets as input')
 
 #**function: convert scipy.sparse csr matrix to internal compressed CSR 
 def ScipySparseCSRtoCSR(scipyCSR):
@@ -806,10 +817,10 @@ class ObjectFFRFinterface:
         self.nodeArray = femInterface.GetNodePositionsAsArray()
         self.trigList = femInterface.GetSurfaceTriangles()
 
+        #self.massMatrixCSR = CSRtoScipySparseCSR(femInterface.GetMassMatrix(sparse=True)) #for multiplications
         #stiffnessMatrixCSR = CSRtoScipySparseCSR(femInterface.GetStiffnessMatrix(sparse=True))
-        self.massMatrixCSR = CSRtoScipySparseCSR(femInterface.GetMassMatrix(sparse=True)) #for multiplications
-        self.stiffnessMatrixSparse = femInterface.GetStiffnessMatrix(sparse=True)
         self.massMatrixSparse = femInterface.GetMassMatrix(sparse=True)
+        self.stiffnessMatrixSparse = femInterface.GetStiffnessMatrix(sparse=True)
 
         #new coordinates:
         self.nNodes = len(self.nodeArray)                   #stored in nNodes x 3 np-array
@@ -826,12 +837,12 @@ class ObjectFFRFinterface:
         #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
         #FFRFreduced constant matrices:
         self.Phit = np.kron(np.ones(self.nNodes),np.eye(3)).T
-        self.PhitTM = self.Phit.T @ self.massMatrixCSR #LARGE MATRIX COMPUTATION
+        self.PhitTM = self.Phit.T @ self.massMatrixSparse #LARGE MATRIX COMPUTATION
         self.xRef = self.nodeArray.flatten()                     #node reference values in single vector (can be added then to q[7:])
         self.xRefTilde = ComputeSkewMatrix(self.xRef) #rfTilde without q    
 
         #not needed, but may be interesting for checks:
-        self.inertiaLocal = self.xRefTilde.T @ self.massMatrixCSR @ self.xRefTilde #LARGE MATRIX COMPUTATION
+        self.inertiaLocal = self.xRefTilde.T @ self.massMatrixSparse @ self.xRefTilde #LARGE MATRIX COMPUTATION
 
 
     #**classFunction: add according nodes, objects and constraints for FFRF object to MainSystem mbs; only implemented for Euler parameters
@@ -871,16 +882,19 @@ class ObjectFFRFinterface:
 
         stiffnessMatrixMC = exu.MatrixContainer()
         #stiffnessMatrixMC.SetWithSparseMatrixCSR(self.nODE2FF, self.nODE2FF, self.stiffnessMatrixSparse,useDenseMatrix=False)
-        stiffnessMatrixMC.SetWithDenseMatrix(CompressedRowSparseToDenseMatrix(self.stiffnessMatrixSparse),useDenseMatrix=False)
+        #OLD: stiffnessMatrixMC.SetWithDenseMatrix(CompressedRowSparseToDenseMatrix(self.stiffnessMatrixSparse),useDenseMatrix=False)
+        stiffnessMatrixMC.SetWithSparseMatrix(self.stiffnessMatrixSparse,useDenseMatrix=False)
 
         massMatrixMC = exu.MatrixContainer()
         #massMatrixMC.SetWithSparseMatrixCSR(self.nODE2FF, self.nODE2FF, self.massMatrixSparse,useDenseMatrix=False)
-        massMatrixMC.SetWithDenseMatrix(CompressedRowSparseToDenseMatrix(self.massMatrixSparse),useDenseMatrix=False)
+        #OLD: massMatrixMC.SetWithDenseMatrix(CompressedRowSparseToDenseMatrix(self.massMatrixSparse),useDenseMatrix=False)
+        massMatrixMC.SetWithSparseMatrix(self.massMatrixSparse,useDenseMatrix=False)
 
         if (massProportionalDamping != 0 or massProportionalDamping != 0):
             dampingMatrixMC = exu.MatrixContainer()
-            dampingMatrixMC.SetWithDenseMatrix(massProportionalDamping*CompressedRowSparseToDenseMatrix(self.massMatrixSparse)+
-                                               stiffnessProportionalDamping*CompressedRowSparseToDenseMatrix(self.stiffnessMatrixSparse),useDenseMatrix=False)
+            dampingMatrixMC.SetWithSparseMatrix(massProportionalDamping*self.massMatrixSparse+
+                                               stiffnessProportionalDamping*self.stiffnessMatrixSparse,
+                                               useDenseMatrix=False)
         else:
             dampingMatrixMC=[]
         
@@ -907,7 +921,7 @@ class ObjectFFRFinterface:
             mGroundCoordinate = mbs.AddMarker(eii.MarkerNodeCoordinates(nodeNumber = nGround)) #Ground node ==> no action
 
             X1 = np.zeros((6, self.nODE2FFRF))
-            X1rot = ComputeSkewMatrix(self.xRef).T @ self.massMatrixCSR
+            X1rot = ComputeSkewMatrix(self.xRef).T @ self.massMatrixSparse
             X1[0:3,self.nODE2rigid:] = self.PhitTM
             X1[3:6,self.nODE2rigid:] = X1rot
             offset = np.zeros(6)
@@ -956,11 +970,11 @@ class ObjectFFRFinterface:
         fTrans = A @ (omega3Dtilde @ self.PhitTM @ rfTilde @ omega3D + 2*self.PhitTM @ cF_tTilde @ omega3D)
         force[0:self.dim3D] = fTrans
 
-        fRot = -G.T@(omega3Dtilde @ rfTilde.T @ self.massMatrixCSR @ rfTilde @ omega3D + 
-                        2*rfTilde.T @ self.massMatrixCSR @ cF_tTilde @ omega3D)
+        fRot = -G.T@(omega3Dtilde @ rfTilde.T @ self.massMatrixSparse @ rfTilde @ omega3D + 
+                        2*rfTilde.T @ self.massMatrixSparse @ cF_tTilde @ omega3D)
         force[self.dim3D:self.nODE2rigid] = fRot
     
-        fFlex = -self.massMatrixCSR @ (omegaTilde2 @ rF + 2*(omegaTilde @ cF_t))
+        fFlex = -self.massMatrixSparse @ (omegaTilde2 @ rF + 2*(omegaTilde @ cF_t))
         force[self.nODE2rigid:] = fFlex
 
         #add gravity:
@@ -992,7 +1006,7 @@ class ObjectFFRFinterface:
         Mnew[0:self.dim3D, self.nODE2rigid:] = Mtf
         Mnew[self.nODE2rigid:, 0:self.dim3D] = Mtf.T
         #Mrf:
-        Mrf = -G.T @ rfTilde.T @ self.massMatrixCSR
+        Mrf = -G.T @ rfTilde.T @ self.massMatrixSparse
         Mnew[self.dim3D:self.dim3D+self.nODE2rot, self.nODE2rigid:] = Mrf
         Mnew[self.nODE2rigid:, self.dim3D:self.dim3D+self.nODE2rot] = Mrf.T
         #Mrr:
@@ -1091,12 +1105,14 @@ class ObjectFFRFreducedOrderInterface:
             self.trigList = femInterface.GetSurfaceTriangles()
             self.postProcessingModes = femInterface.postProcessingModes
     
-            stiffnessMatrixCSR = CSRtoScipySparseCSR(femInterface.GetStiffnessMatrix(sparse=True))
-            massMatrixCSR = CSRtoScipySparseCSR(femInterface.GetMassMatrix(sparse=True))
+            # stiffnessMatrixCSR = CSRtoScipySparseCSR(femInterface.GetStiffnessMatrix(sparse=True))
+            # massMatrixCSR = CSRtoScipySparseCSR(femInterface.GetMassMatrix(sparse=True))
+            stiffnessMatrixSparse = femInterface.GetStiffnessMatrix(sparse=True)
+            massMatrixSparse = femInterface.GetMassMatrix(sparse=True)
     
             #compute reduced mass and stiffness matrices, only flexible coordinates:
-            self.massMatrixReduced = self.modeBasis.T @ massMatrixCSR @ self.modeBasis #LARGE MATRIX COMPUTATION
-            self.stiffnessMatrixReduced = self.modeBasis.T @ stiffnessMatrixCSR @ self.modeBasis #LARGE MATRIX COMPUTATION
+            self.massMatrixReduced = self.modeBasis.T @ massMatrixSparse @ self.modeBasis #LARGE MATRIX COMPUTATION
+            self.stiffnessMatrixReduced = self.modeBasis.T @ stiffnessMatrixSparse @ self.modeBasis #LARGE MATRIX COMPUTATION
             RoundMatrix(self.massMatrixReduced, roundMassMatrix*abs(self.massMatrixReduced).max()) #erase off-diagonal terms for higher efficiency ...
             RoundMatrix(self.stiffnessMatrixReduced, roundStiffnessMatrix*abs(self.stiffnessMatrixReduced).max())
     
@@ -1121,10 +1137,10 @@ class ObjectFFRFreducedOrderInterface:
             #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
             #FFRFreduced constant matrices:
             Phit = np.kron(np.ones(self.nNodes),np.eye(3)).T
-            PhitTM = Phit.T @ massMatrixCSR #LARGE MATRIX COMPUTATION
+            PhitTM = Phit.T @ massMatrixSparse #LARGE MATRIX COMPUTATION
             self.xRef = nodeArray.flatten()          #node reference values in single vector (can be added then to q[7:])
             xRefTilde = ComputeSkewMatrix(self.xRef) #rfTilde without q    
-            self.inertiaLocal = xRefTilde.T @ massMatrixCSR @ xRefTilde #LARGE MATRIX COMPUTATION
+            self.inertiaLocal = xRefTilde.T @ massMatrixSparse @ xRefTilde #LARGE MATRIX COMPUTATION
     
             #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
             #prepare CMS matrices (some already given):
@@ -1139,12 +1155,12 @@ class ObjectFFRFreducedOrderInterface:
             self.PsiTilde = ComputeSkewMatrix(self.modeBasis)
             self.chiU = 1./self.totalMass*(PhitTM @ self.xRef)                 #center of mass
             self.chiUtilde = ComputeSkewMatrix(self.chiU)
-            self.mPsiTildePsi = self.PsiTilde.T @ massMatrixCSR @ self.modeBasis         #LARGE MATRIX COMPUTATION
-            self.mPsiTildePsiTilde = self.PsiTilde.T @ massMatrixCSR @ self.PsiTilde#LARGE MATRIX COMPUTATION
-            self.mPhitTPsi = Phit.T @ massMatrixCSR @ self.modeBasis                #LARGE MATRIX COMPUTATION
-            self.mPhitTPsiTilde = Phit.T @ massMatrixCSR @ self.PsiTilde       #LARGE MATRIX COMPUTATION
-            self.mXRefTildePsi = xRefTilde.T @ massMatrixCSR @ self.modeBasis       #LARGE MATRIX COMPUTATION
-            self.mXRefTildePsiTilde = xRefTilde.T @ massMatrixCSR @ self.PsiTilde    #LARGE MATRIX COMPUTATION
+            self.mPsiTildePsi = self.PsiTilde.T @ massMatrixSparse @ self.modeBasis         #LARGE MATRIX COMPUTATION
+            self.mPsiTildePsiTilde = self.PsiTilde.T @ massMatrixSparse @ self.PsiTilde#LARGE MATRIX COMPUTATION
+            self.mPhitTPsi = Phit.T @ massMatrixSparse @ self.modeBasis                #LARGE MATRIX COMPUTATION
+            self.mPhitTPsiTilde = Phit.T @ massMatrixSparse @ self.PsiTilde       #LARGE MATRIX COMPUTATION
+            self.mXRefTildePsi = xRefTilde.T @ massMatrixSparse @ self.modeBasis       #LARGE MATRIX COMPUTATION
+            self.mXRefTildePsiTilde = xRefTilde.T @ massMatrixSparse @ self.PsiTilde    #LARGE MATRIX COMPUTATION
     
             #fill already parts of the mass matrix in order to avoid copying this constant data during user function calls:
             self.massMatrixFFRFreduced[0:3,0:3] = self.Mtt
@@ -1698,8 +1714,8 @@ class FEMinterface:
                     self.massMatrix = MK['massMatrix']
                     self.stiffnessMatrix = MK['stiffnessMatrix']
                 else:
-                    self.massMatrix = CSRtoScipySparseCSR( np.load(f) )
-                    self.stiffnessMatrix = CSRtoScipySparseCSR( np.load(f) )
+                    self.massMatrix = SparseTripletsToScipySparseCSR( np.load(f) )
+                    self.stiffnessMatrix = SparseTripletsToScipySparseCSR( np.load(f) )
                 self.surface = list(np.load(f, allow_pickle=True))
                 self.nodeSets =  list(np.load(f, allow_pickle=True))
                 self.elementSets = list(np.load(f, allow_pickle=True))
@@ -1907,7 +1923,7 @@ class FEMinterface:
         self.massMatrix[:,1] -= 1
         
         if not useOldCSRformat:
-            self.massMatrix = CSRtoScipySparseCSR(self.massMatrix)
+            self.massMatrix = SparseTripletsToScipySparseCSR(self.massMatrix)
 
     #**classFunction: read stiffness matrix from compressed row text format (exported from Abaqus)
     def ReadStiffnessMatrixFromAbaqus(self, fileName, type='SparseRowColumnValue'):
@@ -1916,7 +1932,7 @@ class FEMinterface:
         self.stiffnessMatrix[:,1] -= 1
 
         if not useOldCSRformat:
-            self.stiffnessMatrix = CSRtoScipySparseCSR(self.stiffnessMatrix)
+            self.stiffnessMatrix = SparseTripletsToScipySparseCSR(self.stiffnessMatrix)
 
 
     #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -2067,8 +2083,8 @@ class FEMinterface:
 
         self.nodes = {'Position':nodes}
         self.elements = [{'Name':'NGsolve','Tet4':elements}]
-        self.massMatrix = CSRtoScipySparseCSR(M1)
-        self.stiffnessMatrix = CSRtoScipySparseCSR(K1)
+        self.massMatrix = SparseTripletsToScipySparseCSR(M1)
+        self.stiffnessMatrix = SparseTripletsToScipySparseCSR(K1)
         self.surface = [{'Name':'meshSurface','Trigs':trigList}]
 
         #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -2740,7 +2756,7 @@ class FEMinterface:
         if sparse:
             from scipy import sparse
             xBlock = sparse.kron(sparse.eye(nNodes), X) #create big block-diagonal matrix
-            G=np.dot(xBlock,CSRtoScipySparseCSR(self.massMatrix))
+            G=np.dot(xBlock,self.massMatrix)
         else:
             xBlock = np.kron(np.eye(nNodes), X) #create big block-diagonal matrix
             G=np.dot(xBlock,CompressedRowSparseToDenseMatrix(self.massMatrix))
@@ -2815,9 +2831,9 @@ class FEMinterface:
         
         nRows = self.NumberOfCoordinates()
         Mcsr = exu.MatrixContainer()
-        Mcsr.SetWithSparseMatrixCSR(nRows,nRows,self.GetMassMatrix(sparse=True), useDenseMatrix=False)
+        Mcsr.SetWithSparseMatrix(self.GetMassMatrix(sparse=True), nRows,nRows,useDenseMatrix=False)
         Kcsr = exu.MatrixContainer()
-        Kcsr.SetWithSparseMatrixCSR(nRows,nRows,self.GetStiffnessMatrix(sparse=True), useDenseMatrix=False)
+        Kcsr.SetWithSparseMatrix(self.GetStiffnessMatrix(sparse=True), nRows,nRows,useDenseMatrix=False)
         
         #now add generic body built from FEM model with mass and stiffness matrix (optional damping could be added):
         oGenericODE2 = mbs.AddObject(eii.ObjectGenericODE2(nodeNumbers = allNodeList, 
@@ -2967,8 +2983,8 @@ class FEMinterface:
             #sorted, sparse eigen vectors
             from scipy.sparse.linalg import eigsh #eigh for symmetric matrices, positive definite
 
-            K = CSRtoScipySparseCSR(self.GetStiffnessMatrix(sparse=True))
-            M = CSRtoScipySparseCSR(self.GetMassMatrix(sparse=True))
+            K = self.GetStiffnessMatrix(sparse=True)
+            M = self.GetMassMatrix(sparse=True)
             #optional, using shift-invert mode; DOES NOT WORK:
             #guess for smallest eigenvalue:
             #n=self.NumberOfCoordinates()
@@ -3104,8 +3120,8 @@ class FEMinterface:
         if useSparseSolver: 
             from scipy.sparse.linalg import eigsh, factorized #eigh for symmetric matrices, positive definite
     
-            K = CSRtoScipySparseCSR(self.GetStiffnessMatrix(sparse=True))
-            M = CSRtoScipySparseCSR(self.GetMassMatrix(sparse=True))
+            K = self.GetStiffnessMatrix(sparse=True)
+            M = self.GetMassMatrix(sparse=True)
     
         else: #not recommended for more than 2000 nodes (6000 DOF)!
             if computationMode == HCBstaticModeSelection.RBE3:
@@ -3755,8 +3771,8 @@ class FEMinterface:
             #d(x) = [                ] * x
             #       [-Minv*K, -omega*Minv*G] 
  
-            M = CSRtoScipySparseCSR(self.GetMassMatrix(sparse=True))
-            K = CSRtoScipySparseCSR(self.GetStiffnessMatrix(sparse=True))
+            M = self.GetMassMatrix(sparse=True)
+            K = self.GetStiffnessMatrix(sparse=True)
             G = self.GetGyroscopicMatrix(rotationAxis=rotationAxis, sparse=True) #already in scypi sparse format
     
             nODE = self.NumberOfCoordinates()
@@ -3885,7 +3901,7 @@ class FEMinterface:
 
         MapSparseMatrixIndices(self.massMatrix, sorting)
         if not useOldCSRformat:
-            self.massMatrix = CSRtoScipySparseCSR(self.massMatrix)
+            self.massMatrix = SparseTripletsToScipySparseCSR(self.massMatrix)
 
     #**classFunction: read stiffness matrix from CSV format (exported from Ansys)
     def ReadStiffnessMatrixFromAnsys(self, fileName, dofMappingVectorFile, sparse=True, verbose=False):
@@ -3901,7 +3917,7 @@ class FEMinterface:
 
         MapSparseMatrixIndices(self.stiffnessMatrix, sorting)
         if not useOldCSRformat:
-            self.stiffnessMatrix = CSRtoScipySparseCSR(self.stiffnessMatrix)
+            self.stiffnessMatrix = SparseTripletsToScipySparseCSR(self.stiffnessMatrix)
                     
     #**classFunction: read nodal coordinates (exported from Ansys as .txt-File)
     def ReadNodalCoordinatesFromAnsys(self, fileName, verbose=False):

@@ -2181,7 +2181,7 @@ void GeneralContact::JacobianODE2LHS(const CSystem& cSystem, TemporaryComputatio
 		//went inside parallel loop:
 		Index threadID = exuThreading::TaskManager::GetThreadId();
 
-		Index index2JacIndex = globalJacobianIndexOffsets[spheresMarkerBasedIndex] - globalContactIndexOffsets[spheresMarkerBasedIndex];
+		//Index index2JacIndex = globalJacobianIndexOffsets[spheresMarkerBasedIndex] - globalContactIndexOffsets[spheresMarkerBasedIndex];
 		SparseTripletVector& triplets = tempArray[threadID].sparseTriplets;
 		//+++++++++++++++++++++++++++++
 
@@ -2192,8 +2192,8 @@ void GeneralContact::JacobianODE2LHS(const CSystem& cSystem, TemporaryComputatio
 		Index gi = (Index)i + globalContactIndexOffsets[spheresMarkerBasedIndex]; //i is local, gi is global index (which is the same for the first contact objects)
 		const ContactSpheresMarkerBased& sphereI = spheresMarkerBased[(Index)i];
 
-		Index minIndex = globalContactIndexOffsets[trigsRigidBodyBasedIndex]; //we are only search for trigs!
-		Index maxIndex = globalContactIndexOffsets[trigsRigidBodyBasedIndex + 1];
+		//Index minIndex = globalContactIndexOffsets[trigsRigidBodyBasedIndex]; //we are only search for trigs!
+		//Index maxIndex = globalContactIndexOffsets[trigsRigidBodyBasedIndex + 1];
 
 		////determine potential contacts using bounding boxes:
 		//run through all active contacts of sphere i
