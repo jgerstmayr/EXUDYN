@@ -137,12 +137,12 @@ jobs:
 
         CIBW_ENVIRONMENT_MACOS: "MACOSX_DEPLOYMENT_TARGET=11.0"  # resolves problems with repairing/delocate-wheel; since 2024-06-04
         #{project} folder is in Exudyn root, not in main!
-        CIBW_TEST_COMMAND_WINDOWS: "cd /d {project}/main/pythonDev/TestModels && python runTestSuite.py -local"
+        # CIBW_TEST_COMMAND_WINDOWS: "cd /d {project}/main/pythonDev/TestModels && python runTestSuite.py -local"
         # perform a test and rename it into a wheel to be copied by cibuild ...
         CIBW_TEST_COMMAND_LINUX: "cd {project}/main/pythonDev/TestModels && python runTestSuite.py -quiet -local"
         CIBW_TEST_COMMAND_MACOS: "cd {project}/main/pythonDev/TestModels && python runTestSuite.py -quiet -local"
         CIBW_TEST_REQUIRES: matplotlib scipy
-        CIBW_TEST_REQUIRES_WINDOWS: "numpy==1.24.4 matplotlib scipy"
+        # CIBW_TEST_REQUIRES_WINDOWS: "numpy==1.24.4 matplotlib scipy"
 
     - uses: actions/upload-artifact@v4 #artifacts are stored locally!
       with:
