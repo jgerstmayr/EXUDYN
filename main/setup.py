@@ -426,7 +426,7 @@ if config['compileExudynFast']:
             pyVersionString == '3.10'
        ) and isDevelopmentVersion: config['compileExudynFast'] = False
 
-if config['compileExudynFast']:
+if config['compileExudynFast'] and False:
     print('***  preparing C++ module also for __FAST_EXUDYN_LINALG  ***')
     ext_modules += [
         Extension(
@@ -441,7 +441,7 @@ if config['compileExudynFast']:
         ),
         ]
 
-if useAVX and not isDevelopmentVersion:
+if useAVX and not isDevelopmentVersion and False:
     print('***  preparing additional C++ module without AVX in release mode ***')
     ext_modules += [
         Extension(
