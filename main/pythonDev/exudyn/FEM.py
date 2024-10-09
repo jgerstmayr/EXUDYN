@@ -1668,9 +1668,11 @@ class FEMinterface:
 
             np.save(f, self.nodes, allow_pickle=True) #allow_pickle=True for lists or dictionaries
             np.save(f, self.elements, allow_pickle=True)
-            if fileVersion >= 2: #now as list, allows to use None, numpy-array and scipy sparse matrix
-                np.save(f, {'massMatrix':self.massMatrix, 
-                            'stiffnessMatrix':self.stiffnessMatrix}, allow_pickle=True)
+            if fileVersion >= 2: #now as dict, allows to use None, numpy-array and scipy sparse matrix
+                np.save(f, {'massMatrix':ScipySparseCSRtoCSR(self.massMatrix), 
+                            'stiffnessMatrix':ScipySparseCSRtoCSR(self.stiffnessMatrix),
+                            'type': 'sparseTriplets'}, 
+                        allow_pickle=True)
             else:
                 np.save(f, ScipySparseCSRtoCSR(self.massMatrix) )
                 np.save(f, ScipySparseCSRtoCSR(self.stiffnessMatrix) )
@@ -1680,10 +1682,6 @@ class FEMinterface:
             np.save(f, self.modeBasis, allow_pickle=True)
             np.save(f, self.eigenValues, allow_pickle=True)
             np.save(f, self.postProcessingModes, allow_pickle=True)
-            #not needed
-            # if fileVersion>0:
-            #     np.save(f, self.massMatrixReduced)
-            #     np.save(f, self.stiffnessMatrixReduced)
 
     #**classFunction: load all data (nodes, elements, ...) from a data filename previously stored with SaveToFile(...). 
     #this function is much faster than the text-based import functions
@@ -1711,8 +1709,8 @@ class FEMinterface:
                 self.elements = list(np.load(f, allow_pickle=True))#list(...) to convert into list again!
                 if fileVersion >= 2:
                     MK = np.load(f, allow_pickle=True).all()
-                    self.massMatrix = MK['massMatrix']
-                    self.stiffnessMatrix = MK['stiffnessMatrix']
+                    self.massMatrix = SparseTripletsToScipySparseCSR(MK['massMatrix'])
+                    self.stiffnessMatrix = SparseTripletsToScipySparseCSR(MK['stiffnessMatrix'])
                 else:
                     self.massMatrix = SparseTripletsToScipySparseCSR( np.load(f) )
                     self.stiffnessMatrix = SparseTripletsToScipySparseCSR( np.load(f) )
@@ -1722,9 +1720,6 @@ class FEMinterface:
                 self.modeBasis = np.load(f, allow_pickle=True).all()
                 self.eigenValues = list(np.load(f, allow_pickle=True))
                 self.postProcessingModes = np.load(f, allow_pickle=True).all()
-                # if fileVersion>0:
-                #     self.massMatrixReduced = np.load(f)
-                #     self.stiffnessMatrixReduced = np.load(f)
         except Exception as e:
             exu.Print('\n\nFEMinterface.LoadFromFile(...) failed; check filename; if your data file is using old format, try with: LoadFromFile(self, fileName=..., forceVersion=0)\n')
             raise

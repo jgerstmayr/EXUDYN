@@ -45,15 +45,21 @@ if __cpuHasAVX2:
 #use numpy.core to find if AVX+AVX2 is available ...
 try:
     if sys.platform != 'darwin' and sys.platform != 'linux': #MacOS does not support AVX2; no AVX2 for linux right now; therefore there are not non-AVX modules compiled ...
-        from numpy.core._multiarray_umath import __cpu_features__
-        if (('AVX' in __cpu_features__) and ('AVX2' in __cpu_features__) and
-            (__cpu_features__['AVX'] == True) and (__cpu_features__['AVX2'] == True)):
-            if not __cpuHasAVX2 and hasattr(sys, 'exudynCPUhasAVX2'):
-                print('WARNING: user deactivated AVX2 support, but support detected on current CPU')
-            else:
-                __cpuHasAVX2 = True
-        elif __cpuHasAVX2:
-            print('WARNING: user activated AVX2 support, but no AVX2 support has been detected on current CPU; may crash')
+        import numpy
+        thisCpuHasAVX2 = True #assume this for now!
+        if numpy.__version__ <= '2.0': #otherwise _multiarray_umath not available (moved to _core and raises warnings)
+            from numpy.core._multiarray_umath import __cpu_features__
+            if (('AVX' in __cpu_features__) and ('AVX2' in __cpu_features__) and
+                (__cpu_features__['AVX'] == True) and (__cpu_features__['AVX2'] == True)):
+                if not __cpuHasAVX2 and hasattr(sys, 'exudynCPUhasAVX2'):
+                    print('WARNING: user deactivated AVX2 support, but support detected on current CPU')
+                else:
+                    __cpuHasAVX2 = True
+            elif __cpuHasAVX2:
+                print('WARNING: user activated AVX2 support, but no AVX2 support has been detected on current CPU; may crash')
+        else: #we do not know what the user has, but assume AVX!
+            if not hasattr(sys, 'exudynCPUhasAVX2'):
+                __cpuHasAVX2 = True #standard case!
     else:
         __cpuHasAVX2 = True #for MacOS and Linux, this means that there is no exudynCPPnoAVX version!
 except:

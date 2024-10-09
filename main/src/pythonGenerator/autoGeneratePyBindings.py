@@ -3328,7 +3328,7 @@ which are not described here as they are native to Pybind11, but can be passed a
 classStr = 'PyMatrixContainer'
 pyClassStr = 'MatrixContainer'
 
-plr.DefPyStartClass(classStr, pyClassStr, 'The MatrixContainer is a versatile representation for dense and sparse matrices. NOTE: if the MatrixContainer is constructed from a numpy array or a list of lists, both representing a dense matrix, it will go into dense mode; if it is initialized with a scipy sparse csr matrix, it will go into sparse mode',
+plr.DefPyStartClass(classStr, pyClassStr, 'The MatrixContainer is a versatile representation for dense and sparse matrices. NOTE: if the MatrixContainer is constructed from a numpy array or a list of lists, both representing a dense matrix, it will go into dense mode; if it is initialized with a scipy sparse csr matrix, it will go into sparse mode. Examples:',
                     subSection=True, 
                     labelName='sec:MatrixContainer') #section with this label was earlier in theory section
 

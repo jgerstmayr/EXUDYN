@@ -1016,7 +1016,7 @@ class PyLatexRST:
             ni = classStr.find(':')
             addInfo = ' regarding **'+classStr[ni+1:]+'**'
             classStr = classStr[:ni]
-        self.sRST += '\n\ The class **'+classStr+'** has the following **functions and structures**'+addInfo+':\n\n'
+        self.sRST += '\n\\ The class **'+classStr+'** has the following **functions and structures**'+addInfo+':\n\n'
 
     #start a new table to describe class bindings in latex;
     def DefLatexStartTable3(self, headers=[]):
@@ -1150,7 +1150,7 @@ class PyLatexRST:
             argStr = (', '.join(argList) )*hasArgs
         
         self.sLatex += '  operator ' + Str2Latex(name) + '('+argStr+') & '+Str2Latex(description) + '\\\\ \\hline  \n'
-        self.sRST += '* | operator ' + '**'+Str2Latex(name)+'**\ ('+argStr+'):\n'
+        self.sRST += '* | operator ' + '**'+Str2Latex(name)+'**\\ ('+argStr+'):\n'
         self.sRST += RemoveIndentation(LatexString2RST(description), '  | ') + '\n'
         
         if returnType != '':

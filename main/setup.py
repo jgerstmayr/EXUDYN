@@ -245,12 +245,14 @@ else:
 
 
 #set according pybind11 requirement
-if sys.version_info.major >= 3 and sys.version_info.minor >= 11:
-    setup_requires_pybind11='pybind11>=2.10' #Python 3.11 only supported since Pybind11 2.10
-if sys.version_info.major == 3 and sys.version_info.minor >= 9:
-    setup_requires_pybind11='pybind11>=2.9' #Python 3.10: some issues fixed in since Pybind11 2.9
-else: #other versions up to now worked well with 2.6.0 ==> never change a running system ...
-    setup_requires_pybind11='pybind11==2.6.0' #replaced previous require>=2.5.0, because compilation with VS2017 fails with pybind11 2.7.0 version of 2021-10-04: setup_requires=['pybind11>=2.5.0'],
+setup_requires_pybind11='pybind11>=2.12' #numpy2.0 requires pybind11>=2.12
+
+# if sys.version_info.major >= 3 and sys.version_info.minor >= 11:
+#     setup_requires_pybind11='pybind11>=2.10' #Python 3.11 only supported since Pybind11 2.10
+# if sys.version_info.major == 3 and sys.version_info.minor >= 9:
+#     setup_requires_pybind11='pybind11>=2.9' #Python 3.10: some issues fixed in since Pybind11 2.9
+# else: #other versions up to now worked well with 2.6.0 ==> never change a running system ...
+#     setup_requires_pybind11='pybind11==2.6.0' #replaced previous require>=2.5.0, because compilation with VS2017 fails with pybind11 2.7.0 version of 2021-10-04: setup_requires=['pybind11>=2.5.0'],
 
 class get_pybind_include(object):
     def __str__(self):
@@ -426,7 +428,7 @@ if config['compileExudynFast']:
             pyVersionString == '3.10'
        ) and isDevelopmentVersion: config['compileExudynFast'] = False
 
-if config['compileExudynFast'] and False:
+if config['compileExudynFast']:
     print('***  preparing C++ module also for __FAST_EXUDYN_LINALG  ***')
     ext_modules += [
         Extension(
@@ -441,7 +443,7 @@ if config['compileExudynFast'] and False:
         ),
         ]
 
-if useAVX and not isDevelopmentVersion and False:
+if useAVX and not isDevelopmentVersion:
     print('***  preparing additional C++ module without AVX in release mode ***')
     ext_modules += [
         Extension(

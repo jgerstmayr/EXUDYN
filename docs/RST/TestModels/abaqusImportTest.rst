@@ -67,8 +67,10 @@ You can view and download this file on Github: `abaqusImportTest.py <https://git
        if True:
            fn = 'solution/testFEM'
            fem.SaveToFile(fn)
-           fem = FEMinterface()
-           fem.LoadFromFile(fn)
+   
+           if np.__version__ <= '2.0': #load save does not work yet!
+               fem = FEMinterface()
+               fem.LoadFromFile(fn)
    
            if False:
                exu.Print('size of nodes:', sys.getsizeof(np.array(fem.nodes['Position'])) )
