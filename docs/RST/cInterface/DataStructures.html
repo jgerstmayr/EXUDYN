@@ -127,7 +127,7 @@ Note that there are many native data types, such as lists, dicts and numpy array
 which are not described here as they are native to Pybind11, but can be passed as arguments when appropriate.</p>
 <section id="matrixcontainer">
 <span id="sec-matrixcontainer"></span><h2>MatrixContainer<a class="headerlink" href="#matrixcontainer" title="Link to this heading"></a></h2>
-<p>The MatrixContainer is a versatile representation for dense and sparse matrices. NOTE: if the MatrixContainer is constructed from a numpy array or a list of lists, both representing a dense matrix, it will go into dense mode; if it is initialized with a scipy sparse csr matrix, it will go into sparse mode</p>
+<p>The MatrixContainer is a versatile representation for dense and sparse matrices. NOTE: if the MatrixContainer is constructed from a numpy array or a list of lists, both representing a dense matrix, it will go into dense mode; if it is initialized with a scipy sparse csr matrix, it will go into sparse mode. Examples:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1">#Create empty MatrixContainer:</span>
 <span class="linenos"> 2</span><span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">csr_matrix</span>
 <span class="linenos"> 3</span><span class="kn">from</span> <span class="nn">exudyn</span> <span class="kn">import</span> <span class="nc">MatrixContainer</span>
